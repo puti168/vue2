@@ -42,11 +42,11 @@
           <a-form-model-item
             prop="password"
             :rules="{
-                required: true,
-                min: 6,
-                max: 12,
-                message: '密码为6~12个字符',
-              }"
+              required: true,
+              min: 6,
+              max: 12,
+              message: '密码为6~12个字符',
+            }"
           >
             <a-input-password v-model="loginForm.password" type="password" placeholder="请输入密码，6-12个字符">
               <a-icon type="lock" slot="prefix" style="color: rgba(0, 0, 0, 0.25)" />
@@ -55,18 +55,16 @@
           <a-form-model-item
             prop="captcha"
             :rules="{
-                required: true,
-                message: '请输入验证码',
-              }"
+              required: true,
+              message: '请输入验证码',
+            }"
           >
             <a-input v-model="loginForm.captcha" placeholder="请输入验证码">
               <a-icon slot="prefix" type="mail" style="color: rgba(0, 0, 0, 0.25)" />
             </a-input>
           </a-form-model-item>
           <a-form-model-item>
-            <a-button type="primary" class="btn" htmlType="submit" :loading="loading"
-              >登录</a-button
-            >
+            <a-button type="primary" class="btn" htmlType="submit" :loading="loading">登录</a-button>
           </a-form-model-item>
         </a-form-model>
       </div>
@@ -75,6 +73,8 @@
 </template>
 <script>
 import md5 from 'md5'
+import storage from 'store'
+import { ACCESS_TOKEN } from '@/store/mutation-types'
 import { mapActions } from 'vuex'
 export default {
   name: 'LoginForm',
@@ -89,6 +89,9 @@ export default {
       },
     }
   },
+  beforeCreate() {
+    storage.remove(ACCESS_TOKEN)
+  },
   methods: {
     ...mapActions(['Login']),
     doLogin(e) {
@@ -98,15 +101,14 @@ export default {
           return
         }
         this.loading = true
-        const {password, ...rest} = this.loginForm
+        const { password, ...rest } = this.loginForm
         this.Login({
           ...rest,
-          password : md5(password)
+          password: md5(password),
         }).then(
           this.$handleResponse(
             () => {
-              // window.location = 'index.html'
-              window.location = '/'
+              window.location = 'index.html'
             },
             () => (this.loading = false)
           )

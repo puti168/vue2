@@ -13,8 +13,11 @@ NProgress.configure({ showSpinner: false }) // NProgress Configuration
 let currentPath = '/'
 
 router.beforeEach((to, from, next) => {
-  console.log(to.path, from.path)
   currentPath = to.path
+  if (currentPath == '/index.html') {
+    next({ path: '/' })
+    return
+  }
   NProgress.start() // start progress bar
   to.meta && (typeof to.meta.title !== 'undefined' && setDocumentTitle(`${i18nRender(to.meta.title)} - ${domTitle}`))
   /* has token */
