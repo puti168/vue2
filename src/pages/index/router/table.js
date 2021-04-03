@@ -16,6 +16,7 @@ export const constantRouterComponents = {
   '/500': () => import(/* webpackChunkName: "error" */ '../views/exception/500'),
 
   '/': BasicLayout,
+  'index.html': BasicLayout,
   //权限管理
   '/manager/system': RouteView,
   '/manager/user': () => import('../views/manager/user'),

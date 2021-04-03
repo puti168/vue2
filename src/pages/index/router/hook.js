@@ -13,17 +13,17 @@ NProgress.configure({ showSpinner: false }) // NProgress Configuration
 let currentPath = '/'
 
 router.beforeEach((to, from, next) => {
+  console.log(to.path, from.path)
   currentPath = to.path
   NProgress.start() // start progress bar
   to.meta && (typeof to.meta.title !== 'undefined' && setDocumentTitle(`${i18nRender(to.meta.title)} - ${domTitle}`))
   /* has token */
-  debugger
   if (storage.get(ACCESS_TOKEN)) {
     if (store.getters.roles.length === 0) {
       // request login userInfo
       store
         .dispatch('GetInfo')
-        .then(res => {debugger
+        .then(res => {
           const { data = {} } = res
           const { menuTree = {} } = data
           // generate dynamic router
@@ -49,14 +49,14 @@ router.beforeEach((to, from, next) => {
           })
           // 失败时，获取用户信息失败时，调用登出，来清空历史保留信息
           store.dispatch('Logout').then(() => {
-            // window.location = "login.html"
+            window.location = "/login.html"
           })
         })
     } else {
       next()
     }
   } else {
-    // window.location = "login.html"
+    window.location = "/login.html"
   }
 })
 

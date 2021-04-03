@@ -8,30 +8,6 @@ const request = axios.create({
   timeout: 30000 // 请求超时时间
 })
 
-const errorHandler = (err) => {
-  if (err.response) {
-    if (err.response.status === 401) {
-      window.location = 'login.html'
-    }
-    message.error(err.response.data)
-    console.error(err.response)
-  }else{
-    message.error(err.message)
-    console.error(err)
-  }
-  return Promise.reject(err)
-}
-
-// request interceptor
-request.interceptors.request.use(config => {
-  return config
-}, errorHandler)
-
-// response interceptor
-request.interceptors.response.use((response) => {
-  return response.data
-}, errorHandler)
-
 const installer = {
   vm: {},
   install(Vue) {

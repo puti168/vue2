@@ -6,14 +6,14 @@ const errorHandler = (err) => {
   if (err.response) {
     if (err.response.status === 401) {
       store.dispatch('Logout').then(() => {
-        window.location = 'login.html'
+        window.location = '/login.html'
       })
     }
     message.error(err.response.data)
     console.error(err.response)
   } else {
-    message.error(err.message)
     console.error(err)
+    message.error(err.message)
   }
   return Promise.reject(err)
 }

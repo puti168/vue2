@@ -51,10 +51,9 @@ const user = {
     },
 
     // 获取用户信息
-    GetInfo({ commit }) {debugger
-      console.log("~~~~~~~~~~~~~")
+    GetInfo({ commit }) {
       return new Promise((resolve, reject) => {
-        getInfo().then(response => {debugger
+        getInfo().then(response => {
           if (response.code != 200) {
             reject(response.msg)
             return

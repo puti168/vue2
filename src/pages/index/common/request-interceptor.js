@@ -1,5 +1,8 @@
 import request from '@/utils/request'
+import storage from 'store'
 import store from '../store'
+import { ACCESS_TOKEN } from '@/store/mutation-types'
+import router from '../router'
 
 // 异常拦截处理器
 const errorHandler = (error) => {
@@ -16,7 +19,7 @@ const errorHandler = (error) => {
     }
     if (error.response.status === 401) {
       store.dispatch('Logout').then(() => {
-        window.location = 'login.html'
+        window.location = '/login.html'
       })
     }
   }

@@ -58,7 +58,7 @@ export default {
         content: this.$t('layouts.usermenu.dialog.content'),
         onOk: () => {
           return this.$store.dispatch('Logout').then(() => {
-            window.location = 'login.html'
+            window.location = '/login.html'
           })
         },
         onCancel () {}

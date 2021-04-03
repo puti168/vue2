@@ -7,6 +7,7 @@ import Login from './index.vue'
 import store from '@/store'
 import bootstrap from '@/core/bootstrap'
 import '@/core/simple_use'
+import './common/request-interceptor'
 // mock
 // WARNING: `mockjs` NOT SUPPORT `IE` PLEASE DO NOT USE IN `production` ENV.
 

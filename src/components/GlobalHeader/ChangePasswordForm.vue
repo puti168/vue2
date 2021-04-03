@@ -111,7 +111,7 @@ export default {
         return
       }
       return this.$store.dispatch('Logout').then(() => {
-        window.location="login.html"
+        window.location="/login.html"
       })
     },
   },

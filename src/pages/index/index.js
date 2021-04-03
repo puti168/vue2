@@ -18,7 +18,17 @@ import bootstrap from '@/core/bootstrap'
 import '@/core/lazy_use' // use lazy load components
 import './common/request-interceptor'
 
+import ProLayout, { PageHeaderWrapper } from '@ant-design-vue/pro-layout'
+import themePluginConfig from '/config/themePluginConfig'
+
 Vue.config.productionTip = false
+
+
+Vue.component('pro-layout', ProLayout)
+Vue.component('page-container', PageHeaderWrapper)
+Vue.component('page-header-wrapper', PageHeaderWrapper)
+
+window.umi_plugin_ant_themeVar = themePluginConfig.theme
 
 new Vue({
   router,
