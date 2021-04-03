@@ -37,6 +37,27 @@ const assetsCDN = {
   ]
 }
 
+let glob = require('glob') // 用于筛选文件
+
+// 工厂函数 - 配置pages实现多页面获取某文件夹下的html与js
+function handleEntry(entry) {
+  let entries = {}
+
+  glob.sync(entry).forEach(item => {
+    let entryTemplate = item.split('/').splice(-3)
+    let pageName = path.basename(entryTemplate[2], '.js')
+
+    entries[pageName] = {
+      entry: 'src/' + entryTemplate[0] + '/' + entryTemplate[1] + '/' + entryTemplate[2],
+      template: 'src/' + entryTemplate[0] + '/' + entryTemplate[1] + '/' + pageName +'.html',
+      title: pageName,
+      filename: pageName +'.html',
+    }
+  })
+  return entries
+}
+
+let pages = handleEntry('./src/pages/**?/*.js')
 // vue.config.js
 const vueConfig = {
   configureWebpack: {
@@ -57,6 +78,7 @@ const vueConfig = {
   chainWebpack: (config) => {
     config.resolve.alias
       .set('@$', resolve('src'))
+      .set('index', resolve('src/pages/index'))
 
     const svgRule = config.module.rule('svg')
     svgRule.uses.clear()
@@ -77,9 +99,13 @@ const vueConfig = {
     // if prod is on
     // assets require on cdn
     if (isProd) {
-      config.plugin('html').tap(args => {
-        args[0].cdn = assetsCDN
-        return args
+      Object.keys(pages).forEach((i, v) => {
+        config
+          .plugin(`html-${i}`)
+          .tap(args => {
+            args[0].cdn = assetsCDN;
+            return args
+          })
       })
     }
   },
@@ -112,61 +138,13 @@ const vueConfig = {
     //   }
     // }
     proxy: {
-      // '/api/ums': {
-      //   target: 'http://172.21.165.138:8080',
-      //   ws: false,
-      //   changeOrigin: true,
-      //   pathRewrite: {
-      //     "/api": ""
-      //   }
-      // },
-      // '/api/rms': {
-      //   target: 'http://172.21.165.138:8081',
-      //   ws: false,
-      //   changeOrigin: true,
-      //   pathRewrite: {
-      //     "/api": ""
-      //   }
-      // },
-      // '/api/tms': {
-      //   target: 'http://172.21.165.138:8081',
-      //   ws: false,
-      //   changeOrigin: true,
-      //   pathRewrite: {
-      //     "/api": ""
-      //   }
-      // },
-      // '/api/mms': {
-      //   target: 'http://172.21.165.138:8081',
-      //   ws: false,
-      //   changeOrigin: true,
-      //   pathRewrite: {
-      //     "/api": ""
-      //   }
-      // },
-      // '/api/bms': {
-      //   target: 'http://172.21.165.138:8081',
-      //   ws: false,
-      //   changeOrigin: true,
-      //   pathRewrite: {
-      //     "/api": ""
-      //   }
-      // },
-      '/api/wallet-server': {
-        target: 'http://dev-bd-wallet-server.bdgatewaynet.com',
-        ws: false,
-        changeOrigin: true,
-        pathRewrite:{
-          "/api/wallet-server":""
-        } 
-      },
       '/api': {
-        target: 'http://localhost:8080',
+        target: 'http://test-wallet.bdgatewaynet.com',
         ws: false,
         changeOrigin: true,
-        pathRewrite:{
-          "/api":""
-        } 
+        pathRewrite: {
+          // "/api": ""
+        }
       },
     }
   },
@@ -175,7 +153,8 @@ const vueConfig = {
   productionSourceMap: false,
   lintOnSave: false,
   // babel-loader no-ignore node_modules/*
-  transpileDependencies: []
+  transpileDependencies: [],
+  pages
 }
 
 // preview.pro.loacg.com only do not use in your production;

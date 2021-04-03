@@ -1,6 +1,5 @@
 import axios from 'axios'
 import { VueAxios } from './axios'
-import message from 'ant-design-vue/es/message'
 
 // 创建 axios 实例
 const request = axios.create({
@@ -9,12 +8,17 @@ const request = axios.create({
   timeout: 30000 // 请求超时时间
 })
 
-// 异常拦截处理器
 const errorHandler = (err) => {
   if (err.response) {
+    if (err.response.status === 401) {
+      window.location = 'login.html'
+    }
+    message.error(err.response.data)
+    console.error(err.response)
+  }else{
     message.error(err.message)
+    console.error(err)
   }
-  console.log(err)
   return Promise.reject(err)
 }
 

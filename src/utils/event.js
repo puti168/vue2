@@ -1,0 +1,1 @@
+export const GAME_TOP10_REPORT_TYPE = 'game:top10:report-type'

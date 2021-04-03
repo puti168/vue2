@@ -1,6 +1,8 @@
 import Vue from 'vue'
+
+import PermissionHelper from './auth'
 import ResonsePlugin from './response'
-import ApiResonsePlugin from './api-response'
+
 
 Vue.use(ResonsePlugin)
-Vue.use(ApiResonsePlugin)
+Vue.use(PermissionHelper)

@@ -3,8 +3,8 @@
 
 - 拉取项目代码
 ```bash
-git clone http://gitlab.bdgatewaynet.com/bd_web/wallet-demo-web.git
-cd wallet-demo-web
+git clone https://gitlab.ddyhr.com/ob-server/merchant-manager-web.git
+cd merchant-manager-web
 ```
 
 - 安装依赖

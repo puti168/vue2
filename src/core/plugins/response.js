@@ -21,25 +21,6 @@ export default {
             }
         }
         /**
-         * 分页响应处理方法
-         * @param {*} func 
-         * @param {*} before 
-         * @returns 
-         */
-        Vue.prototype.$handlePageResponse = function (func, before) {
-            return (resp) => {
-                const { code, data, msg, totalCount } = resp
-                if (before) {
-                    before(data, totalCount, msg)
-                }
-                if (code != 200) {
-                    this.$message.error(msg)
-                    return
-                }
-                return func(data, totalCount)
-            }
-        }
-        /**
          * 默认的响应处理方法
          * @param {预处理} before 
          * @returns 
