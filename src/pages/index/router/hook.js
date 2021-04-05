@@ -14,8 +14,10 @@ let currentPath = '/'
 
 router.beforeEach((to, from, next) => {
   currentPath = to.path
+  console.log(to, from)
   if (currentPath == '/index.html') {
-    next({ path: '/' })
+    const redirect = decodeURIComponent(to.query.redirect || '/')
+    next({ path: redirect })
     return
   }
   NProgress.start() // start progress bar
@@ -52,14 +54,14 @@ router.beforeEach((to, from, next) => {
           })
           // 失败时，获取用户信息失败时，调用登出，来清空历史保留信息
           store.dispatch('Logout').then(() => {
-            window.location = "/login.html"
+            window.location = `/login.html?redirect=${to.fullPath}`
           })
         })
     } else {
       next()
     }
   } else {
-    window.location = "/login.html"
+    window.location = `/login.html?redirect=${to.fullPath}`
   }
 })
 

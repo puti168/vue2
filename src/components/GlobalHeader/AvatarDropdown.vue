@@ -1,7 +1,11 @@
 <template>
   <a-dropdown v-if="currentUser && currentUser.name" placement="bottomRight">
     <span class="ant-pro-account-avatar">
-      <a-avatar size="small" src="https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png" class="antd-pro-global-header-index-avatar" />
+      <a-avatar
+        size="small"
+        src="https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png"
+        class="antd-pro-global-header-index-avatar"
+      />
       <span>{{ currentUser.name }}</span>
     </span>
     <template v-slot:overlay>
@@ -9,13 +13,13 @@
         <a-menu-item key="changePassword" @click="handleChangePassword">
           <a-icon type="desktop" />
           修改密码
-      <change-password-form
-        ref="changePasswordModal"
-        :visible.sync="editForm.visible"
-        :loading="editForm.loading"
-        :formData="editForm.data"
-        :type="editForm.type"
-      />
+          <change-password-form
+            ref="changePasswordModal"
+            :visible.sync="editForm.visible"
+            :loading="editForm.loading"
+            :formData="editForm.data"
+            :type="editForm.type"
+          />
         </a-menu-item>
         <a-menu-item key="logout" @click="handleLogout">
           <a-icon type="logout" />
@@ -39,40 +43,40 @@ export default {
   props: {
     currentUser: {
       type: Object,
-      default: () => null
+      default: () => null,
     },
     menu: {
       type: Boolean,
-      default: true
-    }
+      default: true,
+    },
   },
-  data(){
+  data() {
     return {
       editForm: { data: {}, visible: false, type: 'edit', loading: false },
     }
   },
   methods: {
-    handleLogout (e) {
+    handleLogout(e) {
       Modal.confirm({
         title: this.$t('layouts.usermenu.dialog.title'),
         content: this.$t('layouts.usermenu.dialog.content'),
         onOk: () => {
           return this.$store.dispatch('Logout').then(() => {
-            window.location = '/login.html'
+            window.location = `/login.html?redirect=${window.location.pathname}${window.location.search}`
           })
         },
-        onCancel () {}
+        onCancel() {},
       })
     },
-    handleChangePassword(e){
+    handleChangePassword(e) {
       this.editForm = {
-        data: { oldPwd: '', newPwd: '', confirmNewPwd:'' },
+        data: { oldPwd: '', newPwd: '', confirmNewPwd: '' },
         visible: true,
         type: 'edit',
         loading: false,
       }
-    }
-  }
+    },
+  },
 }
 </script>
 

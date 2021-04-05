@@ -108,7 +108,7 @@ export default {
         }).then(
           this.$handleResponse(
             () => {
-              window.location = 'index.html'
+              window.location = 'index.html' + window.location.search
             },
             () => (this.loading = false)
           )
@@ -173,7 +173,7 @@ export default {
   height: 50px;
   border-radius: 6px;
 }
-。bd-login-box {
+.bd-login-box {
   color: #ffffff;
 }
 .bd-login-box .logo {

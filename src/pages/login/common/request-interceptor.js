@@ -6,7 +6,7 @@ const errorHandler = (err) => {
   if (err.response) {
     if (err.response.status === 401) {
       store.dispatch('Logout').then(() => {
-        window.location = '/login.html'
+        window.location = `/login.html?redirect=${window.location.pathname}${window.location.search}`
       })
     }
     message.error(err.response.data)

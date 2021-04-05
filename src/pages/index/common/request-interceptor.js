@@ -19,7 +19,7 @@ const errorHandler = (error) => {
     }
     if (error.response.status === 401) {
       store.dispatch('Logout').then(() => {
-        window.location = '/login.html'
+        window.location = `/login.html?redirect=${window.location.pathname}${window.location.search}`
       })
     }
   }

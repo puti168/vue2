@@ -48,7 +48,11 @@
                 validator: validateConfirmPwd,
               }"
             >
-              <a-input-password v-model="formData.confirmNewPwd" autocomplete="off" placeholder="请再次输入新的登陆密码" />
+              <a-input-password
+                v-model="formData.confirmNewPwd"
+                autocomplete="off"
+                placeholder="请再次输入新的登陆密码"
+              />
             </a-form-model-item> </a-col
         ></a-row>
       </a-form-model>
@@ -111,7 +115,7 @@ export default {
         return
       }
       return this.$store.dispatch('Logout').then(() => {
-        window.location="/login.html"
+        window.location = `/login.html?redirect=${window.location.pathname}${window.location.search}`
       })
     },
   },
