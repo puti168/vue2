@@ -2,7 +2,7 @@
   <div class="rolespermission">
     <a-card>
       <searchForm ref="searchForm" :searchFunc="search"></searchForm>
-      <a-space size="8" class="bd-right" style="margin: -20px 0 20px 0">
+      <a-space size="8" class="bd-right" style="margin-bottom: 5px">
         <a-button type="primary" v-action:xzjs style="margin-right: 10px" @click="add"> 新增角色 </a-button>
         <a-button type="primary" v-action:plsc @click="roleDelete"> 批量删除空角色 </a-button>
       </a-space>

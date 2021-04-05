@@ -1,11 +1,14 @@
-
 <template>
   <a-form-model ref="searchForm" layout="inline" :model="searchForm">
     <a-form-model-item label="账号名称" class="titlebold" prop="adminName">
       <a-input v-model="searchForm.adminName" placeholder="请输入账号名称" />
     </a-form-model-item>
     <a-form-model-item label="创建时间" class="titlebold" prop="regisTime">
-      <date-range-picker v-model="searchForm.regisTime" :placeholder="['开始时间', '结束时间']" @change="timeData" />
+      <date-range-picker
+        v-model="searchForm.regisTime"
+        :placeholder="['开始时间', '结束时间']"
+        @change="timeData"
+      />
     </a-form-model-item>
     <a-form-model-item label="创建人" class="titlebold" prop="createdBy">
       <a-input v-model="searchForm.createdBy" placeholder="请输入创建人" />
@@ -17,25 +20,43 @@
         <a-select-option :value="1">启用</a-select-option>
       </a-select>
     </a-form-model-item>
-    <a-form-model-item label="所属角色" class="titlebold" prop="roleId" v-show="roleList.length">
-      <a-select v-model="searchForm.roleId" style="width: 180px" placeholder="请选择角色" @change="modalroleChange">
+    <a-form-model-item
+      label="所属角色"
+      class="titlebold"
+      prop="roleId"
+      v-show="roleList.length"
+    >
+      <a-select
+        v-model="searchForm.roleId"
+        style="width: 180px"
+        placeholder="请选择角色"
+        @change="modalroleChange"
+      >
         <a-select-option value="">全部角色</a-select-option>
-        <a-select-option v-for="(item, index) in roleList" :value="item.roleId" :key="index + 'a'">
+        <a-select-option
+          v-for="(item, index) in roleList"
+          :value="item.roleId"
+          :key="index + 'a'"
+        >
           {{ item.roleName }}
         </a-select-option>
       </a-select>
     </a-form-model-item>
     <a-form-model-item class="titlebold">
-      <a-button type="primary" v-action:ymck @click="submitForm('searchForm')"> 查询 </a-button>
-      <a-button style="margin-left: 10px" @click="resetForm('searchForm')"> 重置 </a-button>
+      <a-button type="primary" v-action:ymck @click="submitForm('searchForm')">
+        查询
+      </a-button>
+      <a-button style="margin-left: 10px" @click="resetForm('searchForm')">
+        重置
+      </a-button>
     </a-form-model-item>
   </a-form-model>
 </template>
 <script>
-import moment from 'moment'
-import { DateRangePicker } from '@/components'
+import moment from "moment";
+import { DateRangePicker } from "@/components";
 export default {
-  name: 'memberSearch',
+  name: "memberSearch",
   components: { DateRangePicker },
   props: {
     searchFunc: {
@@ -48,59 +69,59 @@ export default {
   data() {
     return {
       searchForm: {
-        adminName: '',
-        startTime: '',
-        endTime: '',
-        createdBy: '',
-        roleId: '',
-        roleName: '',
-        status: '',
+        adminName: "",
+        startTime: "",
+        endTime: "",
+        createdBy: "",
+        roleId: "",
+        roleName: "",
+        status: "",
         regisTime: [undefined, undefined],
       },
-    }
+    };
   },
   methods: {
     fetch() {
-      this.searchFunc()
+      this.searchFunc();
     },
     timeData(date) {
       if (date[0]) {
-        this.searchForm.startTime = date[0].format('YYYY-MM-DD')
-        this.searchForm.endTime = date[1].format('YYYY-MM-DD')
+        this.searchForm.startTime = date[0].format("YYYY-MM-DD");
+        this.searchForm.endTime = date[1].format("YYYY-MM-DD");
       } else {
-        this.searchForm.startTime = ''
-        this.searchForm.endTime = ''
+        this.searchForm.startTime = "";
+        this.searchForm.endTime = "";
       }
     },
     modalroleChange(val) {
-      console.log(val)
-      this.searchForm.roleId = val
-      if (val == '') {
-        this.searchForm.roleName = ''
+      console.log(val);
+      this.searchForm.roleId = val;
+      if (val == "") {
+        this.searchForm.roleName = "";
       }
       this.roleList.forEach((e) => {
         if (e.roleId === val) {
-          this.searchForm.roleName = e.roleName
+          this.searchForm.roleName = e.roleName;
         }
-      })
+      });
     },
     submitForm() {
       this.$refs.searchForm.validate((value) => {
-        this.fetch(1, this.pageSize)
-      })
+        this.fetch(1, this.pageSize);
+      });
     },
     resetForm() {
-      this.searchForm.startTime = ''
-      this.searchForm.endTime = ''
-      this.searchForm.roleName = ''
-      this.$refs.searchForm.resetFields()
-      this.fetch(1, this.pageSize)
+      this.searchForm.startTime = "";
+      this.searchForm.endTime = "";
+      this.searchForm.roleName = "";
+      this.$refs.searchForm.resetFields();
+      this.fetch(1, this.pageSize);
     },
   },
   mounted() {
-    this.fetch(1, this.pageSize)
+    this.fetch(1, this.pageSize);
   },
-}
+};
 </script>
 
 <style lang="less" scoped>
@@ -108,13 +129,12 @@ export default {
   min-height: 360px;
 }
 .titlebold {
-  line-height: 32px ;
   margin-bottom: 20px;
 }
-.falotright {
-  float: right;
-  top: 20px;
-  margin-right: 0;
+.titlebold /deep/.ant-form-item-label,
+.titlebold /deep/.ant-form-item-control {
+  height: 32px !important;
+  line-height: 32px !important;
 }
 .titlebold /deep/ .ant-form-item-label > label {
   color: #3f3f3f;
@@ -146,4 +166,3 @@ export default {
   text-align: center;
 }
 </style>
-
