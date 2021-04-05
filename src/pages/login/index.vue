@@ -108,7 +108,7 @@ export default {
         }).then(
           this.$handleResponse(
             () => {
-              window.location = 'index.html' + window.location.search
+              window.location = `/index.html${window.location.search}${window.location.hash}`
             },
             () => (this.loading = false)
           )

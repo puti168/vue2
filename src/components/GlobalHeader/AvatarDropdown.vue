@@ -62,7 +62,7 @@ export default {
         content: this.$t('layouts.usermenu.dialog.content'),
         onOk: () => {
           return this.$store.dispatch('Logout').then(() => {
-            window.location = `/login.html?redirect=${window.location.pathname}${window.location.search}`
+            window.location = `/login.html?redirect=${window.location.pathname}${window.location.search}${window.location.hash}`
           })
         },
         onCancel() {},

@@ -257,7 +257,6 @@ export default {
       this.fetch(1, this.pageSize);
     },
     fetch(page, pageSize) {
-      console.log(page, pageSize);
       this.tableLoading = true;
       this.page = page;
       this.pageSize = pageSize;

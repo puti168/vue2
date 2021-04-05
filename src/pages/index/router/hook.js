@@ -14,10 +14,9 @@ let currentPath = '/'
 
 router.beforeEach((to, from, next) => {
   currentPath = to.path
-  console.log(to, from)
   if (currentPath == '/index.html') {
     const redirect = decodeURIComponent(to.query.redirect || '/')
-    next({ path: redirect })
+    next({ path: redirect, hash: to.hash })
     return
   }
   NProgress.start() // start progress bar
