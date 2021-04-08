@@ -1,0 +1,4 @@
+diff a/src/views/merchantUser/index.vue b/src/views/merchantUser/index.vue	(rejected hunks)
+@@ -297 +297 @@ export default {
+-		
++
