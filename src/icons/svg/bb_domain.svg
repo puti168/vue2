@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="28px" height="22px" viewBox="0 0 28 22" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 61.1 (89650) - https://sketch.com -->
+    <desc>Created with Sketch.</desc>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round">
+        <g id="导航栏" transform="translate(-121.000000, -2291.000000)" stroke="#FFFFFF" stroke-width="1.08">
+            <g id="编组" transform="translate(122.000000, 2292.000000)">
+                <polyline id="Stroke-1" points="0.000138461538 -0.000207692308 2.07152308 4.26856154 4.02521538 -0.000207692308 5.8626 4.26856154 7.81698462 -0.000207692308"></polyline>
+                <polyline id="Stroke-3" points="9.32330769 -0.000207692308 11.3946923 4.26856154 13.3483846 -0.000207692308 15.1857692 4.26856154 17.1401538 -0.000207692308"></polyline>
+                <polyline id="Stroke-5" points="18.6005077 -0.000207692308 20.6718923 4.26856154 22.6262769 -0.000207692308 24.4629692 4.26856154 26.4173538 -0.000207692308"></polyline>
+                <polygon id="Stroke-7" points="10.9644923 9.77656154 13.8202615 18.7433308 15.1723385 13.9837154 19.9201846 12.6441"></polygon>
+                <line x1="20.8041923" y1="19.6277538" x2="15.3522692" y2="14.1024462" id="Stroke-9"></line>
+            </g>
+        </g>
+    </g>
+</svg>
