@@ -86,7 +86,7 @@ const actions = {
 							parentRoutes[index].children.push({
 								path: element.path,
 								name: element.id,
-								component: () => import(`@/views${element.path}/index`),
+								component: (resolve) => require(['@/views' + element.path + '/index'], resolve),
 								meta: {
 									title: element.id,
 									icon: element.icon
@@ -103,7 +103,7 @@ const actions = {
 					item.children.push({
 						path: item.path,
 						name: item.id,
-						component: () => import(`@/views${item.path}/index`),
+						component: (resolve) => require(['@/views' + item.path + '/index'], resolve),
 						meta: {
 							title: item.id,
 							icon: item.icon
