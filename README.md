@@ -1,7 +1,5 @@
 
-安全方面的秘钥管理
-=======
-# auth-manager-web
+# merchant-manager-web
 
 > 项目基于 vue-admin-template 构建的一套具有权限系统的后台管理系统
 

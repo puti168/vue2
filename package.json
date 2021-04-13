@@ -1,8 +1,8 @@
 {
-	"name": "vue-admin-secret-manage",
+	"name": "vue-admin-merchant-manager-web",
 	"version": "1.0.0",
-	"description": "安全方面的秘钥管理",
-	"author": "ll",
+	"description": "综合管理后台",
+	"author": "viper",
 	"license": "MIT",
 	"scripts": {
 		"dev": "vue-cli-service serve",
