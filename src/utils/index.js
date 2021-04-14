@@ -8,7 +8,7 @@
  * @param {string} cFormat
  * @returns {string}
  */
-export function parseTime(time, cFormat) {
+ export function parseTime(time, cFormat) {
 	if (arguments.length === 0) {
 		return null
 	}
@@ -110,35 +110,88 @@ export function param2Obj(url) {
 			'"}'
 	)
 }
-export function downloadData({ data, name }) {
-	let fileURL = null
-	if (data instanceof Object) {
-		fileURL = window.URL.createObjectURL(new Blob([data]))
-	} else {
-		fileURL = data
+
+/**
+ * 格式化金钱数字
+ * @param {number} num
+ * @param {Boolean} precision
+ */
+export function formatCurrency(num, precision = true) {
+	if (String(num).includes('.')) precision = true
+	if (num === undefined || num === null) {
+		return '-'
 	}
-	var fileLink = document.createElement('a')
+	if (num === 0 || num === '0') return 0
+	num = num.toString().replace(/\$|\,/g, '')
+	if (isNaN(num)) num = '0'
+	const sign = +num === (num = Math.abs(num))
+	num = Math.floor(num * 100 + 0.50000000001)
+	let cents = num % 100
+	num = Math.floor(num / 100).toString()
+	if (cents < 10) cents = '0' + cents
+	for (var i = 0; i < Math.floor((num.length - (1 + i)) / 3); i++) {
+		num =
+			num.substring(0, num.length - (4 * i + 3)) +
+			',' +
+			num.substring(num.length - (4 * i + 3))
+	}
+	return (sign ? '' : '-') + num + (precision ? '.' + cents : '')
+}
 
-	fileLink.href = fileURL
-	fileLink.setAttribute('download', name || 'pic')
-	fileLink.setAttribute('target', '_blank')
-	document.body.appendChild(fileLink)
+/**
+ * excel格式校验
+ * @param {file:file} file
+ */
+export function validateExcel(file) {
+	if (!/\.(csv|xlsx|xls|XLSX|XLS)$/.test(file.name)) {
+		return false
+	}
+	return true
+}
 
-	fileLink.click()
+/**
+ * 给正负数加颜色
+ * @param {numberVal} numberVal
+ */
+export function colorNum(numberVal) {
+	let color = ''
+	if (!numberVal) {
+		return color
+	}
+	if (numberVal > 0) {
+		color = 'danger'
+	} else if (numberVal < 0) {
+		color = 'success'
+	}
+	return color
+}
+
+/**
+ * @desc 判断一个对象是否为空
+ * @param {Object} obj 对象
+ * @return {Boolean}
+ */
+export function checkNullObj(obj) {
+	return Object.keys(obj).length === 0
 }
 export function isEmptyObj(val) {
 	return Object.keys(val).length === 0 && val.constructor === Object
 }
 
-export function getCurrentDate() {
-	const start = new Date(
-		new Date(new Date().toLocaleDateString()).getTime()
-	).getTime() // 当天0点
-	const end = new Date(
-		new Date(new Date().toLocaleDateString()).getTime() +
-			24 * 60 * 60 * 1000 -
-			1
-	).getTime() // 当天23:59
-	const time = [start, end]
-	return time
+/**
+ * 判断输入的url是否正确
+ * @param {String} str_url
+ */
+export function IsURL(str_url) {
+	return /^(?:(?:https?|ftp):\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,}))\.?)(?::\d{2,5})?(?:[/?#]\S*)?$/i.test(
+		str_url
+	)
+}
+
+/**
+ * @desc 判断金额
+ * @param {Number} num 数字
+ */
+export function isNum(num) {
+	return /^(([1-9][0-9]*)|(([0]\.\d{0,2}|[1-9][0-9]*\.\d{0,2})))$/.test(num)
 }

@@ -1,15 +1,30 @@
 <template>
 	<section class="app-main">
 		<transition name="fade-transform" mode="out-in">
-			<router-view :key="key" />
+			<keep-alive :include="cachedViews">
+				<router-view :key="key" />
+			</keep-alive>
 		</transition>
+		<ModifyPassword :edit-visible="editVisible" />
 	</section>
 </template>
 
 <script>
+import ModifyPassword from './ModifyPassword'
 export default {
 	name: 'AppMain',
+	components: { ModifyPassword },
 	computed: {
+		editVisible() {
+			console.log(
+				'this.$store.state.app.modifyVisible :',
+				this.$store.state.app.modifyVisible
+			)
+			return this.$store.state.app.modifyVisible
+		},
+		cachedViews() {
+			return this.$store.state.tagsView.cachedViews
+		},
 		key() {
 			return this.$route.path
 		}

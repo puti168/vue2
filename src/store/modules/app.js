@@ -9,7 +9,9 @@ const state = {
 		withoutAnimation: false
 	},
 	device: 'desktop',
-	language: getLanguage()
+	language: getLanguage(),
+	// 修改密码弹窗
+	modifyVisible: false
 }
 
 const mutations = {
@@ -36,6 +38,9 @@ const mutations = {
 	SET_LANGUAGE: (state, language) => {
 		state.language = language
 		Cookies.set('language', language)
+	},
+	SET_MODIFY: (state, value) => {
+		state.modifyVisible = value
 	}
 }
 
@@ -51,6 +56,9 @@ const actions = {
 	},
 	setLanguage({ commit }, language) {
 		commit('SET_LANGUAGE', language)
+	},
+	setModify({ commit }, value) {
+		commit('SET_MODIFY', value)
 	}
 }
 
