@@ -1,7 +1,7 @@
 import defaultSettings from '@/settings'
 import i18n from '@/utils/lang'
 
-const title = defaultSettings.title || 'zr - b2b'
+const title = defaultSettings.title
 
 export default function getPageTitle(key) {
 	const hasKey = i18n.te(`route.${key}`)

@@ -2,11 +2,11 @@
 	<div class="sidebar-logo-container" :class="{'collapse':collapse}">
 		<transition name="sidebarLogoFade">
 			<router-link v-if="collapse" key="collapse" class="sidebar-logo-link" to="/">
-				<svg-icon icon-class="bb_logo2" class="sidebar-logo" />
+				<svg-icon icon-class="bb_logo" class="sidebar-logo" />
 				<div class="divide-line divide-line-collapse"></div>
 			</router-link>
 			<router-link v-else key="expand" class="sidebar-logo-link" to="/">
-				<svg-icon icon-class="bb_logo2" class="sidebar-logo" />
+				<svg-icon icon-class="bb_logo" class="sidebar-logo" />
 				<div class="divide-line"></div>
 			</router-link>
 		</transition>
@@ -15,6 +15,7 @@
 
 <script>
 import bb_logo from '../../../assets/img/bb_logo.png'
+
 export default {
 	name: 'SidebarLogo',
 	props: {
@@ -25,7 +26,7 @@ export default {
 	},
 	data() {
 		return {
-			title: '真人娱乐管理后台',
+			title: '游戏管理后台',
 			logo: bb_logo
 		}
 	}
@@ -62,6 +63,7 @@ export default {
 	& .sidebar-logo-link {
 		height: 100%;
 		width: 100%;
+
 		& .sidebar-logo {
 			width: 80px;
 			height: 80px;

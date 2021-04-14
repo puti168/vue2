@@ -1,42 +1,50 @@
 import Vue from 'vue'
-import ECharts from 'vue-echarts'
-import 'echarts/lib/chart/line'
-import 'echarts/lib/component/polar'
 import 'normalize.css/normalize.css' // A modern alternative to CSS resets
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import '@/styles/index.scss' // global css
-
-import App from './App'
+import { parseTime } from '@/utils/index'
 import store from './store'
-import router from './router'
 import i18n from './utils/lang'
 import '@/icons' // icon
 import '@/permission' // permission control
 import apiInstall from '@/utils/apiInstall'
-import { hasPermission } from '@/mixins/permission'
-// 浏览器不兼容提示下载
+import { hasPermission } from '@/mixins/methods'
+import Viewer from 'v-viewer'
+import VueClipboard from 'vue-clipboard2' // 引入复制到剪切板插件
+import 'viewerjs/dist/viewer.css'
 import { supportBrower } from './utils/judgeBrower'
-// import ErrReport from './utils/errReport'
-
+import App from './App'
+import router from './router'
 supportBrower()
 
-// 生产环境才上传
-// if (process.env.NODE_ENV !== 'development') {
-// 	const errReport = new ErrReport({
-// 		vue: Vue,
-// 		projectName: '业务监控系统'
-// 	})
-// 	errReport.handleErrReport()
-// }
+Vue.use(VueClipboard) // 挂载复制到剪切板插件
 
-// 引入echarts
-Vue.component('v-chart', ECharts)
+Vue.use(Viewer)
+Viewer.setDefaults({
+	// inline: true,
+	// button: true,
+	// navbar: true,
+	// title: true,
+	toolbar: true,
+	// tooltip: false,
+	// movable: true,
+	// zoomable: true,
+	// rotatable: true,
+	// scalable: true,
+	// transition: true,
+	// fullscreen: false,
+	// keyboard: true,
+	url: 'data-source'
+})
 
 // 多语言支持
 Vue.use(ElementUI, {
 	i18n: (key, value) => i18n.t(key, value)
 })
+
+// 时间格式化
+Vue.filter('dateformat', parseTime)
 
 // 加入api插件
 Vue.use(apiInstall)

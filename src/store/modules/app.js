@@ -3,11 +3,15 @@ import { getLanguage } from '@/utils/lang/index'
 
 const state = {
 	sidebar: {
-		opened: Cookies.get('sidebarStatus') ? !!+Cookies.get('sidebarStatus') : true,
+		opened: Cookies.get('sidebarStatus')
+			? !!+Cookies.get('sidebarStatus')
+			: true,
 		withoutAnimation: false
 	},
 	device: 'desktop',
-	language: getLanguage()
+	language: getLanguage(),
+	// 修改密码弹窗
+	modifyVisible: false
 }
 
 const mutations = {
@@ -28,12 +32,15 @@ const mutations = {
 	TOGGLE_DEVICE: (state, device) => {
 		state.device = device
 	},
-	GAME_TYPES: (state, types) => {
-		state.types = types
+	GET_LOOKUPDATA: (state, data) => {
+		state.lookUpData = data
 	},
 	SET_LANGUAGE: (state, language) => {
 		state.language = language
 		Cookies.set('language', language)
+	},
+	SET_MODIFY: (state, value) => {
+		state.modifyVisible = value
 	}
 }
 
@@ -47,11 +54,11 @@ const actions = {
 	toggleDevice({ commit }, device) {
 		commit('TOGGLE_DEVICE', device)
 	},
-	setGameTypes({ commit }, types) {
-		commit('GAME_TYPES', types)
-	},
 	setLanguage({ commit }, language) {
 		commit('SET_LANGUAGE', language)
+	},
+	setModify({ commit }, value) {
+		commit('SET_MODIFY', value)
 	}
 }
 

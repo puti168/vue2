@@ -2,18 +2,21 @@
 const path = require('path')
 const VersionPlugin = require('./version-plugin')
 const defaultSettings = require('./src/settings.js')
+
 function resolve(dir) {
 	return path.join(__dirname, dir)
 }
 
-const name = defaultSettings.title || 'b2b management' // page title
+const name = defaultSettings.title // page title
 
-const port = process.env.port || process.env.npm_config_port || 10086 // dev port
-
-// http://vuejs.res.lzjshop.com/common-static/nprogress/index.css
+// console proxyPath
+const consoleProxy = (req, res, proxyOptions) => {
+	console.log(`|- target -|  ${proxyOptions.target}${req.url}`)
+}
+// All configuration item explanations can be find in https://cli.vuejs.org/config/
+const port = process.env.port || process.env.npm_config_port || 3000 // dev port
 
 module.exports = {
-	transpileDependencies: ['vue-echarts', 'resize-detector'],
 	/**
 	 * You will need to set publicPath if you plan to deploy your site under a sub path,
 	 * for example GitHub Pages. If you plan to deploy your site to https://foo.github.io/bar/,
@@ -33,45 +36,30 @@ module.exports = {
 			warnings: false,
 			errors: true
 		}
+		// proxy: {
+		// 	// change xxx-api/login => mock/login
+		// 	// detail: https://cli.vuejs.org/config/#devserver-proxy
+		// 	[process.env.VUE_APP_BASE_API]: {
+		// 		target: `http://localhost:${port}/mock`,
+		// 		changeOrigin: true,
+		// 		pathRewrite: {
+		// 			['^' + process.env.VUE_APP_BASE_API]: ''
+		// 		},
+		// 		bypass: consoleProxy
+		// 	}
+		// },
+		// after: require('./mock/mock-server.js')
 	},
 	configureWebpack: (config) => {
-		console.log(
-			[
-				'                   _ooOoo_',
-				'                  o8888888o',
-				'                  88" . "88',
-				'                  (| -_- |)',
-				'                  O\\  =  /O',
-				"               ____/`---'\\____",
-				"             .'  \\\\|     |//  `.",
-				'            /  \\\\|||  :  |||//  \\',
-				'           /  _||||| -:- |||||-  \\',
-				'           |   | \\\\\\  -  /// |   |',
-				"           | \\_|  ''\\---/''  |   |",
-				'           \\  .-\\__  `-`  ___/-. /',
-				"         ___`. .'  /--.--\\  `. . __",
-				'      ."" \'<  `.___\\_<|>_/___.\'  >\'"".',
-				'     | | :  `- \\`.;`\\ _ /`;.`/ - ` : | |',
-				'     \\  \\ `-.   \\_ __\\ /__ _/   .-` /  /',
-				"======`-.____`-.___\\_____/___.-`____.-'======",
-				"                   `=---='",
-				'^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^',
-				'         佛祖保佑       永无BUG'
-			].join('\n')
-		)
 		// provide the app's title in webpack's name field, so that
 		// it can be accessed in index.html to inject the correct title.
 		config.name = name
 		config.resolve.alias = {
 			'@': resolve('src')
 		}
-		if (process.env.NODE_ENV !== 'development') {
-			config.optimization
-			config.optimization.minimizer
-				? (config.optimization.minimizer[0].options.terserOptions.compress.drop_console = true)
-				: ''
-		}
 		if (process.env.NODE_ENV === 'production') {
+			config.optimization.minimizer[0].options.terserOptions.compress.drop_console = true
+
 			// 加入生成版本插件
 			config.plugins.push(new VersionPlugin({}))
 		}
@@ -115,8 +103,6 @@ module.exports = {
 			)
 
 		config.when(process.env.NODE_ENV !== 'development', (config) => {
-			// 添加dll
-			// dllReference(config)
 			config
 				.plugin('ScriptExtHtmlWebpackPlugin')
 				.after('html')

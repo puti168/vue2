@@ -31,7 +31,7 @@ export function getLanguage() {
 	// if has not choose language
 	const language = (
 		navigator.language || navigator.browserLanguage
-	).toLowerCase() // 这里取了浏览器默认语言
+	).toLowerCase()
 	const locales = Object.keys(messages)
 	for (const locale of locales) {
 		if (language.indexOf(locale) > -1) {
@@ -43,7 +43,7 @@ export function getLanguage() {
 const i18n = new VueI18n({
 	// set locale
 	// options: en | zh | es
-	locale: getLanguage() || 'zh',
+	locale: getLanguage(),
 	// set locale messages
 	messages
 })

@@ -5,12 +5,12 @@
 				v-for="tag in visitedViews"
 				ref="tag"
 				:key="tag.path"
-				:class="isActive(tag)?'active':''"
+				:class="isActive(tag) ? 'active' : ''"
 				:to="{ path: tag.path, query: tag.query, fullPath: tag.fullPath }"
 				tag="span"
 				class="tags-view-item"
 				@click.middle.native="closeSelectedTag(tag)"
-				@contextmenu.prevent.native="openMenu(tag,$event)"
+				@contextmenu.prevent.native="openMenu(tag, $event)"
 			>
 				{{ tag.title }}
 				<span
@@ -20,6 +20,15 @@
 				/>
 			</router-link>
 		</scroll-pane>
+		<!-- <ul v-show="visible" :style="{left:left+'px',top:top+'px'}" class="contextmenu">
+			<li @click="refreshSelectedTag(selectedTag)">Refresh</li>
+			<li
+				v-if="!(selectedTag.meta&&selectedTag.meta.affix)"
+				@click="closeSelectedTag(selectedTag)"
+			>Close</li>
+			<li @click="closeOthersTags">Close Others</li>
+			<li @click="closeAllTags(selectedTag)">Close All</li>
+		</ul>-->
 	</div>
 </template>
 
@@ -40,10 +49,6 @@ export default {
 	},
 	computed: {
 		visitedViews() {
-			console.log(
-				'this.$store.state.tagsView.visitedViews :>> ',
-				this.$store.state.tagsView.visitedViews
-			)
 			return this.$store.state.tagsView.visitedViews
 		},
 		routes() {
@@ -94,6 +99,7 @@ export default {
 		},
 		initTags() {
 			const affixTags = (this.affixTags = this.filterAffixTags(this.routes))
+			console.log('affixTags :', affixTags)
 			for (const tag of affixTags) {
 				// Must have tag name
 				if (tag.name) {
@@ -134,11 +140,13 @@ export default {
 			})
 		},
 		closeSelectedTag(view) {
-			this.$store.dispatch('tagsView/delView', view).then(({ visitedViews }) => {
-				if (this.isActive(view)) {
-					this.toLastView(visitedViews, view)
-				}
-			})
+			this.$store
+				.dispatch('tagsView/delView', view)
+				.then(({ visitedViews }) => {
+					if (this.isActive(view)) {
+						this.toLastView(visitedViews, view)
+					}
+				})
 		},
 		closeOthersTags() {
 			this.$router.push(this.selectedTag)
@@ -163,12 +171,7 @@ export default {
 			} else {
 				// now the default is to redirect to the home page if there is no tags-view,
 				// you can adjust it according to your needs.
-				if (view.name === 'Dashboard') {
-					// to reload home page
-					this.$router.replace({ path: '/redirect' + view.fullPath })
-				} else {
-					this.$router.push('/')
-				}
+				this.$router.push('/')
 			}
 		},
 		openMenu(tag, e) {

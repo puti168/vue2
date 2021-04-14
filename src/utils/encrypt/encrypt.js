@@ -11,7 +11,7 @@ const pako = require('pako')
 
 const dataHandle = function() {}
 // 当前的默认密钥
-const defaultKey = '0123456789ABCDEF'
+const defaultKey = 'prea7u0q560igfq0'
 /**
  * 数据加密
  * param { data } 明文JSON字符串

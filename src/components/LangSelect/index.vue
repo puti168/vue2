@@ -23,8 +23,14 @@ export default {
 			this.$i18n.locale = lang
 			this.$store.dispatch('app/setLanguage', lang)
 			this.$message({
-				message: 'Switch Language Success',
-				type: 'success'
+				message:
+					lang === 'zh'
+						? '语言切换成功'
+						: lang === 'tw'
+						? '語言切換成功'
+						: 'Switch Language Success',
+				type: 'success',
+				duration: 2000
 			})
 		}
 	}

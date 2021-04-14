@@ -1,112 +1,76 @@
 const serviceMap = [
 	{
-		id: '2000',
-		path: '/dealer',
+		id: '5400',
+		path: '/authority',
+		icon: 'bb_rolemanage',
+		title: '权限管理'
+	},
+	{
+		id: '5410',
+		parentId: '5400',
+		path: '/authority/management',
+		icon: 'bb_defaultrole',
+		title: '权限配置'
+	},
+	{
+		id: '5100',
+		path: '/securityAudit',
+		icon: 'audits',
+		title: '审计管理'
+	},
+	{
+		id: '5110',
+		parentId: '5100',
+		path: '/securityAudit/dataAudit',
+		icon: 'audit',
+		title: '数据脱敏'
+	},
+	{
+		id: '5112',
+		parentId: '5100',
+		path: '/securityAudit/monitorAudit',
+		icon: 'audit',
+		title: '监控审计'
+	},
+	{
+		id: '5200',
+		path: '/secretManage',
 		icon: 'form',
-		isRedirect: true,
-		title: '荷官管理'
+		title: '密钥管理'
 	},
 	{
-		id: '2001',
-		parentId: '2000',
-		icon: 'form',
-		path: '/dealer'
+		id: '5210',
+		parentId: '5200',
+		path: '/secretManage/list',
+		icon: 'secret-list',
+		title: '密钥维护'
 	},
 	{
-		id: '2002',
-		parentId: '2000',
-		icon: 'form',
-		path: '/dealer'
-	},
-	{
-		id: '2003',
-		parentId: '2000',
-		icon: 'form',
-		path: '/dealer'
-	},
-	{
-		id: '2004',
-		parentId: '2000',
-		icon: 'form',
-		path: '/dealer'
-	},
-	{
-		id: '2100',
-		path: '/cards',
-		icon: 'form',
-		title: '现场纸牌管理'
-	},
-	{
-		id: '2110',
-		parentId: '2100',
-		path: '/cards'
-	},
-	{
-		id: '2120',
-		parentId: '2100',
-		path: '/cards'
-	},
-	{
-		id: '2130',
-		parentId: '2100',
-		path: '/cards'
-	},
-	{
-		id: '2140',
-		parentId: '2100',
-		path: '/cards'
-	},
-	{
-		id: '2200',
-		path: '/water',
-		icon: 'form',
-		title: '水牌管理'
-	},
-	{
-		id: '2210',
-		parentId: '2200',
-		path: '/water'
-	},
-	{
-		id: '2220',
-		parentId: '2200',
-		path: '/water'
-	},
-	{
-		id: '2300',
+		id: '5300',
 		path: '/system',
-		icon: 'form',
+		icon: 'bb_management_system',
 		title: '系统管理'
 	},
 	{
-		id: '2310',
-		parentId: '2300',
-		path: '/system'
+		id: '5310',
+		parentId: '5300',
+		path: '/system/changePassword',
+		icon: 'bb_blacklist',
+		title: '修改密码'
 	},
 	{
-		id: '2320',
-		parentId: '2300',
-		path: '/system'
+		id: '5320',
+		parentId: '5300',
+		path: '/system/account',
+		icon: 'bb_management_user',
+		title: '账号管理'
 	},
 	{
-		id: '2330',
-		parentId: '2300',
-		path: '/system'
-	},
-	{
-		id: '2340',
-		parentId: '2300',
-		path: '/system'
-	},
-	{
-		id: '2350',
-		parentId: '2300',
-		path: '/system'
-	},
-	{
-		id: '2360',
-		parentId: '2300',
-		path: '/system'
+		id: '5330',
+		parentId: '5300',
+		path: '/system/role',
+		icon: 'bb_management_role',
+		title: '角色管理'
 	}
 ]
 export default serviceMap

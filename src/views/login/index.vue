@@ -9,77 +9,69 @@
 			label-position="left"
 		>
 			<div class="login-content">
-				<h3>
-					<span>
-						<svg-icon icon-class="bb_logo" class="login-logo" />商户管理监控后台
+				<div class="title-container">
+					<h3 class="title">
+						<svg-icon icon-class="l_logo" class="login_logo" />
+						{{ $t('login.title') }}
+					</h3>
+				</div>
+				<el-form-item prop="username">
+					<span class="svg-container">
+						<svg-icon icon-class="user" class="svg-active" />
 					</span>
-				</h3>
-				<el-row>
-					<el-form-item prop="username">
-						<span class="svg-container">
-							<svg-icon icon-class="user" class="svg-active" />
-						</span>
-						<el-input
-							ref="username"
-							v-model="loginForm.username"
-							:placeholder="$t('login.username')"
-							name="username"
-							type="text"
-							tabindex="1"
-							auto-complete="off"
-							maxlength="12"
-							:readonly="firstLogin"
-						/>
-					</el-form-item>
-				</el-row>
-				<el-row>
-					<el-form-item prop="password">
-						<span class="svg-container">
-							<svg-icon icon-class="password" class="svg-active" />
-						</span>
-						<el-input
-							:key="password"
-							ref="password"
-							v-model="loginForm.password"
-							:type="password"
-							:placeholder="$t('login.password')"
-							name="password"
-							tabindex="2"
-							auto-complete="on"
-							@keyup.enter.native="handleLogin"
-						/>
-						<span class="show-pwd" @click="showPwd('password')">
-							<svg-icon :icon-class="password === 'password' ? 'eye' : 'eye-open'" />
-						</span>
-					</el-form-item>
-				</el-row>
-				<el-row :gutter="10">
-					<el-col :span="16">
-						<el-form-item prop="vaildCode">
-							<span class="svg-container">
-								<svg-icon icon-class="user" class="svg-active" fill="currentColor" />
-							</span>
-							<el-input
-								ref="vaildCode"
-								v-model="loginForm.vaildCode"
-								placeholder="验证码"
-								name="security"
-								type="text"
-								tabindex="3"
-								auto-complete="on"
-							/>
-						</el-form-item>
-					</el-col>
-					<el-col :span="8">
-						<img
-							:src="`${baseUrl}/user/captcha?h=50&w=145`"
-							class="kaptcha"
-							alt
-							@click="timestamp=+new Date()"
-						/>
-					</el-col>
-				</el-row>
-				<div class="login-btn" @keyup.enter="handleLogin" @click.prevent="handleLogin">登录</div>
+					<el-input
+						ref="username"
+						v-model="loginForm.username"
+						:placeholder="$t('login.username')"
+						name="username"
+						type="text"
+						tabindex="1"
+						auto-complete="off"
+					/>
+				</el-form-item>
+
+				<el-form-item prop="password">
+					<span class="svg-container">
+						<svg-icon icon-class="password" class="svg-active" />
+					</span>
+					<el-input
+						:key="passwordType"
+						ref="password"
+						v-model="loginForm.password"
+						:type="passwordType"
+						:placeholder="$t('login.password')"
+						name="password"
+						tabindex="2"
+						auto-complete="off"
+						@keyup.enter.native="handleLogin"
+					/>
+					<span class="show-pwd" @click="showPwd">
+						<svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
+					</span>
+				</el-form-item>
+				<el-form-item prop="googleAuth">
+					<span class="svg-container">
+						<svg-icon icon-class="security" class="svg-active" />
+					</span>
+					<el-input
+						ref="security"
+						v-model="loginForm.googleAuth"
+						placeholder="请输入谷歌验证码"
+						name="googleAuth"
+						type="text"
+						tabindex="3"
+						@keyup.enter.native="handleLogin"
+					/>
+				</el-form-item>
+
+				<div class="login-btn" @click.prevent="handleLogin">{{ $t('login.logIn') }}</div>
+
+				<!-- 后端还没做翻译，暂时隐藏
+				<div class="switch-language flex-bc">
+					<a :class="{ aActive: language === 'zh' }" @click.prevent="handleSetLanguage('zh')">简体中文</a>
+					<a :class="{ aActive: language === 'tw' }" @click.prevent="handleSetLanguage('tw')">繁體中文</a>
+					<a :class="{ aActive: language === 'en' }" @click.prevent="handleSetLanguage('en')">English</a>
+				</div>-->
 			</div>
 		</el-form>
 		<div class="version">version: {{ version }}</div>
@@ -87,68 +79,61 @@
 </template>
 
 <script>
+// import { validUsername } from '@/utils/validate'
 import { Message } from 'element-ui'
 import Cookies from 'js-cookie'
-import Finger from '@/utils/fingerprintjs2'
-Finger.load()
+
+const devLoginForm = {
+	username: 'admin',
+	password: '123456',
+	googleAuth: ''
+}
 
 export default {
 	name: 'Login',
 	data() {
-		console.log('Cookies.get> ', Cookies.get('firstLogin') === 'true')
 		return {
-			timestamp: +new Date(),
-			loginForm: {
-				username: '',
-				password: '',
-				vaildCode: ''
-			},
+			loginForm: this.env === 'dev' ? devLoginForm : {},
 			loading: false,
-			password: 'password', // 登录密码眼睛
-			modifyPassword: 'modifyPassword',
-			rePassword: 'rePassword',
+			passwordType: 'password',
 			redirect: undefined,
 			baseUrl: process.env.VUE_APP_BASE_API,
-			rememberPassword: Cookies.get('rememberPassword'),
-			version: '',
-			firstLogin:
-				Cookies.get('firstLogin') && Cookies.get('firstLogin') === 'true',
-			btnText: Cookies.get('firstLogin') === 'true' ? '修改密码' : '登录',
-			userInfo: this.$store.state.user.userInfo,
-			browerFinger: Finger.get(),
-			submitTime: 0 // 记录提交时间，防止多次提交
+			timestamp: +new Date(),
+			version: ''
 		}
 	},
 	computed: {
+		language() {
+			return this.$store.getters.language
+		},
 		loginRules() {
-			const validateUsername = (rule, value, callback) => {
-				if (!this.validUsername(value)) {
-					callback(new Error('请输入正确的用户名'))
-				} else {
-					callback()
-				}
-			}
-
 			const validatePassword = (rule, value, callback) => {
 				if (value.length < 6) {
-					callback(new Error('请输入正确的密码'))
+					callback(new Error(this.$t('login.less6Password')))
 				} else {
 					callback()
 				}
 			}
-
 			return {
 				username: [
-					{ required: true, trigger: 'blur', validator: validateUsername }
-				],
-				password: [
-					{ required: true, trigger: 'blur', validator: validatePassword }
-				],
-				vaildCode: [
 					{
 						required: true,
 						trigger: 'blur',
-						message: '请输入验证码'
+						message: this.$t('login.username')
+					}
+				],
+				password: [
+					{ required: true, message: this.$t('login.password') },
+					{
+						trigger: 'blur',
+						validator: validatePassword
+					}
+				],
+				kaptcha: [
+					{
+						required: true,
+						trigger: 'blur',
+						message: this.$t('login.codeVerify')
 					}
 				]
 			}
@@ -163,21 +148,29 @@ export default {
 		}
 	},
 	mounted() {
-		Cookies.remove('firstLogin')
-		this.firstLogin = false
 		const VERSION = Cookies.get('version') || ''
 		this.version = VERSION
 	},
-
 	methods: {
-		validUsername(str) {
-			const valid_map = str || ['admin', 'editor']
-			return valid_map.indexOf(str.trim()) >= 0
+		// 兼容ie input 失去 再 聚焦 光标从头开始
+		fixInput(obj) {
+			const nodes = obj.$el.childNodes[1]
+			nodes.focus() // 解决ff不获取焦点无法定位问题
+			if (window.getSelection) {
+				// ie11 10 9 ff safari
+				var max_Len = nodes.value.length // text字符数
+				nodes.setSelectionRange(max_Len, max_Len)
+			} else if (document.selection) {
+				// ie10 9 8 7 6 5
+				var range = nodes.createTextRange() // 创建range
+				range.collapse(false) // 光标移至最后
+				range.select() // 避免产生空格
+			}
 		},
-		handleSetLanguage(value) {
+		handleSetLanguage(lang) {
 			Message.closeAll()
 			let actMessage
-			switch (value) {
+			switch (lang) {
 				case 'zh':
 					actMessage = '切换语言成功'
 					break
@@ -187,31 +180,22 @@ export default {
 				default:
 					actMessage = 'Switch Language Success'
 			}
-			this.$i18n.locale = value
-			this.$store.dispatch('app/setLanguage', value)
+			this.$i18n.locale = lang
+			this.$store.dispatch('app/setLanguage', lang)
 			this.$message({
 				message: actMessage,
 				type: 'success'
 			})
 		},
-		showPwd(type) {
-			if (this[type] === type) {
-				this[type] = ''
+		showPwd() {
+			if (this.passwordType === 'password') {
+				this.passwordType = ''
 			} else {
-				this[type] = type
+				this.passwordType = 'password'
 			}
 			this.$nextTick(() => {
-				this.$refs[type].focus()
+				this.fixInput(this.$refs.password)
 			})
-		},
-		onChangeRemember(value) {
-			if (value) {
-				this.rememberPassword = true
-				Cookies.set('rememberPassword', true)
-			} else {
-				this.rememberPassword = false
-				Cookies.set('rememberPassword', '')
-			}
 		},
 		handleLogin() {
 			this.$refs.loginForm.validate((valid) => {
@@ -219,18 +203,16 @@ export default {
 					this.loading = true
 					this.$store
 						.dispatch('user/login', this.loginForm)
-						.then((res) => {
-							console.log('登录成功')
-							this.$router.push({ path: '/' })
+						.then(() => {
+							this.$router.push({ path: this.redirect || '/' })
 							this.loading = false
 						})
-						.catch((error) => {
-							console.log('error :', error)
+						.catch(() => {
 							this.timestamp = +new Date()
 							this.loading = false
 						})
 				} else {
-					this.timestamp = +new Date()
+					console.log('error submit!!')
 					return false
 				}
 			})
@@ -238,6 +220,7 @@ export default {
 	}
 }
 </script>
+
 <style lang="scss">
 /* 修复input 背景不协调 和光标变色 */
 /* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
@@ -261,14 +244,9 @@ $light_gray: #eee;
 	width: 100%;
 	background-color: $bgc;
 	overflow: hidden;
-	background: url('../../assets/login_imgs/login_bg.jpg') no-repeat center center;
+	background: url('../../assets/img/bg.jpg') no-repeat;
 	background-size: cover;
 	// background-position: fixed; /* Internet Explorer 7/8 */
-	.login-logo {
-		width: 40px !important;
-		height: 40px !important;
-		vertical-align: -10px !important;
-	}
 	.login-form {
 		position: relative;
 		width: 600px;
@@ -283,39 +261,26 @@ $light_gray: #eee;
 	}
 	.login-content {
 		padding: 8% 12%;
-		min-height: 300px;
-		background: url('../../assets/login_imgs/form_bg.png') no-repeat;
+		height: 490px;
+		background: url('../../assets/img/login_bg.png') no-repeat;
 		background-size: cover;
-
-		.svg-icon {
-			vertical-align: -0.15em;
-		}
 	}
 	h3 {
 		margin: 0;
-		margin-bottom: 16px;
+		margin-bottom: 32px;
 		text-align: center;
 		font-family: MicrosoftYaHei;
-		font-size: 30px;
+		font-size: 32px;
 		font-weight: normal;
 		font-stretch: normal;
 		letter-spacing: 0px;
 		color: #ffffff;
-		line-height: 50px;
-
-		img {
-			float: left;
-			position: relative;
-			left: -10px;
-		}
-		span {
-			display: inline-block;
-		}
 	}
 	.el-input {
 		display: inline-block;
 		height: 47px;
 		width: 75%;
+		min-width: 100px;
 		input {
 			background: transparent;
 			border: 0px;
@@ -324,7 +289,6 @@ $light_gray: #eee;
 			padding: 12px 5px 12px 15px;
 			color: $light_gray;
 			height: 47px;
-			line-height: 1.5;
 			caret-color: $cursor;
 
 			&:-webkit-autofill {
@@ -356,7 +320,7 @@ $light_gray: #eee;
 		border-radius: 10px;
 	}
 	.login-btn {
-		background: url('../../assets/login_imgs/submit_bg.png') no-repeat;
+		background: url('../../assets/img/login_btn.png') no-repeat;
 		background-size: cover;
 		height: 51px;
 		cursor: pointer;
@@ -380,17 +344,28 @@ $light_gray: #eee;
 		letter-spacing: 0px;
 		color: #8a90a5;
 	}
-	.svg-icon {
-		width: 18px;
-	}
+
 	.svg-container {
-		padding: 1px 5px 6px 15px;
+		padding: 6px 5px 6px 15px;
 		color: $dark_gray;
 		vertical-align: middle;
 		width: 30px;
 		display: inline-block;
 	}
-
+	.title-container {
+		position: relative;
+		.login_logo {
+			vertical-align: -0.15em;
+		}
+		.title {
+			font-family: 'Microsoft Yahei';
+			font-weight: normal;
+			font-size: 40px;
+			color: $light_gray;
+			margin: 0px auto 40px auto;
+			text-align: center;
+		}
+	}
 	.show-pwd {
 		position: absolute;
 		right: 10px;
@@ -400,9 +375,9 @@ $light_gray: #eee;
 		cursor: pointer;
 		user-select: none;
 	}
-	.user-agreement {
-		color: #fff;
-		text-decoration: underline;
+	.kaptcha {
+		height: 50px;
+		border-radius: 10px;
 	}
 	.version {
 		position: fixed;

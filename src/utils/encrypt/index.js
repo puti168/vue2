@@ -1,7 +1,7 @@
 import dataHandle from './encrypt'
 
 // 数据加密
-const key = '0123456789ABCDEF'
+const key = process.env.VUE_APP_KEY
 
 /**
  * @param {} config 请求设置
@@ -16,12 +16,11 @@ const encryptData = (config) => {
 	console.log(encryptData)
 	config.data = encryptData
 	config.headers['Content-Type'] = 'application/json'
-	config.headers['zr-nonce'] = nonce
-	config.headers['zr-timestamp'] = timestamp
-	config.headers['zr-gzipped'] = true
+	config.headers['ob-nonce'] = nonce
+	config.headers['ob-timestamp'] = timestamp
+	// post请求返回加密
 	config.headers['zr-encrypted'] = true
-	config.headers['zr-sign'] = sign
-
+	config.headers['ob-sign'] = sign
 	return config
 }
 

@@ -1,37 +1,56 @@
 <template>
 	<!-- 修改用户密码 -->
 	<el-dialog
-		title="修改用户密码"
 		:close-on-click-modal="false"
 		:visible.sync="visible"
 		width="450px"
 		center
 		@closed="cancel"
 	>
+		<span slot="title">
+			<span>{{ $t("other_007") }}</span>
+		</span>
 		<el-form ref="form" :model="passDialogForm" :rules="rules" label-width="auto">
-			<el-form-item label="账号归属">
+			<el-form-item :label="$t('authoritymanagement_usermanage_components_edituser_285')">
 				<span>{{ userInfo.agentCode }}</span>
 			</el-form-item>
-			<el-form-item label="用户账号">
+			<el-form-item :label="$t('authoritymanagement_usermanage_index_322')">
 				<span>{{ userInfo.username }}</span>
 			</el-form-item>
-			<el-form-item label="用户密码" prop="oldPassword">
-				<el-input v-model="passDialogForm.oldPassword" type="password" placeholder="6-12位字母,数字和特殊字符组合"></el-input>
+			<el-form-item
+				:label="$t('authoritymanagement_usermanage_components_edituser_289')"
+				prop="oldPassword"
+			>
+				<el-input
+					v-model="passDialogForm.oldPassword"
+					type="password"
+					:placeholder="$t('login_index_473')"
+				></el-input>
 			</el-form-item>
-			<el-form-item label="新密码" prop="password">
-				<el-input v-model="passDialogForm.password" type="password" placeholder="6-12位字母,数字和特殊字符组合"></el-input>
+			<el-form-item
+				:label="$t('authoritymanagement_usermanage_components_edituser_288')"
+				prop="password"
+			>
+				<el-input
+					v-model="passDialogForm.password"
+					type="password"
+					::placeholder="$t('login_index_473')"
+				></el-input>
 			</el-form-item>
-			<el-form-item label="确认密码" prop="passwordAgain">
+			<el-form-item
+				:label="$t('authoritymanagement_usermanage_components_edituser_291')"
+				prop="passwordAgain"
+			>
 				<el-input
 					v-model="passDialogForm.passwordAgain"
 					type="password"
-					placeholder="6-12位字母,数字和特殊字符组合"
+					:placeholder="$t('login_index_473')"
 				></el-input>
 			</el-form-item>
 		</el-form>
 		<span slot="footer" class="dialog-footer">
-			<el-button @click="cancel">暂不修改</el-button>
-			<el-button type="primary" @click="handleSure">确认修改</el-button>
+			<el-button @click="cancel">{{ $t('systemmanagement_ipwhite_index_1455') }}</el-button>
+			<el-button type="primary" @click="handleSure">{{ $t('systemmanagement_domain_index_1371') }}</el-button>
 		</span>
 	</el-dialog>
 </template>
@@ -40,7 +59,7 @@
 import router from '@/router'
 import { validPassword } from '@/utils/validate'
 import { mapGetters } from 'vuex'
-
+// import md5 from 'js-md5'
 export default {
 	name: 'ModifyPassword',
 	props: {
@@ -64,18 +83,34 @@ export default {
 		rules() {
 			const validatePwd = (rule, value, callback) => {
 				if (value && value.length < 6) {
-					callback(new Error('密码长度不够，请重新输入密码'))
+					callback(
+						new Error(
+							this.$t('authoritymanagement_usermanage_components_edituser_309')
+						)
+					)
 				} else if (value && value.length > 12) {
-					callback(new Error('密码长度超过12个字符，请重新输入密码'))
+					callback(
+						new Error(
+							this.$t('authoritymanagement_usermanage_components_edituser_310')
+						)
+					)
 				} else if (value === '' || !validPassword(value)) {
-					callback(new Error('密码不符合规则，请重新输入密码'))
+					callback(
+						new Error(
+							this.$t('authoritymanagement_usermanage_components_edituser_311')
+						)
+					)
 				} else {
 					callback()
 				}
 			}
 			const validateRepwd = (rule, value, callback) => {
 				if (value !== this.passDialogForm.password) {
-					callback(new Error(this.$t('密码不一致，请重新输入')))
+					callback(
+						new Error(
+							this.$t('authoritymanagement_usermanage_components_edituser_312')
+						)
+					)
 				} else {
 					callback()
 				}
@@ -84,7 +119,7 @@ export default {
 				oldPassword: [
 					{
 						required: true,
-						message: '请输入正确的登陆密码',
+						message: this.$t('other_008'),
 						trigger: 'blur'
 					}
 				],
@@ -126,6 +161,9 @@ export default {
 					const params = {
 						agentCode: this.userInfo.agentCode,
 						loginName: this.userInfo.username,
+						// oldPassword: md5(this.passDialogForm.oldPassword + this.userInfo.username.trim()),
+						// password: md5(this.passDialogForm.password + this.userInfo.username.trim()),
+						// passwordAgain: md5(this.passDialogForm.passwordAgain + this.userInfo.username.trim())
 						oldPassword: this.passDialogForm.oldPassword,
 						password: this.passDialogForm.password,
 						passwordAgain: this.passDialogForm.passwordAgain
@@ -138,7 +176,7 @@ export default {
 							this.$router.push(`/login?redirect=${router.history.current.fullPath}`)
 							return this.$message({
 								type: 'success',
-								message: '修改密码成功,请重新登录'
+								message: this.$t('other_009')
 							})
 						}
 					})

@@ -60,3 +60,63 @@ export function googleAuth(params) {
 		params
 	})
 }
+
+export function getWarningList(params) {
+	return request({
+		url: '/cardBoxStatus/getWarningList',
+		method: 'get',
+		params
+	})
+}
+
+export function cardWarningEdit(data) {
+	return request({
+		url: '/cardBoxStatus/cardWarningEdit',
+		method: 'POST',
+		data
+	})
+}
+
+export function shuffleCardlist(params) {
+	return request({
+		url: '/cardBoxStatus/shuffleCardlist',
+		method: 'get',
+		params
+	})
+}
+
+export function shuffleAdd(data) {
+	return request({
+		url: '/cardBoxStatus/addShuffle',
+		method: 'POST',
+		data
+	})
+}
+
+export function shuffleDel(data) {
+	return request({
+		url: '/cardBoxStatus/delShuffleById',
+		method: 'POST',
+		data
+	})
+}
+
+export function saveLanguage(data) {
+	return request({
+		url: '/system/saveLanguage',
+		method: 'POST',
+		data
+	})
+}
+
+export function delLanguage(data) {
+	return request({
+		url: '/system/delLanguage',
+		method: 'POST',
+		data
+	})
+}
+
+export default {
+	modifyPwd
+}

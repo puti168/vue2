@@ -1,6 +1,6 @@
 'use strict'
 
-// 真人版本号示例:1.1.1.20191112
+// 真人版本号示例： 1.1.1.20191112
 
 const FStream = require('fs')
 
@@ -60,7 +60,10 @@ VersionPlugin.prototype.apply = function(compiler) {
 			var parseData = JSON.parse(data)
 			console.log('parseData :', parseData)
 			let versions = parseData.version
-			if (primaryVersion[2] !== versions[2] || primaryVersion[4] !== versions[4]) {
+			if (
+				primaryVersion[2] !== versions[2] ||
+				primaryVersion[4] !== versions[4]
+			) {
 				versions = primaryVersion
 				VERSION = generateVersion(compiler, versions)
 			} else {
@@ -71,7 +74,6 @@ VersionPlugin.prototype.apply = function(compiler) {
 			VERSION = generateVersion(compiler, versions)
 		}
 		console.log('应用编译完成！')
-		console.log('开始写入版本信息...')
 		var dir_path = compiler.context + '/' + self.options.versionDirectory
 		var version_file = dir_path + '/version.json'
 		var content = '{"version":' + JSON.stringify(VERSION) + '}'
@@ -86,7 +88,6 @@ VersionPlugin.prototype.apply = function(compiler) {
 				writeVersion(version_file, content)
 			})
 		})
-		console.log('版本信息写入成功!')
 	})
 }
 
@@ -134,9 +135,11 @@ const generateVersion = (compiler, value, type) => {
 }
 
 const writeVersion = (versionFile, content) => {
+	console.log('开始写入版本信息...')
 	// 写入文件
 	FStream.writeFile(versionFile, content, function(err) {
 		if (err) throw err
+		console.log('版本信息写入成功!')
 	})
 }
 

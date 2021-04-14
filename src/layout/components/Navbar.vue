@@ -1,20 +1,16 @@
 <template>
-	<div style="position: relative" @mouseleave="showMemberInfo = false">
-		<div class="navbar">
-			<hamburger :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
+	<div class="navbar">
+		<hamburger :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
 
-			<breadcrumb class="breadcrumb-container" />
-
-			<div class="right-menu flex">
-				<!-- <lang-select v-if="env" class="right-menu-item hover-effect" /> -->
-				<!--
-				<div class="avatar-wrapper flex flex-cc" @mouseover="showMemberInfo = true">
-					<img :src="myavatar" class="user-avatar" />
-					<div class="name flex-cc">{{ name }}</div>
-				</div>-->
-				<div class="login-out" @click="loginOut"></div>
-				<!-- <a href="javascript:;" class="login-out" @click="loginOut">{{ $t('navbar.logOut') }}</a> -->
+		<breadcrumb class="breadcrumb-container" />
+		<div class="right-menu flex">
+			<i class="el-icon-date"></i>
+			<span class="time">(GMT+8): {{ nowMonth }} {{ week }} {{ nowSecond }}</span>
+			<div class="avatar-wrapper flex flex-cc">
+				<img :src="myavatar" class="user-avatar" />
+				<div class="name flex-cc">{{ name }}</div>
 			</div>
+			<div class="login-out" @click="loginOut"></div>
 		</div>
 		<div v-if="showMemberInfo" class="user-wrapper">
 			<h2>账户信息</h2>
@@ -62,11 +58,13 @@
 </template>
 
 <script>
-import { formatCurrency } from '@/utils'
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
-
+import { getNickName} from '@/utils/auth'
+import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
+import { formatCurrency } from '@/utils'
 export default {
 	components: {
 		Breadcrumb,
@@ -74,11 +72,18 @@ export default {
 	},
 	data() {
 		return {
-			showMemberInfo: false
+			showMemberInfo: false,
+			nowMonth: '',
+			nowSecond: '',
+			week: '',
+			timer2: '',
+			timer: '',
+			weeks: ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'],
+			name: ''
 		}
 	},
 	computed: {
-		...mapGetters(['name', 'sidebar', 'avatar', 'userInfo']),
+		...mapGetters(['sidebar', 'avatar', 'userInfo']),
 		myavatar() {
 			return this.avatar || require('@/assets/img/avatar.png')
 		},
@@ -87,15 +92,48 @@ export default {
 		}
 	},
 	mounted() {
-		console.log('this.$store :', this.$store)
-	},
+		dayjs.extend(utc)
+		this.timer = setInterval(this.refresh, 1000)
+    	this.name = getNickName()
+  	},
 	methods: {
 		formatCurrency,
+		getBeijingtime() {
+			// 获得当前运行环境时间
+			const d = new Date()
+			const currentDate = new Date()
+			const tmpHours = currentDate.getHours()
+			// 算得时区
+			let time_zone = -d.getTimezoneOffset() / 60
+			if (time_zone < 0) {
+				time_zone = Math.abs(time_zone) + 8
+				currentDate.setHours(tmpHours + time_zone)
+			} else {
+				time_zone -= 8
+				currentDate.setHours(tmpHours - time_zone)
+			}
+			return currentDate
+		},
+		refresh() {
+			this.nowMonth = dayjs()
+				.utc()
+				.utcOffset(8)
+				.format('YYYY-MM-DD')
+			this.nowSecond = dayjs()
+				.utc()
+				.utcOffset(8)
+				.format('HH:mm:ss')
+			const day = this.getBeijingtime().getDay()
+			this.week = this.weeks[day]
+		},
 		toggleSideBar() {
 			this.$store.dispatch('app/toggleSideBar')
 		},
 		async loginOut() {
 			await this.$store.dispatch('user/logout')
+			await this.$store.dispatch('permission/clearRoutes')
+			this.$store.dispatch('tree/setTree', [])
+			this.$store.dispatch('tree/setTreeData', [])
 			this.$router.push(`/login?redirect=${this.$route.fullPath}`)
 		},
 		onModify() {
@@ -131,12 +169,18 @@ export default {
 	}
 
 	.right-menu {
-		position: relative;
 		margin-right: 15px;
 		float: right;
 		height: 100%;
 		line-height: 50px;
-
+		.time {
+			margin-right: 20px;
+		}
+		.el-icon-date {
+			line-height: 50px;
+			margin-right: 10px;
+			font-size: 20px;
+		}
 		&:focus {
 			outline: none;
 		}
@@ -164,6 +208,7 @@ export default {
 			padding-right: 15px;
 			position: relative;
 			border-right: 1px solid #eee;
+			position: relative;
 
 			.user-avatar {
 				margin-top: 5px;
@@ -191,31 +236,5 @@ export default {
 			background: url('../../assets/img/bb_bt_logout_pre.png') no-repeat;
 		}
 	}
-}
-.user-wrapper {
-	z-index: 9999;
-	line-height: 32px;
-	padding: 20px;
-	width: 55%;
-	top: 48px;
-	right: 70px;
-	position: absolute;
-	background: rgba(242, 242, 242, 1);
-	h2 {
-		margin: 0;
-		font-size: 18px;
-	}
-	span {
-		font-size: 13px;
-	}
-}
-.span-label {
-	display: inline-block;
-	width: 98px;
-	text-align: right;
-}
-.modify-btn {
-	float: right;
-	margin-top: 20px;
 }
 </style>

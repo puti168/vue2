@@ -50,7 +50,8 @@ export function supportBrower() {
 				document.onreadystatechange = () => {
 					if (document.readyState === 'complete') {
 						const meta = document.createElement('meta')
-						const head = document.head || document.getElementsByTagName('head')[0]
+						const head =
+							document.head || document.getElementsByTagName('head')[0]
 						meta.name = 'renderer'
 						meta.content = 'webkit'
 						head.appendChild(meta)

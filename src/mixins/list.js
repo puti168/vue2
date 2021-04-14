@@ -1,25 +1,20 @@
 import dayjs from 'dayjs'
-import { shortcuts } from '@/utils/consts'
+import { shortcuts, shortcutsNoToday, shortcutsM } from '@/utils/consts'
 import { formatCurrency } from '@/utils'
-
 export default {
 	data() {
 		return {
 			list: [],
-			// 时间选择器格式
-			dateType: 'daterange',
+			total: 0,
+			loading: false,
 			pageIndex: 1,
 			pageSize: 10,
-			total: 0,
 			pageSizes: [5, 10, 20, 50, 100, 200, 500],
 			layout: 'total, sizes, prev, pager, next, jumper',
-			defaultTime: ['00:00:00', '23:59:59'],
-			hadSearch: false,
-			loading: false
+			defaultTime: ['00:00:00', '23:59:59']
 		}
 	},
 	computed: {
-		// pickerOptions 可以超90天
 		pickerOptions() {
 			const _this = this
 			return {
@@ -37,29 +32,13 @@ export default {
 				shortcuts: shortcuts
 			}
 		},
-		pickerOptions_no_90() {
+		pickerOptionsM() {
 			const _this = this
 			return {
 				disabledDate(time) {
-					// 1.超过90天的查询时间，提示“起止时间不可超过90天”
-					// 2.查询截至时间不可以超过当前时间
-					// const before = dayjs(_this.minDate)
-					// 	.subtract(90, 'days')
-					// 	.valueOf()
-					// const after = dayjs(_this.minDate)
-					// 	.add(90, 'days')
-					// 	.valueOf()
-					const now = dayjs(
-						dayjs()
-							.add(1, 'd')
-							.format('YYYY-MM-DD')
-					).valueOf()
-					// // 如果after-now大于0,说明选择时间在当前时间90天之前
-					// if (after - now < 0) {
-					// 	return time.getTime() > after || time.getTime() < before
-					// } else {
-					// 	return time.getTime() > now
-					// }
+					const now = dayjs()
+						.endOf('day')
+						.valueOf()
 					return time.getTime() > now
 				},
 				onPick({ maxDate, minDate }) {
@@ -67,7 +46,18 @@ export default {
 						_this.minDate = minDate
 					}
 				},
-				shortcuts: shortcuts
+				shortcuts: shortcutsM
+			}
+		},
+		pickerOptionsNoToday() {
+			const _this = this
+			return {
+				onPick({ maxDate, minDate }) {
+					if (!maxDate) {
+						_this.minDate = minDate
+					}
+				},
+				shortcuts: shortcutsNoToday
 			}
 		}
 	},
@@ -77,62 +67,11 @@ export default {
 			this.initList()
 		}
 	},
-	mounted() {},
 	watch: {
 		page: 'loadData'
 	},
 	methods: {
 		formatCurrency,
-		onSelectTimeFocus() {
-			const dayNum = dayjs().date()
-			const weekNum = dayjs().day()
-			if (weekNum === 1) {
-				const nodeLists = document.querySelectorAll('.el-picker-panel__shortcut')
-				nodeLists &&
-					nodeLists.forEach((val) => {
-						if (val.textContent === '当周') {
-							val.className = 'el-picker-panel__shortcut disabled-week'
-							val.setAttribute('disabled', true)
-						}
-					})
-			}
-			if (dayNum === 1) {
-				const nodeLists = document.querySelectorAll('.el-picker-panel__shortcut')
-				nodeLists &&
-					nodeLists.forEach((val) => {
-						if (val.textContent === '当月') {
-							val.className = 'el-picker-panel__shortcut disabled-week'
-							val.setAttribute('disabled', true)
-						}
-					})
-			}
-		},
-		getSummaries(param) {
-			const { columns, data } = param
-			const sums = []
-			columns.forEach((column, index) => {
-				if (index === 0) {
-					sums[index] = '总价'
-					return
-				}
-				const values = data.map((item) => Number(item[column.property]))
-				if (!values.every((value) => isNaN(value))) {
-					sums[index] = values.reduce((prev, curr) => {
-						const value = Number(curr)
-						if (!isNaN(value)) {
-							return prev + curr
-						} else {
-							return prev
-						}
-					}, 0)
-					sums[index] += ' 元'
-				} else {
-					sums[index] = 'N/A'
-				}
-			})
-
-			return sums
-		},
 		getRowClass({ row, column, rowIndex, columnIndex }) {
 			if (rowIndex === 0) {
 				return 'background:#EFEFEF'
@@ -155,26 +94,6 @@ export default {
 			)
 		},
 		/**
-		 * 加载更多
-		 */
-		loadMore() {
-			this.pageIndex++
-		},
-		/**
-		 * 推送到list中 因为vue的监听特性 只能用push进行数据的添加 如果有特殊处理 通过传递一个filter来过滤数据
-		 * @param list
-		 * @param filter
-		 */
-		pushToList(list, filter) {
-			list.forEach((item) => {
-				if (typeof filter === 'function') {
-					this.list.push(filter(item))
-				} else {
-					this.list.push(item)
-				}
-			})
-		},
-		/**
 		 * 初始化列表
 		 */
 		initList() {
@@ -191,7 +110,12 @@ export default {
 		},
 		// 改变列表条数
 		handleSizeChange(value) {
+			this.pageIndex = 1
 			this.pageSize = value
+			this.loadData()
+		},
+		handleCurrentChange(value) {
+			this.pageIndex = value
 			this.loadData()
 		}
 	}

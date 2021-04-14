@@ -79,22 +79,25 @@ export default {
 		return {}
 	},
 	methods: {
-		hasOneShowingChild(children, parent) {
-			let showingChildren = []
-			if (children) {
-				showingChildren = children.filter((item) => {
-					if (item.hidden) {
-						return false
-					} else {
-						// Temp set(will be used if only has one showing child)
-						this.onlyOneChild = item
-						return true
-					}
-				})
-			}
+		hasOneShowingChild(children = [], parent) {
+			const showingChildren = children.filter((item) => {
+				if (item.hidden) {
+					return false
+				} else {
+					// Temp set(will be used if only has one showing child)
+					this.onlyOneChild = item
+					return true
+				}
+			})
 
 			// When there is only one child router, the child router is displayed by default
 			if (showingChildren.length === 1) {
+				// 鉴于产品与后台要求，将密钥管理设置成二级菜单
+				if (
+					showingChildren[0].name === '5210' ||
+					showingChildren[0].name === '5110' ||
+					showingChildren[0].name === '5410'
+				) { return false }
 				return true
 			}
 
@@ -119,5 +122,3 @@ export default {
 	}
 }
 </script>
-<style lang="scss" scoped>
-</style>

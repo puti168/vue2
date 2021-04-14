@@ -39,6 +39,7 @@ export default {
 		// 	return this.$router.options.routes
 		// },
 		activeMenu() {
+			console.log('routes :>> ', this.routes)
 			const route = this.$route
 			const { meta, path } = route
 			// if set path, the sidebar will highlight the path you set

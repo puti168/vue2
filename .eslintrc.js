@@ -20,6 +20,7 @@ module.exports = {
 				htmlWhitespaceSensitivity: 'ignore'
 			}
 		],
+		'vue/html-indent': 'off',
 		'object-curly-spacing': 'off',
 		'vue/html-self-closing': ['off'],
 		'vue/max-attributes-per-line': [
@@ -32,11 +33,12 @@ module.exports = {
 				}
 			}
 		],
-		'vue/html-indent': 'off',
 		'vue/singleline-html-element-content-newline': 'off',
 		'vue/multiline-html-element-content-newline': 'off',
 		'vue/name-property-casing': ['error', 'PascalCase'],
 		'vue/no-v-html': 'off',
+		// 取消对元素特性只能使用中划线或小驼峰形式的验证
+		'vue/attribute-hyphenation': 'off',
 		'accessor-pairs': 2,
 		'arrow-spacing': [
 			2,

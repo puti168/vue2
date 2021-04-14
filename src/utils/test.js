@@ -9,6 +9,14 @@ export const testName = (value) => {
 }
 
 /**
+ * 验证名称3-12位数字或者字母
+ * @param {} value
+ */
+export const testXPName = (value) => {
+	return P.USERNAME_3_12.test(value)
+}
+
+/**
  * 验证密码6-12位数字字母
  * @param {} value
  */
@@ -21,7 +29,15 @@ export const testPassword = (value) => {
  * @param {} value
  */
 export const testSimplePassword = (value) => {
-	return P.USERNAME_PATTERN.test(value)
+	return P.PASSWORD_MORE_SIMPLE_PATTERN.test(value)
+}
+
+/**
+ * 验证密码3-10位
+ * @param {} value
+ */
+export const testPassword310 = (value) => {
+	return P.PASSWORD_3_10.test(value)
 }
 
 /**
@@ -38,6 +54,23 @@ export function testSpecial(str) {
 	}
 	return true
 }
+
+/**
+ * 验证表情
+ * @param {} value
+ */
+export const testEmoji = (value) => {
+	return P.EMOJI_PATTERN.test(value)
+}
+
+/**
+ * 验证空白字符
+ * @param {} value
+ */
+export const testSpace = (value) => {
+	return P.SPACE_PATTERN.test(value)
+}
+
 /**
  * 验证字符串长度
  * @param {} value

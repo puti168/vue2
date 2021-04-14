@@ -1,12 +1,10 @@
 // translate router.meta.title, be used in breadcrumb sidebar tagsview
-import { routerSwitchNames } from '@/utils/consts'
-
 export function generateTitle(title) {
-	const hasKey = routerSwitchNames[title]
+	const hasKey = this.$te('route.' + title)
 
 	if (hasKey) {
 		// $t :this method from vue-i18n, inject in @/lang/index.js
-		const translatedTitle = routerSwitchNames[title]
+		const translatedTitle = this.$t('route.' + title)
 
 		return translatedTitle
 	}

@@ -1,5 +1,5 @@
 module.exports = {
-	title: '业务监控系统 ',
+	title: 'vue-admin-secret-manage',
 
 	/**
 	 * @type {boolean} true | false

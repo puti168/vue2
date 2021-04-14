@@ -20,7 +20,7 @@
 				:label="$t('dealer_component_updatepass_194')"
 				prop="password"
 				:form="passDialogForm"
-				:placeholder="$t('placeholder.userName')"
+				:placeholder="$t('message.validNumberEn310')"
 				@handleInput="passDialogForm.password = $event"
 			></PasswordWithEye>
 
@@ -28,7 +28,7 @@
 				:label="$t('dealer_component_updatepass_195')"
 				prop="passwordAgain"
 				:form="passDialogForm"
-				:placeholder="$t('placeholder.userName')"
+				:placeholder="$t('message.validNumberEn310')"
 				@handleInput="passDialogForm.passwordAgain = $event"
 			></PasswordWithEye>
 		</el-form>
@@ -40,7 +40,7 @@
 </template>
 
 <script>
-import { testStringLength, testName, testSpecial } from '@/utils/test'
+import { testStringLength, testSpecial, testPassword310 } from '@/utils/test'
 import PasswordWithEye from '@/components/PasswordWithEye'
 
 export default {
@@ -65,12 +65,12 @@ export default {
 	computed: {
 		passDialogFormRules() {
 			const validatePass = (rule, value, callback) => {
-				const err = new Error(this.$t('placeholder.userName'))
+				const err = new Error(this.$t('message.validNumberEn310'))
 				if (value === '') {
 					callback(err)
-				} else if (!testStringLength(value, { min: 6, max: 12 })) {
+				} else if (!testStringLength(value, { min: 3, max: 10 })) {
 					callback(err)
-				} else if (!testName(value)) {
+				} else if (!testPassword310(value)) {
 					callback(err)
 				} else if (!testSpecial(value)) {
 					callback(err)
@@ -82,12 +82,12 @@ export default {
 				}
 			}
 			const validateRePass = (rule, value, callback) => {
-				const err = new Error(this.$t('placeholder.userName'))
+				const err = new Error(this.$t('message.validNumberEn310'))
 				if (value === '') {
 					callback(err)
-				} else if (!testStringLength(value, { min: 6, max: 12 })) {
+				} else if (!testStringLength(value, { min: 3, max: 10 })) {
 					callback(err)
-				} else if (!testName(value)) {
+				} else if (!testPassword310(value)) {
 					callback(err)
 				} else if (!testSpecial(value)) {
 					callback(err)

@@ -1,7 +1,7 @@
 module.exports = {
 	htmlWhitespaceSensitivity: 'ignore',
 	// tab缩进大小,默认为2
-	tabWidth: 1,
+	tabWidth: 2,
 	// 使用tab缩进，默认false
 	useTabs: true,
 	// 使用分号, 默认true

@@ -3,12 +3,25 @@ import * as P from '@/utils/pattern'
 
 export default {
 	methods: {
-		// 验证账号 - 6-12位,数字和字母组合
+		// 验证账号 - 3-12位 字母或数字
 		validateAcount(rule, value, callback) {
-			const err = new Error(this.$t('placeholder.userName'))
+			const err = new Error(this.$t('message.validNumberEn312'))
 			if (!value || value === '') {
 				callback(err)
-			} else if (!T.testName(value)) {
+			} else if (!T.testXPName(value)) {
+				callback(err)
+			} else if (!T.testSpecial(value)) {
+				callback(err)
+			} else {
+				callback()
+			}
+		},
+		// 验证账号 - 3-12位 字母或数字
+		validateXPAcount(rule, value, callback) {
+			const err = new Error(this.$t('message.validNumberEn312'))
+			if (!value || value === '') {
+				callback(err)
+			} else if (!T.testXPName(value)) {
 				callback(err)
 			} else if (!T.testSpecial(value)) {
 				callback(err)
@@ -18,10 +31,11 @@ export default {
 		},
 		// 验证用户名 - 10字符以内,不支持空格和特殊符号
 		validateNickName(rule, value, callback) {
-			if (!value) return
-			const replaceValue = value.replace(P.CN_PATTERN, 'xx')
+			const replaceValue = value ? value.replace(P.CN_PATTERN, 'xx') : value
 			const err = new Error(this.$t('placeholder.nickName'))
 			if (!replaceValue || replaceValue === '') {
+				callback(err)
+			} else if (/(^\s+)|(\s+$)|\s+/g.test(replaceValue)) {
 				callback(err)
 			} else if (!T.testStringLength(replaceValue, { min: 1, max: 10 })) {
 				callback(err)
@@ -56,12 +70,12 @@ export default {
 				callback()
 			}
 		},
-		// 验证字母数字密码(账号创建,密码管理) - 6-12位,数字和字母组合
+		// 验证字母数字密码(账号创建,密码管理) - 3-10位,数字或字母
 		validatePass(rule, value, callback) {
-			const err = new Error(this.$t('placeholder.userName'))
+			const err = new Error(this.$t('message.validNumberEn310'))
 			if (!value || value === '') {
 				callback(err)
-			} else if (!T.testPassword(value)) {
+			} else if (!T.testPassword310(value)) {
 				callback(err)
 			} else if (!T.testSpecial(value)) {
 				callback(err)
@@ -72,12 +86,12 @@ export default {
 				callback()
 			}
 		},
-		// 再次验证字母数字密码(账号创建,密码管理) - 6-12位,数字和字母组合
+		// 再次验证字母数字密码(账号创建,密码管理) - 3-10位,数字或字母
 		validateRePass(rule, value, callback) {
-			const err = new Error(this.$t('placeholder.userName'))
+			const err = new Error(this.$t('message.validNumberEn310'))
 			if (!value || value === '') {
 				callback(err)
-			} else if (!T.testPassword(value)) {
+			} else if (!T.testPassword310(value)) {
 				callback(err)
 			} else if (!T.testSpecial(value)) {
 				callback(err)
@@ -87,12 +101,12 @@ export default {
 				callback()
 			}
 		},
-		// 验证原密码(密码管理) - 6-12位,数字和字母组合
+		// 验证原密码(密码管理) - 3-10位,数字或字母
 		validateOriPwd(rule, value, callback) {
-			const err = new Error(this.$t('placeholder.userName'))
+			const err = new Error(this.$t('message.validNumberEn310'))
 			if (!value || value === '') {
 				callback(err)
-			} else if (!T.testPassword(value)) {
+			} else if (!T.testPassword310(value)) {
 				callback(err)
 			} else if (!T.testSpecial(value)) {
 				callback(err)

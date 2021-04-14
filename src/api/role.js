@@ -1,13 +1,5 @@
 import request from '@/utils/request'
 
-export function getDataDic(params) {
-	return request({
-		url: '/common/getDataDic',
-		method: 'GET',
-		params
-	})
-}
-
 export function getRoles(params) {
 	return request({
 		url: '/role/list',

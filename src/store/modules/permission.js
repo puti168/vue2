@@ -37,7 +37,7 @@ export function filterAsyncRoutes(routes, roles) {
 }
 
 const state = {
-	routes: constantRoutes,
+	routes: [],
 	addRoutes: [],
 	userBtns: []
 }
@@ -73,22 +73,24 @@ const actions = {
 							name: element.id,
 							component: Layout,
 							meta: {
-								title: element.id,
+								title: mapElement.title,
 								icon: element.icon
 							},
 							children: [],
-							isRedirect: element.isRedirect,
-							title: mapElement.title
+							isRedirect: element.isRedirect
 						})
 					} else if (+element.parentId > 0) {
-						const index = parentRoutes.findIndex((val) => val.id === element.parentId)
+						const index = parentRoutes.findIndex(
+							(val) => val.id === element.parentId
+						)
 						if (index > -1) {
 							parentRoutes[index].children.push({
 								path: element.path,
 								name: element.id,
 								component: (resolve) => require(['@/views' + element.path + '/index'], resolve),
+								// component: () => import('@/views' + element.path + '/index'),
 								meta: {
-									title: element.id,
+									title: mapElement.title,
 									icon: element.icon
 								}
 							})
@@ -96,22 +98,6 @@ const actions = {
 					}
 				}
 			})
-
-			// 兼容荷官管理children为0的情况
-			parentRoutes.forEach((item) => {
-				if (item.id === '2000' && item.children.length === 0) {
-					item.children.push({
-						path: item.path,
-						name: item.id,
-						component: (resolve) => require(['@/views' + item.path + '/index'], resolve),
-						meta: {
-							title: item.id,
-							icon: item.icon
-						}
-					})
-				}
-			})
-
 			parentRoutes = parentRoutes.filter((val) => {
 				return !val.children || (val.children && val.children.length !== 0)
 			})
@@ -130,10 +116,17 @@ const actions = {
 			const rootRoutes = []
 			if (parentRoutes.length !== 0) {
 				const rootRoute = parentRoutes[0]
-				rootRoutes.push({
-					path: '/',
-					redirect: rootRoute.path
-				})
+				if (rootRoute.children && rootRoute.children.length > 0) {
+					rootRoutes.push({
+						path: '/',
+						redirect: rootRoute.children && rootRoute.children[0].path
+					})
+				} else {
+					rootRoutes.push({
+						path: '/',
+						redirect: rootRoute.path
+					})
+				}
 			}
 			parentRoutes = parentRoutes.concat(rootRoutes)
 			commit('SET_ROUTES', {
@@ -150,7 +143,7 @@ const actions = {
 
 // 迭代拍平
 function loop(roles, arr) {
-	if (!roles || roles.lenght === 0) return []
+	if (!roles || roles.length === 0) return []
 
 	roles.forEach((i) => {
 		arr.push(i)

@@ -59,3 +59,7 @@ export function clearCookie() {
 		Cookies.remove(i)
 	})
 }
+
+export default {
+	getUsername
+}

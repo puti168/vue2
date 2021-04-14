@@ -8,7 +8,7 @@
  * @param {string} cFormat
  * @returns {string}
  */
-export function parseTime(time, cFormat) {
+ export function parseTime(time, cFormat) {
 	if (arguments.length === 0) {
 		return null
 	}
@@ -173,6 +173,9 @@ export function colorNum(numberVal) {
  */
 export function checkNullObj(obj) {
 	return Object.keys(obj).length === 0
+}
+export function isEmptyObj(val) {
+	return Object.keys(val).length === 0 && val.constructor === Object
 }
 
 /**

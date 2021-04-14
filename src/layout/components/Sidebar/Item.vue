@@ -21,28 +21,23 @@ export default {
 		}
 	},
 	render(h, context) {
-		const { icon, title } = context.props
+		const { icon, title, activePath, path } = context.props
 		const vnodes = []
+		const active = activePath.includes(path)
+
 		if (icon) {
 			vnodes.push(
 				<svg-icon
-					icon-class={icon}
-					style='width: 0px;height: 25px;margin-right: 0px;display: none;'
-				/>
-			)
-		} else {
-			// icon-class="empty"解决控制台警告的抛出
-			vnodes.push(
-				<svg-icon
-					icon-class=''
-					style='width: 0px;height: 25px;margin-right: 0px;display: none;'
+					icon-class={active ? `${icon}_pre` : icon}
+					style='width: 24px;height: 25px;margin-right: 16px;'
 				/>
 			)
 		}
-
+		/* eslint-disable */
 		if (title) {
-			vnodes.push(<span slot='title'>{title}</span>)
+			vnodes.push(<span slot="title">{title}</span>)
 		}
+		/* eslint-disable */
 		return vnodes
 	}
 }

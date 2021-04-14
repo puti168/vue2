@@ -1,33 +1,18 @@
 import request from '@/utils/request'
 
-export function login(params) {
+export function login(data) {
 	return request({
-		url: '/user/login',
-		method: 'GET',
-		params
-	})
-}
-/**
- * 查询商户组织树
- * @param {*} params
- */
-export function searchOrganization(params) {
-	return request({
-		url: '/user/searchOrganization',
-		method: 'GET',
-		params
+		url: '/login',
+		method: 'post',
+		data: {
+			...data,
+			type: 2
+		}
 	})
 }
 export function modifyPassword(data) {
 	return request({
 		url: '/user/modifyPassword',
-		method: 'post',
-		data
-	})
-}
-export function modifyXPSPassword(data) {
-	return request({
-		url: '/user/modifyMobileUserPassword',
 		method: 'post',
 		data
 	})
@@ -88,13 +73,6 @@ export function addUser(data) {
 		data
 	})
 }
-export function addXPSUser(data) {
-	return request({
-		url: '/user/addMobile',
-		method: 'post',
-		data
-	})
-}
 export function getUsers(data) {
 	return request({
 		url: '/user/list',
@@ -103,11 +81,10 @@ export function getUsers(data) {
 	})
 }
 
-export function logout(params) {
+export function logout() {
 	return request({
-		url: '/user/logout',
-		method: 'get',
-		params
+		url: '/logout',
+		method: 'post'
 	})
 }
 
