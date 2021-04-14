@@ -6,7 +6,7 @@ export function login(data) {
 		method: 'post',
 		data: {
 			...data,
-			type: 2
+			type: 1
 		}
 	})
 }
