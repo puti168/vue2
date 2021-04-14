@@ -1,69 +1,63 @@
+import dayjs from 'dayjs'
+import { shortcuts, shortcutsNoToday, shortcutsM } from '@/utils/consts'
+import { formatCurrency } from '@/utils'
 export default {
 	data() {
 		return {
 			list: [],
-			currentPage: 1,
-			limit: 10,
 			total: 0,
 			loading: false,
 			pageIndex: 1,
 			pageSize: 10,
-			pageSizes: [10, 20, 50],
+			pageSizes: [5, 10, 20, 50, 100, 200, 500],
 			layout: 'total, sizes, prev, pager, next, jumper',
 			defaultTime: ['00:00:00', '23:59:59']
 		}
 	},
 	computed: {
 		pickerOptions() {
+			const _this = this
 			return {
-				onPick: (obj) => {
-					if (!obj.maxDate) {
-						const timeRange = 90 * 24 * 3600 * 1000
-						this._minTime = obj.minDate.getTime() - timeRange
-						this._maxTime = obj.minDate.getTime() + timeRange
-					} else {
-						this._minTime = this._maxTime = null
+				disabledDate(time) {
+					const now = dayjs()
+						.endOf('day')
+						.valueOf()
+					return time.getTime() > now
+				},
+				onPick({ maxDate, minDate }) {
+					if (!maxDate) {
+						_this.minDate = minDate
 					}
 				},
-				disabledDate: (time) => {
-					if (this._minTime && this._maxTime) {
-						return (
-							time.getTime() < this._minTime || time.getTime() > this._maxTime
-						)
+				shortcuts: shortcuts
+			}
+		},
+		pickerOptionsM() {
+			const _this = this
+			return {
+				disabledDate(time) {
+					const now = dayjs()
+						.endOf('day')
+						.valueOf()
+					return time.getTime() > now
+				},
+				onPick({ maxDate, minDate }) {
+					if (!maxDate) {
+						_this.minDate = minDate
 					}
 				},
-				shortcuts: [
-					{
-						// eslint-disable-next-line no-undef
-						text: this.$t('placeholder.lastWeek'),
-						onClick(picker) {
-							const end = new Date()
-							const start = new Date()
-							start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
-							picker.$emit('pick', [start, end])
-						}
-					},
-					{
-						// eslint-disable-next-line no-undef
-						text: this.$t('placeholder.lastMonth'),
-						onClick(picker) {
-							const end = new Date()
-							const start = new Date()
-							start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
-							picker.$emit('pick', [start, end])
-						}
-					},
-					{
-						// eslint-disable-next-line no-undef
-						text: this.$t('placeholder.lastThreeMonths'),
-						onClick(picker) {
-							const end = new Date()
-							const start = new Date()
-							start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
-							picker.$emit('pick', [start, end])
-						}
+				shortcuts: shortcutsM
+			}
+		},
+		pickerOptionsNoToday() {
+			const _this = this
+			return {
+				onPick({ maxDate, minDate }) {
+					if (!maxDate) {
+						_this.minDate = minDate
 					}
-				]
+				},
+				shortcuts: shortcutsNoToday
 			}
 		}
 	},
@@ -77,32 +71,7 @@ export default {
 		page: 'loadData'
 	},
 	methods: {
-		getSummaries(param) {
-			const { columns, data } = param
-			const sums = []
-			columns.forEach((column, index) => {
-				if (index === 0) {
-					sums[index] = '总价'
-					return
-				}
-				const values = data.map((item) => Number(item[column.property]))
-				if (!values.every((value) => isNaN(value))) {
-					sums[index] = values.reduce((prev, curr) => {
-						const value = Number(curr)
-						if (!isNaN(value)) {
-							return prev + curr
-						} else {
-							return prev
-						}
-					}, 0)
-					sums[index] += ' 元'
-				} else {
-					sums[index] = 'N/A'
-				}
-			})
-
-			return sums
-		},
+		formatCurrency,
 		getRowClass({ row, column, rowIndex, columnIndex }) {
 			if (rowIndex === 0) {
 				return 'background:#EFEFEF'
@@ -115,53 +84,20 @@ export default {
 		 * @param params
 		 * @returns {*}
 		 */
-		getParams(params = {}) {
-			this.pageIndex = params.pageIndex ? params.pageIndex : this.pageIndex
-			return Object.assign({
-				pageIndex: this.pageIndex,
-				pageSize: this.pageSize,
-				...params
-			})
-		},
-		/**
-		 * 加载更多
-		 */
-		loadMore() {
-			this.pageIndex++
-		},
-		/**
-		 * 推送到list中 因为vue的监听特性 只能用push进行数据的添加 如果有特殊处理 通过传递一个filter来过滤数据
-		 * @param list
-		 * @param filter
-		 */
-		handleSizeChange(pageSize) {
-			this.pageSize = pageSize
-			this.pageIndex = 1 // 重置分页数据
-			this.initList()
-			this.$nextTick(() => {
-				this.loadData()
-			})
-		},
-		handleCurrentChange(pageIndex) {
-			this.pageIndex = pageIndex
-			this.initList()
-			this.$nextTick(() => {
-				this.loadData()
-			})
-		},
-		pushToList(list, filter) {
-			list.forEach((item) => {
-				if (typeof filter === 'function') {
-					this.list.push(filter(item))
-				} else {
-					this.list.push(item)
-				}
-			})
+		getParams(params) {
+			return Object.assign(
+				{
+					pageIndex: this.pageIndex,
+					pageSize: this.pageSize
+				},
+				params
+			)
 		},
 		/**
 		 * 初始化列表
 		 */
 		initList() {
+			this.pageIndex = 1
 			this.list = []
 			this.loadData()
 		},
@@ -171,6 +107,16 @@ export default {
 		 */
 		loadData() {
 			// 每个列表自己的获取数据的方法需要重写
+		},
+		// 改变列表条数
+		handleSizeChange(value) {
+			this.pageIndex = 1
+			this.pageSize = value
+			this.loadData()
+		},
+		handleCurrentChange(value) {
+			this.pageIndex = value
+			this.loadData()
 		}
 	}
 }

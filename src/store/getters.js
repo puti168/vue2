@@ -11,6 +11,7 @@ const getters = {
 	name: (state) => state.user.nickName,
 	username: (state) => state.user.username,
 	userId: (state) => state.user.id,
+	tree: (state) => state.user.tree,
 	userInfo: (state) => state.user.userInfo,
 	// 按钮权限
 	buttonPermissions: (state) => state.permission.userBtns

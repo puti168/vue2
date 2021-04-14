@@ -126,13 +126,13 @@
 				>
 					<template slot-scope="scope">
 						<el-button
-							v-if="hasPermission('5333') && scope.row.roleName !== '安全后台-超级管理员'"
+							v-if="hasPermission('5333') && scope.row.roleName !== '商户后台-超级管理员'"
 							type="text"
 							size="small"
 							@click.native.prevent="editRow(scope.row)"
 						>{{ $t('system_component_role_396') }}</el-button>
 						<el-button
-							v-if="hasPermission('5334') && scope.row.roleName !== '安全后台-超级管理员'"
+							v-if="hasPermission('5334') && scope.row.roleName !== '商户后台-超级管理员'"
 							type="text"
 							size="small"
 							@click.native.prevent="popupDelDialog(scope.row, list)"
