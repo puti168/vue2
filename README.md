@@ -58,5 +58,7 @@ yarn lint
 
 # 代码格式检查并自动修复
 yarn lint -- --fix
-```
 
+# 解决yarn或者npm 不能安装问题
+ 删除package.lock.json和npm shrinkwarp.json
+```
