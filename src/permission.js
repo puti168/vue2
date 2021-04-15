@@ -60,6 +60,9 @@ const ifVersionCorrect = async (to, from, next) => {
 						'permission/generateRoutes',
 						roles
 					)
+					console.log('accessRoutes')
+					console.log(accessRoutes)
+					console.log(roles)
 					router.addRoutes(accessRoutes)
 					next({ ...to, replace: true })
 				}
