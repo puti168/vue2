@@ -112,6 +112,47 @@ const actions = {
 				redirect: '/404',
 				hidden: true
 			})
+
+            // parentRoutes[3].children.push({
+            //     component: () => Promise.resolve(require(`@/views/activity-manager/activity-task/index`).default),
+            //     meta: {
+            //         icon: 'bb_management_system',
+            //         title: '活动任务记录'
+            //     },
+            //     name: '活动任务记录',
+            //     path: '/activity-manager/activity-task'
+            // })
+            //
+            // parentRoutes[3].children.push({
+            //     component: () => Promise.resolve(require(`@/views/activity-manager/play-record/index`).default),
+            //     meta: {
+            //         icon: 'bb_management_system',
+            //         title: '比赛记录'
+            //     },
+            //     name: '比赛记录',
+            //     path: '/activity-manager/play-record'
+            // })
+            //
+            // parentRoutes[3].children.push({
+            //     component: () => Promise.resolve(require(`@/views/activity-manager/bet-record/index`).default),
+            //     meta: {
+            //         icon: 'bb_management_system',
+            //         title: '平台投注详情'
+            //     },
+            //     name: '平台投注详情',
+            //     path: '/activity-manager/bet-record'
+            // })
+            //
+            // parentRoutes[3].children.push({
+            //     component: () => Promise.resolve(require(`@/views/activity-manager/tickets-record/index`).default),
+            //     meta: {
+            //         icon: 'bb_management_system',
+            //         title: '门票记录'
+            //     },
+            //     name: '门票记录',
+            //     path: '/activity-manager/tickets-record'
+            // })
+
 			// 根路由跳转, 定义根路由
 			const rootRoutes = []
 			if (parentRoutes.length) {
