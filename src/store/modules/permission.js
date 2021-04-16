@@ -99,7 +99,7 @@ const actions = {
 				}
 			})
 			parentRoutes = parentRoutes.filter((val) => {
-				return !val.children || (val.children && val.children.length !== 0)
+				return !val.children || (val.children && val.children.length)
 			})
 
 			parentRoutes.forEach((element) => {
@@ -114,9 +114,9 @@ const actions = {
 			})
 			// 根路由跳转, 定义根路由
 			const rootRoutes = []
-			if (parentRoutes.length !== 0) {
+			if (parentRoutes.length) {
 				const rootRoute = parentRoutes[0]
-				if (rootRoute.children && rootRoute.children.length > 0) {
+				if (rootRoute.children && rootRoute.children.length) {
 					rootRoutes.push({
 						path: '/',
 						redirect: rootRoute.children && rootRoute.children[0].path
@@ -143,11 +143,11 @@ const actions = {
 
 // 迭代拍平
 function loop(roles, arr) {
-	if (!roles || roles.length === 0) return []
+	if (!roles || !roles.length) return []
 
 	roles.forEach((i) => {
 		arr.push(i)
-		if (i && i.children && i.children.length > 0) {
+		if (i && i.children && i.children.length) {
 			loop(i.children, arr)
 		}
 	})

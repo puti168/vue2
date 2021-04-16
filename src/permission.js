@@ -48,7 +48,7 @@ const ifVersionCorrect = async (to, from, next) => {
 			next({ path: '/' })
 			NProgress.done()
 		} else {
-			if (addRoutes.length === 0) {
+			if (!addRoutes.length) {
 				const roles = await store.dispatch('user/getRoles')
 
 				if (roles === '无效权限') {
