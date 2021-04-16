@@ -286,14 +286,13 @@ $light_gray: #eee;
 		background-size: cover;
 	}
 	h3 {
-		margin: 0;
-		margin-bottom: 32px;
+		margin: 0 0 32px 0;
 		text-align: center;
 		font-family: MicrosoftYaHei;
 		font-size: 32px;
 		font-weight: normal;
 		font-stretch: normal;
-		letter-spacing: 0px;
+		letter-spacing: 0;
 		color: #ffffff;
 	}
 	.el-input {
@@ -303,16 +302,16 @@ $light_gray: #eee;
 		min-width: 100px;
 		input {
 			background: transparent;
-			border: 0px;
+			border: 0;
 			-webkit-appearance: none;
-			border-radius: 0px;
+			border-radius: 0;
 			padding: 12px 5px 12px 15px;
 			color: $light_gray;
 			height: 47px;
 			caret-color: $cursor;
 
 			&:-webkit-autofill {
-				box-shadow: 0 0 0px 1000px $bg inset !important;
+				box-shadow: 0 0 0 1000px $bg inset !important;
 				-webkit-text-fill-color: $cursor !important;
 			}
 		}
@@ -361,7 +360,7 @@ $light_gray: #eee;
 		font-size: 18px;
 		font-weight: normal;
 		font-stretch: normal;
-		letter-spacing: 0px;
+		letter-spacing: 0;
 		color: #8a90a5;
 	}
 
