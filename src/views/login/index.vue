@@ -1,5 +1,6 @@
 <template>
 	<div class="login-container">
+        <div class="bg-login"></div>
 		<el-form
 			ref="loginForm"
 			:model="loginForm"
@@ -242,9 +243,9 @@ $light_gray: #eee;
 .login-container {
 	min-height: 100%;
 	width: 100%;
-	background-color: $bgc;
+	//background-color: $bgc;
 	overflow: hidden;
-	background: url('../../assets/img/bg.jpg') no-repeat;
+	//background: url('../../assets/img/bg.jpg') no-repeat;
 	background-size: cover;
 	// background-position: fixed; /* Internet Explorer 7/8 */
 	.login-form {
@@ -259,6 +260,25 @@ $light_gray: #eee;
 		text-align: center;
 		margin-bottom: 19px;
 	}
+    .bg-login {
+        position: absolute;
+        width: 100%;
+        max-width: 100%;
+        height: 220px;
+        margin: 0 auto;
+        top: 285px;
+        background-color: rgba(0, 121, 254, 1);
+    }
+    .bg-login:after {
+        //position: absolute;
+        //top: 50%;
+        //left: 50%;
+        //height: 50%;
+        //width: 100%;
+        //content: '';
+        //transform: translate(-50%, -50%);
+        //z-index: -1;
+    }
 	.login-content {
 		padding: 8% 12%;
 		height: 490px;
