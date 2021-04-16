@@ -482,7 +482,7 @@ export default {
 		size: '布局大小'
 	},
 	login: {
-		title: '商户管理后台',
+		title: 'OB旗舰中控管理后台',
 		logIn: '登录',
 		username: '请输入账号',
 		password: '请输入密码',

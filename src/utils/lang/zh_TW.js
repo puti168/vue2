@@ -11,7 +11,7 @@ export default {
 		dashboard: '首頁'
 	},
 	login: {
-		title: '管理後臺',
+		title: 'OB管理後臺',
 		logIn: '登錄',
 		username: '請輸入賬號',
 		password: '請輸入密碼',
