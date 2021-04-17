@@ -77,7 +77,7 @@
 					@click="addRole"
 				>{{ $t('system_component_role_379') }}</el-button>
 			</div>
-			<el-divider></el-divider>
+			<!-- <el-divider></el-divider> -->
 			<el-table :data="list" style="width: 100%" :header-cell-style="getRowClass">
 				<el-table-column
 					align="center"
