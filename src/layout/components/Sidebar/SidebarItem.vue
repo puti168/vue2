@@ -1,5 +1,5 @@
 <template>
-	<div v-if="!item.hidden" class="menu-wrapper">
+	<div class="menu-wrapper">
 		<template
 			v-if="hasOneShowingChild(item.children,item) && (!onlyOneChild.children||onlyOneChild.noShowingChildren)&&!item.alwaysShow"
 		>
@@ -17,27 +17,6 @@
 				</el-menu-item>
 			</app-link>
 		</template>
-
-		<el-submenu v-else ref="subMenu" :index="resolvePath(item.path)" popper-append-to-body>
-			<template slot="title">
-				<item
-					v-if="item.meta"
-					:active-path="activePath"
-					:path="item.path"
-					:icon="item.meta && item.meta.icon"
-					:title="generateTitle(item.meta.title)"
-				/>
-			</template>
-			<sidebar-item
-				v-for="child in item.children"
-				:key="child.path"
-				:is-nest="true"
-				:item="child"
-				:base-path="resolvePath(child.path)"
-				:active-path="activePath"
-				class="nest-menu"
-			/>
-		</el-submenu>
 	</div>
 </template>
 
