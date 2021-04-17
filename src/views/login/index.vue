@@ -75,6 +75,7 @@
                 </div>-->
             </div>
         </el-form>
+        <div class="bottom-tips">Copyright &copy; OBQJ, All Rights Reserved <br />助力打造最强现金网</div>
         <div class="version">version: {{ version }}</div>
     </div>
 </template>
@@ -228,7 +229,7 @@ export default {
 
 $bg: #283443;
 $light_gray: #fff;
-$cursor: #fff;
+$cursor: #999;
 $bgc: #2d3a4b;
 $dark_gray: #889aa4;
 $light_gray: #eee;
@@ -268,19 +269,18 @@ $light_gray: #eee;
         max-width: 100%;
         height: 220px;
         margin: 0 auto;
-        top: 285px;
-        background-color: rgba(0, 121, 254, 1);
+        top: 287px;
+        background: url('../../assets/img/bg-login.jpg') no-repeat;
+        background-size: cover;
     }
 
     .login-content {
         padding: 8% 12% 500px 12%;
         height: 490px;
-        //background: url('../../assets/img/login_bg.png') no-repeat;
         background-size: cover;
         background-color: #FFFFFF;
         border-radius: 5px;
         border: 0.5px solid #ccc;
-        //box-shadow: 1px 1px 4px rgba(25, 81, 134, 0.5);
         box-shadow: 0 0 10px rgba(25, 81, 134, 0.35);
         z-index: 10;
     }
@@ -293,7 +293,7 @@ $light_gray: #eee;
         font-weight: normal;
         font-stretch: normal;
         letter-spacing: 0;
-        color: #ffffff;
+        color: #fff;
     }
 
     .el-input {
@@ -301,7 +301,6 @@ $light_gray: #eee;
         height: 47px;
         width: 75%;
         min-width: 100px;
-
         input {
             background: transparent;
             border: 0;
@@ -311,7 +310,6 @@ $light_gray: #eee;
             color: #999;
             height: 47px;
             caret-color: $cursor;
-
             &:-webkit-autofill {
                 box-shadow: 0 0 0 1000px $bg inset !important;
                 -webkit-text-fill-color: $cursor !important;
@@ -340,23 +338,26 @@ $light_gray: #eee;
     }
 
     .el-form-item:focus-within {
-        //background-color: #101221;
         border: 1px solid #0b7dfa;
         border-radius: 5px;
     }
 
     .login-btn {
-        background: url('../../assets/img/login_btn.png') no-repeat;
-        background-size: cover;
+        background-color: rgba(0, 121, 254, 1);
         height: 51px;
         cursor: pointer;
-        border-radius: 10px;
+        border-radius: 5px;
         text-align: center;
         font-family: MicrosoftYaHei;
         font-size: 20px;
-        color: #ffffff;
+        color: #fff;
         line-height: 51px;
         margin-bottom: 50px;
+    }
+
+    .login-btn:hover {
+        cursor: pointer;
+        opacity: 0.8;
     }
 
     .aActive {
@@ -375,11 +376,12 @@ $light_gray: #eee;
     }
 
     .svg-container {
-        padding: 6px 5px 6px 15px;
+        padding: 3px 5px 6px 15px;
         color: $dark_gray;
         vertical-align: middle;
-        width: 30px;
+        width: 35px;
         display: inline-block;
+        font-size: 18px;
     }
 
     .title-container {
@@ -423,6 +425,16 @@ $light_gray: #eee;
         right: 10px;
         bottom: 10px;
         color: #fff;
+    }
+
+    .bottom-tips {
+        position: fixed;
+        bottom: 30px;
+        text-align: center;
+        left: 50%;
+        font-size: 12px;
+        color: #ccc;
+        transform: translate(-50%, 0);
     }
 }
 </style>

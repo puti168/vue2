@@ -13,8 +13,8 @@ export default {
 	login: {
 		title: 'OB管理後臺',
 		logIn: '登錄',
-		username: '請輸入賬號',
-		password: '請輸入密碼',
+		username: '請輸入登錄賬號',
+		password: '請輸入登錄密碼',
 		codeVerify: '請輸入驗證碼',
 		verificationCode: '驗證碼',
 		less6Password: '密碼不能少於6位'

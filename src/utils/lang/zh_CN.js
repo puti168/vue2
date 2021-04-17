@@ -484,8 +484,8 @@ export default {
 	login: {
 		title: 'OB旗舰中控管理后台',
 		logIn: '登录',
-		username: '请输入账号',
-		password: '请输入密码',
+		username: '请输入用户名称',
+		password: '请输入登录密码',
 		codeVerify: '请输入验证码',
 		verificationCode: '验证码',
 		less6Password: '密码不能少于6位'
