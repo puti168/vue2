@@ -255,7 +255,6 @@ $light_gray: #eee;
 	width: 100%;
 	//background-color: $bgc;
 	overflow: hidden;
-	//background: url('../../assets/img/bg.jpg') no-repeat;
 	background-size: cover;
 	// background-position: fixed; /* Internet Explorer 7/8 */
 	.login-form {
@@ -278,7 +277,7 @@ $light_gray: #eee;
 		max-width: 100%;
 		height: 220px;
 		margin: 0 auto;
-		top: 287px;
+		top: 291px;
 		background: url('../../assets/img/bg-login.jpg') no-repeat;
 		background-size: cover;
 	}
