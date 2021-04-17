@@ -3,8 +3,7 @@
 		<el-scrollbar wrap-class="scrollbar-wrapper">
 			<el-menu
 				:default-active="activeMenu"
-				:collapse="isCollapse"
-				background-color="rgba(242, 242, 242, 1)"
+				background-color="#f2f2f2"
 				text-color="#999999"
 				:unique-opened="false"
 				active-text-color="#999999"
@@ -34,6 +33,7 @@ export default {
 		...mapGetters(['sidebar', 'routes']),
 		activeMenu() {
 			console.log('routes :>> ', this.routes)
+			console.log(this.$route)
 			const route = this.$route
 			const { meta, path } = route
 			// if set path, the sidebar will highlight the path you set
@@ -44,9 +44,6 @@ export default {
 		},
 		variables() {
 			return variables
-		},
-		isCollapse() {
-			return !this.sidebar.opened
 		}
 	}
 }
