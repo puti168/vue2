@@ -1,13 +1,13 @@
 <template>
-	<div :class="{'has-logo':showLogo}">
+	<div>
 		<el-scrollbar wrap-class="scrollbar-wrapper">
 			<el-menu
 				:default-active="activeMenu"
 				:collapse="isCollapse"
-				:background-color="variables.menuBg"
-				:text-color="variables.menuText"
+				background-color="rgba(242, 242, 242, 1)"
+				text-color="#999999"
 				:unique-opened="false"
-				:active-text-color="variables.menuActiveText"
+				active-text-color="#999999"
 				:collapse-transition="false"
 				mode="vertical"
 			>
@@ -32,10 +32,6 @@ export default {
 	components: { SidebarItem },
 	computed: {
 		...mapGetters(['sidebar', 'routes']),
-		// routes() {
-		// 	console.log('router :', this.$router.options.routes)
-		// 	return this.$router.options.routes
-		// },
 		activeMenu() {
 			console.log('routes :>> ', this.routes)
 			const route = this.$route
@@ -45,9 +41,6 @@ export default {
 				return meta.activeMenu
 			}
 			return path
-		},
-		showLogo() {
-			return this.$store.state.settings.sidebarLogo
 		},
 		variables() {
 			return variables
