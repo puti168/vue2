@@ -300,7 +300,7 @@ export default {
 		justify-content: center;
 
 		.el-form-item {
-			margin-bottom: 20px;
+			margin-bottom: 15px;
 
 			.el-form-item__label {
 				font-size: 16px;
