@@ -30,7 +30,9 @@
                   :label="$t('system_component_component_editaccount_407')"
                   prop="type"
                 >
-                  <span>{{ $t("system_component_component_editaccount_408") }}</span>
+                  <span>
+                    {{ $t("system_component_component_editaccount_408") }}
+                  </span>
                 </el-form-item>
               </el-row>
               <el-row>
@@ -95,11 +97,13 @@
                     style="width: 120px; margin-left: 20px"
                     :disabled="loading"
                     @click="createGoogleAuth"
-                    >{{
+                  >
+                    {{
                       isEditing
                         ? $t("system_component_account_274")
                         : $t("login_index_259")
-                    }}</el-button>
+                    }}
+                  </el-button>
                 </el-form-item>
               </el-row>
             </el-col>
@@ -116,12 +120,12 @@
             :props="{ key: 'id', label: 'roleName' }"
           ></el-transfer>
           <div class="handles center">
-            <el-button round type="default" class="item" @click.native="handleClose">{{
-              $t("system_component_component_editaccount_417")
-            }}</el-button>
-            <el-button round type="success" class="item" @click.native="handleSure">{{
-              $t("system_component_component_editaccount_418")
-            }}</el-button>
+            <el-button round type="default" class="item" @click.native="handleClose">
+              {{ $t("system_component_component_editaccount_417") }}
+            </el-button>
+            <el-button round type="success" class="item" @click.native="handleSure">
+              {{ $t("system_component_component_editaccount_418") }}
+            </el-button>
           </div>
         </el-form>
       </el-card>
