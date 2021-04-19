@@ -44,8 +44,6 @@ export default {
 			this.$store.dispatch('app/toggleSideBar')
 		},
 		async go(item) {
-			console.log('item')
-			console.log(item.id)
 			await this.$store.dispatch('permission/setNowroute', item.id)
 			item.checked = !item.checked
 		},
