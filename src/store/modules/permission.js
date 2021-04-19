@@ -39,7 +39,8 @@ export function filterAsyncRoutes(routes, roles) {
 const state = {
 	routes: [],
 	addRoutes: [],
-	userBtns: []
+	userBtns: [],
+	nowRoute: ''
 }
 
 const mutations = {
@@ -50,6 +51,12 @@ const mutations = {
 	},
 	CLEAR_ROUTES: (state) => {
 		state.addRoutes = []
+	},
+	SET_NOWROUTE: (state, value) => {
+		state.nowRoute = value
+		console.log('state.nowRoute')
+		console.log(state.nowRoute)
+		console.log(value)
 	}
 }
 
@@ -65,30 +72,58 @@ const actions = {
 					...element,
 					...mapElement
 				}
+				// 二级菜单集合
+				const parentList = ['1300']
 				if (mapElement) {
+					// 一级菜单
 					if (element.parentId === '0') {
 						parentRoutes.push({
 							id: element.id,
 							path: element.path,
-							name: element.id,
+							name: element.permissionName,
+							show: true,
 							component: Layout,
-							meta: {
-								title: mapElement.title,
-								icon: element.icon
-							},
 							children: [],
-							isRedirect: element.isRedirect
+							checked: false
 						})
-					} else if (+element.parentId > 0) {
+					} else if (+element.parentId < 1300) {
+						// 二级菜单
 						const index = parentRoutes.findIndex(
 							(val) => val.id === element.parentId
 						)
 						if (index > -1) {
 							parentRoutes[index].children.push({
+								id: element.id,
+								path: element.path,
+								name: element.permissionName,
+								component: Layout,
+								parentId: element.parentId,
+								checked: false,
+								meta: {
+									title: mapElement.title,
+									icon: mapElement.icon
+								},
+								children: [],
+								isRedirect: element.isRedirect
+							})
+						}
+					} else if (parentList.includes(element.parentId)) {
+						// 三级菜单
+						const midIndex = userRoutes.findIndex(
+							(val) => val.id === element.parentId
+						)
+						const index = parentRoutes.findIndex(
+							(val) => val.id === userRoutes[midIndex].parentId
+						)
+						const index2 = parentRoutes[index].children.findIndex(
+							(val) => val.id === element.parentId
+						)
+						if (index > -1) {
+							parentRoutes[index].children[index2].children.push({
 								path: element.path,
 								name: element.id,
-								component: (resolve) => require(['@/views' + element.path + '/index'], resolve),
-								// component: () => import('@/views' + element.path + '/index'),
+								component: (resolve) =>
+									require(['@/views' + element.path + '/index'], resolve),
 								meta: {
 									title: mapElement.title,
 									icon: element.icon
@@ -112,47 +147,6 @@ const actions = {
 				redirect: '/404',
 				hidden: true
 			})
-
-            // parentRoutes[3].children.push({
-            //     component: () => Promise.resolve(require(`@/views/activity-manager/activity-task/index`).default),
-            //     meta: {
-            //         icon: 'bb_management_system',
-            //         title: '活动任务记录'
-            //     },
-            //     name: '活动任务记录',
-            //     path: '/activity-manager/activity-task'
-            // })
-            //
-            // parentRoutes[3].children.push({
-            //     component: () => Promise.resolve(require(`@/views/activity-manager/play-record/index`).default),
-            //     meta: {
-            //         icon: 'bb_management_system',
-            //         title: '比赛记录'
-            //     },
-            //     name: '比赛记录',
-            //     path: '/activity-manager/play-record'
-            // })
-            //
-            // parentRoutes[3].children.push({
-            //     component: () => Promise.resolve(require(`@/views/activity-manager/bet-record/index`).default),
-            //     meta: {
-            //         icon: 'bb_management_system',
-            //         title: '平台投注详情'
-            //     },
-            //     name: '平台投注详情',
-            //     path: '/activity-manager/bet-record'
-            // })
-            //
-            // parentRoutes[3].children.push({
-            //     component: () => Promise.resolve(require(`@/views/activity-manager/tickets-record/index`).default),
-            //     meta: {
-            //         icon: 'bb_management_system',
-            //         title: '门票记录'
-            //     },
-            //     name: '门票记录',
-            //     path: '/activity-manager/tickets-record'
-            // })
-
 			// 根路由跳转, 定义根路由
 			const rootRoutes = []
 			if (parentRoutes.length) {
@@ -170,6 +164,8 @@ const actions = {
 				}
 			}
 			parentRoutes = parentRoutes.concat(rootRoutes)
+			console.log('parentRott')
+			console.log(parentRoutes)
 			commit('SET_ROUTES', {
 				parentRoutes,
 				userBtns
@@ -179,6 +175,9 @@ const actions = {
 	},
 	clearRoutes({ commit }) {
 		commit('CLEAR_ROUTES')
+	},
+	setNowroute({ commit }, id) {
+		commit('SET_NOWROUTE', id)
 	}
 }
 

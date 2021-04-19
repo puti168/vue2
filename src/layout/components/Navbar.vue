@@ -2,7 +2,9 @@
 	<div class="navbar">
 		 <svg-icon icon-class="left-logo" class="left-logo" />
 		<span class="left-title">OB旗舰中控管理</span>
-		<div v-for="(item, index) in permissionList" :key="index" class="navbar-title" :class="item.checked ? 'active' : ''" @click="go(item)">{{ item.name }}</div>
+		<template v-for="(item, index) in routes">
+		<div v-if="item.show" :key="index" class="navbar-title" :class="item.checked ? 'active' : ''" @click="go(item)">{{ item.name }}</div>
+		</template>
 		<div class="right-menu flex">
 			<div class="avatar-wrapper flex flex-cc">
 				<svg-icon icon-class="user" class="user-avatar" />
@@ -21,45 +23,11 @@ export default {
 	components: {},
 	data() {
 		return {
-			name: '',
-			permissionList: [
-				{
-					name: '会员',
-					checked: false
-				},
-				{
-					name: '游戏',
-					checked: false
-				},
-				{
-					name: '财务',
-					checked: false
-				},
-				{
-					name: '代理',
-					checked: false
-				},
-				{
-					name: '运营',
-					checked: false
-				},
-				{
-					name: '风控',
-					checked: false
-				},
-				{
-					name: '报表',
-					checked: false
-				},
-				{
-					name: '系统',
-					checked: false
-				}
-			]
+			name: ''
 		}
 	},
 	computed: {
-		...mapGetters(['sidebar', 'avatar', 'userInfo']),
+		...mapGetters(['sidebar', 'avatar', 'routes', 'userInfo']),
 		myavatar() {
 			return this.avatar || require('@/assets/img/avatar.png')
 		},
@@ -75,10 +43,10 @@ export default {
 		toggleSideBar() {
 			this.$store.dispatch('app/toggleSideBar')
 		},
-		go(item) {
-			this.permissionList.forEach(data => {
-				data.checked = false
-			})
+		async go(item) {
+			console.log('item')
+			console.log(item.id)
+			await this.$store.dispatch('permission/setNowroute', item.id)
 			item.checked = !item.checked
 		},
 		async loginOut() {

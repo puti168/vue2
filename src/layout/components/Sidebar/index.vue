@@ -11,7 +11,7 @@
 				mode="vertical"
 			>
 				<sidebar-item
-					v-for="route in routes"
+					v-for="route in showRoute"
 					:key="route.path"
 					:item="route"
 					:base-path="route.path"
@@ -30,7 +30,21 @@ import variables from '@/styles/variables.scss'
 export default {
 	components: { SidebarItem },
 	computed: {
-		...mapGetters(['sidebar', 'routes']),
+		...mapGetters(['sidebar', 'routes', 'nowRoute']),
+		showRoute() {
+			let arr = []
+			console.log('this.nowRoute')
+			console.log(this.routes)
+			console.log(this.nowRoute)
+			this.routes.forEach(item => {
+				if (item.id === this.nowRoute) {
+					arr = item
+				}
+			})
+			console.log('arr')
+			console.log(arr)
+			return arr.children
+		},
 		activeMenu() {
 			console.log('routes :>> ', this.routes)
 			console.log(this.$route)
