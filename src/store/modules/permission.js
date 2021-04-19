@@ -54,9 +54,6 @@ const mutations = {
 	},
 	SET_NOWROUTE: (state, value) => {
 		state.nowRoute = value
-		console.log('state.nowRoute')
-		console.log(state.nowRoute)
-		console.log(value)
 	}
 }
 
@@ -73,7 +70,7 @@ const actions = {
 					...mapElement
 				}
 				// 二级菜单集合
-				const parentList = ['1300']
+				const midList = ['1300']
 				if (mapElement) {
 					// 一级菜单
 					if (element.parentId === '0') {
@@ -86,7 +83,7 @@ const actions = {
 							children: [],
 							checked: false
 						})
-					} else if (+element.parentId < 1300) {
+					} else if (midList.includes(element.id)) {
 						// 二级菜单
 						const index = parentRoutes.findIndex(
 							(val) => val.id === element.parentId
@@ -107,7 +104,7 @@ const actions = {
 								isRedirect: element.isRedirect
 							})
 						}
-					} else if (parentList.includes(element.parentId)) {
+					} else if (midList.includes(element.parentId)) {
 						// 三级菜单
 						const midIndex = userRoutes.findIndex(
 							(val) => val.id === element.parentId
@@ -164,8 +161,6 @@ const actions = {
 				}
 			}
 			parentRoutes = parentRoutes.concat(rootRoutes)
-			console.log('parentRott')
-			console.log(parentRoutes)
 			commit('SET_ROUTES', {
 				parentRoutes,
 				userBtns

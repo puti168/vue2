@@ -33,16 +33,11 @@ export default {
 		...mapGetters(['sidebar', 'routes', 'nowRoute']),
 		showRoute() {
 			let arr = []
-			console.log('this.nowRoute')
-			console.log(this.routes)
-			console.log(this.nowRoute)
 			this.routes.forEach(item => {
 				if (item.id === this.nowRoute) {
 					arr = item
 				}
 			})
-			console.log('arr')
-			console.log(arr)
 			return arr.children
 		},
 		activeMenu() {
