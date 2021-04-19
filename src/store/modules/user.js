@@ -173,12 +173,15 @@ const actions = {
         commit
     }) {
         return getUserPermissions().then((response) => {
+            console.log(response)
             const data = response.status === 203 ? [] : response.data
             const result = []
             loop(data, result)
             commit('SET_ROLES', data)
             commit('SET_ROLES_IDS', result)
             return response.data
+        }).catch((err) => {
+            console.log(err)
         })
     },
     changeDataLanguage({

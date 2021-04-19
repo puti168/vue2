@@ -1,14 +1,12 @@
 <template>
-	<div :class="{'has-logo':showLogo}">
-		<logo v-if="showLogo" :collapse="isCollapse" />
+	<div>
 		<el-scrollbar wrap-class="scrollbar-wrapper">
 			<el-menu
 				:default-active="activeMenu"
-				:collapse="isCollapse"
-				:background-color="variables.menuBg"
-				:text-color="variables.menuText"
+				background-color="#f2f2f2"
+				text-color="#999999"
 				:unique-opened="false"
-				:active-text-color="variables.menuActiveText"
+				active-text-color="#999999"
 				:collapse-transition="false"
 				mode="vertical"
 			>
@@ -26,20 +24,16 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import Logo from './Logo'
 import SidebarItem from './SidebarItem'
 import variables from '@/styles/variables.scss'
 
 export default {
-	components: { SidebarItem, Logo },
+	components: { SidebarItem },
 	computed: {
 		...mapGetters(['sidebar', 'routes']),
-		// routes() {
-		// 	console.log('router :', this.$router.options.routes)
-		// 	return this.$router.options.routes
-		// },
 		activeMenu() {
 			console.log('routes :>> ', this.routes)
+			console.log(this.$route)
 			const route = this.$route
 			const { meta, path } = route
 			// if set path, the sidebar will highlight the path you set
@@ -48,14 +42,8 @@ export default {
 			}
 			return path
 		},
-		showLogo() {
-			return this.$store.state.settings.sidebarLogo
-		},
 		variables() {
 			return variables
-		},
-		isCollapse() {
-			return !this.sidebar.opened
 		}
 	}
 }

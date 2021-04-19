@@ -71,13 +71,6 @@
 				<div class="login-btn" @click.prevent="handleLogin">
 					{{ $t('login.logIn') }}
 				</div>
-
-				<!-- 后端还没做翻译，暂时隐藏
-                <div class="switch-language flex-bc">
-                    <a :class="{ aActive: language === 'zh' }" @click.prevent="handleSetLanguage('zh')">简体中文</a>
-                    <a :class="{ aActive: language === 'tw' }" @click.prevent="handleSetLanguage('tw')">繁體中文</a>
-                    <a :class="{ aActive: language === 'en' }" @click.prevent="handleSetLanguage('en')">English</a>
-                </div>-->
 			</div>
 		</el-form>
 		<div class="bottom-tips">

@@ -5,7 +5,7 @@ import {
     Message
 } from 'element-ui'
 import store from '@/store'
-import router from '@/router'
+// import router from '@/router'
 import Cookies from 'js-cookie'
 import {
     getToken
@@ -106,44 +106,45 @@ service.interceptors.response.use(
                 response.data = JSON.parse(decryptData)
             }
             const res = response.data
+            return res
             // console.log('request===>', res)
-            if (res.code !== 200) {
-                if (res.code === 10025) {
-                    const username = localStorage.getItem('username')
-                    const password = localStorage.getItem('password')
-                    const googleAuth = localStorage.getItem('googleAuth')
-                    await store
-                        .dispatch('user/login', {
-                            username: username.trim(),
-                            password,
-                            googleAuth,
-                            version: '2.0',
-                            pwdNeedReset: true,
-                            prePassword: password
-                        })
-                        .then(() => {
-                            router.push(`/`)
-                        })
-                        .catch(() => {})
-                } else {
-                    // if the custom code is not 20000, it is judged as an error.
-                    if (res.code === 20000 || res.code === 20001 || res.code === 20002) {
-                        // 无效权限
-                        const fullPath = router.history.current.fullPath
-                        await store.dispatch('user/logout')
-                        await store.dispatch('permission/clearRoutes')
-                        router.push(`/login?redirect=${fullPath}`)
-                    }
-                    Message.closeAll()
-                    Message({
-                        message: res.message || res.msg || res || 'Error',
-                        type: 'error'
-                    })
-                }
-                return Promise.reject(new Error(res.message || res.msg || 'Error'))
-            } else {
-                return res
-            }
+            // if (res.code !== 200) {
+            //     if (res.code === 10025) {
+            //         const username = localStorage.getItem('username')
+            //         const password = localStorage.getItem('password')
+            //         const googleAuth = localStorage.getItem('googleAuth')
+            //         await store
+            //             .dispatch('user/login', {
+            //                 username: username.trim(),
+            //                 password,
+            //                 googleAuth,
+            //                 version: '2.0',
+            //                 pwdNeedReset: true,
+            //                 prePassword: password
+            //             })
+            //             .then(() => {
+            //                 router.push(`/`)
+            //             })
+            //             .catch(() => {})
+            //     } else {
+            //         // if the custom code is not 20000, it is judged as an error.
+            //         if (res.code === 20000 || res.code === 20001 || res.code === 20002) {
+            //             // 无效权限
+            //             const fullPath = router.history.current.fullPath
+            //             await store.dispatch('user/logout')
+            //             await store.dispatch('permission/clearRoutes')
+            //             router.push(`/login?redirect=${fullPath}`)
+            //         }
+            //         Message.closeAll()
+            //         Message({
+            //             message: res.message || res.msg || res || 'Error',
+            //             type: 'error'
+            //         })
+            //     }
+            //     return Promise.reject(new Error(res.message || res.msg || 'Error'))
+            // } else {
+            //     return res
+            // }
         },
         async (error) => {
             console.log('err' + error.response) // for debug
