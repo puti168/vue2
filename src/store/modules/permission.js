@@ -39,7 +39,8 @@ export function filterAsyncRoutes(routes, roles) {
 const state = {
 	routes: [],
 	addRoutes: [],
-	userBtns: []
+	userBtns: [],
+	nowRoute: ''
 }
 
 const mutations = {
@@ -50,13 +51,20 @@ const mutations = {
 	},
 	CLEAR_ROUTES: (state) => {
 		state.addRoutes = []
+	},
+	SET_NOWROUTE: (state, value) => {
+		state.nowRoute = value.id
 	}
 }
 
 const actions = {
 	generateRoutes({ commit }, roles) {
 		return new Promise((resolve) => {
+			console.log('roles')
+			console.log(roles)
 			const userRoutes = loop(roles, [])
+			console.log('userRoutes')
+			console.log(userRoutes)
 			let parentRoutes = []
 			const userBtns = userRoutes.map((val) => val.id)
 			userRoutes.forEach((element) => {
@@ -66,18 +74,28 @@ const actions = {
 					...mapElement
 				}
 				if (mapElement) {
-					if (element.parentId === '0') {
+					if (element.parentId === '1001') {
 						parentRoutes.push({
 							id: element.id,
 							path: element.path,
 							name: element.id,
 							component: Layout,
+							parentId: element.parentId,
 							meta: {
 								title: mapElement.title,
 								icon: element.icon
 							},
 							children: [],
 							isRedirect: element.isRedirect
+						})
+					} else if (element.parentId === '0') {
+						parentRoutes.push({
+							id: element.id,
+							path: element.path,
+							name: element.id,
+							component: Layout,
+							children: [],
+							checked: false
 						})
 					} else if (+element.parentId > 0) {
 						const index = parentRoutes.findIndex(
@@ -112,47 +130,6 @@ const actions = {
 				redirect: '/404',
 				hidden: true
 			})
-
-            // parentRoutes[3].children.push({
-            //     component: () => Promise.resolve(require(`@/views/activity-manager/activity-task/index`).default),
-            //     meta: {
-            //         icon: 'bb_management_system',
-            //         title: '活动任务记录'
-            //     },
-            //     name: '活动任务记录',
-            //     path: '/activity-manager/activity-task'
-            // })
-            //
-            // parentRoutes[3].children.push({
-            //     component: () => Promise.resolve(require(`@/views/activity-manager/play-record/index`).default),
-            //     meta: {
-            //         icon: 'bb_management_system',
-            //         title: '比赛记录'
-            //     },
-            //     name: '比赛记录',
-            //     path: '/activity-manager/play-record'
-            // })
-            //
-            // parentRoutes[3].children.push({
-            //     component: () => Promise.resolve(require(`@/views/activity-manager/bet-record/index`).default),
-            //     meta: {
-            //         icon: 'bb_management_system',
-            //         title: '平台投注详情'
-            //     },
-            //     name: '平台投注详情',
-            //     path: '/activity-manager/bet-record'
-            // })
-            //
-            // parentRoutes[3].children.push({
-            //     component: () => Promise.resolve(require(`@/views/activity-manager/tickets-record/index`).default),
-            //     meta: {
-            //         icon: 'bb_management_system',
-            //         title: '门票记录'
-            //     },
-            //     name: '门票记录',
-            //     path: '/activity-manager/tickets-record'
-            // })
-
 			// 根路由跳转, 定义根路由
 			const rootRoutes = []
 			if (parentRoutes.length) {
@@ -170,6 +147,8 @@ const actions = {
 				}
 			}
 			parentRoutes = parentRoutes.concat(rootRoutes)
+			console.log('parentRott')
+			console.log(parentRoutes)
 			commit('SET_ROUTES', {
 				parentRoutes,
 				userBtns
@@ -179,6 +158,9 @@ const actions = {
 	},
 	clearRoutes({ commit }) {
 		commit('CLEAR_ROUTES')
+	},
+	setNowroute({ commit }) {
+		commit('SET_NOWROUTE')
 	}
 }
 

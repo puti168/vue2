@@ -79,6 +79,7 @@ export default {
 			this.permissionList.forEach(data => {
 				data.checked = false
 			})
+			this.$store.dispatch('permission/setNowroute', item.id)
 			item.checked = !item.checked
 		},
 		async loginOut() {

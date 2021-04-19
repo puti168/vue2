@@ -9,6 +9,7 @@ const getters = {
 	token: (state) => state.user.token,
 	avatar: (state) => state.user.avatar,
 	name: (state) => state.user.nickName,
+	nowRoute: (state) => state.permission.nowRoute,
 	username: (state) => state.user.username,
 	userId: (state) => state.user.id,
 	tree: (state) => state.user.tree,

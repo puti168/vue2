@@ -30,7 +30,7 @@ import variables from '@/styles/variables.scss'
 export default {
 	components: { SidebarItem },
 	computed: {
-		...mapGetters(['sidebar', 'routes']),
+		...mapGetters(['sidebar', 'routes', 'nowRoute']),
 		activeMenu() {
 			console.log('routes :>> ', this.routes)
 			console.log(this.$route)

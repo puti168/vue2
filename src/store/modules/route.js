@@ -1,5 +1,9 @@
 const serviceMap = [
 	{
+		id: '1001',
+		title: '系统'
+	},
+	{
 		id: '1300',
 		path: '/system',
 		icon: 'bb_management_system',
