@@ -1,6 +1,6 @@
 <template>
 	<div class="navbar">
-		 <svg-icon icon-class="bg-login" class="left-logo" />
+		 <svg-icon icon-class="left-logo" class="left-logo" />
 		<span class="left-title">OB旗舰中控管理</span>
 		<div v-for="(item, index) in permissionList" :key="index" class="navbar-title" :class="item.checked ? 'active' : ''" @click="go(item)">{{ item.name }}</div>
 		<div class="right-menu flex">
