@@ -53,18 +53,17 @@ const mutations = {
 		state.addRoutes = []
 	},
 	SET_NOWROUTE: (state, value) => {
-		state.nowRoute = value.id
+		state.nowRoute = value
+		console.log('state.nowRoute')
+		console.log(state.nowRoute)
+		console.log(value)
 	}
 }
 
 const actions = {
 	generateRoutes({ commit }, roles) {
 		return new Promise((resolve) => {
-			console.log('roles')
-			console.log(roles)
 			const userRoutes = loop(roles, [])
-			console.log('userRoutes')
-			console.log(userRoutes)
 			let parentRoutes = []
 			const userBtns = userRoutes.map((val) => val.id)
 			userRoutes.forEach((element) => {
@@ -73,40 +72,58 @@ const actions = {
 					...element,
 					...mapElement
 				}
+				// 二级菜单集合
+				const parentList = ['1300']
 				if (mapElement) {
-					if (element.parentId === '1001') {
+					// 一级菜单
+					if (element.parentId === '0') {
 						parentRoutes.push({
 							id: element.id,
 							path: element.path,
-							name: element.id,
-							component: Layout,
-							parentId: element.parentId,
-							meta: {
-								title: mapElement.title,
-								icon: element.icon
-							},
-							children: [],
-							isRedirect: element.isRedirect
-						})
-					} else if (element.parentId === '0') {
-						parentRoutes.push({
-							id: element.id,
-							path: element.path,
-							name: element.id,
+							name: element.permissionName,
+							show: true,
 							component: Layout,
 							children: [],
 							checked: false
 						})
-					} else if (+element.parentId > 0) {
+					} else if (+element.parentId < 1300) {
+						// 二级菜单
 						const index = parentRoutes.findIndex(
 							(val) => val.id === element.parentId
 						)
 						if (index > -1) {
 							parentRoutes[index].children.push({
+								id: element.id,
+								path: element.path,
+								name: element.permissionName,
+								component: Layout,
+								parentId: element.parentId,
+								checked: false,
+								meta: {
+									title: mapElement.title,
+									icon: mapElement.icon
+								},
+								children: [],
+								isRedirect: element.isRedirect
+							})
+						}
+					} else if (parentList.includes(element.parentId)) {
+						// 三级菜单
+						const midIndex = userRoutes.findIndex(
+							(val) => val.id === element.parentId
+						)
+						const index = parentRoutes.findIndex(
+							(val) => val.id === userRoutes[midIndex].parentId
+						)
+						const index2 = parentRoutes[index].children.findIndex(
+							(val) => val.id === element.parentId
+						)
+						if (index > -1) {
+							parentRoutes[index].children[index2].children.push({
 								path: element.path,
 								name: element.id,
-								component: (resolve) => require(['@/views' + element.path + '/index'], resolve),
-								// component: () => import('@/views' + element.path + '/index'),
+								component: (resolve) =>
+									require(['@/views' + element.path + '/index'], resolve),
 								meta: {
 									title: mapElement.title,
 									icon: element.icon
@@ -159,8 +176,8 @@ const actions = {
 	clearRoutes({ commit }) {
 		commit('CLEAR_ROUTES')
 	},
-	setNowroute({ commit }) {
-		commit('SET_NOWROUTE')
+	setNowroute({ commit }, id) {
+		commit('SET_NOWROUTE', id)
 	}
 }
 
