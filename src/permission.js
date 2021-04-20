@@ -50,21 +50,23 @@ const ifVersionCorrect = async (to, from, next) => {
 		} else {
 			if (!addRoutes.length) {
 				const roles = await store.dispatch('user/getRoles')
-
-				if (roles === '无效权限') {
-					await store.dispatch('user/resetToken')
-					next(`/login?redirect=nopermission`)
-					NProgress.done()
-				} else {
-					const accessRoutes = await store.dispatch(
-						'permission/generateRoutes',
-						roles
-					)
-					console.log('accessRoutes')
-					console.log(accessRoutes)
-					console.log(roles)
-					router.addRoutes(accessRoutes)
-					next({ ...to, replace: true })
+				console.log('roles', roles)
+				try {
+					if (roles === '无效权限') {
+						await store.dispatch('user/resetToken')
+						next(`/login?redirect=nopermission`)
+						NProgress.done()
+					} else {
+						const accessRoutes = await store.dispatch(
+							'permission/generateRoutes',
+							roles
+						)
+						console.log('accessRoutes', accessRoutes)
+						router.addRoutes(accessRoutes)
+						next({ ...to, replace: true })
+					}
+				} catch (e) {
+					Message.error(e || 'roles获取失败')
 				}
 			} else {
 				try {

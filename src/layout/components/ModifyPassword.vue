@@ -12,10 +12,10 @@
 		</span>
 		<el-form ref="form" :model="passDialogForm" :rules="rules" label-width="auto">
 			<el-form-item :label="$t('authoritymanagement_usermanage_components_edituser_285')">
-				<span>{{ userInfo.agentCode }}</span>
+<!--				<span>{{ userInfo.agentCode || '' }}</span>-->
 			</el-form-item>
 			<el-form-item :label="$t('authoritymanagement_usermanage_index_322')">
-				<span>{{ userInfo.username }}</span>
+<!--				<span>{{ userInfo.username || '' }}</span>-->
 			</el-form-item>
 			<el-form-item
 				:label="$t('authoritymanagement_usermanage_components_edituser_289')"
@@ -159,8 +159,8 @@ export default {
 			this.$refs.form.validate((valid) => {
 				if (valid) {
 					const params = {
-						agentCode: this.userInfo.agentCode,
-						loginName: this.userInfo.username,
+						agentCode: this.userInfo.agentCode || '',
+						loginName: this.userInfo.username || '',
 						// oldPassword: md5(this.passDialogForm.oldPassword + this.userInfo.username.trim()),
 						// password: md5(this.passDialogForm.password + this.userInfo.username.trim()),
 						// passwordAgain: md5(this.passDialogForm.passwordAgain + this.userInfo.username.trim())
