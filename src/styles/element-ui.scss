@@ -48,7 +48,7 @@
 }
 
 .el-menu-item {
-	font-size: 14px !important;
+    font-size: 14px !important;
 }
 
 .el-submenu__title,
@@ -56,6 +56,10 @@
     font-size: 16px !important;
     height: 36px;
     line-height: 36px;
+}
+
+.el-submenu__title i {
+    display: none;
 }
 
 .el-menu-item {
