@@ -4,7 +4,7 @@ import md5 from 'js-md5'
 import { Message } from 'element-ui'
 import store from '@/store'
 // import router from '@/router'
-import Cookies from 'js-cookie'
+// import Cookies from 'js-cookie'
 import { getToken } from '@/utils/auth'
 import encrypt from './encrypt'
 
@@ -135,17 +135,7 @@ service.interceptors.response.use(
 	async (error) => {
 		// 重新赋值超时提示
 		if (error.message && error.message.includes('timeout')) {
-			const chooseLanguage = Cookies.get('language')
-			switch (chooseLanguage) {
-				case 'en':
-					error.message = 'The server is busy, please try again later'
-					break
-				case 'tw':
-					error.message = '服務器繁忙,請稍後再試'
-					break
-				default:
-					error.message = '服务器繁忙,请稍后再试'
-			}
+			error.message = '服务器繁忙,请稍后再试'
 		}
 		Message.closeAll()
 		Message({
