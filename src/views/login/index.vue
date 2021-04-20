@@ -1,5 +1,6 @@
 <template>
 	<div class="login-container">
+		<div class="bg-login"></div>
 		<el-form
 			ref="loginForm"
 			:model="loginForm"
@@ -9,9 +10,10 @@
 			label-position="left"
 		>
 			<div class="login-content">
+                <div class="bg-header"></div>
 				<div class="title-container">
+					<svg-icon icon-class="bg-login" class="login_logo" />
 					<h3 class="title">
-						<svg-icon icon-class="l_logo" class="login_logo" />
 						{{ $t('login.title') }}
 					</h3>
 				</div>
@@ -46,7 +48,9 @@
 						@keyup.enter.native="handleLogin"
 					/>
 					<span class="show-pwd" @click="showPwd">
-						<svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
+						<svg-icon
+							:icon-class="passwordType === 'password' ? 'eye' : 'eye-open'"
+						/>
 					</span>
 				</el-form-item>
 				<el-form-item prop="googleAuth">
@@ -64,16 +68,16 @@
 					/>
 				</el-form-item>
 
-				<div class="login-btn" @click.prevent="handleLogin">{{ $t('login.logIn') }}</div>
-
-				<!-- 后端还没做翻译，暂时隐藏
-				<div class="switch-language flex-bc">
-					<a :class="{ aActive: language === 'zh' }" @click.prevent="handleSetLanguage('zh')">简体中文</a>
-					<a :class="{ aActive: language === 'tw' }" @click.prevent="handleSetLanguage('tw')">繁體中文</a>
-					<a :class="{ aActive: language === 'en' }" @click.prevent="handleSetLanguage('en')">English</a>
-				</div>-->
+				<div class="login-btn" @click.prevent="handleLogin">
+					{{ $t('login.logIn') }}
+				</div>
 			</div>
 		</el-form>
+		<div class="bottom-tips">
+			Copyright &copy; OBQJ, All Rights Reserved
+			<br />
+			助力打造最强现金网
+		</div>
 		<div class="version">version: {{ version }}</div>
 	</div>
 </template>
@@ -227,7 +231,7 @@ export default {
 
 $bg: #283443;
 $light_gray: #fff;
-$cursor: #fff;
+$cursor: #999;
 $bgc: #2d3a4b;
 $dark_gray: #889aa4;
 $light_gray: #eee;
@@ -242,40 +246,68 @@ $light_gray: #eee;
 .login-container {
 	min-height: 100%;
 	width: 100%;
-	background-color: $bgc;
+	//background-color: $bgc;
 	overflow: hidden;
-	background: url('../../assets/img/bg.jpg') no-repeat;
 	background-size: cover;
 	// background-position: fixed; /* Internet Explorer 7/8 */
 	.login-form {
 		position: relative;
-		width: 600px;
+		width: 500px;
 		max-width: 100%;
 		padding: 160px 35px 0;
 		margin: 0 auto;
 		overflow: hidden;
 	}
+
 	.logo {
 		text-align: center;
 		margin-bottom: 19px;
 	}
-	.login-content {
-		padding: 8% 12%;
-		height: 490px;
-		background: url('../../assets/img/login_bg.png') no-repeat;
+
+	.bg-login {
+		position: absolute;
+		width: 100%;
+		max-width: 100%;
+		height: 220px;
+		margin: 0 auto;
+		top: 291px;
+		background: url('../../assets/img/bg-login.jpg') no-repeat;
 		background-size: cover;
 	}
+
+    .bg-header {
+        width: 100%;
+        height: 10px;
+        position: absolute;
+        background-color: #007BF9;
+        box-shadow: 0 0 10px rgba(25, 81, 134, 0.35);
+        top: -10px;
+        left: 0.5px;
+    }
+
+	.login-content {
+		padding: 8% 12% 500px 12%;
+		height: 490px;
+		background-size: cover;
+		background-color: #ffffff;
+		border-radius: 5px;
+		border: 0.5px solid #ccc;
+		box-shadow: 0 0 10px rgba(25, 81, 134, 0.35);
+		z-index: 10;
+        position: relative;
+	}
+
 	h3 {
-		margin: 0;
-		margin-bottom: 32px;
+		margin: 0 0 32px 0;
 		text-align: center;
 		font-family: MicrosoftYaHei;
 		font-size: 32px;
 		font-weight: normal;
 		font-stretch: normal;
-		letter-spacing: 0px;
-		color: #ffffff;
+		letter-spacing: 0;
+		color: #fff;
 	}
+
 	.el-input {
 		display: inline-block;
 		height: 47px;
@@ -283,57 +315,67 @@ $light_gray: #eee;
 		min-width: 100px;
 		input {
 			background: transparent;
-			border: 0px;
+			border: 0;
 			-webkit-appearance: none;
-			border-radius: 0px;
+			border-radius: 0;
 			padding: 12px 5px 12px 15px;
-			color: $light_gray;
+			color: #999;
 			height: 47px;
 			caret-color: $cursor;
-
 			&:-webkit-autofill {
-				box-shadow: 0 0 0px 1000px $bg inset !important;
+				box-shadow: 0 0 0 1000px $bg inset !important;
 				-webkit-text-fill-color: $cursor !important;
 			}
 		}
 	}
+
 	.el-form-item {
 		box-sizing: border-box;
 		width: auto;
-		height: 52px;
+		height: 50px;
 		margin: 0 auto;
 		margin-bottom: 25px;
-		background-color: #2e3949;
-		color: #454545;
-		border-radius: 10px;
-		border: 2px solid transparent;
+		//background-color: #2e3949;
+		color: #999;
+		border-radius: 5px;
+		border: 1px solid #ccc;
 	}
+
 	.el-form-item:focus-within .svg-active {
 		color: #0b7dfa;
 	}
+
 	.el-form-item:focus-within .el-form-item__error {
 		display: none;
 	}
+
 	.el-form-item:focus-within {
-		background-color: #101221;
-		border: 2px solid #0b7dfa;
-		border-radius: 10px;
+		border: 1px solid #0b7dfa;
+		border-radius: 5px;
 	}
+
 	.login-btn {
-		background: url('../../assets/img/login_btn.png') no-repeat;
-		background-size: cover;
+		background-color: rgba(0, 121, 254, 1);
 		height: 51px;
 		cursor: pointer;
-		border-radius: 10px;
+		border-radius: 5px;
 		text-align: center;
 		font-family: MicrosoftYaHei;
 		font-size: 20px;
-		color: #ffffff;
+		color: #fff;
 		line-height: 51px;
+		margin-bottom: 50px;
 	}
+
+	.login-btn:hover {
+		cursor: pointer;
+		opacity: 0.8;
+	}
+
 	.aActive {
 		color: #fff !important;
 	}
+
 	.switch-language a {
 		margin-top: 46px;
 		font-family: MicrosoftYaHei;
@@ -341,49 +383,70 @@ $light_gray: #eee;
 		font-size: 18px;
 		font-weight: normal;
 		font-stretch: normal;
-		letter-spacing: 0px;
+		letter-spacing: 0;
 		color: #8a90a5;
 	}
 
 	.svg-container {
-		padding: 6px 5px 6px 15px;
+		padding: 3px 5px 6px 15px;
 		color: $dark_gray;
 		vertical-align: middle;
-		width: 30px;
+		width: 35px;
 		display: inline-block;
+		font-size: 18px;
 	}
+
 	.title-container {
 		position: relative;
+		text-align: center;
 		.login_logo {
-			vertical-align: -0.15em;
+			width: 80px;
+			height: 80px;
+			margin: 0 auto;
+			vertical-align: center;
 		}
+
 		.title {
 			font-family: 'Microsoft Yahei';
 			font-weight: normal;
-			font-size: 40px;
+			font-size: 26px;
 			color: $light_gray;
-			margin: 0px auto 40px auto;
+			margin: 0 auto 40px auto;
 			text-align: center;
+			color: #0079fe;
 		}
 	}
+
 	.show-pwd {
 		position: absolute;
 		right: 10px;
-		top: 7px;
+		top: 4px;
 		font-size: 16px;
 		color: $dark_gray;
 		cursor: pointer;
 		user-select: none;
 	}
+
 	.kaptcha {
 		height: 50px;
 		border-radius: 10px;
 	}
+
 	.version {
 		position: fixed;
 		right: 10px;
 		bottom: 10px;
 		color: #fff;
+	}
+
+	.bottom-tips {
+		position: fixed;
+		bottom: 30px;
+		text-align: center;
+		left: 50%;
+		font-size: 12px;
+		color: #ccc;
+		transform: translate(-50%, 0);
 	}
 }
 </style>

@@ -2,11 +2,6 @@ import { constantRoutes } from '@/router'
 import serviceMap from './route'
 import Layout from '@/layout'
 
-/**
- * Use meta.role to determine if the current user has permission
- * @param roles
- * @param route
- */
 function hasPermission(roles, route) {
 	if (route.meta && route.meta.roles) {
 		return roles.some((role) => route.meta.roles.includes(role))
@@ -15,11 +10,6 @@ function hasPermission(roles, route) {
 	}
 }
 
-/**
- * Filter asynchronous routing tables by recursion
- * @param routes asyncRoutes
- * @param roles
- */
 export function filterAsyncRoutes(routes, roles) {
 	const res = []
 
@@ -39,7 +29,8 @@ export function filterAsyncRoutes(routes, roles) {
 const state = {
 	routes: [],
 	addRoutes: [],
-	userBtns: []
+	userBtns: [],
+	nowRoute: ''
 }
 
 const mutations = {
@@ -50,6 +41,9 @@ const mutations = {
 	},
 	CLEAR_ROUTES: (state) => {
 		state.addRoutes = []
+	},
+	SET_NOWROUTE: (state, value) => {
+		state.nowRoute = value
 	}
 }
 
@@ -65,30 +59,58 @@ const actions = {
 					...element,
 					...mapElement
 				}
+				// 二级菜单集合
+				const midList = ['1300']
 				if (mapElement) {
+					// 一级菜单
 					if (element.parentId === '0') {
 						parentRoutes.push({
 							id: element.id,
 							path: element.path,
-							name: element.id,
+							name: element.permissionName,
+							show: true,
 							component: Layout,
-							meta: {
-								title: mapElement.title,
-								icon: element.icon
-							},
 							children: [],
-							isRedirect: element.isRedirect
+							checked: false
 						})
-					} else if (+element.parentId > 0) {
+					} else if (midList.includes(element.id)) {
+						// 二级菜单
 						const index = parentRoutes.findIndex(
 							(val) => val.id === element.parentId
 						)
 						if (index > -1) {
 							parentRoutes[index].children.push({
+								id: element.id,
+								path: element.path,
+								name: element.permissionName,
+								component: Layout,
+								parentId: element.parentId,
+								checked: false,
+								meta: {
+									title: mapElement.title,
+									icon: mapElement.icon
+								},
+								children: [],
+								isRedirect: element.isRedirect
+							})
+						}
+					} else if (midList.includes(element.parentId)) {
+						// 三级菜单
+						const midIndex = userRoutes.findIndex(
+							(val) => val.id === element.parentId
+						)
+						const index = parentRoutes.findIndex(
+							(val) => val.id === userRoutes[midIndex].parentId
+						)
+						const index2 = parentRoutes[index].children.findIndex(
+							(val) => val.id === element.parentId
+						)
+						if (index > -1) {
+							parentRoutes[index].children[index2].children.push({
 								path: element.path,
 								name: element.id,
-								component: (resolve) => require(['@/views' + element.path + '/index'], resolve),
-								// component: () => import('@/views' + element.path + '/index'),
+								component: (resolve) =>
+									require(['@/views' + element.path + '/index'], resolve),
 								meta: {
 									title: mapElement.title,
 									icon: element.icon
@@ -138,6 +160,9 @@ const actions = {
 	},
 	clearRoutes({ commit }) {
 		commit('CLEAR_ROUTES')
+	},
+	setNowroute({ commit }, id) {
+		commit('SET_NOWROUTE', id)
 	}
 }
 
