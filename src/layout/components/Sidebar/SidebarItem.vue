@@ -27,7 +27,7 @@
 					:title="generateTitle(item.meta.title)"
 				/>
 			</template>
-			<!-- <sidebar-item
+			<sidebar-item
 				v-for="child in item.children"
 				:key="child.path"
 				:is-nest="true"
@@ -35,7 +35,7 @@
 				:base-path="resolvePath(child.path)"
 				:active-path="activePath"
 				class="nest-menu"
-			/> -->
+			/>
 		</el-submenu>
 	</div>
 </template>

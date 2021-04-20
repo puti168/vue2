@@ -67,6 +67,7 @@ export default {
   watch: {
     showRoute(newQuestion, oldQuestion) {
       console.log(newQuestion, oldQuestion)
+      this.defaultOpeneds = []
       if (newQuestion.length) {
         for (let i = 0; i < newQuestion.length; i++) {
           const ele = newQuestion[i]
