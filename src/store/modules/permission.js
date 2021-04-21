@@ -1,6 +1,7 @@
 import { constantRoutes } from '@/router'
 import serviceMap from './route'
 import Layout from '@/layout'
+import Layout2 from '@/layout2'
 
 function hasPermission(roles, route) {
 	if (route.meta && route.meta.roles) {
@@ -53,14 +54,13 @@ const actions = {
 			const userRoutes = loop(roles, [])
 			let parentRoutes = []
 			const userBtns = userRoutes.map((val) => val.id)
-			userRoutes.forEach((element) => {
+			userRoutes.forEach((element, val) => {
 				const mapElement = serviceMap.find((item) => item.id === element.id)
 				element = {
 					...element,
 					...mapElement
 				}
 				// 二级菜单集合
-				const midList = ['1300']
 				if (mapElement) {
 					// 一级菜单
 					if (element.parentId === '0') {
@@ -71,9 +71,9 @@ const actions = {
 							show: true,
 							component: Layout,
 							children: [],
-							checked: false
+							checked: val === 0
 						})
-					} else if (midList.includes(element.id)) {
+					} else if (element.level === 2) {
 						// 二级菜单
 						const index = parentRoutes.findIndex(
 							(val) => val.id === element.parentId
@@ -83,7 +83,7 @@ const actions = {
 								id: element.id,
 								path: element.path,
 								name: element.permissionName,
-								component: Layout,
+								component: Layout2,
 								parentId: element.parentId,
 								checked: false,
 								meta: {
@@ -94,7 +94,7 @@ const actions = {
 								isRedirect: element.isRedirect
 							})
 						}
-					} else if (midList.includes(element.parentId)) {
+					} else if (element.level === 3) {
 						// 三级菜单
 						const midIndex = userRoutes.findIndex(
 							(val) => val.id === element.parentId
@@ -108,13 +108,35 @@ const actions = {
 						if (index > -1) {
 							parentRoutes[index].children[index2].children.push({
 								path: element.path,
-								name: element.id,
+								name: element.permissionName,
+								children: [],
 								component: (resolve) =>
 									require(['@/views' + element.path + '/index'], resolve),
 								meta: {
 									title: mapElement.title,
 									icon: element.icon
 								}
+							})
+						}
+					} else {
+						// 四级菜单
+						const midIndex = userRoutes.findIndex(
+							(val) => val.id === element.parentId
+						)
+						const index = parentRoutes.findIndex(
+							(val) => val.id === userRoutes[midIndex].parentId
+						)
+						const index2 = parentRoutes[index].children.findIndex(
+							(val) => val.id === element.parentId
+						)
+						const index3 = parentRoutes[index].children[index2].findIndex(
+							(val) => val.id === element.parentId
+						)
+						if (index > -1) {
+							parentRoutes[index].children[index2].children[index3].push({
+								path: element.path,
+								name: element.permissionName,
+								id: element.id
 							})
 						}
 					}
