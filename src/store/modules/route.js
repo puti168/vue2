@@ -1,75 +1,33 @@
 const serviceMap = [
+	// 第一级菜单
 	{
-		id: '5400',
-		path: '/authority',
-		icon: 'bb_rolemanage',
-		title: '权限管理'
+		id: '1001',
+		title: '系统'
 	},
+	// 第二级菜单
 	{
-		id: '5410',
-		parentId: '5400',
-		path: '/authority/management',
-		icon: 'bb_defaultrole',
-		title: '权限配置'
-	},
-	{
-		id: '5100',
-		path: '/securityAudit',
-		icon: 'audits',
-		title: '审计管理'
-	},
-	{
-		id: '5110',
-		parentId: '5100',
-		path: '/securityAudit/dataAudit',
-		icon: 'audit',
-		title: '数据脱敏'
-	},
-	{
-		id: '5112',
-		parentId: '5100',
-		path: '/securityAudit/monitorAudit',
-		icon: 'audit',
-		title: '监控审计'
-	},
-	{
-		id: '5200',
-		path: '/secretManage',
-		icon: 'form',
-		title: '密钥管理'
-	},
-	{
-		id: '5210',
-		parentId: '5200',
-		path: '/secretManage/list',
-		icon: 'secret-list',
-		title: '密钥维护'
-	},
-	{
-		id: '5300',
-		path: '/system',
+		id: '1300',
+		parentId: '1001',
 		icon: 'bb_management_system',
 		title: '系统管理'
 	},
+	// 第三级菜单
 	{
-		id: '5310',
-		parentId: '5300',
-		path: '/system/changePassword',
-		icon: 'bb_blacklist',
+		id: '1310',
+		parentId: '1300',
+		path: '/system/systemFunctions/changePassword',
 		title: '修改密码'
 	},
 	{
-		id: '5320',
-		parentId: '5300',
-		path: '/system/account',
-		icon: 'bb_management_user',
+		id: '1320',
+		parentId: '1300',
+		path: '/system/systemFunctions/account',
 		title: '账号管理'
 	},
 	{
-		id: '5330',
-		parentId: '5300',
-		path: '/system/role',
-		icon: 'bb_management_role',
+		id: '1330',
+		parentId: '1300',
+		path: '/system/systemFunctions/role',
 		title: '角色管理'
 	}
 ]

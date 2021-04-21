@@ -1,12 +1,8 @@
 import { constantRoutes } from '@/router'
 import serviceMap from './route'
 import Layout from '@/layout'
+import Layout2 from '@/layout2'
 
-/**
- * Use meta.role to determine if the current user has permission
- * @param roles
- * @param route
- */
 function hasPermission(roles, route) {
 	if (route.meta && route.meta.roles) {
 		return roles.some((role) => route.meta.roles.includes(role))
@@ -15,11 +11,6 @@ function hasPermission(roles, route) {
 	}
 }
 
-/**
- * Filter asynchronous routing tables by recursion
- * @param routes asyncRoutes
- * @param roles
- */
 export function filterAsyncRoutes(routes, roles) {
 	const res = []
 
@@ -39,7 +30,8 @@ export function filterAsyncRoutes(routes, roles) {
 const state = {
 	routes: [],
 	addRoutes: [],
-	userBtns: []
+	userBtns: [],
+	nowRoute: ''
 }
 
 const mutations = {
@@ -50,6 +42,9 @@ const mutations = {
 	},
 	CLEAR_ROUTES: (state) => {
 		state.addRoutes = []
+	},
+	SET_NOWROUTE: (state, value) => {
+		state.nowRoute = value
 	}
 }
 
@@ -59,47 +54,96 @@ const actions = {
 			const userRoutes = loop(roles, [])
 			let parentRoutes = []
 			const userBtns = userRoutes.map((val) => val.id)
-			userRoutes.forEach((element) => {
+			userRoutes.forEach((element, val) => {
 				const mapElement = serviceMap.find((item) => item.id === element.id)
 				element = {
 					...element,
 					...mapElement
 				}
+				// 二级菜单集合
 				if (mapElement) {
+					// 一级菜单
 					if (element.parentId === '0') {
 						parentRoutes.push({
 							id: element.id,
 							path: element.path,
-							name: element.id,
+							name: element.permissionName,
+							show: true,
 							component: Layout,
-							meta: {
-								title: mapElement.title,
-								icon: element.icon
-							},
 							children: [],
-							isRedirect: element.isRedirect
+							checked: val === 0
 						})
-					} else if (+element.parentId > 0) {
+					} else if (element.level === 2) {
+						// 二级菜单
 						const index = parentRoutes.findIndex(
 							(val) => val.id === element.parentId
 						)
 						if (index > -1) {
 							parentRoutes[index].children.push({
+								id: element.id,
 								path: element.path,
-								name: element.id,
-								component: (resolve) => require(['@/views' + element.path + '/index'], resolve),
-								// component: () => import('@/views' + element.path + '/index'),
+								name: element.permissionName,
+								component: Layout2,
+								parentId: element.parentId,
+								checked: false,
+								meta: {
+									title: mapElement.title,
+									icon: mapElement.icon
+								},
+								children: [],
+								isRedirect: element.isRedirect
+							})
+						}
+					} else if (element.level === 3) {
+						// 三级菜单
+						const midIndex = userRoutes.findIndex(
+							(val) => val.id === element.parentId
+						)
+						const index = parentRoutes.findIndex(
+							(val) => val.id === userRoutes[midIndex].parentId
+						)
+						const index2 = parentRoutes[index].children.findIndex(
+							(val) => val.id === element.parentId
+						)
+						if (index > -1) {
+							parentRoutes[index].children[index2].children.push({
+								path: element.path,
+								name: element.permissionName,
+								children: [],
+								component: (resolve) =>
+									require(['@/views' + element.path + '/index'], resolve),
 								meta: {
 									title: mapElement.title,
 									icon: element.icon
 								}
 							})
 						}
+					} else {
+						// 四级菜单
+						const midIndex = userRoutes.findIndex(
+							(val) => val.id === element.parentId
+						)
+						const index = parentRoutes.findIndex(
+							(val) => val.id === userRoutes[midIndex].parentId
+						)
+						const index2 = parentRoutes[index].children.findIndex(
+							(val) => val.id === element.parentId
+						)
+						const index3 = parentRoutes[index].children[index2].findIndex(
+							(val) => val.id === element.parentId
+						)
+						if (index > -1) {
+							parentRoutes[index].children[index2].children[index3].push({
+								path: element.path,
+								name: element.permissionName,
+								id: element.id
+							})
+						}
 					}
 				}
 			})
 			parentRoutes = parentRoutes.filter((val) => {
-				return !val.children || (val.children && val.children.length !== 0)
+				return !val.children || (val.children && val.children.length)
 			})
 
 			parentRoutes.forEach((element) => {
@@ -114,9 +158,9 @@ const actions = {
 			})
 			// 根路由跳转, 定义根路由
 			const rootRoutes = []
-			if (parentRoutes.length !== 0) {
+			if (parentRoutes.length) {
 				const rootRoute = parentRoutes[0]
-				if (rootRoute.children && rootRoute.children.length > 0) {
+				if (rootRoute.children && rootRoute.children.length) {
 					rootRoutes.push({
 						path: '/',
 						redirect: rootRoute.children && rootRoute.children[0].path
@@ -138,16 +182,19 @@ const actions = {
 	},
 	clearRoutes({ commit }) {
 		commit('CLEAR_ROUTES')
+	},
+	setNowroute({ commit }, id) {
+		commit('SET_NOWROUTE', id)
 	}
 }
 
 // 迭代拍平
 function loop(roles, arr) {
-	if (!roles || roles.length === 0) return []
+	if (!roles || !roles.length) return []
 
 	roles.forEach((i) => {
 		arr.push(i)
-		if (i && i.children && i.children.length > 0) {
+		if (i && i.children && i.children.length) {
 			loop(i.children, arr)
 		}
 	})

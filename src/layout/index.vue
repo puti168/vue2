@@ -37,7 +37,6 @@ export default {
 		},
 		classObj() {
 			return {
-				hideSidebar: !this.sidebar.opened,
 				openSidebar: this.sidebar.opened,
 				withoutAnimation: this.sidebar.withoutAnimation,
 				mobile: this.device === 'mobile'
@@ -81,12 +80,8 @@ export default {
 	top: 0;
 	right: 0;
 	z-index: 9;
-	width: calc(100% - #{$sideBarWidth});
+	width: 100%;
 	transition: width 0.28s;
-}
-
-.hideSidebar .fixed-header {
-	width: calc(100% - 99px);
 }
 
 .mobile .fixed-header {
