@@ -137,6 +137,8 @@ service.interceptors.response.use(
 		if (error.message && error.message.includes('timeout')) {
 			error.message = '服务器繁忙,请稍后再试'
 		}
+		const fullPath = router.history.current.fullPath
+		router.push(`/login?redirect=${fullPath}`)
 		Message.closeAll()
 		Message({
 			message: error.message,
