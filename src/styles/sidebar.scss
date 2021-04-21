@@ -5,6 +5,11 @@
 		margin-left: $sideBarWidth;
 		position: relative;
 	}
+	.main-container2 {
+		min-height: 100%;
+		transition: margin-left 0.28s;
+		position: relative;
+	}
 
 	.sidebar-container {
 		background-color: rgba(255, 255, 255, 0);

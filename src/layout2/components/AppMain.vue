@@ -1,0 +1,55 @@
+<template>
+	<section class="app-main">
+		<transition name="fade-transform" mode="out-in">
+			<keep-alive :include="cachedViews">
+				<router-view :key="key" />
+			</keep-alive>
+		</transition>
+		<ModifyPassword :edit-visible="editVisible" />
+	</section>
+</template>
+
+<script>
+import ModifyPassword from './ModifyPassword'
+export default {
+	name: 'AppMain',
+	components: { ModifyPassword },
+	computed: {
+		editVisible() {
+			console.log(
+				'this.$store.state.app.modifyVisible :',
+				this.$store.state.app.modifyVisible
+			)
+			return this.$store.state.app.modifyVisible
+		},
+		cachedViews() {
+			return this.$store.state.tagsView.cachedViews
+		},
+		key() {
+			return this.$route.path
+		}
+	}
+}
+</script>
+
+<style scoped>
+.app-main {
+	/*50 = navbar  */
+	min-height: calc(100vh - 105px);
+	width: 100%;
+	position: relative;
+	overflow: hidden;
+}
+.fixed-header + .app-main {
+	padding-top: 105px;
+}
+</style>
+
+<style lang="scss">
+// fix css style bug in open el-dialog
+// .el-popup-parent--hidden {
+//   .fixed-header {
+//     padding-right: 15px;
+//   }
+// }
+</style>
