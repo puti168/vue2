@@ -2,16 +2,9 @@ import dayjs from 'dayjs'
 
 // 路由的名称  一定要和 组件的name对应，缓存才起作用
 export const routerNames = {
-	dealerDetail: 'dealerDetail',
-	dealer: 'dealer',
-	rateServerMonitor: 'rateServerMonitor',
-	apiServerMonitor: 'apiServerMonitor'
+	account: 'account'
 }
 export const routerSwitchNames = {
-	dealerDetail: '已完成校对局',
-	dealer: '未完成校对局',
-	rateServerMonitor: '拉单服务器监控',
-	apiServerMonitor: 'API服务器监控'
 }
 const month = dayjs().month()
 const year = dayjs().year()
@@ -101,15 +94,8 @@ export const shortcutsM = [
 	{
 		text:
 			month - 1 > 0
-				? year +
-				  '年' +
-				  (month - 1) +
-				  '月'
-				: year -
-				  1 +
-				  '年' +
-				  (month - 1 + 12) +
-				  '月',
+				? year + '年' + (month - 1) + '月'
+				: year - 1 + '年' + (month - 1 + 12) + '月',
 		onClick(picker) {
 			const end = dayjs()
 				.subtract(2, 'month')
@@ -124,15 +110,8 @@ export const shortcutsM = [
 	{
 		text:
 			month - 2 > 0
-				? year +
-				  '年' +
-				  (month - 2) +
-				  '月'
-				: year -
-				  1 +
-				  '年' +
-				  (month - 2 + 12) +
-				  '月',
+				? year + '年' + (month - 2) + '月'
+				: year - 1 + '年' + (month - 2 + 12) + '月',
 		onClick(picker) {
 			const end = dayjs()
 				.subtract(3, 'month')
@@ -147,15 +126,8 @@ export const shortcutsM = [
 	{
 		text:
 			month - 3 > 0
-				? year +
-				  '年' +
-				  (month - 3) +
-				  '月'
-				: year -
-				  1 +
-				  '年' +
-				  (month - 3 + 12) +
-				  '月',
+				? year + '年' + (month - 3) + '月'
+				: year - 1 + '年' + (month - 3 + 12) + '月',
 		onClick(picker) {
 			const end = dayjs()
 				.subtract(4, 'month')
@@ -170,15 +142,8 @@ export const shortcutsM = [
 	{
 		text:
 			month - 4 > 0
-				? year +
-				  '年' +
-				  (month - 4) +
-				  '月'
-				: year -
-				  1 +
-				  '年' +
-				  (month - 4 + 12) +
-				  '月',
+				? year + '年' + (month - 4) + '月'
+				: year - 1 + '年' + (month - 4 + 12) + '月',
 		onClick(picker) {
 			const end = dayjs()
 				.subtract(5, 'month')
@@ -193,15 +158,8 @@ export const shortcutsM = [
 	{
 		text:
 			month - 5 > 0
-				? year +
-				  '年' +
-				  (month - 5) +
-				  '月'
-				: year -
-				  1 +
-				  '年' +
-				  (month - 5 + 12) +
-				  '月',
+				? year + '年' + (month - 5) + '月'
+				: year - 1 + '年' + (month - 5 + 12) + '月',
 		onClick(picker) {
 			const end = dayjs()
 				.subtract(6, 'month')
@@ -216,15 +174,8 @@ export const shortcutsM = [
 	{
 		text:
 			month - 6 > 0
-				? year +
-				  '年' +
-				  (month - 6) +
-				  '月'
-				: year -
-				  1 +
-				  '年' +
-				  (month - 6 + 12) +
-				  '月',
+				? year + '年' + (month - 6) + '月'
+				: year - 1 + '年' + (month - 6 + 12) + '月',
 		onClick(picker) {
 			const end = dayjs()
 				.subtract(7, 'month')
@@ -239,15 +190,8 @@ export const shortcutsM = [
 	{
 		text:
 			month - 7 > 0
-				? year +
-				  '年' +
-				  (month - 7) +
-				  '月'
-				: year -
-				  1 +
-				  '年' +
-				  (month - 7 + 12) +
-				  '月',
+				? year + '年' + (month - 7) + '月'
+				: year - 1 + '年' + (month - 7 + 12) + '月',
 		onClick(picker) {
 			const end = dayjs()
 				.subtract(8, 'month')
@@ -262,15 +206,8 @@ export const shortcutsM = [
 	{
 		text:
 			month - 8 > 0
-				? year +
-				  '年' +
-				  (month - 8) +
-				  '月'
-				: year -
-				  1 +
-				  '年' +
-				  (month - 8 + 12) +
-				  '月',
+				? year + '年' + (month - 8) + '月'
+				: year - 1 + '年' + (month - 8 + 12) + '月',
 		onClick(picker) {
 			const end = dayjs()
 				.subtract(9, 'month')
@@ -352,15 +289,8 @@ export const shortcuts = [
 	{
 		text:
 			month - 1 > 0
-				? year +
-				  '年' +
-				  (month - 1) +
-				  '月'
-				: year -
-				  1 +
-				  '年' +
-				  (month - 1 + 12) +
-				  '月',
+				? year + '年' + (month - 1) + '月'
+				: year - 1 + '年' + (month - 1 + 12) + '月',
 		onClick(picker) {
 			const end = dayjs()
 				.subtract(2, 'month')
@@ -375,15 +305,8 @@ export const shortcuts = [
 	{
 		text:
 			month - 2 > 0
-				? year +
-				  '年' +
-				  (month - 2) +
-				  '月'
-				: year -
-				  1 +
-				  '年' +
-				  (month - 2 + 12) +
-				  '月',
+				? year + '年' + (month - 2) + '月'
+				: year - 1 + '年' + (month - 2 + 12) + '月',
 		onClick(picker) {
 			const end = dayjs()
 				.subtract(3, 'month')
@@ -398,15 +321,8 @@ export const shortcuts = [
 	{
 		text:
 			month - 3 > 0
-				? year +
-				  '年' +
-				  (month - 3) +
-				  '月'
-				: year -
-				  1 +
-				  '年' +
-				  (month - 3 + 12) +
-				  '月',
+				? year + '年' + (month - 3) + '月'
+				: year - 1 + '年' + (month - 3 + 12) + '月',
 		onClick(picker) {
 			const end = dayjs()
 				.subtract(4, 'month')
@@ -421,15 +337,8 @@ export const shortcuts = [
 	{
 		text:
 			month - 4 > 0
-				? year +
-				  '年' +
-				  (month - 4) +
-				  '月'
-				: year -
-				  1 +
-				  '年' +
-				  (month - 4 + 12) +
-				  '月',
+				? year + '年' + (month - 4) + '月'
+				: year - 1 + '年' + (month - 4 + 12) + '月',
 		onClick(picker) {
 			const end = dayjs()
 				.subtract(5, 'month')
@@ -444,15 +353,8 @@ export const shortcuts = [
 	{
 		text:
 			month - 5 > 0
-				? year +
-				  '年' +
-				  (month - 5) +
-				  '月'
-				: year -
-				  1 +
-				  '年' +
-				  (month - 5 + 12) +
-				  '月',
+				? year + '年' + (month - 5) + '月'
+				: year - 1 + '年' + (month - 5 + 12) + '月',
 		onClick(picker) {
 			const end = dayjs()
 				.subtract(6, 'month')
@@ -467,15 +369,8 @@ export const shortcuts = [
 	{
 		text:
 			month - 6 > 0
-				? year +
-				  '年' +
-				  (month - 6) +
-				  '月'
-				: year -
-				  1 +
-				  '年' +
-				  (month - 6 + 12) +
-				  '月',
+				? year + '年' + (month - 6) + '月'
+				: year - 1 + '年' + (month - 6 + 12) + '月',
 		onClick(picker) {
 			const end = dayjs()
 				.subtract(7, 'month')
@@ -490,15 +385,8 @@ export const shortcuts = [
 	{
 		text:
 			month - 7 > 0
-				? year +
-				  '年' +
-				  (month - 7) +
-				  '月'
-				: year -
-				  1 +
-				  '年' +
-				  (month - 7 + 12) +
-				  '月',
+				? year + '年' + (month - 7) + '月'
+				: year - 1 + '年' + (month - 7 + 12) + '月',
 		onClick(picker) {
 			const end = dayjs()
 				.subtract(8, 'month')
@@ -513,15 +401,8 @@ export const shortcuts = [
 	{
 		text:
 			month - 8 > 0
-				? year +
-				  '年' +
-				  (month - 8) +
-				  '月'
-				: year -
-				  1 +
-				  '年' +
-				  (month - 8 + 12) +
-				  '月',
+				? year + '年' + (month - 8) + '月'
+				: year - 1 + '年' + (month - 8 + 12) + '月',
 		onClick(picker) {
 			const end = dayjs()
 				.subtract(9, 'month')
@@ -601,15 +482,8 @@ export const shortcutsNoToday = [
 	{
 		text:
 			month - 1 > 0
-				? year +
-				  '年' +
-				  (month - 1) +
-				  '月'
-				: year -
-				  1 +
-				  '年' +
-				  (month - 1 + 12) +
-				  '月',
+				? year + '年' + (month - 1) + '月'
+				: year - 1 + '年' + (month - 1 + 12) + '月',
 		onClick(picker) {
 			const end = dayjs()
 				.subtract(2, 'month')
@@ -624,15 +498,8 @@ export const shortcutsNoToday = [
 	{
 		text:
 			month - 2 > 0
-				? year +
-				  '年' +
-				  (month - 2) +
-				  '月'
-				: year -
-				  1 +
-				  '年' +
-				  (month - 2 + 12) +
-				  '月',
+				? year + '年' + (month - 2) + '月'
+				: year - 1 + '年' + (month - 2 + 12) + '月',
 		onClick(picker) {
 			const end = dayjs()
 				.subtract(3, 'month')
@@ -647,15 +514,8 @@ export const shortcutsNoToday = [
 	{
 		text:
 			month - 3 > 0
-				? year +
-				  '年' +
-				  (month - 3) +
-				  '月'
-				: year -
-				  1 +
-				  '年' +
-				  (month - 3 + 12) +
-				  '月',
+				? year + '年' + (month - 3) + '月'
+				: year - 1 + '年' + (month - 3 + 12) + '月',
 		onClick(picker) {
 			const end = dayjs()
 				.subtract(4, 'month')
@@ -670,15 +530,8 @@ export const shortcutsNoToday = [
 	{
 		text:
 			month - 4 > 0
-				? year +
-				  '年' +
-				  (month - 4) +
-				  '月'
-				: year -
-				  1 +
-				  '年' +
-				  (month - 4 + 12) +
-				  '月',
+				? year + '年' + (month - 4) + '月'
+				: year - 1 + '年' + (month - 4 + 12) + '月',
 		onClick(picker) {
 			const end = dayjs()
 				.subtract(5, 'month')
@@ -693,15 +546,8 @@ export const shortcutsNoToday = [
 	{
 		text:
 			month - 5 > 0
-				? year +
-				  '年' +
-				  (month - 5) +
-				  '月'
-				: year -
-				  1 +
-				  '年' +
-				  (month - 5 + 12) +
-				  '月',
+				? year + '年' + (month - 5) + '月'
+				: year - 1 + '年' + (month - 5 + 12) + '月',
 		onClick(picker) {
 			const end = dayjs()
 				.subtract(6, 'month')
@@ -716,15 +562,8 @@ export const shortcutsNoToday = [
 	{
 		text:
 			month - 6 > 0
-				? year +
-				  '年' +
-				  (month - 6) +
-				  '月'
-				: year -
-				  1 +
-				  '年' +
-				  (month - 6 + 12) +
-				  '月',
+				? year + '年' + (month - 6) + '月'
+				: year - 1 + '年' + (month - 6 + 12) + '月',
 		onClick(picker) {
 			const end = dayjs()
 				.subtract(7, 'month')
@@ -739,15 +578,8 @@ export const shortcutsNoToday = [
 	{
 		text:
 			month - 7 > 0
-				? year +
-				  '年' +
-				  (month - 7) +
-				  '月'
-				: year -
-				  1 +
-				  '年' +
-				  (month - 7 + 12) +
-				  '月',
+				? year + '年' + (month - 7) + '月'
+				: year - 1 + '年' + (month - 7 + 12) + '月',
 		onClick(picker) {
 			const end = dayjs()
 				.subtract(8, 'month')
@@ -762,15 +594,8 @@ export const shortcutsNoToday = [
 	{
 		text:
 			month - 8 > 0
-				? year +
-				  '年' +
-				  (month - 8) +
-				  '月'
-				: year -
-				  1 +
-				  '年' +
-				  (month - 8 + 12) +
-				  '月',
+				? year + '年' + (month - 8) + '月'
+				: year - 1 + '年' + (month - 8 + 12) + '月',
 		onClick(picker) {
 			const end = dayjs()
 				.subtract(9, 'month')
