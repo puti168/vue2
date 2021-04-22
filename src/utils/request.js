@@ -115,7 +115,6 @@ service.interceptors.response.use(
 		        // if the custom code is not 20000, it is judged as an error.
 		        if (res.code === 20000 || res.code === 20001 || res.code === 20002) {
 		            // 无效权限
-					console.log('2222')
 		            const fullPath = router.history.current.fullPath
 		            await store.dispatch('user/logout')
 		            await store.dispatch('permission/clearRoutes')
@@ -137,6 +136,8 @@ service.interceptors.response.use(
 		if (error.message && error.message.includes('timeout')) {
 			error.message = '服务器繁忙,请稍后再试'
 		}
+		const fullPath = router.history.current.fullPath
+		router.push(`/login?redirect=${fullPath}`)
 		Message.closeAll()
 		Message({
 			message: error.message,

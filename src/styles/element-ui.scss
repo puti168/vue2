@@ -122,3 +122,15 @@
     line-height: 14px;
     font-size: 12px;
 }
+
+.el-table td .cell .el-button {
+    width: 60px;
+    height: 24px;
+    line-height: 24px;
+    padding: 0;
+}
+
+.el-table td .cell .el-button [class*=el-icon-]+span {
+    margin: 0;
+    padding: 0;
+}

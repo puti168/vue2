@@ -149,7 +149,7 @@
       <!-- 分页 -->
       <el-pagination
         v-if="total > 0"
-        :current-page.sync="pageIndex"
+        :current-page.sync="pageNum"
         layout="total,sizes,prev,pager,next,jumper"
         :page-sizes="$store.getters.pageSizes"
         :total="total"
@@ -377,7 +377,7 @@ export default {
       const [startTime, endTime] = create
       const params = {
         ...this.listQuery,
-        pageIndex: 1,
+        pageNum: 1,
         startTime: startTime && startTime + '',
         endTime: endTime && endTime + ''
       }
@@ -392,7 +392,7 @@ export default {
         cardColourId: undefined, // 纸牌牌色:1、红牌，2、蓝牌
         createdBy: undefined
       }
-      this.loadData({ pageIndex: 1 })
+      this.loadData({ pageNum: 1 })
     }
   }
 }
