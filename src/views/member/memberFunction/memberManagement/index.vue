@@ -219,24 +219,68 @@
 					<el-table-column
 						prop="bankCode"
 						align="center"
-						label="银行卡号"
+						label="会员账号"
 					></el-table-column>
 					<el-table-column
 						prop="bankName"
 						align="center"
-						label="银行名称"
+						label="会员姓名"
 					></el-table-column>
 					<el-table-column
 						prop="createDt"
 						align="center"
-						label="创建时间"
+						label="代理上级"
 					></el-table-column>
 					<el-table-column
 						prop="updateDt"
 						align="center"
-						label="更新时间"
+						label="会员类型"
 					></el-table-column>
-
+                    <el-table-column
+                        prop="updateDt"
+                        align="center"
+                        label="会员标签"
+                    ></el-table-column>
+                    <el-table-column
+                        prop="updateDt"
+                        align="center"
+                        label="风控层级"
+                    ></el-table-column>
+                    <el-table-column
+                        prop="updateDt"
+                        align="center"
+                        label="账号状态"
+                    ></el-table-column>
+                    <el-table-column
+                        prop="updateDt"
+                        align="center"
+                        label="VIP等级"
+                    ></el-table-column>
+                    <el-table-column
+                        prop="updateDt"
+                        align="center"
+                        label="注册时间"
+                    ></el-table-column>
+                    <el-table-column
+                        prop="updateDt"
+                        align="center"
+                        label="首存时间"
+                    ></el-table-column>
+                    <el-table-column
+                        prop="updateDt"
+                        align="center"
+                        label="首存金额"
+                    ></el-table-column>
+                    <el-table-column
+                        prop="updateDt"
+                        align="center"
+                        label="中心钱包"
+                    ></el-table-column>
+                    <el-table-column
+                        prop="updateDt"
+                        align="center"
+                        label="最后登录时间"
+                    ></el-table-column>
 					<el-table-column align="center" label="操作">
 						<template slot-scope="scope">
 							<el-button
