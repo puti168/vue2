@@ -206,6 +206,7 @@
 					</el-form-item>
 				</el-form>
 			</div>
+
 			<div class="content">
 				<el-table
 					v-loading="loading"
@@ -281,7 +282,7 @@
                         align="center"
                         label="最后登录时间"
                     ></el-table-column>
-					<el-table-column align="center" label="操作">
+					<el-table-column align="center" label="操作" width="200px">
 						<template slot-scope="scope">
 							<el-button
 								type="danger"
@@ -386,7 +387,7 @@ export default {
 		for (let i = 0; i < 10; i++) {
 			this.dataList[i] = {
 				bankCode: '165416416464654',
-				bankName: '中国银行',
+				bankName: '张三',
 				createDt: '2021-02-13 20:28:54',
 				updateDt: '2021-02-13 20:28:54'
 			}
