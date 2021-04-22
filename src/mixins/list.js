@@ -127,7 +127,7 @@ export default {
 			const key = event.which || event.keyCode || event.charCode
 			if (key === 13) {
 				this.hadSearch = true
-				this.pageIndex = 1
+				this.pageNum = 1
 				this.enterSubmit()
 			}
 		}
