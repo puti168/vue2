@@ -81,19 +81,19 @@ const finance = [
 	{
 		id: '38',
 		parentId: '36',
-		path: '/finance/withdrawConfig/generalSettings',
+		path: '/finance/withdrawConfig/normalWithdraw',
 		title: '普通提现'
 	},
 	{
 		id: '39',
 		parentId: '36',
-		path: '/finance/withdrawConfig/generalSettings',
+		path: '/finance/withdrawConfig/bigWithdraw',
 		title: '大额提现'
 	},
 	{
 		id: '40',
 		parentId: '36',
-		path: '/finance/withdrawConfig/generalSettings',
+		path: '/finance/withdrawConfig/agentWithdraw',
 		title: '代理提现'
 	},
 	{
