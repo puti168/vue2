@@ -57,61 +57,61 @@ const serviceMap = [
 	{
 		id: '10',
 		parentId: '9',
-		path: '/member/memberFunction/withdraw',
+		path: '/member/memberReview/withdraw',
 		title: '会员提款审核'
 	},
 	{
 		id: '11',
 		parentId: '9',
-		path: '/member/memberFunction/recharge',
+		path: '/member/memberReview/recharge',
 		title: '充值补单审核'
 	},
 	{
 		id: '12',
 		parentId: '9',
-		path: '/member/memberFunction/bankCardReview',
+		path: '/member/memberReview/bankCardReview',
 		title: '银行卡审核'
 	},
 	{
 		id: '13',
 		parentId: '9',
-		path: '/member/memberFunction/virtualAccount',
+		path: '/member/memberReview/virtualAccount',
 		title: '虚拟币账号审核'
 	},
 	{
 		id: '14',
 		parentId: '9',
-		path: '/member/memberFunction/amountAdjustment',
+		path: '/member/memberReview/amountAdjustment',
 		title: '金额调整审核'
 	},
 	{
 		id: '15',
 		parentId: '9',
-		path: '/member/memberFunction/addMember',
+		path: '/member/memberReview/addMember',
 		title: '新增会员审核'
 	},
 	{
 		id: '16',
 		parentId: '9',
-		path: '/member/memberFunction/dataOpration',
+		path: '/member/memberReview/dataOpration',
 		title: '资料操作审核'
 	},
 	{
 		id: '18',
 		parentId: '17',
-		path: '/member/memberFunction/transactionRecord',
+		path: '/member/memberRecord/transactionRecord',
 		title: '会员交易记录'
 	},
 	{
 		id: '19',
 		parentId: '17',
-		path: '/member/memberFunction/winlossRecord',
+		path: '/member/memberRecord/winlossRecord',
 		title: '会员输赢记录'
 	},
 	{
 		id: '20',
 		parentId: '17',
-		path: '/member/memberFunction/accountChangeRecord',
+		path: '/member/memberRecord`/accountChangeRecord',
 		title: '会员金流账变记录'
 	}
 ]
