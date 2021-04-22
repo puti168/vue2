@@ -183,7 +183,7 @@
       <!-- 分页 -->
       <!-- <el-pagination
 				v-if="total"
-				:current-page="pageIndex"
+				:current-page="pageNum"
 				:total="total"
 				:layout="layout"
 				:page-sizes="pageSizes"
@@ -408,7 +408,7 @@ export default {
       this.loadData(params)
     },
     handleCurrentChange(val) {
-      this.pageIndex = val
+      this.pageNum = val
       this.$nextTick(() => {
         this.loadData()
       })

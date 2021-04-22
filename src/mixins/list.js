@@ -7,7 +7,7 @@ export default {
 			list: [],
 			total: 0,
 			loading: false,
-			pageIndex: 1,
+			pageNum: 1,
 			pageSize: 10,
 			pageSizes: [5, 10, 20, 50, 100, 200, 500],
 			layout: 'total, sizes, prev, pager, next, jumper',
@@ -61,7 +61,7 @@ export default {
 			}
 		}
 	},
-	created() {
+	mounted() {
 		const option = this.$options.doNotInit
 		if (!option) {
 			this.initList()
@@ -87,7 +87,7 @@ export default {
 		getParams(params) {
 			return Object.assign(
 				{
-					pageIndex: this.pageIndex,
+					pageNum: this.pageNum,
 					pageSize: this.pageSize
 				},
 				params
@@ -97,7 +97,7 @@ export default {
 		 * 初始化列表
 		 */
 		initList() {
-			this.pageIndex = 1
+			this.pageNum = 1
 			this.list = []
 			this.loadData()
 		},
@@ -110,12 +110,12 @@ export default {
 		},
 		// 改变列表条数
 		handleSizeChange(value) {
-			this.pageIndex = 1
+			this.pageNum = 1
 			this.pageSize = value
 			this.loadData()
 		},
 		handleCurrentChange(value) {
-			this.pageIndex = value
+			this.pageNum = value
 			this.loadData()
 		}
 	}

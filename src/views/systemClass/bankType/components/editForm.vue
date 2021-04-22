@@ -1,5 +1,5 @@
 <template>
-	<el-form ref="form" :inline="true" :model="queryData" label-width="100px">
+	<el-form ref="form" :model="queryData" label-width="80px">
 		<el-form-item label="银行卡号">
 			<el-input
 				v-model="queryData.bankCode"
@@ -39,7 +39,7 @@
 <script>
 export default {
 	components: {},
-	props: {},
+	props: { editFormData: { type: Object, default: () => ({}) } },
 	data() {
 		return {
 			queryData: {},
@@ -49,7 +49,11 @@ export default {
 		}
 	},
 	computed: {},
-	watch: {},
+	watch: {
+		editFormData(newQuestion, oldQuestion) {
+			this.queryData = newQuestion
+		}
+	},
 	created() {},
 	mounted() {},
 	methods: {}

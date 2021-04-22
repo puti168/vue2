@@ -102,7 +102,7 @@
       </el-table>
       <el-pagination
         v-show="dataList.length > 0"
-        :current-page.sync="pageIndex"
+        :current-page.sync="pageNum"
         layout="total, sizes,prev, pager, next, jumper"
         :page-size="pageSize"
         :page-sizes="$store.getters.pageSizes"
@@ -169,7 +169,7 @@ export default {
     },
     handleCurrentChange() {
       this.loadDetail()
-      console.log(this.pageIndex)
+      console.log(this.pageNum)
     }
   }
 }

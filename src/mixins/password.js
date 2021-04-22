@@ -92,9 +92,9 @@ export default {
 		 * @returns {*}
 		 */
 		getParams(params = {}) {
-			this.pageIndex = params.pageIndex ? params.pageIndex : this.pageIndex
+			this.pageNum = params.pageNum ? params.pageNum : this.pageNum
 			return Object.assign({
-				pageIndex: this.pageIndex,
+				pageNum: this.pageNum,
 				pageSize: this.pageSize,
 				...params
 			})
@@ -103,7 +103,7 @@ export default {
 		 * 加载更多
 		 */
 		loadMore() {
-			this.pageIndex++
+			this.pageNum++
 		},
 		/**
 		 * 推送到list中 因为vue的监听特性 只能用push进行数据的添加 如果有特殊处理 通过传递一个filter来过滤数据
@@ -123,7 +123,7 @@ export default {
 		 * 初始化列表
 		 */
 		initList() {
-			this.pageIndex = 1
+			this.pageNum = 1
 			this.list = []
 			this.loadData()
 		},

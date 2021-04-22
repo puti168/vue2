@@ -7,18 +7,26 @@
 					type="primary"
 					icon="el-icon-search"
 					size="medium"
-					@click="loadPage"
+					@click="query"
 				>
 					查询
 				</el-button>
-				<el-button icon="el-icon-edit" size="medium" @click="reset">
+				<el-button icon="el-icon-refresh-left" size="medium" @click="reset">
 					重置
+				</el-button>
+				<el-button
+					type="primary"
+					icon="el-icon-folder-add"
+					size="medium"
+					@click="add"
+				>
+					新增
 				</el-button>
 			</div>
 		</div>
 		<div class="view-container dealer-container">
 			<div class="params">
-				<query-form></query-form>
+				<query-form ref="queryForm"></query-form>
 			</div>
 			<div class="content">
 				<el-table
@@ -31,76 +39,51 @@
 					:header-cell-style="getRowClass"
 				>
 					<el-table-column
-						prop="Betnumber"
+						prop="bankCode"
 						align="center"
-						label="时间"
+						label="银行卡号"
 					></el-table-column>
 					<el-table-column
-						prop="menberaccount"
+						prop="bankName"
 						align="center"
-						label="会员账号/昵称"
-					>
+						label="银行名称"
+					></el-table-column>
+					<el-table-column
+						prop="createDt"
+						align="center"
+						label="创建时间"
+					></el-table-column>
+					<el-table-column
+						prop="updateDt"
+						align="center"
+						label="更新时间"
+					></el-table-column>
+
+					<el-table-column align="center" label="操作">
 						<template slot-scope="scope">
-							<el-tooltip placement="top">
-								<div slot="content">{{ scope.row.menberaccount }}</div>
-								<div>{{ scope.row.menberaccount }}</div>
-							</el-tooltip>
+							<el-button
+								type="danger"
+								icon="el-icon-delete"
+								size="medium"
+								@click="deleteUp(scope.row)"
+							>
+								删除
+							</el-button>
+							<el-button
+								type="warning"
+								icon="el-icon-edit"
+								size="medium"
+								@click="editUp(scope.row)"
+							>
+								修改
+							</el-button>
 						</template>
 					</el-table-column>
-					<el-table-column
-						prop="merchantname"
-						align="center"
-						label="商户名称"
-					></el-table-column>
-					<el-table-column
-						prop="merchantcode"
-						align="center"
-						label="商户编码"
-					></el-table-column>
-					<el-table-column
-						prop="Contestname"
-						align="center"
-						label="变更类型"
-					></el-table-column>
-					<el-table-column
-						prop="roundinfo"
-						align="center"
-						label="门票名称"
-					></el-table-column>
-					<el-table-column
-						prop="tableinfo"
-						align="center"
-						label="门票ID"
-					></el-table-column>
-					<el-table-column
-						prop="gamesessionnumber"
-						align="center"
-						label="数量"
-					></el-table-column>
-					<el-table-column prop="strategy" align="center" label="持有门票">
-						<template slot="header">
-							<span>持有门票</span>
-							<el-tooltip popper-class="tooltip" placement="top">
-								<i class="el-icon-warning-outline"></i>
-								<div slot="content" class="tooltip-content">
-									点击查看该会员持有门票详情，只记录最新一条数据的门票详情
-								</div>
-							</el-tooltip>
-						</template>
-						<template slot-scope="scope">
-							<span style="color: #c689ff">{{ scope.row.strategy }}</span>
-						</template>
-					</el-table-column>
-					<el-table-column
-						prop="remarks"
-						align="center"
-						label="备注"
-					></el-table-column>
 				</el-table>
 				<!-- 分页 -->
 				<el-pagination
 					v-show="dataList.length > 0"
-					:current-page.sync="pageIndex"
+					:current-page.sync="pageNum"
 					layout="total, sizes,prev, pager, next, jumper"
 					:page-size="pageSize"
 					:page-sizes="$store.getters.pageSizes"
@@ -108,6 +91,20 @@
 					@current-change="handleCurrentChange"
 					@size-change="handleSizeChange"
 				></el-pagination>
+				<el-dialog
+					title="修改银行信息"
+					center
+					:visible.sync="editVisible"
+					width="410px"
+				>
+					<editForm ref="editForm" :editFormData="editFormData"></editForm>
+					<div slot="footer" class="dialog-footer">
+						<el-button @click="editVisible = false">取 消</el-button>
+						<el-button type="primary" @click="submitEdit">
+							确 定
+						</el-button>
+					</div>
+				</el-dialog>
 			</div>
 		</div>
 	</div>
@@ -116,51 +113,101 @@
 <script>
 import list from '@/mixins/list'
 import queryForm from './components/queryForm'
+import editForm from './components/editForm'
+import {
+	getQueryBank,
+	setAddBank,
+	setDeleteBank,
+	setEidteBank
+} from '@/api/bankController'
 export default {
 	name: '',
 	components: {
-		queryForm
+		queryForm,
+		editForm
 	},
 	mixins: [list],
 	data() {
 		return {
-			dataList: []
+			dataList: [],
+			editVisible: false,
+			editFormData: {}
 		}
 	},
 	computed: {},
 	mounted() {
 		for (let i = 0; i < 10; i++) {
 			this.dataList[i] = {
-				Betnumber: '2021-02-13 20:28:54',
-				menberaccount: 'zj7flily0006',
-				merchantname: '亚博体育',
-				merchantcode: 'YBTIS',
-				Contestname: '报名比赛',
-				roundinfo: 'BO月赛争霸赛门票',
-				tableinfo: '9956458',
-				gamesessionnumber: '1',
-				strategy: '16张',
-				remarks: 'BO月赛争霸赛  第2名  012345678901234'
+				bankCode: '165416416464654',
+				bankName: '中国银行',
+				createDt: '2021-02-13 20:28:54',
+				updateDt: '2021-02-13 20:28:54'
 			}
 		}
 	},
 	methods: {
-		loadDetail() {},
-		loadPage() {
-			if (!this.query.roundNo) {
-				this.$message({
-					message: '请输入会员账号！',
-					type: 'error'
-				})
-				return
+		loadData(params) {
+			params = {
+				...this.getParams(params)
 			}
+			getQueryBank(params).then((res) => {
+				console.log('res:', res)
+				if (res.code === 200) {
+					this.loading = false
+					this.dataList = res.data
+				} else {
+					this.loading = false
+					this.$message({
+						message: res.msg,
+						type: 'error'
+					})
+				}
+			})
+		},
+		query() {
 			this.loading = true
+			const queryData = this.$refs.queryForm.queryData
+			const formTime = this.$refs.queryForm.formTime
+			const create = formTime.time || []
+			const [startTime, endTime] = create
+			const params = {
+				...queryData,
+				pageNum: 1,
+				startTime: startTime && startTime + '',
+				endTime: endTime && endTime + ''
+			}
+			this.loadData(params)
 		},
 		reset() {
-			this.query.memberAccount = ''
+			this.$refs.queryForm.queryData = {}
+			this.$refs.queryForm.formTime.time = []
+			// this.loadData()
+		},
+
+		add() {
+			const queryData = this.$refs.queryForm.queryData
+			setAddBank(queryData).then((res) => {
+				console.log(res)
+			})
+		},
+		deleteUp(val) {
+			setDeleteBank(val).then((res) => {
+				console.log(res)
+			})
+			console.log(val)
+		},
+		editUp(val) {
+			this.editVisible = true
+			this.editFormData = val
+			console.log(val)
+		},
+		submitEdit() {
+			setEidteBank().then((res) => {
+				console.log(res)
+			})
 		},
 		handleCurrentChange() {
-			this.loadDetail()
+			this.loadData()
 		}
 	}
 }
