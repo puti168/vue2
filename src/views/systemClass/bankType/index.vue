@@ -23,7 +23,6 @@
         <el-button
           type="primary"
           icon="el-icon-folder-add"
-          :disabled="loading"
           size="medium"
           @click="add"
         >
