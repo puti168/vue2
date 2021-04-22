@@ -8,37 +8,37 @@ const operation = [
 	{
 		id: '66',
 		parentId: '65',
-		icon: 'bb_management_system',
+		icon: 'bb_report',
 		title: '广告位管理'
 	},
 	{
 		id: '70',
 		parentId: '65',
-		icon: 'bb_management_system',
+		icon: 'bb_report',
 		title: '消息管理'
 	},
 	{
 		id: '74',
 		parentId: '65',
-		icon: 'bb_management_system',
+		icon: 'bb_report',
 		title: '活动管理'
 	},
 	{
 		id: '78',
 		parentId: '65',
-		icon: 'bb_management_system',
+		icon: 'bb_report',
 		title: '客户端配置'
 	},
 	{
 		id: '82',
 		parentId: '65',
-		icon: 'bb_management_system',
+		icon: 'bb_report',
 		title: '会员体系管理'
 	},
 	{
 		id: '85',
 		parentId: '65',
-		icon: 'bb_management_system',
+		icon: 'bb_report',
 		title: '客服管理'
 	},
 	// 第三级菜单

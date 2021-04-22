@@ -8,13 +8,13 @@ const system = [
 	{
 		id: '114',
 		parentId: '113',
-		icon: 'bb_management_system',
+		icon: 'bb_report',
 		title: '系统功能'
 	},
 	{
 		id: '117',
 		parentId: '113',
-		icon: 'bb_management_system',
+		icon: 'bb_report',
 		title: '权限配置'
 	},
 	// 第三级菜单

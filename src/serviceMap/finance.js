@@ -8,25 +8,25 @@ const finance = [
 	{
 		id: '33',
 		parentId: '32',
-		icon: 'bb_management_system',
+		icon: 'bb_report',
 		title: '财务功能'
 	},
 	{
 		id: '36',
 		parentId: '32',
-		icon: 'bb_management_system',
+		icon: 'bb_report',
 		title: '提现配置'
 	},
 	{
 		id: '41',
 		parentId: '32',
-		icon: 'bb_management_system',
+		icon: 'bb_report',
 		title: '用户资金调整'
 	},
 	{
 		id: '44',
 		parentId: '32',
-		icon: 'bb_management_system',
+		icon: 'bb_report',
 		title: '订单记录'
 	},
 	// 第三级菜单

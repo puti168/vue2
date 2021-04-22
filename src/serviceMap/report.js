@@ -8,13 +8,13 @@ const report = [
 	{
 		id: '102',
 		parentId: '101',
-		icon: 'bb_management_system',
+		icon: 'bb_report',
 		title: '报表功能'
 	},
 	{
 		id: '107',
 		parentId: '101',
-		icon: 'bb_management_system',
+		icon: 'bb_report',
 		title: '盈亏报表'
 	},
 	// 第三级菜单
