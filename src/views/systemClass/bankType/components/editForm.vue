@@ -1,8 +1,8 @@
 <template>
-	<el-form ref="form" :model="queryData" label-width="80px">
+	<el-form ref="form" :model="editFormData" label-width="80px">
 		<el-form-item label="银行卡号">
 			<el-input
-				v-model="queryData.bankCode"
+				v-model="editFormData.bankCode"
 				clearable
 				size="medium"
 				style="width: 280px"
@@ -11,7 +11,7 @@
 		</el-form-item>
 		<el-form-item label="银行名称">
 			<el-input
-				v-model="queryData.bankName"
+				v-model="editFormData.bankName"
 				clearable
 				size="medium"
 				style="width: 280px"
@@ -51,6 +51,7 @@ export default {
 	computed: {},
 	watch: {
 		editFormData(newQuestion, oldQuestion) {
+			console.log('newQuestion:', newQuestion)
 			this.queryData = newQuestion
 		}
 	},
