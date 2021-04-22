@@ -2,7 +2,7 @@ import { constantRoutes } from '@/router'
 import serviceMap from './route'
 import Layout from '@/layout'
 import Layout2 from '@/layout2'
-
+import store from '@/store'
 function hasPermission(roles, route) {
 	if (route.meta && route.meta.roles) {
 		return roles.some((role) => route.meta.roles.includes(role))
@@ -64,6 +64,9 @@ const actions = {
 				if (mapElement) {
 					// 一级菜单
 					if (element.parentId === '0') {
+						console.log('val')
+						console.log(val)
+						console.log(element)
 						parentRoutes.push({
 							id: element.id,
 							path: element.path,
@@ -73,6 +76,11 @@ const actions = {
 							children: [],
 							checked: val === 0
 						})
+						if (val === 0) {
+							setTimeout(() => {
+								store.dispatch('permission/setNowroute', element.id)
+							}, 200)
+						}
 					} else if (element.level === 2) {
 						// 二级菜单
 						const index = parentRoutes.findIndex(

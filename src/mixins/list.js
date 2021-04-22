@@ -117,6 +117,19 @@ export default {
 		handleCurrentChange(value) {
 			this.pageNum = value
 			this.loadData()
+		},
+		enterSubmit() {
+			// 按下回车键提交表单方法需要重写
+		},
+		enterSearch(e) {
+			const event = e || window.event
+			console.log(event)
+			const key = event.which || event.keyCode || event.charCode
+			if (key === 13) {
+				this.hadSearch = true
+				this.pageIndex = 1
+				this.enterSubmit()
+			}
 		}
 	}
 }
