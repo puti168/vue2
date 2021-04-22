@@ -4,7 +4,7 @@
     <title>编组</title>
     <desc>Created with Sketch.</desc>
     <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round">
-        <g id="导航栏" transform="translate(-122.000000, -2753.000000)" stroke="#FFFFFF">
+        <g id="导航栏" transform="translate(-122.000000, -2753.000000)" stroke="rgb(153, 153, 153)">
             <g id="编组" transform="translate(123.000000, 2753.000000)">
                 <polyline id="Stroke-1" points="18.8841447 9.50526316 22.0084868 11.2296053 12.4361184 15.5032895 2.81440789 11.2296053 6.18809211 9.62960526"></polyline>
                 <path d="M2.60032895,15.7790132 L2.60032895,20.7270395 C2.60032895,20.7270395 2.38914474,21.5770395 3.33914474,22.0263816 L12.4115132,25.6750658 L12.4115132,15.5033553" id="Stroke-2"></path>

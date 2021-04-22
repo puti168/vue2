@@ -8,19 +8,19 @@ const member = [
 	{
 		id: '3',
 		parentId: '2',
-		icon: 'bb_management_system',
+		icon: 'bb_report',
 		title: '会员功能'
 	},
 	{
 		id: '9',
 		parentId: '2',
-		icon: 'bb_management_system',
+		icon: 'bb_report',
 		title: '会员审核'
 	},
 	{
 		id: '17',
 		parentId: '2',
-		icon: 'bb_management_system',
+		icon: 'bb_report',
 		title: '会员记录'
 	},
 	// 第三级菜单

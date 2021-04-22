@@ -8,13 +8,13 @@ const game = [
 	{
 		id: '22',
 		parentId: '21',
-		icon: 'bb_management_system',
+		icon: 'bb_report',
 		title: '游戏功能'
 	},
 	{
 		id: '25',
 		parentId: '21',
-		icon: 'bb_management_system',
+		icon: 'bb_report',
 		title: '游戏配置'
 	},
 	// 第三级菜单

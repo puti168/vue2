@@ -8,19 +8,19 @@ const control = [
 	{
 		id: '91',
 		parentId: '90',
-		icon: 'bb_management_system',
+		icon: 'bb_report',
 		title: '风控功能'
 	},
 	{
 		id: '94',
 		parentId: '90',
-		icon: 'bb_management_system',
+		icon: 'bb_report',
 		title: '风控配置'
 	},
 	{
 		id: '98',
 		parentId: '90',
-		icon: 'bb_management_system',
+		icon: 'bb_report',
 		title: '风控审核'
 	},
 	// 第三级菜单
