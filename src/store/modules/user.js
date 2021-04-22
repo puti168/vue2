@@ -112,6 +112,7 @@ const actions = {
                     username: username.trim(),
                     password: md5(username.trim() + password.trim()),
                     googleAuth,
+                    agentCode: 'AAAAA',
                     version: '2.0',
                     pwdNeedReset: !!userInfo.pwdNeedReset,
                     prePassword: userInfo.prePassword ? userInfo.prePassword : ''
