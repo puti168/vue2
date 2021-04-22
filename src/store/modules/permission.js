@@ -1,5 +1,5 @@
 import { constantRoutes } from '@/router'
-import serviceMap from './route'
+import serviceMap from '@/serviceMap/route'
 import Layout from '@/layout'
 import Layout2 from '@/layout2'
 import store from '@/store'
