@@ -70,9 +70,9 @@ export default {
   mounted() {},
   methods: {
     enterSubmit() {
-      console.log(222222222)
+      // console.log(222222222)
       setEidteBank().then((res) => {
-        console.log(res)
+        // console.log(res)
       })
     }
   }
