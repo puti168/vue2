@@ -62,28 +62,16 @@ export default {
   },
   computed: {},
   watch: {
-    // editFormData(val) {
-    // 	console.log(val);
-    //   this.editData = { ...val };
-    // },
-    editFormData: {
-      // 深度监听，可监听到对象、数组的变化
-      handler(newV, oldV) {
-        // do something, 可使用this
-        this.editData = newV
-      },
-      deep: true,
-      immediate: true // 该回调将会在侦听开始之后被立即调用
+    editFormData(val) {
+      this.editData = { ...val }
     }
   },
   created() {},
   mounted() {},
   methods: {
     enterSubmit() {
-      const params = {
-        ...this.getParams(params)
-      }
-      setEidteBank(params).then((res) => {
+      console.log(222222222)
+      setEidteBank().then((res) => {
         console.log(res)
       })
     }
