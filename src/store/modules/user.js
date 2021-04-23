@@ -174,7 +174,6 @@ const actions = {
         commit
     }) {
         return getUserPermissions().then((response) => {
-            console.log(response)
             const data = response.status === 203 ? [] : response.data
             const result = []
             loop(data, result)

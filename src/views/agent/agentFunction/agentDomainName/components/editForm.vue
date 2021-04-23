@@ -7,41 +7,56 @@
   >
     <el-form-item label="银行卡号">
       <el-input
-        v-model="editData.bankCode"
+        v-model="editData.cardNo"
         clearable
         size="medium"
         style="width: 280px"
         placeholder="请输入银行卡号"
         :disabled="loading"
-        @keyup.enter.native="enterSearch"
       ></el-input>
     </el-form-item>
-    <el-form-item label="银行名称">
+    <el-form-item label="创建人">
       <el-input
-        v-model="editData.bankName"
+        v-model="editData.createBy"
         clearable
         size="medium"
         style="width: 280px"
-        placeholder="请输入银行名称"
+        placeholder="请输入创建人"
         :disabled="loading"
-        @keyup.enter.native="enterSearch"
       ></el-input>
     </el-form-item>
-    <!-- <el-form-item label="时间">
+    <el-form-item label="更新人">
+      <el-input
+        v-model="editData.modifyBy"
+        clearable
+        size="medium"
+        style="width: 280px"
+        placeholder="请输入更新人"
+        :disabled="loading"
+      ></el-input>
+    </el-form-item>
+    <el-form-item label="备注">
+      <el-input
+        v-model="editData.remark"
+        clearable
+        size="medium"
+        style="width: 280px"
+        placeholder="请输入备注"
+        :disabled="loading"
+      ></el-input>
+    </el-form-item>
+    <el-form-item label="更新时间">
       <el-date-picker
         v-model="formTime.time"
         size="medium"
         format="yyyy-MM-dd HH:mm:ss"
-        type="datetimerange"
-        range-separator="-"
-        start-placeholder="开始日期"
-        end-placeholder="结束日期"
+        type="datetime"
         align="right"
         value-format="yyyy-MM-dd HH:mm:ss"
         clearable
         style="width: 280px"
       ></el-date-picker>
-    </el-form-item>-->
+    </el-form-item>
   </el-form>
 </template>
 

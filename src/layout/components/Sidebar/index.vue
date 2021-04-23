@@ -44,14 +44,11 @@ export default {
 			this.routes.forEach((item) => {
 				if (item.id === this.nowRoute) {
 					arr = item
-					console.log(item)
 				}
 			})
 			return arr.children
 		},
 		activeMenu() {
-			console.log('routes :>> ', this.routes)
-			console.log(this.$route)
 			const route = this.$route
 			const { meta, path } = route
 			// if set path, the sidebar will highlight the path you set

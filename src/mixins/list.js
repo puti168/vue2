@@ -123,7 +123,6 @@ export default {
 		},
 		enterSearch(e) {
 			const event = e || window.event
-			console.log(event)
 			const key = event.which || event.keyCode || event.charCode
 			if (key === 13) {
 				this.hadSearch = true
