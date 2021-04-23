@@ -1,7 +1,7 @@
 <template>
   <div class="game-container report-container">
     <div class="header flex-h flex-bc">
-      <h2 class="h2-line">门票记录</h2>
+      <h2 class="h2-line">银行卡管理</h2>
       <div class="head flex-h-end">
         <el-button
           type="primary"
@@ -20,12 +20,7 @@
         >
           重置
         </el-button>
-        <el-button
-          type="primary"
-          icon="el-icon-folder-add"
-          size="medium"
-          @click="add"
-        >
+        <el-button type="primary" icon="el-icon-folder-add" size="medium" @click="add">
           新增
         </el-button>
       </div>
@@ -120,7 +115,7 @@
                 size="medium"
                 @click.stop="editUp(scope.row)"
               >
-                修改
+                编辑
               </el-button>
             </template>
           </el-table-column>
@@ -143,12 +138,12 @@
           :before-close="closeFormDialog"
           width="410px"
         >
-          <editForm v-if="moduleBox == '新增银行信息'" ref="addForm"></editForm>
+          <editForm v-if="moduleBox == '新增'" ref="addForm"></editForm>
           <editForm v-else ref="editForm" :editFormData="editFormData"></editForm>
           <div slot="footer" class="dialog-footer">
             <el-button @click="editVisible = false">取 消</el-button>
             <el-button
-              v-if="moduleBox == '新增银行信息'"
+              v-if="moduleBox == '新增'"
               type="primary"
               @click="submitAdd"
               >确 定</el-button>
@@ -163,6 +158,7 @@
 <script>
 import list from '@/mixins/list'
 import editForm from './components/editForm'
+import { getQueryBank } from '@/api/bankController'
 // import {
 //   getQueryBank,
 //   setAddBank,
@@ -189,35 +185,26 @@ export default {
     }
   },
   computed: {},
-  mounted() {
-    for (let i = 0; i < 10; i++) {
-      this.dataList[i] = {
-        bankCode: '165416416464654',
-        bankName: '中国银行',
-        createDt: '2021-02-13 20:28:54',
-        updateDt: '2021-02-13 20:28:54'
-      }
-    }
-  },
+  mounted() {},
   methods: {
-    // loadData(params) {
-    //   params = {
-    //     ...this.getParams(params)
-    //   }
-    //   getQueryBank(params).then((res) => {
-    //     console.log('res:', res)
-    //     if (res.code === 200) {
-    //       this.loading = false
-    //       this.dataList = res.data
-    //     } else {
-    //       this.loading = false
-    //       this.$message({
-    //         message: res.msg,
-    //         type: 'error'
-    //       })
-    //     }
-    //   })
-    // },
+    loadData(params) {
+      params = {
+        ...this.getParams(params)
+      }
+      getQueryBank(params).then((res) => {
+        console.log('res:', res)
+        if (res.code === 200) {
+          this.loading = false
+          this.dataList = res.data.records
+        } else {
+          this.loading = false
+          this.$message({
+            message: res.msg,
+            type: 'error'
+          })
+        }
+      })
+    },
     query() {
       this.loading = true
       const create = this.formTime.time || []
@@ -238,7 +225,7 @@ export default {
     },
 
     add() {
-      this.moduleBox = '新增银行信息'
+      this.moduleBox = '新增'
       this.editVisible = true
     },
     submitAdd() {
@@ -271,7 +258,7 @@ export default {
         })
     },
     editUp(val) {
-      this.moduleBox = '修改银行信息'
+      this.moduleBox = '编辑'
       this.editVisible = true
       this.editFormData = val
     },
