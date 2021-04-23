@@ -349,6 +349,7 @@
 <script>
 import list from '@/mixins/list'
 import editForm from './components/editForm'
+// import { UTable } from 'umy-ui'
 export default {
 	name: '',
 	components: {
