@@ -8,7 +8,7 @@
 					icon="el-icon-search"
 					:disabled="loading"
 					size="medium"
-					@click="query"
+					@click="search"
 				>
 					查询
 				</el-button>
@@ -154,28 +154,16 @@
 			</div>
 		</div>
     <el-dialog
-					:title="moduleBox"
+					:title="title"
 					center
 					:visible.sync="editVisible"
 					:before-close="closeFormDialog"
 					width="410px"
 				>
-					<editForm v-if="moduleBox === '新增'" ref="addForm"></editForm>
-					<editForm
-						v-else
-						ref="editForm"
-						:editFormData="editFormData"
-					></editForm>
+					<editForm ref="editForm" :type="title" :editFormData="editFormData" @refresh="search"></editForm>
 					<div slot="footer" class="dialog-footer">
 						<el-button @click="editVisible = false">取 消</el-button>
-						<el-button
-							v-if="moduleBox === '新增'"
-							type="primary"
-							@click="submitAdd"
-						>
-							确 定
-						</el-button>
-						<el-button v-else type="primary" @click="submitEdit">
+						<el-button @click="submit">
 							确 定
 						</el-button>
 					</div>
@@ -199,7 +187,7 @@ export default {
 				time: []
 			},
 			dataList: [],
-			moduleBox: '',
+			title: '',
 			showForm: '',
 			editVisible: false,
 			editFormData: {}
@@ -223,8 +211,6 @@ export default {
 			this.$api.blackList(params).then((res) => {
 				if (res.code === 200) {
 					const response = res.data
-					console.log('res')
-					console.log(res)
 					this.loading = false
 					this.dataList = response.records
 					this.total = response.total
@@ -237,22 +223,20 @@ export default {
 				}
 			})
 		},
-		query() {
+		search() {
 			this.pageNum = 1
 			this.loadData()
 		},
 		reset() {
 			this.queryData = {}
 			this.formTime.time = []
-			// this.loadData()
+			this.loadData()
 		},
 
 		add() {
-			this.moduleBox = '新增'
+			this.title = '新增'
 			this.editVisible = true
-		},
-		submitAdd() {
-			this.$api.setAddBank(this.queryData).then(() => {})
+      this.editFormData = {}
 		},
 		deleteUp(val) {
 			this.$confirm('确定删除此银行卡号吗?', {
@@ -273,7 +257,7 @@ export default {
 						})
 						.then(() => {
 							loading.close()
-              this.loadData()
+              this.search()
 							this.$message({
 								type: 'success',
 								message: '删除成功!'
@@ -291,23 +275,18 @@ export default {
 				})
 		},
 		editUp(val) {
-			this.moduleBox = '编辑'
+			this.title = '编辑'
 			this.editVisible = true
 			this.editFormData = val
 		},
-		submitEdit() {
-			// setEidteBank().then((res) => {
-			//   console.log(res);
-			// });
+		submit() {
+			this.$refs.editForm.submit()
 		},
 		handleCurrentChange() {
 			this.loadData()
 		},
 		closeFormDialog() {
 			this.editVisible = false
-		},
-		enterSubmit() {
-			this.query()
 		}
 	}
 }
