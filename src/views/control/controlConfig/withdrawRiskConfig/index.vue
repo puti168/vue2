@@ -205,7 +205,7 @@ export default {
     //     ...this.getParams(params)
     //   }
     //   getQueryBank(params).then((res) => {
-    //     console.log('res:', res)
+    //     ('res:', res)
     //     if (res.code === 200) {
     //       this.loading = false
     //       this.dataList = res.data
@@ -228,7 +228,7 @@ export default {
         startTime: startTime && startTime + '',
         endTime: endTime && endTime + ''
       }
-      console.log(params)
+      // (params)
       this.loadData(params)
     },
     reset() {
@@ -242,13 +242,13 @@ export default {
       this.editVisible = true
     },
     submitAdd() {
-      console.log(this.$refs.addForm)
+      // (this.$refs.addForm)
       //   setAddBank(this.queryData).then((res) => {
-      //     console.log(res);
+      //     (res);
       //   });
     },
     deleteUp(val) {
-      console.log(val)
+      (val)
       this.$confirm('确定删除此银行卡号吗?', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -260,7 +260,7 @@ export default {
             message: '删除成功!'
           })
           // setDeleteBank(val).then((res) => {
-          //   console.log(res);
+          //   (res);
           // });
         })
         .catch(() => {
@@ -277,7 +277,7 @@ export default {
     },
     submitEdit() {
       // setEidteBank().then((res) => {
-      //   console.log(res);
+      //   (res);
       // });
     },
     handleCurrentChange() {

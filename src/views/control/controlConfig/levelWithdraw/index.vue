@@ -228,7 +228,7 @@ export default {
         startTime: startTime && startTime + '',
         endTime: endTime && endTime + ''
       }
-      console.log(params)
+      // console.log(params)
       this.loadData(params)
     },
     reset() {
@@ -248,7 +248,7 @@ export default {
       //   });
     },
     deleteUp(val) {
-      console.log(val)
+      // console.log(val)
       this.$confirm('确定删除此银行卡号吗?', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',

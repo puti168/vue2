@@ -50,7 +50,7 @@ const ifVersionCorrect = async (to, from, next) => {
 		} else {
 			if (!addRoutes.length) {
 				const roles = await store.dispatch('user/getRoles')
-				console.log('roles', roles)
+				// console.log('roles', roles)
 				try {
 					if (roles === '无效权限') {
 						await store.dispatch('user/resetToken')
@@ -61,7 +61,7 @@ const ifVersionCorrect = async (to, from, next) => {
 							'permission/generateRoutes',
 							roles
 						)
-						console.log('accessRoutes', accessRoutes)
+						// console.log('accessRoutes', accessRoutes)
 						router.addRoutes(accessRoutes)
 						next({ ...to, replace: true })
 					}

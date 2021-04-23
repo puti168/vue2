@@ -35,12 +35,13 @@
 				<el-form
 					ref="form"
 					:inline="true"
-					:model="queryData"
+					:model="form"
 					label-width="100px"
 				>
 					<el-form-item label="注册时间">
 						<el-date-picker
-							v-model="form.registerTime"
+                            v-model="form.registerTime"
+							prop="registerTime"
 							size="medium"
 							:picker-options="pickerOptions"
 							format="yyyy-MM-dd HH:mm:ss"
@@ -56,7 +57,8 @@
 					</el-form-item>
 					<el-form-item label="会员账号">
 						<el-input
-							v-model="form.userName"
+                            v-model="form.userName"
+							prop="userName"
 							size="medium"
 							placeholder="会员账号"
 							clearable
@@ -64,7 +66,8 @@
 					</el-form-item>
 					<el-form-item label="会员姓名">
 						<el-input
-							v-model="form.nickName"
+                            v-model="form.nickName"
+							prop="nickName"
 							size="medium"
 							placeholder="会员姓名"
 							clearable
@@ -72,7 +75,8 @@
 					</el-form-item>
 					<el-form-item label="账号状态">
 						<el-select
-							v-model="form.status"
+                            v-model="form.status"
+							prop="status"
 							size="medium"
 							placeholder="全部"
 							clearable
@@ -84,7 +88,8 @@
 					</el-form-item>
 					<el-form-item label="离线天数">
 						<el-input
-							v-model="form.levelDays"
+                            v-model="form.levelDays"
+							prop="levelDays"
 							size="medium"
 							placeholder="离线天数"
 							clearable
@@ -92,7 +97,8 @@
 					</el-form-item>
 					<el-form-item label="最后登录时间">
 						<el-date-picker
-							v-model="form.lastLoginTime"
+                            v-model="form.lastLoginTime"
+							prop="lastLoginTime"
 							size="medium"
 							:picker-options="pickerOptions"
 							format="yyyy-MM-dd HH:mm:ss"
@@ -108,7 +114,8 @@
 					</el-form-item>
 					<el-form-item label="VIP等级">
 						<el-input
-							v-model="form.vipRank"
+                            v-model="form.vipRank"
+							prop="vipRank"
 							size="medium"
 							placeholder="VIP等级"
 							clearable
@@ -152,38 +159,38 @@
 							clearable
 						></el-input>
 					</el-form-item>
-                    <el-form-item label="最后下注时间">
-                        <el-date-picker
-                            v-model="form.lastBetTime"
-                            size="medium"
-                            :picker-options="pickerOptions"
-                            format="yyyy-MM-dd HH:mm:ss"
-                            type="datetimerange"
-                            range-separator="-"
-                            start-placeholder="开始日期"
-                            end-placeholder="结束日期"
-                            align="right"
-                            clearable
-                            value-format="timestamp"
-                            style="width: 385px"
-                        ></el-date-picker>
-                    </el-form-item>
-                    <el-form-item label="首存时间">
-                        <el-date-picker
-                            v-model="form.firstSaveTime"
-                            size="medium"
-                            :picker-options="pickerOptions"
-                            format="yyyy-MM-dd HH:mm:ss"
-                            type="datetimerange"
-                            range-separator="-"
-                            start-placeholder="开始日期"
-                            end-placeholder="结束日期"
-                            align="right"
-                            clearable
-                            value-format="timestamp"
-                            style="width: 385px"
-                        ></el-date-picker>
-                    </el-form-item>
+					<el-form-item label="最后下注时间">
+						<el-date-picker
+							v-model="form.lastBetTime"
+							size="medium"
+							:picker-options="pickerOptions"
+							format="yyyy-MM-dd HH:mm:ss"
+							type="datetimerange"
+							range-separator="-"
+							start-placeholder="开始日期"
+							end-placeholder="结束日期"
+							align="right"
+							clearable
+							value-format="timestamp"
+							style="width: 385px"
+						></el-date-picker>
+					</el-form-item>
+					<el-form-item label="首存时间">
+						<el-date-picker
+							v-model="form.firstSaveTime"
+							size="medium"
+							:picker-options="pickerOptions"
+							format="yyyy-MM-dd HH:mm:ss"
+							type="datetimerange"
+							range-separator="-"
+							start-placeholder="开始日期"
+							end-placeholder="结束日期"
+							align="right"
+							clearable
+							value-format="timestamp"
+							style="width: 385px"
+						></el-date-picker>
+					</el-form-item>
 					<el-form-item label="首存金额">
 						<el-input
 							v-model="form.firstSaveMoney"
@@ -218,17 +225,22 @@
 					:header-cell-style="getRowClass"
 				>
 					<el-table-column
-						prop="bankCode"
+						align="center"
+						type="index"
+						label="序号"
+					></el-table-column>
+					<el-table-column
+						prop="username"
 						align="center"
 						label="会员账号"
 					></el-table-column>
 					<el-table-column
-						prop="bankName"
+						prop="nickname"
 						align="center"
 						label="会员姓名"
 					></el-table-column>
 					<el-table-column
-						prop="createDt"
+						prop="levelId"
 						align="center"
 						label="代理上级"
 					></el-table-column>
@@ -237,51 +249,54 @@
 						align="center"
 						label="会员类型"
 					></el-table-column>
-                    <el-table-column
-                        prop="updateDt"
-                        align="center"
-                        label="会员标签"
-                    ></el-table-column>
-                    <el-table-column
-                        prop="updateDt"
-                        align="center"
-                        label="风控层级"
-                    ></el-table-column>
-                    <el-table-column
-                        prop="updateDt"
-                        align="center"
-                        label="账号状态"
-                    ></el-table-column>
-                    <el-table-column
-                        prop="updateDt"
-                        align="center"
-                        label="VIP等级"
-                    ></el-table-column>
-                    <el-table-column
-                        prop="updateDt"
-                        align="center"
-                        label="注册时间"
-                    ></el-table-column>
-                    <el-table-column
-                        prop="updateDt"
-                        align="center"
-                        label="首存时间"
-                    ></el-table-column>
-                    <el-table-column
-                        prop="updateDt"
-                        align="center"
-                        label="首存金额"
-                    ></el-table-column>
-                    <el-table-column
-                        prop="updateDt"
-                        align="center"
-                        label="中心钱包"
-                    ></el-table-column>
-                    <el-table-column
-                        prop="updateDt"
-                        align="center"
-                        label="最后登录时间"
-                    ></el-table-column>
+					<el-table-column
+						prop="titleId"
+						align="center"
+						label="会员标签"
+					></el-table-column>
+					<el-table-column
+						prop="updateDt"
+						align="center"
+						label="风控层级"
+					></el-table-column>
+					<el-table-column
+						prop="status"
+						align="center"
+						label="账号状态"
+					></el-table-column>
+					<el-table-column
+						prop="updateDt"
+						align="center"
+						label="VIP等级"
+					></el-table-column>
+					<el-table-column
+						prop="createDt"
+						align="center"
+						label="注册时间"
+						width="150px"
+					></el-table-column>
+					<el-table-column
+						prop="updateDt"
+						align="center"
+						width="150px"
+						label="首存时间"
+					></el-table-column>
+					<el-table-column
+						prop="updateDt"
+						align="center"
+						label="首存金额"
+					></el-table-column>
+					<el-table-column
+						prop="updateDt"
+						align="center"
+						label="中心钱包"
+					></el-table-column>
+					<el-table-column
+						prop="updateDt"
+						align="center"
+						label="最后登录时间"
+						width="150px"
+					></el-table-column>
 					<el-table-column align="center" label="操作" width="200px">
 						<template slot-scope="scope">
 							<el-button
@@ -305,12 +320,12 @@
 				</el-table>
 				<!-- 分页 -->
 				<el-pagination
-					v-show="dataList.length > 0"
+					v-show="!!dataList.length"
 					:current-page.sync="pageNum"
 					layout="total, sizes,prev, pager, next, jumper"
 					:page-size="pageSize"
 					:page-sizes="$store.getters.pageSizes"
-					:total="15"
+					:total="total"
 					@current-change="handleCurrentChange"
 					@size-change="handleSizeChange"
 				></el-pagination>
@@ -349,6 +364,7 @@
 <script>
 import list from '@/mixins/list'
 import editForm from './components/editForm'
+// import { UTable } from 'umy-ui'
 export default {
 	name: '',
 	components: {
@@ -369,13 +385,14 @@ export default {
 				userType: '',
 				userLabel: '',
 				terminal: '',
-                supAgent: '',
-                lastBetTime: '',
-                firstSaveTime: '',
-                firstSaveMoney: '',
-                wallet: ''
+				supAgent: '',
+				lastBetTime: '',
+				firstSaveTime: '',
+				firstSaveMoney: '',
+				wallet: ''
 			},
 			dataList: [],
+			total: 0,
 			moduleBox: '',
 			showForm: '',
 			editVisible: false,
@@ -383,51 +400,51 @@ export default {
 		}
 	},
 	computed: {},
-	mounted() {
-		for (let i = 0; i < 10; i++) {
-			this.dataList[i] = {
-				bankCode: '165416416464654',
-				bankName: '张三',
-				createDt: '2021-02-13 20:28:54',
-				updateDt: '2021-02-13 20:28:54'
-			}
-		}
+	created() {
+		this.loadData()
 	},
+	mounted() {},
 	methods: {
-		// loadData(params) {
-		//   params = {
-		//     ...this.getParams(params)
-		//   }
-		//   getQueryBank(params).then((res) => {
-		//     console.log('res:', res)
-		//     if (res.code === 200) {
-		//       this.loading = false
-		//       this.dataList = res.data
-		//     } else {
-		//       this.loading = false
-		//       this.$message({
-		//         message: res.msg,
-		//         type: 'error'
-		//       })
-		//     }
-		//   })
-		// },
+		loadData(params) {
+			params = {
+				...this.getParams(params)
+			}
+			this.dataList = []
+			this.$api.memberList(params).then((res) => {
+				const {
+					code,
+					data: { record, totalRecord },
+					msg
+				} = res
+				if (code === 200) {
+					this.loading = false
+					this.dataList = record || []
+					this.total = totalRecord || 0
+				} else {
+					this.loading = false
+					this.$message({
+						message: msg,
+						type: 'error'
+					})
+				}
+			})
+		},
 		query() {
 			this.loading = true
-			const create = this.formTime.time || []
-			const [startTime, endTime] = create
+			// const { registerTime, lastLoginTime, firstSaveTime } = this.form
+			// const [registerStartTime, registerEndTime] = registerTime
 			const params = {
 				...this.queryData,
-				pageNum: 1,
-				startTime: startTime && startTime + '',
-				endTime: endTime && endTime + ''
+				pageNum: 1
+				// startTime: registerStartTime && registerStartTime + '',
+				// endTime: registerEndTime && registerEndTime + ''
 			}
 			console.log(params)
 			this.loadData(params)
 		},
 		reset() {
 			this.queryData = {}
-			this.formTime.time = []
+			this.$refs['form'].resetFields()
 			// this.loadData()
 		},
 
@@ -481,7 +498,7 @@ export default {
 			this.editVisible = false
 		},
 		enterSubmit() {
-			this.query()
+			// this.query()
 		}
 	}
 }
