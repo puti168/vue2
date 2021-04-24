@@ -22,6 +22,8 @@ export default {
 					const now = dayjs()
 						.endOf('day')
 						.valueOf()
+						console.log(time.getTime() > now)
+						// format('DD/MM/YYYY')
 					return time.getTime() > now
 				},
 				onPick({ maxDate, minDate }) {

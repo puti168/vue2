@@ -284,19 +284,24 @@ export default {
       params = {
         ...this.getParams(params)
       }
-      this.$api.getRoleListPage(params).then((res) => {
-        if (res.code === 200) {
+      this.$api
+        .getRoleListPage(params)
+        .then((res) => {
+          if (res.code === 200) {
+            this.loading = false
+            this.dataList = res.data.records
+            this.total = res.data.total
+          } else {
+            this.loading = false
+            this.$message({
+              message: res.msg,
+              type: 'error'
+            })
+          }
+        })
+        .catch(() => {
           this.loading = false
-          this.dataList = res.data.records
-          this.total = res.data.total
-        } else {
-          this.loading = false
-          this.$message({
-            message: res.msg,
-            type: 'error'
-          })
-        }
-      })
+        })
     },
     query() {
       this.pageNum = 1
