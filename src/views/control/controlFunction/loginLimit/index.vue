@@ -8,7 +8,7 @@
 					icon="el-icon-search"
 					:disabled="loading"
 					size="medium"
-					@click="query"
+					@click="handleSearch"
 				>
 					查询
 				</el-button>
@@ -32,51 +32,26 @@
 		</div>
 		<div class="view-container dealer-container">
 			<div class="params">
-				<el-form
-					ref="form"
-					:inline="true"
-					:model="queryData"
-					label-width="100px"
-				>
-					<el-form-item label="IP地址">
+				<el-form ref="form" :inline="true" :model="form" label-width="100px">
+					<el-form-item label="IP地址:">
 						<el-input
-							v-model="queryData.bankCode"
+							v-model="form.IP"
 							size="medium"
 							placeholder="请输入IP"
 							clearable
 						></el-input>
-						<!--						<el-input-->
-						<!--							v-model="queryData.bankCode"-->
-						<!--							clearable-->
-						<!--							size="medium"-->
-						<!--							style="width: 280px"-->
-						<!--							placeholder="请输入银行卡号"-->
-						<!--							:disabled="loading"-->
-						<!--							@keyup.enter.native="enterSearch"-->
-						<!--						></el-input>-->
 					</el-form-item>
-					<el-form-item label="创建人">
+					<el-form-item label="创建人:">
 						<el-input
-							v-model="queryData.bankName"
+							v-model="form.createBy"
 							clearable
 							size="medium"
 							placeholder="创建人"
 						></el-input>
 					</el-form-item>
-<!--					<el-form-item label="银行名称">-->
-<!--						<el-input-->
-<!--							v-model="queryData.bankName"-->
-<!--							clearable-->
-<!--							size="medium"-->
-<!--							style="width: 280px"-->
-<!--							placeholder="请输入银行名称"-->
-<!--							:disabled="loading"-->
-<!--							@keyup.enter.native="enterSearch"-->
-<!--						></el-input>-->
-<!--					</el-form-item>-->
-					<el-form-item label="创建时间">
+					<el-form-item label="创建时间:">
 						<el-date-picker
-							v-model="formTime.time"
+							v-model="form.time"
 							size="medium"
 							:picker-options="pickerOptions"
 							format="yyyy-MM-dd HH:mm:ss"
@@ -87,7 +62,7 @@
 							align="right"
 							clearable
 							value-format="timestamp"
-							style="width: 280px"
+							style="width: 400px"
 						></el-date-picker>
 					</el-form-item>
 				</el-form>
@@ -102,7 +77,11 @@
 					style="width: 100%"
 					:header-cell-style="getRowClass"
 				>
-                    <el-table-column align="center" type="index" label="序号"></el-table-column>
+					<el-table-column
+						align="center"
+						type="index"
+						label="序号"
+					></el-table-column>
 					<el-table-column
 						prop="ip"
 						align="center"
@@ -113,11 +92,11 @@
 						align="center"
 						label="商户ID"
 					></el-table-column>
-                    <el-table-column
-                        prop="createBy"
-                        align="center"
-                        label="创建人"
-                    ></el-table-column>
+					<el-table-column
+						prop="createBy"
+						align="center"
+						label="创建人"
+					></el-table-column>
 					<el-table-column
 						prop="createDt"
 						align="center"
@@ -128,11 +107,11 @@
 						align="center"
 						label="更新时间"
 					></el-table-column>
-                    <el-table-column
-                        prop="remark"
-                        align="center"
-                        label="备注"
-                    ></el-table-column>
+					<el-table-column
+						prop="remark"
+						align="center"
+						label="备注"
+					></el-table-column>
 					<el-table-column align="center" label="操作">
 						<template slot-scope="scope">
 							<el-button
@@ -156,12 +135,12 @@
 				</el-table>
 				<!-- 分页 -->
 				<el-pagination
-					v-show="dataList.length > 0"
+					v-show="!!total"
 					:current-page.sync="pageNum"
 					layout="total, sizes,prev, pager, next, jumper"
 					:page-size="pageSize"
 					:page-sizes="$store.getters.pageSizes"
-					:total="15"
+					:total="total"
 					@current-change="handleCurrentChange"
 					@size-change="handleSizeChange"
 				></el-pagination>
@@ -208,9 +187,10 @@ export default {
 	mixins: [list],
 	data() {
 		return {
-			queryData: {},
-			formTime: {
-				time: []
+			form: {
+				IP: '',
+                createBy: '',
+                time: []
 			},
 			dataList: [],
 			moduleBox: '',
@@ -220,52 +200,47 @@ export default {
 		}
 	},
 	computed: {},
-	mounted() {
-		for (let i = 0; i < 10; i++) {
-			this.dataList[i] = {
-				bankCode: '165416416464654',
-				bankName: '中国银行',
-				createDt: '2021-02-13 20:28:54',
-				updateDt: '2021-02-13 20:28:54'
-			}
-		}
-	},
+	mounted() {},
 	methods: {
-		// loadData(params) {
-		//   params = {
-		//     ...this.getParams(params)
-		//   }
-		//   getQueryBank(params).then((res) => {
-		//     console.log('res:', res)
-		//     if (res.code === 200) {
-		//       this.loading = false
-		//       this.dataList = res.data
-		//     } else {
-		//       this.loading = false
-		//       this.$message({
-		//         message: res.msg,
-		//         type: 'error'
-		//       })
-		//     }
-		//   })
-		// },
-		query() {
+		loadData(params) {
+			params = {
+				...this.getParams(params)
+			}
+			this.dataList = []
+			this.$api.ipBlackList(params).then((res) => {
+				const {
+					code,
+					data: { records, total },
+					msg
+				} = res
+				if (code === 200) {
+					this.loading = false
+					this.dataList = records || []
+					this.total = total || 0
+				} else {
+					this.loading = false
+					this.$message({
+						message: msg,
+						type: 'error'
+					})
+				}
+			})
+		},
+		handleSearch() {
 			this.loading = true
-			const create = this.formTime.time || []
+			const create = this.form.time || []
 			const [startTime, endTime] = create
 			const params = {
-				...this.queryData,
+				...this.form,
 				pageNum: 1,
 				startTime: startTime && startTime + '',
 				endTime: endTime && endTime + ''
 			}
-			console.log(params)
 			this.loadData(params)
 		},
 		reset() {
-			this.queryData = {}
 			this.formTime.time = []
-			// this.loadData()
+			this.loadData()
 		},
 
 		add() {
