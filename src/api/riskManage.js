@@ -37,11 +37,10 @@ export function ipBlackEdit(data) {
 }
 
 // 风控==> 删除黑名单IP
-export function ipBlackDelete(data) {
+export function ipBlackDelete(id) {
 	return request({
-		url: '/ipBlack/del',
-		method: 'post',
-		data
+		url: `/ipBlack/del/${id}`,
+		method: 'post'
 	})
 }
 

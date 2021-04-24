@@ -88,7 +88,7 @@
 						label="黑名单IP"
 					></el-table-column>
 					<el-table-column
-						prop="bankName"
+						prop="merchantId"
 						align="center"
 						label="商户ID"
 					></el-table-column>
@@ -180,7 +180,7 @@
 import list from '@/mixins/list'
 import editForm from './components/editForm'
 export default {
-	name: '',
+	name: 'IPBlack',
 	components: {
 		editForm
 	},
@@ -189,10 +189,11 @@ export default {
 		return {
 			form: {
 				IP: '',
-                createBy: '',
-                time: []
+				createBy: '',
+				time: []
 			},
 			dataList: [],
+			total: 0,
 			moduleBox: '',
 			showForm: '',
 			editVisible: false,
@@ -239,7 +240,11 @@ export default {
 			this.loadData(params)
 		},
 		reset() {
-			this.formTime.time = []
+			this.form = {
+				IP: '',
+				createBy: '',
+				time: []
+			}
 			this.loadData()
 		},
 
@@ -254,20 +259,33 @@ export default {
 			//   });
 		},
 		deleteUp(val) {
-			console.log(val)
-			this.$confirm('确定删除此银行卡号吗?', {
+			const { id } = val
+			const _that = this
+			this.$confirm('确定删除此黑名单IP吗?', {
 				confirmButtonText: '确定',
 				cancelButtonText: '取消',
 				type: 'warning'
 			})
 				.then(() => {
-					this.$message({
-						type: 'success',
-						message: '删除成功!'
+					_that.$api.ipBlackDelete(id).then((res) => {
+						const { code } = res
+						if (code === 200) {
+							this.$message({
+								type: 'success',
+								message: '删除成功'
+							})
+
+                            if (this.pageNum > 1) {
+                                this.loadData({
+                                    pageNum: this.pageNum - 1
+                                })
+                            } else {
+                                this.loadData({
+                                    pageNum: 1
+                                })
+                            }
+						}
 					})
-					// setDeleteBank(val).then((res) => {
-					//   console.log(res);
-					// });
 				})
 				.catch(() => {
 					this.$message({
