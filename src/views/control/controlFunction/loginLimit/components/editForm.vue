@@ -27,21 +27,6 @@
         @keyup.enter.native="enterSearch"
       ></el-input>
     </el-form-item>
-    <!-- <el-form-item label="时间">
-      <el-date-picker
-        v-model="formTime.time"
-        size="medium"
-        format="yyyy-MM-dd HH:mm:ss"
-        type="datetimerange"
-        range-separator="-"
-        start-placeholder="开始日期"
-        end-placeholder="结束日期"
-        align="right"
-        value-format="yyyy-MM-dd HH:mm:ss"
-        clearable
-        style="width: 280px"
-      ></el-date-picker>
-    </el-form-item>-->
   </el-form>
 </template>
 

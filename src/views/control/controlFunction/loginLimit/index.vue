@@ -145,32 +145,58 @@
 					@size-change="handleSizeChange"
 				></el-pagination>
 				<el-dialog
-					:title="moduleBox"
+					title="添加IP黑名单"
+					:close-on-click-modal="false"
+					:visible.sync="ipDialogVisible"
+					width="500px"
 					center
-					:visible.sync="editVisible"
-					:before-close="closeFormDialog"
-					width="410px"
+					@close="closeIpDialog"
 				>
-					<editForm v-if="moduleBox == '新增银行信息'" ref="addForm"></editForm>
-					<editForm
-						v-else
-						ref="editForm"
-						:editFormData="editFormData"
-					></editForm>
-					<div slot="footer" class="dialog-footer">
-						<el-button @click="editVisible = false">取 消</el-button>
-						<el-button
-							v-if="moduleBox == '新增银行信息'"
-							type="primary"
-							@click="submitAdd"
-						>
-							确 定
-						</el-button>
-						<el-button v-else type="primary" @click="submitEdit">
-							确 定
-						</el-button>
-					</div>
+					<el-form ref="ipDialogForm" :model="ipDialogForm" label-width="80px">
+						<el-form-item label="IP" prop="ip">
+							<el-input v-model="ipDialogForm.ip" maxlength="15"></el-input>
+						</el-form-item>
+						<el-form-item label="备注" prop="remark">
+							<el-input
+								v-model="ipDialogForm.remark"
+								type="textarea"
+								maxlength="50"
+								placeholder="50字以内"
+							></el-input>
+						</el-form-item>
+					</el-form>
+					<span slot="footer" class="dialog-footer">
+						<el-button @click="ipDialogVisible = false">取 消</el-button>
+						<el-button type="primary" @click="commitIpDialog">确 定</el-button>
+					</span>
 				</el-dialog>
+				<!--				<el-dialog-->
+				<!--					:title="moduleBox"-->
+				<!--					center-->
+				<!--					:visible.sync="editVisible"-->
+				<!--					:before-close="closeFormDialog"-->
+				<!--					width="410px"-->
+				<!--				>-->
+				<!--					<editForm v-if="moduleBox == '新增银行信息'" ref="addForm"></editForm>-->
+				<!--					<editForm-->
+				<!--						v-else-->
+				<!--						ref="editForm"-->
+				<!--						:editFormData="editFormData"-->
+				<!--					></editForm>-->
+				<!--					<div slot="footer" class="dialog-footer">-->
+				<!--						<el-button @click="editVisible = false">取 消</el-button>-->
+				<!--						<el-button-->
+				<!--							v-if="moduleBox == '新增银行信息'"-->
+				<!--							type="primary"-->
+				<!--							@click="submitAdd"-->
+				<!--						>-->
+				<!--							确 定-->
+				<!--						</el-button>-->
+				<!--						<el-button v-else type="primary" @click="submitEdit">-->
+				<!--							确 定-->
+				<!--						</el-button>-->
+				<!--					</div>-->
+				<!--				</el-dialog>-->
 			</div>
 		</div>
 	</div>
@@ -178,12 +204,10 @@
 
 <script>
 import list from '@/mixins/list'
-import editForm from './components/editForm'
+import { mapGetters } from 'vuex'
+// import editForm from './components/editForm'
 export default {
 	name: 'IPBlack',
-	components: {
-		editForm
-	},
 	mixins: [list],
 	data() {
 		return {
@@ -194,13 +218,22 @@ export default {
 			},
 			dataList: [],
 			total: 0,
+			ipDialogVisible: false,
+			ipDialogForm: {
+				type: 0,
+				ip: '',
+				remark: '',
+				agentId: '',
+				agentName: ''
+			},
 			moduleBox: '',
 			showForm: '',
-			editVisible: false,
 			editFormData: {}
 		}
 	},
-	computed: {},
+    computed: {
+        ...mapGetters(['userInfo'])
+    },
 	mounted() {},
 	methods: {
 		loadData(params) {
@@ -247,10 +280,30 @@ export default {
 			}
 			this.loadData()
 		},
-
+		closeIpDialog() {
+			this.$refs.ipDialogForm.resetFields()
+		},
 		add() {
-			this.moduleBox = '新增银行信息'
-			this.editVisible = true
+			this.ipDialogVisible = true
+		},
+		commitIpDialog() {
+			this.$refs.ipDialogForm.validate((val) => {
+				if (val) {
+					const form = {
+                        createBy: localStorage.getItem('username'),
+                        id: '',
+                        ip: this.ipDialogForm.ip,
+                        merchantId: '',
+                        modifyBy: localStorage.getItem('username'),
+						remark: this.ipDialogForm.remark
+					}
+					this.$api.ipBlackAdd(form).then(() => {
+						this.ipDialogVisible = false
+						this.$message({ type: 'success', message: '创建成功' })
+						this.loadData()
+					})
+				}
+			})
 		},
 		submitAdd() {
 			console.log(this.$refs.addForm)
@@ -275,15 +328,15 @@ export default {
 								message: '删除成功'
 							})
 
-                            if (this.pageNum > 1) {
-                                this.loadData({
-                                    pageNum: this.pageNum - 1
-                                })
-                            } else {
-                                this.loadData({
-                                    pageNum: 1
-                                })
-                            }
+							if (this.pageNum > 1) {
+								this.loadData({
+									pageNum: this.pageNum - 1
+								})
+							} else {
+								this.loadData({
+									pageNum: 1
+								})
+							}
 						}
 					})
 				})
@@ -306,12 +359,6 @@ export default {
 		},
 		handleCurrentChange() {
 			this.loadData()
-		},
-		closeFormDialog() {
-			this.editVisible = false
-		},
-		enterSubmit() {
-			this.query()
 		}
 	}
 }
