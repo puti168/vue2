@@ -144,7 +144,6 @@
 							}}
 						</span>
 						<el-switch
-							v-if="scope.row.userType === '1'"
 							:disabled="scope.row.userName === username"
 							:value="scope.row.status === '1'"
 							active-color="#13ce66"
