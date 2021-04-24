@@ -1,73 +1,37 @@
 import request from '@/utils/request'
 
-// 密钥列表
-export function getSecretList(params) {
+export function blackList(params) {
 	return request({
-		url: '/securityKey/list',
+		url: '/bankBlack/list',
 		method: 'get',
 		params
 	})
 }
-
-// 查看密钥详情
-export function getSecretDetail(params) {
+export function editBlackList(data) {
 	return request({
-		url: '/securityKey/detail',
-		method: 'get',
-		params
-	})
-}
-
-// 添加密钥
-export function addSecurity(data) {
-	return request({
-		url: '/securityKey/add',
+		url: '/bankBlack/edit',
 		method: 'post',
 		data
 	})
 }
-
-// 用户字典列表
-export function getUserSecurityDict(params) {
+export function delBlackList(data) {
 	return request({
-		url: '/securityDict/listByUser',
-		method: 'get',
-		params
-	})
-}
-
-// 字典列表选择框
-export function getSecurityDictList(params) {
-	return request({
-		url: '/securityDict/list',
-		method: 'get',
-		params
-	})
-}
-
-// 设置用户字典
-export function setUserSecurityDict(data) {
-	return request({
-		url: '/securityDict/setUserDicts',
+		url: '/bankBlack/del',
 		method: 'post',
 		data
 	})
 }
-
-export function editKeyStatus(params) {
+export function addBlackList(data) {
 	return request({
-		url: '/securityKey/editKeyStatus',
-		method: 'get',
-		params
+		url: '/bankBlack/add',
+		method: 'post',
+		data
 	})
 }
 
 export default {
-	getSecretList,
-	getSecretDetail,
-	addSecurity,
-	getUserSecurityDict,
-	getSecurityDictList,
-	setUserSecurityDict,
-	editKeyStatus
+	blackList,
+	editBlackList,
+	delBlackList,
+	addBlackList
 }

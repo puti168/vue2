@@ -5,15 +5,13 @@
 				<router-view :key="key" />
 			</keep-alive>
 		</transition>
-		<ModifyPassword :edit-visible="editVisible" />
 	</section>
 </template>
 
 <script>
-import ModifyPassword from './ModifyPassword'
 export default {
 	name: 'AppMain',
-	components: { ModifyPassword },
+	components: {},
 	computed: {
 		editVisible() {
 			console.log(

@@ -1,11 +1,9 @@
 import user from './user'
 import secret from './secret'
-import system from './system'
-import audit from './audit'
+import bankController from './bankController'
 
 export default {
+	...bankController,
 	...user,
-	...secret,
-	...system,
-	...audit
+	...secret
 }
