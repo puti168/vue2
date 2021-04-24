@@ -252,7 +252,7 @@ export default {
 		dealData: {
 			handler(val) {
 				this.form.roleIds = val.roleIds
-				this.form.userId = val.id
+				this.form.id = val.id
 				this.form.userName = val.userName
 				this.form.nickName = val.nickName
 				this.form.googleAuthCode = val.googleAuthCode
@@ -314,7 +314,7 @@ export default {
 							  }
 							: {
 									nickName: this.form.nickName,
-									userId: this.form.userId,
+									id: this.form.id,
 									userName: `${this.form.userName}`,
 									roleIds: this.tranferVal,
 									googleAuthCode: this.form.googleAuthCode
