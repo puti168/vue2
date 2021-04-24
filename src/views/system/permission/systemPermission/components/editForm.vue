@@ -56,7 +56,7 @@
           全选
         </el-checkbox>
       </div>
-      <div class="ps">
+      <div class="treeBox">
         <el-tree
           ref="tree"
           :data="treeData"
@@ -233,9 +233,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.ps {
+.treeBox {
   width: 675px;
-  height: 400px;
+  height: 300px;
   overflow-y: scroll;
   padding: 0 24px;
   border: 1px solid #eee;
