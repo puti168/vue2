@@ -39,17 +39,6 @@
               @keyup.enter.native="enterSearch"
             ></el-input>
           </el-form-item>
-          <el-form-item label="角色ID">
-            <el-input
-              v-model="queryData.id"
-              clearable
-              size="medium"
-              style="width: 280px"
-              placeholder="请输入角色ID"
-              :disabled="loading"
-              @keyup.enter.native="enterSearch"
-            ></el-input>
-          </el-form-item>
           <el-form-item label="创建人">
             <el-input
               v-model="queryData.createBy"
@@ -79,8 +68,8 @@
               :popper-append-to-body="false"
             >
               <el-option label="全部" value=""></el-option>
-              <el-option label="启用" value="1"></el-option>
-              <el-option label="禁用" value="2"></el-option>
+              <el-option label="启用" value="0"></el-option>
+              <el-option label="停用" value="1"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="创建时间">
@@ -117,7 +106,6 @@
             align="center"
             label="角色名称"
           ></el-table-column>
-          <el-table-column prop="id" align="center" label="角色ID"></el-table-column>
           <el-table-column
             prop="createDt"
             align="center"
@@ -140,14 +128,22 @@
           ></el-table-column>
           <el-table-column prop="status" align="center" label="角色状态">
             <template slot-scope="scope">
-              <span v-show="scope.row.status === '1'" class="blueColor">启用</span>
-              <span v-show="scope.row.status === '2'" class="redColor"> 禁用</span>
+              <span
+                v-show="scope.row.status === '0' && scope.row.id !== '1'"
+                class="blueColor"
+                >启用</span>
+              <span
+                v-show="scope.row.status === '1' && scope.row.id !== '1'"
+                class="redColor"
+                >停用</span>
               <el-switch
+                v-if="scope.row.id !== '1'"
                 style="margin-left: 10px"
-                :value="scope.row.status === '1'"
+                :value="scope.row.status === '0'"
                 @change="handSwitch(scope.row)"
               >
               </el-switch>
+              <span v-else>—</span>
             </template>
           </el-table-column>
           <el-table-column
@@ -158,33 +154,36 @@
 
           <el-table-column align="center" label="操作" width="160px">
             <template slot-scope="scope">
-              <el-button
-                type="danger"
-                icon="el-icon-delete"
-                size="medium"
-                @click="deleteUp(scope.row)"
-              >
-                删除
-              </el-button>
-              <el-button
-                type="warning"
-                icon="el-icon-edit"
-                size="medium"
-                @click.stop="editUp(scope.row)"
-              >
-                修改
-              </el-button>
+              <div v-if="scope.row.id !== '1'">
+                <el-button
+                  type="danger"
+                  icon="el-icon-delete"
+                  size="medium"
+                  @click="deleteUp(scope.row)"
+                >
+                  删除
+                </el-button>
+                <el-button
+                  type="warning"
+                  icon="el-icon-edit"
+                  size="medium"
+                  @click.stop="editUp(scope.row)"
+                >
+                  修改
+                </el-button>
+              </div>
+              <div v-else>—</div>
             </template>
           </el-table-column>
         </el-table>
         <!-- 分页 -->
         <el-pagination
-          v-show="dataList.length > 0"
           :current-page.sync="pageNum"
+          class="pageValue"
           layout="total, sizes,prev, pager, next, jumper"
           :page-size="pageSize"
-          :page-sizes="$store.getters.pageSizes"
-          :total="15"
+          :page-sizes="pageSizes"
+          :total="total"
           @current-change="handleCurrentChange"
           @size-change="handleSizeChange"
         ></el-pagination>
@@ -197,7 +196,7 @@
           :before-close="closeFormDialog"
         >
           <editForm
-            v-if="moduleBox == '新增'"
+            v-if="moduleBox === '新增'"
             ref="addForm"
             :control="control"
             :treeData="treeData"
@@ -216,7 +215,7 @@
           <div slot="footer" class="dialog-footer">
             <el-button @click="editVisible = false">取 消</el-button>
             <el-button
-v-if="moduleBox == '新增'"
+v-if="moduleBox === '新增'"
 type="primary"
 @click="submitAdd"
 >确 定</el-button>
@@ -231,14 +230,6 @@ type="primary"
 <script>
 import list from '@/mixins/list'
 import editForm from './components/editForm'
-import {
-  getRoleListPage,
-  getRoleDetailInfo,
-  getRolePermissions
-} from '@/api/roleController'
-// getRolePermissionList,
-//  setDeleteRole,
-// setUpdateRoleStatus
 export default {
   name: '',
   components: {
@@ -262,35 +253,59 @@ export default {
       editFormData: {},
       treeData: [],
       checkedKeys: [],
-      maxLength: 0
+      maxLength: 0,
+      parentId: [],
+      ChildId: []
     }
   },
   computed: {},
   mounted() {
-    // for (let i = 0; i < 10; i++) {
-    //   this.dataList[i] = {
-    //     roleName: "darcy",
-    //     id: "165416416464654",
-    //     systemType: "超级管理",
-    //     agentCode: "666666",
-    //     createBy: "darcy",
-    //     updatedBy: "darcy",
-    //     createDt: "2021-02-13 20:28:54",
-    //     updateDt: "2021-02-13 20:28:54",
-    //     status: "1",
-    //     remark: "这是备注信息",
-    //   };
-    // }
-    this.initRolePermission()
+    this.initRolePermissions()
   },
   methods: {
-    initRolePermission() {
-      getRolePermissions({}).then((res) => {
+    initRolePermissions() {
+      this.$api.getRolePermissions({}).then((res) => {
         if (res.code === 200) {
           this.treeData = res.data
           this.getMenuIdsArr(res.data)
         }
       })
+    },
+    loadData() {
+      this.loading = true
+      const create = this.formTime.time || []
+      const [startTime, endTime] = create
+      let params = {
+        ...this.queryData,
+        pageNum: this.pageNum,
+        startTime: startTime && startTime + '',
+        endTime: endTime && endTime + ''
+      }
+      params = {
+        ...this.getParams(params)
+      }
+      this.$api.getRoleListPage(params).then((res) => {
+        if (res.code === 200) {
+          this.loading = false
+          this.dataList = res.data.records
+          this.total = res.data.total
+        } else {
+          this.loading = false
+          this.$message({
+            message: res.msg,
+            type: 'error'
+          })
+        }
+      })
+    },
+    query() {
+      this.pageNum = 1
+      this.loadData()
+    },
+    reset() {
+      this.queryData = {}
+      this.formTime.time = []
+      this.loadData()
     },
     getMenuIdsArr(list) {
       for (let i = 0; i < list.length; i++) {
@@ -304,82 +319,43 @@ export default {
       }
       return this.maxLength
     },
-    setMenuIdsArr(list) {
-      for (let i = 0; i < list.length; i++) {
-        const ele = list[i]
-        if (ele.id) {
-          this.checkedKeys.push(ele.id)
-        }
-        if (ele.children && ele.children.length > 0) {
-          this.getMenuIdsArr(ele.children)
-        }
-      }
-      return this.checkedKeys
-    },
-    loadData(params) {
-      params = {
-        ...this.getParams(params)
-      }
-      getRoleListPage(params).then((res) => {
-        console.log('res:', res)
-        if (res.code === 200) {
-          this.loading = false
-          this.dataList = res.data.records
-        } else {
-          this.loading = false
-          this.$message({
-            message: res.msg,
-            type: 'error'
-          })
-        }
-      })
-    },
-    query() {
-      this.loading = true
-      const create = this.formTime.time || []
-      const [startTime, endTime] = create
-      const params = {
-        ...this.queryData,
-        pageNum: 1,
-        startTime: startTime && startTime + '',
-        endTime: endTime && endTime + ''
-      }
-      console.log(params)
-      this.loadData(params)
-    },
-    reset() {
-      this.queryData = {}
-      this.formTime.time = []
-      // this.loadData()
-    },
-
     add() {
       this.moduleBox = '新增'
       this.editVisible = true
       this.checkedKeys = []
     },
     submitAdd() {
-      // console.log(this.$refs.addForm.editData);
-      // console.log(this.$refs.addForm.submitForm());
       this.$refs.addForm.submitForm(() => {
         this.editVisible = false
+        this.loadData()
       })
     },
     deleteUp(val) {
-      console.log(val)
       this.$confirm('确定删除此角色吗?', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       })
         .then(() => {
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
+          const loading = this.$loading({
+            lock: true,
+            text: 'Loading',
+            spinner: 'el-icon-loading',
+            background: 'rgba(0, 0, 0, 0.7)'
           })
-          // setDeleteRole(val).then((res) => {
-          //   console.log(res);
-          // });
+          this.$api
+            .setDeleteRole('', val.id)
+            .then((res) => {
+              loading.close()
+              this.$message({
+                type: 'success',
+                message: '删除成功!'
+              })
+              this.loadData()
+            })
+            .catch(() => {
+              loading.close()
+            })
         })
         .catch(() => {
           this.$message({
@@ -388,35 +364,75 @@ export default {
           })
         })
     },
+    getParentId(list) {
+      for (let i = 0; i < list.length; i++) {
+        const ele = list[i]
+        if (ele.children === null) {
+          this.ChildId.push(ele.id)
+        }
+        if (ele.children && ele.children.length > 0) {
+          this.getParentId(ele.children)
+        }
+      }
+      return this.ChildId
+    },
+    setMenuIdsArr(list) {
+      for (let i = 0; i < list.length; i++) {
+        const ele = list[i]
+        if (ele.isExist === '1') {
+          this.parentId.push(ele.id)
+        }
+        if (ele.children && ele.children.length > 0) {
+          this.getMenuIdsArr(ele.children)
+        }
+      }
+      return this.parentId
+    },
+    testFn(arr) {
+      const tmp = []
+      arr.sort().sort(function (a, b) {
+        if (a === b && tmp.indexOf(a) === -1) {
+          tmp.push(a)
+        }
+      })
+      this.checkedKeys = tmp
+    },
     editUp(val) {
       this.moduleBox = '修改角色'
       this.editFormData = val
-      this.maxLength = 0
-      getRoleDetailInfo({ id: val.id }).then((res) => {
-        console.log('修改角色', res)
+      this.ChildId = []
+      this.parentId = []
+      this.checkedKeys = []
+      this.getParentId(this.treeData)
+      this.$api.getRoleDetailInfo({ id: val.id }).then((res) => {
+        this.setMenuIdsArr(res.data.rolePermission)
+        const arr = this.parentId.concat(this.ChildId)
+        this.testFn(arr)
+        this.editVisible = true
       })
-      // this.setMenuIdsArr(this.treeData);
-      this.editVisible = true
     },
     submitEdit() {
-      console.log(this.$refs.editForm.editData)
-      // setUpdateRoleInfo().then((res) => {
-      //   console.log(res);
-      // });
+      this.$refs.editForm.submitForm(() => {
+        this.editVisible = false
+        this.loadData()
+      })
     },
-    handleCurrentChange() {
+    handleCurrentChange(val) {
+      this.pageNum = val
       this.loadData()
     },
     closeFormDialog() {
       this.editVisible = false
     },
     handSwitch(val) {
-      console.log(val)
       const isSwitch = val.status
       let text = ''
-      if (isSwitch === '1') {
-        text = '禁用'
+      let status = ''
+      if (isSwitch === '0') {
+        text = '停用'
+        status = 1
       } else {
+        status = 0
         text = '启用'
       }
       this.$confirm(`确定${text}此角色吗?`, {
@@ -425,13 +441,25 @@ export default {
         type: 'warning'
       })
         .then(() => {
-          this.$message({
-            type: 'success',
-            message: `${text}成功!`
+          const loading = this.$loading({
+            lock: true,
+            text: 'Loading',
+            spinner: 'el-icon-loading',
+            background: 'rgba(0, 0, 0, 0.7)'
           })
-          // setUpdateRoleStatus(val).then((res) => {
-          //   console.log(res);
-          // });
+          this.$api
+            .setUpdateRoleStatus({ status, id: val.id })
+            .then((res) => {
+              this.loadData()
+              loading.close()
+              this.$message({
+                type: 'success',
+                message: `${text}成功!`
+              })
+            })
+            .catch(() => {
+              loading.close()
+            })
         })
         .catch(() => {
           this.$message({

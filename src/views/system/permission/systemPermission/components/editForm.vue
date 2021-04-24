@@ -14,8 +14,6 @@
         size="medium"
         style="width: 280px"
         placeholder="请输入角色名称"
-        :disabled="loading"
-        @keyup.enter.native="enterSearch"
       ></el-input>
     </el-form-item>
     <el-form-item v-show="control" label="创建人">
@@ -72,16 +70,11 @@
         ></el-tree>
       </div>
     </el-form-item>
-    <!-- <el-form-item>
-      <el-button>取消</el-button>
-      <el-button type="primary" @click="submitEdit">立即创建</el-button>
-    </el-form-item> -->
   </el-form>
 </template>
 
 <script>
 import list from '@/mixins/list'
-import { getRoleListPage, setSaveRoleInfo } from '@/api/roleController'
 export default {
   components: {},
   mixins: [list],
@@ -125,18 +118,21 @@ export default {
     },
     editFormData: {
       handler(newV) {
-        this.editData = newV
+        this.editData = { ...newV }
       },
       deep: true,
       immediate: true
     },
     checkedKeys: {
       handler(newV) {
-        console.log('newV', newV, this.maxLength)
         if (newV.length > 0 && this.maxLength > newV.length) {
           this.checkedAll = false
           this.isIndeterminate = true
-        } else if (this.maxLength === newV.length) {
+        } else if (
+          this.maxLength === newV.length &&
+          this.maxLength !== 0 &&
+          newV.length !== 0
+        ) {
           this.checkedAll = true
           this.isIndeterminate = false
         } else {
@@ -165,12 +161,6 @@ export default {
       } else {
         return (this.menuIdsArr = [])
       }
-    },
-    enterSubmit() {
-      const params = {
-        ...this.getParams(params)
-      }
-      getRoleListPage(params).then((res) => {})
     },
     checkAllChange(val) {
       this.menuIdsArr = []
@@ -202,12 +192,37 @@ export default {
       }
     },
     submitForm(val) {
+      const loading = this.$loading({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      })
       this.$refs.form.validate((valid) => {
         if (valid) {
-          setSaveRoleInfo(this.editData).then((res) => {
-            console.log(res)
-          })
-          val()
+          if (!this.control) {
+            this.$api.setSaveRoleInfo(this.editData).then((res) => {
+              if (res.code === 200) {
+                this.$message({
+                  type: 'success',
+                  message: '新增成功'
+                })
+                val()
+                loading.close()
+              }
+            })
+          } else {
+            this.$api.setUpdateRoleInfo(this.editData).then((res) => {
+              if (res.code === 200) {
+                this.$message({
+                  type: 'success',
+                  message: '修改成功'
+                })
+                val()
+                loading.close()
+              }
+            })
+          }
         } else {
           return false
         }
