@@ -140,7 +140,7 @@ service.interceptors.response.use(
 		router.push(`/login?redirect=${fullPath}`)
 		Message.closeAll()
 		Message({
-			message: error.message,
+			message: error.message || error.msg,
 			type: 'error'
 		})
 		return Promise.reject(error)
