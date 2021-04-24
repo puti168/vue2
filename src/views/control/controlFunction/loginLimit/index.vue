@@ -145,7 +145,7 @@
 					@size-change="handleSizeChange"
 				></el-pagination>
 				<el-dialog
-					title="添加IP黑名单"
+					:title="(moduleStatus === 'add' ? '添加' : '编辑') + 'IP黑名单'"
 					:close-on-click-modal="false"
 					:visible.sync="ipDialogVisible"
 					width="500px"
@@ -170,33 +170,6 @@
 						<el-button type="primary" @click="commitIpDialog">确 定</el-button>
 					</span>
 				</el-dialog>
-				<!--				<el-dialog-->
-				<!--					:title="moduleBox"-->
-				<!--					center-->
-				<!--					:visible.sync="editVisible"-->
-				<!--					:before-close="closeFormDialog"-->
-				<!--					width="410px"-->
-				<!--				>-->
-				<!--					<editForm v-if="moduleBox == '新增银行信息'" ref="addForm"></editForm>-->
-				<!--					<editForm-->
-				<!--						v-else-->
-				<!--						ref="editForm"-->
-				<!--						:editFormData="editFormData"-->
-				<!--					></editForm>-->
-				<!--					<div slot="footer" class="dialog-footer">-->
-				<!--						<el-button @click="editVisible = false">取 消</el-button>-->
-				<!--						<el-button-->
-				<!--							v-if="moduleBox == '新增银行信息'"-->
-				<!--							type="primary"-->
-				<!--							@click="submitAdd"-->
-				<!--						>-->
-				<!--							确 定-->
-				<!--						</el-button>-->
-				<!--						<el-button v-else type="primary" @click="submitEdit">-->
-				<!--							确 定-->
-				<!--						</el-button>-->
-				<!--					</div>-->
-				<!--				</el-dialog>-->
 			</div>
 		</div>
 	</div>
@@ -205,7 +178,6 @@
 <script>
 import list from '@/mixins/list'
 import { mapGetters } from 'vuex'
-// import editForm from './components/editForm'
 export default {
 	name: 'IPBlack',
 	mixins: [list],
@@ -220,20 +192,22 @@ export default {
 			total: 0,
 			ipDialogVisible: false,
 			ipDialogForm: {
-				type: 0,
+				createBy: '',
+				createDt: '',
+				id: '',
 				ip: '',
-				remark: '',
-				agentId: '',
-				agentName: ''
+				merchantId: '',
+				modifyBy: '',
+				modifyDt: '',
+				remark: ''
 			},
-			moduleBox: '',
-			showForm: '',
+			moduleStatus: '',
 			editFormData: {}
 		}
 	},
-    computed: {
-        ...mapGetters(['userInfo'])
-    },
+	computed: {
+		...mapGetters(['userInfo'])
+	},
 	mounted() {},
 	methods: {
 		loadData(params) {
@@ -285,31 +259,46 @@ export default {
 		},
 		add() {
 			this.ipDialogVisible = true
+			this.moduleStatus = 'add'
+			this.ipDialogForm = {
+				createBy: '',
+				createDt: '',
+				id: '',
+				ip: '',
+				merchantId: '',
+				modifyBy: '',
+				modifyDt: '',
+				remark: ''
+			}
 		},
 		commitIpDialog() {
+			const Func =
+				this.moduleStatus === 'add'
+					? this.$api.ipBlackAdd
+					: this.$api.ipBlackEdit
 			this.$refs.ipDialogForm.validate((val) => {
 				if (val) {
 					const form = {
-                        createBy: localStorage.getItem('username'),
-                        id: '',
-                        ip: this.ipDialogForm.ip,
-                        merchantId: '',
-                        modifyBy: localStorage.getItem('username'),
+						// createBy: localStorage.getItem('username'),
+						// id: '',
+						ip: this.ipDialogForm.ip,
+						merchantId: '',
+						// modifyBy: localStorage.getItem('username'),
 						remark: this.ipDialogForm.remark
 					}
-					this.$api.ipBlackAdd(form).then(() => {
+					Func(form).then((res) => {
+						const { code } = res
 						this.ipDialogVisible = false
-						this.$message({ type: 'success', message: '创建成功' })
-						this.loadData()
+						if (code === 200) {
+							this.$message({
+								type: 'success',
+								message: this.moduleStatus === 'add' ? '创建成功' : '修改成功'
+							})
+							this.loadData()
+						}
 					})
 				}
 			})
-		},
-		submitAdd() {
-			console.log(this.$refs.addForm)
-			//   setAddBank(this.queryData).then((res) => {
-			//     console.log(res);
-			//   });
 		},
 		deleteUp(val) {
 			const { id } = val
@@ -348,14 +337,9 @@ export default {
 				})
 		},
 		editUp(val) {
-			this.moduleBox = '修改银行信息'
-			this.editVisible = true
-			this.editFormData = val
-		},
-		submitEdit() {
-			// setEidteBank().then((res) => {
-			//   console.log(res);
-			// });
+			this.moduleStatus = 'edit'
+			this.ipDialogVisible = true
+			this.ipDialogForm = val
 		},
 		handleCurrentChange() {
 			this.loadData()
