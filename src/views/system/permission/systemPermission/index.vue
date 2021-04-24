@@ -1,7 +1,7 @@
 <template>
   <div class="game-container report-container">
     <div class="header flex-h flex-bc">
-      <h2 class="h2-line">门票记录</h2>
+      <h2 class="h2-line">角色管理</h2>
       <div class="head flex-h-end">
         <el-button
           type="primary"
@@ -20,12 +20,7 @@
         >
           重置
         </el-button>
-        <el-button
-          type="primary"
-          icon="el-icon-folder-add"
-          size="medium"
-          @click="add"
-        >
+        <el-button type="primary" icon="el-icon-folder-add" size="medium" @click="add">
           新增
         </el-button>
       </div>
@@ -33,29 +28,62 @@
     <div class="view-container dealer-container">
       <div class="params">
         <el-form ref="form" :inline="true" :model="queryData" label-width="100px">
-          <el-form-item label="银行卡号">
+          <el-form-item label="角色名称">
             <el-input
-              v-model="queryData.bankCode"
+              v-model="queryData.roleName"
               clearable
               size="medium"
               style="width: 280px"
-              placeholder="请输入银行卡号"
+              placeholder="请输入角色名称"
               :disabled="loading"
               @keyup.enter.native="enterSearch"
             ></el-input>
           </el-form-item>
-          <el-form-item label="银行名称">
+          <el-form-item label="角色ID">
             <el-input
-              v-model="queryData.bankName"
+              v-model="queryData.id"
               clearable
               size="medium"
               style="width: 280px"
-              placeholder="请输入银行名称"
+              placeholder="请输入角色ID"
               :disabled="loading"
               @keyup.enter.native="enterSearch"
             ></el-input>
           </el-form-item>
-          <el-form-item label="时间">
+          <el-form-item label="创建人">
+            <el-input
+              v-model="queryData.createBy"
+              clearable
+              size="medium"
+              style="width: 280px"
+              placeholder="请输入创建人"
+              :disabled="loading"
+              @keyup.enter.native="enterSearch"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="编辑人">
+            <el-input
+              v-model="queryData.updatedBy"
+              clearable
+              size="medium"
+              style="width: 280px"
+              placeholder="请输入编辑人"
+              :disabled="loading"
+              @keyup.enter.native="enterSearch"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="角色状态">
+            <el-select
+              v-model="queryData.status"
+              style="width: 280px"
+              :popper-append-to-body="false"
+            >
+              <el-option label="全部" value=""></el-option>
+              <el-option label="启用" value="1"></el-option>
+              <el-option label="禁用" value="2"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="创建时间">
             <el-date-picker
               v-model="formTime.time"
               size="medium"
@@ -83,16 +111,13 @@
           style="width: 100%"
           :header-cell-style="getRowClass"
         >
+          <el-table-column align="center" type="index" label="序号"></el-table-column>
           <el-table-column
-            prop="bankCode"
+            prop="roleName"
             align="center"
-            label="银行卡号"
+            label="角色名称"
           ></el-table-column>
-          <el-table-column
-            prop="bankName"
-            align="center"
-            label="银行名称"
-          ></el-table-column>
+          <el-table-column prop="id" align="center" label="角色ID"></el-table-column>
           <el-table-column
             prop="createDt"
             align="center"
@@ -103,8 +128,35 @@
             align="center"
             label="更新时间"
           ></el-table-column>
+          <el-table-column
+            prop="createBy"
+            align="center"
+            label="创建人"
+          ></el-table-column>
+          <el-table-column
+            prop="updatedBy"
+            align="center"
+            label="编辑人"
+          ></el-table-column>
+          <el-table-column prop="status" align="center" label="角色状态">
+            <template slot-scope="scope">
+              <span v-show="scope.row.status === '1'" class="blueColor">启用</span>
+              <span v-show="scope.row.status === '2'" class="redColor"> 禁用</span>
+              <el-switch
+                style="margin-left: 10px"
+                :value="scope.row.status === '1'"
+                @change="handSwitch(scope.row)"
+              >
+              </el-switch>
+            </template>
+          </el-table-column>
+          <el-table-column
+            prop="remark"
+            align="center"
+            label="角色描述"
+          ></el-table-column>
 
-          <el-table-column align="center" label="操作">
+          <el-table-column align="center" label="操作" width="160px">
             <template slot-scope="scope">
               <el-button
                 type="danger"
@@ -137,21 +189,37 @@
           @size-change="handleSizeChange"
         ></el-pagination>
         <el-dialog
+          v-if="editVisible"
           :title="moduleBox"
           center
+          width="835px"
           :visible.sync="editVisible"
           :before-close="closeFormDialog"
-          width="410px"
         >
-          <editForm v-if="moduleBox == '新增银行信息'" ref="addForm"></editForm>
-          <editForm v-else ref="editForm" :editFormData="editFormData"></editForm>
+          <editForm
+            v-if="moduleBox == '新增'"
+            ref="addForm"
+            :control="control"
+            :treeData="treeData"
+            :maxLength="maxLength"
+            :checkedKeys="checkedKeys"
+          ></editForm>
+          <editForm
+            v-else
+            ref="editForm"
+            :control="!control"
+            :treeData="treeData"
+            :maxLength="maxLength"
+            :checkedKeys="checkedKeys"
+            :editFormData="editFormData"
+          ></editForm>
           <div slot="footer" class="dialog-footer">
             <el-button @click="editVisible = false">取 消</el-button>
             <el-button
-              v-if="moduleBox == '新增银行信息'"
-              type="primary"
-              @click="submitAdd"
-              >确 定</el-button>
+v-if="moduleBox == '新增'"
+type="primary"
+@click="submitAdd"
+>确 定</el-button>
             <el-button v-else type="primary" @click="submitEdit">确 定</el-button>
           </div>
         </el-dialog>
@@ -163,12 +231,14 @@
 <script>
 import list from '@/mixins/list'
 import editForm from './components/editForm'
-// import {
-//   getQueryBank,
-//   setAddBank,
-//   setDeleteBank,
-//   setEidteBank,
-// } from "@/api/bankController";
+import {
+  getRoleListPage,
+  getRoleDetailInfo,
+  getRolePermissions
+} from '@/api/roleController'
+// getRolePermissionList,
+//  setDeleteRole,
+// setUpdateRoleStatus
 export default {
   name: '',
   components: {
@@ -177,7 +247,10 @@ export default {
   mixins: [list],
   data() {
     return {
-      queryData: {},
+      queryData: {
+        status: '',
+        systemType: ''
+      },
       formTime: {
         time: []
       },
@@ -185,39 +258,82 @@ export default {
       moduleBox: '',
       showForm: '',
       editVisible: false,
-      editFormData: {}
+      control: false,
+      editFormData: {},
+      treeData: [],
+      checkedKeys: [],
+      maxLength: 0
     }
   },
   computed: {},
   mounted() {
-    for (let i = 0; i < 10; i++) {
-      this.dataList[i] = {
-        bankCode: '165416416464654',
-        bankName: '中国银行',
-        createDt: '2021-02-13 20:28:54',
-        updateDt: '2021-02-13 20:28:54'
-      }
-    }
+    // for (let i = 0; i < 10; i++) {
+    //   this.dataList[i] = {
+    //     roleName: "darcy",
+    //     id: "165416416464654",
+    //     systemType: "超级管理",
+    //     agentCode: "666666",
+    //     createBy: "darcy",
+    //     updatedBy: "darcy",
+    //     createDt: "2021-02-13 20:28:54",
+    //     updateDt: "2021-02-13 20:28:54",
+    //     status: "1",
+    //     remark: "这是备注信息",
+    //   };
+    // }
+    this.initRolePermission()
   },
   methods: {
-    // loadData(params) {
-    //   params = {
-    //     ...this.getParams(params)
-    //   }
-    //   getQueryBank(params).then((res) => {
-    //     console.log('res:', res)
-    //     if (res.code === 200) {
-    //       this.loading = false
-    //       this.dataList = res.data
-    //     } else {
-    //       this.loading = false
-    //       this.$message({
-    //         message: res.msg,
-    //         type: 'error'
-    //       })
-    //     }
-    //   })
-    // },
+    initRolePermission() {
+      getRolePermissions({}).then((res) => {
+        if (res.code === 200) {
+          this.treeData = res.data
+          this.getMenuIdsArr(res.data)
+        }
+      })
+    },
+    getMenuIdsArr(list) {
+      for (let i = 0; i < list.length; i++) {
+        const ele = list[i]
+        if (ele.id) {
+          this.maxLength = this.maxLength + 1
+        }
+        if (ele.children && ele.children.length > 0) {
+          this.getMenuIdsArr(ele.children)
+        }
+      }
+      return this.maxLength
+    },
+    setMenuIdsArr(list) {
+      for (let i = 0; i < list.length; i++) {
+        const ele = list[i]
+        if (ele.id) {
+          this.checkedKeys.push(ele.id)
+        }
+        if (ele.children && ele.children.length > 0) {
+          this.getMenuIdsArr(ele.children)
+        }
+      }
+      return this.checkedKeys
+    },
+    loadData(params) {
+      params = {
+        ...this.getParams(params)
+      }
+      getRoleListPage(params).then((res) => {
+        console.log('res:', res)
+        if (res.code === 200) {
+          this.loading = false
+          this.dataList = res.data.records
+        } else {
+          this.loading = false
+          this.$message({
+            message: res.msg,
+            type: 'error'
+          })
+        }
+      })
+    },
     query() {
       this.loading = true
       const create = this.formTime.time || []
@@ -238,18 +354,20 @@ export default {
     },
 
     add() {
-      this.moduleBox = '新增银行信息'
+      this.moduleBox = '新增'
       this.editVisible = true
+      this.checkedKeys = []
     },
     submitAdd() {
-      console.log(this.$refs.addForm)
-      //   setAddBank(this.queryData).then((res) => {
-      //     console.log(res);
-      //   });
+      // console.log(this.$refs.addForm.editData);
+      // console.log(this.$refs.addForm.submitForm());
+      this.$refs.addForm.submitForm(() => {
+        this.editVisible = false
+      })
     },
     deleteUp(val) {
       console.log(val)
-      this.$confirm('确定删除此银行卡号吗?', {
+      this.$confirm('确定删除此角色吗?', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
@@ -259,7 +377,7 @@ export default {
             type: 'success',
             message: '删除成功!'
           })
-          // setDeleteBank(val).then((res) => {
+          // setDeleteRole(val).then((res) => {
           //   console.log(res);
           // });
         })
@@ -271,12 +389,18 @@ export default {
         })
     },
     editUp(val) {
-      this.moduleBox = '修改银行信息'
-      this.editVisible = true
+      this.moduleBox = '修改角色'
       this.editFormData = val
+      this.maxLength = 0
+      getRoleDetailInfo({ id: val.id }).then((res) => {
+        console.log('修改角色', res)
+      })
+      // this.setMenuIdsArr(this.treeData);
+      this.editVisible = true
     },
     submitEdit() {
-      // setEidteBank().then((res) => {
+      console.log(this.$refs.editForm.editData)
+      // setUpdateRoleInfo().then((res) => {
       //   console.log(res);
       // });
     },
@@ -285,6 +409,36 @@ export default {
     },
     closeFormDialog() {
       this.editVisible = false
+    },
+    handSwitch(val) {
+      console.log(val)
+      const isSwitch = val.status
+      let text = ''
+      if (isSwitch === '1') {
+        text = '禁用'
+      } else {
+        text = '启用'
+      }
+      this.$confirm(`确定${text}此角色吗?`, {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          this.$message({
+            type: 'success',
+            message: `${text}成功!`
+          })
+          // setUpdateRoleStatus(val).then((res) => {
+          //   console.log(res);
+          // });
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: `已取消${text}`
+          })
+        })
     },
     enterSubmit() {
       this.query()
