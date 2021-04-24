@@ -189,6 +189,7 @@
           @size-change="handleSizeChange"
         ></el-pagination>
         <el-dialog
+          v-if="editVisible"
           :title="moduleBox"
           center
           width="835px"
@@ -196,20 +197,26 @@
           :before-close="closeFormDialog"
         >
           <editForm
-            v-if="moduleBox == '新增角色'"
+            v-if="moduleBox == '新增'"
             ref="addForm"
             :control="control"
+            :treeData="treeData"
+            :maxLength="maxLength"
+            :checkedKeys="checkedKeys"
           ></editForm>
           <editForm
             v-else
             ref="editForm"
             :control="!control"
+            :treeData="treeData"
+            :maxLength="maxLength"
+            :checkedKeys="checkedKeys"
             :editFormData="editFormData"
           ></editForm>
           <div slot="footer" class="dialog-footer">
             <el-button @click="editVisible = false">取 消</el-button>
             <el-button
-v-if="moduleBox == '新增角色'"
+v-if="moduleBox == '新增'"
 type="primary"
 @click="submitAdd"
 >确 定</el-button>
@@ -224,10 +231,13 @@ type="primary"
 <script>
 import list from '@/mixins/list'
 import editForm from './components/editForm'
-import { getRolePermission, getRoleListPage } from '@/api/roleController'
+import {
+  getRoleListPage,
+  getRoleDetailInfo,
+  getRolePermissions
+} from '@/api/roleController'
+// getRolePermissionList,
 //  setDeleteRole,
-// setSaveRoleInfo,
-// setUpdateRoleInfo,
 // setUpdateRoleStatus
 export default {
   name: '',
@@ -249,7 +259,10 @@ export default {
       showForm: '',
       editVisible: false,
       control: false,
-      editFormData: {}
+      editFormData: {},
+      treeData: [],
+      checkedKeys: [],
+      maxLength: 0
     }
   },
   computed: {},
@@ -272,9 +285,36 @@ export default {
   },
   methods: {
     initRolePermission() {
-      getRolePermission({}).then((res) => {
-        console.log('permission', res)
+      getRolePermissions({}).then((res) => {
+        if (res.code === 200) {
+          this.treeData = res.data
+          this.getMenuIdsArr(res.data)
+        }
       })
+    },
+    getMenuIdsArr(list) {
+      for (let i = 0; i < list.length; i++) {
+        const ele = list[i]
+        if (ele.id) {
+          this.maxLength = this.maxLength + 1
+        }
+        if (ele.children && ele.children.length > 0) {
+          this.getMenuIdsArr(ele.children)
+        }
+      }
+      return this.maxLength
+    },
+    setMenuIdsArr(list) {
+      for (let i = 0; i < list.length; i++) {
+        const ele = list[i]
+        if (ele.id) {
+          this.checkedKeys.push(ele.id)
+        }
+        if (ele.children && ele.children.length > 0) {
+          this.getMenuIdsArr(ele.children)
+        }
+      }
+      return this.checkedKeys
     },
     loadData(params) {
       params = {
@@ -314,14 +354,16 @@ export default {
     },
 
     add() {
-      this.moduleBox = '新增角色'
+      this.moduleBox = '新增'
       this.editVisible = true
+      this.checkedKeys = []
     },
     submitAdd() {
-      console.log(this.$refs.addForm.editData)
-      //   setSaveRoleInfo(this.queryData).then((res) => {
-      //     console.log(res);
-      //   });
+      // console.log(this.$refs.addForm.editData);
+      // console.log(this.$refs.addForm.submitForm());
+      this.$refs.addForm.submitForm(() => {
+        this.editVisible = false
+      })
     },
     deleteUp(val) {
       console.log(val)
@@ -348,8 +390,13 @@ export default {
     },
     editUp(val) {
       this.moduleBox = '修改角色'
-      this.editVisible = true
       this.editFormData = val
+      this.maxLength = 0
+      getRoleDetailInfo({ id: val.id }).then((res) => {
+        console.log('修改角色', res)
+      })
+      // this.setMenuIdsArr(this.treeData);
+      this.editVisible = true
     },
     submitEdit() {
       console.log(this.$refs.editForm.editData)

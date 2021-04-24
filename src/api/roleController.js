@@ -8,7 +8,7 @@ export function setDeleteRole(data) {
 	})
 }
 // 查询权限列表
-export function getRolePermission(data) {
+export function getRolePermissionList(data) {
 	return request({
 		url: '/role/permissions/list',
 		method: 'post',
