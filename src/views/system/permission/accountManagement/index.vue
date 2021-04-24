@@ -213,7 +213,7 @@
 		<!-- 设置范围 -->
 		<SetRanges
 			v-if="showRanges"
-			:userId="userId"
+			:id="id"
 			:drawer.sync="showRanges"
 			@close="closeRangesDialog"
 		/>
@@ -269,7 +269,6 @@ import EditAccount from './EditAccount'
 import SetRanges from './SetRanges'
 import AccountUpdatePass from '@/components/Dialog/UpdatePass'
 import list from '@/mixins/list'
-import { updateStatus } from '@/api/user'
 import { message } from '@/utils/message'
 import { getUsername } from '@/utils/auth' // get token from cookie
 import { sleep } from '@/utils/sleep'
@@ -303,7 +302,7 @@ export default {
 				rePwd: ''
 			},
 			showRanges: false,
-			userId: ''
+			id: ''
 		}
 	},
 	computed: {},
@@ -328,12 +327,11 @@ export default {
 		closeDialog() {
 			this.$refs.dialogForm.resetFields()
 		},
-		change({ id, status, userName, userType }) {
+		change({ id, status, userName }) {
 			this.dialogVisible = true
-			this.userType = userType
 			this.dealerStatus = {
 				...this.dealerStatus,
-				userId: id,
+				id: id,
 				status: status === '1' ? '0' : '1',
 				userName
 			}
@@ -341,24 +339,14 @@ export default {
 		requestChange() {
 			this.$refs.dialogForm.validate((valid) => {
 				if (valid) {
-					if (this.userType === '2') {
 						this.$api
 							.updateXPSStatus({ ...this.dealerStatus, ...this.dialogForm })
-							.then((response) => {
+							.then(() => {
 								this.loadData()
 							})
 							.then((_) => {
 								this.dialogVisible = false
 							})
-					} else {
-						updateStatus({ ...this.dealerStatus, ...this.dialogForm })
-							.then((response) => {
-								this.loadData()
-							})
-							.then((_) => {
-								this.dialogVisible = false
-							})
-					}
 				}
 			})
 		},
@@ -367,7 +355,7 @@ export default {
 				.modifyPassword({
 					pwd: md5(form.password + this.userName),
 					rePwd: md5(form.passwordAgain + this.userName),
-					userId: form.id,
+					id: form.id,
 					userName: this.userName
 				})
 				.then((_) => {
@@ -396,12 +384,12 @@ export default {
 		// 设置范围
 		setRange(row) {
 			console.log('设置范围', row)
-			this.userId = row.id
+			this.id = row.id
 			this.showRanges = true
 		},
 		closeRangesDialog() {
 			this.showRanges = false
-			this.userId = ''
+			this.id = ''
 		},
 		editRow(data) {
 			this.dealData = data

@@ -47,7 +47,7 @@ export default {
 	name: 'SetRanges',
 	props: {
 		drawer: Boolean,
-		userId: {
+		id: {
 			type: String,
 			required: true
 		}
@@ -72,13 +72,13 @@ export default {
 		}
 	},
 	created() {
-		const userId = this.userId
-		this.getUserDict(userId)
+		const id = this.id
+		this.getUserDict(id)
 	},
 	methods: {
-		getUserDict(userId) {
+		getUserDict(id) {
 			this.$api
-				.getSecurityDictList({ userId })
+				.getSecurityDictList({ id })
 				.then((res) => {
 					this.list = res.data
 					this.list.forEach((item) => {
@@ -98,8 +98,8 @@ export default {
 		handleSure() {
 			const platformIds = this.platformIds
 			const applicationIds = this.applicationIds
-			const userId = this.userId
-			const params = { platformIds, applicationIds, userId }
+			const id = this.id
+			const params = { platformIds, applicationIds, id }
 			// console.log(params)
 			this.$api.setUserSecurityDict(params).then(
 				(res) => {
