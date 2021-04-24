@@ -1,78 +1,114 @@
 <template>
-  <el-form
-    ref="form"
-    :model="editData"
-    label-width="80px"
-    @submit.native.prevent="enterSearch"
-  >
-    <el-form-item label="银行卡号">
+  <el-form ref="editData" :model="editData" label-width="80px">
+    <el-form-item label="渠道编号">
       <el-input
-        v-model="editData.bankCode"
+        v-model="editData.channelId"
         clearable
         size="medium"
         style="width: 280px"
-        placeholder="请输入银行卡号"
-        :disabled="loading"
-        @keyup.enter.native="enterSearch"
+        placeholder="请输入渠道编号"
       ></el-input>
     </el-form-item>
-    <el-form-item label="银行名称">
+    <el-form-item label="Ip地址">
       <el-input
-        v-model="editData.bankName"
+        v-model="editData.ip"
         clearable
         size="medium"
         style="width: 280px"
-        placeholder="请输入银行名称"
-        :disabled="loading"
-        @keyup.enter.native="enterSearch"
+        placeholder="请输入Ip地址"
       ></el-input>
     </el-form-item>
-    <!-- <el-form-item label="时间">
-      <el-date-picker
-        v-model="formTime.time"
-        size="medium"
-        format="yyyy-MM-dd HH:mm:ss"
-        type="datetimerange"
-        range-separator="-"
-        start-placeholder="开始日期"
-        end-placeholder="结束日期"
-        align="right"
-        value-format="yyyy-MM-dd HH:mm:ss"
+    <el-form-item label="备注">
+      <el-input
+        v-model="editData.remark"
+        type="textarea"
         clearable
-        style="width: 280px"
-      ></el-date-picker>
-    </el-form-item>-->
+        size="medium"
+        style="width: 675px"
+        placeholder="最多输入100"
+      ></el-input>
+    </el-form-item>
   </el-form>
 </template>
 
 <script>
-import list from '@/mixins/list'
-import { setEidteBank } from '@/api/bankController'
 export default {
   components: {},
-  mixins: [list],
-  props: { editFormData: { type: Object, default: () => ({}) } },
+  mixins: [],
+  props: {
+    editFormData: { type: Object, default: () => ({}) },
+    type: {
+      type: String,
+      default: '新增'
+    }
+  },
   data() {
     return {
-      editData: {},
-      formTime: {
-        time: []
-      }
+      editData: {}
     }
   },
   computed: {},
   watch: {
-    editFormData(val) {
-      this.editData = { ...val }
+    editFormData: {
+      handler(newV) {
+        if (newV) {
+          this.editData = { ...newV }
+        }
+      },
+      deep: true,
+      immediate: true
     }
   },
   created() {},
   mounted() {},
   methods: {
-    enterSubmit() {
-      console.log(222222222)
-      setEidteBank().then((res) => {
-        console.log(res)
+    submit(val) {
+      this.$refs.editData.validate((valid) => {
+        if (valid) {
+          const loading = this.$loading({
+            lock: true,
+            text: 'Loading',
+            spinner: 'el-icon-loading',
+            background: 'rgba(0, 0, 0, 0.7)'
+          })
+          if (this.type === '新增') {
+            const loading = this.$loading({
+              lock: true,
+              text: 'Loading',
+              spinner: 'el-icon-loading',
+              background: 'rgba(0, 0, 0, 0.7)'
+            })
+            this.$api
+              .thirdPayWhiteAdd(this.editData)
+              .then(() => {
+                this.$message({
+                  type: 'success',
+                  message: '新增成功!'
+                })
+                this.$emit('refresh')
+                val()
+                loading.close()
+              })
+              .catch(() => {
+                loading.close()
+              })
+          } else {
+            this.$api
+              .thirdPayWhiteEidt(this.editData)
+              .then(() => {
+                this.$message({
+                  type: 'success',
+                  message: '修改成功!'
+                })
+                this.$emit('refresh')
+                val()
+                loading.close()
+              })
+              .catch(() => {
+                loading.close()
+              })
+          }
+        }
       })
     }
   }
