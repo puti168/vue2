@@ -31,7 +31,7 @@ const state = {
 	routes: [],
 	addRoutes: [],
 	userBtns: [],
-	nowRoute: ''
+	nowRoute: '2'
 }
 
 const mutations = {
@@ -71,11 +71,16 @@ const actions = {
 							show: true,
 							component: Layout,
 							children: [],
-							checked: val === 0
+							checked: false
 						})
-						if (val === 0) {
-							store.dispatch('permission/setNowroute', element.id)
-						}
+						setTimeout(() => {
+							parentRoutes.forEach(data => {
+								if (data.id === store.state.tagsView.visitedViews[1].matched[0].path.substr(1)) {
+									data.checked = true
+								}
+							})
+							store.dispatch('permission/setNowroute', store.state.tagsView.visitedViews[1].matched[0].path.substr(1))
+						}, 200)
 					} else if (element.level === 2) {
 						// 二级菜单
 						const index = parentRoutes.findIndex(
@@ -148,12 +153,6 @@ const actions = {
 			parentRoutes = parentRoutes.filter((val) => {
 				return !val.children || (val.children && val.children.length)
 			})
-
-			parentRoutes.forEach((element) => {
-				if (element.isRedirect) {
-					element.redirect = `${element.path}${element.children[0].path}`
-				}
-			})
 			parentRoutes.push({
 				path: '*',
 				redirect: '/404',
@@ -166,7 +165,7 @@ const actions = {
 				if (rootRoute.children && rootRoute.children.length) {
 					rootRoutes.push({
 						path: '/',
-						redirect: rootRoute.children && rootRoute.children[0].path
+						redirect: rootRoute.children && rootRoute.children[0].children[0].path
 					})
 				} else {
 					rootRoutes.push({
