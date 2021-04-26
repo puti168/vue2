@@ -62,7 +62,7 @@
               end-placeholder="结束日期"
               align="right"
               clearable
-              value-format="timestamp"
+              :default-time="defaultTime"
               style="width: 280px"
             ></el-date-picker>
           </el-form-item>
@@ -166,6 +166,7 @@
 
 <script>
 import list from '@/mixins/list'
+import dayjs from 'dayjs'
 import editForm from './components/editForm'
 export default {
   name: '',
@@ -195,8 +196,8 @@ export default {
       let params = {
         ...this.queryData,
         pageNum: this.pageNum,
-        startTime: startTime && startTime + '',
-        endTime: endTime && endTime + ''
+        startTime: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : '',
+        endTime: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
       }
       params = {
         ...this.getParams(params)
@@ -205,7 +206,6 @@ export default {
         .thirdPayWhiteList(params)
         .then((res) => {
           if (res.code === 200) {
-            console.log(111111111111)
             this.loading = false
             this.dataList = res.data
             // this.total = response.total;

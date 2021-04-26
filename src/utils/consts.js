@@ -4,8 +4,7 @@ import dayjs from 'dayjs'
 export const routerNames = {
 	account: 'account'
 }
-export const routerSwitchNames = {
-}
+export const routerSwitchNames = {}
 const month = dayjs().month()
 const year = dayjs().year()
 export const shortcutsM = [
@@ -285,134 +284,151 @@ export const shortcuts = [
 			picker.$emit('pick', [+start, +end])
 		}
 	},
-	// 往前2月
+	// 前3个月
 	{
-		text:
-			month - 1 > 0
-				? year + '年' + (month - 1) + '月'
-				: year - 1 + '年' + (month - 1 + 12) + '月',
+		text: '近三个月',
 		onClick(picker) {
-			const end = dayjs()
-				.subtract(2, 'month')
-				.endOf('month')
-			const start = dayjs()
-				.startOf('month')
-				.subtract(2, 'month')
-			picker.$emit('pick', [+start, +end])
-		}
-	},
-	// 往前3月
-	{
-		text:
-			month - 2 > 0
-				? year + '年' + (month - 2) + '月'
-				: year - 1 + '年' + (month - 2 + 12) + '月',
-		onClick(picker) {
-			const end = dayjs()
-				.subtract(3, 'month')
-				.endOf('month')
-			const start = dayjs()
-				.startOf('month')
-				.subtract(3, 'month')
-			picker.$emit('pick', [+start, +end])
-		}
-	},
-	// 往前4月
-	{
-		text:
-			month - 3 > 0
-				? year + '年' + (month - 3) + '月'
-				: year - 1 + '年' + (month - 3 + 12) + '月',
-		onClick(picker) {
-			const end = dayjs()
-				.subtract(4, 'month')
-				.endOf('month')
-			const start = dayjs()
-				.startOf('month')
-				.subtract(4, 'month')
-			picker.$emit('pick', [+start, +end])
-		}
-	},
-	// 往前5月
-	{
-		text:
-			month - 4 > 0
-				? year + '年' + (month - 4) + '月'
-				: year - 1 + '年' + (month - 4 + 12) + '月',
-		onClick(picker) {
-			const end = dayjs()
-				.subtract(5, 'month')
-				.endOf('month')
-			const start = dayjs()
-				.startOf('month')
-				.subtract(5, 'month')
-			picker.$emit('pick', [+start, +end])
-		}
-	},
-	// 往前6月
-	{
-		text:
-			month - 5 > 0
-				? year + '年' + (month - 5) + '月'
-				: year - 1 + '年' + (month - 5 + 12) + '月',
-		onClick(picker) {
-			const end = dayjs()
-				.subtract(6, 'month')
-				.endOf('month')
-			const start = dayjs()
-				.startOf('month')
-				.subtract(6, 'month')
-			picker.$emit('pick', [+start, +end])
-		}
-	},
-	// 往前7月
-	{
-		text:
-			month - 6 > 0
-				? year + '年' + (month - 6) + '月'
-				: year - 1 + '年' + (month - 6 + 12) + '月',
-		onClick(picker) {
-			const end = dayjs()
-				.subtract(7, 'month')
-				.endOf('month')
-			const start = dayjs()
-				.startOf('month')
-				.subtract(7, 'month')
-			picker.$emit('pick', [+start, +end])
-		}
-	},
-	// 往前8月
-	{
-		text:
-			month - 7 > 0
-				? year + '年' + (month - 7) + '月'
-				: year - 1 + '年' + (month - 7 + 12) + '月',
-		onClick(picker) {
-			const end = dayjs()
-				.subtract(8, 'month')
-				.endOf('month')
-			const start = dayjs()
-				.startOf('month')
-				.subtract(8, 'month')
-			picker.$emit('pick', [+start, +end])
-		}
-	},
-	// 往前9月
-	{
-		text:
-			month - 8 > 0
-				? year + '年' + (month - 8) + '月'
-				: year - 1 + '年' + (month - 8 + 12) + '月',
-		onClick(picker) {
-			const end = dayjs()
-				.subtract(9, 'month')
-				.endOf('month')
-			const start = dayjs()
-				.startOf('month')
-				.subtract(9, 'month')
-			picker.$emit('pick', [+start, +end])
+			// const end = dayjs()
+			// 	.subtract(1, 'month')
+			// 	.endOf('month')
+			// const start = dayjs()
+			// 	.startOf('month')
+			// 	.subtract(3, 'month')
+			// picker.$emit('pick', [+start, +end])
+			const end = new Date()
+			const start = new Date()
+			start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
+			picker.$emit('pick', [start, end])
 		}
 	}
+	// 往前2月
+	// {
+	// 	text:
+	// 		month - 1 > 0
+	// 			? year + '年' + (month - 1) + '月'
+	// 			: year - 1 + '年' + (month - 1 + 12) + '月',
+	// 	onClick(picker) {
+	// 		const end = dayjs()
+	// 			.subtract(2, 'month')
+	// 			.endOf('month')
+	// 		const start = dayjs()
+	// 			.startOf('month')
+	// 			.subtract(2, 'month')
+	// 		picker.$emit('pick', [+start, +end])
+	// 	}
+	// },
+	// 往前3月
+	// {
+	// 	text:
+	// 		month - 2 > 0
+	// 			? year + '年' + (month - 2) + '月'
+	// 			: year - 1 + '年' + (month - 2 + 12) + '月',
+	// 	onClick(picker) {
+	// 		const end = dayjs()
+	// 			.subtract(3, 'month')
+	// 			.endOf('month')
+	// 		const start = dayjs()
+	// 			.startOf('month')
+	// 			.subtract(3, 'month')
+	// 		picker.$emit('pick', [+start, +end])
+	// 	}
+	// },
+	// 往前4月
+	// {
+	// 	text:
+	// 		month - 3 > 0
+	// 			? year + '年' + (month - 3) + '月'
+	// 			: year - 1 + '年' + (month - 3 + 12) + '月',
+	// 	onClick(picker) {
+	// 		const end = dayjs()
+	// 			.subtract(4, 'month')
+	// 			.endOf('month')
+	// 		const start = dayjs()
+	// 			.startOf('month')
+	// 			.subtract(4, 'month')
+	// 		picker.$emit('pick', [+start, +end])
+	// 	}
+	// },
+	// 往前5月
+	// {
+	// 	text:
+	// 		month - 4 > 0
+	// 			? year + '年' + (month - 4) + '月'
+	// 			: year - 1 + '年' + (month - 4 + 12) + '月',
+	// 	onClick(picker) {
+	// 		const end = dayjs()
+	// 			.subtract(5, 'month')
+	// 			.endOf('month')
+	// 		const start = dayjs()
+	// 			.startOf('month')
+	// 			.subtract(5, 'month')
+	// 		picker.$emit('pick', [+start, +end])
+	// 	}
+	// },
+	// 往前6月
+	// {
+	// 	text:
+	// 		month - 5 > 0
+	// 			? year + '年' + (month - 5) + '月'
+	// 			: year - 1 + '年' + (month - 5 + 12) + '月',
+	// 	onClick(picker) {
+	// 		const end = dayjs()
+	// 			.subtract(6, 'month')
+	// 			.endOf('month')
+	// 		const start = dayjs()
+	// 			.startOf('month')
+	// 			.subtract(6, 'month')
+	// 		picker.$emit('pick', [+start, +end])
+	// 	}
+	// },
+	// 往前7月
+	// {
+	// 	text:
+	// 		month - 6 > 0
+	// 			? year + '年' + (month - 6) + '月'
+	// 			: year - 1 + '年' + (month - 6 + 12) + '月',
+	// 	onClick(picker) {
+	// 		const end = dayjs()
+	// 			.subtract(7, 'month')
+	// 			.endOf('month')
+	// 		const start = dayjs()
+	// 			.startOf('month')
+	// 			.subtract(7, 'month')
+	// 		picker.$emit('pick', [+start, +end])
+	// 	}
+	// },
+	// 往前8月
+	// {
+	// 	text:
+	// 		month - 7 > 0
+	// 			? year + '年' + (month - 7) + '月'
+	// 			: year - 1 + '年' + (month - 7 + 12) + '月',
+	// 	onClick(picker) {
+	// 		const end = dayjs()
+	// 			.subtract(8, 'month')
+	// 			.endOf('month')
+	// 		const start = dayjs()
+	// 			.startOf('month')
+	// 			.subtract(8, 'month')
+	// 		picker.$emit('pick', [+start, +end])
+	// 	}
+	// },
+	// 往前9月
+	// {
+	// 	text:
+	// 		month - 8 > 0
+	// 			? year + '年' + (month - 8) + '月'
+	// 			: year - 1 + '年' + (month - 8 + 12) + '月',
+	// 	onClick(picker) {
+	// 		const end = dayjs()
+	// 			.subtract(9, 'month')
+	// 			.endOf('month')
+	// 		const start = dayjs()
+	// 			.startOf('month')
+	// 			.subtract(9, 'month')
+	// 		picker.$emit('pick', [+start, +end])
+	// 	}
+	// }
 ]
 export const shortcutsNoToday = [
 	{

@@ -84,7 +84,7 @@
               end-placeholder="结束日期"
               align="right"
               clearable
-              value-format="timestamp"
+              :default-time="defaultTime"
               style="width: 280px"
             ></el-date-picker>
           </el-form-item>
@@ -229,6 +229,7 @@ type="primary"
 
 <script>
 import list from '@/mixins/list'
+import dayjs from 'dayjs'
 import editForm from './components/editForm'
 export default {
   name: '',
@@ -275,11 +276,12 @@ export default {
       this.loading = true
       const create = this.formTime.time || []
       const [startTime, endTime] = create
+      console.log(11111111, startTime && startTime + '')
       let params = {
         ...this.queryData,
         pageNum: this.pageNum,
-        startTime: startTime && startTime + '',
-        endTime: endTime && endTime + ''
+        startTime: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : '',
+        endTime: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
       }
       params = {
         ...this.getParams(params)
