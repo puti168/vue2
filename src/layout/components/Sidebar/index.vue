@@ -7,7 +7,7 @@
 				background-color="#f2f2f2"
 				text-color="#999999"
 				:unique-opened="false"
-				active-text-color="#999999"
+				active-text-color="#58A3F7"
 				:collapse-transition="false"
 				mode="vertical"
 				:default-openeds="defaultOpeneds"
