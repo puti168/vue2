@@ -1,10 +1,10 @@
 import request from '@/utils/request'
 // 删除角色
-export function setDeleteRole(data) {
+export function setDeleteRole(params, url) {
 	return request({
-		url: '/role/deleteRole',
+		url: `/role/deleteRole/${url}`,
 		method: 'post',
-		data
+		params
 	})
 }
 // 查询权限列表
@@ -78,4 +78,16 @@ export function setUpdateRoleStatus(data) {
 		method: 'post',
 		data
 	})
+}
+export default {
+	setDeleteRole,
+	getRolePermissionList,
+	getRoleDetailInfo,
+	getRoleStatus,
+	getRoleListPage,
+	getPageRoleUsers,
+	getRolePermissions,
+	setSaveRoleInfo,
+	setUpdateRoleInfo,
+	setUpdateRoleStatus
 }

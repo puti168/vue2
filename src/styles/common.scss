@@ -179,13 +179,15 @@
 .blackBackground {
     background: #8167F5;
 }
+
 .pageValue {
-	position: fixed;
-	bottom: 0;
-	background-color: #fff;
-	width: 100%;
-	margin-left: -200px;
-	height: 40px;
-	z-index: 999;
-	right: 0;
+    position: fixed;
+    bottom: 0;
+    background-color: #fff;
+    width: 100%;
+    margin-left: -200px;
+    height: 40px;
+    z-index: 999;
+    right: 0;
 }
+

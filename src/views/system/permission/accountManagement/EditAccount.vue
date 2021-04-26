@@ -103,7 +103,7 @@
 						:data="ps"
 						:props="{ key: 'id', label: 'roleName' }"
 					></el-transfer>
-					<div class="handles center">
+					<div class="handles center" chenter>
 						<el-button
 							round
 							type="default"
@@ -379,7 +379,9 @@ export default {
 	}
 
 	.handles {
+		padding-left: 50px;
 		margin-top: 30px;
+		text-align: center;
 		.item {
 			margin-bottom: 15px;
 		}
