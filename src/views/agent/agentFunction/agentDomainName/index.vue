@@ -257,12 +257,6 @@ export default {
               loading.close()
             })
         })
-        .catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          })
-        })
     },
     editUp(val) {
       this.title = '编辑'

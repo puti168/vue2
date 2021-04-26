@@ -103,7 +103,12 @@
     line-height: 30px;
     padding: 0;
 }
-
+.el-tag {
+    min-width: 80px;
+    height: 30px;
+    line-height: 30px;
+    padding: 0 5px;
+}
 .el-message {
     height: 32px;
     line-height: 32px;
@@ -125,8 +130,8 @@
 
 .el-table td .cell .el-button {
     min-width: 60px;
-    height: 24px;
-    line-height: 24px;
+    height: 20px;
+    line-height: 20px;
     padding: 0 5px;
 }
 .el-table td .cell .el-tag {

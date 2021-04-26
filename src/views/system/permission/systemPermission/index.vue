@@ -1,8 +1,5 @@
 <template>
   <div class="game-container report-container">
-    <div class="header flex-h flex-bc">
-      <h2 class="h2-line">角色管理</h2>
-    </div>
     <div class="view-container dealer-container">
       <div class="params">
         <el-form ref="form" :inline="true" :model="queryData">
@@ -85,7 +82,7 @@
               重置
             </el-button>
             <el-button
-              type="primary"
+              type="success"
               icon="el-icon-folder-add"
               size="medium"
               @click="add"
@@ -174,7 +171,7 @@
                   size="medium"
                   @click.stop="editUp(scope.row)"
                 >
-                  修改
+                  编辑
                 </el-button>
               </div>
               <div v-else>—</div>
@@ -369,12 +366,7 @@ export default {
               loading.close()
             })
         })
-        .catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          })
-        })
+        .catch(() => {})
     },
     getParentId(list) {
       for (let i = 0; i < list.length; i++) {
