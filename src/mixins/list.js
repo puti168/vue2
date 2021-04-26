@@ -14,7 +14,8 @@ export default {
 			pageSize: 10,
 			pageSizes: [5, 10, 20, 50, 100, 200, 500],
 			layout: 'total, sizes, prev, pager, next, jumper',
-			defaultTime: ['00:00:00', '23:59:59']
+			defaultTime: ['00:00:00', '23:59:59'],
+			sortable: true
 		}
 	},
 	computed: {
@@ -142,6 +143,34 @@ export default {
 					})
 				})
 			}
+		},
+		changeTableSort({ column, prop, order }) {
+			this.pageNum = 1
+			console.log('column', column)
+			console.log('order', order)
+			const orderParams = this.checkOrderParams.get(prop)
+			console.log('orderParams', orderParams)
+			if (orderParams) {
+				this.proptype = orderParams
+				if (order === 'ascending') {
+					this.dataList.sort({ sort: 'ascending', ...this.from })
+				} else if (column.order === 'descending') {
+					this.dataList.sort({ sort: 'ascending', ...this.from })
+				}
+			}
+			// // 升序排列方法
+			// const ascSortFun = (a, b) => {
+			// 	return a[this.proptype] - b[this.proptype]
+			// }
+			// // 降序排列方法
+			// const desSortFun = (a, b) => {
+			// 	return b[this.proptype] - a[this.proptype]
+			// }
+			this.loadData()
 		}
+		// sortParams(obj1, obj2) {
+		// 	console.log('obj1', obj1)
+		// 	console.log('obj2', obj2)
+		// }
 	}
 }
