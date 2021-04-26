@@ -2,33 +2,11 @@
   <div class="game-container report-container">
     <div class="header flex-h flex-bc">
       <h2 class="h2-line">角色管理</h2>
-      <div class="head flex-h-end">
-        <el-button
-          type="primary"
-          icon="el-icon-search"
-          :disabled="loading"
-          size="medium"
-          @click="query"
-        >
-          查询
-        </el-button>
-        <el-button
-          icon="el-icon-refresh-left"
-          :disabled="loading"
-          size="medium"
-          @click="reset"
-        >
-          重置
-        </el-button>
-        <el-button type="primary" icon="el-icon-folder-add" size="medium" @click="add">
-          新增
-        </el-button>
-      </div>
     </div>
     <div class="view-container dealer-container">
       <div class="params">
-        <el-form ref="form" :inline="true" :model="queryData" label-width="100px">
-          <el-form-item label="角色名称">
+        <el-form ref="form" :inline="true" :model="queryData">
+          <el-form-item label="角色名称:">
             <el-input
               v-model="queryData.roleName"
               clearable
@@ -39,7 +17,7 @@
               @keyup.enter.native="enterSearch"
             ></el-input>
           </el-form-item>
-          <el-form-item label="创建人">
+          <el-form-item label="创建人:">
             <el-input
               v-model="queryData.createBy"
               clearable
@@ -50,7 +28,7 @@
               @keyup.enter.native="enterSearch"
             ></el-input>
           </el-form-item>
-          <el-form-item label="编辑人">
+          <el-form-item label="编辑人:">
             <el-input
               v-model="queryData.updatedBy"
               clearable
@@ -61,7 +39,7 @@
               @keyup.enter.native="enterSearch"
             ></el-input>
           </el-form-item>
-          <el-form-item label="角色状态">
+          <el-form-item label="角色状态:">
             <el-select
               v-model="queryData.status"
               style="width: 280px"
@@ -72,7 +50,7 @@
               <el-option label="停用" value="1"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="创建时间">
+          <el-form-item label="创建时间:">
             <el-date-picker
               v-model="formTime.time"
               size="medium"
@@ -87,6 +65,33 @@
               :default-time="defaultTime"
               style="width: 280px"
             ></el-date-picker>
+          </el-form-item>
+          <el-form-item style="margin-left: 30px">
+            <el-button
+              type="primary"
+              icon="el-icon-search"
+              :disabled="loading"
+              size="medium"
+              @click="query"
+            >
+              查询
+            </el-button>
+            <el-button
+              icon="el-icon-refresh-left"
+              :disabled="loading"
+              size="medium"
+              @click="reset"
+            >
+              重置
+            </el-button>
+            <el-button
+              type="primary"
+              icon="el-icon-folder-add"
+              size="medium"
+              @click="add"
+            >
+              新增
+            </el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -164,7 +169,7 @@
                   删除
                 </el-button>
                 <el-button
-                  type="warning"
+                  type="primary"
                   icon="el-icon-edit"
                   size="medium"
                   @click.stop="editUp(scope.row)"
