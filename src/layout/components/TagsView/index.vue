@@ -69,7 +69,7 @@ export default {
 		}
 	},
 	mounted() {
-		// this.initTags()
+		this.initTags()
 		this.addTags()
 	},
 	methods: {
@@ -97,15 +97,17 @@ export default {
 			})
 			return tags
 		},
-		// initTags() {
-		// 	const affixTags = (this.affixTags = this.filterAffixTags(this.routes))
-		// 	for (const tag of affixTags) {
-		// 		// Must have tag name
-		// 		if (tag.name) {
-		// 			this.$store.dispatch('tagsView/addVisitedView', tag)
-		// 		}
-		// 	}
-		// },
+		initTags() {
+			const affixTags = (this.affixTags = this.filterAffixTags(this.routes))
+			console.log('afffixxxxx')
+			console.log(affixTags)
+			for (const tag of affixTags) {
+				// Must have tag name
+				if (tag.name) {
+					this.$store.dispatch('tagsView/addVisitedView', tag)
+				}
+			}
+		},
 		addTags() {
 			const { name } = this.$route
 			if (name) {
