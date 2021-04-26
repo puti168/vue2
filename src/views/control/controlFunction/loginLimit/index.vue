@@ -83,10 +83,13 @@
 						label="序号"
 					></el-table-column>
 					<el-table-column
+						v-slot="scope"
 						prop="ip"
 						align="center"
-						label="黑名单IP"
-					></el-table-column>
+                        label="黑名单IP"
+                    >
+						<Copy :title="scope.row.ip" :copy="copy" />
+					</el-table-column>
 					<el-table-column
 						prop="merchantId"
 						align="center"
@@ -178,6 +181,7 @@
 <script>
 import list from '@/mixins/list'
 import { mapGetters } from 'vuex'
+
 export default {
 	name: 'IPBlack',
 	mixins: [list],
