@@ -92,10 +92,13 @@
 						<Copy :title="scope.row.ip" :copy="copy" />
 					</el-table-column>
 					<el-table-column
+						v-slot="scope"
 						prop="merchantId"
 						align="center"
-						label="商户ID"
-					></el-table-column>
+                        label="商户ID"
+					>
+                        <Copy :title="scope.row.merchantId" :copy="copy" />
+                    </el-table-column>
 					<el-table-column
 						prop="createBy"
 						align="center"

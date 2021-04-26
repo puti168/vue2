@@ -153,9 +153,9 @@ export default {
 			if (orderParams) {
 				this.proptype = orderParams
 				if (order === 'ascending') {
-					this.dataList.sort({ sort: 'ascending', ...this.from })
+					// this.dataList.sort({ sort: 'ASD', ...this.from })
 				} else if (column.order === 'descending') {
-					this.dataList.sort({ sort: 'ascending', ...this.from })
+					// this.dataList.sort({ sort: 'ascending', ...this.from })
 				}
 			}
 			// // 升序排列方法

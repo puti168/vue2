@@ -1,19 +1,19 @@
 const game = [
 	// 第一级菜单
 	{
-		id: '21',
+		id: '14',
 		title: '游戏'
 	},
 	// 第二级菜单
 	{
-		id: '22',
-		parentId: '21',
+		id: '15',
+		parentId: '14',
 		icon: 'bb_report',
 		title: '游戏功能'
 	},
 	{
-		id: '25',
-		parentId: '21',
+		id: '18',
+		parentId: '14',
 		icon: 'bb_report',
 		title: '游戏配置'
 	},
