@@ -165,7 +165,7 @@ const actions = {
 				if (rootRoute.children && rootRoute.children.length) {
 					rootRoutes.push({
 						path: '/',
-						redirect: rootRoute.children && rootRoute.children[0].path
+						redirect: rootRoute.children && rootRoute.children[0].children[0].path
 					})
 				} else {
 					rootRoutes.push({
