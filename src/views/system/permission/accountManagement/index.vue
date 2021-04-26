@@ -1,8 +1,5 @@
 <template>
   <div class="game-container account">
-    <div class="flex-h flex-bc">
-      <h2 class="h2-line">账号管理</h2>
-    </div>
     <div class="params flex-h flex-bc">
       <el-form ref="form" :inline="true" :model="listQuery">
         <el-form-item :label="$t('system_component_account_260') + ':'">
@@ -61,7 +58,7 @@
             重置
           </el-button>
           <el-button
-            type="primary"
+            type="success"
             icon="el-icon-folder-add"
             size="medium"
             @click="addUser"
@@ -119,22 +116,16 @@
         ></el-table-column>
         <el-table-column prop="status" :label="$t('system_component_account_264')">
           <template slot-scope="scope">
-            <span
-              :class="{
-                'active-color': scope.row.status === '1',
-                'stop-color': scope.row.status === '0',
-              }"
-            >
-              {{
-                scope.row.status === "1"
-                  ? $t("system_component_account_266")
-                  : $t("system_component_account_267")
-              }}
-            </span>
+            <span v-show="scope.row.status === '1'" class="blueColor">{{
+              $t("system_component_account_266")
+            }}</span>
+            <span v-show="scope.row.status === '0'" class="redColor">{{
+              $t("system_component_account_267")
+            }}</span>
             <el-switch
               :disabled="scope.row.userName === username"
               :value="scope.row.status === '1'"
-              active-color="#13ce66"
+              active-color="#58A3F7"
               inactive-color="#ff4949"
               @change="change(scope.row)"
             ></el-switch>
@@ -155,7 +146,7 @@
         >
           <template slot-scope="scope">
             <el-button
-              type="warning"
+              type="primary"
               icon="el-icon-edit"
               size="medium"
               @click.native.prevent="popupPwdDialog(scope.row)"
@@ -163,7 +154,7 @@
               修改密码
             </el-button>
             <el-button
-              type="warning"
+              type="primary"
               icon="el-icon-edit"
               size="medium"
               @click.stop="editRow(scope.row, list)"
