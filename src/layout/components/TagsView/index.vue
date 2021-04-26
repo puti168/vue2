@@ -56,7 +56,8 @@ export default {
 		}
 	},
 	watch: {
-		$route() {
+		$route(val) {
+			if (val.name === 'Dashboard') return
 			this.addTags()
 			this.moveToCurrentTag()
 		},
@@ -69,7 +70,10 @@ export default {
 		}
 	},
 	mounted() {
+		console.log('this.visitedViews')
+		console.log(this.visitedViews)
 		this.initTags()
+		console.log(this.visitedViews)
 		this.addTags()
 	},
 	methods: {
@@ -99,8 +103,6 @@ export default {
 		},
 		initTags() {
 			const affixTags = (this.affixTags = this.filterAffixTags(this.routes))
-			console.log('afffixxxxx')
-			console.log(affixTags)
 			for (const tag of affixTags) {
 				// Must have tag name
 				if (tag.name) {
