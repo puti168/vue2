@@ -1,7 +1,10 @@
 import dayjs from 'dayjs'
 import { shortcuts, shortcutsNoToday, shortcutsM } from '@/utils/consts'
 import { formatCurrency } from '@/utils'
+import Copy from '@/components/Copy/copy'
+
 export default {
+	components: { Copy },
 	data() {
 		return {
 			list: [],
@@ -128,6 +131,16 @@ export default {
 				this.hadSearch = true
 				this.pageNum = 1
 				this.enterSubmit()
+			}
+		},
+		copy(e) {
+			if (e) {
+				this.$copyText(e).then(() => {
+					this.$message({
+						type: 'success',
+						message: '复制成功'
+					})
+				})
 			}
 		}
 	}

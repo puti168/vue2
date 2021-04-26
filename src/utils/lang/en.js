@@ -93,8 +93,8 @@ export default {
 		enterAgainPassword: 'Please enter your password again',
 		inconsistentTwice: 'Inconsistent input password twice!',
 		setRangesSuccessful: 'authorization range set successfully',
-		copyToClipboardSuccessfully: 'copy to clipboard successfully',
-		copyToClipboardFailed: 'copy to clipboard failed',
+		copyToClipboardSuccessfully: 'Copy to clipboard successfully',
+		copyToClipboardFailed: 'Copy to clipboard failed',
 		getDataError: 'Get data failed'
 	},
 	placeholder: {
