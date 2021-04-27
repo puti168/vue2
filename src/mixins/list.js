@@ -134,6 +134,10 @@ export default {
 				this.enterSubmit()
 			}
 		},
+		search() {
+			this.pageNum = 1
+			this.loadData()
+		},
 		copy(e) {
 			if (e) {
 				this.$copyText(e).then(() => {
