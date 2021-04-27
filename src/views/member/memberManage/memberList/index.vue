@@ -27,7 +27,7 @@
 							size="medium"
 							placeholder="会员账号"
 							clearable
-                            style="width: 165px"
+							style="width: 165px"
 						></el-input>
 					</el-form-item>
 					<el-form-item label="会员姓名:">
@@ -37,7 +37,7 @@
 							size="medium"
 							placeholder="会员姓名"
 							clearable
-                            style="width: 165px"
+							style="width: 165px"
 						></el-input>
 					</el-form-item>
 					<el-form-item label="账号状态:">
@@ -47,49 +47,49 @@
 							size="medium"
 							placeholder="全部"
 							clearable
-                            style="width: 105px"
+							style="width: 105px"
 						>
 							<el-option label="全部" value></el-option>
 							<el-option label="启用" :value="1"></el-option>
 							<el-option label="停用" :value="0"></el-option>
 						</el-select>
 					</el-form-item>
-                    <el-form-item label="风控层级:">
-                        <el-select
-                            v-model="form.riskLevel"
-                            prop="status"
-                            size="medium"
-                            placeholder="全部"
-                            clearable
-                            style="width: 105px"
-                        >
-                            <el-option label="全部" value></el-option>
-                            <el-option label="1" :value="1"></el-option>
-                            <el-option label="2" :value="2"></el-option>
-                            <el-option label="3" :value="3"></el-option>
-                        </el-select>
-                    </el-form-item>
+					<el-form-item label="风控层级:">
+						<el-select
+							v-model="form.riskLevel"
+							prop="status"
+							size="medium"
+							placeholder="全部"
+							clearable
+							style="width: 105px"
+						>
+							<el-option label="全部" value></el-option>
+							<el-option label="1" :value="1"></el-option>
+							<el-option label="2" :value="2"></el-option>
+							<el-option label="3" :value="3"></el-option>
+						</el-select>
+					</el-form-item>
 					<el-form-item label="离线天数:">
-<!--						<el-input-->
-<!--							v-model="form.levelDays"-->
-<!--							prop="levelDays"-->
-<!--							size="medium"-->
-<!--							placeholder="离线天数"-->
-<!--							clearable-->
-<!--						></el-input>-->
-                        <el-input
-                            v-model="form.SaveMoneyMin"
-                            size="medium"
-                            placeholder="最小数值"
-                            style="width: 100px"
-                        ></el-input>
-                        -
-                        <el-input
-                            v-model="form.SaveMoneyMax"
-                            size="medium"
-                            placeholder="最大数值"
-                            style="width: 100px"
-                        ></el-input>
+						<!--						<el-input-->
+						<!--							v-model="form.levelDays"-->
+						<!--							prop="levelDays"-->
+						<!--							size="medium"-->
+						<!--							placeholder="离线天数"-->
+						<!--							clearable-->
+						<!--						></el-input>-->
+						<el-input
+							v-model="form.SaveMoneyMin"
+							size="medium"
+							placeholder="最小数值"
+							style="width: 100px"
+						></el-input>
+						-
+						<el-input
+							v-model="form.SaveMoneyMax"
+							size="medium"
+							placeholder="最大数值"
+							style="width: 100px"
+						></el-input>
 					</el-form-item>
 					<el-form-item label="最后登录时间:">
 						<el-date-picker
@@ -109,26 +109,26 @@
 						></el-date-picker>
 					</el-form-item>
 					<el-form-item label="VIP等级:">
-<!--						<el-input-->
-<!--							v-model="form.vipRank"-->
-<!--							prop="vipRank"-->
-<!--							size="medium"-->
-<!--							placeholder="VIP等级"-->
-<!--							clearable-->
-<!--						></el-input>-->
-                        <el-input
-                            v-model="form.SaveMoneyMin"
-                            size="medium"
-                            placeholder="最小数值"
-                            style="width: 100px"
-                        ></el-input>
-                        -
-                        <el-input
-                            v-model="form.SaveMoneyMax"
-                            size="medium"
-                            placeholder="最大数值"
-                            style="width: 100px"
-                        ></el-input>
+						<!--						<el-input-->
+						<!--							v-model="form.vipRank"-->
+						<!--							prop="vipRank"-->
+						<!--							size="medium"-->
+						<!--							placeholder="VIP等级"-->
+						<!--							clearable-->
+						<!--						></el-input>-->
+						<el-input
+							v-model="form.SaveMoneyMin"
+							size="medium"
+							placeholder="最小数值"
+							style="width: 100px"
+						></el-input>
+						-
+						<el-input
+							v-model="form.SaveMoneyMax"
+							size="medium"
+							placeholder="最大数值"
+							style="width: 100px"
+						></el-input>
 					</el-form-item>
 					<el-form-item label="账号类型:">
 						<el-select
@@ -136,60 +136,60 @@
 							size="medium"
 							placeholder="全部"
 							clearable
-                            style="width: 105px"
+							style="width: 105px"
 						>
 							<el-option label="全部" value></el-option>
 						</el-select>
 					</el-form-item>
-                    <el-form-item label="注册终端:">
-                        <el-select
-                            v-model="form.terminal"
-                            size="medium"
-                            placeholder="全部"
-                            clearable
-                            style="width: 105px"
-                        >
-                            <el-option label="全部" value></el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="首存金额:">
-                        <el-input
-                            v-model="form.SaveMoneyMin"
-                            size="medium"
-                            placeholder="最小数值"
-                            style="width: 100px"
-                        ></el-input>
-                        -
-                        <el-input
-                            v-model="form.SaveMoneyMax"
-                            size="medium"
-                            placeholder="最大数值"
-                            style="width: 100px"
-                        ></el-input>
-                    </el-form-item>
-                    <el-form-item label="首存时间:">
-                        <el-date-picker
-                            v-model="form.firstSaveTime"
-                            size="medium"
-                            :picker-options="pickerOptions"
-                            format="yyyy-MM-dd HH:mm:ss"
-                            type="datetimerange"
-                            range-separator="-"
-                            start-placeholder="开始日期"
-                            end-placeholder="结束日期"
-                            align="right"
-                            clearable
-                            value-format="timestamp"
-                            style="width: 385px"
-                        ></el-date-picker>
-                    </el-form-item>
+					<el-form-item label="注册终端:">
+						<el-select
+							v-model="form.terminal"
+							size="medium"
+							placeholder="全部"
+							clearable
+							style="width: 105px"
+						>
+							<el-option label="全部" value></el-option>
+						</el-select>
+					</el-form-item>
+					<el-form-item label="首存金额:">
+						<el-input
+							v-model="form.SaveMoneyMin"
+							size="medium"
+							placeholder="最小数值"
+							style="width: 100px"
+						></el-input>
+						-
+						<el-input
+							v-model="form.SaveMoneyMax"
+							size="medium"
+							placeholder="最大数值"
+							style="width: 100px"
+						></el-input>
+					</el-form-item>
+					<el-form-item label="首存时间:">
+						<el-date-picker
+							v-model="form.firstSaveTime"
+							size="medium"
+							:picker-options="pickerOptions"
+							format="yyyy-MM-dd HH:mm:ss"
+							type="datetimerange"
+							range-separator="-"
+							start-placeholder="开始日期"
+							end-placeholder="结束日期"
+							align="right"
+							clearable
+							value-format="timestamp"
+							style="width: 385px"
+						></el-date-picker>
+					</el-form-item>
 					<el-form-item label="会员标签:">
 						<el-select
 							v-model="form.userLabel"
 							size="medium"
 							placeholder="全部"
 							clearable
-                            style="width: 105px"
+							style="width: 105px"
 						>
 							<el-option label="全部" value></el-option>
 						</el-select>
@@ -200,36 +200,36 @@
 							size="medium"
 							placeholder="上级代理"
 							clearable
-                            style="width: 165px"
+							style="width: 165px"
 						></el-input>
 					</el-form-item>
-                    <el-form-item>
-                        <el-button
-                            type="primary"
-                            icon="el-icon-search"
-                            :disabled="loading"
-                            size="medium"
-                            @click="query"
-                        >
-                            查询
-                        </el-button>
-                        <el-button
-                            icon="el-icon-refresh-left"
-                            :disabled="loading"
-                            size="medium"
-                            @click="reset"
-                        >
-                            重置
-                        </el-button>
-                        <el-button
-                            type="warning"
-                            icon="el-icon-folder-add"
-                            size="medium"
-                            @click="add"
-                        >
-                            导出
-                        </el-button>
-                    </el-form-item>
+					<el-form-item>
+						<el-button
+							type="primary"
+							icon="el-icon-search"
+							:disabled="loading"
+							size="medium"
+							@click="query"
+						>
+							查询
+						</el-button>
+						<el-button
+							icon="el-icon-refresh-left"
+							:disabled="loading"
+							size="medium"
+							@click="reset"
+						>
+							重置
+						</el-button>
+						<el-button
+							type="warning"
+							icon="el-icon-folder-add"
+							size="medium"
+							@click="add"
+						>
+							导出
+						</el-button>
+					</el-form-item>
 				</el-form>
 			</div>
 
@@ -243,11 +243,6 @@
 					style="width: 100%"
 					:header-cell-style="getRowClass"
 				>
-					<el-table-column
-						align="center"
-						type="index"
-						label="序号"
-					></el-table-column>
 					<el-table-column
 						prop="username"
 						align="center"
@@ -266,57 +261,84 @@
 					<el-table-column
 						prop="updateDt"
 						align="center"
-						label="会员类型"
+						label="账号类型"
+                        :filters="filterStatus"
+                        :filter-multiple="false"
+                        :column-key="'type'"
 					></el-table-column>
 					<el-table-column
 						prop="titleId"
 						align="center"
 						label="会员标签"
+                        :filters="filterStatus"
+                        :filter-multiple="false"
+                        :column-key="'type'"
 					></el-table-column>
 					<el-table-column
 						prop="updateDt"
 						align="center"
 						label="风控层级"
-						:render-header="renderSortHeader"
+						:filters="filterStatus"
+                        :filter-multiple="false"
+                        :column-key="'type'"
 					></el-table-column>
 					<el-table-column
 						prop="status"
 						align="center"
 						label="账号状态"
+                        :filters="filterStatus"
+                        :filter-multiple="false"
+                        :column-key="'type'"
 					></el-table-column>
 					<el-table-column
 						prop="updateDt"
 						align="center"
 						label="VIP等级"
+                        width="100px"
+                        sortable="custom"
 					></el-table-column>
 					<el-table-column
 						prop="createDt"
 						align="center"
 						label="注册时间"
 						width="150px"
+                        sortable="custom"
 					></el-table-column>
 					<el-table-column
 						prop="updateDt"
 						align="center"
 						width="150px"
 						label="首存时间"
+                        sortable="custom"
 					></el-table-column>
 					<el-table-column
 						prop="updateDt"
 						align="center"
 						label="首存金额"
+                        sortable="custom"
+                        width="100px"
 					></el-table-column>
 					<el-table-column
 						prop="updateDt"
 						align="center"
 						label="中心钱包"
+                        width="100px"
+                        sortable="custom"
 					></el-table-column>
 					<el-table-column
 						prop="updateDt"
 						align="center"
 						label="最后登录时间"
 						width="150px"
+                        sortable="custom"
 					></el-table-column>
+                    <el-table-column
+                        prop="updateDt"
+                        align="center"
+                        label="离线天数"
+                        width="150px"
+                        sortable="custom"
+                    ></el-table-column>
 					<el-table-column align="center" label="操作" width="200px">
 						<template slot-scope="scope">
 							<el-button
@@ -399,7 +421,7 @@ export default {
 				userName: '',
 				nickName: '',
 				status: '',
-                riskLevel: '',
+				riskLevel: '',
 				levelDays: '',
 				lastLoginTime: '',
 				vipRank: '',
@@ -418,6 +440,10 @@ export default {
 			moduleBox: '',
 			showForm: '',
 			editVisible: false,
+			filterStatus: [
+				{ text: '一级', value: '一级' },
+				{ text: '二级', value: '二级' }
+			],
 			editFormData: {}
 		}
 	},
@@ -427,80 +453,6 @@ export default {
 	},
 	mounted() {},
 	methods: {
-		renderSortHeader(h, { column }) {
-			const filters = [
-				{ text: '一级', value: '一级' },
-				{ text: '二级', value: '二级' },
-				{ text: '三级', value: '三级' }
-			]
-
-			return h(
-				'div',
-				{
-					style: {
-						height: '56px'
-					}
-				},
-				[
-					h(
-						'span',
-						{
-							style: {},
-							class: 'level-font-class'
-						},
-						'风控层级'
-					),
-					h(
-						'el-select',
-						{
-							on: {
-								input: (value) => {
-									this.logLevel = value
-								}
-							},
-							props: {
-								value: this.logLevel
-							}
-						},
-						[
-							filters.map((item) => {
-								return h('el-option', {
-									props: {
-										value: item.value,
-										label: item.text
-									}
-								})
-							})
-						]
-					)
-				]
-			)
-			// return h('div', [
-			// 	h('span', column.label),
-			// 	h(
-			// 		`el-dropdown-menu`,
-			// 		{
-			// 			props: {
-			// 				content: (function() {
-			// 					const label = column.label
-			// 					switch (label) {
-			// 						case '活动时间':
-			// 							return '用来控制客户端飘窗的开始/结束时间'
-			// 					}
-			// 				})(),
-			// 				effect: 'dark',
-			// 				placement: 'top'
-			// 			}
-			// 		},
-			// 		[
-			// 			h('i', {
-			// 				class: 'el-icon-caret-bottom',
-			// 				style: 'color:#409eff;margin-left:5px;'
-			// 			})
-			// 		]
-			// 	)
-			// ])
-		},
 		loadData(params) {
 			params = {
 				...this.getParams(params)

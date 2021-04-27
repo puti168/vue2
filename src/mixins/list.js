@@ -150,10 +150,7 @@ export default {
 		},
 		changeTableSort({ column, prop, order }) {
 			this.pageNum = 1
-			console.log('column', column)
-			console.log('order', order)
 			const orderParams = this.checkOrderParams.get(prop)
-			console.log('orderParams', orderParams)
 			if (orderParams) {
 				this.proptype = orderParams
 				if (order === 'ascending') {
@@ -162,19 +159,14 @@ export default {
 					// this.dataList.sort({ sort: 'ascending', ...this.from })
 				}
 			}
-			// // 升序排列方法
-			// const ascSortFun = (a, b) => {
-			// 	return a[this.proptype] - b[this.proptype]
-			// }
-			// // 降序排列方法
-			// const desSortFun = (a, b) => {
-			// 	return b[this.proptype] - a[this.proptype]
-			// }
+			this.loadData()
+		},
+
+		filterChange(filters) {
+			if (filters.type) {
+				this.listQuery.type = filters.type[0]
+			}
 			this.loadData()
 		}
-		// sortParams(obj1, obj2) {
-		// 	console.log('obj1', obj1)
-		// 	console.log('obj2', obj2)
-		// }
 	}
 }
