@@ -263,12 +263,6 @@ export default {
           //   console.log(res);
           // });
         })
-        .catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          })
-        })
     },
     editUp(val) {
       this.moduleBox = '修改银行信息'

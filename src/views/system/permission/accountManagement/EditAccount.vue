@@ -113,7 +113,7 @@
 						>{{ $t('system_component_component_editaccount_417') }}</el-button>
 						<el-button
 							round
-							type="success"
+							type="primary"
 							class="item"
 							style="padding: 0"
 							@click.native="handleSure"

@@ -76,6 +76,7 @@
 					:data="dataList"
 					style="width: 100%"
 					:header-cell-style="getRowClass"
+					@sort-change="changeTableSort"
 				>
 					<el-table-column
 						align="center"
@@ -86,15 +87,18 @@
 						v-slot="scope"
 						prop="ip"
 						align="center"
-                        label="黑名单IP"
-                    >
+						label="黑名单IP"
+					>
 						<Copy :title="scope.row.ip" :copy="copy" />
 					</el-table-column>
 					<el-table-column
+						v-slot="scope"
 						prop="merchantId"
 						align="center"
-						label="商户ID"
-					></el-table-column>
+                        label="商户ID"
+					>
+                        <Copy :title="scope.row.merchantId" :copy="copy" />
+                    </el-table-column>
 					<el-table-column
 						prop="createBy"
 						align="center"
@@ -104,11 +108,13 @@
 						prop="createDt"
 						align="center"
 						label="创建时间"
+						sortable="custom"
 					></el-table-column>
 					<el-table-column
 						prop="modifyDt"
 						align="center"
 						label="更新时间"
+						sortable="custom"
 					></el-table-column>
 					<el-table-column
 						prop="remark"
@@ -210,7 +216,14 @@ export default {
 		}
 	},
 	computed: {
-		...mapGetters(['userInfo'])
+		...mapGetters(['userInfo']),
+		checkOrderParams() {
+			const SortLine = new Map([
+				['createDt', 'createDt'],
+				['modifyDt', 'modifyDt']
+			])
+			return SortLine
+		}
 	},
 	mounted() {},
 	methods: {
