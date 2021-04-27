@@ -1,39 +1,9 @@
 <template>
 	<div class="game-container report-container">
-		<div class="header flex-h flex-bc">
-			<h2 class="h2-line">会员管理</h2>
-			<div class="head flex-h-end">
-				<el-button
-					type="primary"
-					icon="el-icon-search"
-					:disabled="loading"
-					size="medium"
-					@click="query"
-				>
-					查询
-				</el-button>
-				<el-button
-					icon="el-icon-refresh-left"
-					:disabled="loading"
-					size="medium"
-					@click="reset"
-				>
-					重置
-				</el-button>
-				<el-button
-					type="primary"
-					icon="el-icon-folder-add"
-					size="medium"
-					@click="add"
-				>
-					新增
-				</el-button>
-			</div>
-		</div>
 		<div class="view-container dealer-container">
 			<div class="params">
 				<el-form ref="form" :inline="true" :model="form" label-width="100px">
-					<el-form-item label="注册时间">
+					<el-form-item label="注册时间:">
 						<el-date-picker
 							v-model="form.registerTime"
 							prop="registerTime"
@@ -50,47 +20,78 @@
 							style="width: 385px"
 						></el-date-picker>
 					</el-form-item>
-					<el-form-item label="会员账号">
+					<el-form-item label="会员账号:">
 						<el-input
 							v-model="form.userName"
 							prop="userName"
 							size="medium"
 							placeholder="会员账号"
 							clearable
+                            style="width: 165px"
 						></el-input>
 					</el-form-item>
-					<el-form-item label="会员姓名">
+					<el-form-item label="会员姓名:">
 						<el-input
 							v-model="form.nickName"
 							prop="nickName"
 							size="medium"
 							placeholder="会员姓名"
 							clearable
+                            style="width: 165px"
 						></el-input>
 					</el-form-item>
-					<el-form-item label="账号状态">
+					<el-form-item label="账号状态:">
 						<el-select
 							v-model="form.status"
 							prop="status"
 							size="medium"
 							placeholder="全部"
 							clearable
+                            style="width: 105px"
 						>
 							<el-option label="全部" value></el-option>
 							<el-option label="启用" :value="1"></el-option>
 							<el-option label="停用" :value="0"></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="离线天数">
-						<el-input
-							v-model="form.levelDays"
-							prop="levelDays"
-							size="medium"
-							placeholder="离线天数"
-							clearable
-						></el-input>
+                    <el-form-item label="风控层级:">
+                        <el-select
+                            v-model="form.riskLevel"
+                            prop="status"
+                            size="medium"
+                            placeholder="全部"
+                            clearable
+                            style="width: 105px"
+                        >
+                            <el-option label="全部" value></el-option>
+                            <el-option label="1" :value="1"></el-option>
+                            <el-option label="2" :value="2"></el-option>
+                            <el-option label="3" :value="3"></el-option>
+                        </el-select>
+                    </el-form-item>
+					<el-form-item label="离线天数:">
+<!--						<el-input-->
+<!--							v-model="form.levelDays"-->
+<!--							prop="levelDays"-->
+<!--							size="medium"-->
+<!--							placeholder="离线天数"-->
+<!--							clearable-->
+<!--						></el-input>-->
+                        <el-input
+                            v-model="form.SaveMoneyMin"
+                            size="medium"
+                            placeholder="最小数值"
+                            style="width: 100px"
+                        ></el-input>
+                        -
+                        <el-input
+                            v-model="form.SaveMoneyMax"
+                            size="medium"
+                            placeholder="最大数值"
+                            style="width: 100px"
+                        ></el-input>
 					</el-form-item>
-					<el-form-item label="最后登录时间">
+					<el-form-item label="最后登录时间:">
 						<el-date-picker
 							v-model="form.lastLoginTime"
 							prop="lastLoginTime"
@@ -107,105 +108,128 @@
 							style="width: 385px"
 						></el-date-picker>
 					</el-form-item>
-					<el-form-item label="VIP等级">
-						<el-input
-							v-model="form.vipRank"
-							prop="vipRank"
-							size="medium"
-							placeholder="VIP等级"
-							clearable
-						></el-input>
+					<el-form-item label="VIP等级:">
+<!--						<el-input-->
+<!--							v-model="form.vipRank"-->
+<!--							prop="vipRank"-->
+<!--							size="medium"-->
+<!--							placeholder="VIP等级"-->
+<!--							clearable-->
+<!--						></el-input>-->
+                        <el-input
+                            v-model="form.SaveMoneyMin"
+                            size="medium"
+                            placeholder="最小数值"
+                            style="width: 100px"
+                        ></el-input>
+                        -
+                        <el-input
+                            v-model="form.SaveMoneyMax"
+                            size="medium"
+                            placeholder="最大数值"
+                            style="width: 100px"
+                        ></el-input>
 					</el-form-item>
-					<el-form-item label="会员类型">
+					<el-form-item label="账号类型:">
 						<el-select
 							v-model="form.userType"
 							size="medium"
 							placeholder="全部"
 							clearable
+                            style="width: 105px"
 						>
 							<el-option label="全部" value></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="会员标签">
+                    <el-form-item label="注册终端:">
+                        <el-select
+                            v-model="form.terminal"
+                            size="medium"
+                            placeholder="全部"
+                            clearable
+                            style="width: 105px"
+                        >
+                            <el-option label="全部" value></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="首存金额:">
+                        <el-input
+                            v-model="form.SaveMoneyMin"
+                            size="medium"
+                            placeholder="最小数值"
+                            style="width: 100px"
+                        ></el-input>
+                        -
+                        <el-input
+                            v-model="form.SaveMoneyMax"
+                            size="medium"
+                            placeholder="最大数值"
+                            style="width: 100px"
+                        ></el-input>
+                    </el-form-item>
+                    <el-form-item label="首存时间:">
+                        <el-date-picker
+                            v-model="form.firstSaveTime"
+                            size="medium"
+                            :picker-options="pickerOptions"
+                            format="yyyy-MM-dd HH:mm:ss"
+                            type="datetimerange"
+                            range-separator="-"
+                            start-placeholder="开始日期"
+                            end-placeholder="结束日期"
+                            align="right"
+                            clearable
+                            value-format="timestamp"
+                            style="width: 385px"
+                        ></el-date-picker>
+                    </el-form-item>
+					<el-form-item label="会员标签:">
 						<el-select
 							v-model="form.userLabel"
 							size="medium"
 							placeholder="全部"
 							clearable
+                            style="width: 105px"
 						>
 							<el-option label="全部" value></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="注册终端">
-						<el-select
-							v-model="form.terminal"
-							size="medium"
-							placeholder="全部"
-							clearable
-						>
-							<el-option label="全部" value></el-option>
-						</el-select>
-					</el-form-item>
-					<el-form-item label="上级代理">
+					<el-form-item label="上级代理:">
 						<el-input
 							v-model="form.supAgent"
 							size="medium"
 							placeholder="上级代理"
 							clearable
+                            style="width: 165px"
 						></el-input>
 					</el-form-item>
-					<el-form-item label="最后下注时间">
-						<el-date-picker
-							v-model="form.lastBetTime"
-							size="medium"
-							:picker-options="pickerOptions"
-							format="yyyy-MM-dd HH:mm:ss"
-							type="datetimerange"
-							range-separator="-"
-							start-placeholder="开始日期"
-							end-placeholder="结束日期"
-							align="right"
-							clearable
-							value-format="timestamp"
-							style="width: 385px"
-						></el-date-picker>
-					</el-form-item>
-					<el-form-item label="首存时间">
-						<el-date-picker
-							v-model="form.firstSaveTime"
-							size="medium"
-							:picker-options="pickerOptions"
-							format="yyyy-MM-dd HH:mm:ss"
-							type="datetimerange"
-							range-separator="-"
-							start-placeholder="开始日期"
-							end-placeholder="结束日期"
-							align="right"
-							clearable
-							value-format="timestamp"
-							style="width: 385px"
-						></el-date-picker>
-					</el-form-item>
-					<el-form-item label="首存金额">
-						<el-input
-							v-model="form.firstSaveMoney"
-							clearable
-							size="medium"
-							placeholder="首存金额"
-							:disabled="loading"
-							@keyup.enter.native="enterSearch"
-						></el-input>
-					</el-form-item>
-					<el-form-item label="中心钱包">
-						<el-input
-							v-model="form.wallet"
-							clearable
-							size="medium"
-							placeholder="中心钱包"
-							:disabled="loading"
-							@keyup.enter.native="enterSearch"
-						></el-input>
-					</el-form-item>
+                    <el-form-item>
+                        <el-button
+                            type="primary"
+                            icon="el-icon-search"
+                            :disabled="loading"
+                            size="medium"
+                            @click="query"
+                        >
+                            查询
+                        </el-button>
+                        <el-button
+                            icon="el-icon-refresh-left"
+                            :disabled="loading"
+                            size="medium"
+                            @click="reset"
+                        >
+                            重置
+                        </el-button>
+                        <el-button
+                            type="warning"
+                            icon="el-icon-folder-add"
+                            size="medium"
+                            @click="add"
+                        >
+                            导出
+                        </el-button>
+                    </el-form-item>
 				</el-form>
 			</div>
 
@@ -375,6 +399,7 @@ export default {
 				userName: '',
 				nickName: '',
 				status: '',
+                riskLevel: '',
 				levelDays: '',
 				lastLoginTime: '',
 				vipRank: '',
@@ -384,7 +409,8 @@ export default {
 				supAgent: '',
 				lastBetTime: '',
 				firstSaveTime: '',
-				firstSaveMoney: '',
+				SaveMoneyMin: '',
+				SaveMoneyMax: '',
 				wallet: ''
 			},
 			dataList: [],
