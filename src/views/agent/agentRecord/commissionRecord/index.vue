@@ -20,12 +20,7 @@
         >
           重置
         </el-button>
-        <el-button
-          type="primary"
-          icon="el-icon-folder-add"
-          size="medium"
-          @click="add"
-        >
+        <el-button type="primary" icon="el-icon-folder-add" size="medium" @click="add">
           新增
         </el-button>
       </div>
@@ -253,22 +248,15 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
+      }).then(() => {
+        this.$message({
+          type: 'success',
+          message: '删除成功!'
+        })
+        // setDeleteBank(val).then((res) => {
+        //   console.log(res);
+        // });
       })
-        .then(() => {
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-          })
-          // setDeleteBank(val).then((res) => {
-          //   console.log(res);
-          // });
-        })
-        .catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          })
-        })
     },
     editUp(val) {
       this.moduleBox = '修改银行信息'
