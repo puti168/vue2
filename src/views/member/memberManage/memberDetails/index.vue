@@ -1,5 +1,6 @@
 <template>
-  <div>
+  <div class="allmargin report-container">
+    <div class="bg"></div>
     <div class="ps">
       <el-form ref="form" :inline="true" :model="queryData">
         <el-form-item label="会员账号:">
@@ -44,31 +45,19 @@
         ></el-tab-pane>
       </el-tabs>
     </div>
-    <!-- <section class="floor-nav" id="floorNavList">
-      <ul class="nav-list">
-        <li
-          class="nav-list-item"
-          v-for="(item, index) in floorList"
-          :key="item.id"
-          @click="setFloorNavMountClick(index)"
-        >
-          {{ item.name }}
-        </li>
-      </ul>
-    </section> -->
-    <div v-for="item in floorList" :key="item.id" class="floor-item">
-      <div class="floor-item-box">
-        <h3>{{ item.name }}</h3>
-      </div>
-    </div>
-    <div class="floor-warpper"></div>
+    <first class="floor-item"></first>
+    <first class="floor-item"></first>
+    <first class="floor-item"></first>
+    <first class="floor-item"></first>
   </div>
 </template>
 
 <script>
 import list from '@/mixins/list'
+import first from './components/first'
 export default {
   name: 'IFloor',
+  components: { first },
   mixins: [list],
   data() {
     return {
@@ -79,13 +68,7 @@ export default {
         nav_item: null,
         floor_item: null
       },
-      timer: null,
-      floorList: [
-        { id: 1, name: 'F1' },
-        { id: 2, name: 'F2' },
-        { id: 3, name: 'F3' },
-        { id: 4, name: 'F4' }
-      ]
+      timer: null
     }
   },
   mounted() {
@@ -94,7 +77,6 @@ export default {
       floor_item: document.getElementsByClassName('floor-item')
     }
     this.element.nav_item[0].classList.add('active')
-    this.element.floor_item[0].classList.add('marginT')
     window.addEventListener('scroll', this.floorSrcollEventListener)
   },
   beforeDestroy() {
@@ -104,9 +86,9 @@ export default {
     query() {},
     reset() {},
     handleClick(tab, event) {
-      console.log(tab.index)
       this.setFloorNavMountClick(tab.index)
     },
+
     /**
      * 设置楼层导航事件驱动方法
      * @param {Number} index  楼层下标
@@ -178,7 +160,6 @@ export default {
         const floor_offsetTop = floor_item[i].offsetTop - floor_item[0].offsetTop
         if (window_scrollTop >= floor_offsetTop) {
           for (let n = 0, len = nav_item.length; n < len; n++) {
-            console.log(i, this.tabList[i])
             i === n
               ? (this.activeName = this.tabList[i])
               : (this.activeName = this.tabList[i])
@@ -191,28 +172,41 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.ps {
-  width: 100%;
-  height: 110px;
-  position: fixed;
-  top: 104px;
-  padding: 15px;
-  background: #fff;
+.allmargin {
+  margin: 9px 15px 15px 15px;
 }
+.ps {
+  position: fixed;
+  height: 125px;
+  width: 100%;
+  background: #fff;
+  padding: 15px 0;
+  z-index: 100;
+  border-bottom: 1px solid #dcdfe6;
+}
+.bg {
+  width: 100%;
+  height: 15px;
+  background: #ffffff;
+  position: fixed;
+  top: 100px;
+  z-index: 1;
+}
+
 /deep/ .tabsBox .el-tabs__nav-wrap::after {
   display: none;
 }
 /deep/ .tabsBox .el-tabs__content {
   display: none;
 }
-// .floor-item {
-//   width: 100%;
-//   min-height: 500px;
-//   text-align: center;
-//   color: #fff;
-//   background-color: #404040;
-// }
-.marginT {
-  margin-top: 110px;
+/deep/ .tabsBox .el-tabs__item {
+  font-weight: bold;
+}
+.floor-item {
+  // width: 100%;
+  // min-height: 500px;
+  // text-align: center;
+  // color: #fff;
+  // background-color: #404040;
 }
 </style>
