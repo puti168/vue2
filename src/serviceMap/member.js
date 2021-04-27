@@ -45,7 +45,7 @@ const member = [
 	{
 		id: '8',
 		parentId: '3',
-		path: '/member/memberManage/memberBankRecord',
+		path: '/member/memberManage/bankRecord',
 		title: '会员银行卡记录'
 	},
 	{
