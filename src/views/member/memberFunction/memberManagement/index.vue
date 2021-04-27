@@ -32,15 +32,10 @@
 		</div>
 		<div class="view-container dealer-container">
 			<div class="params">
-				<el-form
-					ref="form"
-					:inline="true"
-					:model="form"
-					label-width="100px"
-				>
+				<el-form ref="form" :inline="true" :model="form" label-width="100px">
 					<el-form-item label="注册时间">
 						<el-date-picker
-                            v-model="form.registerTime"
+							v-model="form.registerTime"
 							prop="registerTime"
 							size="medium"
 							:picker-options="pickerOptions"
@@ -57,7 +52,7 @@
 					</el-form-item>
 					<el-form-item label="会员账号">
 						<el-input
-                            v-model="form.userName"
+							v-model="form.userName"
 							prop="userName"
 							size="medium"
 							placeholder="会员账号"
@@ -66,7 +61,7 @@
 					</el-form-item>
 					<el-form-item label="会员姓名">
 						<el-input
-                            v-model="form.nickName"
+							v-model="form.nickName"
 							prop="nickName"
 							size="medium"
 							placeholder="会员姓名"
@@ -75,7 +70,7 @@
 					</el-form-item>
 					<el-form-item label="账号状态">
 						<el-select
-                            v-model="form.status"
+							v-model="form.status"
 							prop="status"
 							size="medium"
 							placeholder="全部"
@@ -88,7 +83,7 @@
 					</el-form-item>
 					<el-form-item label="离线天数">
 						<el-input
-                            v-model="form.levelDays"
+							v-model="form.levelDays"
 							prop="levelDays"
 							size="medium"
 							placeholder="离线天数"
@@ -97,7 +92,7 @@
 					</el-form-item>
 					<el-form-item label="最后登录时间">
 						<el-date-picker
-                            v-model="form.lastLoginTime"
+							v-model="form.lastLoginTime"
 							prop="lastLoginTime"
 							size="medium"
 							:picker-options="pickerOptions"
@@ -114,7 +109,7 @@
 					</el-form-item>
 					<el-form-item label="VIP等级">
 						<el-input
-                            v-model="form.vipRank"
+							v-model="form.vipRank"
 							prop="vipRank"
 							size="medium"
 							placeholder="VIP等级"
@@ -258,6 +253,7 @@
 						prop="updateDt"
 						align="center"
 						label="风控层级"
+						:render-header="renderSortHeader"
 					></el-table-column>
 					<el-table-column
 						prop="status"
@@ -405,6 +401,80 @@ export default {
 	},
 	mounted() {},
 	methods: {
+		renderSortHeader(h, { column }) {
+			const filters = [
+				{ text: '一级', value: '一级' },
+				{ text: '二级', value: '二级' },
+				{ text: '三级', value: '三级' }
+			]
+
+			return h(
+				'div',
+				{
+					style: {
+						height: '56px'
+					}
+				},
+				[
+					h(
+						'span',
+						{
+							style: {},
+							class: 'level-font-class'
+						},
+						'风控层级'
+					),
+					h(
+						'el-select',
+						{
+							on: {
+								input: (value) => {
+									this.logLevel = value
+								}
+							},
+							props: {
+								value: this.logLevel
+							}
+						},
+						[
+							filters.map((item) => {
+								return h('el-option', {
+									props: {
+										value: item.value,
+										label: item.text
+									}
+								})
+							})
+						]
+					)
+				]
+			)
+			// return h('div', [
+			// 	h('span', column.label),
+			// 	h(
+			// 		`el-dropdown-menu`,
+			// 		{
+			// 			props: {
+			// 				content: (function() {
+			// 					const label = column.label
+			// 					switch (label) {
+			// 						case '活动时间':
+			// 							return '用来控制客户端飘窗的开始/结束时间'
+			// 					}
+			// 				})(),
+			// 				effect: 'dark',
+			// 				placement: 'top'
+			// 			}
+			// 		},
+			// 		[
+			// 			h('i', {
+			// 				class: 'el-icon-caret-bottom',
+			// 				style: 'color:#409eff;margin-left:5px;'
+			// 			})
+			// 		]
+			// 	)
+			// ])
+		},
 		loadData(params) {
 			params = {
 				...this.getParams(params)
