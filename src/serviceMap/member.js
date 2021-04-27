@@ -27,31 +27,31 @@ const member = [
 	{
 		id: '5',
 		parentId: '3',
-		path: '/member/memberManage/newMember',
+		path: '/member/memberManage/memberDetails',
 		title: '会员详情'
 	},
 	{
 		id: '6',
 		parentId: '3',
-		path: '/member/memberManage/bankCard',
+		path: '/member/memberManage/addMember',
 		title: '新增会员'
 	},
 	{
 		id: '7',
 		parentId: '3',
-		path: '/member/memberManage/virtualCurrency',
+		path: '/member/memberManage/registerInfo',
 		title: '会员注册信息'
 	},
 	{
 		id: '8',
 		parentId: '3',
-		path: '/member/memberManage/memberFeedback',
+		path: '/member/memberManage/memberBankRecord',
 		title: '会员银行卡记录'
 	},
 	{
 		id: '9',
 		parentId: '3',
-		path: '/member/memberReview/withdraw',
+		path: '/member/memberManage/memberRecord',
 		title: '会员虚拟币账号记录'
 	},
 	{
