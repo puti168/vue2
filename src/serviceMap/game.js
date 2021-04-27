@@ -19,52 +19,52 @@ const game = [
 	},
 	// 第三级菜单
 	{
-		id: '26',
-		parentId: '25',
+		id: '16',
+		parentId: '15',
 		path: '/game/gameConfig/gamePlatform',
+		title: '游戏菜单'
+	},
+	{
+		id: '17',
+		parentId: '15',
+		path: '/game/gameConfig/gameStatus',
+		title: '游戏loading配置'
+	},
+	{
+		id: '19',
+		parentId: '18',
+		path: '/game/gameConfig/gameClassify',
 		title: '游戏平台维护配置'
 	},
 	{
-		id: '27',
-		parentId: '25',
-		path: '/game/gameConfig/gameStatus',
+		id: '20',
+		parentId: '18',
+		path: '/game/gameConfig/gameType',
 		title: '游戏状态配置'
 	},
 	{
-		id: '28',
-		parentId: '25',
-		path: '/game/gameConfig/gameClassify',
+		id: '21',
+		parentId: '18',
+		path: '/game/gameConfig/venueGameList',
 		title: '游戏归类配置'
 	},
 	{
-		id: '29',
-		parentId: '25',
-		path: '/game/gameConfig/gameType',
+		id: '22',
+		parentId: '18',
+		path: '/game/gameConfig/gameReminder',
 		title: '游戏类型配置'
 	},
 	{
-		id: '30',
-		parentId: '25',
-		path: '/game/gameConfig/venueGameList',
+		id: '23',
+		parentId: '18',
+		path: '/game/gameFunction/gameBets',
 		title: '场馆游戏列表'
 	},
 	{
-		id: '31',
-		parentId: '25',
-		path: '/game/gameConfig/gameReminder',
-		title: '游戏提醒配置'
-	},
-	{
-		id: '23',
-		parentId: '22',
-		path: '/game/gameFunction/gameBets',
-		title: '游戏注单'
-	},
-	{
 		id: '24',
-		parentId: '22',
+		parentId: '18',
 		path: '/game/gameFunction/gameLoading',
-		title: '游戏loading配置'
+		title: '游戏提醒配置'
 	}
 ]
 export default game
