@@ -21,31 +21,31 @@ const member = [
 	{
 		id: '4',
 		parentId: '3',
-		path: '/member/memberFunction/memberManagement',
+		path: '/member/memberManage/memberList',
 		title: '会员列表'
 	},
 	{
 		id: '5',
 		parentId: '3',
-		path: '/member/memberFunction/newMember',
+		path: '/member/memberManage/newMember',
 		title: '会员详情'
 	},
 	{
 		id: '6',
 		parentId: '3',
-		path: '/member/memberFunction/bankCard',
+		path: '/member/memberManage/bankCard',
 		title: '新增会员'
 	},
 	{
 		id: '7',
 		parentId: '3',
-		path: '/member/memberFunction/virtualCurrency',
+		path: '/member/memberManage/virtualCurrency',
 		title: '会员注册信息'
 	},
 	{
 		id: '8',
 		parentId: '3',
-		path: '/member/memberFunction/memberFeedback',
+		path: '/member/memberManage/memberFeedback',
 		title: '会员银行卡记录'
 	},
 	{
@@ -57,56 +57,20 @@ const member = [
 	{
 		id: '10',
 		parentId: '3',
-		path: '/member/memberReview/recharge',
+		path: '/member/memberReview/memberCheck',
 		title: '会员等级记录'
 	},
 	{
 		id: '12',
 		parentId: '11',
-		path: '/member/memberReview/bankCardReview',
+		path: '/member/memberReview/memberChange',
 		title: '会员账户修改审核'
 	},
 	{
 		id: '13',
 		parentId: '11',
-		path: '/member/memberReview/virtualAccount',
+		path: '/member/memberReview/memberCheck',
 		title: '新增会员审核'
 	}
-	// {
-	// 	id: '14',
-	// 	parentId: '9',
-	// 	path: '/member/memberReview/amountAdjustment',
-	// 	title: '金额调整审核'
-	// },
-	// {
-	// 	id: '15',
-	// 	parentId: '9',
-	// 	path: '/member/memberReview/addMember',
-	// 	title: '新增会员审核'
-	// },
-	// {
-	// 	id: '16',
-	// 	parentId: '9',
-	// 	path: '/member/memberReview/dataOpration',
-	// 	title: '资料操作审核'
-	// },
-	// {
-	// 	id: '18',
-	// 	parentId: '17',
-	// 	path: '/member/memberRecord/transactionRecord',
-	// 	title: '会员交易记录'
-	// },
-	// {
-	// 	id: '19',
-	// 	parentId: '17',
-	// 	path: '/member/memberRecord/winlossRecord',
-	// 	title: '会员输赢记录'
-	// },
-	// {
-	// 	id: '20',
-	// 	parentId: '17',
-	// 	path: '/member/memberRecord`/accountChangeRecord',
-	// 	title: '会员金流账变记录'
-	// }
 ]
 export default member
