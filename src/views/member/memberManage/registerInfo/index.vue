@@ -153,10 +153,10 @@
 						label="上级代理"
 					></el-table-column>
 					<el-table-column prop="phone" align="center" label="注册手机号">
-						<template slot="header">
-							<span>注册手机号</span>
-							<i class="el-icon-view"></i>
-						</template>
+<!--						<template slot="header">-->
+<!--							<span>注册手机号</span>-->
+<!--							<i class="el-icon-view"></i>-->
+<!--						</template>-->
 					</el-table-column>
 					<el-table-column
 						prop="IP"
