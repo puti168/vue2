@@ -1,6 +1,6 @@
 <template>
 	<div class="app-wrapper">
-		<div class="main-container2">
+		<div ref="container2" class="main-container2">
 			<app-main />
 		</div>
 	</div>
