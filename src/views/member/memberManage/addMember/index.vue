@@ -1,10 +1,13 @@
 <template>
 	<div class="game-container report-container addMember-container">
-		<div class="view-container dealer-container">
+            <div class="line-member"></div>
 			<div class="addMember-content">
-				<el-form ref="form" :model="form" label-width="100px">
-                    <div>新增会员资料</div>
-					<el-form-item label="账号类型:">
+                <div class="form-header">
+                    <span>新增会员资料</span>
+                    <span><code style="color:#FF3B30;">*</code>为必填项</span>
+                </div>
+				<el-form ref="form" :model="form" :rules="rules" label-width="100px">
+					<el-form-item label="账号类型:" prop="userType">
 						<el-select
 							v-model="form.userType"
 							size="medium"
@@ -19,7 +22,7 @@
 							<el-option label="置换" value="置换"></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="会员账号:">
+					<el-form-item label="会员账号:" prop="userName">
 						<el-input
 							v-model="form.userName"
 							size="medium"
@@ -28,7 +31,7 @@
                             style="width: 365px"
 						></el-input>
 					</el-form-item>
-					<el-form-item label="登录密码:">
+					<el-form-item label="登录密码:" prop="password">
 						<el-input
 							v-model="form.password"
 							size="medium"
@@ -149,7 +152,6 @@
 				</div>
 			</el-dialog>
 		</div>
-	</div>
 </template>
 
 <script>
@@ -182,7 +184,15 @@ export default {
 			editFormData: {}
 		}
 	},
-	computed: {},
+	computed: {
+        rules() {
+            return {
+                userType: [{ required: true, message: '请选择账号类型', trigger: 'change' }],
+                userName: [{ required: true, message: '请选择参与终端', trigger: 'blur' }],
+                password: [{ required: true, message: '请选择参与商户', trigger: 'blur' }]
+            }
+        }
+    },
 	mounted() {},
 	methods: {
 		// loadData(params) {
@@ -286,6 +296,11 @@ export default {
 }
 .addMember-container {
     background-color: #f5f5f5;
+    margin: 0;
+    min-height: calc(100vh - 105px);
+    .line-member {
+        height: 50px;
+    }
     .addMember-content {
         width: 1000px;
         margin: 0 auto;
@@ -293,6 +308,36 @@ export default {
         justify-content: center;
         align-items: center;
         background-color: #fff;
+        position: relative;
+        padding-top: 65px;
+        .form-header {
+            height: 45px;
+            line-height: 45px;
+            span:nth-child(1) {
+                position: absolute;
+                left: 30px;
+                top: 0;
+                color: #666;
+                font-size: 14px;
+                font-weight: 700;
+            }
+            span:nth-child(2) {
+                position: absolute;
+                right: 30px;
+                color: #999;
+                font-weight: 400;
+                font-size: 14px;
+                top: 0
+            }
+        }
+    }
+    .addMember-content::after {
+        position: absolute;
+        top: 45px;
+        content: '';
+        width: 100%;
+        background-color: rgba(233, 233, 233, 1);
+        height: 1px;
     }
 }
 </style>
