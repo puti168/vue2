@@ -34,7 +34,7 @@
 						clearable
 						size="medium"
 						style="width: 280px"
-						placeholder="请输入会员账号"
+						placeholder="请输入"
 						:disabled="loading"
 						@keyup.enter.native="enterSearch"
 					></el-input>
@@ -45,7 +45,7 @@
 						clearable
 						size="medium"
 						style="width: 280px"
-						placeholder="请输入上级代理"
+						placeholder="请输入"
 						:disabled="loading"
 						@keyup.enter.native="enterSearch"
 					></el-input>
@@ -56,7 +56,7 @@
 						clearable
 						size="medium"
 						style="width: 280px"
-						placeholder="请输入虚拟币种类"
+						placeholder="请输入"
 						:disabled="loading"
 						@keyup.enter.native="enterSearch"
 					></el-input>
@@ -67,7 +67,7 @@
 						clearable
 						size="medium"
 						style="width: 280px"
-						placeholder="请输入虚拟币协议"
+						placeholder="请输入"
 						:disabled="loading"
 						@keyup.enter.native="enterSearch"
 					></el-input>
@@ -89,7 +89,7 @@
 						clearable
 						size="medium"
 						style="width: 280px"
-						placeholder="请输入虚拟币账户地址"
+						placeholder="请输入"
 						:disabled="loading"
 						@keyup.enter.native="enterSearch"
 					></el-input>
@@ -111,14 +111,6 @@
 						@click="reset"
 					>
 						重置
-					</el-button>
-					<el-button
-						type="success"
-						icon="el-icon-folder-add"
-						size="medium"
-						@click="add"
-					>
-						新增
 					</el-button>
 				</el-form-item>
 			</el-form>
