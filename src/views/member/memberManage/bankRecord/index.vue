@@ -133,7 +133,7 @@
                     <el-table-column
                         prop="registerDt"
                         align="center"
-                        label="注册时间"
+                        label="会员账号"
                         sortable="custom"
                     ></el-table-column>
                     <el-table-column
@@ -143,43 +143,35 @@
                         sortable="custom"
                     ></el-table-column>
                     <el-table-column
-                        prop="username"
-                        align="center"
-                        label="会员账号"
-                    ></el-table-column>
-                    <el-table-column
                         prop="agentSup"
                         align="center"
                         label="上级代理"
                     ></el-table-column>
-                    <el-table-column prop="phone" align="center" label="注册手机号">
+                    <el-table-column prop="phone" align="center" label="银行卡号">
                         <template slot="header">
-                            <span>注册手机号</span>
+                            <span>银行卡号</span>
                             <i class="el-icon-view"></i>
                         </template>
                     </el-table-column>
                     <el-table-column
                         prop="IP"
                         align="center"
-                        label="注册IP"
+                        label="银行名称银行支行"
                     ></el-table-column>
                     <el-table-column
                         prop="registration"
                         align="center"
-                        label="IP归属地"
+                        label="持卡人"
                     ></el-table-column>
                     <el-table-column
                         prop="titleId"
                         align="center"
-                        label="注册终端"
-                        :filters="filterStatus"
-                        :filter-multiple="false"
-                        :column-key="'type'"
+                        label="操作类型"
                     ></el-table-column>
                     <el-table-column
                         prop="terminal"
                         align="center"
-                        label="终端设备号"
+                        label="操作时间"
                     ></el-table-column>
                 </el-table>
                 <!-- 分页 -->
