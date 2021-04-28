@@ -45,19 +45,23 @@
         ></el-tab-pane>
       </el-tabs>
     </div>
+    <div class="marginTb"></div>
     <first class="floor-item"></first>
-    <first class="floor-item"></first>
-    <first class="floor-item"></first>
-    <first class="floor-item"></first>
+    <second class="floor-item"></second>
+    <third class="floor-item"></third>
+    <fourth class="floor-item"></fourth>
   </div>
 </template>
 
 <script>
 import list from '@/mixins/list'
 import first from './components/first'
+import second from './components/second'
+import third from './components/third'
+import fourth from './components/fourth'
 export default {
   name: 'IFloor',
-  components: { first },
+  components: { first, second, third, fourth },
   mixins: [list],
   data() {
     return {
@@ -139,7 +143,7 @@ export default {
       this.timer = setInterval(() => {
         const window_scrollTop =
           document.documentElement.scrollTop || document.body.scrollTop
-        if (window_scrollTop + 300 >= timer.FLOOR_OFFSETTOP) {
+        if (window_scrollTop + 140 >= timer.FLOOR_OFFSETTOP) {
           document.documentElement.scrollTop = timer.FLOOR_OFFSETTOP
           document.body.scrollTop = timer.FLOOR_OFFSETTOP
           clearInterval(this.timer)
@@ -155,7 +159,7 @@ export default {
     floorSrcollEventListener() {
       const { nav_item, floor_item } = this.element
       const window_scrollTop =
-        document.documentElement.scrollTop + 180 || document.body.scrollTop + 180
+        document.documentElement.scrollTop + 140 || document.body.scrollTop + 140
       for (let i = 0, len = floor_item.length; i < len; i++) {
         const floor_offsetTop = floor_item[i].offsetTop - floor_item[0].offsetTop
         if (window_scrollTop >= floor_offsetTop) {
@@ -208,5 +212,8 @@ export default {
   // text-align: center;
   // color: #fff;
   // background-color: #404040;
+}
+.marginTb {
+ height: 125px;
 }
 </style>

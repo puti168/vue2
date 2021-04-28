@@ -1,0 +1,165 @@
+<template>
+  <div id="basicInformation">
+    <el-row>
+      <el-col :span="4" class="backgroundTitelBox">银行卡/虚拟币账号信息</el-col>
+      <el-col :span="2" class="refrestBox">
+        <el-button type="primary" icon="el-icon-refresh">刷新</el-button>
+      </el-col>
+    </el-row>
+    <div class="titelBox">银行卡</div>
+    <div style="width: 70%">
+      <el-table
+        border
+        size="mini"
+        class="small-size-table"
+        :data="dataList"
+        style="margin-top: 10px; z-index: 0"
+        :header-cell-style="getRowClass"
+      >
+        <el-table-column align="center" label="绑定时间"></el-table-column>
+        <el-table-column
+          prop="updateDt"
+          align="center"
+          label="银行名称"
+        ></el-table-column>
+        <el-table-column
+          prop="updateDt"
+          align="center"
+          label="持卡人姓名"
+        ></el-table-column>
+        <el-table-column prop="updateDt" align="center" label="卡号"></el-table-column>
+        <el-table-column
+          prop="updateDt"
+          align="center"
+          label="分行地址"
+        ></el-table-column>
+        <el-table-column
+          prop="updateDt"
+          align="center"
+          label="银行卡状态"
+        ></el-table-column>
+      </el-table>
+      <!-- 分页 -->
+      <el-pagination
+        :current-page.sync="pageNum"
+        layout="total, sizes,prev, pager, next, jumper"
+        :page-size="3"
+        :page-sizes="[3, 5, 10]"
+        :total="total"
+        :pager-count="5"
+        style="float: right; padding-top: 10px"
+        @current-change="handleCurrentChange"
+        @size-change="handleSizeChange"
+      ></el-pagination>
+      <div class="clear"></div>
+    </div>
+    <div class="titelBox">虚拟币账号信息</div>
+    <div style="width: 70%">
+      <el-table
+        border
+        size="mini"
+        class="small-size-table"
+        :data="dataList"
+        style="margin-top: 10px; z-index: 0"
+        :header-cell-style="getRowClass"
+      >
+        <el-table-column align="center" label="绑定时间"></el-table-column>
+        <el-table-column
+          prop="updateDt"
+          align="center"
+          label="虚拟币账户地址"
+        ></el-table-column>
+        <el-table-column
+          prop="updateDt"
+          align="center"
+          label="虚拟币种类"
+        ></el-table-column>
+        <el-table-column
+          prop="updateDt"
+          align="center"
+          label="虚拟币协议"
+        ></el-table-column>
+        <el-table-column
+          prop="updateDt"
+          align="center"
+          label="虚拟币账户状态"
+        ></el-table-column>
+      </el-table>
+      <!-- 分页 -->
+      <el-pagination
+        :current-page.sync="pageNum"
+        layout="total, sizes,prev, pager, next, jumper"
+        :page-size="3"
+        :page-sizes="[3, 5, 10]"
+        :total="total"
+        :pager-count="5"
+        style="float: right; padding-top: 10px"
+        @current-change="handleCurrentChange"
+        @size-change="handleSizeChange"
+      ></el-pagination>
+      <div class="clear"></div>
+    </div>
+  </div>
+</template>
+
+<script>
+import list from '@/mixins/list'
+// import dayjs from 'dayjs'
+export default {
+  mixins: [list],
+  props: {},
+  data() {
+    return {
+      dataList: []
+    }
+  },
+  computed: {},
+  watch: {},
+  created() {},
+  mounted() {},
+  methods: {
+    handleCurrentChange(val) {
+      this.pageNum = val
+      this.loadData()
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+#basicInformation {
+  font-size: 14px;
+  line-height: 40px;
+  padding-top: 10px;
+  padding-bottom: 40px;
+}
+/deep/.el-dialog__header {
+  text-align: center;
+  color: #909399;
+  font-weight: 700;
+}
+.titelBox {
+  font-size: 16px;
+  font-weight: bold;
+  line-height: 24px;
+  margin-top: 20px;
+  display: inline-block;
+  border-bottom: 3px solid #58a3f7;
+}
+.backgroundTitelBox {
+  width: 188px;
+  height: 40px;
+  text-align: center;
+  background: #000;
+  color: rgb(255, 255, 255);
+}
+.refrestBox {
+  text-align: center;
+}
+.clear {
+  clear: both;
+  height: 0;
+  line-height: 0;
+  font-size: 0;
+}
+</style>

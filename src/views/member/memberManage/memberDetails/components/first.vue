@@ -125,10 +125,11 @@
         :page-sizes="[3, 5, 10]"
         :total="total"
         :pager-count="5"
-        style="float: right; padding: 10px 0"
+        style="float: right; padding-top: 10px"
         @current-change="handleCurrentChange"
         @size-change="handleSizeChange"
       ></el-pagination>
+      <div class="clear"></div>
     </div>
     <el-dialog
       :title="moduleBox"
@@ -230,6 +231,7 @@
         <el-button v-else type="primary" @click="submitEdit"> 确 定 </el-button>
       </div>
     </el-dialog>
+    <el-divider></el-divider>
   </div>
 </template>
 
@@ -347,7 +349,8 @@ export default {
 #basicInformation {
   font-size: 14px;
   line-height: 40px;
-  padding-top: 140px;
+  padding-top: 10px;
+  padding-bottom: 40px;
 }
 /deep/.el-dialog__header {
   text-align: center;
@@ -389,9 +392,6 @@ export default {
   line-height: 24px;
   margin-bottom: 10px;
 }
-.borderBox {
-  height: 60px;
-}
 .borderL {
   position: absolute;
   right: 0;
@@ -409,5 +409,11 @@ export default {
 }
 .textC {
   text-align: center;
+}
+.clear {
+  clear: both;
+  height: 0;
+  line-height: 0;
+  font-size: 0;
 }
 </style>
