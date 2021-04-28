@@ -156,7 +156,12 @@
 						prop="phone"
 						align="center"
 						label="注册手机号"
-					></el-table-column>
+					>
+                        <template slot="header">
+                            <span>注册手机号</span>
+                            <i class="el-icon-view"></i>
+                        </template>
+                    </el-table-column>
 					<el-table-column
 						prop="IP"
 						align="center"
