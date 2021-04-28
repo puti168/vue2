@@ -51,13 +51,13 @@ const member = [
 	{
 		id: '9',
 		parentId: '3',
-		path: '/member/memberManage/memberRecord',
+		path: '/member/memberManage/virtualRecord',
 		title: '会员虚拟币账号记录'
 	},
 	{
 		id: '10',
 		parentId: '3',
-		path: '/member/memberReview/memberCheck',
+		path: '/member/memberManage/memberLevel',
 		title: '会员等级记录'
 	},
 	{
@@ -69,7 +69,7 @@ const member = [
 	{
 		id: '13',
 		parentId: '11',
-		path: '/member/memberReview/memberCheck',
+		path: '/member/memberReview/addMemberCheck',
 		title: '新增会员审核'
 	}
 ]
