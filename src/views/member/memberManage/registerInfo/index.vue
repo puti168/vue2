@@ -152,16 +152,12 @@
 						align="center"
 						label="上级代理"
 					></el-table-column>
-					<el-table-column
-						prop="phone"
-						align="center"
-						label="注册手机号"
-					>
-                        <template slot="header">
-                            <span>注册手机号</span>
-                            <i class="el-icon-view"></i>
-                        </template>
-                    </el-table-column>
+					<el-table-column prop="phone" align="center" label="注册手机号">
+						<template slot="header">
+							<span>注册手机号</span>
+							<i class="el-icon-view"></i>
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="IP"
 						align="center"
@@ -197,33 +193,33 @@
 					@current-change="handleCurrentChange"
 					@size-change="handleSizeChange"
 				></el-pagination>
-				<el-dialog
-					:title="moduleBox"
-					center
-					:visible.sync="editVisible"
-					:before-close="closeFormDialog"
-					width="410px"
-				>
-					<editForm v-if="moduleBox == '新增银行信息'" ref="addForm"></editForm>
-					<editForm
-						v-else
-						ref="editForm"
-						:editFormData="editFormData"
-					></editForm>
-					<div slot="footer" class="dialog-footer">
-						<el-button @click="editVisible = false">取 消</el-button>
-						<el-button
-							v-if="moduleBox == '新增银行信息'"
-							type="primary"
-							@click="submitAdd"
-						>
-							确 定
-						</el-button>
-						<el-button v-else type="primary" @click="submitEdit">
-							确 定
-						</el-button>
-					</div>
-				</el-dialog>
+				<!--				<el-dialog-->
+				<!--					:title="moduleBox"-->
+				<!--					center-->
+				<!--					:visible.sync="editVisible"-->
+				<!--					:before-close="closeFormDialog"-->
+				<!--					width="410px"-->
+				<!--				>-->
+				<!--					<editForm v-if="moduleBox == '新增银行信息'" ref="addForm"></editForm>-->
+				<!--					<editForm-->
+				<!--						v-else-->
+				<!--						ref="editForm"-->
+				<!--						:editFormData="editFormData"-->
+				<!--					></editForm>-->
+				<!--					<div slot="footer" class="dialog-footer">-->
+				<!--						<el-button @click="editVisible = false">取 消</el-button>-->
+				<!--						<el-button-->
+				<!--							v-if="moduleBox == '新增银行信息'"-->
+				<!--							type="primary"-->
+				<!--							@click="submitAdd"-->
+				<!--						>-->
+				<!--							确 定-->
+				<!--						</el-button>-->
+				<!--						<el-button v-else type="primary" @click="submitEdit">-->
+				<!--							确 定-->
+				<!--						</el-button>-->
+				<!--					</div>-->
+				<!--				</el-dialog>-->
 			</div>
 		</div>
 	</div>
@@ -231,13 +227,13 @@
 
 <script>
 import list from '@/mixins/list'
-import editForm from './components/editForm'
+// import editForm from './components/editForm'
 // import { UTable } from 'umy-ui'
 export default {
 	name: '',
-	components: {
-		editForm
-	},
+	// components: {
+	// 	editForm
+	// },
 	mixins: [list],
 	data() {
 		return {
