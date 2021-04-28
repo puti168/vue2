@@ -60,7 +60,7 @@
                             style="width: 165px"
                         ></el-input>
                     </el-form-item>
-                    <el-form-item label="上级代理:">
+                    <el-form-item label="银行卡号:">
                         <el-input
                             v-model="form.supAgent"
                             size="medium"
@@ -69,7 +69,7 @@
                             style="width: 165px"
                         ></el-input>
                     </el-form-item>
-                    <el-form-item label="注册IP:">
+                    <el-form-item label="上级代理:">
                         <el-input
                             v-model="form.IP"
                             size="medium"
@@ -77,26 +77,6 @@
                             clearable
                             style="width: 165px"
                         ></el-input>
-                    </el-form-item>
-                    <el-form-item label="IP归属地:">
-                        <el-input
-                            v-model="form.registration"
-                            size="medium"
-                            placeholder="请输入"
-                            clearable
-                            style="width: 165px"
-                        ></el-input>
-                    </el-form-item>
-                    <el-form-item label="注册终端:">
-                        <el-select
-                            v-model="form.terminal"
-                            size="medium"
-                            placeholder="全部"
-                            clearable
-                            style="width: 105px"
-                        >
-                            <el-option label="全部" value></el-option>
-                        </el-select>
                     </el-form-item>
                     <el-form-item>
                         <el-button
