@@ -2,7 +2,7 @@
 	<div class="game-container report-container">
 		<div class="view-container dealer-container">
 			<div class="params">
-				<el-form ref="form" :inline="true" :model="form" label-width="100px">
+				<el-form ref="form" :inline="true" :model="form" label-width="85px">
 					<el-form-item label="注册时间:">
 						<el-date-picker
 							v-model="form.registerTime"
@@ -17,7 +17,7 @@
 							align="right"
 							clearable
 							value-format="timestamp"
-							style="width: 385px"
+							style="width: 382px"
 						></el-date-picker>
 					</el-form-item>
 					<el-form-item label="会员账号:">
@@ -27,7 +27,7 @@
 							size="medium"
 							placeholder="请输入"
 							clearable
-							style="width: 165px"
+							style="width: 150px"
 						></el-input>
 					</el-form-item>
 					<el-form-item label="会员姓名:">
@@ -37,7 +37,7 @@
 							size="medium"
 							placeholder="请输入"
 							clearable
-							style="width: 165px"
+							style="width: 150px"
 						></el-input>
 					</el-form-item>
 					<el-form-item label="账号状态:">
@@ -47,7 +47,7 @@
 							size="medium"
 							placeholder="全部"
 							clearable
-							style="width: 105px"
+							style="width: 150px"
 						>
 							<el-option label="全部" value></el-option>
 							<el-option label="启用" :value="1"></el-option>
@@ -61,7 +61,7 @@
 							size="medium"
 							placeholder="全部"
 							clearable
-							style="width: 105px"
+							style="width: 150px"
 						>
 							<el-option label="全部" value></el-option>
 							<el-option label="1" :value="1"></el-option>
@@ -70,13 +70,6 @@
 						</el-select>
 					</el-form-item>
 					<el-form-item label="离线天数:">
-						<!--						<el-input-->
-						<!--							v-model="form.levelDays"-->
-						<!--							prop="levelDays"-->
-						<!--							size="medium"-->
-						<!--							placeholder="离线天数"-->
-						<!--							clearable-->
-						<!--						></el-input>-->
 						<el-input
 							v-model="form.SaveMoneyMin"
 							size="medium"
@@ -91,7 +84,7 @@
 							style="width: 100px"
 						></el-input>
 					</el-form-item>
-					<el-form-item label="最后登录时间:">
+					<el-form-item label="最后登录时间:" label-width="100px">
 						<el-date-picker
 							v-model="form.lastLoginTime"
 							prop="lastLoginTime"
@@ -105,17 +98,10 @@
 							align="right"
 							clearable
 							value-format="timestamp"
-							style="width: 385px"
+							style="width: 382px"
 						></el-date-picker>
 					</el-form-item>
 					<el-form-item label="VIP等级:">
-						<!--						<el-input-->
-						<!--							v-model="form.vipRank"-->
-						<!--							prop="vipRank"-->
-						<!--							size="medium"-->
-						<!--							placeholder="VIP等级"-->
-						<!--							clearable-->
-						<!--						></el-input>-->
 						<el-input
 							v-model="form.SaveMoneyMin"
 							size="medium"
@@ -136,7 +122,7 @@
 							size="medium"
 							placeholder="全部"
 							clearable
-							style="width: 105px"
+							style="width: 150px"
 						>
 							<el-option label="全部" value></el-option>
 						</el-select>
@@ -147,7 +133,7 @@
 							size="medium"
 							placeholder="全部"
 							clearable
-							style="width: 105px"
+							style="width: 150px"
 						>
 							<el-option label="全部" value></el-option>
 						</el-select>
@@ -167,7 +153,7 @@
 							style="width: 100px"
 						></el-input>
 					</el-form-item>
-					<el-form-item label="首存时间:">
+					<el-form-item label="首存时间:" label-width="100px">
 						<el-date-picker
 							v-model="form.firstSaveTime"
 							size="medium"
@@ -180,7 +166,7 @@
 							align="right"
 							clearable
 							value-format="timestamp"
-							style="width: 385px"
+							style="width: 382px"
 						></el-date-picker>
 					</el-form-item>
 					<el-form-item label="会员标签:">
@@ -189,7 +175,7 @@
 							size="medium"
 							placeholder="全部"
 							clearable
-							style="width: 105px"
+							style="width: 150px"
 						>
 							<el-option label="全部" value></el-option>
 						</el-select>
@@ -200,7 +186,7 @@
 							size="medium"
 							placeholder="请输入"
 							clearable
-							style="width: 165px"
+							style="width: 150px"
 						></el-input>
 					</el-form-item>
 					<el-form-item>
