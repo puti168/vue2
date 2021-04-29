@@ -38,7 +38,7 @@
 						<div>备注信息: -</div>
 					</div>
 				</div>
-				<div class="review-content">
+				<div class="review-content more-height">
 					<p class="name">申请信息</p>
 					<div class="review-flex">
 						<div>申请人: XXXXXXXXXX</div>
@@ -50,7 +50,6 @@
 						<el-table
 							border
 							size="mini"
-							class="small-size-table"
 							:data="dataList"
 							style="width: 100%"
 							:header-cell-style="getRowClass"
@@ -69,8 +68,12 @@
 					</div>
 				</div>
 				<div class="review-content">
-					<p class="name">会员注册信息</p>
-					<div></div>
+					<p class="name">会员账号信息</p>
+					<div class="review-flex">
+						<div>一审人: XXXXXXXXXX</div>
+						<div>一审时间: BBBBBBB</div>
+						<div>一审备注: 5555</div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -90,6 +93,13 @@ export default {
 	computed: {},
 	mounted() {},
 	methods: {
+		getRowClass({ row, column, rowIndex, columnIndex }) {
+			if (rowIndex === 0) {
+				return 'background:#EFEFEF'
+			} else {
+				return ''
+			}
+		}
 	}
 }
 </script>
@@ -121,6 +131,7 @@ export default {
 		.review-content {
 			height: 150px;
 			border: 1px solid rgba(192, 190, 190, 0.5);
+			border-top: 0px;
 			padding: 30px;
 			.name {
 				font-weight: 600;
@@ -128,12 +139,15 @@ export default {
 			.review-flex {
 				position: relative;
 				width: 100%;
-				margin-bottom: 10px;
+				margin-top: 10px;
 				div {
 					display: inline-block;
 					width: 24%;
 				}
 			}
+		}
+		.more-height {
+			height: 200px;
 		}
 	}
 }
