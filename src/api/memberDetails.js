@@ -15,18 +15,18 @@ export function getMemberRemarkList(params) {
 		params
 	})
 }
-// 查询角色明细（权限）
-export function getRoleDetailInfo(data) {
+// 查询中心钱包余额
+export function getAccountCashAccount(data) {
 	return request({
-		url: '/role/getRoleDetailInfo',
+		url: '/account/cashAccount',
 		method: 'post',
 		data
 	})
 }
-// 查询角色状态
-export function getRoleStatus(data) {
+// 查询提现冻结余额
+export function getWithdrawalFreeze(data) {
 	return request({
-		url: '/role/getRoleStatus',
+		url: '/withdrawalFreeze/withdrawalFreeze',
 		method: 'post',
 		data
 	})
@@ -71,10 +71,10 @@ export function setUpdateRoleInfo(data) {
 		data
 	})
 }
-// 修改角色状态
-export function setUpdateRoleStatus(data) {
+// 银行卡/虚拟币账号信息
+export function getBankCardBank(data) {
 	return request({
-		url: '/role/updateRoleStatus',
+		url: '/bankCard/bank',
 		method: 'post',
 		data
 	})
@@ -82,12 +82,12 @@ export function setUpdateRoleStatus(data) {
 export default {
 	getVipInfo,
 	getMemberRemarkList,
-	getRoleDetailInfo,
-	getRoleStatus,
+	getAccountCashAccount,
+	getWithdrawalFreeze,
 	getRoleListPage,
 	getPageRoleUsers,
 	getRolePermissions,
 	setSaveRoleInfo,
 	setUpdateRoleInfo,
-	setUpdateRoleStatus
+	getBankCardBank
 }
