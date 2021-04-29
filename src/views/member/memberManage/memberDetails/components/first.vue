@@ -339,8 +339,14 @@ export default {
       this.editVisible = false
     },
     handleCurrentChange(val) {
+      console.log(val)
       this.pageNum = val
-      this.loadData()
+      this.$api.getMemberRemarkList().then((res) => {
+        console.log(res)
+      })
+    },
+    handleSizeChange(val) {
+      console.log(val)
     }
   }
 }

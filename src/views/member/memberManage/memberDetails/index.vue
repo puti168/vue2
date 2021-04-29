@@ -5,7 +5,7 @@
       <el-form ref="form" :inline="true" :model="queryData">
         <el-form-item label="会员账号:">
           <el-input
-            v-model="queryData.roleName"
+            v-model="queryData.userid"
             clearable
             size="medium"
             style="width: 280px"
@@ -20,7 +20,7 @@
             icon="el-icon-search"
             :disabled="loading"
             size="medium"
-            @click="query"
+            @click="serach"
           >
             查询
           </el-button>
@@ -65,7 +65,7 @@ export default {
   mixins: [list],
   data() {
     return {
-      queryData: {},
+      queryData: { userid: 587597733479145472 },
       activeName: 'first',
       tabList: ['first', 'second', 'third', 'fourth'],
       element: {
@@ -87,8 +87,33 @@ export default {
     window.removeEventListener('scroll', this.floorSrcollEventListener)
   },
   methods: {
-    query() {},
-    reset() {},
+    // vip信息
+    getVipInfo(val) {
+      this.$api.getVipInfo(val).then((res) => {
+        console.log(res)
+      })
+    },
+    // 备注信息
+    getMemberRemarkList(val) {
+      // let params = { ...val, pageNum: this.pageNum, pageSize: this.pageSize };
+     const params = {
+        ...this.getParams(params)
+      }
+      console.log(params)
+      this.$api.getMemberRemarkList(val).then((res) => {
+        console.log(res)
+      })
+    },
+    serach() {
+      const params = this.queryData
+      this.pageNum = 1
+      this.pageSize = 3
+      // this.getVipInfo(params);
+      this.getMemberRemarkList(params)
+    },
+    reset() {
+      this.queryData = {}
+    },
     handleClick(tab, event) {
       this.setFloorNavMountClick(tab.index)
     },
