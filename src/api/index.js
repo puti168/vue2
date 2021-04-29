@@ -4,6 +4,7 @@ import bankController from './bankController'
 import roleController from './roleController'
 import threeIpwhitelist from './threeIpwhitelist'
 import riskManage from './riskManage'
+import memberDetails from './memberDetails'
 
 export default {
 	...bankController,
@@ -11,5 +12,6 @@ export default {
 	...secret,
 	...roleController,
 	...threeIpwhitelist,
-	...riskManage
+	...riskManage,
+	...memberDetails
 }

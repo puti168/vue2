@@ -13,7 +13,8 @@
         size="mini"
         class="small-size-table"
         :data="dataList"
-        style="margin-top: 10px; z-index: 0"
+        :header-row-style="{ height: '24px', lineHeight: '24px' }"
+        style="margin: 10px 0 30px 0; z-index: 0"
         :header-cell-style="getRowClass"
       >
         <el-table-column align="center" label="绑定时间"></el-table-column>
@@ -39,19 +40,6 @@
           label="银行卡状态"
         ></el-table-column>
       </el-table>
-      <!-- 分页 -->
-      <el-pagination
-        :current-page.sync="pageNum"
-        layout="total, sizes,prev, pager, next, jumper"
-        :page-size="3"
-        :page-sizes="[3, 5, 10]"
-        :total="total"
-        :pager-count="5"
-        style="float: right; padding-top: 10px"
-        @current-change="handleCurrentChange"
-        @size-change="handleSizeChange"
-      ></el-pagination>
-      <div class="clear"></div>
     </div>
     <div class="titelBox">虚拟币账号信息</div>
     <div style="width: 70%">
@@ -60,7 +48,8 @@
         size="mini"
         class="small-size-table"
         :data="dataList"
-        style="margin-top: 10px; z-index: 0"
+        :header-row-style="{ height: '24px', lineHeight: '24px' }"
+        style="margin: 10px 0 30px 0; z-index: 0"
         :header-cell-style="getRowClass"
       >
         <el-table-column align="center" label="绑定时间"></el-table-column>
@@ -85,19 +74,6 @@
           label="虚拟币账户状态"
         ></el-table-column>
       </el-table>
-      <!-- 分页 -->
-      <el-pagination
-        :current-page.sync="pageNum"
-        layout="total, sizes,prev, pager, next, jumper"
-        :page-size="3"
-        :page-sizes="[3, 5, 10]"
-        :total="total"
-        :pager-count="5"
-        style="float: right; padding-top: 10px"
-        @current-change="handleCurrentChange"
-        @size-change="handleSizeChange"
-      ></el-pagination>
-      <div class="clear"></div>
     </div>
   </div>
 </template>
@@ -117,12 +93,7 @@ export default {
   watch: {},
   created() {},
   mounted() {},
-  methods: {
-    handleCurrentChange(val) {
-      this.pageNum = val
-      this.loadData()
-    }
-  }
+  methods: {}
 }
 </script>
 
@@ -155,11 +126,5 @@ export default {
 }
 .refrestBox {
   text-align: center;
-}
-.clear {
-  clear: both;
-  height: 0;
-  line-height: 0;
-  font-size: 0;
 }
 </style>
