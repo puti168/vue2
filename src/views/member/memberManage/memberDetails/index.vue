@@ -20,7 +20,7 @@
             icon="el-icon-search"
             :disabled="loading"
             size="medium"
-            @click="serach"
+            @click="query"
           >
             查询
           </el-button>
@@ -46,8 +46,8 @@
       </el-tabs>
     </div>
     <div class="marginTb"></div>
-    <first class="floor-item"></first>
-    <second class="floor-item"></second>
+    <first ref="first" class="floor-item" :memberRemarkList="memberRemarkList"></first>
+    <second class="floor-item" :balanceList="balanceList"></second>
     <third class="floor-item"></third>
     <fourth class="floor-item"></fourth>
   </div>
@@ -72,7 +72,21 @@ export default {
         nav_item: null,
         floor_item: null
       },
-      timer: null
+      timer: null,
+      memberRemarkList: {},
+      balanceList: { freezeBalance: '' }
+    }
+  },
+  computed: {
+    num: {
+      get() {
+        return this.$refs.first.page
+      }
+    },
+    size: {
+      get() {
+        return this.$refs.first.size
+      }
     }
   },
   mounted() {
@@ -80,7 +94,6 @@ export default {
       nav_item: document.getElementsByClassName('nav-list-item'),
       floor_item: document.getElementsByClassName('floor-item')
     }
-    this.element.nav_item[0].classList.add('active')
     window.addEventListener('scroll', this.floorSrcollEventListener)
   },
   beforeDestroy() {
@@ -95,21 +108,42 @@ export default {
     },
     // 备注信息
     getMemberRemarkList(val) {
-      // let params = { ...val, pageNum: this.pageNum, pageSize: this.pageSize };
-     const params = {
-        ...this.getParams(params)
-      }
-      console.log(params)
-      this.$api.getMemberRemarkList(val).then((res) => {
+      const params = { ...val, pageNum: this.num, pageSize: this.size }
+      this.$api.getMemberRemarkList(params).then((res) => {
+        if (res.code === 200) {
+          this.memberRemarkList = res.data
+        }
         console.log(res)
       })
     },
-    serach() {
+    // 查询中心钱包余额
+    getAccountCashAccount(val) {
+      this.$api.getAccountCashAccount(val).then((res) => {
+        console.log(res)
+      })
+    },
+    // 提现冻结余额
+    getWithdrawalFreeze(val) {
+      this.$api.getWithdrawalFreeze(val).then((res) => {
+        if (res.code === 200) {
+          console.log(res, 'freezeBalance')
+          this.balanceList.freezeBalance = res.data.freezeBalance
+        }
+      })
+    },
+    // 银行卡/虚拟币
+    getBankCardBank(val) {
+      this.$api.getBankCardBank(val).then((res) => {
+        console.log(res)
+      })
+    },
+    query() {
       const params = this.queryData
-      this.pageNum = 1
-      this.pageSize = 3
       // this.getVipInfo(params);
       this.getMemberRemarkList(params)
+      // this.getAccountCashAccount(params);
+      this.getWithdrawalFreeze(params)
+      // this.getBankCardBank(params);
     },
     reset() {
       this.queryData = {}
@@ -184,7 +218,7 @@ export default {
     floorSrcollEventListener() {
       const { nav_item, floor_item } = this.element
       const window_scrollTop =
-        document.documentElement.scrollTop + 200 || document.body.scrollTop + 200
+        document.documentElement.scrollTop || document.body.scrollTop
       for (let i = 0, len = floor_item.length; i < len; i++) {
         const floor_offsetTop = floor_item[i].offsetTop - floor_item[0].offsetTop
         if (window_scrollTop >= floor_offsetTop) {

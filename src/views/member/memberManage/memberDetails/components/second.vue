@@ -14,7 +14,7 @@
     <el-row class="msgList">
       <el-col :span="3" style="line-height: 36px">
         <div>中心钱包余额：310.00</div>
-        <div>提现冻结余额：20.00</div>
+        <div>提现冻结余额：{{ freezeBalance }}</div>
       </el-col>
       <el-col :span="13">
         <div
@@ -110,7 +110,7 @@
         border
         size="mini"
         class="small-size-table"
-        :data="dataList"
+        :data="tableData"
         :header-row-style="{ height: '24px', lineHeight: '24px' }"
         style="margin: 10px 0 30px 0; z-index: 0"
         :header-cell-style="getRowClass"
@@ -134,7 +134,7 @@
         border
         size="mini"
         class="small-size-table"
-        :data="dataList"
+        :data="tableData"
         :header-row-style="{ height: '24px', lineHeight: '24px' }"
         style="margin: 10px 0 30px 0; z-index: 0"
         :header-cell-style="getRowClass"
@@ -166,16 +166,29 @@ import list from '@/mixins/list'
 // import dayjs from 'dayjs'
 export default {
   mixins: [list],
-  props: {},
+  props: { balanceList: { type: Object, default: () => ({}) } },
   data() {
     return {
-      dataList: [],
+      freezeBalance: '',
+      tableData: [],
       borderL: true,
       tabHeader: 'sy'
     }
   },
   computed: {},
-  watch: {},
+  watch: {
+    balanceList: {
+      handler(newV) {
+        console.log(newV, 1111111111)
+        this.freezeBalance = newV.freezeBalance
+        // if (newV.length) {
+        //   this.dataList = { ...newV };
+        // }
+      },
+      deep: true,
+      immediate: true
+    }
+  },
   created() {},
   mounted() {},
   methods: {
