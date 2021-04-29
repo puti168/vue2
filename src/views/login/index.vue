@@ -8,6 +8,7 @@
 			class="login-form"
 			auto-complete="on"
 			label-position="left"
+            @keyup.enter.native="handleLogin"
 		>
 			<div class="login-content">
                 <div class="bg-header"></div>
@@ -45,7 +46,6 @@
 						name="password"
 						tabindex="2"
 						auto-complete="off"
-						@keyup.enter.native="handleLogin"
 					/>
 					<span class="show-pwd" @click="showPwd">
 						<svg-icon
@@ -64,7 +64,6 @@
 						name="googleAuth"
 						type="text"
 						tabindex="3"
-						@keyup.enter.native="handleLogin"
 					/>
 				</el-form-item>
 
