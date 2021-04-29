@@ -32,18 +32,7 @@
 						:default-time="defaultTime"
 					></el-date-picker>
 				</el-form-item>
-				<el-form-item label="会员账号:">
-					<el-input
-						v-model="queryData.updatedBy"
-						clearable
-						size="medium"
-						style="width: 280px"
-						placeholder="请输入"
-						:disabled="loading"
-						@keyup.enter.native="enterSearch"
-					></el-input>
-				</el-form-item>
-				<el-form-item label="账号类型:">
+				<el-form-item label="审核状态:">
 					<el-select
 						v-model="queryData.status"
 						style="width: 280px"
@@ -54,7 +43,8 @@
 						<el-option label="停用" value="1"></el-option>
 					</el-select>
 				</el-form-item>
-				<el-form-item label="审核申请类型:">
+
+				<el-form-item label="锁单状态:">
 					<el-select
 						v-model="queryData.status"
 						style="width: 280px"
@@ -66,17 +56,6 @@
 					</el-select>
 				</el-form-item>
 				<el-form-item label="审核操作:">
-					<el-select
-						v-model="queryData.status"
-						style="width: 280px"
-						:popper-append-to-body="false"
-					>
-						<el-option label="全部" value=""></el-option>
-						<el-option label="启用" value="0"></el-option>
-						<el-option label="停用" value="1"></el-option>
-					</el-select>
-				</el-form-item>
-				<el-form-item label="审核状态:">
 					<el-select
 						v-model="queryData.status"
 						style="width: 280px"
@@ -99,28 +78,6 @@
 					></el-input>
 				</el-form-item>
 				<el-form-item label="一审人:">
-					<el-input
-						v-model="queryData.updatedBy"
-						clearable
-						size="medium"
-						style="width: 280px"
-						placeholder="请输入"
-						:disabled="loading"
-						@keyup.enter.native="enterSearch"
-					></el-input>
-				</el-form-item>
-				<el-form-item label="锁单状态:">
-					<el-select
-						v-model="queryData.status"
-						style="width: 280px"
-						:popper-append-to-body="false"
-					>
-						<el-option label="全部" value=""></el-option>
-						<el-option label="启用" value="0"></el-option>
-						<el-option label="停用" value="1"></el-option>
-					</el-select>
-				</el-form-item>
-				<el-form-item label="审核单号:">
 					<el-input
 						v-model="queryData.updatedBy"
 						clearable
@@ -184,29 +141,6 @@
 						align="center"
 						label="审核单号"
 					></el-table-column>
-					<el-table-column
-						prop="modifyBy"
-						align="center"
-						label="审核申请类型"
-					></el-table-column>
-					<el-table-column
-						prop="modifyDt"
-						align="center"
-						label="修改前"
-					></el-table-column>
-					<el-table-column
-						align="center"
-					></el-table-column>
-					<el-table-column prop="modifyDt" align="center" label="操作类型">
-						<template slot="header">
-							<p>会员账号</p>
-							<p>账号类型</p>
-						</template>
-						<template slot-scope="scope">
-							{{ scope.row.modifyBy }}
-							<Copy :title="scope.row.modifyBy" :copy="copy" />
-						</template>
-					</el-table-column>
 					<el-table-column
 						prop="remark"
 						align="center"

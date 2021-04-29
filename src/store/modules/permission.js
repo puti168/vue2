@@ -174,6 +174,31 @@ const actions = {
 					})
 				}
 			}
+			console.log('parentRoutes')
+			console.log(parentRoutes)
+			// 前端写死路由
+			parentRoutes.forEach(item => {
+				if (item.name === '会员') {
+					item.children.forEach(data => {
+						if (data.name === '会员审核') {
+							data.children.push({
+								path: '/member/memberReview/memberChangeReview',
+								name: 'memberChangeReview',
+								component: () => import(`@/views/member/memberReview/memberChangeReview/index`),
+								meta: { title: '会员账户修改审核详情', icon: 'bb_reportDaily' },
+								hidden: true
+							})
+							data.children.push({
+								path: '/member/memberReview/addMemberReview',
+								name: 'addMemberReview',
+								component: () => import(`@/views/member/memberReview/addMemberReview/index`),
+								meta: { title: '新增会员审核详情', icon: 'bb_reportDaily' },
+								hidden: true
+							})
+						}
+					})
+				}
+			})
 			parentRoutes = parentRoutes.concat(rootRoutes)
 			commit('SET_ROUTES', {
 				parentRoutes,
