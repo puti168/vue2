@@ -100,7 +100,6 @@ export default {
     setFloorNavMountClick(index) {
       const { floor_item } = this.element
       const floor_offsetTop = floor_item[index].offsetTop - floor_item[0].offsetTop
-      console.log(floor_offsetTop, 222222222)
       const window_scrollTop =
         document.documentElement.scrollTop || document.body.scrollTop
       const timer = {
@@ -144,7 +143,6 @@ export default {
       this.timer = setInterval(() => {
         const window_scrollTop =
           document.documentElement.scrollTop || document.body.scrollTop
-          console.log(window_scrollTop, 11111111111)
         if (window_scrollTop >= timer.FLOOR_OFFSETTOP) {
           document.documentElement.scrollTop = timer.FLOOR_OFFSETTOP
           document.body.scrollTop = timer.FLOOR_OFFSETTOP
@@ -161,7 +159,7 @@ export default {
     floorSrcollEventListener() {
       const { nav_item, floor_item } = this.element
       const window_scrollTop =
-        document.documentElement.scrollTop || document.body.scrollTop
+        document.documentElement.scrollTop + 200 || document.body.scrollTop + 200
       for (let i = 0, len = floor_item.length; i < len; i++) {
         const floor_offsetTop = floor_item[i].offsetTop - floor_item[0].offsetTop
         if (window_scrollTop >= floor_offsetTop) {
@@ -216,6 +214,6 @@ export default {
   // background-color: #404040;
 }
 .marginTb {
- height: 125px;
+  height: 125px;
 }
 </style>

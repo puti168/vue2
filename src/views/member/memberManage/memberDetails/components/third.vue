@@ -12,7 +12,8 @@
         size="mini"
         class="small-size-table"
         :data="dataList"
-        style="margin-top: 30px; z-index: 0"
+        :header-row-style="{ height: '24px', lineHeight: '24px' }"
+        style="margin: 10px 0 30px 0; z-index: 0"
         :header-cell-style="getRowClass"
       >
         <el-table-column align="center" label="登录时间"></el-table-column>
@@ -40,19 +41,6 @@
           label="设备版本"
         ></el-table-column>
       </el-table>
-      <!-- 分页 -->
-      <el-pagination
-        :current-page.sync="pageNum"
-        layout="total, sizes,prev, pager, next, jumper"
-        :page-size="3"
-        :page-sizes="[3, 5, 10]"
-        :total="total"
-        :pager-count="5"
-        style="float: right; padding-top: 10px"
-        @current-change="handleCurrentChange"
-        @size-change="handleSizeChange"
-      ></el-pagination>
-      <div class="clear"></div>
     </div>
     <el-divider></el-divider>
   </div>
@@ -73,12 +61,7 @@ export default {
   watch: {},
   created() {},
   mounted() {},
-  methods: {
-    handleCurrentChange(val) {
-      this.pageNum = val
-      this.loadData()
-    }
-  }
+  methods: {}
 }
 </script>
 
@@ -103,11 +86,5 @@ export default {
 }
 .refrestBox {
   text-align: center;
-}
-.clear {
-  clear: both;
-  height: 0;
-  line-height: 0;
-  font-size: 0;
 }
 </style>

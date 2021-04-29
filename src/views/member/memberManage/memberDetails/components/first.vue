@@ -97,6 +97,7 @@
         size="mini"
         class="small-size-table"
         :data="dataList"
+        :header-row-style="{ height: '24px', lineHeight: '24px' }"
         style="margin-top: 10px; z-index: 0"
         :header-cell-style="getRowClass"
       >
