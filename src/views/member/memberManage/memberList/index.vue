@@ -25,7 +25,7 @@
 							v-model="form.userName"
 							prop="userName"
 							size="medium"
-							placeholder="会员账号"
+							placeholder="请输入"
 							clearable
 							style="width: 165px"
 						></el-input>
@@ -35,7 +35,7 @@
 							v-model="form.nickName"
 							prop="nickName"
 							size="medium"
-							placeholder="会员姓名"
+							placeholder="请输入"
 							clearable
 							style="width: 165px"
 						></el-input>
@@ -198,7 +198,7 @@
 						<el-input
 							v-model="form.supAgent"
 							size="medium"
-							placeholder="上级代理"
+							placeholder="请输入"
 							clearable
 							style="width: 165px"
 						></el-input>
@@ -449,7 +449,7 @@ export default {
 	},
 	computed: {},
 	created() {
-		this.loadData()
+		// this.loadData()
 	},
 	mounted() {},
 	methods: {
