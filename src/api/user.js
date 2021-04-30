@@ -71,9 +71,18 @@ export function getUserRoles(data) {
 	})
 }
 // 会员管理==> 会员列表
-export function memberList(data) {
+export function memberListAPI(data) {
 	return request({
 		url: '/user/queryMember',
+		method: 'post',
+		data
+	})
+}
+
+// 会员管理==> 会员列表 ==> 导出
+export function exportExcelAPI(data) {
+	return request({
+		url: '/member/download',
 		method: 'post',
 		data
 	})
@@ -106,5 +115,6 @@ export default {
 	getSecurityDictList,
 	setUserSecurityDict,
 	updateXPSStatus,
-	memberList
+	memberListAPI,
+	exportExcelAPI
 }
