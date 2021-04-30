@@ -5,18 +5,20 @@
 				<el-form ref="form" :inline="true" :model="form" label-width="100px">
 					<el-form-item label="操作类型:">
 						<el-select
-							v-model="form.userType"
+							v-model="form.operateType"
 							size="medium"
 							placeholder="全部"
 							clearable
 							style="width: 150px"
 						>
 							<el-option label="全部" value></el-option>
+							<el-option label="绑定" value="1"></el-option>
+							<el-option label="解绑" value="2"></el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item label="操作时间:">
 						<el-date-picker
-							v-model="form.registerTime"
+							v-model="form.createDt"
 							prop="registerTime"
 							size="medium"
 							:picker-options="pickerOptions"
@@ -28,54 +30,58 @@
 							align="right"
 							clearable
 							value-format="timestamp"
-							style="width: 382px"
+							style="width: 388px"
+							:default-time="defaultTime"
 						></el-date-picker>
 					</el-form-item>
-					<el-form-item label="会员账号:">
+					<el-form-item label="会员账号:" prop="userName">
 						<el-input
 							v-model="form.userName"
-							prop="userName"
 							size="medium"
 							placeholder="请输入"
 							clearable
+							maxlength="11"
 							style="width: 150px"
 						></el-input>
 					</el-form-item>
 					<el-form-item label="持卡人姓名:">
 						<el-input
-							v-model="form.nickName"
-							prop="nickName"
+							v-model="form.cnName"
 							size="medium"
 							placeholder="请输入"
 							clearable
 							style="width: 150px"
+							maxlength="6"
 						></el-input>
 					</el-form-item>
 					<el-form-item label="银行名称:">
 						<el-input
-							v-model="form.phone"
+							v-model="form.bankName"
 							size="medium"
 							placeholder="请输入"
 							clearable
 							style="width: 150px"
+							maxlength="10"
 						></el-input>
 					</el-form-item>
 					<el-form-item label="银行卡号:">
 						<el-input
-							v-model="form.supAgent"
+							v-model="form.cardNumber"
 							size="medium"
 							placeholder="请输入"
 							clearable
 							style="width: 150px"
+							maxlength="25"
 						></el-input>
 					</el-form-item>
 					<el-form-item label="上级代理:">
 						<el-input
-							v-model="form.IP"
+							v-model="form.parentProxyName"
 							size="medium"
 							placeholder="请输入"
 							clearable
 							style="width: 150px"
+							maxlength="11"
 						></el-input>
 					</el-form-item>
 					<el-form-item>
@@ -84,7 +90,7 @@
 							icon="el-icon-search"
 							:disabled="loading"
 							size="medium"
-							@click="query"
+							@click="handleSearch"
 						>
 							查询
 						</el-button>
@@ -111,83 +117,70 @@
 					:header-cell-style="getRowClass"
 				>
 					<el-table-column
-						prop="registerDt"
+						v-slot="scope"
+						prop="userName"
 						align="center"
 						label="会员账号"
-						sortable="custom"
-					></el-table-column>
-					<el-table-column
-						prop="userType"
-						align="center"
-						label="账号类型"
-						sortable="custom"
-					></el-table-column>
-					<el-table-column
-						prop="agentSup"
-						align="center"
-						label="上级代理"
-					></el-table-column>
-					<el-table-column prop="phone" align="center" label="银行卡号">
+					>
+						<Copy :title="scope.row.userName" :copy="copy" />
 					</el-table-column>
 					<el-table-column
-						prop="IP"
+						prop="accountType"
+						align="center"
+						label="账号类型"
+					></el-table-column>
+					<el-table-column
+						v-slot="scope"
+						prop="parentProxyName"
+						align="center"
+						label="上级代理"
+					>
+						<Copy :title="scope.row.parentProxyName" :copy="copy" />
+					</el-table-column>
+					<el-table-column
+						v-slot="scope"
+						prop="cardNumber"
+						align="center"
+						label="银行卡号"
+					>
+						<Copy :title="scope.row.cardNumber" :copy="copy" />
+					</el-table-column>
+					<el-table-column
+						prop="bankName"
 						align="center"
 						label="银行名称银行支行"
 					></el-table-column>
 					<el-table-column
-						prop="registration"
+						v-slot="scope"
+						prop="cnName"
 						align="center"
 						label="持卡人"
-					></el-table-column>
+					>
+						<Copy :title="scope.row.cnName" :copy="copy" />
+					</el-table-column>
 					<el-table-column
-						prop="titleId"
+						prop="operateType"
 						align="center"
 						label="操作类型"
 					></el-table-column>
 					<el-table-column
-						prop="terminal"
+						prop="createDt"
 						align="center"
 						label="操作时间"
+						sortable="custom"
 					></el-table-column>
 				</el-table>
 				<!-- 分页 -->
-				<el-pagination
-					v-show="!!dataList.length"
-					:current-page.sync="pageNum"
-					layout="total, sizes,prev, pager, next, jumper"
-					:page-size="pageSize"
-					:page-sizes="$store.getters.pageSizes"
-					:total="total"
-					@current-change="handleCurrentChange"
-					@size-change="handleSizeChange"
-				></el-pagination>
-				<!--				<el-dialog-->
-				<!--					:title="moduleBox"-->
-				<!--					center-->
-				<!--					:visible.sync="editVisible"-->
-				<!--					:before-close="closeFormDialog"-->
-				<!--					width="410px"-->
-				<!--				>-->
-				<!--					<editForm v-if="moduleBox == '新增银行信息'" ref="addForm"></editForm>-->
-				<!--					<editForm-->
-				<!--						v-else-->
-				<!--						ref="editForm"-->
-				<!--						:editFormData="editFormData"-->
-				<!--					></editForm>-->
-				<!--					<div slot="footer" class="dialog-footer">-->
-				<!--						<el-button @click="editVisible = false">取 消</el-button>-->
-				<!--						<el-button-->
-				<!--							v-if="moduleBox == '新增银行信息'"-->
-				<!--							type="primary"-->
-				<!--							@click="submitAdd"-->
-				<!--						>-->
-				<!--							确 定-->
-				<!--						</el-button>-->
-				<!--						<el-button v-else type="primary" @click="submitEdit">-->
-				<!--							确 定-->
-				<!--						</el-button>-->
-				<!--					</div>-->
-				<!--				</el-dialog>-->
+                <el-pagination
+                    v-show="!!total"
+                    :current-page.sync="pageNum"
+                    layout="total, sizes,prev, pager, next, jumper"
+                    :page-size="pageSize"
+                    :page-sizes="$store.getters.pageSizes"
+                    :total="total"
+                    @current-change="handleCurrentChange"
+                    @size-change="handleSizeChange"
+                ></el-pagination>
 			</div>
 		</div>
 	</div>
@@ -195,55 +188,50 @@
 
 <script>
 import list from '@/mixins/list'
+import dayjs from 'dayjs'
+// import { notSpecial2, isHaveEmoji } from '@/utils/validate'
+const start = dayjs()
+	.startOf('day')
+	.valueOf()
+const end = dayjs()
+	.endOf('day')
+	.valueOf()
 // import editForm from './components/editForm'
 // import { UTable } from 'umy-ui'
 export default {
 	name: '',
-	// components: {
-	// 	editForm
-	// },
 	mixins: [list],
 	data() {
 		return {
-			queryData: {},
 			form: {
-				registerTime: [],
+				operateType: '',
+				createDt: [start, end],
 				userName: '',
-				nickName: '',
-				levelDays: '',
-				vipRank: '',
-				userType: '',
-				userLabel: '',
-				terminal: '',
-				supAgent: '',
-				lastBetTime: '',
-				wallet: ''
+				cnName: '',
+				bankName: '',
+				cardNumber: '',
+				parentProxyName: ''
 			},
+			pageIndex: 1,
 			dataList: [],
-			total: 0,
-			moduleBox: '',
-			showForm: '',
-			editVisible: false,
-			filterStatus: [
-				{ text: '一级', value: '一级' },
-				{ text: '二级', value: '二级' }
-			],
-			editFormData: {}
+			total: 0
 		}
 	},
 	computed: {},
-	created() {
-		// this.loadData()
-	},
 	mounted() {},
 	methods: {
-		loadData(params) {
-			const { pageNum, pageSize } = this.getParams(params)
-			params = {
-				pageIndex: pageNum,
-				pageSize
-			}
+		loadData() {
 			this.dataList = []
+			const create = this.form.createDt || []
+			const [startTime, endTime] = create
+			const params = {
+				...this.form,
+				pageIndex: this.pageIndex,
+				pageSize: this.pageSize,
+				createDtStart: dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') || '',
+				createDtEnd: dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') || ''
+			}
+			delete params.createDt
 			this.$api.bankRecordListAPI(params).then((res) => {
 				const {
 					code,
@@ -263,76 +251,27 @@ export default {
 				}
 			})
 		},
-		query() {
+		handleSearch() {
 			this.loading = true
-			// const { registerTime, lastLoginTime, firstSaveTime } = this.form
-			// const [registerStartTime, registerEndTime] = registerTime
-			const params = {
-				...this.queryData,
-				pageNum: 1
-				// startTime: registerStartTime && registerStartTime + '',
-				// endTime: registerEndTime && registerEndTime + ''
-			}
-			console.log(params)
-			this.loadData(params)
-		},
-		reset() {
-			this.queryData = {}
-			this.$refs['form'].resetFields()
-			// this.loadData()
-		},
-
-		add() {
-			this.moduleBox = '新增银行信息'
-			this.editVisible = true
-		},
-		submitAdd() {
-			console.log(this.$refs.addForm)
-			//   setAddBank(this.queryData).then((res) => {
-			//     console.log(res);
-			//   });
-		},
-		deleteUp(val) {
-			console.log(val)
-			this.$confirm('确定删除此银行卡号吗?', {
-				confirmButtonText: '确定',
-				cancelButtonText: '取消',
-				type: 'warning'
-			})
-				.then(() => {
-					this.$message({
-						type: 'success',
-						message: '删除成功!'
-					})
-					// setDeleteBank(val).then((res) => {
-					//   console.log(res);
-					// });
-				})
-				.catch(() => {
-					this.$message({
-						type: 'info',
-						message: '已取消删除'
-					})
-				})
-		},
-		editUp(val) {
-			this.moduleBox = '修改银行信息'
-			this.editVisible = true
-			this.editFormData = val
-		},
-		submitEdit() {
-			// setEidteBank().then((res) => {
-			//   console.log(res);
-			// });
-		},
-		handleCurrentChange() {
+			this.pageIndex = 1
 			this.loadData()
 		},
-		closeFormDialog() {
-			this.editVisible = false
+		reset() {
+			this.$refs['form'].resetFields()
+			this.form = {
+				operateType: '',
+				createDt: [start, end],
+				userName: '',
+				cnName: '',
+				bankName: '',
+				cardNumber: '',
+				parentProxyName: ''
+			}
+			this.loadData()
 		},
-		enterSubmit() {
-			// this.query()
+		handleCurrentChange(val) {
+            this.pageIndex = val
+			this.loadData()
 		}
 	}
 }
