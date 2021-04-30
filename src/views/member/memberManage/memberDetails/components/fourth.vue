@@ -101,6 +101,7 @@ export default {
 #basicInformation {
   font-size: 14px;
   line-height: 40px;
+  min-height: 800px;
   padding-top: 10px;
   padding-bottom: 40px;
 }
