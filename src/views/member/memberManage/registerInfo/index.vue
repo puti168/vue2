@@ -98,11 +98,11 @@
 							style="width: 150px"
 						>
 							<el-option label="全部" value></el-option>
-							<el-option label="全部" value="PC"></el-option>
-							<el-option label="全部" value="IOS_APP"></el-option>
-							<el-option label="全部" value="IOS_H5"></el-option>
-							<el-option label="全部" value="Android_H5"></el-option>
-							<el-option label="全部" value="Android_APP"></el-option>
+							<el-option label="PC" value="PC"></el-option>
+							<el-option label="IOS_APP" value="IOS_APP"></el-option>
+							<el-option label="IOS_H5" value="IOS_H5"></el-option>
+							<el-option label="Android_H5" value="Android_H5"></el-option>
+							<el-option label="Android_APP" value="Android_APP"></el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item>
