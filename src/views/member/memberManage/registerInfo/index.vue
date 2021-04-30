@@ -274,7 +274,7 @@ export default {
                 ...this.getParams(params)
             }
             this.dataList = []
-            this.$api.memberList(params).then((res) => {
+            this.$api.memberRegisterInfoListAPI(params).then((res) => {
                 const {
                     code,
                     data: { record, totalRecord },

@@ -87,6 +87,15 @@ export function exportExcelAPI(data) {
 		data
 	})
 }
+// 会员管理==> 会员注册信息 ==> 列表
+export function memberRegisterInfoListAPI(data) {
+	return request({
+		url: '/member/memberRegisterList',
+		method: 'post',
+		data
+	})
+}
+
 // 编辑用户
 export function editUser(data) {
 	return request({
@@ -116,5 +125,6 @@ export default {
 	setUserSecurityDict,
 	updateXPSStatus,
 	memberListAPI,
-	exportExcelAPI
+	exportExcelAPI,
+	memberRegisterInfoListAPI
 }
