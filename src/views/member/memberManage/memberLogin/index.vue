@@ -208,15 +208,23 @@
 <script>
 import list from '@/mixins/list'
 import dayjs from 'dayjs'
+const end = dayjs()
+			.endOf('day')
+			.valueOf()
+		const start = dayjs()
+			.startOf('day')
+			.valueOf()
 export default {
 	name: '',
 	components: {},
 	mixins: [list],
 	data() {
 		return {
-			queryData: {},
+			queryData: {
+				roleName: ''
+			},
 			formTime: {
-				time: []
+				time: [start, end]
 			},
 			dataList: [],
 			title: '',

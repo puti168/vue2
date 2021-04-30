@@ -11,6 +11,12 @@ export function login(data) {
 	})
 }
 
+export function getDics() {
+	return request({
+		url: '/dict/getAllDictList',
+		method: 'get'
+	})
+}
 export function logout() {
 	return request({
 		url: '/logout',
