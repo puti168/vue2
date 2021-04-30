@@ -1,38 +1,38 @@
 const control = [
 	// 第一级菜单
 	{
-		id: '90',
+		id: '83',
 		title: '风控'
 	},
 	// 第二级菜单
 	{
-		id: '91',
-		parentId: '90',
+		id: '84',
+		parentId: '83',
 		icon: 'bb_report',
 		title: '风控功能'
 	},
 	{
-		id: '94',
-		parentId: '90',
+		id: '87',
+		parentId: '83',
 		icon: 'bb_report',
 		title: '风控配置'
 	},
 	{
-		id: '98',
-		parentId: '90',
+		id: '91',
+		parentId: '83',
 		icon: 'bb_report',
 		title: '风控审核'
 	},
 	// 第三级菜单
 	{
-		id: '100',
-		parentId: '98',
+		id: '85',
+		parentId: '84',
 		path: '/control/riskReview/activityAwardReview',
 		title: '活动派奖审核'
 	},
 	{
-		id: '99',
-		parentId: '98',
+		id: '86',
+		parentId: '84',
 		path: '/control/riskReview/riskWithdrawReview',
 		title: '风控提款审核'
 	},
