@@ -19,7 +19,6 @@
 					<el-form-item label="操作时间:">
 						<el-date-picker
 							v-model="form.createDt"
-							prop="registerTime"
 							size="medium"
 							:picker-options="pickerOptions"
 							format="yyyy-MM-dd HH:mm:ss"
@@ -31,7 +30,6 @@
 							clearable
 							value-format="timestamp"
 							style="width: 388px"
-							:default-time="defaultTime"
 						></el-date-picker>
 					</el-form-item>
 					<el-form-item label="会员账号:" prop="userName">
@@ -196,10 +194,9 @@ const start = dayjs()
 const end = dayjs()
 	.endOf('day')
 	.valueOf()
-// import editForm from './components/editForm'
 // import { UTable } from 'umy-ui'
 export default {
-	name: '',
+	name: 'BankRecord',
 	mixins: [list],
 	data() {
 		return {
