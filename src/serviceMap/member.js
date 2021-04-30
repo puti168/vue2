@@ -57,8 +57,8 @@ const member = [
 	{
 		id: '10',
 		parentId: '3',
-		path: '/member/memberManage/memberLevel',
-		title: '会员等级记录'
+		path: '/member/memberManage/memberLogin',
+		title: '会员登录日志'
 	},
 	{
 		id: '12',

@@ -11,6 +11,12 @@ export function login(data) {
 	})
 }
 
+export function getDics() {
+	return request({
+		url: '/dict/getAllDictList',
+		method: 'get'
+	})
+}
 export function logout() {
 	return request({
 		url: '/logout',
@@ -71,13 +77,40 @@ export function getUserRoles(data) {
 	})
 }
 // 会员管理==> 会员列表
-export function memberList(data) {
+export function memberListAPI(data) {
 	return request({
 		url: '/user/queryMember',
 		method: 'post',
 		data
 	})
 }
+
+// 会员管理==> 会员列表 ==> 导出
+export function exportExcelAPI(data) {
+	return request({
+		url: '/member/download',
+		method: 'post',
+		data
+	})
+}
+// 会员管理==> 会员注册信息 ==> 列表
+export function memberRegisterInfoListAPI(data) {
+	return request({
+		url: '/member/memberRegisterList',
+		method: 'post',
+		data
+	})
+}
+
+// 会员管理==> 会员银行记录 ==> 列表
+export function bankRecordListAPI(data) {
+	return request({
+		url: '/bankOperateRecord/page',
+		method: 'post',
+		data
+	})
+}
+
 // 编辑用户
 export function editUser(data) {
 	return request({
@@ -106,5 +139,8 @@ export default {
 	getSecurityDictList,
 	setUserSecurityDict,
 	updateXPSStatus,
-	memberList
+	memberListAPI,
+	exportExcelAPI,
+	memberRegisterInfoListAPI,
+	bankRecordListAPI
 }
