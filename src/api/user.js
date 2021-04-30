@@ -96,6 +96,15 @@ export function memberRegisterInfoListAPI(data) {
 	})
 }
 
+// 会员管理==> 会员银行记录 ==> 列表
+export function bankRecordListAPI(data) {
+	return request({
+		url: '/bankOperateRecord/page',
+		method: 'post',
+		data
+	})
+}
+
 // 编辑用户
 export function editUser(data) {
 	return request({
@@ -126,5 +135,6 @@ export default {
 	updateXPSStatus,
 	memberListAPI,
 	exportExcelAPI,
-	memberRegisterInfoListAPI
+	memberRegisterInfoListAPI,
+	bankRecordListAPI
 }
