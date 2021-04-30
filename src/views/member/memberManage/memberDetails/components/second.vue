@@ -7,7 +7,11 @@
           <span @click="borderL = true">中心钱包</span>
         </el-col>
         <el-col :span="2" class="refrestBox cell">
-          <el-button type="primary" icon="el-icon-refresh">刷新</el-button>
+          <el-button
+type="primary"
+icon="el-icon-refresh"
+@click="refresh"
+>刷新</el-button>
         </el-col>
       </el-row>
     </div>
@@ -64,7 +68,11 @@
       <el-row>
         <el-col :span="2"> 提现流水信息 </el-col>
         <el-col :span="1" class="refrestBox cell">
-          <el-button type="primary" icon="el-icon-refresh">刷新</el-button>
+          <el-button
+type="primary"
+icon="el-icon-refresh"
+@click="refreshTWithdrawWater"
+>刷新</el-button>
         </el-col>
       </el-row>
     </div>
@@ -166,7 +174,10 @@ import list from '@/mixins/list'
 // import dayjs from 'dayjs'
 export default {
   mixins: [list],
-  props: { balanceList: { type: Object, default: () => ({}) } },
+  props: {
+    userid: { type: Number, default: null },
+    balanceList: { type: Object, default: () => ({}) }
+  },
   data() {
     return {
       freezeBalance: '',
@@ -192,6 +203,47 @@ export default {
   created() {},
   mounted() {},
   methods: {
+    // 查询中心钱包余额
+    getAccountCashAccount(val) {
+      this.$api.getAccountCashAccount(val).then((res) => {
+        console.log(res)
+      })
+    },
+    // 提现冻结余额
+    getWithdrawalFreeze(val) {
+      this.$api.getWithdrawalFreeze(val).then((res) => {
+        if (res.code === 200) {
+          console.log(res, 'freezeBalance')
+          this.balanceList.freezeBalance = res.data.freezeBalance
+        }
+      })
+    },
+    // 一键查询所有场馆余额
+    getOneKeyBalance(val) {
+      this.$api.getOneKeyBalance(val).then((res) => {
+        console.log(res)
+      })
+    },
+    // 一键下分
+    getOneKeyWithdraw(val) {
+      this.$api.getOneKeyWithdraw(val).then((res) => {
+        console.log(res)
+      })
+    },
+    // 提现流水查询
+    getWithdrawWater(val) {
+      this.$api.getWithdrawWater('', val.userid).then((res) => {
+        console.log(res)
+      })
+    },
+    refresh() {
+      this.getAccountCashAccount()
+      this.getWithdrawalFreeze()
+      this.getOneKeyBalance()
+    },
+    refreshTWithdrawWater() {
+      this.getWithdrawWater()
+    },
     recycle(val) {
       this.$confirm(
         `<strong>是否一键将所有钱汇总至中心钱包?</strong></br><span style='font-size:12px;color:#c1c1c1'>提现冻结金额不受影响</span>`,
@@ -204,16 +256,30 @@ export default {
         }
       )
         .then(() => {
-          this.$message({
-            type: 'success',
-            message: '回收成功!'
-          })
+          // this.$message({
+          //   type: 'success',
+          //   message: '回收成功!'
+          // })
+          this.getOneKeyWithdraw(this.userid).then((res) => {
+            console.log(res)
+          }) // 一键下分
         })
         .catch(() => {})
     },
     tabHeaderFn(val) {
       console.log(val)
       this.tabHeader = val
+      if (val === 'sy') {
+        const params = { userid: this.userid, orderKey: 1 }
+        this.$api.getPlayerTop3(params).then((res) => {
+          console.log(res)
+        })
+      } else {
+        const params = { userid: this.userid, orderKey: 2 }
+        this.$api.getPlayerTop3(params).then((res) => {
+          console.log(res)
+        })
+      }
     }
   }
 }

@@ -5,7 +5,7 @@
       <el-form ref="form" :inline="true" :model="queryData">
         <el-form-item label="会员账号:">
           <el-input
-            v-model="queryData.userid"
+            v-model="queryData.userName"
             clearable
             size="medium"
             style="width: 280px"
@@ -72,7 +72,7 @@ export default {
   mixins: [list],
   data() {
     return {
-      queryData: { userid: 587597733479145472 },
+      queryData: { userName: 'test01', userid: 587597733479145472 },
       userid: null,
       activeName: 'first',
       tabList: ['first', 'second', 'third', 'fourth'],
@@ -106,6 +106,12 @@ export default {
     window.removeEventListener('scroll', this.onScroll)
   },
   methods: {
+    // 会员详情-基本信息-概要信息以及个人资料
+    getOutlineInfo(val) {
+      this.$api.getOutlineInfo('', val.userName).then((res) => {
+        console.log(res)
+      })
+    },
     // vip信息
     getVipInfo(val) {
       this.$api.getVipInfo(val).then((res) => {
@@ -143,28 +149,63 @@ export default {
         console.log(res)
       })
     },
-    // 一键下分
-    getOneKeyWithdraw(val) {
-      this.$api.getOneKeyWithdraw(val).then((res) => {
+    // // 一键下分
+    // getOneKeyWithdraw(val) {
+    //   this.$api.getOneKeyWithdraw(val).then((res) => {
+    //     console.log(res)
+    //   })
+    // },
+    // 提现流水查询
+    getWithdrawWater(val) {
+      this.$api.getWithdrawWater('', val.userid).then((res) => {
         console.log(res)
       })
     },
-    // 银行卡/虚拟币
-    initGetBankCardBank(val) {
-      this.$api.getBankCardBank(val).then((res) => {
+    // 会员充提信息
+    getPlayerOrderSumInfo(val) {
+      this.$api.getPlayerOrderSumInfo(val).then((res) => {
+        console.log(res)
+      })
+    },
+    // top3平台统计
+    getPlayerTop3(val) {
+      const params = { ...val, orderKey: 1 }
+      this.$api.getPlayerTop3(params).then((res) => {
+        console.log(res)
+      })
+    },
+    // 会员登录日志查询
+    getLogMemberLoginLog(val) {
+      this.$api.getLogMemberLoginLog(val).then((res) => {
+        console.log(res)
+      })
+    },
+    // 银行卡/虚拟币行号信息
+    getBankCardBank(val) {
+      const dataType1 = { ...val, dataType: 1 }
+      this.$api.getBankCardBank(dataType1).then((res) => {
+        console.log(res)
+      })
+      const dataType2 = { ...val, dataType: 2 }
+      this.$api.getBankCardBank(dataType2).then((res) => {
         console.log(res)
       })
     },
     query() {
       const params = this.queryData
       this.userid = params.userid
+      // this.getOutlineInfo(params);
       // this.getVipInfo(params);
       // this.getMemberRemarkList(params);
       // this.getAccountCashAccount(params);
       // this.getWithdrawalFreeze(params)
       // this.getOneKeyBalance(params);
-      this.getOneKeyWithdraw(params)
-      // this.initGetBankCardBank(params);
+      // this.getOneKeyWithdraw(params)
+      // this.getWithdrawWater(params);
+      // this.getPlayerOrderSumInfo(params);
+      // this.getPlayerTop3(params);
+      // this.getLogMemberLoginLog(params);
+      // this.getBankCardBank(params);
     },
     reset() {
       this.queryData = {}

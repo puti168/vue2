@@ -1,4 +1,20 @@
 import request from '@/utils/request'
+// 会员详情-基本信息-概要信息以及个人资料
+export function getOutlineInfo(params, userName) {
+	return request({
+		url: `/member/outlineInfo/${userName}`,
+		method: 'get',
+		params
+	})
+}
+// 会员详情-基本信息-信息编辑
+export function setMemberInfoEdit(data) {
+	return request({
+		url: '/member/infoEdit',
+		method: 'post',
+		data
+	})
+}
 // vip信息
 export function getVipInfo(data) {
 	return request({
@@ -47,26 +63,42 @@ export function getOneKeyWithdraw(params) {
 		params
 	})
 }
-// 查询当前登录用户拥有的全部权限
-export function getRolePermissions(params) {
+// 提现流水查询
+export function getWithdrawWater(params, userId) {
 	return request({
-		url: '/role/permissions',
-		method: 'GET',
+		url: `/withdrawalFreeze/withdrawWater/${userId}`,
+		method: 'get',
 		params
 	})
 }
-// 添加角色
-export function setSaveRoleInfo(data) {
+// 添加会员备注
+export function getMemberRemarkAdd(data) {
 	return request({
-		url: '/role/saveRoleInfo',
+		url: '/memberRemark/add',
 		method: 'post',
 		data
 	})
 }
-// 修改角色
-export function setUpdateRoleInfo(data) {
+// 会员充提信息查询
+export function getPlayerOrderSumInfo(data) {
 	return request({
-		url: '/role/updateRoleInfo',
+		url: '/player/playerOrderSumInfo',
+		method: 'post',
+		data
+	})
+}
+// top3平台统计
+export function getPlayerTop3(params) {
+	return request({
+		url: '/player/top3',
+		method: 'get',
+		params
+	})
+}
+// 会员登录日志查询
+export function getLogMemberLoginLog(data) {
+	return request({
+		url: '/log/memberLoginLog',
 		method: 'post',
 		data
 	})
@@ -80,14 +112,18 @@ export function getBankCardBank(data) {
 	})
 }
 export default {
+	getOutlineInfo,
+	setMemberInfoEdit,
 	getVipInfo,
 	getMemberRemarkList,
 	getAccountCashAccount,
 	getWithdrawalFreeze,
 	getOneKeyBalance,
 	getOneKeyWithdraw,
-	getRolePermissions,
-	setSaveRoleInfo,
-	setUpdateRoleInfo,
+	getWithdrawWater,
+	getMemberRemarkAdd,
+	getPlayerOrderSumInfo,
+	getPlayerTop3,
+	getLogMemberLoginLog,
 	getBankCardBank
 }

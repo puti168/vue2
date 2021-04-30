@@ -3,7 +3,7 @@
     <el-row>
       <el-col :span="4" class="backgroundTitelBox">基本信息</el-col>
       <el-col :span="2" class="refrestBox">
-        <el-button type="primary" icon="el-icon-refresh">刷新</el-button>
+        <el-button type="primary" icon="el-icon-refresh" @click="refresh">刷新</el-button>
       </el-col>
       <el-col :span="2" class="editMsg">
         <i class="el-icon-edit-outline"></i><br />
@@ -13,9 +13,10 @@
         <el-button
           v-for="(item, index) in editMsgList"
           :key="index"
+          :disabled="item.status"
           type="primary"
-          @click="editFn(item)"
-          >{{ item }}</el-button>
+          @click="editFn(item.label)"
+          >{{ item.label }}</el-button>
       </el-col>
     </el-row>
     <div class="titelBox">概要信息</div>
@@ -119,7 +120,7 @@
         :current-page.sync="page"
         layout="total, sizes,prev, pager, next, jumper"
         :page-size="size"
-        :page-sizes="[1, 2, 10]"
+        :page-sizes="[3, 5, 10]"
         :total="total"
         :pager-count="5"
         style="float: right; padding-top: 10px"
@@ -136,23 +137,32 @@
       width="520px"
     >
       <el-form
-        ref="form"
+        ref="editForm"
+        :rules="rules"
         :model="editData"
-        label-width="85px"
+        label-width="95px"
         @submit.native.prevent="enterSearch"
       >
-        <el-form-item v-if="moduleBox === '账号状态'" label="账号状态：">
-          <el-select v-model="editData.accountStatus" placeholder="请选择">
+        <el-form-item
+          v-if="moduleBox === '账号状态'"
+          label="账号状态："
+          prop="accountStatus"
+        >
+          <el-select
+            v-model="editData.accountStatus"
+            placeholder="请选择"
+            @change="changeAccountStatus"
+          >
             <el-option
               v-for="item in accountStatusList"
-              :key="item.value"
+              :key="item.accountStatus"
               :label="item.label"
-              :value="item.value"
+              :value="item.accountStatus"
             >
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item v-if="moduleBox === '风控层级'" label="风控层级：">
+        <el-form-item v-if="moduleBox === '风控层级'" label="风控层级：" prop="riskLevel">
           <el-select v-model="editData.riskLevel" placeholder="请选择">
             <el-option
               v-for="item in riskLevelList"
@@ -163,7 +173,11 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item v-if="moduleBox === '会员标签'" label="会员标签：">
+        <el-form-item
+          v-if="moduleBox === '会员标签'"
+          label="会员标签："
+          prop="memberLabel"
+        >
           <el-select v-model="editData.memberLabel" placeholder="请选择">
             <el-option
               v-for="item in memberLabelList"
@@ -174,13 +188,13 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item v-if="moduleBox === '出生日期'" label="出生日期：">
-          <el-date-picker v-model="editData.value" type="date" placeholder="选择日期">
+        <el-form-item v-if="moduleBox === '出生日期'" label="出生日期：" prop="birthday">
+          <el-date-picker v-model="editData.birthday" type="date" placeholder="选择日期">
           </el-date-picker>
         </el-form-item>
-        <el-form-item v-if="moduleBox === '手机号码'" label="手机号码：">
+        <el-form-item v-if="moduleBox === '手机号码'" label="手机号码：" prop="phoneNum">
           <el-input
-            v-model="editData.bankName"
+            v-model="editData.phoneNum"
             clearable
             size="medium"
             placeholder="请输入手机号码"
@@ -188,9 +202,9 @@
             @keyup.enter.native="enterSearch"
           ></el-input>
         </el-form-item>
-        <el-form-item v-if="moduleBox === '姓名'" label="姓名：">
+        <el-form-item v-if="moduleBox === '姓名'" label="姓名：" prop="name">
           <el-input
-            v-model="editData.bankName"
+            v-model="editData.name"
             clearable
             size="medium"
             placeholder="请输入姓名"
@@ -198,9 +212,21 @@
             @keyup.enter.native="enterSearch"
           ></el-input>
         </el-form-item>
-        <el-form-item v-if="moduleBox === '邮箱'" label="邮箱：">
+        <el-form-item
+          v-if="moduleBox === '邮箱'"
+          label="邮箱："
+          prop="email"
+          :rules="[
+            { required: true, message: '请输入邮箱地址', trigger: 'blur' },
+            {
+              type: 'email',
+              message: '请输入正确的邮箱地址',
+              trigger: 'blur',
+            },
+          ]"
+        >
           <el-input
-            v-model="editData.bankName"
+            v-model="editData.email"
             clearable
             type="email"
             size="medium"
@@ -209,23 +235,33 @@
             @keyup.enter.native="enterSearch"
           ></el-input>
         </el-form-item>
-        <el-form-item v-if="moduleBox === '性别'" label="性别：">
-          <el-radio v-model="editData.radio" label="1">男</el-radio>
-          <el-radio v-model="editData.radio" label="2">女</el-radio>
-          <el-radio v-model="editData.radio" label="3">保密</el-radio>
+        <el-form-item v-if="moduleBox === '性别'" label="性别：" prop="radio">
+          <el-radio-group v-model="radio" @change="changeRadio">
+            <el-radio :label="0">保密</el-radio>
+            <el-radio :label="1">男</el-radio>
+            <el-radio :label="2">女</el-radio>
+          </el-radio-group>
         </el-form-item>
 
-        <el-form-item label="审核备注：">
-          <el-input v-model="editData.textarea" type="textarea" placeholder="请输入内容">
+        <el-form-item
+          label="审核备注："
+          prop="remark"
+          :rules="[
+            { required: true, message: '请输入活动名称', trigger: 'blur' },
+            { min: 2, max: 50, message: '长度在 2 到 50 个字符', trigger: 'blur' },
+          ]"
+        >
+          <el-input
+            v-model="editData.remark"
+            type="textarea"
+            placeholder="最多可输入50个字符"
+          >
           </el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="editVisible = false">取 消</el-button>
-        <el-button v-if="moduleBox == '新增银行信息'" type="primary" @click="submitAdd">
-          确 定
-        </el-button>
-        <el-button v-else type="primary" @click="submitEdit"> 确 定 </el-button>
+        <el-button @click="cancel">取 消</el-button>
+        <el-button type="primary" @click="submitEdit"> 确 定 </el-button>
       </div>
     </el-dialog>
     <el-divider></el-divider>
@@ -242,83 +278,121 @@ export default {
     memberRemarkList: { type: Object, default: () => ({}) }
   },
   data() {
+    const checkPhone = (rule, value, callback) => {
+      const phoneReg = /^1[3|4|5|7|8][0-9]{9}$/
+      if (!value) {
+        return callback(new Error('电话号码不能为空'))
+      }
+      setTimeout(() => {
+        // Number.isInteger是es6验证数字是否为整数的方法,实际输入的数字总是识别成字符串
+        // 所以在前面加了一个+实现隐式转换
+
+        if (!Number.isInteger(+value)) {
+          callback(new Error('请输入数字值'))
+        } else {
+          if (phoneReg.test(value)) {
+            callback()
+          } else {
+            callback(new Error('电话号码格式不正确'))
+          }
+        }
+      }, 100)
+    }
+
     return {
+      loading: false,
+      // 编辑信息按钮
       editMsgList: [
-        '账号状态',
-        '风控层级',
-        '会员标签',
-        '出生日期',
-        '手机号码',
-        '姓名',
-        '性别',
-        '邮箱',
-        '账号备注'
+        { label: '账号状态', status: false },
+        { label: '风控层级', status: false },
+        { label: '会员标签', status: false },
+        { label: '出生日期', status: false },
+        { label: '手机号码', status: false },
+        { label: '姓名', status: false },
+        { label: '性别', status: false },
+        { label: '邮箱', status: false },
+        { label: '账号备注', status: false }
       ],
-      accountStatusList: [
-        {
-          value: '1',
-          label: '正常'
-        },
-        {
-          value: '2',
-          label: '游戏锁定'
-        },
-        {
-          value: '3',
-          label: '登录锁定'
-        },
-        {
-          value: '4',
-          label: '充值锁定'
-        }
-      ],
-      riskLevelList: [
-        {
-          value: '1',
-          label: '一级'
-        },
-        {
-          value: '2',
-          label: '二级'
-        },
-        {
-          value: '3',
-          label: '三级'
-        },
-        {
-          value: '4',
-          label: '四级'
-        }
-      ],
-      memberLabelList: [
-        {
-          value: '1',
-          label: '标签一'
-        },
-        {
-          value: '2',
-          label: '标签二'
-        },
-        {
-          value: '3',
-          label: '标签三'
-        },
-        {
-          value: '4',
-          label: '标签四'
-        }
-      ],
+      // 账号状态
+      accountStatusList: [{ accountStatus: 0, label: '正常' }],
+      // 风控层级
+      riskLevelList: [],
+      // 会员标签
+      memberLabelList: [],
+      // 提交账号状态编辑
+      accountStatusAfter: {
+        userName: '',
+        accountStatus: 0,
+        remark: ''
+      },
+      // 提交风控层级编辑
+      windControlAfter: {
+        userName: '',
+        remark: '',
+        windControlId: 0,
+        windControlName: ''
+      },
+      // 提交会员标签编辑
+      labelAfter: {
+        userName: '',
+        labelName: '',
+        labelId: 0,
+        remark: ''
+      },
+      // 提交生日编辑
+      birthAfter: {
+        userName: '',
+        birth: '',
+        remark: ''
+      },
+      // 提交手机号编辑
+      mobileAfter: {
+        userName: '',
+        mobile: '',
+        remark: ''
+      },
+      // 提交性名编辑
+      realNameAfter: {
+        userName: '',
+        realName: '',
+        remark: ''
+      },
+      // 提交性别编辑
+      genderAfter: {
+        userName: '',
+        gender: 0,
+        remark: ''
+      },
+      // 提交邮箱编辑
+      emailAfter: {
+        userName: '',
+        email: '',
+        remark: ''
+      },
       percentage: 0,
       tableList: [],
       moduleBox: '',
       editVisible: false,
-      editData: { textarea: '' },
+      editData: {},
+      radio: 0,
       page: 1,
-      size: 3
+      size: 3,
+      rules: {
+        phoneNum: [{ required: true, validator: checkPhone, trigger: 'blur' }]
+      }
     }
   },
   computed: {},
   watch: {
+    // userid: {
+    //   handler(newV) {
+    //     if (newV != null) {
+    //       this.editData.userid = newV;
+    //     }
+    //   },
+    //   deep: true,
+    //   immediate: true,
+    // },
     memberRemarkList: {
       handler(newV) {
         if (newV.total) {
@@ -338,14 +412,121 @@ export default {
     }
   },
   methods: {
+    // 会员详情-基本信息-概要信息以及个人资料
+    getOutlineInfo(val) {
+      this.$api.getOutlineInfo('', val.userName).then((res) => {
+        console.log(res)
+      })
+    },
+    // vip信息
+    getVipInfo(val) {
+      this.$api.getVipInfo(val).then((res) => {
+        console.log(res)
+      })
+    },
+    // 添加会员备注
+    getMemberRemarkAdd(val) {
+      this.$api.getMemberRemarkAdd(val).then((res) => {
+        console.log(res)
+        this.editVisible = false
+      })
+    },
+    // 编辑信息
+    setMemberInfoEdit(val) {
+      this.$api.setMemberInfoEdit(val).then((res) => {
+        console.log(res)
+        this.editVisible = false
+      })
+    },
+    refresh() {
+      this.getOutlineInfo()
+      this.getVipInfo()
+    },
     editFn(val) {
       this.moduleBox = val
       this.editVisible = true
     },
-    submitAdd() {},
-    submitEdit() {},
+    changeAccountStatus(val) {
+      this.accountStatusAfter.accountStatus = val
+    },
+    changeRadio(val) {
+      console.log(val)
+      this.radio = val
+      this.editData.radio = val
+    },
+
+    cancel() {
+      this.$refs.editForm.resetFields()
+      this.editVisible = false
+    },
+    submitEdit() {
+      const params = this.editData
+      const data = {}
+      data.userName = 'fitz2019'
+      console.log(this.moduleBox)
+      this.$refs.editForm.validate((valid) => {
+        console.log(params)
+        if (valid) {
+          const loading = this.$loading({
+            lock: true,
+            text: 'Loading',
+            spinner: 'el-icon-loading',
+            background: 'rgba(0, 0, 0, 0.7)'
+          })
+          if (this.moduleBox === '账号状态') {
+            data.accountStatusAfter = params
+            console.log('accountStatusAfter', data)
+            this.setMemberInfoEdit(data)
+            loading.close()
+          }
+          if (this.moduleBox === '风控层级') {
+            data.windControlAfter = params
+            this.setMemberInfoEdit(data)
+            loading.close()
+          }
+          if (this.moduleBox === '会员标签') {
+            data.labelAfter = params
+            this.setMemberInfoEdit(data)
+            loading.close()
+          }
+          if (this.moduleBox === '出生日期') {
+            data.birthAfter = params
+            this.setMemberInfoEdit(data)
+            loading.close()
+          }
+          if (this.moduleBox === '手机号码') {
+            data.mobileAfter = params
+            this.setMemberInfoEdit(data)
+            loading.close()
+          }
+          if (this.moduleBox === '姓名') {
+            data.realNameAfter = params
+            this.setMemberInfoEdit(data)
+            loading.close()
+          }
+          if (this.moduleBox === '性别') {
+            data.genderAfter = params
+            this.setMemberInfoEdit(data)
+            loading.close()
+          }
+          if (this.moduleBox === '邮箱') {
+            data.emailAfter = params
+            this.setMemberInfoEdit(data)
+            loading.close()
+          }
+          if (this.moduleBox === '账号备注') {
+            params.userid = this.userid
+            console.log(params)
+            this.getMemberRemarkAdd(params)
+            loading.close()
+          }
+        } else {
+          return false
+        }
+      })
+    },
     closeFormDialog() {
-      this.editData = {}
+      this.$refs.editForm.resetFields()
       this.editVisible = false
     },
     handleCurrentChange(val) {
@@ -390,7 +571,7 @@ export default {
 }
 .editMsg {
   text-align: center;
-  line-height: 20px;
+  line-height: 18px;
   i {
     font-size: 18px;
     font-weight: bold;
@@ -400,7 +581,7 @@ export default {
 .btngroup button {
   min-width: 40px;
   height: 20px;
-  line-height: 20px;
+  line-height: 18px;
   padding: 0 5px;
 }
 .msgList {
