@@ -1,5 +1,6 @@
 <template>
   <div id="basicInformation">
+    <el-divider></el-divider>
     <el-row>
       <el-col :span="4" class="backgroundTitelBox">银行卡/虚拟币账号信息</el-col>
       <el-col :span="2" class="refrestBox">

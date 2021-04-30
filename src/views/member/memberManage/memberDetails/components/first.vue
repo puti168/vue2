@@ -237,7 +237,10 @@ import list from '@/mixins/list'
 // import dayjs from 'dayjs'
 export default {
   mixins: [list],
-  props: { memberRemarkList: { type: Object, default: () => ({}) } },
+  props: {
+    userid: { type: Number, default: null },
+    memberRemarkList: { type: Object, default: () => ({}) }
+  },
   data() {
     return {
       editMsgList: [

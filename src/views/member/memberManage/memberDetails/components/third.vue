@@ -42,7 +42,6 @@
         ></el-table-column>
       </el-table>
     </div>
-    <el-divider></el-divider>
   </div>
 </template>
 
@@ -69,8 +68,8 @@ export default {
 #basicInformation {
   font-size: 14px;
   line-height: 40px;
+  min-height: 400px;
   padding-top: 10px;
-  padding-bottom: 40px;
 }
 /deep/.el-dialog__header {
   text-align: center;

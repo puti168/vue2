@@ -31,20 +31,20 @@ export function getWithdrawalFreeze(data) {
 		data
 	})
 }
-// 分页查询角色列表
-export function getRoleListPage(data) {
+// 一键查询所有场馆余额
+export function getOneKeyBalance(params) {
 	return request({
-		url: '/role/listPage',
-		method: 'post',
-		data
+		url: '/member/oneKeyBalance',
+		method: 'get',
+		params
 	})
 }
-// 分页查询角色下的用户
-export function getPageRoleUsers(data) {
+// 一键下分
+export function getOneKeyWithdraw(params) {
 	return request({
-		url: '/role/pageRoleUsers',
-		method: 'post',
-		data
+		url: '/member/oneKeyWithdraw',
+		method: 'get',
+		params
 	})
 }
 // 查询当前登录用户拥有的全部权限
@@ -84,8 +84,8 @@ export default {
 	getMemberRemarkList,
 	getAccountCashAccount,
 	getWithdrawalFreeze,
-	getRoleListPage,
-	getPageRoleUsers,
+	getOneKeyBalance,
+	getOneKeyWithdraw,
 	getRolePermissions,
 	setSaveRoleInfo,
 	setUpdateRoleInfo,

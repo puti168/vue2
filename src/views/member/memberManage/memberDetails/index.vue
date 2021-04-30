@@ -47,10 +47,15 @@
     </div>
     <div class="marginTb"></div>
     <div class="contentBox">
-      <first ref="first" class="floor-item" :memberRemarkList="memberRemarkList"></first>
-      <second class="floor-item" :balanceList="balanceList"></second>
-      <third class="floor-item"></third>
-      <fourth class="floor-item"></fourth>
+      <first
+        ref="first"
+        class="floor-item"
+        :userid="userid"
+        :memberRemarkList="memberRemarkList"
+      ></first>
+      <second class="floor-item" :userid="userid" :balanceList="balanceList"></second>
+      <third class="floor-item" :userid="userid"></third>
+      <fourth class="floor-item" :userid="userid"></fourth>
     </div>
   </div>
 </template>
@@ -68,6 +73,7 @@ export default {
   data() {
     return {
       queryData: { userid: 587597733479145472 },
+      userid: null,
       activeName: 'first',
       tabList: ['first', 'second', 'third', 'fourth'],
       element: {
@@ -131,6 +137,18 @@ export default {
         }
       })
     },
+    // 一键查询所有场馆余额
+    getOneKeyBalance(val) {
+      this.$api.getOneKeyBalance(val).then((res) => {
+        console.log(res)
+      })
+    },
+    // 一键下分
+    getOneKeyWithdraw(val) {
+      this.$api.getOneKeyWithdraw(val).then((res) => {
+        console.log(res)
+      })
+    },
     // 银行卡/虚拟币
     initGetBankCardBank(val) {
       this.$api.getBankCardBank(val).then((res) => {
@@ -139,10 +157,13 @@ export default {
     },
     query() {
       const params = this.queryData
+      this.userid = params.userid
       // this.getVipInfo(params);
       // this.getMemberRemarkList(params);
       // this.getAccountCashAccount(params);
-      this.getWithdrawalFreeze(params)
+      // this.getWithdrawalFreeze(params)
+      // this.getOneKeyBalance(params);
+      this.getOneKeyWithdraw(params)
       // this.initGetBankCardBank(params);
     },
     reset() {
