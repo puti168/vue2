@@ -2,7 +2,7 @@
 	<div class="game-container report-container">
 		<div class="view-container dealer-container">
 			<div class="params">
-				<el-form ref="form" :inline="true" :model="form" label-width="100px">
+				<el-form ref="form" :inline="true" :model="form" label-width="85px">
 					<el-form-item label="注册时间:">
 						<el-date-picker
 							v-model="form.registerTime"
@@ -17,7 +17,7 @@
 							align="right"
 							clearable
 							value-format="timestamp"
-							style="width: 385px"
+							style="width: 382px"
 						></el-date-picker>
 					</el-form-item>
 					<el-form-item label="会员账号:">
@@ -27,7 +27,7 @@
 							size="medium"
 							placeholder="请输入"
 							clearable
-							style="width: 165px"
+							style="width: 150px"
 						></el-input>
 					</el-form-item>
 					<el-form-item label="会员姓名:">
@@ -37,7 +37,7 @@
 							size="medium"
 							placeholder="请输入"
 							clearable
-							style="width: 165px"
+							style="width: 150px"
 						></el-input>
 					</el-form-item>
 					<el-form-item label="账号状态:">
@@ -47,7 +47,7 @@
 							size="medium"
 							placeholder="全部"
 							clearable
-							style="width: 105px"
+							style="width: 150px"
 						>
 							<el-option label="全部" value></el-option>
 							<el-option label="启用" :value="1"></el-option>
@@ -61,7 +61,7 @@
 							size="medium"
 							placeholder="全部"
 							clearable
-							style="width: 105px"
+							style="width: 150px"
 						>
 							<el-option label="全部" value></el-option>
 							<el-option label="1" :value="1"></el-option>
@@ -70,13 +70,6 @@
 						</el-select>
 					</el-form-item>
 					<el-form-item label="离线天数:">
-						<!--						<el-input-->
-						<!--							v-model="form.levelDays"-->
-						<!--							prop="levelDays"-->
-						<!--							size="medium"-->
-						<!--							placeholder="离线天数"-->
-						<!--							clearable-->
-						<!--						></el-input>-->
 						<el-input
 							v-model="form.SaveMoneyMin"
 							size="medium"
@@ -91,7 +84,7 @@
 							style="width: 100px"
 						></el-input>
 					</el-form-item>
-					<el-form-item label="最后登录时间:">
+					<el-form-item label="最后登录时间:" label-width="100px">
 						<el-date-picker
 							v-model="form.lastLoginTime"
 							prop="lastLoginTime"
@@ -105,17 +98,10 @@
 							align="right"
 							clearable
 							value-format="timestamp"
-							style="width: 385px"
+							style="width: 382px"
 						></el-date-picker>
 					</el-form-item>
 					<el-form-item label="VIP等级:">
-						<!--						<el-input-->
-						<!--							v-model="form.vipRank"-->
-						<!--							prop="vipRank"-->
-						<!--							size="medium"-->
-						<!--							placeholder="VIP等级"-->
-						<!--							clearable-->
-						<!--						></el-input>-->
 						<el-input
 							v-model="form.SaveMoneyMin"
 							size="medium"
@@ -136,7 +122,7 @@
 							size="medium"
 							placeholder="全部"
 							clearable
-							style="width: 105px"
+							style="width: 150px"
 						>
 							<el-option label="全部" value></el-option>
 						</el-select>
@@ -147,7 +133,7 @@
 							size="medium"
 							placeholder="全部"
 							clearable
-							style="width: 105px"
+							style="width: 150px"
 						>
 							<el-option label="全部" value></el-option>
 						</el-select>
@@ -167,7 +153,7 @@
 							style="width: 100px"
 						></el-input>
 					</el-form-item>
-					<el-form-item label="首存时间:">
+					<el-form-item label="首存时间:" label-width="100px">
 						<el-date-picker
 							v-model="form.firstSaveTime"
 							size="medium"
@@ -180,7 +166,7 @@
 							align="right"
 							clearable
 							value-format="timestamp"
-							style="width: 385px"
+							style="width: 382px"
 						></el-date-picker>
 					</el-form-item>
 					<el-form-item label="会员标签:">
@@ -189,7 +175,7 @@
 							size="medium"
 							placeholder="全部"
 							clearable
-							style="width: 105px"
+							style="width: 150px"
 						>
 							<el-option label="全部" value></el-option>
 						</el-select>
@@ -200,7 +186,7 @@
 							size="medium"
 							placeholder="请输入"
 							clearable
-							style="width: 165px"
+							style="width: 150px"
 						></el-input>
 					</el-form-item>
 					<el-form-item>
@@ -225,7 +211,7 @@
 							type="warning"
 							icon="el-icon-folder-add"
 							size="medium"
-							@click="add"
+							@click="exportExcel"
 						>
 							导出
 						</el-button>
@@ -262,83 +248,83 @@
 						prop="updateDt"
 						align="center"
 						label="账号类型"
-                        :filters="filterStatus"
-                        :filter-multiple="false"
-                        :column-key="'type'"
+						:filters="filterStatus"
+						:filter-multiple="false"
+						:column-key="'type'"
 					></el-table-column>
 					<el-table-column
 						prop="titleId"
 						align="center"
 						label="会员标签"
-                        :filters="filterStatus"
-                        :filter-multiple="false"
-                        :column-key="'type'"
+						:filters="filterStatus"
+						:filter-multiple="false"
+						:column-key="'type'"
 					></el-table-column>
 					<el-table-column
 						prop="updateDt"
 						align="center"
 						label="风控层级"
 						:filters="filterStatus"
-                        :filter-multiple="false"
-                        :column-key="'type'"
+						:filter-multiple="false"
+						:column-key="'type'"
 					></el-table-column>
 					<el-table-column
 						prop="status"
 						align="center"
 						label="账号状态"
-                        :filters="filterStatus"
-                        :filter-multiple="false"
-                        :column-key="'type'"
+						:filters="filterStatus"
+						:filter-multiple="false"
+						:column-key="'type'"
 					></el-table-column>
 					<el-table-column
 						prop="updateDt"
 						align="center"
 						label="VIP等级"
-                        width="100px"
-                        sortable="custom"
+						width="100px"
+						sortable="custom"
 					></el-table-column>
 					<el-table-column
 						prop="createDt"
 						align="center"
 						label="注册时间"
 						width="150px"
-                        sortable="custom"
+						sortable="custom"
 					></el-table-column>
 					<el-table-column
 						prop="updateDt"
 						align="center"
 						width="150px"
 						label="首存时间"
-                        sortable="custom"
+						sortable="custom"
 					></el-table-column>
 					<el-table-column
 						prop="updateDt"
 						align="center"
 						label="首存金额"
-                        sortable="custom"
-                        width="100px"
+						sortable="custom"
+						width="100px"
 					></el-table-column>
 					<el-table-column
 						prop="updateDt"
 						align="center"
 						label="中心钱包"
-                        width="100px"
-                        sortable="custom"
+						width="100px"
+						sortable="custom"
 					></el-table-column>
 					<el-table-column
 						prop="updateDt"
 						align="center"
 						label="最后登录时间"
 						width="150px"
-                        sortable="custom"
+						sortable="custom"
 					></el-table-column>
-                    <el-table-column
-                        prop="updateDt"
-                        align="center"
-                        label="离线天数"
-                        width="150px"
-                        sortable="custom"
-                    ></el-table-column>
+					<el-table-column
+						prop="updateDt"
+						align="center"
+						label="离线天数"
+						width="150px"
+						sortable="custom"
+					></el-table-column>
 					<el-table-column align="center" label="操作" width="200px">
 						<template slot-scope="scope">
 							<el-button
@@ -458,7 +444,7 @@ export default {
 				...this.getParams(params)
 			}
 			this.dataList = []
-			this.$api.memberList(params).then((res) => {
+			this.$api.memberListAPI(params).then((res) => {
 				const {
 					code,
 					data: { record, totalRecord },
@@ -496,10 +482,77 @@ export default {
 			// this.loadData()
 		},
 
-		add() {
-			this.moduleBox = '新增银行信息'
-			this.editVisible = true
+		exportExcel() {
+			const params = {
+				accountStatus: 0,
+				accountType: 0,
+				applyInfo: '2021-04-29T06:03:31.794Z',
+				applyName: 'string',
+				birth: '2021-04-29T06:03:31.794Z',
+				city: 'string',
+				createDt: '2021-04-29T06:03:31.794Z',
+				deviceNo: 'string',
+				deviceType: 0,
+				email: 'string',
+				endTime: 0,
+				firstDepositAmount: 0,
+				firstDepositTime: '2021-04-29T06:03:31.795Z',
+				gender: 0,
+				ipAttribution: 'string',
+				labelId: 0,
+				labelName: 'string',
+				lastLoginIp: 'string',
+				lastLoginTime: '2021-04-29T06:03:31.795Z',
+				levelId: 0,
+				merchantId: 0,
+				mobile: 'string',
+				pageNum: 0,
+				pageSize: 0,
+				parentProxyId: 0,
+				parentProxyName: 'string',
+				password: 'string',
+				realName: 'string',
+				registerIp: 'string',
+				registerPhone: 'string',
+				registerReference: 'string',
+				salt: 'string',
+				startTime: 0,
+				status: 0,
+				titleId: 0,
+				updateDt: '2021-04-29T06:03:31.795Z',
+				username: 'string',
+				vipId: 0,
+				vipSerialNum: 0,
+				windControlId: 0,
+				windControlName: 'string'
+			}
+            this.$api.exportExcelAPI(params).then((res) => {
+                const result = res.data
+                const disposition = res.headers['content-disposition']
+                const fileNames = disposition.split("''")
+                let fileName = fileNames[1]
+                fileName = decodeURIComponent(fileName)
+                const blob = new Blob([result], { type: 'application/octet-stream' })
+                if ('download' in document.createElement('a')) {
+                    const elink = document.createElement('a')
+                    elink.download = fileName || ''
+                    elink.style.display = 'none'
+                    elink.href = URL.createObjectURL(blob)
+                    document.body.appendChild(elink)
+                    elink.click()
+                    URL.revokeObjectURL(elink.href)
+                    document.body.removeChild(elink)
+                } else {
+                    window.navigator.msSaveBlob(blob, fileName)
+                }
+                this.$message({
+                    type: 'success',
+                    message: '导出成功',
+                    duration: 1500
+                })
+            })
 		},
+
 		submitAdd() {
 			console.log(this.$refs.addForm)
 			//   setAddBank(this.queryData).then((res) => {

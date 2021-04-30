@@ -17,7 +17,7 @@
 							align="right"
 							clearable
 							value-format="timestamp"
-							style="width: 385px"
+							style="width: 382px"
 						></el-date-picker>
 					</el-form-item>
 					<el-form-item label="账号类型:">
@@ -26,7 +26,7 @@
 							size="medium"
 							placeholder="全部"
 							clearable
-							style="width: 105px"
+							style="width: 150px"
 						>
 							<el-option label="全部" value></el-option>
 						</el-select>
@@ -38,7 +38,7 @@
 							size="medium"
 							placeholder="请输入"
 							clearable
-							style="width: 165px"
+							style="width: 150px"
 						></el-input>
 					</el-form-item>
 					<el-form-item label="会员姓名:">
@@ -48,7 +48,7 @@
 							size="medium"
 							placeholder="请输入"
 							clearable
-							style="width: 165px"
+							style="width: 150px"
 						></el-input>
 					</el-form-item>
 					<el-form-item label="上级代理:">
@@ -57,7 +57,7 @@
 							size="medium"
 							placeholder="请输入"
 							clearable
-							style="width: 165px"
+							style="width: 150px"
 						></el-input>
 					</el-form-item>
 					<el-form-item label="注册手机号:">
@@ -66,7 +66,7 @@
 							size="medium"
 							placeholder="请输入"
 							clearable
-							style="width: 165px"
+							style="width: 150px"
 						></el-input>
 					</el-form-item>
 					<el-form-item label="注册IP:">
@@ -75,7 +75,7 @@
 							size="medium"
 							placeholder="请输入"
 							clearable
-							style="width: 165px"
+							style="width: 150px"
 						></el-input>
 					</el-form-item>
 					<el-form-item label="IP归属地:">
@@ -84,7 +84,7 @@
 							size="medium"
 							placeholder="请输入"
 							clearable
-							style="width: 165px"
+							style="width: 150px"
 						></el-input>
 					</el-form-item>
 					<el-form-item label="注册终端:">
@@ -93,7 +93,7 @@
 							size="medium"
 							placeholder="全部"
 							clearable
-							style="width: 105px"
+							style="width: 150px"
 						>
 							<el-option label="全部" value></el-option>
 						</el-select>
@@ -153,10 +153,6 @@
 						label="上级代理"
 					></el-table-column>
 					<el-table-column prop="phone" align="center" label="注册手机号">
-<!--						<template slot="header">-->
-<!--							<span>注册手机号</span>-->
-<!--							<i class="el-icon-view"></i>-->
-<!--						</template>-->
 					</el-table-column>
 					<el-table-column
 						prop="IP"
@@ -271,10 +267,24 @@ export default {
 	methods: {
 		loadData(params) {
 			params = {
-				...this.getParams(params)
+				...this.getParams(params),
+				...{
+					accountType: 0,
+					createDtEnd: '',
+					createDtStart: '',
+					deviceType: 0,
+					ipAttribution: '',
+					merchantId: '',
+					orderType: '',
+					parentProxyName: '',
+					registerIp: '',
+					registerPhone: '',
+					total: 0,
+					userName: 'bdHeviis'
+				}
 			}
 			this.dataList = []
-			this.$api.memberList(params).then((res) => {
+			this.$api.memberRegisterInfoListAPI(params).then((res) => {
 				const {
 					code,
 					data: { record, totalRecord },

@@ -96,34 +96,30 @@
         border
         size="mini"
         class="small-size-table"
-        :data="dataList"
+        :data="tableList"
         :header-row-style="{ height: '24px', lineHeight: '24px' }"
         style="margin-top: 10px; z-index: 0"
         :header-cell-style="getRowClass"
       >
         <el-table-column align="center" type="index" label="序号"></el-table-column>
         <el-table-column
-          prop="updateDt"
+          prop="createDt"
           align="center"
           label="更新时间"
         ></el-table-column>
+        <el-table-column prop="remark" align="center" label="备注信息"></el-table-column>
         <el-table-column
-          prop="updateDt"
-          align="center"
-          label="备注信息"
-        ></el-table-column>
-        <el-table-column
-          prop="updateDt"
+          prop="operator"
           align="center"
           label="备注账号"
         ></el-table-column>
       </el-table>
       <!-- 分页 -->
       <el-pagination
-        :current-page.sync="pageNum"
+        :current-page.sync="page"
         layout="total, sizes,prev, pager, next, jumper"
-        :page-size="3"
-        :page-sizes="[3, 5, 10]"
+        :page-size="size"
+        :page-sizes="[1, 2, 10]"
         :total="total"
         :pager-count="5"
         style="float: right; padding-top: 10px"
@@ -241,7 +237,7 @@ import list from '@/mixins/list'
 // import dayjs from 'dayjs'
 export default {
   mixins: [list],
-  props: {},
+  props: { memberRemarkList: { type: Object, default: () => ({}) } },
   data() {
     return {
       editMsgList: [
@@ -310,27 +306,38 @@ export default {
         }
       ],
       percentage: 0,
-      dataList: [],
+      tableList: [],
       moduleBox: '',
       editVisible: false,
-      editData: { textarea: '' }
+      editData: { textarea: '' },
+      page: 1,
+      size: 3
     }
   },
   computed: {},
-  watch: {},
+  watch: {
+    memberRemarkList: {
+      handler(newV) {
+        if (newV.total) {
+          this.total = newV.total
+          this.tableList = newV.records
+        }
+      },
+      deep: true,
+      immediate: true
+    }
+  },
   created() {},
   mounted() {
     this.percentage = (10000 / 20000) * 100 + 0
     if (this.percentage > 100) {
       this.percentage = 100
     }
-    console.log(typeof this.percentage)
   },
   methods: {
     editFn(val) {
       this.moduleBox = val
       this.editVisible = true
-      console.log(val)
     },
     submitAdd() {},
     submitEdit() {},
@@ -339,14 +346,12 @@ export default {
       this.editVisible = false
     },
     handleCurrentChange(val) {
-      console.log(val)
-      this.pageNum = val
-      this.$api.getMemberRemarkList().then((res) => {
-        console.log(res)
-      })
+      this.page = val
+      this.$parent.query()
     },
     handleSizeChange(val) {
-      console.log(val)
+      this.size = val
+      this.$parent.query()
     }
   }
 }
