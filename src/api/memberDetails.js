@@ -1,8 +1,8 @@
 import request from '@/utils/request'
 // 会员详情-基本信息-概要信息以及个人资料
-export function getOutlineInfo(params, userName) {
+export function getOutlineInfo(params) {
 	return request({
-		url: `/member/outlineInfo/${userName}`,
+		url: `/member/outlineInfo`,
 		method: 'get',
 		params
 	})

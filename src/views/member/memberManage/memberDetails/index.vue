@@ -126,7 +126,7 @@ export default {
     getOutlineInfo(val) {
       const loading = this.$loading(this.loadingRgba)
       this.$api
-        .getOutlineInfo('', val.userName)
+        .getOutlineInfo({ userName: val.userName })
         .then((res) => {
           if (res.code === 200) {
             this.outlineInfo = res.data
