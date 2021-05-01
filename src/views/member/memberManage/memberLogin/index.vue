@@ -117,15 +117,15 @@
 					</el-button>
 				</el-form-item>
 				<p class="login1">
-					数据更新时间：1111111
-					<span>总登录次数：94次</span>
+					数据更新时间：{{ now }}
+					<span>总登录次数：{{ summary.count }}次</span>
 				</p>
 				<p class="login2">
 					登录成功：
-					<span class="success">54次</span>
+					<span class="success">{{ summary.successCount }}次</span>
 					<span class="fail">
 						登录失败：
-						<span class="danger">40次</span>
+						<span class="danger">{{ summary.failCount }}次</span>
 					</span>
 				</p>
 			</el-form>
@@ -240,6 +240,12 @@ export default {
 				deviceType: '',
 				deviceNo: ''
 			},
+			now: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
+			summary: {
+				count: 0,
+				failCount: 0,
+				successCount: 0
+			},
 			formTime: {
 				time: [start, end]
 			},
@@ -274,10 +280,12 @@ export default {
 			}
 			this.$api.memberLoginLog(params).then((res) => {
 				if (res.code === 200) {
+					this.now = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
 					const response = res.data
 					this.loading = false
 					this.dataList = response.records
 					this.total = response.total
+					this.summary = response.summary
 				} else {
 					this.loading = false
 					this.$message({

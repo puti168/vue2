@@ -171,7 +171,6 @@ export default {
 			}
 			this.loadData()
 		},
-
 		filterChange(filters) {
 			if (filters.type) {
 				this.listQuery.type = filters.type[0]

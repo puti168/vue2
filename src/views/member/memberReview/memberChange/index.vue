@@ -181,17 +181,19 @@
 					<el-table-column prop="cardNo" align="center" label="锁单">
 						<template slot-scope="scope">
 							<el-checkbox
-								v-if="scope.row.auditStatus === 0 && scope.row.lockOrder === 0"
+								v-if="scope.row.auditStep === '一审审核' && (scope.row.auditName === name || !scope.row.auditName)"
 								v-model="scope.row.lockOrder"
-								@change="lockChange"
+								@change="lockChange()"
 							></el-checkbox>
 						</template>
 					</el-table-column>
-					<el-table-column
-						prop="createBy"
-						align="center"
-						label="操作"
-					></el-table-column>
+					<el-table-column prop="auditStep" align="center" label="操作">
+						<template slot-scope="scope">
+							<el-button v-if="scope.row.auditStep === '一审审核' && (scope.row.auditName === name || !scope.row.auditName)" type="primary" size="medium">{{ scope.row.auditStep }}</el-button>
+							<el-button v-else-if="scope.row.auditStep === '一审审核' && scope.row.auditName !== name" disabled type="primary" size="medium">{{ scope.row.auditStep }}</el-button>
+							<el-button v-else-if="scope.row.auditStep === '结单查看'" type="success" size="medium">{{ scope.row.auditStep }}</el-button>
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="auditNum"
 						align="center"
@@ -207,14 +209,18 @@
 						align="center"
 						label="修改前"
 					></el-table-column>
-					<el-table-column align="center"></el-table-column>
+					<el-table-column
+						prop="afterModify"
+						align="center"
+						label="修改后"
+					></el-table-column>
 					<el-table-column align="center" label="操作类型">
 						<template slot="header">
 							<p>会员账号</p>
 							<p>账号类型</p>
 						</template>
 						<template slot-scope="scope">
-							{{ scope.row.userName }}
+							{{ scope.row.userName ? scope.row.userName : '-' }}
 							<Copy :title="scope.row.modifyBy" :copy="copy" />
 							<p>{{ scope.row.accountType }}</p>
 						</template>
@@ -235,19 +241,36 @@
 						align="center"
 						label="申请信息"
 					></el-table-column>
-					<el-table-column
-						prop="auditStatus"
-						align="center"
-						label="审核状态"
-					></el-table-column>
-					<el-table-column align="center"></el-table-column>
+					<el-table-column align="center" label="审核状态">
+						<template slot-scope="scope">
+							<span
+								v-if="scope.row.auditStatus === '审核处理'"
+								class="infoState"
+							>
+								{{ scope.row.auditStatus }}
+							</span>
+							<span
+								v-else-if="scope.row.auditStatus === '审核通过'"
+								class="success"
+							>
+								{{ scope.row.auditStatus }}
+							</span>
+							<span
+								v-else-if="scope.row.auditStatus === '一审拒绝'"
+								class="danger"
+							>
+								{{ scope.row.auditStatus }}
+							</span>
+						</template>
+					</el-table-column>
 					<el-table-column align="center" sortable="custom" width="200px">
 						<template slot="header">
-							一审审核人 <br />
+							一审审核人
+							<br />
 							一审完成时间
 						</template>
 						<template slot-scope="scope">
-							{{ scope.row.auditName }}
+							{{ scope.row.auditName ? scope.row.auditName : '-' }}
 							<p>{{ scope.row.auditTime }}</p>
 						</template>
 					</el-table-column>
@@ -271,6 +294,7 @@
 <script>
 import list from '@/mixins/list'
 import dayjs from 'dayjs'
+import { getNickName } from '@/utils/auth'
 const end = dayjs()
 	.endOf('day')
 	.valueOf()
@@ -299,6 +323,7 @@ export default {
 				time: [start, end],
 				time2: [start, end]
 			},
+			name: '',
 			dataList: [],
 			title: '',
 			showForm: '',
@@ -320,7 +345,10 @@ export default {
 			return this.globalDics.applyType
 		}
 	},
-	mounted() {},
+	mounted() {
+		this.name = getNickName()
+		console.log(this.name)
+	},
 	methods: {
 		loadData() {
 			this.loading = true
@@ -377,7 +405,10 @@ export default {
 			}
 			this.loadData()
 		},
-		lockChange(val) {}
+		lockChange(val, val2) {
+			console.log(val)
+			console.log(val2)
+		}
 	}
 }
 </script>
