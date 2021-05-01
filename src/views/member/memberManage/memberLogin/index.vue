@@ -29,7 +29,7 @@
 				</el-form-item>
 				<el-form-item label="账号类型:">
 					<el-select
-						v-model="queryData.accountType"
+						v-model="accountType1"
 						multiple
 						placeholder="默认选择全部"
 						:popper-append-to-body="false"
@@ -81,7 +81,7 @@
 				</el-form-item>
 				<el-form-item label="登录终端:">
 					<el-select
-						v-model="queryData.deviceType"
+						v-model="deviceType1"
 						style="width: 300px"
 						:popper-append-to-body="false"
 						multiple
@@ -241,6 +241,8 @@ export default {
 				deviceType: [],
 				deviceNo: ''
 			},
+			accountType1: [],
+			deviceType1: [],
 			now: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
 			summary: {
 				count: 0,
@@ -279,7 +281,8 @@ export default {
 			params = {
 				...this.getParams(params)
 			}
-			params = JSON.stringify(params)
+			params.accountType = this.accountType1.join(',')
+			params.deviceType = this.deviceType1.join(',')
 			this.$api.memberLoginLog(params).then((res) => {
 				if (res.code === 200) {
 					this.now = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
@@ -307,6 +310,8 @@ export default {
 				deviceType: [],
 				deviceNo: ''
 			}
+			this.accountType1 = []
+			this.deviceType1 = []
 			this.formTime.time = [start, end]
 			this.loadData()
 		}
