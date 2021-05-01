@@ -5,7 +5,7 @@
 				ref="menus"
 				:default-active="activeMenu"
 				background-color="#f2f2f2"
-				text-color="#999999"
+				text-color="#666666"
 				:unique-opened="false"
 				active-text-color="#58A3F7"
 				:collapse-transition="false"

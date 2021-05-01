@@ -30,10 +30,10 @@
 				<el-form-item label="账号类型:">
 					<el-select
 						v-model="queryData.accountType"
-						style="width: 180px"
 						multiple
 						placeholder="默认选择全部"
 						:popper-append-to-body="false"
+						style="width: 300px"
 					>
 						<el-option
 							v-for="item in accountType"
@@ -82,10 +82,10 @@
 				<el-form-item label="登录终端:">
 					<el-select
 						v-model="queryData.deviceType"
-						style="width: 180px"
+						style="width: 300px"
 						:popper-append-to-body="false"
+						multiple
 					>
-						<el-option label="全部" value=""></el-option>
 						<el-option
 							v-for="item in deviceType"
 							:key="item.code"
@@ -238,7 +238,7 @@ export default {
 				loginStatus: '',
 				loginIp: '',
 				ipAttribution: '',
-				deviceType: '',
+				deviceType: [],
 				deviceNo: ''
 			},
 			now: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
@@ -279,6 +279,7 @@ export default {
 			params = {
 				...this.getParams(params)
 			}
+			params = JSON.stringify(params)
 			this.$api.memberLoginLog(params).then((res) => {
 				if (res.code === 200) {
 					this.now = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
@@ -303,7 +304,7 @@ export default {
 				loginStatus: '',
 				loginIp: '',
 				ipAttribution: '',
-				deviceType: '',
+				deviceType: [],
 				deviceNo: ''
 			}
 			this.formTime.time = [start, end]
