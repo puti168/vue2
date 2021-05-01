@@ -2,7 +2,7 @@ import dayjs from 'dayjs'
 import { shortcuts, shortcutsNoToday, shortcutsM } from '@/utils/consts'
 import { formatCurrency } from '@/utils'
 import Copy from '@/components/Copy/copy'
-
+import { mapGetters } from 'vuex'
 export default {
 	components: { Copy },
 	data() {
@@ -19,6 +19,7 @@ export default {
 		}
 	},
 	computed: {
+		...mapGetters(['globalDics']),
 		pickerOptions() {
 			const _this = this
 			return {
@@ -35,6 +36,15 @@ export default {
 				},
 				shortcuts: shortcuts
 			}
+		},
+		typeFilter(val, type) {
+			let name = ''
+			this.globalDics[type].forEach(item => {
+				if (item.code === val) {
+					name = item.descrition
+				}
+			})
+			return name
 		},
 		pickerOptionsM() {
 			const _this = this

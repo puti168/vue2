@@ -7,6 +7,27 @@ export function blackList(params) {
 		params
 	})
 }
+export function memberLoginLog(params) {
+	return request({
+		url: '/log/memberLoginLog',
+		method: 'get',
+		params
+	})
+}
+export function recordInfo(params) {
+	return request({
+		url: '/recordInfo',
+		method: 'get',
+		params
+	})
+}
+export function memberChange(params) {
+	return request({
+		url: '/page',
+		method: 'get',
+		params
+	})
+}
 export function editBlackList(data) {
 	return request({
 		url: '/bankBlack/edit',
@@ -30,7 +51,10 @@ export function addBlackList(data) {
 }
 
 export default {
+	recordInfo,
+	memberChange,
 	blackList,
+	memberLoginLog,
 	editBlackList,
 	delBlackList,
 	addBlackList

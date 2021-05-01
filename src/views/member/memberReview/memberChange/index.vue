@@ -19,7 +19,7 @@
 				</el-form-item>
 				<el-form-item label="一审完成时间:">
 					<el-date-picker
-						v-model="formTime.time"
+						v-model="formTime.time2"
 						size="medium"
 						:picker-options="pickerOptions"
 						format="yyyy-MM-dd HH:mm:ss"
@@ -34,35 +34,42 @@
 				</el-form-item>
 				<el-form-item label="会员账号:">
 					<el-input
-						v-model="queryData.updatedBy"
+						v-model="queryData.userName"
 						clearable
 						size="medium"
 						style="width: 280px"
 						placeholder="请输入"
-						:disabled="loading"
 						@keyup.enter.native="enterSearch"
 					></el-input>
 				</el-form-item>
 				<el-form-item label="账号类型:">
 					<el-select
-						v-model="queryData.status"
+						v-model="queryData.accountType"
 						style="width: 280px"
 						:popper-append-to-body="false"
 					>
-						<el-option label="全部" value=""></el-option>
-						<el-option label="启用" value="0"></el-option>
-						<el-option label="停用" value="1"></el-option>
+						<el-option label="全部" value></el-option>
+						<el-option
+							v-for="item in accountType"
+							:key="item.code"
+							:label="item.description"
+							:value="item.code"
+						></el-option>
 					</el-select>
 				</el-form-item>
 				<el-form-item label="审核申请类型:">
 					<el-select
-						v-model="queryData.status"
+						v-model="queryData.applyType"
 						style="width: 280px"
 						:popper-append-to-body="false"
 					>
-						<el-option label="全部" value=""></el-option>
-						<el-option label="启用" value="0"></el-option>
-						<el-option label="停用" value="1"></el-option>
+						<el-option label="全部" value></el-option>
+						<el-option
+							v-for="item in applyType"
+							:key="item.code"
+							:label="item.description"
+							:value="item.code"
+						></el-option>
 					</el-select>
 				</el-form-item>
 				<el-form-item label="审核操作:">
@@ -78,56 +85,61 @@
 				</el-form-item>
 				<el-form-item label="审核状态:">
 					<el-select
-						v-model="queryData.status"
+						v-model="queryData.auditStatus"
 						style="width: 280px"
 						:popper-append-to-body="false"
 					>
 						<el-option label="全部" value=""></el-option>
-						<el-option label="启用" value="0"></el-option>
-						<el-option label="停用" value="1"></el-option>
+						<el-option
+							v-for="item in auditStatus"
+							:key="item.code"
+							:label="item.description"
+							:value="item.code"
+						></el-option>
 					</el-select>
 				</el-form-item>
 				<el-form-item label="申请人:">
 					<el-input
-						v-model="queryData.createBy"
+						v-model="queryData.applyName"
 						clearable
 						size="medium"
 						style="width: 280px"
 						placeholder="请输入"
-						:disabled="loading"
 						@keyup.enter.native="enterSearch"
 					></el-input>
 				</el-form-item>
 				<el-form-item label="一审人:">
 					<el-input
-						v-model="queryData.updatedBy"
+						v-model="queryData.auditName"
 						clearable
 						size="medium"
 						style="width: 280px"
 						placeholder="请输入"
-						:disabled="loading"
 						@keyup.enter.native="enterSearch"
 					></el-input>
 				</el-form-item>
 				<el-form-item label="锁单状态:">
 					<el-select
-						v-model="queryData.status"
+						v-model="queryData.lockOrder"
 						style="width: 280px"
 						:popper-append-to-body="false"
 					>
-						<el-option label="全部" value=""></el-option>
-						<el-option label="启用" value="0"></el-option>
-						<el-option label="停用" value="1"></el-option>
+						<el-option label="全部" value></el-option>
+						<el-option
+							v-for="item in lockOrderType"
+							:key="item.code"
+							:label="item.description"
+							:value="item.code"
+						></el-option>
 					</el-select>
 				</el-form-item>
 				<el-form-item label="审核单号:">
 					<el-input
-						v-model="queryData.updatedBy"
+						v-model="queryData.auditNum"
 						clearable
 						size="medium"
 						style="width: 280px"
 						placeholder="请输入"
-						:disabled="loading"
 						@keyup.enter.native="enterSearch"
 					></el-input>
 				</el-form-item>
@@ -164,15 +176,16 @@
 					:data="dataList"
 					style="width: 100%"
 					:header-cell-style="getRowClass"
+					@sort-change="changeTableSort"
 				>
-					<el-table-column
-						prop="cardNo"
-						align="center"
-						label="锁单"
-					>
-					<template slot-scope="scope">
-						<el-checkbox v-model="scope.row.cardNo"></el-checkbox>
-					</template>
+					<el-table-column prop="cardNo" align="center" label="锁单">
+						<template slot-scope="scope">
+							<el-checkbox
+								v-if="scope.row.auditStatus === 0 && scope.row.lockOrder === 0"
+								v-model="scope.row.lockOrder"
+								@change="lockChange"
+							></el-checkbox>
+						</template>
 					</el-table-column>
 					<el-table-column
 						prop="createBy"
@@ -180,63 +193,62 @@
 						label="操作"
 					></el-table-column>
 					<el-table-column
-						prop="createDt"
+						prop="auditNum"
 						align="center"
 						label="审核单号"
 					></el-table-column>
 					<el-table-column
-						prop="modifyBy"
+						prop="applyType"
 						align="center"
 						label="审核申请类型"
 					></el-table-column>
 					<el-table-column
-						prop="modifyDt"
+						prop="beforeModify"
 						align="center"
 						label="修改前"
 					></el-table-column>
-					<el-table-column
-						align="center"
-					></el-table-column>
-					<el-table-column prop="modifyDt" align="center" label="操作类型">
+					<el-table-column align="center"></el-table-column>
+					<el-table-column align="center" label="操作类型">
 						<template slot="header">
 							<p>会员账号</p>
 							<p>账号类型</p>
 						</template>
 						<template slot-scope="scope">
-							{{ scope.row.modifyBy }}
+							{{ scope.row.userName }}
 							<Copy :title="scope.row.modifyBy" :copy="copy" />
+							<p>{{ scope.row.accountType }}</p>
 						</template>
 					</el-table-column>
 					<el-table-column
-						prop="remark"
+						prop="applyName"
 						align="center"
 						label="申请人"
 					></el-table-column>
 					<el-table-column
-						prop="remark"
+						prop="applyTime"
 						align="center"
+						sortable="custom"
 						label="申请时间"
 					></el-table-column>
 					<el-table-column
-						prop="remark"
+						prop="applyInfo"
 						align="center"
 						label="申请信息"
 					></el-table-column>
 					<el-table-column
-						prop="remark"
+						prop="auditStatus"
 						align="center"
 						label="审核状态"
 					></el-table-column>
-					<el-table-column
-						align="center"
-					></el-table-column>
-					<el-table-column align="center">
+					<el-table-column align="center"></el-table-column>
+					<el-table-column align="center" sortable="custom">
 						<template slot="header">
 							<p>一审审核人</p>
 							<p>一审完成时间</p>
 						</template>
 						<template slot-scope="scope">
-							{{ scope.row.modifyBy }}
+							{{ scope.row.auditName }}
+							<p>{{ scope.row.auditTime }}</p>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -259,15 +271,33 @@
 <script>
 import list from '@/mixins/list'
 import dayjs from 'dayjs'
+const end = dayjs()
+	.endOf('day')
+	.valueOf()
+const start = dayjs()
+	.startOf('day')
+	.valueOf()
 export default {
 	name: '',
 	components: {},
 	mixins: [list],
 	data() {
 		return {
-			queryData: {},
+			queryData: {
+				userName: '',
+				accountType: '',
+				applyType: '',
+				auditStatus: '',
+				applyName: '',
+				auditName: '',
+				lockOrder: '',
+				auditNum: '',
+				orderType: '',
+				orderKey: ''
+			},
 			formTime: {
-				time: []
+				time: [start, end],
+				time2: [start, end]
 			},
 			dataList: [],
 			title: '',
@@ -276,7 +306,20 @@ export default {
 			editFormData: {}
 		}
 	},
-	computed: {},
+	computed: {
+		accountType() {
+			return this.globalDics.accountType
+		},
+		auditStatus() {
+			return this.globalDics.auditStatusType
+		},
+		lockOrderType() {
+			return this.globalDics.lockOrderType
+		},
+		applyType() {
+			return this.globalDics.applyType
+		}
+	},
 	mounted() {},
 	methods: {
 		loadData() {
@@ -284,21 +327,28 @@ export default {
 			const [startTime, endTime] = this.formTime.time || []
 			let params = {
 				...this.queryData,
-				pageNum: 1,
-				startTime: startTime
+				applyTimeStart: startTime
 					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
 					: '',
-				endTime: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
+				applyTimeEnd: endTime
+					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
+					: '',
+				auditTimeStart: startTime
+					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
+					: '',
+				auditTimeEnd: endTime
+					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
+					: ''
 			}
 			params = {
 				...this.getParams(params)
 			}
-			this.$api.blackList(params).then((res) => {
+			this.$api.memberChange(params).then((res) => {
 				if (res.code === 200) {
 					const response = res.data
 					this.loading = false
-					this.dataList = response.records
-					this.total = response.total
+					this.dataList = response.record
+					this.total = response.totalRecord
 				} else {
 					this.loading = false
 					this.$message({
@@ -309,59 +359,25 @@ export default {
 			})
 		},
 		reset() {
-			this.queryData = {}
-			this.formTime.time = []
+			this.queryData = {
+				userName: '',
+				accountType: '',
+				applyType: '',
+				auditStatus: '',
+				applyName: '',
+				auditName: '',
+				lockOrder: '',
+				auditNum: '',
+				orderType: '',
+				orderKey: ''
+			}
+			this.formTime = {
+				time: [start, end],
+				time2: [start, end]
+			}
 			this.loadData()
 		},
-
-		add() {
-			this.title = '新增'
-			this.editVisible = true
-			this.editFormData = {}
-		},
-		deleteUp(val) {
-			this.$confirm('确定删除此银行卡号吗?', {
-				confirmButtonText: '确定',
-				cancelButtonText: '取消',
-				type: 'warning'
-			}).then(() => {
-				const loading = this.$loading({
-					lock: true,
-					text: 'Loading',
-					spinner: 'el-icon-loading',
-					background: 'rgba(0, 0, 0, 0.7)'
-				})
-				this.$api
-					.delBlackList({
-						id: val.id
-					})
-					.then(() => {
-						loading.close()
-						this.search()
-						this.$message({
-							type: 'success',
-							message: '删除成功!'
-						})
-					})
-					.catch(() => {
-						loading.close()
-					})
-			})
-		},
-		editUp(val) {
-			this.title = '编辑'
-			this.editVisible = true
-			this.editFormData = val
-		},
-		submit() {
-			this.$refs.editForm.submit()
-		},
-		handleCurrentChange() {
-			this.loadData()
-		},
-		closeFormDialog() {
-			this.editVisible = false
-		}
+		lockChange(val) {}
 	}
 }
 </script>

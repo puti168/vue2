@@ -4,9 +4,9 @@
 			<div class="head">
 				<span class="title">会员账户修改审核详情</span>
 				<div class="right-btn">
-					<el-button plain>取消</el-button>
-					<el-button type="success">一审通过</el-button>
-					<el-button type="danger">一审拒绝</el-button>
+					<el-button plain @click="goBack">取消</el-button>
+					<el-button type="success" @click="auditOne(true)">一审通过</el-button>
+					<el-button type="danger" @click="auditOne(false)">一审拒绝</el-button>
 				</div>
 			</div>
 			<div class="main-content">
@@ -26,53 +26,53 @@
 				<div class="review-content">
 					<p class="name">会员账号信息</p>
 					<div class="review-flex">
-						<div>账号: XXXXXXXXXX</div>
-						<div>账号状态: BBBBBBB</div>
-						<div>VIP等级: 5555</div>
-						<div>银行卡数量: 3</div>
+						<div>账号: {{ list.accountInfo.userName }}</div>
+						<div>账号状态: {{ list.accountInfo.accountStatus }}</div>
+						<div>VIP等级: {{ list.accountInfo.viptualNum }}</div>
+						<div>银行卡数量: {{ list.accountInfo.cardNum }}</div>
 					</div>
 					<div class="review-flex">
-						<div>虚拟币账号数量: 3</div>
-						<div>风控层级: 风控一级</div>
-						<div>会员标签: 标签1</div>
-						<div>备注信息: -</div>
+						<div>虚拟币账号数量: {{ list.accountInfo.virtualNum }}</div>
+						<div>风控层级: {{ list.accountInfo.windControlName }}</div>
+						<div>会员标签: {{ list.accountInfo.labelName }}</div>
+						<div>备注信息: {{ list.accountInfo.remark }}div></div>
 					</div>
-				</div>
-				<div class="review-content more-height">
-					<p class="name">申请信息</p>
-					<div class="review-flex">
-						<div>申请人: XXXXXXXXXX</div>
-						<div>申请时间: BBBBBBB</div>
-						<div>审核申请类型: 5555</div>
-						<div>申请原因: 3</div>
+					<div class="review-content more-height">
+						<p class="name">申请信息</p>
+						<div class="review-flex">
+							<div>申请人: {{ list.applyInfo.applyName }}</div>
+							<div>申请时间: {{ list.applyInfo.applyTime }}</div>
+							<div>审核申请类型: {{ list.applyInfo.applyType }}</div>
+							<div>申请原因: {{ list.applyInfo.applyInfo }}</div>
+						</div>
+						<div class="review-flex">
+							<el-table
+								border
+								size="mini"
+								:data="list.applyInfo"
+								style="width: 100%"
+								:header-cell-style="getRowClass"
+							>
+								<el-table-column
+									prop="beforeModify"
+									align="center"
+									label="修改前"
+								></el-table-column>
+								<el-table-column
+									prop="afterModify"
+									align="center"
+									label="修改后"
+								></el-table-column>
+							</el-table>
+						</div>
 					</div>
-					<div class="review-flex">
-						<el-table
-							border
-							size="mini"
-							:data="dataList"
-							style="width: 100%"
-							:header-cell-style="getRowClass"
-						>
-							<el-table-column
-								prop="createDt"
-								align="center"
-								label="修改前"
-							></el-table-column>
-							<el-table-column
-								prop="modifyBy"
-								align="center"
-								label="修改后"
-							></el-table-column>
-						</el-table>
-					</div>
-				</div>
-				<div class="review-content">
-					<p class="name">会员账号信息</p>
-					<div class="review-flex">
-						<div>一审人: XXXXXXXXXX</div>
-						<div>一审时间: BBBBBBB</div>
-						<div>一审备注: 5555</div>
+					<div class="review-content">
+						<p class="name">会员账号信息</p>
+						<div class="review-flex">
+							<div>一审人: {{ list.auditInfo.auditName }}</div>
+							<div>一审时间: {{ list.auditInfo.auditTime }}</div>
+							<div>一审备注: {{ list.auditInfo.auditRemark }}</div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -88,11 +88,33 @@ export default {
 	mixins: [],
 	data() {
 		return {
+			list: ''
 		}
 	},
 	computed: {},
 	mounted() {},
 	methods: {
+		auditOne(type) {},
+		goBack() {},
+		getInfo() {
+			const params = {
+				userId: '',
+				recordId: ''
+			}
+			this.$api.recordInfo(params).then((res) => {
+				if (res.code === 200) {
+					const response = res.data
+					this.loading = false
+					this.list = response
+				} else {
+					this.loading = false
+					this.$message({
+						message: res.msg,
+						type: 'error'
+					})
+				}
+			})
+		},
 		getRowClass({ row, column, rowIndex, columnIndex }) {
 			if (rowIndex === 0) {
 				return 'background:#EFEFEF'
