@@ -37,7 +37,7 @@
 						v-model="queryData.userName"
 						clearable
 						size="medium"
-						style="width: 280px"
+						style="width: 180px"
 						placeholder="请输入"
 						@keyup.enter.native="enterSearch"
 					></el-input>
@@ -45,10 +45,11 @@
 				<el-form-item label="账号类型:">
 					<el-select
 						v-model="queryData.accountType"
-						style="width: 280px"
+						style="width: 180px"
+						multiple
 						:popper-append-to-body="false"
+						placeholder="默认选择全部"
 					>
-						<el-option label="全部" value></el-option>
 						<el-option
 							v-for="item in accountType"
 							:key="item.code"
@@ -60,7 +61,7 @@
 				<el-form-item label="审核申请类型:">
 					<el-select
 						v-model="queryData.applyType"
-						style="width: 280px"
+						style="width: 180px"
 						:popper-append-to-body="false"
 					>
 						<el-option label="全部" value></el-option>
@@ -75,7 +76,7 @@
 				<el-form-item label="审核操作:">
 					<el-select
 						v-model="queryData.status"
-						style="width: 280px"
+						style="width: 180px"
 						:popper-append-to-body="false"
 					>
 						<el-option label="全部" value=""></el-option>
@@ -86,7 +87,7 @@
 				<el-form-item label="审核状态:">
 					<el-select
 						v-model="queryData.auditStatus"
-						style="width: 280px"
+						style="width: 180px"
 						:popper-append-to-body="false"
 					>
 						<el-option label="全部" value=""></el-option>
@@ -103,7 +104,7 @@
 						v-model="queryData.applyName"
 						clearable
 						size="medium"
-						style="width: 280px"
+						style="width: 180px"
 						placeholder="请输入"
 						@keyup.enter.native="enterSearch"
 					></el-input>
@@ -113,7 +114,7 @@
 						v-model="queryData.auditName"
 						clearable
 						size="medium"
-						style="width: 280px"
+						style="width: 180px"
 						placeholder="请输入"
 						@keyup.enter.native="enterSearch"
 					></el-input>
@@ -121,7 +122,7 @@
 				<el-form-item label="锁单状态:">
 					<el-select
 						v-model="queryData.lockOrder"
-						style="width: 280px"
+						style="width: 180px"
 						:popper-append-to-body="false"
 					>
 						<el-option label="全部" value></el-option>
@@ -138,7 +139,7 @@
 						v-model="queryData.auditNum"
 						clearable
 						size="medium"
-						style="width: 280px"
+						style="width: 180px"
 						placeholder="请输入"
 						@keyup.enter.native="enterSearch"
 					></el-input>
@@ -181,7 +182,7 @@
 					<el-table-column prop="cardNo" align="center" label="锁单">
 						<template slot-scope="scope">
 							<el-checkbox
-								v-if="scope.row.auditStep === '一审审核' && (scope.row.auditName === name || !scope.row.auditName)"
+								v-if="scope.row.auditStep === '1' && (scope.row.auditName === name || !scope.row.auditName)"
 								v-model="scope.row.lockOrder"
 								@change="lockChange()"
 							></el-checkbox>
@@ -189,9 +190,9 @@
 					</el-table-column>
 					<el-table-column prop="auditStep" align="center" label="操作">
 						<template slot-scope="scope">
-							<el-button v-if="scope.row.auditStep === '一审审核' && (scope.row.auditName === name || !scope.row.auditName)" type="primary" size="medium">{{ scope.row.auditStep }}</el-button>
-							<el-button v-else-if="scope.row.auditStep === '一审审核' && scope.row.auditName !== name" disabled type="primary" size="medium">{{ scope.row.auditStep }}</el-button>
-							<el-button v-else-if="scope.row.auditStep === '结单查看'" type="success" size="medium">{{ scope.row.auditStep }}</el-button>
+							<el-button v-if="scope.row.auditStep === '1' && (scope.row.auditName === name || !scope.row.auditName)" type="primary" size="medium">{{ typeFilter(scope.row.auditStep, 'auditStepType') }}</el-button>
+							<el-button v-else-if="scope.row.auditStep === '1' && scope.row.auditName !== name" disabled type="primary" size="medium">{{ typeFilter(scope.row.auditStep, 'auditStepType') }}</el-button>
+							<el-button v-else-if="scope.row.auditStep === '0'" type="success" size="medium">{{ typeFilter(scope.row.auditStep, 'auditStepType') }}</el-button>
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -203,7 +204,8 @@
 						prop="applyType"
 						align="center"
 						label="审核申请类型"
-					></el-table-column>
+					><template slot-scope="scope">
+						{{ typeFilter(scope.row.applyType, 'applyType') }}</template></el-table-column>
 					<el-table-column
 						prop="beforeModify"
 						align="center"
@@ -222,7 +224,7 @@
 						<template slot-scope="scope">
 							{{ scope.row.userName ? scope.row.userName : '-' }}
 							<Copy :title="scope.row.modifyBy" :copy="copy" />
-							<p>{{ scope.row.accountType }}</p>
+							<p>{{ typeFilter(scope.row.accountType, 'applyType') }}</p>
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -244,22 +246,9 @@
 					<el-table-column align="center" label="审核状态">
 						<template slot-scope="scope">
 							<span
-								v-if="scope.row.auditStatus === '审核处理'"
-								class="infoState"
+								:class="scope.row.auditStatus === '1' ? 'infoState' : scope.row.auditStatus === '2' ? 'success' : 'danger'"
 							>
-								{{ scope.row.auditStatus }}
-							</span>
-							<span
-								v-else-if="scope.row.auditStatus === '审核通过'"
-								class="success"
-							>
-								{{ scope.row.auditStatus }}
-							</span>
-							<span
-								v-else-if="scope.row.auditStatus === '一审拒绝'"
-								class="danger"
-							>
-								{{ scope.row.auditStatus }}
+								{{ typeFilter(scope.row.auditStatus, 'auditStatusType') }}
 							</span>
 						</template>
 					</el-table-column>
@@ -302,14 +291,14 @@ const start = dayjs()
 	.startOf('day')
 	.valueOf()
 export default {
-	name: '',
+	name: 'MemberChange',
 	components: {},
 	mixins: [list],
 	data() {
 		return {
 			queryData: {
 				userName: '',
-				accountType: '',
+				accountType: [],
 				applyType: '',
 				auditStatus: '',
 				applyName: '',
@@ -389,7 +378,7 @@ export default {
 		reset() {
 			this.queryData = {
 				userName: '',
-				accountType: '',
+				accountType: [],
 				applyType: '',
 				auditStatus: '',
 				applyName: '',
@@ -406,6 +395,23 @@ export default {
 			this.loadData()
 		},
 		lockChange(val, val2) {
+			this.$api.lock(
+				{id: '595743559097831424'}
+			).then((res) => {
+				if (res.code === 200) {
+					const response = res.data
+					this.loading = false
+					this.dataList = response.record
+					this.total = response.totalRecord
+				} else {
+					this.loading = false
+					this.$message({
+						message: res.msg,
+						type: 'error'
+					})
+				}
+			})
+			JSON.stringify
 			console.log(val)
 			console.log(val2)
 		}

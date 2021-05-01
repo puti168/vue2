@@ -76,9 +76,10 @@
 					<el-select
 						v-model="queryData.accountType"
 						style="width: 180px"
+						multiple
+						placeholder="默认选择全部"
 						:popper-append-to-body="false"
 					>
-						<el-option label="全部" value></el-option>
 						<el-option v-for="item in accountType" :key="item.code" :label="item.description" :value="item.code"></el-option>
 					</el-select>
 				</el-form-item>
@@ -203,7 +204,7 @@ export default {
 	data() {
 		return {
 			queryData: {
-				accountType: '',
+				accountType: [],
 				bankName: '',
 				dataType: 2,
 				operateType: '',
@@ -260,7 +261,18 @@ export default {
 			})
 		},
 		reset() {
-			this.queryData = {}
+			this.queryData = {
+				accountType: [],
+				bankName: '',
+				dataType: 2,
+				operateType: '',
+				orderType: '',
+				parentProxyName: '',
+				userName: '',
+				virtualAddress: '',
+				virtualKind: '',
+				virtualProtocol: ''
+			}
 			this.formTime.time = [start, end]
 			this.loadData()
 		},

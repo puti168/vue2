@@ -28,6 +28,13 @@ export function memberChange(params) {
 		params
 	})
 }
+export function lock(params) {
+	return request({
+		url: '/lock',
+		method: 'get',
+		params
+	})
+}
 export function editBlackList(data) {
 	return request({
 		url: '/bankBlack/edit',
@@ -53,6 +60,7 @@ export function addBlackList(data) {
 export default {
 	recordInfo,
 	memberChange,
+	lock,
 	blackList,
 	memberLoginLog,
 	editBlackList,

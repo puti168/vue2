@@ -31,9 +31,10 @@
 					<el-select
 						v-model="queryData.accountType"
 						style="width: 180px"
+						multiple
+						placeholder="默认选择全部"
 						:popper-append-to-body="false"
 					>
-						<el-option label="全部" value></el-option>
 						<el-option
 							v-for="item in accountType"
 							:key="item.code"
@@ -233,7 +234,7 @@ export default {
 		return {
 			queryData: {
 				userName: '',
-				accountType: '',
+				accountType: [],
 				loginStatus: '',
 				loginIp: '',
 				ipAttribution: '',
@@ -298,7 +299,7 @@ export default {
 		reset() {
 			this.queryData = {
 				userName: '',
-				accountType: '',
+				accountType: [],
 				loginStatus: '',
 				loginIp: '',
 				ipAttribution: '',
