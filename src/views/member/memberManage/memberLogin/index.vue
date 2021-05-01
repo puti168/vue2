@@ -2,7 +2,7 @@
 	<div class="game-container report-container">
 		<div class="params">
 			<el-form ref="form" :inline="true" :model="queryData">
-        <el-form-item label="登录时间:">
+				<el-form-item label="登录时间:">
 					<el-date-picker
 						v-model="formTime.time"
 						size="medium"
@@ -17,9 +17,9 @@
 						:default-time="defaultTime"
 					></el-date-picker>
 				</el-form-item>
-        <el-form-item label="会员账号:">
+				<el-form-item label="会员账号:">
 					<el-input
-						v-model="queryData.roleName"
+						v-model="queryData.userName"
 						clearable
 						size="medium"
 						style="width: 180px"
@@ -29,30 +29,38 @@
 				</el-form-item>
 				<el-form-item label="账号类型:">
 					<el-select
-						v-model="queryData.status"
+						v-model="queryData.accountType"
 						style="width: 180px"
 						:popper-append-to-body="false"
 					>
-						<el-option label="全部" value=""></el-option>
-						<el-option label="启用" value="0"></el-option>
-						<el-option label="停用" value="1"></el-option>
+						<el-option label="全部" value></el-option>
+						<el-option
+							v-for="item in accountType"
+							:key="item.code"
+							:label="item.description"
+							:value="item.code"
+						></el-option>
 					</el-select>
 				</el-form-item>
 				<el-form-item label="登录状态:">
 					<el-select
-						v-model="queryData.status"
+						v-model="queryData.loginStatus"
 						style="width: 180px"
 						:popper-append-to-body="false"
 					>
 						<el-option label="全部" value=""></el-option>
-						<el-option label="启用" value="0"></el-option>
-						<el-option label="停用" value="1"></el-option>
+						<el-option
+							v-for="item in loginStatusType"
+							:key="item.code"
+							:label="item.description"
+							:value="item.code"
+						></el-option>
 					</el-select>
 				</el-form-item>
 
 				<el-form-item label="登录IP:">
 					<el-input
-						v-model="queryData.createBy"
+						v-model="queryData.loginIp"
 						clearable
 						size="medium"
 						style="width: 180px"
@@ -62,7 +70,7 @@
 				</el-form-item>
 				<el-form-item label="IP归属地:">
 					<el-input
-						v-model="queryData.updatedBy"
+						v-model="queryData.ipAttribution"
 						clearable
 						size="medium"
 						style="width: 180px"
@@ -70,20 +78,24 @@
 						@keyup.enter.native="enterSearch"
 					></el-input>
 				</el-form-item>
-        <el-form-item label="登录终端:">
+				<el-form-item label="登录终端:">
 					<el-select
-						v-model="queryData.status"
+						v-model="queryData.deviceType"
 						style="width: 180px"
 						:popper-append-to-body="false"
 					>
 						<el-option label="全部" value=""></el-option>
-						<el-option label="启用" value="0"></el-option>
-						<el-option label="停用" value="1"></el-option>
+						<el-option
+							v-for="item in deviceType"
+							:key="item.code"
+							:label="item.description"
+							:value="item.code"
+						></el-option>
 					</el-select>
 				</el-form-item>
 				<el-form-item label="终端设备号:">
 					<el-input
-						v-model="queryData.updatedBy"
+						v-model="queryData.deviceNo"
 						clearable
 						size="medium"
 						style="width: 180px"
@@ -100,16 +112,22 @@
 					>
 						查询
 					</el-button>
-					<el-button
-						icon="el-icon-refresh-left"
-						size="medium"
-						@click="reset"
-					>
+					<el-button icon="el-icon-refresh-left" size="medium" @click="reset">
 						重置
 					</el-button>
 				</el-form-item>
-        <p class="login1">数据更新时间：1111111<span>总登录次数：94次</span></p>
-        <p class="login2">登录成功：<span class="success">54次</span><span class="fail">登录失败：<span class="danger">40次</span></span></p>
+				<p class="login1">
+					数据更新时间：1111111
+					<span>总登录次数：94次</span>
+				</p>
+				<p class="login2">
+					登录成功：
+					<span class="success">54次</span>
+					<span class="fail">
+						登录失败：
+						<span class="danger">40次</span>
+					</span>
+				</p>
 			</el-form>
 		</div>
 		<div class="view-container dealer-container">
@@ -124,61 +142,60 @@
 					:header-cell-style="getRowClass"
 				>
 					<el-table-column
-						prop="cardNo"
+						prop="loginTime"
 						align="center"
 						label="登录时间"
-					>
-					</el-table-column>
+					></el-table-column>
 					<el-table-column
-						prop="createBy"
+						prop="loginStatus"
 						align="center"
 						label="登录状态"
 					></el-table-column>
 					<el-table-column
 						v-slot="scope"
-						prop="createDt"
+						prop="userName"
 						align="center"
 						label="会员账号"
 					>
-						<Copy :title="scope.row.cardNo" :copy="copy" />
+						<Copy :title="scope.row.userName" :copy="copy" />
 					</el-table-column>
 					<el-table-column
-						prop="modifyBy"
+						prop="accountType"
 						align="center"
 						label="账号类型"
 					></el-table-column>
 					<el-table-column
-						prop="modifyDt"
+						prop="loginIp"
 						align="center"
 						label="登录IP"
 					></el-table-column>
 					<el-table-column
-						prop="modifyDt"
+						prop="ipAttribution"
 						align="center"
 						label="IP归属地"
 					></el-table-column>
 					<el-table-column
-						prop="modifyDt"
+						prop="deviceType"
 						align="center"
 						label="登录终端"
 					></el-table-column>
 					<el-table-column
-						prop="remark"
+						prop="deviceNo"
 						align="center"
 						label="终端设备号"
 					></el-table-column>
 					<el-table-column
-						prop="remark"
+						prop="loginReference"
 						align="center"
 						label="登录地址"
 					></el-table-column>
 					<el-table-column
-						prop="remark"
+						prop="browseContent"
 						align="center"
 						label="设备版本"
 					></el-table-column>
 					<el-table-column
-						prop="remark"
+						prop="loginError"
 						align="center"
 						label="备注"
 					></el-table-column>
@@ -203,11 +220,11 @@
 import list from '@/mixins/list'
 import dayjs from 'dayjs'
 const end = dayjs()
-			.endOf('day')
-			.valueOf()
-		const start = dayjs()
-			.startOf('day')
-			.valueOf()
+	.endOf('day')
+	.valueOf()
+const start = dayjs()
+	.startOf('day')
+	.valueOf()
 export default {
 	name: '',
 	components: {},
@@ -215,19 +232,31 @@ export default {
 	data() {
 		return {
 			queryData: {
-				roleName: ''
+				userName: '',
+				accountType: '',
+				loginStatus: '',
+				loginIp: '',
+				ipAttribution: '',
+				deviceType: '',
+				deviceNo: ''
 			},
 			formTime: {
 				time: [start, end]
 			},
-			dataList: [],
-			title: '',
-			showForm: '',
-			editVisible: false,
-			editFormData: {}
+			dataList: []
 		}
 	},
-	computed: {},
+	computed: {
+		accountType() {
+			return this.globalDics.accountType
+		},
+		loginStatusType() {
+			return this.globalDics.loginStatusType
+		},
+		deviceType() {
+			return this.globalDics.deviceType
+		}
+	},
 	mounted() {},
 	methods: {
 		loadData() {
@@ -235,15 +264,15 @@ export default {
 			const [startTime, endTime] = this.formTime.time || []
 			let params = {
 				...this.queryData,
-				startTime: startTime
+				loginStartTime: startTime
 					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
 					: '',
-				endTime: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
+				loginEndTime: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
 			}
 			params = {
 				...this.getParams(params)
 			}
-			this.$api.blackList(params).then((res) => {
+			this.$api.memberLoginLog(params).then((res) => {
 				if (res.code === 200) {
 					const response = res.data
 					this.loading = false
@@ -259,58 +288,17 @@ export default {
 			})
 		},
 		reset() {
-			this.queryData = {}
-			this.formTime.time = []
+			this.queryData = {
+				userName: '',
+				accountType: '',
+				loginStatus: '',
+				loginIp: '',
+				ipAttribution: '',
+				deviceType: '',
+				deviceNo: ''
+			}
+			this.formTime.time = [start, end]
 			this.loadData()
-		},
-
-		add() {
-			this.title = '新增'
-			this.editVisible = true
-			this.editFormData = {}
-		},
-		deleteUp(val) {
-			this.$confirm('确定删除此银行卡号吗?', {
-				confirmButtonText: '确定',
-				cancelButtonText: '取消',
-				type: 'warning'
-			}).then(() => {
-				const loading = this.$loading({
-					lock: true,
-					text: 'Loading',
-					spinner: 'el-icon-loading',
-					background: 'rgba(0, 0, 0, 0.7)'
-				})
-				this.$api
-					.delBlackList({
-						id: val.id
-					})
-					.then(() => {
-						loading.close()
-						this.search()
-						this.$message({
-							type: 'success',
-							message: '删除成功!'
-						})
-					})
-					.catch(() => {
-						loading.close()
-					})
-			})
-		},
-		editUp(val) {
-			this.title = '编辑'
-			this.editVisible = true
-			this.editFormData = val
-		},
-		submit() {
-			this.$refs.editForm.submit()
-		},
-		handleCurrentChange() {
-			this.loadData()
-		},
-		closeFormDialog() {
-			this.editVisible = false
 		}
 	}
 }
@@ -323,15 +311,15 @@ export default {
 	font-weight: 700;
 }
 .login1 {
-  margin-top: 0;
-  span {
-    margin-left: 50px;
-  }
+	margin-top: 0;
+	span {
+		margin-left: 50px;
+	}
 }
 .login2 {
-  padding-bottom: 15px;
-  .fail {
-    margin-left: 50px;
-  }
+	padding-bottom: 15px;
+	.fail {
+		margin-left: 50px;
+	}
 }
 </style>
