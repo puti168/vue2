@@ -64,9 +64,9 @@ export function getOneKeyWithdraw(params) {
 	})
 }
 // 提现流水查询
-export function getWithdrawWater(params, userId) {
+export function getWithdrawWater(params) {
 	return request({
-		url: `/withdrawalFreeze/withdrawWater/${userId}`,
+		url: `/withdrawalFreeze/withdrawWater`,
 		method: 'get',
 		params
 	})

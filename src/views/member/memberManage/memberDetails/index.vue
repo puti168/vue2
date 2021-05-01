@@ -134,7 +134,7 @@ export default {
             this.queryData.userId = res.data.id
             this.getVipInfo(res.data.id)
             this.getMemberRemarkList(res.data.id)
-            this.getAccountCashAccount()
+            this.getAccountCashAccount(res.data.id)
             this.getWithdrawalFreeze(res.data.id)
           }
           loading.close()
@@ -153,7 +153,7 @@ export default {
     },
     // 备注信息
     getMemberRemarkList(val) {
-      const params = { ...val, pageNum: this.num, pageSize: this.size }
+      const params = { userId: val, pageNum: this.num, pageSize: this.size }
       this.$api.getMemberRemarkList(params).then((res) => {
         if (res.code === 200) {
           this.remarksTableData = res.data
@@ -162,10 +162,7 @@ export default {
     },
     // 查询中心钱包余额
     getAccountCashAccount(val) {
-      console.log('595608671732400128')
-      const v = parseInt('595608671732400128')
-      console.log(v)
-      this.$api.getAccountCashAccount({ userId: v }).then((res) => {
+      this.$api.getAccountCashAccount({ userId: val }).then((res) => {
         console.log('中心钱包', res)
       })
     },
@@ -192,7 +189,7 @@ export default {
     // },
     // 提现流水查询
     getWithdrawWater(val) {
-      this.$api.getWithdrawWater('', val.userId).then((res) => {
+      this.$api.getWithdrawWater({ userId: val.userId }).then((res) => {
         console.log(res)
       })
     },
