@@ -37,15 +37,6 @@ export default {
 				shortcuts: shortcuts
 			}
 		},
-		typeFilter(val, type) {
-			let name = ''
-			this.globalDics[type].forEach(item => {
-				if (item.code === val) {
-					name = item.descrition
-				}
-			})
-			return name
-		},
 		pickerOptionsM() {
 			const _this = this
 			return {
@@ -92,6 +83,15 @@ export default {
 			} else {
 				return ''
 			}
+		},
+		typeFilter(val, type) {
+			let name = ''
+			this.globalDics[type].forEach(item => {
+				if (Number(item.code) === Number(val)) {
+					name = item.description
+				}
+			})
+			return name
 		},
 		/**
 		 * 获取请求参数 默认只传递index(页码) pageSize(每页条数) 可以由调用方传递指定对象合并(或者覆盖)原参数
@@ -171,7 +171,6 @@ export default {
 			}
 			this.loadData()
 		},
-
 		filterChange(filters) {
 			if (filters.type) {
 				this.listQuery.type = filters.type[0]
