@@ -151,7 +151,8 @@
 						prop="loginStatus"
 						align="center"
 						label="登录状态"
-					></el-table-column>
+					><template slot-scope="scope">
+						<span :class="scope.row.loginStatus === '1' ? 'success' : 'danger'">{{ typeFilter(scope.row.loginStatus, 'loginStatusType') }}</span></template></el-table-column>
 					<el-table-column
 						v-slot="scope"
 						prop="userName"
@@ -164,7 +165,8 @@
 						prop="accountType"
 						align="center"
 						label="账号类型"
-					></el-table-column>
+					><template slot-scope="scope">
+						{{ typeFilter(scope.row.accountType, 'accountType') }}</template></el-table-column>
 					<el-table-column
 						prop="loginIp"
 						align="center"
@@ -179,7 +181,8 @@
 						prop="deviceType"
 						align="center"
 						label="登录终端"
-					></el-table-column>
+					><template slot-scope="scope">
+						{{ typeFilter(scope.row.deviceType, 'deviceType') }}</template></el-table-column>
 					<el-table-column
 						prop="deviceNo"
 						align="center"
@@ -288,7 +291,7 @@ export default {
 					this.now = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
 					const response = res.data
 					this.loading = false
-					this.dataList = response.records
+					this.dataList = response.record
 					this.total = response.total
 					this.summary = response.summary
 				} else {
