@@ -3,11 +3,19 @@
     <div class="bg"></div>
     <div class="ps">
       <el-form ref="form" :inline="true" :model="queryData">
-        <el-form-item label="会员账号:">
+        <el-form-item
+          label="会员账号:"
+          prop="userName"
+          :rules="[
+            { required: true, message: '请输入活动名称', trigger: 'blur' },
+            { min: 1, max: 11, message: '长度在 2 到 50 个字符', trigger: 'blur' },
+          ]"
+        >
           <el-input
             v-model="queryData.userName"
             clearable
             size="medium"
+            :maxlength="11"
             style="width: 280px"
             placeholder="请输入会员账号"
             :disabled="loading"
@@ -50,12 +58,18 @@
       <first
         ref="first"
         class="floor-item"
-        :userid="userid"
-        :memberRemarkList="memberRemarkList"
+        :queryData="queryData"
+        :outlineInfo="outlineInfo"
+        :vipMsg="vipMsg"
+        :remarksTableData="remarksTableData"
       ></first>
-      <second class="floor-item" :userid="userid" :balanceList="balanceList"></second>
-      <third class="floor-item" :userid="userid"></third>
-      <fourth class="floor-item" :userid="userid"></fourth>
+      <second
+        class="floor-item"
+        :queryData="queryData"
+        :balanceList="balanceList"
+      ></second>
+      <third class="floor-item" :queryData="queryData"></third>
+      <fourth class="floor-item" :queryData="queryData"></fourth>
     </div>
   </div>
 </template>
@@ -72,17 +86,19 @@ export default {
   mixins: [list],
   data() {
     return {
-      queryData: { userName: 'test01', userid: 587597733479145472 },
-      userid: null,
+      queryData: { userName: '', userId: null },
       activeName: 'first',
       tabList: ['first', 'second', 'third', 'fourth'],
-      element: {
-        nav_item: null,
-        floor_item: null
-      },
-      timer: null,
-      memberRemarkList: {},
-      balanceList: { freezeBalance: '' }
+      outlineInfo: {}, // 基本信息
+      vipMsg: {}, // vip信息
+      remarksTableData: {}, // 备注表格
+      balanceList: { freezeBalance: '' },
+      loadingRgba: {
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      }
     }
   },
   computed: {
@@ -108,14 +124,31 @@ export default {
   methods: {
     // 会员详情-基本信息-概要信息以及个人资料
     getOutlineInfo(val) {
-      this.$api.getOutlineInfo('', val.userName).then((res) => {
-        console.log(res)
-      })
+      const loading = this.$loading(this.loadingRgba)
+      this.$api
+        .getOutlineInfo('', val.userName)
+        .then((res) => {
+          if (res.code === 200) {
+            this.outlineInfo = res.data
+            this.queryData.userName = res.data.userName
+            this.queryData.userId = res.data.id
+            this.getVipInfo(res.data.id)
+            this.getMemberRemarkList(res.data.id)
+            this.getAccountCashAccount()
+            this.getWithdrawalFreeze(res.data.id)
+          }
+          loading.close()
+        })
+        .catch(() => {
+          loading.close()
+        })
     },
     // vip信息
     getVipInfo(val) {
-      this.$api.getVipInfo(val).then((res) => {
-        console.log(res)
+      this.$api.getVipInfo({ userId: val }).then((res) => {
+        if (res.code === 200) {
+          this.vipMsg = res.data
+        }
       })
     },
     // 备注信息
@@ -123,20 +156,22 @@ export default {
       const params = { ...val, pageNum: this.num, pageSize: this.size }
       this.$api.getMemberRemarkList(params).then((res) => {
         if (res.code === 200) {
-          this.memberRemarkList = res.data
+          this.remarksTableData = res.data
         }
-        console.log(res)
       })
     },
     // 查询中心钱包余额
     getAccountCashAccount(val) {
-      this.$api.getAccountCashAccount(val).then((res) => {
-        console.log(res)
+      console.log('595608671732400128')
+      const v = parseInt('595608671732400128')
+      console.log(v)
+      this.$api.getAccountCashAccount({ userId: v }).then((res) => {
+        console.log('中心钱包', res)
       })
     },
     // 提现冻结余额
     getWithdrawalFreeze(val) {
-      this.$api.getWithdrawalFreeze(val).then((res) => {
+      this.$api.getWithdrawalFreeze({ userId: val }).then((res) => {
         if (res.code === 200) {
           console.log(res, 'freezeBalance')
           this.balanceList.freezeBalance = res.data.freezeBalance
@@ -157,7 +192,7 @@ export default {
     // },
     // 提现流水查询
     getWithdrawWater(val) {
-      this.$api.getWithdrawWater('', val.userid).then((res) => {
+      this.$api.getWithdrawWater('', val.userId).then((res) => {
         console.log(res)
       })
     },
@@ -193,11 +228,12 @@ export default {
     },
     query() {
       const params = this.queryData
-      this.userid = params.userid
-      // this.getOutlineInfo(params);
-      // this.getVipInfo(params);
-      // this.getMemberRemarkList(params);
-      // this.getAccountCashAccount(params);
+      this.$refs.form.validate((valid) => {
+        if (valid) {
+          this.getOutlineInfo(params)
+        }
+      })
+
       // this.getWithdrawalFreeze(params)
       // this.getOneKeyBalance(params);
       // this.getOneKeyWithdraw(params)
@@ -206,6 +242,9 @@ export default {
       // this.getPlayerTop3(params);
       // this.getLogMemberLoginLog(params);
       // this.getBankCardBank(params);
+    },
+    enterSubmit() {
+      this.query()
     },
     reset() {
       this.queryData = {}

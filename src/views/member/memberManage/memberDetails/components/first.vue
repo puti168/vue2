@@ -3,7 +3,12 @@
     <el-row>
       <el-col :span="4" class="backgroundTitelBox">基本信息</el-col>
       <el-col :span="2" class="refrestBox">
-        <el-button type="primary" icon="el-icon-refresh" @click="refresh">刷新</el-button>
+        <el-button
+          type="primary"
+          icon="el-icon-refresh"
+          :disabled="this.queryData.userName === ''"
+          @click="refresh"
+          >刷新</el-button>
       </el-col>
       <el-col :span="2" class="editMsg">
         <i class="el-icon-edit-outline"></i><br />
@@ -21,28 +26,34 @@
     </el-row>
     <div class="titelBox">概要信息</div>
     <el-row class="msgList">
-      <el-col :span="5">会员账号：LAKA12</el-col>
-      <el-col :span="5">账号类型：正式</el-col>
-      <el-col :span="5">帐号状态：正常</el-col>
-      <el-col :span="5">风控层级：风控二级</el-col>
-      <el-col :span="5">首存时间：2019-09-16 17:00:55</el-col>
-      <el-col :span="5">首存金额：10000.00</el-col>
-      <el-col :span="5">最后登录时间：2019-09-16 17:00:55</el-col>
-      <el-col :span="5">离线天数：20</el-col>
-      <el-col :span="5">注册时间：2019-09-16 17:00:55</el-col>
-      <el-col :span="5">注册IP：119.92.65.155</el-col>
-      <el-col :span="5">注册端：PC</el-col>
-      <el-col :span="5">上级代理：MICO123556</el-col>
-      <el-col :span="5">会员标签：标签1</el-col>
+      <el-col :span="5">会员账号：{{ outlineInfoList.userName }}</el-col>
+      <el-col :span="5">账号类型：{{ outlineInfoList.accountType }}</el-col>
+      <el-col :span="5">帐号状态：{{ outlineInfoList.accountStatus }}</el-col>
+      <el-col :span="5">风控层级：{{ outlineInfoList.windControlName }}</el-col>
+      <el-col :span="5">首存时间：{{ outlineInfoList.createDt }}</el-col>
+      <el-col :span="5">首存金额：{{ outlineInfoList.firstDepositAmount }}</el-col>
+      <el-col :span="5">最后登录时间：{{ outlineInfoList.lastLoginTime }}</el-col>
+      <el-col :span="5">离线天数：{{ outlineInfoList.leaveLineTime }}</el-col>
+      <el-col :span="5">注册时间：{{ outlineInfoList.firstDepositTime }}</el-col>
+      <el-col :span="5">注册IP：{{ outlineInfoList.registerIp }}</el-col>
+      <el-col
+:span="5"
+>注册端：
+        <span v-for="item in deviceTypeList" :key="item.label">{{
+          item.value === outlineInfoList.deviceType ? item.label : ""
+        }}</span>
+      </el-col>
+      <el-col :span="5">上级代理：{{ outlineInfoList.parentProxyName }}</el-col>
+      <el-col :span="5">会员标签：{{ outlineInfoList.labelName }}</el-col>
     </el-row>
     <el-divider></el-divider>
     <div class="titelBox">个人资料</div>
     <el-row class="msgList">
-      <el-col :span="5">姓名：张龙</el-col>
-      <el-col :span="5">性别：男</el-col>
-      <el-col :span="5">出生日期：1911-11-11</el-col>
-      <el-col :span="5">手机号码：+86 186****0227</el-col>
-      <el-col :span="5">邮箱：akdjajj@qq.com</el-col>
+      <el-col :span="5">姓名：{{ outlineInfoList.realName }}</el-col>
+      <el-col :span="5">性别：{{ outlineInfoList.gender }}</el-col>
+      <el-col :span="5">出生日期：{{ outlineInfoList.birth }}</el-col>
+      <el-col :span="5">手机号码：{{ outlineInfoList.registerPhone }}</el-col>
+      <el-col :span="5">邮箱：{{ outlineInfoList.email }}</el-col>
     </el-row>
     <el-divider></el-divider>
     <!-- <div class="titelBox">
@@ -56,38 +67,59 @@
       <el-col :span="12" class="paddingBox">
         <el-row>
           <el-col :span="3">剩余</el-col>
-          <el-col :span="7" class="textR">10000</el-col>
-          <el-col :span="7" class="textR">10000</el-col>
-          <el-col :span="7" class="textR">10000</el-col>
+          <el-col :span="7" class="textR">{{ vipMsg.depositAmountLave }}</el-col>
+          <el-col :span="7" class="textR">{{ vipMsg.validBetsLave }}</el-col>
+          <el-col :span="7" class="textR">{{ vipMsg.bjValidBetsLave }}</el-col>
         </el-row>
         <el-row style="height: 14px">
           <el-col :span="3" style="color: #fff; height: 14px">进度条 </el-col>
           <el-col :span="7" class="">
-            <el-progress :percentage="percentage" :stroke-width="12" :show-text="false">
+            <el-progress :percentage="percentagea" :stroke-width="12" :show-text="false">
             </el-progress></el-col>
           <el-col :span="7" class="paddingL">
-            <el-progress :percentage="percentage" :stroke-width="12" :show-text="false">
+            <el-progress :percentage="percentageb" :stroke-width="12" :show-text="false">
             </el-progress></el-col>
           <el-col :span="7" class="paddingL">
-            <el-progress :percentage="percentage" :stroke-width="12" :show-text="false">
+            <el-progress :percentage="percentagec" :stroke-width="12" :show-text="false">
             </el-progress></el-col>
         </el-row>
         <el-row>
           <el-col :span="3">已完成</el-col>
-          <el-col :span="7" class="textR">10000/20000</el-col>
-          <el-col :span="7" class="textR">10000/20000</el-col>
-          <el-col :span="7" class="textR">10000/20000</el-col>
+          <el-col
+:span="7"
+class="textR"
+>{{ vipMsg.depositAmountCurr }}/{{ vipMsg.depositAmountTotal }}</el-col>
+          <el-col
+:span="7"
+class="textR"
+>{{ vipMsg.validBetsCurr }}/{{ vipMsg.validBetsTotal }}</el-col>
+          <el-col
+:span="7"
+class="textR"
+>{{ vipMsg.bjValidBetsCurr }}/{{ vipMsg.bjValidBetsTotal }}</el-col>
         </el-row>
         <el-row>
           <el-col :span="3" style="color: #fff">描述</el-col>
-          <el-col :span="7" class="textC">(升级)存款金额</el-col>
-          <el-col :span="7" class="textC">(升级)有效投注</el-col>
-          <el-col :span="7" class="textC">(保级: 2019-12-31)有效投注</el-col>
+          <el-col
+:span="7"
+class="textC"
+>({{ vipMsg.depositAmountStatus === 0 ? "升级" : "保级："
+            }}{{ vipMsg.depositAmountDate }} )存款金额</el-col>
+          <el-col
+:span="7"
+class="textC"
+>({{ vipMsg.validBetsStatus === 0 ? "升级" : "保级："
+            }}{{ vipMsg.validBetsDate }})有效投注</el-col>
+          <el-col
+:span="7"
+class="textC"
+>({{ vipMsg.bjValidBetsStatus === 0 ? "升级" : "保级："
+            }}{{ vipMsg.bjValidBetsDate }})有效投注</el-col>
         </el-row>
       </el-col>
       <el-col :span="10" class="paddingBox">
-        <div>VIP等级：5</div>
-        <div>VIP经验：20</div>
+        <div>VIP等级：{{ vipMsg.grade }}</div>
+        <div>VIP经验：{{ vipMsg.experience }}</div>
       </el-col>
     </el-row>
     <el-divider></el-divider>
@@ -197,16 +229,24 @@
             v-model="editData.phoneNum"
             clearable
             size="medium"
+            :maxlength="11"
             placeholder="请输入手机号码"
             :disabled="loading"
             @keyup.enter.native="enterSearch"
           ></el-input>
         </el-form-item>
-        <el-form-item v-if="moduleBox === '姓名'" label="姓名：" prop="name">
+        <el-form-item
+          v-if="moduleBox === '姓名'"
+          label="姓名："
+          prop="name"
+          :maxlength="6"
+        >
           <el-input
             v-model="editData.name"
             clearable
+            type="text"
             size="medium"
+            :maxlength="6"
             placeholder="请输入姓名"
             :disabled="loading"
             @keyup.enter.native="enterSearch"
@@ -230,17 +270,18 @@
             clearable
             type="email"
             size="medium"
+            :maxlength="32"
             placeholder="请输入邮箱"
             :disabled="loading"
             @keyup.enter.native="enterSearch"
           ></el-input>
         </el-form-item>
         <el-form-item v-if="moduleBox === '性别'" label="性别：" prop="radio">
-          <el-radio-group v-model="radio" @change="changeRadio">
-            <el-radio :label="0">保密</el-radio>
-            <el-radio :label="1">男</el-radio>
-            <el-radio :label="2">女</el-radio>
-          </el-radio-group>
+          <el-select v-model="editData.radio" placeholder="请选择">
+            <el-option label="保密" value="0"> </el-option>
+            <el-option label="男" value="1"> </el-option>
+            <el-option label="女" value="2"> </el-option>
+          </el-select>
         </el-form-item>
 
         <el-form-item
@@ -253,6 +294,7 @@
         >
           <el-input
             v-model="editData.remark"
+            :maxlength="50"
             type="textarea"
             placeholder="最多可输入50个字符"
           >
@@ -274,8 +316,10 @@ import list from '@/mixins/list'
 export default {
   mixins: [list],
   props: {
-    userid: { type: Number, default: null },
-    memberRemarkList: { type: Object, default: () => ({}) }
+    queryData: { type: Object, default: () => ({}) },
+    outlineInfo: { type: Object, default: () => ({}) },
+    vipMsg: { type: Object, default: () => ({}) },
+    remarksTableData: { type: Object, default: () => ({}) }
   },
   data() {
     const checkPhone = (rule, value, callback) => {
@@ -301,6 +345,13 @@ export default {
 
     return {
       loading: false,
+      deviceTypeList: [
+        { label: 'PC', value: 1 },
+        { label: 'IOS_APP', value: 2 },
+        { label: 'IOS_H5', value: 3 },
+        { label: 'Android_H5', value: 4 },
+        { label: 'Android_APP', value: 5 }
+      ],
       // 编辑信息按钮
       editMsgList: [
         { label: '账号状态', status: false },
@@ -369,12 +420,15 @@ export default {
         email: '',
         remark: ''
       },
-      percentage: 0,
+      outlineInfoList: {}, // 基本信息
+      // vipMsgList: {}, //vip信息
+      percentagea: 0,
+      percentageb: 0,
+      percentagec: 0,
       tableList: [],
       moduleBox: '',
       editVisible: false,
       editData: {},
-      radio: 0,
       page: 1,
       size: 3,
       rules: {
@@ -384,16 +438,34 @@ export default {
   },
   computed: {},
   watch: {
-    // userid: {
-    //   handler(newV) {
-    //     if (newV != null) {
-    //       this.editData.userid = newV;
-    //     }
-    //   },
-    //   deep: true,
-    //   immediate: true,
-    // },
-    memberRemarkList: {
+    outlineInfo: {
+      handler(newV) {
+        this.outlineInfoList = { ...newV }
+      },
+      deep: true,
+      immediate: true
+    },
+    vipMsg: {
+      handler(newV) {
+        if (JSON.stringify(newV) !== '{}') {
+          if (newV.depositAmountCurr > 0 && newV.depositAmountTotal > 0) {
+            const p1 = (newV.depositAmountCurr / newV.depositAmountTotal) * 100
+            p1 >= 100 ? (this.percentagea = 100) : (this.percentagea = p1)
+          }
+          if (newV.validBetsCurr > 0 && newV.validBetsTotal > 0) {
+            const p2 = (newV.validBetsCurr / newV.validBetsTotal) * 100
+            p2 >= 100 ? (this.percentageb = 100) : (this.percentageb = p2)
+          }
+          if (newV.bjValidBetsCurr > 0 && newV.bjValidBetsTotal > 0) {
+            const p3 = (newV.bjValidBetsCurr / newV.bjValidBetsTotal) * 100
+            p3 >= 100 ? (this.percentagec = 100) : (this.percentagec = p3)
+          }
+        }
+      },
+      deep: true,
+      immediate: true
+    },
+    remarksTableData: {
       handler(newV) {
         if (newV.total) {
           this.total = newV.total
@@ -405,17 +477,14 @@ export default {
     }
   },
   created() {},
-  mounted() {
-    this.percentage = (10000 / 20000) * 100 + 0
-    if (this.percentage > 100) {
-      this.percentage = 100
-    }
-  },
+  mounted() {},
   methods: {
     // 会员详情-基本信息-概要信息以及个人资料
     getOutlineInfo(val) {
       this.$api.getOutlineInfo('', val.userName).then((res) => {
-        console.log(res)
+        if (res.code === 200) {
+          this.outlineInfoList = res.data
+        }
       })
     },
     // vip信息
@@ -438,9 +507,21 @@ export default {
         this.editVisible = false
       })
     },
+    // 备注信息
+    getMemberRemarkList(val) {
+      console.log(val, '0000000000000')
+      const params = { val, pageNum: this.page, pageSize: this.size }
+      this.$api.getMemberRemarkList(params).then((res) => {
+        if (res.code === 200) {
+          this.tableList = res.data.records
+        }
+      })
+    },
     refresh() {
-      this.getOutlineInfo()
-      this.getVipInfo()
+      const val = this.queryData
+      console.log(this.queryData)
+      this.getOutlineInfo(val)
+      // this.getVipInfo();
     },
     editFn(val) {
       this.moduleBox = val
@@ -448,11 +529,6 @@ export default {
     },
     changeAccountStatus(val) {
       this.accountStatusAfter.accountStatus = val
-    },
-    changeRadio(val) {
-      console.log(val)
-      this.radio = val
-      this.editData.radio = val
     },
 
     cancel() {
@@ -465,7 +541,7 @@ export default {
       data.userName = 'fitz2019'
       console.log(this.moduleBox)
       this.$refs.editForm.validate((valid) => {
-        console.log(params)
+        console.log(params, 111111111)
         if (valid) {
           const loading = this.$loading({
             lock: true,
@@ -515,7 +591,7 @@ export default {
             loading.close()
           }
           if (this.moduleBox === '账号备注') {
-            params.userid = this.userid
+            params.userid = this.queryData.userid
             console.log(params)
             this.getMemberRemarkAdd(params)
             loading.close()
@@ -531,11 +607,15 @@ export default {
     },
     handleCurrentChange(val) {
       this.page = val
-      this.$parent.query()
+      if (this.queryData.userid !== null) {
+        this.getMemberRemarkList(this.queryData.userid)
+      }
     },
     handleSizeChange(val) {
       this.size = val
-      this.$parent.query()
+      if (this.queryData.userid !== null) {
+        this.getMemberRemarkList(this.queryData.userid)
+      }
     }
   }
 }
