@@ -7,11 +7,11 @@ export function blackList(params) {
 		params
 	})
 }
-export function memberLoginLog(params) {
+export function memberLoginLog(data) {
 	return request({
 		url: '/log/memberLoginLog',
-		method: 'get',
-		params
+		method: 'post',
+		data
 	})
 }
 export function recordInfo(params) {

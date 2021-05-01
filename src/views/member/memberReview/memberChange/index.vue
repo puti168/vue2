@@ -241,10 +241,10 @@
 						label="审核状态"
 					></el-table-column>
 					<el-table-column align="center"></el-table-column>
-					<el-table-column align="center" sortable="custom">
+					<el-table-column align="center" sortable="custom" width="200px">
 						<template slot="header">
-							<p>一审审核人</p>
-							<p>一审完成时间</p>
+							一审审核人 <br />
+							一审完成时间
 						</template>
 						<template slot-scope="scope">
 							{{ scope.row.auditName }}
