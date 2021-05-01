@@ -292,7 +292,7 @@ export default {
 					const response = res.data
 					this.loading = false
 					this.dataList = response.record
-					this.total = response.total
+					this.total = response.totalRecord
 					this.summary = response.summary
 				} else {
 					this.loading = false
