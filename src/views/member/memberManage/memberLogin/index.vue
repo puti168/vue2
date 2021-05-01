@@ -22,16 +22,15 @@
 						v-model="queryData.roleName"
 						clearable
 						size="medium"
-						style="width: 280px"
+						style="width: 180px"
 						placeholder="请输入"
-						:disabled="loading"
 						@keyup.enter.native="enterSearch"
 					></el-input>
 				</el-form-item>
 				<el-form-item label="账号类型:">
 					<el-select
 						v-model="queryData.status"
-						style="width: 280px"
+						style="width: 180px"
 						:popper-append-to-body="false"
 					>
 						<el-option label="全部" value=""></el-option>
@@ -42,7 +41,7 @@
 				<el-form-item label="登录状态:">
 					<el-select
 						v-model="queryData.status"
-						style="width: 280px"
+						style="width: 180px"
 						:popper-append-to-body="false"
 					>
 						<el-option label="全部" value=""></el-option>
@@ -56,9 +55,8 @@
 						v-model="queryData.createBy"
 						clearable
 						size="medium"
-						style="width: 280px"
+						style="width: 180px"
 						placeholder="请输入"
-						:disabled="loading"
 						@keyup.enter.native="enterSearch"
 					></el-input>
 				</el-form-item>
@@ -67,16 +65,15 @@
 						v-model="queryData.updatedBy"
 						clearable
 						size="medium"
-						style="width: 280px"
+						style="width: 180px"
 						placeholder="请输入"
-						:disabled="loading"
 						@keyup.enter.native="enterSearch"
 					></el-input>
 				</el-form-item>
         <el-form-item label="登录终端:">
 					<el-select
 						v-model="queryData.status"
-						style="width: 280px"
+						style="width: 180px"
 						:popper-append-to-body="false"
 					>
 						<el-option label="全部" value=""></el-option>
@@ -89,9 +86,8 @@
 						v-model="queryData.updatedBy"
 						clearable
 						size="medium"
-						style="width: 280px"
+						style="width: 180px"
 						placeholder="请输入"
-						:disabled="loading"
 						@keyup.enter.native="enterSearch"
 					></el-input>
 				</el-form-item>
@@ -99,7 +95,6 @@
 					<el-button
 						type="primary"
 						icon="el-icon-search"
-						:disabled="loading"
 						size="medium"
 						@click="search"
 					>
@@ -107,7 +102,6 @@
 					</el-button>
 					<el-button
 						icon="el-icon-refresh-left"
-						:disabled="loading"
 						size="medium"
 						@click="reset"
 					>
@@ -241,7 +235,6 @@ export default {
 			const [startTime, endTime] = this.formTime.time || []
 			let params = {
 				...this.queryData,
-				pageNum: 1,
 				startTime: startTime
 					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
 					: '',

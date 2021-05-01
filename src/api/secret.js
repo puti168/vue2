@@ -7,6 +7,13 @@ export function blackList(params) {
 		params
 	})
 }
+export function memberChange(params) {
+	return request({
+		url: '/page',
+		method: 'get',
+		params
+	})
+}
 export function editBlackList(data) {
 	return request({
 		url: '/bankBlack/edit',
@@ -30,6 +37,7 @@ export function addBlackList(data) {
 }
 
 export default {
+	memberChange,
 	blackList,
 	editBlackList,
 	delBlackList,

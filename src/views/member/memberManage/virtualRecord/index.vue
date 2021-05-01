@@ -4,13 +4,13 @@
 			<el-form ref="form" :inline="true" :model="queryData">
 				<el-form-item label="操作类型:">
 					<el-select
-						v-model="queryData.status"
-						style="width: 280px"
+						v-model="queryData.operateType"
+						style="width: 180px"
 						:popper-append-to-body="false"
 					>
-						<el-option label="全部" value=""></el-option>
-						<el-option label="启用" value="0"></el-option>
-						<el-option label="停用" value="1"></el-option>
+						<el-option label="全部" value></el-option>
+							<el-option label="绑定" value="1"></el-option>
+							<el-option label="解绑" value="2"></el-option>
 					</el-select>
 				</el-form-item>
 				<el-form-item label="操作时间:">
@@ -30,67 +30,61 @@
 				</el-form-item>
 				<el-form-item label="会员账号:">
 					<el-input
-						v-model="queryData.roleName"
+						v-model="queryData.userName"
 						clearable
 						size="medium"
-						style="width: 280px"
+						style="width: 180px"
 						placeholder="请输入"
-						:disabled="loading"
 						@keyup.enter.native="enterSearch"
 					></el-input>
 				</el-form-item>
 				<el-form-item label="上级代理:">
 					<el-input
-						v-model="queryData.createBy"
+						v-model="queryData.parentProxyName"
 						clearable
 						size="medium"
-						style="width: 280px"
+						style="width: 180px"
 						placeholder="请输入"
-						:disabled="loading"
 						@keyup.enter.native="enterSearch"
 					></el-input>
 				</el-form-item>
 				<el-form-item label="虚拟币种类:">
 					<el-input
-						v-model="queryData.updatedBy"
+						v-model="queryData.virtualKind"
 						clearable
 						size="medium"
-						style="width: 280px"
+						style="width: 180px"
 						placeholder="请输入"
-						:disabled="loading"
 						@keyup.enter.native="enterSearch"
 					></el-input>
 				</el-form-item>
 				<el-form-item label="虚拟币协议:">
 					<el-input
-						v-model="queryData.updatedBy"
+						v-model="queryData.virtualProtocol"
 						clearable
 						size="medium"
-						style="width: 280px"
+						style="width: 180px"
 						placeholder="请输入"
-						:disabled="loading"
 						@keyup.enter.native="enterSearch"
 					></el-input>
 				</el-form-item>
 				<el-form-item label="账号类型:">
 					<el-select
-						v-model="queryData.status"
-						style="width: 280px"
+						v-model="queryData.accountType"
+						style="width: 180px"
 						:popper-append-to-body="false"
 					>
-						<el-option label="全部" value=""></el-option>
-						<el-option label="启用" value="0"></el-option>
-						<el-option label="停用" value="1"></el-option>
+						<el-option label="全部" value></el-option>
+						<el-option v-for="item in accountType" :key="item.code" :label="item.description" :value="item.code"></el-option>
 					</el-select>
 				</el-form-item>
 				<el-form-item label="虚拟币账户地址:">
 					<el-input
-						v-model="queryData.updatedBy"
+						v-model="queryData.virtualAddress"
 						clearable
 						size="medium"
-						style="width: 280px"
+						style="width: 180px"
 						placeholder="请输入"
-						:disabled="loading"
 						@keyup.enter.native="enterSearch"
 					></el-input>
 				</el-form-item>
@@ -128,42 +122,42 @@
 				>
 					<el-table-column
 						v-slot="scope"
-						prop="cardNo"
+						prop="userName"
 						align="center"
 						label="会员账号"
 					>
-						<Copy :title="scope.row.cardNo" :copy="copy" />
+						<Copy :title="scope.row.userName" :copy="copy" />
 					</el-table-column>
 					<el-table-column
-						prop="createBy"
+						prop="accountType"
 						align="center"
 						label="账号类型"
 					></el-table-column>
 					<el-table-column
 						v-slot="scope"
-						prop="createDt"
+						prop="parentProxyName"
 						align="center"
 						label="上级代理"
 					>
-						<Copy :title="scope.row.cardNo" :copy="copy" />
+						<Copy :title="scope.row.parentProxyName" :copy="copy" />
 					</el-table-column>
 					<el-table-column
-						prop="modifyBy"
+						prop="virtualAddress"
 						align="center"
 						label="虚拟币账户地址"
 					></el-table-column>
 					<el-table-column
-						prop="modifyDt"
+						prop="virtualKind"
 						align="center"
 						label="虚拟币种类"
 					></el-table-column>
 					<el-table-column
-						prop="modifyDt"
+						prop="virtualProtocol"
 						align="center"
 						label="虚拟币协议"
 					></el-table-column>
 					<el-table-column
-						prop="modifyDt"
+						prop="operateType"
 						align="center"
 						label="操作类型"
 					></el-table-column>
@@ -192,24 +186,42 @@
 <script>
 import list from '@/mixins/list'
 import dayjs from 'dayjs'
+const end = dayjs()
+			.endOf('day')
+			.valueOf()
+		const start = dayjs()
+			.startOf('day')
+			.valueOf()
 export default {
 	name: '',
 	components: {},
 	mixins: [list],
 	data() {
 		return {
-			queryData: {},
+			queryData: {
+				accountType: '',
+				bankName: '',
+				dataType: 2,
+				operateType: '',
+				orderType: '',
+				parentProxyName: '',
+				userName: '',
+				virtualAddress: '',
+				virtualKind: '',
+				virtualProtocol: ''
+			},
 			formTime: {
-				time: []
+				time: [start, end]
 			},
 			dataList: [],
-			title: '',
-			showForm: '',
-			editVisible: false,
-			editFormData: {}
+			title: ''
 		}
 	},
-	computed: {},
+	computed: {
+		accountType() {
+			return this.globalDics.accountType
+		}
+	},
 	mounted() {},
 	methods: {
 		loadData() {
@@ -217,16 +229,15 @@ export default {
 			const [startTime, endTime] = this.formTime.time || []
 			let params = {
 				...this.queryData,
-				pageNum: 1,
-				startTime: startTime
+				createDtStart: startTime
 					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
 					: '',
-				endTime: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
+				createDtEnd: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
 			}
 			params = {
 				...this.getParams(params)
 			}
-			this.$api.blackList(params).then((res) => {
+			this.$api.bankRecordListAPI(params).then((res) => {
 				if (res.code === 200) {
 					const response = res.data
 					this.loading = false
@@ -243,57 +254,11 @@ export default {
 		},
 		reset() {
 			this.queryData = {}
-			this.formTime.time = []
+			this.formTime.time = [start, end]
 			this.loadData()
-		},
-
-		add() {
-			this.title = '新增'
-			this.editVisible = true
-			this.editFormData = {}
-		},
-		deleteUp(val) {
-			this.$confirm('确定删除此银行卡号吗?', {
-				confirmButtonText: '确定',
-				cancelButtonText: '取消',
-				type: 'warning'
-			}).then(() => {
-				const loading = this.$loading({
-					lock: true,
-					text: 'Loading',
-					spinner: 'el-icon-loading',
-					background: 'rgba(0, 0, 0, 0.7)'
-				})
-				this.$api
-					.delBlackList({
-						id: val.id
-					})
-					.then(() => {
-						loading.close()
-						this.search()
-						this.$message({
-							type: 'success',
-							message: '删除成功!'
-						})
-					})
-					.catch(() => {
-						loading.close()
-					})
-			})
-		},
-		editUp(val) {
-			this.title = '编辑'
-			this.editVisible = true
-			this.editFormData = val
-		},
-		submit() {
-			this.$refs.editForm.submit()
 		},
 		handleCurrentChange() {
 			this.loadData()
-		},
-		closeFormDialog() {
-			this.editVisible = false
 		}
 	}
 }
