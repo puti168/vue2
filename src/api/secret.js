@@ -1,4 +1,5 @@
 import request from '@/utils/request'
+import request2 from '@/utils/request2'
 
 export function blackList(params) {
 	return request({
@@ -29,7 +30,7 @@ export function memberChange(params) {
 	})
 }
 export function lock(data) {
-	return request({
+	return request2({
 		url: '/memberData/lock',
 		method: 'post',
 		data

@@ -13,7 +13,9 @@ Finger.load()
 // create an axios instance
 const service = axios.create({
 	baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url url:'http://47.75.164.135:8102'
-	// withCredentials: true, // send cookies when cross-domain requests
+	headers: {
+		'Content-Type': 'application/json;charset=UTF-8'
+	  },
 	timeout: 15000 // request timeout
 })
 // request interceptor

@@ -411,7 +411,6 @@ export default {
 					})
 				}
 			})
-			JSON.stringify
 			console.log(val)
 			console.log(val2)
 		}
