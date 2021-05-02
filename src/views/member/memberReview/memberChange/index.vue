@@ -218,8 +218,8 @@
 					></el-table-column>
 					<el-table-column align="center" label="操作类型">
 						<template slot="header">
-							<p>会员账号</p>
-							<p>账号类型</p>
+							<p style="font-weight: 600">会员账号</p>
+							<p style="font-weight: 600">账号类型</p>
 						</template>
 						<template slot-scope="scope">
 							{{ scope.row.userName ? scope.row.userName : '-' }}
@@ -396,7 +396,7 @@ export default {
 		},
 		lockChange(val, val2) {
 			this.$api.lock(
-				{id: '595743559097831424'}
+				JSON.stringify({id: '595743559097831424'})
 			).then((res) => {
 				if (res.code === 200) {
 					const response = res.data

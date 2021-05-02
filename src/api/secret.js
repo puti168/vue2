@@ -16,23 +16,23 @@ export function memberLoginLog(data) {
 }
 export function recordInfo(params) {
 	return request({
-		url: '/recordInfo',
+		url: '/memberData/recordInfo',
 		method: 'get',
 		params
 	})
 }
 export function memberChange(params) {
 	return request({
-		url: '/page',
+		url: '/memberData/page',
 		method: 'get',
 		params
 	})
 }
-export function lock(params) {
+export function lock(data) {
 	return request({
-		url: '/lock',
-		method: 'get',
-		params
+		url: '/memberData/lock',
+		method: 'post',
+		data
 	})
 }
 export function editBlackList(data) {

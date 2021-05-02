@@ -74,7 +74,7 @@
 				</el-form-item>
 				<el-form-item label="账号类型:">
 					<el-select
-						v-model="queryData.accountType"
+						v-model="accountType1"
 						style="width: 180px"
 						multiple
 						placeholder="默认选择全部"
@@ -204,7 +204,7 @@ export default {
 	data() {
 		return {
 			queryData: {
-				accountType: [],
+				accountType: '',
 				bankName: '',
 				dataType: 2,
 				operateType: '',
@@ -215,6 +215,7 @@ export default {
 				virtualKind: '',
 				virtualProtocol: ''
 			},
+			accountType1: [],
 			formTime: {
 				time: [start, end]
 			},
@@ -245,6 +246,7 @@ export default {
 			params = {
 				...this.getParams(params)
 			}
+			params.accountType = this.accountType1.join(',')
 			this.$api.bankRecordListAPI(params).then((res) => {
 				if (res.code === 200) {
 					const response = res.data
@@ -262,7 +264,7 @@ export default {
 		},
 		reset() {
 			this.queryData = {
-				accountType: [],
+				accountType: '',
 				bankName: '',
 				dataType: 2,
 				operateType: '',
@@ -273,6 +275,7 @@ export default {
 				virtualKind: '',
 				virtualProtocol: ''
 			}
+			this.accountType1 = []
 			this.formTime.time = [start, end]
 			this.loadData()
 		},

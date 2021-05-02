@@ -84,6 +84,7 @@
 						v-model="deviceType1"
 						style="width: 300px"
 						:popper-append-to-body="false"
+						placeholder="默认选择全部"
 						multiple
 					>
 						<el-option
@@ -146,6 +147,7 @@
 						prop="loginTime"
 						align="center"
 						label="登录时间"
+						sortable="custom"
 					></el-table-column>
 					<el-table-column
 						prop="loginStatus"
