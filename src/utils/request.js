@@ -67,7 +67,7 @@ service.interceptors.request.use(
 			config.headers['Content-Type'] = 'application/json;charset=UTF-8'
 			config.headers['ob-timestamp'] = timestamp
 			config.headers['ob-sign'] = sign
-
+			config.data = JSON.stringify(config.data)
 			// config.headers['zr-encrypted'] = false
 		}
 		return config

@@ -438,7 +438,7 @@ export default {
 				spinner: 'el-icon-loading',
 				background: 'rgba(0, 0, 0, 0.7)'
 			})
-			this.$api.lock(JSON.stringify({ id: val.id })).then((res) => {
+			this.$api.lock({ id: val.id }).then((res) => {
 				if (res.code === 200) {
 					loading.close()
 					this.$message({
