@@ -216,14 +216,7 @@ export default {
 		}
 	},
 	computed: {
-		...mapGetters(['userInfo']),
-		checkOrderParams() {
-			const SortLine = new Map([
-				['createDt', 'createDt'],
-				['modifyDt', 'modifyDt']
-			])
-			return SortLine
-		}
+		...mapGetters(['userInfo'])
 	},
 	mounted() {},
 	methods: {

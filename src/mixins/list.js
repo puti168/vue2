@@ -64,6 +64,13 @@ export default {
 				},
 				shortcuts: shortcutsNoToday
 			}
+		},
+		checkOrderParams() {
+			const SortLine = new Map([
+				['createDt', 'createDt'],
+				['modifyDt', 'modifyDt']
+			])
+			return SortLine
 		}
 	},
 	mounted() {
@@ -86,7 +93,7 @@ export default {
 		},
 		typeFilter(val, type) {
 			let name = ''
-			this.globalDics[type].forEach(item => {
+			this.globalDics[type].forEach((item) => {
 				if (Number(item.code) === Number(val)) {
 					name = item.description
 				}
@@ -162,14 +169,15 @@ export default {
 			this.pageNum = 1
 			const orderParams = this.checkOrderParams.get(prop)
 			if (orderParams) {
-				this.proptype = orderParams
 				if (order === 'ascending') {
-					// this.dataList.sort({ sort: 'ASD', ...this.from })
+					// 升序
+					this.form.orderType = 2
 				} else if (column.order === 'descending') {
-					// this.dataList.sort({ sort: 'ascending', ...this.from })
+					// 降序
+					this.form.orderType = 1
 				}
+				this.loadData()
 			}
-			this.loadData()
 		},
 		filterChange(filters) {
 			if (filters.type) {

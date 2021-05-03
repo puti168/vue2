@@ -121,6 +121,7 @@
 					:data="dataList"
 					style="width: 100%"
 					:header-cell-style="getRowClass"
+                    @sort-change="changeTableSort"
 				>
 					<el-table-column
 						v-slot="scope"
@@ -221,7 +222,8 @@ export default {
 				cnName: '',
 				bankName: '',
 				cardNumber: '',
-				parentProxyName: ''
+				parentProxyName: '',
+                orderType: undefined
 			},
 			dataList: [],
 			total: 0
