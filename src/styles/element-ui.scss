@@ -103,12 +103,14 @@
     line-height: 28px;
     padding: 0;
 }
+
 .el-tag {
     min-width: 80px;
     height: 30px;
     line-height: 30px;
     padding: 0 5px;
 }
+
 .el-message {
     height: 32px;
     line-height: 32px;
@@ -125,7 +127,7 @@
 
 .el-table td .cell {
     line-height: 14px;
-    font-size: 12px;
+    font-size: 14px;
 }
 
 .el-table td .cell .el-button {
@@ -134,6 +136,7 @@
     line-height: 18px;
     padding: 0 5px;
 }
+
 .el-table td .cell .el-tag {
     min-width: 60px;
     height: 20px;
@@ -146,4 +149,6 @@
     padding: 0;
 }
 
-
+.el-select-dropdown__wrap .el-scrollbar__wrap {
+    margin-bottom: -12px;
+}

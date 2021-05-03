@@ -16,23 +16,58 @@ export function memberLoginLog(data) {
 }
 export function recordInfo(params) {
 	return request({
-		url: '/recordInfo',
+		url: '/memberData/recordInfo',
 		method: 'get',
 		params
 	})
 }
-export function memberChange(params) {
+export function audit(data) {
 	return request({
-		url: '/page',
-		method: 'get',
-		params
+		url: '/memberData/audit',
+		method: 'post',
+		data
 	})
 }
-export function lock(params) {
+export function memberAuditDetail(data) {
 	return request({
-		url: '/lock',
-		method: 'get',
-		params
+		url: '/player/memberAuditDetail',
+		method: 'post',
+		data
+	})
+}
+export function updateMemberAuditRecord(data) {
+	return request({
+		url: '/player/updateMemberAuditRecord',
+		method: 'post',
+		data
+	})
+}
+export function memberChange(data) {
+	return request({
+		url: '/memberData/page',
+		method: 'post',
+		data
+	})
+}
+export function playerAuditList(data) {
+	return request({
+		url: '/player/playerAuditList',
+		method: 'post',
+		data
+	})
+}
+export function lock(data) {
+	return request({
+		url: '/memberData/lock',
+		method: 'post',
+		data
+	})
+}
+export function lockMemberAuditRecord(data) {
+	return request({
+		url: '/player/lockMemberAuditRecord',
+		method: 'post',
+		data
 	})
 }
 export function editBlackList(data) {
@@ -60,7 +95,11 @@ export function addBlackList(data) {
 export default {
 	recordInfo,
 	memberChange,
+	memberAuditDetail,
+	audit,
+	updateMemberAuditRecord,
 	lock,
+	playerAuditList,
 	blackList,
 	memberLoginLog,
 	editBlackList,

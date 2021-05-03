@@ -3,8 +3,13 @@
 		<div class="review-content">
 			<div class="head">
 				<span class="title">新增会员审核详情</span>
-				<div class="right-btn">
-					<el-button plain>返回</el-button>
+				<div v-if="type" class="right-btn">
+					<el-button plain @click="goBack">取消</el-button>
+					<el-button type="success" @click="confirm(true)">一审通过</el-button>
+					<el-button type="danger" @click="confirm(false)">一审拒绝</el-button>
+				</div>
+				<div v-else class="right-btn">
+					<el-button plain @click="goBack">返回</el-button>
 				</div>
 			</div>
 			<div class="main-content">
@@ -44,6 +49,38 @@
 				</div>
 			</div>
 		</div>
+		<el-dialog
+			:title="提交确认"
+			center
+			:visible.sync="visible"
+			:before-close="closeFormDialog"
+			width="410px"
+		>
+			<el-form
+				ref="form"
+				label-width="80px"
+			>
+				<el-form-item label="提交审核信息">
+					<el-input
+						v-model="remark"
+						clearable
+						:max="50"
+						size="medium"
+						style="width: 280px"
+						placeholder="请输入"
+					></el-input>
+				</el-form-item>
+			</el-form>
+			<div slot="footer" class="dialog-footer">
+				<el-button @click="visible = false">取 消</el-button>
+				<el-button
+					type="primary"
+					@click="auditOne"
+				>
+					提交
+				</el-button>
+			</div>
+		</el-dialog>
 	</div>
 </template>
 
@@ -55,11 +92,78 @@ export default {
 	mixins: [],
 	data() {
 		return {
+			list: {},
+			visible: false,
+			action: false,
+			// 审核 true 仅返回 false
+			type: true
 		}
 	},
 	computed: {},
+	created() {
+		this.getInfo()
+		this.type = this.$route.query.type
+	},
 	mounted() {},
 	methods: {
+		closeFormDialog() {},
+		confirm(action) {
+			this.remark = ''
+			this.action = action
+		},
+		auditOne() {
+			const loading = this.$loading({
+				lock: true,
+				text: 'Loading',
+				spinner: 'el-icon-loading',
+				background: 'rgba(0, 0, 0, 0.7)'
+			})
+			const params = {
+				id: this.$route.query.id,
+				remark: this.remark,
+				auditStatus: this.action ? 2 : 3
+			}
+			this.$api.audit(params).then((res) => {
+				if (res.code === 200) {
+					this.$message({
+						type: 'success',
+						message: '操作成功!'
+					})
+					this.$router.replace('addMemberCheck')
+					loading.close()
+				} else {
+					loading.close()
+					this.$message({
+						message: res.msg,
+						type: 'error'
+					})
+				}
+			})
+		},
+		goBack() {
+			this.$router.push('addMemberCheck')
+		},
+		getInfo() {
+			const params = {
+				id: this.$route.query.id
+			}
+			this.$api.memberAuditDetail(params).then((res) => {
+				if (res.code === 200) {
+					const response = res.data
+					this.loading = false
+					this.registerInfo = response.registerInfo
+					this.applyInfo = response.applyInfo
+					this.auditInfo = response.auditInfo
+					this.accountInfo = response.accountInfo
+				} else {
+					this.loading = false
+					this.$message({
+						message: res.msg,
+						type: 'error'
+					})
+				}
+			})
+		},
 		getRowClass({ row, column, rowIndex, columnIndex }) {
 			if (rowIndex === 0) {
 				return 'background:#EFEFEF'

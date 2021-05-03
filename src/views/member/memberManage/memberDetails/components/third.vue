@@ -3,7 +3,12 @@
     <el-row>
       <el-col :span="4" class="backgroundTitelBox">登录信息</el-col>
       <el-col :span="2" class="refrestBox">
-        <el-button type="primary" icon="el-icon-refresh">刷新</el-button>
+        <el-button
+          type="primary"
+          icon="el-icon-refresh"
+          :disabled="queryData.userId === ''"
+          @click="refresh"
+          >刷新</el-button>
       </el-col>
     </el-row>
     <div style="width: 70%">
@@ -42,7 +47,6 @@
         ></el-table-column>
       </el-table>
     </div>
-    <el-divider></el-divider>
   </div>
 </template>
 
@@ -51,7 +55,7 @@ import list from '@/mixins/list'
 // import dayjs from 'dayjs'
 export default {
   mixins: [list],
-  props: {},
+  props: { queryData: { type: Object, default: () => ({}) } },
   data() {
     return {
       dataList: []
@@ -61,7 +65,17 @@ export default {
   watch: {},
   created() {},
   mounted() {},
-  methods: {}
+  methods: {
+    // 会员登录日志查询
+    getLogMemberLoginLog(val) {
+      this.$api.getLogMemberLoginLog(val).then((res) => {
+        console.log(res)
+      })
+    },
+    refresh() {
+      this.getLogMemberLoginLog()
+    }
+  }
 }
 </script>
 
@@ -69,8 +83,8 @@ export default {
 #basicInformation {
   font-size: 14px;
   line-height: 40px;
+  min-height: 400px;
   padding-top: 10px;
-  padding-bottom: 40px;
 }
 /deep/.el-dialog__header {
   text-align: center;

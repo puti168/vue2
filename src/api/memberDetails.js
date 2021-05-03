@@ -1,4 +1,28 @@
 import request from '@/utils/request'
+// 会员详情-基本信息-概要信息以及个人资料
+export function getOutlineInfo(params) {
+	return request({
+		url: '/member/outlineInfo',
+		method: 'get',
+		params
+	})
+}
+// 风控层级，会员标签
+export function getMerchantDict(params) {
+	return request({
+		url: '/member/merchantDict',
+		method: 'get',
+		params
+	})
+}
+// 会员详情-基本信息-信息编辑
+export function setMemberInfoEdit(data) {
+	return request({
+		url: '/member/infoEdit',
+		method: 'post',
+		data
+	})
+}
 // vip信息
 export function getVipInfo(data) {
 	return request({
@@ -31,42 +55,66 @@ export function getWithdrawalFreeze(data) {
 		data
 	})
 }
-// 分页查询角色列表
-export function getRoleListPage(data) {
+// 一键查询所有场馆余额
+export function getOneKeyBalance(data) {
 	return request({
-		url: '/role/listPage',
+		url: '/member/oneKeyBalance',
 		method: 'post',
 		data
 	})
 }
-// 分页查询角色下的用户
-export function getPageRoleUsers(data) {
+// 一键下分
+export function getOneKeyWithdraw(params) {
 	return request({
-		url: '/role/pageRoleUsers',
-		method: 'post',
-		data
-	})
-}
-// 查询当前登录用户拥有的全部权限
-export function getRolePermissions(params) {
-	return request({
-		url: '/role/permissions',
-		method: 'GET',
+		url: '/member/oneKeyWithdraw',
+		method: 'get',
 		params
 	})
 }
-// 添加角色
-export function setSaveRoleInfo(data) {
+// 提现流水查询
+export function getWithdrawWater(data) {
 	return request({
-		url: '/role/saveRoleInfo',
+		url: '/withdrawalFreeze/withdrawWater',
 		method: 'post',
 		data
 	})
 }
-// 修改角色
-export function setUpdateRoleInfo(data) {
+// 添加会员备注
+export function getMemberRemarkAdd(data) {
 	return request({
-		url: '/role/updateRoleInfo',
+		url: '/memberRemark/add',
+		method: 'post',
+		data
+	})
+}
+// 会员充提信息查询
+export function getPlayerOrderSumInfo(data) {
+	return request({
+		url: '/player/playerOrderSumInfo',
+		method: 'post',
+		data
+	})
+}
+// 会员投注信息查询
+export function getPlayerBetHistorySum(data) {
+	return request({
+		url: '/player/playerBetHistorySum',
+		method: 'post',
+		data
+	})
+}
+// top3平台统计
+export function getPlayerTop3(params) {
+	return request({
+		url: '/player/top3',
+		method: 'get',
+		params
+	})
+}
+// 会员登录日志查询
+export function getLogMemberLoginLog(data) {
+	return request({
+		url: '/log/memberLoginLog',
 		method: 'post',
 		data
 	})
@@ -80,14 +128,20 @@ export function getBankCardBank(data) {
 	})
 }
 export default {
+	getOutlineInfo,
+	getMerchantDict,
+	setMemberInfoEdit,
 	getVipInfo,
 	getMemberRemarkList,
 	getAccountCashAccount,
 	getWithdrawalFreeze,
-	getRoleListPage,
-	getPageRoleUsers,
-	getRolePermissions,
-	setSaveRoleInfo,
-	setUpdateRoleInfo,
+	getOneKeyBalance,
+	getOneKeyWithdraw,
+	getWithdrawWater,
+	getMemberRemarkAdd,
+	getPlayerOrderSumInfo,
+	getPlayerBetHistorySum,
+	getPlayerTop3,
+	getLogMemberLoginLog,
 	getBankCardBank
 }

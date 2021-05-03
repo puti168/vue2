@@ -37,6 +37,7 @@
 						v-model="queryData.userName"
 						clearable
 						size="medium"
+						:max="1"
 						style="width: 180px"
 						placeholder="请输入"
 						@keyup.enter.native="enterSearch"
@@ -61,10 +62,11 @@
 				<el-form-item label="审核申请类型:">
 					<el-select
 						v-model="queryData.applyType"
-						style="width: 180px"
+						style="width: 300px"
+						multiple
+						placeholder="默认选择全部"
 						:popper-append-to-body="false"
 					>
-						<el-option label="全部" value></el-option>
 						<el-option
 							v-for="item in applyType"
 							:key="item.code"
@@ -75,22 +77,27 @@
 				</el-form-item>
 				<el-form-item label="审核操作:">
 					<el-select
-						v-model="queryData.status"
+						v-model="queryData.auditStep"
 						style="width: 180px"
 						:popper-append-to-body="false"
 					>
 						<el-option label="全部" value=""></el-option>
-						<el-option label="启用" value="0"></el-option>
-						<el-option label="停用" value="1"></el-option>
+						<el-option
+							v-for="item in auditStepType"
+							:key="item.code"
+							:label="item.description"
+							:value="item.code"
+						></el-option>
 					</el-select>
 				</el-form-item>
 				<el-form-item label="审核状态:">
 					<el-select
 						v-model="queryData.auditStatus"
-						style="width: 180px"
+						style="width: 300px"
+						multiple
+						placeholder="默认选择全部"
 						:popper-append-to-body="false"
 					>
-						<el-option label="全部" value=""></el-option>
 						<el-option
 							v-for="item in auditStatus"
 							:key="item.code"
@@ -104,6 +111,7 @@
 						v-model="queryData.applyName"
 						clearable
 						size="medium"
+						:max="12"
 						style="width: 180px"
 						placeholder="请输入"
 						@keyup.enter.native="enterSearch"
@@ -114,6 +122,7 @@
 						v-model="queryData.auditName"
 						clearable
 						size="medium"
+						:max="12"
 						style="width: 180px"
 						placeholder="请输入"
 						@keyup.enter.native="enterSearch"
@@ -139,6 +148,7 @@
 						v-model="queryData.auditNum"
 						clearable
 						size="medium"
+						:max="19"
 						style="width: 180px"
 						placeholder="请输入"
 						@keyup.enter.native="enterSearch"
@@ -164,7 +174,7 @@
 						重置
 					</el-button>
 				</el-form-item>
-				<p class="danger data-refresh">数据更新时间： 2019-10-01 10:00:00</p>
+				<p class="danger data-refresh">数据更新时间： {{ now }}</p>
 			</el-form>
 		</div>
 		<div class="view-container dealer-container">
@@ -179,20 +189,32 @@
 					:header-cell-style="getRowClass"
 					@sort-change="changeTableSort"
 				>
-					<el-table-column prop="cardNo" align="center" label="锁单">
+					<el-table-column align="center" label="锁单">
 						<template slot-scope="scope">
 							<el-checkbox
-								v-if="scope.row.auditStep === '1' && (scope.row.auditName === name || !scope.row.auditName)"
-								v-model="scope.row.lockOrder"
-								@change="lockChange()"
+								v-if="
+									scope.row.auditStep === '1' &&
+										(scope.row.auditName === name || !scope.row.auditName)
+								"
+								v-model="scope.row.lockStatus"
+								@change="lockChange(scope.row)"
 							></el-checkbox>
 						</template>
 					</el-table-column>
 					<el-table-column prop="auditStep" align="center" label="操作">
 						<template slot-scope="scope">
-							<el-button v-if="scope.row.auditStep === '1' && (scope.row.auditName === name || !scope.row.auditName)" type="primary" size="medium">{{ typeFilter(scope.row.auditStep, 'auditStepType') }}</el-button>
-							<el-button v-else-if="scope.row.auditStep === '1' && scope.row.auditName !== name" disabled type="primary" size="medium">{{ typeFilter(scope.row.auditStep, 'auditStepType') }}</el-button>
-							<el-button v-else-if="scope.row.auditStep === '0'" type="success" size="medium">{{ typeFilter(scope.row.auditStep, 'auditStepType') }}</el-button>
+							<el-button
+								:disabled="
+									scope.row.auditStep === '1' && scope.row.auditName !== name
+										? true
+										: false
+								"
+								:type="scope.row.auditStep === '0' ? 'success' : 'primary'"
+								size="medium"
+								@click="goDetail(scope.row)"
+							>
+								{{ typeFilter(scope.row.auditStep, 'auditStepType') }}
+							</el-button>
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -200,12 +222,11 @@
 						align="center"
 						label="审核单号"
 					></el-table-column>
-					<el-table-column
-						prop="applyType"
-						align="center"
-						label="审核申请类型"
-					><template slot-scope="scope">
-						{{ typeFilter(scope.row.applyType, 'applyType') }}</template></el-table-column>
+					<el-table-column prop="applyType" align="center" label="审核申请类型">
+						<template slot-scope="scope">
+							{{ typeFilter(scope.row.applyType, 'applyType') }}
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="beforeModify"
 						align="center"
@@ -218,8 +239,8 @@
 					></el-table-column>
 					<el-table-column align="center" label="操作类型">
 						<template slot="header">
-							<p>会员账号</p>
-							<p>账号类型</p>
+							<p style="font-weight: 600">会员账号</p>
+							<p style="font-weight: 600">账号类型</p>
 						</template>
 						<template slot-scope="scope">
 							{{ scope.row.userName ? scope.row.userName : '-' }}
@@ -246,7 +267,13 @@
 					<el-table-column align="center" label="审核状态">
 						<template slot-scope="scope">
 							<span
-								:class="scope.row.auditStatus === '1' ? 'infoState' : scope.row.auditStatus === '2' ? 'success' : 'danger'"
+								:class="
+									scope.row.auditStatus === '1'
+										? 'infoState'
+										: scope.row.auditStatus === '2'
+										? 'success'
+										: 'danger'
+								"
 							>
 								{{ typeFilter(scope.row.auditStatus, 'auditStatusType') }}
 							</span>
@@ -299,8 +326,9 @@ export default {
 			queryData: {
 				userName: '',
 				accountType: [],
-				applyType: '',
-				auditStatus: '',
+				applyType: [],
+				auditStatus: [],
+				auditStep: '',
 				applyName: '',
 				auditName: '',
 				lockOrder: '',
@@ -308,16 +336,13 @@ export default {
 				orderType: '',
 				orderKey: ''
 			},
+			now: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
 			formTime: {
 				time: [start, end],
 				time2: [start, end]
 			},
 			name: '',
-			dataList: [],
-			title: '',
-			showForm: '',
-			editVisible: false,
-			editFormData: {}
+			dataList: []
 		}
 	},
 	computed: {
@@ -326,6 +351,9 @@ export default {
 		},
 		auditStatus() {
 			return this.globalDics.auditStatusType
+		},
+		auditStepType() {
+			return this.globalDics.auditStepType
 		},
 		lockOrderType() {
 			return this.globalDics.lockOrderType
@@ -336,7 +364,6 @@ export default {
 	},
 	mounted() {
 		this.name = getNickName()
-		console.log(this.name)
 	},
 	methods: {
 		loadData() {
@@ -360,11 +387,20 @@ export default {
 			params = {
 				...this.getParams(params)
 			}
+			console.log(params)
 			this.$api.memberChange(params).then((res) => {
 				if (res.code === 200) {
+					this.now = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
 					const response = res.data
 					this.loading = false
 					this.dataList = response.record
+					this.dataList.forEach((item) => {
+						if (item.lockOrder === '1') {
+							item.lockStatus = true
+						} else {
+							item.lockStatus = false
+						}
+					})
 					this.total = response.totalRecord
 				} else {
 					this.loading = false
@@ -375,12 +411,19 @@ export default {
 				}
 			})
 		},
+		goDetail(row) {
+			const type = row.auditStep === '1' && row.auditName === this.name
+			this.$router.push({
+				path: 'memberChangeReview',
+				query: { id: row.id, userId: row.userId, type: type }
+			})
+		},
 		reset() {
 			this.queryData = {
 				userName: '',
 				accountType: [],
-				applyType: '',
-				auditStatus: '',
+				applyType: [],
+				auditStatus: [],
 				applyName: '',
 				auditName: '',
 				lockOrder: '',
@@ -394,26 +437,29 @@ export default {
 			}
 			this.loadData()
 		},
-		lockChange(val, val2) {
-			this.$api.lock(
-				{id: '595743559097831424'}
-			).then((res) => {
+		lockChange(val) {
+			const loading = this.$loading({
+				lock: true,
+				text: 'Loading',
+				spinner: 'el-icon-loading',
+				background: 'rgba(0, 0, 0, 0.7)'
+			})
+			this.$api.lock({ id: val.id }).then((res) => {
 				if (res.code === 200) {
-					const response = res.data
-					this.loading = false
-					this.dataList = response.record
-					this.total = response.totalRecord
+					loading.close()
+					this.$message({
+						type: 'success',
+						message: '锁单成功!'
+					})
+					this.loadData()
 				} else {
-					this.loading = false
+					loading.close()
 					this.$message({
 						message: res.msg,
 						type: 'error'
 					})
 				}
 			})
-			JSON.stringify
-			console.log(val)
-			console.log(val2)
 		}
 	}
 }

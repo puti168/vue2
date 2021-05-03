@@ -21,6 +21,7 @@
 					<el-input
 						v-model="queryData.userName"
 						clearable
+						:max="11"
 						size="medium"
 						style="width: 180px"
 						placeholder="请输入"
@@ -29,11 +30,11 @@
 				</el-form-item>
 				<el-form-item label="账号类型:">
 					<el-select
-						v-model="queryData.accountType"
-						style="width: 180px"
+						v-model="accountType1"
 						multiple
 						placeholder="默认选择全部"
 						:popper-append-to-body="false"
+						style="width: 300px"
 					>
 						<el-option
 							v-for="item in accountType"
@@ -64,6 +65,7 @@
 						v-model="queryData.loginIp"
 						clearable
 						size="medium"
+						:max="15"
 						style="width: 180px"
 						placeholder="请输入"
 						@keyup.enter.native="enterSearch"
@@ -74,6 +76,7 @@
 						v-model="queryData.ipAttribution"
 						clearable
 						size="medium"
+						:max="10"
 						style="width: 180px"
 						placeholder="请输入"
 						@keyup.enter.native="enterSearch"
@@ -81,11 +84,12 @@
 				</el-form-item>
 				<el-form-item label="登录终端:">
 					<el-select
-						v-model="queryData.deviceType"
-						style="width: 180px"
+						v-model="deviceType1"
+						style="width: 300px"
 						:popper-append-to-body="false"
+						placeholder="默认选择全部"
+						multiple
 					>
-						<el-option label="全部" value=""></el-option>
 						<el-option
 							v-for="item in deviceType"
 							:key="item.code"
@@ -99,6 +103,7 @@
 						v-model="queryData.deviceNo"
 						clearable
 						size="medium"
+						:max="50"
 						style="width: 180px"
 						placeholder="请输入"
 						@keyup.enter.native="enterSearch"
@@ -146,12 +151,14 @@
 						prop="loginTime"
 						align="center"
 						label="登录时间"
+						sortable="custom"
 					></el-table-column>
 					<el-table-column
 						prop="loginStatus"
 						align="center"
 						label="登录状态"
-					></el-table-column>
+					><template slot-scope="scope">
+						<span :class="scope.row.loginStatus === '1' ? 'success' : 'danger'">{{ typeFilter(scope.row.loginStatus, 'loginStatusType') }}</span></template></el-table-column>
 					<el-table-column
 						v-slot="scope"
 						prop="userName"
@@ -164,7 +171,8 @@
 						prop="accountType"
 						align="center"
 						label="账号类型"
-					></el-table-column>
+					><template slot-scope="scope">
+						{{ typeFilter(scope.row.accountType, 'accountType') }}</template></el-table-column>
 					<el-table-column
 						prop="loginIp"
 						align="center"
@@ -179,7 +187,8 @@
 						prop="deviceType"
 						align="center"
 						label="登录终端"
-					></el-table-column>
+					><template slot-scope="scope">
+						{{ typeFilter(scope.row.deviceType, 'deviceType') }}</template></el-table-column>
 					<el-table-column
 						prop="deviceNo"
 						align="center"
@@ -238,9 +247,11 @@ export default {
 				loginStatus: '',
 				loginIp: '',
 				ipAttribution: '',
-				deviceType: '',
+				deviceType: [],
 				deviceNo: ''
 			},
+			accountType1: [],
+			deviceType1: [],
 			now: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
 			summary: {
 				count: 0,
@@ -279,13 +290,15 @@ export default {
 			params = {
 				...this.getParams(params)
 			}
+			params.accountType = this.accountType1.join(',')
+			params.deviceType = this.deviceType1.join(',')
 			this.$api.memberLoginLog(params).then((res) => {
 				if (res.code === 200) {
 					this.now = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
 					const response = res.data
 					this.loading = false
-					this.dataList = response.records
-					this.total = response.total
+					this.dataList = response.record
+					this.total = response.totalRecord
 					this.summary = response.summary
 				} else {
 					this.loading = false
@@ -303,9 +316,11 @@ export default {
 				loginStatus: '',
 				loginIp: '',
 				ipAttribution: '',
-				deviceType: '',
+				deviceType: [],
 				deviceNo: ''
 			}
+			this.accountType1 = []
+			this.deviceType1 = []
 			this.formTime.time = [start, end]
 			this.loadData()
 		}

@@ -9,7 +9,7 @@
 						:popper-append-to-body="false"
 					>
 						<el-option label="全部" value></el-option>
-							<el-option
+						<el-option
 							v-for="item in bindType"
 							:key="item.code"
 							:label="item.description"
@@ -37,6 +37,7 @@
 						v-model="queryData.userName"
 						clearable
 						size="medium"
+						:max="11"
 						style="width: 180px"
 						placeholder="请输入"
 						@keyup.enter.native="enterSearch"
@@ -47,40 +48,56 @@
 						v-model="queryData.parentProxyName"
 						clearable
 						size="medium"
+						:max="11"
 						style="width: 180px"
 						placeholder="请输入"
 						@keyup.enter.native="enterSearch"
 					></el-input>
 				</el-form-item>
 				<el-form-item label="虚拟币种类:">
-					<el-input
+					<el-select
 						v-model="queryData.virtualKind"
-						clearable
-						size="medium"
-						style="width: 180px"
-						placeholder="请输入"
-						@keyup.enter.native="enterSearch"
-					></el-input>
+						multiple
+						style="width: 300px"
+						placeholder="默认选择全部"
+					>
+						<el-option
+							v-for="item in virtualType"
+							:key="item.code"
+							:label="item.description"
+							:value="item.code"
+						></el-option>
+					</el-select>
 				</el-form-item>
 				<el-form-item label="虚拟币协议:">
-					<el-input
+					<el-select
 						v-model="queryData.virtualProtocol"
-						clearable
-						size="medium"
-						style="width: 180px"
-						placeholder="请输入"
-						@keyup.enter.native="enterSearch"
-					></el-input>
+						multiple
+						style="width: 300px"
+						placeholder="默认选择全部"
+					>
+						<el-option
+							v-for="item in virtualProtocolType"
+							:key="item.code"
+							:label="item.description"
+							:value="item.code"
+						></el-option>
+					</el-select>
 				</el-form-item>
 				<el-form-item label="账号类型:">
 					<el-select
 						v-model="queryData.accountType"
-						style="width: 180px"
+						style="width: 300px"
 						multiple
 						placeholder="默认选择全部"
 						:popper-append-to-body="false"
 					>
-						<el-option v-for="item in accountType" :key="item.code" :label="item.description" :value="item.code"></el-option>
+						<el-option
+							v-for="item in accountType"
+							:key="item.code"
+							:label="item.description"
+							:value="item.code"
+						></el-option>
 					</el-select>
 				</el-form-item>
 				<el-form-item label="虚拟币账户地址:">
@@ -88,6 +105,7 @@
 						v-model="queryData.virtualAddress"
 						clearable
 						size="medium"
+						:max="100"
 						style="width: 180px"
 						placeholder="请输入"
 						@keyup.enter.native="enterSearch"
@@ -192,11 +210,11 @@
 import list from '@/mixins/list'
 import dayjs from 'dayjs'
 const end = dayjs()
-			.endOf('day')
-			.valueOf()
-		const start = dayjs()
-			.startOf('day')
-			.valueOf()
+	.endOf('day')
+	.valueOf()
+const start = dayjs()
+	.startOf('day')
+	.valueOf()
 export default {
 	name: '',
 	components: {},
@@ -204,7 +222,7 @@ export default {
 	data() {
 		return {
 			queryData: {
-				accountType: [],
+				accountType: '',
 				bankName: '',
 				dataType: 2,
 				operateType: '',
@@ -212,8 +230,8 @@ export default {
 				parentProxyName: '',
 				userName: '',
 				virtualAddress: '',
-				virtualKind: '',
-				virtualProtocol: ''
+				virtualKind: [],
+				virtualProtocol: []
 			},
 			formTime: {
 				time: [start, end]
@@ -225,6 +243,12 @@ export default {
 	computed: {
 		accountType() {
 			return this.globalDics.accountType
+		},
+		virtualType() {
+			return this.globalDics.virtualType
+		},
+		virtualProtocolType() {
+			return this.globalDics.virtualProtocolType
 		},
 		bindType() {
 			return this.globalDics.bindType
@@ -270,8 +294,8 @@ export default {
 				parentProxyName: '',
 				userName: '',
 				virtualAddress: '',
-				virtualKind: '',
-				virtualProtocol: ''
+				virtualKind: [],
+				virtualProtocol: []
 			}
 			this.formTime.time = [start, end]
 			this.loadData()
