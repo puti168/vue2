@@ -46,7 +46,7 @@
 					</el-form-item>
 					<el-form-item label="会员姓名:">
 						<el-input
-							v-model="form.nickName"
+							v-model="form.realname"
 							size="medium"
 							placeholder="请输入"
 							clearable
@@ -218,13 +218,13 @@ export default {
 		return {
 			form: {
 				registerTime: [start, end],
-                accountType: '',
+                accountType: undefined,
                 userName: '',
                 parentProxyName: '',
                 registerPhone: '',
                 ipAttribution: '',
-                deviceType: '',
-				nickName: ''
+                deviceType: undefined,
+				realname: ''
 			},
             pageIndex: 1,
 			dataList: [],
