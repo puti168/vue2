@@ -215,7 +215,6 @@ export default {
 				cardNumber: '',
 				parentProxyName: ''
 			},
-			pageIndex: 1,
 			dataList: [],
 			total: 0
 		}
@@ -227,14 +226,15 @@ export default {
 			this.dataList = []
 			const create = this.form.createDt || []
 			const [startTime, endTime] = create
-			const params = {
+			let params = {
 				...this.form,
-				pageIndex: this.pageIndex,
-				pageSize: this.pageSize,
 				dataType: 1,
 				createDtStart: dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') || '',
 				createDtEnd: dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') || ''
 			}
+            params = {
+                ...this.getParams(params)
+            }
 			delete params.createDt
 			this.$api.bankRecordListAPI(params).then((res) => {
 				const {
@@ -257,7 +257,6 @@ export default {
 		},
 		handleSearch() {
 			this.loading = true
-			this.pageIndex = 1
 			this.loadData()
 		},
 		reset() {
@@ -271,10 +270,6 @@ export default {
 				cardNumber: '',
 				parentProxyName: ''
 			}
-			this.loadData()
-		},
-		handleCurrentChange(val) {
-			this.pageIndex = val
 			this.loadData()
 		}
 	}
