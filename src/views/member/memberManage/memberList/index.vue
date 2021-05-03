@@ -429,7 +429,7 @@ export default {
 	},
 	computed: {
         deviceTypeArr() {
-            return [{description: '全部', code: undefined}, ...this.globalDics.deviceType]
+            return this.globalDics.deviceType
         }
     },
 	created() {

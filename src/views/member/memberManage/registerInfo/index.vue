@@ -25,7 +25,8 @@
 							size="medium"
 							placeholder="全部"
 							clearable
-							style="width: 180px"
+                            multiple
+							style="width: 300px"
 						>
                             <el-option
                                 v-for="item in accountTypeArr"
@@ -227,17 +228,16 @@ export default {
                 deviceType: undefined,
 				realname: ''
 			},
-            pageIndex: 1,
 			dataList: [],
 			total: 0
 		}
 	},
 	computed: {
         accountTypeArr() {
-            return [{description: '全部', code: undefined}, ...this.globalDics.accountType]
+            return this.globalDics.accountType
         },
         deviceTypeArr() {
-            return [{description: '全部', code: undefined}, ...this.globalDics.deviceType]
+            return this.globalDics.deviceType
         }
     },
 	mounted() {},
@@ -255,6 +255,8 @@ export default {
                 ...this.getParams(params)
             }
 			delete params.registerTime
+            params.accountType = params.accountType.join(',')
+            params.deviceType = params.deviceType.join(',')
 			this.$api.memberRegisterInfoListAPI(params).then((res) => {
 				const {
 					code,
