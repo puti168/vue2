@@ -23,7 +23,7 @@
 						<el-select
 							v-model="form.accountType"
 							size="medium"
-							placeholder="全部"
+							placeholder="默认选择全部"
 							clearable
                             multiple
 							style="width: 300px"

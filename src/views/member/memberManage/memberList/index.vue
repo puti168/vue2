@@ -118,20 +118,25 @@
 					</el-form-item>
 					<el-form-item label="账号类型:">
 						<el-select
-							v-model="form.userType"
+							v-model="form.accountType"
 							size="medium"
-							placeholder="全部"
+							placeholder="默认选择全部"
 							clearable
-							style="width: 180px"
+							style="width: 300px"
 						>
-							<el-option label="全部" value></el-option>
+                            <el-option
+                                v-for="item in accountTypeArr"
+                                :key="item.code"
+                                :label="item.description"
+                                :value="item.code"
+                            ></el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item label="注册终端:">
 						<el-select
-							v-model="form.terminal"
+							v-model="form.deviceType"
 							size="medium"
-							placeholder="全部"
+							placeholder="默认选择全部"
 							clearable
                             multiple
 							style="width: 300px"
@@ -405,7 +410,7 @@ export default {
 				levelDays: '',
 				lastLoginTime: '',
 				vipRank: '',
-				userType: '',
+                accountType: '',
 				userLabel: '',
                 deviceType: '',
 				supAgent: '',
@@ -420,14 +425,13 @@ export default {
 			moduleBox: '',
 			showForm: '',
 			editVisible: false,
-			filterStatus: [
-				{ text: '一级', value: '一级' },
-				{ text: '二级', value: '二级' }
-			],
 			editFormData: {}
 		}
 	},
 	computed: {
+        accountTypeArr() {
+            return this.globalDics.accountType
+        },
         deviceTypeArr() {
             return this.globalDics.deviceType
         }

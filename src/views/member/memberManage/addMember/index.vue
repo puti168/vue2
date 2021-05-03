@@ -10,20 +10,20 @@
 				</span>
 			</div>
 			<el-form ref="form" :model="form" :rules="rules" label-width="100px">
-				<el-form-item label="账号类型:" prop="userType">
+				<el-form-item label="账号类型:" prop="accountType">
 					<el-select
-						v-model="form.userType"
+						v-model="form.accountType"
 						size="medium"
 						placeholder="全部"
 						clearable
 						style="width: 365px"
 					>
-						<el-option label="全部" value="全部"></el-option>
-						<el-option label="正式" value="1"></el-option>
-						<el-option label="试玩" value="2"></el-option>
-						<el-option label="商务" value="3"></el-option>
-						<el-option label="测试" value="4"></el-option>
-						<el-option label="置换" value="5"></el-option>
+						<el-option
+							v-for="item in accountTypeArr"
+							:key="item.code"
+							:label="item.description"
+							:value="item.code"
+						></el-option>
 					</el-select>
 				</el-form-item>
 				<el-form-item label="会员账号:" prop="userName">
@@ -46,7 +46,7 @@
 				</el-form-item>
 				<el-form-item label="手机号码:">
 					<el-input
-						v-model="form.phone"
+						v-model="form.registerPhone"
 						size="medium"
 						placeholder="请输入"
 						clearable
@@ -55,7 +55,7 @@
 				</el-form-item>
 				<el-form-item label="上级代理:">
 					<el-input
-						v-model="form.supAgent"
+						v-model="form.parentProxyName"
 						size="medium"
 						placeholder="请输入"
 						clearable
@@ -70,13 +70,17 @@
 						clearable
 						style="width: 365px"
 					>
-						<el-option label="男" value="男"></el-option>
-						<el-option label="女" value="女"></el-option>
+						<el-option
+							v-for="item in genderType"
+							:key="item.code"
+							:label="item.description"
+							:value="item.code"
+						></el-option>
 					</el-select>
 				</el-form-item>
 				<el-form-item label="VIP经验:">
 					<el-input
-						v-model="form.vipEx"
+						v-model="form.vipExperenceValue"
 						size="medium"
 						placeholder="请输入数字，不支持负数和小数点"
 						clearable
@@ -85,7 +89,7 @@
 				</el-form-item>
 				<el-form-item label="邮箱:">
 					<el-input
-						v-model="form.mail"
+						v-model="form.email"
 						size="medium"
 						placeholder="请输入"
 						clearable
@@ -94,7 +98,7 @@
 				</el-form-item>
 				<el-form-item label="姓名:">
 					<el-input
-						v-model="form.nickname"
+						v-model="form.realName"
 						size="medium"
 						placeholder="请输入"
 						clearable
@@ -103,7 +107,7 @@
 				</el-form-item>
 				<el-form-item label="审核信息:">
 					<el-input
-						v-model="form.checkMsg"
+						v-model="form.applyInfo"
 						size="medium"
 						type="textarea"
 						placeholder="请输入"
@@ -143,24 +147,33 @@ export default {
 	data() {
 		return {
 			form: {
-				userType: '',
+				accountType: '4',
 				userName: '',
 				password: '',
-				phone: '',
-				supAgent: '',
+				registerPhone: '',
+				parentProxyName: '',
 				gender: '',
-				vipEx: '',
-				mail: '',
-				nickname: '',
-				checkMsg: ''
+				vipExperenceValue: '',
+				email: '',
+				realName: '',
+				applyInfo: ''
 			},
 			dataList: []
 		}
 	},
 	computed: {
+		accountTypeArr() {
+			return [
+				{ description: '全部', code: '0' },
+				...this.globalDics.accountType
+			]
+		},
+		genderType() {
+			return [...this.globalDics.genderType].reverse()
+		},
 		rules() {
 			return {
-				userType: [
+				accountType: [
 					{ required: true, message: '请选择账号类型', trigger: 'change' }
 				],
 				userName: [
@@ -180,38 +193,38 @@ export default {
 				...this.form
 			}
 			console.log(params)
-            this.$api.addMemberAPI(params).then((res) => {
-                const {
-                    code,
-                    data: { record, totalRecord },
-                    msg
-                } = res
-                if (code === 200) {
-                    this.loading = false
-                    this.dataList = record || []
-                    this.total = totalRecord || 0
-                } else {
-                    this.loading = false
-                    this.$message({
-                        message: msg,
-                        type: 'error'
-                    })
-                }
-            })
+			this.$api.addMemberAPI(params).then((res) => {
+				const {
+					code,
+					data: { record, totalRecord },
+					msg
+				} = res
+				if (code === 200) {
+					this.loading = false
+					this.dataList = record || []
+					this.total = totalRecord || 0
+				} else {
+					this.loading = false
+					this.$message({
+						message: msg,
+						type: 'error'
+					})
+				}
+			})
 		},
 		reset() {
-            this.$refs['form'].resetFields()
+			this.$refs['form'].resetFields()
 			this.form = {
-				userType: '',
+				accountType: '',
 				userName: '',
 				password: '',
-				phone: '',
-				supAgent: '',
+				registerPhone: '',
+				parentProxyName: '',
 				gender: '',
-				vipEx: '',
-				mail: '',
-				nickname: '',
-				checkMsg: ''
+				vipExperenceValue: '',
+				email: '',
+				realName: '',
+				applyInfo: ''
 			}
 		}
 	}
