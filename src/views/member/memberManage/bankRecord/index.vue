@@ -40,6 +40,7 @@
 							clearable
 							maxlength="11"
 							style="width: 150px"
+                            @keyup.enter.native="enterSearch"
 						></el-input>
 					</el-form-item>
 					<el-form-item label="持卡人姓名:">
@@ -50,6 +51,7 @@
 							clearable
 							style="width: 150px"
 							maxlength="6"
+                            @keyup.enter.native="enterSearch"
 						></el-input>
 					</el-form-item>
 					<el-form-item label="银行名称:">
@@ -60,6 +62,7 @@
 							clearable
 							style="width: 150px"
 							maxlength="10"
+                            @keyup.enter.native="enterSearch"
 						></el-input>
 					</el-form-item>
 					<el-form-item label="银行卡号:">
@@ -70,6 +73,7 @@
 							clearable
 							style="width: 150px"
 							maxlength="25"
+                            @keyup.enter.native="enterSearch"
 						></el-input>
 					</el-form-item>
 					<el-form-item label="上级代理:">
@@ -80,6 +84,7 @@
 							clearable
 							style="width: 150px"
 							maxlength="11"
+                            @keyup.enter.native="enterSearch"
 						></el-input>
 					</el-form-item>
 					<el-form-item>
@@ -88,7 +93,7 @@
 							icon="el-icon-search"
 							:disabled="loading"
 							size="medium"
-							@click="handleSearch"
+							@click="search"
 						>
 							查询
 						</el-button>
@@ -254,10 +259,6 @@ export default {
 					})
 				}
 			})
-		},
-		handleSearch() {
-			this.loading = true
-			this.loadData()
 		},
 		reset() {
 			this.$refs['form'].resetFields()
