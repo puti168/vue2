@@ -142,6 +142,7 @@
 					:data="dataList"
 					style="width: 100%"
 					:header-cell-style="getRowClass"
+					@sort-change="changeTableSort"
 				>
 					<el-table-column
 						v-slot="scope"
@@ -197,6 +198,7 @@
 						prop="createDt"
 						align="center"
 						label="操作时间"
+						sortable="custom"
 					></el-table-column>
 				</el-table>
 				<!-- 分页 -->
@@ -235,7 +237,7 @@ export default {
 				bankName: '',
 				dataType: 2,
 				operateType: '',
-				orderType: '',
+				orderType: undefined,
 				parentProxyName: '',
 				userName: '',
 				virtualAddress: '',
