@@ -47,6 +47,7 @@
 							size="medium"
 							placeholder="请输入"
 							clearable
+                            maxlength="11"
 							style="width: 180px"
 						></el-input>
 					</el-form-item>
@@ -56,6 +57,7 @@
 							size="medium"
 							placeholder="请输入"
 							clearable
+                            maxlength="6"
 							style="width: 180px"
 						></el-input>
 					</el-form-item>
@@ -65,6 +67,7 @@
 							size="medium"
 							placeholder="请输入"
 							clearable
+                            maxlength="11"
 							style="width: 180px"
 						></el-input>
 					</el-form-item>
@@ -74,6 +77,7 @@
 							size="medium"
 							placeholder="请输入"
 							clearable
+                            maxlength="11"
 							style="width: 180px"
 						></el-input>
 					</el-form-item>
@@ -83,6 +87,7 @@
 							size="medium"
 							placeholder="请输入"
 							clearable
+                            maxlength="15"
 							style="width: 180px"
 						></el-input>
 					</el-form-item>
@@ -92,6 +97,7 @@
 							size="medium"
 							placeholder="请输入"
 							clearable
+                            maxlength="10"
 							style="width: 180px"
 						></el-input>
 					</el-form-item>
@@ -271,7 +277,8 @@ export default {
 				registerPhone: '',
 				ipAttribution: '',
 				deviceType: undefined,
-				realname: ''
+				realname: '',
+                orderType: undefined
 			},
 			dataList: [],
 			total: 0
