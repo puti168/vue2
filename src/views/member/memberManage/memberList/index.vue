@@ -2,7 +2,12 @@
 	<div class="game-container report-container">
 		<div class="view-container dealer-container">
 			<div class="params">
-				<el-form ref="form" :inline="true" :model="form" label-width="85px">
+				<el-form
+					ref="form"
+					:inline="true"
+					:model="queryData"
+					label-width="85px"
+				>
 					<el-form-item label="注册时间:" prop="registerTime">
 						<el-date-picker
 							v-model="queryData.registerTime"
@@ -37,18 +42,21 @@
 							style="width: 180px"
 						></el-input>
 					</el-form-item>
-					<el-form-item label="账号状态:">
+					<el-form-item label="账号状态:" prop="accountStatus">
 						<el-select
-							v-model="queryData.status"
-							prop="status"
+							v-model="queryData.accountStatus"
 							size="medium"
-							placeholder="全部"
+							placeholder="默认选择全部"
 							clearable
-							style="width: 180px"
+							multiple
+							style="width: 300px"
 						>
-							<el-option label="全部" value></el-option>
-							<el-option label="启用" :value="1"></el-option>
-							<el-option label="停用" :value="0"></el-option>
+							<el-option
+								v-for="item in accountStatusArr"
+								:key="item.code"
+								:label="item.description"
+								:value="item.code"
+							></el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item label="风控层级:">
@@ -411,7 +419,7 @@ export default {
 				registerTime: [start, end],
 				userName: '',
 				realName: '',
-				status: '',
+				accountStatus: '',
 				riskLevel: '',
 				levelDays: '',
 				lastLoginTime: '',
@@ -436,6 +444,9 @@ export default {
 		}
 	},
 	computed: {
+		accountStatusArr() {
+			return [...this.globalDics.accountStatusType]
+		},
 		accountTypeArr() {
 			return this.globalDics.accountType
 		},

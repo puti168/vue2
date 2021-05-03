@@ -2,10 +2,15 @@
 	<div class="game-container report-container">
 		<div class="view-container dealer-container">
 			<div class="params">
-				<el-form ref="form" :inline="true" :model="form" label-width="100px">
+				<el-form
+					ref="form"
+					:inline="true"
+					:model="queryData"
+					label-width="100px"
+				>
 					<el-form-item label="注册时间:">
 						<el-date-picker
-							v-model="form.registerTime"
+							v-model="queryData.registerTime"
 							size="medium"
 							:picker-options="pickerOptions"
 							format="yyyy-MM-dd HH:mm:ss"
@@ -21,24 +26,24 @@
 					</el-form-item>
 					<el-form-item label="账号类型:">
 						<el-select
-							v-model="form.accountType"
+							v-model="queryData.accountType"
 							size="medium"
 							placeholder="默认选择全部"
 							clearable
-                            multiple
+							multiple
 							style="width: 300px"
 						>
-                            <el-option
-                                v-for="item in accountTypeArr"
-                                :key="item.code"
-                                :label="item.description"
-                                :value="item.code"
-                            ></el-option>
+							<el-option
+								v-for="item in accountTypeArr"
+								:key="item.code"
+								:label="item.description"
+								:value="item.code"
+							></el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item label="会员账号:">
 						<el-input
-							v-model="form.userName"
+							v-model="queryData.userName"
 							size="medium"
 							placeholder="请输入"
 							clearable
@@ -47,7 +52,7 @@
 					</el-form-item>
 					<el-form-item label="会员姓名:">
 						<el-input
-							v-model="form.realname"
+							v-model="queryData.realname"
 							size="medium"
 							placeholder="请输入"
 							clearable
@@ -56,7 +61,7 @@
 					</el-form-item>
 					<el-form-item label="上级代理:">
 						<el-input
-							v-model="form.parentProxyName"
+							v-model="queryData.parentProxyName"
 							size="medium"
 							placeholder="请输入"
 							clearable
@@ -65,7 +70,7 @@
 					</el-form-item>
 					<el-form-item label="注册手机号:">
 						<el-input
-							v-model="form.registerPhone"
+							v-model="queryData.registerPhone"
 							size="medium"
 							placeholder="请输入"
 							clearable
@@ -74,7 +79,7 @@
 					</el-form-item>
 					<el-form-item label="注册IP:">
 						<el-input
-							v-model="form.ipAttribution"
+							v-model="queryData.ipAttribution"
 							size="medium"
 							placeholder="请输入"
 							clearable
@@ -83,7 +88,7 @@
 					</el-form-item>
 					<el-form-item label="IP归属地:">
 						<el-input
-							v-model="form.registration"
+							v-model="queryData.registration"
 							size="medium"
 							placeholder="请输入"
 							clearable
@@ -92,19 +97,19 @@
 					</el-form-item>
 					<el-form-item label="注册终端:">
 						<el-select
-							v-model="form.deviceType"
+							v-model="queryData.deviceType"
 							size="medium"
 							placeholder="默认选择全部"
 							clearable
-                            multiple
+							multiple
 							style="width: 300px"
 						>
-                            <el-option
-                                v-for="item in deviceTypeArr"
-                                :key="item.code"
-                                :label="item.description"
-                                :value="item.code"
-                            ></el-option>
+							<el-option
+								v-for="item in deviceTypeArr"
+								:key="item.code"
+								:label="item.description"
+								:value="item.code"
+							></el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item>
@@ -138,7 +143,7 @@
 					:data="dataList"
 					style="width: 100%"
 					:header-cell-style="getRowClass"
-                    @sort-change="changeTableSort"
+					@sort-change="changeTableSort"
 				>
 					<el-table-column
 						prop="createDt"
@@ -146,15 +151,11 @@
 						label="注册时间"
 						sortable="custom"
 					></el-table-column>
-					<el-table-column
-						prop="accountType"
-						align="center"
-						label="会员类型"
-					>
-                        <template slot-scope="scope">
-                            {{ typeFilter(scope.row.accountType, 'accountType') }}
-                        </template>
-                    </el-table-column>
+					<el-table-column prop="accountType" align="center" label="会员类型">
+						<template slot-scope="scope">
+							{{ typeFilter(scope.row.accountType, 'accountType') }}
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="userName"
 						align="center"
@@ -223,14 +224,14 @@ export default {
 	mixins: [list],
 	data() {
 		return {
-			form: {
+			queryData: {
 				registerTime: [start, end],
-                accountType: undefined,
-                userName: '',
-                parentProxyName: '',
-                registerPhone: '',
-                ipAttribution: '',
-                deviceType: undefined,
+				accountType: undefined,
+				userName: '',
+				parentProxyName: '',
+				registerPhone: '',
+				ipAttribution: '',
+				deviceType: undefined,
 				realname: ''
 			},
 			dataList: [],
@@ -238,30 +239,34 @@ export default {
 		}
 	},
 	computed: {
-        accountTypeArr() {
-            return this.globalDics.accountType
-        },
-        deviceTypeArr() {
-            return this.globalDics.deviceType
-        }
-    },
+		accountTypeArr() {
+			return this.globalDics.accountType
+		},
+		deviceTypeArr() {
+			return this.globalDics.deviceType
+		}
+	},
 	mounted() {},
 	methods: {
 		loadData() {
 			this.dataList = []
-			const create = this.form.registerTime || []
+			const create = this.queryData.registerTime || []
 			const [startTime, endTime] = create
 			let params = {
-				...this.form,
-				createDtStart: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : undefined,
-				createDtEnd: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : undefined
+				...this.queryData,
+				createDtStart: startTime
+					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
+					: undefined,
+				createDtEnd: endTime
+					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
+					: undefined
 			}
-            params = {
-                ...this.getParams(params)
-            }
+			params = {
+				...this.getParams(params)
+			}
 			delete params.registerTime
-            params.accountType = params.accountType.join(',')
-            params.deviceType = params.deviceType.join(',')
+			params.accountType = params.accountType.join(',')
+			params.deviceType = params.deviceType.join(',')
 			this.$api.memberRegisterInfoListAPI(params).then((res) => {
 				const {
 					code,
@@ -283,7 +288,17 @@ export default {
 		},
 		reset() {
 			this.$refs['form'].resetFields()
-			// this.loadData()
+			this.queryData = {
+				registerTime: [start, end],
+				accountType: undefined,
+				userName: '',
+				parentProxyName: '',
+				registerPhone: '',
+				ipAttribution: '',
+				deviceType: undefined,
+				realname: ''
+			}
+            this.loadData()
 		}
 	}
 }
