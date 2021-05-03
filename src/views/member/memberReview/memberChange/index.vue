@@ -193,7 +193,7 @@
 						<template slot-scope="scope">
 							<el-checkbox
 								v-if="
-									scope.row.auditStep === '1' &&
+									Number(scope.row.auditStep) === 1 &&
 										(scope.row.auditName === name || !scope.row.auditName)
 								"
 								v-model="scope.row.lockStatus"
@@ -205,11 +205,11 @@
 						<template slot-scope="scope">
 							<el-button
 								:disabled="
-									scope.row.auditStep === '1' && scope.row.auditName !== name
+									Number(scope.row.auditStep) === 1 && scope.row.auditName !== name
 										? true
 										: false
 								"
-								:type="scope.row.auditStep === '0' ? 'success' : 'primary'"
+								:type="Number(scope.row.auditStep) === 0 ? 'success' : 'primary'"
 								size="medium"
 								@click="goDetail(scope.row)"
 							>
@@ -268,9 +268,9 @@
 						<template slot-scope="scope">
 							<span
 								:class="
-									scope.row.auditStatus === '1'
+									Number(scope.row.auditStatus) === 1
 										? 'infoState'
-										: scope.row.auditStatus === '2'
+										: Number(scope.row.auditStatus) === 2
 										? 'success'
 										: 'danger'
 								"
@@ -294,7 +294,7 @@
 						</template>
 						<template slot-scope="scope">
 							{{ scope.row.auditName ? scope.row.auditName : '-' }}
-							<p>{{ scope.row.auditTime }}</p>
+							<p>{{ scope.row.auditTime ? scope.row.auditTime : '-' }}</p>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -405,7 +405,7 @@ export default {
 					this.dataList = response.record
 					if (this.dataList) {
 						this.dataList.forEach((item) => {
-							if (item.lockOrder === '1') {
+							if (Number(item.lockOrder) === 1) {
 								item.lockStatus = true
 							} else {
 								item.lockStatus = false
@@ -423,7 +423,7 @@ export default {
 			})
 		},
 		goDetail(row) {
-			const type = row.auditStep === '1' && row.auditName === this.name
+			const type = Number(row.auditStep) === 1 && row.auditName === this.name
 			this.$router.push({
 				path: 'memberChangeReview',
 				query: { id: row.id, userId: row.userId, type: type }
@@ -456,7 +456,7 @@ export default {
 				spinner: 'el-icon-loading',
 				background: 'rgba(0, 0, 0, 0.7)'
 			})
-			this.$api.lock({ id: val.id, lockFlag: val.lockStatus === '0' ? 0 : 1}).then((res) => {
+			this.$api.lock({ id: val.id, lockFlag: Number(val.lockOrder) === 0 ? 0 : 1}).then((res) => {
 				if (res.code === 200) {
 					loading.close()
 					this.$message({

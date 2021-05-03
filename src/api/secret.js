@@ -97,6 +97,7 @@ export default {
 	memberChange,
 	memberAuditDetail,
 	audit,
+	lockMemberAuditRecord,
 	updateMemberAuditRecord,
 	lock,
 	playerAuditList,
