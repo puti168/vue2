@@ -7,9 +7,9 @@
 						<el-select
 							v-model="form.operateType"
 							size="medium"
-							placeholder="全部"
+							placeholder="默认选择全部"
 							clearable
-							style="width: 150px"
+							style="width: 180px"
 						>
                             <el-option
                                 v-for="item in bindType"
@@ -42,7 +42,7 @@
 							placeholder="请输入"
 							clearable
 							maxlength="11"
-							style="width: 150px"
+							style="width: 180px"
                             @keyup.enter.native="enterSearch"
 						></el-input>
 					</el-form-item>
@@ -52,7 +52,7 @@
 							size="medium"
 							placeholder="请输入"
 							clearable
-							style="width: 150px"
+							style="width: 180px"
 							maxlength="6"
                             @keyup.enter.native="enterSearch"
 						></el-input>
@@ -63,7 +63,7 @@
 							size="medium"
 							placeholder="请输入"
 							clearable
-							style="width: 150px"
+							style="width: 180px"
 							maxlength="10"
                             @keyup.enter.native="enterSearch"
 						></el-input>
@@ -74,7 +74,7 @@
 							size="medium"
 							placeholder="请输入"
 							clearable
-							style="width: 150px"
+							style="width: 180px"
 							maxlength="25"
                             @keyup.enter.native="enterSearch"
 						></el-input>
@@ -85,7 +85,7 @@
 							size="medium"
 							placeholder="请输入"
 							clearable
-							style="width: 150px"
+							style="width: 180px"
 							maxlength="11"
                             @keyup.enter.native="enterSearch"
 						></el-input>

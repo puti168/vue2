@@ -25,14 +25,14 @@
 							size="medium"
 							placeholder="全部"
 							clearable
-							style="width: 150px"
+							style="width: 180px"
 						>
-							<el-option label="全部" value></el-option>
-							<el-option label="试玩" value="1"></el-option>
-							<el-option label="商务" value="2"></el-option>
-							<el-option label="正式" value="3"></el-option>
-							<el-option label="测试" value="4"></el-option>
-							<el-option label="置换" value="5"></el-option>
+                            <el-option
+                                v-for="item in accountTypeArr"
+                                :key="item.code"
+                                :label="item.description"
+                                :value="item.code"
+                            ></el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item label="会员账号:">
@@ -41,7 +41,7 @@
 							size="medium"
 							placeholder="请输入"
 							clearable
-							style="width: 150px"
+							style="width: 180px"
 						></el-input>
 					</el-form-item>
 					<el-form-item label="会员姓名:">
@@ -50,7 +50,7 @@
 							size="medium"
 							placeholder="请输入"
 							clearable
-							style="width: 150px"
+							style="width: 180px"
 						></el-input>
 					</el-form-item>
 					<el-form-item label="上级代理:">
@@ -59,7 +59,7 @@
 							size="medium"
 							placeholder="请输入"
 							clearable
-							style="width: 150px"
+							style="width: 180px"
 						></el-input>
 					</el-form-item>
 					<el-form-item label="注册手机号:">
@@ -68,7 +68,7 @@
 							size="medium"
 							placeholder="请输入"
 							clearable
-							style="width: 150px"
+							style="width: 180px"
 						></el-input>
 					</el-form-item>
 					<el-form-item label="注册IP:">
@@ -77,7 +77,7 @@
 							size="medium"
 							placeholder="请输入"
 							clearable
-							style="width: 150px"
+							style="width: 180px"
 						></el-input>
 					</el-form-item>
 					<el-form-item label="IP归属地:">
@@ -86,23 +86,23 @@
 							size="medium"
 							placeholder="请输入"
 							clearable
-							style="width: 150px"
+							style="width: 180px"
 						></el-input>
 					</el-form-item>
 					<el-form-item label="注册终端:">
 						<el-select
 							v-model="form.deviceType"
 							size="medium"
-							placeholder="全部"
+							placeholder="默认选择全部"
 							clearable
-							style="width: 150px"
+							style="width: 180px"
 						>
-							<el-option label="全部" value></el-option>
-							<el-option label="PC" value="PC"></el-option>
-							<el-option label="IOS_APP" value="IOS_APP"></el-option>
-							<el-option label="IOS_H5" value="IOS_H5"></el-option>
-							<el-option label="Android_H5" value="Android_H5"></el-option>
-							<el-option label="Android_APP" value="Android_APP"></el-option>
+                            <el-option
+                                v-for="item in deviceTypeArr"
+                                :key="item.code"
+                                :label="item.description"
+                                :value="item.code"
+                            ></el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item>
@@ -111,7 +111,7 @@
 							icon="el-icon-search"
 							:disabled="loading"
 							size="medium"
-							@click="handleSearch"
+							@click="search"
 						>
 							查询
 						</el-button>
@@ -231,20 +231,28 @@ export default {
 			total: 0
 		}
 	},
-	computed: {},
+	computed: {
+        accountTypeArr() {
+            return [{description: '全部', code: undefined}, ...this.globalDics.accountType]
+        },
+        deviceTypeArr() {
+            return [{description: '全部', code: undefined}, ...this.globalDics.deviceType]
+        }
+    },
 	mounted() {},
 	methods: {
 		loadData() {
 			this.dataList = []
 			const create = this.form.registerTime || []
 			const [startTime, endTime] = create
-			const params = {
+			let params = {
 				...this.form,
-				pageIndex: this.pageIndex,
-				pageSize: this.pageSize,
 				createDtStart: dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') || '',
 				createDtEnd: dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') || ''
 			}
+            params = {
+                ...this.getParams(params)
+            }
 			delete params.registerTime
 			this.$api.memberRegisterInfoListAPI(params).then((res) => {
 				const {
@@ -268,16 +276,6 @@ export default {
 		reset() {
 			this.$refs['form'].resetFields()
 			// this.loadData()
-		},
-
-		handleSearch() {
-			this.loading = true
-			this.pageIndex = 1
-			this.loadData()
-		},
-		handleCurrentChange(val) {
-			this.pageIndex = val
-			this.loadData()
 		}
 	}
 }
