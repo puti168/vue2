@@ -326,26 +326,26 @@
 						width="150px"
 						sortable="custom"
 					></el-table-column>
-					<el-table-column align="center" label="操作" width="200px">
-						<template slot-scope="scope">
-							<el-button
-								type="danger"
-								icon="el-icon-delete"
-								size="medium"
-								@click="deleteUp(scope.row)"
-							>
-								删除
-							</el-button>
-							<el-button
-								type="warning"
-								icon="el-icon-edit"
-								size="medium"
-								@click.stop="editUp(scope.row)"
-							>
-								修改
-							</el-button>
-						</template>
-					</el-table-column>
+<!--					<el-table-column align="center" label="操作" width="200px">-->
+<!--						<template slot-scope="scope">-->
+<!--							<el-button-->
+<!--								type="danger"-->
+<!--								icon="el-icon-delete"-->
+<!--								size="medium"-->
+<!--								@click="deleteUp(scope.row)"-->
+<!--							>-->
+<!--								删除-->
+<!--							</el-button>-->
+<!--							<el-button-->
+<!--								type="warning"-->
+<!--								icon="el-icon-edit"-->
+<!--								size="medium"-->
+<!--								@click.stop="editUp(scope.row)"-->
+<!--							>-->
+<!--								修改-->
+<!--							</el-button>-->
+<!--						</template>-->
+<!--					</el-table-column>-->
 				</el-table>
 				<!-- 分页 -->
 				<el-pagination

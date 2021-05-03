@@ -171,10 +171,10 @@ export default {
 			if (orderParams) {
 				if (order === 'ascending') {
 					// 升序
-					this.form.orderType = 2
+					this.form.orderType = 'asc'
 				} else if (column.order === 'descending') {
 					// 降序
-					this.form.orderType = 1
+					this.form.orderType = 'desc'
 				}
 				this.loadData()
 			}
