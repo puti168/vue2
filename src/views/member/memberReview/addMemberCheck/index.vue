@@ -196,14 +196,14 @@
 							</span>
 						</template>
 					</el-table-column>
-					<el-table-column
-						align="center"
-					></el-table-column>
+					<el-table-column align="center"></el-table-column>
 					<el-table-column align="center" sortable="custom" width="200px">
 						<template slot="header">
-							一审审核人
-							<br />
-							一审完成时间
+							<span>
+								一审审核人
+								<br />
+								一审完成时间
+							</span>
 						</template>
 						<template slot-scope="scope">
 							{{ scope.row.auditName ? scope.row.auditName : '-' }}
@@ -363,22 +363,29 @@ export default {
 				spinner: 'el-icon-loading',
 				background: 'rgba(0, 0, 0, 0.7)'
 			})
-			this.$api.lockMemberAuditRecord(JSON.stringify({ id: val.id, lockFlag: val.lockStatus === '0' ? 0 : 1 })).then((res) => {
-				if (res.code === 200) {
-					loading.close()
-					this.$message({
-						type: 'success',
-						message: '锁单成功!'
+			this.$api
+				.lockMemberAuditRecord(
+					JSON.stringify({
+						id: val.id,
+						lockFlag: val.lockStatus === '0' ? 0 : 1
 					})
-					this.loadData()
-				} else {
-					loading.close()
-					this.$message({
-						message: res.msg,
-						type: 'error'
-					})
-				}
-			})
+				)
+				.then((res) => {
+					if (res.code === 200) {
+						loading.close()
+						this.$message({
+							type: 'success',
+							message: '锁单成功!'
+						})
+						this.loadData()
+					} else {
+						loading.close()
+						this.$message({
+							message: res.msg,
+							type: 'error'
+						})
+					}
+				})
 		}
 	}
 }
@@ -389,6 +396,11 @@ export default {
 	text-align: center;
 	color: #909399;
 	font-weight: 700;
+}
+/deep/ .caret-wrapper {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
 }
 .data-refresh {
 	margin-top: 0;
