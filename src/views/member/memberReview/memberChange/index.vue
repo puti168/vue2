@@ -381,6 +381,7 @@ export default {
 			params = {
 				...this.getParams(params)
 			}
+			console.log(params)
 			this.$api.memberChange(params).then((res) => {
 				if (res.code === 200) {
 					this.now = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
@@ -437,7 +438,7 @@ export default {
 				spinner: 'el-icon-loading',
 				background: 'rgba(0, 0, 0, 0.7)'
 			})
-			this.$api.lock(JSON.stringify({ id: val.id })).then((res) => {
+			this.$api.lock({ id: val.id }).then((res) => {
 				if (res.code === 200) {
 					loading.close()
 					this.$message({

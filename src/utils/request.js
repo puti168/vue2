@@ -19,6 +19,8 @@ const service = axios.create({
 // request interceptor
 service.interceptors.request.use(
 	(config) => {
+		console.log('2222222')
+		console.log(config.data)
 		if (config.params) {
 			const keys = Object.keys(config.params)
 			keys.forEach((element) => {
@@ -65,6 +67,7 @@ service.interceptors.request.use(
 			config.headers['Content-Type'] = 'application/json;charset=UTF-8'
 			config.headers['ob-timestamp'] = timestamp
 			config.headers['ob-sign'] = sign
+			config.data = JSON.stringify(config.data)
 			// config.headers['zr-encrypted'] = false
 		}
 		return config
@@ -94,41 +97,41 @@ service.interceptors.response.use(
 		const res = response.data
 		console.log('request===>', res)
 		if (res.code !== 200) {
-		    if (res.code === 10025) {
-		        const username = localStorage.getItem('username')
-		        const password = localStorage.getItem('password')
-		        const googleAuth = localStorage.getItem('googleAuth')
-		        await store
-		            .dispatch('user/login', {
-		                username: username.trim(),
-		                password,
-		                googleAuth,
-		                version: '2.0',
-		                pwdNeedReset: true,
-		                prePassword: password
-		            })
-		            .then(() => {
-		                router.push(`/`)
-		            })
-		            .catch(() => {})
-		    } else {
-		        // if the custom code is not 20000, it is judged as an error.
-		        if (res.code === 20000 || res.code === 20001 || res.code === 20002) {
-		            // 无效权限
-		            const fullPath = router.history.current.fullPath
-		            await store.dispatch('user/logout')
-		            await store.dispatch('permission/clearRoutes')
-		            router.push(`/login?redirect=${fullPath}`)
-		        }
-		        Message.closeAll()
-		        Message({
-		            message: res.message || res.msg || res || 'Error',
-		            type: 'error'
-		        })
-		    }
-		    return Promise.reject(new Error(res.message || res.msg || 'Error'))
+			if (res.code === 10025) {
+				const username = localStorage.getItem('username')
+				const password = localStorage.getItem('password')
+				const googleAuth = localStorage.getItem('googleAuth')
+				await store
+					.dispatch('user/login', {
+						username: username.trim(),
+						password,
+						googleAuth,
+						version: '2.0',
+						pwdNeedReset: true,
+						prePassword: password
+					})
+					.then(() => {
+						router.push(`/`)
+					})
+					.catch(() => {})
+			} else {
+				// if the custom code is not 20000, it is judged as an error.
+				if (res.code === 20000 || res.code === 20001 || res.code === 20002) {
+					// 无效权限
+					const fullPath = router.history.current.fullPath
+					await store.dispatch('user/logout')
+					await store.dispatch('permission/clearRoutes')
+					router.push(`/login?redirect=${fullPath}`)
+				}
+				Message.closeAll()
+				Message({
+					message: res.message || res.msg || res || 'Error',
+					type: 'error'
+				})
+			}
+			return Promise.reject(new Error(res.message || res.msg || 'Error'))
 		} else {
-		    return res
+			return res
 		}
 	},
 	async (error) => {

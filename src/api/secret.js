@@ -28,11 +28,11 @@ export function audit(data) {
 		data
 	})
 }
-export function memberChange(params) {
+export function memberChange(data) {
 	return request({
 		url: '/memberData/page',
-		method: 'get',
-		params
+		method: 'post',
+		data
 	})
 }
 export function playerAuditList(data) {
