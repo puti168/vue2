@@ -163,7 +163,7 @@
 							<span v-if="!!scope.row.accountType">
 								{{ typeFilter(scope.row.accountType, 'accountType') }}
 							</span>
-							<span>-</span>
+							<span v-else>-</span>
 						</template>
 					</el-table-column>
 					<el-table-column prop="userName" align="center" label="会员账号">
