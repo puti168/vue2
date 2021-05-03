@@ -1,5 +1,5 @@
 module.exports = {
-	title: 'vue-admin-secret-manage',
+	title: 'OB旗舰中控管理后台',
 
 	/**
 	 * @type {boolean} true | false
