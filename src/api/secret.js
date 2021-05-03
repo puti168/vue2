@@ -1,5 +1,4 @@
 import request from '@/utils/request'
-import request2 from '@/utils/request2'
 
 export function blackList(params) {
 	return request({
@@ -22,6 +21,13 @@ export function recordInfo(params) {
 		params
 	})
 }
+export function audit(data) {
+	return request({
+		url: '/memberData/audit',
+		method: 'post',
+		data
+	})
+}
 export function memberChange(params) {
 	return request({
 		url: '/memberData/page',
@@ -29,9 +35,23 @@ export function memberChange(params) {
 		params
 	})
 }
+export function playerAuditList(data) {
+	return request({
+		url: '/player/playerAuditList',
+		method: 'post',
+		data
+	})
+}
 export function lock(data) {
-	return request2({
+	return request({
 		url: '/memberData/lock',
+		method: 'post',
+		data
+	})
+}
+export function lockMemberAuditRecord(data) {
+	return request({
+		url: '/player/lockMemberAuditRecord',
 		method: 'post',
 		data
 	})
@@ -61,6 +81,7 @@ export function addBlackList(data) {
 export default {
 	recordInfo,
 	memberChange,
+	audit,
 	lock,
 	blackList,
 	memberLoginLog,

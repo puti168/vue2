@@ -19,7 +19,7 @@
 				</el-form-item>
 				<el-form-item label="一审完成时间:">
 					<el-date-picker
-						v-model="formTime.time"
+						v-model="formTime.time2"
 						size="medium"
 						:picker-options="pickerOptions"
 						format="yyyy-MM-dd HH:mm:ss"
@@ -34,57 +34,67 @@
 				</el-form-item>
 				<el-form-item label="审核状态:">
 					<el-select
-						v-model="queryData.status"
+						v-model="queryData.auditStatus"
 						style="width: 280px"
 						:popper-append-to-body="false"
 					>
 						<el-option label="全部" value=""></el-option>
-						<el-option label="启用" value="0"></el-option>
-						<el-option label="停用" value="1"></el-option>
+						<el-option
+							v-for="item in auditStatus"
+							:key="item.code"
+							:label="item.description"
+							:value="item.code"
+						></el-option>
 					</el-select>
 				</el-form-item>
 
 				<el-form-item label="锁单状态:">
 					<el-select
-						v-model="queryData.status"
+						v-model="queryData.lockOrder"
 						style="width: 280px"
 						:popper-append-to-body="false"
 					>
 						<el-option label="全部" value=""></el-option>
-						<el-option label="启用" value="0"></el-option>
-						<el-option label="停用" value="1"></el-option>
+						<el-option
+							v-for="item in lockOrderType"
+							:key="item.code"
+							:label="item.description"
+							:value="item.code"
+						></el-option>
 					</el-select>
 				</el-form-item>
 				<el-form-item label="审核操作:">
 					<el-select
-						v-model="queryData.status"
+						v-model="queryData.auditStep"
 						style="width: 280px"
 						:popper-append-to-body="false"
 					>
 						<el-option label="全部" value=""></el-option>
-						<el-option label="启用" value="0"></el-option>
-						<el-option label="停用" value="1"></el-option>
+						<el-option
+							v-for="item in auditStepType"
+							:key="item.code"
+							:label="item.description"
+							:value="item.code"
+						></el-option>
 					</el-select>
 				</el-form-item>
 				<el-form-item label="申请人:">
 					<el-input
-						v-model="queryData.createBy"
+						v-model="queryData.applyName"
 						clearable
 						size="medium"
 						style="width: 280px"
 						placeholder="请输入"
-						:disabled="loading"
 						@keyup.enter.native="enterSearch"
 					></el-input>
 				</el-form-item>
 				<el-form-item label="一审人:">
 					<el-input
-						v-model="queryData.updatedBy"
+						v-model="queryData.auditName"
 						clearable
 						size="medium"
 						style="width: 280px"
 						placeholder="请输入"
-						:disabled="loading"
 						@keyup.enter.native="enterSearch"
 					></el-input>
 				</el-form-item>
@@ -108,7 +118,7 @@
 						重置
 					</el-button>
 				</el-form-item>
-				<p class="danger data-refresh">数据更新时间： 2019-10-01 10:00:00</p>
+				<p class="danger data-refresh">数据更新时间： {{ now }}</p>
 			</el-form>
 		</div>
 		<div class="view-container dealer-container">
@@ -122,55 +132,81 @@
 					style="width: 100%"
 					:header-cell-style="getRowClass"
 				>
-					<el-table-column
-						prop="cardNo"
-						align="center"
-						label="锁单"
-					>
-					<template slot-scope="scope">
-						<el-checkbox v-model="scope.row.cardNo"></el-checkbox>
-					</template>
+					<el-table-column align="center" label="锁单">
+						<template slot-scope="scope">
+							<el-checkbox
+								v-if="
+									scope.row.auditStep === '1' &&
+										(scope.row.auditName === name || !scope.row.auditName)
+								"
+								v-model="scope.row.lockStatus"
+								@change="lockChange(scope.row)"
+							></el-checkbox>
+						</template>
+					</el-table-column>
+					<el-table-column prop="auditStep" align="center" label="操作">
+						<template slot-scope="scope">
+							<el-button
+								:disabled="
+									scope.row.auditStep === '1' && scope.row.auditName !== name
+										? true
+										: false
+								"
+								:type="scope.row.auditStep === '0' ? 'success' : 'primary'"
+								size="medium"
+								@click="goDetail(scope.row)"
+							>
+								{{ typeFilter(scope.row.auditStep, 'auditStepType') }}
+							</el-button>
+						</template>
 					</el-table-column>
 					<el-table-column
-						prop="createBy"
-						align="center"
-						label="操作"
-					></el-table-column>
-					<el-table-column
-						prop="createDt"
+						prop="auditNum"
 						align="center"
 						label="审核单号"
 					></el-table-column>
 					<el-table-column
-						prop="remark"
+						prop="applyName"
 						align="center"
 						label="申请人"
 					></el-table-column>
 					<el-table-column
-						prop="remark"
+						prop="applyTime"
 						align="center"
 						label="申请时间"
 					></el-table-column>
 					<el-table-column
-						prop="remark"
+						prop="applyInfo"
 						align="center"
 						label="申请信息"
 					></el-table-column>
+					<el-table-column align="center" label="审核状态">
+						<template slot-scope="scope">
+							<span
+								:class="
+									scope.row.auditStatus === '1'
+										? 'infoState'
+										: scope.row.auditStatus === '2'
+										? 'success'
+										: 'danger'
+								"
+							>
+								{{ typeFilter(scope.row.auditStatus, 'auditStatusType') }}
+							</span>
+						</template>
+					</el-table-column>
 					<el-table-column
-						prop="remark"
-						align="center"
-						label="审核状态"
-					></el-table-column>
-					<el-table-column
 						align="center"
 					></el-table-column>
-					<el-table-column align="center">
+					<el-table-column align="center" sortable="custom" width="200px">
 						<template slot="header">
-							<p>一审审核人</p>
-							<p>一审完成时间</p>
+							一审审核人
+							<br />
+							一审完成时间
 						</template>
 						<template slot-scope="scope">
-							{{ scope.row.modifyBy }}
+							{{ scope.row.auditName ? scope.row.auditName : '-' }}
+							<p>{{ scope.row.auditTime }}</p>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -193,46 +229,97 @@
 <script>
 import list from '@/mixins/list'
 import dayjs from 'dayjs'
+import { getNickName } from '@/utils/auth'
+const end = dayjs()
+	.endOf('day')
+	.valueOf()
+const start = dayjs()
+	.startOf('day')
+	.valueOf()
 export default {
-	name: '',
+	name: 'AddMemberCheck',
 	components: {},
 	mixins: [list],
 	data() {
 		return {
-			queryData: {},
-			formTime: {
-				time: []
+			queryData: {
+				userName: '',
+				accountType: [],
+				applyType: '',
+				auditStatus: '',
+				auditStep: '',
+				applyName: '',
+				auditName: '',
+				lockOrder: '',
+				auditNum: '',
+				orderType: '',
+				orderKey: ''
 			},
-			dataList: [],
-			title: '',
-			showForm: '',
-			editVisible: false,
-			editFormData: {}
+			formTime: {
+				time: [start, end],
+				time2: [start, end]
+			},
+			now: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
+			name: '',
+			dataList: []
 		}
 	},
-	computed: {},
-	mounted() {},
+	computed: {
+		accountType() {
+			return this.globalDics.accountType
+		},
+		auditStatus() {
+			return this.globalDics.auditStatusType
+		},
+		auditStepType() {
+			return this.globalDics.auditStepType
+		},
+		lockOrderType() {
+			return this.globalDics.lockOrderType
+		},
+		applyType() {
+			return this.globalDics.applyType
+		}
+	},
+	mounted() {
+		this.name = getNickName()
+	},
 	methods: {
 		loadData() {
 			this.loading = true
 			const [startTime, endTime] = this.formTime.time || []
 			let params = {
 				...this.queryData,
-				pageNum: 1,
-				startTime: startTime
+				applyTimeStart: startTime
 					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
 					: '',
-				endTime: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
+				applyTimeEnd: endTime
+					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
+					: '',
+				auditTimeStart: startTime
+					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
+					: '',
+				auditTimeEnd: endTime
+					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
+					: ''
 			}
 			params = {
 				...this.getParams(params)
 			}
-			this.$api.blackList(params).then((res) => {
+			this.$api.playerAuditList(params).then((res) => {
 				if (res.code === 200) {
+					this.now = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
 					const response = res.data
 					this.loading = false
-					this.dataList = response.records
-					this.total = response.total
+					this.dataList = response.record
+					this.dataList.forEach((item) => {
+						if (item.lockOrder === '1') {
+							item.lockStatus = true
+						} else {
+							item.lockStatus = false
+						}
+					})
+					this.total = response.totalRecord
 				} else {
 					this.loading = false
 					this.$message({
@@ -242,59 +329,55 @@ export default {
 				}
 			})
 		},
-		reset() {
-			this.queryData = {}
-			this.formTime.time = []
-			this.loadData()
-		},
-
-		add() {
-			this.title = '新增'
-			this.editVisible = true
-			this.editFormData = {}
-		},
-		deleteUp(val) {
-			this.$confirm('确定删除此银行卡号吗?', {
-				confirmButtonText: '确定',
-				cancelButtonText: '取消',
-				type: 'warning'
-			}).then(() => {
-				const loading = this.$loading({
-					lock: true,
-					text: 'Loading',
-					spinner: 'el-icon-loading',
-					background: 'rgba(0, 0, 0, 0.7)'
-				})
-				this.$api
-					.delBlackList({
-						id: val.id
-					})
-					.then(() => {
-						loading.close()
-						this.search()
-						this.$message({
-							type: 'success',
-							message: '删除成功!'
-						})
-					})
-					.catch(() => {
-						loading.close()
-					})
+		goDetail(row) {
+			const type = row.auditStep === '1' && row.auditName === this.name
+			this.$router.push({
+				path: 'addMemberReview',
+				query: { id: row.id, userId: row.userId, type: type }
 			})
 		},
-		editUp(val) {
-			this.title = '编辑'
-			this.editVisible = true
-			this.editFormData = val
-		},
-		submit() {
-			this.$refs.editForm.submit()
-		},
-		handleCurrentChange() {
+		reset() {
+			this.queryData = {
+				userName: '',
+				accountType: [],
+				applyType: '',
+				auditStatus: '',
+				applyName: '',
+				auditName: '',
+				lockOrder: '',
+				auditNum: '',
+				orderType: '',
+				orderKey: ''
+			}
+			this.formTime = {
+				time: [start, end],
+				time2: [start, end]
+			}
 			this.loadData()
 		},
-		closeFormDialog() {
-			this.editVisible = false
+		lockChange(val) {
+			const loading = this.$loading({
+				lock: true,
+				text: 'Loading',
+				spinner: 'el-icon-loading',
+				background: 'rgba(0, 0, 0, 0.7)'
+			})
+			this.$api.lockMemberAuditRecord(JSON.stringify({ id: val.id })).then((res) => {
+				if (res.code === 200) {
+					loading.close()
+					this.$message({
+						type: 'success',
+						message: '锁单成功!'
+					})
+					this.loadData()
+				} else {
+					loading.close()
+					this.$message({
+						message: res.msg,
+						type: 'error'
+					})
+				}
+			})
 		}
 	}
 }

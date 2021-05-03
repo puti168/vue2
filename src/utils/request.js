@@ -62,6 +62,7 @@ service.interceptors.request.use(
 			const sign = md5(Finger.get() + nonce + timestamp)
 			// console.log('nonce, timestamp:', nonce, timestamp)
 			config.headers['ob-nonce'] = nonce
+			config.headers['Content-Type'] = 'application/json;charset=UTF-8'
 			config.headers['ob-timestamp'] = timestamp
 			config.headers['ob-sign'] = sign
 			// config.headers['zr-encrypted'] = false
