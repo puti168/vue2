@@ -174,8 +174,8 @@
 					</el-table-column>
 					<el-table-column prop="userName" align="center" label="会员账号">
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.parentProxyName">
-								{{ scope.row.parentProxyName }}
+							<span v-if="!!scope.row.userName">
+								{{ scope.row.userName }}
 							</span>
 							<span v-else>-</span>
 						</template>
