@@ -114,7 +114,7 @@ class="textR"
 class="textR"
 >{{ vipMsg.bjValidBetsCurr }}/{{ vipMsg.bjValidBetsTotal }}</el-col>
         </el-row>
-        <el-row v-show="vipMsg.depositAmountStatus">
+        <el-row v-show="vipMsg.depositAmountLave">
           <el-col :span="3" style="color: #fff">描述</el-col>
           <el-col
 :span="7"
