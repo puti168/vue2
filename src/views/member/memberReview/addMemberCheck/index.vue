@@ -35,10 +35,11 @@
 				<el-form-item label="审核状态:">
 					<el-select
 						v-model="queryData.auditStatus"
-						style="width: 280px"
+						style="width: 300px"
+						multiple
+						placeholder="默认选择全部"
 						:popper-append-to-body="false"
 					>
-						<el-option label="全部" value=""></el-option>
 						<el-option
 							v-for="item in auditStatus"
 							:key="item.code"
@@ -246,7 +247,7 @@ export default {
 				userName: '',
 				accountType: [],
 				applyType: '',
-				auditStatus: '',
+				auditStatus: [],
 				auditStep: '',
 				applyName: '',
 				auditName: '',
@@ -341,7 +342,7 @@ export default {
 				userName: '',
 				accountType: [],
 				applyType: '',
-				auditStatus: '',
+				auditStatus: [],
 				applyName: '',
 				auditName: '',
 				lockOrder: '',
