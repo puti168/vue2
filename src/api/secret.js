@@ -28,6 +28,20 @@ export function audit(data) {
 		data
 	})
 }
+export function memberAuditDetail(data) {
+	return request({
+		url: '/player/memberAuditDetail',
+		method: 'post',
+		data
+	})
+}
+export function updateMemberAuditRecord(data) {
+	return request({
+		url: '/player/updateMemberAuditRecord',
+		method: 'post',
+		data
+	})
+}
 export function memberChange(data) {
 	return request({
 		url: '/memberData/page',
@@ -81,7 +95,9 @@ export function addBlackList(data) {
 export default {
 	recordInfo,
 	memberChange,
+	memberAuditDetail,
 	audit,
+	updateMemberAuditRecord,
 	lock,
 	playerAuditList,
 	blackList,

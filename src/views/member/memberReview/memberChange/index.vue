@@ -37,6 +37,7 @@
 						v-model="queryData.userName"
 						clearable
 						size="medium"
+						:max="1"
 						style="width: 180px"
 						placeholder="请输入"
 						@keyup.enter.native="enterSearch"
@@ -110,6 +111,7 @@
 						v-model="queryData.applyName"
 						clearable
 						size="medium"
+						:max="12"
 						style="width: 180px"
 						placeholder="请输入"
 						@keyup.enter.native="enterSearch"
@@ -120,6 +122,7 @@
 						v-model="queryData.auditName"
 						clearable
 						size="medium"
+						:max="12"
 						style="width: 180px"
 						placeholder="请输入"
 						@keyup.enter.native="enterSearch"
@@ -145,6 +148,7 @@
 						v-model="queryData.auditNum"
 						clearable
 						size="medium"
+						:max="19"
 						style="width: 180px"
 						placeholder="请输入"
 						@keyup.enter.native="enterSearch"

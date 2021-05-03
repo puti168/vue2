@@ -19,8 +19,6 @@ const service = axios.create({
 // request interceptor
 service.interceptors.request.use(
 	(config) => {
-		console.log('2222222')
-		console.log(config.data)
 		if (config.params) {
 			const keys = Object.keys(config.params)
 			keys.forEach((element) => {

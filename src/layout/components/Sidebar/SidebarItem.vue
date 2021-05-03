@@ -1,7 +1,7 @@
 <template>
 	<div class="menu-wrapper">
 		<template
-			v-if="hasOneShowingChild(item.children,item) && (!onlyOneChild.children||onlyOneChild.noShowingChildren)&&!item.alwaysShow"
+			v-if="hasOneShowingChild(item.children,item) && (!onlyOneChild.children||onlyOneChild.noShowingChildren)&&!item.alwaysShow && !item.hidden"
 		>
 			<app-link v-if="onlyOneChild.meta" :to="resolvePath(onlyOneChild.path)">
 				<el-menu-item
@@ -17,7 +17,7 @@
 				</el-menu-item>
 			</app-link>
 		</template>
-		<el-submenu v-else ref="subMenu" :index="resolvePath(item.path)" popper-append-to-body>
+		<el-submenu v-else-if="!item.hidden" ref="subMenu" :index="resolvePath(item.path)" popper-append-to-body>
 			<template slot="title">
 				<item
 					v-if="item.meta"
@@ -88,17 +88,6 @@ export default {
 					return true
 				}
 			})
-
-			// When there is only one child router, the child router is displayed by default
-			if (showingChildren.length === 1) {
-				// 鉴于产品与后台要求，将密钥管理设置成二级菜单
-				if (
-					showingChildren[0].name === '5210' ||
-					showingChildren[0].name === '5110' ||
-					showingChildren[0].name === '5410'
-				) { return false }
-				return true
-			}
 
 			// Show parent if there are no child router to display
 			if (showingChildren.length === 0) {
