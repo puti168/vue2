@@ -57,8 +57,9 @@
 						v-model="queryData.virtualKind"
 						clearable
 						size="medium"
-						style="width: 180px"
-						placeholder="请输入"
+						multiple
+						style="width: 300px"
+						placeholder="默认选择全部"
 						@keyup.enter.native="enterSearch"
 					></el-input>
 				</el-form-item>
@@ -67,8 +68,9 @@
 						v-model="queryData.virtualProtocol"
 						clearable
 						size="medium"
-						style="width: 180px"
-						placeholder="请输入"
+						multiple
+						style="width: 300px"
+						placeholder="默认选择全部"
 						@keyup.enter.native="enterSearch"
 					></el-input>
 				</el-form-item>
@@ -212,10 +214,9 @@ export default {
 				parentProxyName: '',
 				userName: '',
 				virtualAddress: '',
-				virtualKind: '',
-				virtualProtocol: ''
+				virtualKind: [],
+				virtualProtocol: []
 			},
-			accountType1: [],
 			formTime: {
 				time: [start, end]
 			},
@@ -246,7 +247,6 @@ export default {
 			params = {
 				...this.getParams(params)
 			}
-			// params.accountType = this.accountType1.join(',')
 			this.$api.bankRecordListAPI(params).then((res) => {
 				if (res.code === 200) {
 					const response = res.data
@@ -272,10 +272,9 @@ export default {
 				parentProxyName: '',
 				userName: '',
 				virtualAddress: '',
-				virtualKind: '',
-				virtualProtocol: ''
+				virtualKind: [],
+				virtualProtocol: []
 			}
-			this.accountType1 = []
 			this.formTime.time = [start, end]
 			this.loadData()
 		},
