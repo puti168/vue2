@@ -146,6 +146,7 @@ export default {
 	mixins: [list],
 	data() {
 		return {
+            loading: false,
 			form: {
 				accountType: '4',
 				username: '',
@@ -192,27 +193,35 @@ export default {
 				...this.form
 			}
 			console.log(params)
-			this.$api.addMemberAPI(params).then((res) => {
-				const { code, msg } = res
-				if (code === 200) {
+			this.$api
+				.addMemberAPI(params)
+				.then((res) => {
 					this.loading = false
-					this.$message({
-						message: '会员资料提交成功',
-						type: 'success'
-					})
-				} else {
+					const { code, msg } = res
+					if (code === 200) {
+						this.$message({
+							message: '会员资料提交成功',
+							type: 'success'
+						})
+					} else {
+						this.$message({
+							message: msg,
+							type: 'error'
+						})
+					}
+				})
+				.catch(() => {
 					this.loading = false
-					this.$message({
-						message: msg,
-						type: 'error'
-					})
-				}
-			})
+				})
+
+			setTimeout(() => {
+				this.loading = false
+			}, 1000)
 		},
 		reset() {
 			this.$refs['form'].resetFields()
 			this.form = {
-				accountType: '',
+				accountType: '4',
 				username: '',
 				password: '',
 				registerPhone: '',

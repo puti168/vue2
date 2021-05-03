@@ -67,12 +67,18 @@
         class="floor-item"
         :queryData="queryData"
         :balanceList="balanceList"
-        :top3Sy="top3Sy"
+        :waterList="waterList"
         :playerList="playerList"
         :sumList="sumList"
+        :top3Sy="top3Sy"
       ></second>
       <third class="floor-item" :queryData="queryData"></third>
-      <fourth class="floor-item" :queryData="queryData"></fourth>
+      <fourth
+        class="floor-item"
+        :queryData="queryData"
+        :bankList="bankList"
+        :virtualList="virtualList"
+      ></fourth>
     </div>
   </div>
 </template>
@@ -95,10 +101,13 @@ export default {
       outlineInfo: {}, // 基本信息
       vipMsg: {}, // vip信息
       remarksTableData: {}, // 备注表格
-      balanceList: { freezeBalance: '', balance: '' },
-      playerList: {},
-      sumList: {},
-      top3Sy: [],
+      balanceList: { freezeBalance: '', balance: '' }, // 中心钱包，提现冻结
+      waterList: {}, // 提现流水
+      playerList: {}, // 充提信息
+      sumList: {}, // 投注信息
+      top3Sy: [], // top3表格
+      bankList: [], // 银行卡
+      virtualList: [], // 虚拟账号信息
       loadingRgba: {
         lock: true,
         text: 'Loading',
@@ -142,12 +151,12 @@ export default {
             this.getMemberRemarkList(res.data.id)
             this.getAccountCashAccount(res.data.id)
             this.getWithdrawalFreeze(res.data.id)
-            // this.getWithdrawWater(res.data.id);
-            this.getPlayerTop3(res.data.id)
-            // this.getLogMemberLoginLog(res.data.id);
-            // this.getBankCardBank(res.data.id);
+            this.getWithdrawWater(res.data.id)
             this.getPlayerOrderSumInfo(res.data.id)
             this.getPlayerBetHistorySum(res.data.id)
+            this.getPlayerTop3(res.data.id)
+            this.getLogMemberLoginLog(res.data.id)
+            this.getBankCardBank(res.data.id)
           }
           loading.close()
         })
@@ -191,7 +200,9 @@ export default {
     // 提现流水查询
     getWithdrawWater(val) {
       this.$api.getWithdrawWater({ userId: val }).then((res) => {
-        console.log('提现流水查询', res)
+        if (res.code === 200) {
+          this.waterList = res.data
+        }
       })
     },
     // 会员充提信息
@@ -222,19 +233,24 @@ export default {
     },
     // 会员登录日志查询
     getLogMemberLoginLog(val) {
-      this.$api.getLogMemberLoginLog({ userId: val }).then((res) => {
-        console.log(res)
+      const params = { userId: val, pageNum: 1, pageSize: 10 }
+      this.$api.getLogMemberLoginLog(params).then((res) => {
+        console.log('会员登录日志查询', res)
       })
     },
     // 银行卡/虚拟币行号信息
     getBankCardBank(val) {
-      const dataType1 = { userId: val, dataType: 1 }
+      const dataType1 = { userId: val, dataType: 2 }
       this.$api.getBankCardBank(dataType1).then((res) => {
-        console.log(res)
+        if (res.code === 200) {
+          this.virtualList = res.data
+        }
       })
-      const dataType2 = { userId: val, dataType: 2 }
+      const dataType2 = { userId: val, dataType: 1 }
       this.$api.getBankCardBank(dataType2).then((res) => {
-        console.log(res)
+        if (res.code === 200) {
+          this.bankList = res.data
+        }
       })
     },
     query() {

@@ -2,7 +2,12 @@
 	<div class="game-container report-container">
 		<div class="view-container dealer-container">
 			<div class="params">
-				<el-form ref="form" :inline="true" :model="form" label-width="85px">
+				<el-form
+					ref="form"
+					:inline="true"
+					:model="queryData"
+					label-width="85px"
+				>
 					<el-form-item label="注册时间:" prop="registerTime">
 						<el-date-picker
 							v-model="queryData.registerTime"
@@ -37,24 +42,26 @@
 							style="width: 180px"
 						></el-input>
 					</el-form-item>
-					<el-form-item label="账号状态:">
+					<el-form-item label="账号状态:" prop="accountStatus">
 						<el-select
-							v-model="queryData.status"
-							prop="status"
+							v-model="queryData.accountStatus"
 							size="medium"
-							placeholder="全部"
+							placeholder="默认选择全部"
 							clearable
-							style="width: 180px"
+							multiple
+							style="width: 300px"
 						>
-							<el-option label="全部" value></el-option>
-							<el-option label="启用" :value="1"></el-option>
-							<el-option label="停用" :value="0"></el-option>
+							<el-option
+								v-for="item in accountStatusArr"
+								:key="item.code"
+								:label="item.description"
+								:value="item.code"
+							></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="风控层级:">
+					<el-form-item label="风控层级:" prop="windControlId">
 						<el-select
-							v-model="queryData.riskLevel"
-							prop="status"
+							v-model="queryData.windControlId"
 							size="medium"
 							placeholder="全部"
 							clearable
@@ -68,7 +75,7 @@
 							></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="离线天数:">
+					<el-form-item label="离线天数:" prop="offLineDaysEnd">
 						<el-input
 							v-model="queryData.SaveMoneyMin"
 							size="medium"
@@ -100,7 +107,7 @@
 							style="width: 388px"
 						></el-date-picker>
 					</el-form-item>
-					<el-form-item label="VIP等级:">
+					<el-form-item label="VIP等级:" prop="vipExperenceValue">
 						<el-input
 							v-model="queryData.SaveMoneyMin"
 							size="medium"
@@ -179,15 +186,20 @@
 							style="width: 388px"
 						></el-date-picker>
 					</el-form-item>
-					<el-form-item label="会员标签:">
+					<el-form-item label="会员标签:" prop="labelId">
 						<el-select
-							v-model="queryData.userLabel"
+							v-model="queryData.labelId"
 							size="medium"
 							placeholder="全部"
 							clearable
 							style="width: 180px"
 						>
-							<el-option label="全部" value></el-option>
+                            <el-option
+                                v-for="item in userLabel"
+                                :key="item.labelId"
+                                :label="item.labelName"
+                                :value="item.labelId"
+                            ></el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item label="上级代理:">
@@ -411,13 +423,13 @@ export default {
 				registerTime: [start, end],
 				userName: '',
 				realName: '',
-				status: '',
-				riskLevel: '',
-				levelDays: '',
+				accountStatus: '',
+                windControlId: '',
+                offLineDaysEnd: '',
 				lastLoginTime: '',
 				vipRank: '',
 				accountType: '',
-				userLabel: '',
+                labelId: '',
 				deviceType: '',
 				supAgent: '',
 				lastBetTime: '',
@@ -432,10 +444,14 @@ export default {
 			showForm: '',
 			editVisible: false,
 			editFormData: {},
-			vipDict: []
+			vipDict: [],
+            userLabel: []
 		}
 	},
 	computed: {
+		accountStatusArr() {
+			return [...this.globalDics.accountStatusType]
+		},
 		accountTypeArr() {
 			return this.globalDics.accountType
 		},
@@ -477,11 +493,12 @@ export default {
 			this.$api.merchantDictAPI().then((res) => {
 				const {
 					code,
-					data: { windControl },
+					data: { windControl, userLabel },
 					msg
 				} = res
 				if (code === 200) {
 					this.vipDict = windControl || []
+					this.userLabel = userLabel || []
 				} else {
 					this.$message({
 						message: msg,

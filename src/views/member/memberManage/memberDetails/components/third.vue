@@ -46,6 +46,19 @@
           label="设备版本"
         ></el-table-column>
       </el-table>
+      <!-- 分页 -->
+      <el-pagination
+        :current-page.sync="page"
+        layout="total, sizes,prev, pager, next, jumper"
+        :page-size="size"
+        :page-sizes="[5, 10, 20]"
+        :total="total"
+        :pager-count="5"
+        style="float: right; padding-top: 10px"
+        @current-change="handleCurrentChange"
+        @size-change="handleSizeChange"
+      ></el-pagination>
+      <div class="clear"></div>
     </div>
   </div>
 </template>
@@ -58,6 +71,8 @@ export default {
   props: { queryData: { type: Object, default: () => ({}) } },
   data() {
     return {
+      page: 1,
+      size: 10,
       dataList: []
     }
   },
@@ -68,12 +83,27 @@ export default {
   methods: {
     // 会员登录日志查询
     getLogMemberLoginLog(val) {
-      this.$api.getLogMemberLoginLog(val).then((res) => {
-        console.log(res)
+      const params = { userId: val, pageNum: this.page, pageSize: this.size }
+      this.$api.getLogMemberLoginLog(params).then((res) => {
+        console.log('会员登录日志查询', res)
       })
     },
     refresh() {
-      this.getLogMemberLoginLog()
+      this.page = 1
+      this.size = 10
+      this.getLogMemberLoginLog(this.queryData.userId)
+    },
+    handleCurrentChange(val) {
+      this.page = val
+      if (this.queryData.userId !== null) {
+        this.getLogMemberLoginLog(this.queryData.userId)
+      }
+    },
+    handleSizeChange(val) {
+      this.size = val
+      if (this.queryData.userId !== null) {
+        this.getLogMemberLoginLog(this.queryData.userId)
+      }
     }
   }
 }
@@ -100,5 +130,11 @@ export default {
 }
 .refrestBox {
   text-align: center;
+}
+.clear {
+  clear: both;
+  height: 0;
+  line-height: 0;
+  font-size: 0;
 }
 </style>

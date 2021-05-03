@@ -62,11 +62,11 @@
       </el-row>
     </div>
     <el-row class="msgList">
-      <el-col :span="4">用户余额： 310.00</el-col>
-      <el-col :span="20">所需流水： 310.00</el-col>
-      <el-col :span="4">已完成投注流水： 0.00</el-col>
-      <el-col :span="8">剩余流水： 310.00</el-col>
-      <el-col :span="4">流水开始统计时间： 2019-09-19 15:55:54</el-col>
+      <el-col :span="4">用户余额： {{ resWaterList.userBalance }}</el-col>
+      <el-col :span="20">所需流水： {{ resWaterList.runningWaterRequired }}</el-col>
+      <el-col :span="4">已完成投注流水： {{ resWaterList.finishDetOnWater }}</el-col>
+      <el-col :span="8">剩余流水： {{ resWaterList.residualFlow }}</el-col>
+      <el-col :span="4">流水开始统计时间： {{ resWaterList.waterStarTime }}</el-col>
     </el-row>
     <el-divider></el-divider>
     <div class="titelBox">充提信息</div>
@@ -76,7 +76,9 @@
       <el-col :span="4">存款次数： {{ playerList.depositTimes }}</el-col>
       <el-col
 :span="20"
->取款次数： {{ playerList.withdrawTimes }} (普通6次，大额3次)</el-col>
+>取款次数： {{ playerList.withdrawTimes }} (普通{{
+          playerList.commonWithdrawTimes
+        }}次，大额{{ playerList.bigWithdrawTimes }}次)</el-col>
     </el-row>
     <el-divider></el-divider>
     <div class="titelBox">投注信息</div>
@@ -172,15 +174,17 @@ export default {
   props: {
     queryData: { type: Object, default: () => ({}) },
     balanceList: { type: Object, default: () => ({}) },
-    top3Sy: { type: Array, default: () => ({}) },
+    waterList: { type: Object, default: () => ({}) },
+    top3Sy: { type: Array, default: () => [] },
     playerList: { type: Object, default: () => ({}) },
     sumList: { type: Object, default: () => ({}) }
   },
   data() {
     return {
-      balance: '',
-      freezeBalance: '',
-      balanceAllList: [],
+      balance: '', // 提现冻结
+      freezeBalance: '', // 中心钱包
+      balanceAllList: [], // 一键查询所有场馆
+      resWaterList: {}, // 充提信息
       top3SyList: [],
       top3TzList: [],
       borderL: true,
@@ -193,6 +197,13 @@ export default {
       handler(newV) {
         this.balance = newV.balance
         this.freezeBalance = newV.freezeBalance
+      },
+      deep: true,
+      immediate: true
+    },
+    waterList: {
+      handler(newV) {
+        this.resWaterList = newV
       },
       deep: true,
       immediate: true
@@ -241,8 +252,10 @@ export default {
     },
     // 提现流水查询
     getWithdrawWater(val) {
-      this.$api.getWithdrawWater('', val.userid).then((res) => {
-        console.log(res)
+      this.$api.getWithdrawWater({ userId: val }).then((res) => {
+        if (res.code === 200) {
+          this.resWaterList = res.data
+        }
       })
     },
     balanceAll() {
@@ -256,7 +269,8 @@ export default {
       this.getOneKeyBalance(params)
     },
     refreshTWithdrawWater() {
-      this.getWithdrawWater()
+      const val = this.queryData.userId
+      this.getWithdrawWater(val)
     },
     recycle(val) {
       this.$confirm(
