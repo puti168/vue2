@@ -14,23 +14,23 @@
         <i class="el-icon-edit-outline"></i><br />
         编辑信息
       </el-col>
-      <el-col v-if="queryData.userId === ''" :span="16" class="btngroup">
+      <el-col v-if="isshow" :span="16" class="btngroup">
         <el-button
           v-for="(item, index) in editMsgList"
           :key="index"
           disabled
           type="primary"
-          >{{ item.description }}</el-button>
+          >{{ item.label }}</el-button>
         <el-button disabled type="primary">账号备注</el-button>
       </el-col>
-      <el-col v-else :span="16" class="btngroup">
+      <el-col v-else :span="16" class="btngroup aaaaa">
         <el-button
           v-for="(item, index) in editMsgList"
           :key="index"
           type="primary"
-          :disabled="item.applyStatus !== '1'"
-          @click="editFn(item.description)"
-          >{{ item.description }}</el-button>
+          :disabled="item.applyStatus === '1'"
+          @click="editFn(item.label)"
+          >{{ item.label }}</el-button>
         <el-button
           :disabled="queryData.userId === ''"
           type="primary"
@@ -79,7 +79,7 @@
       <el-col :span="12">VIP信息</el-col>
       <el-col :span="12" class="borderL"></el-col>
     </el-row>
-    <el-row class="msgList" style="min-height:90px;">
+    <el-row class="msgList" style="min-height: 90px">
       <el-col :span="12" class="paddingBox">
         <el-row v-show="vipMsg.depositAmountLave">
           <el-col :span="3">剩余</el-col>
@@ -376,7 +376,17 @@ export default {
     return {
       loading: false,
       // 编辑信息按钮
-      editMsgList: [],
+      editMsgList: [
+        { code: '6', label: '账号状态', applyStatus: '' },
+        { code: '8', label: '风控层级', applyStatus: '' },
+        { code: '9', label: '会员标签', applyStatus: '' },
+        { code: '3', label: '出生日期', applyStatus: '' },
+        { code: '4', label: '手机号码', applyStatus: '' },
+        { code: '1', label: '姓名', applyStatus: '' },
+        { code: '2', label: '性别', applyStatus: '' },
+        { code: '5', label: '邮箱', applyStatus: '' }
+      ],
+      isshow: true,
       // 账号状态
       accountStatusList: [],
       // 风控层级
@@ -385,56 +395,6 @@ export default {
       memberLabelList: [],
       // 性别
       genderTypeList: [],
-      // 提交账号状态编辑
-      accountStatusAfter: {
-        userName: '',
-        accountStatus: 0,
-        remark: ''
-      },
-      // 提交风控层级编辑
-      windControlAfter: {
-        userName: '',
-        remark: '',
-        windControlId: 0,
-        windControlName: ''
-      },
-      // 提交会员标签编辑
-      labelAfter: {
-        userName: '',
-        labelName: '',
-        labelId: 0,
-        remark: ''
-      },
-      // 提交生日编辑
-      birthAfter: {
-        userName: '',
-        birth: '',
-        remark: ''
-      },
-      // 提交手机号编辑
-      mobileAfter: {
-        userName: '',
-        mobile: '',
-        remark: ''
-      },
-      // 提交性名编辑
-      realNameAfter: {
-        userName: '',
-        realName: '',
-        remark: ''
-      },
-      // 提交性别编辑
-      genderAfter: {
-        userName: '',
-        gender: 0,
-        remark: ''
-      },
-      // 提交邮箱编辑
-      emailAfter: {
-        userName: '',
-        email: '',
-        remark: ''
-      },
       outlineInfoList: {}, // 基本信息
       // vipMsgList: {}, //vip信息
       percentagea: 0,
@@ -457,15 +417,18 @@ export default {
       handler(newV) {
         this.outlineInfoList = { ...newV }
         if (newV.auditList) {
+          this.isshow = false
           for (let i = 0; i < newV.auditList.length; i++) {
-            const ele = newV.auditList[i].applyName
+            const ele = newV.auditList[i]
             for (let j = 0; j < this.editMsgList.length; j++) {
-              const val = this.editMsgList[j].applyName
-              if (ele === val) {
-                this.editMsgList[j].applyStatus = newV.applyStatus
+              const val = this.editMsgList[j].code
+              console.log(ele.applyStatus, '6541654654564165')
+              if (ele.applyName === val) {
+                this.editMsgList[j].applyStatus = ele.applyStatus
               }
             }
           }
+          console.log(this.editMsgList, '7978979789')
         }
       },
       deep: true,
@@ -513,9 +476,7 @@ export default {
         if (res.code === 200) {
           this.accountStatusList = res.data.accountStatusType
           this.genderTypeList = res.data.genderType
-          this.editMsgList = res.data.applyType
         }
-        console.log('getDics', res)
       })
       this.$api.getMerchantDict().then((res) => {
         if (res.code === 200) {

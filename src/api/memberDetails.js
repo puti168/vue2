@@ -122,7 +122,7 @@ export function getLogMemberLoginLog(data) {
 // 银行卡/虚拟币账号信息
 export function getBankCardBank(data) {
 	return request({
-		url: '/bankCard/bank',
+		url: '/userBankCard/bank',
 		method: 'post',
 		data
 	})

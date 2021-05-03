@@ -18,33 +18,37 @@
         border
         size="mini"
         class="small-size-table"
-        :data="dataList"
+        :data="resBankList"
         :header-row-style="{ height: '24px', lineHeight: '24px' }"
         style="margin: 10px 0 30px 0; z-index: 0"
         :header-cell-style="getRowClass"
       >
-        <el-table-column align="center" label="绑定时间"></el-table-column>
         <el-table-column
-          prop="updateDt"
+          align="center"
+          prop="modifyDt"
+          label="绑定时间"
+        ></el-table-column>
+        <el-table-column
+          prop="bankName"
           align="center"
           label="银行名称"
         ></el-table-column>
         <el-table-column
-          prop="updateDt"
+          prop="cnName"
           align="center"
           label="持卡人姓名"
         ></el-table-column>
-        <el-table-column prop="updateDt" align="center" label="卡号"></el-table-column>
+        <el-table-column prop="bankCode" align="center" label="卡号"></el-table-column>
         <el-table-column
-          prop="updateDt"
+          prop="bankAddress"
           align="center"
           label="分行地址"
         ></el-table-column>
-        <el-table-column
-          prop="updateDt"
-          align="center"
-          label="银行卡状态"
-        ></el-table-column>
+        <el-table-column prop="status" align="center" label="银行卡状态">
+          <template slot-scope="scope">
+            {{ typeFilter(scope.row.status, "bindType") }}
+          </template>
+        </el-table-column>
       </el-table>
     </div>
     <div class="titelBox">虚拟币账号信息</div>
@@ -53,32 +57,36 @@
         border
         size="mini"
         class="small-size-table"
-        :data="dataList"
+        :data="resVirtualList"
         :header-row-style="{ height: '24px', lineHeight: '24px' }"
         style="margin: 10px 0 30px 0; z-index: 0"
         :header-cell-style="getRowClass"
       >
-        <el-table-column align="center" label="绑定时间"></el-table-column>
         <el-table-column
-          prop="updateDt"
+          align="center"
+          prop="modifyDt"
+          label="绑定时间"
+        ></el-table-column>
+        <el-table-column
+          prop="virtual_address"
           align="center"
           label="虚拟币账户地址"
         ></el-table-column>
         <el-table-column
-          prop="updateDt"
+          prop="virtual_kind"
           align="center"
           label="虚拟币种类"
         ></el-table-column>
         <el-table-column
-          prop="updateDt"
+          prop="virtual_protocol"
           align="center"
           label="虚拟币协议"
         ></el-table-column>
-        <el-table-column
-          prop="updateDt"
-          align="center"
-          label="虚拟币账户状态"
-        ></el-table-column>
+        <el-table-column prop="status" align="center" label="虚拟币账户状态">
+          <template slot-scope="scope">
+            {{ typeFilter(scope.row.status, "bindType") }}
+          </template>
+        </el-table-column>
       </el-table>
     </div>
   </div>
@@ -89,30 +97,54 @@ import list from '@/mixins/list'
 // import dayjs from 'dayjs'
 export default {
   mixins: [list],
-  props: { queryData: { type: Object, default: () => ({}) } },
+  props: {
+    queryData: { type: Object, default: () => ({}) },
+    bankList: { type: Array, default: () => [] },
+    virtualList: { type: Array, default: () => [] }
+  },
   data() {
     return {
-      dataList: []
+      resBankList: [],
+      resVirtualList: []
     }
   },
   computed: {},
-  watch: {},
+  watch: {
+    bankList: {
+      handler(newV) {
+        this.resBankList = newV
+      },
+      deep: true,
+      immediate: true
+    },
+    virtualList: {
+      handler(newV) {
+        this.resVirtualList = newV
+      },
+      deep: true,
+      immediate: true
+    }
+  },
   created() {},
   mounted() {},
   methods: {
     // 银行卡/虚拟币行号信息
     getBankCardBank(val) {
-      const dataType1 = { ...val, dataType: 1 }
+      const dataType1 = { userId: val, dataType: 2 }
       this.$api.getBankCardBank(dataType1).then((res) => {
-        console.log(res)
+        if (res.code === 200) {
+          this.resVirtualList = res.data
+        }
       })
-      const dataType2 = { ...val, dataType: 2 }
+      const dataType2 = { userId: val, dataType: 1 }
       this.$api.getBankCardBank(dataType2).then((res) => {
-        console.log(res)
+        if (res.code === 200) {
+          this.resBankList = res.data
+        }
       })
     },
     refresh() {
-      this.getBankCardBank()
+      this.getBankCardBank(this.queryData.userId)
     }
   }
 }
