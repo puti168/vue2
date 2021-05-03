@@ -30,6 +30,8 @@
 					<el-input
 						v-model="form.username"
 						size="medium"
+						minlength="4"
+						maxlength="11"
 						placeholder="4-11位，最少2个字母+数字组合，首位字母"
 						clearable
 						style="width: 365px"
@@ -41,12 +43,14 @@
 						size="medium"
 						placeholder="8-12位，字母+数字组合"
 						clearable
+						minlength="8"
+						maxlength="12"
 						style="width: 365px"
 					></el-input>
 				</el-form-item>
 				<el-form-item label="手机号码:">
 					<el-input
-						v-model="form.registerPhone"
+						v-model="form.mobile"
 						size="medium"
 						placeholder="请输入"
 						clearable
@@ -141,17 +145,18 @@
 
 <script>
 import list from '@/mixins/list'
+import { notSpecial2, isHaveEmoji } from '@/utils/validate'
 export default {
 	name: 'AddMember',
 	mixins: [list],
 	data() {
 		return {
-            loading: false,
+			loading: false,
 			form: {
 				accountType: '4',
 				username: '',
 				password: '',
-				registerPhone: '',
+                mobile: '',
 				parentProxyName: '',
 				gender: '',
 				vipExperenceValue: '',
@@ -172,15 +177,56 @@ export default {
 			return [...this.globalDics.genderType].reverse()
 		},
 		rules() {
+			const reg1 = /^[A-Za-z]{1}(?=(.*[a-zA-Z]){1,})(?=(.*[0-9]){1,})[0-9A-Za-z]{3,10}$/
+			const reg2 = /^([a-zA-Z0-9]*[a-zA-Z]+[0-9]+[a-zA-Z0-9]*|[a-zA-Z0-9]*[0-9]+[a-zA-Z]+[a-zA-Z0-9]*)$/
+
+			const testUserName = (rule, value, callback) => {
+				const isSpecial = !notSpecial2(String(value))
+				const isRmoji = isHaveEmoji(String(value))
+				if (isSpecial) {
+					callback(new Error('不支持空格及特殊字符'))
+				} else if (isRmoji) {
+					callback(new Error('不支持表情'))
+				} else if (!reg1.test(value)) {
+					callback(new Error('请输入4-11位，最少2个字母+数字组合，首位字母'))
+				} else {
+					callback()
+				}
+			}
+
+			const testPassword = (rule, value, callback) => {
+				const isSpecial = !notSpecial2(String(value))
+				const isRmoji = isHaveEmoji(String(value))
+				if (isSpecial) {
+					callback(new Error('不支持空格及特殊字符'))
+				} else if (isRmoji) {
+					callback(new Error('不支持表情'))
+				} else if (!reg2.test(value)) {
+					callback(new Error('请输入8-12位，字母+数字组合'))
+				} else {
+					callback()
+				}
+			}
+
 			return {
 				accountType: [
 					{ required: true, message: '请选择账号类型', trigger: 'change' }
 				],
 				username: [
-					{ required: true, message: '请输入会员账号', trigger: 'blur' }
+					{
+						required: true,
+						validator: testUserName,
+						message: '请输入会员账号',
+						trigger: 'blur'
+					}
 				],
 				password: [
-					{ required: true, message: '请输入登录密码', trigger: 'blur' }
+					{
+						required: true,
+						validator: testPassword,
+						message: '请输入登录密码',
+						trigger: 'blur'
+					}
 				]
 			}
 		}
@@ -224,7 +270,7 @@ export default {
 				accountType: '4',
 				username: '',
 				password: '',
-				registerPhone: '',
+                mobile: '',
 				parentProxyName: '',
 				gender: '',
 				vipExperenceValue: '',
