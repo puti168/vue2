@@ -95,7 +95,8 @@
 							size="medium"
 							placeholder="默认选择全部"
 							clearable
-							style="width: 180px"
+                            multiple
+							style="width: 300px"
 						>
                             <el-option
                                 v-for="item in deviceTypeArr"

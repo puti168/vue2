@@ -17,7 +17,7 @@
 							align="right"
 							clearable
 							value-format="timestamp"
-							style="width: 382px"
+							style="width: 388px"
 						></el-date-picker>
 					</el-form-item>
 					<el-form-item label="会员账号:">
@@ -27,7 +27,7 @@
 							size="medium"
 							placeholder="请输入"
 							clearable
-							style="width: 150px"
+							style="width: 180px"
 						></el-input>
 					</el-form-item>
 					<el-form-item label="会员姓名:">
@@ -37,7 +37,7 @@
 							size="medium"
 							placeholder="请输入"
 							clearable
-							style="width: 150px"
+							style="width: 180px"
 						></el-input>
 					</el-form-item>
 					<el-form-item label="账号状态:">
@@ -47,7 +47,7 @@
 							size="medium"
 							placeholder="全部"
 							clearable
-							style="width: 150px"
+							style="width: 180px"
 						>
 							<el-option label="全部" value></el-option>
 							<el-option label="启用" :value="1"></el-option>
@@ -61,7 +61,7 @@
 							size="medium"
 							placeholder="全部"
 							clearable
-							style="width: 150px"
+							style="width: 180px"
 						>
 							<el-option label="全部" value></el-option>
 							<el-option label="1" :value="1"></el-option>
@@ -98,7 +98,7 @@
 							align="right"
 							clearable
 							value-format="timestamp"
-							style="width: 382px"
+							style="width: 388px"
 						></el-date-picker>
 					</el-form-item>
 					<el-form-item label="VIP等级:">
@@ -122,7 +122,7 @@
 							size="medium"
 							placeholder="全部"
 							clearable
-							style="width: 150px"
+							style="width: 180px"
 						>
 							<el-option label="全部" value></el-option>
 						</el-select>
@@ -133,7 +133,8 @@
 							size="medium"
 							placeholder="全部"
 							clearable
-							style="width: 150px"
+                            multiple
+							style="width: 300px"
 						>
                             <el-option
                                 v-for="item in deviceTypeArr"
@@ -171,7 +172,7 @@
 							align="right"
 							clearable
 							value-format="timestamp"
-							style="width: 382px"
+							style="width: 388px"
 						></el-date-picker>
 					</el-form-item>
 					<el-form-item label="会员标签:">
@@ -180,7 +181,7 @@
 							size="medium"
 							placeholder="全部"
 							clearable
-							style="width: 150px"
+							style="width: 180px"
 						>
 							<el-option label="全部" value></el-option>
 						</el-select>
@@ -191,7 +192,7 @@
 							size="medium"
 							placeholder="请输入"
 							clearable
-							style="width: 150px"
+							style="width: 180px"
 						></el-input>
 					</el-form-item>
 					<el-form-item>
@@ -588,9 +589,6 @@ export default {
 			// setEidteBank().then((res) => {
 			//   console.log(res);
 			// });
-		},
-		handleCurrentChange() {
-			this.loadData()
 		},
 		closeFormDialog() {
 			this.editVisible = false
