@@ -135,7 +135,12 @@
 							clearable
 							style="width: 150px"
 						>
-							<el-option label="全部" value></el-option>
+                            <el-option
+                                v-for="item in deviceTypeArr"
+                                :key="item.code"
+                                :label="item.description"
+                                :value="item.code"
+                            ></el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item label="首存金额:">
@@ -195,7 +200,7 @@
 							icon="el-icon-search"
 							:disabled="loading"
 							size="medium"
-							@click="query"
+							@click="search"
 						>
 							查询
 						</el-button>
@@ -248,33 +253,21 @@
 						prop="updateDt"
 						align="center"
 						label="账号类型"
-						:filters="filterStatus"
-						:filter-multiple="false"
-						:column-key="'type'"
 					></el-table-column>
 					<el-table-column
 						prop="titleId"
 						align="center"
 						label="会员标签"
-						:filters="filterStatus"
-						:filter-multiple="false"
-						:column-key="'type'"
 					></el-table-column>
 					<el-table-column
 						prop="updateDt"
 						align="center"
 						label="风控层级"
-						:filters="filterStatus"
-						:filter-multiple="false"
-						:column-key="'type'"
 					></el-table-column>
 					<el-table-column
 						prop="status"
 						align="center"
 						label="账号状态"
-						:filters="filterStatus"
-						:filter-multiple="false"
-						:column-key="'type'"
 					></el-table-column>
 					<el-table-column
 						prop="updateDt"
@@ -394,7 +387,7 @@ import list from '@/mixins/list'
 import editForm from './components/editForm'
 // import { UTable } from 'umy-ui'
 export default {
-	name: '',
+	name: 'MemberList',
 	components: {
 		editForm
 	},
@@ -413,7 +406,7 @@ export default {
 				vipRank: '',
 				userType: '',
 				userLabel: '',
-				terminal: '',
+                deviceType: '',
 				supAgent: '',
 				lastBetTime: '',
 				firstSaveTime: '',
@@ -433,7 +426,11 @@ export default {
 			editFormData: {}
 		}
 	},
-	computed: {},
+	computed: {
+        deviceTypeArr() {
+            return [{description: '全部', code: undefined}, ...this.globalDics.deviceType]
+        }
+    },
 	created() {
 		// this.loadData()
 	},
