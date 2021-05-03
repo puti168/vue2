@@ -10,7 +10,7 @@
           <el-button
             type="primary"
             icon="el-icon-refresh"
-            :disabled="queryData.userId === ''"
+            :disabled="parentData.userId === ''"
             @click="refresh"
             >刷新</el-button>
         </el-col>
@@ -26,22 +26,22 @@
           v-show="borderL"
           type="text"
           class="blueColor"
-          :disabled="queryData.userId === ''"
+          :disabled="parentData.userId === ''"
           @click="balanceAll"
           >点击查看全部场馆金额分布</el-button>
         <el-row v-show="!borderL" class="" :class="{ borderL: !borderL }">
-          <!-- <el-col :span="8" v-for="item in balanceAllList" :key="item.gameCode">
-            <span class="width70 paddingL"
-              >{{ item.gameName }}：({{ queryData.userName }})</span
-            >
-            <span class="blueColor width30 textR">{{ item.balance }}</span></el-col
-          > -->
+          <el-col v-for="item in balanceAllList" :key="item.gameCode" :span="8">
+            <span class="width70 paddingL">
+              {{ item.gameName }}：({{ item.playName }})
+            </span>
+            <span class="blueColor width30 textR">{{ item.balance }}</span>
+          </el-col>
 
-          <el-col :span="8">
+          <!-- <el-col :span="8">
             <span class="width70 paddingL">小金真人：(admin789789)</span>
             <span class="blueColor width30 textR">10.00</span>
-          </el-col>
-          <el-col :span="16">
+          </el-col> -->
+          <el-col v-show="balanceAllList.length > 0" :span="16">
             <div class="blueColor textR decoration" @click="recycle">一键回收</div>
           </el-col>
         </el-row>
@@ -55,7 +55,7 @@
           <el-button
             type="primary"
             icon="el-icon-refresh"
-            :disabled="queryData.userId === ''"
+            :disabled="parentData.userId === ''"
             @click="refreshTWithdrawWater"
             >刷新</el-button>
         </el-col>
@@ -97,14 +97,14 @@
         <el-col :span="1" class="refrestBox cell">
           <el-button
             type="primary"
-            :disabled="queryData.userId === ''"
+            :disabled="parentData.userId === ''"
             @click="tabHeaderFn('sy')"
             >输赢</el-button>
         </el-col>
         <el-col :span="1" class="refrestBox cell">
           <el-button
             type="primary"
-            :disabled="queryData.userId === ''"
+            :disabled="parentData.userId === ''"
             @click="tabHeaderFn('tz')"
             >投注</el-button>
         </el-col>
@@ -120,15 +120,20 @@
         style="margin: 10px 0 30px 0; z-index: 0"
         :header-cell-style="getRowClass"
       >
-        <el-table-column align="center" type="index" label="平台"></el-table-column>
         <el-table-column
-          prop="updateDt"
+          align="center"
+          prop="gameName"
+          type="index"
+          label="平台"
+        ></el-table-column>
+        <el-table-column
+          prop="netAmount"
           align="center"
           label="会员输赢"
         ></el-table-column>
-        <el-table-column prop="updateDt" align="center" label="投注"></el-table-column>
+        <el-table-column prop="betAmount" align="center" label="投注"></el-table-column>
         <el-table-column
-          prop="updateDt"
+          prop="validBetAmount"
           align="center"
           label="有效投注"
         ></el-table-column>
@@ -144,19 +149,24 @@
         style="margin: 10px 0 30px 0; z-index: 0"
         :header-cell-style="getRowClass"
       >
-        <el-table-column align="center" type="index" label="平台"></el-table-column>
         <el-table-column
-          prop="updateDt"
+          align="center"
+          prop="gameName"
+          type="index"
+          label="平台"
+        ></el-table-column>
+        <el-table-column
+          prop="betAmount"
           align="center"
           label="投注金额"
         ></el-table-column>
         <el-table-column
-          prop="updateDt"
+          prop="validBetAmount"
           align="center"
           label="有效投注"
         ></el-table-column>
         <el-table-column
-          prop="updateDt"
+          prop="netAmount"
           align="center"
           label="会员输赢"
         ></el-table-column>
@@ -172,7 +182,7 @@ import list from '@/mixins/list'
 export default {
   mixins: [list],
   props: {
-    queryData: { type: Object, default: () => ({}) },
+    parentData: { type: Object, default: () => ({}) },
     balanceList: { type: Object, default: () => ({}) },
     waterList: { type: Object, default: () => ({}) },
     top3Sy: { type: Array, default: () => [] },
@@ -198,8 +208,7 @@ export default {
         this.balance = newV.balance
         this.freezeBalance = newV.freezeBalance
       },
-      deep: true,
-      immediate: true
+      deep: true
     },
     waterList: {
       handler(newV) {
@@ -241,7 +250,6 @@ export default {
         if (res.code === 200) {
           this.balanceAllList = res.data
         }
-        console.log('一键查询所有场馆余额', res)
       })
     },
     // 一键下分
@@ -259,17 +267,17 @@ export default {
       })
     },
     balanceAll() {
-      this.getOneKeyBalance(this.queryData.userId)
+      this.getOneKeyBalance(this.parentData.userId)
       this.borderL = false
     },
     refresh() {
-      const params = this.queryData.userId
+      const params = this.parentData.userId
       this.getAccountCashAccount(params)
       this.getWithdrawalFreeze(params)
-      this.getOneKeyBalance(params)
+      this.borderL = true
     },
     refreshTWithdrawWater() {
-      const val = this.queryData.userId
+      const val = this.parentData.userId
       this.getWithdrawWater(val)
     },
     recycle(val) {
@@ -288,24 +296,23 @@ export default {
           //   type: 'success',
           //   message: '回收成功!'
           // })
-          this.getOneKeyWithdraw(this.queryData.userId).then((res) => {
-            console.log(res)
+          this.getOneKeyWithdraw({ userId: this.parentData.userId }).then((res) => {
+            console.log('一键下分', res)
           }) // 一键下分
         })
         .catch(() => {})
     },
     tabHeaderFn(val) {
-      console.log(val)
       this.tabHeader = val
       if (val === 'sy') {
-        const params = { userId: this.queryData.userId, orderKey: 1 }
+        const params = { userId: this.parentData.userId, orderKey: 1 }
         this.$api.getPlayerTop3(params).then((res) => {
           if (res.code === 200) {
             this.top3SyList = res.data
           }
         })
       } else {
-        const params = { userId: this.queryData.userId, orderKey: 2 }
+        const params = { userId: this.parentData.userId, orderKey: 2 }
         this.$api.getPlayerTop3(params).then((res) => {
           if (res.code === 200) {
             this.top3TzList = res.data

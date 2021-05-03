@@ -58,24 +58,24 @@
       <first
         ref="first"
         class="floor-item"
-        :queryData="queryData"
+        :parentData="parentData"
         :outlineInfo="outlineInfo"
         :vipMsg="vipMsg"
         :remarksTableData="remarksTableData"
       ></first>
       <second
         class="floor-item"
-        :queryData="queryData"
+        :parentData="parentData"
         :balanceList="balanceList"
         :waterList="waterList"
         :playerList="playerList"
         :sumList="sumList"
         :top3Sy="top3Sy"
       ></second>
-      <third class="floor-item" :queryData="queryData"></third>
+      <third class="floor-item" :parentData="parentData" :lonRecord="lonRecord"></third>
       <fourth
         class="floor-item"
-        :queryData="queryData"
+        :parentData="parentData"
         :bankList="bankList"
         :virtualList="virtualList"
       ></fourth>
@@ -95,6 +95,7 @@ export default {
   mixins: [list],
   data() {
     return {
+      parentData: { userName: '', userId: '' },
       queryData: { userName: '', userId: '' },
       activeName: 'first',
       tabList: ['first', 'second', 'third', 'fourth'],
@@ -106,6 +107,7 @@ export default {
       playerList: {}, // 充提信息
       sumList: {}, // 投注信息
       top3Sy: [], // top3表格
+      lonRecord: [], // 登录信息
       bankList: [], // 银行卡
       virtualList: [], // 虚拟账号信息
       loadingRgba: {
@@ -145,8 +147,8 @@ export default {
         .then((res) => {
           if (res.code === 200) {
             this.outlineInfo = res.data
-            this.queryData.userName = res.data.userName
-            this.queryData.userId = res.data.id
+            this.parentData.userName = res.data.userName
+            this.parentData.userId = res.data.id
             this.getVipInfo(res.data.id)
             this.getMemberRemarkList(res.data.id)
             this.getAccountCashAccount(res.data.id)
@@ -161,6 +163,19 @@ export default {
           loading.close()
         })
         .catch(() => {
+          this.parentData = { userName: '', userId: '' }
+          this.outlineInfo = {}
+          this.outlineInfo = {} // 基本信息
+          this.vipMsg = {} // vip信息
+          this.remarksTableData = {} // 备注表格
+          this.balanceList = { freezeBalance: '', balance: '' } // 中心钱包，提现冻结
+          this.waterList = {} // 提现流水
+          this.playerList = {} // 充提信息
+          this.sumList = {} // 投注信息
+          this.top3Sy = [] // top3表格
+          this.lonRecord = [] // 登录信息
+          this.bankList = [] // 银行卡
+          this.virtualList = [] // 虚拟账号信息
           loading.close()
         })
     },
@@ -235,7 +250,9 @@ export default {
     getLogMemberLoginLog(val) {
       const params = { userId: val, pageNum: 1, pageSize: 10 }
       this.$api.getLogMemberLoginLog(params).then((res) => {
-        console.log('会员登录日志查询', res)
+        if (res.code === 200) {
+          this.lonRecord = res.data.record
+        }
       })
     },
     // 银行卡/虚拟币行号信息

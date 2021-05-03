@@ -64,11 +64,11 @@ export function getOneKeyBalance(data) {
 	})
 }
 // 一键下分
-export function getOneKeyWithdraw(params) {
+export function getOneKeyWithdraw(data) {
 	return request({
 		url: '/member/oneKeyWithdraw',
-		method: 'get',
-		params
+		method: 'post',
+		data
 	})
 }
 // 提现流水查询

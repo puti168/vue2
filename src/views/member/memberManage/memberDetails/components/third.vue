@@ -6,7 +6,7 @@
         <el-button
           type="primary"
           icon="el-icon-refresh"
-          :disabled="queryData.userId === ''"
+          :disabled="parentData.userId === ''"
           @click="refresh"
           >刷新</el-button>
       </el-col>
@@ -21,27 +21,35 @@
         style="margin: 10px 0 30px 0; z-index: 0"
         :header-cell-style="getRowClass"
       >
-        <el-table-column align="center" label="登录时间"></el-table-column>
-        <el-table-column prop="updateDt" align="center" label="状态"></el-table-column>
-        <el-table-column prop="updateDt" align="center" label="IP地址"></el-table-column>
         <el-table-column
-          prop="updateDt"
+          align="center"
+          prop="loginTime"
+          label="登录时间"
+        ></el-table-column>
+        <el-table-column prop="loginStatus" align="center" label="状态">
+          <template slot-scope="scope">
+            {{ typeFilter(scope.row.loginStatus, "loginStatusType") }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="loginIp" align="center" label="IP地址"></el-table-column>
+        <el-table-column
+          prop="ipAttribution"
           align="center"
           label="IP归属地"
         ></el-table-column>
         <el-table-column
-          prop="updateDt"
+          prop="loginReference"
           align="center"
           label="登录网址"
         ></el-table-column>
         <el-table-column
-          prop="updateDt"
+          prop="deviceType"
           align="center"
           label="登录终端"
         ></el-table-column>
-        <el-table-column prop="updateDt" align="center" label="设备号"></el-table-column>
+        <el-table-column prop="deviceNo" align="center" label="设备号"></el-table-column>
         <el-table-column
-          prop="updateDt"
+          prop="browseContent"
           align="center"
           label="设备版本"
         ></el-table-column>
@@ -68,7 +76,10 @@ import list from '@/mixins/list'
 // import dayjs from 'dayjs'
 export default {
   mixins: [list],
-  props: { queryData: { type: Object, default: () => ({}) } },
+  props: {
+    parentData: { type: Object, default: () => ({}) },
+    lonRecord: { type: Array, default: () => [] }
+  },
   data() {
     return {
       page: 1,
@@ -77,7 +88,15 @@ export default {
     }
   },
   computed: {},
-  watch: {},
+  watch: {
+    lonRecord: {
+      handler(newV) {
+        this.dataList = newV
+      },
+      deep: true,
+      immediate: true
+    }
+  },
   created() {},
   mounted() {},
   methods: {
@@ -85,24 +104,26 @@ export default {
     getLogMemberLoginLog(val) {
       const params = { userId: val, pageNum: this.page, pageSize: this.size }
       this.$api.getLogMemberLoginLog(params).then((res) => {
-        console.log('会员登录日志查询', res)
+        if (res.code === 200) {
+          this.dataList = res.data.record
+        }
       })
     },
     refresh() {
       this.page = 1
       this.size = 10
-      this.getLogMemberLoginLog(this.queryData.userId)
+      this.getLogMemberLoginLog(this.parentData.userId)
     },
     handleCurrentChange(val) {
       this.page = val
-      if (this.queryData.userId !== null) {
-        this.getLogMemberLoginLog(this.queryData.userId)
+      if (this.parentData.userId !== null) {
+        this.getLogMemberLoginLog(this.parentData.userId)
       }
     },
     handleSizeChange(val) {
       this.size = val
-      if (this.queryData.userId !== null) {
-        this.getLogMemberLoginLog(this.queryData.userId)
+      if (this.parentData.userId !== null) {
+        this.getLogMemberLoginLog(this.parentData.userId)
       }
     }
   }

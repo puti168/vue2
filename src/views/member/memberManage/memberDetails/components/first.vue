@@ -6,7 +6,7 @@
         <el-button
           type="primary"
           icon="el-icon-refresh"
-          :disabled="queryData.userId === ''"
+          :disabled="parentData.userId === ''"
           @click="refresh"
           >刷新</el-button>
       </el-col>
@@ -32,7 +32,7 @@
           @click="editFn(item.label)"
           >{{ item.label }}</el-button>
         <el-button
-          :disabled="queryData.userId === ''"
+          :disabled="parentData.userId === ''"
           type="primary"
           @click="editFn('账号备注')"
           >账号备注</el-button>
@@ -81,11 +81,11 @@
     </el-row>
     <el-row class="msgList" style="min-height: 90px">
       <el-col :span="12" class="paddingBox">
-        <el-row v-show="vipMsg.depositAmountLave">
+        <el-row v-show="vipMsgList.depositAmountLave">
           <el-col :span="3">剩余</el-col>
-          <el-col :span="7" class="textR">{{ vipMsg.depositAmountLave }}</el-col>
-          <el-col :span="7" class="textR">{{ vipMsg.validBetsLave }}</el-col>
-          <el-col :span="7" class="textR">{{ vipMsg.bjValidBetsLave }}</el-col>
+          <el-col :span="7" class="textR">{{ vipMsgList.depositAmountLave }}</el-col>
+          <el-col :span="7" class="textR">{{ vipMsgList.validBetsLave }}</el-col>
+          <el-col :span="7" class="textR">{{ vipMsgList.bjValidBetsLave }}</el-col>
         </el-row>
         <el-row style="height: 14px">
           <el-col :span="3" style="color: #fff; height: 14px">进度条 </el-col>
@@ -99,43 +99,45 @@
             <el-progress :percentage="percentagec" :stroke-width="12" :show-text="false">
             </el-progress></el-col>
         </el-row>
-        <el-row v-show="vipMsg.depositAmountLave">
+        <el-row v-show="vipMsgList.depositAmountLave">
           <el-col :span="3">已完成</el-col>
           <el-col
 :span="7"
 class="textR"
->{{ vipMsg.depositAmountCurr }}/{{ vipMsg.depositAmountTotal }}</el-col>
+>{{ vipMsgList.depositAmountCurr }}/{{
+              vipMsgList.depositAmountTotal
+            }}</el-col>
           <el-col
 :span="7"
 class="textR"
->{{ vipMsg.validBetsCurr }}/{{ vipMsg.validBetsTotal }}</el-col>
+>{{ vipMsgList.validBetsCurr }}/{{ vipMsgList.validBetsTotal }}</el-col>
           <el-col
 :span="7"
 class="textR"
->{{ vipMsg.bjValidBetsCurr }}/{{ vipMsg.bjValidBetsTotal }}</el-col>
+>{{ vipMsgList.bjValidBetsCurr }}/{{ vipMsgList.bjValidBetsTotal }}</el-col>
         </el-row>
-        <el-row v-show="vipMsg.depositAmountLave">
+        <el-row v-show="vipMsgList.depositAmountLave">
           <el-col :span="3" style="color: #fff">描述</el-col>
           <el-col
 :span="7"
 class="textC"
->({{ vipMsg.depositAmountStatus === 0 ? "升级" : "保级："
-            }}{{ vipMsg.depositAmountDate }} )存款金额</el-col>
+>({{ vipMsgList.depositAmountStatus === 0 ? "升级" : "保级："
+            }}{{ vipMsgList.depositAmountDate }} )存款金额</el-col>
           <el-col
 :span="7"
 class="textC"
->({{ vipMsg.validBetsStatus === 0 ? "升级" : "保级："
-            }}{{ vipMsg.validBetsDate }})有效投注</el-col>
+>({{ vipMsgList.validBetsStatus === 0 ? "升级" : "保级："
+            }}{{ vipMsgList.validBetsDate }})有效投注</el-col>
           <el-col
 :span="7"
 class="textC"
->({{ vipMsg.bjValidBetsStatus === 0 ? "升级" : "保级："
-            }}{{ vipMsg.bjValidBetsDate }})有效投注</el-col>
+>({{ vipMsgList.bjValidBetsStatus === 0 ? "升级" : "保级："
+            }}{{ vipMsgList.bjValidBetsDate }})有效投注</el-col>
         </el-row>
       </el-col>
       <el-col :span="10" class="paddingBox">
-        <div>VIP等级：{{ vipMsg.grade }}</div>
-        <div>VIP经验：{{ vipMsg.experience }}</div>
+        <div>VIP等级：{{ vipMsgList.grade }}</div>
+        <div>VIP经验：{{ vipMsgList.experience }}</div>
       </el-col>
     </el-row>
     <el-divider></el-divider>
@@ -346,7 +348,7 @@ import { getDics } from '@/api/user'
 export default {
   mixins: [list],
   props: {
-    queryData: { type: Object, default: () => ({}) },
+    parentData: { type: Object, default: () => ({}) },
     outlineInfo: { type: Object, default: () => ({}) },
     vipMsg: { type: Object, default: () => ({}) },
     remarksTableData: { type: Object, default: () => ({}) }
@@ -396,7 +398,7 @@ export default {
       // 性别
       genderTypeList: [],
       outlineInfoList: {}, // 基本信息
-      // vipMsgList: {}, //vip信息
+      vipMsgList: {}, // vip信息
       percentagea: 0,
       percentageb: 0,
       percentagec: 0,
@@ -422,13 +424,13 @@ export default {
             const ele = newV.auditList[i]
             for (let j = 0; j < this.editMsgList.length; j++) {
               const val = this.editMsgList[j].code
-              console.log(ele.applyStatus, '6541654654564165')
               if (ele.applyName === val) {
                 this.editMsgList[j].applyStatus = ele.applyStatus
               }
             }
           }
-          console.log(this.editMsgList, '7978979789')
+        } else {
+          this.isshow = true
         }
       },
       deep: true,
@@ -436,6 +438,7 @@ export default {
     },
     vipMsg: {
       handler(newV) {
+        this.vipMsgList = newV
         if (JSON.stringify(newV) !== '{}') {
           if (newV.depositAmountCurr > 0 && newV.depositAmountTotal > 0) {
             const p1 = (newV.depositAmountCurr / newV.depositAmountTotal) * 100
@@ -449,6 +452,10 @@ export default {
             const p3 = (newV.bjValidBetsCurr / newV.bjValidBetsTotal) * 100
             p3 >= 100 ? (this.percentagec = 100) : (this.percentagec = p3)
           }
+        } else {
+          this.percentagea = 0
+          this.percentageb = 0
+          this.percentagec = 0
         }
       },
       deep: true,
@@ -459,6 +466,8 @@ export default {
         if (newV.total) {
           this.total = newV.total
           this.tableList = newV.records
+        } else {
+          this.tableList = []
         }
       },
       deep: true,
@@ -468,7 +477,6 @@ export default {
   created() {},
   mounted() {
     this.initGetDics()
-    console.log(this.queryData.userName)
   },
   methods: {
     initGetDics() {
@@ -528,7 +536,7 @@ export default {
         this.editData = {}
         if (res.code === 200) {
           this.$message.success('添加成功')
-          this.getOutlineInfo(this.queryData)
+          this.getOutlineInfo(this.parentData)
         }
         this.editVisible = false
       })
@@ -538,7 +546,7 @@ export default {
       this.$api.setMemberInfoEdit(val).then((res) => {
         if (res.code === 200) {
           this.$message.success(res.msg)
-          this.getOutlineInfo(this.queryData)
+          this.getOutlineInfo(this.parentData)
           this.editData = {}
         }
         this.editVisible = false
@@ -546,7 +554,6 @@ export default {
     },
     // 备注信息
     getMemberRemarkList(val) {
-      console.log(val, '0000000000000')
       const params = { val, pageNum: this.page, pageSize: this.size }
       this.$api.getMemberRemarkList(params).then((res) => {
         if (res.code === 200) {
@@ -555,7 +562,7 @@ export default {
       })
     },
     refresh() {
-      const val = this.queryData
+      const val = this.parentData
       this.getOutlineInfo(val)
     },
     editFn(val) {
@@ -591,7 +598,7 @@ export default {
     submitEdit() {
       const params = this.editData
       const data = {}
-      data.userName = this.queryData.userName
+      data.userName = this.parentData.userName
       this.$refs.editForm.validate((valid) => {
         if (valid) {
           const loading = this.$loading({
@@ -623,7 +630,6 @@ export default {
           }
           if (this.moduleBox === '手机号码') {
             data.mobileAfter = params
-            console.log('修改手机号', data)
             this.setMemberInfoEdit(data)
             loading.close()
           }
@@ -644,9 +650,8 @@ export default {
             loading.close()
           }
           if (this.moduleBox === '账号备注') {
-            params.userName = this.queryData.userName
-            params.userId = this.queryData.userId
-            console.log(params)
+            params.userName = this.parentData.userName
+            params.userId = this.parentData.userId
             this.getMemberRemarkAdd(params)
             loading.close()
           }
@@ -661,14 +666,14 @@ export default {
     },
     handleCurrentChange(val) {
       this.page = val
-      if (this.queryData.userId !== null) {
-        this.getMemberRemarkList(this.queryData.userId)
+      if (this.parentData.userId !== null) {
+        this.getMemberRemarkList(this.parentData.userId)
       }
     },
     handleSizeChange(val) {
       this.size = val
-      if (this.queryData.userId !== null) {
-        this.getMemberRemarkList(this.queryData.userId)
+      if (this.parentData.userId !== null) {
+        this.getMemberRemarkList(this.parentData.userId)
       }
     }
   }

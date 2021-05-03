@@ -7,7 +7,7 @@
         <el-button
           type="primary"
           icon="el-icon-refresh"
-          :disabled="queryData.userId === ''"
+          :disabled="parentData.userId === ''"
           @click="refresh"
           >刷新</el-button>
       </el-col>
@@ -98,7 +98,7 @@ import list from '@/mixins/list'
 export default {
   mixins: [list],
   props: {
-    queryData: { type: Object, default: () => ({}) },
+    parentData: { type: Object, default: () => ({}) },
     bankList: { type: Array, default: () => [] },
     virtualList: { type: Array, default: () => [] }
   },
@@ -144,7 +144,7 @@ export default {
       })
     },
     refresh() {
-      this.getBankCardBank(this.queryData.userId)
+      this.getBankCardBank(this.parentData.userId)
     }
   }
 }
