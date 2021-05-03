@@ -74,7 +74,7 @@
 				</el-form-item>
 				<el-form-item label="账号类型:">
 					<el-select
-						v-model="accountType1"
+						v-model="queryData.accountType"
 						style="width: 180px"
 						multiple
 						placeholder="默认选择全部"
@@ -264,7 +264,7 @@ export default {
 		},
 		reset() {
 			this.queryData = {
-				accountType: '',
+				accountType: [],
 				bankName: '',
 				dataType: 2,
 				operateType: '',
