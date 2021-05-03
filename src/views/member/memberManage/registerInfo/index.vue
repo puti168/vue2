@@ -223,7 +223,7 @@
 					<el-table-column prop="deviceType" align="center" label="注册终端">
 						<template slot-scope="scope">
 							<span v-if="!!scope.row.deviceType">
-								{{ scope.row.deviceType }}
+								{{ typeFilter(scope.row.deviceType, 'deviceType') }}
 							</span>
 							<span v-else>-</span>
 						</template>
