@@ -83,6 +83,7 @@ export default {
 	memberChange,
 	audit,
 	lock,
+	playerAuditList,
 	blackList,
 	memberLoginLog,
 	editBlackList,

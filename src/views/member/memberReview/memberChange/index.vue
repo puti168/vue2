@@ -61,10 +61,11 @@
 				<el-form-item label="审核申请类型:">
 					<el-select
 						v-model="queryData.applyType"
-						style="width: 180px"
+						style="width: 300px"
+						multiple
+						placeholder="默认选择全部"
 						:popper-append-to-body="false"
 					>
-						<el-option label="全部" value></el-option>
 						<el-option
 							v-for="item in applyType"
 							:key="item.code"
@@ -91,10 +92,11 @@
 				<el-form-item label="审核状态:">
 					<el-select
 						v-model="queryData.auditStatus"
-						style="width: 180px"
+						style="width: 300px"
+						multiple
+						placeholder="默认选择全部"
 						:popper-append-to-body="false"
 					>
-						<el-option label="全部" value=""></el-option>
 						<el-option
 							v-for="item in auditStatus"
 							:key="item.code"
@@ -320,8 +322,8 @@ export default {
 			queryData: {
 				userName: '',
 				accountType: [],
-				applyType: '',
-				auditStatus: '',
+				applyType: [],
+				auditStatus: [],
 				auditStep: '',
 				applyName: '',
 				auditName: '',
@@ -416,8 +418,8 @@ export default {
 			this.queryData = {
 				userName: '',
 				accountType: [],
-				applyType: '',
-				auditStatus: '',
+				applyType: [],
+				auditStatus: [],
 				applyName: '',
 				auditName: '',
 				lockOrder: '',
