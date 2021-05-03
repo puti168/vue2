@@ -311,8 +311,8 @@ export default {
 				...this.getParams(params)
 			}
 			delete params.registerTime
-			params.accountType = params.accountType.join(',')
-			params.deviceType = params.deviceType.join(',')
+			params.accountType = params.accountType ? params.accountType.join(',') : undefined
+			params.deviceType = params.deviceType ? params.deviceType.join(',') : undefined
 			this.$api.memberRegisterInfoListAPI(params).then((res) => {
 				const {
 					code,
