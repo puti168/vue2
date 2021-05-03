@@ -146,8 +146,7 @@
 					<el-table-column
 						prop="userType"
 						align="center"
-						label="账号类型"
-						sortable="custom"
+						label="会员类型"
 					></el-table-column>
 					<el-table-column
 						prop="username"
@@ -155,7 +154,7 @@
 						label="会员账号"
 					></el-table-column>
 					<el-table-column
-						prop="agentSup"
+						prop="parentProxyName"
 						align="center"
 						label="上级代理"
 					></el-table-column>
@@ -170,17 +169,14 @@
 						label="注册IP"
 					></el-table-column>
 					<el-table-column
-						prop="registration"
+						prop="ipAttribution"
 						align="center"
 						label="IP归属地"
 					></el-table-column>
 					<el-table-column
-						prop="titleId"
+						prop="deviceType"
 						align="center"
 						label="注册终端"
-						:filters="filterStatus"
-						:filter-multiple="false"
-						:column-key="'type'"
 					></el-table-column>
 					<el-table-column
 						prop="terminal"

@@ -156,11 +156,11 @@
 					>
 						<Copy :title="scope.row.cnName" :copy="copy" />
 					</el-table-column>
-					<el-table-column
-						prop="operateType"
-						align="center"
-						label="操作类型"
-					></el-table-column>
+					<el-table-column prop="operateType" align="center" label="操作类型">
+						<template slot-scope="scope">
+							{{ typeFilter(scope.row.operateType, 'bindType') }}
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="createDt"
 						align="center"
@@ -169,16 +169,16 @@
 					></el-table-column>
 				</el-table>
 				<!-- 分页 -->
-                <el-pagination
-                    v-show="!!total"
-                    :current-page.sync="pageNum"
-                    layout="total, sizes,prev, pager, next, jumper"
-                    :page-size="pageSize"
-                    :page-sizes="$store.getters.pageSizes"
-                    :total="total"
-                    @current-change="handleCurrentChange"
-                    @size-change="handleSizeChange"
-                ></el-pagination>
+				<el-pagination
+					v-show="!!total"
+					:current-page.sync="pageNum"
+					layout="total, sizes,prev, pager, next, jumper"
+					:page-size="pageSize"
+					:page-sizes="$store.getters.pageSizes"
+					:total="total"
+					@current-change="handleCurrentChange"
+					@size-change="handleSizeChange"
+				></el-pagination>
 			</div>
 		</div>
 	</div>
@@ -225,6 +225,7 @@ export default {
 				...this.form,
 				pageIndex: this.pageIndex,
 				pageSize: this.pageSize,
+				dataType: 1,
 				createDtStart: dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') || '',
 				createDtEnd: dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') || ''
 			}
@@ -267,7 +268,7 @@ export default {
 			this.loadData()
 		},
 		handleCurrentChange(val) {
-            this.pageIndex = val
+			this.pageIndex = val
 			this.loadData()
 		}
 	}

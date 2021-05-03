@@ -84,7 +84,7 @@
 							style="width: 100px"
 						></el-input>
 					</el-form-item>
-					<el-form-item label="最后登录时间:" label-width="100px">
+					<el-form-item label="最后登录时间:" label-width="110px">
 						<el-date-picker
 							v-model="form.lastLoginTime"
 							prop="lastLoginTime"
