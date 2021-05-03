@@ -7,6 +7,7 @@
 				<el-menu-item
 					:index="resolvePath(onlyOneChild.path)"
 					:class="{'submenu-title-noDropdown':!isNest}"
+					style="text-align: left"
 				>
 					<item
 						:active-path="activePath"

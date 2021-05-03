@@ -8,13 +8,13 @@ const member = [
 	{
 		id: '3',
 		parentId: '2',
-		icon: 'bb_report',
+		icon: 'bb_accountInfo',
 		title: '会员管理'
 	},
 	{
 		id: '11',
 		parentId: '2',
-		icon: 'bb_report',
+		icon: 'bb_accounttransaction',
 		title: '会员审核'
 	},
 	// 第三级菜单

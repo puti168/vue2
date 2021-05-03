@@ -16,35 +16,35 @@
 				<div class="review-content">
 					<p class="name">新增会员信息</p>
 					<div class="review-flex">
-						<div>账号类型: aaaa</div>
-						<div>会员账号: mico</div>
-						<div>登录密码: 12344444</div>
-						<div>上级代理: 李磊</div>
+						<div>账号类型: {{ typeFilter(list.accountType, 'accountType') }}</div>
+						<div>会员账号: {{ list.userName }}</div>
+						<div>登录密码: {{ list.password }}</div>
+						<div>上级代理: {{ list.parentProxyName }}</div>
 					</div>
 					<div class="review-flex">
-						<div>性别: 男</div>
-						<div>VIP经验: 50000</div>
-						<div>邮箱: 4444@qq.com</div>
-						<div>姓名: 50000</div>
+						<div>性别: {{ typeFilter(list.genderType, 'genderType') }}</div>
+						<div>VIP经验: {{ list.vipExperienceVal }}</div>
+						<div>邮箱: {{ list.email }}</div>
+						<div>姓名: {{ list.realName }}</div>
 					</div>
 					<div class="review-flex">
-						<div>手机号码: 1333333333333</div>
+						<div>手机号码: {{ list.mobile }}</div>
 					</div>
 				</div>
 				<div class="review-content">
 					<p class="name">申请信息</p>
 					<div class="review-flex">
-						<div>申请人: XXXXXXXXXX</div>
-						<div>申请时间: BBBBBBB</div>
-						<div>申请信息: 5555</div>
+						<div>申请人: {{ list.applyName }}</div>
+						<div>申请时间: {{ list.applyTime }}</div>
+						<div>申请信息: {{ list.applyInfo }}</div>
 					</div>
 				</div>
 				<div class="review-content">
 					<p class="name">审核信息信息</p>
 					<div class="review-flex">
-						<div>一审人: mico</div>
-						<div>一审时间: BBBBBBB</div>
-						<div>一审备注: 5555</div>
+						<div>一审人: {{ list.auditName }}</div>
+						<div>一审时间: {{ list.auditTime }}</div>
+						<div>一审备注: {{ list.remark }}</div>
 					</div>
 				</div>
 			</div>
@@ -86,6 +86,7 @@
 
 <script>
 // import dayjs from 'dayjs'
+import { mapGetters } from 'vuex'
 export default {
 	name: '',
 	components: {},
@@ -99,7 +100,15 @@ export default {
 			type: true
 		}
 	},
-	computed: {},
+	computed: {
+		...mapGetters(['globalDics']),
+		accountType() {
+			return this.globalDics.accountType
+		},
+		genderType() {
+			return this.globalDics.genderType
+		}
+	},
 	created() {
 		this.getInfo()
 		this.type = this.$route.query.type

@@ -152,10 +152,13 @@
 						<Copy :title="scope.row.userName" :copy="copy" />
 					</el-table-column>
 					<el-table-column
-						prop="accountType"
 						align="center"
 						label="账号类型"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							<p>{{ typeFilter(scope.row.accountType, 'accountType') }}</p>
+						</template>
+					</el-table-column>
 					<el-table-column
 						v-slot="scope"
 						prop="parentProxyName"
@@ -173,19 +176,25 @@
 						prop="virtualKind"
 						align="center"
 						label="虚拟币种类"
-					></el-table-column>
+					><template slot-scope="scope">
+							<p>{{ typeFilter(scope.row.virtualKind, 'virtualType') }}</p>
+						</template></el-table-column>
 					<el-table-column
 						prop="virtualProtocol"
 						align="center"
 						label="虚拟币协议"
-					></el-table-column>
+					><template slot-scope="scope">
+							<p>{{ typeFilter(scope.row.virtualProtocol, 'virtualProtocolType') }}</p>
+						</template></el-table-column>
 					<el-table-column
 						prop="operateType"
 						align="center"
 						label="操作类型"
-					></el-table-column>
+					><template slot-scope="scope">
+							<p>{{ typeFilter(scope.row.operateType, 'bindType') }}</p>
+						</template></el-table-column>
 					<el-table-column
-						prop="remark"
+						prop="createDt"
 						align="center"
 						label="操作时间"
 					></el-table-column>
@@ -273,8 +282,8 @@ export default {
 				if (res.code === 200) {
 					const response = res.data
 					this.loading = false
-					this.dataList = response.records
-					this.total = response.total
+					this.dataList = response.record
+					this.total = response.totalRecord
 				} else {
 					this.loading = false
 					this.$message({

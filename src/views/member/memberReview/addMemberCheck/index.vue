@@ -52,7 +52,7 @@
 				<el-form-item label="锁单状态:">
 					<el-select
 						v-model="queryData.lockOrder"
-						style="width: 280px"
+						style="width: 180px"
 						:popper-append-to-body="false"
 					>
 						<el-option label="全部" value=""></el-option>
@@ -67,7 +67,7 @@
 				<el-form-item label="审核操作:">
 					<el-select
 						v-model="queryData.auditStep"
-						style="width: 280px"
+						style="width: 180px"
 						:popper-append-to-body="false"
 					>
 						<el-option label="全部" value=""></el-option>
@@ -84,7 +84,7 @@
 						v-model="queryData.applyName"
 						clearable
 						size="medium"
-						style="width: 280px"
+						style="width: 180px"
 						placeholder="请输入"
 						@keyup.enter.native="enterSearch"
 					></el-input>
@@ -94,7 +94,7 @@
 						v-model="queryData.auditName"
 						clearable
 						size="medium"
-						style="width: 280px"
+						style="width: 180px"
 						placeholder="请输入"
 						@keyup.enter.native="enterSearch"
 					></el-input>
@@ -363,7 +363,7 @@ export default {
 				spinner: 'el-icon-loading',
 				background: 'rgba(0, 0, 0, 0.7)'
 			})
-			this.$api.lockMemberAuditRecord(JSON.stringify({ id: val.id })).then((res) => {
+			this.$api.lockMemberAuditRecord(JSON.stringify({ id: val.id, lockFlag: val.lockStatus === '0' ? 0 : 1 })).then((res) => {
 				if (res.code === 200) {
 					loading.close()
 					this.$message({
