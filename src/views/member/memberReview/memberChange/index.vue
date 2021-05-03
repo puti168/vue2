@@ -279,11 +279,18 @@
 							</span>
 						</template>
 					</el-table-column>
-					<el-table-column align="center" sortable="custom" width="200px">
+					<el-table-column
+						prop="auditTime"
+						align="center"
+						sortable="custom"
+						width="200px"
+					>
 						<template slot="header">
-							一审审核人
-							<br />
-							一审完成时间
+							<span>
+								一审审核人
+								<br />
+								一审完成时间
+							</span>
 						</template>
 						<template slot-scope="scope">
 							{{ scope.row.auditName ? scope.row.auditName : '-' }}
@@ -330,6 +337,7 @@ export default {
 				auditStatus: [],
 				auditStep: '',
 				applyName: '',
+				orderProperties: '',
 				auditName: '',
 				lockOrder: '',
 				auditNum: '',
@@ -339,7 +347,7 @@ export default {
 			now: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
 			formTime: {
 				time: [start, end],
-				time2: [start, end]
+				time2: []
 			},
 			name: '',
 			dataList: []
@@ -369,6 +377,7 @@ export default {
 		loadData() {
 			this.loading = true
 			const [startTime, endTime] = this.formTime.time || []
+			const [startTime2, endTime2] = this.formTime.time2 || []
 			let params = {
 				...this.queryData,
 				applyTimeStart: startTime
@@ -377,11 +386,11 @@ export default {
 				applyTimeEnd: endTime
 					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
 					: '',
-				auditTimeStart: startTime
-					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
+				auditTimeStart: startTime2
+					? dayjs(startTime2).format('YYYY-MM-DD HH:mm:ss')
 					: '',
 				auditTimeEnd: endTime
-					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
+					? dayjs(endTime2).format('YYYY-MM-DD HH:mm:ss')
 					: ''
 			}
 			params = {
@@ -394,13 +403,15 @@ export default {
 					const response = res.data
 					this.loading = false
 					this.dataList = response.record
-					this.dataList.forEach((item) => {
-						if (item.lockOrder === '1') {
-							item.lockStatus = true
-						} else {
-							item.lockStatus = false
-						}
-					})
+					if (this.dataList) {
+						this.dataList.forEach((item) => {
+							if (item.lockOrder === '1') {
+								item.lockStatus = true
+							} else {
+								item.lockStatus = false
+							}
+						})
+					}
 					this.total = response.totalRecord
 				} else {
 					this.loading = false
@@ -425,6 +436,7 @@ export default {
 				applyType: [],
 				auditStatus: [],
 				applyName: '',
+				orderProperties: '',
 				auditName: '',
 				lockOrder: '',
 				auditNum: '',
@@ -433,7 +445,7 @@ export default {
 			}
 			this.formTime = {
 				time: [start, end],
-				time2: [start, end]
+				time2: []
 			}
 			this.loadData()
 		},
@@ -470,6 +482,11 @@ export default {
 	text-align: center;
 	color: #909399;
 	font-weight: 700;
+}
+/deep/ .caret-wrapper {
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
 }
 .data-refresh {
 	margin-top: 0;

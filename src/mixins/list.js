@@ -68,6 +68,8 @@ export default {
 		checkOrderParams() {
 			const SortLine = new Map([
 				['createDt', 'createDt'],
+				['auditTime', 'auditTime'],
+				['applyTime', 'applyTime'],
 				['modifyDt', 'modifyDt']
 			])
 			return SortLine
@@ -167,6 +169,7 @@ export default {
 		},
 		changeTableSort({ column, prop, order }) {
 			this.pageNum = 1
+			this.queryData.orderProperties = prop
 			const orderParams = this.checkOrderParams.get(prop)
 			if (orderParams) {
 				if (order === 'ascending') {
