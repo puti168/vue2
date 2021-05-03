@@ -59,10 +59,9 @@
 							></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="风控层级:">
+					<el-form-item label="风控层级:" prop="windControlId">
 						<el-select
-							v-model="queryData.riskLevel"
-							prop="status"
+							v-model="queryData.windControlId"
 							size="medium"
 							placeholder="全部"
 							clearable
@@ -76,7 +75,7 @@
 							></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="离线天数:">
+					<el-form-item label="离线天数:" prop="offLineDaysEnd">
 						<el-input
 							v-model="queryData.SaveMoneyMin"
 							size="medium"
@@ -108,7 +107,7 @@
 							style="width: 388px"
 						></el-date-picker>
 					</el-form-item>
-					<el-form-item label="VIP等级:">
+					<el-form-item label="VIP等级:" prop="vipExperenceValue">
 						<el-input
 							v-model="queryData.SaveMoneyMin"
 							size="medium"
@@ -187,9 +186,9 @@
 							style="width: 388px"
 						></el-date-picker>
 					</el-form-item>
-					<el-form-item label="会员标签:">
+					<el-form-item label="会员标签:" prop="labelId">
 						<el-select
-							v-model="queryData.userLabel"
+							v-model="queryData.labelId"
 							size="medium"
 							placeholder="全部"
 							clearable
@@ -420,12 +419,12 @@ export default {
 				userName: '',
 				realName: '',
 				accountStatus: '',
-				riskLevel: '',
-				levelDays: '',
+                windControlId: '',
+                offLineDaysEnd: '',
 				lastLoginTime: '',
 				vipRank: '',
 				accountType: '',
-				userLabel: '',
+                labelId: '',
 				deviceType: '',
 				supAgent: '',
 				lastBetTime: '',
@@ -440,7 +439,8 @@ export default {
 			showForm: '',
 			editVisible: false,
 			editFormData: {},
-			vipDict: []
+			vipDict: [],
+            userLabel: []
 		}
 	},
 	computed: {
@@ -488,11 +488,12 @@ export default {
 			this.$api.merchantDictAPI().then((res) => {
 				const {
 					code,
-					data: { windControl },
+					data: { windControl, userLabel },
 					msg
 				} = res
 				if (code === 200) {
 					this.vipDict = windControl || []
+					this.userLabel = userLabel || []
 				} else {
 					this.$message({
 						message: msg,

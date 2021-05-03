@@ -212,7 +212,7 @@ export default {
 		reset() {
 			this.$refs['form'].resetFields()
 			this.form = {
-				accountType: '',
+				accountType: '4',
 				username: '',
 				password: '',
 				registerPhone: '',
