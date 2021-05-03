@@ -67,6 +67,9 @@
         class="floor-item"
         :queryData="queryData"
         :balanceList="balanceList"
+        :top3Sy="top3Sy"
+        :playerList="playerList"
+        :sumList="sumList"
       ></second>
       <third class="floor-item" :queryData="queryData"></third>
       <fourth class="floor-item" :queryData="queryData"></fourth>
@@ -86,13 +89,16 @@ export default {
   mixins: [list],
   data() {
     return {
-      queryData: { userName: '', userId: null },
+      queryData: { userName: '', userId: '' },
       activeName: 'first',
       tabList: ['first', 'second', 'third', 'fourth'],
       outlineInfo: {}, // 基本信息
       vipMsg: {}, // vip信息
       remarksTableData: {}, // 备注表格
-      balanceList: { freezeBalance: '' },
+      balanceList: { freezeBalance: '', balance: '' },
+      playerList: {},
+      sumList: {},
+      top3Sy: [],
       loadingRgba: {
         lock: true,
         text: 'Loading',
@@ -136,6 +142,12 @@ export default {
             this.getMemberRemarkList(res.data.id)
             this.getAccountCashAccount(res.data.id)
             this.getWithdrawalFreeze(res.data.id)
+            // this.getWithdrawWater(res.data.id);
+            this.getPlayerTop3(res.data.id)
+            // this.getLogMemberLoginLog(res.data.id);
+            // this.getBankCardBank(res.data.id);
+            this.getPlayerOrderSumInfo(res.data.id)
+            this.getPlayerBetHistorySum(res.data.id)
           }
           loading.close()
         })
@@ -163,62 +175,64 @@ export default {
     // 查询中心钱包余额
     getAccountCashAccount(val) {
       this.$api.getAccountCashAccount({ userId: val }).then((res) => {
-        console.log('中心钱包', res)
+        if (res.code === 200) {
+          this.balanceList.balance = res.data.balance
+        }
       })
     },
     // 提现冻结余额
     getWithdrawalFreeze(val) {
       this.$api.getWithdrawalFreeze({ userId: val }).then((res) => {
         if (res.code === 200) {
-          console.log(res, 'freezeBalance')
           this.balanceList.freezeBalance = res.data.freezeBalance
         }
       })
     },
-    // 一键查询所有场馆余额
-    getOneKeyBalance(val) {
-      this.$api.getOneKeyBalance(val).then((res) => {
-        console.log(res)
-      })
-    },
-    // // 一键下分
-    // getOneKeyWithdraw(val) {
-    //   this.$api.getOneKeyWithdraw(val).then((res) => {
-    //     console.log(res)
-    //   })
-    // },
     // 提现流水查询
     getWithdrawWater(val) {
-      this.$api.getWithdrawWater({ userId: val.userId }).then((res) => {
-        console.log(res)
+      this.$api.getWithdrawWater({ userId: val }).then((res) => {
+        console.log('提现流水查询', res)
       })
     },
     // 会员充提信息
     getPlayerOrderSumInfo(val) {
-      this.$api.getPlayerOrderSumInfo(val).then((res) => {
-        console.log(res)
+      this.$api.getPlayerOrderSumInfo({ userId: val }).then((res) => {
+        if (res.code === 200) {
+          this.playerList = res.data
+        }
+      })
+    },
+    // 会员投注信息
+    getPlayerBetHistorySum(val) {
+      this.$api.getPlayerBetHistorySum({ userId: val }).then((res) => {
+        if (res.code === 200) {
+          this.sumList = res.data
+        }
       })
     },
     // top3平台统计
     getPlayerTop3(val) {
-      const params = { ...val, orderKey: 1 }
+      const params = { userId: val, orderKey: 1 }
       this.$api.getPlayerTop3(params).then((res) => {
+        if (res.code === 200) {
+          this.top3Sy = res.data
+        }
         console.log(res)
       })
     },
     // 会员登录日志查询
     getLogMemberLoginLog(val) {
-      this.$api.getLogMemberLoginLog(val).then((res) => {
+      this.$api.getLogMemberLoginLog({ userId: val }).then((res) => {
         console.log(res)
       })
     },
     // 银行卡/虚拟币行号信息
     getBankCardBank(val) {
-      const dataType1 = { ...val, dataType: 1 }
+      const dataType1 = { userId: val, dataType: 1 }
       this.$api.getBankCardBank(dataType1).then((res) => {
         console.log(res)
       })
-      const dataType2 = { ...val, dataType: 2 }
+      const dataType2 = { userId: val, dataType: 2 }
       this.$api.getBankCardBank(dataType2).then((res) => {
         console.log(res)
       })
@@ -230,15 +244,6 @@ export default {
           this.getOutlineInfo(params)
         }
       })
-
-      // this.getWithdrawalFreeze(params)
-      // this.getOneKeyBalance(params);
-      // this.getOneKeyWithdraw(params)
-      // this.getWithdrawWater(params);
-      // this.getPlayerOrderSumInfo(params);
-      // this.getPlayerTop3(params);
-      // this.getLogMemberLoginLog(params);
-      // this.getBankCardBank(params);
     },
     enterSubmit() {
       this.query()

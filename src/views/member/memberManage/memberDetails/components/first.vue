@@ -6,7 +6,7 @@
         <el-button
           type="primary"
           icon="el-icon-refresh"
-          :disabled="this.queryData.userName === ''"
+          :disabled="queryData.userId === ''"
           @click="refresh"
           >刷新</el-button>
       </el-col>
@@ -14,21 +14,41 @@
         <i class="el-icon-edit-outline"></i><br />
         编辑信息
       </el-col>
-      <el-col :span="16" class="btngroup">
+      <el-col v-if="queryData.userId === ''" :span="16" class="btngroup">
         <el-button
           v-for="(item, index) in editMsgList"
           :key="index"
-          :disabled="item.status"
+          disabled
           type="primary"
-          @click="editFn(item.label)"
-          >{{ item.label }}</el-button>
+          >{{ item.description }}</el-button>
+        <el-button disabled type="primary">账号备注</el-button>
+      </el-col>
+      <el-col v-else :span="16" class="btngroup">
+        <el-button
+          v-for="(item, index) in editMsgList"
+          :key="index"
+          type="primary"
+          :disabled="item.applyStatus !== '1'"
+          @click="editFn(item.description)"
+          >{{ item.description }}</el-button>
+        <el-button
+          :disabled="queryData.userId === ''"
+          type="primary"
+          @click="editFn('账号备注')"
+          >账号备注</el-button>
       </el-col>
     </el-row>
     <div class="titelBox">概要信息</div>
     <el-row class="msgList">
       <el-col :span="5">会员账号：{{ outlineInfoList.userName }}</el-col>
-      <el-col :span="5">账号类型：{{ outlineInfoList.accountType }}</el-col>
-      <el-col :span="5">帐号状态：{{ outlineInfoList.accountStatus }}</el-col>
+      <el-col
+:span="5"
+>账号类型：{{ typeFilter(outlineInfoList.accountType, "accountType") }}</el-col>
+      <el-col
+:span="5"
+>帐号状态：{{
+          typeFilter(outlineInfoList.accountStatus, "accountStatusType")
+        }}</el-col>
       <el-col :span="5">风控层级：{{ outlineInfoList.windControlName }}</el-col>
       <el-col :span="5">首存时间：{{ outlineInfoList.createDt }}</el-col>
       <el-col :span="5">首存金额：{{ outlineInfoList.firstDepositAmount }}</el-col>
@@ -38,10 +58,7 @@
       <el-col :span="5">注册IP：{{ outlineInfoList.registerIp }}</el-col>
       <el-col
 :span="5"
->注册端：
-        <span v-for="item in deviceTypeList" :key="item.label">{{
-          item.value === outlineInfoList.deviceType ? item.label : ""
-        }}</span>
+>注册端：{{ typeFilter(outlineInfoList.deviceType, "deviceType") }}
       </el-col>
       <el-col :span="5">上级代理：{{ outlineInfoList.parentProxyName }}</el-col>
       <el-col :span="5">会员标签：{{ outlineInfoList.labelName }}</el-col>
@@ -50,22 +67,21 @@
     <div class="titelBox">个人资料</div>
     <el-row class="msgList">
       <el-col :span="5">姓名：{{ outlineInfoList.realName }}</el-col>
-      <el-col :span="5">性别：{{ outlineInfoList.gender }}</el-col>
+      <el-col
+:span="5"
+>性别：{{ typeFilter(outlineInfoList.gender, "genderType") }}</el-col>
       <el-col :span="5">出生日期：{{ outlineInfoList.birth }}</el-col>
       <el-col :span="5">手机号码：{{ outlineInfoList.registerPhone }}</el-col>
       <el-col :span="5">邮箱：{{ outlineInfoList.email }}</el-col>
     </el-row>
     <el-divider></el-divider>
-    <!-- <div class="titelBox">
-      <p class="borderR"></p>
-    </div> -->
     <el-row class="titelBox">
       <el-col :span="12">VIP信息</el-col>
       <el-col :span="12" class="borderL"></el-col>
     </el-row>
-    <el-row class="msgList">
+    <el-row class="msgList" style="min-height:90px;">
       <el-col :span="12" class="paddingBox">
-        <el-row>
+        <el-row v-show="vipMsg.depositAmountLave">
           <el-col :span="3">剩余</el-col>
           <el-col :span="7" class="textR">{{ vipMsg.depositAmountLave }}</el-col>
           <el-col :span="7" class="textR">{{ vipMsg.validBetsLave }}</el-col>
@@ -83,7 +99,7 @@
             <el-progress :percentage="percentagec" :stroke-width="12" :show-text="false">
             </el-progress></el-col>
         </el-row>
-        <el-row>
+        <el-row v-show="vipMsg.depositAmountLave">
           <el-col :span="3">已完成</el-col>
           <el-col
 :span="7"
@@ -98,7 +114,7 @@ class="textR"
 class="textR"
 >{{ vipMsg.bjValidBetsCurr }}/{{ vipMsg.bjValidBetsTotal }}</el-col>
         </el-row>
-        <el-row>
+        <el-row v-show="vipMsg.depositAmountStatus">
           <el-col :span="3" style="color: #fff">描述</el-col>
           <el-col
 :span="7"
@@ -175,58 +191,67 @@ class="textC"
         label-width="95px"
         @submit.native.prevent="enterSearch"
       >
-        <el-form-item
-          v-if="moduleBox === '账号状态'"
-          label="账号状态："
-          prop="accountStatus"
-        >
+        <el-form-item v-if="moduleBox === '账号状态'" label="账号状态：" prop="code">
           <el-select
-            v-model="editData.accountStatus"
+            v-model="editData.code"
             placeholder="请选择"
             @change="changeAccountStatus"
           >
             <el-option
               v-for="item in accountStatusList"
-              :key="item.accountStatus"
-              :label="item.label"
-              :value="item.accountStatus"
-            >
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item v-if="moduleBox === '风控层级'" label="风控层级：" prop="riskLevel">
-          <el-select v-model="editData.riskLevel" placeholder="请选择">
-            <el-option
-              v-for="item in riskLevelList"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
+              :key="item.description"
+              :label="item.description"
+              :value="item.code"
             >
             </el-option>
           </el-select>
         </el-form-item>
         <el-form-item
-          v-if="moduleBox === '会员标签'"
-          label="会员标签："
-          prop="memberLabel"
+          v-if="moduleBox === '风控层级'"
+          label="风控层级："
+          prop="windControlId"
         >
-          <el-select v-model="editData.memberLabel" placeholder="请选择">
+          <el-select
+            v-model="editData.windControlId"
+            placeholder="请选择"
+            @change="changeWindControlId"
+          >
             <el-option
-              v-for="item in memberLabelList"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
+              v-for="item in riskLevelList"
+              :key="item.windControlName"
+              :label="item.windControlName"
+              :value="item.windControlId"
             >
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item v-if="moduleBox === '出生日期'" label="出生日期：" prop="birthday">
-          <el-date-picker v-model="editData.birthday" type="date" placeholder="选择日期">
+        <el-form-item v-if="moduleBox === '会员标签'" label="会员标签：" prop="labelId">
+          <el-select
+            v-model="editData.labelId"
+            placeholder="请选择"
+            @change="changeLabelId"
+          >
+            <el-option
+              v-for="item in memberLabelList"
+              :key="item.labelName"
+              :label="item.labelName"
+              :value="item.labelId"
+            >
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item v-if="moduleBox === '出生日期'" label="出生日期：" prop="birth">
+          <el-date-picker
+            v-model="editData.birth"
+            type="date"
+            placeholder="选择日期"
+            value-format="yyyy-MM-dd HH-mm-ss"
+          >
           </el-date-picker>
         </el-form-item>
-        <el-form-item v-if="moduleBox === '手机号码'" label="手机号码：" prop="phoneNum">
+        <el-form-item v-if="moduleBox === '手机号码'" label="手机号码：" prop="mobile">
           <el-input
-            v-model="editData.phoneNum"
+            v-model="editData.mobile"
             clearable
             size="medium"
             :maxlength="11"
@@ -238,11 +263,11 @@ class="textC"
         <el-form-item
           v-if="moduleBox === '姓名'"
           label="姓名："
-          prop="name"
+          prop="realName"
           :maxlength="6"
         >
           <el-input
-            v-model="editData.name"
+            v-model="editData.realName"
             clearable
             type="text"
             size="medium"
@@ -276,11 +301,15 @@ class="textC"
             @keyup.enter.native="enterSearch"
           ></el-input>
         </el-form-item>
-        <el-form-item v-if="moduleBox === '性别'" label="性别：" prop="radio">
-          <el-select v-model="editData.radio" placeholder="请选择">
-            <el-option label="保密" value="0"> </el-option>
-            <el-option label="男" value="1"> </el-option>
-            <el-option label="女" value="2"> </el-option>
+        <el-form-item v-if="moduleBox === '性别'" label="性别：" prop="code">
+          <el-select v-model="editData.code" placeholder="请选择" @change="changeGender">
+            <el-option
+              v-for="item in genderTypeList"
+              :key="item.description"
+              :label="item.description"
+              :value="item.code"
+            >
+            </el-option>
           </el-select>
         </el-form-item>
 
@@ -312,6 +341,7 @@ class="textC"
 
 <script>
 import list from '@/mixins/list'
+import { getDics } from '@/api/user'
 // import dayjs from 'dayjs'
 export default {
   mixins: [list],
@@ -345,31 +375,16 @@ export default {
 
     return {
       loading: false,
-      deviceTypeList: [
-        { label: 'PC', value: 1 },
-        { label: 'IOS_APP', value: 2 },
-        { label: 'IOS_H5', value: 3 },
-        { label: 'Android_H5', value: 4 },
-        { label: 'Android_APP', value: 5 }
-      ],
       // 编辑信息按钮
-      editMsgList: [
-        { label: '账号状态', status: false },
-        { label: '风控层级', status: false },
-        { label: '会员标签', status: false },
-        { label: '出生日期', status: false },
-        { label: '手机号码', status: false },
-        { label: '姓名', status: false },
-        { label: '性别', status: false },
-        { label: '邮箱', status: false },
-        { label: '账号备注', status: false }
-      ],
+      editMsgList: [],
       // 账号状态
-      accountStatusList: [{ accountStatus: 0, label: '正常' }],
+      accountStatusList: [],
       // 风控层级
       riskLevelList: [],
       // 会员标签
       memberLabelList: [],
+      // 性别
+      genderTypeList: [],
       // 提交账号状态编辑
       accountStatusAfter: {
         userName: '',
@@ -432,7 +447,7 @@ export default {
       page: 1,
       size: 3,
       rules: {
-        phoneNum: [{ required: true, validator: checkPhone, trigger: 'blur' }]
+        mobile: [{ required: true, validator: checkPhone, trigger: 'blur' }]
       }
     }
   },
@@ -441,6 +456,17 @@ export default {
     outlineInfo: {
       handler(newV) {
         this.outlineInfoList = { ...newV }
+        if (newV.auditList) {
+          for (let i = 0; i < newV.auditList.length; i++) {
+            const ele = newV.auditList[i].applyName
+            for (let j = 0; j < this.editMsgList.length; j++) {
+              const val = this.editMsgList[j].applyName
+              if (ele === val) {
+                this.editMsgList[j].applyStatus = newV.applyStatus
+              }
+            }
+          }
+        }
       },
       deep: true,
       immediate: true
@@ -477,33 +503,83 @@ export default {
     }
   },
   created() {},
-  mounted() {},
+  mounted() {
+    this.initGetDics()
+    console.log(this.queryData.userName)
+  },
   methods: {
+    initGetDics() {
+      getDics().then((res) => {
+        if (res.code === 200) {
+          this.accountStatusList = res.data.accountStatusType
+          this.genderTypeList = res.data.genderType
+          this.editMsgList = res.data.applyType
+        }
+        console.log('getDics', res)
+      })
+      this.$api.getMerchantDict().then((res) => {
+        if (res.code === 200) {
+          this.riskLevelList = res.data.windControl
+          this.memberLabelList = res.data.userLabel
+        }
+      })
+    },
     // 会员详情-基本信息-概要信息以及个人资料
     getOutlineInfo(val) {
-      this.$api.getOutlineInfo('', val.userName).then((res) => {
+      this.$api.getOutlineInfo({ userName: val.userName }).then((res) => {
         if (res.code === 200) {
           this.outlineInfoList = res.data
+          this.getVipInfo(res.data.id)
+          const params = { userId: val.userId, pageNum: 1, pageSize: 3 }
+          this.$api.getMemberRemarkList(params).then((res) => {
+            if (res.code === 200) {
+              this.tableList = res.data.records
+            }
+          })
         }
       })
     },
     // vip信息
     getVipInfo(val) {
-      this.$api.getVipInfo(val).then((res) => {
-        console.log(res)
+      this.$api.getVipInfo({ userId: val }).then((res) => {
+        if (res.code === 200) {
+          const newV = res.data
+          if (JSON.stringify(newV) !== '{}') {
+            if (newV.depositAmountCurr > 0 && newV.depositAmountTotal > 0) {
+              const p1 = (newV.depositAmountCurr / newV.depositAmountTotal) * 100
+              p1 >= 100 ? (this.percentagea = 100) : (this.percentagea = p1)
+            }
+            if (newV.validBetsCurr > 0 && newV.validBetsTotal > 0) {
+              const p2 = (newV.validBetsCurr / newV.validBetsTotal) * 100
+              p2 >= 100 ? (this.percentageb = 100) : (this.percentageb = p2)
+            }
+            if (newV.bjValidBetsCurr > 0 && newV.bjValidBetsTotal > 0) {
+              const p3 = (newV.bjValidBetsCurr / newV.bjValidBetsTotal) * 100
+              p3 >= 100 ? (this.percentagec = 100) : (this.percentagec = p3)
+            }
+          }
+        }
       })
     },
     // 添加会员备注
     getMemberRemarkAdd(val) {
       this.$api.getMemberRemarkAdd(val).then((res) => {
-        console.log(res)
+        this.editData = {}
+        if (res.code === 200) {
+          this.$message.success('添加成功')
+          this.getOutlineInfo(this.queryData)
+        }
         this.editVisible = false
       })
     },
     // 编辑信息
     setMemberInfoEdit(val) {
       this.$api.setMemberInfoEdit(val).then((res) => {
-        console.log(res)
+        if (res.code === 200) {
+          this.$message.success(res.msg)
+          this.getOutlineInfo(this.queryData)
+          this.editData = {}
+        }
         this.editVisible = false
       })
     },
@@ -519,29 +595,43 @@ export default {
     },
     refresh() {
       const val = this.queryData
-      console.log(this.queryData)
       this.getOutlineInfo(val)
-      // this.getVipInfo();
     },
     editFn(val) {
       this.moduleBox = val
       this.editVisible = true
     },
     changeAccountStatus(val) {
-      this.accountStatusAfter.accountStatus = val
+      this.editData.accountStatus = val
     },
-
+    changeWindControlId(val) {
+      for (let i = 0; i < this.memberLabelList.length; i++) {
+        const ele = this.riskLevelList[i]
+        if (ele.windControlId === val) {
+          this.editData.windControlName = ele.windControlName
+        }
+      }
+    },
+    changeLabelId(val) {
+      for (let i = 0; i < this.memberLabelList.length; i++) {
+        const ele = this.memberLabelList[i]
+        if (ele.labelId === val) {
+          this.editData.labelName = ele.labelName
+        }
+      }
+    },
+    changeGender(val) {
+      this.editData.gender = val
+    },
     cancel() {
-      this.$refs.editForm.resetFields()
+      this.editData = {}
       this.editVisible = false
     },
     submitEdit() {
       const params = this.editData
       const data = {}
-      data.userName = 'fitz2019'
-      console.log(this.moduleBox)
+      data.userName = this.queryData.userName
       this.$refs.editForm.validate((valid) => {
-        console.log(params, 111111111)
         if (valid) {
           const loading = this.$loading({
             lock: true,
@@ -550,8 +640,8 @@ export default {
             background: 'rgba(0, 0, 0, 0.7)'
           })
           if (this.moduleBox === '账号状态') {
+            delete params.code
             data.accountStatusAfter = params
-            console.log('accountStatusAfter', data)
             this.setMemberInfoEdit(data)
             loading.close()
           }
@@ -572,6 +662,7 @@ export default {
           }
           if (this.moduleBox === '手机号码') {
             data.mobileAfter = params
+            console.log('修改手机号', data)
             this.setMemberInfoEdit(data)
             loading.close()
           }
@@ -581,6 +672,7 @@ export default {
             loading.close()
           }
           if (this.moduleBox === '性别') {
+            delete params.code
             data.genderAfter = params
             this.setMemberInfoEdit(data)
             loading.close()
@@ -591,7 +683,8 @@ export default {
             loading.close()
           }
           if (this.moduleBox === '账号备注') {
-            params.userid = this.queryData.userid
+            params.userName = this.queryData.userName
+            params.userId = this.queryData.userId
             console.log(params)
             this.getMemberRemarkAdd(params)
             loading.close()
@@ -602,19 +695,19 @@ export default {
       })
     },
     closeFormDialog() {
-      this.$refs.editForm.resetFields()
+      this.editData = {}
       this.editVisible = false
     },
     handleCurrentChange(val) {
       this.page = val
-      if (this.queryData.userid !== null) {
-        this.getMemberRemarkList(this.queryData.userid)
+      if (this.queryData.userId !== null) {
+        this.getMemberRemarkList(this.queryData.userId)
       }
     },
     handleSizeChange(val) {
       this.size = val
-      if (this.queryData.userid !== null) {
-        this.getMemberRemarkList(this.queryData.userid)
+      if (this.queryData.userId !== null) {
+        this.getMemberRemarkList(this.queryData.userId)
       }
     }
   }
