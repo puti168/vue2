@@ -50,7 +50,7 @@
 				</el-form-item>
 				<el-form-item label="手机号码:">
 					<el-input
-						v-model="form.registerPhone"
+						v-model="form.mobile"
 						size="medium"
 						placeholder="请输入"
 						clearable
@@ -156,7 +156,7 @@ export default {
 				accountType: '4',
 				username: '',
 				password: '',
-				registerPhone: '',
+                mobile: '',
 				parentProxyName: '',
 				gender: '',
 				vipExperenceValue: '',
@@ -270,7 +270,7 @@ export default {
 				accountType: '4',
 				username: '',
 				password: '',
-				registerPhone: '',
+                mobile: '',
 				parentProxyName: '',
 				gender: '',
 				vipExperenceValue: '',

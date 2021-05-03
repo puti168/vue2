@@ -194,17 +194,17 @@
 							clearable
 							style="width: 180px"
 						>
-                            <el-option
-                                v-for="item in userLabel"
-                                :key="item.labelId"
-                                :label="item.labelName"
-                                :value="item.labelId"
-                            ></el-option>
+							<el-option
+								v-for="item in userLabel"
+								:key="item.labelId"
+								:label="item.labelName"
+								:value="item.labelId"
+							></el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item label="上级代理:">
 						<el-input
-							v-model="queryData.supAgent"
+							v-model="queryData.parentProxyName"
 							size="medium"
 							placeholder="请输入"
 							clearable
@@ -251,39 +251,70 @@
 					style="width: 100%"
 					:header-cell-style="getRowClass"
 				>
-					<el-table-column
-						prop="userName"
-						align="center"
-						label="会员账号"
-					></el-table-column>
-					<el-table-column
-						prop="realName"
-						align="center"
-						label="会员姓名"
-					></el-table-column>
+					<el-table-column prop="userName" align="center" label="会员账号">
+						<template slot-scope="scope">
+							<span v-if="!!scope.row.userName">
+								{{ scope.row.userName }}
+							</span>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
+					<el-table-column prop="realName" align="center" label="会员姓名">
+						<template slot-scope="scope">
+							<span v-if="!!scope.row.realName">
+								{{ scope.row.realName }}
+							</span>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="parentProxyName"
 						align="center"
 						label="代理上级"
-					></el-table-column>
-					<el-table-column prop="updateDt" align="center" label="账号类型">
+					>
 						<template slot-scope="scope">
-							{{ typeFilter(scope.row.accountType, 'accountType') }}
+							<span v-if="!!scope.row.parentProxyName">
+								{{ scope.row.parentProxyName }}
+							</span>
+							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column
-						prop="labelName"
-						align="center"
-						label="会员标签"
-					></el-table-column>
-					<el-table-column
-						prop="windControlName"
-						align="center"
-						label="风控层级"
-					></el-table-column>
-					<el-table-column prop="status" align="center" label="账号状态">
+					<el-table-column prop="updateDt" align="center" label="账号类型">
 						<template slot-scope="scope">
-							{{ typeFilter(scope.row.accountStatus, 'accountStatusType') }}
+							<span v-if="!!scope.row.accountType">
+								{{ typeFilter(scope.row.accountType, 'accountType') }}
+							</span>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
+					<el-table-column prop="labelId" align="center" label="会员标签">
+						<template slot-scope="scope">
+							<span v-if="!!scope.row.labelId">
+								{{
+									userLabel.filter((item) => (item.labelId = labelId)).labelName
+								}}
+							</span>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
+					<el-table-column prop="windControlId" align="center" label="风控层级">
+						<template slot-scope="scope">
+							<span v-if="!!scope.row.labelId">
+								{{
+									userLabel.filter(
+										(item) => (item.windControlId = windControlId)
+									).windControlName
+								}}
+							</span>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
+					<el-table-column prop="accountStatus" align="center" label="账号状态">
+						<template slot-scope="scope">
+							<span v-if="!!scope.row.accountStatus">
+								{{ typeFilter(scope.row.accountStatus, 'accountStatusType') }}
+							</span>
+							<span v-else></span>
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -299,7 +330,14 @@
 						label="注册时间"
 						width="150px"
 						sortable="custom"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							<span v-if="!!scope.row.createDt">
+								{{ scope.row.createDt }}
+							</span>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="firstDepositTime"
 						align="center"
@@ -424,14 +462,14 @@ export default {
 				userName: '',
 				realName: '',
 				accountStatus: '',
-                windControlId: '',
-                offLineDaysEnd: '',
+				windControlId: '',
+				offLineDaysEnd: '',
 				lastLoginTime: '',
 				vipRank: '',
 				accountType: '',
-                labelId: '',
+				labelId: '',
 				deviceType: '',
-				supAgent: '',
+				parentProxyName: '',
 				lastBetTime: '',
 				firstSaveTime: '',
 				SaveMoneyMin: '',
@@ -445,7 +483,7 @@ export default {
 			editVisible: false,
 			editFormData: {},
 			vipDict: [],
-            userLabel: []
+			userLabel: []
 		}
 	},
 	computed: {
