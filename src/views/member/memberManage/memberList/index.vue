@@ -63,10 +63,12 @@
 							clearable
 							style="width: 180px"
 						>
-							<el-option label="全部" value></el-option>
-							<el-option label="1" :value="1"></el-option>
-							<el-option label="2" :value="2"></el-option>
-							<el-option label="3" :value="3"></el-option>
+                            <el-option
+                                v-for="item in vipDict"
+                                :key="item.windControlId"
+                                :label="item.windControlName"
+                                :value="item.windControlId"
+                            ></el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item label="离线天数:">
@@ -425,7 +427,8 @@ export default {
 			moduleBox: '',
 			showForm: '',
 			editVisible: false,
-			editFormData: {}
+			editFormData: {},
+			vipDict: []
 		}
 	},
 	computed: {
@@ -437,7 +440,7 @@ export default {
 		}
 	},
 	created() {
-		// this.loadData()
+		this.getMerchantDict()
 	},
 	mounted() {},
 	methods: {
@@ -458,6 +461,24 @@ export default {
 					this.total = totalRecord || 0
 				} else {
 					this.loading = false
+					this.$message({
+						message: msg,
+						type: 'error'
+					})
+				}
+			})
+		},
+		// 获取风控层级
+		getMerchantDict() {
+			this.$api.merchantDictAPI().then((res) => {
+				const {
+					code,
+					data: { windControl },
+                    msg
+				} = res
+				if (code === 200) {
+					this.vipDict = windControl || []
+				} else {
 					this.$message({
 						message: msg,
 						type: 'error'

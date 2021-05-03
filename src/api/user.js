@@ -76,12 +76,22 @@ export function getUserRoles(data) {
 		data
 	})
 }
+
 // 会员管理==> 会员列表
 export function memberListAPI(data) {
 	return request({
 		url: '/user/queryMember',
 		method: 'post',
 		data
+	})
+}
+
+// 会员管理==> 会员列表 ===> 风控层级
+export function merchantDictAPI(params) {
+	return request({
+		url: '/member/merchantDict',
+		method: 'get',
+		params
 	})
 }
 
@@ -150,6 +160,7 @@ export default {
 	setUserSecurityDict,
 	updateXPSStatus,
 	memberListAPI,
+	merchantDictAPI,
 	exportExcelAPI,
 	addMemberAPI,
 	memberRegisterInfoListAPI,
