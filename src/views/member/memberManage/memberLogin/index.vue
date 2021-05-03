@@ -153,12 +153,15 @@
 						label="登录时间"
 						sortable="custom"
 					></el-table-column>
-					<el-table-column
-						prop="loginStatus"
-						align="center"
-						label="登录状态"
-					><template slot-scope="scope">
-						<span :class="scope.row.loginStatus === '1' ? 'success' : 'danger'">{{ typeFilter(scope.row.loginStatus, 'loginStatusType') }}</span></template></el-table-column>
+					<el-table-column prop="loginStatus" align="center" label="登录状态">
+						<template slot-scope="scope">
+							<span
+								:class="scope.row.loginStatus === '1' ? 'success' : 'danger'"
+							>
+								{{ typeFilter(scope.row.loginStatus, 'loginStatusType') }}
+							</span>
+						</template>
+					</el-table-column>
 					<el-table-column
 						v-slot="scope"
 						prop="userName"
@@ -167,12 +170,11 @@
 					>
 						<Copy :title="scope.row.userName" :copy="copy" />
 					</el-table-column>
-					<el-table-column
-						prop="accountType"
-						align="center"
-						label="账号类型"
-					><template slot-scope="scope">
-						{{ typeFilter(scope.row.accountType, 'accountType') }}</template></el-table-column>
+					<el-table-column prop="accountType" align="center" label="账号类型">
+						<template slot-scope="scope">
+							{{ typeFilter(scope.row.accountType, 'accountType') }}
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="loginIp"
 						align="center"
@@ -183,12 +185,11 @@
 						align="center"
 						label="IP归属地"
 					></el-table-column>
-					<el-table-column
-						prop="deviceType"
-						align="center"
-						label="登录终端"
-					><template slot-scope="scope">
-						{{ typeFilter(scope.row.deviceType, 'deviceType') }}</template></el-table-column>
+					<el-table-column prop="deviceType" align="center" label="登录终端">
+						<template slot-scope="scope">
+							{{ typeFilter(scope.row.deviceType, 'deviceType') }}
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="deviceNo"
 						align="center"
@@ -285,7 +286,9 @@ export default {
 				loginStartTime: startTime
 					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
 					: '',
-				loginEndTime: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
+				loginEndTime: endTime
+					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
+					: ''
 			}
 			params = {
 				...this.getParams(params)
@@ -300,6 +303,8 @@ export default {
 					this.dataList = response.record
 					this.total = response.totalRecord
 					this.summary = response.summary
+						? response.summary
+						: { count: 0, failCount: 0, successCount: 0 }
 				} else {
 					this.loading = false
 					this.$message({
