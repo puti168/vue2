@@ -3,10 +3,9 @@
 		<div class="view-container dealer-container">
 			<div class="params">
 				<el-form ref="form" :inline="true" :model="form" label-width="85px">
-					<el-form-item label="注册时间:">
+					<el-form-item label="注册时间:" prop="registerTime">
 						<el-date-picker
-							v-model="form.registerTime"
-							prop="registerTime"
+							v-model="queryData.registerTime"
 							size="medium"
 							:picker-options="pickerOptions"
 							format="yyyy-MM-dd HH:mm:ss"
@@ -20,20 +19,18 @@
 							style="width: 388px"
 						></el-date-picker>
 					</el-form-item>
-					<el-form-item label="会员账号:">
+					<el-form-item label="会员账号:" prop="userName">
 						<el-input
-							v-model="form.userName"
-							prop="userName"
+							v-model="queryData.userName"
 							size="medium"
 							placeholder="请输入"
 							clearable
 							style="width: 180px"
 						></el-input>
 					</el-form-item>
-					<el-form-item label="会员姓名:">
+					<el-form-item label="会员姓名:" prop="realName">
 						<el-input
-							v-model="form.nickName"
-							prop="nickName"
+							v-model="queryData.realName"
 							size="medium"
 							placeholder="请输入"
 							clearable
@@ -42,7 +39,7 @@
 					</el-form-item>
 					<el-form-item label="账号状态:">
 						<el-select
-							v-model="form.status"
+							v-model="queryData.status"
 							prop="status"
 							size="medium"
 							placeholder="全部"
@@ -56,31 +53,31 @@
 					</el-form-item>
 					<el-form-item label="风控层级:">
 						<el-select
-							v-model="form.riskLevel"
+							v-model="queryData.riskLevel"
 							prop="status"
 							size="medium"
 							placeholder="全部"
 							clearable
 							style="width: 180px"
 						>
-                            <el-option
-                                v-for="item in vipDict"
-                                :key="item.windControlId"
-                                :label="item.windControlName"
-                                :value="item.windControlId"
-                            ></el-option>
+							<el-option
+								v-for="item in vipDict"
+								:key="item.windControlId"
+								:label="item.windControlName"
+								:value="item.windControlId"
+							></el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item label="离线天数:">
 						<el-input
-							v-model="form.SaveMoneyMin"
+							v-model="queryData.SaveMoneyMin"
 							size="medium"
 							placeholder="最小数值"
 							style="width: 100px"
 						></el-input>
 						-
 						<el-input
-							v-model="form.SaveMoneyMax"
+							v-model="queryData.SaveMoneyMax"
 							size="medium"
 							placeholder="最大数值"
 							style="width: 100px"
@@ -88,7 +85,7 @@
 					</el-form-item>
 					<el-form-item label="最后登录时间:" label-width="110px">
 						<el-date-picker
-							v-model="form.lastLoginTime"
+							v-model="queryData.lastLoginTime"
 							prop="lastLoginTime"
 							size="medium"
 							:picker-options="pickerOptions"
@@ -105,14 +102,14 @@
 					</el-form-item>
 					<el-form-item label="VIP等级:">
 						<el-input
-							v-model="form.SaveMoneyMin"
+							v-model="queryData.SaveMoneyMin"
 							size="medium"
 							placeholder="最小数值"
 							style="width: 100px"
 						></el-input>
 						-
 						<el-input
-							v-model="form.SaveMoneyMax"
+							v-model="queryData.SaveMoneyMax"
 							size="medium"
 							placeholder="最大数值"
 							style="width: 100px"
@@ -120,7 +117,7 @@
 					</el-form-item>
 					<el-form-item label="账号类型:">
 						<el-select
-							v-model="form.accountType"
+							v-model="queryData.accountType"
 							size="medium"
 							placeholder="默认选择全部"
 							clearable
@@ -136,7 +133,7 @@
 					</el-form-item>
 					<el-form-item label="注册终端:">
 						<el-select
-							v-model="form.deviceType"
+							v-model="queryData.deviceType"
 							size="medium"
 							placeholder="默认选择全部"
 							clearable
@@ -153,14 +150,14 @@
 					</el-form-item>
 					<el-form-item label="首存金额:">
 						<el-input
-							v-model="form.SaveMoneyMin"
+							v-model="queryData.SaveMoneyMin"
 							size="medium"
 							placeholder="最小数值"
 							style="width: 100px"
 						></el-input>
 						-
 						<el-input
-							v-model="form.SaveMoneyMax"
+							v-model="queryData.SaveMoneyMax"
 							size="medium"
 							placeholder="最大数值"
 							style="width: 100px"
@@ -168,7 +165,7 @@
 					</el-form-item>
 					<el-form-item label="首存时间:" label-width="100px">
 						<el-date-picker
-							v-model="form.firstSaveTime"
+							v-model="queryData.firstSaveTime"
 							size="medium"
 							:picker-options="pickerOptions"
 							format="yyyy-MM-dd HH:mm:ss"
@@ -184,7 +181,7 @@
 					</el-form-item>
 					<el-form-item label="会员标签:">
 						<el-select
-							v-model="form.userLabel"
+							v-model="queryData.userLabel"
 							size="medium"
 							placeholder="全部"
 							clearable
@@ -195,7 +192,7 @@
 					</el-form-item>
 					<el-form-item label="上级代理:">
 						<el-input
-							v-model="form.supAgent"
+							v-model="queryData.supAgent"
 							size="medium"
 							placeholder="请输入"
 							clearable
@@ -326,26 +323,26 @@
 						width="150px"
 						sortable="custom"
 					></el-table-column>
-<!--					<el-table-column align="center" label="操作" width="200px">-->
-<!--						<template slot-scope="scope">-->
-<!--							<el-button-->
-<!--								type="danger"-->
-<!--								icon="el-icon-delete"-->
-<!--								size="medium"-->
-<!--								@click="deleteUp(scope.row)"-->
-<!--							>-->
-<!--								删除-->
-<!--							</el-button>-->
-<!--							<el-button-->
-<!--								type="warning"-->
-<!--								icon="el-icon-edit"-->
-<!--								size="medium"-->
-<!--								@click.stop="editUp(scope.row)"-->
-<!--							>-->
-<!--								修改-->
-<!--							</el-button>-->
-<!--						</template>-->
-<!--					</el-table-column>-->
+					<!--					<el-table-column align="center" label="操作" width="200px">-->
+					<!--						<template slot-scope="scope">-->
+					<!--							<el-button-->
+					<!--								type="danger"-->
+					<!--								icon="el-icon-delete"-->
+					<!--								size="medium"-->
+					<!--								@click="deleteUp(scope.row)"-->
+					<!--							>-->
+					<!--								删除-->
+					<!--							</el-button>-->
+					<!--							<el-button-->
+					<!--								type="warning"-->
+					<!--								icon="el-icon-edit"-->
+					<!--								size="medium"-->
+					<!--								@click.stop="editUp(scope.row)"-->
+					<!--							>-->
+					<!--								修改-->
+					<!--							</el-button>-->
+					<!--						</template>-->
+					<!--					</el-table-column>-->
 				</el-table>
 				<!-- 分页 -->
 				<el-pagination
@@ -393,7 +390,15 @@
 <script>
 import list from '@/mixins/list'
 import editForm from './components/editForm'
+import dayjs from 'dayjs'
 // import { UTable } from 'umy-ui'
+
+const start = dayjs()
+	.startOf('day')
+	.valueOf()
+const end = dayjs()
+	.endOf('day')
+	.valueOf()
 export default {
 	name: 'MemberList',
 	components: {
@@ -402,11 +407,10 @@ export default {
 	mixins: [list],
 	data() {
 		return {
-			queryData: {},
-			form: {
-				registerTime: [],
+			queryData: {
+				registerTime: [start, end],
 				userName: '',
-				nickName: '',
+				realName: '',
 				status: '',
 				riskLevel: '',
 				levelDays: '',
@@ -474,7 +478,7 @@ export default {
 				const {
 					code,
 					data: { windControl },
-                    msg
+					msg
 				} = res
 				if (code === 200) {
 					this.vipDict = windControl || []
