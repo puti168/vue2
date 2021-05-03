@@ -245,7 +245,7 @@
 						<template slot-scope="scope">
 							{{ scope.row.userName ? scope.row.userName : '-' }}
 							<Copy :title="scope.row.modifyBy" :copy="copy" />
-							<p>{{ typeFilter(scope.row.accountType, 'applyType') }}</p>
+							<p>{{ typeFilter(scope.row.accountType, 'accountType') }}</p>
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -444,7 +444,7 @@ export default {
 				spinner: 'el-icon-loading',
 				background: 'rgba(0, 0, 0, 0.7)'
 			})
-			this.$api.lock({ id: val.id }).then((res) => {
+			this.$api.lock({ id: val.id, lockFlag: val.lockStatus === '0' ? 0 : 1}).then((res) => {
 				if (res.code === 200) {
 					loading.close()
 					this.$message({
