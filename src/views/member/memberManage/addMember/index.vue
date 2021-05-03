@@ -26,9 +26,9 @@
 						></el-option>
 					</el-select>
 				</el-form-item>
-				<el-form-item label="会员账号:" prop="userName">
+				<el-form-item label="会员账号:" prop="username">
 					<el-input
-						v-model="form.userName"
+						v-model="form.username"
 						size="medium"
 						placeholder="4-11位，最少2个字母+数字组合，首位字母"
 						clearable
@@ -148,7 +148,7 @@ export default {
 		return {
 			form: {
 				accountType: '4',
-				userName: '',
+				username: '',
 				password: '',
 				registerPhone: '',
 				parentProxyName: '',
@@ -157,8 +157,7 @@ export default {
 				email: '',
 				realName: '',
 				applyInfo: ''
-			},
-			dataList: []
+			}
 		}
 	},
 	computed: {
@@ -176,7 +175,7 @@ export default {
 				accountType: [
 					{ required: true, message: '请选择账号类型', trigger: 'change' }
 				],
-				userName: [
+				username: [
 					{ required: true, message: '请输入会员账号', trigger: 'blur' }
 				],
 				password: [
@@ -194,15 +193,13 @@ export default {
 			}
 			console.log(params)
 			this.$api.addMemberAPI(params).then((res) => {
-				const {
-					code,
-					data: { record, totalRecord },
-					msg
-				} = res
+				const { code, msg } = res
 				if (code === 200) {
 					this.loading = false
-					this.dataList = record || []
-					this.total = totalRecord || 0
+					this.$message({
+						message: '会员资料提交成功',
+						type: 'success'
+					})
 				} else {
 					this.loading = false
 					this.$message({
@@ -216,7 +213,7 @@ export default {
 			this.$refs['form'].resetFields()
 			this.form = {
 				accountType: '',
-				userName: '',
+				username: '',
 				password: '',
 				registerPhone: '',
 				parentProxyName: '',
