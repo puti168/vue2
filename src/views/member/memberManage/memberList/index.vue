@@ -124,12 +124,12 @@
 							clearable
 							style="width: 300px"
 						>
-                            <el-option
-                                v-for="item in accountTypeArr"
-                                :key="item.code"
-                                :label="item.description"
-                                :value="item.code"
-                            ></el-option>
+							<el-option
+								v-for="item in accountTypeArr"
+								:key="item.code"
+								:label="item.description"
+								:value="item.code"
+							></el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item label="注册终端:">
@@ -138,15 +138,15 @@
 							size="medium"
 							placeholder="默认选择全部"
 							clearable
-                            multiple
+							multiple
 							style="width: 300px"
 						>
-                            <el-option
-                                v-for="item in deviceTypeArr"
-                                :key="item.code"
-                                :label="item.description"
-                                :value="item.code"
-                            ></el-option>
+							<el-option
+								v-for="item in deviceTypeArr"
+								:key="item.code"
+								:label="item.description"
+								:value="item.code"
+							></el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item label="首存金额:">
@@ -241,42 +241,42 @@
 					:header-cell-style="getRowClass"
 				>
 					<el-table-column
-						prop="username"
+						prop="userName"
 						align="center"
 						label="会员账号"
 					></el-table-column>
 					<el-table-column
-						prop="nickname"
+						prop="realName"
 						align="center"
 						label="会员姓名"
 					></el-table-column>
 					<el-table-column
-						prop="levelId"
+						prop="parentProxyName"
 						align="center"
 						label="代理上级"
 					></el-table-column>
+					<el-table-column prop="updateDt" align="center" label="账号类型">
+						<template slot-scope="scope">
+							{{ typeFilter(scope.row.accountType, 'accountType') }}
+						</template>
+					</el-table-column>
 					<el-table-column
-						prop="updateDt"
-						align="center"
-						label="账号类型"
-					></el-table-column>
-					<el-table-column
-						prop="titleId"
+						prop="labelName"
 						align="center"
 						label="会员标签"
 					></el-table-column>
 					<el-table-column
-						prop="updateDt"
+						prop="windControlName"
 						align="center"
 						label="风控层级"
 					></el-table-column>
+					<el-table-column prop="status" align="center" label="账号状态">
+						<template slot-scope="scope">
+							{{ typeFilter(scope.row.accountStatus, 'accountStatusType') }}
+						</template>
+					</el-table-column>
 					<el-table-column
-						prop="status"
-						align="center"
-						label="账号状态"
-					></el-table-column>
-					<el-table-column
-						prop="updateDt"
+						prop="vipSerialNum"
 						align="center"
 						label="VIP等级"
 						width="100px"
@@ -290,14 +290,14 @@
 						sortable="custom"
 					></el-table-column>
 					<el-table-column
-						prop="updateDt"
+						prop="firstDepositTime"
 						align="center"
 						width="150px"
 						label="首存时间"
 						sortable="custom"
 					></el-table-column>
 					<el-table-column
-						prop="updateDt"
+						prop="firstDepositAmount	"
 						align="center"
 						label="首存金额"
 						sortable="custom"
@@ -311,14 +311,14 @@
 						sortable="custom"
 					></el-table-column>
 					<el-table-column
-						prop="updateDt"
+						prop="lastLoginTime"
 						align="center"
 						label="最后登录时间"
 						width="150px"
 						sortable="custom"
 					></el-table-column>
 					<el-table-column
-						prop="updateDt"
+						prop="offLineDays"
 						align="center"
 						label="离线天数"
 						width="150px"
@@ -410,9 +410,9 @@ export default {
 				levelDays: '',
 				lastLoginTime: '',
 				vipRank: '',
-                accountType: '',
+				accountType: '',
 				userLabel: '',
-                deviceType: '',
+				deviceType: '',
 				supAgent: '',
 				lastBetTime: '',
 				firstSaveTime: '',
@@ -429,13 +429,13 @@ export default {
 		}
 	},
 	computed: {
-        accountTypeArr() {
-            return this.globalDics.accountType
-        },
-        deviceTypeArr() {
-            return this.globalDics.deviceType
-        }
-    },
+		accountTypeArr() {
+			return this.globalDics.accountType
+		},
+		deviceTypeArr() {
+			return this.globalDics.deviceType
+		}
+	},
 	created() {
 		// this.loadData()
 	},
@@ -528,31 +528,31 @@ export default {
 				windControlId: 0,
 				windControlName: 'string'
 			}
-            this.$api.exportExcelAPI(params).then((res) => {
-                const result = res.data
-                const disposition = res.headers['content-disposition']
-                const fileNames = disposition.split("''")
-                let fileName = fileNames[1]
-                fileName = decodeURIComponent(fileName)
-                const blob = new Blob([result], { type: 'application/octet-stream' })
-                if ('download' in document.createElement('a')) {
-                    const elink = document.createElement('a')
-                    elink.download = fileName || ''
-                    elink.style.display = 'none'
-                    elink.href = URL.createObjectURL(blob)
-                    document.body.appendChild(elink)
-                    elink.click()
-                    URL.revokeObjectURL(elink.href)
-                    document.body.removeChild(elink)
-                } else {
-                    window.navigator.msSaveBlob(blob, fileName)
-                }
-                this.$message({
-                    type: 'success',
-                    message: '导出成功',
-                    duration: 1500
-                })
-            })
+			this.$api.exportExcelAPI(params).then((res) => {
+				const result = res.data
+				const disposition = res.headers['content-disposition']
+				const fileNames = disposition.split("''")
+				let fileName = fileNames[1]
+				fileName = decodeURIComponent(fileName)
+				const blob = new Blob([result], { type: 'application/octet-stream' })
+				if ('download' in document.createElement('a')) {
+					const elink = document.createElement('a')
+					elink.download = fileName || ''
+					elink.style.display = 'none'
+					elink.href = URL.createObjectURL(blob)
+					document.body.appendChild(elink)
+					elink.click()
+					URL.revokeObjectURL(elink.href)
+					document.body.removeChild(elink)
+				} else {
+					window.navigator.msSaveBlob(blob, fileName)
+				}
+				this.$message({
+					type: 'success',
+					message: '导出成功',
+					duration: 1500
+				})
+			})
 		},
 
 		submitAdd() {
