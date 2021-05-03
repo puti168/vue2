@@ -138,6 +138,7 @@
 					:data="dataList"
 					style="width: 100%"
 					:header-cell-style="getRowClass"
+                    @sort-change="changeTableSort"
 				>
 					<el-table-column
 						prop="createDt"
