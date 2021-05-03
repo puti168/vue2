@@ -2,7 +2,15 @@ import request from '@/utils/request'
 // 会员详情-基本信息-概要信息以及个人资料
 export function getOutlineInfo(params) {
 	return request({
-		url: `/member/outlineInfo`,
+		url: '/member/outlineInfo',
+		method: 'get',
+		params
+	})
+}
+// 风控层级，会员标签
+export function getMerchantDict(params) {
+	return request({
+		url: '/member/merchantDict',
 		method: 'get',
 		params
 	})
@@ -48,11 +56,11 @@ export function getWithdrawalFreeze(data) {
 	})
 }
 // 一键查询所有场馆余额
-export function getOneKeyBalance(params) {
+export function getOneKeyBalance(data) {
 	return request({
 		url: '/member/oneKeyBalance',
-		method: 'get',
-		params
+		method: 'post',
+		data
 	})
 }
 // 一键下分
@@ -64,11 +72,11 @@ export function getOneKeyWithdraw(params) {
 	})
 }
 // 提现流水查询
-export function getWithdrawWater(params) {
+export function getWithdrawWater(data) {
 	return request({
-		url: `/withdrawalFreeze/withdrawWater`,
-		method: 'get',
-		params
+		url: '/withdrawalFreeze/withdrawWater',
+		method: 'post',
+		data
 	})
 }
 // 添加会员备注
@@ -83,6 +91,14 @@ export function getMemberRemarkAdd(data) {
 export function getPlayerOrderSumInfo(data) {
 	return request({
 		url: '/player/playerOrderSumInfo',
+		method: 'post',
+		data
+	})
+}
+// 会员投注信息查询
+export function getPlayerBetHistorySum(data) {
+	return request({
+		url: '/player/playerBetHistorySum',
 		method: 'post',
 		data
 	})
@@ -113,6 +129,7 @@ export function getBankCardBank(data) {
 }
 export default {
 	getOutlineInfo,
+	getMerchantDict,
 	setMemberInfoEdit,
 	getVipInfo,
 	getMemberRemarkList,
@@ -123,6 +140,7 @@ export default {
 	getWithdrawWater,
 	getMemberRemarkAdd,
 	getPlayerOrderSumInfo,
+	getPlayerBetHistorySum,
 	getPlayerTop3,
 	getLogMemberLoginLog,
 	getBankCardBank

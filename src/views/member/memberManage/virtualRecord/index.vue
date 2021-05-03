@@ -74,8 +74,8 @@
 				</el-form-item>
 				<el-form-item label="账号类型:">
 					<el-select
-						v-model="accountType1"
-						style="width: 180px"
+						v-model="queryData.accountType"
+						style="width: 300px"
 						multiple
 						placeholder="默认选择全部"
 						:popper-append-to-body="false"
@@ -246,7 +246,7 @@ export default {
 			params = {
 				...this.getParams(params)
 			}
-			params.accountType = this.accountType1.join(',')
+			// params.accountType = this.accountType1.join(',')
 			this.$api.bankRecordListAPI(params).then((res) => {
 				if (res.code === 200) {
 					const response = res.data
@@ -264,7 +264,7 @@ export default {
 		},
 		reset() {
 			this.queryData = {
-				accountType: '',
+				accountType: [],
 				bankName: '',
 				dataType: 2,
 				operateType: '',

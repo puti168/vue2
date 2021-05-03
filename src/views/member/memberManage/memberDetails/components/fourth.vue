@@ -4,7 +4,12 @@
     <el-row>
       <el-col :span="4" class="backgroundTitelBox">银行卡/虚拟币账号信息</el-col>
       <el-col :span="2" class="refrestBox">
-        <el-button type="primary" icon="el-icon-refresh" @click="refresh">刷新</el-button>
+        <el-button
+          type="primary"
+          icon="el-icon-refresh"
+          :disabled="queryData.userId === ''"
+          @click="refresh"
+          >刷新</el-button>
       </el-col>
     </el-row>
     <div class="titelBox">银行卡</div>
@@ -84,7 +89,7 @@ import list from '@/mixins/list'
 // import dayjs from 'dayjs'
 export default {
   mixins: [list],
-  props: { userid: { type: Number, default: null } },
+  props: { queryData: { type: Object, default: () => ({}) } },
   data() {
     return {
       dataList: []
