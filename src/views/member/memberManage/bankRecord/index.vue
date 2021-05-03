@@ -11,9 +11,12 @@
 							clearable
 							style="width: 150px"
 						>
-							<el-option label="全部" value></el-option>
-							<el-option label="绑定" value="1"></el-option>
-							<el-option label="解绑" value="2"></el-option>
+                            <el-option
+                                v-for="item in bindType"
+                                :key="item.code"
+                                :label="item.description"
+                                :value="item.code"
+                            ></el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item label="操作时间:">
@@ -224,7 +227,11 @@ export default {
 			total: 0
 		}
 	},
-	computed: {},
+	computed: {
+        bindType() {
+            return [{description: '全部', code: undefined}, ...this.globalDics.bindType]
+        }
+    },
 	mounted() {},
 	methods: {
 		loadData() {
