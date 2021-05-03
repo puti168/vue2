@@ -146,8 +146,14 @@
 					<el-table-column
 						prop="bankName"
 						align="center"
-						label="银行名称银行支行"
-					></el-table-column>
+						label="银行名称"
+					>
+                        <template slot="header">
+                            银行名称
+                            <br />
+                            银行支行
+                        </template>
+                    </el-table-column>
 					<el-table-column
 						v-slot="scope"
 						prop="cnName"
