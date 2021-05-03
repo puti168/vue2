@@ -3,10 +3,13 @@
 		<div class="review-content">
 			<div class="head">
 				<span class="title">会员账户修改审核详情</span>
-				<div class="right-btn">
+				<div v-if="type" class="right-btn">
 					<el-button plain @click="goBack">取消</el-button>
 					<el-button type="success" @click="auditOne(true)">一审通过</el-button>
 					<el-button type="danger" @click="auditOne(false)">一审拒绝</el-button>
+				</div>
+				<div v-else class="right-btn">
+					<el-button plain @click="goBack">返回</el-button>
 				</div>
 			</div>
 			<div class="main-content">
@@ -86,7 +89,7 @@
 <script>
 // import dayjs from 'dayjs'
 export default {
-	name: '',
+	name: 'MemberChangeReview',
 	components: {},
 	mixins: [],
 	data() {
@@ -94,23 +97,56 @@ export default {
 			accountInfo: '',
 			auditInfo: '',
 			applyInfo: '',
-			registerInfo: ''
+			registerInfo: '',
+			// 审核 true 仅返回 false
+			type: true
 		}
 	},
 	computed: {},
 	created() {
 		this.getInfo()
+		this.type = this.$route.query.type
 	},
-	mounted() {},
+	mounted() {
+		console.log(this.$route.query)
+	},
 	methods: {
-		auditOne(type) {},
+		auditOne(type) {
+			const loading = this.$loading({
+						lock: true,
+						text: 'Loading',
+						spinner: 'el-icon-loading',
+						background: 'rgba(0, 0, 0, 0.7)'
+					})
+					const params = {
+						id: this.$route.query.id,
+						userId: this.$route.query.userId,
+						auditStatus: type ? 2 : 3
+					}
+			this.$api.audit(params).then((res) => {
+				if (res.code === 200) {
+					this.$message({
+									type: 'success',
+									message: '操作成功!'
+								})
+					this.$router.replace('memberChange')
+					loading.close()
+				} else {
+					loading.close()
+					this.$message({
+						message: res.msg,
+						type: 'error'
+					})
+				}
+			})
+		},
 		goBack() {
 			this.$router.push('memberChange')
 		},
 		getInfo() {
 			const params = {
-				userId: '595725605967273984',
-				recordId: '595743559097831424'
+				userId: this.$route.query.userId,
+				recordId: this.$route.query.id
 			}
 			this.$api.recordInfo(params).then((res) => {
 				if (res.code === 200) {
