@@ -389,7 +389,7 @@ export default {
 				auditTimeStart: startTime2
 					? dayjs(startTime2).format('YYYY-MM-DD HH:mm:ss')
 					: '',
-				auditTimeEnd: endTime
+				auditTimeEnd: endTime2
 					? dayjs(endTime2).format('YYYY-MM-DD HH:mm:ss')
 					: ''
 			}
