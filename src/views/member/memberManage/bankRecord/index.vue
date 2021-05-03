@@ -243,8 +243,8 @@ export default {
 			let params = {
 				...this.form,
 				dataType: 1,
-				createDtStart: dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') || '',
-				createDtEnd: dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') || ''
+				createDtStart: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : undefined,
+				createDtEnd: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : undefined
 			}
             params = {
                 ...this.getParams(params)

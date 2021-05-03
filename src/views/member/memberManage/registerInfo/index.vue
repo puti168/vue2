@@ -140,18 +140,22 @@
 					:header-cell-style="getRowClass"
 				>
 					<el-table-column
-						prop="registerDt"
+						prop="createDt"
 						align="center"
 						label="注册时间"
 						sortable="custom"
 					></el-table-column>
 					<el-table-column
-						prop="userType"
+						prop="accountType"
 						align="center"
 						label="会员类型"
-					></el-table-column>
+					>
+                        <template slot-scope="scope">
+                            {{ typeFilter(scope.row.accountType, 'accountType') }}
+                        </template>
+                    </el-table-column>
 					<el-table-column
-						prop="username"
+						prop="userName"
 						align="center"
 						label="会员账号"
 					></el-table-column>
@@ -248,8 +252,8 @@ export default {
 			const [startTime, endTime] = create
 			let params = {
 				...this.form,
-				createDtStart: dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') || '',
-				createDtEnd: dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') || ''
+				createDtStart: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : undefined,
+				createDtEnd: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : undefined
 			}
             params = {
                 ...this.getParams(params)
