@@ -381,6 +381,7 @@ export default {
 			params = {
 				...this.getParams(params)
 			}
+			console.log(params)
 			this.$api.memberChange(params).then((res) => {
 				if (res.code === 200) {
 					this.now = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
