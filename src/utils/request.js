@@ -93,7 +93,6 @@ service.interceptors.response.use(
 			response.data = JSON.parse(decryptData)
 		}
 		const res = response.data
-		console.log('request===>', res)
 		if (res.code !== 200) {
 			if (res.code === 10025) {
 				const username = localStorage.getItem('username')
