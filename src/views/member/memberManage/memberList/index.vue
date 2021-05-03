@@ -194,7 +194,12 @@
 							clearable
 							style="width: 180px"
 						>
-							<el-option label="全部" value></el-option>
+                            <el-option
+                                v-for="item in userLabel"
+                                :key="item.labelId"
+                                :label="item.labelName"
+                                :value="item.labelId"
+                            ></el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item label="上级代理:">
