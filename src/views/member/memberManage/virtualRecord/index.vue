@@ -246,7 +246,7 @@ export default {
 			params = {
 				...this.getParams(params)
 			}
-			params.accountType = this.accountType1.join(',')
+			// params.accountType = this.accountType1.join(',')
 			this.$api.bankRecordListAPI(params).then((res) => {
 				if (res.code === 200) {
 					const response = res.data
