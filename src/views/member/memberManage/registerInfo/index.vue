@@ -150,47 +150,86 @@
 						align="center"
 						label="注册时间"
 						sortable="custom"
-					></el-table-column>
-					<el-table-column prop="accountType" align="center" label="会员类型">
+					>
 						<template slot-scope="scope">
-							{{ typeFilter(scope.row.accountType, 'accountType') }}
+							<span v-if="!!scope.row.createDt">
+								{{ scope.row.createDt }}
+							</span>
+							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column
-						prop="userName"
-						align="center"
-						label="会员账号"
-					></el-table-column>
+					<el-table-column prop="accountType" align="center" label="会员类型">
+						<template slot-scope="scope">
+							<span v-if="!!scope.row.accountType">
+								{{ typeFilter(scope.row.accountType, 'accountType') }}
+							</span>
+							<span>-</span>
+						</template>
+					</el-table-column>
+					<el-table-column prop="userName" align="center" label="会员账号">
+						<template slot-scope="scope">
+							<span v-if="!!scope.row.parentProxyName">
+								{{ scope.row.parentProxyName }}
+							</span>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="parentProxyName"
 						align="center"
 						label="上级代理"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							<span v-if="!!scope.row.parentProxyName">
+								{{ scope.row.parentProxyName }}
+							</span>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
 					<el-table-column
-						prop="phone"
+						prop="registerPhone"
 						align="center"
 						label="注册手机号"
-					></el-table-column>
-					<el-table-column
-						prop="IP"
-						align="center"
-						label="注册IP"
-					></el-table-column>
-					<el-table-column
-						prop="ipAttribution"
-						align="center"
-						label="IP归属地"
-					></el-table-column>
-					<el-table-column
-						prop="deviceType"
-						align="center"
-						label="注册终端"
-					></el-table-column>
-					<el-table-column
-						prop="terminal"
-						align="center"
-						label="终端设备号"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							<span v-if="!!scope.row.registerPhone">
+								{{ scope.row.registerPhone }}
+							</span>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
+					<el-table-column prop="registerIp" align="center" label="注册IP">
+						<template slot-scope="scope">
+							<span v-if="!!scope.row.registerIp">
+								{{ scope.row.registerIp }}
+							</span>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
+					<el-table-column prop="ipAttribution" align="center" label="IP归属地">
+						<template slot-scope="scope">
+							<span v-if="!!scope.row.ipAttribution">
+								{{ scope.row.ipAttribution }}
+							</span>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
+					<el-table-column prop="deviceType" align="center" label="注册终端">
+						<template slot-scope="scope">
+							<span v-if="!!scope.row.deviceType">
+								{{ scope.row.deviceType }}
+							</span>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
+					<el-table-column prop="deviceNo" align="center" label="终端设备号">
+						<template slot-scope="scope">
+							<span v-if="!!scope.row.deviceNo">
+								{{ scope.row.deviceNo }}
+							</span>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
 				</el-table>
 				<!-- 分页 -->
 				<el-pagination
@@ -298,7 +337,7 @@ export default {
 				deviceType: undefined,
 				realname: ''
 			}
-            this.loadData()
+			this.loadData()
 		}
 	}
 }
