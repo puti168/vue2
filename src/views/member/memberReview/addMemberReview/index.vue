@@ -133,7 +133,7 @@ export default {
 				remark: this.remark,
 				auditStatus: this.action ? 2 : 3
 			}
-			this.$api.audit(params).then((res) => {
+			this.$api.updateMemberAuditRecord(params).then((res) => {
 				if (res.code === 200) {
 					this.$message({
 						type: 'success',

@@ -116,7 +116,7 @@ const actions = {
 						if (index > -1) {
 							parentRoutes[index].children[index2].children.push({
 								path: element.path,
-								name: element.permissionName,
+								name: element.name ? element.name : element.permissionName,
 								children: [],
 								component: (resolve) =>
 									require(['@/views' + element.path + '/index'], resolve),
@@ -174,8 +174,6 @@ const actions = {
 					})
 				}
 			}
-			console.log('parentRoutes')
-			console.log(parentRoutes)
 			// 前端写死路由
 			parentRoutes.forEach(item => {
 				if (item.name === '会员') {
