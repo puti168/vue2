@@ -84,6 +84,7 @@
 							placeholder="最小数值"
 							style="width: 100px"
 							maxlength="5"
+                            @blur="checkValue()"
 						></el-input>
 						-
 						<el-input
@@ -92,6 +93,7 @@
 							placeholder="最大数值"
 							style="width: 100px"
 							maxlength="5"
+                            @blur="checkValue()"
 						></el-input>
 					</el-form-item>
 					<el-form-item label="最后登录时间:" label-width="110px">
@@ -118,6 +120,7 @@
 							placeholder="最小数值"
 							style="width: 100px"
 							maxlength="3"
+                            @blur="checkValue()"
 						></el-input>
 						-
 						<el-input
@@ -126,6 +129,7 @@
 							placeholder="最大数值"
 							style="width: 100px"
 							maxlength="3"
+                            @blur="checkValue()"
 						></el-input>
 					</el-form-item>
 					<el-form-item label="账号类型:">
@@ -169,6 +173,7 @@
 							placeholder="最小数值"
 							style="width: 100px"
 							maxlength="10"
+                            @blur="checkValue()"
 						></el-input>
 						-
 						<el-input
@@ -177,6 +182,7 @@
 							placeholder="最大数值"
 							style="width: 100px"
 							maxlength="10"
+                            @blur="checkValue()"
 						></el-input>
 					</el-form-item>
 					<el-form-item label="首存时间:" label-width="100px">
@@ -485,15 +491,15 @@ export default {
 				registerTime: [start, end],
 				userName: undefined,
 				realName: undefined,
-				accountStatus: undefined,
+				accountStatus: [],
 				windControlId: undefined,
 				offLineDaysStart: undefined,
 				offLineDaysEnd: undefined,
 				lastLoginTime: [start, end],
 				vipSerialNumMax: undefined,
 				vipSerialNumMin: undefined,
-				accountType: undefined,
-				deviceType: undefined,
+				accountType: [],
+				deviceType: [],
 				firstDepositAmountMin: undefined,
 				firstDepositAmountMax: undefined,
 				firstSaveTime: [],
@@ -544,18 +550,18 @@ export default {
 			delete params.registerTime
 			delete params.lastLoginTime
 			delete params.firstSaveTime
-			params.accountStatus =
-				params.accountStatus && params.accountStatus.length
-					? JSON.stringify(params.accountStatus)
-					: undefined
-			params.deviceType =
-				params.deviceType && params.deviceType.length
-					? JSON.stringify(params.deviceType)
-					: undefined
-			params.accountType =
-				params.accountType && params.accountType.length
-					? JSON.stringify(params.accountType)
-					: undefined
+			// params.accountStatus =
+			// 	params.accountStatus && params.accountStatus.length
+			// 		? params.accountStatus
+			// 		: undefined
+			// params.deviceType =
+			// 	params.deviceType && params.deviceType.length
+			// 		? params.deviceType
+			// 		: undefined
+			// params.accountType =
+			// 	params.accountType && params.accountType.length
+			// 		? params.accountType
+			// 		: undefined
 			this.$api
 				.memberListAPI(params)
 				.then((res) => {
@@ -655,6 +661,8 @@ export default {
 			}
 			this.loadData()
 		},
+
+        checkValue(e) {},
 		exportExcel() {
 			const create = this.queryData.registerTime || []
 			const [startTime, endTime] = create
