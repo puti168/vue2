@@ -274,7 +274,7 @@
 						align="center"
 						label="申请信息"
 					></el-table-column>
-					<el-table-column align="center" label="审核状态" width="80">
+					<el-table-column align="center" label="审核状态" width="100">
 						<template slot-scope="scope">
 							<span
 								:class="

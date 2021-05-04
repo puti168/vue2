@@ -85,15 +85,16 @@
 			center
 			:visible.sync="visible"
 			:before-close="closeFormDialog"
-			width="410px"
+			width="610px"
 		>
-			<el-form ref="form" label-width="80px">
+			<el-form ref="form" label-width="100px">
 				<el-form-item label="提交审核信息">
 					<el-input
 						v-model="auditRemark"
 						clearable
+						type="textarea"
 						:max="50"
-						size="medium"
+						:autosize="{ minRows: 4, maxRows: 4 }"
 						style="width: 280px"
 						placeholder="请输入"
 					></el-input>
@@ -140,6 +141,7 @@ export default {
 	methods: {
 		closeFormDialog() {},
 		confirm(action) {
+			this.visible = true
 			this.auditRemark = ''
 			this.action = action
 		},

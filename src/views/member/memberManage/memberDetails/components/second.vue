@@ -37,7 +37,7 @@ type="text"
 class="blueColor"
 @click="balanceAll"
 >点击查看全部场馆金额分布</el-button>
-        <el-row v-show="!borderL" class="" :class="{ borderL: !borderL }">
+        <el-row v-show="!borderL" :class="{ borderL: !borderL }">
           <el-col v-for="item in balanceAllList" :key="item.gameCode" :span="8">
             <span class="width70 paddingL">
               {{ item.gameName }}：({{ item.playName }})
@@ -45,7 +45,13 @@ class="blueColor"
             <span class="blueColor width30 textR">{{ item.balance }}</span>
           </el-col>
           <el-col v-show="balanceAllList.length > 0" :span="16">
-            <div class="blueColor textR decoration" @click="recycle">一键回收</div>
+            <div
+              class="blueColor textR decoration"
+              style="width: 80px; float: right"
+              @click="recycle"
+            >
+              一键回收
+            </div>
           </el-col>
         </el-row>
       </el-col>
