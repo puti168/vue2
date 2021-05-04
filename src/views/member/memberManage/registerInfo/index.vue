@@ -22,6 +22,7 @@
 							clearable
 							value-format="timestamp"
 							style="width: 388px"
+                            :default-time="defaultTime"
 						></el-date-picker>
 					</el-form-item>
 					<el-form-item label="账号类型:">

@@ -38,6 +38,7 @@
 							clearable
 							value-format="timestamp"
 							style="width: 388px"
+                            :default-time="defaultTime"
 						></el-date-picker>
 					</el-form-item>
 					<el-form-item label="会员账号:" prop="userName">
