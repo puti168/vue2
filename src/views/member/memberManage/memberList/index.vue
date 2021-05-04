@@ -251,7 +251,12 @@
 					style="width: 100%"
 					:header-cell-style="getRowClass"
 				>
-					<el-table-column prop="userName" align="center" label="会员账号">
+					<el-table-column
+						prop="userName"
+						align="center"
+						label="会员账号"
+						width="150px"
+					>
 						<template slot-scope="scope">
 							<span v-if="!!scope.row.userName">
 								{{ scope.row.userName }}
@@ -259,7 +264,12 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="realName" align="center" label="会员姓名">
+					<el-table-column
+						prop="realName"
+						align="center"
+						label="会员姓名"
+						width="150px"
+					>
 						<template slot-scope="scope">
 							<span v-if="!!scope.row.realName">
 								{{ scope.row.realName }}
@@ -271,6 +281,7 @@
 						prop="parentProxyName"
 						align="center"
 						label="代理上级"
+						width="150px"
 					>
 						<template slot-scope="scope">
 							<span v-if="!!scope.row.parentProxyName">
@@ -323,12 +334,21 @@
 						label="VIP等级"
 						width="100px"
 						sortable="custom"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							<span
+								v-if="!!scope.row.vipSerialNum || scope.row.vipSerialNum === 0"
+							>
+								{{ scope.row.vipSerialNum }}
+							</span>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="createDt"
 						align="center"
 						label="注册时间"
-						width="150px"
+						width="180px"
 						sortable="custom"
 					>
 						<template slot-scope="scope">
@@ -341,38 +361,82 @@
 					<el-table-column
 						prop="firstDepositTime"
 						align="center"
-						width="150px"
+						width="180px"
 						label="首存时间"
 						sortable="custom"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							<span v-if="!!scope.row.firstDepositTime">
+								{{ scope.row.firstDepositTime }}
+							</span>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="firstDepositAmount	"
 						align="center"
 						label="首存金额"
 						sortable="custom"
 						width="100px"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							<span
+								v-if="
+									!!scope.row.firstDepositAmount ||
+										scope.row.firstDepositAmount === 0
+								"
+							>
+								{{ scope.row.firstDepositAmount }}
+							</span>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
 					<el-table-column
-						prop="updateDt"
+						prop="userBalance"
 						align="center"
 						label="中心钱包"
 						width="100px"
 						sortable="custom"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							<span
+								v-if="!!scope.row.userBalance || scope.row.userBalance === 0"
+							>
+								{{ scope.row.userBalance }}
+							</span>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="lastLoginTime"
 						align="center"
 						label="最后登录时间"
-						width="150px"
+						width="180px"
 						sortable="custom"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							<span v-if="!!scope.row.lastLoginTime">
+								{{ scope.row.lastLoginTime }}
+							</span>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="offLineDays"
 						align="center"
 						label="离线天数"
 						width="150px"
 						sortable="custom"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							<span
+								v-if="!!scope.row.offLineDays || scope.row.offLineDays === 0"
+							>
+								{{ scope.row.offLineDays }}
+							</span>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
 					<!--					<el-table-column align="center" label="操作" width="200px">-->
 					<!--						<template slot-scope="scope">-->
 					<!--							<el-button-->
