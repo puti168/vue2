@@ -84,7 +84,8 @@
 							placeholder="最小数值"
 							style="width: 100px"
 							maxlength="5"
-                            @blur="checkValue()"
+							name="offLineDaysStart"
+							@blur="checkValue($event)"
 						></el-input>
 						-
 						<el-input
@@ -93,7 +94,8 @@
 							placeholder="最大数值"
 							style="width: 100px"
 							maxlength="5"
-                            @blur="checkValue()"
+							name="offLineDaysEnd"
+							@blur="checkValue($event)"
 						></el-input>
 					</el-form-item>
 					<el-form-item label="最后登录时间:" label-width="110px">
@@ -120,7 +122,8 @@
 							placeholder="最小数值"
 							style="width: 100px"
 							maxlength="3"
-                            @blur="checkValue()"
+							name="vipSerialNumMin"
+							@blur="checkValue($event)"
 						></el-input>
 						-
 						<el-input
@@ -129,7 +132,8 @@
 							placeholder="最大数值"
 							style="width: 100px"
 							maxlength="3"
-                            @blur="checkValue()"
+							name="vipSerialNumMax"
+							@blur="checkValue($event)"
 						></el-input>
 					</el-form-item>
 					<el-form-item label="账号类型:">
@@ -173,7 +177,8 @@
 							placeholder="最小数值"
 							style="width: 100px"
 							maxlength="10"
-                            @blur="checkValue()"
+							name="firstDepositAmountMin"
+							@blur="checkValue($event)"
 						></el-input>
 						-
 						<el-input
@@ -182,7 +187,8 @@
 							placeholder="最大数值"
 							style="width: 100px"
 							maxlength="10"
-                            @blur="checkValue()"
+							name="firstDepositAmountMax"
+							@blur="checkValue($event)"
 						></el-input>
 					</el-form-item>
 					<el-form-item label="首存时间:" label-width="100px">
@@ -662,7 +668,77 @@ export default {
 			this.loadData()
 		},
 
-        checkValue(e) {},
+		checkValue(e) {
+			const { name, value } = e.target
+			switch (name) {
+				case 'offLineDaysStart':
+					if (
+						!!this.queryData.offLineDaysEnd &&
+						(value && value * 1 >= this.queryData.offLineDaysEnd * 1)
+					) {
+						this.$message({
+							type: 'warning',
+							message: `请输入小于${this.queryData.offLineDaysEnd}天数`
+						})
+					}
+					break
+				case 'offLineDaysEnd':
+					if (
+						!!this.queryData.offLineDaysStart &&
+						(value && value * 1 <= this.queryData.offLineDaysStart * 1)
+					) {
+						this.$message({
+							type: 'warning',
+							message: `请输入大于${this.queryData.offLineDaysStart}天数`
+						})
+					}
+					break
+				case 'vipSerialNumMin':
+					if (
+						!!this.queryData.vipSerialNumMax &&
+						(value && value * 1 >= this.queryData.vipSerialNumMax * 1)
+					) {
+						this.$message({
+							type: 'warning',
+							message: `请输入小于${this.queryData.vipSerialNumMax}等级`
+						})
+					}
+					break
+				case 'vipSerialNumMax':
+					if (
+						!!this.queryData.vipSerialNumMin &&
+						(value && value * 1 <= this.queryData.vipSerialNumMin * 1)
+					) {
+						this.$message({
+							type: 'warning',
+							message: `请输入大于${this.queryData.vipSerialNumMin}等级`
+						})
+					}
+					break
+				case 'firstDepositAmountMin':
+					if (
+						!!this.queryData.firstDepositAmountMax &&
+						(value && value * 1 >= this.queryData.firstDepositAmountMax * 1)
+					) {
+						this.$message({
+							type: 'warning',
+							message: `请输入小于${this.queryData.firstDepositAmountMax}金额`
+						})
+					}
+					break
+				case 'firstDepositAmountMax':
+					if (
+						!!this.queryData.firstDepositAmountMin &&
+						(value && value * 1 <= this.queryData.firstDepositAmountMin * 1)
+					) {
+						this.$message({
+							type: 'warning',
+							message: `请输入大于${this.queryData.firstDepositAmountMin}金额`
+						})
+					}
+					break
+			}
+		},
 		exportExcel() {
 			const create = this.queryData.registerTime || []
 			const [startTime, endTime] = create
