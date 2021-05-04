@@ -231,6 +231,7 @@
 <script>
 import list from '@/mixins/list'
 import dayjs from 'dayjs'
+import { routerNames } from '@/utils/consts'
 const end = dayjs()
 	.endOf('day')
 	.valueOf()
@@ -238,7 +239,7 @@ const start = dayjs()
 	.startOf('day')
 	.valueOf()
 export default {
-	name: '',
+	name: routerNames.memberLogin,
 	components: {},
 	mixins: [list],
 	data() {

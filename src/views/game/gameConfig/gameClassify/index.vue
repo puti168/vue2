@@ -162,6 +162,7 @@
 
 <script>
 import list from '@/mixins/list'
+import { routerNames } from '@/utils/consts'
 import editForm from './components/editForm'
 // import {
 //   getQueryBank,
@@ -170,7 +171,7 @@ import editForm from './components/editForm'
 //   setEidteBank,
 // } from "@/api/bankController";
 export default {
-  name: '',
+  name: routerNames.memberChange,
   components: {
     editForm
   },

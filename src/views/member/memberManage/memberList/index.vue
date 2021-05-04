@@ -469,7 +469,7 @@
 import list from '@/mixins/list'
 import dayjs from 'dayjs'
 // import { UTable } from 'umy-ui'
-
+import { routerNames } from '@/utils/consts'
 const start = dayjs()
 	.startOf('day')
 	.valueOf()
@@ -477,7 +477,7 @@ const end = dayjs()
 	.endOf('day')
 	.valueOf()
 export default {
-	name: 'MemberList',
+	name: routerNames.memberList,
 	mixins: [list],
 	data() {
 		return {

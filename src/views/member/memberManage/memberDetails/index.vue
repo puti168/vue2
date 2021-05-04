@@ -88,9 +88,10 @@ import list from '@/mixins/list'
 import first from './components/first'
 import second from './components/second'
 import third from './components/third'
+import { routerNames } from '@/utils/consts'
 import fourth from './components/fourth'
 export default {
-  name: 'IFloor',
+  name: routerNames.memberDetails,
   components: { first, second, third, fourth },
   mixins: [list],
   data() {

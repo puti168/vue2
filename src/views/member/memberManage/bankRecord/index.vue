@@ -202,6 +202,7 @@
 <script>
 import list from '@/mixins/list'
 import dayjs from 'dayjs'
+import { routerNames } from '@/utils/consts'
 // import { notSpecial2, isHaveEmoji } from '@/utils/validate'
 const start = dayjs()
 	.startOf('day')
@@ -211,7 +212,7 @@ const end = dayjs()
 	.valueOf()
 // import { UTable } from 'umy-ui'
 export default {
-	name: 'BankRecord',
+	name: routerNames.bankRecord,
 	mixins: [list],
 	data() {
 		return {

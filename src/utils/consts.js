@@ -2,7 +2,17 @@ import dayjs from 'dayjs'
 
 // 路由的名称  一定要和 组件的name对应，缓存才起作用
 export const routerNames = {
-	MemberChange: 'MemberChange'
+	memberChange: 'memberChange',
+	addMember: 'addMember',
+	bankRecord: 'bankRecord',
+	memberDetails: 'memberDetails',
+	memberList: 'memberList',
+	memberLogin: 'memberLogin',
+	registerInfo: 'registerInfo',
+	virtualRecord: 'virtualRecord',
+	gameClassify: 'gameClassify',
+	gamePlatform: 'gamePlatform',
+	addMemberCheck: 'addMemberCheck'
 }
 const month = dayjs().month()
 const year = dayjs().year()

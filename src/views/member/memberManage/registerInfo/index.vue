@@ -255,6 +255,7 @@
 
 <script>
 import list from '@/mixins/list'
+import { routerNames } from '@/utils/consts'
 import dayjs from 'dayjs'
 const start = dayjs()
 	.startOf('day')
@@ -265,7 +266,7 @@ const end = dayjs()
 // import editForm from './components/editForm'
 // import { UTable } from 'umy-ui'
 export default {
-	name: 'RegisterInfo',
+	name: routerNames.registerInfo,
 	mixins: [list],
 	data() {
 		return {

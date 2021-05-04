@@ -144,13 +144,14 @@
 </template>
 
 <script>
+import { routerNames } from '@/utils/consts'
 import list from '@/mixins/list'
 import {
 	notSpecial2,
 	isHaveEmoji
 } from '@/utils/validate'
 export default {
-	name: 'AddMember',
+	name: routerNames.addMember,
 	mixins: [list],
 	data() {
 		return {
