@@ -51,7 +51,7 @@
 
 				<el-form-item label="锁单状态:">
 					<el-select
-						v-model="queryData.lockOrder"
+						v-model="queryData.lockStatus"
 						style="width: 180px"
 						:popper-append-to-body="false"
 					>
@@ -60,13 +60,13 @@
 							v-for="item in lockOrderType"
 							:key="item.code"
 							:label="item.description"
-							:value="item.code"
+							:value="Number(item.code)"
 						></el-option>
 					</el-select>
 				</el-form-item>
 				<el-form-item label="审核操作:">
 					<el-select
-						v-model="queryData.auditStep"
+						v-model="queryData.auditOperation"
 						style="width: 180px"
 						:popper-append-to-body="false"
 					>
@@ -75,7 +75,7 @@
 							v-for="item in auditStepType"
 							:key="item.code"
 							:label="item.description"
-							:value="item.code"
+							:value="Number(item.code)"
 						></el-option>
 					</el-select>
 				</el-form-item>
@@ -263,11 +263,11 @@ export default {
 				accountType: [],
 				applyType: '',
 				auditStatus: [],
-				auditStep: '',
+				auditOperation: '',
 				orderProperties: '',
 				applyName: '',
 				auditName: '',
-				lockOrder: '',
+				lockStatus: '',
 				auditNum: '',
 				orderType: '',
 				orderKey: ''
@@ -369,7 +369,8 @@ export default {
 				auditStatus: [],
 				applyName: '',
 				auditName: '',
-				lockOrder: '',
+				lockStatus: '',
+				auditOperation: '',
 				orderProperties: '',
 				auditNum: '',
 				orderType: '',
