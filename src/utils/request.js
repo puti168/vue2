@@ -88,7 +88,7 @@ service.interceptors.response.use(
 			const blob = new Blob([data], { type: 'application/vnd.ms-excel' })
 			link.style.display = 'none'
 			link.href = URL.createObjectURL(blob)
-			const title = localStorage.getItem('title')
+			const title = '会员列表'
 			link.setAttribute('download', title + '.xls')
 			document.body.appendChild(link)
 			link.click()
