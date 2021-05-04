@@ -272,13 +272,13 @@ export default {
 		return {
 			queryData: {
 				registerTime: [start, end],
-				accountType: undefined,
+				accountType: [],
 				userName: '',
 				parentProxyName: '',
 				registerPhone: '',
 				registerIp: '',
 				ipAttribution: '',
-				deviceType: undefined,
+				deviceType: [],
 				realname: '',
 				orderType: undefined
 			},
@@ -314,14 +314,14 @@ export default {
 				...this.getParams(params)
 			}
 			delete params.registerTime
-			params.accountType =
-				params.accountType && params.accountType.length
-					? JSON.stringify(params.accountType)
-					: undefined
-			params.deviceType =
-				params.deviceType && params.deviceType.length
-					? JSON.stringify(params.deviceType)
-					: undefined
+			// params.accountType =
+			// 	params.accountType && params.accountType.length
+			// 		? params.accountType
+			// 		: undefined
+			// params.deviceType =
+			// 	params.deviceType && params.deviceType.length
+			// 		? params.deviceType
+			// 		: undefined
 			this.$api
 				.memberRegisterInfoListAPI(params)
 				.then((res) => {

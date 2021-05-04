@@ -84,6 +84,8 @@
 							placeholder="最小数值"
 							style="width: 100px"
 							maxlength="5"
+							name="offLineDaysStart"
+							@blur="checkValue($event)"
 						></el-input>
 						-
 						<el-input
@@ -92,6 +94,8 @@
 							placeholder="最大数值"
 							style="width: 100px"
 							maxlength="5"
+							name="offLineDaysEnd"
+							@blur="checkValue($event)"
 						></el-input>
 					</el-form-item>
 					<el-form-item label="最后登录时间:" label-width="110px">
@@ -118,6 +122,8 @@
 							placeholder="最小数值"
 							style="width: 100px"
 							maxlength="3"
+							name="vipSerialNumMin"
+							@blur="checkValue($event)"
 						></el-input>
 						-
 						<el-input
@@ -126,6 +132,8 @@
 							placeholder="最大数值"
 							style="width: 100px"
 							maxlength="3"
+							name="vipSerialNumMax"
+							@blur="checkValue($event)"
 						></el-input>
 					</el-form-item>
 					<el-form-item label="账号类型:">
@@ -169,6 +177,8 @@
 							placeholder="最小数值"
 							style="width: 100px"
 							maxlength="10"
+							name="firstDepositAmountMin"
+							@blur="checkValue($event)"
 						></el-input>
 						-
 						<el-input
@@ -177,6 +187,8 @@
 							placeholder="最大数值"
 							style="width: 100px"
 							maxlength="10"
+							name="firstDepositAmountMax"
+							@blur="checkValue($event)"
 						></el-input>
 					</el-form-item>
 					<el-form-item label="首存时间:" label-width="100px">
@@ -485,15 +497,15 @@ export default {
 				registerTime: [start, end],
 				userName: undefined,
 				realName: undefined,
-				accountStatus: undefined,
+				accountStatus: [],
 				windControlId: undefined,
 				offLineDaysStart: undefined,
 				offLineDaysEnd: undefined,
 				lastLoginTime: [start, end],
 				vipSerialNumMax: undefined,
 				vipSerialNumMin: undefined,
-				accountType: undefined,
-				deviceType: undefined,
+				accountType: [],
+				deviceType: [],
 				firstDepositAmountMin: undefined,
 				firstDepositAmountMax: undefined,
 				firstSaveTime: [],
@@ -544,18 +556,18 @@ export default {
 			delete params.registerTime
 			delete params.lastLoginTime
 			delete params.firstSaveTime
-			params.accountStatus =
-				params.accountStatus && params.accountStatus.length
-					? JSON.stringify(params.accountStatus)
-					: undefined
-			params.deviceType =
-				params.deviceType && params.deviceType.length
-					? JSON.stringify(params.deviceType)
-					: undefined
-			params.accountType =
-				params.accountType && params.accountType.length
-					? JSON.stringify(params.accountType)
-					: undefined
+			// params.accountStatus =
+			// 	params.accountStatus && params.accountStatus.length
+			// 		? params.accountStatus
+			// 		: undefined
+			// params.deviceType =
+			// 	params.deviceType && params.deviceType.length
+			// 		? params.deviceType
+			// 		: undefined
+			// params.accountType =
+			// 	params.accountType && params.accountType.length
+			// 		? params.accountType
+			// 		: undefined
 			this.$api
 				.memberListAPI(params)
 				.then((res) => {
@@ -654,6 +666,78 @@ export default {
 				this.queryData.orderType = 'desc'
 			}
 			this.loadData()
+		},
+
+		checkValue(e) {
+			const { name, value } = e.target
+			switch (name) {
+				case 'offLineDaysStart':
+					if (
+						!!this.queryData.offLineDaysEnd &&
+						(value && value * 1 >= this.queryData.offLineDaysEnd * 1)
+					) {
+						this.$message({
+							type: 'warning',
+							message: `请输入小于${this.queryData.offLineDaysEnd}天数`
+						})
+					}
+					break
+				case 'offLineDaysEnd':
+					if (
+						!!this.queryData.offLineDaysStart &&
+						(value && value * 1 <= this.queryData.offLineDaysStart * 1)
+					) {
+						this.$message({
+							type: 'warning',
+							message: `请输入大于${this.queryData.offLineDaysStart}天数`
+						})
+					}
+					break
+				case 'vipSerialNumMin':
+					if (
+						!!this.queryData.vipSerialNumMax &&
+						(value && value * 1 >= this.queryData.vipSerialNumMax * 1)
+					) {
+						this.$message({
+							type: 'warning',
+							message: `请输入小于${this.queryData.vipSerialNumMax}等级`
+						})
+					}
+					break
+				case 'vipSerialNumMax':
+					if (
+						!!this.queryData.vipSerialNumMin &&
+						(value && value * 1 <= this.queryData.vipSerialNumMin * 1)
+					) {
+						this.$message({
+							type: 'warning',
+							message: `请输入大于${this.queryData.vipSerialNumMin}等级`
+						})
+					}
+					break
+				case 'firstDepositAmountMin':
+					if (
+						!!this.queryData.firstDepositAmountMax &&
+						(value && value * 1 >= this.queryData.firstDepositAmountMax * 1)
+					) {
+						this.$message({
+							type: 'warning',
+							message: `请输入小于${this.queryData.firstDepositAmountMax}金额`
+						})
+					}
+					break
+				case 'firstDepositAmountMax':
+					if (
+						!!this.queryData.firstDepositAmountMin &&
+						(value && value * 1 <= this.queryData.firstDepositAmountMin * 1)
+					) {
+						this.$message({
+							type: 'warning',
+							message: `请输入大于${this.queryData.firstDepositAmountMin}金额`
+						})
+					}
+					break
+			}
 		},
 		exportExcel() {
 			const create = this.queryData.registerTime || []

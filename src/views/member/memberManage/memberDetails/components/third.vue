@@ -31,14 +31,15 @@
         <el-table-column
           align="center"
           prop="loginTime"
+          width="160px"
           label="登录时间"
         ></el-table-column>
-        <el-table-column prop="loginStatus" align="center" label="状态">
+        <el-table-column prop="loginStatus" width="80px" align="center" label="状态">
           <template slot-scope="scope">
             {{ typeFilter(scope.row.loginStatus, "loginStatusType") }}
           </template>
         </el-table-column>
-        <el-table-column prop="loginIp" align="center" label="IP地址"></el-table-column>
+        <el-table-column prop="loginIp" width="120px" align="center" label="IP地址"></el-table-column>
         <el-table-column
           prop="ipAttribution"
           align="center"
@@ -49,7 +50,7 @@
           align="center"
           label="登录网址"
         ></el-table-column>
-        <el-table-column prop="deviceType" align="center" label="登录终端">
+        <el-table-column prop="deviceType" width="100px" align="center" label="登录终端">
           <template slot-scope="scope">
             {{ typeFilter(scope.row.deviceType, "deviceType") }}
           </template>
