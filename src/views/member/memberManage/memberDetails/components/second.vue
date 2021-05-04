@@ -340,24 +340,34 @@ export default {
     },
     // 一键查询所有场馆余额
     getOneKeyBalance(val) {
-      this.$api.getOneKeyBalance({ userId: val }).then((res) => {
-        if (res.code === 200) {
-          this.balanceAllList = res.data
-        }
-      })
+      this.$api
+        .getOneKeyBalance({ userId: val })
+        .then((res) => {
+          if (res.code === 200) {
+            this.balanceAllList = res.data
+          }
+        })
+        .catch(() => {
+          this.borderL = true
+        })
     },
     // 一键下分
     getOneKeyWithdraw(val) {
-      this.$api.getOneKeyWithdraw(val).then((res) => {
-        if (res.code === 200) {
-          this.refresh()
-          this.$message({
-            type: 'success',
-            message: '回收成功!'
-          })
-        }
-        console.log(res)
-      })
+      this.$api
+        .getOneKeyWithdraw(val)
+        .then((res) => {
+          if (res.code === 200) {
+            this.refresh()
+            this.$message({
+              type: 'success',
+              message: '回收成功!'
+            })
+          }
+          console.log(res)
+        })
+        .catch(() => {
+          this.borderL = true
+        })
     },
     // 提现流水查询
     getWithdrawWater(val) {
