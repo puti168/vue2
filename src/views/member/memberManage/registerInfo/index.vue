@@ -47,7 +47,7 @@
 							size="medium"
 							placeholder="请输入"
 							clearable
-                            maxlength="11"
+							maxlength="11"
 							style="width: 180px"
 						></el-input>
 					</el-form-item>
@@ -57,7 +57,7 @@
 							size="medium"
 							placeholder="请输入"
 							clearable
-                            maxlength="6"
+							maxlength="6"
 							style="width: 180px"
 						></el-input>
 					</el-form-item>
@@ -67,7 +67,7 @@
 							size="medium"
 							placeholder="请输入"
 							clearable
-                            maxlength="11"
+							maxlength="11"
 							style="width: 180px"
 						></el-input>
 					</el-form-item>
@@ -77,27 +77,27 @@
 							size="medium"
 							placeholder="请输入"
 							clearable
-                            maxlength="11"
+							maxlength="11"
 							style="width: 180px"
 						></el-input>
 					</el-form-item>
 					<el-form-item label="注册IP:">
 						<el-input
-							v-model="queryData.ipAttribution"
+							v-model="queryData.registerIp"
 							size="medium"
 							placeholder="请输入"
 							clearable
-                            maxlength="15"
+							maxlength="15"
 							style="width: 180px"
 						></el-input>
 					</el-form-item>
 					<el-form-item label="IP归属地:">
 						<el-input
-							v-model="queryData.registration"
+							v-model="queryData.ipAttribution"
 							size="medium"
 							placeholder="请输入"
 							clearable
-                            maxlength="10"
+							maxlength="10"
 							style="width: 180px"
 						></el-input>
 					</el-form-item>
@@ -276,10 +276,11 @@ export default {
 				userName: '',
 				parentProxyName: '',
 				registerPhone: '',
+				registerIp: '',
 				ipAttribution: '',
 				deviceType: undefined,
 				realname: '',
-                orderType: undefined
+				orderType: undefined
 			},
 			dataList: [],
 			total: 0
@@ -297,6 +298,7 @@ export default {
 	methods: {
 		loadData() {
 			this.dataList = []
+			this.loading = true
 			const create = this.queryData.registerTime || []
 			const [startTime, endTime] = create
 			let params = {
@@ -312,26 +314,39 @@ export default {
 				...this.getParams(params)
 			}
 			delete params.registerTime
-			params.accountType = params.accountType ? params.accountType.join(',') : undefined
-			params.deviceType = params.deviceType ? params.deviceType.join(',') : undefined
-			this.$api.memberRegisterInfoListAPI(params).then((res) => {
-				const {
-					code,
-					data: { record, totalRecord },
-					msg
-				} = res
-				if (code === 200) {
-					this.loading = false
-					this.dataList = record || []
-					this.total = totalRecord || 0
-				} else {
-					this.loading = false
-					this.$message({
-						message: msg,
-						type: 'error'
-					})
-				}
-			})
+			params.accountType =
+				params.accountType && params.accountType.length
+					? params.accountType
+					: []
+			params.deviceType =
+				params.deviceType && params.deviceType.length
+					? params.deviceType
+					: []
+			this.$api
+				.memberRegisterInfoListAPI(params)
+				.then((res) => {
+					const {
+						code,
+						data: { record, totalRecord },
+						msg
+					} = res
+					if (code === 200) {
+						this.loading = false
+						this.dataList = record || []
+						this.total = totalRecord || 0
+					} else {
+						this.loading = false
+						this.$message({
+							message: msg,
+							type: 'error'
+						})
+					}
+				})
+				.catch(() => (this.loading = false))
+
+			setTimeout(() => {
+				this.loading = false
+			}, 1000)
 		},
 		reset() {
 			this.$refs['form'].resetFields()
@@ -341,6 +356,7 @@ export default {
 				userName: '',
 				parentProxyName: '',
 				registerPhone: '',
+				registerIp: '',
 				ipAttribution: '',
 				deviceType: undefined,
 				realname: ''

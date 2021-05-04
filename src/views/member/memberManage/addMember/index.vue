@@ -146,10 +146,7 @@
 <script>
 import { routerNames } from '@/utils/consts'
 import list from '@/mixins/list'
-import {
-	notSpecial2,
-	isHaveEmoji
-} from '@/utils/validate'
+import { notSpecial2, isHaveEmoji } from '@/utils/validate'
 export default {
 	name: routerNames.addMember,
 	mixins: [list],
@@ -172,10 +169,7 @@ export default {
 	},
 	computed: {
 		accountTypeArr() {
-			return [
-				{ description: '全部', code: '0' },
-				...this.globalDics.accountType
-			]
+			return [...this.globalDics.accountType]
 		},
 		genderType() {
 			return [...this.globalDics.genderType].reverse()
@@ -252,8 +246,9 @@ export default {
 								this.$confirm(`会员${data}资料提交成功`, {
 									confirmButtonText: '确定',
 									type: 'success',
-                                    showCancelButton: false
+									showCancelButton: false
 								})
+								this.reset()
 							} else {
 								this.$message({
 									message: msg,

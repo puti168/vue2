@@ -526,6 +526,7 @@ export default {
 	methods: {
 		loadData() {
 			this.dataList = []
+			this.loading = true
 			const create = this.queryData.registerTime || []
 			const [startTime, endTime] = create
 			let params = {
@@ -543,33 +544,43 @@ export default {
 			delete params.registerTime
 			delete params.lastLoginTime
 			delete params.firstSaveTime
-			params.accountStatus = params.accountStatus
-				? params.accountStatus.join(',')
-				: undefined
-			params.deviceType = params.deviceType
-				? params.deviceType.join(',')
-				: undefined
-			params.accountType = params.accountType
-				? params.accountType.join(',')
-				: undefined
-			this.$api.memberListAPI(params).then((res) => {
-				const {
-					code,
-					data: { record, totalRecord },
-					msg
-				} = res
-				if (code === 200) {
-					this.loading = false
-					this.dataList = record || []
-					this.total = totalRecord || 0
-				} else {
-					this.loading = false
-					this.$message({
-						message: msg,
-						type: 'error'
-					})
-				}
-			})
+			params.accountStatus =
+				params.accountStatus && params.accountStatus.length
+					? params.accountStatus
+					: []
+			params.deviceType =
+				params.deviceType && params.deviceType.length
+					? params.deviceType
+					: []
+			params.accountType =
+				params.accountType && params.accountType.length
+					? params.accountType
+					: []
+			this.$api
+				.memberListAPI(params)
+				.then((res) => {
+					const {
+						code,
+						data: { record, totalRecord },
+						msg
+					} = res
+					if (code === 200) {
+						this.loading = false
+						this.dataList = record || []
+						this.total = totalRecord || 0
+					} else {
+						this.loading = false
+						this.$message({
+							message: msg,
+							type: 'error'
+						})
+					}
+				})
+				.catch(() => (this.loading = false))
+
+			setTimeout(() => {
+				this.loading = false
+			}, 1000)
 		},
 		// 获取风控层级
 		getMerchantDict() {
