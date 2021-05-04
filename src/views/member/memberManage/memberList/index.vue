@@ -421,7 +421,6 @@
 						align="center"
 						label="中心钱包"
 						width="100px"
-						sortable="custom"
 					>
 						<template slot-scope="scope">
 							<span
