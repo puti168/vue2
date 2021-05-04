@@ -154,7 +154,7 @@
 						label="登录时间"
 						sortable="custom"
 					></el-table-column>
-					<el-table-column prop="loginStatus" align="center" label="登录状态">
+					<el-table-column prop="loginStatus" align="center" label="登录状态" width="80">
 						<template slot-scope="scope">
 							<span
 								:class="scope.row.loginStatus === '1' ? 'success' : 'danger'"
@@ -171,7 +171,7 @@
 					>
 						<Copy :title="scope.row.userName" :copy="copy" />
 					</el-table-column>
-					<el-table-column prop="accountType" align="center" label="账号类型">
+					<el-table-column prop="accountType" align="center" label="账号类型" width="80">
 						<template slot-scope="scope">
 							{{ typeFilter(scope.row.accountType, 'accountType') }}
 						</template>
@@ -180,13 +180,14 @@
 						prop="loginIp"
 						align="center"
 						label="登录IP"
+						 width="120"
 					></el-table-column>
 					<el-table-column
 						prop="ipAttribution"
 						align="center"
 						label="IP归属地"
 					></el-table-column>
-					<el-table-column prop="deviceType" align="center" label="登录终端">
+					<el-table-column prop="deviceType" align="center" label="登录终端" width="80">
 						<template slot-scope="scope">
 							{{ typeFilter(scope.row.deviceType, 'deviceType') }}
 						</template>
@@ -205,6 +206,7 @@
 						prop="browseContent"
 						align="center"
 						label="设备版本"
+						 width="280"
 					></el-table-column>
 					<el-table-column
 						prop="loginError"

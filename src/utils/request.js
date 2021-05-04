@@ -152,6 +152,7 @@ service.interceptors.response.use(
 			error.message = '服务器繁忙,请稍后再试'
 		}
 		const fullPath = router.history.current.fullPath
+		await store.dispatch('permission/clearRoutes')
 		router.push(`/login?redirect=${fullPath}`)
 		Message.closeAll()
 		Message({

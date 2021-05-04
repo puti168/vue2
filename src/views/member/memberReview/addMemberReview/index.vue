@@ -158,9 +158,7 @@ export default {
 				})
 		},
 		goBack() {
-			this.$nextTick(() => {
-				this.$router.go(-1)
-			})
+			this.$router.go(-1)
 		},
 		getInfo() {
 			const params = {

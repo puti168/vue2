@@ -179,12 +179,7 @@ export default {
 				})
 		},
 		goBack() {
-			this.$store.dispatch('tagsView/delView', {
-				name: routerNames.memberChange
-			})
-			this.$nextTick(() => {
-				this.$router.go(-1)
-			})
+			this.$router.go(-1)
 		},
 		getInfo() {
 			const params = {

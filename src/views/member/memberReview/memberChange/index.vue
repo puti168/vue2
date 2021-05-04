@@ -382,7 +382,6 @@ export default {
 		}
 	},
 	mounted() {
-		console.log('4444444')
 		this.name = getNickName()
 	},
 	methods: {
