@@ -216,7 +216,6 @@ export default {
 					{
 						required: true,
 						validator: testUserName,
-						message: '请输入会员账号',
 						trigger: 'blur'
 					}
 				],
@@ -224,7 +223,6 @@ export default {
 					{
 						required: true,
 						validator: testPassword,
-						message: '请输入登录密码',
 						trigger: 'blur'
 					}
 				]

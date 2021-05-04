@@ -134,7 +134,7 @@
 							size="medium"
 							placeholder="默认选择全部"
 							clearable
-                            multiple
+							multiple
 							style="width: 300px"
 						>
 							<el-option
@@ -671,31 +671,38 @@ export default {
 			params.accountType = params.accountType
 				? params.accountType.join(',')
 				: undefined
-			this.$api.exportExcelAPI(params).then((res) => {
-				const result = res.data
-				const disposition = res.headers['content-disposition']
-				const fileNames = disposition.split("''")
-				let fileName = fileNames[1]
-				fileName = decodeURIComponent(fileName)
-				const blob = new Blob([result], { type: 'application/octet-stream' })
-				if ('download' in document.createElement('a')) {
-					const elink = document.createElement('a')
-					elink.download = fileName || ''
-					elink.style.display = 'none'
-					elink.href = URL.createObjectURL(blob)
-					document.body.appendChild(elink)
-					elink.click()
-					URL.revokeObjectURL(elink.href)
-					document.body.removeChild(elink)
-				} else {
-					window.navigator.msSaveBlob(blob, fileName)
-				}
-				this.$message({
-					type: 'success',
-					message: '导出成功',
-					duration: 1500
+			this.$api
+				.exportExcelAPI(params)
+				.then((res) => {
+					const result = res.data
+					const disposition = res.headers['content-disposition']
+					const fileNames = disposition.split("''")
+					console.log('fileNames', fileNames)
+					let fileName = fileNames[1]
+					fileName = decodeURIComponent(fileName)
+					const blob = new Blob([result], { type: 'application/octet-stream' })
+					if ('download' in document.createElement('a')) {
+						const elink = document.createElement('a')
+						elink.download = fileName || ''
+						elink.style.display = 'none'
+						elink.href = URL.createObjectURL(blob)
+						document.body.appendChild(elink)
+						elink.click()
+						URL.revokeObjectURL(elink.href)
+						document.body.removeChild(elink)
+					} else {
+						console.log('进来', 111)
+						window.navigator.msSaveBlob(blob, fileName)
+					}
+					this.$message({
+						type: 'success',
+						message: '导出成功',
+						duration: 1500
+					})
 				})
-			})
+				.catch(() => {
+					console.log('导出失败')
+				})
 		}
 	}
 }
