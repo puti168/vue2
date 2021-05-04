@@ -100,6 +100,7 @@ export function exportExcelAPI(data) {
 	return request({
 		url: '/member/download',
 		method: 'post',
+		responseType: 'blob',
 		data
 	})
 }
