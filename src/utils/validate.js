@@ -27,6 +27,18 @@ export function notSpecial2(str) {
 	return true
 }
 
+// 手机号
+export function isvalidPhone(str) {
+	const phoneRegexp = /^[1][3,4,5,6,7,8,9][0-9]{9}$/
+	return phoneRegexp.test(str)
+}
+
+// 邮箱
+export function validateEmail(email) {
+	const urlregex = /^(\w)+(\.\w+)*@(\w)+((\.\w{2,3}){1,3})$/g
+	return urlregex.test(email)
+}
+
 export function isHaveEmoji(str) {
 	const regex = emojiRegex()
 	return !!regex.exec(str)

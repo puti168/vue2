@@ -145,7 +145,10 @@
 
 <script>
 import list from '@/mixins/list'
-import { notSpecial2, isHaveEmoji } from '@/utils/validate'
+import {
+	notSpecial2,
+	isHaveEmoji
+} from '@/utils/validate'
 export default {
 	name: 'AddMember',
 	mixins: [list],
@@ -156,7 +159,7 @@ export default {
 				accountType: '4',
 				username: '',
 				password: '',
-                mobile: '',
+				mobile: '',
 				parentProxyName: '',
 				gender: '',
 				vipExperenceValue: '',
@@ -237,26 +240,31 @@ export default {
 				...this.form
 			}
 			console.log(params)
-			this.$api
-				.addMemberAPI(params)
-				.then((res) => {
-					this.loading = false
-					const { code, msg } = res
-					if (code === 200) {
-						this.$message({
-							message: '会员资料提交成功',
-							type: 'success'
+			this.$refs['form'].validate((valid) => {
+				if (valid) {
+					this.$api
+						.addMemberAPI(params)
+						.then((res) => {
+							this.loading = false
+							const { code, data, msg } = res
+							if (code === 200) {
+								this.$confirm(`会员${data}资料提交成功`, {
+									confirmButtonText: '确定',
+									type: 'success',
+                                    showCancelButton: false
+								})
+							} else {
+								this.$message({
+									message: msg,
+									type: 'error'
+								})
+							}
 						})
-					} else {
-						this.$message({
-							message: msg,
-							type: 'error'
+						.catch(() => {
+							this.loading = false
 						})
-					}
-				})
-				.catch(() => {
-					this.loading = false
-				})
+				}
+			})
 
 			setTimeout(() => {
 				this.loading = false
@@ -268,7 +276,7 @@ export default {
 				accountType: '4',
 				username: '',
 				password: '',
-                mobile: '',
+				mobile: '',
 				parentProxyName: '',
 				gender: '',
 				vipExperenceValue: '',
@@ -276,7 +284,8 @@ export default {
 				realName: '',
 				applyInfo: ''
 			}
-		}
+		},
+		checkValue(val) {}
 	}
 }
 </script>
