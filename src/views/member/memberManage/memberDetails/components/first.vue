@@ -271,12 +271,14 @@ class="textC"
         <el-table-column
           prop="createDt"
           align="center"
+          width="200px"
           label="更新时间"
         ></el-table-column>
         <el-table-column prop="remark" align="center" label="备注信息"></el-table-column>
         <el-table-column
           prop="operator"
           align="center"
+          width="150px"
           label="备注账号"
         ></el-table-column>
       </el-table>
