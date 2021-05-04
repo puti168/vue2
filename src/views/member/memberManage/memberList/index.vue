@@ -546,16 +546,16 @@ export default {
 			delete params.firstSaveTime
 			params.accountStatus =
 				params.accountStatus && params.accountStatus.length
-					? params.accountStatus
-					: []
+					? JSON.stringify(params.accountStatus)
+					: undefined
 			params.deviceType =
 				params.deviceType && params.deviceType.length
-					? params.deviceType
-					: []
+					? JSON.stringify(params.deviceType)
+					: undefined
 			params.accountType =
 				params.accountType && params.accountType.length
-					? params.accountType
-					: []
+					? JSON.stringify(params.accountType)
+					: undefined
 			this.$api
 				.memberListAPI(params)
 				.then((res) => {

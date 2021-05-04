@@ -44,11 +44,6 @@ class="blueColor"
             </span>
             <span class="blueColor width30 textR">{{ item.balance }}</span>
           </el-col>
-
-          <!-- <el-col :span="8">
-            <span class="width70 paddingL">小金真人：(admin789789)</span>
-            <span class="blueColor width30 textR">10.00</span>
-          </el-col> -->
           <el-col v-show="balanceAllList.length > 0" :span="16">
             <div class="blueColor textR decoration" @click="recycle">一键回收</div>
           </el-col>

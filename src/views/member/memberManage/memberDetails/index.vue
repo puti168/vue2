@@ -7,7 +7,7 @@
           label="会员账号:"
           prop="userName"
           :rules="[
-            { required: true, message: '请输入活动名称', trigger: 'blur' },
+            { required: true, message: '请输入会员账号', trigger: 'blur' },
             { min: 4, max: 12, message: '长度在 4 到 12 个字符', trigger: 'blur' },
           ]"
         >
