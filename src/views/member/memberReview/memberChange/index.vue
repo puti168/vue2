@@ -193,7 +193,7 @@
 						<template slot-scope="scope">
 							<el-checkbox
 								v-if="
-									scope.row.auditStep === '1' &&
+									Number(scope.row.auditStep) === 1 &&
 										(scope.row.auditName === name || !scope.row.auditName)
 								"
 								v-model="scope.row.lockStatus"
@@ -204,12 +204,8 @@
 					<el-table-column prop="auditStep" align="center" label="操作">
 						<template slot-scope="scope">
 							<el-button
-								:disabled="
-									scope.row.auditStep === '1' && scope.row.auditName !== name
-										? true
-										: false
-								"
-								:type="scope.row.auditStep === '0' ? 'success' : 'primary'"
+								:class="Number(scope.row.auditStep) === 1 && scope.row.auditName !== name ? 'dis' : ''"
+								:type="Number(scope.row.auditStep) === 0 ? 'success' : 'primary'"
 								size="medium"
 								@click="goDetail(scope.row)"
 							>
@@ -268,9 +264,9 @@
 						<template slot-scope="scope">
 							<span
 								:class="
-									scope.row.auditStatus === '1'
+									Number(scope.row.auditStatus) === 1
 										? 'infoState'
-										: scope.row.auditStatus === '2'
+										: Number(scope.row.auditStatus) === 2
 										? 'success'
 										: 'danger'
 								"
@@ -279,15 +275,22 @@
 							</span>
 						</template>
 					</el-table-column>
-					<el-table-column align="center" sortable="custom" width="200px">
+					<el-table-column
+						prop="auditTime"
+						align="center"
+						sortable="custom"
+						width="200px"
+					>
 						<template slot="header">
-							一审审核人
-							<br />
-							一审完成时间
+							<span>
+								一审审核人
+								<br />
+								一审完成时间
+							</span>
 						</template>
 						<template slot-scope="scope">
 							{{ scope.row.auditName ? scope.row.auditName : '-' }}
-							<p>{{ scope.row.auditTime }}</p>
+							<p>{{ scope.row.auditTime ? scope.row.auditTime : '-' }}</p>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -330,6 +333,7 @@ export default {
 				auditStatus: [],
 				auditStep: '',
 				applyName: '',
+				orderProperties: '',
 				auditName: '',
 				lockOrder: '',
 				auditNum: '',
@@ -339,7 +343,7 @@ export default {
 			now: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
 			formTime: {
 				time: [start, end],
-				time2: [start, end]
+				time2: []
 			},
 			name: '',
 			dataList: []
@@ -369,6 +373,7 @@ export default {
 		loadData() {
 			this.loading = true
 			const [startTime, endTime] = this.formTime.time || []
+			const [startTime2, endTime2] = this.formTime.time2 || []
 			let params = {
 				...this.queryData,
 				applyTimeStart: startTime
@@ -377,16 +382,17 @@ export default {
 				applyTimeEnd: endTime
 					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
 					: '',
-				auditTimeStart: startTime
-					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
+				auditTimeStart: startTime2
+					? dayjs(startTime2).format('YYYY-MM-DD HH:mm:ss')
 					: '',
-				auditTimeEnd: endTime
-					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
+				auditTimeEnd: endTime2
+					? dayjs(endTime2).format('YYYY-MM-DD HH:mm:ss')
 					: ''
 			}
 			params = {
 				...this.getParams(params)
 			}
+			console.log('params')
 			console.log(params)
 			this.$api.memberChange(params).then((res) => {
 				if (res.code === 200) {
@@ -394,13 +400,15 @@ export default {
 					const response = res.data
 					this.loading = false
 					this.dataList = response.record
-					this.dataList.forEach((item) => {
-						if (item.lockOrder === '1') {
-							item.lockStatus = true
-						} else {
-							item.lockStatus = false
-						}
-					})
+					if (this.dataList) {
+						this.dataList.forEach((item) => {
+							if (Number(item.lockOrder) === 1) {
+								item.lockStatus = true
+							} else {
+								item.lockStatus = false
+							}
+						})
+					}
 					this.total = response.totalRecord
 				} else {
 					this.loading = false
@@ -412,9 +420,9 @@ export default {
 			})
 		},
 		goDetail(row) {
-			const type = row.auditStep === '1' && row.auditName === this.name
+			const type = Number(row.auditStep) === 1 && row.auditName === this.name
 			this.$router.push({
-				path: 'memberChangeReview',
+				path: '/member/memberReview/memberChangeReview',
 				query: { id: row.id, userId: row.userId, type: type }
 			})
 		},
@@ -425,6 +433,7 @@ export default {
 				applyType: [],
 				auditStatus: [],
 				applyName: '',
+				orderProperties: '',
 				auditName: '',
 				lockOrder: '',
 				auditNum: '',
@@ -433,7 +442,7 @@ export default {
 			}
 			this.formTime = {
 				time: [start, end],
-				time2: [start, end]
+				time2: []
 			}
 			this.loadData()
 		},
@@ -444,7 +453,7 @@ export default {
 				spinner: 'el-icon-loading',
 				background: 'rgba(0, 0, 0, 0.7)'
 			})
-			this.$api.lock({ id: val.id, lockFlag: val.lockStatus === '0' ? 0 : 1}).then((res) => {
+			this.$api.lock({ id: val.id, lockFlag: Number(val.lockOrder) === 0 ? 0 : 1}).then((res) => {
 				if (res.code === 200) {
 					loading.close()
 					this.$message({
@@ -470,6 +479,11 @@ export default {
 	text-align: center;
 	color: #909399;
 	font-weight: 700;
+}
+/deep/ .caret-wrapper {
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
 }
 .data-refresh {
 	margin-top: 0;

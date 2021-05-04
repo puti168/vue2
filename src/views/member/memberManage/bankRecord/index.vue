@@ -2,10 +2,10 @@
 	<div class="game-container report-container">
 		<div class="view-container dealer-container">
 			<div class="params">
-				<el-form ref="form" :inline="true" :model="form" label-width="100px">
+				<el-form ref="form" :inline="true" :model="queryData" label-width="100px">
 					<el-form-item label="操作类型:">
 						<el-select
-							v-model="form.operateType"
+							v-model="queryData.operateType"
 							size="medium"
 							placeholder="默认选择全部"
 							clearable
@@ -21,7 +21,7 @@
 					</el-form-item>
 					<el-form-item label="操作时间:">
 						<el-date-picker
-							v-model="form.createDt"
+							v-model="queryData.createDt"
 							size="medium"
 							:picker-options="pickerOptions"
 							format="yyyy-MM-dd HH:mm:ss"
@@ -37,7 +37,7 @@
 					</el-form-item>
 					<el-form-item label="会员账号:" prop="userName">
 						<el-input
-							v-model="form.userName"
+							v-model="queryData.userName"
 							size="medium"
 							placeholder="请输入"
 							clearable
@@ -48,7 +48,7 @@
 					</el-form-item>
 					<el-form-item label="持卡人姓名:">
 						<el-input
-							v-model="form.cnName"
+							v-model="queryData.cnName"
 							size="medium"
 							placeholder="请输入"
 							clearable
@@ -59,7 +59,7 @@
 					</el-form-item>
 					<el-form-item label="银行名称:">
 						<el-input
-							v-model="form.bankName"
+							v-model="queryData.bankName"
 							size="medium"
 							placeholder="请输入"
 							clearable
@@ -70,7 +70,7 @@
 					</el-form-item>
 					<el-form-item label="银行卡号:">
 						<el-input
-							v-model="form.cardNumber"
+							v-model="queryData.cardNumber"
 							size="medium"
 							placeholder="请输入"
 							clearable
@@ -81,7 +81,7 @@
 					</el-form-item>
 					<el-form-item label="上级代理:">
 						<el-input
-							v-model="form.parentProxyName"
+							v-model="queryData.parentProxyName"
 							size="medium"
 							placeholder="请输入"
 							clearable
@@ -215,7 +215,7 @@ export default {
 	mixins: [list],
 	data() {
 		return {
-			form: {
+            queryData: {
 				operateType: '',
 				createDt: [start, end],
 				userName: '',
@@ -238,13 +238,13 @@ export default {
 	methods: {
 		loadData() {
 			this.dataList = []
-			const create = this.form.createDt || []
+			const create = this.queryData.createDt || []
 			const [startTime, endTime] = create
 			let params = {
-				...this.form,
+				...this.queryData,
 				dataType: 1,
-				createDtStart: dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') || '',
-				createDtEnd: dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') || ''
+				createDtStart: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : undefined,
+				createDtEnd: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : undefined
 			}
             params = {
                 ...this.getParams(params)
@@ -271,7 +271,7 @@ export default {
 		},
 		reset() {
 			this.$refs['form'].resetFields()
-			this.form = {
+			this.queryData = {
 				operateType: '',
 				createDt: [start, end],
 				userName: '',

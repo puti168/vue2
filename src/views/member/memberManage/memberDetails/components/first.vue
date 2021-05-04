@@ -6,7 +6,7 @@
         <el-button
           type="primary"
           icon="el-icon-refresh"
-          :disabled="queryData.userId === ''"
+          :disabled="parentData.userId === ''"
           @click="refresh"
           >刷新</el-button>
       </el-col>
@@ -14,25 +14,25 @@
         <i class="el-icon-edit-outline"></i><br />
         编辑信息
       </el-col>
-      <el-col v-if="queryData.userId === ''" :span="16" class="btngroup">
+      <el-col v-if="isshow" :span="16" class="btngroup">
         <el-button
           v-for="(item, index) in editMsgList"
           :key="index"
           disabled
           type="primary"
-          >{{ item.description }}</el-button>
+          >{{ item.label }}</el-button>
         <el-button disabled type="primary">账号备注</el-button>
       </el-col>
-      <el-col v-else :span="16" class="btngroup">
+      <el-col v-else :span="16" class="btngroup aaaaa">
         <el-button
           v-for="(item, index) in editMsgList"
           :key="index"
           type="primary"
-          :disabled="item.applyStatus !== '1'"
-          @click="editFn(item.description)"
-          >{{ item.description }}</el-button>
+          :disabled="item.applyStatus === '1'"
+          @click="editFn(item.label)"
+          >{{ item.label }}</el-button>
         <el-button
-          :disabled="queryData.userId === ''"
+          :disabled="parentData.userId === ''"
           type="primary"
           @click="editFn('账号备注')"
           >账号备注</el-button>
@@ -79,13 +79,13 @@
       <el-col :span="12">VIP信息</el-col>
       <el-col :span="12" class="borderL"></el-col>
     </el-row>
-    <el-row class="msgList" style="min-height:90px;">
+    <el-row class="msgList" style="min-height: 90px">
       <el-col :span="12" class="paddingBox">
-        <el-row v-show="vipMsg.depositAmountLave">
+        <el-row v-show="vipMsgList.depositAmountLave">
           <el-col :span="3">剩余</el-col>
-          <el-col :span="7" class="textR">{{ vipMsg.depositAmountLave }}</el-col>
-          <el-col :span="7" class="textR">{{ vipMsg.validBetsLave }}</el-col>
-          <el-col :span="7" class="textR">{{ vipMsg.bjValidBetsLave }}</el-col>
+          <el-col :span="7" class="textR">{{ vipMsgList.depositAmountLave }}</el-col>
+          <el-col :span="7" class="textR">{{ vipMsgList.validBetsLave }}</el-col>
+          <el-col :span="7" class="textR">{{ vipMsgList.bjValidBetsLave }}</el-col>
         </el-row>
         <el-row style="height: 14px">
           <el-col :span="3" style="color: #fff; height: 14px">进度条 </el-col>
@@ -99,43 +99,45 @@
             <el-progress :percentage="percentagec" :stroke-width="12" :show-text="false">
             </el-progress></el-col>
         </el-row>
-        <el-row v-show="vipMsg.depositAmountLave">
+        <el-row v-show="vipMsgList.depositAmountLave">
           <el-col :span="3">已完成</el-col>
           <el-col
 :span="7"
 class="textR"
->{{ vipMsg.depositAmountCurr }}/{{ vipMsg.depositAmountTotal }}</el-col>
+>{{ vipMsgList.depositAmountCurr }}/{{
+              vipMsgList.depositAmountTotal
+            }}</el-col>
           <el-col
 :span="7"
 class="textR"
->{{ vipMsg.validBetsCurr }}/{{ vipMsg.validBetsTotal }}</el-col>
+>{{ vipMsgList.validBetsCurr }}/{{ vipMsgList.validBetsTotal }}</el-col>
           <el-col
 :span="7"
 class="textR"
->{{ vipMsg.bjValidBetsCurr }}/{{ vipMsg.bjValidBetsTotal }}</el-col>
+>{{ vipMsgList.bjValidBetsCurr }}/{{ vipMsgList.bjValidBetsTotal }}</el-col>
         </el-row>
-        <el-row v-show="vipMsg.depositAmountStatus">
+        <el-row v-show="vipMsgList.depositAmountLave">
           <el-col :span="3" style="color: #fff">描述</el-col>
           <el-col
 :span="7"
 class="textC"
->({{ vipMsg.depositAmountStatus === 0 ? "升级" : "保级："
-            }}{{ vipMsg.depositAmountDate }} )存款金额</el-col>
+>({{ vipMsgList.depositAmountStatus === 0 ? "升级" : "保级："
+            }}{{ vipMsgList.depositAmountDate }} )存款金额</el-col>
           <el-col
 :span="7"
 class="textC"
->({{ vipMsg.validBetsStatus === 0 ? "升级" : "保级："
-            }}{{ vipMsg.validBetsDate }})有效投注</el-col>
+>({{ vipMsgList.validBetsStatus === 0 ? "升级" : "保级："
+            }}{{ vipMsgList.validBetsDate }})有效投注</el-col>
           <el-col
 :span="7"
 class="textC"
->({{ vipMsg.bjValidBetsStatus === 0 ? "升级" : "保级："
-            }}{{ vipMsg.bjValidBetsDate }})有效投注</el-col>
+>({{ vipMsgList.bjValidBetsStatus === 0 ? "升级" : "保级："
+            }}{{ vipMsgList.bjValidBetsDate }})有效投注</el-col>
         </el-row>
       </el-col>
       <el-col :span="10" class="paddingBox">
-        <div>VIP等级：{{ vipMsg.grade }}</div>
-        <div>VIP经验：{{ vipMsg.experience }}</div>
+        <div>VIP等级：{{ vipMsgList.grade }}</div>
+        <div>VIP经验：{{ vipMsgList.experience }}</div>
       </el-col>
     </el-row>
     <el-divider></el-divider>
@@ -346,7 +348,7 @@ import { getDics } from '@/api/user'
 export default {
   mixins: [list],
   props: {
-    queryData: { type: Object, default: () => ({}) },
+    parentData: { type: Object, default: () => ({}) },
     outlineInfo: { type: Object, default: () => ({}) },
     vipMsg: { type: Object, default: () => ({}) },
     remarksTableData: { type: Object, default: () => ({}) }
@@ -376,7 +378,17 @@ export default {
     return {
       loading: false,
       // 编辑信息按钮
-      editMsgList: [],
+      editMsgList: [
+        { code: '6', label: '账号状态', applyStatus: '' },
+        { code: '8', label: '风控层级', applyStatus: '' },
+        { code: '9', label: '会员标签', applyStatus: '' },
+        { code: '3', label: '出生日期', applyStatus: '' },
+        { code: '4', label: '手机号码', applyStatus: '' },
+        { code: '1', label: '姓名', applyStatus: '' },
+        { code: '2', label: '性别', applyStatus: '' },
+        { code: '5', label: '邮箱', applyStatus: '' }
+      ],
+      isshow: true,
       // 账号状态
       accountStatusList: [],
       // 风控层级
@@ -385,58 +397,8 @@ export default {
       memberLabelList: [],
       // 性别
       genderTypeList: [],
-      // 提交账号状态编辑
-      accountStatusAfter: {
-        userName: '',
-        accountStatus: 0,
-        remark: ''
-      },
-      // 提交风控层级编辑
-      windControlAfter: {
-        userName: '',
-        remark: '',
-        windControlId: 0,
-        windControlName: ''
-      },
-      // 提交会员标签编辑
-      labelAfter: {
-        userName: '',
-        labelName: '',
-        labelId: 0,
-        remark: ''
-      },
-      // 提交生日编辑
-      birthAfter: {
-        userName: '',
-        birth: '',
-        remark: ''
-      },
-      // 提交手机号编辑
-      mobileAfter: {
-        userName: '',
-        mobile: '',
-        remark: ''
-      },
-      // 提交性名编辑
-      realNameAfter: {
-        userName: '',
-        realName: '',
-        remark: ''
-      },
-      // 提交性别编辑
-      genderAfter: {
-        userName: '',
-        gender: 0,
-        remark: ''
-      },
-      // 提交邮箱编辑
-      emailAfter: {
-        userName: '',
-        email: '',
-        remark: ''
-      },
       outlineInfoList: {}, // 基本信息
-      // vipMsgList: {}, //vip信息
+      vipMsgList: {}, // vip信息
       percentagea: 0,
       percentageb: 0,
       percentagec: 0,
@@ -456,16 +418,20 @@ export default {
     outlineInfo: {
       handler(newV) {
         this.outlineInfoList = { ...newV }
+        console.log('newV.auditList', newV.auditList)
         if (newV.auditList) {
+          this.isshow = false
           for (let i = 0; i < newV.auditList.length; i++) {
-            const ele = newV.auditList[i].applyName
+            const ele = newV.auditList[i]
             for (let j = 0; j < this.editMsgList.length; j++) {
-              const val = this.editMsgList[j].applyName
-              if (ele === val) {
-                this.editMsgList[j].applyStatus = newV.applyStatus
+              const val = this.editMsgList[j].code
+              if (ele.applyName === val) {
+                this.editMsgList[j].applyStatus = ele.applyStatus
               }
             }
           }
+        } else {
+          this.isshow = false
         }
       },
       deep: true,
@@ -473,6 +439,7 @@ export default {
     },
     vipMsg: {
       handler(newV) {
+        this.vipMsgList = newV
         if (JSON.stringify(newV) !== '{}') {
           if (newV.depositAmountCurr > 0 && newV.depositAmountTotal > 0) {
             const p1 = (newV.depositAmountCurr / newV.depositAmountTotal) * 100
@@ -486,6 +453,10 @@ export default {
             const p3 = (newV.bjValidBetsCurr / newV.bjValidBetsTotal) * 100
             p3 >= 100 ? (this.percentagec = 100) : (this.percentagec = p3)
           }
+        } else {
+          this.percentagea = 0
+          this.percentageb = 0
+          this.percentagec = 0
         }
       },
       deep: true,
@@ -496,6 +467,8 @@ export default {
         if (newV.total) {
           this.total = newV.total
           this.tableList = newV.records
+        } else {
+          this.tableList = []
         }
       },
       deep: true,
@@ -505,7 +478,6 @@ export default {
   created() {},
   mounted() {
     this.initGetDics()
-    console.log(this.queryData.userName)
   },
   methods: {
     initGetDics() {
@@ -513,9 +485,7 @@ export default {
         if (res.code === 200) {
           this.accountStatusList = res.data.accountStatusType
           this.genderTypeList = res.data.genderType
-          this.editMsgList = res.data.applyType
         }
-        console.log('getDics', res)
       })
       this.$api.getMerchantDict().then((res) => {
         if (res.code === 200) {
@@ -567,7 +537,7 @@ export default {
         this.editData = {}
         if (res.code === 200) {
           this.$message.success('添加成功')
-          this.getOutlineInfo(this.queryData)
+          this.getOutlineInfo(this.parentData)
         }
         this.editVisible = false
       })
@@ -577,7 +547,7 @@ export default {
       this.$api.setMemberInfoEdit(val).then((res) => {
         if (res.code === 200) {
           this.$message.success(res.msg)
-          this.getOutlineInfo(this.queryData)
+          this.getOutlineInfo(this.parentData)
           this.editData = {}
         }
         this.editVisible = false
@@ -585,7 +555,6 @@ export default {
     },
     // 备注信息
     getMemberRemarkList(val) {
-      console.log(val, '0000000000000')
       const params = { val, pageNum: this.page, pageSize: this.size }
       this.$api.getMemberRemarkList(params).then((res) => {
         if (res.code === 200) {
@@ -594,7 +563,7 @@ export default {
       })
     },
     refresh() {
-      const val = this.queryData
+      const val = this.parentData
       this.getOutlineInfo(val)
     },
     editFn(val) {
@@ -630,7 +599,7 @@ export default {
     submitEdit() {
       const params = this.editData
       const data = {}
-      data.userName = this.queryData.userName
+      data.userName = this.parentData.userName
       this.$refs.editForm.validate((valid) => {
         if (valid) {
           const loading = this.$loading({
@@ -662,7 +631,6 @@ export default {
           }
           if (this.moduleBox === '手机号码') {
             data.mobileAfter = params
-            console.log('修改手机号', data)
             this.setMemberInfoEdit(data)
             loading.close()
           }
@@ -683,9 +651,8 @@ export default {
             loading.close()
           }
           if (this.moduleBox === '账号备注') {
-            params.userName = this.queryData.userName
-            params.userId = this.queryData.userId
-            console.log(params)
+            params.userName = this.parentData.userName
+            params.userId = this.parentData.userId
             this.getMemberRemarkAdd(params)
             loading.close()
           }
@@ -700,14 +667,14 @@ export default {
     },
     handleCurrentChange(val) {
       this.page = val
-      if (this.queryData.userId !== null) {
-        this.getMemberRemarkList(this.queryData.userId)
+      if (this.parentData.userId !== null) {
+        this.getMemberRemarkList(this.parentData.userId)
       }
     },
     handleSizeChange(val) {
       this.size = val
-      if (this.queryData.userId !== null) {
-        this.getMemberRemarkList(this.queryData.userId)
+      if (this.parentData.userId !== null) {
+        this.getMemberRemarkList(this.parentData.userId)
       }
     }
   }

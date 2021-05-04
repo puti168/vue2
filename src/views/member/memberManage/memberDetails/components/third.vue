@@ -6,7 +6,7 @@
         <el-button
           type="primary"
           icon="el-icon-refresh"
-          :disabled="queryData.userId === ''"
+          :disabled="parentData.userId === ''"
           @click="refresh"
           >刷新</el-button>
       </el-col>
@@ -21,31 +21,52 @@
         style="margin: 10px 0 30px 0; z-index: 0"
         :header-cell-style="getRowClass"
       >
-        <el-table-column align="center" label="登录时间"></el-table-column>
-        <el-table-column prop="updateDt" align="center" label="状态"></el-table-column>
-        <el-table-column prop="updateDt" align="center" label="IP地址"></el-table-column>
         <el-table-column
-          prop="updateDt"
+          align="center"
+          prop="loginTime"
+          label="登录时间"
+        ></el-table-column>
+        <el-table-column prop="loginStatus" align="center" label="状态">
+          <template slot-scope="scope">
+            {{ typeFilter(scope.row.loginStatus, "loginStatusType") }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="loginIp" align="center" label="IP地址"></el-table-column>
+        <el-table-column
+          prop="ipAttribution"
           align="center"
           label="IP归属地"
         ></el-table-column>
         <el-table-column
-          prop="updateDt"
+          prop="loginReference"
           align="center"
           label="登录网址"
         ></el-table-column>
         <el-table-column
-          prop="updateDt"
+          prop="deviceType"
           align="center"
           label="登录终端"
         ></el-table-column>
-        <el-table-column prop="updateDt" align="center" label="设备号"></el-table-column>
+        <el-table-column prop="deviceNo" align="center" label="设备号"></el-table-column>
         <el-table-column
-          prop="updateDt"
+          prop="browseContent"
           align="center"
           label="设备版本"
         ></el-table-column>
       </el-table>
+      <!-- 分页 -->
+      <el-pagination
+        :current-page.sync="page"
+        layout="total, sizes,prev, pager, next, jumper"
+        :page-size="size"
+        :page-sizes="[5, 10, 20]"
+        :total="total"
+        :pager-count="5"
+        style="float: right; padding-top: 10px"
+        @current-change="handleCurrentChange"
+        @size-change="handleSizeChange"
+      ></el-pagination>
+      <div class="clear"></div>
     </div>
   </div>
 </template>
@@ -55,25 +76,55 @@ import list from '@/mixins/list'
 // import dayjs from 'dayjs'
 export default {
   mixins: [list],
-  props: { queryData: { type: Object, default: () => ({}) } },
+  props: {
+    parentData: { type: Object, default: () => ({}) },
+    lonRecord: { type: Array, default: () => [] }
+  },
   data() {
     return {
+      page: 1,
+      size: 10,
       dataList: []
     }
   },
   computed: {},
-  watch: {},
+  watch: {
+    lonRecord: {
+      handler(newV) {
+        this.dataList = newV
+      },
+      deep: true,
+      immediate: true
+    }
+  },
   created() {},
   mounted() {},
   methods: {
     // 会员登录日志查询
     getLogMemberLoginLog(val) {
-      this.$api.getLogMemberLoginLog(val).then((res) => {
-        console.log(res)
+      const params = { userId: val, pageNum: this.page, pageSize: this.size }
+      this.$api.getLogMemberLoginLog(params).then((res) => {
+        if (res.code === 200) {
+          this.dataList = res.data.record
+        }
       })
     },
     refresh() {
-      this.getLogMemberLoginLog()
+      this.page = 1
+      this.size = 10
+      this.getLogMemberLoginLog(this.parentData.userId)
+    },
+    handleCurrentChange(val) {
+      this.page = val
+      if (this.parentData.userId !== null) {
+        this.getLogMemberLoginLog(this.parentData.userId)
+      }
+    },
+    handleSizeChange(val) {
+      this.size = val
+      if (this.parentData.userId !== null) {
+        this.getLogMemberLoginLog(this.parentData.userId)
+      }
     }
   }
 }
@@ -100,5 +151,11 @@ export default {
 }
 .refrestBox {
   text-align: center;
+}
+.clear {
+  clear: both;
+  height: 0;
+  line-height: 0;
+  font-size: 0;
 }
 </style>

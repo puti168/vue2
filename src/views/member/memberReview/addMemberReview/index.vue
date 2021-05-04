@@ -16,7 +16,9 @@
 				<div class="review-content">
 					<p class="name">新增会员信息</p>
 					<div class="review-flex">
-						<div>账号类型: {{ typeFilter(list.accountType, 'accountType') }}</div>
+						<div>
+							账号类型: {{ typeFilter(list.accountType, 'accountType') }}
+						</div>
 						<div>会员账号: {{ list.userName }}</div>
 						<div>登录密码: {{ list.password }}</div>
 						<div>上级代理: {{ list.parentProxyName }}</div>
@@ -50,33 +52,28 @@
 			</div>
 		</div>
 		<el-dialog
-			:title="提交确认"
+			title="提交确认"
 			center
 			:visible.sync="visible"
 			:before-close="closeFormDialog"
-			width="410px"
+			width="610px"
 		>
-			<el-form
-				ref="form"
-				label-width="80px"
-			>
+			<el-form ref="form" label-width="100px">
 				<el-form-item label="提交审核信息">
 					<el-input
 						v-model="remark"
 						clearable
+						type="textarea"
 						:max="50"
+						:autosize="{ minRows: 4, maxRows: 4 }"
 						size="medium"
-						style="width: 280px"
 						placeholder="请输入"
 					></el-input>
 				</el-form-item>
 			</el-form>
 			<div slot="footer" class="dialog-footer">
 				<el-button @click="visible = false">取 消</el-button>
-				<el-button
-					type="primary"
-					@click="auditOne"
-				>
+				<el-button type="primary" @click="auditOne">
 					提交
 				</el-button>
 			</div>
@@ -85,23 +82,23 @@
 </template>
 
 <script>
+import list from '@/mixins/list'
 // import dayjs from 'dayjs'
-import { mapGetters } from 'vuex'
 export default {
-	name: '',
+	name: 'AddMemberReview',
 	components: {},
-	mixins: [],
+	mixins: [list],
 	data() {
 		return {
 			list: {},
 			visible: false,
+			remark: '',
 			action: false,
 			// 审核 true 仅返回 false
 			type: true
 		}
 	},
 	computed: {
-		...mapGetters(['globalDics']),
 		accountType() {
 			return this.globalDics.accountType
 		},
@@ -110,8 +107,10 @@ export default {
 		}
 	},
 	created() {
-		this.getInfo()
-		this.type = this.$route.query.type
+		if (this.$route.name === 'addMemberReview') {
+			this.getInfo()
+			this.type = this.$route.query.type
+		}
 	},
 	mounted() {},
 	methods: {
@@ -119,6 +118,7 @@ export default {
 		confirm(action) {
 			this.remark = ''
 			this.action = action
+			this.visible = true
 		},
 		auditOne() {
 			const loading = this.$loading({
@@ -129,6 +129,7 @@ export default {
 			})
 			const params = {
 				id: this.$route.query.id,
+				userId: this.$route.query.userId,
 				remark: this.remark,
 				auditStatus: this.action ? 2 : 3
 			}
@@ -138,7 +139,7 @@ export default {
 						type: 'success',
 						message: '操作成功!'
 					})
-					this.$router.replace('addMemberCheck')
+					this.$router.go(-1)
 					loading.close()
 				} else {
 					loading.close()
@@ -150,7 +151,7 @@ export default {
 			})
 		},
 		goBack() {
-			this.$router.push('addMemberCheck')
+			this.$router.go(-1)
 		},
 		getInfo() {
 			const params = {
@@ -160,10 +161,7 @@ export default {
 				if (res.code === 200) {
 					const response = res.data
 					this.loading = false
-					this.registerInfo = response.registerInfo
-					this.applyInfo = response.applyInfo
-					this.auditInfo = response.auditInfo
-					this.accountInfo = response.accountInfo
+					this.list = response
 				} else {
 					this.loading = false
 					this.$message({

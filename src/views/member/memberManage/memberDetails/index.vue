@@ -58,21 +58,27 @@
       <first
         ref="first"
         class="floor-item"
-        :queryData="queryData"
+        :parentData="parentData"
         :outlineInfo="outlineInfo"
         :vipMsg="vipMsg"
         :remarksTableData="remarksTableData"
       ></first>
       <second
         class="floor-item"
-        :queryData="queryData"
+        :parentData="parentData"
         :balanceList="balanceList"
-        :top3Sy="top3Sy"
+        :waterList="waterList"
         :playerList="playerList"
         :sumList="sumList"
+        :top3Sy="top3Sy"
       ></second>
-      <third class="floor-item" :queryData="queryData"></third>
-      <fourth class="floor-item" :queryData="queryData"></fourth>
+      <third class="floor-item" :parentData="parentData" :lonRecord="lonRecord"></third>
+      <fourth
+        class="floor-item"
+        :parentData="parentData"
+        :bankList="bankList"
+        :virtualList="virtualList"
+      ></fourth>
     </div>
   </div>
 </template>
@@ -89,16 +95,21 @@ export default {
   mixins: [list],
   data() {
     return {
+      parentData: { userName: '', userId: '' },
       queryData: { userName: '', userId: '' },
       activeName: 'first',
       tabList: ['first', 'second', 'third', 'fourth'],
       outlineInfo: {}, // 基本信息
       vipMsg: {}, // vip信息
       remarksTableData: {}, // 备注表格
-      balanceList: { freezeBalance: '', balance: '' },
-      playerList: {},
-      sumList: {},
-      top3Sy: [],
+      balanceList: { freezeBalance: '', balance: '' }, // 中心钱包，提现冻结
+      waterList: {}, // 提现流水
+      playerList: {}, // 充提信息
+      sumList: {}, // 投注信息
+      top3Sy: [], // top3表格
+      lonRecord: [], // 登录信息
+      bankList: [], // 银行卡
+      virtualList: [], // 虚拟账号信息
       loadingRgba: {
         lock: true,
         text: 'Loading',
@@ -136,22 +147,35 @@ export default {
         .then((res) => {
           if (res.code === 200) {
             this.outlineInfo = res.data
-            this.queryData.userName = res.data.userName
-            this.queryData.userId = res.data.id
+            this.parentData.userName = res.data.userName
+            this.parentData.userId = res.data.id
             this.getVipInfo(res.data.id)
             this.getMemberRemarkList(res.data.id)
             this.getAccountCashAccount(res.data.id)
             this.getWithdrawalFreeze(res.data.id)
-            // this.getWithdrawWater(res.data.id);
-            this.getPlayerTop3(res.data.id)
-            // this.getLogMemberLoginLog(res.data.id);
-            // this.getBankCardBank(res.data.id);
+            this.getWithdrawWater(res.data.id)
             this.getPlayerOrderSumInfo(res.data.id)
             this.getPlayerBetHistorySum(res.data.id)
+            this.getPlayerTop3(res.data.id)
+            this.getLogMemberLoginLog(res.data.id)
+            this.getBankCardBank(res.data.id)
           }
           loading.close()
         })
         .catch(() => {
+          this.parentData = { userName: '', userId: '' }
+          this.outlineInfo = {}
+          this.outlineInfo = {} // 基本信息
+          this.vipMsg = {} // vip信息
+          this.remarksTableData = {} // 备注表格
+          this.balanceList = { freezeBalance: '', balance: '' } // 中心钱包，提现冻结
+          this.waterList = {} // 提现流水
+          this.playerList = {} // 充提信息
+          this.sumList = {} // 投注信息
+          this.top3Sy = [] // top3表格
+          this.lonRecord = [] // 登录信息
+          this.bankList = [] // 银行卡
+          this.virtualList = [] // 虚拟账号信息
           loading.close()
         })
     },
@@ -191,7 +215,9 @@ export default {
     // 提现流水查询
     getWithdrawWater(val) {
       this.$api.getWithdrawWater({ userId: val }).then((res) => {
-        console.log('提现流水查询', res)
+        if (res.code === 200) {
+          this.waterList = res.data
+        }
       })
     },
     // 会员充提信息
@@ -222,19 +248,26 @@ export default {
     },
     // 会员登录日志查询
     getLogMemberLoginLog(val) {
-      this.$api.getLogMemberLoginLog({ userId: val }).then((res) => {
-        console.log(res)
+      const params = { userId: val, pageNum: 1, pageSize: 10 }
+      this.$api.getLogMemberLoginLog(params).then((res) => {
+        if (res.code === 200) {
+          this.lonRecord = res.data.record
+        }
       })
     },
     // 银行卡/虚拟币行号信息
     getBankCardBank(val) {
-      const dataType1 = { userId: val, dataType: 1 }
+      const dataType1 = { userId: val, dataType: 2 }
       this.$api.getBankCardBank(dataType1).then((res) => {
-        console.log(res)
+        if (res.code === 200) {
+          this.virtualList = res.data
+        }
       })
-      const dataType2 = { userId: val, dataType: 2 }
+      const dataType2 = { userId: val, dataType: 1 }
       this.$api.getBankCardBank(dataType2).then((res) => {
-        console.log(res)
+        if (res.code === 200) {
+          this.bankList = res.data
+        }
       })
     },
     query() {

@@ -10,26 +10,28 @@
 				</span>
 			</div>
 			<el-form ref="form" :model="form" :rules="rules" label-width="100px">
-				<el-form-item label="账号类型:" prop="userType">
+				<el-form-item label="账号类型:" prop="accountType">
 					<el-select
-						v-model="form.userType"
+						v-model="form.accountType"
 						size="medium"
 						placeholder="全部"
 						clearable
 						style="width: 365px"
 					>
-						<el-option label="全部" value="全部"></el-option>
-						<el-option label="正式" value="1"></el-option>
-						<el-option label="试玩" value="2"></el-option>
-						<el-option label="商务" value="3"></el-option>
-						<el-option label="测试" value="4"></el-option>
-						<el-option label="置换" value="5"></el-option>
+						<el-option
+							v-for="item in accountTypeArr"
+							:key="item.code"
+							:label="item.description"
+							:value="item.code"
+						></el-option>
 					</el-select>
 				</el-form-item>
-				<el-form-item label="会员账号:" prop="userName">
+				<el-form-item label="会员账号:" prop="username">
 					<el-input
-						v-model="form.userName"
+						v-model="form.username"
 						size="medium"
+						minlength="4"
+						maxlength="11"
 						placeholder="4-11位，最少2个字母+数字组合，首位字母"
 						clearable
 						style="width: 365px"
@@ -41,12 +43,14 @@
 						size="medium"
 						placeholder="8-12位，字母+数字组合"
 						clearable
+						minlength="8"
+						maxlength="12"
 						style="width: 365px"
 					></el-input>
 				</el-form-item>
 				<el-form-item label="手机号码:">
 					<el-input
-						v-model="form.phone"
+						v-model="form.mobile"
 						size="medium"
 						placeholder="请输入"
 						clearable
@@ -55,7 +59,7 @@
 				</el-form-item>
 				<el-form-item label="上级代理:">
 					<el-input
-						v-model="form.supAgent"
+						v-model="form.parentProxyName"
 						size="medium"
 						placeholder="请输入"
 						clearable
@@ -70,13 +74,17 @@
 						clearable
 						style="width: 365px"
 					>
-						<el-option label="男" value="男"></el-option>
-						<el-option label="女" value="女"></el-option>
+						<el-option
+							v-for="item in genderType"
+							:key="item.code"
+							:label="item.description"
+							:value="item.code"
+						></el-option>
 					</el-select>
 				</el-form-item>
 				<el-form-item label="VIP经验:">
 					<el-input
-						v-model="form.vipEx"
+						v-model="form.vipExperenceValue"
 						size="medium"
 						placeholder="请输入数字，不支持负数和小数点"
 						clearable
@@ -85,7 +93,7 @@
 				</el-form-item>
 				<el-form-item label="邮箱:">
 					<el-input
-						v-model="form.mail"
+						v-model="form.email"
 						size="medium"
 						placeholder="请输入"
 						clearable
@@ -94,7 +102,7 @@
 				</el-form-item>
 				<el-form-item label="姓名:">
 					<el-input
-						v-model="form.nickname"
+						v-model="form.realName"
 						size="medium"
 						placeholder="请输入"
 						clearable
@@ -103,7 +111,7 @@
 				</el-form-item>
 				<el-form-item label="审核信息:">
 					<el-input
-						v-model="form.checkMsg"
+						v-model="form.applyInfo"
 						size="medium"
 						type="textarea"
 						placeholder="请输入"
@@ -137,37 +145,88 @@
 
 <script>
 import list from '@/mixins/list'
+import { notSpecial2, isHaveEmoji } from '@/utils/validate'
 export default {
 	name: 'AddMember',
 	mixins: [list],
 	data() {
 		return {
+			loading: false,
 			form: {
-				userType: '',
-				userName: '',
+				accountType: '4',
+				username: '',
 				password: '',
-				phone: '',
-				supAgent: '',
+                mobile: '',
+				parentProxyName: '',
 				gender: '',
-				vipEx: '',
-				mail: '',
-				nickname: '',
-				checkMsg: ''
-			},
-			dataList: []
+				vipExperenceValue: '',
+				email: '',
+				realName: '',
+				applyInfo: ''
+			}
 		}
 	},
 	computed: {
+		accountTypeArr() {
+			return [
+				{ description: '全部', code: '0' },
+				...this.globalDics.accountType
+			]
+		},
+		genderType() {
+			return [...this.globalDics.genderType].reverse()
+		},
 		rules() {
+			const reg1 = /^[A-Za-z]{1}(?=(.*[a-zA-Z]){1,})(?=(.*[0-9]){1,})[0-9A-Za-z]{3,10}$/
+			const reg2 = /^([a-zA-Z0-9]*[a-zA-Z]+[0-9]+[a-zA-Z0-9]*|[a-zA-Z0-9]*[0-9]+[a-zA-Z]+[a-zA-Z0-9]*)$/
+
+			const testUserName = (rule, value, callback) => {
+				const isSpecial = !notSpecial2(String(value))
+				const isRmoji = isHaveEmoji(String(value))
+				if (isSpecial) {
+					callback(new Error('不支持空格及特殊字符'))
+				} else if (isRmoji) {
+					callback(new Error('不支持表情'))
+				} else if (!reg1.test(value)) {
+					callback(new Error('请输入4-11位，最少2个字母+数字组合，首位字母'))
+				} else {
+					callback()
+				}
+			}
+
+			const testPassword = (rule, value, callback) => {
+				const isSpecial = !notSpecial2(String(value))
+				const isRmoji = isHaveEmoji(String(value))
+				if (isSpecial) {
+					callback(new Error('不支持空格及特殊字符'))
+				} else if (isRmoji) {
+					callback(new Error('不支持表情'))
+				} else if (!reg2.test(value)) {
+					callback(new Error('请输入8-12位，字母+数字组合'))
+				} else {
+					callback()
+				}
+			}
+
 			return {
-				userType: [
+				accountType: [
 					{ required: true, message: '请选择账号类型', trigger: 'change' }
 				],
-				userName: [
-					{ required: true, message: '请输入会员账号', trigger: 'blur' }
+				username: [
+					{
+						required: true,
+						validator: testUserName,
+						message: '请输入会员账号',
+						trigger: 'blur'
+					}
 				],
 				password: [
-					{ required: true, message: '请输入登录密码', trigger: 'blur' }
+					{
+						required: true,
+						validator: testPassword,
+						message: '请输入登录密码',
+						trigger: 'blur'
+					}
 				]
 			}
 		}
@@ -180,38 +239,44 @@ export default {
 				...this.form
 			}
 			console.log(params)
-            this.$api.addMemberAPI(params).then((res) => {
-                const {
-                    code,
-                    data: { record, totalRecord },
-                    msg
-                } = res
-                if (code === 200) {
-                    this.loading = false
-                    this.dataList = record || []
-                    this.total = totalRecord || 0
-                } else {
-                    this.loading = false
-                    this.$message({
-                        message: msg,
-                        type: 'error'
-                    })
-                }
-            })
+			this.$api
+				.addMemberAPI(params)
+				.then((res) => {
+					this.loading = false
+					const { code, msg } = res
+					if (code === 200) {
+						this.$message({
+							message: '会员资料提交成功',
+							type: 'success'
+						})
+					} else {
+						this.$message({
+							message: msg,
+							type: 'error'
+						})
+					}
+				})
+				.catch(() => {
+					this.loading = false
+				})
+
+			setTimeout(() => {
+				this.loading = false
+			}, 1000)
 		},
 		reset() {
-            this.$refs['form'].resetFields()
+			this.$refs['form'].resetFields()
 			this.form = {
-				userType: '',
-				userName: '',
+				accountType: '4',
+				username: '',
 				password: '',
-				phone: '',
-				supAgent: '',
+                mobile: '',
+				parentProxyName: '',
 				gender: '',
-				vipEx: '',
-				mail: '',
-				nickname: '',
-				checkMsg: ''
+				vipExperenceValue: '',
+				email: '',
+				realName: '',
+				applyInfo: ''
 			}
 		}
 	}
