@@ -2,7 +2,12 @@
 	<div class="game-container report-container">
 		<div class="view-container dealer-container">
 			<div class="params">
-				<el-form ref="form" :inline="true" :model="queryData" label-width="100px">
+				<el-form
+					ref="form"
+					:inline="true"
+					:model="queryData"
+					label-width="100px"
+				>
 					<el-form-item label="操作类型:">
 						<el-select
 							v-model="queryData.operateType"
@@ -11,12 +16,12 @@
 							clearable
 							style="width: 180px"
 						>
-                            <el-option
-                                v-for="item in bindType"
-                                :key="item.code"
-                                :label="item.description"
-                                :value="item.code"
-                            ></el-option>
+							<el-option
+								v-for="item in bindType"
+								:key="item.code"
+								:label="item.description"
+								:value="item.code"
+							></el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item label="操作时间:">
@@ -43,7 +48,7 @@
 							clearable
 							maxlength="11"
 							style="width: 180px"
-                            @keyup.enter.native="enterSearch"
+							@keyup.enter.native="enterSearch"
 						></el-input>
 					</el-form-item>
 					<el-form-item label="持卡人姓名:">
@@ -54,7 +59,7 @@
 							clearable
 							style="width: 180px"
 							maxlength="6"
-                            @keyup.enter.native="enterSearch"
+							@keyup.enter.native="enterSearch"
 						></el-input>
 					</el-form-item>
 					<el-form-item label="银行名称:">
@@ -65,7 +70,7 @@
 							clearable
 							style="width: 180px"
 							maxlength="10"
-                            @keyup.enter.native="enterSearch"
+							@keyup.enter.native="enterSearch"
 						></el-input>
 					</el-form-item>
 					<el-form-item label="银行卡号:">
@@ -76,7 +81,7 @@
 							clearable
 							style="width: 180px"
 							maxlength="25"
-                            @keyup.enter.native="enterSearch"
+							@keyup.enter.native="enterSearch"
 						></el-input>
 					</el-form-item>
 					<el-form-item label="上级代理:">
@@ -87,7 +92,7 @@
 							clearable
 							style="width: 180px"
 							maxlength="11"
-                            @keyup.enter.native="enterSearch"
+							@keyup.enter.native="enterSearch"
 						></el-input>
 					</el-form-item>
 					<el-form-item>
@@ -121,59 +126,79 @@
 					:data="dataList"
 					style="width: 100%"
 					:header-cell-style="getRowClass"
-                    @sort-change="changeTableSort"
+					@sort-change="changeTableSort"
 				>
-					<el-table-column
-						v-slot="scope"
-						prop="userName"
-						align="center"
-						label="会员账号"
-					>
-						<Copy :title="scope.row.userName" :copy="copy" />
+					<el-table-column prop="userName" align="center" label="会员账号">
+						<template slot-scope="scope">
+							<Copy
+								v-if="!!scope.row.userName"
+								:title="scope.row.userName"
+								:copy="copy"
+							/>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
+					<el-table-column prop="accountType" align="center" label="账号类型">
+						<template slot-scope="scope">
+							<span v-if="!!scope.row.accountType">
+								{{ typeFilter(scope.row.accountType, 'accountType') }}
+							</span>
+							<span v-else>-</span>
+						</template>
 					</el-table-column>
 					<el-table-column
-						prop="accountType"
-						align="center"
-						label="账号类型"
-					></el-table-column>
-					<el-table-column
-						v-slot="scope"
 						prop="parentProxyName"
 						align="center"
 						label="上级代理"
 					>
-						<Copy :title="scope.row.parentProxyName" :copy="copy" />
+						<template slot-scope="scope">
+							<Copy
+								v-if="!!scope.row.parentProxyName"
+								:title="scope.row.parentProxyName"
+								:copy="copy"
+							/>
+							<span v-else>-</span>
+						</template>
 					</el-table-column>
-					<el-table-column
-						v-slot="scope"
-						prop="cardNumber"
-						align="center"
-						label="银行卡号"
-					>
-						<Copy :title="scope.row.cardNumber" :copy="copy" />
+					<el-table-column prop="cardNumber" align="center" label="银行卡号">
+						<template slot-scope="scope">
+							<Copy
+								v-if="!!scope.row.cardNumber"
+								:title="scope.row.cardNumber"
+								:copy="copy"
+							/>
+							<span v-else>-</span>
+						</template>
 					</el-table-column>
-					<el-table-column
-						prop="bankName"
-						align="center"
-						label="银行名称"
-					>
-                        <template slot="header">
-                            银行名称
-                            <br />
-                            银行支行
-                        </template>
-                    </el-table-column>
-					<el-table-column
-						v-slot="scope"
-						prop="cnName"
-						align="center"
-						label="持卡人"
-					>
-						<Copy :title="scope.row.cnName" :copy="copy" />
+					<el-table-column prop="bankName" align="center" label="银行名称">
+						<template slot="header">
+							银行名称
+							<br />
+							银行支行
+						</template>
+						<template slot-scope="scope">
+							<span v-if="!!scope.row.bankName">
+								{{ scope.row.bankName }}
+							</span>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
+					<el-table-column prop="cnName" align="center" label="持卡人">
+						<template slot-scope="scope">
+							<Copy
+								v-if="!!scope.row.cnName"
+								:title="scope.row.cnName"
+								:copy="copy"
+							/>
+							<span v-else>-</span>
+						</template>
 					</el-table-column>
 					<el-table-column prop="operateType" align="center" label="操作类型">
 						<template slot-scope="scope">
-							{{ typeFilter(scope.row.operateType, 'bindType') }}
+							<span v-if="!!scope.row.operateType">
+								{{ typeFilter(scope.row.operateType, 'bindType') }}
+							</span>
+							<span v-else>-</span>
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -181,7 +206,14 @@
 						align="center"
 						label="操作时间"
 						sortable="custom"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							<span v-if="!!scope.row.createDt">
+								{{ scope.row.createDt }}
+							</span>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
 				</el-table>
 				<!-- 分页 -->
 				<el-pagination
@@ -215,7 +247,7 @@ export default {
 	mixins: [list],
 	data() {
 		return {
-            queryData: {
+			queryData: {
 				operateType: '',
 				createDt: [start, end],
 				userName: '',
@@ -223,17 +255,20 @@ export default {
 				bankName: '',
 				cardNumber: '',
 				parentProxyName: '',
-                orderType: undefined
+				orderType: undefined
 			},
 			dataList: [],
 			total: 0
 		}
 	},
 	computed: {
-        bindType() {
-            return [{description: '全部', code: undefined}, ...this.globalDics.bindType]
-        }
-    },
+		bindType() {
+			return [
+				{ description: '全部', code: undefined },
+				...this.globalDics.bindType
+			]
+		}
+	},
 	mounted() {},
 	methods: {
 		loadData() {
@@ -243,12 +278,16 @@ export default {
 			let params = {
 				...this.queryData,
 				dataType: 1,
-				createDtStart: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : undefined,
-				createDtEnd: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : undefined
+				createDtStart: startTime
+					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
+					: undefined,
+				createDtEnd: endTime
+					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
+					: undefined
 			}
-            params = {
-                ...this.getParams(params)
-            }
+			params = {
+				...this.getParams(params)
+			}
 			delete params.createDt
 			this.$api.bankRecordListAPI(params).then((res) => {
 				const {

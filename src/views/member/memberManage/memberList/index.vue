@@ -301,7 +301,7 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="updateDt" align="center" label="账号类型">
+					<el-table-column prop="accountType" align="center" label="账号类型">
 						<template slot-scope="scope">
 							<span v-if="!!scope.row.accountType">
 								{{ typeFilter(scope.row.accountType, 'accountType') }}
