@@ -543,15 +543,18 @@ export default {
 			delete params.registerTime
 			delete params.lastLoginTime
 			delete params.firstSaveTime
-			params.accountStatus = params.accountStatus
-				? params.accountStatus.join(',')
-				: undefined
-			params.deviceType = params.deviceType
-				? params.deviceType.join(',')
-				: undefined
-			params.accountType = params.accountType
-				? params.accountType.join(',')
-				: undefined
+			params.accountStatus =
+				params.accountStatus && params.accountStatus.length
+					? params.accountStatus.join(',')
+					: undefined
+			params.deviceType =
+				params.deviceType && params.deviceType.length
+					? params.deviceType.join(',')
+					: undefined
+			params.accountType =
+				params.accountType && params.accountType.length
+					? params.accountType.join(',')
+					: undefined
 			this.$api.memberListAPI(params).then((res) => {
 				const {
 					code,

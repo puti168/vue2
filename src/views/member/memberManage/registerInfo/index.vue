@@ -47,7 +47,7 @@
 							size="medium"
 							placeholder="请输入"
 							clearable
-                            maxlength="11"
+							maxlength="11"
 							style="width: 180px"
 						></el-input>
 					</el-form-item>
@@ -57,7 +57,7 @@
 							size="medium"
 							placeholder="请输入"
 							clearable
-                            maxlength="6"
+							maxlength="6"
 							style="width: 180px"
 						></el-input>
 					</el-form-item>
@@ -67,7 +67,7 @@
 							size="medium"
 							placeholder="请输入"
 							clearable
-                            maxlength="11"
+							maxlength="11"
 							style="width: 180px"
 						></el-input>
 					</el-form-item>
@@ -77,7 +77,7 @@
 							size="medium"
 							placeholder="请输入"
 							clearable
-                            maxlength="11"
+							maxlength="11"
 							style="width: 180px"
 						></el-input>
 					</el-form-item>
@@ -87,7 +87,7 @@
 							size="medium"
 							placeholder="请输入"
 							clearable
-                            maxlength="15"
+							maxlength="15"
 							style="width: 180px"
 						></el-input>
 					</el-form-item>
@@ -97,7 +97,7 @@
 							size="medium"
 							placeholder="请输入"
 							clearable
-                            maxlength="10"
+							maxlength="10"
 							style="width: 180px"
 						></el-input>
 					</el-form-item>
@@ -276,11 +276,11 @@ export default {
 				userName: '',
 				parentProxyName: '',
 				registerPhone: '',
-                registerIp: '',
+				registerIp: '',
 				ipAttribution: '',
 				deviceType: undefined,
 				realname: '',
-                orderType: undefined
+				orderType: undefined
 			},
 			dataList: [],
 			total: 0
@@ -313,8 +313,14 @@ export default {
 				...this.getParams(params)
 			}
 			delete params.registerTime
-			params.accountType = params.accountType ? params.accountType.join(',') : undefined
-			params.deviceType = params.deviceType ? params.deviceType.join(',') : undefined
+			params.accountType =
+				params.accountType && params.accountType.length
+					? params.accountType.join(',')
+					: undefined
+			params.deviceType =
+				params.deviceType && params.deviceType.length
+					? params.deviceType.join(',')
+					: undefined
 			this.$api.memberRegisterInfoListAPI(params).then((res) => {
 				const {
 					code,
@@ -342,7 +348,7 @@ export default {
 				userName: '',
 				parentProxyName: '',
 				registerPhone: '',
-                registerIp: '',
+				registerIp: '',
 				ipAttribution: '',
 				deviceType: undefined,
 				realname: ''
