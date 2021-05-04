@@ -31,7 +31,7 @@
 							placeholder="请输入"
 							clearable
 							style="width: 180px"
-                            maxlength="11"
+							maxlength="11"
 						></el-input>
 					</el-form-item>
 					<el-form-item label="会员姓名:" prop="realName">
@@ -41,7 +41,7 @@
 							placeholder="请输入"
 							clearable
 							style="width: 180px"
-                            maxlength="6"
+							maxlength="6"
 						></el-input>
 					</el-form-item>
 					<el-form-item label="账号状态:">
@@ -83,7 +83,7 @@
 							size="medium"
 							placeholder="最小数值"
 							style="width: 100px"
-                            maxlength="5"
+							maxlength="5"
 						></el-input>
 						-
 						<el-input
@@ -91,7 +91,7 @@
 							size="medium"
 							placeholder="最大数值"
 							style="width: 100px"
-                            maxlength="5"
+							maxlength="5"
 						></el-input>
 					</el-form-item>
 					<el-form-item label="最后登录时间:" label-width="110px">
@@ -117,7 +117,7 @@
 							size="medium"
 							placeholder="最小数值"
 							style="width: 100px"
-                            maxlength="3"
+							maxlength="3"
 						></el-input>
 						-
 						<el-input
@@ -125,7 +125,7 @@
 							size="medium"
 							placeholder="最大数值"
 							style="width: 100px"
-                            maxlength="3"
+							maxlength="3"
 						></el-input>
 					</el-form-item>
 					<el-form-item label="账号类型:">
@@ -134,6 +134,7 @@
 							size="medium"
 							placeholder="默认选择全部"
 							clearable
+                            multiple
 							style="width: 300px"
 						>
 							<el-option
@@ -167,7 +168,7 @@
 							size="medium"
 							placeholder="最小数值"
 							style="width: 100px"
-                            maxlength="10"
+							maxlength="10"
 						></el-input>
 						-
 						<el-input
@@ -175,7 +176,7 @@
 							size="medium"
 							placeholder="最大数值"
 							style="width: 100px"
-                            maxlength="10"
+							maxlength="10"
 						></el-input>
 					</el-form-item>
 					<el-form-item label="首存时间:" label-width="100px">
@@ -217,7 +218,7 @@
 							placeholder="请输入"
 							clearable
 							style="width: 180px"
-                            maxlength="11"
+							maxlength="11"
 						></el-input>
 					</el-form-item>
 					<el-form-item>
@@ -486,17 +487,17 @@ export default {
 				realName: undefined,
 				accountStatus: undefined,
 				windControlId: undefined,
-                offLineDaysStart: undefined,
+				offLineDaysStart: undefined,
 				offLineDaysEnd: undefined,
 				lastLoginTime: [start, end],
-                vipSerialNumMax: undefined,
-                vipSerialNumMin: undefined,
+				vipSerialNumMax: undefined,
+				vipSerialNumMin: undefined,
 				accountType: undefined,
 				deviceType: undefined,
-                firstDepositAmountMin: undefined,
-                firstDepositAmountMax: undefined,
-                firstSaveTime: [],
-                labelId: undefined,
+				firstDepositAmountMin: undefined,
+				firstDepositAmountMax: undefined,
+				firstSaveTime: [],
+				labelId: undefined,
 				parentProxyName: undefined,
 				orderKey: undefined,
 				orderType: undefined
@@ -524,27 +525,33 @@ export default {
 	mounted() {},
 	methods: {
 		loadData() {
-            this.dataList = []
-            const create = this.queryData.registerTime || []
-            const [startTime, endTime] = create
-            let params = {
-                ...this.queryData,
-                createDtStart: startTime
-                    ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
-                    : undefined,
-                createDtEnd: endTime
-                    ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
-                    : undefined
-            }
-            params = {
-                ...this.getParams(params)
-            }
-            delete params.registerTime
-            delete params.lastLoginTime
-            delete params.firstSaveTime
-            params.accountStatus = params.accountStatus ? params.accountStatus.join(',') : undefined
-            params.deviceType = params.deviceType ? params.deviceType.join(',') : undefined
-            params.accountType = params.accountType ? params.accountType.join(',') : undefined
+			this.dataList = []
+			const create = this.queryData.registerTime || []
+			const [startTime, endTime] = create
+			let params = {
+				...this.queryData,
+				createDtStart: startTime
+					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
+					: undefined,
+				createDtEnd: endTime
+					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
+					: undefined
+			}
+			params = {
+				...this.getParams(params)
+			}
+			delete params.registerTime
+			delete params.lastLoginTime
+			delete params.firstSaveTime
+			params.accountStatus = params.accountStatus
+				? params.accountStatus.join(',')
+				: undefined
+			params.deviceType = params.deviceType
+				? params.deviceType.join(',')
+				: undefined
+			params.accountType = params.accountType
+				? params.accountType.join(',')
+				: undefined
 			this.$api.memberListAPI(params).then((res) => {
 				const {
 					code,
@@ -585,25 +592,25 @@ export default {
 		},
 		reset() {
 			this.queryData = {
-                registerTime: [start, end],
-                userName: undefined,
-                realName: undefined,
-                accountStatus: undefined,
-                windControlId: undefined,
-                offLineDaysStart: undefined,
-                offLineDaysEnd: undefined,
-                lastLoginTime: [start, end],
-                vipSerialNumMax: undefined,
-                vipSerialNumMin: undefined,
-                accountType: undefined,
-                deviceType: undefined,
-                firstDepositAmountMin: undefined,
-                firstDepositAmountMax: undefined,
-                firstSaveTime: [],
-                labelId: undefined,
-                parentProxyName: undefined,
-                orderKey: undefined,
-                orderType: undefined
+				registerTime: [start, end],
+				userName: undefined,
+				realName: undefined,
+				accountStatus: undefined,
+				windControlId: undefined,
+				offLineDaysStart: undefined,
+				offLineDaysEnd: undefined,
+				lastLoginTime: [start, end],
+				vipSerialNumMax: undefined,
+				vipSerialNumMin: undefined,
+				accountType: undefined,
+				deviceType: undefined,
+				firstDepositAmountMin: undefined,
+				firstDepositAmountMax: undefined,
+				firstSaveTime: [],
+				labelId: undefined,
+				parentProxyName: undefined,
+				orderKey: undefined,
+				orderType: undefined
 			}
 			this.$refs['form'].resetFields()
 			this.loadData()
@@ -627,7 +634,7 @@ export default {
 			if (prop === 'offLineDays') {
 				prop = 6
 			}
-            this.queryData.orderKey = prop
+			this.queryData.orderKey = prop
 			if (order === 'ascending') {
 				// 升序
 				this.queryData.orderType = 'asc'
@@ -638,26 +645,32 @@ export default {
 			this.loadData()
 		},
 		exportExcel() {
-            const create = this.queryData.registerTime || []
-            const [startTime, endTime] = create
-            let params = {
-                ...this.queryData,
-                createDtStart: startTime
-                    ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
-                    : undefined,
-                createDtEnd: endTime
-                    ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
-                    : undefined
-            }
-            params = {
-                ...this.getParams(params)
-            }
-            delete params.registerTime
-            delete params.lastLoginTime
-            delete params.firstSaveTime
-            params.accountStatus = params.accountStatus ? params.accountStatus.join(',') : undefined
-            params.deviceType = params.deviceType ? params.deviceType.join(',') : undefined
-            params.accountType = params.accountType ? params.accountType.join(',') : undefined
+			const create = this.queryData.registerTime || []
+			const [startTime, endTime] = create
+			let params = {
+				...this.queryData,
+				createDtStart: startTime
+					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
+					: undefined,
+				createDtEnd: endTime
+					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
+					: undefined
+			}
+			params = {
+				...this.getParams(params)
+			}
+			delete params.registerTime
+			delete params.lastLoginTime
+			delete params.firstSaveTime
+			params.accountStatus = params.accountStatus
+				? params.accountStatus.join(',')
+				: undefined
+			params.deviceType = params.deviceType
+				? params.deviceType.join(',')
+				: undefined
+			params.accountType = params.accountType
+				? params.accountType.join(',')
+				: undefined
 			this.$api.exportExcelAPI(params).then((res) => {
 				const result = res.data
 				const disposition = res.headers['content-disposition']
