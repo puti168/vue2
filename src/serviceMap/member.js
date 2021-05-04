@@ -63,9 +63,9 @@ const member = [
 	{
 		id: '12',
 		parentId: '11',
-		path: '/member/memberReview/MemberChange',
+		path: '/member/memberReview/memberChange',
 		title: '会员账户修改审核',
-		name: 'MemberChange'
+		name: 'memberChange'
 	},
 	{
 		id: '13',
