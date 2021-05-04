@@ -81,16 +81,13 @@
 			</div>
 		</div>
 		<el-dialog
-			:title="提交确认"
+			title="提交确认"
 			center
 			:visible.sync="visible"
 			:before-close="closeFormDialog"
 			width="410px"
 		>
-			<el-form
-				ref="form"
-				label-width="80px"
-			>
+			<el-form ref="form" label-width="80px">
 				<el-form-item label="提交审核信息">
 					<el-input
 						v-model="auditRemark"
@@ -104,10 +101,7 @@
 			</el-form>
 			<div slot="footer" class="dialog-footer">
 				<el-button @click="visible = false">取 消</el-button>
-				<el-button
-					type="primary"
-					@click="auditOne"
-				>
+				<el-button type="primary" @click="auditOne">
 					提交
 				</el-button>
 			</div>
@@ -136,12 +130,12 @@ export default {
 	},
 	computed: {},
 	created() {
-		this.getInfo()
-		this.type = this.$route.query.type
+		if (this.$route.name === 'memberChangeReview') {
+			this.getInfo()
+			this.type = this.$route.query.type
+		}
 	},
-	mounted() {
-		console.log(this.$route.query)
-	},
+	mounted() {},
 	methods: {
 		closeFormDialog() {},
 		confirm(action) {

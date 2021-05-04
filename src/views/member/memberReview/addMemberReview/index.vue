@@ -107,11 +107,12 @@ export default {
 		}
 	},
 	created() {
-		this.type = this.$route.query.type
+		if (this.$route.name === 'addMemberReview') {
+			this.getInfo()
+			this.type = this.$route.query.type
+		}
 	},
-	mounted() {
-		this.getInfo()
-	},
+	mounted() {},
 	methods: {
 		closeFormDialog() {},
 		confirm(action) {
