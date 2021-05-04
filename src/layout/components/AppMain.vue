@@ -1,7 +1,7 @@
 <template>
 	<section class="app-main">
 		<transition name="fade-transform" mode="out-in">
-			<keep-alive :exclude="noAliveList">
+			<keep-alive :include="cachedViews">
 				<router-view :key="key" />
 			</keep-alive>
 		</transition>
@@ -14,7 +14,6 @@ export default {
 	components: {},
 	data() {
 		return {
-			noAliveList: ['memberChangeReview', 'addMemberReview', 'addMemberCheck', 'memberChange']
 		}
 	},
 	computed: {
@@ -22,9 +21,13 @@ export default {
 			return this.$store.state.app.modifyVisible
 		},
 		cachedViews() {
+			console.log('cachedViews')
+			console.log(this.$store.state.tagsView.cachedViews)
 			return this.$store.state.tagsView.cachedViews
 		},
 		key() {
+			console.log('path')
+			console.log(this.$route.path)
 			return this.$route.path
 		}
 	}
