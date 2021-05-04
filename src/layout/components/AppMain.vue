@@ -21,13 +21,9 @@ export default {
 			return this.$store.state.app.modifyVisible
 		},
 		cachedViews() {
-			console.log('cachedViews')
-			console.log(this.$store.state.tagsView.cachedViews)
 			return this.$store.state.tagsView.cachedViews
 		},
 		key() {
-			console.log('path')
-			console.log(this.$route.path)
 			return this.$route.path
 		}
 	}

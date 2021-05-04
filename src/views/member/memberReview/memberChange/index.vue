@@ -189,7 +189,7 @@
 					:header-cell-style="getRowClass"
 					@sort-change="changeTableSort"
 				>
-					<el-table-column align="center" label="锁单">
+					<el-table-column align="center" label="锁单" width="60">
 						<template slot-scope="scope">
 							<el-checkbox
 								v-if="
@@ -201,7 +201,7 @@
 							></el-checkbox>
 						</template>
 					</el-table-column>
-					<el-table-column prop="auditStep" align="center" label="操作">
+					<el-table-column prop="auditStep" align="center" label="操作" width="100">
 						<template slot-scope="scope">
 							<el-button
 								:class="Number(scope.row.auditStep) === 1 && scope.row.auditName !== name ? 'dis' : ''"
@@ -217,6 +217,7 @@
 						prop="auditNum"
 						align="center"
 						label="审核单号"
+						width="170"
 					></el-table-column>
 					<el-table-column prop="applyType" align="center" label="审核申请类型">
 						<template slot-scope="scope">
@@ -253,6 +254,7 @@
 						prop="applyTime"
 						align="center"
 						sortable="custom"
+						width="160"
 						label="申请时间"
 					></el-table-column>
 					<el-table-column
@@ -260,7 +262,7 @@
 						align="center"
 						label="申请信息"
 					></el-table-column>
-					<el-table-column align="center" label="审核状态">
+					<el-table-column align="center" label="审核状态" width="80">
 						<template slot-scope="scope">
 							<span
 								:class="

@@ -155,6 +155,7 @@
 					<el-table-column
 						align="center"
 						label="账号类型"
+						width="100"
 					>
 						<template slot-scope="scope">
 							<p>{{ typeFilter(scope.row.accountType, 'accountType') }}</p>
@@ -190,6 +191,7 @@
 					<el-table-column
 						prop="operateType"
 						align="center"
+						width="100"
 						label="操作类型"
 					><template slot-scope="scope">
 							<p>{{ typeFilter(scope.row.operateType, 'bindType') }}</p>
