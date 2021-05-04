@@ -10,6 +10,8 @@ export const routerNames = {
 	memberLogin: 'memberLogin',
 	registerInfo: 'registerInfo',
 	virtualRecord: 'virtualRecord',
+	addMemberReview: 'addMemberReview',
+	memberChangeReview: 'memberChangeReview',
 	gameClassify: 'gameClassify',
 	gamePlatform: 'gamePlatform',
 	addMemberCheck: 'addMemberCheck'

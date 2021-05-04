@@ -146,10 +146,20 @@
 							></el-checkbox>
 						</template>
 					</el-table-column>
-					<el-table-column prop="auditStep" align="center" label="操作" width="100">
+					<el-table-column
+						prop="auditStep"
+						align="center"
+						label="操作"
+						width="100"
+					>
 						<template slot-scope="scope">
 							<el-button
-								:class="Number(scope.row.auditStep) === 1 && scope.row.auditName !== name ? 'dis' : ''"
+								:class="
+									Number(scope.row.auditStep) === 1 &&
+									scope.row.auditName !== name
+										? 'dis'
+										: ''
+								"
 								:type="
 									Number(scope.row.auditStep) === 0 ? 'success' : 'primary'
 								"
@@ -341,9 +351,14 @@ export default {
 		},
 		goDetail(row) {
 			const type = Number(row.auditStep) === 1 && row.auditName === this.name
-			this.$router.push({
-				path: '/member/memberReview/addMemberReview',
-				query: { id: row.id, userId: row.userId, type: type }
+			this.$store.dispatch('tagsView/delView', {
+				name: routerNames.addMemberReview
+			})
+			this.$nextTick(() => {
+				this.$router.push({
+					path: '/member/memberReview/addMemberReview',
+					query: { id: row.id, userId: row.userId, type: type }
+				})
 			})
 		},
 		reset() {

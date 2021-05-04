@@ -83,9 +83,10 @@
 
 <script>
 import list from '@/mixins/list'
+import { routerNames } from '@/utils/consts'
 // import dayjs from 'dayjs'
 export default {
-	name: 'AddMemberReview',
+	name: routerNames.addMemberReview,
 	components: {},
 	mixins: [list],
 	data() {

@@ -22,43 +22,50 @@ const member = [
 		id: '4',
 		parentId: '3',
 		path: '/member/memberManage/memberList',
-		title: '会员列表'
+		title: '会员列表',
+		name: 'memberList'
 	},
 	{
 		id: '5',
 		parentId: '3',
 		path: '/member/memberManage/memberDetails',
-		title: '会员详情'
+		title: '会员详情',
+		name: 'memberDetails'
 	},
 	{
 		id: '6',
 		parentId: '3',
 		path: '/member/memberManage/addMember',
-		title: '新增会员'
+		title: '新增会员',
+		name: 'addMember'
 	},
 	{
 		id: '7',
 		parentId: '3',
 		path: '/member/memberManage/registerInfo',
-		title: '会员注册信息'
+		title: '会员注册信息',
+		name: 'registerInfo'
 	},
 	{
 		id: '8',
 		parentId: '3',
 		path: '/member/memberManage/bankRecord',
-		title: '会员银行卡记录'
+		title: '会员银行卡记录',
+		name: 'bankRecord'
 	},
 	{
 		id: '9',
 		parentId: '3',
 		path: '/member/memberManage/virtualRecord',
-		title: '会员虚拟币账号记录'
+		title: '会员虚拟币账号记录',
+		name: 'virtualRecord'
 	},
 	{
 		id: '10',
 		parentId: '3',
 		path: '/member/memberManage/memberLogin',
-		title: '会员登录日志'
+		title: '会员登录日志',
+		name: 'memberLogin'
 	},
 	{
 		id: '12',
@@ -71,7 +78,8 @@ const member = [
 		id: '13',
 		parentId: '11',
 		path: '/member/memberReview/addMemberCheck',
-		title: '新增会员审核'
+		title: '新增会员审核',
+		name: 'addMemberCheck'
 	}
 ]
 export default member

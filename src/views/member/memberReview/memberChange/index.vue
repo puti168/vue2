@@ -201,11 +201,23 @@
 							></el-checkbox>
 						</template>
 					</el-table-column>
-					<el-table-column prop="auditStep" align="center" label="操作" width="100">
+					<el-table-column
+						prop="auditStep"
+						align="center"
+						label="操作"
+						width="100"
+					>
 						<template slot-scope="scope">
 							<el-button
-								:class="Number(scope.row.auditStep) === 1 && scope.row.auditName !== name ? 'dis' : ''"
-								:type="Number(scope.row.auditStep) === 0 ? 'success' : 'primary'"
+								:class="
+									Number(scope.row.auditStep) === 1 &&
+									scope.row.auditName !== name
+										? 'dis'
+										: ''
+								"
+								:type="
+									Number(scope.row.auditStep) === 0 ? 'success' : 'primary'
+								"
 								size="medium"
 								@click="goDetail(scope.row)"
 							>
@@ -424,9 +436,14 @@ export default {
 		},
 		goDetail(row) {
 			const type = Number(row.auditStep) === 1 && row.auditName === this.name
-			this.$router.push({
-				path: '/member/memberReview/memberChangeReview',
-				query: { id: row.id, userId: row.userId, type: type }
+			this.$store.dispatch('tagsView/delView', {
+				name: routerNames.memberChangeReview
+			})
+			this.$nextTick(() => {
+				this.$router.push({
+					path: '/member/memberReview/memberChangeReview',
+					query: { id: row.id, userId: row.userId, type: type }
+				})
 			})
 		},
 		reset() {
@@ -456,22 +473,24 @@ export default {
 				spinner: 'el-icon-loading',
 				background: 'rgba(0, 0, 0, 0.7)'
 			})
-			this.$api.lock({ id: val.id, lockFlag: Number(val.lockOrder) === 0 ? 0 : 1}).then((res) => {
-				if (res.code === 200) {
-					loading.close()
-					this.$message({
-						type: 'success',
-						message: '锁单成功!'
-					})
-					this.loadData()
-				} else {
-					loading.close()
-					this.$message({
-						message: res.msg,
-						type: 'error'
-					})
-				}
-			})
+			this.$api
+				.lock({ id: val.id, lockFlag: Number(val.lockOrder) === 0 ? 0 : 1 })
+				.then((res) => {
+					if (res.code === 200) {
+						loading.close()
+						this.$message({
+							type: 'success',
+							message: '锁单成功!'
+						})
+						this.loadData()
+					} else {
+						loading.close()
+						this.$message({
+							message: res.msg,
+							type: 'error'
+						})
+					}
+				})
 		}
 	}
 }

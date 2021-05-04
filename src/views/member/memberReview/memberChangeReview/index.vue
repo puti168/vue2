@@ -111,8 +111,9 @@
 
 <script>
 // import dayjs from 'dayjs'
+import { routerNames } from '@/utils/consts'
 export default {
-	name: 'MemberChangeReview',
+	name: routerNames.memberChangeReview,
 	components: {},
 	mixins: [],
 	data() {
