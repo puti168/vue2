@@ -16,7 +16,9 @@
 				<div class="review-content">
 					<p class="name">新增会员信息</p>
 					<div class="review-flex">
-						<div>账号类型: {{ typeFilter(list.accountType, 'accountType') }}</div>
+						<div>
+							账号类型: {{ typeFilter(list.accountType, 'accountType') }}
+						</div>
 						<div>会员账号: {{ list.userName }}</div>
 						<div>登录密码: {{ list.password }}</div>
 						<div>上级代理: {{ list.parentProxyName }}</div>
@@ -56,17 +58,14 @@
 			:before-close="closeFormDialog"
 			width="610px"
 		>
-			<el-form
-				ref="form"
-				label-width="100px"
-			>
+			<el-form ref="form" label-width="100px">
 				<el-form-item label="提交审核信息">
 					<el-input
 						v-model="remark"
 						clearable
 						type="textarea"
 						:max="50"
-						:autosize="{ minRows: 4, maxRows: 4}"
+						:autosize="{ minRows: 4, maxRows: 4 }"
 						size="medium"
 						placeholder="请输入"
 					></el-input>
@@ -74,10 +73,7 @@
 			</el-form>
 			<div slot="footer" class="dialog-footer">
 				<el-button @click="visible = false">取 消</el-button>
-				<el-button
-					type="primary"
-					@click="auditOne"
-				>
+				<el-button type="primary" @click="auditOne">
 					提交
 				</el-button>
 			</div>
@@ -111,10 +107,12 @@ export default {
 		}
 	},
 	created() {
-		this.getInfo()
 		this.type = this.$route.query.type
 	},
-	mounted() {},
+	mounted() {
+		console.log('2222')
+		this.getInfo()
+	},
 	methods: {
 		closeFormDialog() {},
 		confirm(action) {

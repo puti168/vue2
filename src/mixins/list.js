@@ -70,6 +70,7 @@ export default {
 				['createDt', 'createDt'],
 				['auditTime', 'auditTime'],
 				['applyTime', 'applyTime'],
+				['loginTime', 'loginTime'],
 				['modifyDt', 'modifyDt']
 			])
 			return SortLine
