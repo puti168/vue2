@@ -526,6 +526,7 @@ export default {
 	methods: {
 		loadData() {
 			this.dataList = []
+			this.loading = true
 			const create = this.queryData.registerTime || []
 			const [startTime, endTime] = create
 			let params = {
@@ -555,24 +556,31 @@ export default {
 				params.accountType && params.accountType.length
 					? params.accountType.join(',')
 					: undefined
-			this.$api.memberListAPI(params).then((res) => {
-				const {
-					code,
-					data: { record, totalRecord },
-					msg
-				} = res
-				if (code === 200) {
-					this.loading = false
-					this.dataList = record || []
-					this.total = totalRecord || 0
-				} else {
-					this.loading = false
-					this.$message({
-						message: msg,
-						type: 'error'
-					})
-				}
-			})
+			this.$api
+				.memberListAPI(params)
+				.then((res) => {
+					const {
+						code,
+						data: { record, totalRecord },
+						msg
+					} = res
+					if (code === 200) {
+						this.loading = false
+						this.dataList = record || []
+						this.total = totalRecord || 0
+					} else {
+						this.loading = false
+						this.$message({
+							message: msg,
+							type: 'error'
+						})
+					}
+				})
+				.catch(() => (this.loading = false))
+
+			setTimeout(() => {
+				this.loading = false
+			}, 1000)
 		},
 		// 获取风控层级
 		getMerchantDict() {

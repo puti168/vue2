@@ -274,6 +274,7 @@ export default {
 	methods: {
 		loadData() {
 			this.dataList = []
+			this.loading = true
 			const create = this.queryData.createDt || []
 			const [startTime, endTime] = create
 			let params = {
@@ -290,24 +291,31 @@ export default {
 				...this.getParams(params)
 			}
 			delete params.createDt
-			this.$api.bankRecordListAPI(params).then((res) => {
-				const {
-					code,
-					data: { record, totalRecord },
-					msg
-				} = res
-				if (code === 200) {
-					this.loading = false
-					this.dataList = record || []
-					this.total = totalRecord || 0
-				} else {
-					this.loading = false
-					this.$message({
-						message: msg,
-						type: 'error'
-					})
-				}
-			})
+			this.$api
+				.bankRecordListAPI(params)
+				.then((res) => {
+					const {
+						code,
+						data: { record, totalRecord },
+						msg
+					} = res
+					if (code === 200) {
+						this.loading = false
+						this.dataList = record || []
+						this.total = totalRecord || 0
+					} else {
+						this.loading = false
+						this.$message({
+							message: msg,
+							type: 'error'
+						})
+					}
+				})
+				.catch(() => (this.loading = false))
+
+			setTimeout(() => {
+				this.loading = false
+			}, 1000)
 		},
 		reset() {
 			this.$refs['form'].resetFields()
