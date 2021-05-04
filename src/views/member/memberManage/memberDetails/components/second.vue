@@ -361,6 +361,7 @@ export default {
   margin-bottom: 10px;
 }
 .borderL {
+  min-height: 72px;
   border-left: 1px solid #ccc;
 }
 .textR {

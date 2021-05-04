@@ -418,6 +418,7 @@ export default {
     outlineInfo: {
       handler(newV) {
         this.outlineInfoList = { ...newV }
+        console.log('newV.auditList', newV.auditList)
         if (newV.auditList) {
           this.isshow = false
           for (let i = 0; i < newV.auditList.length; i++) {
@@ -430,7 +431,7 @@ export default {
             }
           }
         } else {
-          this.isshow = true
+          this.isshow = false
         }
       },
       deep: true,
