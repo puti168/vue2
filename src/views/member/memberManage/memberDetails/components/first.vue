@@ -3,27 +3,23 @@
     <el-row>
       <el-col :span="4" class="backgroundTitelBox">基本信息</el-col>
       <el-col :span="2" class="refrestBox">
-        <el-button
-          type="primary"
-          icon="el-icon-refresh"
-          :disabled="parentData.userId === ''"
-          @click="refresh"
-          >刷新</el-button>
+        <el-button type="primary" icon="el-icon-refresh" @click="refresh">刷新</el-button>
       </el-col>
       <el-col :span="2" class="editMsg">
         <i class="el-icon-edit-outline"></i><br />
         编辑信息
       </el-col>
-      <el-col v-if="isshow" :span="16" class="btngroup">
+      <!-- <el-col v-if="isshow" :span="16" class="btngroup">
         <el-button
           v-for="(item, index) in editMsgList"
           :key="index"
           disabled
           type="primary"
-          >{{ item.label }}</el-button>
+          >{{ item.label }}</el-button
+        >
         <el-button disabled type="primary">账号备注</el-button>
-      </el-col>
-      <el-col v-else :span="16" class="btngroup aaaaa">
+      </el-col> -->
+      <el-col :span="16" class="btngroup aaaaa">
         <el-button
           v-for="(item, index) in editMsgList"
           :key="index"
@@ -31,34 +27,84 @@
           :disabled="item.applyStatus === '1'"
           @click="editFn(item.label)"
           >{{ item.label }}</el-button>
-        <el-button
-          :disabled="parentData.userId === ''"
-          type="primary"
-          @click="editFn('账号备注')"
-          >账号备注</el-button>
+        <el-button type="primary" @click="editFn('账号备注')">账号备注</el-button>
       </el-col>
     </el-row>
     <div class="titelBox">概要信息</div>
     <el-row class="msgList">
-      <el-col :span="5">会员账号：{{ outlineInfoList.userName }}</el-col>
       <el-col
 :span="5"
->账号类型：{{ typeFilter(outlineInfoList.accountType, "accountType") }}</el-col>
+>会员账号：<i v-if="activeL" class="el-icon-loading"></i>
+        <span v-else>{{ outlineInfoList.userName }}</span>
+      </el-col>
+      <el-col :span="5">
+        账号类型：<i v-if="activeL" class="el-icon-loading"></i>
+        <span v-else>
+          {{ typeFilter(outlineInfoList.accountType, "accountType") }}
+        </span>
+      </el-col>
       <el-col
 :span="5"
->帐号状态：{{
-          typeFilter(outlineInfoList.accountStatus, "accountStatusType")
-        }}</el-col>
-      <el-col :span="5">风控层级：{{ outlineInfoList.windControlName }}</el-col>
-      <el-col :span="5">首存时间：{{ outlineInfoList.createDt }}</el-col>
-      <el-col :span="5">首存金额：{{ outlineInfoList.firstDepositAmount }}</el-col>
-      <el-col :span="5">最后登录时间：{{ outlineInfoList.lastLoginTime }}</el-col>
-      <el-col :span="5">离线天数：{{ outlineInfoList.leaveLineTime }}</el-col>
-      <el-col :span="5">注册时间：{{ outlineInfoList.firstDepositTime }}</el-col>
-      <el-col :span="5">注册IP：{{ outlineInfoList.registerIp }}</el-col>
+>帐号状态：<i v-if="activeL" class="el-icon-loading"></i>
+        <span v-else>
+          {{ typeFilter(outlineInfoList.accountStatus, "accountStatusType") }}
+        </span>
+      </el-col>
       <el-col
 :span="5"
->注册端：{{ typeFilter(outlineInfoList.deviceType, "deviceType") }}
+>风控层级：<i v-if="activeL" class="el-icon-loading"></i>
+        <span v-else>
+          {{ outlineInfoList.windControlName }}
+        </span>
+      </el-col>
+      <el-col
+:span="5"
+>首存时间：<i v-if="activeL" class="el-icon-loading"></i>
+        <span v-else>
+          {{ outlineInfoList.createDt }}
+        </span>
+      </el-col>
+      <el-col
+:span="5"
+>首存金额：<i v-if="activeL" class="el-icon-loading"></i>
+        <span v-else>
+          {{ outlineInfoList.firstDepositAmount }}
+        </span>
+      </el-col>
+      <el-col
+:span="5"
+>最后登录时间：<i v-if="activeL" class="el-icon-loading"></i>
+        <span v-else>
+          {{ outlineInfoList.lastLoginTime }}
+        </span>
+      </el-col>
+      <el-col
+:span="5"
+>离线天数：<i v-if="activeL" class="el-icon-loading"></i>
+        <span v-else>
+          {{ outlineInfoList.leaveLineTime }}
+        </span>
+      </el-col>
+      <el-col
+:span="5"
+>注册时间：<i v-if="activeL" class="el-icon-loading"></i>
+        <span v-else>
+          {{ outlineInfoList.firstDepositTime }}
+        </span>
+      </el-col>
+      <el-col
+:span="5"
+>注册IP：<i v-if="activeL" class="el-icon-loading"></i>
+        <span v-else>
+          {{ outlineInfoList.registerIp }}
+        </span>
+      </el-col>
+      <el-col
+:span="5"
+>注册端：<i v-if="activeL" class="el-icon-loading"></i>
+        <span v-else>
+          {{ typeFilter(outlineInfoList.deviceType, "deviceType") }}
+        </span>
       </el-col>
       <el-col :span="5">上级代理：{{ outlineInfoList.parentProxyName }}</el-col>
       <el-col :span="5">会员标签：{{ outlineInfoList.labelName }}</el-col>
@@ -66,13 +112,41 @@
     <el-divider></el-divider>
     <div class="titelBox">个人资料</div>
     <el-row class="msgList">
-      <el-col :span="5">姓名：{{ outlineInfoList.realName }}</el-col>
       <el-col
 :span="5"
->性别：{{ typeFilter(outlineInfoList.gender, "genderType") }}</el-col>
-      <el-col :span="5">出生日期：{{ outlineInfoList.birth }}</el-col>
-      <el-col :span="5">手机号码：{{ outlineInfoList.registerPhone }}</el-col>
-      <el-col :span="5">邮箱：{{ outlineInfoList.email }}</el-col>
+>姓名：<i v-if="activeL" class="el-icon-loading"></i>
+        <span v-else>
+          {{ outlineInfoList.realName }}
+        </span>
+      </el-col>
+      <el-col
+:span="5"
+>性别：<i v-if="activeL" class="el-icon-loading"></i>
+        <span v-else>
+          {{ typeFilter(outlineInfoList.gender, "genderType") }}
+        </span>
+      </el-col>
+      <el-col
+:span="5"
+>出生日期：<i v-if="activeL" class="el-icon-loading"></i>
+        <span v-else>
+          {{ outlineInfoList.birth }}
+        </span>
+      </el-col>
+      <el-col
+:span="5"
+>手机号码：<i v-if="activeL" class="el-icon-loading"></i>
+        <span v-else>
+          {{ outlineInfoList.registerPhone }}
+        </span>
+      </el-col>
+      <el-col
+:span="5"
+>邮箱：<i v-if="activeL" class="el-icon-loading"></i>
+        <span v-else>
+          {{ outlineInfoList.email }}
+        </span>
+      </el-col>
     </el-row>
     <el-divider></el-divider>
     <el-row class="titelBox">
@@ -81,11 +155,26 @@
     </el-row>
     <el-row class="msgList" style="min-height: 90px">
       <el-col :span="12" class="paddingBox">
-        <el-row v-show="vipMsgList.depositAmountLave">
+        <el-row>
           <el-col :span="3">剩余</el-col>
-          <el-col :span="7" class="textR">{{ vipMsgList.depositAmountLave }}</el-col>
-          <el-col :span="7" class="textR">{{ vipMsgList.validBetsLave }}</el-col>
-          <el-col :span="7" class="textR">{{ vipMsgList.bjValidBetsLave }}</el-col>
+          <el-col :span="7" class="textR">
+            <i v-if="activeL" class="el-icon-loading"></i>
+            <span v-else>
+              {{ vipMsgList.depositAmountLave }}
+            </span>
+          </el-col>
+          <el-col :span="7" class="textR">
+            <i v-if="activeL" class="el-icon-loading"></i>
+            <span v-else>
+              {{ vipMsgList.validBetsLave }}
+            </span>
+          </el-col>
+          <el-col :span="7" class="textR">
+            <i v-if="activeL" class="el-icon-loading"></i>
+            <span v-else>
+              {{ vipMsgList.bjValidBetsLave }}
+            </span>
+          </el-col>
         </el-row>
         <el-row style="height: 14px">
           <el-col :span="3" style="color: #fff; height: 14px">进度条 </el-col>
@@ -99,24 +188,28 @@
             <el-progress :percentage="percentagec" :stroke-width="12" :show-text="false">
             </el-progress></el-col>
         </el-row>
-        <el-row v-show="vipMsgList.depositAmountLave">
+        <el-row>
           <el-col :span="3">已完成</el-col>
-          <el-col
-:span="7"
-class="textR"
->{{ vipMsgList.depositAmountCurr }}/{{
-              vipMsgList.depositAmountTotal
-            }}</el-col>
-          <el-col
-:span="7"
-class="textR"
->{{ vipMsgList.validBetsCurr }}/{{ vipMsgList.validBetsTotal }}</el-col>
-          <el-col
-:span="7"
-class="textR"
->{{ vipMsgList.bjValidBetsCurr }}/{{ vipMsgList.bjValidBetsTotal }}</el-col>
+          <el-col :span="7" class="textR">
+            <i v-if="activeL" class="el-icon-loading"></i>
+            <span v-else>
+              {{ vipMsgList.depositAmountCurr }}/{{ vipMsgList.depositAmountTotal }}
+            </span>
+          </el-col>
+          <el-col :span="7" class="textR">
+            <i v-if="activeL" class="el-icon-loading"></i>
+            <span v-else>
+              {{ vipMsgList.validBetsCurr }}/{{ vipMsgList.validBetsTotal }}
+            </span>
+          </el-col>
+          <el-col :span="7" class="textR">
+            <i v-if="activeL" class="el-icon-loading"></i>
+            <span v-else>
+              {{ vipMsgList.bjValidBetsCurr }}/{{ vipMsgList.bjValidBetsTotal }}
+            </span>
+          </el-col>
         </el-row>
-        <el-row v-show="vipMsgList.depositAmountLave">
+        <el-row>
           <el-col :span="3" style="color: #fff">描述</el-col>
           <el-col
 :span="7"
@@ -136,13 +229,35 @@ class="textC"
         </el-row>
       </el-col>
       <el-col :span="10" class="paddingBox">
-        <div>VIP等级：{{ vipMsgList.grade }}</div>
-        <div>VIP经验：{{ vipMsgList.experience }}</div>
+        <div>
+          VIP等级：<i v-if="activeL" class="el-icon-loading"></i>
+          <span v-else>
+            {{ vipMsgList.grade }}
+          </span>
+        </div>
+        <div>
+          VIP经验：<i v-if="activeL" class="el-icon-loading"></i>
+          <span v-else>
+            {{ vipMsgList.experience }}
+          </span>
+        </div>
       </el-col>
     </el-row>
     <el-divider></el-divider>
     <div class="titelBox">备注信息</div>
-    <div style="width: 70%">
+    <div
+      v-if="activeL"
+      style="
+        height: 100px;
+        width: 300px;
+        line-height: 100px;
+        text-align: center;
+        font-size: 24px;
+      "
+    >
+      <i class="el-icon-loading"></i>
+    </div>
+    <div v-else style="width: 70%">
       <el-table
         border
         size="mini"
@@ -377,6 +492,7 @@ export default {
 
     return {
       loading: false,
+      activeL: true,
       // 编辑信息按钮
       editMsgList: [
         { code: '6', label: '账号状态', applyStatus: '' },
@@ -419,7 +535,7 @@ export default {
       handler(newV) {
         this.outlineInfoList = { ...newV }
         console.log('newV.auditList', newV.auditList)
-        if (newV.auditList) {
+        if (newV.auditList && newV.auditList !== null) {
           this.isshow = false
           for (let i = 0; i < newV.auditList.length; i++) {
             const ele = newV.auditList[i]
@@ -431,6 +547,9 @@ export default {
             }
           }
         } else {
+          for (let i = 0; i < this.editMsgList.length; i++) {
+            this.editMsgList[i].applyStatus = ''
+          }
           this.isshow = false
         }
       },

@@ -3,15 +3,22 @@
     <el-row>
       <el-col :span="4" class="backgroundTitelBox">登录信息</el-col>
       <el-col :span="2" class="refrestBox">
-        <el-button
-          type="primary"
-          icon="el-icon-refresh"
-          :disabled="parentData.userId === ''"
-          @click="refresh"
-          >刷新</el-button>
+        <el-button type="primary" icon="el-icon-refresh" @click="refresh">刷新</el-button>
       </el-col>
     </el-row>
-    <div style="width: 70%">
+    <div
+      v-if="activeL"
+      style="
+        height: 350px;
+        width: 400px;
+        line-height: 350px;
+        text-align: center;
+        font-size: 28px;
+      "
+    >
+      <i class="el-icon-loading"></i>
+    </div>
+    <div v-else style="width: 70%">
       <el-table
         border
         size="mini"
@@ -42,11 +49,11 @@
           align="center"
           label="登录网址"
         ></el-table-column>
-        <el-table-column
-          prop="deviceType"
-          align="center"
-          label="登录终端"
-        ></el-table-column>
+        <el-table-column prop="deviceType" align="center" label="登录终端">
+          <template slot-scope="scope">
+            {{ typeFilter(scope.row.deviceType, "deviceType") }}
+          </template>
+        </el-table-column>
         <el-table-column prop="deviceNo" align="center" label="设备号"></el-table-column>
         <el-table-column
           prop="browseContent"
@@ -82,6 +89,7 @@ export default {
   },
   data() {
     return {
+      activeL: true,
       page: 1,
       size: 10,
       dataList: []

@@ -4,16 +4,23 @@
     <el-row>
       <el-col :span="4" class="backgroundTitelBox">银行卡/虚拟币账号信息</el-col>
       <el-col :span="2" class="refrestBox">
-        <el-button
-          type="primary"
-          icon="el-icon-refresh"
-          :disabled="parentData.userId === ''"
-          @click="refresh"
-          >刷新</el-button>
+        <el-button type="primary" icon="el-icon-refresh" @click="refresh">刷新</el-button>
       </el-col>
     </el-row>
     <div class="titelBox">银行卡</div>
-    <div style="width: 70%">
+    <div
+      v-if="activeL"
+      style="
+        height: 100px;
+        width: 180px;
+        line-height: 100px;
+        text-align: center;
+        font-size: 24px;
+      "
+    >
+      <i class="el-icon-loading"></i>
+    </div>
+    <div v-else style="width: 70%">
       <el-table
         border
         size="mini"
@@ -52,7 +59,19 @@
       </el-table>
     </div>
     <div class="titelBox">虚拟币账号信息</div>
-    <div style="width: 70%">
+    <div
+      v-if="activeL"
+      style="
+        height: 100px;
+        width: 180px;
+        line-height: 100px;
+        text-align: center;
+        font-size: 24px;
+      "
+    >
+      <i class="el-icon-loading"></i>
+    </div>
+    <div v-else style="width: 70%">
       <el-table
         border
         size="mini"
@@ -104,6 +123,7 @@ export default {
   },
   data() {
     return {
+      activeL: true,
       resBankList: [],
       resVirtualList: []
     }
