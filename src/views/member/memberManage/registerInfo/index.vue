@@ -83,7 +83,7 @@
 					</el-form-item>
 					<el-form-item label="注册IP:">
 						<el-input
-							v-model="queryData.ipAttribution"
+							v-model="queryData.registerIp"
 							size="medium"
 							placeholder="请输入"
 							clearable
@@ -93,7 +93,7 @@
 					</el-form-item>
 					<el-form-item label="IP归属地:">
 						<el-input
-							v-model="queryData.registration"
+							v-model="queryData.ipAttribution"
 							size="medium"
 							placeholder="请输入"
 							clearable
@@ -276,6 +276,7 @@ export default {
 				userName: '',
 				parentProxyName: '',
 				registerPhone: '',
+                registerIp: '',
 				ipAttribution: '',
 				deviceType: undefined,
 				realname: '',
@@ -341,6 +342,7 @@ export default {
 				userName: '',
 				parentProxyName: '',
 				registerPhone: '',
+                registerIp: '',
 				ipAttribution: '',
 				deviceType: undefined,
 				realname: ''
