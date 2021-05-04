@@ -585,9 +585,9 @@ export default {
     },
     remarksTableData: {
       handler(newV) {
-        if (newV.total) {
-          this.total = newV.total
-          this.tableList = newV.records
+        if (newV.totalRecord) {
+          this.total = newV.totalRecord
+          this.tableList = newV.record
         } else {
           this.tableList = []
         }

@@ -213,7 +213,7 @@ export default {
     },
     // 备注信息
     getMemberRemarkList(val) {
-      const params = { userId: val, pageNum: this.num, pageSize: this.size }
+      const params = { userId: val, pageNum: 1, pageSize: 3 }
       this.$api.getMemberRemarkList(params).then((res) => {
         if (res.code === 200) {
           this.remarksTableData = res.data
@@ -275,7 +275,7 @@ export default {
       const params = { userId: val, pageNum: 1, pageSize: 10 }
       this.$api.getLogMemberLoginLog(params).then((res) => {
         if (res.code === 200) {
-          this.lonRecord = res.data.record
+          this.lonRecord = res.data
         }
       })
     },

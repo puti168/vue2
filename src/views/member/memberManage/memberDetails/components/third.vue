@@ -39,7 +39,12 @@
             {{ typeFilter(scope.row.loginStatus, "loginStatusType") }}
           </template>
         </el-table-column>
-        <el-table-column prop="loginIp" width="120px" align="center" label="IP地址"></el-table-column>
+        <el-table-column
+          prop="loginIp"
+          width="120px"
+          align="center"
+          label="IP地址"
+        ></el-table-column>
         <el-table-column
           prop="ipAttribution"
           align="center"
@@ -100,7 +105,8 @@ export default {
   watch: {
     lonRecord: {
       handler(newV) {
-        this.dataList = newV
+        this.total = newV.totalRecord
+        this.dataList = newV.record
       },
       deep: true,
       immediate: true
