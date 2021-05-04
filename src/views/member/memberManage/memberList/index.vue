@@ -301,7 +301,7 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="updateDt" align="center" label="账号类型">
+					<el-table-column prop="accountType" align="center" label="账号类型">
 						<template slot-scope="scope">
 							<span v-if="!!scope.row.accountType">
 								{{ typeFilter(scope.row.accountType, 'accountType') }}
@@ -673,27 +673,27 @@ export default {
 				: undefined
 			this.$api
 				.exportExcelAPI(params)
-				.then((res) => {
-					const result = res.data
-					const disposition = res.headers['content-disposition']
-					const fileNames = disposition.split("''")
-					console.log('fileNames', fileNames)
-					let fileName = fileNames[1]
-					fileName = decodeURIComponent(fileName)
-					const blob = new Blob([result], { type: 'application/octet-stream' })
-					if ('download' in document.createElement('a')) {
-						const elink = document.createElement('a')
-						elink.download = fileName || ''
-						elink.style.display = 'none'
-						elink.href = URL.createObjectURL(blob)
-						document.body.appendChild(elink)
-						elink.click()
-						URL.revokeObjectURL(elink.href)
-						document.body.removeChild(elink)
-					} else {
-						console.log('进来', 111)
-						window.navigator.msSaveBlob(blob, fileName)
-					}
+				.then(() => {
+					// const result = res.data
+					// const disposition = res.headers['content-disposition']
+					// const fileNames = disposition.split("''")
+					// console.log('fileNames', fileNames)
+					// let fileName = fileNames[1]
+					// fileName = decodeURIComponent(fileName)
+					// const blob = new Blob([result], { type: 'application/octet-stream' })
+					// if ('download' in document.createElement('a')) {
+					// 	const elink = document.createElement('a')
+					// 	elink.download = fileName || ''
+					// 	elink.style.display = 'none'
+					// 	elink.href = URL.createObjectURL(blob)
+					// 	document.body.appendChild(elink)
+					// 	elink.click()
+					// 	URL.revokeObjectURL(elink.href)
+					// 	document.body.removeChild(elink)
+					// } else {
+					// 	console.log('进来', 111)
+					// 	window.navigator.msSaveBlob(blob, fileName)
+					// }
 					this.$message({
 						type: 'success',
 						message: '导出成功',

@@ -8,27 +8,35 @@
         </el-col>
         <el-col :span="2" class="refrestBox cell">
           <el-button
-            type="primary"
-            icon="el-icon-refresh"
-            :disabled="parentData.userId === ''"
-            @click="refresh"
-            >刷新</el-button>
+type="primary"
+icon="el-icon-refresh"
+@click="refresh"
+>刷新</el-button>
         </el-col>
       </el-row>
     </div>
     <el-row class="msgList">
       <el-col :span="3" style="line-height: 36px">
-        <div>中心钱包余额：{{ balance }}</div>
-        <div>提现冻结余额：{{ freezeBalance }}</div>
+        <div>
+          中心钱包余额：<i v-if="activeL" class="el-icon-loading"></i>
+          <span v-else>
+            {{ moneyList.balance }}
+          </span>
+        </div>
+        <div>
+          提现冻结余额：<i v-if="activeL" class="el-icon-loading"></i>
+          <span v-else>
+            {{ moneyList.freezeBalance }}
+          </span>
+        </div>
       </el-col>
       <el-col :span="13">
         <el-button
-          v-show="borderL"
-          type="text"
-          class="blueColor"
-          :disabled="parentData.userId === ''"
-          @click="balanceAll"
-          >点击查看全部场馆金额分布</el-button>
+v-show="borderL"
+type="text"
+class="blueColor"
+@click="balanceAll"
+>点击查看全部场馆金额分布</el-button>
         <el-row v-show="!borderL" class="" :class="{ borderL: !borderL }">
           <el-col v-for="item in balanceAllList" :key="item.gameCode" :span="8">
             <span class="width70 paddingL">
@@ -53,65 +61,148 @@
         <el-col :span="2"> 提现流水信息 </el-col>
         <el-col :span="1" class="refrestBox cell">
           <el-button
-            type="primary"
-            icon="el-icon-refresh"
-            :disabled="parentData.userId === ''"
-            @click="refreshTWithdrawWater"
-            >刷新</el-button>
+type="primary"
+icon="el-icon-refresh"
+@click="refreshTWithdrawWater"
+>刷新</el-button>
         </el-col>
       </el-row>
     </div>
     <el-row class="msgList">
-      <el-col :span="4">用户余额： {{ resWaterList.userBalance }}</el-col>
-      <el-col :span="20">所需流水： {{ resWaterList.runningWaterRequired }}</el-col>
-      <el-col :span="4">已完成投注流水： {{ resWaterList.finishDetOnWater }}</el-col>
-      <el-col :span="8">剩余流水： {{ resWaterList.residualFlow }}</el-col>
-      <el-col :span="4">流水开始统计时间： {{ resWaterList.waterStarTime }}</el-col>
+      <el-col :span="4">
+        用户余额： <i v-if="activeL" class="el-icon-loading"></i>
+        <span v-else>
+          {{ resWaterList.userBalance }}
+        </span>
+      </el-col>
+      <el-col :span="20">
+        所需流水：<i v-if="activeL" class="el-icon-loading"></i>
+        <span v-else>
+          {{ resWaterList.runningWaterRequired }}
+        </span>
+      </el-col>
+      <el-col :span="4">
+        已完成投注流水：<i v-if="activeL" class="el-icon-loading"></i>
+        <span v-else>
+          {{ resWaterList.finishDetOnWater }}
+        </span>
+      </el-col>
+      <el-col :span="8">
+        剩余流水：<i v-if="activeL" class="el-icon-loading"></i>
+        <span v-else>
+          {{ resWaterList.residualFlow }}
+        </span>
+      </el-col>
+      <el-col :span="4">
+        流水开始统计时间：<i v-if="activeL" class="el-icon-loading"></i>
+        <span v-else>
+          {{ resWaterList.waterStarTime }}
+        </span>
+      </el-col>
     </el-row>
     <el-divider></el-divider>
     <div class="titelBox">充提信息</div>
     <el-row class="msgList">
-      <el-col :span="4">存款总额： {{ playerList.sumDepositAmount }}</el-col>
-      <el-col :span="20">取款总额： {{ playerList.sumWithdrawAmount }}</el-col>
-      <el-col :span="4">存款次数： {{ playerList.depositTimes }}</el-col>
-      <el-col
-:span="20"
->取款次数： {{ playerList.withdrawTimes }} (普通{{
-          playerList.commonWithdrawTimes
-        }}次，大额{{ playerList.bigWithdrawTimes }}次)</el-col>
+      <el-col :span="4">
+        存款总额： <i v-if="activeL" class="el-icon-loading"></i>
+        <span v-else>
+          {{ playerList.sumDepositAmount }}
+        </span>
+      </el-col>
+      <el-col :span="20">
+        取款总额： <i v-if="activeL" class="el-icon-loading"></i>
+        <span v-else>
+          {{ playerList.sumWithdrawAmount }}
+        </span>
+      </el-col>
+      <el-col :span="4">
+        存款次数： <i v-if="activeL" class="el-icon-loading"></i>
+        <span v-else>
+          {{ playerList.depositTimes }}
+        </span>
+      </el-col>
+      <el-col :span="20">
+        取款次数： <i v-if="activeL" class="el-icon-loading"></i>
+        <span v-else>
+          {{ playerList.withdrawTimes }} (普通{{
+            playerList.commonWithdrawTimes
+          }}次，大额{{ playerList.bigWithdrawTimes }}次)
+        </span>
+      </el-col>
     </el-row>
     <el-divider></el-divider>
     <div class="titelBox">投注信息</div>
     <el-row class="msgList">
-      <el-col :span="4">总投注： {{ sumList.betAmount }}</el-col>
-      <el-col :span="4">总派彩： {{ sumList.payAmount }}</el-col>
-      <el-col :span="16">玩家输赢： {{ sumList.netAmount }}</el-col>
-      <el-col :span="4">活动： {{ sumList.discountAmount }}</el-col>
-      <el-col :span="4">返水： {{ sumList.returnWaterAmount }}</el-col>
-      <el-col :span="16">公司总输赢： {{ sumList.companyNetAmount }}</el-col>
+      <el-col :span="4">
+        总投注：
+        <i v-if="activeL" class="el-icon-loading"></i>
+        <span v-else>
+          {{ sumList.betAmount }}
+        </span>
+      </el-col>
+      <el-col :span="4">
+        总派彩：
+        <i v-if="activeL" class="el-icon-loading"></i>
+        <span v-else>
+          {{ sumList.payAmount }}
+        </span>
+      </el-col>
+      <el-col :span="16">
+        玩家输赢：
+        <i v-if="activeL" class="el-icon-loading"></i>
+        <span v-else>
+          {{ sumList.netAmount }}
+        </span>
+      </el-col>
+      <el-col :span="4">
+        活动：
+        <i v-if="activeL" class="el-icon-loading"></i>
+        <span v-else>
+          {{ sumList.discountAmount }}
+        </span>
+      </el-col>
+      <el-col :span="4">
+        返水：
+        <i v-if="activeL" class="el-icon-loading"></i>
+        <span v-else>
+          {{ sumList.returnWaterAmount }}
+        </span>
+      </el-col>
+      <el-col :span="16">
+        公司总输赢：
+        <i v-if="activeL" class="el-icon-loading"></i>
+        <span v-else>
+          {{ sumList.companyNetAmount }}
+        </span>
+      </el-col>
     </el-row>
     <el-divider></el-divider>
     <div class="titelBox">
       <el-row>
         <el-col :span="2"> top前3平台统计 </el-col>
         <el-col :span="1" class="refrestBox cell">
-          <el-button
-            type="primary"
-            :disabled="parentData.userId === ''"
-            @click="tabHeaderFn('sy')"
-            >输赢</el-button>
+          <el-button type="primary" @click="tabHeaderFn('sy')">输赢</el-button>
         </el-col>
         <el-col :span="1" class="refrestBox cell">
-          <el-button
-            type="primary"
-            :disabled="parentData.userId === ''"
-            @click="tabHeaderFn('tz')"
-            >投注</el-button>
+          <el-button type="primary" @click="tabHeaderFn('tz')">投注</el-button>
         </el-col>
       </el-row>
     </div>
-    <div v-if="tabHeader === 'sy'" style="width: 70%">
+    <div
+      v-if="activeL"
+      style="
+        height: 100px;
+        width: 300px;
+        line-height: 100px;
+        text-align: center;
+        font-size: 24px;
+      "
+    >
+      <i class="el-icon-loading"></i>
+    </div>
+    <div v-else style="width: 70%">
       <el-table
+        v-if="tabHeader === 'sy'"
         border
         size="mini"
         class="small-size-table"
@@ -138,9 +229,8 @@
           label="有效投注"
         ></el-table-column>
       </el-table>
-    </div>
-    <div v-else style="width: 70%">
       <el-table
+        v-else
         border
         size="mini"
         class="small-size-table"
@@ -191,8 +281,11 @@ export default {
   },
   data() {
     return {
-      balance: '', // 提现冻结
-      freezeBalance: '', // 中心钱包
+      activeL: true,
+      moneyList: {
+        balance: '', // 提现冻结
+        freezeBalance: '' // 中心钱包
+      },
       balanceAllList: [], // 一键查询所有场馆
       resWaterList: {}, // 充提信息
       top3SyList: [],
@@ -205,8 +298,9 @@ export default {
   watch: {
     balanceList: {
       handler(newV) {
-        this.balance = newV.balance
-        this.freezeBalance = newV.freezeBalance
+        // this.balance = newV.balance;
+        // this.freezeBalance = newV.freezeBalance;
+        this.moneyList = newV
       },
       deep: true
     },
@@ -232,7 +326,7 @@ export default {
     getAccountCashAccount(val) {
       this.$api.getAccountCashAccount({ userId: val }).then((res) => {
         if (res.code === 200) {
-          this.balance = res.data.balance
+          this.moneyList.balance = res.data.balance
         }
       })
     },
@@ -240,7 +334,7 @@ export default {
     getWithdrawalFreeze(val) {
       this.$api.getWithdrawalFreeze({ userId: val }).then((res) => {
         if (res.code === 200) {
-          this.freezeBalance = res.data.freezeBalance
+          this.moneyList.freezeBalance = res.data.freezeBalance
         }
       })
     },
@@ -255,6 +349,13 @@ export default {
     // 一键下分
     getOneKeyWithdraw(val) {
       this.$api.getOneKeyWithdraw(val).then((res) => {
+        if (res.code === 200) {
+          this.refresh()
+          this.$message({
+            type: 'success',
+            message: '回收成功!'
+          })
+        }
         console.log(res)
       })
     },
@@ -292,13 +393,7 @@ export default {
         }
       )
         .then(() => {
-          // this.$message({
-          //   type: 'success',
-          //   message: '回收成功!'
-          // })
-          this.getOneKeyWithdraw({ userId: this.parentData.userId }).then((res) => {
-            console.log('一键下分', res)
-          }) // 一键下分
+          this.getOneKeyWithdraw({ userId: this.parentData.userId }) // 一键下分
         })
         .catch(() => {})
     },

@@ -8,7 +8,7 @@
           prop="userName"
           :rules="[
             { required: true, message: '请输入活动名称', trigger: 'blur' },
-            { min: 1, max: 11, message: '长度在 2 到 50 个字符', trigger: 'blur' },
+            { min: 4, max: 12, message: '长度在 4 到 12 个字符', trigger: 'blur' },
           ]"
         >
           <el-input
@@ -42,7 +42,12 @@
           </el-button>
         </el-form-item>
       </el-form>
-      <el-tabs v-model="activeName" class="tabsBox" @tab-click="handleClick">
+      <el-tabs
+        v-show="isShow"
+        v-model="activeName"
+        class="tabsBox"
+        @tab-click="handleClick"
+      >
         <el-tab-pane label="基本信息" name="first" class="nav-list-item"> </el-tab-pane>
         <el-tab-pane label="财务信息" name="second" class="nav-list-item"></el-tab-pane>
         <el-tab-pane label="登录信息" name="third" class="nav-list-item"></el-tab-pane>
@@ -54,7 +59,7 @@
       </el-tabs>
     </div>
     <div class="marginTb"></div>
-    <div class="contentBox">
+    <div v-show="isShow" class="contentBox">
       <first
         ref="first"
         class="floor-item"
@@ -64,6 +69,7 @@
         :remarksTableData="remarksTableData"
       ></first>
       <second
+        ref="second"
         class="floor-item"
         :parentData="parentData"
         :balanceList="balanceList"
@@ -72,8 +78,14 @@
         :sumList="sumList"
         :top3Sy="top3Sy"
       ></second>
-      <third class="floor-item" :parentData="parentData" :lonRecord="lonRecord"></third>
+      <third
+        ref="third"
+        class="floor-item"
+        :parentData="parentData"
+        :lonRecord="lonRecord"
+      ></third>
       <fourth
+        ref="fourth"
         class="floor-item"
         :parentData="parentData"
         :bankList="bankList"
@@ -96,6 +108,7 @@ export default {
   mixins: [list],
   data() {
     return {
+      isShow: false,
       parentData: { userName: '', userId: '' },
       queryData: { userName: '', userId: '' },
       activeName: 'first',
@@ -110,13 +123,13 @@ export default {
       top3Sy: [], // top3表格
       lonRecord: [], // 登录信息
       bankList: [], // 银行卡
-      virtualList: [], // 虚拟账号信息
-      loadingRgba: {
-        lock: true,
-        text: 'Loading',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
-      }
+      virtualList: [] // 虚拟账号信息
+      // loadingRgba: {
+      //   lock: true,
+      //   text: "Loading",
+      //   spinner: "el-icon-loading",
+      //   background: "rgba(0, 0, 0, 0.7)",
+      // },
     }
   },
   computed: {
@@ -142,10 +155,11 @@ export default {
   methods: {
     // 会员详情-基本信息-概要信息以及个人资料
     getOutlineInfo(val) {
-      const loading = this.$loading(this.loadingRgba)
+      // const loading = this.$loading(this.loadingRgba);
       this.$api
         .getOutlineInfo({ userName: val.userName })
         .then((res) => {
+          this.isShow = true
           if (res.code === 200) {
             this.outlineInfo = res.data
             this.parentData.userName = res.data.userName
@@ -161,9 +175,18 @@ export default {
             this.getLogMemberLoginLog(res.data.id)
             this.getBankCardBank(res.data.id)
           }
-          loading.close()
+          this.$refs.first.activeL = false
+          this.$refs.second.activeL = false
+          this.$refs.third.activeL = false
+          this.$refs.fourth.activeL = false
+          // loading.close();
         })
         .catch(() => {
+          this.isShow = false
+          this.$refs.first.activeL = false
+          this.$refs.second.activeL = false
+          this.$refs.third.activeL = false
+          this.$refs.fourth.activeL = false
           this.parentData = { userName: '', userId: '' }
           this.outlineInfo = {}
           this.outlineInfo = {} // 基本信息
@@ -177,7 +200,7 @@ export default {
           this.lonRecord = [] // 登录信息
           this.bankList = [] // 银行卡
           this.virtualList = [] // 虚拟账号信息
-          loading.close()
+          // loading.close();
         })
     },
     // vip信息
