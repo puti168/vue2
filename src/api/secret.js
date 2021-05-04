@@ -14,11 +14,11 @@ export function memberLoginLog(data) {
 		data
 	})
 }
-export function recordInfo(params) {
+export function recordInfo(data) {
 	return request({
 		url: '/memberData/recordInfo',
-		method: 'get',
-		params
+		method: 'post',
+		data
 	})
 }
 export function audit(data) {
