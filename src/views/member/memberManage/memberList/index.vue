@@ -469,33 +469,6 @@
 					@current-change="handleCurrentChange"
 					@size-change="handleSizeChange"
 				></el-pagination>
-				<el-dialog
-					:title="moduleBox"
-					center
-					:visible.sync="editVisible"
-					:before-close="closeFormDialog"
-					width="410px"
-				>
-					<editForm v-if="moduleBox == '新增银行信息'" ref="addForm"></editForm>
-					<editForm
-						v-else
-						ref="editForm"
-						:editFormData="editFormData"
-					></editForm>
-					<div slot="footer" class="dialog-footer">
-						<el-button @click="editVisible = false">取 消</el-button>
-						<el-button
-							v-if="moduleBox == '新增银行信息'"
-							type="primary"
-							@click="submitAdd"
-						>
-							确 定
-						</el-button>
-						<el-button v-else type="primary" @click="submitEdit">
-							确 定
-						</el-button>
-					</div>
-				</el-dialog>
 			</div>
 		</div>
 	</div>
@@ -503,7 +476,6 @@
 
 <script>
 import list from '@/mixins/list'
-import editForm from './components/editForm'
 import dayjs from 'dayjs'
 // import { UTable } from 'umy-ui'
 
@@ -515,9 +487,6 @@ const end = dayjs()
 	.valueOf()
 export default {
 	name: 'MemberList',
-	components: {
-		editForm
-	},
 	mixins: [list],
 	data() {
 		return {
@@ -623,9 +592,27 @@ export default {
 			this.loadData(params)
 		},
 		reset() {
-			this.queryData = {}
+			this.queryData = {
+				registerTime: [start, end],
+				userName: '',
+				realName: '',
+				accountStatus: '',
+				windControlId: '',
+				offLineDaysEnd: '',
+				lastLoginTime: '',
+				vipRank: '',
+				accountType: '',
+				labelId: '',
+				deviceType: '',
+				parentProxyName: '',
+				lastBetTime: '',
+				firstSaveTime: '',
+				SaveMoneyMin: '',
+				SaveMoneyMax: '',
+				wallet: ''
+			}
 			this.$refs['form'].resetFields()
-			// this.loadData()
+			this.loadData()
 		},
 
 		exportExcel() {
@@ -697,52 +684,6 @@ export default {
 					duration: 1500
 				})
 			})
-		},
-
-		submitAdd() {
-			console.log(this.$refs.addForm)
-			//   setAddBank(this.queryData).then((res) => {
-			//     console.log(res);
-			//   });
-		},
-		deleteUp(val) {
-			console.log(val)
-			this.$confirm('确定删除此银行卡号吗?', {
-				confirmButtonText: '确定',
-				cancelButtonText: '取消',
-				type: 'warning'
-			})
-				.then(() => {
-					this.$message({
-						type: 'success',
-						message: '删除成功!'
-					})
-					// setDeleteBank(val).then((res) => {
-					//   console.log(res);
-					// });
-				})
-				.catch(() => {
-					this.$message({
-						type: 'info',
-						message: '已取消删除'
-					})
-				})
-		},
-		editUp(val) {
-			this.moduleBox = '修改银行信息'
-			this.editVisible = true
-			this.editFormData = val
-		},
-		submitEdit() {
-			// setEidteBank().then((res) => {
-			//   console.log(res);
-			// });
-		},
-		closeFormDialog() {
-			this.editVisible = false
-		},
-		enterSubmit() {
-			// this.query()
 		}
 	}
 }
