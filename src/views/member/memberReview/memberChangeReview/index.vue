@@ -136,8 +136,7 @@ export default {
 			this.type = this.$route.query.type
 		}
 	},
-	mounted() {
-	},
+	mounted() {},
 	methods: {
 		closeFormDialog() {},
 		confirm(action) {
@@ -157,22 +156,27 @@ export default {
 				auditRemark: this.auditRemark,
 				auditStatus: this.action ? 2 : 3
 			}
-			this.$api.audit(params).then((res) => {
-				if (res.code === 200) {
-					this.$message({
-						type: 'success',
-						message: '操作成功!'
-					})
+			this.$api
+				.audit(params)
+				.then((res) => {
 					loading.close()
-					this.goBack()
-				} else {
+					if (res.code === 200) {
+						this.$message({
+							type: 'success',
+							message: '操作成功!'
+						})
+						this.visible = false
+						this.goBack()
+					} else {
+						this.$message({
+							message: res.msg,
+							type: 'error'
+						})
+					}
+				})
+				.catch(() => {
 					loading.close()
-					this.$message({
-						message: res.msg,
-						type: 'error'
-					})
-				}
-			})
+				})
 		},
 		goBack() {
 			this.$store.dispatch('tagsView/delView', {
