@@ -66,7 +66,7 @@
 				</el-form-item>
 				<el-form-item label="审核操作:">
 					<el-select
-						v-model="queryData.auditOperation"
+						v-model="queryData.auditStep"
 						style="width: 180px"
 						:popper-append-to-body="false"
 					>
@@ -263,7 +263,7 @@ export default {
 				accountType: [],
 				applyType: '',
 				auditStatus: [],
-				auditOperation: '',
+				auditStep: '',
 				orderProperties: '',
 				applyName: '',
 				auditName: '',
@@ -370,7 +370,7 @@ export default {
 				applyName: '',
 				auditName: '',
 				lockStatus: '',
-				auditOperation: '',
+				auditStep: '',
 				orderProperties: '',
 				auditNum: '',
 				orderType: '',
