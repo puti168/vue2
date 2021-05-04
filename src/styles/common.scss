@@ -1,235 +1,239 @@
 // 超长文字隐藏
 .longText {
-    .cell {
-        overflow: hidden !important; //超出的文本隐藏
-        text-overflow: ellipsis !important; //溢出用省略号显示
-        white-space: nowrap !important; //溢出不换行
+	.cell {
+		overflow: hidden !important; //超出的文本隐藏
+		text-overflow: ellipsis !important; //溢出用省略号显示
+		white-space: nowrap !important; //溢出不换行
 
-        &:hover {
-            overflow: auto !important; //超出的文本隐藏
-            text-overflow: auto !important; //溢出用省略号显示
-            white-space: normal !important; //溢出不换行
-        }
-    }
+		&:hover {
+			overflow: auto !important; //超出的文本隐藏
+			text-overflow: auto !important; //溢出用省略号显示
+			white-space: normal !important; //溢出不换行
+		}
+	}
 }
-
+// 不可用但不影响点击
+.dis {
+	background-color: #a0cfff;
+	border-color: #a0cfff;
+}
 // 状态样式
 .infoState {
-    background-color: #ecf5ff;
-    display: inline-block;
-    height: 18px;
-    padding: 0 6px;
-    line-height: 18px;
-    font-size: 12px;
-    color: #409eff;
-    border: 1px solid #d9ecff;
-    border-radius: 4px;
-    box-sizing: border-box;
-    white-space: nowrap;
+	background-color: #ecf5ff;
+	display: inline-block;
+	height: 18px;
+	padding: 0 6px;
+	line-height: 18px;
+	font-size: 12px;
+	color: #409eff;
+	border: 1px solid #d9ecff;
+	border-radius: 4px;
+	box-sizing: border-box;
+	white-space: nowrap;
 }
 
 .successState {
-    background-color: #f0f9eb;
-    border-color: #e1f3d8;
-    color: #67c23a;
-    display: inline-block;
-    height: 18px;
-    padding: 0 6px;
-    line-height: 18px;
-    font-size: 12px;
-    border: 1px solid #e1f3d8;
-    border-radius: 4px;
-    box-sizing: border-box;
-    white-space: nowrap;
+	background-color: #f0f9eb;
+	border-color: #e1f3d8;
+	color: #67c23a;
+	display: inline-block;
+	height: 18px;
+	padding: 0 6px;
+	line-height: 18px;
+	font-size: 12px;
+	border: 1px solid #e1f3d8;
+	border-radius: 4px;
+	box-sizing: border-box;
+	white-space: nowrap;
 }
 
 .disableState {
-    background-color: #f4f4f5;
-    border-color: #e9e9eb;
-    color: #909399;
-    display: inline-block;
-    height: 18px;
-    padding: 0 6px;
-    line-height: 18px;
-    font-size: 12px;
-    border: 1px solid #e9e9eb;
-    border-radius: 4px;
-    box-sizing: border-box;
-    white-space: nowrap;
+	background-color: #f4f4f5;
+	border-color: #e9e9eb;
+	color: #909399;
+	display: inline-block;
+	height: 18px;
+	padding: 0 6px;
+	line-height: 18px;
+	font-size: 12px;
+	border: 1px solid #e9e9eb;
+	border-radius: 4px;
+	box-sizing: border-box;
+	white-space: nowrap;
 }
 
 .warningState {
-    background-color: #fdf6ec;
-    border-color: #faecd8;
-    color: #e6a23c;
-    display: inline-block;
-    height: 18px;
-    padding: 0 6px;
-    line-height: 18px;
-    font-size: 12px;
-    border: 1px solid #faecd8;
-    border-radius: 4px;
-    box-sizing: border-box;
-    white-space: nowrap;
+	background-color: #fdf6ec;
+	border-color: #faecd8;
+	color: #e6a23c;
+	display: inline-block;
+	height: 18px;
+	padding: 0 6px;
+	line-height: 18px;
+	font-size: 12px;
+	border: 1px solid #faecd8;
+	border-radius: 4px;
+	box-sizing: border-box;
+	white-space: nowrap;
 }
 
 .dangerState {
-    background-color: #fef0f0;
-    border-color: #fde2e2;
-    color: #f56c6c;
-    display: inline-block;
-    height: 18px;
-    padding: 0 6px;
-    line-height: 18px;
-    font-size: 12px;
-    border: 1px solid #fde2e2;
-    border-radius: 4px;
-    box-sizing: border-box;
-    white-space: nowrap;
+	background-color: #fef0f0;
+	border-color: #fde2e2;
+	color: #f56c6c;
+	display: inline-block;
+	height: 18px;
+	padding: 0 6px;
+	line-height: 18px;
+	font-size: 12px;
+	border: 1px solid #fde2e2;
+	border-radius: 4px;
+	box-sizing: border-box;
+	white-space: nowrap;
 }
 
 // 成功失败
 .danger {
-    color: #f56c6c;
+	color: #f56c6c;
 }
 
 .success {
-    color: #67c23a;
+	color: #67c23a;
 }
 
 .text-link {
-    color: #409EFF;
-    cursor: pointer;
-    text-decoration: underline;
+	color: #409eff;
+	cursor: pointer;
+	text-decoration: underline;
 }
 
 .enableColor {
-    color: #13ce66;
+	color: #13ce66;
 }
 
 .disableColor {
-    color: #FB6260;
+	color: #fb6260;
 }
 
 .viewer-play,
 .view-large {
-    display: none;
+	display: none;
 }
 
 .blueColor {
-    color: #58A3F7;
+	color: #58a3f7;
 }
 
 .blueBackground {
-    background: #58A3F7;
+	background: #58a3f7;
 }
 
 .yellowColor {
-    color: #FEC03D;
+	color: #fec03d;
 }
 
 .yellowBackground {
-    background: #FEC03D;
+	background: #fec03d;
 }
 
 .lightBlueColor {
-    color: #52C1F5;
+	color: #52c1f5;
 }
 
 .lightBlueBackground {
-    background: #52C1F5;
+	background: #52c1f5;
 }
 
 .lightGreenColor {
-    color: #4BCED0;
+	color: #4bced0;
 }
 
 .lightGreenBackground {
-    background: #4BCED0;
+	background: #4bced0;
 }
 
 .redColor {
-    color: #FB6260;
+	color: #fb6260;
 }
 
 .redBackground {
-    background: #FB6260;
+	background: #fb6260;
 }
 
 .orangeColor {
-    color: #FFA94C;
+	color: #ffa94c;
 }
 
 .orangeBackground {
-    background: #FFA94C;
+	background: #ffa94c;
 }
 
 .purpleColor {
-    color: #8167F5;
+	color: #8167f5;
 }
 
 .purpleBackground {
-    background: #8167F5;
+	background: #8167f5;
 }
 
 .blackColor {
-    color: #8167F5;
+	color: #8167f5;
 }
 
 .blackBackground {
-    background: #8167F5;
+	background: #8167f5;
 }
 
 .pageValue {
-    position: fixed;
-    bottom: 0;
-    background-color: #fff;
-    width: 100%;
-    margin-left: -200px;
-    height: 40px;
-    z-index: 999;
-    right: 0;
+	position: fixed;
+	bottom: 0;
+	background-color: #fff;
+	width: 100%;
+	margin-left: -200px;
+	height: 40px;
+	z-index: 999;
+	right: 0;
 }
 
 .normalRgba {
-    min-width: 60px;
-    height: 20px;
-    line-height: 20px;
-    padding: 0 5px;
-    display: inline-block;
-    border-radius: 5px;
-    color: #67c23a;
-    background: rgba(0, 160, 0, 0.3);
+	min-width: 60px;
+	height: 20px;
+	line-height: 20px;
+	padding: 0 5px;
+	display: inline-block;
+	border-radius: 5px;
+	color: #67c23a;
+	background: rgba(0, 160, 0, 0.3);
 }
 
 .disableRgba {
-    min-width: 60px;
-    height: 20px;
-    line-height: 20px;
-    padding: 0 5px;
-    display: inline-block;
-    border-radius: 5px;
-    color: #FB6260;
-    background: rgba(250, 89, 89, 0.3);
+	min-width: 60px;
+	height: 20px;
+	line-height: 20px;
+	padding: 0 5px;
+	display: inline-block;
+	border-radius: 5px;
+	color: #fb6260;
+	background: rgba(250, 89, 89, 0.3);
 }
 
 .deleteRgba {
-    min-width: 60px;
-    height: 20px;
-    line-height: 20px;
-    padding: 0 5px;
-    display: inline-block;
-    border-radius: 5px;
-    color: #FEC03D;
-    background: rgba(253, 168, 77, 0.3);
+	min-width: 60px;
+	height: 20px;
+	line-height: 20px;
+	padding: 0 5px;
+	display: inline-block;
+	border-radius: 5px;
+	color: #fec03d;
+	background: rgba(253, 168, 77, 0.3);
 }
 .lockingRgba {
-    min-width: 60px;
-    height: 20px;
-    line-height: 20px;
-    padding: 0 5px;
-    display: inline-block;
-    border-radius: 5px;
-    color: #58a3f7;
-    background: rgba(88, 163, 247, 0.3);
+	min-width: 60px;
+	height: 20px;
+	line-height: 20px;
+	padding: 0 5px;
+	display: inline-block;
+	border-radius: 5px;
+	color: #58a3f7;
+	background: rgba(88, 163, 247, 0.3);
 }

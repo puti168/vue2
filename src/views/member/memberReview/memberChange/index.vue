@@ -204,11 +204,7 @@
 					<el-table-column prop="auditStep" align="center" label="操作">
 						<template slot-scope="scope">
 							<el-button
-								:disabled="
-									Number(scope.row.auditStep) === 1 && scope.row.auditName !== name
-										? true
-										: false
-								"
+								:class="Number(scope.row.auditStep) === 1 && scope.row.auditName !== name ? 'dis' : ''"
 								:type="Number(scope.row.auditStep) === 0 ? 'success' : 'primary'"
 								size="medium"
 								@click="goDetail(scope.row)"
