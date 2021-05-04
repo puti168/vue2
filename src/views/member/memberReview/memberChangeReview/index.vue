@@ -136,7 +136,8 @@ export default {
 			this.type = this.$route.query.type
 		}
 	},
-	mounted() {},
+	mounted() {
+	},
 	methods: {
 		closeFormDialog() {},
 		confirm(action) {
@@ -162,8 +163,8 @@ export default {
 						type: 'success',
 						message: '操作成功!'
 					})
-					this.$router.go(-1)
 					loading.close()
+					this.goBack()
 				} else {
 					loading.close()
 					this.$message({
@@ -174,7 +175,12 @@ export default {
 			})
 		},
 		goBack() {
-			this.$router.go(-1)
+			this.$store.dispatch('tagsView/delView', {
+				name: routerNames.memberChange
+			})
+			this.$nextTick(() => {
+				this.$router.go(-1)
+			})
 		},
 		getInfo() {
 			const params = {

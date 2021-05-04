@@ -281,8 +281,8 @@
 									Number(scope.row.auditStatus) === 1
 										? 'infoState'
 										: Number(scope.row.auditStatus) === 2
-										? 'success'
-										: 'danger'
+										? 'successState'
+										: 'dangerState'
 								"
 							>
 								{{ typeFilter(scope.row.auditStatus, 'auditStatusType') }}
@@ -382,6 +382,7 @@ export default {
 		}
 	},
 	mounted() {
+		console.log('4444444')
 		this.name = getNickName()
 	},
 	methods: {

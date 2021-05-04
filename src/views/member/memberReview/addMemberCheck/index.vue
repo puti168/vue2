@@ -198,8 +198,8 @@
 									Number(scope.row.auditStatus) === 1
 										? 'infoState'
 										: Number(scope.row.auditStatus) === 2
-										? 'success'
-										: 'danger'
+										? 'successState'
+										: 'dangerState'
 								"
 							>
 								{{ typeFilter(scope.row.auditStatus, 'auditStatusType') }}
