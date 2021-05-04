@@ -31,6 +31,7 @@
 							placeholder="请输入"
 							clearable
 							style="width: 180px"
+                            maxlength="11"
 						></el-input>
 					</el-form-item>
 					<el-form-item label="会员姓名:" prop="realName">
@@ -40,9 +41,10 @@
 							placeholder="请输入"
 							clearable
 							style="width: 180px"
+                            maxlength="6"
 						></el-input>
 					</el-form-item>
-					<el-form-item label="账号状态:" prop="accountStatus">
+					<el-form-item label="账号状态:">
 						<el-select
 							v-model="queryData.accountStatus"
 							size="medium"
@@ -59,7 +61,7 @@
 							></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="风控层级:" prop="windControlId">
+					<el-form-item label="风控层级:">
 						<el-select
 							v-model="queryData.windControlId"
 							size="medium"
@@ -75,19 +77,21 @@
 							></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="离线天数:" prop="offLineDaysEnd">
+					<el-form-item label="离线天数:">
 						<el-input
-							v-model="queryData.SaveMoneyMin"
+							v-model="queryData.offLineDaysStart"
 							size="medium"
 							placeholder="最小数值"
 							style="width: 100px"
+                            maxlength="5"
 						></el-input>
 						-
 						<el-input
-							v-model="queryData.SaveMoneyMax"
+							v-model="queryData.offLineDaysEnd"
 							size="medium"
 							placeholder="最大数值"
 							style="width: 100px"
+                            maxlength="5"
 						></el-input>
 					</el-form-item>
 					<el-form-item label="最后登录时间:" label-width="110px">
@@ -107,19 +111,21 @@
 							style="width: 388px"
 						></el-date-picker>
 					</el-form-item>
-					<el-form-item label="VIP等级:" prop="vipExperenceValue">
+					<el-form-item label="VIP等级:">
 						<el-input
-							v-model="queryData.SaveMoneyMin"
+							v-model="queryData.vipSerialNumMin"
 							size="medium"
 							placeholder="最小数值"
 							style="width: 100px"
+                            maxlength="3"
 						></el-input>
 						-
 						<el-input
-							v-model="queryData.SaveMoneyMax"
+							v-model="queryData.vipSerialNumMax"
 							size="medium"
 							placeholder="最大数值"
 							style="width: 100px"
+                            maxlength="3"
 						></el-input>
 					</el-form-item>
 					<el-form-item label="账号类型:">
@@ -157,17 +163,19 @@
 					</el-form-item>
 					<el-form-item label="首存金额:">
 						<el-input
-							v-model="queryData.SaveMoneyMin"
+							v-model="queryData.firstDepositAmountMin"
 							size="medium"
 							placeholder="最小数值"
 							style="width: 100px"
+                            maxlength="10"
 						></el-input>
 						-
 						<el-input
-							v-model="queryData.SaveMoneyMax"
+							v-model="queryData.firstDepositAmountMax"
 							size="medium"
 							placeholder="最大数值"
 							style="width: 100px"
+                            maxlength="10"
 						></el-input>
 					</el-form-item>
 					<el-form-item label="首存时间:" label-width="100px">
@@ -186,7 +194,7 @@
 							style="width: 388px"
 						></el-date-picker>
 					</el-form-item>
-					<el-form-item label="会员标签:" prop="labelId">
+					<el-form-item label="会员标签:">
 						<el-select
 							v-model="queryData.labelId"
 							size="medium"
@@ -209,6 +217,7 @@
 							placeholder="请输入"
 							clearable
 							style="width: 180px"
+                            maxlength="11"
 						></el-input>
 					</el-form-item>
 					<el-form-item>
@@ -250,6 +259,7 @@
 					:data="dataList"
 					style="width: 100%"
 					:header-cell-style="getRowClass"
+					@sort-change="_changeTableSort"
 				>
 					<el-table-column
 						prop="userName"
@@ -437,26 +447,6 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<!--					<el-table-column align="center" label="操作" width="200px">-->
-					<!--						<template slot-scope="scope">-->
-					<!--							<el-button-->
-					<!--								type="danger"-->
-					<!--								icon="el-icon-delete"-->
-					<!--								size="medium"-->
-					<!--								@click="deleteUp(scope.row)"-->
-					<!--							>-->
-					<!--								删除-->
-					<!--							</el-button>-->
-					<!--							<el-button-->
-					<!--								type="warning"-->
-					<!--								icon="el-icon-edit"-->
-					<!--								size="medium"-->
-					<!--								@click.stop="editUp(scope.row)"-->
-					<!--							>-->
-					<!--								修改-->
-					<!--							</el-button>-->
-					<!--						</template>-->
-					<!--					</el-table-column>-->
 				</el-table>
 				<!-- 分页 -->
 				<el-pagination
@@ -492,29 +482,27 @@ export default {
 		return {
 			queryData: {
 				registerTime: [start, end],
-				userName: '',
-				realName: '',
-				accountStatus: '',
-				windControlId: '',
-				offLineDaysEnd: '',
-				lastLoginTime: '',
-				vipRank: '',
-				accountType: '',
-				labelId: '',
-				deviceType: '',
-				parentProxyName: '',
-				lastBetTime: '',
-				firstSaveTime: '',
-				SaveMoneyMin: '',
-				SaveMoneyMax: '',
-				wallet: ''
+				userName: undefined,
+				realName: undefined,
+				accountStatus: undefined,
+				windControlId: undefined,
+                offLineDaysStart: undefined,
+				offLineDaysEnd: undefined,
+				lastLoginTime: [start, end],
+                vipSerialNumMax: undefined,
+                vipSerialNumMin: undefined,
+				accountType: undefined,
+				deviceType: undefined,
+                firstDepositAmountMin: undefined,
+                firstDepositAmountMax: undefined,
+                firstSaveTime: [],
+                labelId: undefined,
+				parentProxyName: undefined,
+				orderKey: undefined,
+				orderType: undefined
 			},
 			dataList: [],
 			total: 0,
-			moduleBox: '',
-			showForm: '',
-			editVisible: false,
-			editFormData: {},
 			vipDict: [],
 			userLabel: []
 		}
@@ -535,11 +523,28 @@ export default {
 	},
 	mounted() {},
 	methods: {
-		loadData(params) {
-			params = {
-				...this.getParams(params)
-			}
-			this.dataList = []
+		loadData() {
+            this.dataList = []
+            const create = this.queryData.registerTime || []
+            const [startTime, endTime] = create
+            let params = {
+                ...this.queryData,
+                createDtStart: startTime
+                    ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
+                    : undefined,
+                createDtEnd: endTime
+                    ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
+                    : undefined
+            }
+            params = {
+                ...this.getParams(params)
+            }
+            delete params.registerTime
+            delete params.lastLoginTime
+            delete params.firstSaveTime
+            params.accountStatus = params.accountStatus ? params.accountStatus.join(',') : undefined
+            params.deviceType = params.deviceType ? params.deviceType.join(',') : undefined
+            params.accountType = params.accountType ? params.accountType.join(',') : undefined
 			this.$api.memberListAPI(params).then((res) => {
 				const {
 					code,
@@ -578,87 +583,81 @@ export default {
 				}
 			})
 		},
-		query() {
-			this.loading = true
-			// const { registerTime, lastLoginTime, firstSaveTime } = this.form
-			// const [registerStartTime, registerEndTime] = registerTime
-			const params = {
-				...this.queryData,
-				pageNum: 1
-				// startTime: registerStartTime && registerStartTime + '',
-				// endTime: registerEndTime && registerEndTime + ''
-			}
-			console.log(params)
-			this.loadData(params)
-		},
 		reset() {
 			this.queryData = {
-				registerTime: [start, end],
-				userName: '',
-				realName: '',
-				accountStatus: '',
-				windControlId: '',
-				offLineDaysEnd: '',
-				lastLoginTime: '',
-				vipRank: '',
-				accountType: '',
-				labelId: '',
-				deviceType: '',
-				parentProxyName: '',
-				lastBetTime: '',
-				firstSaveTime: '',
-				SaveMoneyMin: '',
-				SaveMoneyMax: '',
-				wallet: ''
+                registerTime: [start, end],
+                userName: undefined,
+                realName: undefined,
+                accountStatus: undefined,
+                windControlId: undefined,
+                offLineDaysStart: undefined,
+                offLineDaysEnd: undefined,
+                lastLoginTime: [start, end],
+                vipSerialNumMax: undefined,
+                vipSerialNumMin: undefined,
+                accountType: undefined,
+                deviceType: undefined,
+                firstDepositAmountMin: undefined,
+                firstDepositAmountMax: undefined,
+                firstSaveTime: [],
+                labelId: undefined,
+                parentProxyName: undefined,
+                orderKey: undefined,
+                orderType: undefined
 			}
 			this.$refs['form'].resetFields()
 			this.loadData()
 		},
-
-		exportExcel() {
-			const params = {
-				accountStatus: 0,
-				accountType: 0,
-				applyInfo: '2021-04-29T06:03:31.794Z',
-				applyName: 'string',
-				birth: '2021-04-29T06:03:31.794Z',
-				city: 'string',
-				createDt: '2021-04-29T06:03:31.794Z',
-				deviceNo: 'string',
-				deviceType: 0,
-				email: 'string',
-				endTime: 0,
-				firstDepositAmount: 0,
-				firstDepositTime: '2021-04-29T06:03:31.795Z',
-				gender: 0,
-				ipAttribution: 'string',
-				labelId: 0,
-				labelName: 'string',
-				lastLoginIp: 'string',
-				lastLoginTime: '2021-04-29T06:03:31.795Z',
-				levelId: 0,
-				merchantId: 0,
-				mobile: 'string',
-				pageNum: 0,
-				pageSize: 0,
-				parentProxyId: 0,
-				parentProxyName: 'string',
-				password: 'string',
-				realName: 'string',
-				registerIp: 'string',
-				registerPhone: 'string',
-				registerReference: 'string',
-				salt: 'string',
-				startTime: 0,
-				status: 0,
-				titleId: 0,
-				updateDt: '2021-04-29T06:03:31.795Z',
-				username: 'string',
-				vipId: 0,
-				vipSerialNum: 0,
-				windControlId: 0,
-				windControlName: 'string'
+		_changeTableSort({ column, prop, order }) {
+			if (prop === 'vipSerialNum') {
+				prop = 1
 			}
+			if (prop === 'createDt') {
+				prop = 2
+			}
+			if (prop === 'firstDepositTime') {
+				prop = 3
+			}
+			if (prop === 'firstDepositAmount') {
+				prop = 4
+			}
+			if (prop === 'lastLoginTime') {
+				prop = 5
+			}
+			if (prop === 'offLineDays') {
+				prop = 6
+			}
+            this.queryData.orderKey = prop
+			if (order === 'ascending') {
+				// 升序
+				this.queryData.orderType = 'asc'
+			} else if (column.order === 'descending') {
+				// 降序
+				this.queryData.orderType = 'desc'
+			}
+			this.loadData()
+		},
+		exportExcel() {
+            const create = this.queryData.registerTime || []
+            const [startTime, endTime] = create
+            let params = {
+                ...this.queryData,
+                createDtStart: startTime
+                    ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
+                    : undefined,
+                createDtEnd: endTime
+                    ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
+                    : undefined
+            }
+            params = {
+                ...this.getParams(params)
+            }
+            delete params.registerTime
+            delete params.lastLoginTime
+            delete params.firstSaveTime
+            params.accountStatus = params.accountStatus ? params.accountStatus.join(',') : undefined
+            params.deviceType = params.deviceType ? params.deviceType.join(',') : undefined
+            params.accountType = params.accountType ? params.accountType.join(',') : undefined
 			this.$api.exportExcelAPI(params).then((res) => {
 				const result = res.data
 				const disposition = res.headers['content-disposition']
