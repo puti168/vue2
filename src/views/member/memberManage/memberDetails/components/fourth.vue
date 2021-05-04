@@ -134,15 +134,13 @@ export default {
       handler(newV) {
         this.resBankList = newV
       },
-      deep: true,
-      immediate: true
+      deep: true
     },
     virtualList: {
       handler(newV) {
         this.resVirtualList = newV
       },
-      deep: true,
-      immediate: true
+      deep: true
     }
   },
   created() {},

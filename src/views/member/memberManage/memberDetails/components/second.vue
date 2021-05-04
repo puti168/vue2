@@ -309,15 +309,13 @@ export default {
       handler(newV) {
         this.resWaterList = newV
       },
-      deep: true,
-      immediate: true
+      deep: true
     },
     top3Sy: {
       handler(newV) {
         this.top3SyList = newV
       },
-      deep: true,
-      immediate: true
+      deep: true
     }
   },
   created() {},

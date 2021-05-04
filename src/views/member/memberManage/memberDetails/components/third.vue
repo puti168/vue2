@@ -91,7 +91,7 @@ export default {
   mixins: [list],
   props: {
     parentData: { type: Object, default: () => ({}) },
-    lonRecord: { type: Array, default: () => [] }
+    lonRecord: { type: Object, default: () => ({}) }
   },
   data() {
     return {
@@ -105,11 +105,12 @@ export default {
   watch: {
     lonRecord: {
       handler(newV) {
-        this.total = newV.totalRecord
-        this.dataList = newV.record
+        if (newV.totalRecord) {
+          this.total = newV.totalRecord
+          this.dataList = newV.record
+        }
       },
-      deep: true,
-      immediate: true
+      deep: true
     }
   },
   created() {},

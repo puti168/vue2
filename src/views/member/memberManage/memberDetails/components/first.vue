@@ -555,8 +555,7 @@ export default {
           this.isshow = false
         }
       },
-      deep: true,
-      immediate: true
+      deep: true
     },
     vipMsg: {
       handler(newV) {
@@ -580,8 +579,7 @@ export default {
           this.percentagec = 0
         }
       },
-      deep: true,
-      immediate: true
+      deep: true
     },
     remarksTableData: {
       handler(newV) {
@@ -592,8 +590,7 @@ export default {
           this.tableList = []
         }
       },
-      deep: true,
-      immediate: true
+      deep: true
     }
   },
   created() {},
@@ -676,10 +673,10 @@ export default {
     },
     // 备注信息
     getMemberRemarkList(val) {
-      const params = { val, pageNum: this.page, pageSize: this.size }
+      const params = { userId: val, pageNum: this.page, pageSize: this.size }
       this.$api.getMemberRemarkList(params).then((res) => {
         if (res.code === 200) {
-          this.tableList = res.data.records
+          this.tableList = res.data.record
         }
       })
     },

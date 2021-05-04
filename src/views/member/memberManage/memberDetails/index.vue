@@ -121,7 +121,7 @@ export default {
       playerList: {}, // 充提信息
       sumList: {}, // 投注信息
       top3Sy: [], // top3表格
-      lonRecord: [], // 登录信息
+      lonRecord: {}, // 登录信息
       bankList: [], // 银行卡
       virtualList: [] // 虚拟账号信息
       // loadingRgba: {
@@ -132,18 +132,7 @@ export default {
       // },
     }
   },
-  computed: {
-    num: {
-      get() {
-        return this.$refs.first.page
-      }
-    },
-    size: {
-      get() {
-        return this.$refs.first.size
-      }
-    }
-  },
+  computed: {},
   mounted() {
     // 监听滚动事件
     window.addEventListener('scroll', this.onScroll, false)
@@ -197,7 +186,7 @@ export default {
           this.playerList = {} // 充提信息
           this.sumList = {} // 投注信息
           this.top3Sy = [] // top3表格
-          this.lonRecord = [] // 登录信息
+          this.lonRecord = {} // 登录信息
           this.bankList = [] // 银行卡
           this.virtualList = [] // 虚拟账号信息
           // loading.close();
