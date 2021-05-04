@@ -85,7 +85,7 @@
 import list from '@/mixins/list'
 // import dayjs from 'dayjs'
 export default {
-	name: '',
+	name: 'AddMemberReview',
 	components: {},
 	mixins: [list],
 	data() {
@@ -110,7 +110,6 @@ export default {
 		this.type = this.$route.query.type
 	},
 	mounted() {
-		console.log('2222')
 		this.getInfo()
 	},
 	methods: {
@@ -139,7 +138,7 @@ export default {
 						type: 'success',
 						message: '操作成功!'
 					})
-					this.$router.replace('addMemberCheck')
+					this.$router.go(-1)
 					loading.close()
 				} else {
 					loading.close()
@@ -151,7 +150,7 @@ export default {
 			})
 		},
 		goBack() {
-			this.$router.push('addMemberCheck')
+			this.$router.go(-1)
 		},
 		getInfo() {
 			const params = {

@@ -341,7 +341,7 @@ export default {
 		goDetail(row) {
 			const type = Number(row.auditStep) === 1 && row.auditName === this.name
 			this.$router.push({
-				path: 'addMemberReview',
+				path: '/member/memberReview/addMemberReview',
 				query: { id: row.id, userId: row.userId, type: type }
 			})
 		},

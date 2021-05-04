@@ -1,7 +1,7 @@
 <template>
 	<section class="app-main">
 		<transition name="fade-transform" mode="out-in">
-			<keep-alive>
+			<keep-alive :exclude="noAliveList">
 				<router-view :key="key" />
 			</keep-alive>
 		</transition>
@@ -12,6 +12,11 @@
 export default {
 	name: 'AppMain',
 	components: {},
+	data() {
+		return {
+			noAliveList: ['memberChangeReview', 'addMemberReview', 'addMemberCheck', 'memberChange']
+		}
+	},
 	computed: {
 		editVisible() {
 			return this.$store.state.app.modifyVisible

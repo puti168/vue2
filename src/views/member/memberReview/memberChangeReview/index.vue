@@ -167,7 +167,7 @@ export default {
 						type: 'success',
 						message: '操作成功!'
 					})
-					this.$router.replace('memberChange')
+					this.$router.go(-1)
 					loading.close()
 				} else {
 					loading.close()
@@ -179,7 +179,7 @@ export default {
 			})
 		},
 		goBack() {
-			this.$router.push('memberChange')
+			this.$router.go(-1)
 		},
 		getInfo() {
 			const params = {
