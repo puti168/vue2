@@ -1,7 +1,7 @@
 <template>
 	<section class="app-main">
 		<transition name="fade-transform" mode="out-in">
-			<keep-alive>
+			<keep-alive :include="cachedViews">
 				<router-view :key="key" />
 			</keep-alive>
 		</transition>
@@ -10,7 +10,7 @@
 
 <script>
 export default {
-	name: 'AppMain',
+	name: 'AppMain2',
 	components: {},
 	computed: {
 		editVisible() {
