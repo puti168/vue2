@@ -316,12 +316,12 @@ export default {
 			delete params.registerTime
 			params.accountType =
 				params.accountType && params.accountType.length
-					? params.accountType
-					: []
+					? JSON.stringify(params.accountType)
+					: undefined
 			params.deviceType =
 				params.deviceType && params.deviceType.length
-					? params.deviceType
-					: []
+					? JSON.stringify(params.deviceType)
+					: undefined
 			this.$api
 				.memberRegisterInfoListAPI(params)
 				.then((res) => {
