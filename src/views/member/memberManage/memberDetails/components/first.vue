@@ -61,7 +61,7 @@
 :span="5"
 >首存时间：<i v-if="activeL" class="el-icon-loading"></i>
         <span v-else>
-          {{ outlineInfoList.createDt }}
+          {{ outlineInfoList.firstDepositTime }}
         </span>
       </el-col>
       <el-col
@@ -89,7 +89,7 @@
 :span="5"
 >注册时间：<i v-if="activeL" class="el-icon-loading"></i>
         <span v-else>
-          {{ outlineInfoList.firstDepositTime }}
+          {{ outlineInfoList.createDt }}
         </span>
       </el-col>
       <el-col
@@ -434,7 +434,7 @@ class="textC"
           label="审核备注："
           prop="remark"
           :rules="[
-            { required: true, message: '请输入活动名称', trigger: 'blur' },
+            { required: true, message: '请输入备注信息', trigger: 'blur' },
             { min: 2, max: 50, message: '长度在 2 到 50 个字符', trigger: 'blur' },
           ]"
         >

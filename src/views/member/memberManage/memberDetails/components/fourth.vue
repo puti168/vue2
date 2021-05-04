@@ -45,7 +45,7 @@
           align="center"
           label="持卡人姓名"
         ></el-table-column>
-        <el-table-column prop="bankCode" align="center" label="卡号"></el-table-column>
+        <el-table-column prop="cardNumber" align="center" label="卡号"></el-table-column>
         <el-table-column
           prop="bankAddress"
           align="center"
