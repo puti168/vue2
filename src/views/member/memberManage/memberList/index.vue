@@ -757,15 +757,18 @@ export default {
 			delete params.registerTime
 			delete params.lastLoginTime
 			delete params.firstSaveTime
-			params.accountStatus = params.accountStatus
-				? params.accountStatus.join(',')
-				: undefined
-			params.deviceType = params.deviceType
-				? params.deviceType.join(',')
-				: undefined
-			params.accountType = params.accountType
-				? params.accountType.join(',')
-				: undefined
+            delete params.accountStatus
+            delete params.deviceType
+            delete params.accountType
+			// params.accountStatus = params.accountStatus
+			// 	? params.accountStatus.join(',')
+			// 	: undefined
+			// params.deviceType = params.deviceType
+			// 	? params.deviceType.join(',')
+			// 	: undefined
+			// params.accountType = params.accountType
+			// 	? params.accountType.join(',')
+			// 	: undefined
 			this.$api
 				.exportExcelAPI(params)
 				.then(() => {
