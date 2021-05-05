@@ -86,6 +86,7 @@
 							style="width: 100px"
 							maxlength="5"
 							name="offLineDaysStart"
+                            oninput="value=value.replace(/[^\d]/g,'')"
 							@blur="checkValue($event)"
 						></el-input>
 						-
@@ -96,6 +97,7 @@
 							style="width: 100px"
 							maxlength="5"
 							name="offLineDaysEnd"
+                            oninput="value=value.replace(/[^\d]/g,'')"
 							@blur="checkValue($event)"
 						></el-input>
 					</el-form-item>
@@ -125,6 +127,7 @@
 							style="width: 100px"
 							maxlength="3"
 							name="vipSerialNumMin"
+                            oninput="value=value.replace(/[^\d]/g,'')"
 							@blur="checkValue($event)"
 						></el-input>
 						-
@@ -134,6 +137,7 @@
 							placeholder="最大数值"
 							style="width: 100px"
 							maxlength="3"
+                            oninput="value=value.replace(/[^\d]/g,'')"
 							name="vipSerialNumMax"
 							@blur="checkValue($event)"
 						></el-input>
@@ -179,6 +183,7 @@
 							placeholder="最小数值"
 							style="width: 100px"
 							maxlength="10"
+                            oninput="value=value.replace(/[^\d]/g,'')"
 							name="firstDepositAmountMin"
 							@blur="checkValue($event)"
 						></el-input>
@@ -189,6 +194,7 @@
 							placeholder="最大数值"
 							style="width: 100px"
 							maxlength="10"
+                            oninput="value=value.replace(/[^\d]/g,'')"
 							name="firstDepositAmountMax"
 							@blur="checkValue($event)"
 						></el-input>

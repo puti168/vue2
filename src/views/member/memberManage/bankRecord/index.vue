@@ -82,6 +82,7 @@
 							clearable
 							style="width: 180px"
 							maxlength="25"
+                            oninput="value=value.replace(/[^\d]/g,'')"
 							@keyup.enter.native="enterSearch"
 						></el-input>
 					</el-form-item>

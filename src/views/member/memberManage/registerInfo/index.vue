@@ -79,6 +79,7 @@
 							placeholder="请输入"
 							clearable
 							maxlength="11"
+                            oninput="value=value.replace(/[^\d]/g,'')"
 							style="width: 180px"
 						></el-input>
 					</el-form-item>
