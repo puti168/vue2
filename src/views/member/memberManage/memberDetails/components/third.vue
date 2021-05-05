@@ -81,6 +81,7 @@
       ></el-pagination>
       <div class="clear"></div>
     </div>
+    <el-divider></el-divider>
   </div>
 </template>
 
