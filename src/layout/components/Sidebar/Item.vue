@@ -29,7 +29,7 @@ export default {
 			vnodes.push(
 				<svg-icon
 					icon-class={active ? `${icon}_pre` : icon}
-					style='width: 24px;height: 25px;margin-right: 16px;'
+					style='width: 18px;height: 18px;margin-right: 8px;margin-left: 8px'
 				/>
 			)
 		}

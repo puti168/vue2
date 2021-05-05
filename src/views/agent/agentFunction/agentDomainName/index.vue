@@ -1,14 +1,14 @@
 <template>
   <div class="game-container report-container">
     <div class="header flex-h flex-bc">
-      <h2 class="h2-line">门票记录</h2>
+      <h2 class="h2-line">银行卡黑名单</h2>
       <div class="head flex-h-end">
         <el-button
           type="primary"
           icon="el-icon-search"
           :disabled="loading"
           size="medium"
-          @click="query"
+          @click="search"
         >
           查询
         </el-button>
@@ -20,12 +20,7 @@
         >
           重置
         </el-button>
-        <el-button
-          type="primary"
-          icon="el-icon-folder-add"
-          size="medium"
-          @click="add"
-        >
+        <el-button type="primary" icon="el-icon-folder-add" size="medium" @click="add">
           新增
         </el-button>
       </div>
@@ -35,7 +30,7 @@
         <el-form ref="form" :inline="true" :model="queryData" label-width="100px">
           <el-form-item label="银行卡号">
             <el-input
-              v-model="queryData.bankCode"
+              v-model="queryData.cardNo"
               clearable
               size="medium"
               style="width: 280px"
@@ -44,13 +39,13 @@
               @keyup.enter.native="enterSearch"
             ></el-input>
           </el-form-item>
-          <el-form-item label="银行名称">
+          <el-form-item label="id">
             <el-input
-              v-model="queryData.bankName"
+              v-model="queryData.id"
               clearable
               size="medium"
               style="width: 280px"
-              placeholder="请输入银行名称"
+              placeholder="请输入id"
               :disabled="loading"
               @keyup.enter.native="enterSearch"
             ></el-input>
@@ -67,7 +62,7 @@
               end-placeholder="结束日期"
               align="right"
               clearable
-              value-format="timestamp"
+              :default-time="defaultTime"
               style="width: 280px"
             ></el-date-picker>
           </el-form-item>
@@ -84,14 +79,14 @@
           :header-cell-style="getRowClass"
         >
           <el-table-column
-            prop="bankCode"
+            prop="cardNo"
             align="center"
             label="银行卡号"
           ></el-table-column>
           <el-table-column
-            prop="bankName"
+            prop="createBy"
             align="center"
-            label="银行名称"
+            label="创建人"
           ></el-table-column>
           <el-table-column
             prop="createDt"
@@ -99,10 +94,16 @@
             label="创建时间"
           ></el-table-column>
           <el-table-column
-            prop="updateDt"
+            prop="modifyBy"
+            align="center"
+            label="更新人"
+          ></el-table-column>
+          <el-table-column
+            prop="modifyDt"
             align="center"
             label="更新时间"
           ></el-table-column>
+          <el-table-column prop="remark" align="center" label="备注"></el-table-column>
 
           <el-table-column align="center" label="操作">
             <template slot-scope="scope">
@@ -120,55 +121,49 @@
                 size="medium"
                 @click.stop="editUp(scope.row)"
               >
-                修改
+                编辑
               </el-button>
             </template>
           </el-table-column>
         </el-table>
         <!-- 分页 -->
         <el-pagination
-          v-show="dataList.length > 0"
           :current-page.sync="pageNum"
+          class="pageValue"
           layout="total, sizes,prev, pager, next, jumper"
           :page-size="pageSize"
-          :page-sizes="$store.getters.pageSizes"
-          :total="15"
+          :page-sizes="pageSizes"
+          :total="total"
           @current-change="handleCurrentChange"
           @size-change="handleSizeChange"
         ></el-pagination>
-        <el-dialog
-          :title="moduleBox"
-          center
-          :visible.sync="editVisible"
-          :before-close="closeFormDialog"
-          width="410px"
-        >
-          <editForm v-if="moduleBox == '新增银行信息'" ref="addForm"></editForm>
-          <editForm v-else ref="editForm" :editFormData="editFormData"></editForm>
-          <div slot="footer" class="dialog-footer">
-            <el-button @click="editVisible = false">取 消</el-button>
-            <el-button
-              v-if="moduleBox == '新增银行信息'"
-              type="primary"
-              @click="submitAdd"
-              >确 定</el-button>
-            <el-button v-else type="primary" @click="submitEdit">确 定</el-button>
-          </div>
-        </el-dialog>
       </div>
     </div>
+    <el-dialog
+      :title="title"
+      center
+      :visible.sync="editVisible"
+      :before-close="closeFormDialog"
+      width="410px"
+    >
+      <editForm
+        ref="editForm"
+        :type="title"
+        :editFormData="editFormData"
+        @refresh="search"
+      ></editForm>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="editVisible = false">取 消</el-button>
+        <el-button @click="submit"> 确 定 </el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import list from '@/mixins/list'
+import dayjs from 'dayjs'
 import editForm from './components/editForm'
-// import {
-//   getQueryBank,
-//   setAddBank,
-//   setDeleteBank,
-//   setEidteBank,
-// } from "@/api/bankController";
 export default {
   name: '',
   components: {
@@ -182,112 +177,100 @@ export default {
         time: []
       },
       dataList: [],
-      moduleBox: '',
+      title: '',
       showForm: '',
       editVisible: false,
       editFormData: {}
     }
   },
   computed: {},
-  mounted() {
-    for (let i = 0; i < 10; i++) {
-      this.dataList[i] = {
-        bankCode: '165416416464654',
-        bankName: '中国银行',
-        createDt: '2021-02-13 20:28:54',
-        updateDt: '2021-02-13 20:28:54'
-      }
-    }
-  },
+  mounted() {},
   methods: {
-    // loadData(params) {
-    //   params = {
-    //     ...this.getParams(params)
-    //   }
-    //   getQueryBank(params).then((res) => {
-    //     console.log('res:', res)
-    //     if (res.code === 200) {
-    //       this.loading = false
-    //       this.dataList = res.data
-    //     } else {
-    //       this.loading = false
-    //       this.$message({
-    //         message: res.msg,
-    //         type: 'error'
-    //       })
-    //     }
-    //   })
-    // },
-    query() {
+    loadData() {
       this.loading = true
-      const create = this.formTime.time || []
-      const [startTime, endTime] = create
-      const params = {
+      const [startTime, endTime] = this.formTime.time || []
+      let params = {
         ...this.queryData,
         pageNum: 1,
-        startTime: startTime && startTime + '',
-        endTime: endTime && endTime + ''
+        startTime: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : '',
+        endTime: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
       }
-      console.log(params)
-      this.loadData(params)
+      params = {
+        ...this.getParams(params)
+      }
+      this.$api.blackList(params).then((res) => {
+        if (res.code === 200) {
+          const response = res.data
+          this.loading = false
+          this.dataList = response.records
+          this.total = response.total
+        } else {
+          this.loading = false
+          this.$message({
+            message: res.msg,
+            type: 'error'
+          })
+        }
+      })
+    },
+    search() {
+      this.pageNum = 1
+      this.loadData()
     },
     reset() {
       this.queryData = {}
       this.formTime.time = []
-      // this.loadData()
+      this.loadData()
     },
 
     add() {
-      this.moduleBox = '新增银行信息'
+      this.title = '新增'
       this.editVisible = true
-    },
-    submitAdd() {
-      console.log(this.$refs.addForm)
-      //   setAddBank(this.queryData).then((res) => {
-      //     console.log(res);
-      //   });
+      this.editFormData = {}
     },
     deleteUp(val) {
-      console.log(val)
       this.$confirm('确定删除此银行卡号吗?', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       })
         .then(() => {
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
+          const loading = this.$loading({
+            lock: true,
+            text: 'Loading',
+            spinner: 'el-icon-loading',
+            background: 'rgba(0, 0, 0, 0.7)'
           })
-          // setDeleteBank(val).then((res) => {
-          //   console.log(res);
-          // });
-        })
-        .catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          })
+          this.$api
+            .delBlackList({
+              id: val.id
+            })
+            .then(() => {
+              loading.close()
+              this.search()
+              this.$message({
+                type: 'success',
+                message: '删除成功!'
+              })
+            })
+            .catch(() => {
+              loading.close()
+            })
         })
     },
     editUp(val) {
-      this.moduleBox = '修改银行信息'
+      this.title = '编辑'
       this.editVisible = true
       this.editFormData = val
     },
-    submitEdit() {
-      // setEidteBank().then((res) => {
-      //   console.log(res);
-      // });
+    submit() {
+      this.$refs.editForm.submit()
     },
     handleCurrentChange() {
       this.loadData()
     },
     closeFormDialog() {
       this.editVisible = false
-    },
-    enterSubmit() {
-      this.query()
     }
   }
 }

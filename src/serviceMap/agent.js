@@ -8,19 +8,19 @@ const agent = [
 	{
 		id: '52',
 		parentId: '51',
-		icon: 'bb_management_system',
+		icon: 'bb_report',
 		title: '代理功能'
 	},
 	{
 		id: '56',
 		parentId: '51',
-		icon: 'bb_management_system',
+		icon: 'bb_report',
 		title: '代理审核'
 	},
 	{
 		id: '61',
 		parentId: '51',
-		icon: 'bb_management_system',
+		icon: 'bb_report',
 		title: '代理记录'
 	},
 	// 第三级菜单

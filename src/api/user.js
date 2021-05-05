@@ -10,62 +10,137 @@ export function login(data) {
 		}
 	})
 }
-export function modifyPassword(data) {
+
+export function getDics() {
 	return request({
-		url: '/user/modifyPassword',
-		method: 'post',
-		data
+		url: '/dict/getAllDictList',
+		method: 'get'
 	})
 }
-export function updateStatus(data) {
+export function logout() {
 	return request({
-		url: '/user/modifyStatus',
-		method: 'post',
-		data
+		url: '/logout',
+		method: 'post'
 	})
 }
 export function updateXPSStatus(data) {
 	return request({
-		url: '/user/modifyMobileUserStatus',
+		url: '/user/updateUserStatus',
 		method: 'post',
 		data
 	})
 }
-export function getRoles(params) {
+export function modifyPassword(data) {
 	return request({
-		url: '/user/roleList',
-		method: 'GET',
+		url: '/user/updatePassword',
+		method: 'post',
+		data
+	})
+}
+export function getUsers(data) {
+	return request({
+		url: '/user/listPage',
+		method: 'post',
+		data
+	})
+}
+// 字典列表选择框
+export function getSecurityDictList(params) {
+	return request({
+		url: '/securityDict/list',
+		method: 'get',
 		params
 	})
 }
-export function userEditRoleList(params) {
+// 设置用户字典
+export function setUserSecurityDict(data) {
 	return request({
-		url: '/user/userEditRoleList',
-		method: 'GET',
+		url: '/securityDict/setUserDicts',
+		method: 'post',
+		data
+	})
+}
+// 角色列表
+export function getRoleList(data) {
+	return request({
+		url: '/role/listPage',
+		method: 'post',
+		data
+	})
+}
+// 用户明细
+export function getUserRoles(data) {
+	return request({
+		url: '/user/getUserDetailInfo',
+		method: 'post',
+		data
+	})
+}
+
+// 会员管理==> 会员列表
+export function memberListAPI(data) {
+	return request({
+		url: '/user/queryMember',
+		method: 'post',
+		data
+	})
+}
+
+// 会员管理==> 会员列表 ===> 风控层级
+export function merchantDictAPI(params) {
+	return request({
+		url: '/member/merchantDict',
+		method: 'get',
 		params
 	})
 }
-export function getUserRoles(params) {
+
+// 会员管理==> 会员列表 ==> 导出
+export function exportExcelAPI(data) {
 	return request({
-		url: '/user/getUserDetail',
-		method: 'GET',
-		params
+		url: '/member/download',
+		method: 'post',
+		responseType: 'blob',
+		data
 	})
 }
+
+// 会员管理==> 新增
+export function addMemberAPI(data) {
+	return request({
+		url: '/player/addPlayer',
+		method: 'post',
+		data
+	})
+}
+
+// 会员管理==> 会员注册信息 ==> 列表
+export function memberRegisterInfoListAPI(data) {
+	return request({
+		url: '/member/memberRegisterList',
+		method: 'post',
+		data
+	})
+}
+
+// 会员管理==> 会员银行记录 ==> 列表
+export function bankRecordListAPI(data) {
+	return request({
+		url: '/bankOperateRecord/page',
+		method: 'post',
+		data
+	})
+}
+
+// 编辑用户
 export function editUser(data) {
 	return request({
-		url: '/user/edit',
+		url: '/user/updateUserInfo',
 		method: 'post',
 		data
 	})
 }
-export function editXPSUser(data) {
-	return request({
-		url: '/user/updateMobile',
-		method: 'post',
-		data
-	})
-}
+// 新增用户
 export function addUser(data) {
 	return request({
 		url: '/user/add',
@@ -73,32 +148,22 @@ export function addUser(data) {
 		data
 	})
 }
-export function getUsers(data) {
-	return request({
-		url: '/user/list',
-		method: 'get',
-		params: data
-	})
-}
-
-export function logout() {
-	return request({
-		url: '/logout',
-		method: 'post'
-	})
-}
-
-export function switchLanguage(data) {
-	// lang:中文:zh_CN,英文:en_US
-	return request({
-		url: '/language/switchLanguage',
-		method: 'get',
-		params: data
-	})
-}
-
 export default {
 	login,
 	logout,
-	switchLanguage
+	getUsers,
+	addUser,
+	editUser,
+	getUserRoles,
+	getRoleList,
+	modifyPassword,
+	getSecurityDictList,
+	setUserSecurityDict,
+	updateXPSStatus,
+	memberListAPI,
+	merchantDictAPI,
+	exportExcelAPI,
+	addMemberAPI,
+	memberRegisterInfoListAPI,
+	bankRecordListAPI
 }

@@ -31,7 +31,7 @@ const state = {
 	routes: [],
 	addRoutes: [],
 	userBtns: [],
-	nowRoute: ''
+	nowRoute: '2'
 }
 
 const mutations = {
@@ -64,9 +64,6 @@ const actions = {
 				if (mapElement) {
 					// 一级菜单
 					if (element.parentId === '0') {
-						console.log('val')
-						console.log(val)
-						console.log(element)
 						parentRoutes.push({
 							id: element.id,
 							path: element.path,
@@ -74,13 +71,16 @@ const actions = {
 							show: true,
 							component: Layout,
 							children: [],
-							checked: val === 0
+							checked: false
 						})
-						if (val === 0) {
-							setTimeout(() => {
-								store.dispatch('permission/setNowroute', element.id)
-							}, 200)
-						}
+						setTimeout(() => {
+							parentRoutes.forEach(data => {
+								if (data.id === store.state.tagsView.visitedViews[1].matched[0].path.substr(1)) {
+									data.checked = true
+								}
+							})
+							store.dispatch('permission/setNowroute', store.state.tagsView.visitedViews[1].matched[0].path.substr(1))
+						}, 200)
 					} else if (element.level === 2) {
 						// 二级菜单
 						const index = parentRoutes.findIndex(
@@ -116,7 +116,7 @@ const actions = {
 						if (index > -1) {
 							parentRoutes[index].children[index2].children.push({
 								path: element.path,
-								name: element.permissionName,
+								name: element.name ? element.name : element.permissionName,
 								children: [],
 								component: (resolve) =>
 									require(['@/views' + element.path + '/index'], resolve),
@@ -153,12 +153,6 @@ const actions = {
 			parentRoutes = parentRoutes.filter((val) => {
 				return !val.children || (val.children && val.children.length)
 			})
-
-			parentRoutes.forEach((element) => {
-				if (element.isRedirect) {
-					element.redirect = `${element.path}${element.children[0].path}`
-				}
-			})
 			parentRoutes.push({
 				path: '*',
 				redirect: '/404',
@@ -171,7 +165,7 @@ const actions = {
 				if (rootRoute.children && rootRoute.children.length) {
 					rootRoutes.push({
 						path: '/',
-						redirect: rootRoute.children && rootRoute.children[0].path
+						redirect: rootRoute.children && rootRoute.children[0].children[0].path
 					})
 				} else {
 					rootRoutes.push({
@@ -180,6 +174,29 @@ const actions = {
 					})
 				}
 			}
+			// 前端写死路由
+			parentRoutes.forEach(item => {
+				if (item.name === '会员') {
+					item.children.forEach(data => {
+						if (data.name === '会员审核') {
+							data.children.push({
+								path: '/member/memberReview/memberChangeReview',
+								name: 'memberChangeReview',
+								component: () => import(`@/views/member/memberReview/memberChangeReview/index`),
+								meta: { title: '会员账户修改审核详情', icon: 'bb_reportDaily' },
+								hidden: true
+							})
+							data.children.push({
+								path: '/member/memberReview/addMemberReview',
+								name: 'addMemberReview',
+								component: () => import(`@/views/member/memberReview/addMemberReview/index`),
+								meta: { title: '新增会员审核详情', icon: 'bb_reportDaily' },
+								hidden: true
+							})
+						}
+					})
+				}
+			})
 			parentRoutes = parentRoutes.concat(rootRoutes)
 			commit('SET_ROUTES', {
 				parentRoutes,

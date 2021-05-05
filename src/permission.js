@@ -7,7 +7,7 @@ import { getToken } from '@/utils/auth' // get token from cookie
 import getPageTitle from '@/utils/get-page-title'
 import axios from 'axios'
 import Cookies from 'js-cookie'
-
+import { checkNullObj } from '@/utils'
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
 const whiteList = ['/login'] // no redirect whitelist
@@ -44,13 +44,18 @@ const ifVersionCorrect = async (to, from, next) => {
 	const hasToken = getToken()
 	const addRoutes = store.state.permission.addRoutes
 	if (hasToken) {
-		if (to.path === '/login') {
+		if (to.path === '/login' || to.path === '/404') {
 			next({ path: '/' })
 			NProgress.done()
 		} else {
+			const gloablDics = store.state.user.globalDics
+			if (checkNullObj(gloablDics)) {
+				// 如果请求失败 跳转会再次请求
+				// 请求数据字典
+				await store.dispatch('user/getDics')
+			}
 			if (!addRoutes.length) {
 				const roles = await store.dispatch('user/getRoles')
-				console.log('roles', roles)
 				try {
 					if (roles === '无效权限') {
 						await store.dispatch('user/resetToken')
@@ -61,7 +66,6 @@ const ifVersionCorrect = async (to, from, next) => {
 							'permission/generateRoutes',
 							roles
 						)
-						console.log('accessRoutes', accessRoutes)
 						router.addRoutes(accessRoutes)
 						next({ ...to, replace: true })
 					}

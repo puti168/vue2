@@ -98,10 +98,17 @@
 }
 
 .el-button {
-    width: 80px;
+    min-width: 80px;
+    height: 30px;
+    line-height: 28px;
+    padding: 0;
+}
+
+.el-tag {
+    min-width: 80px;
     height: 30px;
     line-height: 30px;
-    padding: 0;
+    padding: 0 5px;
 }
 
 .el-message {
@@ -119,18 +126,29 @@
 }
 
 .el-table td .cell {
-    line-height: 14px;
-    font-size: 12px;
+    line-height: 16px;
+    font-size: 14px;
 }
 
 .el-table td .cell .el-button {
-    width: 60px;
-    height: 24px;
-    line-height: 24px;
+    min-width: 60px;
+    height: 20px;
+    line-height: 18px;
+    padding: 0 5px;
+}
+
+.el-table td .cell .el-tag {
+    min-width: 60px;
+    height: 20px;
+    line-height: 18px;
+    padding: 0 5px;
+}
+
+.el-table td .cell .el-button [class*='el-icon-']+span {
+    margin: 0;
     padding: 0;
 }
 
-.el-table td .cell .el-button [class*=el-icon-]+span {
-    margin: 0;
-    padding: 0;
+.el-select-dropdown__wrap .el-scrollbar__wrap {
+    margin-bottom: -12px;
 }

@@ -1,5 +1,6 @@
 import {
     login,
+    getDics,
     logout
 } from '@/api/user'
 import {
@@ -29,6 +30,7 @@ const state = {
     nickName: '',
     id: '',
     avatar: '',
+    globalDics: {},
     datas: {}
 }
 
@@ -36,6 +38,9 @@ const mutations = {
     SET_TOKEN: (state, token) => {
         state.token = token
     },
+    SET_GLABALDICS: (state, dics) => {
+		state.globalDics = dics
+	},
     SET_ID: (state, token) => {
         state.id = token
     },
@@ -140,6 +145,16 @@ const actions = {
                 })
         })
     },
+    getDics({ commit, state }) {
+		return new Promise((resolve, reject) => {
+			getDics().then((_) => {
+				if (_.code === 200) {
+					commit('SET_GLABALDICS', _.data)
+				}
+			})
+			resolve()
+		})
+	},
     // user logout
     logout({
         commit,
@@ -174,7 +189,6 @@ const actions = {
         commit
     }) {
         return getUserPermissions().then((response) => {
-            console.log(response)
             const data = response.status === 203 ? [] : response.data
             const result = []
             loop(data, result)

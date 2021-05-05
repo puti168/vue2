@@ -1,24 +1,18 @@
 <template>
-	<div class="app-wrapper">
-		<div class="main-container2">
-			<app-main />
-		</div>
-	</div>
+	<app-main />
 </template>
 
 <script>
 import { AppMain } from './components'
 
 export default {
-	name: 'Layout',
+	name: 'Layout2',
 	components: {
 		AppMain
 	},
 	mixins: [],
-	computed: {
-	},
-	methods: {
-	}
+	computed: {},
+	methods: {}
 }
 </script>
 

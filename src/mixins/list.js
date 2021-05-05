@@ -1,7 +1,10 @@
 import dayjs from 'dayjs'
 import { shortcuts, shortcutsNoToday, shortcutsM } from '@/utils/consts'
 import { formatCurrency } from '@/utils'
+import Copy from '@/components/Copy/copy'
+import { mapGetters } from 'vuex'
 export default {
+	components: { Copy },
 	data() {
 		return {
 			list: [],
@@ -11,10 +14,12 @@ export default {
 			pageSize: 10,
 			pageSizes: [5, 10, 20, 50, 100, 200, 500],
 			layout: 'total, sizes, prev, pager, next, jumper',
-			defaultTime: ['00:00:00', '23:59:59']
+			defaultTime: ['00:00:00', '23:59:59'],
+			sortable: true
 		}
 	},
 	computed: {
+		...mapGetters(['globalDics']),
 		pickerOptions() {
 			const _this = this
 			return {
@@ -59,6 +64,16 @@ export default {
 				},
 				shortcuts: shortcutsNoToday
 			}
+		},
+		checkOrderParams() {
+			const SortLine = new Map([
+				['createDt', 'createDt'],
+				['auditTime', 'auditTime'],
+				['applyTime', 'applyTime'],
+				['loginTime', 'loginTime'],
+				['modifyDt', 'modifyDt']
+			])
+			return SortLine
 		}
 	},
 	mounted() {
@@ -78,6 +93,15 @@ export default {
 			} else {
 				return ''
 			}
+		},
+		typeFilter(val, type) {
+			let name = ''
+			this.globalDics[type].forEach((item) => {
+				if (Number(item.code) === Number(val)) {
+					name = item.description
+				}
+			})
+			return name
 		},
 		/**
 		 * 获取请求参数 默认只传递index(页码) pageSize(每页条数) 可以由调用方传递指定对象合并(或者覆盖)原参数
@@ -123,13 +147,47 @@ export default {
 		},
 		enterSearch(e) {
 			const event = e || window.event
-			console.log(event)
 			const key = event.which || event.keyCode || event.charCode
 			if (key === 13) {
 				this.hadSearch = true
 				this.pageNum = 1
 				this.enterSubmit()
 			}
+		},
+		search() {
+			this.pageNum = 1
+			this.loadData()
+		},
+		copy(e) {
+			if (e) {
+				this.$copyText(e).then(() => {
+					this.$message({
+						type: 'success',
+						message: '复制成功'
+					})
+				})
+			}
+		},
+		changeTableSort({ column, prop, order }) {
+			this.pageNum = 1
+			this.queryData.orderProperties = prop
+			const orderParams = this.checkOrderParams.get(prop)
+			if (orderParams) {
+				if (order === 'ascending') {
+					// 升序
+					this.queryData.orderType = 'asc'
+				} else if (column.order === 'descending') {
+					// 降序
+					this.queryData.orderType = 'desc'
+				}
+				this.loadData()
+			}
+		},
+		filterChange(filters) {
+			if (filters.type) {
+				this.listQuery.type = filters.type[0]
+			}
+			this.loadData()
 		}
 	}
 }

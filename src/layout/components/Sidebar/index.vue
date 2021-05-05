@@ -5,9 +5,9 @@
 				ref="menus"
 				:default-active="activeMenu"
 				background-color="#f2f2f2"
-				text-color="#999999"
+				text-color="#666666"
 				:unique-opened="false"
-				active-text-color="#999999"
+				active-text-color="#58A3F7"
 				:collapse-transition="false"
 				mode="vertical"
 				:default-openeds="defaultOpeneds"
@@ -44,14 +44,11 @@ export default {
 			this.routes.forEach((item) => {
 				if (item.id === this.nowRoute) {
 					arr = item
-					console.log(item)
 				}
 			})
 			return arr.children
 		},
 		activeMenu() {
-			console.log('routes :>> ', this.routes)
-			console.log(this.$route)
 			const route = this.$route
 			const { meta, path } = route
 			// if set path, the sidebar will highlight the path you set
@@ -66,8 +63,6 @@ export default {
 	},
 	watch: {
 		showRoute(newQuestion, oldQuestion) {
-			console.log(' oldQuestion')
-			console.log(newQuestion, oldQuestion)
 			this.defaultOpeneds = []
 			if (newQuestion.length) {
 				for (let i = 0; i < newQuestion.length; i++) {
@@ -77,8 +72,21 @@ export default {
 			}
 		}
 	},
-	mounted() {},
+	mounted() {
+		this.init()
+	},
 	methods: {
+		init() {
+			let arr = []
+			this.routes.forEach((item) => {
+				if (item.id === this.nowRoute) {
+					arr = item
+				}
+			})
+			arr.children.forEach((item) => {
+				this.defaultOpeneds.push(item.path)
+			})
+		},
 		handleClose(key, keyPath) {
 			this.$refs.menus.open(keyPath)
 		}

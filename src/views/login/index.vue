@@ -8,6 +8,7 @@
 			class="login-form"
 			auto-complete="on"
 			label-position="left"
+            @keyup.enter.native="handleLogin"
 		>
 			<div class="login-content">
                 <div class="bg-header"></div>
@@ -45,7 +46,6 @@
 						name="password"
 						tabindex="2"
 						auto-complete="off"
-						@keyup.enter.native="handleLogin"
 					/>
 					<span class="show-pwd" @click="showPwd">
 						<svg-icon
@@ -64,7 +64,6 @@
 						name="googleAuth"
 						type="text"
 						tabindex="3"
-						@keyup.enter.native="handleLogin"
 					/>
 				</el-form-item>
 
@@ -84,7 +83,6 @@
 
 <script>
 // import { validUsername } from '@/utils/validate'
-import { Message } from 'element-ui'
 import Cookies from 'js-cookie'
 
 const devLoginForm = {
@@ -171,26 +169,6 @@ export default {
 				range.select() // 避免产生空格
 			}
 		},
-		handleSetLanguage(lang) {
-			Message.closeAll()
-			let actMessage
-			switch (lang) {
-				case 'zh':
-					actMessage = '切换语言成功'
-					break
-				case 'tw':
-					actMessage = '切換語言成功'
-					break
-				default:
-					actMessage = 'Switch Language Success'
-			}
-			this.$i18n.locale = lang
-			this.$store.dispatch('app/setLanguage', lang)
-			this.$message({
-				message: actMessage,
-				type: 'success'
-			})
-		},
 		showPwd() {
 			if (this.passwordType === 'password') {
 				this.passwordType = ''
@@ -209,6 +187,7 @@ export default {
 						.dispatch('user/login', this.loginForm)
 						.then(() => {
 							this.$router.push({ path: this.redirect || '/' })
+							// this.$router.push({ path: '/' })
 							this.loading = false
 						})
 						.catch(() => {

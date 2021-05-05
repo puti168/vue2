@@ -163,6 +163,7 @@
 <script>
 import list from '@/mixins/list'
 import editForm from './components/editForm'
+import { routerNames } from '@/utils/consts'
 // import {
 //   getQueryBank,
 //   setAddBank,
@@ -170,7 +171,7 @@ import editForm from './components/editForm'
 //   setEidteBank,
 // } from "@/api/bankController";
 export default {
-  name: '',
+  name: routerNames.gamePlatform,
   components: {
     editForm
   },
