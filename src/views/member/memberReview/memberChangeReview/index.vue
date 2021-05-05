@@ -19,11 +19,11 @@
 						<div>注册时间: {{ registerInfo.createDt }}</div>
 						<div>上次登录时间: {{ registerInfo.lastLoginTime }}</div>
 						<div>最后下注时间时间: {{ registerInfo.lastBetTime }}</div>
-						<div>注册端: {{ registerInfo.deviceType }}</div>
+						<div>注册端: {{ typeFilter(registerInfo.deviceType, "deviceType") }}</div>
 					</div>
 					<div class="review-flex">
 						<div>上级代理: {{ registerInfo.parentProxyName }}</div>
-						<div>账号类型: {{ registerInfo.accountType }}</div>
+						<div>账号类型: {{ typeFilter(registerInfo.accountType, 'accountType') }}</div>
 					</div>
 				</div>
 				<div v-if="accountInfo" class="review-content">
@@ -46,7 +46,7 @@
 					<div class="review-flex">
 						<div>申请人: {{ applyInfo.applyName }}</div>
 						<div>申请时间: {{ applyInfo.applyTime }}</div>
-						<div>审核申请类型: {{ applyInfo.applyType }}</div>
+						<div>审核申请类型: {{ typeFilter(applyInfo.applyType, 'applyType') }}</div>
 						<div>申请原因: {{ applyInfo.applyInfo }}</div>
 					</div>
 					<div class="review-flex">
@@ -113,10 +113,11 @@
 <script>
 // import dayjs from 'dayjs'
 import { routerNames } from '@/utils/consts'
+import list from '@/mixins/list'
 export default {
 	name: routerNames.memberChangeReview,
 	components: {},
-	mixins: [],
+	mixins: [list],
 	data() {
 		return {
 			accountInfo: '',
@@ -130,7 +131,17 @@ export default {
 			type: true
 		}
 	},
-	computed: {},
+	computed: {
+		accountType() {
+			return this.globalDics.accountType
+		},
+		deviceType() {
+			return this.globalDics.deviceType
+		},
+		applyType() {
+			return this.globalDics.applyType
+		}
+	},
 	created() {
 		if (this.$route.name === 'memberChangeReview') {
 			this.getInfo()
