@@ -8,10 +8,10 @@
 			class="login-form"
 			auto-complete="on"
 			label-position="left"
-            @keyup.enter.native="handleLogin"
+			@keyup.enter.native="handleLogin"
 		>
 			<div class="login-content">
-                <div class="bg-header"></div>
+				<div class="bg-header"></div>
 				<div class="title-container">
 					<svg-icon icon-class="bg-login" class="login_logo" />
 					<h3 class="title">
@@ -68,6 +68,7 @@
 				</el-form-item>
 
 				<div class="login-btn" @click.prevent="handleLogin">
+					<i v-show="loading" class="el-icon-loading"></i>
 					{{ $t('login.logIn') }}
 				</div>
 			</div>
@@ -199,6 +200,8 @@ export default {
 					return false
 				}
 			})
+
+			setTimeout(() => (this.loading = false), 1500)
 		}
 	}
 }
@@ -254,15 +257,15 @@ $light_gray: #eee;
 		background-size: cover;
 	}
 
-    .bg-header {
-        width: 100%;
-        height: 10px;
-        position: absolute;
-        background-color: #007BF9;
-        box-shadow: 0 0 10px rgba(25, 81, 134, 0.35);
-        top: -10px;
-        left: 0.5px;
-    }
+	.bg-header {
+		width: 100%;
+		height: 10px;
+		position: absolute;
+		background-color: #007bf9;
+		box-shadow: 0 0 10px rgba(25, 81, 134, 0.35);
+		top: -10px;
+		left: 0.5px;
+	}
 
 	.login-content {
 		padding: 8% 12% 500px 12%;
@@ -273,7 +276,7 @@ $light_gray: #eee;
 		border: 0.5px solid #ccc;
 		box-shadow: 0 0 10px rgba(25, 81, 134, 0.35);
 		z-index: 10;
-        position: relative;
+		position: relative;
 	}
 
 	h3 {
