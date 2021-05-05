@@ -5,14 +5,14 @@ import game from './game'
 // import finance from './finance'
 // import operation from './operation'
 // import report from './report'
-// import system from './system'
+import system from './system'
 export default [
 	// ...agent,
 	// ...control,
 	// ...finance,
 	// ...operation,
 	// ...report,
-	// ...system,
+	...system,
 	...member,
 	...game
 ]
