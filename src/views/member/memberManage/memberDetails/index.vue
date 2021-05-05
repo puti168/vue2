@@ -295,6 +295,7 @@ export default {
       this.query()
     },
     reset() {
+      this.$refs.form.resetFields()
       this.queryData = {}
     },
     handleClick(tab, event) {

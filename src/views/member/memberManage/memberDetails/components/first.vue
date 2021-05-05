@@ -711,6 +711,7 @@ export default {
       this.editData.gender = val
     },
     cancel() {
+      this.$refs.editForm.resetFields()
       this.editData = {}
       this.editVisible = false
     },
@@ -780,6 +781,7 @@ export default {
       })
     },
     closeFormDialog() {
+      this.$refs.editForm.resetFields()
       this.editData = {}
       this.editVisible = false
     },
