@@ -283,7 +283,6 @@ export default {
 	mounted() {},
 	methods: {
 		loadData() {
-			this.loading = true
 			const [startTime, endTime] = this.formTime.time || []
 			let params = {
 				...this.queryData,
@@ -294,11 +293,19 @@ export default {
 					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
 					: ''
 			}
+			if (!params.loginStartTime || !params.loginEndTime) {
+				this.$message({
+						message: '登录时间参数必传',
+						type: 'error'
+					})
+					return
+			}
 			params = {
 				...this.getParams(params)
 			}
 			params.accountType = this.accountType1.join(',')
 			params.deviceType = this.deviceType1.join(',')
+			this.loading = true
 			this.$api.memberLoginLog(params).then((res) => {
 				if (res.code === 200) {
 					this.now = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')

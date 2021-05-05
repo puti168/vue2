@@ -271,7 +271,6 @@ export default {
 	mounted() {},
 	methods: {
 		loadData() {
-			this.loading = true
 			const [startTime, endTime] = this.formTime.time || []
 			let params = {
 				...this.queryData,
@@ -280,9 +279,18 @@ export default {
 					: '',
 				createDtEnd: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
 			}
+			if (!params.createDtStart || !params.createDtEnd) {
+				this.$message({
+						message: '操作时间参数必传',
+						type: 'error'
+					})
+					return
+			}
 			params = {
 				...this.getParams(params)
 			}
+			this.loading = true
+
 			this.$api.bankRecordListAPI(params).then((res) => {
 				if (res.code === 200) {
 					const response = res.data

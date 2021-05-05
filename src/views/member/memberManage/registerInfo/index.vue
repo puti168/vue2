@@ -22,7 +22,7 @@
 							clearable
 							value-format="timestamp"
 							style="width: 388px"
-                            :default-time="defaultTime"
+							:default-time="defaultTime"
 						></el-date-picker>
 					</el-form-item>
 					<el-form-item label="账号类型:">
@@ -79,6 +79,7 @@
 							placeholder="请输入"
 							clearable
 							maxlength="11"
+                            oninput="value=value.replace(/[^\d]/g,'')"
 							style="width: 180px"
 						></el-input>
 					</el-form-item>
@@ -175,9 +176,13 @@
 					</el-table-column>
 					<el-table-column prop="userName" align="center" label="会员账号">
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.userName">
+							<Copy
+								v-if="!!scope.row.userName"
+								:title="scope.row.userName"
+								:copy="copy"
+							>
 								{{ scope.row.userName }}
-							</span>
+							</Copy>
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
@@ -187,9 +192,13 @@
 						label="上级代理"
 					>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.parentProxyName">
+							<Copy
+								v-if="!!scope.row.parentProxyName"
+								:title="scope.row.parentProxyName"
+								:copy="copy"
+							>
 								{{ scope.row.parentProxyName }}
-							</span>
+							</Copy>
 							<span v-else>-</span>
 						</template>
 					</el-table-column>

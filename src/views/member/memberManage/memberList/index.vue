@@ -22,7 +22,7 @@
 							clearable
 							value-format="timestamp"
 							style="width: 388px"
-                            :default-time="defaultTime"
+							:default-time="defaultTime"
 						></el-date-picker>
 					</el-form-item>
 					<el-form-item label="会员账号:" prop="userName">
@@ -86,6 +86,7 @@
 							style="width: 100px"
 							maxlength="5"
 							name="offLineDaysStart"
+                            oninput="value=value.replace(/[^\d]/g,'')"
 							@blur="checkValue($event)"
 						></el-input>
 						-
@@ -96,6 +97,7 @@
 							style="width: 100px"
 							maxlength="5"
 							name="offLineDaysEnd"
+                            oninput="value=value.replace(/[^\d]/g,'')"
 							@blur="checkValue($event)"
 						></el-input>
 					</el-form-item>
@@ -114,7 +116,7 @@
 							clearable
 							value-format="timestamp"
 							style="width: 388px"
-                            :default-time="defaultTime"
+							:default-time="defaultTime"
 						></el-date-picker>
 					</el-form-item>
 					<el-form-item label="VIP等级:">
@@ -125,6 +127,7 @@
 							style="width: 100px"
 							maxlength="3"
 							name="vipSerialNumMin"
+                            oninput="value=value.replace(/[^\d]/g,'')"
 							@blur="checkValue($event)"
 						></el-input>
 						-
@@ -134,6 +137,7 @@
 							placeholder="最大数值"
 							style="width: 100px"
 							maxlength="3"
+                            oninput="value=value.replace(/[^\d]/g,'')"
 							name="vipSerialNumMax"
 							@blur="checkValue($event)"
 						></el-input>
@@ -179,6 +183,7 @@
 							placeholder="最小数值"
 							style="width: 100px"
 							maxlength="10"
+                            oninput="value=value.replace(/[^\d]/g,'')"
 							name="firstDepositAmountMin"
 							@blur="checkValue($event)"
 						></el-input>
@@ -189,6 +194,7 @@
 							placeholder="最大数值"
 							style="width: 100px"
 							maxlength="10"
+                            oninput="value=value.replace(/[^\d]/g,'')"
 							name="firstDepositAmountMax"
 							@blur="checkValue($event)"
 						></el-input>
@@ -283,9 +289,13 @@
 						width="150px"
 					>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.userName">
+							<Copy
+								v-if="!!scope.row.userName"
+								:title="scope.row.userName"
+								:copy="copy"
+							>
 								{{ scope.row.userName }}
-							</span>
+							</Copy>
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
@@ -296,9 +306,13 @@
 						width="150px"
 					>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.realName">
+							<Copy
+								v-if="!!scope.row.realName"
+								:title="scope.row.realName"
+								:copy="copy"
+							>
 								{{ scope.row.realName }}
-							</span>
+							</Copy>
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
@@ -309,9 +323,13 @@
 						width="150px"
 					>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.parentProxyName">
+							<Copy
+								v-if="!!scope.row.parentProxyName"
+								:title="scope.row.parentProxyName"
+								:copy="copy"
+							>
 								{{ scope.row.parentProxyName }}
-							</span>
+							</Copy>
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
@@ -398,7 +416,7 @@
 						</template>
 					</el-table-column>
 					<el-table-column
-						prop="firstDepositAmount	"
+						prop="firstDepositAmount"
 						align="center"
 						label="首存金额"
 						sortable="custom"
@@ -461,14 +479,14 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-                    <el-table-column prop="deviceType" align="center" label="注册终端">
-                        <template slot-scope="scope">
+					<el-table-column prop="deviceType" align="center" label="注册终端">
+						<template slot-scope="scope">
 							<span v-if="!!scope.row.deviceType">
 								{{ typeFilter(scope.row.deviceType, 'deviceType') }}
 							</span>
-                            <span v-else></span>
-                        </template>
-                    </el-table-column>
+							<span v-else></span>
+						</template>
+					</el-table-column>
 				</el-table>
 				<!-- 分页 -->
 				<el-pagination
@@ -766,9 +784,9 @@ export default {
 			delete params.registerTime
 			delete params.lastLoginTime
 			delete params.firstSaveTime
-            delete params.accountStatus
-            delete params.deviceType
-            delete params.accountType
+			delete params.accountStatus
+			delete params.deviceType
+			delete params.accountType
 			// params.accountStatus = params.accountStatus
 			// 	? params.accountStatus.join(',')
 			// 	: undefined

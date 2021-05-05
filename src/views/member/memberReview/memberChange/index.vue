@@ -328,7 +328,7 @@
 import list from '@/mixins/list'
 import dayjs from 'dayjs'
 import { routerNames } from '@/utils/consts'
-import { getNickName } from '@/utils/auth'
+import { getUsername } from '@/utils/auth'
 const end = dayjs()
 	.endOf('day')
 	.valueOf()
@@ -381,7 +381,7 @@ export default {
 		}
 	},
 	mounted() {
-		this.name = getNickName()
+		this.name = getUsername()
 	},
 	methods: {
 		loadData() {

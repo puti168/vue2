@@ -60,6 +60,3 @@ export function clearCookie() {
 	})
 }
 
-export default {
-	getUsername
-}
