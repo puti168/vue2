@@ -347,6 +347,8 @@ export default {
 						type: 'error'
 					})
 				}
+			}).catch(() => {
+				this.loading = false
 			})
 		},
 		goDetail(row) {
@@ -399,7 +401,7 @@ export default {
 						loading.close()
 						this.$message({
 							type: 'success',
-							message: '锁单成功!'
+							message: '操作成功!'
 						})
 						this.loadData()
 					} else {

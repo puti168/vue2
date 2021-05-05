@@ -115,7 +115,9 @@ export default {
 	},
 	mounted() {},
 	methods: {
-		closeFormDialog() {},
+		closeFormDialog() {
+			this.visible = false
+		},
 		confirm(action) {
 			this.remark = ''
 			this.action = action

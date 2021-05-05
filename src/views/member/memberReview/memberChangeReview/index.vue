@@ -150,7 +150,9 @@ export default {
 	},
 	mounted() {},
 	methods: {
-		closeFormDialog() {},
+		closeFormDialog() {
+			this.visible = false
+		},
 		confirm(action) {
 			this.visible = true
 			this.auditRemark = ''
