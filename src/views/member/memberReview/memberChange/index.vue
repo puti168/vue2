@@ -348,7 +348,6 @@ export default {
 				auditStatus: [],
 				auditStep: '',
 				applyName: '',
-				orderProperties: '',
 				auditName: '',
 				lockOrder: '',
 				auditNum: '',
@@ -453,7 +452,6 @@ export default {
 				applyType: [],
 				auditStatus: [],
 				applyName: '',
-				orderProperties: '',
 				auditName: '',
 				lockOrder: '',
 				auditNum: '',
@@ -465,6 +463,25 @@ export default {
 				time2: []
 			}
 			this.loadData()
+		},
+		changeTableSort({ column, prop, order }) {
+			this.pageNum = 1
+			if (prop === 'applyTime') {
+				this.queryData.orderKey = 1
+			} else {
+				this.queryData.orderKey = 2
+			}
+			const orderParams = this.checkOrderParams.get(prop)
+			if (orderParams) {
+				if (order === 'ascending') {
+					// 升序
+					this.queryData.orderType = 'asc'
+				} else if (column.order === 'descending') {
+					// 降序
+					this.queryData.orderType = 'desc'
+				}
+				this.loadData()
+			}
 		},
 		lockChange(val) {
 			const loading = this.$loading({
