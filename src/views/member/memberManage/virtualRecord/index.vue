@@ -296,6 +296,8 @@ export default {
 						type: 'error'
 					})
 				}
+			}).catch(() => {
+				this.loading = false
 			})
 		},
 		changeTableSort({ column, prop, order }) {

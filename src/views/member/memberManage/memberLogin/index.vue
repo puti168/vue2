@@ -316,6 +316,8 @@ export default {
 						type: 'error'
 					})
 				}
+			}).catch(() => {
+				this.loading = false
 			})
 		},
 		reset() {
