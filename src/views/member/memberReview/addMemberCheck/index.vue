@@ -244,7 +244,7 @@
 <script>
 import list from '@/mixins/list'
 import dayjs from 'dayjs'
-import { getNickName } from '@/utils/auth'
+import { getUsername } from '@/utils/auth'
 import { routerNames } from '@/utils/consts'
 const end = dayjs()
 	.endOf('day')
@@ -299,7 +299,7 @@ export default {
 		}
 	},
 	mounted() {
-		this.name = getNickName()
+		this.name = getUsername()
 	},
 	methods: {
 		loadData() {
