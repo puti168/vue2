@@ -134,8 +134,10 @@ export default {
   },
   computed: {},
   mounted() {
+    this.activeName = 'first'
     // 监听滚动事件
     window.addEventListener('scroll', this.onScroll, false)
+    this.onScroll(0)
   },
   destroy() {
     // 必须移除监听器，不然当该vue组件被销毁了，监听器还在就会出错
@@ -168,6 +170,8 @@ export default {
           this.$refs.second.activeL = false
           this.$refs.third.activeL = false
           this.$refs.fourth.activeL = false
+          this.activeName = 'first'
+          this.scrollTo(0)
           // loading.close();
         })
         .catch(() => {
@@ -317,7 +321,7 @@ export default {
       for (let n = 0; n < offsetTopArr.length; n++) {
         // 如果 scrollTop 大于等于第n个元素的 offsetTop 则说明 n-1 的内容已经完全不可见
         // 那么此时导航索引就应该是n了
-        if (scrollTop + 134 >= offsetTopArr[n]) {
+        if (scrollTop + 240 >= offsetTopArr[n]) {
           navIndex = n
         }
       }
@@ -362,8 +366,8 @@ export default {
           } else {
             scrollTop = targetOffsetTop
           }
-          document.body.scrollTop = scrollTop - 134
-          document.documentElement.scrollTop = scrollTop - 134
+          document.body.scrollTop = scrollTop - 240
+          document.documentElement.scrollTop = scrollTop - 240
           // 关于 requestAnimationFrame 可以自己查一下，在这种场景下，相比 setInterval 性价比更高
           requestAnimationFrame(smoothDown)
         }
@@ -376,8 +380,8 @@ export default {
           } else {
             scrollTop = targetOffsetTop
           }
-          document.body.scrollTop = scrollTop - 134
-          document.documentElement.scrollTop = scrollTop - 134
+          document.body.scrollTop = scrollTop - 240
+          document.documentElement.scrollTop = scrollTop - 240
           requestAnimationFrame(smoothUp)
         }
       }
