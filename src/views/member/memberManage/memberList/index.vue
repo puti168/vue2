@@ -416,7 +416,7 @@
 						</template>
 					</el-table-column>
 					<el-table-column
-						prop="firstDepositAmount	"
+						prop="firstDepositAmount"
 						align="center"
 						label="首存金额"
 						sortable="custom"
