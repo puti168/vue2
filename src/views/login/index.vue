@@ -181,9 +181,11 @@ export default {
 			})
 		},
 		handleLogin() {
+			let lock = true
 			this.$refs.loginForm.validate((valid) => {
-				if (valid) {
+				if (valid && lock) {
 					this.loading = true
+					lock = false
 					this.$store
 						.dispatch('user/login', this.loginForm)
 						.then(() => {
@@ -194,6 +196,7 @@ export default {
 						.catch(() => {
 							this.timestamp = +new Date()
 							this.loading = false
+							lock = false
 						})
 				} else {
 					console.log('error submit!!')
@@ -201,7 +204,10 @@ export default {
 				}
 			})
 
-			setTimeout(() => (this.loading = false), 1500)
+			setTimeout(() => {
+				this.loading = false
+				lock = true
+			}, 1500)
 		}
 	}
 }
