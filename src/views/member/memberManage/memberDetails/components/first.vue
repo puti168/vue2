@@ -593,10 +593,10 @@ export default {
       deep: true
     }
   },
-  created() {},
-  mounted() {
+  created() {
     this.initGetDics()
   },
+  mounted() {},
   methods: {
     initGetDics() {
       getDics().then((res) => {

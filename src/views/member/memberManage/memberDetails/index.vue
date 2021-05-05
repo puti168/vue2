@@ -2,7 +2,7 @@
   <div class="allmargin report-container">
     <div class="bg"></div>
     <div class="ps">
-      <el-form ref="form" :inline="true" :model="queryData">
+      <el-form ref="form" :inline="true" :model="queryData" @submit.native.prevent>
         <el-form-item
           label="会员账号:"
           prop="userName"
