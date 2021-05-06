@@ -49,7 +49,7 @@
 						style="width: 365px"
 					></el-input>
 				</el-form-item>
-				<el-form-item label="手机号码:">
+				<el-form-item label="手机号码:" prop="mobile">
 					<el-input
 						v-model="form.mobile"
 						size="medium"
@@ -96,7 +96,7 @@
 						style="width: 365px"
 					></el-input>
 				</el-form-item>
-				<el-form-item label="邮箱:">
+				<el-form-item label="邮箱:" prop="email">
 					<el-input
 						v-model="form.email"
 						size="medium"
@@ -155,6 +155,7 @@
 import { routerNames } from '@/utils/consts'
 import list from '@/mixins/list'
 import { notSpecial2, isHaveEmoji } from '@/utils/validate'
+import { MOBILE_PATTERN, EMAIL_PATTERN } from '@/utils/pattern'
 export default {
 	name: routerNames.addMember,
 	mixins: [list],
@@ -214,6 +215,22 @@ export default {
 				}
 			}
 
+			const testMobile = (rule, value, callback) => {
+				if (!!value && !MOBILE_PATTERN.test(value)) {
+					callback(new Error('请输入有效的手机号码'))
+				} else {
+					callback()
+				}
+			}
+
+			const testEmail = (rule, value, callback) => {
+				if (!!value && !EMAIL_PATTERN.test(value)) {
+					callback(new Error('请输入正确的邮箱'))
+				} else {
+					callback()
+				}
+			}
+
 			return {
 				accountType: [
 					{ required: true, message: '请选择账号类型', trigger: 'change' }
@@ -231,6 +248,20 @@ export default {
 						validator: testPassword,
 						trigger: 'blur'
 					}
+				],
+				mobile: [
+					{
+						required: false,
+						validator: testMobile,
+						trigger: 'blur'
+					}
+				],
+				email: [
+					{
+						required: false,
+						validator: testEmail,
+						trigger: 'blur'
+					}
 				]
 			}
 		}
@@ -244,6 +275,7 @@ export default {
 			}
 			console.log(params)
 			this.$refs['form'].validate((valid) => {
+				console.log('valid', valid)
 				if (valid) {
 					this.$api
 						.addMemberAPI(params)

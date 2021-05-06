@@ -221,6 +221,7 @@
 				<el-pagination
 					v-show="!!total"
 					:current-page.sync="pageNum"
+                    class="pageValue"
 					layout="total, sizes,prev, pager, next, jumper"
 					:page-size="pageSize"
 					:page-sizes="$store.getters.pageSizes"

@@ -81,15 +81,18 @@ service.interceptors.response.use(
 	async (response) => {
 		if (response.data.type === 'application/octet-stream') {
 			const data = response.data
+			const disposition = response.headers['content-disposition']
+			const fileNames = disposition.split("''")
+			let fileName = fileNames[1]
 			if (!data) {
 				return
 			}
+			fileName = decodeURIComponent(fileName)
 			const link = document.createElement('a')
 			const blob = new Blob([data], { type: 'application/vnd.ms-excel' })
 			link.style.display = 'none'
 			link.href = URL.createObjectURL(blob)
-			const title = '会员列表'
-			link.setAttribute('download', title + '.xls')
+			link.setAttribute('download', fileName)
 			document.body.appendChild(link)
 			link.click()
 			document.body.removeChild(link)
