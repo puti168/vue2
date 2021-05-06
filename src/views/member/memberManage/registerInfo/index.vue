@@ -52,16 +52,6 @@
 							style="width: 180px"
 						></el-input>
 					</el-form-item>
-					<el-form-item label="会员姓名:">
-						<el-input
-							v-model="queryData.realname"
-							size="medium"
-							placeholder="请输入"
-							clearable
-							maxlength="6"
-							style="width: 180px"
-						></el-input>
-					</el-form-item>
 					<el-form-item label="上级代理:">
 						<el-input
 							v-model="queryData.parentProxyName"
@@ -289,7 +279,6 @@ export default {
 				registerIp: '',
 				ipAttribution: '',
 				deviceType: [],
-				realname: '',
 				orderType: undefined
 			},
 			dataList: [],
@@ -368,8 +357,7 @@ export default {
 				registerPhone: '',
 				registerIp: '',
 				ipAttribution: '',
-				deviceType: undefined,
-				realname: ''
+				deviceType: undefined
 			}
 			this.loadData()
 		}
