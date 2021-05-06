@@ -54,7 +54,9 @@
 						size="medium"
 						placeholder="请输入"
 						clearable
+						maxlength="11"
 						style="width: 365px"
+						oninput="value=value.replace(/[^\d]/g,'')"
 					></el-input>
 				</el-form-item>
 				<el-form-item label="上级代理:">
@@ -63,6 +65,7 @@
 						size="medium"
 						placeholder="请输入"
 						clearable
+						maxlength="11"
 						style="width: 365px"
 					></el-input>
 				</el-form-item>
@@ -87,7 +90,9 @@
 						v-model="form.vipExperenceValue"
 						size="medium"
 						placeholder="请输入数字，不支持负数和小数点"
+						oninput="value=value.replace(/[^\d]/g,'')"
 						clearable
+						maxlength="12"
 						style="width: 365px"
 					></el-input>
 				</el-form-item>
@@ -97,6 +102,7 @@
 						size="medium"
 						placeholder="请输入"
 						clearable
+						maxlength="32"
 						style="width: 365px"
 					></el-input>
 				</el-form-item>
@@ -106,6 +112,7 @@
 						size="medium"
 						placeholder="请输入"
 						clearable
+						maxlength="6"
 						style="width: 365px"
 					></el-input>
 				</el-form-item>
