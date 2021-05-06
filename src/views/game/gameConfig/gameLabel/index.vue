@@ -1,7 +1,7 @@
 <template>
   <div class="game-container report-container">
     <div class="header flex-h flex-bc">
-      <h2 class="h2-line">门票记录</h2>
+      <h2 class="h2-line">游戏标签管理</h2>
       <div class="head flex-h-end">
         <el-button
           type="primary"

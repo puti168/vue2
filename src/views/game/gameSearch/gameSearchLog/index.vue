@@ -1,7 +1,7 @@
 <template>
   <div class="game-container report-container">
     <div class="header flex-h flex-bc">
-      <h2 class="h2-line">门票记录</h2>
+      <h2 class="h2-line">游戏搜索日志</h2>
       <div class="head flex-h-end">
         <el-button
           type="primary"
@@ -20,12 +20,7 @@
         >
           重置
         </el-button>
-        <el-button
-          type="primary"
-          icon="el-icon-folder-add"
-          size="medium"
-          @click="add"
-        >
+        <el-button type="primary" icon="el-icon-folder-add" size="medium" @click="add">
           新增
         </el-button>
       </div>
@@ -136,25 +131,6 @@
           @current-change="handleCurrentChange"
           @size-change="handleSizeChange"
         ></el-pagination>
-        <el-dialog
-          :title="moduleBox"
-          center
-          :visible.sync="editVisible"
-          :before-close="closeFormDialog"
-          width="410px"
-        >
-          <editForm v-if="moduleBox == '新增银行信息'" ref="addForm"></editForm>
-          <editForm v-else ref="editForm" :editFormData="editFormData"></editForm>
-          <div slot="footer" class="dialog-footer">
-            <el-button @click="editVisible = false">取 消</el-button>
-            <el-button
-              v-if="moduleBox == '新增银行信息'"
-              type="primary"
-              @click="submitAdd"
-              >确 定</el-button>
-            <el-button v-else type="primary" @click="submitEdit">确 定</el-button>
-          </div>
-        </el-dialog>
       </div>
     </div>
   </div>
@@ -162,7 +138,7 @@
 
 <script>
 import list from '@/mixins/list'
-import editForm from './components/editForm'
+import { routerNames } from '@/utils/consts'
 // import {
 //   getQueryBank,
 //   setAddBank,
@@ -170,10 +146,8 @@ import editForm from './components/editForm'
 //   setEidteBank,
 // } from "@/api/bankController";
 export default {
-  name: '',
-  components: {
-    editForm
-  },
+  name: routerNames.gamePlatform,
+  components: {},
   mixins: [list],
   data() {
     return {
