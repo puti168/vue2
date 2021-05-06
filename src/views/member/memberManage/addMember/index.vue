@@ -43,6 +43,7 @@
 						size="medium"
 						placeholder="8-12位，字母+数字组合"
 						clearable
+						oninput="value=value.replace(/(^\s*)|(\s*$)/g ,'')"
 						minlength="8"
 						maxlength="12"
 						style="width: 365px"
@@ -74,7 +75,6 @@
 						v-model="form.gender"
 						size="medium"
 						placeholder="全部"
-						clearable
 						style="width: 365px"
 					>
 						<el-option
@@ -123,7 +123,7 @@
 						type="textarea"
 						placeholder="请输入"
 						clearable
-                        maxlength="50"
+						maxlength="50"
 						style="width: 365px"
 					></el-input>
 				</el-form-item>
@@ -184,7 +184,7 @@ export default {
 		},
 		rules() {
 			const reg1 = /^[A-Za-z]{1}(?=(.*[a-zA-Z]){1,})(?=(.*[0-9]){1,})[0-9A-Za-z]{3,10}$/
-			const reg2 = /^([a-zA-Z0-9]*[a-zA-Z]+[0-9]+[a-zA-Z0-9]*|[a-zA-Z0-9]*[0-9]+[a-zA-Z]+[a-zA-Z0-9]*)$/
+			const reg2 = /(?=.*[a-zA-Z])(?=.*[0-9])[a-zA-Z0-9]{8,12}/
 
 			const testUserName = (rule, value, callback) => {
 				const isSpecial = !notSpecial2(String(value))
