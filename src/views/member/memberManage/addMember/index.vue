@@ -43,18 +43,21 @@
 						size="medium"
 						placeholder="8-12位，字母+数字组合"
 						clearable
+						oninput="value=value.replace(/(^\s*)|(\s*$)/g ,'')"
 						minlength="8"
 						maxlength="12"
 						style="width: 365px"
 					></el-input>
 				</el-form-item>
-				<el-form-item label="手机号码:">
+				<el-form-item label="手机号码:" prop="mobile">
 					<el-input
 						v-model="form.mobile"
 						size="medium"
 						placeholder="请输入"
 						clearable
+						maxlength="11"
 						style="width: 365px"
+						oninput="value=value.replace(/[^\d]/g,'')"
 					></el-input>
 				</el-form-item>
 				<el-form-item label="上级代理:">
@@ -63,6 +66,7 @@
 						size="medium"
 						placeholder="请输入"
 						clearable
+						maxlength="11"
 						style="width: 365px"
 					></el-input>
 				</el-form-item>
@@ -71,7 +75,6 @@
 						v-model="form.gender"
 						size="medium"
 						placeholder="全部"
-						clearable
 						style="width: 365px"
 					>
 						<el-option
@@ -87,16 +90,19 @@
 						v-model="form.vipExperenceValue"
 						size="medium"
 						placeholder="请输入数字，不支持负数和小数点"
+						oninput="value=value.replace(/[^\d]/g,'')"
 						clearable
+						maxlength="12"
 						style="width: 365px"
 					></el-input>
 				</el-form-item>
-				<el-form-item label="邮箱:">
+				<el-form-item label="邮箱:" prop="email">
 					<el-input
 						v-model="form.email"
 						size="medium"
 						placeholder="请输入"
 						clearable
+						maxlength="32"
 						style="width: 365px"
 					></el-input>
 				</el-form-item>
@@ -106,6 +112,7 @@
 						size="medium"
 						placeholder="请输入"
 						clearable
+						maxlength="6"
 						style="width: 365px"
 					></el-input>
 				</el-form-item>
@@ -116,6 +123,7 @@
 						type="textarea"
 						placeholder="请输入"
 						clearable
+						maxlength="50"
 						style="width: 365px"
 					></el-input>
 				</el-form-item>
@@ -147,6 +155,7 @@
 import { routerNames } from '@/utils/consts'
 import list from '@/mixins/list'
 import { notSpecial2, isHaveEmoji } from '@/utils/validate'
+import { MOBILE_PATTERN, EMAIL_PATTERN } from '@/utils/pattern'
 export default {
 	name: routerNames.addMember,
 	mixins: [list],
@@ -159,7 +168,7 @@ export default {
 				password: '',
 				mobile: '',
 				parentProxyName: '',
-				gender: '',
+				gender: '2',
 				vipExperenceValue: '',
 				email: '',
 				realName: '',
@@ -176,7 +185,7 @@ export default {
 		},
 		rules() {
 			const reg1 = /^[A-Za-z]{1}(?=(.*[a-zA-Z]){1,})(?=(.*[0-9]){1,})[0-9A-Za-z]{3,10}$/
-			const reg2 = /^([a-zA-Z0-9]*[a-zA-Z]+[0-9]+[a-zA-Z0-9]*|[a-zA-Z0-9]*[0-9]+[a-zA-Z]+[a-zA-Z0-9]*)$/
+			const reg2 = /(?=.*[a-zA-Z])(?=.*[0-9])[a-zA-Z0-9]{8,12}/
 
 			const testUserName = (rule, value, callback) => {
 				const isSpecial = !notSpecial2(String(value))
@@ -206,6 +215,22 @@ export default {
 				}
 			}
 
+			const testMobile = (rule, value, callback) => {
+				if (!!value && !MOBILE_PATTERN.test(value)) {
+					callback(new Error('请输入有效的手机号码'))
+				} else {
+					callback()
+				}
+			}
+
+			const testEmail = (rule, value, callback) => {
+				if (!!value && !EMAIL_PATTERN.test(value)) {
+					callback(new Error('请输入正确的邮箱'))
+				} else {
+					callback()
+				}
+			}
+
 			return {
 				accountType: [
 					{ required: true, message: '请选择账号类型', trigger: 'change' }
@@ -223,6 +248,20 @@ export default {
 						validator: testPassword,
 						trigger: 'blur'
 					}
+				],
+				mobile: [
+					{
+						required: false,
+						validator: testMobile,
+						trigger: 'blur'
+					}
+				],
+				email: [
+					{
+						required: false,
+						validator: testEmail,
+						trigger: 'blur'
+					}
 				]
 			}
 		}
@@ -236,6 +275,7 @@ export default {
 			}
 			console.log(params)
 			this.$refs['form'].validate((valid) => {
+				console.log('valid', valid)
 				if (valid) {
 					this.$api
 						.addMemberAPI(params)
@@ -274,7 +314,7 @@ export default {
 				password: '',
 				mobile: '',
 				parentProxyName: '',
-				gender: '',
+				gender: '2',
 				vipExperenceValue: '',
 				email: '',
 				realName: '',

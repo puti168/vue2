@@ -79,22 +79,12 @@ service.interceptors.request.use(
 // response interceptor
 service.interceptors.response.use(
 	async (response) => {
-		if (response.data.type === 'application/octet-stream') {
-			const data = response.data
-			if (!data) {
-				return
-			}
-			const link = document.createElement('a')
-			const blob = new Blob([data], { type: 'application/vnd.ms-excel' })
-			link.style.display = 'none'
-			link.href = URL.createObjectURL(blob)
-			const title = '会员列表'
-			link.setAttribute('download', title + '.xls')
-			document.body.appendChild(link)
-			link.click()
-			document.body.removeChild(link)
+		if (
+			response.config.responseType &&
+			response.config.responseType === 'blob'
+		) {
+			return response
 		}
-		// console.log('response :', response)
 		const headers = response.config.headers
 		// 数据解密, 只对content-type为application/json或者text/plain解密
 		const headersContentType = response.headers['content-type'] || ''

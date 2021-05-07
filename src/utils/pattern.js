@@ -31,7 +31,7 @@ export const NUM_PATTERN = /^-?\d*\.?\d+$/
 // Email正则
 export const EMAIL_PATTERN = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/
 // 手机号正则
-export const MOBILE_PATTERN = /^1[34578]\d{9}$/
+export const MOBILE_PATTERN = /^1[345789]\d{9}$/
 // 身份证号正则
 export const ID_PATTERN = /^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/
 // URL正则
