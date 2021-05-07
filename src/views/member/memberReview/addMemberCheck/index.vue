@@ -411,6 +411,8 @@ export default {
 							type: 'error'
 						})
 					}
+				}).catch(() => {
+					loading.close()
 				})
 		}
 	}
