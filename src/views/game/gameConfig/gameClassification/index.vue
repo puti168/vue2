@@ -38,7 +38,7 @@
 							placeholder="请输入"
 							clearable
 							style="width: 180px"
-							maxlength="11"
+							maxlength="10"
 						></el-input>
 					</el-form-item>
 					<el-form-item label="账号状态:">
@@ -171,17 +171,11 @@
 						prop="parentProxyName"
 						align="center"
 						label="使用状态"
-						width="150px"
+						width="110px"
 					>
 						<template slot-scope="scope">
-							<Copy
-								v-if="!!scope.row.parentProxyName"
-								:title="scope.row.parentProxyName"
-								:copy="copy"
-							>
-								{{ scope.row.parentProxyName }}
-							</Copy>
-							<span v-else>-</span>
+							<div v-if="scope.row.code === 1" class="normalRgba">开启中</div>
+							<div v-else class="disableRgba">已禁用</div>
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -213,16 +207,24 @@
 					<el-table-column
 						prop="vipSerialNum"
 						align="center"
-						label="包含字游戏"
+						label="包含子游戏"
 						width="100px"
 					>
+						<!--						<template slot-scope="scope">-->
+						<!--							<span-->
+						<!--								v-if="!!scope.row.vipSerialNum || scope.row.vipSerialNum === 0"-->
+						<!--							>-->
+						<!--								{{ scope.row.vipSerialNum }}-->
+						<!--							</span>-->
+						<!--							<span v-else>-</span>-->
+						<!--						</template>-->
 						<template slot-scope="scope">
-							<span
-								v-if="!!scope.row.vipSerialNum || scope.row.vipSerialNum === 0"
+							<div
+								class="blueColor decoration"
+								@click="lookGame(scope.row.vipSerialNum)"
 							>
 								{{ scope.row.vipSerialNum }}
-							</span>
-							<span v-else>-</span>
+							</div>
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -230,7 +232,6 @@
 						align="center"
 						label="备注信息"
 						width="180px"
-						sortable="custom"
 					>
 						<template slot-scope="scope">
 							<span v-if="!!scope.row.firstDepositTime">
@@ -244,7 +245,6 @@
 						align="center"
 						width="100px"
 						label="创建人"
-						sortable="custom"
 					>
 						<template slot-scope="scope">
 							<span v-if="!!scope.row.firstDepositTime">
@@ -297,14 +297,24 @@
 						</template>
 					</el-table-column>
 					<el-table-column align="center" label="操作" width="300px">
-						<template>
-							<el-button type="danger" icon="el-icon-delete" size="medium">
+						<template slot-scope="scope">
+							<el-button
+								type="danger"
+								icon="el-icon-delete"
+								size="medium"
+								@click="recycle"
+							>
 								禁用
 							</el-button>
 							<el-button type="warning" icon="el-icon-edit" size="medium">
 								编辑信息
 							</el-button>
-							<el-button type="warning" icon="el-icon-edit" size="medium">
+							<el-button
+								type="warning"
+								icon="el-icon-edit"
+								size="medium"
+								@click="deleteRow(scope.row)"
+							>
 								删除
 							</el-button>
 						</template>
@@ -316,7 +326,7 @@
 					class="pageValue"
 					:current-page.sync="pageNum"
 					background
-        			layout="total, sizes,prev, pager, next, jumper"
+					layout="total, sizes,prev, pager, next, jumper"
 					:page-size="pageSize"
 					:page-sizes="$store.getters.pageSizes"
 					:total="total"
@@ -325,6 +335,30 @@
 				></el-pagination>
 			</div>
 		</div>
+		<el-dialog
+			title="分类游戏"
+			:visible.sync="dialogGameVisible"
+			:destroy-on-close="true"
+			width="480px"
+			class="rempadding"
+		>
+			<el-divider></el-divider>
+			<div class="contentBox disableColor">分类名称：热门游戏（1）</div>
+			<p class="headerBox">
+				<span>游戏名称</span>
+				<span>添加时间</span>
+			</p>
+			<div class="bodyBox">
+				<p>
+					<span>斗地主</span>
+					<span>2016-09-21 08:50:08</span>
+				</p>
+				<p>
+					<span>麻将</span>
+					<span>2016-10-21 08:50:08</span>
+				</p>
+			</div>
+		</el-dialog>
 	</div>
 </template>
 
@@ -368,7 +402,8 @@ export default {
 			dataList: [],
 			total: 0,
 			vipDict: [],
-			userLabel: []
+			userLabel: [],
+			dialogGameVisible: false
 		}
 	},
 	computed: {
@@ -654,6 +689,57 @@ export default {
 						duration: 1500
 					})
 				})
+		},
+
+		recycle() {
+			this.$confirm(
+				`<strong>是否对子游戏进行开启/维护/禁用操作</strong></br>
+                 <span style='font-size:12px;color:#c1c1c1'>一旦操作将会立即生效</span>`,
+				'确认提示',
+				{
+					dangerouslyUseHTMLString: true,
+					confirmButtonText: '确定',
+					cancelButtonText: '取消',
+					type: 'warning'
+				}
+			)
+				.then(() => {
+					// this.getOneKeyWithdraw({ userId: this.parentData.userId })
+				})
+				.catch(() => {})
+		},
+		lookGame(val) {
+			this.dialogGameVisible = true
+			console.log(val)
+		},
+		deleteRow(val) {
+			this.$confirm('确定删除此游戏吗?', {
+				confirmButtonText: '确定',
+				cancelButtonText: '取消',
+				type: 'warning'
+			})
+				.then(() => {
+					// const loading = this.$loading({
+					// 	lock: true,
+					// 	text: 'Loading',
+					// 	spinner: 'el-icon-loading',
+					// 	background: 'rgba(0, 0, 0, 0.7)'
+					// })
+					// this.$api
+					// 	.setDeleteRole('', val.id)
+					// 	.then((res) => {
+					// 		loading.close()
+					// 		this.$message({
+					// 			type: 'success',
+					// 			message: '删除成功!'
+					// 		})
+					// 		this.loadData()
+					// 	})
+					// 	.catch(() => {
+					// 		loading.close()
+					// 	})
+				})
+				.catch(() => {})
 		}
 	}
 }
@@ -664,5 +750,45 @@ export default {
 	text-align: center;
 	color: #909399;
 	font-weight: 700;
+}
+.decoration {
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+/deep/ .rempadding .el-dialog__body {
+	padding: 0;
+	padding-bottom: 30px;
+
+	.contentBox,
+	form {
+		padding: 0 20px;
+	}
+}
+
+.bodyBox {
+	max-height: 400px;
+	overflow: auto;
+}
+p {
+	display: flex;
+	height: 40px;
+	line-height: 40px;
+	border-bottom: 1px solid #e8e8e8;
+	justify-content: space-around;
+	span {
+		display: inline-block;
+		width: 50%;
+		text-align: center;
+	}
+}
+
+.headerBox {
+	color: #000000d8;
+	background: #fafafa;
+	font-family: 'PingFang SC ', 'PingFang SC', sans-serif;
+	font-weight: 650;
+	border-top: 1px solid #e8e8e8;
+	margin-top: 15px;
 }
 </style>
