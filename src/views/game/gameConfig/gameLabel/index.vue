@@ -1,75 +1,72 @@
 <template>
   <div class="game-container report-container">
-    <div class="header flex-h flex-bc">
-      <h2 class="h2-line">游戏标签管理</h2>
-      <div class="head flex-h-end">
-        <el-button
-          type="primary"
-          icon="el-icon-search"
-          :disabled="loading"
-          size="medium"
-          @click="query"
-        >
-          查询
-        </el-button>
-        <el-button
-          icon="el-icon-refresh-left"
-          :disabled="loading"
-          size="medium"
-          @click="reset"
-        >
-          重置
-        </el-button>
-        <el-button
-          type="primary"
-          icon="el-icon-folder-add"
-          size="medium"
-          @click="add"
-        >
-          新增
-        </el-button>
-      </div>
-    </div>
     <div class="view-container dealer-container">
       <div class="params">
-        <el-form ref="form" :inline="true" :model="queryData" label-width="100px">
-          <el-form-item label="银行卡号">
+        <el-form ref="form" :inline="true" :model="queryData">
+          <el-form-item label="游戏标签ID:">
             <el-input
               v-model="queryData.bankCode"
               clearable
+              :maxlength="3"
               size="medium"
-              style="width: 280px"
-              placeholder="请输入银行卡号"
+              style="width: 180px"
+              placeholder="请输入"
               :disabled="loading"
               @keyup.enter.native="enterSearch"
             ></el-input>
           </el-form-item>
-          <el-form-item label="银行名称">
+          <el-form-item label="标签名称:">
             <el-input
               v-model="queryData.bankName"
               clearable
+              :maxlength="10"
               size="medium"
-              style="width: 280px"
-              placeholder="请输入银行名称"
+              style="width: 180px; margin-right: 20px"
+              placeholder="请输入"
               :disabled="loading"
               @keyup.enter.native="enterSearch"
             ></el-input>
           </el-form-item>
-          <el-form-item label="时间">
-            <el-date-picker
-              v-model="formTime.time"
+          <el-form-item label="状态:" class="tagheight">
+            <el-select
+              v-model="queryData.accountType"
+              style="width: 180px"
+              multiple
+              placeholder="默认选择全部"
+              :popper-append-to-body="false"
+            >
+              <el-option label="开启中" value="1"></el-option>
+              <el-option label="禁用中" value="2"></el-option>
+            </el-select>
+          </el-form-item>
+
+          <el-form-item>
+            <el-button
+              type="primary"
+              icon="el-icon-search"
+              :disabled="loading"
               size="medium"
-              :picker-options="pickerOptions"
-              format="yyyy-MM-dd HH:mm:ss"
-              type="datetimerange"
-              range-separator="-"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-              align="right"
-              clearable
-              value-format="timestamp"
-              style="width: 280px"
-            ></el-date-picker>
+              @click="search"
+            >
+              查询
+            </el-button>
+            <el-button
+              icon="el-icon-refresh-left"
+              :disabled="loading"
+              size="medium"
+              @click="reset"
+            >
+              重置
+            </el-button>
+            <el-button
+              type="warning"
+              icon="el-icon-folder"
+              :disabled="loading"
+              size="medium"
+              @click="dialogFormVisible = true"
+            >
+              创建
+            </el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -79,215 +76,275 @@
           border
           size="mini"
           class="small-size-table"
-          :data="dataList"
+          :data="tableData"
           style="width: 100%"
           :header-cell-style="getRowClass"
+          @sort-change="_changeTableSort"
         >
           <el-table-column
-            prop="bankCode"
+            prop="vipSerialNum"
             align="center"
-            label="银行卡号"
+            label="游戏标签ID"
+            sortable="custom"
+            width="120px"
+          ></el-table-column>
+          <el-table-column
+            prop="content"
+            align="center"
+            label="标签内容"
+            width="170px"
+          ></el-table-column>
+          <el-table-column prop="bankName" align="center" label="状态" width="100px">
+            <template slot-scope="scope">
+              <div v-if="scope.row.code === 1" class="normalRgba">开启中</div>
+              <div v-else class="disableRgba">已禁用</div>
+            </template>
+          </el-table-column>
+          <el-table-column
+            prop="bankName"
+            align="center"
+            label="标签描述"
           ></el-table-column>
           <el-table-column
             prop="bankName"
             align="center"
-            label="银行名称"
+            label="已标签游戏"
+            width="120px"
+          >
+            <template slot-scope="scope">
+              <div class="blueColor decoration" @click="lookGame(scope.row)">100</div>
+            </template>
+          </el-table-column>
+          <el-table-column
+            prop="bankName"
+            align="center"
+            label="创建人"
+            width="100px"
           ></el-table-column>
           <el-table-column
             prop="createDt"
             align="center"
             label="创建时间"
+            sortable="custom"
+            width="160px"
           ></el-table-column>
           <el-table-column
-            prop="updateDt"
+            prop="bankName"
             align="center"
-            label="更新时间"
+            label="最近操作人"
+            width="100px"
           ></el-table-column>
-
-          <el-table-column align="center" label="操作">
+          <el-table-column
+            prop="createDt"
+            align="center"
+            label="最近操作时间"
+            sortable="custom"
+            width="160px"
+          ></el-table-column>
+          <el-table-column prop="operating" align="center" label="操作" width="240px">
             <template slot-scope="scope">
-              <el-button
-                type="danger"
-                icon="el-icon-delete"
+              <!-- <el-button
+                :disabled="loading"
+                type="success"
                 size="medium"
-                @click="deleteUp(scope.row)"
+                class="noicon"
+                @click="reset"
               >
-                删除
+                开启
+              </el-button> -->
+              <el-button
+                :disabled="loading"
+                type="danger"
+                size="medium"
+                class="noicon"
+                @click="reset"
+              >
+                禁用
               </el-button>
               <el-button
-                type="warning"
+                type="primary"
                 icon="el-icon-edit"
+                :disabled="loading"
                 size="medium"
-                @click.stop="editUp(scope.row)"
+                @click="edit(scope.row)"
               >
-                修改
+                编辑信息
+              </el-button>
+
+              <el-button
+                type="warning"
+                icon="el-icon-delete"
+                :disabled="loading"
+                size="medium"
+              >
+                删除
               </el-button>
             </template>
           </el-table-column>
         </el-table>
         <!-- 分页 -->
         <el-pagination
-          v-show="dataList.length > 0"
           :current-page.sync="pageNum"
+          class="pageValue"
           layout="total, sizes,prev, pager, next, jumper"
           :page-size="pageSize"
-          :page-sizes="$store.getters.pageSizes"
-          :total="15"
+          :page-sizes="pageSizes"
+          :total="total"
           @current-change="handleCurrentChange"
           @size-change="handleSizeChange"
         ></el-pagination>
-        <el-dialog
-          :title="moduleBox"
-          center
-          :visible.sync="editVisible"
-          :before-close="closeFormDialog"
-          width="410px"
-        >
-          <editForm v-if="moduleBox == '新增银行信息'" ref="addForm"></editForm>
-          <editForm v-else ref="editForm" :editFormData="editFormData"></editForm>
-          <div slot="footer" class="dialog-footer">
-            <el-button @click="editVisible = false">取 消</el-button>
-            <el-button
-              v-if="moduleBox == '新增银行信息'"
-              type="primary"
-              @click="submitAdd"
-              >确 定</el-button>
-            <el-button v-else type="primary" @click="submitEdit">确 定</el-button>
-          </div>
-        </el-dialog>
       </div>
+      <el-dialog
+        title="创建/编辑"
+        :visible.sync="dialogFormVisible"
+        :destroy-on-close="true"
+        width="480px"
+        class="rempadding"
+      >
+        <el-divider></el-divider>
+        <el-form :model="dialogForm" label-width="90px">
+          <el-form-item
+            label="标签名称:"
+            prop="name"
+            :rules="[
+              { required: true, message: '请输入标签名称', trigger: 'blur' },
+              { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' },
+            ]"
+          >
+            <el-input
+              v-model="dialogForm.name"
+              :maxlength="10"
+              autocomplete="off"
+            ></el-input>
+          </el-form-item>
+          <el-form-item
+            label="描述:"
+            prop="remark"
+            :rules="[
+              { required: true, message: '请输入描述内容', trigger: 'blur' },
+              { min: 2, max: 50, message: '长度在 2 到 50 个字符', trigger: 'blur' },
+            ]"
+          >
+            <el-input v-model="dialogForm.remark" type="textarea"></el-input>
+          </el-form-item>
+        </el-form>
+        <el-divider></el-divider>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="dialogFormVisible = false">取消</el-button>
+          <el-button type="primary" @click="subAddOrEidt">保存</el-button>
+        </div>
+      </el-dialog>
+      <el-dialog
+        title="标签游戏"
+        :visible.sync="dialogGameVisible"
+        :destroy-on-close="true"
+        width="480px"
+        class="rempadding"
+      >
+        <el-divider></el-divider>
+        <div class="contentBox disableColor">标签名称：高频率（001）</div>
+        <p class="headerBox">
+          <span>游戏名称</span>
+          <span>添加时间</span>
+        </p>
+        <div class="bodyBox">
+          <p>
+            <span>斗地主</span>
+            <span>2016-09-21 08:50:08</span>
+          </p>
+        </div>
+      </el-dialog>
     </div>
   </div>
 </template>
 
 <script>
 import list from '@/mixins/list'
-import editForm from './components/editForm'
-// import {
-//   getQueryBank,
-//   setAddBank,
-//   setDeleteBank,
-//   setEidteBank,
-// } from "@/api/bankController";
+import dayjs from 'dayjs'
+import { routerNames } from '@/utils/consts'
+const startTime = dayjs().startOf('day').valueOf()
+const endTime = dayjs().endOf('day').valueOf()
+
 export default {
-  name: '',
-  components: {
-    editForm
-  },
+  name: routerNames.gamePlatform,
+  components: {},
   mixins: [list],
   data() {
     return {
-      queryData: {},
-      formTime: {
-        time: []
+      queryData: {
+        accountType: []
       },
-      dataList: [],
-      moduleBox: '',
-      showForm: '',
-      editVisible: false,
-      editFormData: {}
+      searchTime: [startTime, endTime],
+      now: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
+      summary: {
+        count: 0,
+        failCount: 0,
+        successCount: 0
+      },
+      tableData: [],
+      dialogFormVisible: false,
+      dialogForm: {},
+      dialogGameVisible: false
     }
   },
   computed: {},
   mounted() {
     for (let i = 0; i < 10; i++) {
-      this.dataList[i] = {
+      this.tableData[i] = {
         bankCode: '165416416464654',
         bankName: '中国银行',
+        content: '高频率',
+        code: 1,
         createDt: '2021-02-13 20:28:54',
         updateDt: '2021-02-13 20:28:54'
       }
     }
   },
   methods: {
-    // loadData(params) {
-    //   params = {
-    //     ...this.getParams(params)
-    //   }
-    //   getQueryBank(params).then((res) => {
-    //     console.log('res:', res)
-    //     if (res.code === 200) {
-    //       this.loading = false
-    //       this.dataList = res.data
-    //     } else {
-    //       this.loading = false
-    //       this.$message({
-    //         message: res.msg,
-    //         type: 'error'
-    //       })
-    //     }
-    //   })
-    // },
-    query() {
-      this.loading = true
-      const create = this.formTime.time || []
+    loadData() {
+      // this.loading = true;
+      const create = this.searchTime || []
       const [startTime, endTime] = create
-      const params = {
+      let params = {
         ...this.queryData,
-        pageNum: 1,
-        startTime: startTime && startTime + '',
-        endTime: endTime && endTime + ''
+        startTime: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : '',
+        endTime: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
+      }
+      params = {
+        ...this.getParams(params)
       }
       console.log(params)
-      this.loadData(params)
+    },
+    lookGame(val) {
+      this.dialogGameVisible = true
+      console.log(val)
     },
     reset() {
       this.queryData = {}
-      this.formTime.time = []
-      // this.loadData()
     },
-
-    add() {
-      this.moduleBox = '新增银行信息'
-      this.editVisible = true
-    },
-    submitAdd() {
-      console.log(this.$refs.addForm)
-      //   setAddBank(this.queryData).then((res) => {
-      //     console.log(res);
-      //   });
-    },
-    deleteUp(val) {
+    edit(val) {
+      this.dialogFormVisible = true
       console.log(val)
-      this.$confirm('确定删除此银行卡号吗?', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      })
-        .then(() => {
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-          })
-          // setDeleteBank(val).then((res) => {
-          //   console.log(res);
-          // });
-        })
-        .catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          })
-        })
     },
-    editUp(val) {
-      this.moduleBox = '修改银行信息'
-      this.editVisible = true
-      this.editFormData = val
+    subAddOrEidt() {
+      this.dialogFormVisible = false
     },
-    submitEdit() {
-      // setEidteBank().then((res) => {
-      //   console.log(res);
-      // });
-    },
-    handleCurrentChange() {
+    _changeTableSort({ column, prop, order }) {
+      if (prop === 'vipSerialNum') {
+        prop = 1
+      }
+      this.queryData.orderKey = prop
+      if (order === 'ascending') {
+        // 升序
+        this.queryData.orderType = 'asc'
+      } else if (column.order === 'descending') {
+        // 降序
+        this.queryData.orderType = 'desc'
+      }
       this.loadData()
     },
-    closeFormDialog() {
-      this.editVisible = false
-    },
     enterSubmit() {
-      this.query()
+      this.loadData()
     }
   }
 }
@@ -298,5 +355,47 @@ export default {
   text-align: center;
   color: #909399;
   font-weight: 700;
+}
+/deep/ .tagheight .el-tag {
+  height: 24px;
+  line-height: 24px;
+  min-width: 60px;
+}
+/deep/ .rempadding .el-dialog__body {
+  padding: 0;
+  padding-bottom: 30px;
+
+  .contentBox,
+  form {
+    padding: 0 20px;
+  }
+}
+.decoration {
+  text-decoration: underline;
+  cursor: pointer;
+}
+.bodyBox {
+  max-height: 400px;
+  overflow: auto;
+}
+p {
+  display: flex;
+  height: 40px;
+  line-height: 40px;
+  border-bottom: 1px solid #e8e8e8;
+  justify-content: space-around;
+  span {
+    display: inline-block;
+    width: 50%;
+    text-align: center;
+  }
+}
+.headerBox {
+  color: #000000d8;
+  background: #fafafa;
+  font-family: "PingFang SC ", "PingFang SC", sans-serif;
+  font-weight: 650;
+  border-top: 1px solid #e8e8e8;
+  margin-top: 15px;
 }
 </style>
