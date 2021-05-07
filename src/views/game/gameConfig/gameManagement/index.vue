@@ -1,7 +1,7 @@
 <template>
   <div class="game-container report-container">
     <div class="header flex-h flex-bc">
-      <h2 class="h2-line">门票记录</h2>
+      <h2 class="h2-line">游戏管理</h2>
       <div class="head flex-h-end">
         <el-button
           type="primary"
@@ -162,6 +162,7 @@
 
 <script>
 import list from '@/mixins/list'
+import { routerNames } from '@/utils/consts'
 import editForm from './components/editForm'
 // import {
 //   getQueryBank,
@@ -170,7 +171,7 @@ import editForm from './components/editForm'
 //   setEidteBank,
 // } from "@/api/bankController";
 export default {
-  name: '',
+  name: routerNames.memberChange,
   components: {
     editForm
   },

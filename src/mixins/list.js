@@ -12,7 +12,7 @@ export default {
 			loading: false,
 			pageNum: 1,
 			pageSize: 10,
-			pageSizes: [5, 10, 20, 50, 100, 200, 500],
+			pageSizes: [10, 20, 50],
 			layout: 'total, sizes, prev, pager, next, jumper',
 			defaultTime: ['00:00:00', '23:59:59'],
 			sortable: true

@@ -8,77 +8,7 @@
 					:model="queryData"
 					label-width="85px"
 				>
-					<el-form-item label="注册时间:" prop="registerTime">
-						<el-date-picker
-							v-model="queryData.registerTime"
-							size="medium"
-							:picker-options="pickerOptions"
-							format="yyyy-MM-dd HH:mm:ss"
-							type="datetimerange"
-							range-separator="-"
-							start-placeholder="开始日期"
-							end-placeholder="结束日期"
-							align="right"
-							clearable
-							value-format="timestamp"
-							style="width: 388px"
-							:default-time="defaultTime"
-						></el-date-picker>
-					</el-form-item>
-					<el-form-item label="会员账号:" prop="userName">
-						<el-input
-							v-model="queryData.userName"
-							size="medium"
-							placeholder="请输入"
-							clearable
-							style="width: 180px"
-							maxlength="11"
-						></el-input>
-					</el-form-item>
-					<el-form-item label="会员姓名:" prop="realName">
-						<el-input
-							v-model="queryData.realName"
-							size="medium"
-							placeholder="请输入"
-							clearable
-							style="width: 180px"
-							maxlength="6"
-						></el-input>
-					</el-form-item>
-					<el-form-item label="账号状态:">
-						<el-select
-							v-model="queryData.accountStatus"
-							size="medium"
-							placeholder="默认选择全部"
-							clearable
-							multiple
-							style="width: 300px"
-						>
-							<el-option
-								v-for="item in accountStatusArr"
-								:key="item.code"
-								:label="item.description"
-								:value="item.code"
-							></el-option>
-						</el-select>
-					</el-form-item>
-					<el-form-item label="风控层级:">
-						<el-select
-							v-model="queryData.windControlId"
-							size="medium"
-							placeholder="全部"
-							clearable
-							style="width: 180px"
-						>
-							<el-option
-								v-for="item in vipDict"
-								:key="item.windControlId"
-								:label="item.windControlName"
-								:value="item.windControlId"
-							></el-option>
-						</el-select>
-					</el-form-item>
-					<el-form-item label="离线天数:">
+					<el-form-item label="分类顺序:">
 						<el-input
 							v-model="queryData.offLineDaysStart"
 							size="medium"
@@ -101,50 +31,19 @@
 							@blur="checkValue($event)"
 						></el-input>
 					</el-form-item>
-					<el-form-item label="最后登录时间:" label-width="110px">
-						<el-date-picker
-							v-model="queryData.lastLoginTime"
-							prop="lastLoginTime"
+					<el-form-item label="分类名称:" prop="userName">
+						<el-input
+							v-model="queryData.userName"
 							size="medium"
-							:picker-options="pickerOptions"
-							format="yyyy-MM-dd HH:mm:ss"
-							type="datetimerange"
-							range-separator="-"
-							start-placeholder="开始日期"
-							end-placeholder="结束日期"
-							align="right"
+							placeholder="请输入"
 							clearable
-							value-format="timestamp"
-							style="width: 388px"
-							:default-time="defaultTime"
-						></el-date-picker>
-					</el-form-item>
-					<el-form-item label="VIP等级:">
-						<el-input
-							v-model="queryData.vipSerialNumMin"
-							size="medium"
-							placeholder="最小数值"
-							style="width: 100px"
-							maxlength="3"
-							name="vipSerialNumMin"
-							oninput="value=value.replace(/[^\d]/g,'')"
-							@blur="checkValue($event)"
-						></el-input>
-						-
-						<el-input
-							v-model="queryData.vipSerialNumMax"
-							size="medium"
-							placeholder="最大数值"
-							style="width: 100px"
-							maxlength="3"
-							oninput="value=value.replace(/[^\d]/g,'')"
-							name="vipSerialNumMax"
-							@blur="checkValue($event)"
+							style="width: 180px"
+							maxlength="11"
 						></el-input>
 					</el-form-item>
-					<el-form-item label="账号类型:">
+					<el-form-item label="账号状态:">
 						<el-select
-							v-model="queryData.accountType"
+							v-model="queryData.accountStatus"
 							size="medium"
 							placeholder="默认选择全部"
 							clearable
@@ -152,14 +51,14 @@
 							style="width: 300px"
 						>
 							<el-option
-								v-for="item in accountTypeArr"
+								v-for="item in accountStatusArr"
 								:key="item.code"
 								:label="item.description"
 								:value="item.code"
 							></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="注册终端:">
+					<el-form-item label="支持终端:">
 						<el-select
 							v-model="queryData.deviceType"
 							size="medium"
@@ -176,46 +75,7 @@
 							></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="首存金额:">
-						<el-input
-							v-model="queryData.firstDepositAmountMin"
-							size="medium"
-							placeholder="最小数值"
-							style="width: 100px"
-							maxlength="10"
-							oninput="value=value.replace(/[^\d]/g,'')"
-							name="firstDepositAmountMin"
-							@blur="checkValue($event)"
-						></el-input>
-						-
-						<el-input
-							v-model="queryData.firstDepositAmountMax"
-							size="medium"
-							placeholder="最大数值"
-							style="width: 100px"
-							maxlength="10"
-							oninput="value=value.replace(/[^\d]/g,'')"
-							name="firstDepositAmountMax"
-							@blur="checkValue($event)"
-						></el-input>
-					</el-form-item>
-					<el-form-item label="首存时间:" label-width="100px">
-						<el-date-picker
-							v-model="queryData.firstSaveTime"
-							size="medium"
-							:picker-options="pickerOptions"
-							format="yyyy-MM-dd HH:mm:ss"
-							type="datetimerange"
-							range-separator="-"
-							start-placeholder="开始日期"
-							end-placeholder="结束日期"
-							align="right"
-							clearable
-							value-format="timestamp"
-							style="width: 388px"
-						></el-date-picker>
-					</el-form-item>
-					<el-form-item label="会员标签:">
+					<el-form-item label="客户端分类显示:" label-width="130px">
 						<el-select
 							v-model="queryData.labelId"
 							size="medium"
@@ -230,16 +90,6 @@
 								:value="item.labelId"
 							></el-option>
 						</el-select>
-					</el-form-item>
-					<el-form-item label="上级代理:">
-						<el-input
-							v-model="queryData.parentProxyName"
-							size="medium"
-							placeholder="请输入"
-							clearable
-							style="width: 180px"
-							maxlength="11"
-						></el-input>
 					</el-form-item>
 					<el-form-item>
 						<el-button
@@ -265,7 +115,7 @@
 							size="medium"
 							@click="exportExcel"
 						>
-							导出
+							创建
 						</el-button>
 					</el-form-item>
 				</el-form>
@@ -285,8 +135,9 @@
 					<el-table-column
 						prop="userName"
 						align="center"
-						label="会员账号"
-						width="150px"
+						label="分类顺序"
+						width="100px"
+						sortable="custom"
 					>
 						<template slot-scope="scope">
 							<Copy
@@ -302,7 +153,7 @@
 					<el-table-column
 						prop="realName"
 						align="center"
-						label="会员姓名"
+						label="分类名称"
 						width="150px"
 					>
 						<template slot-scope="scope">
@@ -319,7 +170,7 @@
 					<el-table-column
 						prop="parentProxyName"
 						align="center"
-						label="代理上级"
+						label="使用状态"
 						width="150px"
 					>
 						<template slot-scope="scope">
@@ -333,7 +184,12 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="accountType" align="center" label="账号类型">
+					<el-table-column
+						prop="accountType"
+						align="center"
+						label="客户端分类显示"
+						width="150px"
+					>
 						<template slot-scope="scope">
 							<span v-if="!!scope.row.accountType">
 								{{ typeFilter(scope.row.accountType, 'accountType') }}
@@ -341,29 +197,12 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="labelId" align="center" label="会员标签">
-						<template slot-scope="scope">
-							<span v-if="!!scope.row.labelId">
-								{{
-									userLabel.filter((item) => (item.labelId = labelId)).labelName
-								}}
-							</span>
-							<span v-else>-</span>
-						</template>
-					</el-table-column>
-					<el-table-column prop="windControlId" align="center" label="风控层级">
-						<template slot-scope="scope">
-							<span v-if="!!scope.row.labelId">
-								{{
-									userLabel.filter(
-										(item) => (item.windControlId = windControlId)
-									).windControlName
-								}}
-							</span>
-							<span v-else>-</span>
-						</template>
-					</el-table-column>
-					<el-table-column prop="accountStatus" align="center" label="账号状态">
+					<el-table-column
+						prop="accountStatus"
+						align="center"
+						label="支持终端类型"
+						width="150px"
+					>
 						<template slot-scope="scope">
 							<span v-if="!!scope.row.accountStatus">
 								{{ typeFilter(scope.row.accountStatus, 'accountStatusType') }}
@@ -374,9 +213,8 @@
 					<el-table-column
 						prop="vipSerialNum"
 						align="center"
-						label="VIP等级"
+						label="包含字游戏"
 						width="100px"
-						sortable="custom"
 					>
 						<template slot-scope="scope">
 							<span
@@ -388,9 +226,37 @@
 						</template>
 					</el-table-column>
 					<el-table-column
-						prop="createDt"
+						prop="firstDepositTime"
 						align="center"
-						label="注册时间"
+						label="备注信息"
+						width="180px"
+						sortable="custom"
+					>
+						<template slot-scope="scope">
+							<span v-if="!!scope.row.firstDepositTime">
+								{{ scope.row.firstDepositTime }}
+							</span>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
+					<el-table-column
+						prop="firstDepositTime"
+						align="center"
+						width="100px"
+						label="创建人"
+						sortable="custom"
+					>
+						<template slot-scope="scope">
+							<span v-if="!!scope.row.firstDepositTime">
+								{{ scope.row.firstDepositTime }}
+							</span>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
+					<el-table-column
+						prop="lastLoginTime"
+						align="center"
+						label="创建时间"
 						width="180px"
 						sortable="custom"
 					>
@@ -402,73 +268,10 @@
 						</template>
 					</el-table-column>
 					<el-table-column
-						prop="firstDepositTime"
-						align="center"
-						width="180px"
-						label="首存时间"
-						sortable="custom"
-					>
-						<template slot-scope="scope">
-							<span v-if="!!scope.row.firstDepositTime">
-								{{ scope.row.firstDepositTime }}
-							</span>
-							<span v-else>-</span>
-						</template>
-					</el-table-column>
-					<el-table-column
-						prop="firstDepositAmount"
-						align="center"
-						label="首存金额"
-						sortable="custom"
-						width="100px"
-					>
-						<template slot-scope="scope">
-							<span
-								v-if="
-									!!scope.row.firstDepositAmount ||
-										scope.row.firstDepositAmount === 0
-								"
-							>
-								{{ scope.row.firstDepositAmount }}
-							</span>
-							<span v-else>-</span>
-						</template>
-					</el-table-column>
-					<el-table-column
-						prop="userBalance"
-						align="center"
-						label="中心钱包"
-						width="100px"
-					>
-						<template slot-scope="scope">
-							<span
-								v-if="!!scope.row.userBalance || scope.row.userBalance === 0"
-							>
-								{{ scope.row.userBalance }}
-							</span>
-							<span v-else>-</span>
-						</template>
-					</el-table-column>
-					<el-table-column
-						prop="lastLoginTime"
-						align="center"
-						label="最后登录时间"
-						width="180px"
-						sortable="custom"
-					>
-						<template slot-scope="scope">
-							<span v-if="!!scope.row.lastLoginTime">
-								{{ scope.row.lastLoginTime }}
-							</span>
-							<span v-else>-</span>
-						</template>
-					</el-table-column>
-					<el-table-column
 						prop="offLineDays"
 						align="center"
-						label="离线天数"
-						width="150px"
-						sortable="custom"
+						label="最近操作人"
+						width="100px"
 					>
 						<template slot-scope="scope">
 							<span
@@ -479,12 +282,31 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="deviceType" align="center" label="注册终端">
+					<el-table-column
+						prop="lastLoginTime"
+						align="center"
+						label="最近操作时间"
+						width="180px"
+						sortable="custom"
+					>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.deviceType">
-								{{ typeFilter(scope.row.deviceType, 'deviceType') }}
+							<span v-if="!!scope.row.createDt">
+								{{ scope.row.createDt }}
 							</span>
-							<span v-else></span>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
+					<el-table-column align="center" label="操作" width="300px">
+						<template>
+							<el-button type="danger" icon="el-icon-delete" size="medium">
+								禁用
+							</el-button>
+							<el-button type="warning" icon="el-icon-edit" size="medium">
+								编辑信息
+							</el-button>
+							<el-button type="warning" icon="el-icon-edit" size="medium">
+								删除
+							</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -563,53 +385,63 @@ export default {
 	created() {
 		this.getMerchantDict()
 	},
-	mounted() {},
+	mounted() {
+		for (let i = 0; i < 10; i++) {
+			this.dataList[i] = {
+				bankCode: '165416416464654',
+				bankName: '中国银行',
+				createDt: '2021-02-13 20:28:54',
+				updateDt: '2021-02-13 20:28:54',
+				vipSerialNum: '115'
+			}
+		}
+	},
 	methods: {
 		loadData() {
-			this.dataList = []
-			this.loading = true
-			const create = this.queryData.registerTime || []
-			const [startTime, endTime] = create
-			let params = {
-				...this.queryData,
-				createDtStart: startTime
-					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
-					: undefined,
-				createDtEnd: endTime
-					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
-					: undefined
-			}
-			params = {
-				...this.getParams(params)
-			}
-			delete params.registerTime
-			delete params.lastLoginTime
-			delete params.firstSaveTime
-			this.$api
-				.memberListAPI(params)
-				.then((res) => {
-					const {
-						code,
-						data: { record, totalRecord },
-						msg
-					} = res
-					if (code === 200) {
-						this.loading = false
-						this.dataList = record || []
-						this.total = totalRecord || 0
-					} else {
-						this.loading = false
-						this.$message({
-							message: msg,
-							type: 'error'
-						})
-					}
-				})
-				.catch(() => (this.loading = false))
-
-			setTimeout(() => {
-				this.loading = false
-			}, 1000)
+			// this.dataList = []
+			// this.loading = true
+			// const create = this.queryData.registerTime || []
+			// const [startTime, endTime] = create
+			// let params = {
+			// 	...this.queryData,
+			// 	createDtStart: startTime
+			// 		? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
+			// 		: undefined,
+			// 	createDtEnd: endTime
+			// 		? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
+			// 		: undefined
+			// }
+			// params = {
+			// 	...this.getParams(params)
+			// }
+			// delete params.registerTime
+			// delete params.lastLoginTime
+			// delete params.firstSaveTime
+			// this.$api
+			// 	.memberListAPI(params)
+			// 	.then((res) => {
+			// 		const {
+			// 			code,
+			// 			data: { record, totalRecord },
+			// 			msg
+			// 		} = res
+			// 		if (code === 200) {
+			// 			this.loading = false
+			// 			this.dataList = record || []
+			// 			this.total = totalRecord || 0
+			// 		} else {
+			// 			this.loading = false
+			// 			this.$message({
+			// 				message: msg,
+			// 				type: 'error'
+			// 			})
+			// 		}
+			// 	})
+			// 	.catch(() => (this.loading = false))
+			//
+			// setTimeout(() => {
+			// 	this.loading = false
+			// }, 1000)
 		},
 		// 获取风控层级
 		getMerchantDict() {
