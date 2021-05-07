@@ -229,6 +229,7 @@
 				<el-pagination
 					:current-page.sync="pageNum"
 					class="pageValue"
+					background
 					layout="total, sizes,prev, pager, next, jumper"
 					:page-size="pageSize"
 					:page-sizes="pageSizes"
@@ -324,32 +325,35 @@ export default {
 			params = {
 				...this.getParams(params)
 			}
-			this.$api.playerAuditList(params).then((res) => {
-				if (res.code === 200) {
-					this.now = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
-					const response = res.data
-					this.loading = false
-					this.dataList = response.record
-					if (this.dataList) {
-						this.dataList.forEach((item) => {
-							if (Number(item.lockOrder) === 1) {
-								item.lockStatus = true
-							} else {
-								item.lockStatus = false
-							}
+			this.$api
+				.playerAuditList(params)
+				.then((res) => {
+					if (res.code === 200) {
+						this.now = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
+						const response = res.data
+						this.loading = false
+						this.dataList = response.record
+						if (this.dataList) {
+							this.dataList.forEach((item) => {
+								if (Number(item.lockOrder) === 1) {
+									item.lockStatus = true
+								} else {
+									item.lockStatus = false
+								}
+							})
+						}
+						this.total = response.totalRecord
+					} else {
+						this.loading = false
+						this.$message({
+							message: res.msg,
+							type: 'error'
 						})
 					}
-					this.total = response.totalRecord
-				} else {
+				})
+				.catch(() => {
 					this.loading = false
-					this.$message({
-						message: res.msg,
-						type: 'error'
-					})
-				}
-			}).catch(() => {
-				this.loading = false
-			})
+				})
 		},
 		goDetail(row) {
 			const type = Number(row.auditStep) === 1 && row.auditName === this.name

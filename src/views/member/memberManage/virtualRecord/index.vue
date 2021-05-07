@@ -152,11 +152,7 @@
 					>
 						<Copy :title="scope.row.userName" :copy="copy" />
 					</el-table-column>
-					<el-table-column
-						align="center"
-						label="账号类型"
-						width="100"
-					>
+					<el-table-column align="center" label="账号类型" width="100">
 						<template slot-scope="scope">
 							<p>{{ typeFilter(scope.row.accountType, 'accountType') }}</p>
 						</template>
@@ -174,28 +170,34 @@
 						align="center"
 						label="虚拟币账户地址"
 					></el-table-column>
-					<el-table-column
-						prop="virtualKind"
-						align="center"
-						label="虚拟币种类"
-					><template slot-scope="scope">
+					<el-table-column prop="virtualKind" align="center" label="虚拟币种类">
+						<template slot-scope="scope">
 							<p>{{ typeFilter(scope.row.virtualKind, 'virtualType') }}</p>
-						</template></el-table-column>
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="virtualProtocol"
 						align="center"
 						label="虚拟币协议"
-					><template slot-scope="scope">
-							<p>{{ typeFilter(scope.row.virtualProtocol, 'virtualProtocolType') }}</p>
-						</template></el-table-column>
+					>
+						<template slot-scope="scope">
+							<p>
+								{{
+									typeFilter(scope.row.virtualProtocol, 'virtualProtocolType')
+								}}
+							</p>
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="operateType"
 						align="center"
 						width="100"
 						label="操作类型"
-					><template slot-scope="scope">
+					>
+						<template slot-scope="scope">
 							<p>{{ typeFilter(scope.row.operateType, 'bindType') }}</p>
-						</template></el-table-column>
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="createDt"
 						align="center"
@@ -207,6 +209,7 @@
 				<el-pagination
 					:current-page.sync="pageNum"
 					class="pageValue"
+					background
 					layout="total, sizes,prev, pager, next, jumper"
 					:page-size="pageSize"
 					:page-sizes="pageSizes"
@@ -281,32 +284,35 @@ export default {
 			}
 			if (!params.createDtStart || !params.createDtEnd) {
 				this.$message({
-						message: '操作时间参数必传',
-						type: 'info'
-					})
-					return
+					message: '操作时间参数必传',
+					type: 'info'
+				})
+				return
 			}
 			params = {
 				...this.getParams(params)
 			}
 			this.loading = true
 
-			this.$api.bankRecordListAPI(params).then((res) => {
-				if (res.code === 200) {
-					const response = res.data
+			this.$api
+				.bankRecordListAPI(params)
+				.then((res) => {
+					if (res.code === 200) {
+						const response = res.data
+						this.loading = false
+						this.dataList = response.record
+						this.total = response.totalRecord
+					} else {
+						this.loading = false
+						this.$message({
+							message: res.msg,
+							type: 'error'
+						})
+					}
+				})
+				.catch(() => {
 					this.loading = false
-					this.dataList = response.record
-					this.total = response.totalRecord
-				} else {
-					this.loading = false
-					this.$message({
-						message: res.msg,
-						type: 'error'
-					})
-				}
-			}).catch(() => {
-				this.loading = false
-			})
+				})
 		},
 		changeTableSort({ column, prop, order }) {
 			this.pageNum = 1

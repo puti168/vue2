@@ -154,7 +154,12 @@
 						label="登录时间"
 						sortable="custom"
 					></el-table-column>
-					<el-table-column prop="loginStatus" align="center" label="登录状态" width="80">
+					<el-table-column
+						prop="loginStatus"
+						align="center"
+						label="登录状态"
+						width="80"
+					>
 						<template slot-scope="scope">
 							<span
 								:class="scope.row.loginStatus === '1' ? 'success' : 'danger'"
@@ -171,7 +176,12 @@
 					>
 						<Copy :title="scope.row.userName" :copy="copy" />
 					</el-table-column>
-					<el-table-column prop="accountType" align="center" label="账号类型" width="80">
+					<el-table-column
+						prop="accountType"
+						align="center"
+						label="账号类型"
+						width="80"
+					>
 						<template slot-scope="scope">
 							{{ typeFilter(scope.row.accountType, 'accountType') }}
 						</template>
@@ -180,14 +190,19 @@
 						prop="loginIp"
 						align="center"
 						label="登录IP"
-						 width="120"
+						width="120"
 					></el-table-column>
 					<el-table-column
 						prop="ipAttribution"
 						align="center"
 						label="IP归属地"
 					></el-table-column>
-					<el-table-column prop="deviceType" align="center" label="登录终端" width="80">
+					<el-table-column
+						prop="deviceType"
+						align="center"
+						label="登录终端"
+						width="80"
+					>
 						<template slot-scope="scope">
 							{{ typeFilter(scope.row.deviceType, 'deviceType') }}
 						</template>
@@ -206,7 +221,7 @@
 						prop="browseContent"
 						align="center"
 						label="设备版本"
-						 width="280"
+						width="280"
 					></el-table-column>
 					<el-table-column
 						prop="loginError"
@@ -218,6 +233,7 @@
 				<el-pagination
 					:current-page.sync="pageNum"
 					class="pageValue"
+					background
 					layout="total, sizes,prev, pager, next, jumper"
 					:page-size="pageSize"
 					:page-sizes="pageSizes"
@@ -295,10 +311,10 @@ export default {
 			}
 			if (!params.loginStartTime || !params.loginEndTime) {
 				this.$message({
-						message: '登录时间参数必传',
-						type: 'error'
-					})
-					return
+					message: '登录时间参数必传',
+					type: 'error'
+				})
+				return
 			}
 			params = {
 				...this.getParams(params)
@@ -306,26 +322,29 @@ export default {
 			params.accountType = this.accountType1.join(',')
 			params.deviceType = this.deviceType1.join(',')
 			this.loading = true
-			this.$api.memberLoginLog(params).then((res) => {
-				if (res.code === 200) {
-					this.now = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
-					const response = res.data
+			this.$api
+				.memberLoginLog(params)
+				.then((res) => {
+					if (res.code === 200) {
+						this.now = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
+						const response = res.data
+						this.loading = false
+						this.dataList = response.record
+						this.total = response.totalRecord
+						this.summary = response.summary
+							? response.summary
+							: { count: 0, failCount: 0, successCount: 0 }
+					} else {
+						this.loading = false
+						this.$message({
+							message: res.msg,
+							type: 'error'
+						})
+					}
+				})
+				.catch(() => {
 					this.loading = false
-					this.dataList = response.record
-					this.total = response.totalRecord
-					this.summary = response.summary
-						? response.summary
-						: { count: 0, failCount: 0, successCount: 0 }
-				} else {
-					this.loading = false
-					this.$message({
-						message: res.msg,
-						type: 'error'
-					})
-				}
-			}).catch(() => {
-				this.loading = false
-			})
+				})
 		},
 		reset() {
 			this.queryData = {
