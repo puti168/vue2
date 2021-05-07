@@ -285,6 +285,7 @@ class="textC"
       <!-- 分页 -->
       <el-pagination
         :current-page.sync="page"
+        background
         layout="total, sizes,prev, pager, next, jumper"
         :page-size="size"
         :page-sizes="[3, 5, 10]"

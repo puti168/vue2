@@ -145,6 +145,7 @@
         <el-pagination
           :current-page.sync="pageNum"
           class="pageValue"
+          background
           layout="total, sizes,prev, pager, next, jumper"
           :page-size="pageSize"
           :page-sizes="pageSizes"
