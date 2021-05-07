@@ -194,6 +194,7 @@
 					<el-table-column align="center" label="审核状态" width="100">
 						<template slot-scope="scope">
 							<span
+								v-if="Number(auditStatus) !== 0"
 								:class="
 									Number(scope.row.auditStatus) === 1
 										? 'infoState'
@@ -411,6 +412,8 @@ export default {
 							type: 'error'
 						})
 					}
+				}).catch(() => {
+					loading.close()
 				})
 		}
 	}
