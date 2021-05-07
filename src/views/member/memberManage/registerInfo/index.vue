@@ -241,7 +241,6 @@
 				<el-pagination
 					v-show="!!total"
                     class="pageValue"
-                    background
 					:current-page.sync="pageNum"
 					layout="total, sizes,prev, pager, next, jumper"
 					:page-size="pageSize"
