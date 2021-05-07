@@ -3,7 +3,10 @@ export default {
 	name: 'Copy',
 	functional: true,
 	props: {
-		copy: [Function],
+		copy: {
+			type: Function,
+			default: () => {}
+		},
 		title: {
 			type: String,
 			default: ''
