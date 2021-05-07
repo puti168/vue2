@@ -314,6 +314,7 @@
 				<el-pagination
 					v-show="!!dataList.length"
 					class="pageValue"
+                    background
 					:current-page.sync="pageNum"
 					layout="total, sizes,prev, pager, next, jumper"
 					:page-size="pageSize"
