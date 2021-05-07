@@ -86,7 +86,7 @@
 							style="width: 100px"
 							maxlength="5"
 							name="offLineDaysStart"
-                            oninput="value=value.replace(/[^\d]/g,'')"
+							oninput="value=value.replace(/[^\d]/g,'')"
 							@blur="checkValue($event)"
 						></el-input>
 						-
@@ -97,7 +97,7 @@
 							style="width: 100px"
 							maxlength="5"
 							name="offLineDaysEnd"
-                            oninput="value=value.replace(/[^\d]/g,'')"
+							oninput="value=value.replace(/[^\d]/g,'')"
 							@blur="checkValue($event)"
 						></el-input>
 					</el-form-item>
@@ -127,7 +127,7 @@
 							style="width: 100px"
 							maxlength="3"
 							name="vipSerialNumMin"
-                            oninput="value=value.replace(/[^\d]/g,'')"
+							oninput="value=value.replace(/[^\d]/g,'')"
 							@blur="checkValue($event)"
 						></el-input>
 						-
@@ -137,7 +137,7 @@
 							placeholder="最大数值"
 							style="width: 100px"
 							maxlength="3"
-                            oninput="value=value.replace(/[^\d]/g,'')"
+							oninput="value=value.replace(/[^\d]/g,'')"
 							name="vipSerialNumMax"
 							@blur="checkValue($event)"
 						></el-input>
@@ -183,7 +183,7 @@
 							placeholder="最小数值"
 							style="width: 100px"
 							maxlength="10"
-                            oninput="value=value.replace(/[^\d]/g,'')"
+							oninput="value=value.replace(/[^\d]/g,'')"
 							name="firstDepositAmountMin"
 							@blur="checkValue($event)"
 						></el-input>
@@ -194,7 +194,7 @@
 							placeholder="最大数值"
 							style="width: 100px"
 							maxlength="10"
-                            oninput="value=value.replace(/[^\d]/g,'')"
+							oninput="value=value.replace(/[^\d]/g,'')"
 							name="firstDepositAmountMax"
 							@blur="checkValue($event)"
 						></el-input>
@@ -491,6 +491,7 @@
 				<!-- 分页 -->
 				<el-pagination
 					v-show="!!dataList.length"
+					class="pageValue"
 					:current-page.sync="pageNum"
 					layout="total, sizes,prev, pager, next, jumper"
 					:page-size="pageSize"
@@ -583,18 +584,6 @@ export default {
 			delete params.registerTime
 			delete params.lastLoginTime
 			delete params.firstSaveTime
-			// params.accountStatus =
-			// 	params.accountStatus && params.accountStatus.length
-			// 		? params.accountStatus
-			// 		: undefined
-			// params.deviceType =
-			// 	params.deviceType && params.deviceType.length
-			// 		? params.deviceType
-			// 		: undefined
-			// params.accountType =
-			// 	params.accountType && params.accountType.length
-			// 		? params.accountType
-			// 		: undefined
 			this.$api
 				.memberListAPI(params)
 				.then((res) => {
@@ -787,46 +776,50 @@ export default {
 			delete params.accountStatus
 			delete params.deviceType
 			delete params.accountType
-			// params.accountStatus = params.accountStatus
-			// 	? params.accountStatus.join(',')
-			// 	: undefined
-			// params.deviceType = params.deviceType
-			// 	? params.deviceType.join(',')
-			// 	: undefined
-			// params.accountType = params.accountType
-			// 	? params.accountType.join(',')
-			// 	: undefined
 			this.$api
 				.exportExcelAPI(params)
-				.then(() => {
-					// const result = res.data
-					// const disposition = res.headers['content-disposition']
-					// const fileNames = disposition.split("''")
-					// console.log('fileNames', fileNames)
-					// let fileName = fileNames[1]
-					// fileName = decodeURIComponent(fileName)
-					// const blob = new Blob([result], { type: 'application/octet-stream' })
-					// if ('download' in document.createElement('a')) {
-					// 	const elink = document.createElement('a')
-					// 	elink.download = fileName || ''
-					// 	elink.style.display = 'none'
-					// 	elink.href = URL.createObjectURL(blob)
-					// 	document.body.appendChild(elink)
-					// 	elink.click()
-					// 	URL.revokeObjectURL(elink.href)
-					// 	document.body.removeChild(elink)
-					// } else {
-					// 	console.log('进来', 111)
-					// 	window.navigator.msSaveBlob(blob, fileName)
-					// }
-					this.$message({
-						type: 'success',
-						message: '导出成功',
-						duration: 1500
-					})
+				.then((res) => {
+					const result = res.data
+					const disposition = res.headers['content-disposition']
+					if (disposition) {
+						const fileNames = disposition.split("''")
+						let fileName = fileNames[1]
+						fileName = decodeURIComponent(fileName)
+						const blob = new Blob([result], {
+							type: 'application/octet-stream'
+						})
+						if ('download' in document.createElement('a')) {
+							const elink = document.createElement('a')
+							elink.download = fileName || ''
+							elink.style.display = 'none'
+							elink.href = URL.createObjectURL(blob)
+							document.body.appendChild(elink)
+							elink.click()
+							URL.revokeObjectURL(elink.href)
+							document.body.removeChild(elink)
+						} else {
+							console.log('进来', 111)
+							window.navigator.msSaveBlob(blob, fileName)
+						}
+						this.$message({
+							type: 'success',
+							message: '导出成功',
+							duration: 1500
+						})
+					} else {
+						this.$message({
+							type: 'error',
+							message: '每10分钟导一次，请稍后再试',
+							duration: 1500
+						})
+					}
 				})
 				.catch(() => {
-					console.log('导出失败')
+					this.$message({
+						type: 'error',
+						message: '导出失败',
+						duration: 1500
+					})
 				})
 		}
 	}
