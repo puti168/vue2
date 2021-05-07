@@ -70,7 +70,8 @@
       <!-- 分页 -->
       <el-pagination
         :current-page.sync="page"
-        layout="total, sizes,prev, pager, next, jumper"
+        background
+					layout="total, sizes,prev, pager, next, jumper"
         :page-size="size"
         :page-sizes="[5, 10, 20]"
         :total="total"
