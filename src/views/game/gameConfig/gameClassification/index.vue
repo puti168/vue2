@@ -136,7 +136,8 @@
 						prop="userName"
 						align="center"
 						label="分类顺序"
-						width="150px"
+						width="100px"
+						sortable="custom"
 					>
 						<template slot-scope="scope">
 							<Copy
@@ -187,6 +188,7 @@
 						prop="accountType"
 						align="center"
 						label="客户端分类显示"
+						width="150px"
 					>
 						<template slot-scope="scope">
 							<span v-if="!!scope.row.accountType">
@@ -199,6 +201,7 @@
 						prop="accountStatus"
 						align="center"
 						label="支持终端类型"
+						width="150px"
 					>
 						<template slot-scope="scope">
 							<span v-if="!!scope.row.accountStatus">
@@ -223,15 +226,15 @@
 						</template>
 					</el-table-column>
 					<el-table-column
-						prop="createDt"
+						prop="firstDepositTime"
 						align="center"
 						label="备注信息"
 						width="180px"
 						sortable="custom"
 					>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.createDt">
-								{{ scope.row.createDt }}
+							<span v-if="!!scope.row.firstDepositTime">
+								{{ scope.row.firstDepositTime }}
 							</span>
 							<span v-else>-</span>
 						</template>
@@ -239,7 +242,7 @@
 					<el-table-column
 						prop="firstDepositTime"
 						align="center"
-						width="180px"
+						width="100px"
 						label="创建人"
 						sortable="custom"
 					>
@@ -258,8 +261,8 @@
 						sortable="custom"
 					>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.lastLoginTime">
-								{{ scope.row.lastLoginTime }}
+							<span v-if="!!scope.row.createDt">
+								{{ scope.row.createDt }}
 							</span>
 							<span v-else>-</span>
 						</template>
@@ -268,8 +271,7 @@
 						prop="offLineDays"
 						align="center"
 						label="最近操作人"
-						width="150px"
-						sortable="custom"
+						width="100px"
 					>
 						<template slot-scope="scope">
 							<span
@@ -288,13 +290,13 @@
 						sortable="custom"
 					>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.lastLoginTime">
-								{{ scope.row.lastLoginTime }}
+							<span v-if="!!scope.row.createDt">
+								{{ scope.row.createDt }}
 							</span>
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column align="center" label="操作" width="200px">
+					<el-table-column align="center" label="操作" width="300px">
 						<template>
 							<el-button type="danger" icon="el-icon-delete" size="medium">
 								禁用
@@ -382,53 +384,63 @@ export default {
 	created() {
 		this.getMerchantDict()
 	},
-	mounted() {},
+	mounted() {
+		for (let i = 0; i < 10; i++) {
+			this.dataList[i] = {
+				bankCode: '165416416464654',
+				bankName: '中国银行',
+				createDt: '2021-02-13 20:28:54',
+				updateDt: '2021-02-13 20:28:54',
+				vipSerialNum: '115'
+			}
+		}
+	},
 	methods: {
 		loadData() {
-			this.dataList = []
-			this.loading = true
-			const create = this.queryData.registerTime || []
-			const [startTime, endTime] = create
-			let params = {
-				...this.queryData,
-				createDtStart: startTime
-					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
-					: undefined,
-				createDtEnd: endTime
-					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
-					: undefined
-			}
-			params = {
-				...this.getParams(params)
-			}
-			delete params.registerTime
-			delete params.lastLoginTime
-			delete params.firstSaveTime
-			this.$api
-				.memberListAPI(params)
-				.then((res) => {
-					const {
-						code,
-						data: { record, totalRecord },
-						msg
-					} = res
-					if (code === 200) {
-						this.loading = false
-						this.dataList = record || []
-						this.total = totalRecord || 0
-					} else {
-						this.loading = false
-						this.$message({
-							message: msg,
-							type: 'error'
-						})
-					}
-				})
-				.catch(() => (this.loading = false))
-
-			setTimeout(() => {
-				this.loading = false
-			}, 1000)
+			// this.dataList = []
+			// this.loading = true
+			// const create = this.queryData.registerTime || []
+			// const [startTime, endTime] = create
+			// let params = {
+			// 	...this.queryData,
+			// 	createDtStart: startTime
+			// 		? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
+			// 		: undefined,
+			// 	createDtEnd: endTime
+			// 		? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
+			// 		: undefined
+			// }
+			// params = {
+			// 	...this.getParams(params)
+			// }
+			// delete params.registerTime
+			// delete params.lastLoginTime
+			// delete params.firstSaveTime
+			// this.$api
+			// 	.memberListAPI(params)
+			// 	.then((res) => {
+			// 		const {
+			// 			code,
+			// 			data: { record, totalRecord },
+			// 			msg
+			// 		} = res
+			// 		if (code === 200) {
+			// 			this.loading = false
+			// 			this.dataList = record || []
+			// 			this.total = totalRecord || 0
+			// 		} else {
+			// 			this.loading = false
+			// 			this.$message({
+			// 				message: msg,
+			// 				type: 'error'
+			// 			})
+			// 		}
+			// 	})
+			// 	.catch(() => (this.loading = false))
+			//
+			// setTimeout(() => {
+			// 	this.loading = false
+			// }, 1000)
 		},
 		// 获取风控层级
 		getMerchantDict() {
