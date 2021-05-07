@@ -175,6 +175,7 @@
       <el-pagination
         v-if="total"
         :current-page="pageNum"
+        background
         :total="total"
         :layout="layout"
         :page-sizes="pageSizes"

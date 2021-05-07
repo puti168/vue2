@@ -242,7 +242,8 @@
 					v-show="!!total"
                     class="pageValue"
 					:current-page.sync="pageNum"
-					layout="total, sizes,prev, pager, next, jumper"
+					background
+        			layout="total, sizes,prev, pager, next, jumper"
 					:page-size="pageSize"
 					:page-sizes="$store.getters.pageSizes"
 					:total="total"
