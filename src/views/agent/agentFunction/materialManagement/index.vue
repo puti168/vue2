@@ -122,7 +122,8 @@
         </el-table>
         <!-- 分页 -->
         <el-pagination
-          v-show="dataList.length > 0"
+					v-show="dataList.length > 0"
+          background
           :current-page.sync="pageNum"
           layout="total, sizes,prev, pager, next, jumper"
           :page-size="pageSize"
