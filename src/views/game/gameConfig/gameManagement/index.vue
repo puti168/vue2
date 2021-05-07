@@ -1,304 +1,514 @@
 <template>
-  <div class="game-container report-container">
-    <div class="header flex-h flex-bc">
-      <h2 class="h2-line">游戏管理</h2>
-      <div class="head flex-h-end">
-        <el-button
-          type="primary"
-          icon="el-icon-search"
-          :disabled="loading"
-          size="medium"
-          @click="query"
-        >
-          查询
-        </el-button>
-        <el-button
-          icon="el-icon-refresh-left"
-          :disabled="loading"
-          size="medium"
-          @click="reset"
-        >
-          重置
-        </el-button>
-        <el-button
-          type="primary"
-          icon="el-icon-folder-add"
-          size="medium"
-          @click="add"
-        >
-          新增
-        </el-button>
-      </div>
-    </div>
-    <div class="view-container dealer-container">
-      <div class="params">
-        <el-form ref="form" :inline="true" :model="queryData" label-width="100px">
-          <el-form-item label="银行卡号">
-            <el-input
-              v-model="queryData.bankCode"
-              clearable
-              size="medium"
-              style="width: 280px"
-              placeholder="请输入银行卡号"
-              :disabled="loading"
-              @keyup.enter.native="enterSearch"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="银行名称">
-            <el-input
-              v-model="queryData.bankName"
-              clearable
-              size="medium"
-              style="width: 280px"
-              placeholder="请输入银行名称"
-              :disabled="loading"
-              @keyup.enter.native="enterSearch"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="时间">
-            <el-date-picker
-              v-model="formTime.time"
-              size="medium"
-              :picker-options="pickerOptions"
-              format="yyyy-MM-dd HH:mm:ss"
-              type="datetimerange"
-              range-separator="-"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-              align="right"
-              clearable
-              value-format="timestamp"
-              style="width: 280px"
-            ></el-date-picker>
-          </el-form-item>
-        </el-form>
-      </div>
-      <div class="content">
-        <el-table
-          v-loading="loading"
-          border
-          size="mini"
-          class="small-size-table"
-          :data="dataList"
-          style="width: 100%"
-          :header-cell-style="getRowClass"
-        >
-          <el-table-column
-            prop="bankCode"
-            align="center"
-            label="银行卡号"
-          ></el-table-column>
-          <el-table-column
-            prop="bankName"
-            align="center"
-            label="银行名称"
-          ></el-table-column>
-          <el-table-column
-            prop="createDt"
-            align="center"
-            label="创建时间"
-          ></el-table-column>
-          <el-table-column
-            prop="updateDt"
-            align="center"
-            label="更新时间"
-          ></el-table-column>
+	<div class="game-container report-container">
+		<div class="view-container dealer-container">
+			<div class="params">
+				<el-form ref="form" :inline="true" :model="queryData">
+					<el-form-item label="游戏标签ID:">
+						<el-input
+							v-model="queryData.bankCode"
+							clearable
+							:maxlength="3"
+							size="medium"
+							style="width: 180px"
+							placeholder="请输入"
+							:disabled="loading"
+							@keyup.enter.native="enterSearch"
+						></el-input>
+					</el-form-item>
+					<el-form-item label="游戏名称:">
+						<el-input
+							v-model="queryData.bankName"
+							clearable
+							:maxlength="10"
+							size="medium"
+							style="width: 180px; margin-right: 20px"
+							placeholder="请输入"
+							:disabled="loading"
+							@keyup.enter.native="enterSearch"
+						></el-input>
+					</el-form-item>
+					<el-form-item label="显示状态:" class="tagheight">
+						<el-select
+							v-model="queryData.accountType"
+							style="width: 180px"
+							multiple
+							placeholder="默认选择全部"
+							:popper-append-to-body="false"
+						>
+							<el-option label="开启中" value="1"></el-option>
+							<el-option label="禁用中" value="2"></el-option>
+						</el-select>
+					</el-form-item>
+					<el-form-item label="支持终端:" class="tagheight">
+						<el-select
+							v-model="queryData.accountType"
+							style="width: 180px"
+							multiple
+							placeholder="默认选择全部"
+							:popper-append-to-body="false"
+						>
+							<el-option label="开启中" value="1"></el-option>
+							<el-option label="禁用中" value="2"></el-option>
+						</el-select>
+					</el-form-item>
+					<el-form-item label="图标状态:" class="tagheight">
+						<el-select
+							v-model="queryData.accountType"
+							style="width: 180px"
+							multiple
+							placeholder="默认选择全部"
+							:popper-append-to-body="false"
+						>
+							<el-option label="开启中" value="1"></el-option>
+							<el-option label="禁用中" value="2"></el-option>
+						</el-select>
+					</el-form-item>
+					<el-form-item label="关联推荐游戏:" class="tagheight">
+						<el-select
+							v-model="queryData.accountType"
+							style="width: 180px"
+							multiple
+							placeholder="默认选择全部"
+							:popper-append-to-body="false"
+						>
+							<el-option label="开启中" value="1"></el-option>
+							<el-option label="禁用中" value="2"></el-option>
+						</el-select>
+					</el-form-item>
+					<el-form-item label="游戏平台:" class="tagheight">
+						<el-select
+							v-model="queryData.accountType"
+							style="width: 180px"
+							multiple
+							placeholder="默认选择全部"
+							:popper-append-to-body="false"
+						>
+							<el-option label="开启中" value="1"></el-option>
+							<el-option label="禁用中" value="2"></el-option>
+						</el-select>
+					</el-form-item>
+					<el-form-item label="游戏标签:" class="tagheight">
+						<el-select
+							v-model="queryData.accountType"
+							style="width: 180px"
+							multiple
+							placeholder="默认选择全部"
+							:popper-append-to-body="false"
+						>
+							<el-option label="开启中" value="1"></el-option>
+							<el-option label="禁用中" value="2"></el-option>
+						</el-select>
+					</el-form-item>
 
-          <el-table-column align="center" label="操作">
-            <template slot-scope="scope">
-              <el-button
-                type="danger"
-                icon="el-icon-delete"
-                size="medium"
-                @click="deleteUp(scope.row)"
-              >
-                删除
-              </el-button>
-              <el-button
-                type="warning"
-                icon="el-icon-edit"
-                size="medium"
-                @click.stop="editUp(scope.row)"
-              >
-                修改
-              </el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-        <!-- 分页 -->
-        <el-pagination
-          v-show="dataList.length > 0"
-          :current-page.sync="pageNum"
-          background
-          layout="total, sizes,prev, pager, next, jumper"
-          :page-size="pageSize"
-          :page-sizes="$store.getters.pageSizes"
-          :total="15"
-          @current-change="handleCurrentChange"
-          @size-change="handleSizeChange"
-        ></el-pagination>
-        <el-dialog
-          :title="moduleBox"
-          center
-          :visible.sync="editVisible"
-          :before-close="closeFormDialog"
-          width="410px"
-        >
-          <editForm v-if="moduleBox == '新增银行信息'" ref="addForm"></editForm>
-          <editForm v-else ref="editForm" :editFormData="editFormData"></editForm>
-          <div slot="footer" class="dialog-footer">
-            <el-button @click="editVisible = false">取 消</el-button>
-            <el-button
-              v-if="moduleBox == '新增银行信息'"
-              type="primary"
-              @click="submitAdd"
-              >确 定</el-button>
-            <el-button v-else type="primary" @click="submitEdit">确 定</el-button>
-          </div>
-        </el-dialog>
-      </div>
-    </div>
-  </div>
+					<el-form-item>
+						<el-button
+							type="primary"
+							icon="el-icon-search"
+							:disabled="loading"
+							size="medium"
+							@click="search"
+						>
+							查询
+						</el-button>
+						<el-button
+							icon="el-icon-refresh-left"
+							:disabled="loading"
+							size="medium"
+							@click="reset"
+						>
+							重置
+						</el-button>
+						<el-button
+							type="warning"
+							icon="el-icon-folder"
+							:disabled="loading"
+							size="medium"
+							@click="dialogFormVisible = true"
+						>
+							创建
+						</el-button>
+					</el-form-item>
+				</el-form>
+			</div>
+			<div class="content">
+				<el-table
+					v-loading="loading"
+					border
+					size="mini"
+					class="small-size-table"
+					:data="tableData"
+					style="width: 100%"
+					:header-cell-style="getRowClass"
+					@sort-change="_changeTableSort"
+				>
+					<el-table-column
+						prop="vipSerialNum"
+						align="center"
+						label="游戏ID"
+						sortable="custom"
+						width="120px"
+					></el-table-column>
+					<el-table-column
+						prop="content"
+						align="center"
+						label="游戏平台"
+						width="170px"
+					></el-table-column>
+					<el-table-column
+						prop="content"
+						align="center"
+						label="游戏名称"
+						width="170px"
+					></el-table-column>
+					<el-table-column
+						prop="bankName"
+						align="center"
+						label="状态"
+						width="100px"
+					>
+						<template slot-scope="scope">
+							<div v-if="scope.row.code === 1" class="normalRgba">开启中</div>
+							<div v-else class="disableRgba">已禁用</div>
+						</template>
+					</el-table-column>
+					<el-table-column
+						prop="bankName"
+						align="center"
+						label="支持终端"
+					></el-table-column>
+					<el-table-column
+						prop="bankName"
+						align="center"
+						label="图标状态"
+					></el-table-column>
+					<el-table-column
+						prop="bankName"
+						align="center"
+						label="游戏图片"
+						width="120px"
+					>
+						<template slot-scope="scope">
+              <span class="text-link" @click="lookGame(scope.row.bankName)">点击预览</span>
+							<!-- <el-image
+								style="width: 100px; height: 100px"
+								:src="url"
+								:preview-src-list="srcList"
+							></el-image> -->
+						</template>
+					</el-table-column>
+					<el-table-column
+						prop="bankName"
+						align="center"
+						label="游戏描述"
+						width="100px"
+					></el-table-column>
+					<el-table-column
+						prop="createDt"
+						align="center"
+						label="关联游戏模块"
+						sortable="custom"
+						width="160px"
+					></el-table-column>
+					<el-table-column
+						prop="bankName"
+						align="center"
+						label="游戏标签"
+						width="100px"
+					></el-table-column>
+					<el-table-column
+						prop="createDt"
+						align="center"
+						label="备注信息"
+						sortable="custom"
+						width="160px"
+					></el-table-column>
+					<el-table-column
+						prop="createDt"
+						align="center"
+						label="创建人"
+						sortable="custom"
+						width="160px"
+					></el-table-column>
+					<el-table-column
+						prop="createDt"
+						align="center"
+						label="创建时间"
+						sortable="custom"
+						width="160px"
+					></el-table-column>
+					<el-table-column
+						prop="createDt"
+						align="center"
+						label="最近操作人"
+						sortable="custom"
+						width="80px"
+					></el-table-column>
+					<el-table-column
+						prop="createDt"
+						align="center"
+						label="最近操作时间"
+						sortable="custom"
+						width="160px"
+					></el-table-column>
+					<el-table-column
+						prop="operating"
+						align="center"
+						label="操作"
+						width="240px"
+					>
+						<template slot-scope="scope">
+							<el-button
+								:disabled="loading"
+								type="success"
+								size="medium"
+								class="noicon"
+								@click="reset"
+							>
+								维护
+							</el-button>
+							<el-button
+								:disabled="loading"
+								type="danger"
+								size="medium"
+								class="noicon"
+								@click="reset"
+							>
+								禁用
+							</el-button>
+							<el-button
+								type="primary"
+								icon="el-icon-edit"
+								:disabled="loading"
+								size="medium"
+								@click="edit(scope.row)"
+							>
+								编辑信息
+							</el-button>
+						</template>
+					</el-table-column>
+				</el-table>
+				<!-- 分页 -->
+				<el-pagination
+					:current-page.sync="pageNum"
+					class="pageValue"
+					background
+					layout="total, sizes,prev, pager, next, jumper"
+					:page-size="pageSize"
+					:page-sizes="pageSizes"
+					:total="total"
+					@current-change="handleCurrentChange"
+					@size-change="handleSizeChange"
+				></el-pagination>
+			</div>
+			<el-dialog
+				title="创建/编辑"
+				:visible.sync="dialogFormVisible"
+				:destroy-on-close="true"
+				width="480px"
+				class="rempadding"
+			>
+				<el-divider></el-divider>
+				<el-form :model="dialogForm" label-width="90px">
+					<el-form-item
+						label="标签名称:"
+						prop="name"
+						:rules="[
+							{ required: true, message: '请输入标签名称', trigger: 'blur' },
+							{
+								min: 2,
+								max: 10,
+								message: '长度在 2 到 10 个字符',
+								trigger: 'blur'
+							}
+						]"
+					>
+						<el-input
+							v-model="dialogForm.name"
+							:maxlength="10"
+							autocomplete="off"
+						></el-input>
+					</el-form-item>
+					<el-form-item
+						label="描述:"
+						prop="remark"
+						:rules="[
+							{ required: true, message: '请输入描述内容', trigger: 'blur' },
+							{
+								min: 2,
+								max: 50,
+								message: '长度在 2 到 50 个字符',
+								trigger: 'blur'
+							}
+						]"
+					>
+						<el-input v-model="dialogForm.remark" type="textarea"></el-input>
+					</el-form-item>
+				</el-form>
+				<el-divider></el-divider>
+				<div slot="footer" class="dialog-footer">
+					<el-button @click="dialogFormVisible = false">取消</el-button>
+					<el-button type="primary" @click="subAddOrEidt">保存</el-button>
+				</div>
+			</el-dialog>
+			<el-dialog
+				title="图片"
+				:visible.sync="dialogGameVisible"
+				:destroy-on-close="true"
+				width="480px"
+				class="imgCenter"
+			>
+				<img src="@/assets/img/bb_bt_logout.png">
+			</el-dialog>
+		</div>
+	</div>
 </template>
 
 <script>
 import list from '@/mixins/list'
+import dayjs from 'dayjs'
 import { routerNames } from '@/utils/consts'
-import editForm from './components/editForm'
-// import {
-//   getQueryBank,
-//   setAddBank,
-//   setDeleteBank,
-//   setEidteBank,
-// } from "@/api/bankController";
-export default {
-  name: routerNames.memberChange,
-  components: {
-    editForm
-  },
-  mixins: [list],
-  data() {
-    return {
-      queryData: {},
-      formTime: {
-        time: []
-      },
-      dataList: [],
-      moduleBox: '',
-      showForm: '',
-      editVisible: false,
-      editFormData: {}
-    }
-  },
-  computed: {},
-  mounted() {
-    for (let i = 0; i < 10; i++) {
-      this.dataList[i] = {
-        bankCode: '165416416464654',
-        bankName: '中国银行',
-        createDt: '2021-02-13 20:28:54',
-        updateDt: '2021-02-13 20:28:54'
-      }
-    }
-  },
-  methods: {
-    // loadData(params) {
-    //   params = {
-    //     ...this.getParams(params)
-    //   }
-    //   getQueryBank(params).then((res) => {
-    //     console.log('res:', res)
-    //     if (res.code === 200) {
-    //       this.loading = false
-    //       this.dataList = res.data
-    //     } else {
-    //       this.loading = false
-    //       this.$message({
-    //         message: res.msg,
-    //         type: 'error'
-    //       })
-    //     }
-    //   })
-    // },
-    query() {
-      this.loading = true
-      const create = this.formTime.time || []
-      const [startTime, endTime] = create
-      const params = {
-        ...this.queryData,
-        pageNum: 1,
-        startTime: startTime && startTime + '',
-        endTime: endTime && endTime + ''
-      }
-      console.log(params)
-      this.loadData(params)
-    },
-    reset() {
-      this.queryData = {}
-      this.formTime.time = []
-      // this.loadData()
-    },
+const startTime = dayjs()
+	.startOf('day')
+	.valueOf()
+const endTime = dayjs()
+	.endOf('day')
+	.valueOf()
 
-    add() {
-      this.moduleBox = '新增银行信息'
-      this.editVisible = true
-    },
-    submitAdd() {
-      console.log(this.$refs.addForm)
-      //   setAddBank(this.queryData).then((res) => {
-      //     console.log(res);
-      //   });
-    },
-    deleteUp(val) {
-      console.log(val)
-      this.$confirm('确定删除此银行卡号吗?', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      })
-        .then(() => {
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-          })
-          // setDeleteBank(val).then((res) => {
-          //   console.log(res);
-          // });
-        })
-        .catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          })
-        })
-    },
-    editUp(val) {
-      this.moduleBox = '修改银行信息'
-      this.editVisible = true
-      this.editFormData = val
-    },
-    submitEdit() {
-      // setEidteBank().then((res) => {
-      //   console.log(res);
-      // });
-    },
-    handleCurrentChange() {
-      this.loadData()
-    },
-    closeFormDialog() {
-      this.editVisible = false
-    },
-    enterSubmit() {
-      this.query()
-    }
-  }
+export default {
+	name: routerNames.gamePlatform,
+	components: {},
+	mixins: [list],
+	data() {
+		return {
+			queryData: {
+				accountType: []
+			},
+      url: '@/assets/img/logo.png',
+      srcList: '@/assets/img/logo.png',
+			searchTime: [startTime, endTime],
+			now: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
+			summary: {
+				count: 0,
+				failCount: 0,
+				successCount: 0
+			},
+			tableData: [],
+			dialogFormVisible: false,
+			dialogForm: {},
+			dialogGameVisible: false
+		}
+	},
+	computed: {},
+	mounted() {
+		for (let i = 0; i < 10; i++) {
+			this.tableData[i] = {
+				bankCode: '165416416464654',
+				bankName: '中国银行',
+				content: '高频率',
+				code: 1,
+				createDt: '2021-02-13 20:28:54',
+				updateDt: '2021-02-13 20:28:54'
+			}
+		}
+	},
+	methods: {
+		loadData() {
+			// this.loading = true;
+			const create = this.searchTime || []
+			const [startTime, endTime] = create
+			let params = {
+				...this.queryData,
+				startTime: startTime
+					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
+					: '',
+				endTime: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
+			}
+			params = {
+				...this.getParams(params)
+			}
+			console.log(params)
+		},
+		lookGame(val) {
+			this.dialogGameVisible = true
+			console.log(val)
+		},
+		reset() {
+			this.queryData = {}
+		},
+		edit(val) {
+			this.dialogFormVisible = true
+			console.log(val)
+		},
+		subAddOrEidt() {
+			this.dialogFormVisible = false
+		},
+		_changeTableSort({ column, prop, order }) {
+			if (prop === 'vipSerialNum') {
+				prop = 1
+			}
+			this.queryData.orderKey = prop
+			if (order === 'ascending') {
+				// 升序
+				this.queryData.orderType = 'asc'
+			} else if (column.order === 'descending') {
+				// 降序
+				this.queryData.orderType = 'desc'
+			}
+			this.loadData()
+		},
+		enterSubmit() {
+			this.loadData()
+		}
+	}
 }
 </script>
 
 <style lang="scss" scoped>
 /deep/.el-dialog__header {
-  text-align: center;
-  color: #909399;
-  font-weight: 700;
+	text-align: center;
+	color: #909399;
+	font-weight: 700;
+}
+/deep/ .tagheight .el-tag {
+	height: 24px;
+	line-height: 24px;
+	min-width: 60px;
+}
+/deep/ .rempadding .el-dialog__body {
+	padding: 0;
+	padding-bottom: 30px;
+
+	.contentBox,
+	form {
+		padding: 0 20px;
+	}
+}
+.decoration {
+	text-decoration: underline;
+	cursor: pointer;
+}
+.bodyBox {
+	max-height: 400px;
+	overflow: auto;
+}
+p {
+	display: flex;
+	height: 40px;
+	line-height: 40px;
+	border-bottom: 1px solid #e8e8e8;
+	justify-content: space-around;
+	span {
+		display: inline-block;
+		width: 50%;
+		text-align: center;
+	}
+}
+.headerBox {
+	color: #000000d8;
+	background: #fafafa;
+	font-family: 'PingFang SC ', 'PingFang SC', sans-serif;
+	font-weight: 650;
+	border-top: 1px solid #e8e8e8;
+	margin-top: 15px;
 }
 </style>
