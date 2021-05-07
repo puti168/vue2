@@ -28,7 +28,7 @@
 						start-placeholder="开始日期"
 						end-placeholder="结束日期"
 						align="right"
-						clearable
+						:clearable="false"
 						:default-time="defaultTime"
 					></el-date-picker>
 				</el-form-item>
@@ -282,7 +282,7 @@ export default {
 			if (!params.createDtStart || !params.createDtEnd) {
 				this.$message({
 						message: '操作时间参数必传',
-						type: 'error'
+						type: 'info'
 					})
 					return
 			}
