@@ -16,6 +16,7 @@ export const routerNames = {
 	gamePlatform: 'gamePlatform',
 	addMemberCheck: 'addMemberCheck',
 	gameManagement: 'gameManagement',
+	gameClassification: 'gameClassification',
 	gameSearchManage: 'gameSearchManage'
 }
 const month = dayjs().month()

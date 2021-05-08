@@ -273,9 +273,7 @@ export default {
 			const params = {
 				...this.form
 			}
-			console.log(params)
 			this.$refs['form'].validate((valid) => {
-				console.log('valid', valid)
 				if (valid) {
 					this.$api
 						.addMemberAPI(params)

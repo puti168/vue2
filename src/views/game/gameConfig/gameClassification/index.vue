@@ -374,7 +374,7 @@ const end = dayjs()
 	.endOf('day')
 	.valueOf()
 export default {
-	name: routerNames.memberList,
+	name: routerNames.gameClassification,
 	mixins: [list],
 	data() {
 		return {

@@ -47,6 +47,104 @@
 					<span class="hotConfig">热门搜索配置</span>
 					<el-button type="primary">新增</el-button>
 				</div>
+				<div class="content">
+					<el-table
+						v-loading="loading"
+						border
+						size="mini"
+						class="small-size-table"
+						:data="dataList"
+						style="width: 100%"
+						:header-cell-style="getRowClass"
+						@sort-change="changeTableSort"
+					>
+						<el-table-column prop="userName" align="center" label="展示顺序">
+							<template slot-scope="scope">
+								<Copy
+									v-if="!!scope.row.userName"
+									:title="scope.row.userName"
+									:copy="copy"
+								/>
+								<span v-else>-</span>
+							</template>
+						</el-table-column>
+						<el-table-column prop="accountType" align="center" label="搜索词条信息">
+							<template slot-scope="scope">
+								<span v-if="!!scope.row.accountType">
+									{{ typeFilter(scope.row.accountType, 'accountType') }}
+								</span>
+								<span v-else>-</span>
+							</template>
+						</el-table-column>
+						<el-table-column prop="cardNumber" align="center" label="创建人">
+							<template slot-scope="scope">
+								<Copy
+									v-if="!!scope.row.cardNumber"
+									:title="scope.row.cardNumber"
+									:copy="copy"
+								/>
+								<span v-else>-</span>
+							</template>
+						</el-table-column>
+                        <el-table-column
+                            prop="createDt"
+                            align="center"
+                            label="创建时间"
+                            width="180px"
+                            sortable="custom"
+                        >
+                            <template slot-scope="scope">
+							<span v-if="!!scope.row.createDt">
+								{{ scope.row.createDt }}
+							</span>
+                                <span v-else>-</span>
+                            </template>
+                        </el-table-column>
+						<el-table-column prop="cnName" align="center" label="最新操作人">
+							<template slot-scope="scope">
+								<Copy
+									v-if="!!scope.row.cnName"
+									:title="scope.row.cnName"
+									:copy="copy"
+								/>
+								<span v-else>-</span>
+							</template>
+						</el-table-column>
+						<el-table-column prop="operateType" align="center" label="最新操作人">
+							<template slot-scope="scope">
+								<span v-if="!!scope.row.operateType">
+									{{ typeFilter(scope.row.operateType, 'bindType') }}
+								</span>
+								<span v-else>-</span>
+							</template>
+						</el-table-column>
+                        <el-table-column align="center" label="操作" width="300px">
+                            <template slot-scope="scope">
+                                <el-button
+                                    type="warning"
+                                    icon="el-icon-edit"
+                                    size="medium"
+                                    @click="deleteRow(scope.row)"
+                                >
+                                    删除
+                                </el-button>
+                            </template>
+                        </el-table-column>
+					</el-table>
+					<!-- 分页 -->
+					<el-pagination
+						v-show="!!total"
+						:current-page.sync="pageNum"
+						class="pageValue"
+						background
+						layout="total, sizes,prev, pager, next, jumper"
+						:page-size="pageSize"
+						:page-sizes="$store.getters.pageSizes"
+						:total="total"
+						@current-change="handleCurrentChange"
+						@size-change="handleSizeChange"
+					></el-pagination>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -62,9 +160,10 @@ export default {
 		return {
 			loading: false,
 			form: {
-                historyGameLimit: undefined,
-                hotSearch: undefined
-			}
+				historyGameLimit: undefined,
+				hotSearch: undefined
+			},
+            dataList: []
 		}
 	},
 	computed: {},
@@ -75,7 +174,6 @@ export default {
 			const params = {
 				...this.form
 			}
-			console.log(params)
 			this.$refs['form'].validate((valid) => {
 				console.log('valid', valid)
 				if (valid) {
@@ -111,11 +209,40 @@ export default {
 		reset() {
 			this.$refs['form'].resetFields()
 			this.form = {
-                historyGameLimit: undefined,
-                hotSearch: undefined
+				historyGameLimit: undefined,
+				hotSearch: undefined
 			}
 		},
-		checkValue(val) {}
+		checkValue(val) {},
+        deleteRow(val) {
+            this.$confirm('确定删除此游戏吗?', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            })
+                .then(() => {
+                    // const loading = this.$loading({
+                    // 	lock: true,
+                    // 	text: 'Loading',
+                    // 	spinner: 'el-icon-loading',
+                    // 	background: 'rgba(0, 0, 0, 0.7)'
+                    // })
+                    // this.$api
+                    // 	.setDeleteRole('', val.id)
+                    // 	.then((res) => {
+                    // 		loading.close()
+                    // 		this.$message({
+                    // 			type: 'success',
+                    // 			message: '删除成功!'
+                    // 		})
+                    // 		this.loadData()
+                    // 	})
+                    // 	.catch(() => {
+                    // 		loading.close()
+                    // 	})
+                })
+                .catch(() => {})
+        }
 	}
 }
 </script>
@@ -188,6 +315,13 @@ export default {
 		.content-part3 {
 			width: 100%;
 			padding: 25px 35px 20px;
+			.hotConfig {
+				color: rgba(0, 0, 0, 0.847058823529412);
+				font-size: 14px;
+				font-weight: 650;
+				display: inline-block;
+				margin-right: 50px;
+			}
 		}
 	}
 }
