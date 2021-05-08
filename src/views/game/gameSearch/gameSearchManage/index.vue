@@ -48,89 +48,99 @@
 					<el-button type="primary">新增</el-button>
 				</div>
 				<div class="content">
-					<el-table
-						v-loading="loading"
-						border
-						size="mini"
-						class="small-size-table"
-						:data="dataList"
-						style="width: 100%"
-						:header-cell-style="getRowClass"
-						@sort-change="changeTableSort"
-					>
-						<el-table-column prop="userName" align="center" label="展示顺序">
-							<template slot-scope="scope">
-								<Copy
-									v-if="!!scope.row.userName"
-									:title="scope.row.userName"
-									:copy="copy"
-								/>
-								<span v-else>-</span>
-							</template>
-						</el-table-column>
-						<el-table-column prop="accountType" align="center" label="搜索词条信息">
-							<template slot-scope="scope">
-								<span v-if="!!scope.row.accountType">
-									{{ typeFilter(scope.row.accountType, 'accountType') }}
-								</span>
-								<span v-else>-</span>
-							</template>
-						</el-table-column>
-						<el-table-column prop="cardNumber" align="center" label="创建人">
-							<template slot-scope="scope">
-								<Copy
-									v-if="!!scope.row.cardNumber"
-									:title="scope.row.cardNumber"
-									:copy="copy"
-								/>
-								<span v-else>-</span>
-							</template>
-						</el-table-column>
-                        <el-table-column
-                            prop="createDt"
-                            align="center"
-                            label="创建时间"
-                            width="180px"
-                            sortable="custom"
-                        >
-                            <template slot-scope="scope">
-							<span v-if="!!scope.row.createDt">
-								{{ scope.row.createDt }}
-							</span>
-                                <span v-else>-</span>
-                            </template>
-                        </el-table-column>
-						<el-table-column prop="cnName" align="center" label="最新操作人">
-							<template slot-scope="scope">
-								<Copy
-									v-if="!!scope.row.cnName"
-									:title="scope.row.cnName"
-									:copy="copy"
-								/>
-								<span v-else>-</span>
-							</template>
-						</el-table-column>
-						<el-table-column prop="operateType" align="center" label="最新操作人">
-							<template slot-scope="scope">
-								<span v-if="!!scope.row.operateType">
-									{{ typeFilter(scope.row.operateType, 'bindType') }}
-								</span>
-								<span v-else>-</span>
-							</template>
-						</el-table-column>
-                        <el-table-column align="center" label="操作" width="300px">
-                            <template slot-scope="scope">
-                                <el-button
-                                    type="warning"
-                                    icon="el-icon-edit"
-                                    size="medium"
-                                    @click="deleteRow(scope.row)"
-                                >
-                                    删除
-                                </el-button>
-                            </template>
-                        </el-table-column>
-					</el-table>
+					<draggable v-model="dataList" class="wrapper">
+						<el-table
+							v-loading="loading"
+							border
+							size="mini"
+							class="small-size-table"
+							:data="dataList"
+							style="width: 100%"
+							:header-cell-style="getRowClass"
+							@sort-change="changeTableSort"
+						>
+							<el-table-column prop="userName" align="center" label="展示顺序">
+								<template slot-scope="scope">
+									<Copy
+										v-if="!!scope.row.userName"
+										:title="scope.row.userName"
+										:copy="copy"
+									/>
+									<span v-else>-</span>
+								</template>
+							</el-table-column>
+							<el-table-column
+								prop="accountType"
+								align="center"
+								label="搜索词条信息"
+							>
+								<template slot-scope="scope">
+									<span v-if="!!scope.row.accountType">
+										{{ typeFilter(scope.row.accountType, 'accountType') }}
+									</span>
+									<span v-else>-</span>
+								</template>
+							</el-table-column>
+							<el-table-column prop="cardNumber" align="center" label="创建人">
+								<template slot-scope="scope">
+									<Copy
+										v-if="!!scope.row.cardNumber"
+										:title="scope.row.cardNumber"
+										:copy="copy"
+									/>
+									<span v-else>-</span>
+								</template>
+							</el-table-column>
+							<el-table-column
+								prop="createDt"
+								align="center"
+								label="创建时间"
+								width="180px"
+								sortable="custom"
+							>
+								<template slot-scope="scope">
+									<span v-if="!!scope.row.createDt">
+										{{ scope.row.createDt }}
+									</span>
+									<span v-else>-</span>
+								</template>
+							</el-table-column>
+							<el-table-column prop="cnName" align="center" label="最新操作人">
+								<template slot-scope="scope">
+									<Copy
+										v-if="!!scope.row.cnName"
+										:title="scope.row.cnName"
+										:copy="copy"
+									/>
+									<span v-else>-</span>
+								</template>
+							</el-table-column>
+							<el-table-column
+								prop="operateType"
+								align="center"
+								label="最新操作人"
+							>
+								<template slot-scope="scope">
+									<span v-if="!!scope.row.operateType">
+										{{ typeFilter(scope.row.operateType, 'bindType') }}
+									</span>
+									<span v-else>-</span>
+								</template>
+							</el-table-column>
+							<el-table-column align="center" label="操作" width="300px">
+								<template slot-scope="scope">
+									<el-button
+										type="warning"
+										icon="el-icon-edit"
+										size="medium"
+										@click="deleteRow(scope.row)"
+									>
+										删除
+									</el-button>
+								</template>
+							</el-table-column>
+						</el-table>
+					</draggable>
 					<!-- 分页 -->
 					<el-pagination
 						v-show="!!total"
@@ -153,8 +163,10 @@
 <script>
 import { routerNames } from '@/utils/consts'
 import list from '@/mixins/list'
+import draggable from 'vuedraggable'
 export default {
 	name: routerNames.gameSearchManage,
+	components: { draggable },
 	mixins: [list],
 	data() {
 		return {
@@ -163,7 +175,7 @@ export default {
 				historyGameLimit: undefined,
 				hotSearch: undefined
 			},
-            dataList: []
+			dataList: []
 		}
 	},
 	computed: {},
@@ -214,35 +226,35 @@ export default {
 			}
 		},
 		checkValue(val) {},
-        deleteRow(val) {
-            this.$confirm('确定删除此游戏吗?', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-            })
-                .then(() => {
-                    // const loading = this.$loading({
-                    // 	lock: true,
-                    // 	text: 'Loading',
-                    // 	spinner: 'el-icon-loading',
-                    // 	background: 'rgba(0, 0, 0, 0.7)'
-                    // })
-                    // this.$api
-                    // 	.setDeleteRole('', val.id)
-                    // 	.then((res) => {
-                    // 		loading.close()
-                    // 		this.$message({
-                    // 			type: 'success',
-                    // 			message: '删除成功!'
-                    // 		})
-                    // 		this.loadData()
-                    // 	})
-                    // 	.catch(() => {
-                    // 		loading.close()
-                    // 	})
-                })
-                .catch(() => {})
-        }
+		deleteRow(val) {
+			this.$confirm('确定删除此游戏吗?', {
+				confirmButtonText: '确定',
+				cancelButtonText: '取消',
+				type: 'warning'
+			})
+				.then(() => {
+					// const loading = this.$loading({
+					// 	lock: true,
+					// 	text: 'Loading',
+					// 	spinner: 'el-icon-loading',
+					// 	background: 'rgba(0, 0, 0, 0.7)'
+					// })
+					// this.$api
+					// 	.setDeleteRole('', val.id)
+					// 	.then((res) => {
+					// 		loading.close()
+					// 		this.$message({
+					// 			type: 'success',
+					// 			message: '删除成功!'
+					// 		})
+					// 		this.loadData()
+					// 	})
+					// 	.catch(() => {
+					// 		loading.close()
+					// 	})
+				})
+				.catch(() => {})
+		}
 	}
 }
 </script>
