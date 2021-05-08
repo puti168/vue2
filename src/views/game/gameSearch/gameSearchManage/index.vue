@@ -45,102 +45,116 @@
 			<div class="content-part3">
 				<div class="part-title">
 					<span class="hotConfig">热门搜索配置</span>
-					<el-button type="primary">新增</el-button>
+					<el-button type="primary" @click="addRow">新增</el-button>
 				</div>
 				<div class="content">
-					<draggable v-model="dataList" class="wrapper">
-						<el-table
-							v-loading="loading"
-							border
-							size="mini"
-							class="small-size-table"
-							:data="dataList"
-							style="width: 100%"
-							:header-cell-style="getRowClass"
-							@sort-change="changeTableSort"
+					<el-table
+						v-loading="loading"
+						border
+						size="mini"
+						class="small-size-table"
+						:data="dataList"
+						style="width: 100%"
+						:header-cell-style="getRowClass"
+						row-key="id"
+						:row-style="{ height: '45px' }"
+						@sort-change="changeTableSort"
+					>
+						<el-table-column
+							prop="userName"
+							align="center"
+							label="展示顺序"
+							width="120px"
 						>
-							<el-table-column prop="userName" align="center" label="展示顺序">
-								<template slot-scope="scope">
-									<Copy
-										v-if="!!scope.row.userName"
-										:title="scope.row.userName"
-										:copy="copy"
-									/>
-									<span v-else>-</span>
-								</template>
-							</el-table-column>
-							<el-table-column
-								prop="accountType"
-								align="center"
-								label="搜索词条信息"
-							>
-								<template slot-scope="scope">
-									<span v-if="!!scope.row.accountType">
-										{{ typeFilter(scope.row.accountType, 'accountType') }}
-									</span>
-									<span v-else>-</span>
-								</template>
-							</el-table-column>
-							<el-table-column prop="cardNumber" align="center" label="创建人">
-								<template slot-scope="scope">
-									<Copy
-										v-if="!!scope.row.cardNumber"
-										:title="scope.row.cardNumber"
-										:copy="copy"
-									/>
-									<span v-else>-</span>
-								</template>
-							</el-table-column>
-							<el-table-column
-								prop="createDt"
-								align="center"
-								label="创建时间"
-								width="180px"
-								sortable="custom"
-							>
-								<template slot-scope="scope">
-									<span v-if="!!scope.row.createDt">
-										{{ scope.row.createDt }}
-									</span>
-									<span v-else>-</span>
-								</template>
-							</el-table-column>
-							<el-table-column prop="cnName" align="center" label="最新操作人">
-								<template slot-scope="scope">
-									<Copy
-										v-if="!!scope.row.cnName"
-										:title="scope.row.cnName"
-										:copy="copy"
-									/>
-									<span v-else>-</span>
-								</template>
-							</el-table-column>
-							<el-table-column
-								prop="operateType"
-								align="center"
-								label="最新操作人"
-							>
-								<template slot-scope="scope">
-									<span v-if="!!scope.row.operateType">
-										{{ typeFilter(scope.row.operateType, 'bindType') }}
-									</span>
-									<span v-else>-</span>
-								</template>
-							</el-table-column>
-							<el-table-column align="center" label="操作" width="300px">
-								<template slot-scope="scope">
-									<el-button
-										type="warning"
-										icon="el-icon-edit"
+							<template slot-scope="scope">
+								<!--									<Copy-->
+								<!--										v-if="!!scope.row.id"-->
+								<!--										:title="scope.row.id + 'ss'"-->
+								<!--										:copy="copy"-->
+								<!--									/>-->
+								<span v-if="!!scope.row.id">{{ scope.row.id }}</span>
+								<span v-else>-</span>
+							</template>
+						</el-table-column>
+						<el-table-column
+							prop="accountType"
+							align="center"
+							label="搜索词条信息"
+							width="220px"
+						>
+							<template slot-scope="scope">
+								<span v-if="!!scope.row.bankName">
+									<el-input
+										v-model="scope.row.bankName"
 										size="medium"
-										@click="deleteRow(scope.row)"
-									>
-										删除
-									</el-button>
-								</template>
-							</el-table-column>
-						</el-table>
-					</draggable>
+										maxlength="20"
+										placeholder="请输入"
+										clearable
+										style="width: 180px"
+									></el-input>
+								</span>
+								<span v-else>-</span>
+							</template>
+						</el-table-column>
+						<el-table-column prop="cardNumber" align="center" label="创建人">
+							<template slot-scope="scope">
+								<Copy
+									v-if="!!scope.row.cardNumber"
+									:title="scope.row.cardNumber"
+									:copy="copy"
+								/>
+								<span v-else>-</span>
+							</template>
+						</el-table-column>
+						<el-table-column
+							prop="createDt"
+							align="center"
+							label="创建时间"
+							width="180px"
+							sortable="custom"
+						>
+							<template slot-scope="scope">
+								<span v-if="!!scope.row.createDt">
+									{{ scope.row.createDt }}
+								</span>
+								<span v-else>-</span>
+							</template>
+						</el-table-column>
+						<el-table-column prop="cnName" align="center" label="最新操作人">
+							<template slot-scope="scope">
+								<Copy
+									v-if="!!scope.row.cnName"
+									:title="scope.row.cnName"
+									:copy="copy"
+								/>
+								<span v-else>-</span>
+							</template>
+						</el-table-column>
+						<el-table-column
+							prop="operateType"
+							align="center"
+							label="最新操作人"
+						>
+							<template slot-scope="scope">
+								<span v-if="!!scope.row.operateType">
+									{{ typeFilter(scope.row.operateType, 'bindType') }}
+								</span>
+								<span v-else>-</span>
+							</template>
+						</el-table-column>
+						<el-table-column align="center" label="操作">
+							<template slot-scope="scope">
+								<el-button
+									type="danger"
+									icon="el-icon-edit"
+									size="medium"
+									@click="deleteRow(scope.row)"
+								>
+									删除
+								</el-button>
+							</template>
+						</el-table-column>
+					</el-table>
 					<!-- 分页 -->
 					<el-pagination
 						v-show="!!total"
@@ -163,10 +177,10 @@
 <script>
 import { routerNames } from '@/utils/consts'
 import list from '@/mixins/list'
-import draggable from 'vuedraggable'
+import Sortable from 'sortablejs'
+
 export default {
 	name: routerNames.gameSearchManage,
-	components: { draggable },
 	mixins: [list],
 	data() {
 		return {
@@ -179,7 +193,28 @@ export default {
 		}
 	},
 	computed: {},
-	mounted() {},
+	mounted() {
+		document.body.ondrop = function(event) {
+			event.preventDefault()
+			event.stopPropagation()
+		}
+
+		for (let i = 0; i < 5; i++) {
+			this.dataList[i] = {
+				bankCode: '165416416464654',
+				bankName: '中国银行',
+				createDt: '2021-02-13 20:28:54',
+				updateDt: '2021-02-13 20:28:54',
+				vipSerialNum: '115',
+				id: i + 100
+			}
+		}
+
+		this.columnDrop()
+	},
+	updated() {
+		console.log('新表格数据', this.dataList)
+	},
 	methods: {
 		add() {
 			this.loading = true
@@ -226,6 +261,11 @@ export default {
 			}
 		},
 		checkValue(val) {},
+		addRow() {
+			const lastRow = this.dataList[this.dataList.length - 1]
+			const new_row = lastRow.id + 1
+			this.dataList.push({ id: new_row })
+		},
 		deleteRow(val) {
 			this.$confirm('确定删除此游戏吗?', {
 				confirmButtonText: '确定',
@@ -254,6 +294,21 @@ export default {
 					// 	})
 				})
 				.catch(() => {})
+		},
+
+		// 列拖动
+		columnDrop() {
+			console.log('旧数据', this.dataList)
+			const wrapperTr = document.querySelector('.el-table__body-wrapper tbody')
+			const _this = this
+			this.sortable = Sortable.create(wrapperTr, {
+				animation: 180,
+				delay: 0,
+				onEnd: ({ newIndex, oldIndex }) => {
+					const currRow = _this.dataList.splice(oldIndex, 1)[0]
+					_this.dataList.splice(newIndex, 0, currRow)
+				}
+			})
 		}
 	}
 }
@@ -274,6 +329,7 @@ export default {
 		margin: 0 auto;
 		background-color: #fff;
 		position: relative;
+		padding-bottom: 30px;
 		.form-header {
 			height: 55px;
 			line-height: 55px;
