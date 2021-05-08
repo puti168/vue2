@@ -69,7 +69,7 @@ const game = [
 	{
 		id: '1020402',
 		parentId: '1020400',
-		path: '/game/gameSearch/gameSearchManagement',
+		path: '/game/gameSearch/gameSearchManage',
 		title: '游戏搜索管理'
 	}
 ]

@@ -691,7 +691,7 @@ export default {
 				case 'offLineDaysStart':
 					if (
 						!!this.queryData.offLineDaysEnd &&
-						(value && value * 1 >= this.queryData.offLineDaysEnd * 1)
+						(value && value * 1 > this.queryData.offLineDaysEnd * 1)
 					) {
 						this.$message({
 							type: 'warning',
@@ -702,7 +702,7 @@ export default {
 				case 'offLineDaysEnd':
 					if (
 						!!this.queryData.offLineDaysStart &&
-						(value && value * 1 <= this.queryData.offLineDaysStart * 1)
+						(value && value * 1 < this.queryData.offLineDaysStart * 1)
 					) {
 						this.$message({
 							type: 'warning',
@@ -713,7 +713,7 @@ export default {
 				case 'vipSerialNumMin':
 					if (
 						!!this.queryData.vipSerialNumMax &&
-						(value && value * 1 >= this.queryData.vipSerialNumMax * 1)
+						(value && value * 1 > this.queryData.vipSerialNumMax * 1)
 					) {
 						this.$message({
 							type: 'warning',
@@ -724,7 +724,7 @@ export default {
 				case 'vipSerialNumMax':
 					if (
 						!!this.queryData.vipSerialNumMin &&
-						(value && value * 1 <= this.queryData.vipSerialNumMin * 1)
+						(value && value * 1 < this.queryData.vipSerialNumMin * 1)
 					) {
 						this.$message({
 							type: 'warning',
@@ -735,7 +735,7 @@ export default {
 				case 'firstDepositAmountMin':
 					if (
 						!!this.queryData.firstDepositAmountMax &&
-						(value && value * 1 >= this.queryData.firstDepositAmountMax * 1)
+						(value && value * 1 > this.queryData.firstDepositAmountMax * 1)
 					) {
 						this.$message({
 							type: 'warning',
@@ -746,7 +746,7 @@ export default {
 				case 'firstDepositAmountMax':
 					if (
 						!!this.queryData.firstDepositAmountMin &&
-						(value && value * 1 <= this.queryData.firstDepositAmountMin * 1)
+						(value && value * 1 < this.queryData.firstDepositAmountMin * 1)
 					) {
 						this.$message({
 							type: 'warning',
