@@ -375,7 +375,7 @@ const endTime = dayjs()
 	.valueOf()
 
 export default {
-	name: routerNames.gamePlatform,
+	name: routerNames.gameManagement,
 	components: {},
 	mixins: [list],
 	data() {
