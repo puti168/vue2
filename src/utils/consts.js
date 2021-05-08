@@ -17,7 +17,14 @@ export const routerNames = {
 	addMemberCheck: 'addMemberCheck',
 	gameManagement: 'gameManagement',
 	gameClassification: 'gameClassification',
-	gameSearchManage: 'gameSearchManage'
+	gameSearchManage: 'gameSearchManage',
+	zrDetails: 'zrDetails',
+	qpDetails: 'qpDetails',
+	tyDetails: 'tyDetails',
+	djDetails: 'djDetails',
+	cpDetails: 'cpDetails',
+	dyDetails: 'dyDetails',
+	lhjDetails: 'lhjDetails'
 }
 const month = dayjs().month()
 const year = dayjs().year()
