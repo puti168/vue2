@@ -94,19 +94,21 @@
 				<div class="content">
 					<p class="hotConfig">分类包含游戏</p>
 					<div class="demo">
-						<el-transfer
+						<Transfer
+							id="transfer"
+							ref="transfer"
 							v-model="value"
 							filterable
 							:data="data"
 							:filter-method="filterMethod"
 							:target-order="'push'"
-							:titles="['左边数据', '右边数据']"
+							:titles="['已包含', '游戏平台']"
 							:props="{ key: 'id', label: 'label' }"
 							:left-default-checked="hasCheckedWHLeftData"
 							:right-default-checked="hasCheckedWHRightData"
 							@left-check-change="handleWHLeftChange"
 							@right-check-change="handleWHRightChange"
-						></el-transfer>
+						></Transfer>
 					</div>
 				</div>
 			</div>
@@ -116,14 +118,15 @@
 
 <script>
 import list from '@/mixins/list'
-import Sortable from 'sortablejs'
+// import Sortable from 'sortablejs'
+import Transfer from '@/components/transfer'
 
 const generateData = () => {
 	const data = []
 	for (let i = 1; i <= 30; i++) {
 		data.push({
 			id: i,
-			label: `备选项 ${i}`
+			label: `${i} 斗地主`
 		})
 	}
 	return data
@@ -131,6 +134,7 @@ const generateData = () => {
 
 export default {
 	name: 'CreatePage',
+	components: { Transfer },
 	mixins: [list],
 	data() {
 		return {
@@ -180,36 +184,36 @@ export default {
 		window.addEventListener('keyup', (e) => {
 			this.shiftKey = false
 		})
-		const el = document
-			.querySelector('.el-transfer')
-			.querySelectorAll('.el-checkbox-group')[1]
-		new Sortable(el, {
-			forceFallback: false,
-			onUpdate: (event) => {
-				const box = this.$el
-					.querySelector('.el-transfer')
-					.querySelectorAll('.el-checkbox-group')[1]
-				const nums = this.$el
-					.querySelector('.el-transfer')
-					.querySelectorAll('.el-checkbox-group')[1].childNodes.length
-				console.log(nums, event.newIndex)
-				if (event.newIndex >= nums) {
-					return
-				}
-				const newIndex = event.newIndex
-				const oldIndex = event.oldIndex
-				const $label = box.children[newIndex]
-				const $oldLabel = box.children[oldIndex]
-				box.removeChild($label)
-				if (newIndex < oldIndex) {
-					box.insertBefore($label, $oldLabel)
-				} else {
-					box.insertBefore($label, $oldLabel.nextSibling)
-				}
-				const item = this.value.splice(oldIndex, 1)
-				this.value.splice(newIndex, 0, item[0])
-			}
-		})
+		// const el = document
+		// 	.querySelector('.el-transfer')
+		// 	.querySelectorAll('.el-checkbox-group')[1]
+		// new Sortable(el, {
+		// 	forceFallback: false,
+		// 	onUpdate: (event) => {
+		// 		const box = this.$el
+		// 			.querySelector('.el-transfer')
+		// 			.querySelectorAll('.el-checkbox-group')[1]
+		// 		const nums = this.$el
+		// 			.querySelector('.el-transfer')
+		// 			.querySelectorAll('.el-checkbox-group')[1].childNodes.length
+		// 		console.log(nums, event.newIndex)
+		// 		if (event.newIndex >= nums) {
+		// 			return
+		// 		}
+		// 		const newIndex = event.newIndex
+		// 		const oldIndex = event.oldIndex
+		// 		const $label = box.children[newIndex]
+		// 		const $oldLabel = box.children[oldIndex]
+		// 		box.removeChild($label)
+		// 		if (newIndex < oldIndex) {
+		// 			box.insertBefore($label, $oldLabel)
+		// 		} else {
+		// 			box.insertBefore($label, $oldLabel.nextSibling)
+		// 		}
+		// 		const item = this.value.splice(oldIndex, 1)
+		// 		this.value.splice(newIndex, 0, item[0])
+		// 	}
+		// })
 	},
 	updated() {
 		// console.log('新表格数据', this.dataList)
@@ -523,12 +527,19 @@ a {
 		.content-part3 {
 			width: 100%;
 			padding: 25px 35px 20px;
-			.hotConfig {
-				color: rgba(0, 0, 0, 0.847058823529412);
-				font-size: 14px;
-				font-weight: 650;
-				display: inline-block;
-				margin-right: 50px;
+			.content {
+				margin: 0 auto;
+				width: 100%;
+				padding-left: 100px;
+                padding-bottom: 50px;
+				.hotConfig {
+					color: rgba(0, 0, 0, 0.847058823529412);
+					font-size: 14px;
+					font-weight: 650;
+					display: inline-block;
+					margin-right: 50px;
+					margin-bottom: 10px;
+				}
 			}
 		}
 	}
