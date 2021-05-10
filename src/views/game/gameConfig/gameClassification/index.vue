@@ -1,370 +1,372 @@
 <template>
-	<div class="game-container report-container">
-		<div class="view-container dealer-container">
-			<div class="params">
-				<el-form
-					ref="form"
-					:inline="true"
-					:model="queryData"
-					label-width="85px"
-				>
-					<el-form-item label="分类顺序:">
-						<el-input
-							v-model="queryData.assortSortMin"
-							size="medium"
-							placeholder="最小数值"
-							style="width: 100px"
-							maxlength="5"
-							name="assortSortMin"
-							oninput="value=value.replace(/[^\d]/g,'')"
-							@blur="checkValue($event)"
-						></el-input>
-						-
-						<el-input
-							v-model="queryData.assortSortMax"
-							size="medium"
-							placeholder="最大数值"
-							style="width: 100px"
-							maxlength="5"
-							name="assortSortMax"
-							oninput="value=value.replace(/[^\d]/g,'')"
-							@blur="checkValue($event)"
-						></el-input>
-					</el-form-item>
-					<el-form-item label="分类名称:">
-						<el-input
-							v-model="queryData.assortName"
-							size="medium"
-							placeholder="请输入"
-							clearable
-							style="width: 180px"
-							maxlength="10"
-						></el-input>
-					</el-form-item>
-					<el-form-item label="显示状态:">
-						<el-select
-							v-model="queryData.assortStatus"
-							size="medium"
-							placeholder="默认选择全部"
-							clearable
-							multiple
-							style="width: 300px"
-						>
-							<el-option
-								v-for="item in assortStatusArr"
-								:key="item.code"
-								:label="item.description"
-								:value="item.code"
-							></el-option>
-						</el-select>
-					</el-form-item>
-					<el-form-item label="支持终端:">
-						<el-select
-							v-model="queryData.supportTerminal"
-							size="medium"
-							placeholder="默认选择全部"
-							clearable
-							multiple
-							style="width: 300px"
-						>
-							<el-option
-								v-for="item in terminalTypeArr"
-								:key="item.code"
-								:label="item.description"
-								:value="item.code"
-							></el-option>
-						</el-select>
-					</el-form-item>
-					<el-form-item
-						label="客户端分类显示:"
-						label-width="130px"
-						prop="clientDisplay"
-					>
-						<el-select
-							v-model="queryData.clientDisplay"
-							size="medium"
-							placeholder="全部"
-							clearable
-							style="width: 180px"
-						>
-							<el-option
-								v-for="item in gameDisplayArr"
-								:key="item.code"
-								:label="item.description"
-								:value="item.code"
-							></el-option>
-						</el-select>
-					</el-form-item>
-					<el-form-item>
-						<el-button
-							type="primary"
-							icon="el-icon-search"
-							:disabled="loading"
-							size="medium"
-							@click="search"
-						>
-							查询
-						</el-button>
-						<el-button
-							icon="el-icon-refresh-left"
-							:disabled="loading"
-							size="medium"
-							@click="reset"
-						>
-							重置
-						</el-button>
-						<el-button
-							type="warning"
-							icon="el-icon-folder-add"
-							size="medium"
-							@click="add"
-						>
-							创建
-						</el-button>
-					</el-form-item>
-				</el-form>
-			</div>
+	<div>
+        <div v-if="false" class="game-container report-container">
+            <div class="view-container dealer-container">
+                <div class="params">
+                    <el-form
+                        ref="form"
+                        :inline="true"
+                        :model="queryData"
+                        label-width="85px"
+                    >
+                        <el-form-item label="分类顺序:">
+                            <el-input
+                                v-model="queryData.assortSortMin"
+                                size="medium"
+                                placeholder="最小数值"
+                                style="width: 100px"
+                                maxlength="5"
+                                name="assortSortMin"
+                                oninput="value=value.replace(/[^\d]/g,'')"
+                                @blur="checkValue($event)"
+                            ></el-input>
+                            -
+                            <el-input
+                                v-model="queryData.assortSortMax"
+                                size="medium"
+                                placeholder="最大数值"
+                                style="width: 100px"
+                                maxlength="5"
+                                name="assortSortMax"
+                                oninput="value=value.replace(/[^\d]/g,'')"
+                                @blur="checkValue($event)"
+                            ></el-input>
+                        </el-form-item>
+                        <el-form-item label="分类名称:">
+                            <el-input
+                                v-model="queryData.assortName"
+                                size="medium"
+                                placeholder="请输入"
+                                clearable
+                                style="width: 180px"
+                                maxlength="10"
+                            ></el-input>
+                        </el-form-item>
+                        <el-form-item label="显示状态:">
+                            <el-select
+                                v-model="queryData.assortStatus"
+                                size="medium"
+                                placeholder="默认选择全部"
+                                clearable
+                                multiple
+                                style="width: 300px"
+                            >
+                                <el-option
+                                    v-for="item in assortStatusArr"
+                                    :key="item.code"
+                                    :label="item.description"
+                                    :value="item.code"
+                                ></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="支持终端:">
+                            <el-select
+                                v-model="queryData.supportTerminal"
+                                size="medium"
+                                placeholder="默认选择全部"
+                                clearable
+                                multiple
+                                style="width: 300px"
+                            >
+                                <el-option
+                                    v-for="item in terminalTypeArr"
+                                    :key="item.code"
+                                    :label="item.description"
+                                    :value="item.code"
+                                ></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item
+                            label="客户端分类显示:"
+                            label-width="130px"
+                            prop="clientDisplay"
+                        >
+                            <el-select
+                                v-model="queryData.clientDisplay"
+                                size="medium"
+                                placeholder="全部"
+                                clearable
+                                style="width: 180px"
+                            >
+                                <el-option
+                                    v-for="item in gameDisplayArr"
+                                    :key="item.code"
+                                    :label="item.description"
+                                    :value="item.code"
+                                ></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-button
+                                type="primary"
+                                icon="el-icon-search"
+                                :disabled="loading"
+                                size="medium"
+                                @click="search"
+                            >
+                                查询
+                            </el-button>
+                            <el-button
+                                icon="el-icon-refresh-left"
+                                :disabled="loading"
+                                size="medium"
+                                @click="reset"
+                            >
+                                重置
+                            </el-button>
+                            <el-button
+                                type="warning"
+                                icon="el-icon-folder-add"
+                                size="medium"
+                                @click="add"
+                            >
+                                创建
+                            </el-button>
+                        </el-form-item>
+                    </el-form>
+                </div>
 
-			<div class="content">
-				<el-table
-					v-loading="loading"
-					border
-					size="mini"
-					class="small-size-table"
-					:data="dataList"
-					style="width: 100%"
-					:header-cell-style="getRowClass"
-					@sort-change="_changeTableSort"
-				>
-					<el-table-column
-						prop="assortSort"
-						align="center"
-						label="分类顺序"
-						width="100px"
-						sortable="custom"
-					>
-						<template slot-scope="scope">
+                <div class="content">
+                    <el-table
+                        v-loading="loading"
+                        border
+                        size="mini"
+                        class="small-size-table"
+                        :data="dataList"
+                        style="width: 100%"
+                        :header-cell-style="getRowClass"
+                        @sort-change="_changeTableSort"
+                    >
+                        <el-table-column
+                            prop="assortSort"
+                            align="center"
+                            label="分类顺序"
+                            width="100px"
+                            sortable="custom"
+                        >
+                            <template slot-scope="scope">
 							<span v-if="!!scope.row.assortSort">
 								{{ scope.row.assortSort }}
 							</span>
-							<span v-else>-</span>
-						</template>
-					</el-table-column>
-					<el-table-column
-						prop="assortName"
-						align="center"
-						label="分类名称"
-						width="150px"
-					>
-						<template slot-scope="scope">
-							<Copy
-								v-if="!!scope.row.assortName"
-								:title="scope.row.assortName"
-								:copy="copy"
-							>
-								{{ scope.row.assortName }}
-							</Copy>
-							<span v-else>-</span>
-						</template>
-					</el-table-column>
-					<el-table-column
-						prop="assortStatus"
-						align="center"
-						label="使用状态"
-						width="110px"
-					>
-						<template slot-scope="scope">
-							<div v-if="scope.row.assortStatus * 1 === 1" class="normalRgba">
-								开启中
-							</div>
-							<div
-								v-else-if="scope.row.assortStatus * 1 === 0"
-								class="disableRgba"
-							>
-								已禁用
-							</div>
-							<div v-else>-</div>
-						</template>
-					</el-table-column>
-					<el-table-column
-						prop="clientDisplay"
-						align="center"
-						label="客户端分类显示"
-						width="150px"
-					>
-						<template slot-scope="scope">
-							<div v-if="scope.row.clientDisplay * 1 === 0">
-								显示
-							</div>
-							<div
-								v-else-if="scope.row.clientDisplay * 1 === 1"
-								class="disableRgba"
-							>
-								不显示
-							</div>
-							<div v-else>-</div>
-						</template>
-					</el-table-column>
-					<el-table-column
-						prop="supportTerminal"
-						align="center"
-						label="支持终端类型"
-						width="150px"
-					>
-						<template slot-scope="scope">
+                                <span v-else>-</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                            prop="assortName"
+                            align="center"
+                            label="分类名称"
+                            width="150px"
+                        >
+                            <template slot-scope="scope">
+                                <Copy
+                                    v-if="!!scope.row.assortName"
+                                    :title="scope.row.assortName"
+                                    :copy="copy"
+                                >
+                                    {{ scope.row.assortName }}
+                                </Copy>
+                                <span v-else>-</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                            prop="assortStatus"
+                            align="center"
+                            label="使用状态"
+                            width="110px"
+                        >
+                            <template slot-scope="scope">
+                                <div v-if="scope.row.assortStatus * 1 === 1" class="normalRgba">
+                                    开启中
+                                </div>
+                                <div
+                                    v-else-if="scope.row.assortStatus * 1 === 0"
+                                    class="disableRgba"
+                                >
+                                    已禁用
+                                </div>
+                                <div v-else>-</div>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                            prop="clientDisplay"
+                            align="center"
+                            label="客户端分类显示"
+                            width="150px"
+                        >
+                            <template slot-scope="scope">
+                                <div v-if="scope.row.clientDisplay * 1 === 0">
+                                    显示
+                                </div>
+                                <div
+                                    v-else-if="scope.row.clientDisplay * 1 === 1"
+                                    class="disableRgba"
+                                >
+                                    不显示
+                                </div>
+                                <div v-else>-</div>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                            prop="supportTerminal"
+                            align="center"
+                            label="支持终端类型"
+                            width="150px"
+                        >
+                            <template slot-scope="scope">
 							<span v-if="!!scope.row.supportTerminal">
 								{{ typeFilter(scope.row.supportTerminal, 'terminalnType') }}
 							</span>
-							<span v-else></span>
-						</template>
-					</el-table-column>
-					<el-table-column
-						prop="gameNumber"
-						align="center"
-						label="包含子游戏"
-						width="100px"
-					>
-						<template slot-scope="scope">
-							<div
-								class="blueColor decoration"
-								@click="lookGame(scope.row.gameNumber)"
-							>
-								{{ scope.row.gameNumber }}
-							</div>
-						</template>
-					</el-table-column>
-					<el-table-column
-						prop="remark"
-						align="center"
-						label="备注信息"
-						width="180px"
-					>
-						<template slot-scope="scope">
+                                <span v-else></span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                            prop="gameNumber"
+                            align="center"
+                            label="包含子游戏"
+                            width="100px"
+                        >
+                            <template slot-scope="scope">
+                                <div
+                                    class="blueColor decoration"
+                                    @click="lookGame(scope.row.gameNumber)"
+                                >
+                                    {{ scope.row.gameNumber }}
+                                </div>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                            prop="remark"
+                            align="center"
+                            label="备注信息"
+                            width="180px"
+                        >
+                            <template slot-scope="scope">
 							<span v-if="!!scope.row.remark">
 								{{ scope.row.remark }}
 							</span>
-							<span v-else>-</span>
-						</template>
-					</el-table-column>
-					<el-table-column
-						prop="createdBy"
-						align="center"
-						width="100px"
-						label="创建人"
-					>
-						<template slot-scope="scope">
+                                <span v-else>-</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                            prop="createdBy"
+                            align="center"
+                            width="100px"
+                            label="创建人"
+                        >
+                            <template slot-scope="scope">
 							<span v-if="!!scope.row.createdBy">
 								{{ scope.row.createdBy }}
 							</span>
-							<span v-else>-</span>
-						</template>
-					</el-table-column>
-					<el-table-column
-						prop="createdAt"
-						align="center"
-						label="创建时间"
-						width="180px"
-						sortable="custom"
-					>
-						<template slot-scope="scope">
+                                <span v-else>-</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                            prop="createdAt"
+                            align="center"
+                            label="创建时间"
+                            width="180px"
+                            sortable="custom"
+                        >
+                            <template slot-scope="scope">
 							<span v-if="!!scope.row.createdAt">
 								{{ scope.row.createdAt }}
 							</span>
-							<span v-else>-</span>
-						</template>
-					</el-table-column>
-					<el-table-column
-						prop="updatedBy"
-						align="center"
-						label="最近操作人"
-						width="100px"
-					>
-						<template slot-scope="scope">
+                                <span v-else>-</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                            prop="updatedBy"
+                            align="center"
+                            label="最近操作人"
+                            width="100px"
+                        >
+                            <template slot-scope="scope">
 							<span v-if="!!scope.row.updatedBy">
 								{{ scope.row.updatedBy }}
 							</span>
-							<span v-else>-</span>
-						</template>
-					</el-table-column>
-					<el-table-column
-						prop="updatedAt"
-						align="center"
-						label="最近操作时间"
-						width="180px"
-						sortable="custom"
-					>
-						<template slot-scope="scope">
+                                <span v-else>-</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                            prop="updatedAt"
+                            align="center"
+                            label="最近操作时间"
+                            width="180px"
+                            sortable="custom"
+                        >
+                            <template slot-scope="scope">
 							<span v-if="!!scope.row.updatedAt">
 								{{ scope.row.updatedAt }}
 							</span>
-							<span v-else>-</span>
-						</template>
-					</el-table-column>
-					<el-table-column align="center" label="操作" width="300px">
-						<template slot-scope="scope">
-							<el-button
-								type="danger"
-								icon="el-icon-delete"
-								size="medium"
-								@click="recycle"
-							>
-								禁用
-							</el-button>
-							<el-button type="warning" icon="el-icon-edit" size="medium">
-								编辑信息
-							</el-button>
-							<el-button
-								type="warning"
-								icon="el-icon-edit"
-								size="medium"
-								@click="deleteRow(scope.row)"
-							>
-								删除
-							</el-button>
-						</template>
-					</el-table-column>
-				</el-table>
-				<!-- 分页 -->
-				<el-pagination
-					v-show="!!dataList.length"
-					class="pageValue"
-					:current-page.sync="pageNum"
-					background
-					layout="total, sizes,prev, pager, next, jumper"
-					:page-size="pageSize"
-					:page-sizes="$store.getters.pageSizes"
-					:total="total"
-					@current-change="handleCurrentChange"
-					@size-change="handleSizeChange"
-				></el-pagination>
-			</div>
-		</div>
-		<el-dialog
-			title="分类游戏"
-			:visible.sync="dialogGameVisible"
-			:destroy-on-close="true"
-			width="480px"
-			class="rempadding"
-		>
-			<el-divider></el-divider>
-			<div class="contentBox disableColor">分类名称：热门游戏（1）</div>
-			<p class="headerBox">
-				<span>游戏名称</span>
-				<span>添加时间</span>
-			</p>
-			<div class="bodyBox">
-				<p>
-					<span>斗地主</span>
-					<span>2016-09-21 08:50:08</span>
-				</p>
-				<p>
-					<span>麻将</span>
-					<span>2016-10-21 08:50:08</span>
-				</p>
-			</div>
-		</el-dialog>
+                                <span v-else>-</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column align="center" label="操作" width="300px">
+                            <template slot-scope="scope">
+                                <el-button
+                                    type="danger"
+                                    icon="el-icon-delete"
+                                    size="medium"
+                                    @click="recycle"
+                                >
+                                    禁用
+                                </el-button>
+                                <el-button type="warning" icon="el-icon-edit" size="medium">
+                                    编辑信息
+                                </el-button>
+                                <el-button
+                                    type="warning"
+                                    icon="el-icon-edit"
+                                    size="medium"
+                                    @click="deleteRow(scope.row)"
+                                >
+                                    删除
+                                </el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                    <!-- 分页 -->
+                    <el-pagination
+                        v-show="!!dataList.length"
+                        class="pageValue"
+                        :current-page.sync="pageNum"
+                        background
+                        layout="total, sizes,prev, pager, next, jumper"
+                        :page-size="pageSize"
+                        :page-sizes="$store.getters.pageSizes"
+                        :total="total"
+                        @current-change="handleCurrentChange"
+                        @size-change="handleSizeChange"
+                    ></el-pagination>
+                </div>
+            </div>
+            <el-dialog
+                title="分类游戏"
+                :visible.sync="dialogGameVisible"
+                :destroy-on-close="true"
+                width="480px"
+                class="rempadding"
+            >
+                <el-divider></el-divider>
+                <div class="contentBox disableColor">分类名称：热门游戏（1）</div>
+                <p class="headerBox">
+                    <span>游戏名称</span>
+                    <span>添加时间</span>
+                </p>
+                <div class="bodyBox">
+                    <p>
+                        <span>斗地主</span>
+                        <span>2016-09-21 08:50:08</span>
+                    </p>
+                    <p>
+                        <span>麻将</span>
+                        <span>2016-10-21 08:50:08</span>
+                    </p>
+                </div>
+            </el-dialog>
+        </div>
         <createPage></createPage>
-	</div>
+    </div>
 </template>
 
 <script>

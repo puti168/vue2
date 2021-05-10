@@ -11,14 +11,14 @@
 				<p class="part-title">配置信息</p>
 				<el-form
 					ref="form"
-					:model="form"
+					:model="queryData"
 					:inline="true"
 					label-width="100px"
 					class="form-content"
 				>
 					<el-form-item label="历史游戏上限:">
 						<el-input
-							v-model="form.historyGameLimit"
+							v-model="queryData.historyGameLimit"
 							size="medium"
 							minlength="4"
 							maxlength="11"
@@ -30,7 +30,7 @@
 					</el-form-item>
 					<el-form-item label="热门搜索上限:">
 						<el-input
-							v-model="form.hotSearch"
+							v-model="queryData.hotSearch"
 							size="medium"
 							minlength="4"
 							maxlength="11"
@@ -185,7 +185,7 @@ export default {
 	data() {
 		return {
 			loading: false,
-			form: {
+            queryData: {
 				historyGameLimit: undefined,
 				hotSearch: undefined
 			},

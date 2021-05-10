@@ -1,6 +1,6 @@
 import router from './router'
 import store from './store'
-import { Message } from 'element-ui'
+// import { Message } from 'element-ui'
 import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css' // progress bar style
 import { getToken } from '@/utils/auth' // get token from cookie
@@ -57,32 +57,23 @@ const ifVersionCorrect = async (to, from, next) => {
 			console.log(addRoutes)
 			if (!addRoutes.length) {
 				const roles = await store.dispatch('user/getRoles')
-				try {
-					if (roles === '无效权限') {
-						await store.dispatch('user/resetToken')
-						next(`/login?redirect=nopermission`)
-						NProgress.done()
-					} else {
-						const accessRoutes = await store.dispatch(
-							'permission/generateRoutes',
-							roles
-						)
-						router.addRoutes(accessRoutes)
-						next({ ...to, replace: true })
-					}
-				} catch (e) {
-					Message.error(e || 'roles获取失败')
-				}
-			} else {
-				try {
-					// await store.dispatch('user/getInfo')
-					next()
-				} catch (error) {
+				console.log('重新请求')
+				if (roles === '无效权限') {
 					await store.dispatch('user/resetToken')
-					Message.error(error || 'Has Error')
-					next(`/login?redirect=${to.path}`)
+					next(`/login?redirect=nopermission`)
 					NProgress.done()
+				} else {
+					const accessRoutes = await store.dispatch(
+						'permission/generateRoutes',
+						roles
+					)
+					router.addRoutes(accessRoutes)
+					next({ ...to, replace: true })
 				}
+				return
+			} else {
+				console.log('不重新请求')
+				next()
 			}
 		}
 	} else {
