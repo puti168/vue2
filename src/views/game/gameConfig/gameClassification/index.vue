@@ -363,6 +363,7 @@
 				</p>
 			</div>
 		</el-dialog>
+        <createPage></createPage>
 	</div>
 </template>
 
@@ -370,8 +371,10 @@
 import list from '@/mixins/list'
 // import { UTable } from 'umy-ui'
 import { routerNames } from '@/utils/consts'
+import createPage from './components/createPage'
 export default {
 	name: routerNames.gameClassification,
+	components: { createPage },
 	mixins: [list],
 	data() {
 		return {
@@ -479,7 +482,6 @@ export default {
 			}
 			this.loadData()
 		},
-
 		checkValue(e) {
 			const { name, value } = e.target
 			switch (name) {
