@@ -4,7 +4,7 @@
 			<div class="form-header">
 				<span>页签创建</span>
 				<span>
-					<el-button type="info">返回</el-button>
+					<el-button type="info" @click="back">返回</el-button>
 					<el-button type="success">保存</el-button>
 				</span>
 			</div>
@@ -219,6 +219,9 @@ export default {
 		// console.log('新表格数据', this.dataList)
 	},
 	methods: {
+	    back() {
+	        this.$emit('back')
+        },
 		handleWHLeftChange(key, key1) {
 			const _this = this
 			console.log(_this.hasCheckedWHLeftData)
