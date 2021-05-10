@@ -175,12 +175,12 @@ const actions = {
 						redirect: rootRoute.path
 					})
 				}
-				parentRoutes.push({
-					path: '*',
-					redirect: '/404',
-					hidden: true
-				})
 			}
+			parentRoutes.push({
+				path: '*',
+				redirect: '/404',
+				hidden: true
+			})
 			// 前端写死路由
 			parentRoutes.forEach((item) => {
 				if (item.name === '会员') {
