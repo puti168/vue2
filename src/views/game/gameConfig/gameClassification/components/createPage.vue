@@ -21,9 +21,7 @@
 						<el-input
 							v-model="queryData.historyGameLimit"
 							size="medium"
-							minlength="4"
-							maxlength="11"
-							oninput="value=value.replace(/(^\s*)|(\s*$)/g ,'')"
+							maxlength="10"
 							placeholder="请输入"
 							clearable
 							style="width: 180px"
