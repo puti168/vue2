@@ -74,12 +74,18 @@ const actions = {
 							checked: false
 						})
 						setTimeout(() => {
-							parentRoutes.forEach(data => {
-								if (data.id === store.state.tagsView.visitedViews[1].matched[0].path.substr(1)) {
+							parentRoutes.forEach((data) => {
+								if (
+									data.id ===
+									store.state.tagsView.visitedViews[1].matched[0].path.substr(1)
+								) {
 									data.checked = true
 								}
 							})
-							store.dispatch('permission/setNowroute', store.state.tagsView.visitedViews[1].matched[0].path.substr(1))
+							store.dispatch(
+								'permission/setNowroute',
+								store.state.tagsView.visitedViews[1].matched[0].path.substr(1)
+							)
 						}, 200)
 					} else if (element.level === 2) {
 						// 二级菜单
@@ -165,7 +171,8 @@ const actions = {
 				if (rootRoute.children && rootRoute.children.length) {
 					rootRoutes.push({
 						path: '/',
-						redirect: rootRoute.children && rootRoute.children[0].children[0].path
+						redirect:
+							rootRoute.children && rootRoute.children[0].children[0].path
 					})
 				} else {
 					rootRoutes.push({
@@ -175,22 +182,96 @@ const actions = {
 				}
 			}
 			// 前端写死路由
-			parentRoutes.forEach(item => {
+			parentRoutes.forEach((item) => {
 				if (item.name === '会员') {
-					item.children.forEach(data => {
+					item.children.forEach((data) => {
 						if (data.name === '会员审核') {
 							data.children.push({
 								path: '/member/memberReview/memberChangeReview',
 								name: 'memberChangeReview',
-								component: () => import(`@/views/member/memberReview/memberChangeReview/index`),
+								component: () =>
+									import(`@/views/member/memberReview/memberChangeReview/index`),
 								meta: { title: '会员账户修改审核详情', icon: 'bb_reportDaily' },
 								hidden: true
 							})
 							data.children.push({
 								path: '/member/memberReview/addMemberReview',
 								name: 'addMemberReview',
-								component: () => import(`@/views/member/memberReview/addMemberReview/index`),
+								component: () =>
+									import(`@/views/member/memberReview/addMemberReview/index`),
 								meta: { title: '新增会员审核详情', icon: 'bb_reportDaily' },
+								hidden: true
+							})
+						}
+					})
+				}
+				if (item.name === '游戏') {
+					item.children.forEach((data) => {
+						if (data.name === '游戏配置') {
+							data.children.push({
+								path: '/game/gameConfig/gameManagementEdit',
+								name: 'gameManagementEdit',
+								component: () =>
+									import(`@/views/game/gameConfig/gameManagementEdit/index`),
+								meta: { title: '游戏管理创建编辑' },
+								hidden: true
+							})
+						}
+						if (data.name === '游戏注单') {
+							data.children.push({
+								path: '/game/gameBetslip/zrDetails/index',
+								name: 'zrDetails',
+								component: () =>
+									import(`@/views/game/gameBetslip/zrDetails/index`),
+								meta: { title: '真人注单详情', icon: 'bb_reportDaily' },
+								hidden: true
+							})
+							data.children.push({
+								path: '/game/gameBetslip/qpDetails/index',
+								name: 'qpDetails',
+								component: () =>
+									import(`@/views/game/gameBetslip/qpDetails/index`),
+								meta: { title: '棋牌注单详情', icon: 'bb_reportDaily' },
+								hidden: true
+							})
+							data.children.push({
+								path: '/game/gameBetslip/tyDetails/index',
+								name: 'tyDetails',
+								component: () =>
+									import(`@/views/game/gameBetslip/tyDetails/index`),
+								meta: { title: '体育注单详情', icon: 'bb_reportDaily' },
+								hidden: true
+							})
+							data.children.push({
+								path: '/game/gameBetslip/djDetails/index',
+								name: 'djDetails',
+								component: () =>
+									import(`@/views/game/gameBetslip/djDetails/index`),
+								meta: { title: '电竞注单详情', icon: 'bb_reportDaily' },
+								hidden: true
+							})
+							data.children.push({
+								path: '/game/gameBetslip/cpDetails/index',
+								name: 'cpDetails',
+								component: () =>
+									import(`@/views/game/gameBetslip/cpDetails/index`),
+								meta: { title: '彩票注单详情', icon: 'bb_reportDaily' },
+								hidden: true
+							})
+							data.children.push({
+								path: '/game/gameBetslip/dyDetails/index',
+								name: 'dyDetails',
+								component: () =>
+									import(`@/views/game/gameBetslip/dyDetails/index`),
+								meta: { title: '电游注单详情', icon: 'bb_reportDaily' },
+								hidden: true
+							})
+							data.children.push({
+								path: '/game/gameBetslip/lhjDetails/index',
+								name: 'lhjDetails',
+								component: () =>
+									import(`@/views/game/gameBetslip/lhjDetails/index`),
+								meta: { title: '老虎机注单详情', icon: 'bb_reportDaily' },
 								hidden: true
 							})
 						}

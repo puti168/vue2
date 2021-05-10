@@ -54,6 +54,7 @@ const ifVersionCorrect = async (to, from, next) => {
 				// 请求数据字典
 				await store.dispatch('user/getDics')
 			}
+			console.log(addRoutes)
 			if (!addRoutes.length) {
 				const roles = await store.dispatch('user/getRoles')
 				try {

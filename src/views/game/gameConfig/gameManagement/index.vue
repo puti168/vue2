@@ -123,7 +123,7 @@
 							icon="el-icon-folder"
 							:disabled="loading"
 							size="medium"
-							@click="dialogFormVisible = true"
+							@click="openEdit()"
 						>
 							创建
 						</el-button>
@@ -280,7 +280,7 @@
 								icon="el-icon-edit"
 								:disabled="loading"
 								size="medium"
-								@click="edit(scope.row)"
+								@click="openEdit(scope.row)"
 							>
 								编辑信息
 							</el-button>
@@ -431,6 +431,18 @@ export default {
 		lookGame(val) {
 			this.dialogGameVisible = true
 			console.log(val)
+		},
+		openEdit(row) {
+			if (row) {
+				this.$router.push({
+					path: '/game/gameConfig/gameManagementEdit',
+					query: { id: row.id, userId: row.userId }
+				})
+			} else {
+				this.$router.push({
+					path: '/game/gameConfig/gameManagementEdit'
+				})
+			}
 		},
 		reset() {
 			this.queryData = {}

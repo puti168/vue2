@@ -280,17 +280,20 @@
           :header-cell-style="getRowClass"
           @sort-change="_changeTableSort"
         >
-          <el-table-column
-            prop="vipSerialNum"
-            align="center"
-            label="搜索时间"
-            sortable="custom"
-          ></el-table-column>
-          <el-table-column
-            prop="bankName"
-            align="center"
-            label="搜索内容"
-          ></el-table-column>
+          <el-table-column prop="vipSerialNum" align="center">
+            <template slot="header">
+              注单号
+              <br />
+              三方订单号
+            </template>
+          </el-table-column>
+          <el-table-column prop="bankName" align="center">
+            <template slot="header">
+              游戏平台
+              <br />
+              游戏类型
+            </template>
+          </el-table-column>
           <el-table-column prop="createDt" align="center" label="会员账号">
             <template slot-scope="scope">
               <Copy v-if="!!scope.row.createDt" :title="scope.row.createDt" :copy="copy">
@@ -304,6 +307,74 @@
             align="center"
             label="账号类型"
           ></el-table-column>
+          <el-table-column prop="createDt" align="center" label="上级代理">
+            <template slot-scope="scope">
+              <Copy v-if="!!scope.row.createDt" :title="scope.row.createDt" :copy="copy">
+                {{ scope.row.createDt }}
+              </Copy>
+              <span v-else>-</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="createDt" align="center" label="游戏账号">
+            <template slot-scope="scope">
+              <Copy v-if="!!scope.row.createDt" :title="scope.row.createDt" :copy="copy">
+                {{ scope.row.createDt }}
+              </Copy>
+              <span v-else>-</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="" align="center" label="注单状态">
+            <template slot-scope="">
+              <span class="normalRgba">已结算</span>
+              <span class="deleteRgba">未结算</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            prop="updateDt"
+            align="center"
+            label="投注金额"
+            sortable="custom"
+          ></el-table-column>
+          <el-table-column
+            prop="updateDt"
+            align="center"
+            label="会员输赢"
+            sortable="custom"
+          ></el-table-column>
+          <el-table-column
+            prop="updateDt"
+            align="center"
+            label="投注时间"
+            sortable="custom"
+          ></el-table-column>
+          <el-table-column
+            prop="updateDt"
+            align="center"
+            label="结算时间"
+            sortable="custom"
+          ></el-table-column>
+          <el-table-column
+            prop="updateDt"
+            align="center"
+            label="投注IP"
+          ></el-table-column>
+          <el-table-column
+            prop="updateDt"
+            align="center"
+            label="投注终端"
+          ></el-table-column>
+          <el-table-column prop="operation" align="center" label="操作">
+            <template slot-scope="scope">
+              <el-button
+                type="primary"
+                icon="el-icon-view"
+                size="medium"
+                @click="lookMsg(scope.row)"
+              >
+                查看详情
+              </el-button>
+            </template>
+          </el-table-column>
         </el-table>
         <!-- 分页 -->
         <el-pagination
@@ -330,7 +401,7 @@ const startTime = dayjs().startOf('day').valueOf()
 const endTime = dayjs().endOf('day').valueOf()
 
 export default {
-  name: routerNames.gamePlatform,
+  name: routerNames.gameBetslipTable,
   components: {},
   mixins: [list],
   data() {
@@ -362,7 +433,8 @@ export default {
         bankCode: '165416416464654',
         bankName: '中国银行',
         createDt: '2021-02-13 20:28:54',
-        updateDt: '2021-02-13 20:28:54'
+        updateDt: '2021-02-13 20:28:54',
+        index: i
       }
     }
   },
@@ -383,6 +455,88 @@ export default {
     },
     reset() {
       this.queryData = {}
+    },
+    lookMsg(val) {
+      console.log(val)
+      switch (val.index) {
+        case 0:
+          this.$store.dispatch('tagsView/delView', {
+            name: routerNames.zrDetails
+          })
+          this.$nextTick(() => {
+            this.$router.push({
+              path: '/game/gameBetslip/zrDetails/index',
+              query: { id: val }
+            })
+          })
+          break
+        case 1:
+          this.$store.dispatch('tagsView/delView', {
+            name: routerNames.qpDetails
+          })
+          this.$nextTick(() => {
+            this.$router.push({
+              path: '/game/gameBetslip/qpDetails/index'
+              // query: { id: row.id, userId: row.userId, type: type }
+            })
+          })
+          break
+        case 2:
+          this.$store.dispatch('tagsView/delView', {
+            name: routerNames.tyDetails
+          })
+          this.$nextTick(() => {
+            this.$router.push({
+              path: '/game/gameBetslip/tyDetails/index'
+              // query: { id: row.id, userId: row.userId, type: type }
+            })
+          })
+          break
+        case 3:
+          this.$store.dispatch('tagsView/delView', {
+            name: routerNames.djDetails
+          })
+          this.$nextTick(() => {
+            this.$router.push({
+              path: '/game/gameBetslip/djDetails/index'
+              // query: { id: row.id, userId: row.userId, type: type }
+            })
+          })
+          break
+        case 4:
+          this.$store.dispatch('tagsView/delView', {
+            name: routerNames.cpDetails
+          })
+          this.$nextTick(() => {
+            this.$router.push({
+              path: '/game/gameBetslip/cpDetails/index'
+              // query: { id: row.id, userId: row.userId, type: type }
+            })
+          })
+          break
+        case 5:
+          this.$store.dispatch('tagsView/delView', {
+            name: routerNames.dyDetails
+          })
+          this.$nextTick(() => {
+            this.$router.push({
+              path: '/game/gameBetslip/dyDetails/index'
+              // query: { id: row.id, userId: row.userId, type: type }
+            })
+          })
+          break
+        case 6:
+          this.$store.dispatch('tagsView/delView', {
+            name: routerNames.lhjDetails
+          })
+          this.$nextTick(() => {
+            this.$router.push({
+              path: '/game/gameBetslip/lhjDetails/index'
+              // query: { id: row.id, userId: row.userId, type: type }
+            })
+          })
+          break
+      }
     },
     _changeTableSort({ column, prop, order }) {
       if (prop === 'vipSerialNum') {
