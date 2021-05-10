@@ -68,33 +68,46 @@
 							style="width: 180px"
 						></el-input>
 					</el-form-item>
-                    <el-form-item
-                        label="客户端分类显示:"
-                        label-width="130px"
-                        prop="clientDisplay"
-                    >
-                        <el-select
-                            v-model="queryData.clientDisplay"
-                            size="medium"
-                            placeholder="全部"
-                            clearable
-                            style="width: 180px"
-                        >
-                            <el-option
-                                v-for="item in gameDisplayArr"
-                                :key="item.code"
-                                :label="item.description"
-                                :value="item.code"
-                            ></el-option>
-                        </el-select>
-                    </el-form-item>
+					<el-form-item
+						label="客户端分类显示:"
+						label-width="130px"
+						prop="clientDisplay"
+					>
+						<el-select
+							v-model="queryData.clientDisplay"
+							size="medium"
+							placeholder="全部"
+							clearable
+							style="width: 180px"
+						>
+							<el-option
+								v-for="item in gameDisplayArr"
+								:key="item.code"
+								:label="item.description"
+								:value="item.code"
+							></el-option>
+						</el-select>
+					</el-form-item>
 				</el-form>
 			</div>
 			<div class="content-part3">
-				<div class="part-title">
-					<span class="hotConfig">热门搜索配置</span>
-				</div>
 				<div class="content">
+					<p class="hotConfig">分类包含游戏</p>
+					<div class="demo">
+						<el-transfer
+							v-model="value"
+							filterable
+							:data="data"
+							:filter-method="filterMethod"
+							:target-order="'push'"
+							:titles="['左边数据', '右边数据']"
+							:props="{ key: 'id', label: 'label' }"
+							:left-default-checked="hasCheckedWHLeftData"
+							:right-default-checked="hasCheckedWHRightData"
+							@left-check-change="handleWHLeftChange"
+							@right-check-change="handleWHRightChange"
+						></el-transfer>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -105,28 +118,53 @@
 import list from '@/mixins/list'
 import Sortable from 'sortablejs'
 
+const generateData = () => {
+	const data = []
+	for (let i = 1; i <= 30; i++) {
+		data.push({
+			id: i,
+			label: `备选项 ${i}`
+		})
+	}
+	return data
+}
+
 export default {
 	name: 'CreatePage',
 	mixins: [list],
 	data() {
 		return {
+			filterMethod(query, item) {
+				const regStr = query.replace(/\*/g, '.*')
+				const reg = new RegExp(regStr)
+				return reg.test(item.label)
+			},
 			loading: false,
 			queryData: {
 				historyGameLimit: undefined,
 				hotSearch: undefined,
 				supportTerminal: undefined,
-                clientDisplay: undefined
+				clientDisplay: undefined
 			},
-			dataList: []
+			dataList: [],
+			data: generateData(),
+			value: [4, 2, 1],
+			shiftKey: false,
+			firstWHLeftLocation: -1, // 数据左边起始值
+			lastWHLeftLocation: -1, // 数据左边终止值
+			hasCheckedWHLeftData: [], // 数据左边选中的数据
+			firstWHRightLocation: -1, // 数据右边起始值
+			lastWHRightLocation: -1, // 数据右边终止值
+			hasCheckedWHRightData: [] // 数据右边选中的数据
 		}
 	},
 	computed: {
 		terminalTypeArr() {
 			return [...this.globalDics.terminalnType]
 		},
-        gameDisplayArr() {
-            return [...this.globalDics.gameDisplayType]
-        }
+		gameDisplayArr() {
+			return [...this.globalDics.gameDisplayType]
+		}
 	},
 	mounted() {
 		document.body.ondrop = function(event) {
@@ -134,23 +172,151 @@ export default {
 			event.stopPropagation()
 		}
 
-		for (let i = 0; i < 5; i++) {
-			this.dataList[i] = {
-				bankCode: '165416416464654',
-				bankName: '中国银行',
-				createDt: '2021-02-13 20:28:54',
-				updateDt: '2021-02-13 20:28:54',
-				vipSerialNum: '115',
-				id: i + 100
+		window.addEventListener('keydown', (e) => {
+			if (e.keyCode === 16 && e.shiftKey) {
+				this.shiftKey = true
 			}
-		}
-
-		this.columnDrop()
+		})
+		window.addEventListener('keyup', (e) => {
+			this.shiftKey = false
+		})
+		const el = document
+			.querySelector('.el-transfer')
+			.querySelectorAll('.el-checkbox-group')[1]
+		new Sortable(el, {
+			forceFallback: false,
+			onUpdate: (event) => {
+				const box = this.$el
+					.querySelector('.el-transfer')
+					.querySelectorAll('.el-checkbox-group')[1]
+				const nums = this.$el
+					.querySelector('.el-transfer')
+					.querySelectorAll('.el-checkbox-group')[1].childNodes.length
+				console.log(nums, event.newIndex)
+				if (event.newIndex >= nums) {
+					return
+				}
+				const newIndex = event.newIndex
+				const oldIndex = event.oldIndex
+				const $label = box.children[newIndex]
+				const $oldLabel = box.children[oldIndex]
+				box.removeChild($label)
+				if (newIndex < oldIndex) {
+					box.insertBefore($label, $oldLabel)
+				} else {
+					box.insertBefore($label, $oldLabel.nextSibling)
+				}
+				const item = this.value.splice(oldIndex, 1)
+				this.value.splice(newIndex, 0, item[0])
+			}
+		})
 	},
 	updated() {
-		console.log('新表格数据', this.dataList)
+		// console.log('新表格数据', this.dataList)
 	},
 	methods: {
+		handleWHLeftChange(key, key1) {
+			const _this = this
+			console.log(_this.hasCheckedWHLeftData)
+			_this.hasCheckedWHLeftData = _this.commonChangeFuc(
+				key,
+				key1,
+				_this.hasCheckedWHLeftData,
+				_this.firstWHLeftLocation,
+				_this.lastWHLeftLocation,
+				_this.data,
+				'id'
+			)
+			console.log(_this.hasCheckedWHLeftData)
+		},
+		handleWHRightChange(key, key1) {
+			var _this = this
+			console.log(_this.hasCheckedWHRightData)
+			_this.hasCheckedWHRightData = _this.commonChangeFuc(
+				key,
+				key1,
+				_this.hasCheckedWHRightData,
+				_this.firstWHRightLocation,
+				_this.lastWHRightLocation,
+				_this.value,
+				false
+			)
+			console.log(_this.hasCheckedWHRightData)
+		},
+		commonChangeFuc(
+			key,
+			key1,
+			hasCheckedData,
+			firstLocation,
+			lastLocation,
+			arrList,
+			value
+		) {
+			let k
+			const _this = this
+			let cFlag = false // 取消勾选
+			// debugger
+			for (var i = 0; i < key.length; i++) {
+				if (key[i] === key1[0]) {
+					cFlag = true // 选中
+				}
+			}
+			if (cFlag) {
+				if (key.length === 1) {
+					firstLocation = 0
+					hasCheckedData.push(key[0])
+				} else if (key.length > 1) {
+					// eslint-disable-next-line no-unused-vars
+					const arr = []
+					// 当前有选中数据 并且 按住shift
+					if (_this.shiftKey) {
+						// if (isRight) {
+						for (let i = 0; i < arrList.length; i++) {
+							const item = value ? arrList[i][value] : arrList[i]
+							if (item === key[key.length - 2]) {
+								firstLocation = i
+							}
+							if (item === key1[0]) {
+								lastLocation = i
+							}
+						}
+						if (firstLocation !== -1 && lastLocation !== -1) {
+							if (firstLocation < lastLocation) {
+								for (k = 0; k < arrList.length; k++) {
+									const item = value ? arrList[k][value] : arrList[k]
+
+									if (k >= firstLocation && k <= lastLocation) {
+										hasCheckedData.push(item)
+									}
+								}
+							} else if (firstLocation > lastLocation) {
+								for (k = 0; k < arrList.length; k++) {
+									if (k >= lastLocation && k <= firstLocation) {
+										// eslint-disable-next-line no-undef
+										hasCheckedData.push(item)
+									}
+								}
+							}
+						}
+					} else {
+						// 不再按shift
+						hasCheckedData.push(key1[0])
+					}
+				}
+			} else {
+				// 取消选中的
+				hasCheckedData = []
+				for (let i = 0; i < key.length; i++) {
+					if (key[i] !== key1[0]) {
+						hasCheckedData.push(key[i])
+					}
+				}
+			}
+			// 去重
+			hasCheckedData = new Set(hasCheckedData)
+			hasCheckedData = Array.from(hasCheckedData)
+			return hasCheckedData
+		},
 		add() {
 			this.loading = true
 			const params = {
@@ -229,22 +395,22 @@ export default {
 					// 	})
 				})
 				.catch(() => {})
-		},
+		}
 
 		// 列拖动
-		columnDrop() {
-			console.log('旧数据', this.dataList)
-			const wrapperTr = document.querySelector('.el-table__body-wrapper tbody')
-			const _this = this
-			this.sortable = Sortable.create(wrapperTr, {
-				animation: 180,
-				delay: 0,
-				onEnd: ({ newIndex, oldIndex }) => {
-					const currRow = _this.dataList.splice(oldIndex, 1)[0]
-					_this.dataList.splice(newIndex, 0, currRow)
-				}
-			})
-		}
+		// columnDrop() {
+		// 	console.log('旧数据', this.dataList)
+		// 	const wrapperTr = document.querySelector('.el-table__body-wrapper tbody')
+		// 	const _this = this
+		// 	this.sortable = Sortable.create(wrapperTr, {
+		// 		animation: 180,
+		// 		delay: 0,
+		// 		onEnd: ({ newIndex, oldIndex }) => {
+		// 			const currRow = _this.dataList.splice(oldIndex, 1)[0]
+		// 			_this.dataList.splice(newIndex, 0, currRow)
+		// 		}
+		// 	})
+		// }
 	}
 }
 </script>
@@ -261,6 +427,38 @@ export default {
 }
 /deep/ .el-button--info:hover {
 	background-color: #f7f7f7;
+}
+/deep/ .el-transfer__buttons {
+	/deep/ button {
+		display: block;
+		margin: 0;
+		&:first-child {
+			margin-bottom: 12px;
+		}
+	}
+}
+.demo {
+	text-align: left;
+}
+h3 {
+	margin: 40px 0 0;
+}
+ul {
+	list-style-type: none;
+	padding: 0;
+	text-align: left;
+	width: 300px;
+	height: 300px;
+	background-color: #42b983;
+	overflow: scroll;
+}
+li {
+	display: block;
+	margin: 20px 10px;
+	border: 1px solid #444;
+}
+a {
+	color: #42b983;
 }
 .gameCreatePage-container {
 	background-color: #f5f5f5;
