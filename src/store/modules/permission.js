@@ -159,11 +159,6 @@ const actions = {
 			parentRoutes = parentRoutes.filter((val) => {
 				return !val.children || (val.children && val.children.length)
 			})
-			parentRoutes.push({
-				path: '*',
-				redirect: '/404',
-				hidden: true
-			})
 			// 根路由跳转, 定义根路由
 			const rootRoutes = []
 			if (parentRoutes.length) {
@@ -181,6 +176,11 @@ const actions = {
 					})
 				}
 			}
+			parentRoutes.push({
+				path: '*',
+				redirect: '/404',
+				hidden: true
+			})
 			// 前端写死路由
 			parentRoutes.forEach((item) => {
 				if (item.name === '会员') {
