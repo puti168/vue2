@@ -118,6 +118,7 @@
 import list from '@/mixins/list'
 // import Sortable from 'sortablejs'
 import Transfer from '@/components/transfer'
+// import DragDrop from './demo'
 
 const generateData = () => {
 	const data = []
@@ -125,7 +126,7 @@ const generateData = () => {
 		data.push({
 			id: i,
 			label: `斗地主`,
-            status: '维护中'
+			status: '维护中'
 		})
 	}
 	return data
@@ -218,9 +219,9 @@ export default {
 		// console.log('新表格数据', this.dataList)
 	},
 	methods: {
-	    back() {
-	        this.$emit('back')
-        },
+		back() {
+			this.$emit('back')
+		},
 		handleWHLeftChange(key, key1) {
 			const _this = this
 			console.log(_this.hasCheckedWHLeftData)
@@ -445,7 +446,7 @@ export default {
 }
 .demo {
 	text-align: left;
-    height: 450px;
+	height: 450px;
 }
 h3 {
 	margin: 40px 0 0;
@@ -534,7 +535,7 @@ a {
 				margin: 0 auto;
 				width: 100%;
 				padding-left: 100px;
-                padding-bottom: 50px;
+				padding-bottom: 50px;
 				.hotConfig {
 					color: rgba(0, 0, 0, 0.847058823529412);
 					font-size: 14px;
