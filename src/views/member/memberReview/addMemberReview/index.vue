@@ -24,7 +24,7 @@
 						<div>上级代理: {{ list.parentProxyName }}</div>
 					</div>
 					<div class="review-flex">
-						<div>性别: {{ typeFilter(list.genderType, 'genderType') }}</div>
+						<div>性别: {{ typeFilter(list.gender, 'genderType') }}</div>
 						<div>VIP经验: {{ list.vipExperienceVal }}</div>
 						<div>邮箱: {{ list.email }}</div>
 						<div>姓名: {{ list.realName }}</div>
@@ -99,14 +99,7 @@ export default {
 			type: true
 		}
 	},
-	computed: {
-		accountType() {
-			return this.globalDics.accountType
-		},
-		genderType() {
-			return this.globalDics.genderType
-		}
-	},
+	computed: {},
 	created() {
 		if (this.$route.name === 'addMemberReview') {
 			this.getInfo()

@@ -1,401 +1,392 @@
 <template>
-	<div class="game-container report-container">
-		<div class="view-container dealer-container">
-			<div class="params">
-				<el-form
-					ref="form"
-					:inline="true"
-					:model="queryData"
-					label-width="85px"
-				>
-					<el-form-item label="分类顺序:">
-						<el-input
-							v-model="queryData.offLineDaysStart"
-							size="medium"
-							placeholder="最小数值"
-							style="width: 100px"
-							maxlength="5"
-							name="offLineDaysStart"
-							oninput="value=value.replace(/[^\d]/g,'')"
-							@blur="checkValue($event)"
-						></el-input>
-						-
-						<el-input
-							v-model="queryData.offLineDaysEnd"
-							size="medium"
-							placeholder="最大数值"
-							style="width: 100px"
-							maxlength="5"
-							name="offLineDaysEnd"
-							oninput="value=value.replace(/[^\d]/g,'')"
-							@blur="checkValue($event)"
-						></el-input>
-					</el-form-item>
-					<el-form-item label="分类名称:" prop="userName">
-						<el-input
-							v-model="queryData.userName"
-							size="medium"
-							placeholder="请输入"
-							clearable
-							style="width: 180px"
-							maxlength="10"
-						></el-input>
-					</el-form-item>
-					<el-form-item label="账号状态:">
-						<el-select
-							v-model="queryData.accountStatus"
-							size="medium"
-							placeholder="默认选择全部"
-							clearable
-							multiple
-							style="width: 300px"
-						>
-							<el-option
-								v-for="item in accountStatusArr"
-								:key="item.code"
-								:label="item.description"
-								:value="item.code"
-							></el-option>
-						</el-select>
-					</el-form-item>
-					<el-form-item label="支持终端:">
-						<el-select
-							v-model="queryData.deviceType"
-							size="medium"
-							placeholder="默认选择全部"
-							clearable
-							multiple
-							style="width: 300px"
-						>
-							<el-option
-								v-for="item in deviceTypeArr"
-								:key="item.code"
-								:label="item.description"
-								:value="item.code"
-							></el-option>
-						</el-select>
-					</el-form-item>
-					<el-form-item label="客户端分类显示:" label-width="130px">
-						<el-select
-							v-model="queryData.labelId"
-							size="medium"
-							placeholder="全部"
-							clearable
-							style="width: 180px"
-						>
-							<el-option
-								v-for="item in userLabel"
-								:key="item.labelId"
-								:label="item.labelName"
-								:value="item.labelId"
-							></el-option>
-						</el-select>
-					</el-form-item>
-					<el-form-item>
-						<el-button
-							type="primary"
-							icon="el-icon-search"
-							:disabled="loading"
-							size="medium"
-							@click="search"
-						>
-							查询
-						</el-button>
-						<el-button
-							icon="el-icon-refresh-left"
-							:disabled="loading"
-							size="medium"
-							@click="reset"
-						>
-							重置
-						</el-button>
-						<el-button
-							type="warning"
-							icon="el-icon-folder-add"
-							size="medium"
-							@click="exportExcel"
-						>
-							创建
-						</el-button>
-					</el-form-item>
-				</el-form>
-			</div>
-
-			<div class="content">
-				<el-table
-					v-loading="loading"
-					border
-					size="mini"
-					class="small-size-table"
-					:data="dataList"
-					style="width: 100%"
-					:header-cell-style="getRowClass"
-					@sort-change="_changeTableSort"
-				>
-					<el-table-column
-						prop="userName"
-						align="center"
-						label="分类顺序"
-						width="100px"
-						sortable="custom"
+	<transition name="fade-transform" mode="out-in">
+		<div v-if="!createPage" class="game-container report-container">
+			<div class="view-container dealer-container">
+				<div class="params">
+					<el-form
+						ref="form"
+						:inline="true"
+						:model="queryData"
+						label-width="85px"
 					>
-						<template slot-scope="scope">
-							<Copy
-								v-if="!!scope.row.userName"
-								:title="scope.row.userName"
-								:copy="copy"
-							>
-								{{ scope.row.userName }}
-							</Copy>
-							<span v-else>-</span>
-						</template>
-					</el-table-column>
-					<el-table-column
-						prop="realName"
-						align="center"
-						label="分类名称"
-						width="150px"
-					>
-						<template slot-scope="scope">
-							<Copy
-								v-if="!!scope.row.realName"
-								:title="scope.row.realName"
-								:copy="copy"
-							>
-								{{ scope.row.realName }}
-							</Copy>
-							<span v-else>-</span>
-						</template>
-					</el-table-column>
-					<el-table-column
-						prop="parentProxyName"
-						align="center"
-						label="使用状态"
-						width="110px"
-					>
-						<template slot-scope="scope">
-							<div v-if="scope.row.code === 1" class="normalRgba">开启中</div>
-							<div v-else class="disableRgba">已禁用</div>
-						</template>
-					</el-table-column>
-					<el-table-column
-						prop="accountType"
-						align="center"
-						label="客户端分类显示"
-						width="150px"
-					>
-						<template slot-scope="scope">
-							<span v-if="!!scope.row.accountType">
-								{{ typeFilter(scope.row.accountType, 'accountType') }}
-							</span>
-							<span v-else>-</span>
-						</template>
-					</el-table-column>
-					<el-table-column
-						prop="accountStatus"
-						align="center"
-						label="支持终端类型"
-						width="150px"
-					>
-						<template slot-scope="scope">
-							<span v-if="!!scope.row.accountStatus">
-								{{ typeFilter(scope.row.accountStatus, 'accountStatusType') }}
-							</span>
-							<span v-else></span>
-						</template>
-					</el-table-column>
-					<el-table-column
-						prop="vipSerialNum"
-						align="center"
-						label="包含子游戏"
-						width="100px"
-					>
-						<!--						<template slot-scope="scope">-->
-						<!--							<span-->
-						<!--								v-if="!!scope.row.vipSerialNum || scope.row.vipSerialNum === 0"-->
-						<!--							>-->
-						<!--								{{ scope.row.vipSerialNum }}-->
-						<!--							</span>-->
-						<!--							<span v-else>-</span>-->
-						<!--						</template>-->
-						<template slot-scope="scope">
-							<div
-								class="blueColor decoration"
-								@click="lookGame(scope.row.vipSerialNum)"
-							>
-								{{ scope.row.vipSerialNum }}
-							</div>
-						</template>
-					</el-table-column>
-					<el-table-column
-						prop="firstDepositTime"
-						align="center"
-						label="备注信息"
-						width="180px"
-					>
-						<template slot-scope="scope">
-							<span v-if="!!scope.row.firstDepositTime">
-								{{ scope.row.firstDepositTime }}
-							</span>
-							<span v-else>-</span>
-						</template>
-					</el-table-column>
-					<el-table-column
-						prop="firstDepositTime"
-						align="center"
-						width="100px"
-						label="创建人"
-					>
-						<template slot-scope="scope">
-							<span v-if="!!scope.row.firstDepositTime">
-								{{ scope.row.firstDepositTime }}
-							</span>
-							<span v-else>-</span>
-						</template>
-					</el-table-column>
-					<el-table-column
-						prop="lastLoginTime"
-						align="center"
-						label="创建时间"
-						width="180px"
-						sortable="custom"
-					>
-						<template slot-scope="scope">
-							<span v-if="!!scope.row.createDt">
-								{{ scope.row.createDt }}
-							</span>
-							<span v-else>-</span>
-						</template>
-					</el-table-column>
-					<el-table-column
-						prop="offLineDays"
-						align="center"
-						label="最近操作人"
-						width="100px"
-					>
-						<template slot-scope="scope">
-							<span
-								v-if="!!scope.row.offLineDays || scope.row.offLineDays === 0"
-							>
-								{{ scope.row.offLineDays }}
-							</span>
-							<span v-else>-</span>
-						</template>
-					</el-table-column>
-					<el-table-column
-						prop="lastLoginTime"
-						align="center"
-						label="最近操作时间"
-						width="180px"
-						sortable="custom"
-					>
-						<template slot-scope="scope">
-							<span v-if="!!scope.row.createDt">
-								{{ scope.row.createDt }}
-							</span>
-							<span v-else>-</span>
-						</template>
-					</el-table-column>
-					<el-table-column align="center" label="操作" width="300px">
-						<template slot-scope="scope">
-							<el-button
-								type="danger"
-								icon="el-icon-delete"
+						<el-form-item label="分类顺序:">
+							<el-input
+								v-model="queryData.assortSortMin"
 								size="medium"
-								@click="recycle"
+								placeholder="最小数值"
+								style="width: 100px"
+								maxlength="5"
+								name="assortSortMin"
+								oninput="value=value.replace(/[^\d]/g,'')"
+								@blur="checkValue($event)"
+							></el-input>
+							-
+							<el-input
+								v-model="queryData.assortSortMax"
+								size="medium"
+								placeholder="最大数值"
+								style="width: 100px"
+								maxlength="5"
+								name="assortSortMax"
+								oninput="value=value.replace(/[^\d]/g,'')"
+								@blur="checkValue($event)"
+							></el-input>
+						</el-form-item>
+						<el-form-item label="分类名称:">
+							<el-input
+								v-model="queryData.assortName"
+								size="medium"
+								placeholder="请输入"
+								clearable
+								style="width: 180px"
+								maxlength="10"
+							></el-input>
+						</el-form-item>
+						<el-form-item label="显示状态:">
+							<el-select
+								v-model="queryData.assortStatus"
+								size="medium"
+								placeholder="默认选择全部"
+								clearable
+								multiple
+								style="width: 300px"
 							>
-								禁用
+								<el-option
+									v-for="item in assortStatusArr"
+									:key="item.code"
+									:label="item.description"
+									:value="item.code"
+								></el-option>
+							</el-select>
+						</el-form-item>
+						<el-form-item label="支持终端:">
+							<el-select
+								v-model="queryData.supportTerminal"
+								size="medium"
+								placeholder="默认选择全部"
+								clearable
+								multiple
+								style="width: 300px"
+							>
+								<el-option
+									v-for="item in terminalTypeArr"
+									:key="item.code"
+									:label="item.description"
+									:value="item.code"
+								></el-option>
+							</el-select>
+						</el-form-item>
+						<el-form-item
+							label="客户端分类显示:"
+							label-width="130px"
+							prop="clientDisplay"
+						>
+							<el-select
+								v-model="queryData.clientDisplay"
+								size="medium"
+								placeholder="全部"
+								clearable
+								style="width: 180px"
+							>
+								<el-option
+									v-for="item in gameDisplayArr"
+									:key="item.code"
+									:label="item.description"
+									:value="item.code"
+								></el-option>
+							</el-select>
+						</el-form-item>
+						<el-form-item>
+							<el-button
+								type="primary"
+								icon="el-icon-search"
+								:disabled="loading"
+								size="medium"
+								@click="search"
+							>
+								查询
 							</el-button>
-							<el-button type="warning" icon="el-icon-edit" size="medium">
-								编辑信息
+							<el-button
+								icon="el-icon-refresh-left"
+								:disabled="loading"
+								size="medium"
+								@click="reset"
+							>
+								重置
 							</el-button>
 							<el-button
 								type="warning"
-								icon="el-icon-edit"
+								icon="el-icon-folder-add"
 								size="medium"
-								@click="deleteRow(scope.row)"
+								@click="add"
 							>
-								删除
+								创建
 							</el-button>
-						</template>
-					</el-table-column>
-				</el-table>
-				<!-- 分页 -->
-				<el-pagination
-					v-show="!!dataList.length"
-					class="pageValue"
-					:current-page.sync="pageNum"
-					background
-					layout="total, sizes,prev, pager, next, jumper"
-					:page-size="pageSize"
-					:page-sizes="$store.getters.pageSizes"
-					:total="total"
-					@current-change="handleCurrentChange"
-					@size-change="handleSizeChange"
-				></el-pagination>
+						</el-form-item>
+					</el-form>
+				</div>
+
+				<div class="content">
+					<el-table
+						v-loading="loading"
+						border
+						size="mini"
+						class="small-size-table"
+						:data="dataList"
+						style="width: 100%"
+						:header-cell-style="getRowClass"
+						@sort-change="_changeTableSort"
+					>
+						<el-table-column
+							prop="assortSort"
+							align="center"
+							label="分类顺序"
+							width="100px"
+							sortable="custom"
+						>
+							<template slot-scope="scope">
+								<span v-if="!!scope.row.assortSort">
+									{{ scope.row.assortSort }}
+								</span>
+								<span v-else>-</span>
+							</template>
+						</el-table-column>
+						<el-table-column
+							prop="assortName"
+							align="center"
+							label="分类名称"
+							width="150px"
+						>
+							<template slot-scope="scope">
+								<Copy
+									v-if="!!scope.row.assortName"
+									:title="scope.row.assortName"
+									:copy="copy"
+								>
+									{{ scope.row.assortName }}
+								</Copy>
+								<span v-else>-</span>
+							</template>
+						</el-table-column>
+						<el-table-column
+							prop="assortStatus"
+							align="center"
+							label="使用状态"
+							width="110px"
+						>
+							<template slot-scope="scope">
+								<div v-if="scope.row.assortStatus * 1 === 1" class="normalRgba">
+									开启中
+								</div>
+								<div
+									v-else-if="scope.row.assortStatus * 1 === 0"
+									class="disableRgba"
+								>
+									已禁用
+								</div>
+								<div v-else>-</div>
+							</template>
+						</el-table-column>
+						<el-table-column
+							prop="clientDisplay"
+							align="center"
+							label="客户端分类显示"
+							width="150px"
+						>
+							<template slot-scope="scope">
+								<div v-if="scope.row.clientDisplay * 1 === 0">
+									显示
+								</div>
+								<div
+									v-else-if="scope.row.clientDisplay * 1 === 1"
+									class="disableRgba"
+								>
+									不显示
+								</div>
+								<div v-else>-</div>
+							</template>
+						</el-table-column>
+						<el-table-column
+							prop="supportTerminal"
+							align="center"
+							label="支持终端类型"
+							width="150px"
+						>
+							<template slot-scope="scope">
+								<span v-if="!!scope.row.supportTerminal">
+									{{ typeFilter(scope.row.supportTerminal, 'terminalnType') }}
+								</span>
+								<span v-else></span>
+							</template>
+						</el-table-column>
+						<el-table-column
+							prop="gameNumber"
+							align="center"
+							label="包含子游戏"
+							width="100px"
+						>
+							<template slot-scope="scope">
+								<div
+									class="blueColor decoration"
+									@click="lookGame(scope.row.gameNumber)"
+								>
+									{{ scope.row.gameNumber }}
+								</div>
+							</template>
+						</el-table-column>
+						<el-table-column
+							prop="remark"
+							align="center"
+							label="备注信息"
+							width="180px"
+						>
+							<template slot-scope="scope">
+								<span v-if="!!scope.row.remark">
+									{{ scope.row.remark }}
+								</span>
+								<span v-else>-</span>
+							</template>
+						</el-table-column>
+						<el-table-column
+							prop="createdBy"
+							align="center"
+							width="100px"
+							label="创建人"
+						>
+							<template slot-scope="scope">
+								<span v-if="!!scope.row.createdBy">
+									{{ scope.row.createdBy }}
+								</span>
+								<span v-else>-</span>
+							</template>
+						</el-table-column>
+						<el-table-column
+							prop="createdAt"
+							align="center"
+							label="创建时间"
+							width="180px"
+							sortable="custom"
+						>
+							<template slot-scope="scope">
+								<span v-if="!!scope.row.createdAt">
+									{{ scope.row.createdAt }}
+								</span>
+								<span v-else>-</span>
+							</template>
+						</el-table-column>
+						<el-table-column
+							prop="updatedBy"
+							align="center"
+							label="最近操作人"
+							width="100px"
+						>
+							<template slot-scope="scope">
+								<span v-if="!!scope.row.updatedBy">
+									{{ scope.row.updatedBy }}
+								</span>
+								<span v-else>-</span>
+							</template>
+						</el-table-column>
+						<el-table-column
+							prop="updatedAt"
+							align="center"
+							label="最近操作时间"
+							width="180px"
+							sortable="custom"
+						>
+							<template slot-scope="scope">
+								<span v-if="!!scope.row.updatedAt">
+									{{ scope.row.updatedAt }}
+								</span>
+								<span v-else>-</span>
+							</template>
+						</el-table-column>
+						<el-table-column align="center" label="操作" width="300px">
+							<template slot-scope="scope">
+								<el-button
+									type="danger"
+									icon="el-icon-delete"
+									size="medium"
+									@click="recycle"
+								>
+									禁用
+								</el-button>
+								<el-button type="warning" icon="el-icon-edit" size="medium">
+									编辑信息
+								</el-button>
+								<el-button
+									type="warning"
+									icon="el-icon-edit"
+									size="medium"
+									@click="deleteRow(scope.row)"
+								>
+									删除
+								</el-button>
+							</template>
+						</el-table-column>
+					</el-table>
+					<!-- 分页 -->
+					<el-pagination
+						v-show="!!dataList.length"
+						class="pageValue"
+						:current-page.sync="pageNum"
+						background
+						layout="total, sizes,prev, pager, next, jumper"
+						:page-size="pageSize"
+						:page-sizes="$store.getters.pageSizes"
+						:total="total"
+						@current-change="handleCurrentChange"
+						@size-change="handleSizeChange"
+					></el-pagination>
+				</div>
 			</div>
+			<el-dialog
+				title="分类游戏"
+				:visible.sync="dialogGameVisible"
+				:destroy-on-close="true"
+				width="480px"
+				class="rempadding"
+			>
+				<el-divider></el-divider>
+				<div class="contentBox disableColor">分类名称：热门游戏（1）</div>
+				<p class="headerBox">
+					<span>游戏名称</span>
+					<span>添加时间</span>
+				</p>
+				<div class="bodyBox">
+					<p>
+						<span>斗地主</span>
+						<span>2016-09-21 08:50:08</span>
+					</p>
+					<p>
+						<span>麻将</span>
+						<span>2016-10-21 08:50:08</span>
+					</p>
+				</div>
+			</el-dialog>
 		</div>
-		<el-dialog
-			title="分类游戏"
-			:visible.sync="dialogGameVisible"
-			:destroy-on-close="true"
-			width="480px"
-			class="rempadding"
-		>
-			<el-divider></el-divider>
-			<div class="contentBox disableColor">分类名称：热门游戏（1）</div>
-			<p class="headerBox">
-				<span>游戏名称</span>
-				<span>添加时间</span>
-			</p>
-			<div class="bodyBox">
-				<p>
-					<span>斗地主</span>
-					<span>2016-09-21 08:50:08</span>
-				</p>
-				<p>
-					<span>麻将</span>
-					<span>2016-10-21 08:50:08</span>
-				</p>
-			</div>
-		</el-dialog>
-	</div>
+		<createPage v-else @back="back"></createPage>
+	</transition>
 </template>
 
 <script>
 import list from '@/mixins/list'
-import dayjs from 'dayjs'
 // import { UTable } from 'umy-ui'
 import { routerNames } from '@/utils/consts'
-const start = dayjs()
-	.startOf('day')
-	.valueOf()
-const end = dayjs()
-	.endOf('day')
-	.valueOf()
+import createPage from './components/createPage'
 export default {
-	name: routerNames.memberList,
+	name: routerNames.gameClassification,
+	components: { createPage },
 	mixins: [list],
 	data() {
 		return {
 			queryData: {
-				registerTime: [start, end],
-				userName: undefined,
-				realName: undefined,
-				accountStatus: [],
-				windControlId: undefined,
-				offLineDaysStart: undefined,
-				offLineDaysEnd: undefined,
-				lastLoginTime: [start, end],
-				vipSerialNumMax: undefined,
-				vipSerialNumMin: undefined,
-				accountType: [],
-				deviceType: [],
-				firstDepositAmountMin: undefined,
-				firstDepositAmountMax: undefined,
-				firstSaveTime: [],
-				labelId: undefined,
-				parentProxyName: undefined,
+				assortSortMin: undefined,
+				assortSortMax: undefined,
+				assortName: undefined,
+				assortStatus: undefined,
+				supportTerminal: undefined,
+				clientDisplay: undefined,
 				orderKey: undefined,
 				orderType: undefined
 			},
@@ -403,119 +394,71 @@ export default {
 			total: 0,
 			vipDict: [],
 			userLabel: [],
-			dialogGameVisible: false
+			dialogGameVisible: false,
+			createPage: false
 		}
 	},
 	computed: {
-		accountStatusArr() {
-			return [...this.globalDics.accountStatusType]
+		assortStatusArr() {
+			return [...this.globalDics.gameStatusType]
 		},
-		accountTypeArr() {
-			return this.globalDics.accountType
+		terminalTypeArr() {
+			return [...this.globalDics.terminalnType]
 		},
-		deviceTypeArr() {
-			return this.globalDics.deviceType
+		gameDisplayArr() {
+			return [...this.globalDics.gameDisplayType]
 		}
 	},
-	created() {
-		this.getMerchantDict()
-	},
-	mounted() {
-		for (let i = 0; i < 10; i++) {
-			this.dataList[i] = {
-				bankCode: '165416416464654',
-				bankName: '中国银行',
-				createDt: '2021-02-13 20:28:54',
-				updateDt: '2021-02-13 20:28:54',
-				vipSerialNum: '115'
-			}
-		}
-	},
+	created() {},
+	mounted() {},
 	methods: {
 		loadData() {
-			// this.dataList = []
-			// this.loading = true
-			// const create = this.queryData.registerTime || []
-			// const [startTime, endTime] = create
-			// let params = {
-			// 	...this.queryData,
-			// 	createDtStart: startTime
-			// 		? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
-			// 		: undefined,
-			// 	createDtEnd: endTime
-			// 		? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
-			// 		: undefined
-			// }
-			// params = {
-			// 	...this.getParams(params)
-			// }
-			// delete params.registerTime
-			// delete params.lastLoginTime
-			// delete params.firstSaveTime
-			// this.$api
-			// 	.memberListAPI(params)
-			// 	.then((res) => {
-			// 		const {
-			// 			code,
-			// 			data: { record, totalRecord },
-			// 			msg
-			// 		} = res
-			// 		if (code === 200) {
-			// 			this.loading = false
-			// 			this.dataList = record || []
-			// 			this.total = totalRecord || 0
-			// 		} else {
-			// 			this.loading = false
-			// 			this.$message({
-			// 				message: msg,
-			// 				type: 'error'
-			// 			})
-			// 		}
-			// 	})
-			// 	.catch(() => (this.loading = false))
-			//
-			// setTimeout(() => {
-			// 	this.loading = false
-			// }, 1000)
-		},
-		// 获取风控层级
-		getMerchantDict() {
-			this.$api.merchantDictAPI().then((res) => {
-				const {
-					code,
-					data: { windControl, userLabel },
-					msg
-				} = res
-				if (code === 200) {
-					this.vipDict = windControl || []
-					this.userLabel = userLabel || []
-				} else {
-					this.$message({
-						message: msg,
-						type: 'error'
-					})
-				}
-			})
+			this.dataList = []
+			this.loading = true
+			let params = {
+				...this.queryData
+			}
+			params = {
+				...this.getParams(params)
+			}
+			delete params.assortStatus
+			delete params.supportTerminal
+			delete params.clientDisplay
+
+			this.$api
+				.gameAssortListAPI(params)
+				.then((res) => {
+					const {
+						code,
+						data: { record, totalRecord },
+						msg
+					} = res
+					if (code === 200) {
+						this.loading = false
+						this.dataList = record || []
+						this.total = totalRecord || 0
+					} else {
+						this.loading = false
+						this.$message({
+							message: msg,
+							type: 'error'
+						})
+					}
+				})
+				.catch(() => (this.loading = false))
+
+			setTimeout(() => {
+				this.loading = false
+			}, 1000)
 		},
 		reset() {
 			this.queryData = {
-				registerTime: [start, end],
-				userName: undefined,
-				realName: undefined,
-				accountStatus: undefined,
-				windControlId: undefined,
-				offLineDaysStart: undefined,
-				offLineDaysEnd: undefined,
-				lastLoginTime: [start, end],
-				vipSerialNumMax: undefined,
-				vipSerialNumMin: undefined,
-				accountType: undefined,
-				deviceType: undefined,
-				firstDepositAmountMin: undefined,
-				firstDepositAmountMax: undefined,
-				firstSaveTime: [],
-				labelId: undefined,
-				parentProxyName: undefined,
+				assortSortMin: undefined,
+				assortSortMax: undefined,
+				assortName: undefined,
+				assortStatus: [],
+				supportTerminal: [],
+				clientDisplay: '',
 				orderKey: undefined,
 				orderType: undefined
 			}
@@ -532,15 +475,6 @@ export default {
 			if (prop === 'firstDepositTime') {
 				prop = 3
 			}
-			if (prop === 'firstDepositAmount') {
-				prop = 4
-			}
-			if (prop === 'lastLoginTime') {
-				prop = 5
-			}
-			if (prop === 'offLineDays') {
-				prop = 6
-			}
 			this.queryData.orderKey = prop
 			if (order === 'ascending') {
 				// 升序
@@ -551,146 +485,40 @@ export default {
 			}
 			this.loadData()
 		},
-
 		checkValue(e) {
 			const { name, value } = e.target
 			switch (name) {
-				case 'offLineDaysStart':
+				case 'assortSortMin':
 					if (
-						!!this.queryData.offLineDaysEnd &&
-						(value && value * 1 >= this.queryData.offLineDaysEnd * 1)
+						!!this.queryData.assortSortMax &&
+						(value && value * 1 > this.queryData.assortSortMax * 1)
 					) {
 						this.$message({
 							type: 'warning',
-							message: `请输入小于${this.queryData.offLineDaysEnd}天数`
+							message: `请输入小于${this.queryData.assortSortMax}天数`
 						})
 					}
 					break
-				case 'offLineDaysEnd':
+				case 'assortSortMax':
 					if (
-						!!this.queryData.offLineDaysStart &&
-						(value && value * 1 <= this.queryData.offLineDaysStart * 1)
+						!!this.queryData.assortSortMin &&
+						(value && value * 1 < this.queryData.assortSortMin * 1)
 					) {
 						this.$message({
 							type: 'warning',
-							message: `请输入大于${this.queryData.offLineDaysStart}天数`
-						})
-					}
-					break
-				case 'vipSerialNumMin':
-					if (
-						!!this.queryData.vipSerialNumMax &&
-						(value && value * 1 >= this.queryData.vipSerialNumMax * 1)
-					) {
-						this.$message({
-							type: 'warning',
-							message: `请输入小于${this.queryData.vipSerialNumMax}等级`
-						})
-					}
-					break
-				case 'vipSerialNumMax':
-					if (
-						!!this.queryData.vipSerialNumMin &&
-						(value && value * 1 <= this.queryData.vipSerialNumMin * 1)
-					) {
-						this.$message({
-							type: 'warning',
-							message: `请输入大于${this.queryData.vipSerialNumMin}等级`
-						})
-					}
-					break
-				case 'firstDepositAmountMin':
-					if (
-						!!this.queryData.firstDepositAmountMax &&
-						(value && value * 1 >= this.queryData.firstDepositAmountMax * 1)
-					) {
-						this.$message({
-							type: 'warning',
-							message: `请输入小于${this.queryData.firstDepositAmountMax}金额`
-						})
-					}
-					break
-				case 'firstDepositAmountMax':
-					if (
-						!!this.queryData.firstDepositAmountMin &&
-						(value && value * 1 <= this.queryData.firstDepositAmountMin * 1)
-					) {
-						this.$message({
-							type: 'warning',
-							message: `请输入大于${this.queryData.firstDepositAmountMin}金额`
+							message: `请输入大于${this.queryData.assortSortMin}天数`
 						})
 					}
 					break
 			}
-		},
-		exportExcel() {
-			const create = this.queryData.registerTime || []
-			const [startTime, endTime] = create
-			let params = {
-				...this.queryData,
-				createDtStart: startTime
-					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
-					: undefined,
-				createDtEnd: endTime
-					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
-					: undefined
-			}
-			params = {
-				...this.getParams(params)
-			}
-			delete params.registerTime
-			delete params.lastLoginTime
-			delete params.firstSaveTime
-			delete params.accountStatus
-			delete params.deviceType
-			delete params.accountType
-			this.$api
-				.exportExcelAPI(params)
-				.then((res) => {
-					const result = res.data
-					const disposition = res.headers['content-disposition']
-					if (disposition) {
-						const fileNames = disposition.split("''")
-						let fileName = fileNames[1]
-						fileName = decodeURIComponent(fileName)
-						const blob = new Blob([result], {
-							type: 'application/octet-stream'
-						})
-						if ('download' in document.createElement('a')) {
-							const elink = document.createElement('a')
-							elink.download = fileName || ''
-							elink.style.display = 'none'
-							elink.href = URL.createObjectURL(blob)
-							document.body.appendChild(elink)
-							elink.click()
-							URL.revokeObjectURL(elink.href)
-							document.body.removeChild(elink)
-						} else {
-							console.log('进来', 111)
-							window.navigator.msSaveBlob(blob, fileName)
-						}
-						this.$message({
-							type: 'success',
-							message: '导出成功',
-							duration: 1500
-						})
-					} else {
-						this.$message({
-							type: 'error',
-							message: '每10分钟导一次，请稍后再试',
-							duration: 1500
-						})
-					}
-				})
-				.catch(() => {
-					this.$message({
-						type: 'error',
-						message: '导出失败',
-						duration: 1500
-					})
-				})
 		},
 
+		add() {
+			this.createPage = true
+		},
+		back() {
+			this.createPage = false
+		},
 		recycle() {
 			this.$confirm(
 				`<strong>是否对子游戏进行开启/维护/禁用操作</strong></br>

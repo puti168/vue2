@@ -21,7 +21,7 @@
 					<el-input
 						v-model="queryData.userName"
 						clearable
-						:max="11"
+						:maxlength="11"
 						size="medium"
 						style="width: 180px"
 						placeholder="请输入"
@@ -65,7 +65,7 @@
 						v-model="queryData.loginIp"
 						clearable
 						size="medium"
-						:max="15"
+						:maxlength="15"
 						style="width: 180px"
 						placeholder="请输入"
 						@keyup.enter.native="enterSearch"
@@ -76,7 +76,7 @@
 						v-model="queryData.ipAttribution"
 						clearable
 						size="medium"
-						:max="10"
+						:maxlength="10"
 						style="width: 180px"
 						placeholder="请输入"
 						@keyup.enter.native="enterSearch"
@@ -103,7 +103,7 @@
 						v-model="queryData.deviceNo"
 						clearable
 						size="medium"
-						:max="50"
+						:maxlength="50"
 						style="width: 180px"
 						placeholder="请输入"
 						@keyup.enter.native="enterSearch"

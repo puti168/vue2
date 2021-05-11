@@ -37,7 +37,7 @@
 						v-model="queryData.userName"
 						clearable
 						size="medium"
-						:max="11"
+						:maxlength="11"
 						style="width: 180px"
 						placeholder="请输入"
 						@keyup.enter.native="enterSearch"
@@ -48,7 +48,7 @@
 						v-model="queryData.parentProxyName"
 						clearable
 						size="medium"
-						:max="11"
+						:maxlength="11"
 						style="width: 180px"
 						placeholder="请输入"
 						@keyup.enter.native="enterSearch"
@@ -105,7 +105,7 @@
 						v-model="queryData.virtualAddress"
 						clearable
 						size="medium"
-						:max="100"
+						:maxlength="100"
 						style="width: 180px"
 						placeholder="请输入"
 						@keyup.enter.native="enterSearch"

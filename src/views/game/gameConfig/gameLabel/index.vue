@@ -143,21 +143,21 @@
           ></el-table-column>
           <el-table-column prop="operating" align="center" label="操作" width="240px">
             <template slot-scope="scope">
-              <!-- <el-button
+              <el-button
                 :disabled="loading"
                 type="success"
                 size="medium"
                 class="noicon"
-                @click="reset"
+                @click="switchClick(scope.row)"
               >
                 开启
-              </el-button> -->
+              </el-button>
               <el-button
                 :disabled="loading"
                 type="danger"
                 size="medium"
                 class="noicon"
-                @click="reset"
+                @click="switchClick(scope.row)"
               >
                 禁用
               </el-button>
@@ -176,6 +176,7 @@
                 icon="el-icon-delete"
                 :disabled="loading"
                 size="medium"
+                @click="deleteLabel(scope.row)"
               >
                 删除
               </el-button>
@@ -323,9 +324,37 @@ export default {
     reset() {
       this.queryData = {}
     },
+    switchClick(val) {
+      this.$confirm(
+        `<strong>是否对子游戏进行开启/维护/禁用操作?</strong></br><span style='font-size:12px;color:#c1c1c1'>一旦操作将会立即生效</span>`,
+        `确认提示`,
+        {
+          dangerouslyUseHTMLString: true,
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }
+      )
+        .then(() => {
+          console.log(1111111)
+        })
+        .catch(() => {})
+    },
     edit(val) {
       this.dialogFormVisible = true
       console.log(val)
+    },
+    deleteLabel(val) {
+      this.$confirm(`<strong>确定删除此条标签类型吗?</strong>`, `确认提示`, {
+        dangerouslyUseHTMLString: true,
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          console.log(2222222222)
+        })
+        .catch(() => {})
     },
     subAddOrEidt() {
       this.dialogFormVisible = false

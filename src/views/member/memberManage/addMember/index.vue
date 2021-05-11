@@ -273,14 +273,15 @@ export default {
 			const params = {
 				...this.form
 			}
-			console.log(params)
+			let lock = true
 			this.$refs['form'].validate((valid) => {
-				console.log('valid', valid)
-				if (valid) {
+				if (valid && lock) {
+					lock = false
 					this.$api
 						.addMemberAPI(params)
 						.then((res) => {
 							this.loading = false
+							lock = true
 							const { code, data, msg } = res
 							if (code === 200) {
 								this.$confirm(`会员${data}资料提交成功`, {
@@ -298,12 +299,14 @@ export default {
 						})
 						.catch(() => {
 							this.loading = false
+							lock = true
 						})
 				}
 			})
 
 			setTimeout(() => {
 				this.loading = false
+				lock = true
 			}, 1000)
 		},
 		reset() {
