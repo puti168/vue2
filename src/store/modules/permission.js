@@ -219,59 +219,11 @@ const actions = {
 						}
 						if (data.name === '游戏注单') {
 							data.children.push({
-								path: '/game/gameBetslip/zrDetails/index',
-								name: 'zrDetails',
+								path: '/game/gameBetslip/gameBetslipDetails/index',
+								name: 'gameBetslipDetails',
 								component: () =>
-									import(`@/views/game/gameBetslip/zrDetails/index`),
-								meta: { title: '真人注单详情', icon: 'bb_reportDaily' },
-								hidden: true
-							})
-							data.children.push({
-								path: '/game/gameBetslip/qpDetails/index',
-								name: 'qpDetails',
-								component: () =>
-									import(`@/views/game/gameBetslip/qpDetails/index`),
-								meta: { title: '棋牌注单详情', icon: 'bb_reportDaily' },
-								hidden: true
-							})
-							data.children.push({
-								path: '/game/gameBetslip/tyDetails/index',
-								name: 'tyDetails',
-								component: () =>
-									import(`@/views/game/gameBetslip/tyDetails/index`),
-								meta: { title: '体育注单详情', icon: 'bb_reportDaily' },
-								hidden: true
-							})
-							data.children.push({
-								path: '/game/gameBetslip/djDetails/index',
-								name: 'djDetails',
-								component: () =>
-									import(`@/views/game/gameBetslip/djDetails/index`),
-								meta: { title: '电竞注单详情', icon: 'bb_reportDaily' },
-								hidden: true
-							})
-							data.children.push({
-								path: '/game/gameBetslip/cpDetails/index',
-								name: 'cpDetails',
-								component: () =>
-									import(`@/views/game/gameBetslip/cpDetails/index`),
-								meta: { title: '彩票注单详情', icon: 'bb_reportDaily' },
-								hidden: true
-							})
-							data.children.push({
-								path: '/game/gameBetslip/dyDetails/index',
-								name: 'dyDetails',
-								component: () =>
-									import(`@/views/game/gameBetslip/dyDetails/index`),
-								meta: { title: '电游注单详情', icon: 'bb_reportDaily' },
-								hidden: true
-							})
-							data.children.push({
-								path: '/game/gameBetslip/lhjDetails/index',
-								name: 'lhjDetails',
-								component: () =>
-									import(`@/views/game/gameBetslip/lhjDetails/index`),
-								meta: { title: '老虎机注单详情', icon: 'bb_reportDaily' },
+									import(`@/views/game/gameBetslip/gameBetslipDetails/index`),
+								meta: { title: '游戏注单详情', icon: 'bb_reportDaily' },
 								hidden: true
 							})
 						}

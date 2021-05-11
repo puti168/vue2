@@ -1,7 +1,5 @@
 <template>
-  <div class="game-container report-container">
-    <div class="view-container dealer-container">
-      <headerMsg></headerMsg>
+    <div class=" dealer-container">
       <div class="betslip">
         <strong class="strong">投注人信息</strong>
         <div>
@@ -25,15 +23,12 @@
         </div>
       </div>
     </div>
-  </div>
 </template>
 
 <script>
-import headerMsg from '../gameBetslipTable/components/headerMsg'
-import { routerNames } from '@/utils/consts'
 export default {
-  name: routerNames.zrDetails,
-  components: { headerMsg },
+  name: 'LhjDetails',
+  components: { },
   props: {},
   data() {
     return {}
