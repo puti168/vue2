@@ -4,43 +4,118 @@
     <div class="view-container dealer-container">
       <div class="params">
         <el-form ref="form" :inline="true" :model="queryData">
-          <el-form-item label="游戏标签ID:">
-            <el-input
-              v-model="queryData.bankCode"
-              clearable
-              :maxlength="3"
+          <el-form-item label="登录时间:">
+            <el-date-picker
+              v-model="searchTime"
               size="medium"
-              style="width: 180px"
-              placeholder="请输入"
-              :disabled="loading"
-              @keyup.enter.native="enterSearch"
-            ></el-input>
+              :picker-options="pickerOptions"
+              format="yyyy-MM-dd HH:mm:ss"
+              type="datetimerange"
+              range-separator="-"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+              align="right"
+              clearable
+              :default-time="defaultTime"
+              style="width: 375px"
+            ></el-date-picker>
           </el-form-item>
-          <el-form-item label="标签名称:">
+          <el-form-item label="代理账号:">
             <el-input
               v-model="queryData.bankName"
               clearable
-              :maxlength="10"
+              :maxlength="11"
               size="medium"
               style="width: 180px; margin-right: 20px"
-              placeholder="请输入"
+              placeholder="请输入会员账号"
               :disabled="loading"
               @keyup.enter.native="enterSearch"
             ></el-input>
           </el-form-item>
-          <el-form-item label="状态:" class="tagheight">
+          <el-form-item label="代理类型:" class="tagheight">
             <el-select
               v-model="queryData.accountType"
-              style="width: 180px"
+              style="width: 280px"
               multiple
               placeholder="默认选择全部"
               :popper-append-to-body="false"
             >
-              <el-option label="开启中" value="1"></el-option>
-              <el-option label="禁用中" value="2"></el-option>
+              <el-option
+                v-for="item in accountType"
+                :key="item.code"
+                :label="item.description"
+                :value="item.code"
+              ></el-option>
             </el-select>
           </el-form-item>
-
+          <el-form-item label="登录状态:" class="tagheight">
+            <el-select
+              v-model="queryData.accountType"
+              style="width: 280px"
+              multiple
+              placeholder="默认选择全部"
+              :popper-append-to-body="false"
+            >
+              <el-option
+                v-for="item in accountType"
+                :key="item.code"
+                :label="item.description"
+                :value="item.code"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="登录IP:">
+            <el-input
+              v-model="queryData.bankCode"
+              clearable
+              :maxlength="30"
+              size="medium"
+              style="width: 180px"
+              placeholder="请输入内容"
+              :disabled="loading"
+              @keyup.enter.native="enterSearch"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="IP归属地:">
+            <el-input
+              v-model="queryData.bankCode"
+              clearable
+              :maxlength="30"
+              size="medium"
+              style="width: 180px"
+              placeholder="请输入内容"
+              :disabled="loading"
+              @keyup.enter.native="enterSearch"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="登录终端:" class="tagheight">
+            <el-select
+              v-model="queryData.accountType"
+              style="width: 280px"
+              multiple
+              placeholder="默认选择全部"
+              :popper-append-to-body="false"
+            >
+              <el-option
+                v-for="item in accountType"
+                :key="item.code"
+                :label="item.description"
+                :value="item.code"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="登录设备号:">
+            <el-input
+              v-model="queryData.bankCode"
+              clearable
+              :maxlength="30"
+              size="medium"
+              style="width: 180px"
+              placeholder="请输入内容"
+              :disabled="loading"
+              @keyup.enter.native="enterSearch"
+            ></el-input>
+          </el-form-item>
           <el-form-item>
             <el-button
               type="primary"
@@ -59,17 +134,28 @@
             >
               重置
             </el-button>
-            <el-button
-              type="warning"
-              icon="el-icon-folder"
-              :disabled="loading"
-              size="medium"
-              @click="dialogFormVisible = true"
-            >
-              创建
-            </el-button>
           </el-form-item>
         </el-form>
+        <div class="msgList">
+          <p>
+            <span>数据更新时间：</span><span>{{ now }}</span>
+          </p>
+          <p>
+            总登录次数：
+            {{ summary.count }}
+            次
+          </p>
+        </div>
+        <div class="msgList">
+          <p>
+            登录成功：<span class="enableColor">{{ summary.successCount }}</span>
+            次
+          </p>
+          <p>
+            登录失败<span class="redColor">{{ summary.successCount }}</span>
+            次
+          </p>
+        </div>
       </div>
       <div class="content">
         <el-table
@@ -85,104 +171,58 @@
           <el-table-column
             prop="vipSerialNum"
             align="center"
-            label="游戏标签ID"
+            label="登录时间"
             sortable="custom"
-            width="120px"
           ></el-table-column>
           <el-table-column
-            prop="content"
+            prop="bankName"
             align="center"
-            label="标签内容"
-            width="170px"
+            label="登录状态"
           ></el-table-column>
-          <el-table-column prop="bankName" align="center" label="状态" width="100px">
+          <el-table-column prop="createDt" align="center" label="代理账号">
             <template slot-scope="scope">
-              <div v-if="scope.row.code === 1" class="normalRgba">开启中</div>
-              <div v-else class="disableRgba">已禁用</div>
+              <Copy v-if="!!scope.row.createDt" :title="scope.row.createDt" :copy="copy">
+                {{ scope.row.createDt }}
+              </Copy>
+              <span v-else>-</span>
             </template>
           </el-table-column>
           <el-table-column
-            prop="bankName"
+            prop="updateDt"
             align="center"
-            label="标签描述"
+            label="代理类型"
           ></el-table-column>
           <el-table-column
-            prop="bankName"
+            prop="updateDt"
             align="center"
-            label="已标签游戏"
-            width="120px"
-          >
-            <template slot-scope="scope">
-              <div class="blueColor decoration" @click="lookGame(scope.row)">100</div>
-            </template>
-          </el-table-column>
-          <el-table-column
-            prop="bankName"
-            align="center"
-            label="创建人"
-            width="100px"
+            label="登录IP"
           ></el-table-column>
           <el-table-column
-            prop="createDt"
+            prop="updateDt"
             align="center"
-            label="创建时间"
-            sortable="custom"
-            width="160px"
+            label="IP归属地"
           ></el-table-column>
           <el-table-column
-            prop="bankName"
+            prop="updateDt"
             align="center"
-            label="最近操作人"
-            width="100px"
+            label="登录终端"
           ></el-table-column>
           <el-table-column
-            prop="createDt"
+            prop="updateDt"
             align="center"
-            label="最近操作时间"
-            sortable="custom"
-            width="160px"
+            label="终端设备号"
           ></el-table-column>
-          <el-table-column prop="operating" align="center" label="操作" width="240px">
-            <template slot-scope="scope">
-              <el-button
-                :disabled="loading"
-                type="success"
-                size="medium"
-                class="noicon"
-                @click="switchClick(scope.row)"
-              >
-                开启
-              </el-button>
-              <el-button
-                :disabled="loading"
-                type="danger"
-                size="medium"
-                class="noicon"
-                @click="switchClick(scope.row)"
-              >
-                禁用
-              </el-button>
-              <el-button
-                type="primary"
-                icon="el-icon-edit"
-                :disabled="loading"
-                size="medium"
-                @click="edit(scope.row)"
-              >
-                编辑信息
-              </el-button>
-
-              <el-button
-                type="warning"
-                icon="el-icon-delete"
-                :disabled="loading"
-                size="medium"
-                @click="deleteLabel(scope.row)"
-              >
-                删除
-              </el-button>
-            </template>
-          </el-table-column>
+          <el-table-column
+            prop="updateDt"
+            align="center"
+            label="登录地址"
+          ></el-table-column>
+          <el-table-column
+            prop="updateDt"
+            align="center"
+            label="设备版本"
+          ></el-table-column>
+          <el-table-column prop="updateDt" align="center" label="备注"></el-table-column>
         </el-table>
         <!-- 分页 -->
         <el-pagination
@@ -197,66 +237,6 @@
           @size-change="handleSizeChange"
         ></el-pagination>
       </div>
-      <el-dialog
-        title="创建/编辑"
-        :visible.sync="dialogFormVisible"
-        :destroy-on-close="true"
-        width="480px"
-        class="rempadding"
-      >
-        <el-divider></el-divider>
-        <el-form :model="dialogForm" label-width="90px">
-          <el-form-item
-            label="标签名称:"
-            prop="name"
-            :rules="[
-              { required: true, message: '请输入标签名称', trigger: 'blur' },
-              { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' },
-            ]"
-          >
-            <el-input
-              v-model="dialogForm.name"
-              :maxlength="10"
-              autocomplete="off"
-            ></el-input>
-          </el-form-item>
-          <el-form-item
-            label="描述:"
-            prop="remark"
-            :rules="[
-              { required: true, message: '请输入描述内容', trigger: 'blur' },
-              { min: 2, max: 50, message: '长度在 2 到 50 个字符', trigger: 'blur' },
-            ]"
-          >
-            <el-input v-model="dialogForm.remark" type="textarea"></el-input>
-          </el-form-item>
-        </el-form>
-        <el-divider></el-divider>
-        <div slot="footer" class="dialog-footer">
-          <el-button @click="dialogFormVisible = false">取消</el-button>
-          <el-button type="primary" @click="subAddOrEidt">保存</el-button>
-        </div>
-      </el-dialog>
-      <el-dialog
-        title="标签游戏"
-        :visible.sync="dialogGameVisible"
-        :destroy-on-close="true"
-        width="480px"
-        class="rempadding"
-      >
-        <el-divider></el-divider>
-        <div class="contentBox disableColor">标签名称：高频率（001）</div>
-        <p class="headerBox">
-          <span>游戏名称</span>
-          <span>添加时间</span>
-        </p>
-        <div class="bodyBox">
-          <p>
-            <span>斗地主</span>
-            <span>2016-09-21 08:50:08</span>
-          </p>
-        </div>
-      </el-dialog>
     </div>
   </div>
 </template>
@@ -284,20 +264,19 @@ export default {
         failCount: 0,
         successCount: 0
       },
-      tableData: [],
-      dialogFormVisible: false,
-      dialogForm: {},
-      dialogGameVisible: false
+      tableData: []
     }
   },
-  computed: {},
+  computed: {
+    accountType() {
+      return this.globalDics.accountType
+    }
+  },
   mounted() {
     for (let i = 0; i < 10; i++) {
       this.tableData[i] = {
         bankCode: '165416416464654',
         bankName: '中国银行',
-        content: '高频率',
-        code: 1,
         createDt: '2021-02-13 20:28:54',
         updateDt: '2021-02-13 20:28:54'
       }
@@ -318,47 +297,8 @@ export default {
       }
       console.log(params)
     },
-    lookGame(val) {
-      this.dialogGameVisible = true
-      console.log(val)
-    },
     reset() {
       this.queryData = {}
-    },
-    switchClick(val) {
-      this.$confirm(
-        `<strong>是否对子游戏进行开启/维护/禁用操作?</strong></br><span style='font-size:12px;color:#c1c1c1'>一旦操作将会立即生效</span>`,
-        `确认提示`,
-        {
-          dangerouslyUseHTMLString: true,
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }
-      )
-        .then(() => {
-          console.log(1111111)
-        })
-        .catch(() => {})
-    },
-    edit(val) {
-      this.dialogFormVisible = true
-      console.log(val)
-    },
-    deleteLabel(val) {
-      this.$confirm(`<strong>确定删除此条标签类型吗?</strong>`, `确认提示`, {
-        dangerouslyUseHTMLString: true,
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      })
-        .then(() => {
-          console.log(2222222222)
-        })
-        .catch(() => {})
-    },
-    subAddOrEidt() {
-      this.dialogFormVisible = false
     },
     _changeTableSort({ column, prop, order }) {
       if (prop === 'vipSerialNum') {
@@ -392,41 +332,15 @@ export default {
   line-height: 24px;
   min-width: 60px;
 }
-/deep/ .rempadding .el-dialog__body {
-  padding: 0;
-  padding-bottom: 30px;
-
-  .contentBox,
-  form {
-    padding: 0 20px;
-  }
-}
-.decoration {
-  text-decoration: underline;
-  cursor: pointer;
-}
-.bodyBox {
-  max-height: 400px;
-  overflow: auto;
-}
-p {
+.msgList {
+  font-size: 14px;
   display: flex;
-  height: 40px;
-  line-height: 40px;
-  border-bottom: 1px solid #e8e8e8;
-  justify-content: space-around;
-  span {
-    display: inline-block;
-    width: 50%;
-    text-align: center;
+  p {
+    margin-right: 20px;
+    line-height: 24px;
   }
-}
-.headerBox {
-  color: #000000d8;
-  background: #fafafa;
-  font-family: "PingFang SC ", "PingFang SC", sans-serif;
-  font-weight: 650;
-  border-top: 1px solid #e8e8e8;
-  margin-top: 15px;
+  &:last-child p {
+    margin-bottom: 15px;
+  }
 }
 </style>
