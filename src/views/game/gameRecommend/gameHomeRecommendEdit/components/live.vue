@@ -179,14 +179,7 @@ export default {
 				historyGameLimit: undefined,
 				hotSearch: undefined
 			},
-			dataList: [],
-			visible: false,
-			remark: '',
-			action: false,
-			uploadUrl: process.env.VUE_APP_BASE_API + '/agents/uploadAgentLog',
-			imageUrl: '',
-			// 审核 true 仅返回 false
-			type: true
+			dataList: []
 		}
 	},
 	computed: {},
