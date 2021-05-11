@@ -25,36 +25,36 @@
         </div>
         <el-divider></el-divider>
       </div>
-      <zrDetails v-if="gameType === 'zr'" :dataList="dataList"></zrDetails>
-      <qpDetails v-else-if="gameType === 'qp'" :dataList="dataList"></qpDetails>
-      <tyDetails v-else-if="gameType === 'ty'" :dataList="dataList"></tyDetails>
-      <djDetails v-else-if="gameType === 'dj'" :dataList="dataList"></djDetails>
-      <cpDetails v-else-if="gameType === 'cp'" :dataList="dataList"></cpDetails>
-      <dyDetails v-else-if="gameType === 'dy'" :dataList="dataList"></dyDetails>
-      <lhjDetails v-else></lhjDetails>
+      <realDetails v-if="gameType === 'zr'" :dataList="dataList"></realDetails>
+      <chessDetails v-else-if="gameType === 'qp'" :dataList="dataList"></chessDetails>
+      <sportDetails v-else-if="gameType === 'ty'" :dataList="dataList"></sportDetails>
+      <eSportDetails v-else-if="gameType === 'dj'" :dataList="dataList"></eSportDetails>
+      <lotteryDetails v-else-if="gameType === 'cp'" :dataList="dataList"></lotteryDetails>
+      <eGameDetails v-else-if="gameType === 'dy'" :dataList="dataList"></eGameDetails>
+      <slotDetails v-else></slotDetails>
     </div>
   </div>
 </template>
 
 <script>
 import { routerNames } from '@/utils/consts'
-import zrDetails from '../gameBetslipTable/components/zrDetails'
-import qpDetails from '../gameBetslipTable/components/qpDetails'
-import tyDetails from '../gameBetslipTable/components/tyDetails'
-import djDetails from '../gameBetslipTable/components/djDetails'
-import cpDetails from '../gameBetslipTable/components/cpDetails'
-import dyDetails from '../gameBetslipTable/components/dyDetails'
-import lhjDetails from '../gameBetslipTable/components/lhjDetails'
+import realDetails from './components/realDetails'
+import chessDetails from './components/chessDetails'
+import sportDetails from './components/sportDetails'
+import eSportDetails from './components/eSportDetails'
+import lotteryDetails from './components/lotteryDetails'
+import eGameDetails from './components/eGameDetails'
+import slotDetails from './components/slotDetails'
 export default {
   name: routerNames.gameBetslipDetails,
   components: {
-    zrDetails,
-    qpDetails,
-    tyDetails,
-    djDetails,
-    cpDetails,
-    dyDetails,
-    lhjDetails
+    realDetails,
+    chessDetails,
+    sportDetails,
+    eSportDetails,
+    lotteryDetails,
+    eGameDetails,
+    slotDetails
   },
   props: {},
   data() {
