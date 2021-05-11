@@ -1,88 +1,136 @@
 const agent = [
 	// 第一级菜单
 	{
-		id: '51',
+		id: '44',
 		title: '代理'
 	},
 	// 第二级菜单
 	{
-		id: '52',
-		parentId: '51',
-		icon: 'bb_report',
-		title: '代理功能'
-	},
-	{
-		id: '56',
-		parentId: '51',
-		icon: 'bb_report',
-		title: '代理审核'
-	},
-	{
-		id: '61',
-		parentId: '51',
-		icon: 'bb_report',
-		title: '代理记录'
-	},
-	// 第三级菜单
-	{
-		id: '64',
-		parentId: '61',
-		path: '/agent/agentRecord/withdrawRecord',
-		title: '提款记录'
-	},
-	{
-		id: '63',
-		parentId: '61',
-		path: '/agent/agentRecord/surrogateRecord',
-		title: '代存记录'
-	},
-	{
-		id: '62',
-		parentId: '61',
-		path: '/agent/agentRecord/commissionRecord',
-		title: '佣金记录'
-	},
-	{
-		id: '60',
-		parentId: '56',
-		path: '/agent/agentReview/agentDeposit',
-		title: '代理代存审核'
-	},
-	{
-		id: '59',
-		parentId: '56',
-		path: '/agent/agentReview/agentAmount',
-		title: '代理佣金审核'
-	},
-	{
-		id: '58',
-		parentId: '56',
-		path: '/agent/agentReview/agentJumperAudit',
-		title: '代理跳线审核'
-	},
-	{
-		id: '57',
-		parentId: '56',
-		path: '/agent/agentReview/levelApplicationReview',
-		title: '层级申请审核'
-	},
-	{
-		id: '53',
-		parentId: '52',
-		path: '/agent/agentFunction/agentManagement',
+		id: '45',
+		parentId: '44',
+		icon: 'bb_merchantInfo',
 		title: '代理管理'
 	},
 	{
+		id: '46',
+		parentId: '44',
+		icon: 'bb_rateaccount',
+		title: '代理审核'
+	},
+	{
+		id: '47',
+		parentId: '44',
+		icon: 'bb_rolemanage',
+		title: '推广管理'
+	},
+	{
+		id: '48',
+		parentId: '44',
+		icon: 'bb_currency',
+		title: '代理配置'
+	},
+	// 第三级菜单
+	{
+		id: '49',
+		parentId: '45',
+		path: '/agent/agentManagement/agentList',
+		title: '代理列表'
+	},
+	{
+		id: '50',
+		parentId: '45',
+		path: '/agent/agentManagement/agentDetails',
+		title: '代理详情'
+	},
+	{
+		id: '51',
+		parentId: '45',
+		path: '/agent/agentManagement/addAgent',
+		title: '新增代理'
+	},
+	{
+		id: '52',
+		parentId: '45',
+		path: '/agent/agentManagement/memberTransfer',
+		title: '会员转代申请'
+	},
+	{
+		id: '53',
+		parentId: '45',
+		path: '/agent/agentManagement/memberOverflow',
+		title: '会员溢出申请'
+	},
+	{
 		id: '54',
-		parentId: '52',
-		path: '/agent/agentFunction/materialManagement',
-		title: '推广素材管理'
+		parentId: '45',
+		path: '/agent/agentManagement/agentLogin',
+		title: '代理登录信息'
 	},
 	{
 		id: '55',
-		parentId: '52',
-		path: '/agent/agentFunction/agentDomainName',
-		title: '代理域名管理'
+		parentId: '45',
+		path: '/agent/agentManagement/agentRegistered',
+		title: '代理注册信息'
+	},
+	{
+		id: '56',
+		parentId: '45',
+		path: '/agent/agentManagement/agentBankCard',
+		title: '代理银行卡记录'
+	},
+	{
+		id: '121',
+		parentId: '45',
+		path: '/agent/agentManagement/agentVirtualCurrency',
+		title: '代理虚拟币账号记录'
+	},
+	{
+		id: '122',
+		parentId: '45',
+		path: '/agent/agentManagement/agentInfoChange',
+		title: '代理信息变更记录'
+	},
+	{
+		id: '57',
+		parentId: '46',
+		path: '/agent/agencyReview/agencyEidtReview',
+		title: '代理账户修改审核'
+	},
+	{
+		id: '115',
+		parentId: '46',
+		path: '/agent/agencyReview/overflowReview',
+		title: '会员溢出审核'
+	},
+	{
+		id: '116',
+		parentId: '46',
+		path: '/agent/agencyReview/addReview',
+		title: '新增代理审核'
+	},
+	{
+		id: '117',
+		parentId: '46',
+		path: '/agent/agencyReview/transformationReview',
+		title: '会员转代审核'
+	},
+	{
+		id: '118',
+		parentId: '47',
+		path: '/agent/promotionManagement/domainNameManagement',
+		title: '推广域名管理'
+	},
+	{
+		id: '119',
+		parentId: '47',
+		path: '/agent/promotionManagement/pictureManagement',
+		title: '推广图片管理'
+	},
+	{
+		id: '120',
+		parentId: '48',
+		path: '/agent/agentConfig/levelWelfareCnfig',
+		title: '等级福利配置'
 	}
 ]
 export default agent
