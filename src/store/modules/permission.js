@@ -217,6 +217,16 @@ const actions = {
 								hidden: true
 							})
 						}
+						if (data.name === '游戏推荐') {
+							data.children.push({
+								path: '/game/gameConfig/gameHomeRecommendEdit',
+								name: 'gameHomeRecommendEdit',
+								component: () =>
+									import(`@/views/game/gameRecommend/gameHomeRecommendEdit/index`),
+								meta: { title: '推荐位管理编辑' },
+								hidden: true
+							})
+						}
 						if (data.name === '游戏注单') {
 							data.children.push({
 								path: '/game/gameBetslip/zrDetails/index',

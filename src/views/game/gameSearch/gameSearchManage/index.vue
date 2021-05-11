@@ -185,7 +185,7 @@ export default {
 	data() {
 		return {
 			loading: false,
-            queryData: {
+			queryData: {
 				historyGameLimit: undefined,
 				hotSearch: undefined
 			},
@@ -314,7 +314,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 /deep/.el-dialog__header {
 	text-align: center;
 	color: #909399;
