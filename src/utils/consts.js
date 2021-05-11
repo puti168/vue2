@@ -15,6 +15,7 @@ export const routerNames = {
 	gameClassify: 'gameClassify',
 	gamePlatform: 'gamePlatform',
 	addMemberCheck: 'addMemberCheck',
+	gameHomeRecommendEdit: 'gameHomeRecommendEdit',
 	gameManagement: 'gameManagement',
 	gameClassification: 'gameClassification',
 	gameSearchManage: 'gameSearchManage',

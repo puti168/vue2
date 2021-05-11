@@ -84,8 +84,10 @@
 				</div>
 			</div>
 		</div>
-		<!-- 直播，游戏专题 -->
-		<div v-else-if="false" class="review-content">
+		<!-- 直播模块 -->
+		<live></live>
+		<!-- 游戏专题模块 -->
+		<div v-if="false" class="review-content">
 			<div class="head">
 				<span class="title">直播模块</span>
 				<div class="right-btn">
@@ -96,6 +98,22 @@
 			<div class="main-content">
 				<div class="review-content">
 					<div class="content-part3">
+						<el-form ref="form" :model="form" label-width="auto">
+							<el-row>
+								<el-col :span="12">
+									<el-form-item label="模块描述:">
+										<el-input
+											v-model="form.gameName"
+											size="medium"
+											maxlength="20"
+											clearable
+											style="width: 365px"
+										></el-input>
+									</el-form-item>
+								</el-col>
+							</el-row>
+						</el-form>
+						<el-divider></el-divider>
 						<div class="part-title">
 							<el-button type="primary" @click="addRow">新增</el-button>
 						</div>
@@ -200,6 +218,15 @@
 								<el-table-column align="center" label="操作">
 									<template slot-scope="scope">
 										<el-button
+											:disabled="loading"
+											type="danger"
+											size="medium"
+											class="noicon"
+											@click="deleteRow(scope.row)"
+										>
+											禁用
+										</el-button>
+										<el-button
 											type="danger"
 											icon="el-icon-edit"
 											size="medium"
@@ -229,9 +256,9 @@
 			</div>
 		</div>
 		<!-- 最新游戏 -->
-		<div v-else-if="true" class="review-content">
+		<div v-if="false" class="review-content">
 			<div class="head">
-				<span class="title">最新模块</span>
+				<span class="title">最新游戏模块</span>
 				<div class="right-btn">
 					<el-button plain @click="goBack">取消</el-button>
 					<el-button type="success" @click="confirm(true)">保存</el-button>
@@ -297,6 +324,138 @@
 								</el-form-item>
 							</el-col>
 						</el-row>
+						<el-divider></el-divider>
+						<div class="img-title">模块游戏截图</div>
+
+						<el-form-item
+							label="图片上传1"
+							prop="image"
+							style="display:inline-block"
+						>
+							<!-- <el-upload
+								:action="uploadUrl"
+								:headers="{
+									'X-Request-Sys': '0',
+									'x-request-token': token
+								}"
+								:data="dataList"
+								:show-file-list="false"
+								accept="image/png"
+								:on-success="
+									(response, file, fileList) =>
+										handleAvatarSuccess(response, file, fileList)
+								"
+								:before-upload="(file) => beforeAvatarUpload(file)"
+							>
+								<img v-if="imageUrl" :src="imageUrl" class="avatar" />
+								<i v-else class="el-icon-plus avatar-uploader-icon"></i>
+							</el-upload> -->
+							<el-upload
+								class="avatar-uploader"
+								action="https://jsonplaceholder.typicode.com/posts/"
+								:show-file-list="false"
+								:on-success="handleAvatarSuccess"
+								:before-upload="beforeAvatarUpload"
+							>
+								<img v-if="imageUrl" :src="imageUrl" class="avatar" />
+								<i v-else class="el-icon-plus avatar-uploader-icon"></i>
+							</el-upload>
+						</el-form-item>
+						<el-form-item
+							label="图片上传2"
+							prop="image"
+							style="display:inline-block"
+						>
+							<!-- <el-upload
+								:action="uploadUrl"
+								:headers="{
+									'X-Request-Sys': '0',
+									'x-request-token': token
+								}"
+								:data="dataList"
+								:show-file-list="false"
+								accept="image/png"
+								:on-success="
+									(response, file, fileList) =>
+										handleAvatarSuccess(response, file, fileList)
+								"
+								:before-upload="(file) => beforeAvatarUpload(file)"
+							>
+								<img v-if="imageUrl" :src="imageUrl" class="avatar" />
+								<i v-else class="el-icon-plus avatar-uploader-icon"></i>
+							</el-upload> -->
+							<el-upload
+								class="avatar-uploader"
+								action="https://jsonplaceholder.typicode.com/posts/"
+								:show-file-list="false"
+								:on-success="handleAvatarSuccess"
+								:before-upload="beforeAvatarUpload"
+							>
+								<img v-if="imageUrl" :src="imageUrl" class="avatar" />
+								<i v-else class="el-icon-plus avatar-uploader-icon"></i>
+							</el-upload>
+						</el-form-item>
+						<el-form-item
+							label="图片上传3"
+							prop="image"
+							style="display:inline-block"
+						>
+							<!-- <el-upload
+								:action="uploadUrl"
+								:headers="{
+									'X-Request-Sys': '0',
+									'x-request-token': token
+								}"
+								:data="dataList"
+								:show-file-list="false"
+								accept="image/png"
+								:on-success="
+									(response, file, fileList) =>
+										handleAvatarSuccess(response, file, fileList)
+								"
+								:before-upload="(file) => beforeAvatarUpload(file)"
+							>
+								<img v-if="imageUrl" :src="imageUrl" class="avatar" />
+								<i v-else class="el-icon-plus avatar-uploader-icon"></i>
+							</el-upload> -->
+							<el-upload
+								class="avatar-uploader"
+								action="https://jsonplaceholder.typicode.com/posts/"
+								:show-file-list="false"
+								:on-success="handleAvatarSuccess"
+								:before-upload="beforeAvatarUpload"
+							>
+								<img v-if="imageUrl" :src="imageUrl" class="avatar" />
+								<i v-else class="el-icon-plus avatar-uploader-icon"></i>
+							</el-upload>
+						</el-form-item>
+						<el-divider></el-divider>
+						<div class="img-title">模块游戏文本信息</div>
+						<el-row>
+							<el-col :span="24">
+								<el-form-item label="正文标题:" prop="gameName">
+									<el-input
+										v-model="form.gameName"
+										size="medium"
+										maxlength="20"
+										clearable
+										style="width: 365px"
+									></el-input>
+								</el-form-item>
+							</el-col>
+							<el-col :span="24">
+								<el-form-item label="内容信息:" prop="gameName">
+									<el-input
+										v-model="form.gameName"
+										clearable
+										type="textarea"
+										:max="50"
+										:autosize="{ minRows: 4, maxRows: 4 }"
+										style="width: 90%"
+									></el-input>
+								</el-form-item>
+							</el-col>
+						</el-row>
 					</el-form>
 				</div>
 			</div>
@@ -328,6 +487,9 @@
 				</el-button>
 			</div>
 		</el-dialog>
+		<mix v-if="false"></mix>
+		<game v-if="false"></game>
+		<newGame v-if="false"></newGame>
 	</div>
 </template>
 
@@ -335,11 +497,20 @@
 import list from '@/mixins/list'
 import { routerNames } from '@/utils/consts'
 import { getToken } from '@/utils/auth'
+import live from './components/live'
+import mix from './components/mix'
+import game from './components/game'
+import newGame from './components/newGame'
 import Sortable from 'sortablejs'
 // import dayjs from 'dayjs'
 export default {
-	name: routerNames.gameManagementEdit,
-	components: {},
+	name: routerNames.gameHomeRecommendEdit,
+	components: {
+		live,
+		game,
+		newGame,
+		mix
+	},
 	mixins: [list],
 	data() {
 		return {
@@ -461,35 +632,6 @@ export default {
 			const lastRow = this.dataList[this.dataList.length - 1]
 			const new_row = lastRow.id + 1
 			this.dataList.push({ id: new_row })
-		},
-		deleteRow() {
-			this.$confirm('确定删除此游戏吗?', {
-				confirmButtonText: '确定',
-				cancelButtonText: '取消',
-				type: 'warning'
-			})
-				.then(() => {
-					// const loading = this.$loading({
-					// 	lock: true,
-					// 	text: 'Loading',
-					// 	spinner: 'el-icon-loading',
-					// 	background: 'rgba(0, 0, 0, 0.7)'
-					// })
-					// this.$api
-					// 	.setDeleteRole('', val.id)
-					// 	.then((res) => {
-					// 		loading.close()
-					// 		this.$message({
-					// 			type: 'success',
-					// 			message: '删除成功!'
-					// 		})
-					// 		this.loadData()
-					// 	})
-					// 	.catch(() => {
-					// 		loading.close()
-					// 	})
-				})
-				.catch(() => {})
 		},
 
 		// 列拖动
