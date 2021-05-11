@@ -18,13 +18,7 @@ export const routerNames = {
 	gameManagement: 'gameManagement',
 	gameClassification: 'gameClassification',
 	gameSearchManage: 'gameSearchManage',
-	zrDetails: 'zrDetails',
-	qpDetails: 'qpDetails',
-	tyDetails: 'tyDetails',
-	djDetails: 'djDetails',
-	cpDetails: 'cpDetails',
-	dyDetails: 'dyDetails',
-	lhjDetails: 'lhjDetails'
+	gameBetslipDetails: 'gameBetslipDetails'
 }
 const month = dayjs().month()
 const year = dayjs().year()
