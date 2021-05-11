@@ -1,5 +1,5 @@
 <template>
-	<div class="el-transfer-panel" style="width: 265px">
+	<div class="el-transfer-panel" style="width: 265px; height: 450px">
 		<p class="el-transfer-panel__header">
 			<!--			<el-checkbox-->
 			<!--				v-model="allChecked"-->
@@ -28,26 +28,43 @@
 					@click="clearQuery"
 				></i>
 			</el-input>
-			<div
+			<el-checkbox-group
 				v-show="!hasNoMatch && data.length > 0"
+				v-if="show"
+				v-model="checked"
 				:class="{ 'is-filterable': filterable }"
 				class="el-transfer-panel__list"
 			>
-				<!--				<el-checkbox-->
-				<!--					v-for="item in filteredData"-->
-				<!--					:key="item[keyProp]"-->
-				<!--					class="el-transfer-panel__item"-->
-				<!--					:label="item[keyProp]"-->
-				<!--					:disabled="item[disabledProp]"-->
-				<!--				>-->
-				<!--					<option-content :option="item"></option-content>-->
-				<!--				</el-checkbox>-->
+				<el-checkbox
+					v-for="item in filteredData"
+					:key="item[keyProp]"
+					class="el-transfer-panel__item"
+					:label="item[keyProp]"
+					:disabled="item[disabledProp]"
+				>
+					<option-content :option="item"></option-content>
+				</el-checkbox>
+			</el-checkbox-group>
+			<div
+				v-show="!hasNoMatch && data.length > 0"
+				v-else
+				:class="{ 'is-filterable': filterable }"
+				class="el-transfer-panel__list"
+			>
 				<div
 					v-for="item in filteredData"
 					:key="item[keyProp]"
 					class="el-transfer-panel__item"
 				>
-					<option-content :option="item"></option-content>
+					<p class="item-content">
+						<span class="item-id">{{ item['id'] }}</span>
+						<span class="item-label">
+							{{ item[labelProp] || item[keyProp] }}
+						</span>
+						<span class="item-status disableRgba">
+							{{ item[statusProp] || '' }}
+						</span>
+					</p>
 				</div>
 			</div>
 			<p v-show="hasNoMatch" class="el-transfer-panel__empty">
@@ -101,7 +118,8 @@ export default {
 					transfer.$scopedSlots.default({ option: this.option })
 				) : (
 					<span>
-						{this.option[panel.labelProp] || this.option[panel.keyProp]}
+						{this.option[panel.labelProp] || this.option[panel.keyProp]}{' '}
+						{this.option[panel.statusProp] || ''}
 					</span>
 				)
 			}
@@ -120,6 +138,7 @@ export default {
 		},
 		renderContent: Function,
 		title: String,
+		show: Boolean,
 		filterable: Boolean,
 		format: Object,
 		filterMethod: Function,
@@ -141,6 +160,7 @@ export default {
 		filteredData() {
 			return this.data.filter((item) => {
 				if (typeof this.filterMethod === 'function') {
+					console.log('item', item)
 					return this.filterMethod(this.query, item)
 				} else {
 					const label = item[this.labelProp] || item[this.keyProp].toString()
@@ -189,6 +209,10 @@ export default {
 
 		keyProp() {
 			return this.props.key || 'key'
+		},
+
+		statusProp() {
+			return this.props.status || 'status'
 		},
 
 		disabledProp() {
@@ -281,3 +305,35 @@ export default {
 	}
 }
 </script>
+
+<style lang="scss" scoped>
+/deep/ .el-transfer-panel__list.is-filterable {
+	height: 400px;
+}
+/deep/ .el-transfer-panel__item {
+	padding-left: 0;
+	height: 42px;
+}
+.item-content {
+	border-bottom: 1px solid #ccc;
+	height: 42px;
+	line-height: 42px;
+	padding-left: 20px;
+	span {
+		display: inline-block;
+	}
+	.item-id {
+		color: #aaa;
+		font-size: 20px;
+		font-weight: 700;
+	}
+	.item-label {
+		font-size: 14px;
+		color: #666;
+		font-weight: 400;
+		padding-left: 30px;
+		text-align: center;
+        width: 100px;
+	}
+}
+</style>
