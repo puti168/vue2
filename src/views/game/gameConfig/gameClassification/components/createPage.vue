@@ -91,7 +91,7 @@
 			<div class="content-part3">
 				<div class="content">
 					<p class="hotConfig">分类包含游戏</p>
-					<div class="demo">
+					<div class="transfer-wrapper">
 						<Transfer
 							id="transfer"
 							ref="transfer"
@@ -403,21 +403,6 @@ export default {
 				})
 				.catch(() => {})
 		}
-
-		// 列拖动
-		// columnDrop() {
-		// 	console.log('旧数据', this.dataList)
-		// 	const wrapperTr = document.querySelector('.el-table__body-wrapper tbody')
-		// 	const _this = this
-		// 	this.sortable = Sortable.create(wrapperTr, {
-		// 		animation: 180,
-		// 		delay: 0,
-		// 		onEnd: ({ newIndex, oldIndex }) => {
-		// 			const currRow = _this.dataList.splice(oldIndex, 1)[0]
-		// 			_this.dataList.splice(newIndex, 0, currRow)
-		// 		}
-		// 	})
-		// }
 	}
 }
 </script>
@@ -444,29 +429,9 @@ export default {
 		}
 	}
 }
-.demo {
+.transfer-wrapper {
 	text-align: left;
 	height: 450px;
-}
-h3 {
-	margin: 40px 0 0;
-}
-ul {
-	list-style-type: none;
-	padding: 0;
-	text-align: left;
-	width: 300px;
-	height: 300px;
-	background-color: #42b983;
-	overflow: scroll;
-}
-li {
-	display: block;
-	margin: 20px 10px;
-	border: 1px solid #444;
-}
-a {
-	color: #42b983;
 }
 .gameCreatePage-container {
 	background-color: #f5f5f5;
@@ -536,13 +501,16 @@ a {
 				width: 100%;
 				padding-left: 100px;
 				padding-bottom: 50px;
+                overflow-x: scroll;
+                //overflow-y: hidden;
 				.hotConfig {
 					color: rgba(0, 0, 0, 0.847058823529412);
 					font-size: 14px;
 					font-weight: 650;
 					display: inline-block;
-					margin-right: 50px;
-					margin-bottom: 10px;
+					margin-left: 82px;
+                    margin-top: 10px;
+					margin-bottom: 18px;
 				}
 			}
 		}
