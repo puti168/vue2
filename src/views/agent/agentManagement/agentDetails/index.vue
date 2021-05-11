@@ -4,10 +4,10 @@
     <div class="ps">
       <el-form ref="form" :inline="true" :model="queryData" @submit.native.prevent>
         <el-form-item
-          label="会员账号:"
+          label="代理账号:"
           prop="userName"
           :rules="[
-            { required: true, message: '请输入会员账号', trigger: 'blur' },
+            { required: true, message: '请输入代理账号', trigger: 'blur' },
             { min: 4, max: 12, message: '长度在 4 到 12 个字符', trigger: 'blur' },
           ]"
         >
@@ -42,6 +42,7 @@
           </el-button>
         </el-form-item>
       </el-form>
+
       <el-tabs
         v-show="isShow"
         v-model="activeName"
@@ -74,7 +75,6 @@
         class="floor-item"
         :parentData="parentData"
         :outlineInfo="outlineInfo"
-        :vipMsg="vipMsg"
         :remarksTableData="remarksTableData"
       ></basicInfor>
       <financialInfor
@@ -82,23 +82,23 @@
         class="floor-item"
         :parentData="parentData"
         :balanceList="balanceList"
-        :waterList="waterList"
+        :commission="commission"
         :playerList="playerList"
-        :sumList="sumList"
-        :top3Sy="top3Sy"
+        :surrogateList="surrogateList"
       ></financialInfor>
       <teamInfor
         ref="teamInfor"
         class="floor-item"
         :parentData="parentData"
-        :lonRecord="lonRecord"
+        :overviewList="overviewList"
+        :bettingList="bettingList"
+        :top3Sy="top3Sy"
       ></teamInfor>
       <loginInfor
         ref="loginInfor"
         class="floor-item"
         :parentData="parentData"
-        :bankList="bankList"
-        :virtualList="virtualList"
+        :lonRecord="lonRecord"
       ></loginInfor>
     </div>
   </div>
@@ -109,8 +109,8 @@ import list from '@/mixins/list'
 import basicInfor from './components/basicInfor'
 import financialInfor from './components/financialInfor'
 import teamInfor from './components/teamInfor'
-import { routerNames } from '@/utils/consts'
 import loginInfor from './components/loginInfor'
+import { routerNames } from '@/utils/consts'
 export default {
   name: routerNames.memberDetails,
   components: { basicInfor, financialInfor, teamInfor, loginInfor },
@@ -123,22 +123,15 @@ export default {
       activeName: 'basicInfor',
       tabList: ['basicInfor', 'financialInfor', 'teamInfor', 'loginInfor'],
       outlineInfo: {}, // 基本信息
-      vipMsg: {}, // vip信息
       remarksTableData: {}, // 备注表格
-      balanceList: { freezeBalance: '', balance: '' }, // 中心钱包，提现冻结
-      waterList: {}, // 提现流水
+      balanceList: {}, // 代理余额
+      commission: {}, // 佣金信息
       playerList: {}, // 充提信息
-      sumList: {}, // 投注信息
+      surrogateList: {}, // 代存信息
+      overviewList: {}, // 成员概览
+      bettingList: {}, // 投注信息
       top3Sy: [], // top3表格
-      lonRecord: {}, // 登录信息
-      bankList: [], // 银行卡
-      virtualList: [] // 虚拟账号信息
-      // loadingRgba: {
-      //   lock: true,
-      //   text: "Loading",
-      //   spinner: "el-icon-loading",
-      //   background: "rgba(0, 0, 0, 0.7)",
-      // },
+      lonRecord: {} // 登录信息
     }
   },
   computed: {},
@@ -164,7 +157,6 @@ export default {
             this.outlineInfo = res.data
             this.parentData.userName = res.data.userName
             this.parentData.userId = res.data.id
-            this.getVipInfo(res.data.id)
             this.getMemberRemarkList(res.data.id)
             this.getAccountCashAccount(res.data.id)
             this.getWithdrawalFreeze(res.data.id)
@@ -173,7 +165,6 @@ export default {
             this.getPlayerBetHistorySum(res.data.id)
             this.getPlayerTop3(res.data.id)
             this.getLogMemberLoginLog(res.data.id)
-            this.getBankCardBank(res.data.id)
           }
           this.$refs.basicInfor.activeL = false
           this.$refs.financialInfor.activeL = false
@@ -189,29 +180,7 @@ export default {
           this.$refs.financialInfor.activeL = false
           this.$refs.teamInfor.activeL = false
           this.$refs.loginInfor.activeL = false
-          this.parentData = { userName: '', userId: '' }
-          this.outlineInfo = {}
-          this.outlineInfo = {} // 基本信息
-          this.vipMsg = {} // vip信息
-          this.remarksTableData = {} // 备注表格
-          this.balanceList = { freezeBalance: '', balance: '' } // 中心钱包，提现冻结
-          this.waterList = {} // 提现流水
-          this.playerList = {} // 充提信息
-          this.sumList = {} // 投注信息
-          this.top3Sy = [] // top3表格
-          this.lonRecord = {} // 登录信息
-          this.bankList = [] // 银行卡
-          this.virtualList = [] // 虚拟账号信息
-          // loading.close();
         })
-    },
-    // vip信息
-    getVipInfo(val) {
-      this.$api.getVipInfo({ userId: val }).then((res) => {
-        if (res.code === 200) {
-          this.vipMsg = res.data
-        }
-      })
     },
     // 备注信息
     getMemberRemarkList(val) {
@@ -278,21 +247,6 @@ export default {
       this.$api.getLogMemberLoginLog(params).then((res) => {
         if (res.code === 200) {
           this.lonRecord = res.data
-        }
-      })
-    },
-    // 银行卡/虚拟币行号信息
-    getBankCardBank(val) {
-      const dataType1 = { userId: val, dataType: 2 }
-      this.$api.getBankCardBank(dataType1).then((res) => {
-        if (res.code === 200) {
-          this.virtualList = res.data
-        }
-      })
-      const dataType2 = { userId: val, dataType: 1 }
-      this.$api.getBankCardBank(dataType2).then((res) => {
-        if (res.code === 200) {
-          this.bankList = res.data
         }
       })
     },

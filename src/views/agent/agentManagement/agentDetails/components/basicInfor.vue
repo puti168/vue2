@@ -9,16 +9,6 @@
         <i class="el-icon-edit-outline"></i><br />
         编辑信息
       </el-col>
-      <!-- <el-col v-if="isshow" :span="16" class="btngroup">
-        <el-button
-          v-for="(item, index) in editMsgList"
-          :key="index"
-          disabled
-          type="primary"
-          >{{ item.label }}</el-button
-        >
-        <el-button disabled type="primary">账号备注</el-button>
-      </el-col> -->
       <el-col :span="16" class="btngroup aaaaa">
         <el-button
           v-for="(item, index) in editMsgList"
@@ -27,7 +17,7 @@
           :disabled="item.applyStatus === '1'"
           @click="editFn(item.label)"
           >{{ item.label }}</el-button>
-        <el-button type="primary" @click="editFn('账号备注')">账号备注</el-button>
+        <!-- <el-button type="primary" @click="editFn('账号备注')">账号备注</el-button> -->
       </el-col>
     </el-row>
     <div class="titelBox">概要信息</div>
@@ -104,6 +94,13 @@
 >注册端：<i v-if="activeL" class="el-icon-loading"></i>
         <span v-else>
           {{ typeFilter(outlineInfoList.deviceType, "deviceType") }}
+        </span>
+      </el-col>
+      <el-col
+:span="5"
+>入口权限：<i v-if="activeL" class="el-icon-loading"></i>
+        <span v-else>
+          {{ outlineInfoList.registerIp }}
         </span>
       </el-col>
     </el-row>
@@ -223,9 +220,8 @@
     >
       <el-form
         ref="editForm"
-        :rules="rules"
         :model="editData"
-        label-width="95px"
+        label-width="110px"
         @submit.native.prevent="enterSearch"
       >
         <el-form-item v-if="moduleBox === '账号状态'" label="账号状态：" prop="code">
@@ -278,6 +274,31 @@
           </el-select>
         </el-form-item>
         <el-form-item
+          v-if="moduleBox === '支付密码重置'"
+          label="支付密码重置："
+          prop="labelId"
+        >
+          <el-input></el-input>
+        </el-form-item>
+        <el-form-item
+          v-if="moduleBox === '账号备注' || moduleBox === '入口权限'"
+          label="备注信息："
+          prop="remark"
+          :rules="[
+            { required: true, message: '请输入备注信息', trigger: 'blur' },
+            { min: 2, max: 50, message: '长度在 2 到 50 个字符', trigger: 'blur' },
+          ]"
+        >
+          <el-input
+            v-model="editData.remark"
+            :maxlength="50"
+            type="textarea"
+            placeholder="最多可输入50个字符"
+          >
+          </el-input>
+        </el-form-item>
+        <el-form-item
+          v-else
           label="审核备注："
           prop="remark"
           :rules="[
@@ -315,27 +336,6 @@ export default {
     remarksTableData: { type: Object, default: () => ({}) }
   },
   data() {
-    const checkPhone = (rule, value, callback) => {
-      const phoneReg = /^1[3|4|5|7|8][0-9]{9}$/
-      if (!value) {
-        return callback(new Error('电话号码不能为空'))
-      }
-      setTimeout(() => {
-        // Number.isInteger是es6验证数字是否为整数的方法,实际输入的数字总是识别成字符串
-        // 所以在前面加了一个+实现隐式转换
-
-        if (!Number.isInteger(+value)) {
-          callback(new Error('请输入数字值'))
-        } else {
-          if (phoneReg.test(value)) {
-            callback()
-          } else {
-            callback(new Error('电话号码格式不正确'))
-          }
-        }
-      }, 100)
-    }
-
     return {
       loading: false,
       activeL: true,
@@ -344,9 +344,10 @@ export default {
         { code: '6', label: '账号状态', applyStatus: '' },
         { code: '8', label: '风控层级', applyStatus: '' },
         { code: '9', label: '代理标签', applyStatus: '' },
+        { code: '', label: '账号备注', applyStatus: '' },
+        { code: '', label: '入口权限', applyStatus: '' },
         { code: '3', label: '支付密码重置', applyStatus: '' }
       ],
-      isshow: true,
       // 账号状态
       accountStatusList: [],
       // 风控层级
@@ -361,10 +362,7 @@ export default {
       editVisible: false,
       editData: {},
       page: 1,
-      size: 3,
-      rules: {
-        mobile: [{ required: true, validator: checkPhone, trigger: 'blur' }]
-      }
+      size: 3
     }
   },
   computed: {},
@@ -374,7 +372,6 @@ export default {
         this.outlineInfoList = { ...newV }
         console.log('newV.auditList', newV.auditList)
         if (newV.auditList && newV.auditList !== null) {
-          this.isshow = false
           for (let i = 0; i < newV.auditList.length; i++) {
             const ele = newV.auditList[i]
             for (let j = 0; j < this.editMsgList.length; j++) {
@@ -388,7 +385,6 @@ export default {
           for (let i = 0; i < this.editMsgList.length; i++) {
             this.editMsgList[i].applyStatus = ''
           }
-          this.isshow = false
         }
       },
       deep: true
