@@ -1,6 +1,6 @@
 <template>
 	<transition name="fade-transform" mode="out-in">
-		<div v-if="!createPage" class="game-container report-container">
+		<div v-if="createPage" class="game-container report-container">
 			<div class="view-container dealer-container">
 				<div class="params">
 					<el-form

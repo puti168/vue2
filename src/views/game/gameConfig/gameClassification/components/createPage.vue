@@ -31,7 +31,6 @@
 						<el-input
 							v-model="queryData.hotSearch"
 							size="medium"
-							minlength="4"
 							maxlength="11"
 							oninput="value=value.replace(/(^\s*)|(\s*$)/g ,'')"
 							placeholder="请输入"
@@ -60,7 +59,6 @@
 						<el-input
 							v-model="queryData.hotSearch"
 							size="medium"
-							minlength="4"
 							maxlength="11"
 							oninput="value=value.replace(/(^\s*)|(\s*$)/g ,'')"
 							placeholder="请输入"
@@ -103,7 +101,7 @@
 							:filter-method="filterMethod"
 							:target-order="'push'"
 							:titles="['已包含', '游戏平台']"
-							:props="{ key: 'id', label: 'label' }"
+							:props="{ key: 'id', label: 'label', status: 'status' }"
 							:left-default-checked="hasCheckedWHLeftData"
 							:right-default-checked="hasCheckedWHRightData"
 							@left-check-change="handleWHLeftChange"
@@ -120,13 +118,15 @@
 import list from '@/mixins/list'
 // import Sortable from 'sortablejs'
 import Transfer from '@/components/transfer'
+// import DragDrop from './demo'
 
 const generateData = () => {
 	const data = []
 	for (let i = 1; i <= 30; i++) {
 		data.push({
 			id: i,
-			label: `${i} 斗地主`
+			label: `斗地主`,
+			status: '维护中'
 		})
 	}
 	return data
@@ -219,9 +219,9 @@ export default {
 		// console.log('新表格数据', this.dataList)
 	},
 	methods: {
-	    back() {
-	        this.$emit('back')
-        },
+		back() {
+			this.$emit('back')
+		},
 		handleWHLeftChange(key, key1) {
 			const _this = this
 			console.log(_this.hasCheckedWHLeftData)
@@ -433,7 +433,7 @@ export default {
 	color: rgba(0, 0, 0, 0.64);
 }
 /deep/ .el-button--info:hover {
-	background-color: #f7f7f7;
+	background-color: #eeeded;
 }
 /deep/ .el-transfer__buttons {
 	/deep/ button {
@@ -446,6 +446,7 @@ export default {
 }
 .demo {
 	text-align: left;
+	height: 450px;
 }
 h3 {
 	margin: 40px 0 0;
@@ -534,7 +535,7 @@ a {
 				margin: 0 auto;
 				width: 100%;
 				padding-left: 100px;
-                padding-bottom: 50px;
+				padding-bottom: 50px;
 				.hotConfig {
 					color: rgba(0, 0, 0, 0.847058823529412);
 					font-size: 14px;

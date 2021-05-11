@@ -1,5 +1,5 @@
 <template>
-	<div class="el-transfer-panel" style="width: 265px">
+	<div class="el-transfer-panel" style="width: 265px; height: 450px">
 		<p class="el-transfer-panel__header">
 			<!--			<el-checkbox-->
 			<!--				v-model="allChecked"-->
@@ -28,28 +28,63 @@
 					@click="clearQuery"
 				></i>
 			</el-input>
-			<div
+			<!--			<div-->
+			<!--				v-show="!hasNoMatch && data.length > 0"-->
+			<!--				v-if="show"-->
+			<!--				:class="{ 'is-filterable': filterable }"-->
+			<!--				class="el-transfer-panel__list"-->
+			<!--			>-->
+			<!--				<el-checkbox-->
+			<!--					v-for="item in filteredData"-->
+			<!--					:key="item[keyProp]"-->
+			<!--					class="el-transfer-panel__item"-->
+			<!--					:label="item[keyProp]"-->
+			<!--				>-->
+			<!--					<option-content :option="item"></option-content>-->
+			<!--				</el-checkbox>-->
+			<!--			</div>-->
+			<draggable
+				v-if="show"
+				v-model="selectedTheme"
+				class="selected-list"
+				tag="ul"
+				v-bind="dragOptions"
+				:move="onMove"
+				@end="onEnd"
+			>
+				<li
+					v-for="item in selectedTheme"
+					:key="item.id"
+					class="selected-theme"
+				>
+					{{ item.id }}{{ item.label }}
+				</li>
+			</draggable>
+			<draggable
 				v-show="!hasNoMatch && data.length > 0"
+				v-else
+                v-model="data"
 				:class="{ 'is-filterable': filterable }"
 				class="el-transfer-panel__list"
+                v-bind="dragOptions"
 			>
-				<!--				<el-checkbox-->
-				<!--					v-for="item in filteredData"-->
-				<!--					:key="item[keyProp]"-->
-				<!--					class="el-transfer-panel__item"-->
-				<!--					:label="item[keyProp]"-->
-				<!--					:disabled="item[disabledProp]"-->
-				<!--				>-->
-				<!--					<option-content :option="item"></option-content>-->
-				<!--				</el-checkbox>-->
 				<div
 					v-for="item in filteredData"
 					:key="item[keyProp]"
 					class="el-transfer-panel__item"
 				>
-					<option-content :option="item"></option-content>
+					<p class="item-content">
+						<span class="item-id">{{ item['id'] }}</span>
+						<span class="item-label">
+							{{ item[labelProp] || item[keyProp] }}
+						</span>
+						<span class="item-status disableRgba">
+							{{ item[statusProp] || '' }}
+						</span>
+						<i class="el-icon-close"></i>
+					</p>
 				</div>
-			</div>
+			</draggable>
 			<p v-show="hasNoMatch" class="el-transfer-panel__empty">
 				{{ t('el.transfer.noMatch') }}
 			</p>
@@ -71,6 +106,7 @@
 // import ElCheckbox from 'element-ui/packages/checkbox'
 // import ElInput from 'element-ui/packages/input'
 import Locale from 'element-ui/src/mixins/locale'
+import draggable from 'vuedraggable'
 
 export default {
 	name: 'ElTransferPanel',
@@ -79,33 +115,35 @@ export default {
 		// ElCheckboxGroup,
 		// ElCheckbox,
 		// ElInput,
-		OptionContent: {
-			props: {
-				option: Object
-			},
-			render(h) {
-				const getParent = (vm) => {
-					if (vm.$options.componentName === 'ElTransferPanel') {
-						return vm
-					} else if (vm.$parent) {
-						return getParent(vm.$parent)
-					} else {
-						return vm
-					}
-				}
-				const panel = getParent(this)
-				const transfer = panel.$parent || panel
-				return panel.renderContent ? (
-					panel.renderContent(h, this.option)
-				) : transfer.$scopedSlots.default ? (
-					transfer.$scopedSlots.default({ option: this.option })
-				) : (
-					<span>
-						{this.option[panel.labelProp] || this.option[panel.keyProp]}
-					</span>
-				)
-			}
-		}
+		draggable
+		// OptionContent: {
+		// 	props: {
+		// 		option: Object
+		// 	},
+		// 	render(h) {
+		// 		const getParent = (vm) => {
+		// 			if (vm.$options.componentName === 'ElTransferPanel') {
+		// 				return vm
+		// 			} else if (vm.$parent) {
+		// 				return getParent(vm.$parent)
+		// 			} else {
+		// 				return vm
+		// 			}
+		// 		}
+		// 		const panel = getParent(this)
+		// 		const transfer = panel.$parent || panel
+		// 		return panel.renderContent ? (
+		// 			panel.renderContent(h, this.option)
+		// 		) : transfer.$scopedSlots.default ? (
+		// 			transfer.$scopedSlots.default({ option: this.option })
+		// 		) : (
+		// 			<span>
+		// 				{this.option[panel.labelProp] || this.option[panel.keyProp]}{' '}
+		// 				{this.option[panel.statusProp] || ''}
+		// 			</span>
+		// 		)
+		// 	}
+		// }
 	},
 	mixins: [Locale],
 
@@ -120,6 +158,7 @@ export default {
 		},
 		renderContent: Function,
 		title: String,
+		show: Boolean,
 		filterable: Boolean,
 		format: Object,
 		filterMethod: Function,
@@ -133,7 +172,28 @@ export default {
 			allChecked: false,
 			query: '',
 			inputHover: false,
-			checkChangeByUser: true
+			checkChangeByUser: true,
+            selectedTheme: [
+                {
+                    id: 1,
+                    label: `老虎机`,
+                    status: '开启中'
+                },
+                {
+                    id: 2,
+                    label: `百人牛牛`,
+                    status: '已禁用'
+                },
+                {
+                    id: 4,
+                    label: `老虎机`,
+                    status: '开启中'
+                }
+            ],
+            backSelectedTheme: [], // 选主题列表备份
+            backUnSelectTheme: [], // 未选主题列表备份用于恢复默认设置
+            relatedListLast: {}, // 已选主题列表最后一项
+            isShowDel: false
 		}
 	},
 
@@ -141,6 +201,7 @@ export default {
 		filteredData() {
 			return this.data.filter((item) => {
 				if (typeof this.filterMethod === 'function') {
+					// console.log('item', item)
 					return this.filterMethod(this.query, item)
 				} else {
 					const label = item[this.labelProp] || item[this.keyProp].toString()
@@ -148,7 +209,14 @@ export default {
 				}
 			})
 		},
-
+		dragOptions() {
+			return {
+				animation: 0,
+				group: 'description',
+				disabled: false,
+				ghostClass: 'ghost'
+			}
+		},
 		checkableData() {
 			return this.filteredData.filter((item) => !item[this.disabledProp])
 		},
@@ -189,6 +257,10 @@ export default {
 
 		keyProp() {
 			return this.props.key || 'key'
+		},
+
+		statusProp() {
+			return this.props.status || 'status'
 		},
 
 		disabledProp() {
@@ -277,7 +349,215 @@ export default {
 			if (this.inputIcon === 'circle-close') {
 				this.query = ''
 			}
+		},
+
+		onMove({ relatedContext, draggedContext, to }) {
+			const relatedElement = relatedContext.element
+			const draggedElement = draggedContext.element
+			const dragInEl = to['className']
+            console.log('relatedElement', relatedElement)
+            console.log('draggedElement', draggedElement)
+            console.log('dragInEl', dragInEl)
+			if (dragInEl === 'selected-list') {
+				this.isShowDel = false
+				if (this.selectedTheme.length === 4) {
+					// 判断往已选列表拖时，如果已经满足4项，则记录已选列表的最后一项
+					// 拖拽结束时将此项清除到未选列表中
+					this.relatedListLast = this.selectedTheme[
+						this.selectedTheme.length - 1
+					]
+				}
+			} else {
+				this.isShowDel = true // 判断如果是往未选列表里拖的话显示垃圾桶
+			}
+			return (!relatedElement || !relatedElement.fixed) && !draggedElement.fixed
+		},
+		onEnd(dragObj) {
+			const dragInEl = dragObj.to['className']
+            console.log('dragInEl', dragObj)
+			if (dragInEl === 'selected-list') {
+				// if (this.selectedTheme.length > 4) {
+				// 	// 判断已选列表大于4项，将记录的最后一项过滤出来，并push到未选列表数组
+				// 	this.selectedTheme = this.selectedTheme.filter((item) => {
+				// 		return item.type !== this.relatedListLast.type
+				// 	})
+				// 	this.unSelectTheme.push(this.relatedListLast)
+				// }
+			}
+			if (dragInEl === 'theme-right-list') {
+				// 判断是往未选列表拖时，拖拽结束时将垃圾桶隐藏
+				this.isShowDel = false
+			}
 		}
 	}
 }
 </script>
+
+<style lang="scss" scoped>
+/deep/ .el-transfer-panel__list.is-filterable {
+	height: 400px;
+}
+/deep/ .el-transfer-panel__item {
+	padding-left: 0;
+	height: 42px;
+}
+.item-content {
+	border-bottom: 1px solid #ccc;
+	height: 42px;
+	line-height: 42px;
+	padding-left: 20px;
+	span {
+		display: inline-block;
+	}
+	.item-id {
+		color: #aaa;
+		font-size: 20px;
+		font-weight: 700;
+	}
+	.item-label {
+		font-size: 14px;
+		color: #666;
+		font-weight: 400;
+		padding-left: 30px;
+		text-align: center;
+		width: 100px;
+	}
+	.item-status {
+		margin-right: 10px;
+	}
+}
+.selected-list {
+    height: 240px;
+    margin-top: 24px;
+    overflow: hidden;
+    .selected-theme {
+        width: 160px;
+        height: 48px;
+        line-height: 48px;
+        text-align: center;
+        margin-bottom: 16px;
+        cursor: pointer;
+        background: linear-gradient(
+                180deg,
+                rgba(43, 46, 83, 1) 0%,
+                rgba(108, 116, 150, 1) 100%
+        );
+        border-radius: 6px;
+        font-size: 14px;
+        font-family: MicrosoftYaHei;
+        color: rgba(255, 255, 255, 1);
+    }
+}
+.theme-setting {
+	/deep/.el-dialog {
+		height: 476px;
+		border-radius: 6px;
+		.el-dialog__header {
+			height: 55px;
+			line-height: 56px;
+			padding: 0;
+			border-bottom: 1px solid rgba(13, 20, 30, 0.1);
+			.el-dialog__title {
+				height: 21px;
+				font-size: 16px;
+				font-family: MicrosoftYaHei-Bold, MicrosoftYaHei;
+				font-weight: bold;
+				color: rgba(13, 20, 30, 1);
+				line-height: 21px;
+			}
+			.el-dialog__headerbtn {
+				margin-top: -4px;
+			}
+		}
+		.el-dialog__body {
+			position: relative;
+			display: flex;
+			height: 331px;
+			padding: 0;
+			border-bottom: 1px solid rgba(13, 20, 30, 0.1);
+		}
+	}
+
+    .theme-left {
+        width: 218px;
+        margin-left: 24px;
+        border-right: 1px solid rgba(13, 20, 30, 0.1);
+        .theme-title {
+            display: flex;
+            margin-top: 24px;
+            .title {
+                height: 19px;
+                margin-right: 4px;
+                font-size: 14px;
+                font-family: MicrosoftYaHei-Bold, MicrosoftYaHei;
+                font-weight: bold;
+                color: rgba(13, 20, 30, 1);
+                line-height: 19px;
+            }
+            .des {
+                height: 16px;
+                font-size: 12px;
+                font-family: MicrosoftYaHei;
+                color: rgba(13, 20, 30, 0.6);
+                line-height: 19px;
+            }
+        }
+    }
+    .theme-right {
+        padding: 0 24px;
+        .theme-right-title {
+            padding-top: 24px;
+            height: 19px;
+            font-size: 14px;
+            font-family: MicrosoftYaHei-Bold, MicrosoftYaHei;
+            font-weight: bold;
+            color: rgba(13, 20, 30, 0.4);
+            line-height: 19px;
+        }
+        .theme-right-list {
+            width: 357px;
+            height: 240px;
+            overflow: scroll;
+            margin-top: 24px;
+            .theme-right-item {
+                width: 160px;
+                height: 48px;
+                line-height: 48px;
+                float: left;
+                margin-right: 16px;
+                margin-bottom: 16px;
+                background: rgba(247, 248, 252, 1);
+                border-radius: 6px;
+                font-size: 14px;
+                font-family: MicrosoftYaHei;
+                color: rgba(13, 20, 30, 0.4);
+                text-align: center;
+                cursor: pointer;
+            }
+        }
+        .theme-right-list::before,
+        .theme-right-list::after {
+            content: '';
+            display: table;
+        }
+        .theme-right-list::after {
+            clear: both;
+        }
+    }
+    .drag-drop-del {
+        position: absolute;
+        right: 1px;
+        top: 0;
+        width: 404px;
+        height: 331px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        //background-image: url('../../../../../../src/assets/img/bb_logo.png');
+        img {
+            width: 96px;
+            height: 96px;
+        }
+    }
+}
+</style>

@@ -5,9 +5,10 @@
 			ref="leftPanel"
 			v-bind="$props"
 			:data="sourceData"
-			:title="titles[0] || t('el.transfer.titles.0')"
+			:title="titles[0]"
+            :show="false"
 			:default-checked="leftDefaultChecked"
-			:placeholder="filterPlaceholder || t('el.transfer.filterPlaceholder')"
+			:placeholder="filterPlaceholder"
 			@checked-change="onSourceCheckedChange"
 		>
 			<slot name="left-footer"></slot>
@@ -56,9 +57,10 @@
 			ref="rightPanel"
 			v-bind="$props"
 			:data="targetData"
-			:title="titles[1] || t('el.transfer.titles.1')"
+			:title="titles[1]"
+            :show="true"
 			:default-checked="rightDefaultChecked"
-			:placeholder="filterPlaceholder || t('el.transfer.filterPlaceholder')"
+			:placeholder="filterPlaceholder"
 			@checked-change="onTargetCheckedChange"
 		>
 			<slot name="right-footer"></slot>
