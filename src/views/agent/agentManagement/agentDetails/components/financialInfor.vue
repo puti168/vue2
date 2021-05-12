@@ -89,8 +89,8 @@
     <el-divider></el-divider>
     <div class="titelBox">
       <el-row>
-        <el-col :span="2"> 代存信息 </el-col>
-        <el-col :span="1" class="refrestBox cell">
+        <el-col :span="1"> 代存信息 </el-col>
+        <el-col :span="2" class="refrestBox cell">
           <el-button type="primary" icon="el-icon-refresh">刷新</el-button>
         </el-col>
       </el-row>

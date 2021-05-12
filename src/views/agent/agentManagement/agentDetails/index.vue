@@ -17,7 +17,7 @@
             size="medium"
             :maxlength="11"
             style="width: 280px"
-            placeholder="请输入会员账号"
+            placeholder="请输入代理账号"
             :disabled="loading"
             @keyup.enter.native="enterSearch"
           ></el-input>

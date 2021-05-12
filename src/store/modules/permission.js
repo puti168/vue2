@@ -205,6 +205,20 @@ const actions = {
 						}
 					})
 				}
+				if (item.name === '代理') {
+					item.children.forEach((data) => {
+						if (data.name === '推广管理') {
+							data.children.push({
+								path: '/agent/promotionManagement/domainCreateAndEidt',
+								name: 'domainCreateAndEidt',
+								component: () =>
+									import(`@/views/agent/promotionManagement/domainCreateAndEidt/index`),
+								meta: { title: '推广域名创建/编辑', icon: 'bb_reportDaily' },
+								hidden: true
+							})
+						}
+					})
+				}
 				if (item.name === '游戏') {
 					item.children.forEach((data) => {
 						if (data.name === '游戏配置') {
@@ -229,7 +243,7 @@ const actions = {
 						}
 						if (data.name === '游戏注单') {
 							data.children.push({
-								path: '/game/gameBetslip/gameBetslipDetails/index',
+								path: '/game/gameBetslip/gameBetslipDetails',
 								name: 'gameBetslipDetails',
 								component: () =>
 									import(`@/views/game/gameBetslip/gameBetslipDetails/index`),
