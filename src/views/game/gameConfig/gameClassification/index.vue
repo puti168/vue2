@@ -118,7 +118,7 @@
 								type="warning"
 								icon="el-icon-folder-add"
 								size="medium"
-								@click="add"
+								@click="openEdit"
 							>
 								创建
 							</el-button>
@@ -311,7 +311,7 @@
 								>
 									禁用
 								</el-button>
-								<el-button type="warning" icon="el-icon-edit" size="medium">
+								<el-button type="warning" icon="el-icon-edit" size="medium" @click="openEdit(scope.row)">
 									编辑信息
 								</el-button>
 								<el-button
@@ -513,7 +513,7 @@ export default {
 			}
 		},
 
-		add() {
+        openEdit() {
 			this.createPage = true
 		},
 		back() {

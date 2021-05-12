@@ -8,9 +8,9 @@
                     :model="queryData"
                     label-width="100px"
                 >
-                    <el-form-item label="使用时间:">
+                    <el-form-item label="注册时间:">
                         <el-date-picker
-                            v-model="queryData.createDt"
+                            v-model="queryData.registerTime"
                             size="medium"
                             :picker-options="pickerOptions"
                             format="yyyy-MM-dd HH:mm:ss"
@@ -25,7 +25,24 @@
                             :default-time="defaultTime"
                         ></el-date-picker>
                     </el-form-item>
-                    <el-form-item label="代理账号:" prop="userName">
+                    <el-form-item label="代理类型:">
+                        <el-select
+                            v-model="queryData.accountType"
+                            size="medium"
+                            placeholder="默认选择全部"
+                            clearable
+                            multiple
+                            style="width: 300px"
+                        >
+                            <el-option
+                                v-for="item in accountTypeArr"
+                                :key="item.code"
+                                :label="item.description"
+                                :value="item.code"
+                            ></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="代理账号:">
                         <el-input
                             v-model="queryData.userName"
                             size="medium"
@@ -33,58 +50,44 @@
                             clearable
                             maxlength="11"
                             style="width: 180px"
-                            @keyup.enter.native="enterSearch"
                         ></el-input>
                     </el-form-item>
-                    <el-form-item label="代理类型:">
+                    <el-form-item label="注册IP:">
+                        <el-input
+                            v-model="queryData.registerIp"
+                            size="medium"
+                            placeholder="请输入"
+                            clearable
+                            maxlength="15"
+                            style="width: 180px"
+                        ></el-input>
+                    </el-form-item>
+                    <el-form-item label="IP归属地:">
+                        <el-input
+                            v-model="queryData.ipAttribution"
+                            size="medium"
+                            placeholder="请输入"
+                            clearable
+                            maxlength="10"
+                            style="width: 180px"
+                        ></el-input>
+                    </el-form-item>
+                    <el-form-item label="注册终端:">
                         <el-select
-                            v-model="queryData.operateType"
+                            v-model="queryData.deviceType"
                             size="medium"
                             placeholder="默认选择全部"
                             clearable
-                            style="width: 180px"
+                            multiple
+                            style="width: 300px"
                         >
                             <el-option
-                                v-for="item in bindType"
+                                v-for="item in deviceTypeArr"
                                 :key="item.code"
                                 :label="item.description"
                                 :value="item.code"
                             ></el-option>
                         </el-select>
-                    </el-form-item>
-                    <el-form-item label="银行卡号:">
-                        <el-input
-                            v-model="queryData.cardNumber"
-                            size="medium"
-                            placeholder="请输入"
-                            clearable
-                            style="width: 180px"
-                            maxlength="25"
-                            oninput="value=value.replace(/[^\d]/g,'')"
-                            @keyup.enter.native="enterSearch"
-                        ></el-input>
-                    </el-form-item>
-                    <el-form-item label="银行名称:">
-                        <el-input
-                            v-model="queryData.bankName"
-                            size="medium"
-                            placeholder="请输入"
-                            clearable
-                            style="width: 180px"
-                            maxlength="10"
-                            @keyup.enter.native="enterSearch"
-                        ></el-input>
-                    </el-form-item>
-                    <el-form-item label="持卡人姓名:">
-                        <el-input
-                            v-model="queryData.cnName"
-                            size="medium"
-                            placeholder="请输入"
-                            clearable
-                            style="width: 180px"
-                            maxlength="6"
-                            @keyup.enter.native="enterSearch"
-                        ></el-input>
                     </el-form-item>
                     <el-form-item>
                         <el-button
@@ -119,13 +122,16 @@
                     :header-cell-style="getRowClass"
                     @sort-change="changeTableSort"
                 >
-                    <el-table-column prop="userName" align="center" label="代理账号">
+                    <el-table-column
+                        prop="createDt"
+                        align="center"
+                        label="注册时间"
+                        sortable="custom"
+                    >
                         <template slot-scope="scope">
-                            <Copy
-                                v-if="!!scope.row.userName"
-                                :title="scope.row.userName"
-                                :copy="copy"
-                            />
+							<span v-if="!!scope.row.createDt">
+								{{ scope.row.createDt }}
+							</span>
                             <span v-else>-</span>
                         </template>
                     </el-table-column>
@@ -137,64 +143,46 @@
                             <span v-else>-</span>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="cardNumber" align="center" label="银行卡号">
+                    <el-table-column prop="userName" align="center" label="代理账号">
                         <template slot-scope="scope">
                             <Copy
-                                v-if="!!scope.row.cardNumber"
-                                :title="scope.row.cardNumber"
+                                v-if="!!scope.row.userName"
+                                :title="scope.row.userName"
                                 :copy="copy"
-                            />
+                            >
+                                {{ scope.row.userName }}
+                            </Copy>
                             <span v-else>-</span>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="bankName" align="center" label="银行名称">
-                        <template slot="header">
-                            银行名称
-                            <br />
-                            银行支行
-                        </template>
+                    <el-table-column prop="registerIp" align="center" label="注册IP">
                         <template slot-scope="scope">
-							<span v-if="!!scope.row.bankName">
-								{{ scope.row.bankName }}
+							<span v-if="!!scope.row.registerIp">
+								{{ scope.row.registerIp }}
 							</span>
                             <span v-else>-</span>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="cnName" align="center" label="持卡人">
+                    <el-table-column prop="ipAttribution" align="center" label="IP归属地">
                         <template slot-scope="scope">
-                            <Copy
-                                v-if="!!scope.row.cnName"
-                                :title="scope.row.cnName"
-                                :copy="copy"
-                            />
-                            <span v-else>-</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column prop="operateType" align="center" label="操作类型">
-                        <template slot-scope="scope">
-							<span v-if="!!scope.row.operateType">
-								{{ typeFilter(scope.row.operateType, 'bindType') }}
+							<span v-if="!!scope.row.ipAttribution">
+								{{ scope.row.ipAttribution }}
 							</span>
                             <span v-else>-</span>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="operateType" align="center" label="开户地址">
+                    <el-table-column prop="deviceType" align="center" label="注册终端">
                         <template slot-scope="scope">
-							<span v-if="!!scope.row.operateType">
-								{{ typeFilter(scope.row.operateType, 'bindType') }}
+							<span v-if="!!scope.row.deviceType">
+								{{ typeFilter(scope.row.deviceType, 'deviceType') }}
 							</span>
                             <span v-else>-</span>
                         </template>
                     </el-table-column>
-                    <el-table-column
-                        prop="createDt"
-                        align="center"
-                        label="操作时间"
-                        sortable="custom"
-                    >
+                    <el-table-column prop="deviceNo" align="center" label="终端设备号">
                         <template slot-scope="scope">
-							<span v-if="!!scope.row.createDt">
-								{{ scope.row.createDt }}
+							<span v-if="!!scope.row.deviceNo">
+								{{ scope.row.deviceNo }}
 							</span>
                             <span v-else>-</span>
                         </template>
@@ -203,8 +191,8 @@
                 <!-- 分页 -->
                 <el-pagination
                     v-show="!!total"
-                    :current-page.sync="pageNum"
                     class="pageValue"
+                    :current-page.sync="pageNum"
                     background
                     layout="total, sizes,prev, pager, next, jumper"
                     :page-size="pageSize"
@@ -220,28 +208,28 @@
 
 <script>
 import list from '@/mixins/list'
-import dayjs from 'dayjs'
 import { routerNames } from '@/utils/consts'
-// import { notSpecial2, isHaveEmoji } from '@/utils/validate'
+import dayjs from 'dayjs'
 const start = dayjs()
     .startOf('day')
     .valueOf()
 const end = dayjs()
     .endOf('day')
     .valueOf()
+// import editForm from './components/editForm'
 // import { UTable } from 'umy-ui'
 export default {
-    name: routerNames.agentBankCard,
+    name: routerNames.registerInfo,
     mixins: [list],
     data() {
         return {
             queryData: {
-                operateType: '',
-                createDt: [start, end],
+                registerTime: [start, end],
+                accountType: [],
                 userName: '',
-                cnName: '',
-                bankName: '',
-                cardNumber: '',
+                registerIp: '',
+                ipAttribution: '',
+                deviceType: [],
                 orderType: undefined
             },
             dataList: [],
@@ -249,11 +237,11 @@ export default {
         }
     },
     computed: {
-        bindType() {
-            return [
-                { description: '全部', code: undefined },
-                ...this.globalDics.bindType
-            ]
+        accountTypeArr() {
+            return this.globalDics.accountType
+        },
+        deviceTypeArr() {
+            return this.globalDics.deviceType
         }
     },
     mounted() {},
@@ -261,11 +249,10 @@ export default {
         loadData() {
             this.dataList = []
             this.loading = true
-            const create = this.queryData.createDt || []
+            const create = this.queryData.registerTime || []
             const [startTime, endTime] = create
             let params = {
                 ...this.queryData,
-                dataType: 1,
                 createDtStart: startTime
                     ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
                     : undefined,
@@ -276,9 +263,17 @@ export default {
             params = {
                 ...this.getParams(params)
             }
-            delete params.createDt
+            delete params.registerTime
+            // params.accountType =
+            // 	params.accountType && params.accountType.length
+            // 		? params.accountType
+            // 		: undefined
+            // params.deviceType =
+            // 	params.deviceType && params.deviceType.length
+            // 		? params.deviceType
+            // 		: undefined
             this.$api
-                .bankRecordListAPI(params)
+                .memberRegisterInfoListAPI(params)
                 .then((res) => {
                     const {
                         code,
@@ -306,12 +301,12 @@ export default {
         reset() {
             this.$refs['form'].resetFields()
             this.queryData = {
-                operateType: '',
-                createDt: [start, end],
+                registerTime: [start, end],
+                accountType: undefined,
                 userName: '',
-                cnName: '',
-                bankName: '',
-                cardNumber: ''
+                registerIp: '',
+                ipAttribution: '',
+                deviceType: undefined
             }
             this.loadData()
         }

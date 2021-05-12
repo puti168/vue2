@@ -52,39 +52,51 @@
                             ></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="银行卡号:">
+                    <el-form-item label="虚拟币账户地址:" label-width="120px">
                         <el-input
                             v-model="queryData.cardNumber"
                             size="medium"
                             placeholder="请输入"
                             clearable
-                            style="width: 180px"
-                            maxlength="25"
+                            style="width: 300px"
+                            maxlength="50"
                             oninput="value=value.replace(/[^\d]/g,'')"
                             @keyup.enter.native="enterSearch"
                         ></el-input>
                     </el-form-item>
-                    <el-form-item label="银行名称:">
-                        <el-input
-                            v-model="queryData.bankName"
+                    <el-form-item label="虚拟币类型:">
+                        <el-select
+                            v-model="queryData.accountType"
                             size="medium"
-                            placeholder="请输入"
+                            placeholder="默认选择全部"
                             clearable
-                            style="width: 180px"
-                            maxlength="10"
-                            @keyup.enter.native="enterSearch"
-                        ></el-input>
+                            multiple
+                            style="width: 300px"
+                        >
+                            <el-option
+                                v-for="item in accountTypeArr"
+                                :key="item.code"
+                                :label="item.description"
+                                :value="item.code"
+                            ></el-option>
+                        </el-select>
                     </el-form-item>
-                    <el-form-item label="持卡人姓名:">
-                        <el-input
-                            v-model="queryData.cnName"
+                    <el-form-item label="虚拟币协议:">
+                        <el-select
+                            v-model="queryData.accountType"
                             size="medium"
-                            placeholder="请输入"
+                            placeholder="默认选择全部"
                             clearable
-                            style="width: 180px"
-                            maxlength="6"
-                            @keyup.enter.native="enterSearch"
-                        ></el-input>
+                            multiple
+                            style="width: 300px"
+                        >
+                            <el-option
+                                v-for="item in accountTypeArr"
+                                :key="item.code"
+                                :label="item.description"
+                                :value="item.code"
+                            ></el-option>
+                        </el-select>
                     </el-form-item>
                     <el-form-item>
                         <el-button
@@ -137,7 +149,7 @@
                             <span v-else>-</span>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="cardNumber" align="center" label="银行卡号">
+                    <el-table-column prop="cardNumber" align="center" label="虚拟币账号地址">
                         <template slot-scope="scope">
                             <Copy
                                 v-if="!!scope.row.cardNumber"
@@ -147,12 +159,7 @@
                             <span v-else>-</span>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="bankName" align="center" label="银行名称">
-                        <template slot="header">
-                            银行名称
-                            <br />
-                            银行支行
-                        </template>
+                    <el-table-column prop="bankName" align="center" label="虚拟币种类">
                         <template slot-scope="scope">
 							<span v-if="!!scope.row.bankName">
 								{{ scope.row.bankName }}
@@ -160,7 +167,7 @@
                             <span v-else>-</span>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="cnName" align="center" label="持卡人">
+                    <el-table-column prop="cnName" align="center" label="虚拟币协议">
                         <template slot-scope="scope">
                             <Copy
                                 v-if="!!scope.row.cnName"
@@ -170,26 +177,10 @@
                             <span v-else>-</span>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="operateType" align="center" label="操作类型">
-                        <template slot-scope="scope">
-							<span v-if="!!scope.row.operateType">
-								{{ typeFilter(scope.row.operateType, 'bindType') }}
-							</span>
-                            <span v-else>-</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column prop="operateType" align="center" label="开户地址">
-                        <template slot-scope="scope">
-							<span v-if="!!scope.row.operateType">
-								{{ typeFilter(scope.row.operateType, 'bindType') }}
-							</span>
-                            <span v-else>-</span>
-                        </template>
-                    </el-table-column>
                     <el-table-column
                         prop="createDt"
                         align="center"
-                        label="操作时间"
+                        label="提取时间"
                         sortable="custom"
                     >
                         <template slot-scope="scope">
@@ -254,6 +245,9 @@ export default {
                 { description: '全部', code: undefined },
                 ...this.globalDics.bindType
             ]
+        },
+        accountTypeArr() {
+            return this.globalDics.accountType
         }
     },
     mounted() {},
