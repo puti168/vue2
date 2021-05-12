@@ -69,7 +69,7 @@ const agent = [
 	{
 		id: '55',
 		parentId: '45',
-		path: '/agent/agentManagement/agentRegistered',
+		path: '/agent/agentManagement/agentRegisterInfo',
 		title: '代理注册信息'
 	},
 	{
