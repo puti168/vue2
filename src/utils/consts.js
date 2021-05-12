@@ -20,7 +20,8 @@ export const routerNames = {
 	gameClassification: 'gameClassification',
 	gameSearchManage: 'gameSearchManage',
 	gameBetslipDetails: 'gameBetslipDetails',
-	pictureManagement: 'pictureManagement'
+	pictureManagement: 'pictureManagement',
+	agentBankCard: 'agentBankCard'
 }
 const month = dayjs().month()
 const year = dayjs().year()

@@ -81,7 +81,7 @@ const agent = [
 	{
 		id: '121',
 		parentId: '45',
-		path: '/agent/agentManagement/agentVirtualCurrency',
+		path: '/agent/agentManagement/agentVirtualRecord',
 		title: '代理虚拟币账号记录'
 	},
 	{
