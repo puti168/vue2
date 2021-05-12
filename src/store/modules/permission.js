@@ -205,6 +205,20 @@ const actions = {
 						}
 					})
 				}
+				if (item.name === '代理') {
+					item.children.forEach((data) => {
+						if (data.name === '代理审核') {
+							data.children.push({
+								path: '/agent/agencyReview/agencyEditReview',
+								name: 'agencyEditReview',
+								component: () =>
+									import(`@/views/agent/agencyReview/agencyEditReview/index`),
+								meta: { title: '代理账户修改审核详情', icon: 'bb_reportDaily' },
+								hidden: true
+							})
+						}
+					})
+				}
 				if (item.name === '游戏') {
 					item.children.forEach((data) => {
 						if (data.name === '游戏配置') {

@@ -93,7 +93,7 @@ const agent = [
 	{
 		id: '57',
 		parentId: '46',
-		path: '/agent/agencyReview/agencyEidtReview',
+		path: '/agent/agencyReview/agencyEdit',
 		title: '代理账户修改审核'
 	},
 	{
