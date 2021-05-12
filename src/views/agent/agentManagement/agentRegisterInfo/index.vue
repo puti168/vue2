@@ -304,8 +304,6 @@ export default {
                 registerTime: [start, end],
                 accountType: undefined,
                 userName: '',
-                parentProxyName: '',
-                registerPhone: '',
                 registerIp: '',
                 ipAttribution: '',
                 deviceType: undefined
