@@ -30,17 +30,20 @@
 					class="avatar imgSize"
 					@click.stop="handleClick"
 				/>
-				<svg-icon
-					icon-class="bb_icon_delete"
+				<!--				<i-->
+				<!--					icon-class="bb_icon_delete"-->
+				<!--					class="delete-icon"-->
+				<!--					@click.stop="handleDeleteImgUrl"-->
+				<!--				/>-->
+				<i
 					class="delete-icon"
 					@click.stop="handleDeleteImgUrl"
-				/>
+				></i>
 			</div>
-			<svg-icon
-				v-else
-				icon-class="icon_addimgcam"
-				class="common-align-center"
-			/>
+			<i
+				class="common-align-center el-icon-plus"
+				@click.stop="handleDeleteImgUrl"
+			></i>
 		</el-upload>
 		<el-dialog v-if="isImage" :visible.sync="dialogVisible" size="tiny">
 			<img width="100%" :src="dialogUrl" alt />
@@ -369,13 +372,13 @@ export default {
 		},
 		getIndex() {
 			// 根据参数id取得该节点
-			var obj = document.getElementById(this.randomId)
-			// 获取该节点的父节点
-			var p = obj.parentNode
-			// 取得父节点下的所有节点
-			var tags = p.children
-			// 在父节点的所有子节点中查找自己所在的位置
-			for (var i = 0, len = tags.length; i < len; i++) {
+            const obj = document.getElementById(this.randomId)
+            // 获取该节点的父节点
+            const p = obj.parentNode
+            // 取得父节点下的所有节点
+            const tags = p.children
+            // 在父节点的所有子节点中查找自己所在的位置
+			for (let i = 0, len = tags.length; i < len; i++) {
 				// 找到节点，返回下标
 				if (tags[i] === obj) {
 					return i
@@ -430,6 +433,16 @@ export default {
 $medium-size: 178px;
 $small-size: 140px;
 $mini-size: 100px;
+.upload-container {
+	.el-upload {
+		width: 100%;
+
+		.el-upload-dragger {
+			width: 100%;
+			height: 200px;
+		}
+	}
+}
 .avatar-uploader /deep/ .el-upload {
 	border: 1px dashed #d9d9d9;
 	border-radius: 6px;
@@ -478,15 +491,13 @@ $mini-size: 100px;
 	display: block;
 }
 .common-align-center {
-	position: absolute !important;
-	transform: translate(-50%, -50%);
-	left: 50%;
-	top: 50%;
+    width: 50px;
+    height: 50px;
 }
 .delete-icon {
-	position: absolute;
-	right: 0px;
-	top: 0px;
+	//position: absolute;
+	//right: 0px;
+	//top: 0px;
 }
 .el-progress-circle {
 	width: 100px !important;

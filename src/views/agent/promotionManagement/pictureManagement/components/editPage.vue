@@ -82,7 +82,7 @@
 							@upoladItemDefeat="handleUploadDefeat"
 						></upload>
 						<p v-if="imgTip" class="imgTip">
-							{{ imgTip }} 图片格式仅支持png, jpg, 图片大小不超过2M
+                            <code style="color:#FF3B30;">*</code>&nbsp;图片格式仅支持png, jpg, 图片大小不超过2MB
 						</p>
 					</el-form-item>
 					<el-form-item label="审核信息:">
@@ -201,6 +201,9 @@ export default {
 				picSize: [
 					{ required: true, message: '请选择图片尺寸', trigger: 'change' }
 				],
+                imgUrl: [
+                    { required: true, message: '请上传图片', trigger: 'change' }
+                ],
 				picName: [
 					{
 						required: true,
