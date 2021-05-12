@@ -4,6 +4,7 @@ import dayjs from 'dayjs'
 export const routerNames = {
 	memberChange: 'memberChange',
 	addMember: 'addMember',
+    memberOverflow: 'memberOverflow',
 	bankRecord: 'bankRecord',
 	memberDetails: 'memberDetails',
 	memberList: 'memberList',
