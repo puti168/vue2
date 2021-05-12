@@ -1,5 +1,5 @@
 <template>
-	<div class="el-transfer-panel" style="width: 265px; height: 450px">
+	<div class="el-transfer-panel" style="width: 285px; height: 450px">
 		<p class="el-transfer-panel__header">
 			<!--			<el-checkbox-->
 			<!--				v-model="allChecked"-->

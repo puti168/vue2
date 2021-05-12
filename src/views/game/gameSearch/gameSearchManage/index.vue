@@ -301,7 +301,7 @@ export default {
 			console.log('旧数据', this.dataList)
 			const wrapperTr = document.querySelector('.el-table__body-wrapper tbody')
 			const _this = this
-			this.sortable = Sortable.create(wrapperTr, {
+			this.sortable = wrapperTr && Sortable.create(wrapperTr, {
 				animation: 180,
 				delay: 0,
 				onEnd: ({ newIndex, oldIndex }) => {
