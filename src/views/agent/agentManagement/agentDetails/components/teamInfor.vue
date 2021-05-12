@@ -3,8 +3,8 @@
     <div class="backgroundTitelBox">团队信息</div>
     <div class="titelBox">
       <el-row>
-        <el-col :span="1" style="cursor: pointer">
-          <span @click="borderL = true"> 成员概览</span>
+        <el-col :span="1">
+          <span> 成员概览</span>
         </el-col>
         <el-col :span="2" class="refrestBox cell">
           <el-button
@@ -88,10 +88,10 @@ icon="el-icon-refresh"
     <el-divider></el-divider>
     <div class="titelBox">
       <el-row>
-        <el-col :span="1" style="cursor: pointer">
-          <span @click="borderL = true">成员投注信息</span>
+        <el-col :span="2">
+          <span>成员投注信息</span>
         </el-col>
-        <el-col :span="2" class="refrestBox cell">
+        <el-col :span="1" class="refrestBox cell">
           <el-button
 type="primary"
 icon="el-icon-refresh"

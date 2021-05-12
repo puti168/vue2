@@ -191,7 +191,7 @@ const actions = {
 								name: 'memberChangeReview',
 								component: () =>
 									import(`@/views/member/memberReview/memberChangeReview/index`),
-								meta: { title: '会员账户修改审核详情', icon: 'bb_reportDaily' },
+								meta: { title: '会员账户修改审核详情'},
 								hidden: true
 							})
 							data.children.push({
@@ -199,7 +199,7 @@ const actions = {
 								name: 'addMemberReview',
 								component: () =>
 									import(`@/views/member/memberReview/addMemberReview/index`),
-								meta: { title: '新增会员审核详情', icon: 'bb_reportDaily' },
+								meta: { title: '新增会员审核详情'},
 								hidden: true
 							})
 						}
@@ -213,7 +213,17 @@ const actions = {
 								name: 'agencyEditReview',
 								component: () =>
 									import(`@/views/agent/agencyReview/agencyEditReview/index`),
-								meta: { title: '代理账户修改审核详情', icon: 'bb_reportDaily' },
+								meta: { title: '代理账户修改审核详情'},
+								hidden: true
+							})
+						}
+						if (data.name === '推广管理') {
+							data.children.push({
+								path: '/agent/promotionManagement/domainCreateAndEidt',
+								name: 'domainCreateAndEidt',
+								component: () =>
+									import(`@/views/agent/promotionManagement/domainCreateAndEidt/index`),
+								meta: { title: '推广域名创建/编辑'},
 								hidden: true
 							})
 						}
@@ -243,11 +253,11 @@ const actions = {
 						}
 						if (data.name === '游戏注单') {
 							data.children.push({
-								path: '/game/gameBetslip/gameBetslipDetails/index',
+								path: '/game/gameBetslip/gameBetslipDetails',
 								name: 'gameBetslipDetails',
 								component: () =>
 									import(`@/views/game/gameBetslip/gameBetslipDetails/index`),
-								meta: { title: '游戏注单详情', icon: 'bb_reportDaily' },
+								meta: { title: '游戏注单详情'},
 								hidden: true
 							})
 						}

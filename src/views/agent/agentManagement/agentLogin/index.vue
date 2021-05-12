@@ -1,12 +1,11 @@
 <template>
   <div class="game-container report-container">
-    <h3>代理登录信息</h3>
     <div class="view-container dealer-container">
       <div class="params">
         <el-form ref="form" :inline="true" :model="queryData">
           <el-form-item label="登录时间:">
             <el-date-picker
-              v-model="searchTime"
+              v-model="loginTime"
               size="medium"
               :picker-options="pickerOptions"
               format="yyyy-MM-dd HH:mm:ss"
@@ -15,7 +14,7 @@
               start-placeholder="开始日期"
               end-placeholder="结束日期"
               align="right"
-              clearable
+              :clearable="false"
               :default-time="defaultTime"
               style="width: 375px"
             ></el-date-picker>
@@ -27,7 +26,7 @@
               :maxlength="11"
               size="medium"
               style="width: 180px; margin-right: 20px"
-              placeholder="请输入会员账号"
+              placeholder="请输入"
               :disabled="loading"
               @keyup.enter.native="enterSearch"
             ></el-input>
@@ -52,23 +51,19 @@
             <el-select
               v-model="queryData.accountType"
               style="width: 280px"
-              multiple
               placeholder="默认选择全部"
               :popper-append-to-body="false"
             >
-              <el-option
-                v-for="item in accountType"
-                :key="item.code"
-                :label="item.description"
-                :value="item.code"
-              ></el-option>
+              <el-option label="全部" value=""></el-option>
+              <el-option label="成功" value="0"></el-option>
+              <el-option label="失败" value="1"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="登录IP:">
             <el-input
               v-model="queryData.bankCode"
               clearable
-              :maxlength="30"
+              :maxlength="15"
               size="medium"
               style="width: 180px"
               placeholder="请输入内容"
@@ -80,7 +75,7 @@
             <el-input
               v-model="queryData.bankCode"
               clearable
-              :maxlength="30"
+              :maxlength="10"
               size="medium"
               style="width: 180px"
               placeholder="请输入内容"
@@ -104,11 +99,11 @@
               ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="登录设备号:">
+          <el-form-item label="终端设备号:">
             <el-input
               v-model="queryData.bankCode"
               clearable
-              :maxlength="30"
+              :maxlength="50"
               size="medium"
               style="width: 180px"
               placeholder="请输入内容"
@@ -257,7 +252,7 @@ export default {
       queryData: {
         accountType: []
       },
-      searchTime: [startTime, endTime],
+      loginTime: [startTime, endTime],
       now: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
       summary: {
         count: 0,
@@ -285,7 +280,7 @@ export default {
   methods: {
     loadData() {
       // this.loading = true;
-      const create = this.searchTime || []
+      const create = this.loginTime || []
       const [startTime, endTime] = create
       let params = {
         ...this.queryData,

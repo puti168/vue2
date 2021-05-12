@@ -1,6 +1,5 @@
 <template>
   <div class="game-container report-container">
-    <h3>信息变更</h3>
     <div class="view-container dealer-container">
       <div class="params">
         <el-form ref="form" :inline="true" :model="queryData">
@@ -15,7 +14,7 @@
               start-placeholder="开始日期"
               end-placeholder="结束日期"
               align="right"
-              clearable
+              :clearable="false"
               :default-time="defaultTime"
               style="width: 375px"
             ></el-date-picker>
@@ -27,7 +26,7 @@
               :maxlength="11"
               size="medium"
               style="width: 180px; margin-right: 20px"
-              placeholder="请输入会员账号"
+              placeholder="请输入"
               :disabled="loading"
               @keyup.enter.native="enterSearch"
             ></el-input>
@@ -68,10 +67,10 @@
             <el-input
               v-model="queryData.bankCode"
               clearable
-              :maxlength="30"
+              :maxlength="12"
               size="medium"
               style="width: 180px"
-              placeholder="请输入内容"
+              placeholder="请输入"
               :disabled="loading"
               @keyup.enter.native="enterSearch"
             ></el-input>
@@ -96,26 +95,6 @@
             </el-button>
           </el-form-item>
         </el-form>
-        <div class="msgList">
-          <p>
-            <span>数据更新时间：</span><span>{{ now }}</span>
-          </p>
-          <p>
-            总登录次数：
-            {{ summary.count }}
-            次
-          </p>
-        </div>
-        <div class="msgList">
-          <p>
-            登录成功：<span class="enableColor">{{ summary.successCount }}</span>
-            次
-          </p>
-          <p>
-            登录失败<span class="redColor">{{ summary.successCount }}</span>
-            次
-          </p>
-        </div>
       </div>
       <div class="content">
         <el-table

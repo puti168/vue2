@@ -4,6 +4,7 @@ import dayjs from 'dayjs'
 export const routerNames = {
 	memberChange: 'memberChange',
 	addMember: 'addMember',
+	memberOverflow: 'memberOverflow',
 	bankRecord: 'bankRecord',
 	memberDetails: 'memberDetails',
 	memberList: 'memberList',
@@ -21,7 +22,8 @@ export const routerNames = {
 	gameSearchManage: 'gameSearchManage',
 	gameBetslipDetails: 'gameBetslipDetails',
 	pictureManagement: 'pictureManagement',
-	agentBankCard: 'agentBankCard'
+	agentBankCard: 'agentBankCard',
+	domainCreateAndEidt: 'domainCreateAndEidt'
 }
 const month = dayjs().month()
 const year = dayjs().year()

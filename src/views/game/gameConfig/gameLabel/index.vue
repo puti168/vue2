@@ -268,7 +268,7 @@ const startTime = dayjs().startOf('day').valueOf()
 const endTime = dayjs().endOf('day').valueOf()
 
 export default {
-  name: routerNames.gamePlatform,
+  name: routerNames.gameLabel,
   components: {},
   mixins: [list],
   data() {
@@ -278,11 +278,6 @@ export default {
       },
       searchTime: [startTime, endTime],
       now: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
-      summary: {
-        count: 0,
-        failCount: 0,
-        successCount: 0
-      },
       tableData: [],
       dialogFormVisible: false,
       dialogForm: {},

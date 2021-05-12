@@ -503,7 +503,7 @@ export default {
       })
       this.$nextTick(() => {
         this.$router.push({
-          path: '/game/gameBetslip/gameBetslipDetails/index',
+          path: '/game/gameBetslip/gameBetslipDetails',
           query: val
         })
       })
