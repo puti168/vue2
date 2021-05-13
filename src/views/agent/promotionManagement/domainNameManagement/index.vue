@@ -1,6 +1,5 @@
 <template>
   <div class="game-container report-container">
-    <h3>推广域名管理</h3>
     <div class="view-container dealer-container">
       <div class="params">
         <el-form ref="form" :inline="true" :model="queryData">
@@ -239,12 +238,12 @@
             <img src="" alt="" />
             <div>防封QQ二维码</div></el-col>
         </el-row>
-        <el-row v-else>
-          <el-col class="marginT">
+        <el-row v-else class="marginT">
+          <el-col>
             防封微信短链：<Copy :title="'http://bdqjxxx.com/ajnZDDX'" :copy="copy">
             </Copy>
           </el-col>
-          <el-col class="marginT">
+          <el-col>
             防封QQ短链：
             <Copy :title="'http://bdqjaaaaas.com/ajnZDDX'" :copy="copy"> </Copy>
           </el-col>

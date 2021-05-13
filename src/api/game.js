@@ -35,7 +35,6 @@ export function gameUpdateAPI(data) {
 		data
 	})
 }
-
 // 游戏配置==> 游戏分类管理 ===> 创建
 export function gameCreateAPI(data) {
 	return request({
@@ -45,6 +44,54 @@ export function gameCreateAPI(data) {
 	})
 }
 
+//  游戏标签管理 ===> 表格查询
+export function getTabelData(data) {
+	return request({
+		url: '/obGameLabel/select',
+		method: 'post',
+		data
+	})
+}
+//  游戏标签管理 ===> 新增游戏标签管理
+export function addObGameLabel(data) {
+	return request({
+		url: '/obGameLabel/insert',
+		method: 'post',
+		data
+	})
+}
+//  游戏标签管理 ===> 已标签游戏查询
+export function getGameLabelRelation(data) {
+	return request({
+		url: '/obGameLabel/getGameLabelRelation',
+		method: 'post',
+		data
+	})
+}
+//  游戏标签管理 ===> 修改游戏标签 状态
+export function setUpdateStatus(data) {
+	return request({
+		url: '/obGameLabel/updateStatus',
+		method: 'post',
+		data
+	})
+}
+//  游戏标签管理 ===> 修改游戏标签管理
+export function setUpdateLabel(data) {
+	return request({
+		url: '/obGameLabel/update',
+		method: 'post',
+		data
+	})
+}
+//  游戏标签管理 ===> 删除游戏标签管理
+export function setUpdateDelete(data) {
+	return request({
+		url: '/obGameLabel/delete',
+		method: 'post',
+		data
+	})
+}
 // 游戏配置==> 游戏搜索管理 ===> 新增
 export function gameSearchCreateAPI(data) {
 	return request({
@@ -71,13 +118,18 @@ export function gameSearchDeleteAPI(data) {
 		data
 	})
 }
-
 export default {
 	gameAssortListAPI,
 	queryChildGameAPI,
 	gameDeleteAPI,
 	gameUpdateAPI,
 	gameCreateAPI,
+	getTabelData,
+	addObGameLabel,
+	getGameLabelRelation,
+	setUpdateStatus,
+	setUpdateLabel,
+	setUpdateDelete,
 	gameSearchCreateAPI,
 	gameSearchUpdateAPI,
 	gameSearchDeleteAPI
