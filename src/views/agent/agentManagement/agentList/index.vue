@@ -453,7 +453,7 @@ const end = dayjs()
     .endOf('day')
     .valueOf()
 export default {
-    name: routerNames.memberList,
+    name: routerNames.agentList,
     mixins: [list],
     data() {
         return {

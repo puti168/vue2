@@ -167,6 +167,16 @@
 								</Copy>
 								<span v-else>-</span>
 							</template>
+							<!--							<template slot-scope="scope">-->
+							<!--								<Copy-->
+							<!--									v-if="!!scope.row.assortName"-->
+							<!--									:title="scope.row.assortName"-->
+							<!--									:copy="copy"-->
+							<!--								>-->
+							<!--									{{ scope.row.assortName }}-->
+							<!--								</Copy>-->
+							<!--								<span v-else>-</span>-->
+							<!--							</template>-->
 						</el-table-column>
 						<el-table-column
 							prop="assortStatus"
@@ -226,10 +236,7 @@
 							width="100px"
 						>
 							<template slot-scope="scope">
-								<div
-									class="blueColor decoration"
-									@click="lookGame(scope.row.gameNumber)"
-								>
+								<div class="blueColor decoration" @click="lookGame(scope.row)">
 									{{ scope.row.gameNumber }}
 								</div>
 							</template>
@@ -311,7 +318,12 @@
 								>
 									禁用
 								</el-button>
-								<el-button type="warning" icon="el-icon-edit" size="medium" @click="openEdit(scope.row)">
+								<el-button
+                                    type="primary"
+									icon="el-icon-edit"
+									size="medium"
+									@click="openEdit(scope.row)"
+								>
 									编辑信息
 								</el-button>
 								<el-button
@@ -345,7 +357,7 @@
 				:visible.sync="dialogGameVisible"
 				:destroy-on-close="true"
 				width="480px"
-				class="rempadding"
+				class="classify"
 			>
 				<el-divider></el-divider>
 				<div class="contentBox disableColor">分类名称：热门游戏（1）</div>
@@ -466,13 +478,13 @@ export default {
 			this.loadData()
 		},
 		_changeTableSort({ column, prop, order }) {
-			if (prop === 'vipSerialNum') {
+			if (prop === 'assortSort') {
 				prop = 1
 			}
-			if (prop === 'createDt') {
+			if (prop === 'createdAt') {
 				prop = 2
 			}
-			if (prop === 'firstDepositTime') {
+			if (prop === 'updatedBy') {
 				prop = 3
 			}
 			this.queryData.orderKey = prop
@@ -497,6 +509,8 @@ export default {
 							type: 'warning',
 							message: `请输入小于${this.queryData.assortSortMax}天数`
 						})
+					} else {
+						this.queryData.assortSortMin = value
 					}
 					break
 				case 'assortSortMax':
@@ -508,12 +522,14 @@ export default {
 							type: 'warning',
 							message: `请输入大于${this.queryData.assortSortMin}天数`
 						})
+					} else {
+						this.queryData.assortSortMax = value
 					}
 					break
 			}
 		},
 
-        openEdit() {
+		openEdit() {
 			this.createPage = true
 		},
 		back() {
@@ -538,34 +554,65 @@ export default {
 		},
 		lookGame(val) {
 			this.dialogGameVisible = true
-			console.log(val)
+			const { id } = val
+			const params = {
+				assortId: id,
+				pageNum: 1,
+				pageSize: 10
+			}
+			this.$api
+				.queryChildGameAPI(params)
+				.then((res) => {
+					console.log('分类res', res)
+					const {
+						code,
+						data: { record, totalRecord },
+						msg
+					} = res
+					if (code === 200) {
+						this.loading = false
+						this.dataList = record || []
+						this.total = totalRecord || 0
+					} else {
+						this.loading = false
+						this.$message({
+							message: msg,
+							type: 'error'
+						})
+					}
+				})
+				.catch(() => (this.loading = false))
 		},
 		deleteRow(val) {
+			const { id } = val
 			this.$confirm('确定删除此游戏吗?', {
 				confirmButtonText: '确定',
 				cancelButtonText: '取消',
 				type: 'warning'
 			})
 				.then(() => {
-					// const loading = this.$loading({
-					// 	lock: true,
-					// 	text: 'Loading',
-					// 	spinner: 'el-icon-loading',
-					// 	background: 'rgba(0, 0, 0, 0.7)'
-					// })
-					// this.$api
-					// 	.setDeleteRole('', val.id)
-					// 	.then((res) => {
-					// 		loading.close()
-					// 		this.$message({
-					// 			type: 'success',
-					// 			message: '删除成功!'
-					// 		})
-					// 		this.loadData()
-					// 	})
-					// 	.catch(() => {
-					// 		loading.close()
-					// 	})
+					const loading = this.$loading({
+						lock: true,
+						text: 'Loading',
+						spinner: 'el-icon-loading',
+						background: 'rgba(0, 0, 0, 0.7)'
+					})
+					this.$api
+						.gameDeleteAPI({ id })
+						.then((res) => {
+							loading.close()
+							const { code } = res
+							if (code === 200) {
+								this.$message({
+									type: 'success',
+									message: '删除成功!'
+								})
+							}
+							this.loadData()
+						})
+						.catch(() => {
+							loading.close()
+						})
 				})
 				.catch(() => {})
 		}
@@ -584,39 +631,36 @@ export default {
 	cursor: pointer;
 }
 
-/deep/ .rempadding .el-dialog__body {
-	padding: 0;
-	padding-bottom: 30px;
-
-	.contentBox,
-	form {
+/deep/ .classify .el-dialog__body {
+	padding: 0 0 30px;
+	.contentBox {
 		padding: 0 20px;
 	}
-}
 
-.bodyBox {
-	max-height: 400px;
-	overflow: auto;
-}
-p {
-	display: flex;
-	height: 40px;
-	line-height: 40px;
-	border-bottom: 1px solid #e8e8e8;
-	justify-content: space-around;
-	span {
-		display: inline-block;
-		width: 50%;
-		text-align: center;
+	.bodyBox {
+		max-height: 400px;
+		overflow: auto;
 	}
-}
+	p {
+		display: flex;
+		height: 40px;
+		line-height: 40px;
+		border-bottom: 1px solid #e8e8e8;
+		justify-content: space-around;
+		span {
+			display: inline-block;
+			width: 50%;
+			text-align: center;
+		}
+	}
 
-.headerBox {
-	color: #000000d8;
-	background: #fafafa;
-	font-family: 'PingFang SC ', 'PingFang SC', sans-serif;
-	font-weight: 650;
-	border-top: 1px solid #e8e8e8;
-	margin-top: 15px;
+	.headerBox {
+		color: #000000d8;
+		background: #fafafa;
+		font-family: 'PingFang SC ', 'PingFang SC', sans-serif;
+		font-weight: 650;
+		border-top: 1px solid #e8e8e8;
+		margin-top: 15px;
+	}
 }
 </style>

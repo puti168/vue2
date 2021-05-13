@@ -5,19 +5,21 @@
         <el-form ref="form" :inline="true" :model="queryData">
           <el-form-item label="游戏标签ID:">
             <el-input
-              v-model="queryData.bankCode"
+              v-model.number="queryData.gameLabelId"
               clearable
               :maxlength="3"
               size="medium"
               style="width: 180px"
               placeholder="请输入"
               :disabled="loading"
+              oninput="value=value.replace(/[^\d]/g,'')"
               @keyup.enter.native="enterSearch"
+              @blur="checkValue($event)"
             ></el-input>
           </el-form-item>
           <el-form-item label="标签名称:">
             <el-input
-              v-model="queryData.bankName"
+              v-model.number="queryData.gameLabelName"
               clearable
               :maxlength="10"
               size="medium"
@@ -29,14 +31,13 @@
           </el-form-item>
           <el-form-item label="状态:" class="tagheight">
             <el-select
-              v-model="queryData.accountType"
+              v-model="queryData.status"
               style="width: 180px"
-              multiple
               placeholder="默认选择全部"
               :popper-append-to-body="false"
             >
-              <el-option label="开启中" value="1"></el-option>
-              <el-option label="禁用中" value="2"></el-option>
+              <el-option label="禁用中" :value="0"></el-option>
+              <el-option label="开启中" :value="1"></el-option>
             </el-select>
           </el-form-item>
 
@@ -202,32 +203,33 @@
         :destroy-on-close="true"
         width="480px"
         class="rempadding"
+        @close="clear"
       >
         <el-divider></el-divider>
-        <el-form :model="dialogForm" label-width="90px">
+        <el-form ref="formSub" :model="dialogForm" label-width="90px">
           <el-form-item
             label="标签名称:"
-            prop="name"
+            prop="gameLabelName"
             :rules="[
               { required: true, message: '请输入标签名称', trigger: 'blur' },
               { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' },
             ]"
           >
             <el-input
-              v-model="dialogForm.name"
+              v-model="dialogForm.gameLabelName"
               :maxlength="10"
               autocomplete="off"
             ></el-input>
           </el-form-item>
           <el-form-item
             label="描述:"
-            prop="remark"
+            prop="description"
             :rules="[
               { required: true, message: '请输入描述内容', trigger: 'blur' },
               { min: 2, max: 50, message: '长度在 2 到 50 个字符', trigger: 'blur' },
             ]"
           >
-            <el-input v-model="dialogForm.remark" type="textarea"></el-input>
+            <el-input v-model="dialogForm.description" type="textarea"></el-input>
           </el-form-item>
         </el-form>
         <el-divider></el-divider>
@@ -262,26 +264,19 @@
 
 <script>
 import list from '@/mixins/list'
-import dayjs from 'dayjs'
 import { routerNames } from '@/utils/consts'
-const startTime = dayjs().startOf('day').valueOf()
-const endTime = dayjs().endOf('day').valueOf()
-
 export default {
   name: routerNames.gameLabel,
   components: {},
   mixins: [list],
   data() {
     return {
-      queryData: {
-        accountType: []
-      },
-      searchTime: [startTime, endTime],
-      now: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
+      queryData: {},
       tableData: [],
       dialogFormVisible: false,
       dialogForm: {},
-      dialogGameVisible: false
+      dialogGameVisible: false,
+      title: ''
     }
   },
   computed: {},
@@ -300,16 +295,15 @@ export default {
   methods: {
     loadData() {
       // this.loading = true;
-      const create = this.searchTime || []
-      const [startTime, endTime] = create
       let params = {
-        ...this.queryData,
-        startTime: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : '',
-        endTime: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
+        ...this.queryData
       }
       params = {
         ...this.getParams(params)
       }
+      this.$api.getTabelData(params).then((res) => {
+        console.log(res)
+      })
       console.log(params)
     },
     lookGame(val) {
@@ -331,11 +325,12 @@ export default {
         }
       )
         .then(() => {
-          console.log(1111111)
+          console.log(val)
         })
         .catch(() => {})
     },
     edit(val) {
+      this.title = '编辑'
       this.dialogFormVisible = true
       console.log(val)
     },
@@ -352,7 +347,28 @@ export default {
         .catch(() => {})
     },
     subAddOrEidt() {
-      this.dialogFormVisible = false
+      console.log(this.title)
+      this.$refs.formSub.validate((valid) => {
+        if (valid) {
+          if (this.title !== '编辑') {
+            console.log('新增')
+            // this.$api.addObGameLabel().then(res=>{
+            //   console.log(res);
+            // })
+          } else {
+            // this.$api.setUpdateLabel().then(res=>{
+            //   console.log(res);
+            // })
+          }
+          this.dialogFormVisible = false
+        }
+      })
+    },
+    checkValue(e) {
+      const value = e.target.value
+      if (value) {
+        this.queryData.gameLabelId = value * 1
+      }
     },
     _changeTableSort({ column, prop, order }) {
       if (prop === 'vipSerialNum') {
@@ -367,6 +383,9 @@ export default {
         this.queryData.orderType = 'desc'
       }
       this.loadData()
+    },
+    clear() {
+      this.$refs.formSub.resetFields()
     },
     enterSubmit() {
       this.loadData()

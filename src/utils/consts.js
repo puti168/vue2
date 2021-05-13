@@ -18,11 +18,12 @@ export const routerNames = {
 	addMemberCheck: 'addMemberCheck',
 	gameHomeRecommendEdit: 'gameHomeRecommendEdit',
 	gameManagement: 'gameManagement',
-	gameClassification: 'gameClassification',
+	gameClassification: 'GameClassification',
 	gameSearchManage: 'gameSearchManage',
 	gameBetslipDetails: 'gameBetslipDetails',
 	pictureManagement: 'pictureManagement',
 	agentBankCard: 'agentBankCard',
+	agentList: 'AgentList',
 	domainCreateAndEidt: 'domainCreateAndEidt'
 }
 const month = dayjs().month()
