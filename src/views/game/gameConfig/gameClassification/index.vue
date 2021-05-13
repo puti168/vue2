@@ -167,6 +167,16 @@
 								</Copy>
 								<span v-else>-</span>
 							</template>
+							<!--							<template slot-scope="scope">-->
+							<!--								<Copy-->
+							<!--									v-if="!!scope.row.assortName"-->
+							<!--									:title="scope.row.assortName"-->
+							<!--									:copy="copy"-->
+							<!--								>-->
+							<!--									{{ scope.row.assortName }}-->
+							<!--								</Copy>-->
+							<!--								<span v-else>-</span>-->
+							<!--							</template>-->
 						</el-table-column>
 						<el-table-column
 							prop="assortStatus"
@@ -350,7 +360,7 @@
 				:visible.sync="dialogGameVisible"
 				:destroy-on-close="true"
 				width="480px"
-				class="rempadding"
+				class="classify"
 			>
 				<el-divider></el-divider>
 				<div class="contentBox disableColor">分类名称：热门游戏（1）</div>
@@ -471,13 +481,13 @@ export default {
 			this.loadData()
 		},
 		_changeTableSort({ column, prop, order }) {
-			if (prop === 'vipSerialNum') {
+			if (prop === 'assortSort') {
 				prop = 1
 			}
-			if (prop === 'createDt') {
+			if (prop === 'createdAt') {
 				prop = 2
 			}
-			if (prop === 'firstDepositTime') {
+			if (prop === 'updatedBy') {
 				prop = 3
 			}
 			this.queryData.orderKey = prop
@@ -593,39 +603,36 @@ export default {
 	cursor: pointer;
 }
 
-/deep/ .rempadding .el-dialog__body {
-	padding: 0;
-	padding-bottom: 30px;
-
-	.contentBox,
-	form {
+/deep/ .classify .el-dialog__body {
+	padding: 0 0 30px;
+	.contentBox {
 		padding: 0 20px;
 	}
-}
 
-.bodyBox {
-	max-height: 400px;
-	overflow: auto;
-}
-p {
-	display: flex;
-	height: 40px;
-	line-height: 40px;
-	border-bottom: 1px solid #e8e8e8;
-	justify-content: space-around;
-	span {
-		display: inline-block;
-		width: 50%;
-		text-align: center;
+	.bodyBox {
+		max-height: 400px;
+		overflow: auto;
 	}
-}
+	p {
+		display: flex;
+		height: 40px;
+		line-height: 40px;
+		border-bottom: 1px solid #e8e8e8;
+		justify-content: space-around;
+		span {
+			display: inline-block;
+			width: 50%;
+			text-align: center;
+		}
+	}
 
-.headerBox {
-	color: #000000d8;
-	background: #fafafa;
-	font-family: 'PingFang SC ', 'PingFang SC', sans-serif;
-	font-weight: 650;
-	border-top: 1px solid #e8e8e8;
-	margin-top: 15px;
+	.headerBox {
+		color: #000000d8;
+		background: #fafafa;
+		font-family: 'PingFang SC ', 'PingFang SC', sans-serif;
+		font-weight: 650;
+		border-top: 1px solid #e8e8e8;
+		margin-top: 15px;
+	}
 }
 </style>
