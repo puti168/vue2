@@ -311,7 +311,12 @@
 								>
 									禁用
 								</el-button>
-								<el-button type="warning" icon="el-icon-edit" size="medium" @click="openEdit(scope.row)">
+								<el-button
+									type="warning"
+									icon="el-icon-edit"
+									size="medium"
+									@click="openEdit(scope.row)"
+								>
 									编辑信息
 								</el-button>
 								<el-button
@@ -497,6 +502,8 @@ export default {
 							type: 'warning',
 							message: `请输入小于${this.queryData.assortSortMax}天数`
 						})
+					} else {
+						this.queryData.assortSortMin = value
 					}
 					break
 				case 'assortSortMax':
@@ -508,12 +515,14 @@ export default {
 							type: 'warning',
 							message: `请输入大于${this.queryData.assortSortMin}天数`
 						})
+					} else {
+						this.queryData.assortSortMax = value
 					}
 					break
 			}
 		},
 
-        openEdit() {
+		openEdit() {
 			this.createPage = true
 		},
 		back() {
