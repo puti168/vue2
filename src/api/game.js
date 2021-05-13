@@ -27,8 +27,28 @@ export function gameDeleteAPI(data) {
 	})
 }
 
+// 游戏配置==> 游戏分类管理 ===> 游戏分类编辑
+export function gameUpdateAPI(data) {
+	return request({
+		url: '/gameAssort/update',
+		method: 'post',
+		data
+	})
+}
+
+// 游戏配置==> 游戏分类管理 ===> 游戏分类创建
+export function gameCreateAPI(data) {
+	return request({
+		url: '/gameAssort/create',
+		method: 'post',
+		data
+	})
+}
+
 export default {
 	gameAssortListAPI,
 	queryChildGameAPI,
-	gameDeleteAPI
+	gameDeleteAPI,
+	gameUpdateAPI,
+	gameCreateAPI
 }
