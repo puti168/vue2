@@ -236,10 +236,7 @@
 							width="100px"
 						>
 							<template slot-scope="scope">
-								<div
-									class="blueColor decoration"
-									@click="lookGame(scope.row.gameNumber)"
-								>
+								<div class="blueColor decoration" @click="lookGame(scope.row)">
 									{{ scope.row.gameNumber }}
 								</div>
 							</template>
@@ -557,7 +554,34 @@ export default {
 		},
 		lookGame(val) {
 			this.dialogGameVisible = true
-			console.log(val)
+			const { id } = val
+			const params = {
+				assortId: id,
+				pageNum: 1,
+				pageSize: 10
+			}
+			this.$api
+				.queryChildGameAPI(params)
+				.then((res) => {
+                    console.log('分类res', res)
+					const {
+						code,
+						data: { record, totalRecord },
+						msg
+					} = res
+					if (code === 200) {
+						this.loading = false
+						this.dataList = record || []
+						this.total = totalRecord || 0
+					} else {
+						this.loading = false
+						this.$message({
+							message: msg,
+							type: 'error'
+						})
+					}
+				})
+				.catch(() => (this.loading = false))
 		},
 		deleteRow(val) {
 			this.$confirm('确定删除此游戏吗?', {

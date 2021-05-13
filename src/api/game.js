@@ -9,6 +9,16 @@ export function gameAssortListAPI(data) {
 	})
 }
 
+// 游戏配置==> 游戏分类管理 ===> 包含子游戏查询
+export function queryChildGameAPI(data) {
+	return request({
+		url: '/gameAssort/queryChildrenGame',
+		method: 'post',
+		data
+	})
+}
+
 export default {
-	gameAssortListAPI
+	gameAssortListAPI,
+	queryChildGameAPI
 }
