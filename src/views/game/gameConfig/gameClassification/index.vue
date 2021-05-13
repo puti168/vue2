@@ -319,7 +319,7 @@
 									禁用
 								</el-button>
 								<el-button
-									type="warning"
+                                    type="primary"
 									icon="el-icon-edit"
 									size="medium"
 									@click="openEdit(scope.row)"
@@ -563,7 +563,7 @@ export default {
 			this.$api
 				.queryChildGameAPI(params)
 				.then((res) => {
-                    console.log('分类res', res)
+					console.log('分类res', res)
 					const {
 						code,
 						data: { record, totalRecord },
@@ -584,31 +584,35 @@ export default {
 				.catch(() => (this.loading = false))
 		},
 		deleteRow(val) {
+			const { id } = val
 			this.$confirm('确定删除此游戏吗?', {
 				confirmButtonText: '确定',
 				cancelButtonText: '取消',
 				type: 'warning'
 			})
 				.then(() => {
-					// const loading = this.$loading({
-					// 	lock: true,
-					// 	text: 'Loading',
-					// 	spinner: 'el-icon-loading',
-					// 	background: 'rgba(0, 0, 0, 0.7)'
-					// })
-					// this.$api
-					// 	.setDeleteRole('', val.id)
-					// 	.then((res) => {
-					// 		loading.close()
-					// 		this.$message({
-					// 			type: 'success',
-					// 			message: '删除成功!'
-					// 		})
-					// 		this.loadData()
-					// 	})
-					// 	.catch(() => {
-					// 		loading.close()
-					// 	})
+					const loading = this.$loading({
+						lock: true,
+						text: 'Loading',
+						spinner: 'el-icon-loading',
+						background: 'rgba(0, 0, 0, 0.7)'
+					})
+					this.$api
+						.gameDeleteAPI({ id })
+						.then((res) => {
+							loading.close()
+							const { code } = res
+							if (code === 200) {
+								this.$message({
+									type: 'success',
+									message: '删除成功!'
+								})
+							}
+							this.loadData()
+						})
+						.catch(() => {
+							loading.close()
+						})
 				})
 				.catch(() => {})
 		}

@@ -18,7 +18,17 @@ export function queryChildGameAPI(data) {
 	})
 }
 
+// 游戏配置==> 游戏分类管理 ===> 游戏分类删除
+export function gameDeleteAPI(data) {
+	return request({
+		url: '/gameAssort/delete',
+		method: 'post',
+		data
+	})
+}
+
 export default {
 	gameAssortListAPI,
-	queryChildGameAPI
+	queryChildGameAPI,
+	gameDeleteAPI
 }
