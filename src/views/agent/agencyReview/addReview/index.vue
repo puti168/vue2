@@ -263,7 +263,7 @@ const start = dayjs()
 	.startOf('day')
 	.valueOf()
 export default {
-	name: routerNames.addMemberCheck,
+	name: routerNames.addReview,
 	components: {},
 	mixins: [list],
 	data() {

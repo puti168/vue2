@@ -322,7 +322,7 @@ const start = dayjs()
 	.startOf('day')
 	.valueOf()
 export default {
-	name: routerNames.addMemberCheck,
+	name: routerNames.agencyEdit,
 	components: {},
 	mixins: [list],
 	data() {
@@ -430,7 +430,7 @@ export default {
 			})
 			this.$nextTick(() => {
 				this.$router.push({
-					path: '/agent/agencyReview/agencyEditReview',
+					path: '/agent/agencyReview/agencyEditDetail',
 					query: { id: row.id, userId: row.userId, type: type }
 				})
 			})
