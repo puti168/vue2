@@ -6,15 +6,14 @@
           <el-form-item label="游戏标签ID:">
             <el-input
               v-model.number="queryData.gameLabelId"
-              clearable
               :maxlength="3"
+              clearable
               size="medium"
               style="width: 180px"
               placeholder="请输入"
               :disabled="loading"
               oninput="value=value.replace(/[^\d]/g,'')"
               @keyup.enter.native="enterSearch"
-              @blur="checkValue($event)"
             ></el-input>
           </el-form-item>
           <el-form-item label="标签名称:">
@@ -33,6 +32,7 @@
             <el-select
               v-model="queryData.status"
               style="width: 180px"
+              clearable
               placeholder="默认选择全部"
               :popper-append-to-body="false"
             >
@@ -83,60 +83,62 @@
           @sort-change="_changeTableSort"
         >
           <el-table-column
-            prop="vipSerialNum"
+            prop="gameLabelId"
             align="center"
             label="游戏标签ID"
             sortable="custom"
             width="120px"
           ></el-table-column>
           <el-table-column
-            prop="content"
+            prop="gameLabelName"
             align="center"
-            label="标签内容"
+            label="标签名称"
             width="170px"
           ></el-table-column>
-          <el-table-column prop="bankName" align="center" label="状态" width="100px">
+          <el-table-column prop="labelStatus" align="center" label="状态" width="100px">
             <template slot-scope="scope">
-              <div v-if="scope.row.code === 1" class="normalRgba">开启中</div>
+              <div v-if="scope.row.labelStatus === 1" class="normalRgba">开启中</div>
               <div v-else class="disableRgba">已禁用</div>
             </template>
           </el-table-column>
           <el-table-column
-            prop="bankName"
+            prop="description"
             align="center"
             label="标签描述"
           ></el-table-column>
           <el-table-column
-            prop="bankName"
+            prop="gameLabelCount"
             align="center"
             label="已标签游戏"
             width="120px"
           >
             <template slot-scope="scope">
-              <div class="blueColor decoration" @click="lookGame(scope.row)">100</div>
+              <div class="blueColor decoration" @click="lookGame(scope.row)">
+                {{ scope.row.gameLabelCount }}
+              </div>
             </template>
           </el-table-column>
           <el-table-column
-            prop="bankName"
+            prop="createdBy"
             align="center"
             label="创建人"
             width="100px"
           ></el-table-column>
           <el-table-column
-            prop="createDt"
+            prop="createdAt"
             align="center"
             label="创建时间"
             sortable="custom"
             width="160px"
           ></el-table-column>
           <el-table-column
-            prop="bankName"
+            prop="updatedBy"
             align="center"
             label="最近操作人"
             width="100px"
           ></el-table-column>
           <el-table-column
-            prop="createDt"
+            prop="updatedAt"
             align="center"
             label="最近操作时间"
             sortable="custom"
@@ -145,6 +147,7 @@
           <el-table-column prop="operating" align="center" label="操作" width="240px">
             <template slot-scope="scope">
               <el-button
+                v-if="scope.row.labelStatus === 0"
                 :disabled="loading"
                 type="success"
                 size="medium"
@@ -154,6 +157,7 @@
                 开启
               </el-button>
               <el-button
+                v-else
                 :disabled="loading"
                 type="danger"
                 size="medium"
@@ -252,9 +256,9 @@
           <span>添加时间</span>
         </p>
         <div class="bodyBox">
-          <p>
-            <span>斗地主</span>
-            <span>2016-09-21 08:50:08</span>
+          <p v-for="item in gameList" :key="item.gameName">
+            <span>{{ item.gameName }}</span>
+            <span>{{ item.createdAt }}</span>
           </p>
         </div>
       </el-dialog>
@@ -275,23 +279,13 @@ export default {
       tableData: [],
       dialogFormVisible: false,
       dialogForm: {},
+      gameList: [],
       dialogGameVisible: false,
       title: ''
     }
   },
   computed: {},
-  mounted() {
-    for (let i = 0; i < 10; i++) {
-      this.tableData[i] = {
-        bankCode: '165416416464654',
-        bankName: '中国银行',
-        content: '高频率',
-        code: 1,
-        createDt: '2021-02-13 20:28:54',
-        updateDt: '2021-02-13 20:28:54'
-      }
-    }
-  },
+  mounted() {},
   methods: {
     loadData() {
       // this.loading = true;
@@ -302,13 +296,25 @@ export default {
         ...this.getParams(params)
       }
       this.$api.getTabelData(params).then((res) => {
+        if (res.code === 200) {
+          this.tableData = res.data.record
+          this.total = res.data.totalRecord
+        }
         console.log(res)
       })
       console.log(params)
     },
     lookGame(val) {
-      this.dialogGameVisible = true
-      console.log(val)
+      const data = {}
+      data.gameLabelId = val.gameLabelId
+      data.gameLabelName = val.gameLabelName
+      debugger
+      this.$api.getGameLabelRelation(data).then((res) => {
+        if (res.code === 200) {
+          this.gameList = res
+          this.dialogGameVisible = true
+        }
+      })
     },
     reset() {
       this.queryData = {}
@@ -325,16 +331,26 @@ export default {
         }
       )
         .then(() => {
-          console.log(val)
+          this.$api
+            .setUpdateStatus({ id: val.gameLabelId, status: val.labelStatus })
+            .then((res) => {
+              if (res.code === 200) {
+                this.loadData()
+              }
+            })
         })
         .catch(() => {})
     },
     edit(val) {
       this.title = '编辑'
+      this.dialogForm = val
       this.dialogFormVisible = true
-      console.log(val)
     },
     deleteLabel(val) {
+      const data = {}
+      data.id = val.gameLabelId
+      data.description = val.description
+      data.gameLabelName = val.gameLabelName
       this.$confirm(`<strong>确定删除此条标签类型吗?</strong>`, `确认提示`, {
         dangerouslyUseHTMLString: true,
         confirmButtonText: '确定',
@@ -342,19 +358,31 @@ export default {
         type: 'warning'
       })
         .then(() => {
-          console.log(2222222222)
+          this.$api.setUpdateDelete(data).then((res) => {
+            if (res.code === 200) {
+              this.$message.success('删除成功！')
+              this.loadData()
+            }
+          })
         })
         .catch(() => {})
     },
     subAddOrEidt() {
       console.log(this.title)
+      const data = {}
+      data.id = this.dialogForm.gameLabelId
+      data.description = this.dialogForm.description
+      data.gameLabelName = this.dialogForm.gameLabelName
       this.$refs.formSub.validate((valid) => {
         if (valid) {
           if (this.title !== '编辑') {
             console.log('新增')
-            // this.$api.addObGameLabel().then(res=>{
-            //   console.log(res);
-            // })
+            this.$api.addObGameLabel(data).then((res) => {
+              if (res.code === 200) {
+                this.$message.success('创建成功')
+                this.loadData()
+              }
+            })
           } else {
             // this.$api.setUpdateLabel().then(res=>{
             //   console.log(res);
@@ -363,12 +391,6 @@ export default {
           this.dialogFormVisible = false
         }
       })
-    },
-    checkValue(e) {
-      const value = e.target.value
-      if (value) {
-        this.queryData.gameLabelId = value * 1
-      }
     },
     _changeTableSort({ column, prop, order }) {
       if (prop === 'vipSerialNum') {

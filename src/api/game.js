@@ -92,6 +92,14 @@ export function setUpdateDelete(data) {
 		data
 	})
 }
+//  游戏搜索管理 ===> 游戏搜索日志
+export function getGameSearchLog(data) {
+	return request({
+		url: '/gameSearchLog/selectLog',
+		method: 'post',
+		data
+	})
+}
 // 游戏配置==> 游戏搜索管理 ===> 新增
 export function gameSearchCreateAPI(data) {
 	return request({
@@ -130,6 +138,7 @@ export default {
 	setUpdateStatus,
 	setUpdateLabel,
 	setUpdateDelete,
+	getGameSearchLog,
 	gameSearchCreateAPI,
 	gameSearchUpdateAPI,
 	gameSearchDeleteAPI
