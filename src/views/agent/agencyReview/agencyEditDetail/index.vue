@@ -2,7 +2,7 @@
 	<div class="game-container report-container">
 		<div class="review-content">
 			<div class="head">
-				<span class="title">新增代理审核详情</span>
+				<span class="title">代理账户修改审核详情</span>
 				<div v-if="type" class="right-btn">
 					<el-button plain @click="goBack">取消</el-button>
 					<el-button type="success" @click="confirm(true)">一审通过</el-button>
@@ -14,29 +14,64 @@
 			</div>
 			<div class="main-content">
 				<div class="review-content">
-					<p class="name">新增代理信息</p>
+					<p class="name">代理注册信息</p>
 					<div class="review-flex">
 						<div>
-							代理类型: {{ typeFilter(list.accountType, 'accountType') }}
+							注册时间: {{ typeFilter(list.accountType, 'accountType') }}
 						</div>
-						<div>代理账号: {{ list.userName }}</div>
-						<div>登录密码: {{ list.password }}</div>
+						<div>代理类型: {{ list.userName }}</div>
+						<div>上次登录时间: {{ list.password }}</div>
+						<div>注册端: {{ list.parentProxyName }}</div>
+					</div>
+				</div>
+				<div class="review-content">
+					<p class="name">代理账号信息</p>
+					<div class="review-flex">
+						<div>账号: {{ list.applyName }}</div>
+						<div>账号状态: {{ list.applyTime }}</div>
+						<div>风控层级: {{ list.applyInfo }}</div>
+						<div>代理标签: {{ list.applyInfo }}</div>
+					</div>
+					<div class="review-flex">
+						<div>备注信息: {{ list.applyName }}</div>
 					</div>
 				</div>
 				<div class="review-content">
 					<p class="name">申请信息</p>
 					<div class="review-flex">
-						<div>申请人: {{ list.applyName }}</div>
-						<div>申请时间: {{ list.applyTime }}</div>
-						<div>申请信息: {{ list.applyInfo }}</div>
+						<div>申请人: {{ list.auditName }}</div>
+						<div>申请时间: {{ list.auditTime }}</div>
+						<div>审核申请类型: {{ list.remark }}</div>
+						<div>申请原因: {{ list.remark }}</div>
+					</div>
+					<div class="review-flex">
+						<el-table
+							border
+							size="mini"
+							:data="[1]"
+							style="width: 100%"
+							:header-cell-style="getRowClass"
+						>
+							<el-table-column align="center" label="修改前">
+								<template>
+									{{ list.beforeModify }}
+								</template>
+							</el-table-column>
+							<el-table-column align="center" label="修改后">
+								<template>
+									{{ list.afterModify }}
+								</template>
+							</el-table-column>
+						</el-table>
 					</div>
 				</div>
 				<div class="review-content">
 					<p class="name">审核信息</p>
 					<div class="review-flex">
-						<div>一审人: {{ list.auditName }}</div>
-						<div>一审时间: {{ list.auditTime }}</div>
-						<div>一审备注: {{ list.remark }}</div>
+						<div>一审人: {{ auditInfo.auditName }}</div>
+						<div>一审时间: {{ auditInfo.auditTime }}</div>
+						<div>一审备注: {{ auditInfo.auditRemark }}</div>
+						<div>一审状态: {{ auditInfo.auditRemark }}</div>
 					</div>
 				</div>
 			</div>

@@ -215,10 +215,10 @@ const actions = {
 						if (data.name === '代理审核') {
 							data.children.push(
 								{
-									path: '/agent/agencyReview/agencyEditReview',
-									name: 'agencyEditReview',
+									path: '/agent/agencyReview/agencyEditDetail',
+									name: 'agencyEditDetail',
 									component: () =>
-										import(`@/views/agent/agencyReview/agencyEditReview/index`),
+										import(`@/views/agent/agencyReview/agencyEditDetail/index`),
 									meta: { title: '代理账户修改审核详情' },
 									hidden: true
 								},
@@ -228,6 +228,14 @@ const actions = {
 									component: () =>
 										import(`@/views/agent/agencyReview/addReviewDetail/index`),
 									meta: { title: '新增代理审核详情' },
+									hidden: true
+								},
+								{
+									path: '/agent/agencyReview/transformationDetail',
+									name: 'transformationDetail',
+									component: () =>
+										import(`@/views/agent/agencyReview/transformationDetail/index`),
+									meta: { title: '会员转代审核详情' },
 									hidden: true
 								}
 							)

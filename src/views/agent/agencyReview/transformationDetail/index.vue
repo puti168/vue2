@@ -2,7 +2,7 @@
 	<div class="game-container report-container">
 		<div class="review-content">
 			<div class="head">
-				<span class="title">代理账户修改审核详情</span>
+				<span class="title">会员转代审核详情</span>
 				<div v-if="type" class="right-btn">
 					<el-button plain @click="goBack">取消</el-button>
 					<el-button type="success" @click="confirm(true)">一审通过</el-button>
@@ -14,42 +14,31 @@
 			</div>
 			<div class="main-content">
 				<div class="review-content">
-					<p class="name">代理注册信息</p>
+					<p class="name">转代会员信息</p>
 					<div class="review-flex">
 						<div>
-							注册时间: {{ typeFilter(list.accountType, 'accountType') }}
+							会员账号: {{ typeFilter(list.accountType, 'accountType') }}
 						</div>
-						<div>代理类型: {{ list.userName }}</div>
-						<div>上次登录时间: {{ list.password }}</div>
-						<div>注册端: {{ list.parentProxyName }}</div>
+						<div>账号类型: {{ list.userName }}</div>
+						<div>注册时间: {{ list.password }}</div>
 					</div>
 				</div>
 				<div class="review-content">
-					<p class="name">代理账号信息</p>
+					<p class="name">转入代理信息</p>
 					<div class="review-flex">
-						<div>账号: {{ list.applyName }}</div>
-						<div>账号状态: {{ list.applyTime }}</div>
-						<div>风控层级: {{ list.applyInfo }}</div>
-						<div>代理标签: {{ list.applyInfo }}</div>
-					</div>
-					<div class="review-flex">
-						<div>备注信息: {{ list.applyName }}</div>
+						<div>代理账号: {{ list.applyName }}</div>
+						<div>代理类型: {{ list.applyTime }}</div>
+						<div>注册时间: {{ list.applyInfo }}</div>
 					</div>
 				</div>
-				<div class="review-content">
+				<div class="review-content" style="height: 180px;">
 					<p class="name">申请信息</p>
-					<div class="review-flex">
-						<div>申请人: {{ list.auditName }}</div>
-						<div>申请时间: {{ list.auditTime }}</div>
-						<div>审核申请类型: {{ list.remark }}</div>
-						<div>申请原因: {{ list.remark }}</div>
-					</div>
 					<div class="review-flex">
 						<el-table
 							border
 							size="mini"
 							:data="[1]"
-							style="width: 100%"
+							style="width: 100%;margin-bottom: 20px;"
 							:header-cell-style="getRowClass"
 						>
 							<el-table-column align="center" label="修改前">
@@ -63,15 +52,17 @@
 								</template>
 							</el-table-column>
 						</el-table>
+						<div>申请人: {{ list.auditName }}</div>
+						<div>申请时间: {{ list.auditTime }}</div>
+						<div>申请信息: {{ list.remark }}</div>
 					</div>
 				</div>
 				<div class="review-content">
 					<p class="name">审核信息</p>
 					<div class="review-flex">
-						<div>一审人: {{ auditInfo.auditName }}</div>
-						<div>一审时间: {{ auditInfo.auditTime }}</div>
-						<div>一审备注: {{ auditInfo.auditRemark }}</div>
-						<div>一审状态: {{ auditInfo.auditRemark }}</div>
+						<div>一审人: {{ list.auditName }}</div>
+						<div>一审时间: {{ list.auditTime }}</div>
+						<div>一审备注: {{ list.remark }}</div>
 					</div>
 				</div>
 			</div>
@@ -244,7 +235,7 @@ export default {
 			.review-flex {
 				position: relative;
 				width: 100%;
-				margin-top: 10px;
+				margin-top: 15px;
 				div {
 					display: inline-block;
 					width: 24%;

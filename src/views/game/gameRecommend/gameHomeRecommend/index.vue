@@ -110,7 +110,7 @@ const start = dayjs()
 	.startOf('day')
 	.valueOf()
 export default {
-	name: routerNames.virtualRecord,
+	name: routerNames.gameHomeRecommend,
 	components: {},
 	mixins: [list],
 	data() {
