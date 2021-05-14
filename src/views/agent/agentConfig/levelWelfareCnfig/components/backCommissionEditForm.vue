@@ -13,12 +13,12 @@
                     ref="form"
                     :model="queryData"
                     :rules="rules"
-                    label-width="100px"
+                    label-width="150px"
                     class="picture-form"
                 >
-                    <el-form-item label="返佣等级:" prop="picName">
+                    <el-form-item label="返佣等级:" prop="commissionLevel">
                         <el-input
-                            v-model="queryData.picName"
+                            v-model="queryData.commissionLevel"
                             size="medium"
                             maxlength="50"
                             placeholder="请输入"
@@ -26,9 +26,27 @@
                             style="width: 365px"
                         ></el-input>
                     </el-form-item>
-                    <el-form-item label="公司总输赢:" prop="picName">
+                    <el-form-item label="公司总输赢:" prop="totalProfit">
                         <el-input
-                            v-model="queryData.picName"
+                            v-model="queryData.totalProfitStart"
+                            size="medium"
+                            maxlength="50"
+                            placeholder="请输入"
+                            clearable
+                            style="width: 100px"
+                        ></el-input> -
+                        <el-input
+                        v-model="queryData.totalProfitEnd"
+                        size="medium"
+                        maxlength="50"
+                        placeholder="请输入"
+                        clearable
+                        style="width: 100px"
+                    ></el-input>
+                    </el-form-item>
+                    <el-form-item label="本月活跃人数:" prop="activeCount">
+                        <el-input
+                            v-model="queryData.activeCount"
                             size="medium"
                             maxlength="50"
                             placeholder="请输入"
@@ -36,34 +54,13 @@
                             style="width: 365px"
                         ></el-input>
                     </el-form-item>
-                    <el-form-item label="本月活跃人数:" prop="picName">
+                    <el-form-item label="佣金比例%:" prop="commissionRate">
                         <el-input
-                            v-model="queryData.picName"
+                            v-model="queryData.commissionRate"
                             size="medium"
                             maxlength="50"
                             placeholder="请输入"
                             clearable
-                            style="width: 365px"
-                        ></el-input>
-                    </el-form-item>
-                    <el-form-item label="佣金比例%:" prop="picName">
-                        <el-input
-                            v-model="queryData.picName"
-                            size="medium"
-                            maxlength="50"
-                            placeholder="请输入"
-                            clearable
-                            style="width: 365px"
-                        ></el-input>
-                    </el-form-item>
-                    <el-form-item label="审核信息:">
-                        <el-input
-                            v-model="queryData.applyInfo"
-                            size="medium"
-                            type="textarea"
-                            placeholder="请输入"
-                            clearable
-                            maxlength="50"
                             style="width: 365px"
                         ></el-input>
                     </el-form-item>
@@ -86,14 +83,12 @@ export default {
         return {
             loading: false,
             queryData: {
-                picName: undefined,
-                picType: undefined,
-                picSize: undefined,
-                sort: undefined,
-                applyInfo: undefined,
-                imgUrl: undefined
-            },
-            dataList: []
+                commissionLevel: '',
+                totalProfitStart: '',
+                totalProfitEnd: '',
+                activeCount: '',
+                commissionRate: ''
+            }
         }
     },
     computed: {
@@ -113,22 +108,22 @@ export default {
             return this.queryData.imgUrl ? '' : '请上传图片！'
         },
         rules() {
-            const reg1 = /^[A-Za-z]{1}(?=(.*[a-zA-Z]){1,})(?=(.*[0-9]){1,})[0-9A-Za-z]{3,10}$/
+            // const reg1 = /^[A-Za-z]{1}(?=(.*[a-zA-Z]){1,})(?=(.*[0-9]){1,})[0-9A-Za-z]{3,10}$/
             const reg2 = /(?=.*[a-zA-Z])(?=.*[0-9])[a-zA-Z0-9]{8,12}/
 
-            const testPicName = (rule, value, callback) => {
-                const isSpecial = !notSpecial2(String(value))
-                const isRmoji = isHaveEmoji(String(value))
-                if (isSpecial) {
-                    callback(new Error('不支持空格及特殊字符'))
-                } else if (isRmoji) {
-                    callback(new Error('不支持表情'))
-                } else if (!reg1.test(value)) {
-                    callback(new Error('请填入图片标题'))
-                } else {
-                    callback()
-                }
-            }
+            // const testPicName = (rule, value, callback) => {
+            //     const isSpecial = !notSpecial2(String(value))
+            //     const isRmoji = isHaveEmoji(String(value))
+            //     if (isSpecial) {
+            //         callback(new Error('不支持空格及特殊字符'))
+            //     } else if (isRmoji) {
+            //         callback(new Error('不支持表情'))
+            //     } else if (!reg1.test(value)) {
+            //         callback(new Error('请填入图片标题'))
+            //     } else {
+            //         callback()
+            //     }
+            // }
 
             const testPassword = (rule, value, callback) => {
                 const isSpecial = !notSpecial2(String(value))
@@ -145,21 +140,17 @@ export default {
             }
 
             return {
-                picType: [
-                    { required: true, message: '请选择图片类型', trigger: 'change' }
+                commissionLevel: [
+                    { required: true, message: '请选输入佣金等级', trigger: 'change' }
                 ],
-                picSize: [
-                    { required: true, message: '请选择图片尺寸', trigger: 'change' }
+                totalProfit: [
+                    { required: true, message: '请输入', trigger: 'change' }
                 ],
-                imgUrl: [
+                activeCount: [
                     { required: true, message: '请上传图片', trigger: 'change' }
                 ],
-                picName: [
-                    {
-                        required: true,
-                        validator: testPicName,
-                        trigger: 'blur'
-                    }
+                commissionRate: [
+                    { required: true, message: '请上传图片', trigger: 'change' }
                 ],
                 sort: [
                     {

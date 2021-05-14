@@ -85,7 +85,7 @@
                             type="danger"
                             size="medium"
                             class="noicon"
-                            @click="confined"
+                            @click="confined(scope.row)"
                         >
                             删除
                         </el-button>
@@ -187,7 +187,7 @@ export default {
         // 删除
         confined() {
             this.$confirm(
-                `<strong>是否对子游戏进行删除操作?</strong></br><span style='font-size:12px;color:#c1c1c1'>一旦操作将会立即删除</span>`,
+                `<strong>是否删除该条配置?</strong></br><span style='font-size:12px;color:#c1c1c1'>请谨慎操作</span>`,
                 '确认提示',
                 {
                     dangerouslyUseHTMLString: true,

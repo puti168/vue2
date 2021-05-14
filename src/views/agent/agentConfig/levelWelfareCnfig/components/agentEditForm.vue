@@ -13,12 +13,12 @@
                     ref="form"
                     :model="queryData"
                     :rules="rules"
-                    label-width="100px"
+                    label-width="180px"
                     class="agent-form"
                 >
-                    <el-form-item label="代理等级:" prop="agentUser">
+                    <el-form-item label="代理等级:" prop="agentLeve">
                         <el-input
-                            v-model="queryData.picName"
+                            v-model="queryData.agentLeve"
                             size="medium"
                             maxlength="50"
                             placeholder="请输入"
@@ -28,27 +28,7 @@
                     </el-form-item>
                     <el-form-item label="本月活跃人数≥:" prop="activeCount">
                         <el-input
-                            v-model="queryData.picName"
-                            size="medium"
-                            maxlength="50"
-                            placeholder="请输入"
-                            clearable
-                            style="width: 180px"
-                        ></el-input>
-                    </el-form-item>
-                    <el-form-item label="本月新增活跃人数≥:" prop="addActiveCount">
-                        <el-input
-                            v-model="queryData.picName"
-                            size="medium"
-                            maxlength="50"
-                            placeholder="请输入"
-                            clearable
-                            style="width: 180px"
-                        ></el-input>
-                    </el-form-item>
-                    <el-form-item label="佣金比例%:" prop="picName">
-                        <el-input
-                            v-model="queryData.picName"
+                            v-model="queryData.activeCount"
                             size="medium"
                             maxlength="50"
                             placeholder="请输入"
@@ -56,9 +36,39 @@
                             style="width: 365px"
                         ></el-input>
                     </el-form-item>
-                    <el-form-item label="审核信息:">
+                    <el-form-item label="新增活跃人数≥:" prop="addActiveCount">
                         <el-input
-                            v-model="queryData.applyInfo"
+                            v-model="queryData.addActiveCount"
+                            size="medium"
+                            maxlength="50"
+                            placeholder="请输入"
+                            clearable
+                            style="width: 365px"
+                        ></el-input>
+                    </el-form-item>
+                    <el-form-item label="额外赠佣佣金比例%:" prop="extraGiftCommissionRate">
+                        <el-input
+                            v-model="queryData.extraGiftCommissionRate"
+                            size="medium"
+                            maxlength="50"
+                            placeholder="请输入"
+                            clearable
+                            style="width: 365px"
+                        ></el-input>
+                    </el-form-item>
+                    <el-form-item label="赠佣上限:" prop="giftCommissionLimit">
+                        <el-input
+                            v-model="queryData.giftCommissionLimit"
+                            size="medium"
+                            maxlength="50"
+                            placeholder="请输入"
+                            clearable
+                            style="width: 365px"
+                        ></el-input>
+                    </el-form-item>
+                    <el-form-item label="赠送彩金:" prop="giftAmt">
+                        <el-input
+                            v-model="queryData.giftAmt"
                             size="medium"
                             type="textarea"
                             placeholder="请输入"
@@ -75,7 +85,6 @@
 
 <script>
 import list from '@/mixins/list'
-import { isHaveEmoji, notSpecial2 } from '@/utils/validate'
 // import Sortable from 'sortablejs'
 // import Transfer from '@/components/transfer'
 
@@ -86,12 +95,12 @@ export default {
         return {
             loading: false,
             queryData: {
-                picName: undefined,
-                picType: undefined,
-                picSize: undefined,
-                sort: undefined,
-                applyInfo: undefined,
-                imgUrl: undefined
+                agentLeve: undefined,
+                activeCount: undefined,
+                addActiveCount: undefined,
+                extraGiftCommissionRate: undefined,
+                giftCommissionLimit: undefined,
+                giftAmt: undefined
             },
             dataList: []
         }
@@ -113,67 +122,24 @@ export default {
             return this.queryData.imgUrl ? '' : '请上传图片！'
         },
         rules() {
-            const reg1 = /^[A-Za-z]{1}(?=(.*[a-zA-Z]){1,})(?=(.*[0-9]){1,})[0-9A-Za-z]{3,10}$/
-            const reg2 = /(?=.*[a-zA-Z])(?=.*[0-9])[a-zA-Z0-9]{8,12}/
-
-            const testPicName = (rule, value, callback) => {
-                const isSpecial = !notSpecial2(String(value))
-                const isRmoji = isHaveEmoji(String(value))
-                if (isSpecial) {
-                    callback(new Error('不支持空格及特殊字符'))
-                } else if (isRmoji) {
-                    callback(new Error('不支持表情'))
-                } else if (!reg1.test(value)) {
-                    callback(new Error('请填入图片标题'))
-                } else {
-                    callback()
-                }
-            }
-
-            const testPassword = (rule, value, callback) => {
-                const isSpecial = !notSpecial2(String(value))
-                const isRmoji = isHaveEmoji(String(value))
-                if (isSpecial) {
-                    callback(new Error('不支持空格及特殊字符'))
-                } else if (isRmoji) {
-                    callback(new Error('不支持表情'))
-                } else if (!reg2.test(value)) {
-                    callback(new Error('请输入8-12位，字母+数字组合'))
-                } else {
-                    callback()
-                }
-            }
-
             return {
-                picType: [
-                    { required: true, message: '请选择图片类型', trigger: 'change' }
+                agentLeve: [
+                    { required: true, message: '请输入', trigger: 'change' }
                 ],
-                picSize: [
-                    { required: true, message: '请选择图片尺寸', trigger: 'change' }
+                activeCount: [
+                    { required: true, message: '请输入', trigger: 'change' }
                 ],
-                imgUrl: [
-                    { required: true, message: '请上传图片', trigger: 'change' }
+                addActiveCount: [
+                    { required: true, message: '请输入', trigger: 'change' }
                 ],
-                picName: [
-                    {
-                        required: true,
-                        validator: testPicName,
-                        trigger: 'blur'
-                    }
+                giftCommissionLimit: [
+                    { required: true, message: '请输入', trigger: 'change' }
                 ],
-                sort: [
-                    {
-                        required: true,
-                        message: '请输入排序',
-                        trigger: 'blur'
-                    }
+                extraGiftCommissionRate: [
+                    { required: true, message: '请输入', trigger: 'change' }
                 ],
-                password: [
-                    {
-                        required: true,
-                        validator: testPassword,
-                        trigger: 'blur'
-                    }
+                giftAmt: [
+                    { required: true, message: '请输入', trigger: 'change' }
                 ]
             }
         }

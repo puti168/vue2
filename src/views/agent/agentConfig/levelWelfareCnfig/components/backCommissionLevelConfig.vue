@@ -1,5 +1,6 @@
 <template>
-    <div class="view-container dealer-container">
+    <backCommissionEditForm v-if="edit" @back="back" />
+    <div v-else class="view-container dealer-container">
         <div class="content">
             <el-table
                 v-loading="loading"
@@ -79,7 +80,7 @@
                             type="danger"
                             size="medium"
                             class="noicon"
-                            @click="confined"
+                            @click="confined(scope.row)"
                         >
                             删除
                         </el-button>
@@ -106,9 +107,10 @@
 
 import list from '@/mixins/list'
 import dayjs from 'dayjs'
+import backCommissionEditForm from '@/views/agent/agentConfig/levelWelfareCnfig/components/backCommissionEditForm'
 
 export default {
-    components: {},
+    components: {backCommissionEditForm},
     mixins: [list],
     props: {backCommDataList: { type: Array, default: () => []}},
     data() {
@@ -120,7 +122,8 @@ export default {
             pageSizes: [10, 20, 50],
             layout: 'total, sizes, prev, pager, next, jumper',
             defaultTime: ['00:00:00', '23:59:59'],
-            sortable: true
+            sortable: true,
+            edit: false
         }
     },
     computed: {
@@ -140,6 +143,18 @@ export default {
     mounted() {
     },
     methods: {
+        deleteLabel(val) {
+            this.$confirm(`<strong>是否删除该条配置?</strong>`, `确认提示`, {
+                dangerouslyUseHTMLString: true,
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            })
+                .then(() => {
+                    console.log(2222222222)
+                })
+                .catch(() => {})
+        },
         loadData() {
             const [startTime, endTime] = []
             let params = {
@@ -181,17 +196,16 @@ export default {
                     this.loading = false
                 })
         },
-        openEdit(row) {
-            debugger
-            this.$router.push({
-                path: '/game/gameConfig/gameHomeRecommendEdit',
-                query: { id: row.id, userId: row.userId }
-            })
+        openEdit(val) {
+            this.edit = true
+        },
+        back() {
+            this.edit = false
         },
         // 删除
-        confined() {
+        confined(val) {
             this.$confirm(
-                `<strong>是否对子游戏进行删除操作?</strong></br><span style='font-size:12px;color:#c1c1c1'>一旦操作将会立即删除</span>`,
+                `<strong>是否删除该条配置?</strong></br><span style='font-size:12px;color:#c1c1c1'>请谨慎操作</span>`,
                 '确认提示',
                 {
                     dangerouslyUseHTMLString: true,
