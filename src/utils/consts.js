@@ -22,7 +22,8 @@ export const routerNames = {
 	gameSearchManage: 'gameSearchManage',
 	gameBetslipDetails: 'gameBetslipDetails',
 	pictureManagement: 'pictureManagement',
-	agentBankCard: 'agentBankCard'
+	agentBankCard: 'agentBankCard',
+	levelWelfareConfig: 'levelWelfareConfig'
 }
 const month = dayjs().month()
 const year = dayjs().year()
