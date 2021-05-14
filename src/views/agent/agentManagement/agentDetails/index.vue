@@ -157,9 +157,10 @@ export default {
             this.outlineInfo = res.data
             this.parentData.userName = res.data.userName
             this.parentData.userId = res.data.id
-            this.getMemberRemarkList(res.data.id)
-            this.getAccountCashAccount(res.data.id)
-            this.getWithdrawalFreeze(res.data.id)
+            this.getProxyDetailRemark(res.data.id)
+            this.getProxyDataBalance(res.data.id)
+            this.getProxyDataCommission(res.data.id)
+            this.getRechargeAndWithdrawInfo(res.data.id)
             this.getWithdrawWater(res.data.id)
             this.getPlayerOrderSumInfo(res.data.id)
             this.getPlayerBetHistorySum(res.data.id)
@@ -184,26 +185,34 @@ export default {
     },
     // 备注信息
     getMemberRemarkList(val) {
-      const params = { userId: val, pageNum: 1, pageSize: 3 }
+      const params = { userId: val, accountType: 1, pageNum: 1, pageSize: 3 }
       this.$api.getMemberRemarkList(params).then((res) => {
         if (res.code === 200) {
           this.remarksTableData = res.data
         }
       })
     },
-    // 查询中心钱包余额
-    getAccountCashAccount(val) {
-      this.$api.getAccountCashAccount({ userId: val }).then((res) => {
+    // 查询代理余额
+    getProxyDataBalance(val) {
+      this.$api.getProxyDataBalance({ userId: val }).then((res) => {
         if (res.code === 200) {
-          this.balanceList.balance = res.data.balance
+          this.balanceList = res.data
         }
       })
     },
-    // 提现冻结余额
-    getWithdrawalFreeze(val) {
-      this.$api.getWithdrawalFreeze({ userId: val }).then((res) => {
+    // 查询佣金信息
+    getProxyDataCommission(val) {
+      this.$api.getProxyDataCommission({ userId: val }).then((res) => {
         if (res.code === 200) {
-          this.balanceList.freezeBalance = res.data.freezeBalance
+          this.commission = res.data
+        }
+      })
+    },
+    // 查询存提信息
+    getRechargeAndWithdrawInfo(val) {
+      this.$api.getRechargeAndWithdrawInfo({ userId: val }).then((res) => {
+        if (res.code === 200) {
+          this.surrogateList = res.data
         }
       })
     },
