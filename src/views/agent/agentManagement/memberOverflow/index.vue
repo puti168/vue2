@@ -18,7 +18,7 @@
                         size="medium"
                         minlength="4"
                         maxlength="11"
-                        placeholder="最低4个字符，最多11个字符，账号必须数字+字符的形式组合且首位字母"
+                        placeholder="请输入"
                         clearable
                         style="width: 365px"
                     ></el-input>
@@ -28,7 +28,7 @@
                         size="medium"
                         style="margin-left: 10px"
                         @click="search"
-                    >
+>
                     查询
                     </el-button>
                 </el-form-item>
@@ -60,9 +60,9 @@
                     <el-input
                         v-model="form.transferAgent"
                         size="medium"
-                        minlength="4"
+                        minlength="2"
                         maxlength="11"
-                        placeholder="最低4个字符，最多11个字符，账号必须数字+字符的形式组合且首位字母"
+                        placeholder="请输入"
                         clearable
                         style="width: 365px"
                     ></el-input>
@@ -70,11 +70,10 @@
                 <el-form-item label="推广设备:" prop="promoteDevice">
                     <el-select
                         v-model="form.promoteDevice"
-                        size="medium"
-                        placeholder="全部"
+                        placeholder="WEB"
                         clearable
                         style="width: 365px"
-                    >
+>
                         <el-option
                             v-for="item in promoteDeviceList"
                             :key="item.code"
@@ -89,8 +88,8 @@
                         v-model="form.promoteLinkUrl"
                         size="medium"
                         minlength="4"
-                        maxlength="11"
-                        placeholder="4-11位，最少2个字母+数字组合，首位字母"
+                        maxlength="50"
+                        placeholder="请输入"
                         clearable
                         style="width: 365px"
                     ></el-input>
@@ -129,7 +128,7 @@
                 <el-form-item>
                     <el-button
                         type="primary"
-                        icon="el-icon-success"
+                        icon="el-icon-search"
                         :disabled="loading"
                         size="medium"
                         @click="add"
@@ -247,7 +246,6 @@ export default {
         // 文件上传成功触发
         uploadSuccess(response, file, fileList) {
             console.log(response)
-            debugger
             if (response.code === 0) {
                 this.$message({
                     message: '导入成功',
@@ -269,7 +267,6 @@ export default {
         },
         // 上传前对文件的大小和类型的判断
         beforeAvatarUpload(file) {
-            debugger
             const extension = file.name.split('.')[1] === 'jpg'
             const extension2 = file.name.split('.')[1] === 'png'
             if (!extension && !extension2) {
@@ -281,13 +278,11 @@ export default {
             return extension || extension2
         },
         handleUploadBefore(file) {
-            debugger
             this.beforeAvatarUpload(file)
             console.log(file)
         },
         // 上传数量限制
         uploadLimit (file, fileList) {
-            debugger
             if (fileList.length >= 6) {
                 this.$message({ message: '最多上传6张图片', type: 'error'})
             }
@@ -298,6 +293,9 @@ export default {
         handlePictureCardPreview(file) {
             this.dialogImageUrl = file.url
             this.dialogVisible = true
+        },
+        search() {
+            console.log('查询数据弹窗！#todo')
         },
         add() {
             this.loading = true
@@ -344,16 +342,15 @@ export default {
         reset() {
             this.$refs['form'].resetFields()
             this.form = {
-                accountType: '4',
                 username: '',
-                password: '',
-                mobile: '',
-                parentProxyName: '',
-                gender: '2',
-                vipExperenceValue: '',
-                email: '',
-                realName: '',
-                applyInfo: ''
+                accountType: '',
+                currentSuperior: '',
+                transferAgent: '',
+                promoteDevice: '',
+                promoteLinkUrl: '',
+                uploadPicture: '',
+                auditInfo: '',
+                uploadImage: []
             }
         },
         checkValue(val) {}
