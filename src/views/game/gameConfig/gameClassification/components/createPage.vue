@@ -262,7 +262,6 @@ export default {
 			let k
 			const _this = this
 			let cFlag = false // 取消勾选
-			// debugger
 			for (var i = 0; i < key.length; i++) {
 				if (key[i] === key1[0]) {
 					cFlag = true // 选中

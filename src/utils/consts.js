@@ -28,7 +28,8 @@ export const routerNames = {
 	pictureManagement: 'pictureManagement',
 	agentBankCard: 'agentBankCard',
 	agentList: 'AgentList',
-	domainCreateAndEidt: 'domainCreateAndEidt'
+	domainCreateAndEidt: 'domainCreateAndEidt',
+    levelWelfareConfig: 'levelWelfareConfig'
 }
 const month = dayjs().month()
 const year = dayjs().year()
