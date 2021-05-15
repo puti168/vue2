@@ -116,24 +116,26 @@ const actions = {
 						const index = parentRoutes.findIndex(
 							(val) => val.id === userRoutes[midIndex].parentId
 						)
-						const index2 = parentRoutes[index].children.findIndex(
-							(val) => val.id === element.parentId
-						)
-						const fullPath = element.path
-						const pos = fullPath.lastIndexOf('/')
-						const filePath = fullPath.substr(pos + 1)
-						if (index > -1) {
-							parentRoutes[index].children[index2].children.push({
-								path: element.path,
-								name: element.name ? element.name : filePath,
-								children: [],
-								component: (resolve) =>
-									require(['@/views' + element.path + '/index'], resolve),
-								meta: {
-									title: mapElement.title,
-									icon: element.icon
-								}
-							})
+						if (parentRoutes[index]) {
+							const index2 = parentRoutes[index].children.findIndex(
+								(val) => val.id === element.parentId
+							)
+							const fullPath = element.path
+							const pos = fullPath.lastIndexOf('/')
+							const filePath = fullPath.substr(pos + 1)
+							if (index > -1) {
+								parentRoutes[index].children[index2].children.push({
+									path: element.path,
+									name: element.name ? element.name : filePath,
+									children: [],
+									component: (resolve) =>
+										require(['@/views' + element.path + '/index'], resolve),
+									meta: {
+										title: mapElement.title,
+										icon: element.icon
+									}
+								})
+							}
 						}
 					} else {
 						// 四级菜单
@@ -159,6 +161,7 @@ const actions = {
 					}
 				}
 			})
+			console.log('2232')
 			parentRoutes = parentRoutes.filter((val) => {
 				return !val.children || (val.children && val.children.length)
 			})
