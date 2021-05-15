@@ -57,7 +57,7 @@
 						clearable
 						maxlength="11"
 						style="width: 365px"
-						oninput="value=value.replace(/[^\d]/g,'')"
+                        onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
 					></el-input>
 				</el-form-item>
 				<el-form-item label="上级代理:">
@@ -90,7 +90,7 @@
 						v-model="form.vipExperenceValue"
 						size="medium"
 						placeholder="请输入数字，不支持负数和小数点"
-						oninput="value=value.replace(/[^\d]/g,'')"
+						onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
 						clearable
 						maxlength="12"
 						style="width: 365px"
