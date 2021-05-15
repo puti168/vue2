@@ -19,11 +19,16 @@
 						<div>注册时间: {{ registerInfo.createDt }}</div>
 						<div>上次登录时间: {{ registerInfo.lastLoginTime }}</div>
 						<div>最后下注时间时间: {{ registerInfo.lastBetTime }}</div>
-						<div>注册端: {{ typeFilter(registerInfo.deviceType, "deviceType") }}</div>
+						<div>
+							注册端: {{ typeFilter(registerInfo.deviceType, 'deviceType') }}
+						</div>
 					</div>
 					<div class="review-flex">
 						<div>上级代理: {{ registerInfo.parentProxyName }}</div>
-						<div>账号类型: {{ typeFilter(registerInfo.accountType, 'accountType') }}</div>
+						<div>
+							账号类型:
+							{{ typeFilter(registerInfo.accountType, 'accountType') }}
+						</div>
 					</div>
 				</div>
 				<div v-if="accountInfo" class="review-content">
@@ -46,7 +51,9 @@
 					<div class="review-flex">
 						<div>申请人: {{ applyInfo.applyName }}</div>
 						<div>申请时间: {{ applyInfo.applyTime }}</div>
-						<div>审核申请类型: {{ typeFilter(applyInfo.applyType, 'applyType') }}</div>
+						<div>
+							审核申请类型: {{ typeFilter(applyInfo.applyType, 'applyType') }}
+						</div>
 						<div>申请原因: {{ applyInfo.applyInfo }}</div>
 					</div>
 					<div class="review-flex">
@@ -86,16 +93,28 @@
 			:visible.sync="visible"
 			:before-close="closeFormDialog"
 			width="610px"
+			class="audit-confirm"
 		>
-			<el-form ref="form" label-width="100px">
-				<el-form-item label="提交审核信息">
+			<el-form ref="form" :model="form" :rules="formRules">
+				<el-form-item v-if="action" label="提交审核信息">
 					<el-input
-						v-model="auditRemark"
+						v-model="form.auditRemark"
 						clearable
 						type="textarea"
 						:max="50"
 						:autosize="{ minRows: 4, maxRows: 4 }"
-						style="width: 280px"
+						style="width: 380px"
+						placeholder="请输入"
+					></el-input>
+				</el-form-item>
+				<el-form-item v-else label="提交审核信息" prop="auditRemark">
+					<el-input
+						v-model="form.auditRemark"
+						clearable
+						type="textarea"
+						:max="50"
+						:autosize="{ minRows: 4, maxRows: 4 }"
+						style="width: 380px"
 						placeholder="请输入"
 					></el-input>
 				</el-form-item>
@@ -124,7 +143,9 @@ export default {
 			auditInfo: '',
 			applyInfo: '',
 			registerInfo: '',
-			auditRemark: '',
+			form: {
+				auditRemark: ''
+			},
 			visible: false,
 			action: false,
 			// 审核 true 仅返回 false
@@ -140,6 +161,13 @@ export default {
 		},
 		applyType() {
 			return this.globalDics.applyType
+		},
+		formRules() {
+			return {
+				auditRemark: [
+					{ required: true, message: '审核拒绝备注必填', trigger: 'blur' }
+				]
+			}
 		}
 	},
 	created() {
@@ -159,39 +187,79 @@ export default {
 			this.action = action
 		},
 		auditOne() {
-			const loading = this.$loading({
-				lock: true,
-				text: 'Loading',
-				spinner: 'el-icon-loading',
-				background: 'rgba(0, 0, 0, 0.7)'
-			})
-			const params = {
-				id: this.$route.query.id,
-				userId: this.$route.query.userId,
-				auditRemark: this.auditRemark,
-				auditStatus: this.action ? 2 : 3
-			}
-			this.$api
-				.audit(params)
-				.then((res) => {
-					loading.close()
-					if (res.code === 200) {
-						this.$message({
-							type: 'success',
-							message: '操作成功!'
+			if (this.action) {
+				const loading = this.$loading({
+					lock: true,
+					text: 'Loading',
+					spinner: 'el-icon-loading',
+					background: 'rgba(0, 0, 0, 0.7)'
+				})
+				const params = {
+					id: this.$route.query.id,
+					userId: this.$route.query.userId,
+					auditRemark: this.form.auditRemark,
+					auditStatus: this.action ? 2 : 3
+				}
+				this.$api
+					.audit(params)
+					.then((res) => {
+						loading.close()
+						if (res.code === 200) {
+							this.$message({
+								type: 'success',
+								message: '操作成功!'
+							})
+							this.visible = false
+							this.goBack()
+						} else {
+							this.$message({
+								message: res.msg,
+								type: 'error'
+							})
+						}
+					})
+					.catch(() => {
+						loading.close()
+					})
+			} else {
+				this.$refs.form.validate((valid) => {
+					if (valid) {
+						const loading = this.$loading({
+							lock: true,
+							text: 'Loading',
+							spinner: 'el-icon-loading',
+							background: 'rgba(0, 0, 0, 0.7)'
 						})
-						this.visible = false
-						this.goBack()
-					} else {
-						this.$message({
-							message: res.msg,
-							type: 'error'
-						})
+						const params = {
+							id: this.$route.query.id,
+							userId: this.$route.query.userId,
+							auditRemark: this.form.auditRemark,
+							auditStatus: this.action ? 2 : 3
+						}
+						this.$api
+							.audit(params)
+							.then((res) => {
+								loading.close()
+								if (res.code === 200) {
+									this.$message({
+										type: 'success',
+										message: '操作成功!'
+									})
+									this.visible = false
+									this.goBack()
+								} else {
+									this.$message({
+										message: res.msg,
+										type: 'error'
+									})
+								}
+							})
+							.catch(() => {
+								loading.close()
+							})
 					}
 				})
-				.catch(() => {
-					loading.close()
-				})
+			}
 		},
 		goBack() {
 			this.$router.go(-1)
