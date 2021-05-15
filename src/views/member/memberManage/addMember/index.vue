@@ -181,7 +181,13 @@ export default {
 			return this.globalDics.accountType
 		},
 		genderType() {
-			return [...this.globalDics.genderType].reverse()
+			const arr = []
+			if (this.globalDics.genderType && this.globalDics.genderType.length) {
+				this.globalDics.genderType.forEach((item) => {
+					arr.unshift(item)
+				})
+			}
+			return arr
 		},
 		rules() {
 			const reg1 = /^[A-Za-z]{1}(?=(.*[a-zA-Z]){1,})(?=(.*[0-9]){1,})[0-9A-Za-z]{3,10}$/
