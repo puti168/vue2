@@ -206,7 +206,7 @@ export default {
     },
     // 备注信息
     getMemberRemarkList(val) {
-      const params = { userId: val, accountType: 0, pageNum: 1, pageSize: 3 }
+      const params = { userId: val, pageNum: 1, pageSize: 3 }
       this.$api.getMemberRemarkList(params).then((res) => {
         if (res.code === 200) {
           this.remarksTableData = res.data
