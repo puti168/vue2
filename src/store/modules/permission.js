@@ -127,7 +127,8 @@ function filterAsyncRouter(asyncRouterMap) {
 						meta: {
 							title: item.title,
 							icon: item.icon
-						}
+						},
+						show: true
 					})
 
 					if (route.level === 3) {

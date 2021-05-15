@@ -178,7 +178,7 @@ export default {
 	},
 	computed: {
 		accountTypeArr() {
-			return [...this.globalDics.accountType]
+			return this.globalDics.accountType
 		},
 		genderType() {
 			return [...this.globalDics.genderType].reverse()

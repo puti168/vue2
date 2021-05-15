@@ -4,10 +4,10 @@
 		<span class="left-title">OB旗舰中控管理</span>
 		<template v-for="item in routes">
 			<div
-				v-if="!item.hidden"
-				:key="item.path"
+				v-if="item.show"
+				:key="item.id"
 				class="navbar-title"
-				:class="item.checked ? 'active' : ''"
+                :class="{active: activeId === item.id}"
 				@click="go(item, routes)"
 			>
 				{{ item.name }}
@@ -31,7 +31,8 @@ export default {
 	components: {},
 	data() {
 		return {
-			name: ''
+			name: '',
+            activeId: '2'
 		}
 	},
 	computed: {
@@ -45,6 +46,7 @@ export default {
 	},
 	mounted() {
 		this.name = getNickName()
+        console.log('routes', this.routes)
 	},
 	methods: {
 		formatCurrency,
@@ -53,10 +55,10 @@ export default {
 		},
 		async go(item, routes) {
 			await this.$store.dispatch('permission/setNowroute', item.id)
-			routes.forEach((data) => {
-				data.checked = false
-			})
-			item.checked = true
+			// routes.forEach((data) => {
+			// 	data.checked = false
+			// })
+            this.activeId = item.id
 		},
 		async loginOut() {
 			await this.$store.dispatch('user/logout')
@@ -76,11 +78,11 @@ export default {
 	background: rgba(38, 156, 255, 1);
 	.active {
 		border-bottom: 5px solid #fff;
-		text-shadow: #fff 0px 0px 10px;
+		text-shadow: #fff 0 0 10px;
 	}
 	.navbar-title {
 		width: 80px;
-		//height: 70px;
+		height: 70px;
 		line-height: 70px;
 		text-align: center;
 		color: #fff;
