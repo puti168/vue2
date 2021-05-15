@@ -6,7 +6,8 @@ import {
 	setToken,
 	removeToken,
 	setUsername,
-	setId,
+	setUserInfo,
+	getUserInfo,
 	setNickName,
 	clearCookie
 } from '@/utils/auth'
@@ -20,7 +21,7 @@ const state = {
 	name: '',
 	username: '',
 	nickName: '',
-	id: '',
+	userInfo: getUserInfo(),
 	avatar: '',
 	globalDics: {},
 	datas: {}
@@ -33,8 +34,8 @@ const mutations = {
 	SET_GLABALDICS: (state, dics) => {
 		state.globalDics = dics
 	},
-	SET_ID: (state, token) => {
-		state.id = token
+	SET_USERINFO: (state, userInfo) => {
+		state.userInfo = userInfo
 	},
 	SET_NAME: (state, name) => {
 		state.nickName = name
@@ -111,9 +112,9 @@ const actions = {
 						commit('SET_TOKEN', data.token)
 						commit('SET_ACCOUNT', data.userInfo.username)
 						commit('SET_NAME', data.userInfo.nickName)
-						commit('SET_ID', data.userInfo.id)
+						commit('SET_USERINFO', data.userInfo)
 						setToken(data.token)
-						setId(data.userInfo.id)
+						setUserInfo(data.userInfo)
 						setUsername(data.userInfo.username)
 						setNickName(data.userInfo.nickName)
 						resolve(data)
