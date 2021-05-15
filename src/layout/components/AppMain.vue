@@ -2,7 +2,7 @@
 	<section class="app-main">
 		<transition name="fade-transform" mode="out-in">
 			<keep-alive :include="cachedViews">
-				<router-view :key="key" />
+				<router-view />
 			</keep-alive>
 		</transition>
 	</section>
@@ -21,9 +21,6 @@ export default {
 		},
 		cachedViews() {
 			return this.$store.state.tagsView.cachedViews
-		},
-		key() {
-			return this.$route.activeMenuName
 		}
 	}
 }
@@ -38,7 +35,7 @@ export default {
 	overflow: hidden;
 }
 .fixed-header + .app-main {
-	padding-top: 50px;
+	padding-top: 105px;
 }
 </style>
 

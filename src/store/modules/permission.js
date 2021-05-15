@@ -1,7 +1,7 @@
 import { constantRoutes } from '@/router'
 import serviceMap from '@/serviceMap/route'
 import Layout from '@/layout'
-// import Layout2 from '@/layout2'
+import Layout2 from '@/layout2'
 // import store from '@/store'
 function hasPermission(roles, route) {
 	if (route.meta && route.meta.roles) {
@@ -111,7 +111,9 @@ function filterAsyncRouter(asyncRouterMap) {
 		if (route.type !== 0) {
 			if (!route.component) {
 				if (route.level !== 3) {
-					route.component = Layout
+					route.level === 1
+						? (route.component = Layout)
+						: (route.component = Layout2)
 				} else {
 					route.component = (resolve) =>
 						require(['@/views' + route.path + '/index'], resolve)
