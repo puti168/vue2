@@ -14,7 +14,7 @@
               start-placeholder="开始日期"
               end-placeholder="结束日期"
               align="right"
-              clearable
+              :clearable="false"
               :default-time="defaultTime"
               style="width: 375px"
             ></el-date-picker>
@@ -92,15 +92,21 @@
         </div>
         <div class="msgList">
           <p style="line-height: 24px">
-            搜索词条top1：<span class="gray">{{ summary.successCount }}</span>
+            搜索词条top1：<span class="gray">{{
+              summary.topContent ? summary.topContent[0] : ""
+            }}</span>
             次
           </p>
           <p style="line-height: 24px">
-            搜索词条top2：<span class="gray">{{ summary.successCount }}</span>
+            搜索词条top2：<span class="gray">{{
+              summary.topContent ? summary.topContent[1] : ""
+            }}</span>
             次
           </p>
           <p style="line-height: 24px">
-            搜索词条top3：<span class="gray">{{ summary.successCount }}</span>
+            搜索词条top3：<span class="gray">{{
+              summary.topContent ? summary.topContent[2] : ""
+            }}</span>
             次
           </p>
         </div>

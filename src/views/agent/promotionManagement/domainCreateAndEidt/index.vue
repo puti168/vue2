@@ -19,36 +19,36 @@
       >
         <el-form-item
           label="域名:"
-          prop="domain"
+          prop="domainName"
           :rules="[
             { required: true, message: '请输入域名地址', trigger: 'blur' },
             { min: 0, max: 50, message: '长度在 0 到 50 个字符', trigger: 'blur' },
           ]"
         >
           <el-input
-            v-model="formData.domain"
+            v-model="formData.domainName"
             placeholder="请输入"
             :maxlength="50"
           ></el-input>
         </el-form-item>
         <el-form-item
           label="描述:"
-          prop="remark1"
+          prop="description"
           :rules="[
             { required: true, message: '请输入描述信息', trigger: 'blur' },
             { min: 0, max: 50, message: '长度在 0 到 50 个字符', trigger: 'blur' },
           ]"
         >
           <el-input
-            v-model="formData.remark1"
+            v-model="formData.description"
             type="textarea"
             :maxlength="50"
             show-word-limit
             placeholder="请输入"
           ></el-input>
         </el-form-item>
-        <el-form-item label="排序:" prop="sort">
-          <el-input v-model.number="formData.sort" :disabled="control"></el-input>
+        <el-form-item label="排序:" prop="displayOrder">
+          <el-input v-model.number="formData.displayOrder" :disabled="control"></el-input>
         </el-form-item>
         <el-form-item label="状态:">
           <el-select v-model="formData.status" placeholder="请选择" :disabled="control">
@@ -58,7 +58,7 @@
         </el-form-item>
         <el-form-item v-if="control" label="备注:">
           <el-input
-            v-model="formData.remark2"
+            v-model="formData.remark"
             type="textarea"
             :maxlength="50"
             show-word-limit
@@ -68,14 +68,14 @@
         <el-form-item
           v-else
           label="备注:"
-          prop="remark2"
+          prop="remark"
           :rules="[
             { required: true, message: '请输入备注信息', trigger: 'blur' },
             { min: 2, max: 50, message: '长度在 2 到 50 个字符', trigger: 'blur' },
           ]"
         >
           <el-input
-            v-model="formData.remark2"
+            v-model="formData.remark"
             type="textarea"
             :maxlength="50"
             show-word-limit
@@ -118,7 +118,7 @@ export default {
       },
       control: true,
       rules: {
-        sort: [{ validator: checkAge, trigger: 'blur' }]
+        displayOrder: [{ validator: checkAge, trigger: 'blur' }]
       }
     }
   },
@@ -128,8 +128,8 @@ export default {
     if (this.$route.name === 'domainCreateAndEidt') {
       const data = this.$route.query
       console.log(this.$route.query)
-      if (data.code) {
-        this.formData.status = data.code
+      if (data.status) {
+        this.formData.status = data.status
         this.control = false
       }
     }
@@ -143,6 +143,15 @@ export default {
       console.log(this.formData)
       this.$refs.form.validate((valid) => {
         if (valid) {
+          if (this.control) {
+            this.$api.addDomainInsert(this.formData).then((res) => {
+              console.log(res)
+            })
+          } else {
+            this.$api.setDomainUpdate(this.formData).then((res) => {
+              console.log(res)
+            })
+          }
           console.log(this.formData)
         }
       })
