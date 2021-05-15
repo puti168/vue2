@@ -1,5 +1,7 @@
 <template>
-    <div class="game-container report-container">
+    <overflow-review-detail v-if="isDetails" @back="back" />
+    <div v-else class="game-container report-container">
+        <!-- 查询参数       -->
         <div class="params">
             <el-form ref="form" :inline="true" :model="queryData">
                 <el-form-item label="申请时间:">
@@ -171,6 +173,7 @@
                 <p class="danger data-refresh">数据更新时间： {{ now }}</p>
             </el-form>
         </div>
+        <!--  数据列表      -->
         <div class="view-container dealer-container">
             <div class="content">
                 <el-table
@@ -213,7 +216,7 @@
 									Number(scope.row.auditStep) === 0 ? 'success' : 'primary'
 								"
                                 size="medium"
-                                @click="goDetail(scope.row)"
+                                @click="openDetails(scope.row)"
                             >
                                 {{ typeFilter(scope.row.auditStep, 'auditStepType') }}
                             </el-button>
@@ -223,7 +226,7 @@
                         prop="auditNum"
                         align="center"
                         label="审核单号"
-                        width="170"
+                        width="170px"
                     ></el-table-column>
                     <el-table-column align="center" label="操作类型">
                         <template slot="header">
@@ -231,9 +234,9 @@
                             <p style="font-weight: 600">代理类型</p>
                         </template>
                         <template slot-scope="scope">
-                            {{ scope.row.userName ? scope.row.userName : '-' }}
+                            {{ scope.row.applyAgent ? scope.row.applyAgent : '-' }}
                             <Copy :title="scope.row.modifyBy" :copy="copy" />
-                            <p>{{ typeFilter(scope.row.accountType, 'accountType') }}</p>
+                            <p>{{ typeFilter(scope.row.agentType, 'agentType') }}</p>
                         </template>
                     </el-table-column>
                     <el-table-column align="center" label="操作类型">
@@ -242,7 +245,7 @@
                             <p style="font-weight: 600">账号类型</p>
                         </template>
                         <template slot-scope="scope">
-                            {{ scope.row.userName ? scope.row.userName : '-' }}
+                            {{ scope.row.overflowAccount ? scope.row.overflowAccount : '-' }}
                             <Copy :title="scope.row.modifyBy" :copy="copy" />
                             <p>{{ typeFilter(scope.row.accountType, 'accountType') }}</p>
                         </template>
@@ -314,8 +317,8 @@
 <script>
 import list from '@/mixins/list'
 import dayjs from 'dayjs'
-import { routerNames } from '@/utils/consts'
 import { getUsername } from '@/utils/auth'
+import OverflowReviewDetail from '@/views/agent/agencyReview/overflowReview/components/overflowReviewDetail'
 const end = dayjs()
     .endOf('day')
     .valueOf()
@@ -323,24 +326,28 @@ const start = dayjs()
     .startOf('day')
     .valueOf()
 export default {
-    name: routerNames.memberChange,
-    components: {},
+    components: {OverflowReviewDetail},
     mixins: [list],
     data() {
         return {
+            // 查询表单数据
             queryData: {
-                userName: '',
                 auditAction: [],
                 applyType: [],
-                auditStatus: [],
+                // // 溢出账户
+                overflowAccount: '',
+                accountType: [],
                 auditStep: '',
                 applyName: '',
-                auditName: '',
                 lockOrder: '',
                 auditNum: '',
                 overflowNum: '',
                 agentType: '',
-                orderKey: ''
+                applyAgent: '',
+                orderKey: '',
+                auditStatus: [],
+                auditName: '',
+                auditTime: ''
             },
             now: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
             formTime: {
@@ -348,10 +355,18 @@ export default {
                 time2: []
             },
             name: '',
-            dataList: []
+            dataList: [],
+            isDetails: false
         }
     },
     computed: {
+        accountType() {
+            const at = this.globalDics.accountType
+            if (at != null) {
+                return at
+            }
+            return [{}]
+        },
         auditAction() {
             return this.globalDics.auditAction
         },
@@ -370,9 +385,43 @@ export default {
     },
     mounted() {
         this.name = getUsername()
+        this.addDataList()
     },
     methods: {
-        loadData() {
+        openDetails(val) {
+            this.isDetails = true
+        },
+        back() {
+            this.isDetails = false
+        },
+        // 初始化数据
+        addDataList() {
+            debugger
+            const qw = this.agentType
+            console.log(qw)
+            for (let i = 0; i < 10; i++) {
+                this.dataList[i] = {
+                    lockStatus: i % 2 === 0,
+                    auditStep: i,
+                    auditNum: 'CH20210404102929888' + i,
+                    applyAgent: 'shenQing11123',
+                    // agentType: this.agentType[0],
+                    agentType: '正式',
+                    overflowAccount: 'daXia11123',
+                    // accountType: this.accountType[0],
+                    accountType: '测试',
+                    applyTime: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
+                    applyInfo: '请尽快通过',
+                    // auditStatus: this.auditStatus[0],
+                    auditStatus: '审核通过',
+                    auditName: '鲁班',
+                    auditTime: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
+                }
+            }
+            debugger
+            console.log(this.dataList)
+        },
+        loadInitData() {
             this.loading = true
             const [startTime, endTime] = this.formTime.time || []
             const [startTime2, endTime2] = this.formTime.time2 || []
@@ -422,16 +471,17 @@ export default {
             })
         },
         goDetail(row) {
-            const type = Number(row.auditStep) === 1 && row.auditName === this.name
-            this.$store.dispatch('tagsView/delView', {
-                name: routerNames.memberChangeReview
-            })
-            this.$nextTick(() => {
-                this.$router.push({
-                    path: '/member/memberReview/memberChangeReview',
-                    query: { id: row.id, userId: row.userId, type: type }
-                })
-            })
+            // const type = Number(row.auditStep) === 1 && row.auditName === this.name
+            // this.$store.dispatch('tagsView/delView', {
+            //     name: routerNames.memberChangeReview
+            // })
+            // this.$nextTick(() => {
+            //     this.$router.push({
+            //         path: '/member/memberReview/memberChangeReview',
+            //         query: { id: row.id, userId: row.userId, type: type }
+            //     })
+            // })
+            this.isDetails = true
         },
         reset() {
             this.queryData = {

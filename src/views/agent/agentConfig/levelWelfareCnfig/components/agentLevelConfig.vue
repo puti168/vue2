@@ -178,7 +178,6 @@ export default {
                 })
         },
         openEdit(val) {
-            debugger
             this.edit = true
         },
         back() {
