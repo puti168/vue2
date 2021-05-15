@@ -92,7 +92,7 @@ const actions = {
 						const index = parentRoutes.findIndex(
 							(val) => val.id === element.parentId
 						)
-						if (index > -1) {
+						if (index > -1 && parentRoutes[index]) {
 							parentRoutes[index].children.push({
 								id: element.id,
 								path: element.path,
@@ -123,7 +123,7 @@ const actions = {
 							const fullPath = element.path
 							const pos = fullPath.lastIndexOf('/')
 							const filePath = fullPath.substr(pos + 1)
-							if (index > -1) {
+							if (index > -1 && parentRoutes[index].children[index2]) {
 								parentRoutes[index].children[index2].children.push({
 									path: element.path,
 									name: element.name ? element.name : filePath,
