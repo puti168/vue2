@@ -1,7 +1,9 @@
 <template>
 	<section class="app-main">
 		<transition name="fade-transform" mode="out-in">
+			<keep-alive :include="cachedViews">
 				<router-view :key="key" />
+			</keep-alive>
 		</transition>
 	</section>
 </template>
@@ -11,8 +13,7 @@ export default {
 	name: 'AppMain',
 	components: {},
 	data() {
-		return {
-		}
+		return {}
 	},
 	computed: {
 		editVisible() {
@@ -37,7 +38,7 @@ export default {
 	overflow: hidden;
 }
 .fixed-header + .app-main {
-	padding-top: 105px;
+	padding-top: 50px;
 }
 </style>
 

@@ -2,10 +2,10 @@
 	<div class="navbar">
 		<svg-icon icon-class="left-logo" class="left-logo" />
 		<span class="left-title">OB旗舰中控管理</span>
-		<template v-for="(item, index) in routes">
+		<template v-for="item in routes">
 			<div
-				v-if="item.show"
-				:key="index"
+				v-if="!item.hidden"
+				:key="item.path"
 				class="navbar-title"
 				:class="item.checked ? 'active' : ''"
 				@click="go(item, routes)"
@@ -80,7 +80,7 @@ export default {
 	}
 	.navbar-title {
 		width: 80px;
-		height: 70px;
+		//height: 70px;
 		line-height: 70px;
 		text-align: center;
 		color: #fff;
