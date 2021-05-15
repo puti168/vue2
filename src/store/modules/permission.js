@@ -128,7 +128,8 @@ function filterAsyncRouter(asyncRouterMap) {
 							title: item.title,
 							icon: item.icon
 						},
-						show: true
+						show: true,
+						checked: false
 					})
 
 					if (route.level === 3) {

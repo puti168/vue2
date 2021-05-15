@@ -7,7 +7,7 @@
 				v-if="item.show"
 				:key="item.id"
 				class="navbar-title"
-                :class="{active: activeId === item.id}"
+                :class="item.checked ? 'active' : ''"
 				@click="go(item, routes)"
 			>
 				{{ item.name }}
@@ -55,10 +55,10 @@ export default {
 		},
 		async go(item, routes) {
 			await this.$store.dispatch('permission/setNowroute', item.id)
-			// routes.forEach((data) => {
-			// 	data.checked = false
-			// })
-            this.activeId = item.id
+			routes.forEach((data) => {
+				data.checked = false
+			})
+            item.checked = true
 		},
 		async loginOut() {
 			await this.$store.dispatch('user/logout')
