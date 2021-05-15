@@ -57,16 +57,28 @@
 			:visible.sync="visible"
 			:before-close="closeFormDialog"
 			width="610px"
+			class="audit-confirm"
 		>
-			<el-form ref="form" label-width="100px">
-				<el-form-item label="提交审核信息">
+			<el-form ref="form" :model="form" :rules="formRules">
+				<el-form-item v-if="action" label="提交审核信息">
 					<el-input
-						v-model="remark"
+						v-model="form.remark"
 						clearable
 						type="textarea"
 						:max="50"
 						:autosize="{ minRows: 4, maxRows: 4 }"
-						size="medium"
+						style="width: 380px"
+						placeholder="请输入"
+					></el-input>
+				</el-form-item>
+				<el-form-item v-else label="提交审核信息" prop="remark">
+					<el-input
+						v-model="form.remark"
+						clearable
+						type="textarea"
+						:max="50"
+						:autosize="{ minRows: 4, maxRows: 4 }"
+						style="width: 380px"
 						placeholder="请输入"
 					></el-input>
 				</el-form-item>
@@ -93,13 +105,23 @@ export default {
 		return {
 			list: {},
 			visible: false,
-			remark: '',
+			form: {
+				remark: ''
+			},
 			action: false,
 			// 审核 true 仅返回 false
 			type: true
 		}
 	},
-	computed: {},
+	computed: {
+		formRules() {
+			return {
+				remark: [
+					{ required: true, message: '审核拒绝备注必填', trigger: 'blur' }
+				]
+			}
+		}
+	},
 	created() {
 		if (this.$route.name === 'addMemberReview') {
 			this.getInfo()
@@ -117,40 +139,81 @@ export default {
 			this.visible = true
 		},
 		auditOne() {
-			const loading = this.$loading({
-				lock: true,
-				text: 'Loading',
-				spinner: 'el-icon-loading',
-				background: 'rgba(0, 0, 0, 0.7)'
-			})
-			const params = {
-				id: this.$route.query.id,
-				userId: this.$route.query.userId,
-				remark: this.remark,
-				auditStatus: this.action ? 2 : 3
-			}
+			if (this.action) {
+				const loading = this.$loading({
+					lock: true,
+					text: 'Loading',
+					spinner: 'el-icon-loading',
+					background: 'rgba(0, 0, 0, 0.7)'
+				})
+				const params = {
+					id: this.$route.query.id,
+					userId: this.$route.query.userId,
+					remark: this.form.remark,
+					auditStatus: this.action ? 2 : 3
+				}
 
-			this.$api
-				.updateMemberAuditRecord(params)
-				.then((res) => {
-					loading.close()
-					if (res.code === 200) {
-						this.$message({
-							type: 'success',
-							message: '操作成功!'
+				this.$api
+					.updateMemberAuditRecord(params)
+					.then((res) => {
+						loading.close()
+						if (res.code === 200) {
+							this.$message({
+								type: 'success',
+								message: '操作成功!'
+							})
+							this.visible = false
+							this.goBack()
+						} else {
+							this.$message({
+								message: res.msg,
+								type: 'error'
+							})
+						}
+					})
+					.catch(() => {
+						loading.close()
+					})
+			} else {
+				this.$refs.form.validate((valid) => {
+					if (valid) {
+						const loading = this.$loading({
+							lock: true,
+							text: 'Loading',
+							spinner: 'el-icon-loading',
+							background: 'rgba(0, 0, 0, 0.7)'
 						})
-						this.visible = false
-						this.goBack()
-					} else {
-						this.$message({
-							message: res.msg,
-							type: 'error'
-						})
+						const params = {
+							id: this.$route.query.id,
+							userId: this.$route.query.userId,
+							remark: this.form.remark,
+							auditStatus: this.action ? 2 : 3
+						}
+
+						this.$api
+							.updateMemberAuditRecord(params)
+							.then((res) => {
+								loading.close()
+								if (res.code === 200) {
+									this.$message({
+										type: 'success',
+										message: '操作成功!'
+									})
+									this.visible = false
+									this.goBack()
+								} else {
+									this.$message({
+										message: res.msg,
+										type: 'error'
+									})
+								}
+							})
+							.catch(() => {
+								loading.close()
+							})
 					}
 				})
-				.catch(() => {
-					loading.close()
-				})
+			}
 		},
 		goBack() {
 			this.$router.go(-1)

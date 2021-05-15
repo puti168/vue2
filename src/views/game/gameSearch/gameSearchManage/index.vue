@@ -185,7 +185,7 @@ export default {
 	data() {
 		return {
 			loading: false,
-            queryData: {
+			queryData: {
 				historyGameLimit: undefined,
 				hotSearch: undefined
 			},
@@ -301,20 +301,22 @@ export default {
 			console.log('旧数据', this.dataList)
 			const wrapperTr = document.querySelector('.el-table__body-wrapper tbody')
 			const _this = this
-			this.sortable = Sortable.create(wrapperTr, {
-				animation: 180,
-				delay: 0,
-				onEnd: ({ newIndex, oldIndex }) => {
-					const currRow = _this.dataList.splice(oldIndex, 1)[0]
-					_this.dataList.splice(newIndex, 0, currRow)
-				}
-			})
+			this.sortable =
+				wrapperTr &&
+				Sortable.create(wrapperTr, {
+					animation: 180,
+					delay: 0,
+					onEnd: ({ newIndex, oldIndex }) => {
+						const currRow = _this.dataList.splice(oldIndex, 1)[0]
+						_this.dataList.splice(newIndex, 0, currRow)
+					}
+				})
 		}
 	}
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 /deep/.el-dialog__header {
 	text-align: center;
 	color: #909399;
@@ -346,10 +348,12 @@ export default {
 			span:nth-child(2) {
 				position: absolute;
 				right: 30px;
-				top: 0;
+				top: 14px;
 				color: #999;
 				font-weight: 400;
 				font-size: 14px;
+                height: 30px;
+                line-height: 20px;
 			}
 		}
 		.form-header:after {

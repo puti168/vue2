@@ -119,10 +119,13 @@ const actions = {
 						const index2 = parentRoutes[index].children.findIndex(
 							(val) => val.id === element.parentId
 						)
+						const fullPath = element.path
+						const pos = fullPath.lastIndexOf('/')
+						const filePath = fullPath.substr(pos + 1)
 						if (index > -1) {
 							parentRoutes[index].children[index2].children.push({
 								path: element.path,
-								name: element.name ? element.name : element.permissionName,
+								name: element.name ? element.name : filePath,
 								children: [],
 								component: (resolve) =>
 									require(['@/views' + element.path + '/index'], resolve),
@@ -186,20 +189,64 @@ const actions = {
 				if (item.name === '会员') {
 					item.children.forEach((data) => {
 						if (data.name === '会员审核') {
+							data.children.push(
+								{
+									path: '/member/memberReview/memberChangeReview',
+									name: 'memberChangeReview',
+									component: () =>
+										import(`@/views/member/memberReview/memberChangeReview/index`),
+									meta: { title: '会员账户修改审核详情' },
+									hidden: true
+								},
+								{
+									path: '/member/memberReview/addMemberReview',
+									name: 'addMemberReview',
+									component: () =>
+										import(`@/views/member/memberReview/addMemberReview/index`),
+									meta: { title: '新增会员审核详情' },
+									hidden: true
+								}
+							)
+						}
+					})
+				}
+				if (item.name === '代理') {
+					item.children.forEach((data) => {
+						if (data.name === '代理审核') {
+							data.children.push(
+								{
+									path: '/agent/agencyReview/agencyEditDetail',
+									name: 'agencyEditDetail',
+									component: () =>
+										import(`@/views/agent/agencyReview/agencyEditDetail/index`),
+									meta: { title: '代理账户修改审核详情' },
+									hidden: true
+								},
+								{
+									path: '/agent/agencyReview/addReviewDetail',
+									name: 'addReviewDetail',
+									component: () =>
+										import(`@/views/agent/agencyReview/addReviewDetail/index`),
+									meta: { title: '新增代理审核详情' },
+									hidden: true
+								},
+								{
+									path: '/agent/agencyReview/transformationDetail',
+									name: 'transformationDetail',
+									component: () =>
+										import(`@/views/agent/agencyReview/transformationDetail/index`),
+									meta: { title: '会员转代审核详情' },
+									hidden: true
+								}
+							)
+						}
+						if (data.name === '推广管理') {
 							data.children.push({
-								path: '/member/memberReview/memberChangeReview',
-								name: 'memberChangeReview',
+								path: '/agent/promotionManagement/domainCreateAndEidt',
+								name: 'domainCreateAndEidt',
 								component: () =>
-									import(`@/views/member/memberReview/memberChangeReview/index`),
-								meta: { title: '会员账户修改审核详情', icon: 'bb_reportDaily' },
-								hidden: true
-							})
-							data.children.push({
-								path: '/member/memberReview/addMemberReview',
-								name: 'addMemberReview',
-								component: () =>
-									import(`@/views/member/memberReview/addMemberReview/index`),
-								meta: { title: '新增会员审核详情', icon: 'bb_reportDaily' },
+									import(`@/views/agent/promotionManagement/domainCreateAndEidt/index`),
+								meta: { title: '推广域名创建/编辑' },
 								hidden: true
 							})
 						}
@@ -217,61 +264,23 @@ const actions = {
 								hidden: true
 							})
 						}
+						if (data.name === '游戏推荐') {
+							data.children.push({
+								path: '/game/gameConfig/gameHomeRecommendEdit',
+								name: 'gameHomeRecommendEdit',
+								component: () =>
+									import(`@/views/game/gameRecommend/gameHomeRecommendEdit/index`),
+								meta: { title: '推荐位管理编辑' },
+								hidden: true
+							})
+						}
 						if (data.name === '游戏注单') {
 							data.children.push({
-								path: '/game/gameBetslip/zrDetails/index',
-								name: 'zrDetails',
+								path: '/game/gameBetslip/gameBetslipDetails',
+								name: 'gameBetslipDetails',
 								component: () =>
-									import(`@/views/game/gameBetslip/zrDetails/index`),
-								meta: { title: '真人注单详情', icon: 'bb_reportDaily' },
-								hidden: true
-							})
-							data.children.push({
-								path: '/game/gameBetslip/qpDetails/index',
-								name: 'qpDetails',
-								component: () =>
-									import(`@/views/game/gameBetslip/qpDetails/index`),
-								meta: { title: '棋牌注单详情', icon: 'bb_reportDaily' },
-								hidden: true
-							})
-							data.children.push({
-								path: '/game/gameBetslip/tyDetails/index',
-								name: 'tyDetails',
-								component: () =>
-									import(`@/views/game/gameBetslip/tyDetails/index`),
-								meta: { title: '体育注单详情', icon: 'bb_reportDaily' },
-								hidden: true
-							})
-							data.children.push({
-								path: '/game/gameBetslip/djDetails/index',
-								name: 'djDetails',
-								component: () =>
-									import(`@/views/game/gameBetslip/djDetails/index`),
-								meta: { title: '电竞注单详情', icon: 'bb_reportDaily' },
-								hidden: true
-							})
-							data.children.push({
-								path: '/game/gameBetslip/cpDetails/index',
-								name: 'cpDetails',
-								component: () =>
-									import(`@/views/game/gameBetslip/cpDetails/index`),
-								meta: { title: '彩票注单详情', icon: 'bb_reportDaily' },
-								hidden: true
-							})
-							data.children.push({
-								path: '/game/gameBetslip/dyDetails/index',
-								name: 'dyDetails',
-								component: () =>
-									import(`@/views/game/gameBetslip/dyDetails/index`),
-								meta: { title: '电游注单详情', icon: 'bb_reportDaily' },
-								hidden: true
-							})
-							data.children.push({
-								path: '/game/gameBetslip/lhjDetails/index',
-								name: 'lhjDetails',
-								component: () =>
-									import(`@/views/game/gameBetslip/lhjDetails/index`),
-								meta: { title: '老虎机注单详情', icon: 'bb_reportDaily' },
+									import(`@/views/game/gameBetslip/gameBetslipDetails/index`),
+								meta: { title: '游戏注单详情' },
 								hidden: true
 							})
 						}

@@ -1,432 +1,406 @@
 <template>
-  <div class="game-container report-container">
-    <h3>代理详情</h3>
-    <div class="view-container dealer-container">
-      <div class="params">
-        <el-form ref="form" :inline="true" :model="queryData">
-          <el-form-item label="游戏标签ID:">
-            <el-input
-              v-model="queryData.bankCode"
-              clearable
-              :maxlength="3"
-              size="medium"
-              style="width: 180px"
-              placeholder="请输入"
-              :disabled="loading"
-              @keyup.enter.native="enterSearch"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="标签名称:">
-            <el-input
-              v-model="queryData.bankName"
-              clearable
-              :maxlength="10"
-              size="medium"
-              style="width: 180px; margin-right: 20px"
-              placeholder="请输入"
-              :disabled="loading"
-              @keyup.enter.native="enterSearch"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="状态:" class="tagheight">
-            <el-select
-              v-model="queryData.accountType"
-              style="width: 180px"
-              multiple
-              placeholder="默认选择全部"
-              :popper-append-to-body="false"
-            >
-              <el-option label="开启中" value="1"></el-option>
-              <el-option label="禁用中" value="2"></el-option>
-            </el-select>
-          </el-form-item>
-
-          <el-form-item>
-            <el-button
-              type="primary"
-              icon="el-icon-search"
-              :disabled="loading"
-              size="medium"
-              @click="search"
-            >
-              查询
-            </el-button>
-            <el-button
-              icon="el-icon-refresh-left"
-              :disabled="loading"
-              size="medium"
-              @click="reset"
-            >
-              重置
-            </el-button>
-            <el-button
-              type="warning"
-              icon="el-icon-folder"
-              :disabled="loading"
-              size="medium"
-              @click="dialogFormVisible = true"
-            >
-              创建
-            </el-button>
-          </el-form-item>
-        </el-form>
-      </div>
-      <div class="content">
-        <el-table
-          v-loading="loading"
-          border
-          size="mini"
-          class="small-size-table"
-          :data="tableData"
-          style="width: 100%"
-          :header-cell-style="getRowClass"
-          @sort-change="_changeTableSort"
+  <div class="allmargin report-container">
+    <div class="bg"></div>
+    <div class="ps">
+      <el-form ref="form" :inline="true" :model="queryData" @submit.native.prevent>
+        <el-form-item
+          label="代理账号:"
+          prop="userName"
+          :rules="[
+            { required: true, message: '请输入代理账号', trigger: 'blur' },
+            { min: 4, max: 12, message: '长度在 4 到 12 个字符', trigger: 'blur' },
+          ]"
         >
-          <el-table-column
-            prop="vipSerialNum"
-            align="center"
-            label="游戏标签ID"
-            sortable="custom"
-            width="120px"
-          ></el-table-column>
-          <el-table-column
-            prop="content"
-            align="center"
-            label="标签内容"
-            width="170px"
-          ></el-table-column>
-          <el-table-column prop="bankName" align="center" label="状态" width="100px">
-            <template slot-scope="scope">
-              <div v-if="scope.row.code === 1" class="normalRgba">开启中</div>
-              <div v-else class="disableRgba">已禁用</div>
-            </template>
-          </el-table-column>
-          <el-table-column
-            prop="bankName"
-            align="center"
-            label="标签描述"
-          ></el-table-column>
-          <el-table-column
-            prop="bankName"
-            align="center"
-            label="已标签游戏"
-            width="120px"
+          <el-input
+            v-model="queryData.userName"
+            clearable
+            size="medium"
+            :maxlength="11"
+            style="width: 280px"
+            placeholder="请输入代理账号"
+            :disabled="loading"
+            @keyup.enter.native="enterSearch"
+          ></el-input>
+        </el-form-item>
+        <el-form-item style="margin-left: 30px">
+          <el-button
+            type="primary"
+            icon="el-icon-search"
+            :disabled="loading"
+            size="medium"
+            @click="query"
           >
-            <template slot-scope="scope">
-              <div class="blueColor decoration" @click="lookGame(scope.row)">100</div>
-            </template>
-          </el-table-column>
-          <el-table-column
-            prop="bankName"
-            align="center"
-            label="创建人"
-            width="100px"
-          ></el-table-column>
-          <el-table-column
-            prop="createDt"
-            align="center"
-            label="创建时间"
-            sortable="custom"
-            width="160px"
-          ></el-table-column>
-          <el-table-column
-            prop="bankName"
-            align="center"
-            label="最近操作人"
-            width="100px"
-          ></el-table-column>
-          <el-table-column
-            prop="createDt"
-            align="center"
-            label="最近操作时间"
-            sortable="custom"
-            width="160px"
-          ></el-table-column>
-          <el-table-column prop="operating" align="center" label="操作" width="240px">
-            <template slot-scope="scope">
-              <el-button
-                :disabled="loading"
-                type="success"
-                size="medium"
-                class="noicon"
-                @click="switchClick(scope.row)"
-              >
-                开启
-              </el-button>
-              <el-button
-                :disabled="loading"
-                type="danger"
-                size="medium"
-                class="noicon"
-                @click="switchClick(scope.row)"
-              >
-                禁用
-              </el-button>
-              <el-button
-                type="primary"
-                icon="el-icon-edit"
-                :disabled="loading"
-                size="medium"
-                @click="edit(scope.row)"
-              >
-                编辑信息
-              </el-button>
+            查询
+          </el-button>
+          <el-button
+            icon="el-icon-refresh-left"
+            :disabled="loading"
+            size="medium"
+            @click="reset"
+          >
+            重置
+          </el-button>
+        </el-form-item>
+      </el-form>
 
-              <el-button
-                type="warning"
-                icon="el-icon-delete"
-                :disabled="loading"
-                size="medium"
-                @click="deleteLabel(scope.row)"
-              >
-                删除
-              </el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-        <!-- 分页 -->
-        <el-pagination
-          :current-page.sync="pageNum"
-          class="pageValue"
-          background
-          layout="total, sizes,prev, pager, next, jumper"
-          :page-size="pageSize"
-          :page-sizes="pageSizes"
-          :total="total"
-          @current-change="handleCurrentChange"
-          @size-change="handleSizeChange"
-        ></el-pagination>
-      </div>
-      <el-dialog
-        title="创建/编辑"
-        :visible.sync="dialogFormVisible"
-        :destroy-on-close="true"
-        width="480px"
-        class="rempadding"
+      <el-tabs
+        v-show="isShow"
+        v-model="activeName"
+        class="tabsBox"
+        @tab-click="handleClick"
       >
-        <el-divider></el-divider>
-        <el-form :model="dialogForm" label-width="90px">
-          <el-form-item
-            label="标签名称:"
-            prop="name"
-            :rules="[
-              { required: true, message: '请输入标签名称', trigger: 'blur' },
-              { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' },
-            ]"
-          >
-            <el-input
-              v-model="dialogForm.name"
-              :maxlength="10"
-              autocomplete="off"
-            ></el-input>
-          </el-form-item>
-          <el-form-item
-            label="描述:"
-            prop="remark"
-            :rules="[
-              { required: true, message: '请输入描述内容', trigger: 'blur' },
-              { min: 2, max: 50, message: '长度在 2 到 50 个字符', trigger: 'blur' },
-            ]"
-          >
-            <el-input v-model="dialogForm.remark" type="textarea"></el-input>
-          </el-form-item>
-        </el-form>
-        <el-divider></el-divider>
-        <div slot="footer" class="dialog-footer">
-          <el-button @click="dialogFormVisible = false">取消</el-button>
-          <el-button type="primary" @click="subAddOrEidt">保存</el-button>
-        </div>
-      </el-dialog>
-      <el-dialog
-        title="标签游戏"
-        :visible.sync="dialogGameVisible"
-        :destroy-on-close="true"
-        width="480px"
-        class="rempadding"
-      >
-        <el-divider></el-divider>
-        <div class="contentBox disableColor">标签名称：高频率（001）</div>
-        <p class="headerBox">
-          <span>游戏名称</span>
-          <span>添加时间</span>
-        </p>
-        <div class="bodyBox">
-          <p>
-            <span>斗地主</span>
-            <span>2016-09-21 08:50:08</span>
-          </p>
-        </div>
-      </el-dialog>
+        <el-tab-pane label="基本信息" name="basicInfor" class="nav-list-item">
+        </el-tab-pane>
+        <el-tab-pane
+          label="财务信息"
+          name="financialInfor"
+          class="nav-list-item"
+        ></el-tab-pane>
+        <el-tab-pane
+          label="团队信息"
+          name="teamInfor"
+          class="nav-list-item"
+        ></el-tab-pane>
+        <el-tab-pane
+          label="登录信息"
+          name="loginInfor"
+          class="nav-list-item"
+        ></el-tab-pane>
+      </el-tabs>
+    </div>
+    <div class="marginTb"></div>
+    <div v-show="isShow" class="contentBox">
+      <basicInfor
+        ref="basicInfor"
+        class="floor-item"
+        :parentData="parentData"
+        :outlineInfo="outlineInfo"
+        :remarksTableData="remarksTableData"
+      ></basicInfor>
+      <financialInfor
+        ref="financialInfor"
+        class="floor-item"
+        :parentData="parentData"
+        :balanceList="balanceList"
+        :commission="commission"
+        :playerList="playerList"
+        :surrogateList="surrogateList"
+      ></financialInfor>
+      <teamInfor
+        ref="teamInfor"
+        class="floor-item"
+        :parentData="parentData"
+        :overviewList="overviewList"
+        :bettingList="bettingList"
+        :top3Sy="top3Sy"
+      ></teamInfor>
+      <loginInfor
+        ref="loginInfor"
+        class="floor-item"
+        :parentData="parentData"
+        :lonRecord="lonRecord"
+      ></loginInfor>
     </div>
   </div>
 </template>
 
 <script>
 import list from '@/mixins/list'
-import dayjs from 'dayjs'
+import basicInfor from './components/basicInfor'
+import financialInfor from './components/financialInfor'
+import teamInfor from './components/teamInfor'
+import loginInfor from './components/loginInfor'
 import { routerNames } from '@/utils/consts'
-const startTime = dayjs().startOf('day').valueOf()
-const endTime = dayjs().endOf('day').valueOf()
-
 export default {
-  name: routerNames.gamePlatform,
-  components: {},
+  name: routerNames.memberDetails,
+  components: { basicInfor, financialInfor, teamInfor, loginInfor },
   mixins: [list],
   data() {
     return {
-      queryData: {
-        accountType: []
-      },
-      searchTime: [startTime, endTime],
-      now: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
-      summary: {
-        count: 0,
-        failCount: 0,
-        successCount: 0
-      },
-      tableData: [],
-      dialogFormVisible: false,
-      dialogForm: {},
-      dialogGameVisible: false
+      isShow: false,
+      parentData: { userName: '', userId: '' },
+      queryData: { userName: '', userId: '' },
+      activeName: 'basicInfor',
+      tabList: ['basicInfor', 'financialInfor', 'teamInfor', 'loginInfor'],
+      outlineInfo: {}, // 基本信息
+      remarksTableData: {}, // 备注表格
+      balanceList: {}, // 代理余额
+      commission: {}, // 佣金信息
+      playerList: {}, // 充提信息
+      surrogateList: {}, // 代存信息
+      overviewList: {}, // 成员概览
+      bettingList: {}, // 投注信息
+      top3Sy: [], // top3表格
+      lonRecord: {} // 登录信息
     }
   },
   computed: {},
   mounted() {
-    for (let i = 0; i < 10; i++) {
-      this.tableData[i] = {
-        bankCode: '165416416464654',
-        bankName: '中国银行',
-        content: '高频率',
-        code: 1,
-        createDt: '2021-02-13 20:28:54',
-        updateDt: '2021-02-13 20:28:54'
-      }
-    }
+    this.activeName = 'basicInfor'
+    // 监听滚动事件
+    window.addEventListener('scroll', this.onScroll, false)
+    this.onScroll(0)
+  },
+  destroy() {
+    // 必须移除监听器，不然当该vue组件被销毁了，监听器还在就会出错
+    window.removeEventListener('scroll', this.onScroll)
   },
   methods: {
-    loadData() {
-      // this.loading = true;
-      const create = this.searchTime || []
-      const [startTime, endTime] = create
-      let params = {
-        ...this.queryData,
-        startTime: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : '',
-        endTime: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
-      }
-      params = {
-        ...this.getParams(params)
-      }
-      console.log(params)
+    // 会员详情-基本信息-概要信息以及个人资料
+    getOutlineInfo(val) {
+      // const loading = this.$loading(this.loadingRgba);
+      this.$api
+        .getOutlineInfo({ userName: val.userName })
+        .then((res) => {
+          this.isShow = true
+          if (res.code === 200) {
+            this.outlineInfo = res.data
+            this.parentData.userName = res.data.userName
+            this.parentData.userId = res.data.id
+            this.getProxyDetailRemark(res.data.id)
+            this.getProxyDataBalance(res.data.id)
+            this.getProxyDataCommission(res.data.id)
+            this.getRechargeAndWithdrawInfo(res.data.id)
+            this.getWithdrawWater(res.data.id)
+            this.getPlayerOrderSumInfo(res.data.id)
+            this.getPlayerBetHistorySum(res.data.id)
+            this.getPlayerTop3(res.data.id)
+            this.getLogMemberLoginLog(res.data.id)
+          }
+          this.$refs.basicInfor.activeL = false
+          this.$refs.financialInfor.activeL = false
+          this.$refs.teamInfor.activeL = false
+          this.$refs.loginInfor.activeL = false
+          this.activeName = 'basicInfor'
+          this.scrollTo(0)
+          // loading.close();
+        })
+        .catch(() => {
+          this.isShow = false
+          this.$refs.basicInfor.activeL = false
+          this.$refs.financialInfor.activeL = false
+          this.$refs.teamInfor.activeL = false
+          this.$refs.loginInfor.activeL = false
+        })
     },
-    lookGame(val) {
-      this.dialogGameVisible = true
-      console.log(val)
-    },
-    reset() {
-      this.queryData = {}
-    },
-    switchClick(val) {
-      this.$confirm(
-        `<strong>是否对子游戏进行开启/维护/禁用操作?</strong></br><span style='font-size:12px;color:#c1c1c1'>一旦操作将会立即生效</span>`,
-        `确认提示`,
-        {
-          dangerouslyUseHTMLString: true,
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
+    // 备注信息
+    getMemberRemarkList(val) {
+      const params = { userId: val, accountType: 1, pageNum: 1, pageSize: 3 }
+      this.$api.getMemberRemarkList(params).then((res) => {
+        if (res.code === 200) {
+          this.remarksTableData = res.data
         }
-      )
-        .then(() => {
-          console.log(1111111)
-        })
-        .catch(() => {})
-    },
-    edit(val) {
-      this.dialogFormVisible = true
-      console.log(val)
-    },
-    deleteLabel(val) {
-      this.$confirm(`<strong>确定删除此条标签类型吗?</strong>`, `确认提示`, {
-        dangerouslyUseHTMLString: true,
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
       })
-        .then(() => {
-          console.log(2222222222)
-        })
-        .catch(() => {})
     },
-    subAddOrEidt() {
-      this.dialogFormVisible = false
+    // 查询代理余额
+    getProxyDataBalance(val) {
+      this.$api.getProxyDataBalance({ userId: val }).then((res) => {
+        if (res.code === 200) {
+          this.balanceList = res.data
+        }
+      })
     },
-    _changeTableSort({ column, prop, order }) {
-      if (prop === 'vipSerialNum') {
-        prop = 1
-      }
-      this.queryData.orderKey = prop
-      if (order === 'ascending') {
-        // 升序
-        this.queryData.orderType = 'asc'
-      } else if (column.order === 'descending') {
-        // 降序
-        this.queryData.orderType = 'desc'
-      }
-      this.loadData()
+    // 查询佣金信息
+    getProxyDataCommission(val) {
+      this.$api.getProxyDataCommission({ userId: val }).then((res) => {
+        if (res.code === 200) {
+          this.commission = res.data
+        }
+      })
+    },
+    // 查询存提信息
+    getRechargeAndWithdrawInfo(val) {
+      this.$api.getRechargeAndWithdrawInfo({ userId: val }).then((res) => {
+        if (res.code === 200) {
+          this.surrogateList = res.data
+        }
+      })
+    },
+    // 提现流水查询
+    getWithdrawWater(val) {
+      this.$api.getWithdrawWater({ userId: val }).then((res) => {
+        if (res.code === 200) {
+          this.waterList = res.data
+        }
+      })
+    },
+    // 会员充提信息
+    getPlayerOrderSumInfo(val) {
+      this.$api.getPlayerOrderSumInfo({ userId: val }).then((res) => {
+        if (res.code === 200) {
+          this.playerList = res.data
+        }
+      })
+    },
+    // 会员投注信息
+    getPlayerBetHistorySum(val) {
+      this.$api.getPlayerBetHistorySum({ userId: val }).then((res) => {
+        if (res.code === 200) {
+          this.sumList = res.data
+        }
+      })
+    },
+    // top3平台统计
+    getPlayerTop3(val) {
+      const params = { userId: val, orderKey: 1 }
+      this.$api.getPlayerTop3(params).then((res) => {
+        if (res.code === 200) {
+          this.top3Sy = res.data
+        }
+        console.log(res)
+      })
+    },
+    // 会员登录日志查询
+    getLogMemberLoginLog(val) {
+      const params = { userId: val, pageNum: 1, pageSize: 10 }
+      this.$api.getLogMemberLoginLog(params).then((res) => {
+        if (res.code === 200) {
+          this.lonRecord = res.data
+        }
+      })
+    },
+    query() {
+      const params = this.queryData
+      this.$refs.form.validate((valid) => {
+        if (valid) {
+          this.getOutlineInfo(params)
+        }
+      })
     },
     enterSubmit() {
-      this.loadData()
+      this.query()
+    },
+    reset() {
+      this.$refs.form.resetFields()
+      this.queryData = {}
+    },
+    handleClick(tab, event) {
+      this.scrollTo(tab.index)
+    },
+    // 滚动监听器
+    onScroll() {
+      // 获取所有锚点元素
+      const navContents = document.querySelectorAll('.floor-item')
+      // 所有锚点元素的 offsetTop
+      const offsetTopArr = []
+      navContents.forEach((item) => {
+        offsetTopArr.push(item.offsetTop)
+      })
+      // 获取当前文档流的 scrollTop
+      const scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+      // 定义当前点亮的导航下标
+      let navIndex = 0
+      for (let n = 0; n < offsetTopArr.length; n++) {
+        // 如果 scrollTop 大于等于第n个元素的 offsetTop 则说明 n-1 的内容已经完全不可见
+        // 那么此时导航索引就应该是n了
+        if (scrollTop + 240 >= offsetTopArr[n]) {
+          navIndex = n
+        }
+      }
+      if (
+        scrollTop + document.documentElement.clientHeight ===
+        document.documentElement.scrollHeight
+      ) {
+        navIndex = offsetTopArr.length - 1
+      }
+      this.activeName = this.tabList[navIndex]
+    },
+    // 跳转到指定索引的元素
+    scrollTo(index) {
+      // 获取目标的 offsetTop
+      // css选择器是从 1 开始计数，我们是从 0 开始，所以要 +1
+      const navContents = document.querySelectorAll('.floor-item')
+      const targetOffsetTop = navContents[index].offsetTop
+      // const targetOffsetTop = document.querySelector(
+      //   `.floor-item:nth-child(${index + 1})`
+      // ).offsetTop;
+      console.log(targetOffsetTop)
+      // 获取当前 offsetTop
+      let scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+      // 定义一次跳 50 个像素，数字越大跳得越快，但是会有掉帧得感觉，步子迈大了会扯到蛋
+      const STEP = 50
+      // 判断是往下滑还是往上滑
+      if (scrollTop > targetOffsetTop) {
+        // 往上滑
+        smoothUp()
+      } else {
+        // 往下滑
+        smoothDown()
+      }
+      // 定义往下滑函数
+      function smoothDown() {
+        // 如果当前 scrollTop 小于 targetOffsetTop 说明视口还没滑到指定位置
+        if (scrollTop < targetOffsetTop) {
+          // 如果和目标相差距离大于等于 STEP 就跳 STEP
+          // 否则直接跳到目标点，目标是为了防止跳过了。
+          if (targetOffsetTop - scrollTop >= STEP) {
+            scrollTop += STEP
+          } else {
+            scrollTop = targetOffsetTop
+          }
+          document.body.scrollTop = scrollTop - 240
+          document.documentElement.scrollTop = scrollTop - 240
+          // 关于 requestAnimationFrame 可以自己查一下，在这种场景下，相比 setInterval 性价比更高
+          requestAnimationFrame(smoothDown)
+        }
+      }
+      // 定义往上滑函数
+      function smoothUp() {
+        if (scrollTop > targetOffsetTop) {
+          if (scrollTop - targetOffsetTop >= STEP) {
+            scrollTop -= STEP
+          } else {
+            scrollTop = targetOffsetTop
+          }
+          document.body.scrollTop = scrollTop - 240
+          document.documentElement.scrollTop = scrollTop - 240
+          requestAnimationFrame(smoothUp)
+        }
+      }
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-/deep/.el-dialog__header {
-  text-align: center;
-  color: #909399;
-  font-weight: 700;
+.allmargin {
+  margin: 9px 15px 15px 15px;
 }
-/deep/ .tagheight .el-tag {
-  height: 24px;
-  line-height: 24px;
-  min-width: 60px;
+.ps {
+  position: fixed;
+  height: 125px;
+  width: 100%;
+  background: #fff;
+  padding: 15px 0;
+  z-index: 100;
+  border-bottom: 1px solid #dcdfe6;
 }
-/deep/ .rempadding .el-dialog__body {
-  padding: 0;
-  padding-bottom: 30px;
+.bg {
+  width: 100%;
+  height: 15px;
+  background: #ffffff;
+  position: fixed;
+  top: 100px;
+  z-index: 1;
+}
 
-  .contentBox,
-  form {
-    padding: 0 20px;
-  }
+/deep/ .tabsBox .el-tabs__nav-wrap::after {
+  display: none;
 }
-.decoration {
-  text-decoration: underline;
-  cursor: pointer;
+/deep/ .tabsBox .el-tabs__content {
+  display: none;
 }
-.bodyBox {
-  max-height: 400px;
-  overflow: auto;
+/deep/ .tabsBox .el-tabs__item {
+  font-weight: bold;
 }
-p {
-  display: flex;
-  height: 40px;
-  line-height: 40px;
-  border-bottom: 1px solid #e8e8e8;
-  justify-content: space-around;
-  span {
-    display: inline-block;
-    width: 50%;
-    text-align: center;
-  }
+.floor-item {
+  // width: 100%;
+  // min-height: 500px;
+  // text-align: center;
+  // color: #fff;
+  // background-color: #404040;
 }
-.headerBox {
-  color: #000000d8;
-  background: #fafafa;
-  font-family: "PingFang SC ", "PingFang SC", sans-serif;
-  font-weight: 650;
-  border-top: 1px solid #e8e8e8;
-  margin-top: 15px;
+.marginTb {
+  height: 125px;
 }
 </style>

@@ -29,15 +29,21 @@
 					></el-table-column>
 					<el-table-column prop="status" align="center" label="状态">
 						<template slot-scope="scope">
-							<p :class="scope.row.status === '开启中' ? 'successState' : 'dangerState'">{{ scope.row.status }}</p>
+							<p
+								:class="
+									scope.row.status === '开启中' ? 'successState' : 'dangerState'
+								"
+							>
+								{{ scope.row.status }}
+							</p>
 						</template>
 					</el-table-column>
-          <el-table-column
+					<el-table-column
 						prop="bankName"
 						align="center"
 						label="模块描述"
 					></el-table-column>
-          <el-table-column
+					<el-table-column
 						prop="bankName"
 						align="center"
 						label="最近操作人"
@@ -48,7 +54,7 @@
 						label="最近操作时间"
 						sortable="custom"
 					></el-table-column>
-          <el-table-column
+					<el-table-column
 						prop="operating"
 						align="center"
 						label="操作"
@@ -104,7 +110,7 @@ const start = dayjs()
 	.startOf('day')
 	.valueOf()
 export default {
-	name: routerNames.virtualRecord,
+	name: routerNames.gameHomeRecommend,
 	components: {},
 	mixins: [list],
 	data() {
@@ -144,7 +150,7 @@ export default {
 		}
 	},
 	mounted() {
-    for (let i = 0; i < 10; i++) {
+		for (let i = 0; i < 10; i++) {
 			this.dataList[i] = {
 				bankCode: '165416416464654',
 				bankName: '中国银行',
@@ -154,8 +160,9 @@ export default {
 				updateDt: '2021-02-13 20:28:54'
 			}
 		}
-  },
+	},
 	methods: {
+		handleClick() {},
 		loadData() {
 			const [startTime, endTime] = this.formTime.time || []
 			let params = {
@@ -197,22 +204,28 @@ export default {
 					this.loading = false
 				})
 		},
-    confrim() {
-      this.$confirm(
-        `<strong>是否对子游戏进行开启/禁用操作?</strong></br><span style='font-size:12px;color:#c1c1c1'>一旦操作将会立即生效</span>`,
-        '确认提示',
-        {
-          dangerouslyUseHTMLString: true,
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }
-      )
-        .then(() => {
-          // this.getOneKeyWithdraw({ userId: this.parentData.userId }) // 一键下分
-        })
-        .catch(() => {})
-    },
+		openEdit(row) {
+			this.$router.push({
+				path: '/game/gameConfig/gameHomeRecommendEdit',
+				query: { id: row.id, userId: row.userId }
+			})
+		},
+		confrim() {
+			this.$confirm(
+				`<strong>是否对子游戏进行开启/禁用操作?</strong></br><span style='font-size:12px;color:#c1c1c1'>一旦操作将会立即生效</span>`,
+				'确认提示',
+				{
+					dangerouslyUseHTMLString: true,
+					confirmButtonText: '确定',
+					cancelButtonText: '取消',
+					type: 'warning'
+				}
+			)
+				.then(() => {
+					// this.getOneKeyWithdraw({ userId: this.parentData.userId }) // 一键下分
+				})
+				.catch(() => {})
+		},
 		changeTableSort({ column, prop, order }) {
 			this.pageNum = 1
 			const orderParams = this.checkOrderParams.get(prop)

@@ -6,6 +6,7 @@ import threeIpwhitelist from './threeIpwhitelist'
 import riskManage from './riskManage'
 import memberDetails from './memberDetails'
 import game from './game'
+import agent from './agent'
 
 export default {
 	...bankController,
@@ -15,5 +16,6 @@ export default {
 	...threeIpwhitelist,
 	...riskManage,
 	...memberDetails,
-	...game
+	...game,
+	...agent
 }

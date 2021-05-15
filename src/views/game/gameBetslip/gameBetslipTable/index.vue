@@ -428,14 +428,54 @@ export default {
     }
   },
   mounted() {
-    for (let i = 0; i < 10; i++) {
-      this.tableData[i] = {
-        bankCode: '165416416464654',
-        bankName: '中国银行',
-        createDt: '2021-02-13 20:28:54',
-        updateDt: '2021-02-13 20:28:54',
-        index: i
-      }
+    this.tableData[0] = {
+      bankCode: '165416416464654',
+      bankName: '真人游戏',
+      createDt: '2021-02-13 20:28:54',
+      updateDt: '2021-02-13 20:28:54',
+      gameType: 'zr'
+    }
+    this.tableData[1] = {
+      bankCode: '165416416464654',
+      bankName: '棋牌游戏',
+      createDt: '2021-02-13 20:28:54',
+      updateDt: '2021-02-13 20:28:54',
+      gameType: 'qp'
+    }
+    this.tableData[2] = {
+      bankCode: '165416416464654',
+      bankName: '体育游戏',
+      createDt: '2021-02-13 20:28:54',
+      updateDt: '2021-02-13 20:28:54',
+      gameType: 'ty'
+    }
+    this.tableData[3] = {
+      bankCode: '165416416464654',
+      bankName: '电竞游戏',
+      createDt: '2021-02-13 20:28:54',
+      updateDt: '2021-02-13 20:28:54',
+      gameType: 'dj'
+    }
+    this.tableData[4] = {
+      bankCode: '165416416464654',
+      bankName: '彩票游戏',
+      createDt: '2021-02-13 20:28:54',
+      updateDt: '2021-02-13 20:28:54',
+      gameType: 'cp'
+    }
+    this.tableData[5] = {
+      bankCode: '165416416464654',
+      bankName: '电游游戏',
+      createDt: '2021-02-13 20:28:54',
+      updateDt: '2021-02-13 20:28:54',
+      gameType: 'dy'
+    }
+    this.tableData[6] = {
+      bankCode: '165416416464654',
+      bankName: '老虎机',
+      createDt: '2021-02-13 20:28:54',
+      updateDt: '2021-02-13 20:28:54',
+      gameType: 'lhj'
     }
   },
   methods: {
@@ -458,85 +498,20 @@ export default {
     },
     lookMsg(val) {
       console.log(val)
-      switch (val.index) {
-        case 0:
-          this.$store.dispatch('tagsView/delView', {
-            name: routerNames.zrDetails
-          })
-          this.$nextTick(() => {
-            this.$router.push({
-              path: '/game/gameBetslip/zrDetails/index',
-              query: { id: val }
-            })
-          })
-          break
-        case 1:
-          this.$store.dispatch('tagsView/delView', {
-            name: routerNames.qpDetails
-          })
-          this.$nextTick(() => {
-            this.$router.push({
-              path: '/game/gameBetslip/qpDetails/index'
-              // query: { id: row.id, userId: row.userId, type: type }
-            })
-          })
-          break
-        case 2:
-          this.$store.dispatch('tagsView/delView', {
-            name: routerNames.tyDetails
-          })
-          this.$nextTick(() => {
-            this.$router.push({
-              path: '/game/gameBetslip/tyDetails/index'
-              // query: { id: row.id, userId: row.userId, type: type }
-            })
-          })
-          break
-        case 3:
-          this.$store.dispatch('tagsView/delView', {
-            name: routerNames.djDetails
-          })
-          this.$nextTick(() => {
-            this.$router.push({
-              path: '/game/gameBetslip/djDetails/index'
-              // query: { id: row.id, userId: row.userId, type: type }
-            })
-          })
-          break
-        case 4:
-          this.$store.dispatch('tagsView/delView', {
-            name: routerNames.cpDetails
-          })
-          this.$nextTick(() => {
-            this.$router.push({
-              path: '/game/gameBetslip/cpDetails/index'
-              // query: { id: row.id, userId: row.userId, type: type }
-            })
-          })
-          break
-        case 5:
-          this.$store.dispatch('tagsView/delView', {
-            name: routerNames.dyDetails
-          })
-          this.$nextTick(() => {
-            this.$router.push({
-              path: '/game/gameBetslip/dyDetails/index'
-              // query: { id: row.id, userId: row.userId, type: type }
-            })
-          })
-          break
-        case 6:
-          this.$store.dispatch('tagsView/delView', {
-            name: routerNames.lhjDetails
-          })
-          this.$nextTick(() => {
-            this.$router.push({
-              path: '/game/gameBetslip/lhjDetails/index'
-              // query: { id: row.id, userId: row.userId, type: type }
-            })
-          })
-          break
-      }
+      this.$store.dispatch('tagsView/delView', {
+        name: routerNames.gameBetslipDetails
+      })
+      this.$nextTick(() => {
+        this.$router.push({
+          path: '/game/gameBetslip/gameBetslipDetails',
+          query: val
+        })
+      })
+      // switch (val.gameType) {
+      //   case "zr":
+
+      //     break;
+      // }
     },
     _changeTableSort({ column, prop, order }) {
       if (prop === 'vipSerialNum') {

@@ -1,432 +1,494 @@
 <template>
-  <div class="game-container report-container">
-    <h3>会员转代审核</h3>
-    <div class="view-container dealer-container">
-      <div class="params">
-        <el-form ref="form" :inline="true" :model="queryData">
-          <el-form-item label="游戏标签ID:">
-            <el-input
-              v-model="queryData.bankCode"
-              clearable
-              :maxlength="3"
-              size="medium"
-              style="width: 180px"
-              placeholder="请输入"
-              :disabled="loading"
-              @keyup.enter.native="enterSearch"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="标签名称:">
-            <el-input
-              v-model="queryData.bankName"
-              clearable
-              :maxlength="10"
-              size="medium"
-              style="width: 180px; margin-right: 20px"
-              placeholder="请输入"
-              :disabled="loading"
-              @keyup.enter.native="enterSearch"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="状态:" class="tagheight">
-            <el-select
-              v-model="queryData.accountType"
-              style="width: 180px"
-              multiple
-              placeholder="默认选择全部"
-              :popper-append-to-body="false"
-            >
-              <el-option label="开启中" value="1"></el-option>
-              <el-option label="禁用中" value="2"></el-option>
-            </el-select>
-          </el-form-item>
-
-          <el-form-item>
-            <el-button
-              type="primary"
-              icon="el-icon-search"
-              :disabled="loading"
-              size="medium"
-              @click="search"
-            >
-              查询
-            </el-button>
-            <el-button
-              icon="el-icon-refresh-left"
-              :disabled="loading"
-              size="medium"
-              @click="reset"
-            >
-              重置
-            </el-button>
-            <el-button
-              type="warning"
-              icon="el-icon-folder"
-              :disabled="loading"
-              size="medium"
-              @click="dialogFormVisible = true"
-            >
-              创建
-            </el-button>
-          </el-form-item>
-        </el-form>
-      </div>
-      <div class="content">
-        <el-table
-          v-loading="loading"
-          border
-          size="mini"
-          class="small-size-table"
-          :data="tableData"
-          style="width: 100%"
-          :header-cell-style="getRowClass"
-          @sort-change="_changeTableSort"
-        >
-          <el-table-column
-            prop="vipSerialNum"
-            align="center"
-            label="游戏标签ID"
-            sortable="custom"
-            width="120px"
-          ></el-table-column>
-          <el-table-column
-            prop="content"
-            align="center"
-            label="标签内容"
-            width="170px"
-          ></el-table-column>
-          <el-table-column prop="bankName" align="center" label="状态" width="100px">
-            <template slot-scope="scope">
-              <div v-if="scope.row.code === 1" class="normalRgba">开启中</div>
-              <div v-else class="disableRgba">已禁用</div>
-            </template>
-          </el-table-column>
-          <el-table-column
-            prop="bankName"
-            align="center"
-            label="标签描述"
-          ></el-table-column>
-          <el-table-column
-            prop="bankName"
-            align="center"
-            label="已标签游戏"
-            width="120px"
-          >
-            <template slot-scope="scope">
-              <div class="blueColor decoration" @click="lookGame(scope.row)">100</div>
-            </template>
-          </el-table-column>
-          <el-table-column
-            prop="bankName"
-            align="center"
-            label="创建人"
-            width="100px"
-          ></el-table-column>
-          <el-table-column
-            prop="createDt"
-            align="center"
-            label="创建时间"
-            sortable="custom"
-            width="160px"
-          ></el-table-column>
-          <el-table-column
-            prop="bankName"
-            align="center"
-            label="最近操作人"
-            width="100px"
-          ></el-table-column>
-          <el-table-column
-            prop="createDt"
-            align="center"
-            label="最近操作时间"
-            sortable="custom"
-            width="160px"
-          ></el-table-column>
-          <el-table-column prop="operating" align="center" label="操作" width="240px">
-            <template slot-scope="scope">
-              <el-button
-                :disabled="loading"
-                type="success"
-                size="medium"
-                class="noicon"
-                @click="switchClick(scope.row)"
-              >
-                开启
-              </el-button>
-              <el-button
-                :disabled="loading"
-                type="danger"
-                size="medium"
-                class="noicon"
-                @click="switchClick(scope.row)"
-              >
-                禁用
-              </el-button>
-              <el-button
-                type="primary"
-                icon="el-icon-edit"
-                :disabled="loading"
-                size="medium"
-                @click="edit(scope.row)"
-              >
-                编辑信息
-              </el-button>
-
-              <el-button
-                type="warning"
-                icon="el-icon-delete"
-                :disabled="loading"
-                size="medium"
-                @click="deleteLabel(scope.row)"
-              >
-                删除
-              </el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-        <!-- 分页 -->
-        <el-pagination
-          :current-page.sync="pageNum"
-          class="pageValue"
-          background
-          layout="total, sizes,prev, pager, next, jumper"
-          :page-size="pageSize"
-          :page-sizes="pageSizes"
-          :total="total"
-          @current-change="handleCurrentChange"
-          @size-change="handleSizeChange"
-        ></el-pagination>
-      </div>
-      <el-dialog
-        title="创建/编辑"
-        :visible.sync="dialogFormVisible"
-        :destroy-on-close="true"
-        width="480px"
-        class="rempadding"
-      >
-        <el-divider></el-divider>
-        <el-form :model="dialogForm" label-width="90px">
-          <el-form-item
-            label="标签名称:"
-            prop="name"
-            :rules="[
-              { required: true, message: '请输入标签名称', trigger: 'blur' },
-              { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' },
-            ]"
-          >
-            <el-input
-              v-model="dialogForm.name"
-              :maxlength="10"
-              autocomplete="off"
-            ></el-input>
-          </el-form-item>
-          <el-form-item
-            label="描述:"
-            prop="remark"
-            :rules="[
-              { required: true, message: '请输入描述内容', trigger: 'blur' },
-              { min: 2, max: 50, message: '长度在 2 到 50 个字符', trigger: 'blur' },
-            ]"
-          >
-            <el-input v-model="dialogForm.remark" type="textarea"></el-input>
-          </el-form-item>
-        </el-form>
-        <el-divider></el-divider>
-        <div slot="footer" class="dialog-footer">
-          <el-button @click="dialogFormVisible = false">取消</el-button>
-          <el-button type="primary" @click="subAddOrEidt">保存</el-button>
-        </div>
-      </el-dialog>
-      <el-dialog
-        title="标签游戏"
-        :visible.sync="dialogGameVisible"
-        :destroy-on-close="true"
-        width="480px"
-        class="rempadding"
-      >
-        <el-divider></el-divider>
-        <div class="contentBox disableColor">标签名称：高频率（001）</div>
-        <p class="headerBox">
-          <span>游戏名称</span>
-          <span>添加时间</span>
-        </p>
-        <div class="bodyBox">
-          <p>
-            <span>斗地主</span>
-            <span>2016-09-21 08:50:08</span>
-          </p>
-        </div>
-      </el-dialog>
-    </div>
-  </div>
+	<div class="game-container report-container">
+		<div class="params">
+			<el-form ref="form" :inline="true" :model="queryData">
+				<el-form-item label="申请时间:">
+					<el-date-picker
+						v-model="formTime.time"
+						size="medium"
+						:picker-options="pickerOptions"
+						format="yyyy-MM-dd HH:mm:ss"
+						type="datetimerange"
+						range-separator="-"
+						start-placeholder="开始日期"
+						end-placeholder="结束日期"
+						align="right"
+						clearable
+						:default-time="defaultTime"
+					></el-date-picker>
+				</el-form-item>
+				<el-form-item label="一审完成时间:">
+					<el-date-picker
+						v-model="formTime.time2"
+						size="medium"
+						:picker-options="pickerOptions"
+						format="yyyy-MM-dd HH:mm:ss"
+						type="datetimerange"
+						range-separator="-"
+						start-placeholder="开始日期"
+						end-placeholder="结束日期"
+						align="right"
+						clearable
+						:default-time="defaultTime"
+					></el-date-picker>
+				</el-form-item>
+				<el-form-item label="审核状态:">
+					<el-select
+						v-model="queryData.auditStatus"
+						style="width: 300px"
+						multiple
+						placeholder="默认选择全部"
+						:popper-append-to-body="false"
+					>
+						<el-option
+							v-for="item in auditStatus"
+							:key="item.code"
+							:label="item.description"
+							:value="item.code"
+						></el-option>
+					</el-select>
+				</el-form-item>
+				<el-form-item label="锁单状态:">
+					<el-select
+						v-model="queryData.lockStatus"
+						style="width: 180px"
+						:popper-append-to-body="false"
+					>
+						<el-option label="全部" value=""></el-option>
+						<el-option
+							v-for="item in lockOrderType"
+							:key="item.code"
+							:label="item.description"
+							:value="Number(item.code)"
+						></el-option>
+					</el-select>
+				</el-form-item>
+				<el-form-item label="审核操作:">
+					<el-select
+						v-model="queryData.auditStep"
+						style="width: 180px"
+						:popper-append-to-body="false"
+					>
+						<el-option label="全部" value=""></el-option>
+						<el-option
+							v-for="item in auditStepType"
+							:key="item.code"
+							:label="item.description"
+							:value="Number(item.code)"
+						></el-option>
+					</el-select>
+				</el-form-item>
+				<el-form-item label="申请人:">
+					<el-input
+						v-model="queryData.applyName"
+						clearable
+						size="medium"
+						style="width: 180px"
+						placeholder="请输入"
+						@keyup.enter.native="enterSearch"
+					></el-input>
+				</el-form-item>
+				<el-form-item label="一审人:">
+					<el-input
+						v-model="queryData.auditName"
+						clearable
+						size="medium"
+						style="width: 180px"
+						placeholder="请输入"
+						@keyup.enter.native="enterSearch"
+					></el-input>
+				</el-form-item>
+				<el-form-item label="转代会员账号:">
+					<el-input
+						v-model="queryData.auditName"
+						clearable
+						size="medium"
+						style="width: 180px"
+						placeholder="请输入"
+						@keyup.enter.native="enterSearch"
+					></el-input>
+				</el-form-item>
+				<el-form-item label="转入代理账号:">
+					<el-input
+						v-model="queryData.auditName"
+						clearable
+						size="medium"
+						style="width: 180px"
+						placeholder="请输入"
+						@keyup.enter.native="enterSearch"
+					></el-input>
+				</el-form-item>
+				<el-form-item label="审核单号:">
+					<el-input
+						v-model="queryData.auditName"
+						clearable
+						size="medium"
+						style="width: 180px"
+						placeholder="请输入"
+						@keyup.enter.native="enterSearch"
+					></el-input>
+				</el-form-item>
+				<el-form-item style="margin-left: 30px">
+					<el-button
+						type="primary"
+						icon="el-icon-search"
+						:disabled="loading"
+						size="medium"
+						@click="search"
+					>
+						查询
+					</el-button>
+					<el-button
+						icon="el-icon-refresh-left"
+						:disabled="loading"
+						size="medium"
+						@click="reset"
+					>
+						重置
+					</el-button>
+				</el-form-item>
+				<p class="danger data-refresh">数据更新时间： {{ now }}</p>
+			</el-form>
+		</div>
+		<div class="view-container dealer-container">
+			<div class="content">
+				<el-table
+					v-loading="loading"
+					border
+					size="mini"
+					class="small-size-table"
+					:data="dataList"
+					style="width: 100%"
+					:header-cell-style="getRowClass"
+					@sort-change="changeTableSort"
+				>
+					<el-table-column align="center" label="锁单" width="60">
+						<template slot-scope="scope">
+							<el-checkbox
+								v-if="
+									Number(scope.row.auditStep) === 1 &&
+										(scope.row.auditName === name || !scope.row.auditName)
+								"
+								v-model="scope.row.lockStatus"
+								@change="lockChange(scope.row)"
+							></el-checkbox>
+						</template>
+					</el-table-column>
+					<el-table-column
+						prop="auditStep"
+						align="center"
+						label="操作"
+						width="100"
+					>
+						<template slot-scope="scope">
+							<el-button
+								:class="
+									Number(scope.row.auditStep) === 1 &&
+									scope.row.auditName !== name
+										? 'dis'
+										: ''
+								"
+								:type="
+									Number(scope.row.auditStep) === 0 ? 'success' : 'primary'
+								"
+								size="medium"
+								@click="goDetail(scope.row)"
+							>
+								{{ typeFilter(scope.row.auditStep, 'auditStepType') }}
+							</el-button>
+						</template>
+					</el-table-column>
+					<el-table-column
+						prop="auditNum"
+						align="center"
+						label="审核单号"
+					></el-table-column>
+					<el-table-column
+						prop="applyName"
+						align="center"
+						label="转代会员账号"
+						width="100"
+					></el-table-column>
+					<el-table-column
+						prop="applyName"
+						align="center"
+						label="转入代理账号"
+						width="100"
+					>
+						<template slot-scope="scope">
+							<Copy
+								v-if="!!scope.row.applyName"
+								:title="scope.row.applyName"
+								:copy="copy"
+							/>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
+					<el-table-column
+						prop="applyName"
+						align="center"
+						label="申请人"
+						width="100"
+					>
+						<template slot-scope="scope">
+							<Copy
+								v-if="!!scope.row.applyName"
+								:title="scope.row.applyName"
+								:copy="copy"
+							/>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
+					<el-table-column
+						prop="applyTime"
+						align="center"
+						sortable="custom"
+						label="申请时间"
+					></el-table-column>
+					<el-table-column
+						prop="applyInfo"
+						align="center"
+						label="申请信息"
+					></el-table-column>
+					<el-table-column align="center" label="审核状态" width="100">
+						<template slot-scope="scope">
+							<span
+								v-if="Number(auditStatus) !== 0"
+								:class="
+									Number(scope.row.auditStatus) === 1
+										? 'infoState'
+										: Number(scope.row.auditStatus) === 2
+										? 'successState'
+										: 'dangerState'
+								"
+							>
+								{{ typeFilter(scope.row.auditStatus, 'auditStatusType') }}
+							</span>
+						</template>
+					</el-table-column>
+					<el-table-column prop="auditTime" align="center" width="200px">
+						<template slot="header">
+							<span>
+								一审审核人
+								<br />
+								一审完成时间
+							</span>
+						</template>
+						<template slot-scope="scope">
+							{{ scope.row.auditName ? scope.row.auditName : '-' }}
+							<p>{{ scope.row.auditTime ? scope.row.auditTime : '-' }}</p>
+						</template>
+					</el-table-column>
+				</el-table>
+				<!-- 分页 -->
+				<el-pagination
+					:current-page.sync="pageNum"
+					class="pageValue"
+					background
+					layout="total, sizes,prev, pager, next, jumper"
+					:page-size="pageSize"
+					:page-sizes="pageSizes"
+					:total="total"
+					@current-change="handleCurrentChange"
+					@size-change="handleSizeChange"
+				></el-pagination>
+			</div>
+		</div>
+	</div>
 </template>
 
 <script>
 import list from '@/mixins/list'
 import dayjs from 'dayjs'
+import { getUsername } from '@/utils/auth'
 import { routerNames } from '@/utils/consts'
-const startTime = dayjs().startOf('day').valueOf()
-const endTime = dayjs().endOf('day').valueOf()
-
+const end = dayjs()
+	.endOf('day')
+	.valueOf()
+const start = dayjs()
+	.startOf('day')
+	.valueOf()
 export default {
-  name: routerNames.gamePlatform,
-  components: {},
-  mixins: [list],
-  data() {
-    return {
-      queryData: {
-        accountType: []
-      },
-      searchTime: [startTime, endTime],
-      now: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
-      summary: {
-        count: 0,
-        failCount: 0,
-        successCount: 0
-      },
-      tableData: [],
-      dialogFormVisible: false,
-      dialogForm: {},
-      dialogGameVisible: false
-    }
-  },
-  computed: {},
-  mounted() {
-    for (let i = 0; i < 10; i++) {
-      this.tableData[i] = {
-        bankCode: '165416416464654',
-        bankName: '中国银行',
-        content: '高频率',
-        code: 1,
-        createDt: '2021-02-13 20:28:54',
-        updateDt: '2021-02-13 20:28:54'
-      }
-    }
-  },
-  methods: {
-    loadData() {
-      // this.loading = true;
-      const create = this.searchTime || []
-      const [startTime, endTime] = create
-      let params = {
-        ...this.queryData,
-        startTime: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : '',
-        endTime: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
-      }
-      params = {
-        ...this.getParams(params)
-      }
-      console.log(params)
-    },
-    lookGame(val) {
-      this.dialogGameVisible = true
-      console.log(val)
-    },
-    reset() {
-      this.queryData = {}
-    },
-    switchClick(val) {
-      this.$confirm(
-        `<strong>是否对子游戏进行开启/维护/禁用操作?</strong></br><span style='font-size:12px;color:#c1c1c1'>一旦操作将会立即生效</span>`,
-        `确认提示`,
-        {
-          dangerouslyUseHTMLString: true,
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }
-      )
-        .then(() => {
-          console.log(1111111)
-        })
-        .catch(() => {})
-    },
-    edit(val) {
-      this.dialogFormVisible = true
-      console.log(val)
-    },
-    deleteLabel(val) {
-      this.$confirm(`<strong>确定删除此条标签类型吗?</strong>`, `确认提示`, {
-        dangerouslyUseHTMLString: true,
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      })
-        .then(() => {
-          console.log(2222222222)
-        })
-        .catch(() => {})
-    },
-    subAddOrEidt() {
-      this.dialogFormVisible = false
-    },
-    _changeTableSort({ column, prop, order }) {
-      if (prop === 'vipSerialNum') {
-        prop = 1
-      }
-      this.queryData.orderKey = prop
-      if (order === 'ascending') {
-        // 升序
-        this.queryData.orderType = 'asc'
-      } else if (column.order === 'descending') {
-        // 降序
-        this.queryData.orderType = 'desc'
-      }
-      this.loadData()
-    },
-    enterSubmit() {
-      this.loadData()
-    }
-  }
+	name: routerNames.transformationReview,
+	components: {},
+	mixins: [list],
+	data() {
+		return {
+			queryData: {
+				userName: '',
+				accountType: [],
+				applyType: '',
+				auditStatus: [],
+				auditStep: '',
+				orderProperties: '',
+				applyName: '',
+				auditName: '',
+				lockStatus: '',
+				auditNum: '',
+				orderType: '',
+				orderKey: ''
+			},
+			formTime: {
+				time: [start, end],
+				time2: []
+			},
+			now: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
+			name: '',
+			dataList: []
+		}
+	},
+	computed: {
+		accountType() {
+			return this.globalDics.accountType
+		},
+		auditStatus() {
+			return this.globalDics.auditStatusType
+		},
+		auditStepType() {
+			return this.globalDics.auditStepType
+		},
+		lockOrderType() {
+			return this.globalDics.lockOrderType
+		},
+		applyType() {
+			return this.globalDics.applyType
+		}
+	},
+	mounted() {
+		this.name = getUsername()
+	},
+	methods: {
+		loadData() {
+			this.loading = true
+			const [startTime, endTime] = this.formTime.time || []
+			const [startTime2, endTime2] = this.formTime.time2 || []
+			let params = {
+				...this.queryData,
+				applyTimeStart: startTime
+					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
+					: '',
+				applyTimeEnd: endTime
+					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
+					: '',
+				auditTimeStart: startTime2
+					? dayjs(startTime2).format('YYYY-MM-DD HH:mm:ss')
+					: '',
+				auditTimeEnd: endTime2
+					? dayjs(endTime2).format('YYYY-MM-DD HH:mm:ss')
+					: ''
+			}
+			params = {
+				...this.getParams(params)
+			}
+			this.$api
+				.playerAuditList(params)
+				.then((res) => {
+					if (res.code === 200) {
+						this.now = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
+						const response = res.data
+						this.loading = false
+						this.dataList = response.record
+						if (this.dataList) {
+							this.dataList.forEach((item) => {
+								if (Number(item.lockOrder) === 1) {
+									item.lockStatus = true
+								} else {
+									item.lockStatus = false
+								}
+							})
+						}
+						this.total = response.totalRecord
+					} else {
+						this.loading = false
+						this.$message({
+							message: res.msg,
+							type: 'error'
+						})
+					}
+				})
+				.catch(() => {
+					this.loading = false
+				})
+		},
+		goDetail(row) {
+			const type = Number(row.auditStep) === 1 && row.auditName === this.name
+			this.$nextTick(() => {
+				this.$router.push({
+					path: '/agent/agencyReview/transformationDetail',
+					query: { id: row.id, userId: row.userId, type: type }
+				})
+			})
+		},
+		reset() {
+			this.queryData = {
+				userName: '',
+				accountType: [],
+				applyType: '',
+				auditStatus: [],
+				applyName: '',
+				auditName: '',
+				lockStatus: '',
+				auditStep: '',
+				orderProperties: '',
+				auditNum: '',
+				orderType: '',
+				orderKey: ''
+			}
+			this.formTime = {
+				time: [start, end],
+				time2: []
+			}
+			this.loadData()
+		},
+		lockChange(val) {
+			const loading = this.$loading({
+				lock: true,
+				text: 'Loading',
+				spinner: 'el-icon-loading',
+				background: 'rgba(0, 0, 0, 0.7)'
+			})
+			this.$api
+				.lockMemberAuditRecord({
+					id: val.id,
+					lockFlag: Number(val.lockOrder) === 0 ? 0 : 1
+				})
+				.then((res) => {
+					if (res.code === 200) {
+						loading.close()
+						this.$message({
+							type: 'success',
+							message: '操作成功!'
+						})
+						this.loadData()
+					} else {
+						loading.close()
+						this.$message({
+							message: res.msg,
+							type: 'error'
+						})
+					}
+				})
+				.catch(() => {
+					loading.close()
+				})
+		}
+	}
 }
 </script>
 
 <style lang="scss" scoped>
 /deep/.el-dialog__header {
-  text-align: center;
-  color: #909399;
-  font-weight: 700;
+	text-align: center;
+	color: #909399;
+	font-weight: 700;
 }
-/deep/ .tagheight .el-tag {
-  height: 24px;
-  line-height: 24px;
-  min-width: 60px;
+/deep/ .caret-wrapper {
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
 }
-/deep/ .rempadding .el-dialog__body {
-  padding: 0;
-  padding-bottom: 30px;
-
-  .contentBox,
-  form {
-    padding: 0 20px;
-  }
-}
-.decoration {
-  text-decoration: underline;
-  cursor: pointer;
-}
-.bodyBox {
-  max-height: 400px;
-  overflow: auto;
-}
-p {
-  display: flex;
-  height: 40px;
-  line-height: 40px;
-  border-bottom: 1px solid #e8e8e8;
-  justify-content: space-around;
-  span {
-    display: inline-block;
-    width: 50%;
-    text-align: center;
-  }
-}
-.headerBox {
-  color: #000000d8;
-  background: #fafafa;
-  font-family: "PingFang SC ", "PingFang SC", sans-serif;
-  font-weight: 650;
-  border-top: 1px solid #e8e8e8;
-  margin-top: 15px;
+.data-refresh {
+	margin-top: 0;
+	padding-bottom: 20px;
 }
 </style>

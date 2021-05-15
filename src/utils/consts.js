@@ -4,6 +4,7 @@ import dayjs from 'dayjs'
 export const routerNames = {
 	memberChange: 'memberChange',
 	addMember: 'addMember',
+	memberOverflow: 'memberOverflow',
 	bankRecord: 'bankRecord',
 	memberDetails: 'memberDetails',
 	memberList: 'memberList',
@@ -15,16 +16,20 @@ export const routerNames = {
 	gameClassify: 'gameClassify',
 	gamePlatform: 'gamePlatform',
 	addMemberCheck: 'addMemberCheck',
+	gameHomeRecommendEdit: 'gameHomeRecommendEdit',
 	gameManagement: 'gameManagement',
-	gameClassification: 'gameClassification',
+	gameHomeRecommend: 'gameHomeRecommend',
+	gameClassification: 'GameClassification',
+	addReview: 'addReview',
+	agencyEdit: 'agencyEdit',
+	transformationReview: 'transformationReview',
 	gameSearchManage: 'gameSearchManage',
-	zrDetails: 'zrDetails',
-	qpDetails: 'qpDetails',
-	tyDetails: 'tyDetails',
-	djDetails: 'djDetails',
-	cpDetails: 'cpDetails',
-	dyDetails: 'dyDetails',
-	lhjDetails: 'lhjDetails'
+	gameBetslipDetails: 'gameBetslipDetails',
+	pictureManagement: 'pictureManagement',
+	agentBankCard: 'agentBankCard',
+	agentList: 'AgentList',
+	domainCreateAndEidt: 'domainCreateAndEidt',
+    levelWelfareConfig: 'levelWelfareConfig'
 }
 const month = dayjs().month()
 const year = dayjs().year()

@@ -31,7 +31,6 @@
 						<el-input
 							v-model="queryData.hotSearch"
 							size="medium"
-							minlength="4"
 							maxlength="11"
 							oninput="value=value.replace(/(^\s*)|(\s*$)/g ,'')"
 							placeholder="请输入"
@@ -60,7 +59,6 @@
 						<el-input
 							v-model="queryData.hotSearch"
 							size="medium"
-							minlength="4"
 							maxlength="11"
 							oninput="value=value.replace(/(^\s*)|(\s*$)/g ,'')"
 							placeholder="请输入"
@@ -93,7 +91,7 @@
 			<div class="content-part3">
 				<div class="content">
 					<p class="hotConfig">分类包含游戏</p>
-					<div class="demo">
+					<div class="transfer-wrapper">
 						<Transfer
 							id="transfer"
 							ref="transfer"
@@ -103,7 +101,7 @@
 							:filter-method="filterMethod"
 							:target-order="'push'"
 							:titles="['已包含', '游戏平台']"
-							:props="{ key: 'id', label: 'label' }"
+							:props="{ key: 'id', label: 'label', status: 'status' }"
 							:left-default-checked="hasCheckedWHLeftData"
 							:right-default-checked="hasCheckedWHRightData"
 							@left-check-change="handleWHLeftChange"
@@ -120,13 +118,15 @@
 import list from '@/mixins/list'
 // import Sortable from 'sortablejs'
 import Transfer from '@/components/transfer'
+// import DragDrop from './demo'
 
 const generateData = () => {
 	const data = []
 	for (let i = 1; i <= 30; i++) {
 		data.push({
 			id: i,
-			label: `${i} 斗地主`
+			label: `斗地主`,
+			status: '维护中'
 		})
 	}
 	return data
@@ -219,9 +219,9 @@ export default {
 		// console.log('新表格数据', this.dataList)
 	},
 	methods: {
-	    back() {
-	        this.$emit('back')
-        },
+		back() {
+			this.$emit('back')
+		},
 		handleWHLeftChange(key, key1) {
 			const _this = this
 			console.log(_this.hasCheckedWHLeftData)
@@ -262,7 +262,6 @@ export default {
 			let k
 			const _this = this
 			let cFlag = false // 取消勾选
-			// debugger
 			for (var i = 0; i < key.length; i++) {
 				if (key[i] === key1[0]) {
 					cFlag = true // 选中
@@ -403,21 +402,6 @@ export default {
 				})
 				.catch(() => {})
 		}
-
-		// 列拖动
-		// columnDrop() {
-		// 	console.log('旧数据', this.dataList)
-		// 	const wrapperTr = document.querySelector('.el-table__body-wrapper tbody')
-		// 	const _this = this
-		// 	this.sortable = Sortable.create(wrapperTr, {
-		// 		animation: 180,
-		// 		delay: 0,
-		// 		onEnd: ({ newIndex, oldIndex }) => {
-		// 			const currRow = _this.dataList.splice(oldIndex, 1)[0]
-		// 			_this.dataList.splice(newIndex, 0, currRow)
-		// 		}
-		// 	})
-		// }
 	}
 }
 </script>
@@ -433,7 +417,7 @@ export default {
 	color: rgba(0, 0, 0, 0.64);
 }
 /deep/ .el-button--info:hover {
-	background-color: #f7f7f7;
+	background-color: #eeeded;
 }
 /deep/ .el-transfer__buttons {
 	/deep/ button {
@@ -444,28 +428,9 @@ export default {
 		}
 	}
 }
-.demo {
+.transfer-wrapper {
 	text-align: left;
-}
-h3 {
-	margin: 40px 0 0;
-}
-ul {
-	list-style-type: none;
-	padding: 0;
-	text-align: left;
-	width: 300px;
-	height: 300px;
-	background-color: #42b983;
-	overflow: scroll;
-}
-li {
-	display: block;
-	margin: 20px 10px;
-	border: 1px solid #444;
-}
-a {
-	color: #42b983;
+	height: 450px;
 }
 .gameCreatePage-container {
 	background-color: #f5f5f5;
@@ -534,14 +499,17 @@ a {
 				margin: 0 auto;
 				width: 100%;
 				padding-left: 100px;
-                padding-bottom: 50px;
+				padding-bottom: 50px;
+                overflow-x: scroll;
+                //overflow-y: hidden;
 				.hotConfig {
 					color: rgba(0, 0, 0, 0.847058823529412);
 					font-size: 14px;
 					font-weight: 650;
 					display: inline-block;
-					margin-right: 50px;
-					margin-bottom: 10px;
+					margin-left: 82px;
+                    margin-top: 10px;
+					margin-bottom: 18px;
 				}
 			}
 		}

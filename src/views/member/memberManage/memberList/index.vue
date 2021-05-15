@@ -494,7 +494,7 @@
 					class="pageValue"
 					:current-page.sync="pageNum"
 					background
-        			layout="total, sizes,prev, pager, next, jumper"
+					layout="total, sizes,prev, pager, next, jumper"
 					:page-size="pageSize"
 					:page-sizes="$store.getters.pageSizes"
 					:total="total"
@@ -691,67 +691,85 @@ export default {
 				case 'offLineDaysStart':
 					if (
 						!!this.queryData.offLineDaysEnd &&
-						(value && value * 1 > this.queryData.offLineDaysEnd * 1)
+						value &&
+						value * 1 > this.queryData.offLineDaysEnd * 1
 					) {
 						this.$message({
 							type: 'warning',
 							message: `请输入小于${this.queryData.offLineDaysEnd}天数`
 						})
+					} else {
+						this.queryData.offLineDaysStart = value
 					}
 					break
 				case 'offLineDaysEnd':
 					if (
 						!!this.queryData.offLineDaysStart &&
-						(value && value * 1 < this.queryData.offLineDaysStart * 1)
+						value &&
+						value * 1 < this.queryData.offLineDaysStart * 1
 					) {
 						this.$message({
 							type: 'warning',
 							message: `请输入大于${this.queryData.offLineDaysStart}天数`
 						})
+					} else {
+						this.queryData.offLineDaysEnd = value
 					}
 					break
 				case 'vipSerialNumMin':
 					if (
 						!!this.queryData.vipSerialNumMax &&
-						(value && value * 1 > this.queryData.vipSerialNumMax * 1)
+						value &&
+						value * 1 > this.queryData.vipSerialNumMax * 1
 					) {
 						this.$message({
 							type: 'warning',
 							message: `请输入小于${this.queryData.vipSerialNumMax}等级`
 						})
+					} else {
+						this.queryData.vipSerialNumMin = value
 					}
 					break
 				case 'vipSerialNumMax':
 					if (
 						!!this.queryData.vipSerialNumMin &&
-						(value && value * 1 < this.queryData.vipSerialNumMin * 1)
+						value &&
+						value * 1 < this.queryData.vipSerialNumMin * 1
 					) {
 						this.$message({
 							type: 'warning',
 							message: `请输入大于${this.queryData.vipSerialNumMin}等级`
 						})
+					} else {
+						this.queryData.vipSerialNumMax = value
 					}
 					break
 				case 'firstDepositAmountMin':
 					if (
 						!!this.queryData.firstDepositAmountMax &&
-						(value && value * 1 > this.queryData.firstDepositAmountMax * 1)
+						value &&
+						value * 1 > this.queryData.firstDepositAmountMax * 1
 					) {
 						this.$message({
 							type: 'warning',
 							message: `请输入小于${this.queryData.firstDepositAmountMax}金额`
 						})
+					} else {
+						this.queryData.firstDepositAmountMin = value
 					}
 					break
 				case 'firstDepositAmountMax':
 					if (
 						!!this.queryData.firstDepositAmountMin &&
-						(value && value * 1 < this.queryData.firstDepositAmountMin * 1)
+						value &&
+						value * 1 < this.queryData.firstDepositAmountMin * 1
 					) {
 						this.$message({
 							type: 'warning',
 							message: `请输入大于${this.queryData.firstDepositAmountMin}金额`
 						})
+					} else {
+						this.queryData.firstDepositAmountMax = value
 					}
 					break
 			}
