@@ -37,6 +37,7 @@ const state = {
 	currentRoutes: {}
 }
 
+const userBtns = []
 const mutations = {
 	SET_ROUTES: (state, value) => {
 		state.addRoutes = value.asyncRouterMap
@@ -77,7 +78,8 @@ const actions = {
 			}
 			asyncRouterMap = asyncRouterMap.concat(rootRoutes)
 			commit('SET_ROUTES', {
-				asyncRouterMap
+				asyncRouterMap,
+				userBtns
 			})
 			resolve(asyncRouterMap)
 		})
@@ -125,6 +127,11 @@ function filterAsyncRouter(asyncRouterMap) {
 							icon: item.icon
 						}
 					})
+
+					if (route.level === 3) {
+						// 按钮id
+						userBtns.push(route.id)
+					}
 				}
 			})
 
