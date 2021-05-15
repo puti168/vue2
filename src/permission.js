@@ -57,7 +57,8 @@ const ifVersionCorrect = async (to, from, next) => {
 			// console.log(addRoutes)
 			if (!addRoutes.length) {
 				let roles = JSON.parse(window.localStorage.getItem('role'))
-				if (!!roles && roles.length) {
+				const bool = false
+				if (bool) {
 					const accessRoutes = await store.dispatch(
 						'permission/generateRoutes',
 						roles
