@@ -7,8 +7,8 @@
 				v-if="item.show"
 				:key="item.id"
 				class="navbar-title"
-                :class="item.checked ? 'active' : ''"
-				@click="go(item, routes)"
+				:class="{ active: activeId === item.id }"
+				@click="chooseItem(item, routes)"
 			>
 				{{ item.name }}
 			</div>
@@ -32,7 +32,7 @@ export default {
 	data() {
 		return {
 			name: '',
-            activeId: '2'
+			activeId: '2'
 		}
 	},
 	computed: {
@@ -44,21 +44,28 @@ export default {
 			return process.env.NODE_ENV === 'development'
 		}
 	},
+	created() {
+		const id = window.sessionStorage.getItem('activeId')
+		if (id) {
+			this.activeId = id
+		}
+	},
 	mounted() {
 		this.name = getNickName()
-        console.log('routes', this.routes)
 	},
 	methods: {
 		formatCurrency,
 		toggleSideBar() {
 			this.$store.dispatch('app/toggleSideBar')
 		},
-		async go(item, routes) {
+		async chooseItem(item, routes) {
 			await this.$store.dispatch('permission/setNowroute', item.id)
-			routes.forEach((data) => {
-				data.checked = false
-			})
-            item.checked = true
+			this.activeId = item.id
+			window.sessionStorage.setItem('activeId', item.id)
+			// routes.forEach((data) => {
+			// 	data.checked = false
+			// })
+			// item.checked = true
 		},
 		async loginOut() {
 			await this.$store.dispatch('user/logout')

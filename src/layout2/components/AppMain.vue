@@ -17,10 +17,10 @@ export default {
 			return this.$store.state.app.modifyVisible
 		},
 		cachedViews() {
+		    console.log('cachedViewslayout2', this.$store.state.tagsView.cachedViews)
 			return this.$store.state.tagsView.cachedViews
 		},
 		key() {
-		    console.log('this.$route.path缓存', this.$route.path)
 			return this.$route.path
 		}
 	}

@@ -76,26 +76,10 @@ const actions = {
 					})
 				}
 			}
+			console.log('asyncRouterMap', asyncRouterMap)
 			asyncRouterMap = asyncRouterMap.concat(rootRoutes)
-			setTimeout(() => {
-				// let a =
-				// 	store.state.tagsView.visitedViews &&
-				// 	store.state.tagsView.visitedViews.length
-				// 		? store.state.tagsView.visitedViews[1]
-				// 		: 'aa'
-				// console.log('执行', a)
-				// if (
-				// 	route.id ===
-				// 	store.state.tagsView.visitedViews[1].matched[0].path.substr(1)
-				// ) {
-				// 	route.checked = true
-				// }
-				console.log('执行', store.state.tagsView.visitedViews[1])
-				store.dispatch(
-					'permission/setNowroute',
-					store.state.tagsView.visitedViews[1].matched[0].path.substr(1)
-				)
-			}, 2000)
+			const id = window.sessionStorage.getItem('activeId')
+			id ? store.dispatch('permission/setNowroute', id) : ''
 			commit('SET_ROUTES', {
 				asyncRouterMap,
 				userBtns
@@ -151,6 +135,10 @@ function filterAsyncRouter(asyncRouterMap) {
 						checked: false
 					})
 					if (route.level === 3) {
+						const fullPath = route.path
+						const pos = fullPath.lastIndexOf('/')
+						const filePath = fullPath.substr(pos + 1)
+						route.name = filePath
 						// 按钮id
 						userBtns.push(route.id)
 					}
