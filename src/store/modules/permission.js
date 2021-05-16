@@ -76,7 +76,6 @@ const actions = {
 					})
 				}
 			}
-			console.log('asyncRouterMap', asyncRouterMap)
 			asyncRouterMap = asyncRouterMap.concat(rootRoutes)
 			const id = window.sessionStorage.getItem('activeId')
 			id ? store.dispatch('permission/setNowroute', id) : ''

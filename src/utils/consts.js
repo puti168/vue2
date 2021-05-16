@@ -18,7 +18,7 @@ export const routerNames = {
 	addMemberCheck: 'addMemberCheck',
 	gameHomeRecommendEdit: 'gameHomeRecommendEdit',
 	gameManagement: 'gameManagement',
-	gameClassification: 'GameClassification',
+	gameClassification: 'gameClassification',
 	gameSearchManage: 'gameSearchManage',
 	gameBetslipDetails: 'gameBetslipDetails',
 	pictureManagement: 'pictureManagement',

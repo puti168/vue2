@@ -412,13 +412,13 @@ export default {
 	},
 	computed: {
 		assortStatusArr() {
-			return [...this.globalDics.gameStatusType]
+			return this.globalDics.gameStatusType
 		},
 		terminalTypeArr() {
-			return [...this.globalDics.terminalnType]
+			return this.globalDics.terminalnType
 		},
 		gameDisplayArr() {
-			return [...this.globalDics.gameDisplayType]
+			return this.globalDics.gameDisplayType
 		}
 	},
 	created() {},

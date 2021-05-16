@@ -10,14 +10,9 @@ export default {
 	components: {},
 	computed: {
 		editVisible() {
-			console.log(
-				'this.$store.state.app.modifyVisible :',
-				this.$store.state.app.modifyVisible
-			)
 			return this.$store.state.app.modifyVisible
 		},
 		cachedViews() {
-		    console.log('cachedViewslayout2', this.$store.state.tagsView.cachedViews)
 			return this.$store.state.tagsView.cachedViews
 		},
 		key() {
