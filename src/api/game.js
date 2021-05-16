@@ -44,6 +44,15 @@ export function gameCreateAPI(data) {
 	})
 }
 
+// 游戏配置==> 游戏分类管理 ===>游戏平台查询
+export function queryGameAPI(data) {
+	return request({
+		url: '/gameAssort/queryGame',
+		method: 'post',
+		data
+	})
+}
+
 //  游戏标签管理 ===> 表格查询
 export function getTabelData(data) {
 	return request({
@@ -132,6 +141,7 @@ export default {
 	gameDeleteAPI,
 	gameUpdateAPI,
 	gameCreateAPI,
+	queryGameAPI,
 	getTabelData,
 	addObGameLabel,
 	getGameLabelRelation,

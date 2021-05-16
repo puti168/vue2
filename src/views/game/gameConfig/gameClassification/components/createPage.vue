@@ -19,7 +19,7 @@
 				>
 					<el-form-item label="分类名称:">
 						<el-input
-							v-model="queryData.historyGameLimit"
+							v-model="queryData.assortName"
 							size="medium"
 							maxlength="10"
 							placeholder="请输入"
@@ -29,7 +29,7 @@
 					</el-form-item>
 					<el-form-item label="分类顺序:">
 						<el-input
-							v-model="queryData.hotSearch"
+							v-model="queryData.assortSort"
 							size="medium"
 							maxlength="11"
 							oninput="value=value.replace(/(^\s*)|(\s*$)/g ,'')"
@@ -57,7 +57,7 @@
 					</el-form-item>
 					<el-form-item label="页签备注:">
 						<el-input
-							v-model="queryData.hotSearch"
+							v-model="queryData.remark"
 							size="medium"
 							maxlength="11"
 							oninput="value=value.replace(/(^\s*)|(\s*$)/g ,'')"
@@ -118,7 +118,6 @@
 import list from '@/mixins/list'
 // import Sortable from 'sortablejs'
 import Transfer from '@/components/transfer'
-// import DragDrop from './demo'
 
 const generateData = () => {
 	const data = []
@@ -145,12 +144,14 @@ export default {
 			},
 			loading: false,
 			queryData: {
-				historyGameLimit: undefined,
-				hotSearch: undefined,
+				assortName: undefined,
+				assortSort: undefined,
 				supportTerminal: undefined,
+				remark: undefined,
 				clientDisplay: undefined
 			},
 			dataList: [],
+            gameNameList: [],
 			data: generateData(),
 			value: [4, 2, 1],
 			shiftKey: false,
@@ -164,10 +165,10 @@ export default {
 	},
 	computed: {
 		terminalTypeArr() {
-			return [...this.globalDics.terminalnType]
+			return this.globalDics.terminalnType
 		},
 		gameDisplayArr() {
-			return [...this.globalDics.gameDisplayType]
+			return this.globalDics.gameDisplayType
 		}
 	},
 	mounted() {
@@ -175,7 +176,6 @@ export default {
 			event.preventDefault()
 			event.stopPropagation()
 		}
-
 		window.addEventListener('keydown', (e) => {
 			if (e.keyCode === 16 && e.shiftKey) {
 				this.shiftKey = true
@@ -184,6 +184,8 @@ export default {
 		window.addEventListener('keyup', (e) => {
 			this.shiftKey = false
 		})
+
+        this.queryGame()
 		// const el = document
 		// 	.querySelector('.el-transfer')
 		// 	.querySelectorAll('.el-checkbox-group')[1]
@@ -221,6 +223,30 @@ export default {
 	methods: {
 		back() {
 			this.$emit('back')
+		},
+		// 游戏平台查询
+		queryGame() {
+            this.gameNameList = []
+			const params = {
+				gameName: '',
+				gamePlatform: ''
+			}
+			this.$api.queryGameAPI(params).then((res) => {
+                const {
+                    code,
+                    data,
+                    msg
+                } = res
+                if (code === 200) {
+                    this.gameNameList = data || []
+                } else {
+                    this.loading = false
+                    this.$message({
+                        message: msg,
+                        type: 'error'
+                    })
+                }
+			})
 		},
 		handleWHLeftChange(key, key1) {
 			const _this = this
@@ -500,15 +526,15 @@ export default {
 				width: 100%;
 				padding-left: 100px;
 				padding-bottom: 50px;
-                overflow-x: scroll;
-                //overflow-y: hidden;
+				overflow-x: scroll;
+				//overflow-y: hidden;
 				.hotConfig {
 					color: rgba(0, 0, 0, 0.847058823529412);
 					font-size: 14px;
 					font-weight: 650;
 					display: inline-block;
 					margin-left: 82px;
-                    margin-top: 10px;
+					margin-top: 10px;
 					margin-bottom: 18px;
 				}
 			}
