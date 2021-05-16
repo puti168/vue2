@@ -2,7 +2,7 @@ import { constantRoutes } from '@/router'
 import serviceMap from '@/serviceMap/route'
 import Layout from '@/layout'
 import Layout2 from '@/layout2'
-// import store from '@/store'
+import store from '@/store'
 function hasPermission(roles, route) {
 	if (route.meta && route.meta.roles) {
 		return roles.some((role) => route.meta.roles.includes(role))
@@ -119,6 +119,23 @@ function filterAsyncRouter(asyncRouterMap) {
 						require(['@/views' + route.path + '/index'], resolve)
 				}
 			}
+			// if (route.parentId === '0') {
+			// 	setTimeout(() => {
+			// 		parentRoutes.forEach((data) => {
+			// 			if (
+			// 				data.id ===
+			// 				store.state.tagsView.visitedViews[1].matched[0].path.substr(1)
+			// 			) {
+			// 				data.checked = true
+			// 			}
+			// 		})
+			// 		store.dispatch(
+			// 			'permission/setNowroute',
+			// 			store.state.tagsView.visitedViews[1].matched[0].path.substr(1)
+			// 		)
+			// 	}, 200)
+			// }
+
 			serviceMap.forEach((item) => {
 				if (item.id === route.id) {
 					Object.assign(route, {
@@ -131,7 +148,21 @@ function filterAsyncRouter(asyncRouterMap) {
 						show: true,
 						checked: false
 					})
-
+					if (route.parentId === '0') {
+						setTimeout(() => {
+							// if (
+							// 	route.id ===
+							// 	store.state.tagsView.visitedViews[1].matched[0].path.substr(1)
+							// ) {
+							// 	route.checked = true
+							// }
+							console.log('执行', store.state.tagsView.visitedViews)
+							// store.dispatch(
+							// 	'permission/setNowroute',
+							// 	store.state.tagsView.visitedViews[1].matched[0].path.substr(1)
+							// )
+						}, 200)
+					}
 					if (route.level === 3) {
 						// 按钮id
 						userBtns.push(route.id)
