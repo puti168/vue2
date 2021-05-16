@@ -77,6 +77,25 @@ const actions = {
 				}
 			}
 			asyncRouterMap = asyncRouterMap.concat(rootRoutes)
+			setTimeout(() => {
+				// let a =
+				// 	store.state.tagsView.visitedViews &&
+				// 	store.state.tagsView.visitedViews.length
+				// 		? store.state.tagsView.visitedViews[1]
+				// 		: 'aa'
+				// console.log('执行', a)
+				// if (
+				// 	route.id ===
+				// 	store.state.tagsView.visitedViews[1].matched[0].path.substr(1)
+				// ) {
+				// 	route.checked = true
+				// }
+				console.log('执行', store.state.tagsView.visitedViews[1])
+				store.dispatch(
+					'permission/setNowroute',
+					store.state.tagsView.visitedViews[1].matched[0].path.substr(1)
+				)
+			}, 2000)
 			commit('SET_ROUTES', {
 				asyncRouterMap,
 				userBtns
@@ -119,23 +138,6 @@ function filterAsyncRouter(asyncRouterMap) {
 						require(['@/views' + route.path + '/index'], resolve)
 				}
 			}
-			// if (route.parentId === '0') {
-			// 	setTimeout(() => {
-			// 		parentRoutes.forEach((data) => {
-			// 			if (
-			// 				data.id ===
-			// 				store.state.tagsView.visitedViews[1].matched[0].path.substr(1)
-			// 			) {
-			// 				data.checked = true
-			// 			}
-			// 		})
-			// 		store.dispatch(
-			// 			'permission/setNowroute',
-			// 			store.state.tagsView.visitedViews[1].matched[0].path.substr(1)
-			// 		)
-			// 	}, 200)
-			// }
-
 			serviceMap.forEach((item) => {
 				if (item.id === route.id) {
 					Object.assign(route, {
@@ -148,21 +150,6 @@ function filterAsyncRouter(asyncRouterMap) {
 						show: true,
 						checked: false
 					})
-					if (route.parentId === '0') {
-						setTimeout(() => {
-							// if (
-							// 	route.id ===
-							// 	store.state.tagsView.visitedViews[1].matched[0].path.substr(1)
-							// ) {
-							// 	route.checked = true
-							// }
-							console.log('执行', store.state.tagsView.visitedViews)
-							// store.dispatch(
-							// 	'permission/setNowroute',
-							// 	store.state.tagsView.visitedViews[1].matched[0].path.substr(1)
-							// )
-						}, 200)
-					}
 					if (route.level === 3) {
 						// 按钮id
 						userBtns.push(route.id)
@@ -170,7 +157,7 @@ function filterAsyncRouter(asyncRouterMap) {
 				}
 			})
 
-			if (route.children != null && route.children && route.children.length) {
+			if (route.children !== null && route.children && route.children.length) {
 				route.children = filterAsyncRouter(route.children)
 			}
 		}
