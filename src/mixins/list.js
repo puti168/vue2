@@ -70,6 +70,9 @@ export default {
 				['createDt', 'createDt'],
 				['auditTime', 'auditTime'],
 				['applyTime', 'applyTime'],
+				['gameId', 'gameId'],
+				['createdAt', 'createdAt'],
+				['updateAt', 'updateAt'],
 				['loginTime', 'loginTime'],
 				['modifyDt', 'modifyDt']
 			])

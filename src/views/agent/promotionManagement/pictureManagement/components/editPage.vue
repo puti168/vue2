@@ -82,7 +82,7 @@
 							@upoladItemDefeat="handleUploadDefeat"
 						></upload>
 						<p v-if="imgTip" class="imgTip">
-                            <code style="color:#FF3B30;">*</code>&nbsp;图片格式仅支持png, jpg, 图片大小不超过2MB
+                            请上传图片！图片格式仅支持png,图片尺寸： ？？ 图片大小不超过？？
 						</p>
 					</el-form-item>
 					<el-form-item label="审核信息:">
