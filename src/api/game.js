@@ -110,7 +110,7 @@ export function setUpdateDelete(data) {
 		data
 	})
 }
-//  游戏注单 ===> 游戏注单分页
+//  游戏注单 ===> 游戏平台
 export function getMerchantGameGamePlant(data) {
 	return request({
 		url: '/merchantGame/gamePlant',
