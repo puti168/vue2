@@ -161,7 +161,7 @@
 						<el-col :span="12">
 							<el-form-item label="1级标签:">
 								<el-select
-									v-model="form.gameLabelParam1"
+									v-model="gameLabelParam1"
 									size="medium"
 									placeholder="全部"
 									clearable
@@ -179,7 +179,7 @@
 						<el-col :span="12">
 							<el-form-item label="2级标签:">
 								<el-select
-									v-model="form.gameLabelParam2"
+									v-model="gameLabelParam2"
 									size="medium"
 									placeholder="全部"
 									clearable
@@ -197,7 +197,7 @@
 						<el-col :span="12">
 							<el-form-item label="3级标签:">
 								<el-select
-									v-model="form.gameLabelParam3"
+									v-model="gameLabelParam3"
 									size="medium"
 									placeholder="全部"
 									clearable
@@ -275,13 +275,16 @@ export default {
 				gamePlatform: '',
 				gameName: '',
 				imageAddress: '',
-				gameLabelParam1: '',
-				gameLabelParam2: '',
-				gameLabelParam3: '',
+				gameLabelParam1: {},
+				gameLabelParam2: {},
+				gameLabelParam3: {},
 				accessInfo: '',
 				description: '',
 				remark: ''
 			},
+			gameLabelParam1: '',
+			gameLabelParam2: '',
+			gameLabelParam3: '',
 			supportTerminal: [],
 			relationOtherGameId: [],
 			relationGameModuleName: []
@@ -368,6 +371,30 @@ export default {
 						spinner: 'el-icon-loading',
 						background: 'rgba(0, 0, 0, 0.7)'
 					})
+					this.labelList.forEach(item => {
+						if (item.gameLabelId === this.gameLabelParam1) {
+							this.form.gameLabelParam1 = {
+								gameLabelId: item.gameLabelId,
+								gameLabelName: item.gameLabelName,
+								id: item.id
+							}
+						}
+						if (item.gameLabelId === this.gameLabelParam2) {
+							this.form.gameLabelParam2 = {
+								gameLabelId: item.gameLabelId,
+								gameLabelName: item.gameLabelName,
+								id: item.id
+							}
+						}
+						if (item.gameLabelId === this.gameLabelParam3) {
+							this.form.gameLabelParam3 = {
+								gameLabelId: item.gameLabelId,
+								gameLabelName: item.gameLabelName,
+								id: item.id
+							}
+						}
+					})
+					console.log(this.form)
 					const params = {
 						...this.form,
 						supportTerminal: this.supportTerminal.join(','),
