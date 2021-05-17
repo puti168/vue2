@@ -152,6 +152,16 @@ export function getGameSearchLog(data) {
 		data
 	})
 }
+
+// 游戏配置==> 游戏搜索管理 ===> 列表
+export function gameSearchListAPI(data) {
+	return request({
+		url: '/obSearchConfig/select',
+		method: 'post',
+		data
+	})
+}
+
 // 游戏配置==> 游戏搜索管理 ===> 新增
 export function gameSearchCreateAPI(data) {
 	return request({
@@ -205,6 +215,7 @@ export default {
 	getGameRecordDownload,
 	getGameRecordDetail,
 	getGameSearchLog,
+	gameSearchListAPI,
 	gameSearchCreateAPI,
 	gameSearchUpdateAPI,
 	gameSearchDeleteAPI

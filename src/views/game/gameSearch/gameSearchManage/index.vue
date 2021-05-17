@@ -22,7 +22,7 @@
 							size="medium"
 							minlength="4"
 							maxlength="11"
-							oninput="value=value.replace(/(^\s*)|(\s*$)/g ,'')"
+							onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
 							placeholder="请输入"
 							clearable
 							style="width: 180px"
@@ -34,7 +34,7 @@
 							size="medium"
 							minlength="4"
 							maxlength="11"
-							oninput="value=value.replace(/(^\s*)|(\s*$)/g ,'')"
+							onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
 							placeholder="请输入"
 							clearable
 							style="width: 180px"
@@ -67,12 +67,9 @@
 							width="120px"
 						>
 							<template slot-scope="scope">
-								<!--									<Copy-->
-								<!--										v-if="!!scope.row.id"-->
-								<!--										:title="scope.row.id + 'ss'"-->
-								<!--										:copy="copy"-->
-								<!--									/>-->
-								<span v-if="!!scope.row.id">{{ scope.row.id }}</span>
+								<span v-if="!!scope.row.displayOrder">
+									{{ scope.row.displayOrder }}
+								</span>
 								<span v-else>-</span>
 							</template>
 						</el-table-column>
@@ -98,50 +95,36 @@
 						</el-table-column>
 						<el-table-column prop="cardNumber" align="center" label="创建人">
 							<template slot-scope="scope">
-								<Copy
-									v-if="!!scope.row.cardNumber"
-									:title="scope.row.cardNumber"
-									:copy="copy"
-								/>
+								<span v-if="!!scope.row.createdBy">
+									{{ scope.row.createdBy }}
+								</span>
 								<span v-else>-</span>
 							</template>
 						</el-table-column>
 						<el-table-column
-							prop="createDt"
+							prop="createdAt"
 							align="center"
 							label="创建时间"
 							width="180px"
 							sortable="custom"
-						>
-							<template slot-scope="scope">
-								<span v-if="!!scope.row.createDt">
-									{{ scope.row.createDt }}
-								</span>
-								<span v-else>-</span>
-							</template>
-						</el-table-column>
+							:formatter="dateFormat"
+						></el-table-column>
 						<el-table-column prop="cnName" align="center" label="最新操作人">
 							<template slot-scope="scope">
-								<Copy
-									v-if="!!scope.row.cnName"
-									:title="scope.row.cnName"
-									:copy="copy"
-								/>
+								<span v-if="!!scope.row.updatedBy">
+									{{ scope.row.updatedBy }}
+								</span>
 								<span v-else>-</span>
 							</template>
 						</el-table-column>
 						<el-table-column
-							prop="operateType"
+							prop="updatedAt"
 							align="center"
-							label="最新操作人"
-						>
-							<template slot-scope="scope">
-								<span v-if="!!scope.row.operateType">
-									{{ typeFilter(scope.row.operateType, 'bindType') }}
-								</span>
-								<span v-else>-</span>
-							</template>
-						</el-table-column>
+							label="最新操作时间"
+							width="180px"
+							sortable="custom"
+							:formatter="dateFormat"
+						></el-table-column>
 						<el-table-column align="center" label="操作">
 							<template slot-scope="scope">
 								<el-button
@@ -177,6 +160,7 @@
 <script>
 import { routerNames } from '@/utils/consts'
 import list from '@/mixins/list'
+import dayjs from 'dayjs'
 import Sortable from 'sortablejs'
 
 export default {
@@ -216,6 +200,47 @@ export default {
 		console.log('新表格数据', this.dataList)
 	},
 	methods: {
+		loadData() {
+			this.dataList = []
+			this.loading = true
+			let params = {
+				...this.queryData
+			}
+			params = {
+				...this.getParams(params)
+			}
+
+			this.$api
+				.gameSearchListAPI(params)
+				.then((res) => {
+					const {
+						code,
+						data: { obSearchConfigList },
+						msg
+					} = res
+					if (code === 200) {
+						this.loading = false
+						this.dataList = obSearchConfigList || []
+					} else {
+						this.loading = false
+						this.$message({
+							message: msg,
+							type: 'error'
+						})
+					}
+				})
+				.catch(() => (this.loading = false))
+
+			setTimeout(() => {
+				this.loading = false
+			}, 1000)
+		},
+		dateFormat(row, column, cellValue, index) {
+			if (cellValue === undefined || cellValue === null) {
+				return ''
+			}
+			return dayjs(cellValue).format('YY-MM-DD HH:mm')
+		},
 		add() {
 			this.loading = true
 			const params = {
@@ -352,8 +377,8 @@ export default {
 				color: #999;
 				font-weight: 400;
 				font-size: 14px;
-                height: 30px;
-                line-height: 20px;
+				height: 30px;
+				line-height: 20px;
 			}
 		}
 		.form-header:after {
