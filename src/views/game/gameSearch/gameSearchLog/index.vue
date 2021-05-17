@@ -93,21 +93,18 @@
         <div class="msgList">
           <p style="line-height: 24px">
             搜索词条top1：<span class="gray">{{
-              summary.topContent ? summary.topContent[0] : ""
+              summary.topContent ? summary.topContent[0] : "无"
             }}</span>
-            次
           </p>
           <p style="line-height: 24px">
             搜索词条top2：<span class="gray">{{
-              summary.topContent ? summary.topContent[1] : ""
+              summary.topContent ? summary.topContent[1] : "无"
             }}</span>
-            次
           </p>
           <p style="line-height: 24px">
             搜索词条top3：<span class="gray">{{
-              summary.topContent ? summary.topContent[2] : ""
+              summary.topContent ? summary.topContent[2] : "无"
             }}</span>
-            次
           </p>
         </div>
       </div>
@@ -145,11 +142,11 @@
               <span v-else>-</span>
             </template>
           </el-table-column>
-          <el-table-column
-            prop="accountType"
-            align="center"
-            label="账号类型"
-          ></el-table-column>
+          <el-table-column prop="accountType" align="center" label="账号类型">
+            <template slot-scope="scope">
+              {{ typeFilter(scope.row.accountType, "accountType") }}
+            </template>
+          </el-table-column>
         </el-table>
         <!-- 分页 -->
         <el-pagination
@@ -182,8 +179,7 @@ export default {
   data() {
     return {
       queryData: {
-        accountType: [],
-        merchantId: '588326785867908888'
+        accountType: []
       },
       searchTime: [startTime, endTime],
       now: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
@@ -223,6 +219,7 @@ export default {
     },
     reset() {
       this.queryData = {}
+      this.pageNum = 1
     },
     _changeTableSort({ column, prop, order }) {
       console.log(column, prop, order)

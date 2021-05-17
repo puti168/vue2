@@ -141,6 +141,7 @@ export function getGameRecordDownload(data) {
 	return request({
 		url: '/gameRecord/download',
 		method: 'post',
+		responseType: 'blob',
 		data
 	})
 }

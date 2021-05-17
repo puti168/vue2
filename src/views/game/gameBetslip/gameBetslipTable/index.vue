@@ -244,29 +244,38 @@
             >
               重置
             </el-button>
+            <el-button
+              icon="el-icon-download"
+              type="warning"
+              :disabled="loading"
+              size="medium"
+              @click="exportExcel"
+            >
+              导出
+            </el-button>
           </el-form-item>
         </el-form>
         <div class="msgList">
           <p>
             <span>数据更新时间：</span><span>{{ now }}</span>
           </p>
-          <p>总注单数：{{ summary.count }}条</p>
+          <p>总注单数：{{ summary.totalCount }}条</p>
         </div>
         <div class="msgList">
           <p>
             <span class="normalRgba">已结算</span>
-            <span>{{ summary.successCount }}</span>
+            <span>{{ summary.settledCount }}</span>
             条
           </p>
           <p>
             <span class="deleteRgba">未结算</span>
-            <span>{{ summary.successCount }}</span>
+            <span>{{ summary.unSettledCount }}</span>
             条
           </p>
-          <p>投注金额：5000</p>
+          <p>投注金额：{{ summary.betAmount }}</p>
           <p>
             会员输赢：
-            <span class="redColor">{{ summary.successCount }}</span>
+            <span class="redColor">{{ summary.netAmount }}</span>
           </p>
         </div>
       </div>
@@ -300,7 +309,9 @@
               游戏类型
             </template>
             <template slot-scope="scope">
-              {{ scope.row.gameCode }}
+              <span v-for="item in gameTypeList" :key="item.gameCode">
+                {{ item.gameCode === scope.row.gameCode ? item.gameName : "" }}
+              </span>
               <br />
               {{ scope.row.gameTypeName }}
             </template>
@@ -317,11 +328,11 @@
               <span v-else>-</span>
             </template>
           </el-table-column>
-          <el-table-column
-            prop="accountType"
-            align="center"
-            label="账号类型"
-          ></el-table-column>
+          <el-table-column prop="accountType" align="center" label="账号类型">
+            <template slot-scope="scope">
+              {{ typeFilter(scope.row.accountType, "accountType") }}
+            </template>
+          </el-table-column>
           <el-table-column prop="parentProxyName" align="center" label="上级代理">
             <template slot-scope="scope">
               <Copy
@@ -385,11 +396,11 @@ class="disableRgba"
             sortable="custom"
           ></el-table-column>
           <el-table-column prop="loginIp" align="center" label="投注IP"></el-table-column>
-          <el-table-column
-            prop="deviceType"
-            align="center"
-            label="投注终端"
-          ></el-table-column>
+          <el-table-column prop="deviceType" align="center" label="投注终端">
+            <template slot-scope="scope">
+              {{ typeFilter(scope.row.deviceType, "betDeviceType") }}
+            </template>
+          </el-table-column>
           <el-table-column prop="operation" align="center" label="操作">
             <template slot-scope="scope">
               <el-button
@@ -429,16 +440,39 @@ class="disableRgba"
           <strong class="paddingLR strong">投注人信息</strong>
           <div class="paddingLR paddingB">
             <el-row class="paddingLR">
-              <el-col :span="6">账号类型： 正式</el-col>
-              <el-col :span="6">会员账号： mico123456</el-col>
-              <el-col :span="6">上级代理： mico11</el-col>
-              <el-col :span="6">VIP等级： 5级</el-col>
-              <el-col :span="6">游戏账号： 8885411</el-col>
+              <el-col :span="6">账号类型：  {{ typeFilter(scope.row.accountType, "accountType") }}</el-col>
+              <el-col :span="6">会员账号： {{ dataList.memberName }}</el-col>
+              <el-col :span="6">上级代理：{{ dataList.parentProxyName }}</el-col>
+              <el-col :span="6">VIP等级： {{ dataList.vipSerialNum }}</el-col>
+              <el-col :span="6">游戏账号： {{ dataList.playerName }}</el-col>
               <el-col :span="6">
                 账号状态：
-                <span class="normalRgba">正常</span>
+                <span
+                  v-if="dataList.accountStatus && dataList.accountStatus === '1'"
+                  class="normalRgba"
+                >
+                  {{ typeFilter(dataList.accountStatus, "accountStatusType") }}
+                </span>
+                <span
+                  v-else-if="dataList.accountStatus && dataList.accountStatus === '2'"
+                  class="disableRgba"
+                >
+                  {{ typeFilter(dataList.accountStatus, "accountStatusType") }}
+                </span>
+                <span
+                  v-else-if="dataList.accountStatus && dataList.accountStatus === '3'"
+                  class="lockingRgba"
+                >
+                  {{ typeFilter(dataList.accountStatus, "accountStatusType") }}
+                </span>
+                <span
+                  v-else-if="dataList.accountStatus && dataList.accountStatus === '4'"
+                  class="deleteRgba"
+                >
+                  {{ typeFilter(dataList.accountStatus, "accountStatusType") }}
+                </span>
               </el-col>
-              <el-col :span="6">该类游戏总输赢： +55555</el-col>
+              <el-col :span="6">该类游戏总输赢： {{ dataList.totalNetAmount }}</el-col>
             </el-row>
           </div>
           <el-divider></el-divider>
@@ -491,11 +525,7 @@ export default {
       searchTime: [startTime, endTime],
       netTime: [startTime, endTime],
       now: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
-      summary: {
-        count: 0,
-        failCount: 0,
-        successCount: 0
-      },
+      summary: {},
       tableData: [],
       gameType: 'init',
       dataList: {}
@@ -521,7 +551,7 @@ export default {
       })
     },
     loadData() {
-      // this.loading = true;
+      this.loading = true
       const create = this.searchTime || []
       const net = this.netTime || []
       const [startTime, endTime] = create
@@ -537,9 +567,19 @@ export default {
         ...this.getParams(params)
       }
       if (startTime && endTime && netAtStart && netAtEnd) {
-        this.$api.getGameRecordNotes(params).then((res) => {
-          console.log(res)
-        })
+        this.$api
+          .getGameRecordNotes(params)
+          .then((res) => {
+            if (res.code === 200) {
+              this.tableData = res.data.record
+              this.total = res.data.totalRecord
+              this.summary = res.data.summary !== null ? res.data.summary : {}
+            }
+            this.loading = false
+          })
+          .catch(() => {
+            this.loading = false
+          })
       } else {
         this.$message.warning('请选择一个下注时间或者结算时间')
       }
@@ -548,15 +588,48 @@ export default {
     },
     reset() {
       this.queryData = {}
+      this.searchTime = [startTime, endTime]
+      this.netTime = [startTime, endTime]
+      this.pageNum = 1
     },
     lookMsg(val) {
       console.log(val)
-      this.dataList = { ...val }
-      this.gameType = 'zr'
+      const data = {}
+      data.createAt = val.createAt
+      data.gameCode = val.gameCode
+      data.id = val.thirdOrderId
+      const loading = this.$loading({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      })
+      this.$api
+        .getGameRecordDetail(data)
+        .then((res) => {
+          if (res.code === 200) {
+            this.dataList = res.data.record
+            this.gameType = val.gameCode
+            loading.close()
+          }
+          console.log(res)
+        })
+        .catch(() => {
+          loading.close()
+        })
     },
     _changeTableSort({ column, prop, order }) {
-      if (prop === 'vipSerialNum') {
+      if (prop === 'betAmount') {
         prop = 1
+      }
+      if (prop === 'netAmount') {
+        prop = 2
+      }
+      if (prop === 'createAt') {
+        prop = 3
+      }
+      if (prop === 'netAt') {
+        prop = 4
       }
       this.queryData.orderKey = prop
       if (order === 'ascending') {
@@ -600,6 +673,71 @@ export default {
           }
           break
       }
+    },
+    exportExcel() {
+      const create = this.queryData.registerTime || []
+      const [startTime, endTime] = create
+      let params = {
+        ...this.queryData,
+        createDtStart: startTime
+          ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
+          : undefined,
+        createDtEnd: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : undefined
+      }
+      params = {
+        ...this.getParams(params)
+      }
+      delete params.registerTime
+      delete params.lastLoginTime
+      delete params.firstSaveTime
+      delete params.accountStatus
+      delete params.deviceType
+      delete params.accountType
+      this.$api
+        .getGameRecordDownload(params)
+        .then((res) => {
+          const result = res.data
+          const disposition = res.headers['content-disposition']
+          if (disposition) {
+            const fileNames = disposition.split("''")
+            let fileName = fileNames[1]
+            fileName = decodeURIComponent(fileName)
+            const blob = new Blob([result], {
+              type: 'application/octet-stream'
+            })
+            if ('download' in document.createElement('a')) {
+              const elink = document.createElement('a')
+              elink.download = fileName || ''
+              elink.style.display = 'none'
+              elink.href = URL.createObjectURL(blob)
+              document.body.appendChild(elink)
+              elink.click()
+              URL.revokeObjectURL(elink.href)
+              document.body.removeChild(elink)
+            } else {
+              console.log('进来', 111)
+              window.navigator.msSaveBlob(blob, fileName)
+            }
+            this.$message({
+              type: 'success',
+              message: '导出成功',
+              duration: 1500
+            })
+          } else {
+            this.$message({
+              type: 'error',
+              message: '每10分钟导一次，请稍后再试',
+              duration: 1500
+            })
+          }
+        })
+        .catch(() => {
+          this.$message({
+            type: 'error',
+            message: '导出失败',
+            duration: 1500
+          })
+        })
     },
     goBack() {
       this.gameType = 'init'

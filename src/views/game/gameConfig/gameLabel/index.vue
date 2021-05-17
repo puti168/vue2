@@ -319,6 +319,7 @@ export default {
     },
     reset() {
       this.queryData = {}
+      this.pageNum = 1
     },
     switchClick(val) {
       const status = val.labelStatus === 0 ? 1 : 0
