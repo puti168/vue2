@@ -114,7 +114,7 @@
 						<el-col :span="12">
 							<el-form-item label="关联游戏模块:">
 								<el-select
-									v-model="relationGameModuleName"
+									v-model="relationGameModuleId"
 									size="medium"
 									placeholder="全部"
 									multiple
@@ -274,7 +274,7 @@ export default {
 				gameIcon: '',
 				gamePlatform: '',
 				gameName: '',
-				imageAddress: '',
+				imageAddress: '3535test',
 				gameLabelParam1: {},
 				gameLabelParam2: {},
 				gameLabelParam3: {},
@@ -287,7 +287,7 @@ export default {
 			gameLabelParam3: '',
 			supportTerminal: [],
 			relationOtherGameId: [],
-			relationGameModuleName: []
+			relationGameModuleId: []
 		}
 	},
 	computed: {
@@ -327,7 +327,7 @@ export default {
 						type: 'array'
 					}
 				],
-				relationGameModuleName: [
+				relationGameModuleId: [
 					{
 						required: true,
 						message: '请输入关联游戏模块',
@@ -397,9 +397,10 @@ export default {
 					console.log(this.form)
 					const params = {
 						...this.form,
+						imageAddress: '3535test',
 						supportTerminal: this.supportTerminal.join(','),
 						relationOtherGameId: this.relationOtherGameId.join(','),
-						relationGameModuleName: this.relationGameModuleName.join(',')
+						relationGameModuleId: this.relationGameModuleId.join(',')
 					}
 					const url = this.editType === 'add' ? 'addGame' : 'editGame'
 					this.$api[url](params)
@@ -466,7 +467,7 @@ export default {
 				gameIcon: '',
 				gamePlatform: '',
 				gameName: '',
-				imageAddress: '',
+				imageAddress: '3535test',
 				gameLabelParam1: '',
 				gameLabelParam2: '',
 				gameLabelParam3: '',
@@ -476,7 +477,7 @@ export default {
 			}
 			this.supportTerminal = []
 			this.relationOtherGameId = []
-			this.relationGameModuleName = []
+			this.relationGameModuleId = []
 			this.$emit('closeEdit')
 		}
 	}
