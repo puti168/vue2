@@ -107,6 +107,7 @@
 							:right-default-checked="hasCheckedWHRightData"
 							@left-check-change="handleWHLeftChange"
 							@right-check-change="handleWHRightChange"
+                            @clearAbleList="clearAbleList"
 						></Transfer>
 					</div>
 				</div>
@@ -237,7 +238,7 @@ export default {
 			this.$api.queryGameAPI(params).then((res) => {
 				const { code, data, msg } = res
 				if (code === 200) {
-					this.gameNameList = data || []
+					this.gameNameList = data
 				} else {
 					this.loading = false
 					this.$message({
@@ -253,12 +254,12 @@ export default {
 			this.gameNameList = []
 			const params = {
 				gameName: '',
-                assortId: ''
+				assortId: ''
 			}
 			this.$api.queryChildGameAPI(params).then((res) => {
 				const { code, data, msg } = res
 				if (code === 200) {
-					this.gameNameList = data || []
+					this.gameNameList = data
 				} else {
 					this.loading = false
 					this.$message({
@@ -267,6 +268,10 @@ export default {
 					})
 				}
 			})
+		},
+		// 列表清空
+		clearAbleList() {
+			console.log('清空列表')
 		},
 		handleWHLeftChange(key, key1) {
 			const _this = this

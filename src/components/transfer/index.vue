@@ -1,6 +1,8 @@
 <template>
 	<div class="el-transfer">
-		<el-button type="primary" class="clear-list">列表清空</el-button>
+		<el-button type="primary" class="clear-list" @click="clearAbleList">
+			列表清空
+		</el-button>
 		<transfer-panel
 			ref="leftPanel"
 			v-bind="$props"
@@ -43,7 +45,7 @@
 			size="medium"
 			clearable
 			class="game-choose"
-            @change="chooseGame($event)"
+			@change="chooseGame($event)"
 		>
 			<el-option
 				v-for="item in gameNameList"
@@ -206,9 +208,12 @@ export default {
 	},
 
 	methods: {
-        chooseGame(val) {
-            console.log('选择游戏了', val)
-        },
+		chooseGame(val) {
+			console.log('选择游戏了', val)
+		},
+		clearAbleList() {
+			this.$emit('clearAbleList')
+		},
 		getMigratingConfig() {
 			return {
 				props: {
@@ -278,6 +283,7 @@ export default {
 	position: relative;
 	margin: 0 auto;
 	width: 850px;
+
 	.clear-list {
 		position: absolute;
 		color: #fff;
@@ -287,6 +293,7 @@ export default {
 		top: 6px;
 		left: 180px;
 	}
+
 	.game-choose {
 		position: absolute;
 		z-index: 10;

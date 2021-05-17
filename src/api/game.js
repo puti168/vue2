@@ -182,7 +182,7 @@ export function gameSearchCreateAPI(data) {
 // 游戏配置==> 游戏搜索管理 ===> 修改
 export function gameSearchUpdateAPI(data) {
 	return request({
-		url: '/obSearchConfig/update',
+		url: '/obSearchConfig/save',
 		method: 'post',
 		data
 	})
