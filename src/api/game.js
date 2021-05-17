@@ -44,6 +44,16 @@ export function gameUpdateAPI(data) {
 		data
 	})
 }
+
+// 游戏配置==> 游戏分类管理 ===> 编辑
+export function gameUpdateStatusAPI(data) {
+	return request({
+		url: '/gameAssort/updateStatus',
+		method: 'post',
+		data
+	})
+}
+
 // 游戏配置==> 游戏分类管理 ===> 创建
 export function gameCreateAPI(data) {
 	return request({
@@ -176,6 +186,7 @@ export default {
 	gameUpdateAPI,
 	gameCreateAPI,
 	queryGameAPI,
+	gameUpdateStatusAPI,
 	getTabelData,
 	addObGameLabel,
 	getGameLabelRelation,
