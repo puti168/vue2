@@ -21,7 +21,7 @@ export function queryChildGamePageAPI(data) {
 // 游戏配置==> 游戏分类管理 ===> 子游戏查询
 export function queryChildGameAPI(data) {
 	return request({
-		url: '/gameAssort/queryChildrenGamePage',
+		url: '/gameAssort/queryChildrenGame',
 		method: 'post',
 		data
 	})
@@ -44,6 +44,16 @@ export function gameUpdateAPI(data) {
 		data
 	})
 }
+
+// 游戏配置==> 游戏分类管理 ===> 编辑
+export function gameUpdateStatusAPI(data) {
+	return request({
+		url: '/gameAssort/updateStatus',
+		method: 'post',
+		data
+	})
+}
+
 // 游戏配置==> 游戏分类管理 ===> 创建
 export function gameCreateAPI(data) {
 	return request({
@@ -110,6 +120,14 @@ export function setUpdateDelete(data) {
 		data
 	})
 }
+//  游戏注单 ===> 游戏平台
+export function getMerchantGameGamePlant(data) {
+	return request({
+		url: '/merchantGame/gamePlant',
+		method: 'post',
+		data
+	})
+}
 //  游戏注单 ===> 游戏注单分页
 export function getGameRecordNotes(data) {
 	return request({
@@ -123,6 +141,7 @@ export function getGameRecordDownload(data) {
 	return request({
 		url: '/gameRecord/download',
 		method: 'post',
+		responseType: 'blob',
 		data
 	})
 }
@@ -142,6 +161,16 @@ export function getGameSearchLog(data) {
 		data
 	})
 }
+
+// 游戏配置==> 游戏搜索管理 ===> 列表
+export function gameSearchListAPI(data) {
+	return request({
+		url: '/obSearchConfig/select',
+		method: 'post',
+		data
+	})
+}
+
 // 游戏配置==> 游戏搜索管理 ===> 新增
 export function gameSearchCreateAPI(data) {
 	return request({
@@ -154,7 +183,7 @@ export function gameSearchCreateAPI(data) {
 // 游戏配置==> 游戏搜索管理 ===> 修改
 export function gameSearchUpdateAPI(data) {
 	return request({
-		url: '/obSearchConfig/update',
+		url: '/obSearchConfig/save',
 		method: 'post',
 		data
 	})
@@ -168,24 +197,36 @@ export function gameSearchDeleteAPI(data) {
 		data
 	})
 }
+export function gameList(data) {
+	return request({
+		url: '/gameManager/gameList',
+		method: 'post',
+		data
+	})
+}
+
 export default {
 	gameAssortListAPI,
+	gameList,
 	queryChildGamePageAPI,
 	queryChildGameAPI,
 	gameDeleteAPI,
 	gameUpdateAPI,
 	gameCreateAPI,
 	queryGameAPI,
+	gameUpdateStatusAPI,
 	getTabelData,
 	addObGameLabel,
 	getGameLabelRelation,
 	setUpdateStatus,
 	setUpdateLabel,
 	setUpdateDelete,
+	getMerchantGameGamePlant,
 	getGameRecordNotes,
 	getGameRecordDownload,
 	getGameRecordDetail,
 	getGameSearchLog,
+	gameSearchListAPI,
 	gameSearchCreateAPI,
 	gameSearchUpdateAPI,
 	gameSearchDeleteAPI
