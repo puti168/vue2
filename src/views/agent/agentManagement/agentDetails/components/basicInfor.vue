@@ -432,7 +432,7 @@ export default {
           const params = { userId: val.userId, pageNum: 1, pageSize: 3 }
           this.$api.getMemberRemarkList(params).then((res) => {
             if (res.code === 200) {
-              this.tableList = res.data.records
+              this.tableList = res.data.record
             }
           })
         }

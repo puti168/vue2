@@ -46,9 +46,22 @@
       <el-col
 :span="5"
 >帐号状态：<i v-if="activeL" class="el-icon-loading"></i>
-        <span v-else>
-          {{ typeFilter(outlineInfoList.accountStatus, "accountStatusType") }}
-        </span>
+        <span v-else>{{
+          typeFilter(outlineInfoList.accountStatus, "accountStatusType")
+        }}</span>
+        <!-- <div v-else style="width: 80%; display: inline-block">
+          <p v-if="outlineInfoList.accountStatus === '1'">
+            <span>
+              {{ typeFilter(outlineInfoList.accountStatus, "accountStatusType") }}
+            </span>
+          </p>
+          <p v-else class="yellowColor">
+            <span>
+              {{ typeFilter(outlineInfoList.accountStatus, "accountStatusType") }}
+            </span>
+            <span>审核中</span>
+          </p>
+        </div> -->
       </el-col>
       <el-col
 :span="5"
@@ -276,7 +289,7 @@ class="textC"
         ></el-table-column>
         <el-table-column prop="remark" align="center" label="备注信息"></el-table-column>
         <el-table-column
-          prop="operator"
+          prop="userName"
           align="center"
           width="150px"
           label="备注账号"
@@ -313,7 +326,7 @@ class="textC"
       >
         <el-form-item v-if="moduleBox === '账号状态'" label="账号状态：" prop="code">
           <el-select
-            v-model="editData.code"
+            v-model="editData.accountStatus"
             placeholder="请选择"
             @change="changeAccountStatus"
           >
@@ -622,7 +635,7 @@ export default {
           const params = { userId: val.userId, pageNum: 1, pageSize: 3 }
           this.$api.getMemberRemarkList(params).then((res) => {
             if (res.code === 200) {
-              this.tableList = res.data.records
+              this.tableList = res.data.record
             }
           })
         }
@@ -674,7 +687,11 @@ export default {
     },
     // 备注信息
     getMemberRemarkList(val) {
-      const params = { userId: val, pageNum: this.page, pageSize: this.size }
+      const params = {
+        userId: val,
+        pageNum: this.page,
+        pageSize: this.size
+      }
       this.$api.getMemberRemarkList(params).then((res) => {
         if (res.code === 200) {
           this.tableList = res.data.record
@@ -687,6 +704,15 @@ export default {
     },
     editFn(val) {
       this.moduleBox = val
+      if (val === '账号状态') {
+        this.editData.accountStatus = this.outlineInfo.accountStatus
+      }
+      if (val === '风控层级') {
+        this.editData.windControlId = this.outlineInfo.windControlId
+      }
+      if (val === '会员标签') {
+        this.editData.labelId = this.outlineInfo.labelId
+      }
       this.editVisible = true
     },
     changeAccountStatus(val) {
@@ -718,6 +744,7 @@ export default {
     },
     submitEdit() {
       const params = this.editData
+      console.log(params)
       const data = {}
       data.userName = this.parentData.userName
       this.$refs.editForm.validate((valid) => {
@@ -729,7 +756,7 @@ export default {
             background: 'rgba(0, 0, 0, 0.7)'
           })
           if (this.moduleBox === '账号状态') {
-            delete params.code
+            // delete params.code;
             data.accountStatusAfter = params
             this.setMemberInfoEdit(data)
             loading.close()
