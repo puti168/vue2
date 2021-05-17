@@ -81,10 +81,11 @@ export default {
 			// alert(data);
 			// alert(decrypted);
 
+            // eslint-disable-next-line no-unused-vars
 			var message = decrypted.toString(CryptoJS.enc.Utf8)
-			console.log(message)
-			console.log(JSON.parse(message))
-			console.log(JSON.parse(JSON.parse(message).body))
+			// console.log(message)
+			// console.log(JSON.parse(message))
+			// console.log(JSON.parse(JSON.parse(message).body))
 		},
 		sendHeart() {
 			const RequestPackage = {}
@@ -112,19 +113,20 @@ export default {
 			const thiss = this
 			this.wss.onopen = function() {
 				// 成功后发起心跳
-				console.log('sendHeart')
+				// console.log('sendHeart')
 				thiss.timer = window.setInterval(thiss.sendHeart, 5000)
 			}
 			this.wss.onmessage = function(event) {
+                // eslint-disable-next-line no-unused-vars
 				const jsonStr = thiss.decrypte(event.data)
-				console.log('jsonStr')
-				console.log(jsonStr)
+				// console.log('jsonStr')
+				// console.log(jsonStr)
 			}
 			this.wss.onclose = function() {
-				console.log('断开')
+				// console.log('断开')
 			}
 			this.wss.onerror = function(evt) {
-				console.log(evt)
+				// console.log(evt)
 			}
 		}
 	}
