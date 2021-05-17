@@ -257,16 +257,6 @@ const actions = {
 				}
 				if (item.name === '游戏') {
 					item.children.forEach((data) => {
-						if (data.name === '游戏配置') {
-							data.children.push({
-								path: '/game/gameConfig/gameManagementEdit',
-								name: 'gameManagementEdit',
-								component: () =>
-									import(`@/views/game/gameConfig/gameManagementEdit/index`),
-								meta: { title: '游戏管理创建编辑' },
-								hidden: true
-							})
-						}
 						if (data.name === '游戏推荐') {
 							data.children.push({
 								path: '/game/gameConfig/gameHomeRecommendEdit',

@@ -1,13 +1,13 @@
 <template>
 	<div class="game-container report-container">
-		<div class="view-container dealer-container">
+		<div v-if="true" class="view-container dealer-container">
 			<div class="params">
 				<el-form ref="form" :inline="true" :model="queryData">
 					<el-form-item label="游戏标签ID:">
 						<el-input
-							v-model="queryData.bankCode"
+							v-model="queryData.gameId"
 							clearable
-							:maxlength="3"
+							:maxlength="5"
 							size="medium"
 							style="width: 180px"
 							placeholder="请输入"
@@ -17,9 +17,9 @@
 					</el-form-item>
 					<el-form-item label="游戏名称:">
 						<el-input
-							v-model="queryData.bankName"
+							v-model="queryData.gameName"
 							clearable
-							:maxlength="10"
+							:maxlength="20"
 							size="medium"
 							style="width: 180px; margin-right: 20px"
 							placeholder="请输入"
@@ -29,74 +29,98 @@
 					</el-form-item>
 					<el-form-item label="显示状态:" class="tagheight">
 						<el-select
-							v-model="queryData.accountType"
+							v-model="queryData.gameStatusList"
 							style="width: 180px"
 							multiple
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
 						>
-							<el-option label="开启中" value="1"></el-option>
-							<el-option label="禁用中" value="2"></el-option>
+							<el-option
+								v-for="item in gameStatusType"
+								:key="item.code"
+								:label="item.description"
+								:value="item.code"
+							></el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item label="支持终端:" class="tagheight">
 						<el-select
-							v-model="queryData.accountType"
+							v-model="queryData.supportTerminalList"
 							style="width: 180px"
 							multiple
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
 						>
-							<el-option label="开启中" value="1"></el-option>
-							<el-option label="禁用中" value="2"></el-option>
+							<el-option
+								v-for="item in terminalnType"
+								:key="item.code"
+								:label="item.description"
+								:value="item.code"
+							></el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item label="图标状态:" class="tagheight">
 						<el-select
-							v-model="queryData.accountType"
+							v-model="queryData.gameIconList"
 							style="width: 180px"
 							multiple
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
 						>
-							<el-option label="开启中" value="1"></el-option>
-							<el-option label="禁用中" value="2"></el-option>
+							<el-option
+								v-for="item in gameIconType"
+								:key="item.code"
+								:label="item.description"
+								:value="item.code"
+							></el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item label="关联推荐游戏:" class="tagheight">
 						<el-select
-							v-model="queryData.accountType"
+							v-model="queryData.relationOtherGameIdList"
 							style="width: 180px"
 							multiple
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
 						>
-							<el-option label="开启中" value="1"></el-option>
-							<el-option label="禁用中" value="2"></el-option>
+							<el-option
+								v-for="item in gameStatusType"
+								:key="item.code"
+								:label="item.description"
+								:value="item.code"
+							></el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item label="游戏平台:" class="tagheight">
 						<el-select
-							v-model="queryData.accountType"
+							v-model="queryData.gamePlatformList"
 							style="width: 180px"
 							multiple
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
 						>
-							<el-option label="开启中" value="1"></el-option>
-							<el-option label="禁用中" value="2"></el-option>
+							<el-option
+								v-for="item in gameStatusType"
+								:key="item.code"
+								:label="item.description"
+								:value="item.code"
+							></el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item label="游戏标签:" class="tagheight">
 						<el-select
-							v-model="queryData.accountType"
+							v-model="queryData.gameLabelIdList"
 							style="width: 180px"
 							multiple
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
 						>
-							<el-option label="开启中" value="1"></el-option>
-							<el-option label="禁用中" value="2"></el-option>
+							<el-option
+								v-for="item in gameStatusType"
+								:key="item.code"
+								:label="item.description"
+								:value="item.code"
+							></el-option>
 						</el-select>
 					</el-form-item>
 
@@ -188,7 +212,9 @@
 						width="120px"
 					>
 						<template slot-scope="scope">
-              <span class="text-link" @click="lookGame(scope.row.bankName)">点击预览</span>
+							<span class="text-link" @click="lookGame(scope.row.bankName)">
+								点击预览
+							</span>
 							<!-- <el-image
 								style="width: 100px; height: 100px"
 								:src="url"
@@ -357,14 +383,16 @@
 				width="480px"
 				class="imgCenter"
 			>
-				<img src="@/assets/img/bb_bt_logout.png">
+				<img src="@/assets/img/bb_bt_logout.png" />
 			</el-dialog>
 		</div>
+		<gameManagementEdit v-else></gameManagementEdit>
 	</div>
 </template>
 
 <script>
 import list from '@/mixins/list'
+import gameManagementEdit from './components/gameManagementEdit'
 import dayjs from 'dayjs'
 import { routerNames } from '@/utils/consts'
 const startTime = dayjs()
@@ -376,15 +404,23 @@ const endTime = dayjs()
 
 export default {
 	name: routerNames.gameManagement,
-	components: {},
+	components: { gameManagementEdit },
 	mixins: [list],
 	data() {
 		return {
 			queryData: {
-				accountType: []
+				gameId: '',
+				gameName: '',
+				accountType: [],
+				gameLabelIdList: [],
+				gamePlatformList: [],
+				gameIconList: [],
+				relationOtherGameIdList: [],
+				supportTerminalList: [],
+				gameStatusList: []
 			},
-      url: '@/assets/img/logo.png',
-      srcList: '@/assets/img/logo.png',
+			url: '@/assets/img/logo.png',
+			srcList: '@/assets/img/logo.png',
 			searchTime: [startTime, endTime],
 			now: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
 			summary: {
@@ -398,35 +434,44 @@ export default {
 			dialogGameVisible: false
 		}
 	},
-	computed: {},
-	mounted() {
-		for (let i = 0; i < 10; i++) {
-			this.tableData[i] = {
-				bankCode: '165416416464654',
-				bankName: '中国银行',
-				content: '高频率',
-				code: 1,
-				createDt: '2021-02-13 20:28:54',
-				updateDt: '2021-02-13 20:28:54'
-			}
+	computed: {
+		gameStatusType() {
+			return this.globalDics.gameStatusType
+		},
+		terminalnType() {
+			return this.globalDics.terminalnType
+		},
+		gameIconType() {
+			return this.globalDics.gameIconType
 		}
 	},
+	mounted() {},
 	methods: {
 		loadData() {
-			// this.loading = true;
-			const create = this.searchTime || []
-			const [startTime, endTime] = create
-			let params = {
-				...this.queryData,
-				startTime: startTime
-					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
-					: '',
-				endTime: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
+			const params = {
+				...this.getParams(this.queryData)
 			}
-			params = {
-				...this.getParams(params)
-			}
-			console.log(params)
+			this.loading = true
+
+			this.$api
+				.gameList(params)
+				.then((res) => {
+					if (res.code === 200) {
+						const response = res.data
+						this.loading = false
+						this.dataList = response.record
+						this.total = response.totalRecord
+					} else {
+						this.loading = false
+						this.$message({
+							message: res.msg,
+							type: 'error'
+						})
+					}
+				})
+				.catch(() => {
+					this.loading = false
+				})
 		},
 		lookGame(val) {
 			this.dialogGameVisible = true

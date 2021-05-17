@@ -117,6 +117,13 @@ export function gameSearchUpdateAPI(data) {
 		data
 	})
 }
+export function gameList(data) {
+	return request({
+		url: '/gameManager/gameList',
+		method: 'post',
+		data
+	})
+}
 
 // 游戏配置==> 游戏搜索管理 ===> 删除
 export function gameSearchDeleteAPI(data) {
@@ -128,6 +135,7 @@ export function gameSearchDeleteAPI(data) {
 }
 export default {
 	gameAssortListAPI,
+	gameList,
 	queryChildGameAPI,
 	gameDeleteAPI,
 	gameUpdateAPI,
