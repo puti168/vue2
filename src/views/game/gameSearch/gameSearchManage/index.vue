@@ -173,7 +173,8 @@ export default {
 			},
 			dataList: [],
 			idArray: [],
-			cloneArr: []
+			cloneArr: [],
+            createObSearchConfigReqList: []
 		}
 	},
 	computed: {},
@@ -392,6 +393,23 @@ export default {
 						_this.dataList.splice(newIndex, 0, currRow)
 					}
 				})
+
+            this.dataList.forEach((item) => {
+                let isExist = false
+                const itemId = item.searchInfo
+                this.cloneArr.forEach((lis) => {
+                    const lisId = lis.searchInfo
+                    if (itemId === lisId) {
+                        isExist = true
+                    }
+                })
+                if (!isExist) {
+                    this.createObSearchConfigReqList.push({
+                        displayOrder: item.displayOrder,
+                        searchInfo: item.searchInfo
+                    })
+                }
+            })
 		}
 	}
 }
