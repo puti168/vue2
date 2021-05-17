@@ -2,27 +2,29 @@
   <div class="game-container report-container">
     <div class="view-container dealer-container">
       <div class="betslip">
-        <strong class="strong">投注人信息</strong>
+        <strong class="strong">注单信息</strong>
         <div>
           <el-row class="paddingLR paddingB">
-            <el-col :span="6">注单号： 45646544445451</el-col>
-            <el-col :span="6">三方注单号： 45646544445451</el-col>
-            <el-col :span="6">局号： 4545454545454A4</el-col>
-            <el-col :span="6">游戏平台： B端名称</el-col>
-            <el-col :span="6">玩法名称： 经典百家乐</el-col>
-            <el-col :span="6"> 游戏桌台号： D15 </el-col>
-            <el-col :span="6">投注玩法： 虎</el-col>
-            <el-col :span="6">玩法赔率： 50</el-col>
-            <el-col :span="6">局结果： 龙13 虎10</el-col>
-            <el-col :span="6">投注金额： 60.00</el-col>
-            <el-col :span="6">有效投注： 60.00</el-col>
-            <el-col :span="6">输赢金额： -60.00</el-col>
-            <el-col :span="6">注单状态： 已结算</el-col>
-            <el-col :span="6">投注IP： 192.168.0.1</el-col>
-            <el-col :span="6">投注终端： IOS_APP</el-col>
-            <el-col :span="6">投注时间： 1991/11/11 06:11:12</el-col>
-            <el-col :span="6">结算时间： 1991/11/11 07:11:12</el-col>
-            <el-col :span="6">同步时间： 1991/11/11 08:11:12</el-col>
+            <el-col :span="6">注单号： {{ dataList.id }}</el-col>
+            <el-col :span="6">三方注单号： {{ dataList.thirdOrderId }}</el-col>
+            <el-col :span="6">局号： {{ dataList.roundNo }}</el-col>
+            <el-col :span="6">游戏平台： {{ dataList.gameCode }}</el-col>
+            <el-col :span="6">玩法名称： {{ dataList.playName }}</el-col>
+            <el-col :span="6"> 游戏桌台号： {{ dataList.tableCode }} </el-col>
+            <el-col :span="6">投注玩法： {{ dataList.playOptionName }}</el-col>
+            <el-col :span="6">玩法赔率： {{ dataList.oddsValue }}</el-col>
+            <el-col
+:span="6"
+>局结果： {{ dataList.judgeResultCn }}{{ dataList.judgeResult1 }}</el-col>
+            <el-col :span="6">投注金额： {{ dataList.betAmount }}</el-col>
+            <el-col :span="6">有效投注： {{ dataList.validBetAmount }}</el-col>
+            <el-col :span="6">输赢金额： {{ dataList.netAmount }}</el-col>
+            <el-col :span="6">注单状态： {{ dataList.betStatus }}</el-col>
+            <el-col :span="6">投注IP： {{ dataList.loginIp }}</el-col>
+            <el-col :span="6">投注终端： {{ dataList.deviceType }}</el-col>
+            <el-col :span="6">投注时间： {{ dataList.createAt }}</el-col>
+            <el-col :span="6">结算时间： {{ dataList.netAt }}</el-col>
+            <el-col :span="6">同步时间： {{ dataList.synchronizationTime }}</el-col>
           </el-row>
         </div>
       </div>
@@ -33,20 +35,20 @@
 <script>
 export default {
   name: 'ZrDetails',
-  components: { },
-  props: {},
-  data() {
-    return {
-        dataList: []
+  components: {},
+  props: {
+    dataList: {
+      typeL: Object,
+      default: () => ({})
     }
+  },
+  data() {
+    return {}
   },
   computed: {},
   watch: {},
-  created() {
-  },
-  mounted() {
-      console.log(this.$route.query)
-  },
+  created() {},
+  mounted() {},
   methods: {}
 }
 </script>
