@@ -80,7 +80,7 @@
 							width="220px"
 						>
 							<template slot-scope="scope">
-								<span v-if="!!scope.row.searchInfo">
+								<span>
 									<el-input
 										v-model="scope.row.searchInfo"
 										size="medium"
@@ -90,10 +90,9 @@
 										style="width: 180px"
 									></el-input>
 								</span>
-								<span v-else>-</span>
 							</template>
 						</el-table-column>
-						<el-table-column prop="cardNumber" align="center" label="创建人">
+						<el-table-column prop="createdBy" align="center" label="创建人">
 							<template slot-scope="scope">
 								<span v-if="!!scope.row.createdBy">
 									{{ scope.row.createdBy }}
@@ -106,10 +105,9 @@
 							align="center"
 							label="创建时间"
 							width="180px"
-							sortable="custom"
 							:formatter="dateFormat"
 						></el-table-column>
-						<el-table-column prop="cnName" align="center" label="最新操作人">
+						<el-table-column prop="updatedBy" align="center" label="最新操作人">
 							<template slot-scope="scope">
 								<span v-if="!!scope.row.updatedBy">
 									{{ scope.row.updatedBy }}
@@ -122,7 +120,6 @@
 							align="center"
 							label="最新操作时间"
 							width="180px"
-							sortable="custom"
 							:formatter="dateFormat"
 						></el-table-column>
 						<el-table-column align="center" label="操作">
@@ -162,6 +159,7 @@ import { routerNames } from '@/utils/consts'
 import list from '@/mixins/list'
 import dayjs from 'dayjs'
 import Sortable from 'sortablejs'
+import { getUsername } from '@/utils/auth'
 
 export default {
 	name: routerNames.gameSearchManage,
@@ -173,7 +171,8 @@ export default {
 				historyGameLimit: undefined,
 				hotSearch: undefined
 			},
-			dataList: []
+			dataList: [],
+			idArray: []
 		}
 	},
 	computed: {},
@@ -182,18 +181,6 @@ export default {
 			event.preventDefault()
 			event.stopPropagation()
 		}
-
-		for (let i = 0; i < 5; i++) {
-			this.dataList[i] = {
-				bankCode: '165416416464654',
-				bankName: '中国银行',
-				createDt: '2021-02-13 20:28:54',
-				updateDt: '2021-02-13 20:28:54',
-				vipSerialNum: '115',
-				id: i + 100
-			}
-		}
-
 		this.columnDrop()
 	},
 	updated() {
@@ -221,6 +208,10 @@ export default {
 					if (code === 200) {
 						this.loading = false
 						this.dataList = obSearchConfigList || []
+						this.idArray =
+							obSearchConfigList &&
+							obSearchConfigList.length &&
+							obSearchConfigList.map((item) => item.id)
 					} else {
 						this.loading = false
 						this.$message({
@@ -241,45 +232,40 @@ export default {
 			}
 			return dayjs(cellValue).format('YY-MM-DD HH:mm')
 		},
-		add() {
+		save() {
 			this.loading = true
 			const params = {
 				...this.form
 			}
-			this.$refs['form'].validate((valid) => {
-				console.log('valid', valid)
-				if (valid) {
-					this.$api
-						.addMemberAPI(params)
-						.then((res) => {
-							this.loading = false
-							const { code, data, msg } = res
-							if (code === 200) {
-								this.$confirm(`会员${data}资料提交成功`, {
-									confirmButtonText: '确定',
-									type: 'success',
-									showCancelButton: false
-								})
-								this.reset()
-							} else {
-								this.$message({
-									message: msg,
-									type: 'error'
-								})
-							}
+			this.$api
+				.gameSearchUpdateAPI(params)
+				.then((res) => {
+					this.loading = false
+					const { code, msg } = res
+					if (code === 200) {
+						this.$message({
+							message: '保存成功',
+							type: 'success'
 						})
-						.catch(() => {
-							this.loading = false
+						this.reset()
+					} else {
+						this.$message({
+							message: msg,
+							type: 'error'
 						})
-				}
-			})
+					}
+					this.loadData()
+				})
+				.catch(() => {
+					this.loading = false
+				})
 
 			setTimeout(() => {
 				this.loading = false
 			}, 1000)
 		},
 		reset() {
-			this.$refs['form'].resetFields()
+		    this.pageNum = 1
 			this.form = {
 				historyGameLimit: undefined,
 				hotSearch: undefined
@@ -289,49 +275,67 @@ export default {
 		addRow() {
 			const lastRow = this.dataList[this.dataList.length - 1]
 			const new_row = lastRow.id + 1
-			this.dataList.push({ id: new_row })
+			const displayOrder = lastRow.displayOrder + 1
+			this.dataList.push({
+				id: new_row,
+				updatedBy: getUsername(),
+				createdBy: getUsername(),
+				createdAt: new Date(),
+				updatedAt: new Date(),
+				displayOrder,
+				searchInfo: ''
+			})
 		},
 		deleteRow(val) {
 			const { id } = val
+			const loading = this.$loading({
+				lock: true,
+				text: 'Loading',
+				spinner: 'el-icon-loading',
+				background: 'rgba(0, 0, 0, 0.7)'
+			})
 			this.$confirm('确定删除此游戏吗?', {
 				confirmButtonText: '确定',
 				cancelButtonText: '取消',
 				type: 'warning'
 			})
 				.then(() => {
-					const loading = this.$loading({
-						lock: true,
-						text: 'Loading',
-						spinner: 'el-icon-loading',
-						background: 'rgba(0, 0, 0, 0.7)'
-					})
-					this.$api
-						.gameSearchDeleteAPI({ id })
-						.then((res) => {
-							loading.close()
-							const { code } = res
-							if (code === 200) {
-								this.$message({
-									type: 'success',
-									message: '删除成功!'
-								})
-							} else {
+					if (this.idArray.includes(id)) {
+						this.$api
+							.gameSearchDeleteAPI({ id })
+							.then((res) => {
+								loading.close()
+								const { code } = res
+								if (code === 200) {
+									this.$message({
+										type: 'success',
+										message: '删除成功!'
+									})
+								} else {
+									this.$message({
+										type: 'error',
+										message: '删除失败!'
+									})
+								}
+								this.loadData()
+							})
+							.catch(() => {
+								loading.close()
 								this.$message({
 									type: 'error',
 									message: '删除失败!'
 								})
-							}
-							this.loadData()
-						})
-						.catch(() => {
-							loading.close()
-							this.$message({
-								type: 'error',
-								message: '删除失败!'
 							})
-						})
+					} else {
+						loading.close()
+					}
 				})
-				.catch(() => {})
+				.catch(() => {
+					loading.close()
+				})
+			setTimeout(() => {
+				loading.close()
+			}, 1500)
 		},
 
 		// 列拖动

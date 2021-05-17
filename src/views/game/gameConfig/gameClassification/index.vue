@@ -405,6 +405,8 @@ export default {
 			},
 			dataList: [],
 			total: 0,
+			childDataList: [],
+			childTotal: 0,
 			vipDict: [],
 			userLabel: [],
 			dialogGameVisible: false,
@@ -474,6 +476,7 @@ export default {
 			}, 1000)
 		},
 		reset() {
+		    this.pageNum = 1
 			this.queryData = {
 				assortSortMin: undefined,
 				assortSortMax: undefined,
@@ -484,7 +487,6 @@ export default {
 				orderKey: undefined,
 				orderType: undefined
 			}
-			this.$refs['form'].resetFields()
 			this.loadData()
 		},
 		_changeTableSort({ column, prop, order }) {
@@ -494,7 +496,7 @@ export default {
 			if (prop === 'createdAt') {
 				prop = 2
 			}
-			if (prop === 'updatedBy') {
+			if (prop === 'updatedAt') {
 				prop = 3
 			}
 			this.queryData.orderKey = prop
@@ -592,25 +594,22 @@ export default {
 			this.$api
 				.queryChildGamePageAPI(params)
 				.then((res) => {
-					console.log('分类res', res)
 					const {
 						code,
 						data: { record, totalRecord },
 						msg
 					} = res
 					if (code === 200) {
-						this.loading = false
-						this.dataList = record || []
-						this.total = totalRecord || 0
+						this.childDataList = record || []
+						this.childTotal = totalRecord || 0
 					} else {
-						this.loading = false
 						this.$message({
 							message: msg,
 							type: 'error'
 						})
 					}
 				})
-				.catch(() => (this.loading = false))
+				.catch(() => {})
 		},
 		deleteRow(val) {
 			const { id } = val

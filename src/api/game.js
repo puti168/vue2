@@ -183,14 +183,7 @@ export function gameSearchCreateAPI(data) {
 // 游戏配置==> 游戏搜索管理 ===> 修改
 export function gameSearchUpdateAPI(data) {
 	return request({
-		url: '/obSearchConfig/update',
-		method: 'post',
-		data
-	})
-}
-export function gameList(data) {
-	return request({
-		url: '/gameManager/gameList',
+		url: '/obSearchConfig/save',
 		method: 'post',
 		data
 	})
@@ -204,6 +197,14 @@ export function gameSearchDeleteAPI(data) {
 		data
 	})
 }
+export function gameList(data) {
+	return request({
+		url: '/gameManager/gameList',
+		method: 'post',
+		data
+	})
+}
+
 export default {
 	gameAssortListAPI,
 	gameList,
