@@ -253,7 +253,7 @@ export default {
 			this.gameNameList = []
 			const params = {
 				gameName: '',
-				gamePlatform: ''
+                assortId: ''
 			}
 			this.$api.queryChildGameAPI(params).then((res) => {
 				const { code, data, msg } = res

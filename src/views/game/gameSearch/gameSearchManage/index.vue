@@ -80,7 +80,7 @@
 							width="220px"
 						>
 							<template slot-scope="scope">
-								<span v-if="!!scope.row.searchInfo">
+								<span>
 									<el-input
 										v-model="scope.row.searchInfo"
 										size="medium"
@@ -90,10 +90,9 @@
 										style="width: 180px"
 									></el-input>
 								</span>
-								<span v-else>-</span>
 							</template>
 						</el-table-column>
-						<el-table-column prop="cardNumber" align="center" label="创建人">
+						<el-table-column prop="createdBy" align="center" label="创建人">
 							<template slot-scope="scope">
 								<span v-if="!!scope.row.createdBy">
 									{{ scope.row.createdBy }}
@@ -106,10 +105,9 @@
 							align="center"
 							label="创建时间"
 							width="180px"
-							sortable="custom"
 							:formatter="dateFormat"
 						></el-table-column>
-						<el-table-column prop="cnName" align="center" label="最新操作人">
+						<el-table-column prop="updatedBy" align="center" label="最新操作人">
 							<template slot-scope="scope">
 								<span v-if="!!scope.row.updatedBy">
 									{{ scope.row.updatedBy }}
@@ -122,7 +120,6 @@
 							align="center"
 							label="最新操作时间"
 							width="180px"
-							sortable="custom"
 							:formatter="dateFormat"
 						></el-table-column>
 						<el-table-column align="center" label="操作">
@@ -162,6 +159,7 @@ import { routerNames } from '@/utils/consts'
 import list from '@/mixins/list'
 import dayjs from 'dayjs'
 import Sortable from 'sortablejs'
+import { getUsername } from '@/utils/auth'
 
 export default {
 	name: routerNames.gameSearchManage,
@@ -182,18 +180,6 @@ export default {
 			event.preventDefault()
 			event.stopPropagation()
 		}
-
-		for (let i = 0; i < 5; i++) {
-			this.dataList[i] = {
-				bankCode: '165416416464654',
-				bankName: '中国银行',
-				createDt: '2021-02-13 20:28:54',
-				updateDt: '2021-02-13 20:28:54',
-				vipSerialNum: '115',
-				id: i + 100
-			}
-		}
-
 		this.columnDrop()
 	},
 	updated() {
@@ -289,7 +275,16 @@ export default {
 		addRow() {
 			const lastRow = this.dataList[this.dataList.length - 1]
 			const new_row = lastRow.id + 1
-			this.dataList.push({ id: new_row })
+			const displayOrder = lastRow.displayOrder + 1
+			this.dataList.push({
+				id: new_row,
+				updatedBy: getUsername(),
+				createdBy: getUsername(),
+                createdAt: new Date(),
+                updatedAt: new Date(),
+                displayOrder,
+                searchInfo: ''
+			})
 		},
 		deleteRow(val) {
 			const { id } = val
