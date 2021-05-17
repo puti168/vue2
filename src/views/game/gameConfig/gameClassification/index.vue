@@ -534,6 +534,7 @@ export default {
 		},
 		back() {
 			this.createPage = false
+            this.loadData()
 		},
 		recycle() {
 			this.$confirm(

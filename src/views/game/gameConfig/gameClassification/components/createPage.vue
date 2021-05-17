@@ -163,7 +163,7 @@ export default {
 			hasCheckedWHRightData: [] // 数据右边选中的数据
 		}
 	},
-	computed: {
+    computed: {
 		terminalTypeArr() {
 			return this.globalDics.terminalnType
 		},
@@ -171,6 +171,10 @@ export default {
 			return this.globalDics.gameDisplayType
 		}
 	},
+    created() {
+	    this.queryChildGame()
+        this.queryGame()
+    },
 	mounted() {
 		document.body.ondrop = function(event) {
 			event.preventDefault()
@@ -184,8 +188,6 @@ export default {
 		window.addEventListener('keyup', (e) => {
 			this.shiftKey = false
 		})
-
-        this.queryGame()
 		// const el = document
 		// 	.querySelector('.el-transfer')
 		// 	.querySelectorAll('.el-checkbox-group')[1]
@@ -248,6 +250,31 @@ export default {
                 }
 			})
 		},
+
+        // 子游戏查询
+        queryChildGame() {
+            this.gameNameList = []
+            const params = {
+                gameName: '',
+                gamePlatform: ''
+            }
+            this.$api.queryChildGameAPI(params).then((res) => {
+                const {
+                    code,
+                    data,
+                    msg
+                } = res
+                if (code === 200) {
+                    this.gameNameList = data || []
+                } else {
+                    this.loading = false
+                    this.$message({
+                        message: msg,
+                        type: 'error'
+                    })
+                }
+            })
+        },
 		handleWHLeftChange(key, key1) {
 			const _this = this
 			console.log(_this.hasCheckedWHLeftData)

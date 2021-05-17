@@ -21,7 +21,7 @@ export function queryChildGamePageAPI(data) {
 // 游戏配置==> 游戏分类管理 ===> 子游戏查询
 export function queryChildGameAPI(data) {
 	return request({
-		url: '/gameAssort/queryChildrenGamePage',
+		url: '/gameAssort/queryChildrenGame',
 		method: 'post',
 		data
 	})
