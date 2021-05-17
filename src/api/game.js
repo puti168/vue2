@@ -111,6 +111,14 @@ export function setUpdateDelete(data) {
 	})
 }
 //  游戏注单 ===> 游戏注单分页
+export function getMerchantGameGamePlant(data) {
+	return request({
+		url: '/merchantGame/gamePlant',
+		method: 'post',
+		data
+	})
+}
+//  游戏注单 ===> 游戏注单分页
 export function getGameRecordNotes(data) {
 	return request({
 		url: '/gameRecord/notes',
@@ -182,6 +190,7 @@ export default {
 	setUpdateStatus,
 	setUpdateLabel,
 	setUpdateDelete,
+	getMerchantGameGamePlant,
 	getGameRecordNotes,
 	getGameRecordDownload,
 	getGameRecordDetail,
