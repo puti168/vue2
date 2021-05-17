@@ -41,7 +41,7 @@
 							</el-form-item>
 						</el-col>
 						<el-col :span="12">
-							<el-form-item label="支持终端:" prop="supportTerminal">
+							<el-form-item label="支持终端:">
 								<el-select
 									v-model="supportTerminal"
 									size="medium"
@@ -93,7 +93,7 @@
 							</el-form-item>
 						</el-col>
 						<el-col :span="12">
-							<el-form-item label="关联推荐游戏:" prop="relationOtherGameId">
+							<el-form-item label="关联推荐游戏:">
 								<el-select
 									v-model="relationOtherGameId"
 									size="medium"
@@ -112,7 +112,7 @@
 							</el-form-item>
 						</el-col>
 						<el-col :span="12">
-							<el-form-item label="关联游戏模块:" prop="relationGameModuleName">
+							<el-form-item label="关联游戏模块:">
 								<el-select
 									v-model="relationGameModuleName"
 									size="medium"
@@ -217,6 +217,7 @@
 					<span class="img-title">客户端图片上传</span>
 					<el-form-item label="图片上传">
 						<!-- :upload-file-type="'image/jpeg'"
+							:platform="'PC'"
 							:bounds="imageSize" -->
 						<upload
 							ref="imgUpload"
@@ -361,9 +362,7 @@ export default {
 	mounted() {},
 	methods: {
 		confirm() {
-			this.$refs.form.validate((valid) => {
-				if (valid) {
-					const loading = this.$loading({
+			const loading = this.$loading({
 						lock: true,
 						text: 'Loading',
 						spinner: 'el-icon-loading',
@@ -395,11 +394,33 @@ export default {
 						.catch(() => {
 							loading.close()
 						})
-				}
-			})
+			// this.$refs.form.validate((valid) => {
+			// 	if (valid) {
+
+			// 	}
+			// })
 		},
 		handleStartUpload() {
 			this.$message.info('图片开始上传')
+			// this.$api.gameManagerUpload(params)
+			// 			.then((res) => {
+			// 				loading.close()
+			// 				if (res.code === 200) {
+			// 					this.$message({
+			// 						type: 'success',
+			// 						message: '操作成功!'
+			// 					})
+			// 					this.goBack()
+			// 				} else {
+			// 					this.$message({
+			// 						message: res.msg,
+			// 						type: 'error'
+			// 					})
+			// 				}
+			// 			})
+			// 			.catch(() => {
+			// 				loading.close()
+			// 			})
 		},
 		handleUploadSucess({ index, file, id }) {
 			this.form.imageAddress = file.imgUrl

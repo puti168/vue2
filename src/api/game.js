@@ -211,6 +211,13 @@ export function gameModuleNameList(data) {
 		data
 	})
 }
+export function addGame(data) {
+	return request({
+		url: '/gameManager/addGame',
+		method: 'post',
+		data
+	})
+}
 export function editGame(data) {
 	return request({
 		url: '/gameManager/editGame',
@@ -264,6 +271,7 @@ export default {
 	gameAssortListAPI,
 	gameList,
 	editGame,
+	addGame,
 	editGameStatus,
 	imageUpload,
 	gameModuleNameList,
