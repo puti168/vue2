@@ -46,7 +46,10 @@
       <el-col
 :span="5"
 >帐号状态：<i v-if="activeL" class="el-icon-loading"></i>
-        <div v-else style="width: 80%; display: inline-block">
+        <span v-else>{{
+          typeFilter(outlineInfoList.accountStatus, "accountStatusType")
+        }}</span>
+        <!-- <div v-else style="width: 80%; display: inline-block">
           <p v-if="outlineInfoList.accountStatus === '1'">
             <span>
               {{ typeFilter(outlineInfoList.accountStatus, "accountStatusType") }}
@@ -58,7 +61,7 @@
             </span>
             <span>审核中</span>
           </p>
-        </div>
+        </div> -->
       </el-col>
       <el-col
 :span="5"

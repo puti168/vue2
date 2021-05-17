@@ -39,7 +39,7 @@ class="blueColor"
 >点击查看全部场馆金额分布</el-button>
         <el-row v-show="!borderL" :class="{ borderL: !borderL }">
           <el-col v-for="item in balanceAllList" :key="item.gameCode" :span="8">
-            <span class="width70 paddingL">
+            <span v-show="item.gameName !== null" class="width70 paddingL">
               {{ item.gameName }}：({{ item.playName }})
             </span>
             <span class="blueColor width30 textR">{{ item.balance }}</span>
