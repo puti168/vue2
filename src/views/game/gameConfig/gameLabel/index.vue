@@ -250,7 +250,7 @@
         class="rempadding"
       >
         <el-divider></el-divider>
-        <div class="contentBox disableColor">标签名称：高频率（001）</div>
+        <div class="contentBox disableColor">标签名称：{{ labelName }}</div>
         <p class="headerBox">
           <span>游戏名称</span>
           <span>添加时间</span>
@@ -281,7 +281,8 @@ export default {
       dialogForm: {},
       gameList: [],
       dialogGameVisible: false,
-      title: ''
+      title: '',
+      labelName: ''
     }
   },
   computed: {},
@@ -305,21 +306,23 @@ export default {
       console.log(params)
     },
     lookGame(val) {
+      this.labelName = val.gameLabelName
       const data = {}
       data.gameLabelId = val.gameLabelId
       data.gameLabelName = val.gameLabelName
-      debugger
       this.$api.getGameLabelRelation(data).then((res) => {
         if (res.code === 200) {
-          this.gameList = res
+          this.gameList = res.data
           this.dialogGameVisible = true
         }
       })
     },
     reset() {
       this.queryData = {}
+      this.pageNum = 1
     },
     switchClick(val) {
+      const status = val.labelStatus === 0 ? 1 : 0
       this.$confirm(
         `<strong>是否对子游戏进行开启/维护/禁用操作?</strong></br><span style='font-size:12px;color:#c1c1c1'>一旦操作将会立即生效</span>`,
         `确认提示`,
@@ -331,24 +334,22 @@ export default {
         }
       )
         .then(() => {
-          this.$api
-            .setUpdateStatus({ id: val.gameLabelId, status: val.labelStatus })
-            .then((res) => {
-              if (res.code === 200) {
-                this.loadData()
-              }
-            })
+          this.$api.setUpdateStatus({ id: val.id, status: status }).then((res) => {
+            if (res.code === 200) {
+              this.loadData()
+            }
+          })
         })
         .catch(() => {})
     },
     edit(val) {
       this.title = '编辑'
-      this.dialogForm = {...val}
+      this.dialogForm = { ...val }
       this.dialogFormVisible = true
     },
     deleteLabel(val) {
       const data = {}
-      data.id = val.gameLabelId
+      data.id = val.id
       data.description = val.description
       data.gameLabelName = val.gameLabelName
       this.$confirm(`<strong>确定删除此条标签类型吗?</strong>`, `确认提示`, {
@@ -370,7 +371,7 @@ export default {
     subAddOrEidt() {
       console.log(this.title)
       const data = {}
-      data.id = this.dialogForm.gameLabelId
+      data.id = this.dialogForm.id
       data.description = this.dialogForm.description
       data.gameLabelName = this.dialogForm.gameLabelName
       this.$refs.formSub.validate((valid) => {

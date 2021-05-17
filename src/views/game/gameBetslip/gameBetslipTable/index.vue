@@ -1,11 +1,11 @@
 <template>
   <div class="game-container report-container">
-    <div class="view-container dealer-container">
+    <div v-if="gameType === 'init'" class="view-container dealer-container">
       <div class="params">
         <el-form ref="form" :inline="true" :model="queryData">
           <el-form-item label="注单号:">
             <el-input
-              v-model="queryData.bankCode"
+              v-model="queryData.id"
               clearable
               :maxlength="100"
               size="medium"
@@ -17,7 +17,7 @@
           </el-form-item>
           <el-form-item label="三方注单号:">
             <el-input
-              v-model="queryData.bankCode"
+              v-model="queryData.thirdOrderId"
               clearable
               :maxlength="100"
               size="medium"
@@ -45,7 +45,7 @@
           </el-form-item>
           <el-form-item label="结算时间:">
             <el-date-picker
-              v-model="searchTime"
+              v-model="netTime"
               size="medium"
               :picker-options="pickerOptions"
               format="yyyy-MM-dd HH:mm:ss"
@@ -61,23 +61,23 @@
           </el-form-item>
           <el-form-item label="游戏平台:" class="tagheight">
             <el-select
-              v-model="queryData.accountType"
-              style="width: 180px"
+              v-model="queryData.gameCode"
+              style="width: 200px"
               multiple
               placeholder="默认选择全部"
               :popper-append-to-body="false"
             >
               <el-option
-                v-for="item in accountType"
-                :key="item.code"
-                :label="item.description"
-                :value="item.code"
+                v-for="item in gameTypeList"
+                :key="item.gameCode"
+                :label="item.gameName"
+                :value="item.gameCode"
               ></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="游戏类型:">
             <el-input
-              v-model="queryData.bankName"
+              v-model="queryData.gameTypeName"
               clearable
               :maxlength="100"
               size="medium"
@@ -89,7 +89,7 @@
           </el-form-item>
           <el-form-item label="会员账号:">
             <el-input
-              v-model="queryData.bankCode"
+              v-model="queryData.memberName"
               clearable
               :maxlength="11"
               size="medium"
@@ -117,7 +117,7 @@
           </el-form-item>
           <el-form-item label="上级代理:">
             <el-input
-              v-model="queryData.bankCode"
+              v-model="queryData.parentProxyName"
               clearable
               :maxlength="11"
               size="medium"
@@ -129,7 +129,7 @@
           </el-form-item>
           <el-form-item label="游戏账号:">
             <el-input
-              v-model="queryData.bankCode"
+              v-model="queryData.playerName"
               clearable
               :maxlength="25"
               size="medium"
@@ -141,7 +141,7 @@
           </el-form-item>
           <el-form-item label="注单状态:" class="tagheight">
             <el-select
-              v-model="queryData.accountType1"
+              v-model="queryData.betStatus"
               style="width: 180px"
               clearable
               placeholder="默认选择全部"
@@ -149,57 +149,58 @@
             >
               <el-option label="已计算" value="1"></el-option>
               <el-option label="未计算" value="2"></el-option>
+              <el-option label="已取消" value="3"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="投注金额:">
             <el-input
-              v-model="queryData.offLineDaysStart"
+              v-model="queryData.betAmountMin"
               size="medium"
               placeholder="最小数值"
               style="width: 100px"
               :maxlength="10"
-              name="offLineDaysStart"
+              name="betAmountMin"
               oninput="value=value.replace(/[^\d]/g,'')"
               @blur="checkValue($event)"
             ></el-input>
             -
             <el-input
-              v-model="queryData.offLineDaysEnd"
+              v-model="queryData.betAmountMax"
               size="medium"
               placeholder="最大数值"
               style="width: 100px"
               :maxlength="10"
-              name="offLineDaysEnd"
+              name="betAmountMax"
               oninput="value=value.replace(/[^\d]/g,'')"
               @blur="checkValue($event)"
             ></el-input>
           </el-form-item>
           <el-form-item label="会员输赢:">
             <el-input
-              v-model="queryData.offLineDays"
+              v-model="queryData.netAmountMin"
               size="medium"
               placeholder="最小数值"
               style="width: 100px"
               :maxlength="10"
-              name="offLineDays"
+              name="netAmountMin"
               oninput="value=value.replace(/[^\d]/g,'')"
               @blur="checkValue($event)"
             ></el-input>
             -
             <el-input
-              v-model="queryData.offLine"
+              v-model="queryData.netAmountMax"
               size="medium"
               placeholder="最大数值"
               style="width: 100px"
               :maxlength="10"
-              name="offLine"
+              name="netAmountMax"
               oninput="value=value.replace(/[^\d]/g,'')"
               @blur="checkValue($event)"
             ></el-input>
           </el-form-item>
           <el-form-item label="投注IP:">
             <el-input
-              v-model="queryData.bankCode"
+              v-model="queryData.loginIp"
               clearable
               :maxlength="15"
               size="medium"
@@ -218,7 +219,7 @@
               :popper-append-to-body="false"
             >
               <el-option
-                v-for="item in deviceType"
+                v-for="item in betDeviceType"
                 :key="item.code"
                 :label="item.description"
                 :value="item.code"
@@ -243,29 +244,38 @@
             >
               重置
             </el-button>
+            <el-button
+              icon="el-icon-download"
+              type="warning"
+              :disabled="loading"
+              size="medium"
+              @click="exportExcel"
+            >
+              导出
+            </el-button>
           </el-form-item>
         </el-form>
         <div class="msgList">
           <p>
             <span>数据更新时间：</span><span>{{ now }}</span>
           </p>
-          <p>总注单数：{{ summary.count }}条</p>
+          <p>总注单数：{{ summary.totalCount }}条</p>
         </div>
         <div class="msgList">
           <p>
             <span class="normalRgba">已结算</span>
-            <span>{{ summary.successCount }}</span>
+            <span>{{ summary.settledCount }}</span>
             条
           </p>
           <p>
             <span class="deleteRgba">未结算</span>
-            <span>{{ summary.successCount }}</span>
+            <span>{{ summary.unSettledCount }}</span>
             条
           </p>
-          <p>投注金额：5000</p>
+          <p>投注金额：{{ summary.betAmount }}</p>
           <p>
             会员输赢：
-            <span class="redColor">{{ summary.successCount }}</span>
+            <span class="redColor">{{ summary.netAmount }}</span>
           </p>
         </div>
       </div>
@@ -280,11 +290,16 @@
           :header-cell-style="getRowClass"
           @sort-change="_changeTableSort"
         >
-          <el-table-column prop="vipSerialNum" align="center">
+          <el-table-column prop="id" align="center">
             <template slot="header">
               注单号
               <br />
               三方订单号
+            </template>
+            <template slot-scope="scope">
+              {{ scope.row.id }}
+              <br />
+              {{ scope.row.thirdId }}
             </template>
           </el-table-column>
           <el-table-column prop="bankName" align="center">
@@ -293,76 +308,99 @@
               <br />
               游戏类型
             </template>
-          </el-table-column>
-          <el-table-column prop="createDt" align="center" label="会员账号">
             <template slot-scope="scope">
-              <Copy v-if="!!scope.row.createDt" :title="scope.row.createDt" :copy="copy">
-                {{ scope.row.createDt }}
+              <span v-for="item in gameTypeList" :key="item.gameCode">
+                {{ item.gameCode === scope.row.gameCode ? item.gameName : "" }}
+              </span>
+              <br />
+              {{ scope.row.gameTypeName }}
+            </template>
+          </el-table-column>
+          <el-table-column prop="memberName" align="center" label="会员账号">
+            <template slot-scope="scope">
+              <Copy
+                v-if="!!scope.row.memberName"
+                :title="scope.row.memberName"
+                :copy="copy"
+              >
+                {{ scope.row.memberName }}
               </Copy>
+              <span v-else>-</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="accountType" align="center" label="账号类型">
+            <template slot-scope="scope">
+              {{ typeFilter(scope.row.accountType, "accountType") }}
+            </template>
+          </el-table-column>
+          <el-table-column prop="parentProxyName" align="center" label="上级代理">
+            <template slot-scope="scope">
+              <Copy
+                v-if="!!scope.row.parentProxyName"
+                :title="scope.row.parentProxyName"
+                :copy="copy"
+              >
+                {{ scope.row.parentProxyName }}
+              </Copy>
+              <span v-else>-</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="playerName" align="center" label="游戏账号">
+            <template slot-scope="scope">
+              <Copy
+                v-if="!!scope.row.playerName"
+                :title="scope.row.playerName"
+                :copy="copy"
+              >
+                {{ scope.row.playerName }}
+              </Copy>
+              <span v-else>-</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="betStatus" align="center" label="注单状态">
+            <template slot-scope="scope">
+              <span v-if="scope.row.betStatus === '1'" class="normalRgba">已结算</span>
+              <span
+v-else-if="scope.row.betStatus === '2'"
+class="deleteRgba"
+>未结算</span>
+              <span
+v-else-if="scope.row.betStatus === '3'"
+class="disableRgba"
+>已取消</span>
               <span v-else>-</span>
             </template>
           </el-table-column>
           <el-table-column
-            prop="updateDt"
-            align="center"
-            label="账号类型"
-          ></el-table-column>
-          <el-table-column prop="createDt" align="center" label="上级代理">
-            <template slot-scope="scope">
-              <Copy v-if="!!scope.row.createDt" :title="scope.row.createDt" :copy="copy">
-                {{ scope.row.createDt }}
-              </Copy>
-              <span v-else>-</span>
-            </template>
-          </el-table-column>
-          <el-table-column prop="createDt" align="center" label="游戏账号">
-            <template slot-scope="scope">
-              <Copy v-if="!!scope.row.createDt" :title="scope.row.createDt" :copy="copy">
-                {{ scope.row.createDt }}
-              </Copy>
-              <span v-else>-</span>
-            </template>
-          </el-table-column>
-          <el-table-column prop="" align="center" label="注单状态">
-            <template slot-scope="">
-              <span class="normalRgba">已结算</span>
-              <span class="deleteRgba">未结算</span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            prop="updateDt"
+            prop="betAmount"
             align="center"
             label="投注金额"
             sortable="custom"
           ></el-table-column>
           <el-table-column
-            prop="updateDt"
+            prop="netAmount"
             align="center"
             label="会员输赢"
             sortable="custom"
           ></el-table-column>
           <el-table-column
-            prop="updateDt"
+            prop="createAt"
             align="center"
             label="投注时间"
             sortable="custom"
           ></el-table-column>
           <el-table-column
-            prop="updateDt"
+            prop="netAt"
             align="center"
             label="结算时间"
             sortable="custom"
           ></el-table-column>
-          <el-table-column
-            prop="updateDt"
-            align="center"
-            label="投注IP"
-          ></el-table-column>
-          <el-table-column
-            prop="updateDt"
-            align="center"
-            label="投注终端"
-          ></el-table-column>
+          <el-table-column prop="loginIp" align="center" label="投注IP"></el-table-column>
+          <el-table-column prop="deviceType" align="center" label="投注终端">
+            <template slot-scope="scope">
+              {{ typeFilter(scope.row.deviceType, "betDeviceType") }}
+            </template>
+          </el-table-column>
           <el-table-column prop="operation" align="center" label="操作">
             <template slot-scope="scope">
               <el-button
@@ -390,6 +428,67 @@
         ></el-pagination>
       </div>
     </div>
+    <div v-else class="game-container report-container">
+      <div class="view-container dealer-container">
+        <div class="review-content">
+          <div class="head paddingLR">
+            <p class="title">注单详情</p>
+            <p class="right-btn">
+              <el-button plain @click="goBack">返回</el-button>
+            </p>
+          </div>
+          <strong class="paddingLR strong">投注人信息</strong>
+          <div class="paddingLR paddingB">
+            <el-row class="paddingLR">
+              <el-col :span="6">账号类型：  {{ typeFilter(scope.row.accountType, "accountType") }}</el-col>
+              <el-col :span="6">会员账号： {{ dataList.memberName }}</el-col>
+              <el-col :span="6">上级代理：{{ dataList.parentProxyName }}</el-col>
+              <el-col :span="6">VIP等级： {{ dataList.vipSerialNum }}</el-col>
+              <el-col :span="6">游戏账号： {{ dataList.playerName }}</el-col>
+              <el-col :span="6">
+                账号状态：
+                <span
+                  v-if="dataList.accountStatus && dataList.accountStatus === '1'"
+                  class="normalRgba"
+                >
+                  {{ typeFilter(dataList.accountStatus, "accountStatusType") }}
+                </span>
+                <span
+                  v-else-if="dataList.accountStatus && dataList.accountStatus === '2'"
+                  class="disableRgba"
+                >
+                  {{ typeFilter(dataList.accountStatus, "accountStatusType") }}
+                </span>
+                <span
+                  v-else-if="dataList.accountStatus && dataList.accountStatus === '3'"
+                  class="lockingRgba"
+                >
+                  {{ typeFilter(dataList.accountStatus, "accountStatusType") }}
+                </span>
+                <span
+                  v-else-if="dataList.accountStatus && dataList.accountStatus === '4'"
+                  class="deleteRgba"
+                >
+                  {{ typeFilter(dataList.accountStatus, "accountStatusType") }}
+                </span>
+              </el-col>
+              <el-col :span="6">该类游戏总输赢： {{ dataList.totalNetAmount }}</el-col>
+            </el-row>
+          </div>
+          <el-divider></el-divider>
+        </div>
+        <realDetails v-if="gameType === 'zr'" :dataList="dataList"></realDetails>
+        <chessDetails v-else-if="gameType === 'qp'" :dataList="dataList"></chessDetails>
+        <sportDetails v-else-if="gameType === 'ty'" :dataList="dataList"></sportDetails>
+        <eSportDetails v-else-if="gameType === 'dj'" :dataList="dataList"></eSportDetails>
+        <lotteryDetails
+          v-else-if="gameType === 'cp'"
+          :dataList="dataList"
+        ></lotteryDetails>
+        <eGameDetails v-else-if="gameType === 'dy'" :dataList="dataList"></eGameDetails>
+        <slotDetails v-else></slotDetails>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -397,125 +496,140 @@
 import list from '@/mixins/list'
 import dayjs from 'dayjs'
 import { routerNames } from '@/utils/consts'
+import realDetails from './components/realDetails'
+import chessDetails from './components/chessDetails'
+import sportDetails from './components/sportDetails'
+import eSportDetails from './components/eSportDetails'
+import lotteryDetails from './components/lotteryDetails'
+import eGameDetails from './components/eGameDetails'
+import slotDetails from './components/slotDetails'
 const startTime = dayjs().startOf('day').valueOf()
 const endTime = dayjs().endOf('day').valueOf()
 
 export default {
   name: routerNames.gameBetslipTable,
-  components: {},
+  components: {
+    realDetails,
+    chessDetails,
+    sportDetails,
+    eSportDetails,
+    lotteryDetails,
+    eGameDetails,
+    slotDetails
+  },
   mixins: [list],
   data() {
     return {
-      queryData: {
-        accountType: []
-      },
+      queryData: {},
+      gameTypeList: [],
       searchTime: [startTime, endTime],
+      netTime: [startTime, endTime],
       now: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
-      summary: {
-        count: 0,
-        failCount: 0,
-        successCount: 0
-      },
-      tableData: []
+      summary: {},
+      tableData: [],
+      gameType: 'init',
+      dataList: {}
     }
   },
   computed: {
     accountType() {
       return this.globalDics.accountType
     },
-    deviceType() {
-      return this.globalDics.deviceType
+    betDeviceType() {
+      return this.globalDics.betDeviceType
     }
   },
   mounted() {
-    this.tableData[0] = {
-      bankCode: '165416416464654',
-      bankName: '真人游戏',
-      createDt: '2021-02-13 20:28:54',
-      updateDt: '2021-02-13 20:28:54',
-      gameType: 'zr'
-    }
-    this.tableData[1] = {
-      bankCode: '165416416464654',
-      bankName: '棋牌游戏',
-      createDt: '2021-02-13 20:28:54',
-      updateDt: '2021-02-13 20:28:54',
-      gameType: 'qp'
-    }
-    this.tableData[2] = {
-      bankCode: '165416416464654',
-      bankName: '体育游戏',
-      createDt: '2021-02-13 20:28:54',
-      updateDt: '2021-02-13 20:28:54',
-      gameType: 'ty'
-    }
-    this.tableData[3] = {
-      bankCode: '165416416464654',
-      bankName: '电竞游戏',
-      createDt: '2021-02-13 20:28:54',
-      updateDt: '2021-02-13 20:28:54',
-      gameType: 'dj'
-    }
-    this.tableData[4] = {
-      bankCode: '165416416464654',
-      bankName: '彩票游戏',
-      createDt: '2021-02-13 20:28:54',
-      updateDt: '2021-02-13 20:28:54',
-      gameType: 'cp'
-    }
-    this.tableData[5] = {
-      bankCode: '165416416464654',
-      bankName: '电游游戏',
-      createDt: '2021-02-13 20:28:54',
-      updateDt: '2021-02-13 20:28:54',
-      gameType: 'dy'
-    }
-    this.tableData[6] = {
-      bankCode: '165416416464654',
-      bankName: '老虎机',
-      createDt: '2021-02-13 20:28:54',
-      updateDt: '2021-02-13 20:28:54',
-      gameType: 'lhj'
-    }
+    this.getGameTypeList()
   },
   methods: {
+    getGameTypeList() {
+      this.$api.getMerchantGameGamePlant().then((res) => {
+        if (res.code === 200) {
+          this.gameTypeList = res.data
+        }
+      })
+    },
     loadData() {
-      // this.loading = true;
+      this.loading = true
       const create = this.searchTime || []
+      const net = this.netTime || []
       const [startTime, endTime] = create
+      const [netAtStart, netAtEnd] = net
       let params = {
         ...this.queryData,
-        startTime: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : '',
-        endTime: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
+        createAtStart: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : '',
+        createAtEnd: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : '',
+        netAtStart: netAtStart ? dayjs(netAtStart).format('YYYY-MM-DD HH:mm:ss') : '',
+        netAtEnd: netAtEnd ? dayjs(netAtEnd).format('YYYY-MM-DD HH:mm:ss') : ''
       }
       params = {
         ...this.getParams(params)
       }
+      if (startTime && endTime && netAtStart && netAtEnd) {
+        this.$api
+          .getGameRecordNotes(params)
+          .then((res) => {
+            if (res.code === 200) {
+              this.tableData = res.data.record
+              this.total = res.data.totalRecord
+              this.summary = res.data.summary !== null ? res.data.summary : {}
+            }
+            this.loading = false
+          })
+          .catch(() => {
+            this.loading = false
+          })
+      } else {
+        this.$message.warning('请选择一个下注时间或者结算时间')
+      }
+
       console.log(params)
     },
     reset() {
       this.queryData = {}
+      this.searchTime = [startTime, endTime]
+      this.netTime = [startTime, endTime]
+      this.pageNum = 1
     },
     lookMsg(val) {
       console.log(val)
-      this.$store.dispatch('tagsView/delView', {
-        name: routerNames.gameBetslipDetails
+      const data = {}
+      data.createAt = val.createAt
+      data.gameCode = val.gameCode
+      data.id = val.thirdOrderId
+      const loading = this.$loading({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
       })
-      this.$nextTick(() => {
-        this.$router.push({
-          path: '/game/gameBetslip/gameBetslipDetails',
-          query: val
+      this.$api
+        .getGameRecordDetail(data)
+        .then((res) => {
+          if (res.code === 200) {
+            this.dataList = res.data.record
+            this.gameType = val.gameCode
+            loading.close()
+          }
+          console.log(res)
         })
-      })
-      // switch (val.gameType) {
-      //   case "zr":
-
-      //     break;
-      // }
+        .catch(() => {
+          loading.close()
+        })
     },
     _changeTableSort({ column, prop, order }) {
-      if (prop === 'vipSerialNum') {
+      if (prop === 'betAmount') {
         prop = 1
+      }
+      if (prop === 'netAmount') {
+        prop = 2
+      }
+      if (prop === 'createAt') {
+        prop = 3
+      }
+      if (prop === 'netAt') {
+        prop = 4
       }
       this.queryData.orderKey = prop
       if (order === 'ascending') {
@@ -530,31 +644,103 @@ export default {
     checkValue(e) {
       const { name, value } = e.target
       switch (name) {
-        case 'offLineDaysEnd':
+        case 'betAmountMax':
           if (
-            !!this.queryData.offLineDaysStart &&
+            !!this.queryData.betAmountMin &&
             value &&
-            value * 1 <= this.queryData.offLineDaysStart * 1
+            value * 1 <= this.queryData.betAmountMin * 1
           ) {
             this.$message({
               type: 'warning',
               message: `投注金额输入最大值不能小于最小值`
             })
+          } else {
+            this.queryData.betAmountMax = value
           }
           break
-        case 'offLine':
+        case 'netAmountMax':
           if (
-            !!this.queryData.offLineDays &&
+            !!this.queryData.netAmountMin &&
             value &&
-            value * 1 <= this.queryData.offLineDays * 1
+            value * 1 < this.queryData.netAmountMin * 1
           ) {
             this.$message({
               type: 'warning',
               message: `会员输赢输入最大值不能小于最小值`
             })
+          } else {
+            this.queryData.netAmountMax = value
           }
           break
       }
+    },
+    exportExcel() {
+      const create = this.queryData.registerTime || []
+      const [startTime, endTime] = create
+      let params = {
+        ...this.queryData,
+        createDtStart: startTime
+          ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
+          : undefined,
+        createDtEnd: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : undefined
+      }
+      params = {
+        ...this.getParams(params)
+      }
+      delete params.registerTime
+      delete params.lastLoginTime
+      delete params.firstSaveTime
+      delete params.accountStatus
+      delete params.deviceType
+      delete params.accountType
+      this.$api
+        .getGameRecordDownload(params)
+        .then((res) => {
+          const result = res.data
+          const disposition = res.headers['content-disposition']
+          if (disposition) {
+            const fileNames = disposition.split("''")
+            let fileName = fileNames[1]
+            fileName = decodeURIComponent(fileName)
+            const blob = new Blob([result], {
+              type: 'application/octet-stream'
+            })
+            if ('download' in document.createElement('a')) {
+              const elink = document.createElement('a')
+              elink.download = fileName || ''
+              elink.style.display = 'none'
+              elink.href = URL.createObjectURL(blob)
+              document.body.appendChild(elink)
+              elink.click()
+              URL.revokeObjectURL(elink.href)
+              document.body.removeChild(elink)
+            } else {
+              console.log('进来', 111)
+              window.navigator.msSaveBlob(blob, fileName)
+            }
+            this.$message({
+              type: 'success',
+              message: '导出成功',
+              duration: 1500
+            })
+          } else {
+            this.$message({
+              type: 'error',
+              message: '每10分钟导一次，请稍后再试',
+              duration: 1500
+            })
+          }
+        })
+        .catch(() => {
+          this.$message({
+            type: 'error',
+            message: '导出失败',
+            duration: 1500
+          })
+        })
+    },
+    goBack() {
+      this.gameType = 'init'
     },
     enterSubmit() {
       this.loadData()
@@ -585,5 +771,39 @@ export default {
   &:last-child p {
     margin-bottom: 15px;
   }
+}
+.view-container {
+  border: 1px solid #dcdfe6;
+  font-size: 14px;
+}
+.review-content {
+  line-height: 30px;
+}
+.paddingLR {
+  padding: 0 30px;
+}
+.head {
+  height: 70px;
+  line-height: 70px;
+  width: 100%;
+  background: #000;
+  border-radius: 2px;
+  display: flex;
+  justify-content: space-between;
+  .title {
+    font-weight: 600;
+    font-size: 16px;
+    color: rgb(192, 190, 190);
+  }
+  .right-btn {
+    float: right;
+  }
+}
+.strong {
+  height: 70px;
+  line-height: 80px;
+}
+.paddingB {
+  padding-bottom: 30px;
 }
 </style>

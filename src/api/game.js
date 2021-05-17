@@ -120,6 +120,14 @@ export function setUpdateDelete(data) {
 		data
 	})
 }
+//  游戏注单 ===> 游戏平台
+export function getMerchantGameGamePlant(data) {
+	return request({
+		url: '/merchantGame/gamePlant',
+		method: 'post',
+		data
+	})
+}
 //  游戏注单 ===> 游戏注单分页
 export function getGameRecordNotes(data) {
 	return request({
@@ -133,6 +141,7 @@ export function getGameRecordDownload(data) {
 	return request({
 		url: '/gameRecord/download',
 		method: 'post',
+		responseType: 'blob',
 		data
 	})
 }
@@ -152,6 +161,16 @@ export function getGameSearchLog(data) {
 		data
 	})
 }
+
+// 游戏配置==> 游戏搜索管理 ===> 列表
+export function gameSearchListAPI(data) {
+	return request({
+		url: '/obSearchConfig/select',
+		method: 'post',
+		data
+	})
+}
+
 // 游戏配置==> 游戏搜索管理 ===> 新增
 export function gameSearchCreateAPI(data) {
 	return request({
@@ -164,14 +183,16 @@ export function gameSearchCreateAPI(data) {
 // 游戏配置==> 游戏搜索管理 ===> 修改
 export function gameSearchUpdateAPI(data) {
 	return request({
-		url: '/obSearchConfig/update',
+		url: '/obSearchConfig/save',
 		method: 'post',
 		data
 	})
 }
-export function gameList(data) {
+
+// 游戏配置==> 游戏搜索管理 ===> 删除
+export function gameSearchDeleteAPI(data) {
 	return request({
-		url: '/gameManager/gameList',
+		url: '/obSearchConfig/delete',
 		method: 'post',
 		data
 	})
@@ -227,13 +248,14 @@ export function gamePlant(data) {
 }
 
 // 游戏配置==> 游戏搜索管理 ===> 删除
-export function gameSearchDeleteAPI(data) {
+export function gameList(data) {
 	return request({
-		url: '/obSearchConfig/delete',
+		url: '/gameManager/gameList',
 		method: 'post',
 		data
 	})
 }
+
 export default {
 	gameAssortListAPI,
 	gameList,
@@ -257,10 +279,12 @@ export default {
 	setUpdateStatus,
 	setUpdateLabel,
 	setUpdateDelete,
+	getMerchantGameGamePlant,
 	getGameRecordNotes,
 	getGameRecordDownload,
 	getGameRecordDetail,
 	getGameSearchLog,
+	gameSearchListAPI,
 	gameSearchCreateAPI,
 	gameSearchUpdateAPI,
 	gameSearchDeleteAPI

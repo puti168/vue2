@@ -8,7 +8,7 @@
 			<!--			>-->
 			<!--			</el-checkbox>-->
 			{{ title }}
-			<span>{{ checkedSummary }}</span>
+			<span>{{ !show ? checkedSummary : '' }}</span>
 		</p>
 		<div
 			:class="['el-transfer-panel__body', hasFooter ? 'is-with-footer' : '']"
@@ -52,21 +52,17 @@
 				:move="onMove"
 				@end="onEnd"
 			>
-				<li
-					v-for="item in selectedTheme"
-					:key="item.id"
-					class="selected-theme"
-				>
+				<li v-for="item in selectedTheme" :key="item.id" class="selected-theme">
 					{{ item.id }}{{ item.label }}
 				</li>
 			</draggable>
 			<draggable
 				v-show="!hasNoMatch && data.length > 0"
 				v-else
-                v-model="data"
+				v-model="data"
 				:class="{ 'is-filterable': filterable }"
 				class="el-transfer-panel__list"
-                v-bind="dragOptions"
+				v-bind="dragOptions"
 			>
 				<div
 					v-for="item in filteredData"
@@ -173,27 +169,27 @@ export default {
 			query: '',
 			inputHover: false,
 			checkChangeByUser: true,
-            selectedTheme: [
-                {
-                    id: 1,
-                    label: `老虎机`,
-                    status: '开启中'
-                },
-                {
-                    id: 2,
-                    label: `百人牛牛`,
-                    status: '已禁用'
-                },
-                {
-                    id: 4,
-                    label: `老虎机`,
-                    status: '开启中'
-                }
-            ],
-            backSelectedTheme: [], // 选主题列表备份
-            backUnSelectTheme: [], // 未选主题列表备份用于恢复默认设置
-            relatedListLast: {}, // 已选主题列表最后一项
-            isShowDel: false
+			selectedTheme: [
+				{
+					id: 1,
+					label: `老虎机`,
+					status: '开启中'
+				},
+				{
+					id: 2,
+					label: `百人牛牛`,
+					status: '已禁用'
+				},
+				{
+					id: 4,
+					label: `老虎机`,
+					status: '开启中'
+				}
+			],
+			backSelectedTheme: [], // 选主题列表备份
+			backUnSelectTheme: [], // 未选主题列表备份用于恢复默认设置
+			relatedListLast: {}, // 已选主题列表最后一项
+			isShowDel: false
 		}
 	},
 
@@ -355,9 +351,9 @@ export default {
 			const relatedElement = relatedContext.element
 			const draggedElement = draggedContext.element
 			const dragInEl = to['className']
-            console.log('relatedElement', relatedElement)
-            console.log('draggedElement', draggedElement)
-            console.log('dragInEl', dragInEl)
+			console.log('relatedElement', relatedElement)
+			console.log('draggedElement', draggedElement)
+			console.log('dragInEl', dragInEl)
 			if (dragInEl === 'selected-list') {
 				this.isShowDel = false
 				if (this.selectedTheme.length === 4) {
@@ -374,7 +370,7 @@ export default {
 		},
 		onEnd(dragObj) {
 			const dragInEl = dragObj.to['className']
-            console.log('dragInEl', dragObj)
+			console.log('dragInEl', dragObj)
 			if (dragInEl === 'selected-list') {
 				// if (this.selectedTheme.length > 4) {
 				// 	// 判断已选列表大于4项，将记录的最后一项过滤出来，并push到未选列表数组
@@ -427,26 +423,26 @@ export default {
 	}
 }
 .selected-list {
-    height: 240px;
-    margin-top: 24px;
-    overflow: hidden;
-    .selected-theme {
-        width: 160px;
-        height: 48px;
-        line-height: 48px;
-        text-align: center;
-        margin-bottom: 16px;
-        cursor: pointer;
-        background: linear-gradient(
-                180deg,
-                rgba(43, 46, 83, 1) 0%,
-                rgba(108, 116, 150, 1) 100%
-        );
-        border-radius: 6px;
-        font-size: 14px;
-        font-family: MicrosoftYaHei;
-        color: rgba(255, 255, 255, 1);
-    }
+	height: 240px;
+	margin-top: 24px;
+	overflow: hidden;
+	.selected-theme {
+		width: 160px;
+		height: 48px;
+		line-height: 48px;
+		text-align: center;
+		margin-bottom: 16px;
+		cursor: pointer;
+		background: linear-gradient(
+			180deg,
+			rgba(43, 46, 83, 1) 0%,
+			rgba(108, 116, 150, 1) 100%
+		);
+		border-radius: 6px;
+		font-size: 14px;
+		font-family: MicrosoftYaHei;
+		color: rgba(255, 255, 255, 1);
+	}
 }
 .theme-setting {
 	/deep/.el-dialog {
@@ -478,86 +474,86 @@ export default {
 		}
 	}
 
-    .theme-left {
-        width: 218px;
-        margin-left: 24px;
-        border-right: 1px solid rgba(13, 20, 30, 0.1);
-        .theme-title {
-            display: flex;
-            margin-top: 24px;
-            .title {
-                height: 19px;
-                margin-right: 4px;
-                font-size: 14px;
-                font-family: MicrosoftYaHei-Bold, MicrosoftYaHei;
-                font-weight: bold;
-                color: rgba(13, 20, 30, 1);
-                line-height: 19px;
-            }
-            .des {
-                height: 16px;
-                font-size: 12px;
-                font-family: MicrosoftYaHei;
-                color: rgba(13, 20, 30, 0.6);
-                line-height: 19px;
-            }
-        }
-    }
-    .theme-right {
-        padding: 0 24px;
-        .theme-right-title {
-            padding-top: 24px;
-            height: 19px;
-            font-size: 14px;
-            font-family: MicrosoftYaHei-Bold, MicrosoftYaHei;
-            font-weight: bold;
-            color: rgba(13, 20, 30, 0.4);
-            line-height: 19px;
-        }
-        .theme-right-list {
-            width: 357px;
-            height: 240px;
-            overflow: scroll;
-            margin-top: 24px;
-            .theme-right-item {
-                width: 160px;
-                height: 48px;
-                line-height: 48px;
-                float: left;
-                margin-right: 16px;
-                margin-bottom: 16px;
-                background: rgba(247, 248, 252, 1);
-                border-radius: 6px;
-                font-size: 14px;
-                font-family: MicrosoftYaHei;
-                color: rgba(13, 20, 30, 0.4);
-                text-align: center;
-                cursor: pointer;
-            }
-        }
-        .theme-right-list::before,
-        .theme-right-list::after {
-            content: '';
-            display: table;
-        }
-        .theme-right-list::after {
-            clear: both;
-        }
-    }
-    .drag-drop-del {
-        position: absolute;
-        right: 1px;
-        top: 0;
-        width: 404px;
-        height: 331px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        //background-image: url('../../../../../../src/assets/img/bb_logo.png');
-        img {
-            width: 96px;
-            height: 96px;
-        }
-    }
+	.theme-left {
+		width: 218px;
+		margin-left: 24px;
+		border-right: 1px solid rgba(13, 20, 30, 0.1);
+		.theme-title {
+			display: flex;
+			margin-top: 24px;
+			.title {
+				height: 19px;
+				margin-right: 4px;
+				font-size: 14px;
+				font-family: MicrosoftYaHei-Bold, MicrosoftYaHei;
+				font-weight: bold;
+				color: rgba(13, 20, 30, 1);
+				line-height: 19px;
+			}
+			.des {
+				height: 16px;
+				font-size: 12px;
+				font-family: MicrosoftYaHei;
+				color: rgba(13, 20, 30, 0.6);
+				line-height: 19px;
+			}
+		}
+	}
+	.theme-right {
+		padding: 0 24px;
+		.theme-right-title {
+			padding-top: 24px;
+			height: 19px;
+			font-size: 14px;
+			font-family: MicrosoftYaHei-Bold, MicrosoftYaHei;
+			font-weight: bold;
+			color: rgba(13, 20, 30, 0.4);
+			line-height: 19px;
+		}
+		.theme-right-list {
+			width: 357px;
+			height: 240px;
+			overflow: scroll;
+			margin-top: 24px;
+			.theme-right-item {
+				width: 160px;
+				height: 48px;
+				line-height: 48px;
+				float: left;
+				margin-right: 16px;
+				margin-bottom: 16px;
+				background: rgba(247, 248, 252, 1);
+				border-radius: 6px;
+				font-size: 14px;
+				font-family: MicrosoftYaHei;
+				color: rgba(13, 20, 30, 0.4);
+				text-align: center;
+				cursor: pointer;
+			}
+		}
+		.theme-right-list::before,
+		.theme-right-list::after {
+			content: '';
+			display: table;
+		}
+		.theme-right-list::after {
+			clear: both;
+		}
+	}
+	.drag-drop-del {
+		position: absolute;
+		right: 1px;
+		top: 0;
+		width: 404px;
+		height: 331px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		//background-image: url('../../../../../../src/assets/img/bb_logo.png');
+		img {
+			width: 96px;
+			height: 96px;
+		}
+	}
 }
 </style>
