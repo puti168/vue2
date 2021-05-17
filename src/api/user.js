@@ -148,6 +148,15 @@ export function addUser(data) {
 		data
 	})
 }
+
+// 会员管理==> 会员银行记录 ==> 列表
+export function gameHomeRecommendListAPI(data) {
+    return request({
+        url: '/gameCommonModule/gameModuleList',
+        method: 'post',
+        data
+    })
+}
 export default {
 	login,
 	logout,
@@ -165,5 +174,6 @@ export default {
 	exportExcelAPI,
 	addMemberAPI,
 	memberRegisterInfoListAPI,
-	bankRecordListAPI
+	bankRecordListAPI,
+    gameHomeRecommendListAPI
 }

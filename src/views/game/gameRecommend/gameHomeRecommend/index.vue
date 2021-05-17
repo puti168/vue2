@@ -18,38 +18,38 @@
 					@sort-change="changeTableSort"
 				>
 					<el-table-column
-						prop="code"
+						prop="moduleId"
 						align="center"
 						label="模块顺序"
 					></el-table-column>
 					<el-table-column
-						prop="bankName"
+						prop="moduleName"
 						align="center"
 						label="模块名称"
 					></el-table-column>
-					<el-table-column prop="status" align="center" label="状态">
+					<el-table-column prop="moduleStatus" align="center" label="状态">
 						<template slot-scope="scope">
 							<p
 								:class="
-									scope.row.status === '开启中' ? 'successState' : 'dangerState'
+									scope.row.moduleStatus === 1 ? 'successState' : 'dangerState'
 								"
 							>
-								{{ scope.row.status }}
+								{{ scope.row.moduleStatus===1 ? '开启中' : '已禁用' }}
 							</p>
 						</template>
 					</el-table-column>
 					<el-table-column
-						prop="bankName"
+						prop="description"
 						align="center"
 						label="模块描述"
 					></el-table-column>
 					<el-table-column
-						prop="bankName"
+						prop="updatedBy"
 						align="center"
 						label="最近操作人"
 					></el-table-column>
 					<el-table-column
-						prop="createDt"
+						prop="updatedAt"
 						align="center"
 						label="最近操作时间"
 						sortable="custom"
@@ -115,24 +115,42 @@ export default {
 	mixins: [list],
 	data() {
 		return {
-			queryData: {
-				accountType: '',
-				bankName: '',
-				dataType: 2,
-				operateType: '',
-				orderType: undefined,
-				parentProxyName: '',
-				userName: '',
-				virtualAddress: '',
-				virtualKind: [],
-				virtualProtocol: []
-			},
+            searchParams: {
+                pageSize: 10,
+                pageNum: 1,
+                terminalType: 1
+            },
+            searchData: {
+                allGameNum: 0,
+                assortId: 0,
+                bodyTitle: '',
+                contentInfor: '',
+                currentUserName: '',
+                description: '',
+                gameId: 0,
+                iconAddress: '',
+                mainTitleInfo: '',
+                moduleCaption: '',
+                moduleId: 0,
+                moduleStatus: 0,
+                pageNum: 0,
+                pageSize: 0,
+                pictureHome: '',
+                pictureOne: '',
+                pictureTwo: '',
+                scrollingNum: 0,
+                subTitleInfo: '',
+                terminalType: 0,
+                videoSourceAddress: ''
+            },
 			activeName: 'second',
 			formTime: {
 				time: [start, end]
 			},
 			dataList: [],
-			title: ''
+			title: '',
+            // 终端类型
+            terminalType: 1
 		}
 	},
 	computed: {
@@ -150,23 +168,15 @@ export default {
 		}
 	},
 	mounted() {
-		for (let i = 0; i < 10; i++) {
-			this.dataList[i] = {
-				bankCode: '165416416464654',
-				bankName: '中国银行',
-				status: '开启中',
-				code: 1,
-				createDt: '2021-02-13 20:28:54',
-				updateDt: '2021-02-13 20:28:54'
-			}
-		}
+        this.loadData()
 	},
 	methods: {
-		handleClick() {},
+		handleClick(value) {
+        },
 		loadData() {
 			const [startTime, endTime] = this.formTime.time || []
 			let params = {
-				...this.queryData,
+				...this.searchData,
 				createDtStart: startTime
 					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
 					: '',
@@ -180,13 +190,17 @@ export default {
 				return
 			}
 			params = {
+			    ...this.searchParams
+            }
+			params = {
 				...this.getParams(params)
 			}
 			this.loading = true
 
 			this.$api
-				.bankRecordListAPI(params)
+				.gameHomeRecommendListAPI(params)
 				.then((res) => {
+				    debugger
 					if (res.code === 200) {
 						const response = res.data
 						this.loading = false
@@ -200,7 +214,8 @@ export default {
 						})
 					}
 				})
-				.catch(() => {
+				.catch((res) => {
+				    debugger
 					this.loading = false
 				})
 		},
