@@ -9,10 +9,19 @@ export function gameAssortListAPI(data) {
 	})
 }
 
+// 游戏配置==> 游戏分类管理 ===> 子游戏分页查询
+export function queryChildGamePageAPI(data) {
+	return request({
+		url: '/gameAssort/queryChildrenGamePage',
+		method: 'post',
+		data
+	})
+}
+
 // 游戏配置==> 游戏分类管理 ===> 子游戏查询
 export function queryChildGameAPI(data) {
 	return request({
-		url: '/gameAssort/queryChildrenGame',
+		url: '/gameAssort/queryChildrenGamePage',
 		method: 'post',
 		data
 	})
@@ -137,6 +146,7 @@ export function gameSearchDeleteAPI(data) {
 }
 export default {
 	gameAssortListAPI,
+	queryChildGamePageAPI,
 	queryChildGameAPI,
 	gameDeleteAPI,
 	gameUpdateAPI,
