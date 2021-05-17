@@ -9,6 +9,15 @@ export function gameAssortListAPI(data) {
 	})
 }
 
+// 游戏配置==> 游戏分类管理 ===> 子游戏分页查询
+export function queryChildGamePageAPI(data) {
+	return request({
+		url: '/gameAssort/queryChildrenGamePage',
+		method: 'post',
+		data
+	})
+}
+
 // 游戏配置==> 游戏分类管理 ===> 子游戏查询
 export function queryChildGameAPI(data) {
 	return request({
@@ -35,10 +44,29 @@ export function gameUpdateAPI(data) {
 		data
 	})
 }
+
+// 游戏配置==> 游戏分类管理 ===> 编辑
+export function gameUpdateStatusAPI(data) {
+	return request({
+		url: '/gameAssort/updateStatus',
+		method: 'post',
+		data
+	})
+}
+
 // 游戏配置==> 游戏分类管理 ===> 创建
 export function gameCreateAPI(data) {
 	return request({
 		url: '/gameAssort/create',
+		method: 'post',
+		data
+	})
+}
+
+// 游戏配置==> 游戏分类管理 ===>游戏平台查询
+export function queryGameAPI(data) {
+	return request({
+		url: '/gameAssort/queryGame',
 		method: 'post',
 		data
 	})
@@ -92,6 +120,30 @@ export function setUpdateDelete(data) {
 		data
 	})
 }
+//  游戏注单 ===> 游戏注单分页
+export function getGameRecordNotes(data) {
+	return request({
+		url: '/gameRecord/notes',
+		method: 'post',
+		data
+	})
+}
+//  游戏注单 ===> 游戏注单列表导出
+export function getGameRecordDownload(data) {
+	return request({
+		url: '/gameRecord/download',
+		method: 'post',
+		data
+	})
+}
+//  游戏注单 ===> 获取注单明细
+export function getGameRecordDetail(data) {
+	return request({
+		url: '/gameRecord/detail',
+		method: 'post',
+		data
+	})
+}
 //  游戏搜索管理 ===> 游戏搜索日志
 export function getGameSearchLog(data) {
 	return request({
@@ -136,16 +188,22 @@ export function gameSearchDeleteAPI(data) {
 export default {
 	gameAssortListAPI,
 	gameList,
+	queryChildGamePageAPI,
 	queryChildGameAPI,
 	gameDeleteAPI,
 	gameUpdateAPI,
 	gameCreateAPI,
+	queryGameAPI,
+	gameUpdateStatusAPI,
 	getTabelData,
 	addObGameLabel,
 	getGameLabelRelation,
 	setUpdateStatus,
 	setUpdateLabel,
 	setUpdateDelete,
+	getGameRecordNotes,
+	getGameRecordDownload,
+	getGameRecordDetail,
 	getGameSearchLog,
 	gameSearchCreateAPI,
 	gameSearchUpdateAPI,
