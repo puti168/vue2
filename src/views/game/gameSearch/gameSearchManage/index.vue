@@ -18,7 +18,7 @@
 				>
 					<el-form-item label="历史游戏上限:">
 						<el-input
-							v-model="queryData.historyGameLimit"
+							v-model="queryData.historySearchGameLimit"
 							size="medium"
 							minlength="4"
 							maxlength="11"
@@ -30,7 +30,7 @@
 					</el-form-item>
 					<el-form-item label="热门搜索上限:">
 						<el-input
-							v-model="queryData.hotSearch"
+							v-model="queryData.hotSearchGameLimit"
 							size="medium"
 							minlength="4"
 							maxlength="11"
@@ -168,13 +168,13 @@ export default {
 		return {
 			loading: false,
 			queryData: {
-				historyGameLimit: undefined,
-				hotSearch: undefined
+				historySearchGameLimit: undefined,
+				hotSearchGameLimit: undefined
 			},
 			dataList: [],
 			idArray: [],
 			cloneArr: [],
-            createObSearchConfigReqList: []
+			createObSearchConfigReqList: []
 		}
 	},
 	computed: {},
@@ -237,31 +237,39 @@ export default {
 		},
 		save() {
 			// this.loading = true
-			const createObSearchConfigReqList = []
 			// const diff = this.dataList.filter(
 			// 	(key) => this.updateArr.indexOf(key.searchInfo) !== -1
 			// )
-			this.dataList.forEach((item) => {
-				let isExist = false
-				const itemId = item.searchInfo
-				this.cloneArr.forEach((lis) => {
-					const lisId = lis.searchInfo
-					if (itemId === lisId) {
-						isExist = true
-					}
-				})
-				if (!isExist) {
-					createObSearchConfigReqList.push({
+			// this.dataList.forEach((item) => {
+			// 	let isExist = false
+			// 	const itemId = item.searchInfo
+			// 	this.cloneArr.forEach((lis) => {
+			// 		const lisId = lis.searchInfo
+			// 		if (itemId === lisId) {
+			// 			isExist = true
+			// 		}
+			// 	})
+			// 	if (!isExist) {
+			// 		createObSearchConfigReqList.push({
+			// 			displayOrder: item.displayOrder,
+			// 			searchInfo: item.searchInfo
+			// 		})
+			// 	}
+			// })
+
+			const createObSearchConfigReqList =
+				this.dataList.map((item) => {
+					return {
 						displayOrder: item.displayOrder,
 						searchInfo: item.searchInfo
-					})
-				}
-			})
-			// console.log('总变更', createObSearchConfigReqList)
-
+					}
+				}) || []
+			console.log('createObSearchConfigReqList', createObSearchConfigReqList)
+			const { historySearchGameLimit, hotSearchGameLimit } = this.queryData
 			const params = {
 				createObSearchConfigReqList,
-				...this.form
+				historySearchGameLimit: historySearchGameLimit || '0',
+				hotSearchGameLimit: hotSearchGameLimit || '0'
 			}
 			this.$api
 				.gameSearchUpdateAPI(params)
@@ -293,8 +301,8 @@ export default {
 		reset() {
 			this.pageNum = 1
 			this.form = {
-				historyGameLimit: undefined,
-				hotSearch: undefined
+                historySearchGameLimit: undefined,
+                hotSearchGameLimit: undefined
 			}
 		},
 		checkValue(val) {},
@@ -394,22 +402,22 @@ export default {
 					}
 				})
 
-            this.dataList.forEach((item) => {
-                let isExist = false
-                const itemId = item.searchInfo
-                this.cloneArr.forEach((lis) => {
-                    const lisId = lis.searchInfo
-                    if (itemId === lisId) {
-                        isExist = true
-                    }
-                })
-                if (!isExist) {
-                    this.createObSearchConfigReqList.push({
-                        displayOrder: item.displayOrder,
-                        searchInfo: item.searchInfo
-                    })
-                }
-            })
+			// this.dataList.forEach((item) => {
+			// 	let isExist = false
+			// 	const itemId = item.searchInfo
+			// 	this.cloneArr.forEach((lis) => {
+			// 		const lisId = lis.searchInfo
+			// 		if (itemId === lisId) {
+			// 			isExist = true
+			// 		}
+			// 	})
+			// 	if (!isExist) {
+			// 		this.createObSearchConfigReqList.push({
+			// 			displayOrder: item.displayOrder,
+			// 			searchInfo: item.searchInfo
+			// 		})
+			// 	}
+			// })
 		}
 	}
 }
