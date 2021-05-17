@@ -217,7 +217,6 @@
 					<span class="img-title">客户端图片上传</span>
 					<el-form-item label="图片上传">
 						<!-- :upload-file-type="'image/jpeg'"
-							:platform="'PC'"
 							:bounds="imageSize" -->
 						<upload
 							ref="imgUpload"
@@ -401,25 +400,6 @@ export default {
 		},
 		handleStartUpload() {
 			this.$message.info('图片开始上传')
-			// this.$api.gameManagerUpload(params)
-			// 			.then((res) => {
-			// 				loading.close()
-			// 				if (res.code === 200) {
-			// 					this.$message({
-			// 						type: 'success',
-			// 						message: '操作成功!'
-			// 					})
-			// 					this.goBack()
-			// 				} else {
-			// 					this.$message({
-			// 						message: res.msg,
-			// 						type: 'error'
-			// 					})
-			// 				}
-			// 			})
-			// 			.catch(() => {
-			// 				loading.close()
-			// 			})
 		},
 		handleUploadSucess({ index, file, id }) {
 			this.form.imageAddress = file.imgUrl

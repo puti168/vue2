@@ -112,8 +112,9 @@ export default {
 			}
 			this.wss.onmessage = function(event) {
 				const jsonStr = thiss.decrypte(event.data)
+				return jsonStr
 				// console.log('jsonStr')
-				console.log(jsonStr)
+				// console.log(jsonStr)
 			}
 			this.wss.onclose = function() {
 				// console.log('断开')
