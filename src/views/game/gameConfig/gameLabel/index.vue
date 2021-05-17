@@ -343,7 +343,7 @@ export default {
     },
     edit(val) {
       this.title = '编辑'
-      this.dialogForm = val
+      this.dialogForm = {...val}
       this.dialogFormVisible = true
     },
     deleteLabel(val) {
