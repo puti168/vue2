@@ -1,6 +1,6 @@
 <template>
 	<div class="game-container report-container">
-		<div v-if="true" class="view-container dealer-container">
+		<div v-if="!showDetail" class="view-container dealer-container">
 			<div class="params">
 				<el-form ref="form" :inline="true" :model="queryData">
 					<el-form-item label="游戏标签ID:">
@@ -84,10 +84,10 @@
 							:popper-append-to-body="false"
 						>
 							<el-option
-								v-for="item in gameStatusType"
-								:key="item.code"
-								:label="item.description"
-								:value="item.code"
+								v-for="item in gameModuleNameList"
+								:key="item.moduleId"
+								:label="item.moduleName"
+								:value="item.moduleId"
 							></el-option>
 						</el-select>
 					</el-form-item>
@@ -100,10 +100,10 @@
 							:popper-append-to-body="false"
 						>
 							<el-option
-								v-for="item in gameStatusType"
-								:key="item.code"
-								:label="item.description"
-								:value="item.code"
+								v-for="item in gamePlantList"
+								:key="item.gameCode"
+								:label="item.gameName"
+								:value="item.gameCode"
 							></el-option>
 						</el-select>
 					</el-form-item>
@@ -116,10 +116,10 @@
 							:popper-append-to-body="false"
 						>
 							<el-option
-								v-for="item in gameStatusType"
-								:key="item.code"
-								:label="item.description"
-								:value="item.code"
+								v-for="item in labelList"
+								:key="item.gameLabelId"
+								:label="item.gameLabelName"
+								:value="item.gameLabelId"
 							></el-option>
 						</el-select>
 					</el-form-item>
@@ -160,117 +160,122 @@
 					border
 					size="mini"
 					class="small-size-table"
-					:data="tableData"
+					:data="list"
 					style="width: 100%"
 					:header-cell-style="getRowClass"
-					@sort-change="_changeTableSort"
+					@sort-change="changeTableSort"
 				>
 					<el-table-column
-						prop="vipSerialNum"
+						prop="gameId"
 						align="center"
 						label="游戏ID"
 						sortable="custom"
-						width="120px"
+						width="100px"
 					></el-table-column>
+					<el-table-column align="center" label="游戏平台" width="120px">
+						<template slot-scope="scope">
+							{{ gamePlantFilter(scope.row.gamePlatform) }}
+						</template>
+					</el-table-column>
 					<el-table-column
-						prop="content"
-						align="center"
-						label="游戏平台"
-						width="170px"
-					></el-table-column>
-					<el-table-column
-						prop="content"
+						prop="gameName"
 						align="center"
 						label="游戏名称"
-						width="170px"
+						width="120px"
 					></el-table-column>
-					<el-table-column
-						prop="bankName"
-						align="center"
-						label="状态"
-						width="100px"
-					>
+					<el-table-column align="center" label="显示状态" width="80px">
 						<template slot-scope="scope">
-							<div v-if="scope.row.code === 1" class="normalRgba">开启中</div>
-							<div v-else class="disableRgba">已禁用</div>
+							<span
+								:class="
+									Number(scope.row.gameStatus) === 0
+										? 'dangerState'
+										: Number(scope.row.gameStatus) === 1
+										? 'successState'
+										: 'warningState'
+								"
+							>
+								{{ typeFilter(scope.row.gameStatus, 'gameStatusType') }}
+							</span>
 						</template>
 					</el-table-column>
-					<el-table-column
-						prop="bankName"
-						align="center"
-						label="支持终端"
-					></el-table-column>
-					<el-table-column
-						prop="bankName"
-						align="center"
-						label="图标状态"
-					></el-table-column>
-					<el-table-column
-						prop="bankName"
-						align="center"
-						label="游戏图片"
-						width="120px"
-					>
+					<el-table-column align="center" label="支持终端">
 						<template slot-scope="scope">
-							<span class="text-link" @click="lookGame(scope.row.bankName)">
+							{{ typeFilter(scope.row.supportTerminal, 'terminalnType') }}
+						</template>
+					</el-table-column>
+					<el-table-column align="center" label="图标状态">
+						<template slot-scope="scope">
+							{{ typeFilter(scope.row.gameIcon, 'gameIconType') }}
+						</template>
+					</el-table-column>
+					<el-table-column align="center" label="游戏图片" width="80px">
+						<template slot-scope="scope">
+							<span class="text-link" @click="lookGame(scope.row.imageAddress)">
 								点击预览
 							</span>
-							<!-- <el-image
-								style="width: 100px; height: 100px"
-								:src="url"
-								:preview-src-list="srcList"
-							></el-image> -->
 						</template>
 					</el-table-column>
 					<el-table-column
-						prop="bankName"
+						prop="description"
 						align="center"
 						label="游戏描述"
-						width="100px"
 					></el-table-column>
 					<el-table-column
-						prop="createDt"
+						prop="relationOtherGameId"
+						align="center"
+						label="关联推荐游戏"
+						width="160px"
+					>
+						<template slot-scope="scope">
+							{{ moduleFilter(scope.row.relationOtherGameId) }}
+						</template>
+					</el-table-column>
+					<el-table-column
+						prop="relationOtherGameId"
 						align="center"
 						label="关联游戏模块"
-						sortable="custom"
 						width="160px"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							{{ moduleFilter(scope.row.relationOtherGameId) }}
+						</template>
+					</el-table-column>
 					<el-table-column
-						prop="bankName"
+						prop="gameLabelName"
 						align="center"
 						label="游戏标签"
 						width="100px"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							{{ labelListFilter(scope.row.gameLabelName) }}
+						</template>
+					</el-table-column>
 					<el-table-column
-						prop="createDt"
+						prop="remark"
 						align="center"
 						label="备注信息"
-						sortable="custom"
 						width="160px"
 					></el-table-column>
 					<el-table-column
-						prop="createDt"
+						prop="createdBy"
 						align="center"
 						label="创建人"
-						sortable="custom"
-						width="160px"
 					></el-table-column>
 					<el-table-column
-						prop="createDt"
+						prop="createdAt"
 						align="center"
 						label="创建时间"
 						sortable="custom"
 						width="160px"
 					></el-table-column>
 					<el-table-column
-						prop="createDt"
+						prop="updatedBy"
 						align="center"
 						label="最近操作人"
-						sortable="custom"
-						width="80px"
+						width="120px"
 					></el-table-column>
 					<el-table-column
-						prop="createDt"
+						prop="updatedAt"
 						align="center"
 						label="最近操作时间"
 						sortable="custom"
@@ -284,22 +289,34 @@
 					>
 						<template slot-scope="scope">
 							<el-button
-								:disabled="loading"
-								type="success"
-								size="medium"
-								class="noicon"
-								@click="reset"
-							>
-								维护
-							</el-button>
-							<el-button
+								v-if="Number(scope.row.gameStatus) !== 0"
 								:disabled="loading"
 								type="danger"
 								size="medium"
 								class="noicon"
-								@click="reset"
+								@click="changeStatus(scope.row.id, 0)"
 							>
 								禁用
+							</el-button>
+							<el-button
+								v-if="Number(scope.row.gameStatus) !== 1"
+								:disabled="loading"
+								type="success"
+								size="medium"
+								class="noicon"
+								@click="changeStatus(scope.row.id, 1)"
+							>
+								开启
+							</el-button>
+							<el-button
+								v-if="Number(scope.row.gameStatus) !== 2"
+								:disabled="loading"
+								type="success"
+								size="medium"
+								class="noicon"
+								@click="changeStatus(scope.row.id, 2)"
+							>
+								维护
 							</el-button>
 							<el-button
 								type="primary"
@@ -327,66 +344,24 @@
 				></el-pagination>
 			</div>
 			<el-dialog
-				title="创建/编辑"
-				:visible.sync="dialogFormVisible"
-				:destroy-on-close="true"
-				width="480px"
-				class="rempadding"
-			>
-				<el-divider></el-divider>
-				<el-form :model="dialogForm" label-width="90px">
-					<el-form-item
-						label="标签名称:"
-						prop="name"
-						:rules="[
-							{ required: true, message: '请输入标签名称', trigger: 'blur' },
-							{
-								min: 2,
-								max: 10,
-								message: '长度在 2 到 10 个字符',
-								trigger: 'blur'
-							}
-						]"
-					>
-						<el-input
-							v-model="dialogForm.name"
-							:maxlength="10"
-							autocomplete="off"
-						></el-input>
-					</el-form-item>
-					<el-form-item
-						label="描述:"
-						prop="remark"
-						:rules="[
-							{ required: true, message: '请输入描述内容', trigger: 'blur' },
-							{
-								min: 2,
-								max: 50,
-								message: '长度在 2 到 50 个字符',
-								trigger: 'blur'
-							}
-						]"
-					>
-						<el-input v-model="dialogForm.remark" type="textarea"></el-input>
-					</el-form-item>
-				</el-form>
-				<el-divider></el-divider>
-				<div slot="footer" class="dialog-footer">
-					<el-button @click="dialogFormVisible = false">取消</el-button>
-					<el-button type="primary" @click="subAddOrEidt">保存</el-button>
-				</div>
-			</el-dialog>
-			<el-dialog
 				title="图片"
 				:visible.sync="dialogGameVisible"
 				:destroy-on-close="true"
 				width="480px"
 				class="imgCenter"
 			>
-				<img src="@/assets/img/bb_bt_logout.png" />
+				<img :src="bigImage" />
 			</el-dialog>
 		</div>
-		<gameManagementEdit v-else></gameManagementEdit>
+		<gameManagementEdit
+			v-else
+			:rowData="rowData"
+			:editType="editType"
+			:labelList="labelList"
+			:gameModuleNameList="gameModuleNameList"
+			:gamePlantList="gamePlantList"
+			@closeEdit="closeEdit"
+		></gameManagementEdit>
 	</div>
 </template>
 
@@ -395,13 +370,6 @@ import list from '@/mixins/list'
 import gameManagementEdit from './components/gameManagementEdit'
 import dayjs from 'dayjs'
 import { routerNames } from '@/utils/consts'
-const startTime = dayjs()
-	.startOf('day')
-	.valueOf()
-const endTime = dayjs()
-	.endOf('day')
-	.valueOf()
-
 export default {
 	name: routerNames.gameManagement,
 	components: { gameManagementEdit },
@@ -419,18 +387,14 @@ export default {
 				supportTerminalList: [],
 				gameStatusList: []
 			},
-			url: '@/assets/img/logo.png',
-			srcList: '@/assets/img/logo.png',
-			searchTime: [startTime, endTime],
+			rowData: {},
+			showDetail: false,
+			labelList: {},
+			gameModuleNameList: {},
+			gamePlantList: {},
+			bigImage: '',
+			editType: '',
 			now: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
-			summary: {
-				count: 0,
-				failCount: 0,
-				successCount: 0
-			},
-			tableData: [],
-			dialogFormVisible: false,
-			dialogForm: {},
 			dialogGameVisible: false
 		}
 	},
@@ -445,7 +409,9 @@ export default {
 			return this.globalDics.gameIconType
 		}
 	},
-	mounted() {},
+	created() {
+		this.getList()
+	},
 	methods: {
 		loadData() {
 			const params = {
@@ -459,7 +425,7 @@ export default {
 					if (res.code === 200) {
 						const response = res.data
 						this.loading = false
-						this.dataList = response.record
+						this.list = response.record
 						this.total = response.totalRecord
 					} else {
 						this.loading = false
@@ -473,44 +439,146 @@ export default {
 					this.loading = false
 				})
 		},
+		getList() {
+			// 游戏标签
+			this.$api
+				.gameLabelList()
+				.then((res) => {
+					if (res.code === 200) {
+						this.labelList = res.data
+					} else {
+						this.$message({
+							message: res.msg,
+							type: 'error'
+						})
+					}
+				})
+				.catch(() => {})
+			// 关联推荐游戏
+			this.$api
+				.gameModuleNameList()
+				.then((res) => {
+					if (res.code === 200) {
+						this.gameModuleNameList = res.data
+					} else {
+						this.$message({
+							message: res.msg,
+							type: 'error'
+						})
+					}
+				})
+				.catch(() => {})
+			// 游戏平台
+			this.$api
+				.gamePlant()
+				.then((res) => {
+					if (res.code === 200) {
+						this.gamePlantList = res.data
+					} else {
+						this.$message({
+							message: res.msg,
+							type: 'error'
+						})
+					}
+				})
+				.catch(() => {})
+		},
+		gamePlantFilter(val) {
+			let name = ''
+			this.gamePlantList.forEach((item) => {
+				if (item.gameCode === val) {
+					name = item.gameName
+				}
+			})
+			return name
+		},
+		moduleFilter(val) {
+			let name = ''
+			this.gameModuleNameList.forEach((item) => {
+				if (item.moduleId === val) {
+					name = item.moduleName
+				}
+			})
+			return name
+		},
+		labelListFilter(val) {
+			let name = ''
+			this.labelList.forEach((item) => {
+				if (item.gameLabelId === val) {
+					name = item.gameLabelName
+				}
+			})
+			return name
+		},
 		lookGame(val) {
 			this.dialogGameVisible = true
-			console.log(val)
+			this.bigImage = val
 		},
 		openEdit(row) {
+			console.log('r')
+			console.log(row)
+			this.showDetail = true
 			if (row) {
-				this.$router.push({
-					path: '/game/gameConfig/gameManagementEdit',
-					query: { id: row.id, userId: row.userId }
-				})
+				this.rowData = row
+				this.editType = 'edit'
 			} else {
-				this.$router.push({
-					path: '/game/gameConfig/gameManagementEdit'
-				})
+				this.rowData = {}
+				this.editType = 'add'
 			}
+		},
+		closeEdit() {
+			this.showDetail = false
+		},
+		changeStatus(id, type) {
+			this.$confirm(
+				`<strong>是否对子游戏进行${
+					Number(type) === 0 ? '禁用' : Number(type) === 1 ? '开启' : '维护'
+				}操作?</strong></br><span style='font-size:12px;color:#c1c1c1'>一旦操作将会立即生效</span>`,
+				'确认提示',
+				{
+					dangerouslyUseHTMLString: true,
+					confirmButtonText: '确定',
+					cancelButtonText: '取消',
+					type: 'warning'
+				}
+			)
+				.then(() => {
+					this.$api
+						.editGameStatus({
+							id: id,
+							gameStatus: type
+						})
+						.then((res) => {
+							if (res.code === 200) {
+								this.$message({
+									message: '操作成功！',
+									type: 'success'
+								})
+								this.loadData()
+							} else {
+								this.$message({
+									message: res.msg,
+									type: 'error'
+								})
+							}
+						})
+						.catch(() => {})
+				})
+				.catch(() => {})
 		},
 		reset() {
-			this.queryData = {}
-		},
-		edit(val) {
-			this.dialogFormVisible = true
-			console.log(val)
-		},
-		subAddOrEidt() {
-			this.dialogFormVisible = false
-		},
-		_changeTableSort({ column, prop, order }) {
-			if (prop === 'vipSerialNum') {
-				prop = 1
+			this.queryData = {
+				gameId: '',
+				gameName: '',
+				accountType: [],
+				gameLabelIdList: [],
+				gamePlatformList: [],
+				gameIconList: [],
+				relationOtherGameIdList: [],
+				supportTerminalList: [],
+				gameStatusList: []
 			}
-			this.queryData.orderKey = prop
-			if (order === 'ascending') {
-				// 升序
-				this.queryData.orderType = 'asc'
-			} else if (column.order === 'descending') {
-				// 降序
-				this.queryData.orderType = 'desc'
-			}
+			this.pageNum = 1
 			this.loadData()
 		},
 		enterSubmit() {

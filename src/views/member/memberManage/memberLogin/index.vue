@@ -338,6 +338,7 @@ export default {
 				deviceType: [],
 				deviceNo: ''
 			}
+			this.pageNum = 1
 			this.accountType1 = []
 			this.deviceType1 = []
 			this.formTime.time = [start, end]
