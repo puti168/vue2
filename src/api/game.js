@@ -197,6 +197,57 @@ export function gameSearchDeleteAPI(data) {
 		data
 	})
 }
+export function gameLabelList(data) {
+	return request({
+		url: '/gameManager/gameLabelList',
+		method: 'post',
+		data
+	})
+}
+export function gameModuleNameList(data) {
+	return request({
+		url: '/gameManager/gameModuleNameList',
+		method: 'post',
+		data
+	})
+}
+export function editGame(data) {
+	return request({
+		url: '/gameManager/editGame',
+		method: 'post',
+		data
+	})
+}
+export function gameManagerUpload(data) {
+	return request({
+		url: '/gameManager/upload',
+		method: 'post',
+		data
+	})
+}
+export function editGameStatus(data) {
+	return request({
+		url: '/gameManager/editStatus',
+		method: 'post',
+		data
+	})
+}
+export function gameManageDetail(data) {
+	return request({
+		url: '/gameManager/gameManageDetail',
+		method: 'post',
+		data
+	})
+}
+export function gamePlant(data) {
+	return request({
+		url: '/merchantGame/gamePlant',
+		method: 'post',
+		data
+	})
+}
+
+// 游戏配置==> 游戏搜索管理 ===> 删除
 export function gameList(data) {
 	return request({
 		url: '/gameManager/gameList',
@@ -208,6 +259,13 @@ export function gameList(data) {
 export default {
 	gameAssortListAPI,
 	gameList,
+	editGame,
+	editGameStatus,
+	gameManagerUpload,
+	gameModuleNameList,
+	gamePlant,
+	gameManageDetail,
+	gameLabelList,
 	queryChildGamePageAPI,
 	queryChildGameAPI,
 	gameDeleteAPI,
