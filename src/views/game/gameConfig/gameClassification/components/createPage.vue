@@ -32,7 +32,7 @@
 							v-model="queryData.assortSort"
 							size="medium"
 							maxlength="11"
-							oninput="value=value.replace(/(^\s*)|(\s*$)/g ,'')"
+							onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
 							placeholder="请输入"
 							clearable
 							style="width: 180px"
@@ -98,6 +98,7 @@
 							v-model="value"
 							filterable
 							:data="data"
+							:gameNameList="gameNameList"
 							:filter-method="filterMethod"
 							:target-order="'push'"
 							:titles="['已包含', '游戏平台']"
@@ -151,7 +152,7 @@ export default {
 				clientDisplay: undefined
 			},
 			dataList: [],
-            gameNameList: [],
+			gameNameList: [],
 			data: generateData(),
 			value: [4, 2, 1],
 			shiftKey: false,
@@ -163,7 +164,7 @@ export default {
 			hasCheckedWHRightData: [] // 数据右边选中的数据
 		}
 	},
-    computed: {
+	computed: {
 		terminalTypeArr() {
 			return this.globalDics.terminalnType
 		},
@@ -171,10 +172,10 @@ export default {
 			return this.globalDics.gameDisplayType
 		}
 	},
-    created() {
-	    this.queryChildGame()
-        this.queryGame()
-    },
+	created() {
+		this.queryChildGame()
+		this.queryGame()
+	},
 	mounted() {
 		document.body.ondrop = function(event) {
 			event.preventDefault()
@@ -228,53 +229,45 @@ export default {
 		},
 		// 游戏平台查询
 		queryGame() {
-            this.gameNameList = []
+			this.gameNameList = []
 			const params = {
 				gameName: '',
 				gamePlatform: ''
 			}
 			this.$api.queryGameAPI(params).then((res) => {
-                const {
-                    code,
-                    data,
-                    msg
-                } = res
-                if (code === 200) {
-                    this.gameNameList = data || []
-                } else {
-                    this.loading = false
-                    this.$message({
-                        message: msg,
-                        type: 'error'
-                    })
-                }
+				const { code, data, msg } = res
+				if (code === 200) {
+					this.gameNameList = data || []
+				} else {
+					this.loading = false
+					this.$message({
+						message: msg,
+						type: 'error'
+					})
+				}
 			})
 		},
 
-        // 子游戏查询
-        queryChildGame() {
-            this.gameNameList = []
-            const params = {
-                gameName: '',
-                gamePlatform: ''
-            }
-            this.$api.queryChildGameAPI(params).then((res) => {
-                const {
-                    code,
-                    data,
-                    msg
-                } = res
-                if (code === 200) {
-                    this.gameNameList = data || []
-                } else {
-                    this.loading = false
-                    this.$message({
-                        message: msg,
-                        type: 'error'
-                    })
-                }
-            })
-        },
+		// 子游戏查询
+		queryChildGame() {
+			this.gameNameList = []
+			const params = {
+				gameName: '',
+				gamePlatform: ''
+			}
+			this.$api.queryChildGameAPI(params).then((res) => {
+				const { code, data, msg } = res
+				if (code === 200) {
+					this.gameNameList = data || []
+				} else {
+					this.loading = false
+					this.$message({
+						message: msg,
+						type: 'error'
+					})
+				}
+			})
+		},
 		handleWHLeftChange(key, key1) {
 			const _this = this
 			console.log(_this.hasCheckedWHLeftData)
