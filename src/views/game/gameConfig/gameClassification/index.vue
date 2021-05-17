@@ -412,13 +412,13 @@ export default {
 	},
 	computed: {
 		assortStatusArr() {
-			return [...this.globalDics.gameStatusType]
+			return this.globalDics.gameStatusType
 		},
 		terminalTypeArr() {
-			return [...this.globalDics.terminalnType]
+			return this.globalDics.terminalnType
 		},
 		gameDisplayArr() {
-			return [...this.globalDics.gameDisplayType]
+			return this.globalDics.gameDisplayType
 		}
 	},
 	created() {},
@@ -561,7 +561,7 @@ export default {
 				pageSize: 10
 			}
 			this.$api
-				.queryChildGameAPI(params)
+				.queryChildGamePageAPI(params)
 				.then((res) => {
 					console.log('分类res', res)
 					const {
