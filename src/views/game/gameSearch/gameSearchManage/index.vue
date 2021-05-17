@@ -172,7 +172,7 @@ export default {
 				hotSearch: undefined
 			},
 			dataList: [],
-			idArr: []
+			idArray: []
 		}
 	},
 	computed: {},
@@ -208,12 +208,10 @@ export default {
 					if (code === 200) {
 						this.loading = false
 						this.dataList = obSearchConfigList || []
-						this.idArr =
+						this.idArray =
 							obSearchConfigList &&
 							obSearchConfigList.length &&
-							obSearchConfigList.filter((item) => item.id)
-
-						console.log(this.idArr)
+							obSearchConfigList.map((item) => item.id)
 					} else {
 						this.loading = false
 						this.$message({
@@ -289,45 +287,54 @@ export default {
 		},
 		deleteRow(val) {
 			const { id } = val
+			const loading = this.$loading({
+				lock: true,
+				text: 'Loading',
+				spinner: 'el-icon-loading',
+				background: 'rgba(0, 0, 0, 0.7)'
+			})
 			this.$confirm('确定删除此游戏吗?', {
 				confirmButtonText: '确定',
 				cancelButtonText: '取消',
 				type: 'warning'
 			})
 				.then(() => {
-					const loading = this.$loading({
-						lock: true,
-						text: 'Loading',
-						spinner: 'el-icon-loading',
-						background: 'rgba(0, 0, 0, 0.7)'
-					})
-					this.$api
-						.gameSearchDeleteAPI({ id })
-						.then((res) => {
-							loading.close()
-							const { code } = res
-							if (code === 200) {
-								this.$message({
-									type: 'success',
-									message: '删除成功!'
-								})
-							} else {
+					if (this.idArray.includes(id)) {
+						this.$api
+							.gameSearchDeleteAPI({ id })
+							.then((res) => {
+								loading.close()
+								const { code } = res
+								if (code === 200) {
+									this.$message({
+										type: 'success',
+										message: '删除成功!'
+									})
+								} else {
+									this.$message({
+										type: 'error',
+										message: '删除失败!'
+									})
+								}
+								this.loadData()
+							})
+							.catch(() => {
+								loading.close()
 								this.$message({
 									type: 'error',
 									message: '删除失败!'
 								})
-							}
-							this.loadData()
-						})
-						.catch(() => {
-							loading.close()
-							this.$message({
-								type: 'error',
-								message: '删除失败!'
 							})
-						})
+					} else {
+						loading.close()
+					}
 				})
-				.catch(() => {})
+				.catch(() => {
+					loading.close()
+				})
+			setTimeout(() => {
+				loading.close()
+			}, 1500)
 		},
 
 		// 列拖动
