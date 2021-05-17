@@ -265,6 +265,7 @@ export default {
 			}, 1000)
 		},
 		reset() {
+		    this.pageNum = 1
 			this.form = {
 				historyGameLimit: undefined,
 				hotSearch: undefined
