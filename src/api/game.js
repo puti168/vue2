@@ -101,6 +101,30 @@ export function setUpdateDelete(data) {
 		data
 	})
 }
+//  游戏注单 ===> 游戏注单分页
+export function getGameRecordNotes(data) {
+	return request({
+		url: '/gameRecord/notes',
+		method: 'post',
+		data
+	})
+}
+//  游戏注单 ===> 游戏注单列表导出
+export function getGameRecordDownload(data) {
+	return request({
+		url: '/gameRecord/download',
+		method: 'post',
+		data
+	})
+}
+//  游戏注单 ===> 获取注单明细
+export function getGameRecordDetail(data) {
+	return request({
+		url: '/gameRecord/detail',
+		method: 'post',
+		data
+	})
+}
 //  游戏搜索管理 ===> 游戏搜索日志
 export function getGameSearchLog(data) {
 	return request({
