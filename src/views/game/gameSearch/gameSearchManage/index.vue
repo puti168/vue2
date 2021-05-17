@@ -4,7 +4,7 @@
 			<div class="form-header">
 				<span>游戏搜索管理</span>
 				<span>
-					<el-button type="success">保存</el-button>
+					<el-button type="success" @click="save">保存</el-button>
 				</span>
 			</div>
 			<div class="content-part2">
@@ -18,7 +18,7 @@
 				>
 					<el-form-item label="历史游戏上限:">
 						<el-input
-							v-model="queryData.historyGameLimit"
+							v-model="queryData.historySearchGameLimit"
 							size="medium"
 							minlength="4"
 							maxlength="11"
@@ -30,7 +30,7 @@
 					</el-form-item>
 					<el-form-item label="热门搜索上限:">
 						<el-input
-							v-model="queryData.hotSearch"
+							v-model="queryData.hotSearchGameLimit"
 							size="medium"
 							minlength="4"
 							maxlength="11"
@@ -168,11 +168,13 @@ export default {
 		return {
 			loading: false,
 			queryData: {
-				historyGameLimit: undefined,
-				hotSearch: undefined
+				historySearchGameLimit: undefined,
+				hotSearchGameLimit: undefined
 			},
 			dataList: [],
-			idArray: []
+			idArray: [],
+			cloneArr: [],
+			createObSearchConfigReqList: []
 		}
 	},
 	computed: {},
@@ -184,7 +186,7 @@ export default {
 		this.columnDrop()
 	},
 	updated() {
-		console.log('新表格数据', this.dataList)
+		// console.log('新表格数据', this.dataList)
 	},
 	methods: {
 		loadData() {
@@ -207,6 +209,7 @@ export default {
 					} = res
 					if (code === 200) {
 						this.loading = false
+						this.cloneArr = JSON.parse(JSON.stringify(obSearchConfigList))
 						this.dataList = obSearchConfigList || []
 						this.idArray =
 							obSearchConfigList &&
@@ -233,9 +236,40 @@ export default {
 			return dayjs(cellValue).format('YY-MM-DD HH:mm')
 		},
 		save() {
-			this.loading = true
+			// this.loading = true
+			// const diff = this.dataList.filter(
+			// 	(key) => this.updateArr.indexOf(key.searchInfo) !== -1
+			// )
+			// this.dataList.forEach((item) => {
+			// 	let isExist = false
+			// 	const itemId = item.searchInfo
+			// 	this.cloneArr.forEach((lis) => {
+			// 		const lisId = lis.searchInfo
+			// 		if (itemId === lisId) {
+			// 			isExist = true
+			// 		}
+			// 	})
+			// 	if (!isExist) {
+			// 		createObSearchConfigReqList.push({
+			// 			displayOrder: item.displayOrder,
+			// 			searchInfo: item.searchInfo
+			// 		})
+			// 	}
+			// })
+
+			const createObSearchConfigReqList =
+				this.dataList.map((item) => {
+					return {
+						displayOrder: item.displayOrder,
+						searchInfo: item.searchInfo
+					}
+				}) || []
+			console.log('createObSearchConfigReqList', createObSearchConfigReqList)
+			const { historySearchGameLimit, hotSearchGameLimit } = this.queryData
 			const params = {
-				...this.form
+				createObSearchConfigReqList,
+				historySearchGameLimit: historySearchGameLimit || '0',
+				hotSearchGameLimit: hotSearchGameLimit || '0'
 			}
 			this.$api
 				.gameSearchUpdateAPI(params)
@@ -265,10 +299,10 @@ export default {
 			}, 1000)
 		},
 		reset() {
-		    this.pageNum = 1
+			this.pageNum = 1
 			this.form = {
-				historyGameLimit: undefined,
-				hotSearch: undefined
+                historySearchGameLimit: undefined,
+                hotSearchGameLimit: undefined
 			}
 		},
 		checkValue(val) {},
@@ -285,6 +319,15 @@ export default {
 				displayOrder,
 				searchInfo: ''
 			})
+			// this.updateArr.push({
+			// 	id: new_row,
+			// 	updatedBy: getUsername(),
+			// 	createdBy: getUsername(),
+			// 	createdAt: new Date(),
+			// 	updatedAt: new Date(),
+			// 	displayOrder,
+			// 	searchInfo: ''
+			// })
 		},
 		deleteRow(val) {
 			const { id } = val
@@ -327,7 +370,12 @@ export default {
 								})
 							})
 					} else {
-						loading.close()
+						this.dataList = this.dataList.filter((item) => {
+							return item.id !== id
+						})
+						// this.updateArr = this.updateArr.filter((item) => {
+						// 	return item.id !== id
+						// })
 					}
 				})
 				.catch(() => {
@@ -353,6 +401,23 @@ export default {
 						_this.dataList.splice(newIndex, 0, currRow)
 					}
 				})
+
+			// this.dataList.forEach((item) => {
+			// 	let isExist = false
+			// 	const itemId = item.searchInfo
+			// 	this.cloneArr.forEach((lis) => {
+			// 		const lisId = lis.searchInfo
+			// 		if (itemId === lisId) {
+			// 			isExist = true
+			// 		}
+			// 	})
+			// 	if (!isExist) {
+			// 		this.createObSearchConfigReqList.push({
+			// 			displayOrder: item.displayOrder,
+			// 			searchInfo: item.searchInfo
+			// 		})
+			// 	}
+			// })
 		}
 	}
 }
