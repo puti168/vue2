@@ -551,7 +551,7 @@ export default {
 	},
 	computed: {
 		accountStatusArr() {
-			return [...this.globalDics.accountStatusType]
+			return this.globalDics.accountStatusType
 		},
 		accountTypeArr() {
 			return this.globalDics.accountType

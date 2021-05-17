@@ -434,9 +434,18 @@ export default {
 			params = {
 				...this.getParams(params)
 			}
-			delete params.assortStatus
-			delete params.supportTerminal
-			delete params.clientDisplay
+			params.assortStatus =
+				params.assortStatus && params.assortStatus.length
+					? params.assortStatus.join(',')
+					: undefined
+			params.supportTerminal =
+				params.supportTerminal && params.supportTerminal.length
+					? params.deviceType.join(',')
+					: undefined
+			params.clientDisplay =
+				params.clientDisplay && params.clientDisplay.length
+					? params.clientDisplay.join(',')
+					: undefined
 
 			this.$api
 				.gameAssortListAPI(params)
