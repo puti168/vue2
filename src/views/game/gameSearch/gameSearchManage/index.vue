@@ -171,7 +171,8 @@ export default {
 				historyGameLimit: undefined,
 				hotSearch: undefined
 			},
-			dataList: []
+			dataList: [],
+			idArr: []
 		}
 	},
 	computed: {},
@@ -207,6 +208,12 @@ export default {
 					if (code === 200) {
 						this.loading = false
 						this.dataList = obSearchConfigList || []
+						this.idArr =
+							obSearchConfigList &&
+							obSearchConfigList.length &&
+							obSearchConfigList.filter((item) => item.id)
+
+						console.log(this.idArr)
 					} else {
 						this.loading = false
 						this.$message({
@@ -227,45 +234,39 @@ export default {
 			}
 			return dayjs(cellValue).format('YY-MM-DD HH:mm')
 		},
-		add() {
+		save() {
 			this.loading = true
 			const params = {
 				...this.form
 			}
-			this.$refs['form'].validate((valid) => {
-				console.log('valid', valid)
-				if (valid) {
-					this.$api
-						.addMemberAPI(params)
-						.then((res) => {
-							this.loading = false
-							const { code, data, msg } = res
-							if (code === 200) {
-								this.$confirm(`会员${data}资料提交成功`, {
-									confirmButtonText: '确定',
-									type: 'success',
-									showCancelButton: false
-								})
-								this.reset()
-							} else {
-								this.$message({
-									message: msg,
-									type: 'error'
-								})
-							}
+			this.$api
+				.gameSearchUpdateAPI(params)
+				.then((res) => {
+					this.loading = false
+					const { code, msg } = res
+					if (code === 200) {
+						this.$message({
+							message: '保存成功',
+							type: 'success'
 						})
-						.catch(() => {
-							this.loading = false
+						this.reset()
+					} else {
+						this.$message({
+							message: msg,
+							type: 'error'
 						})
-				}
-			})
+					}
+					this.loadData()
+				})
+				.catch(() => {
+					this.loading = false
+				})
 
 			setTimeout(() => {
 				this.loading = false
 			}, 1000)
 		},
 		reset() {
-			this.$refs['form'].resetFields()
 			this.form = {
 				historyGameLimit: undefined,
 				hotSearch: undefined
@@ -280,10 +281,10 @@ export default {
 				id: new_row,
 				updatedBy: getUsername(),
 				createdBy: getUsername(),
-                createdAt: new Date(),
-                updatedAt: new Date(),
-                displayOrder,
-                searchInfo: ''
+				createdAt: new Date(),
+				updatedAt: new Date(),
+				displayOrder,
+				searchInfo: ''
 			})
 		},
 		deleteRow(val) {
