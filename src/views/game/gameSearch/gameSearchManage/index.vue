@@ -74,15 +74,15 @@
 							</template>
 						</el-table-column>
 						<el-table-column
-							prop="accountType"
+							prop="searchInfo"
 							align="center"
 							label="搜索词条信息"
 							width="220px"
 						>
 							<template slot-scope="scope">
-								<span v-if="!!scope.row.bankName">
+								<span v-if="!!scope.row.searchInfo">
 									<el-input
-										v-model="scope.row.bankName"
+										v-model="scope.row.searchInfo"
 										size="medium"
 										maxlength="20"
 										placeholder="请输入"
@@ -292,31 +292,44 @@ export default {
 			this.dataList.push({ id: new_row })
 		},
 		deleteRow(val) {
+			const { id } = val
 			this.$confirm('确定删除此游戏吗?', {
 				confirmButtonText: '确定',
 				cancelButtonText: '取消',
 				type: 'warning'
 			})
 				.then(() => {
-					// const loading = this.$loading({
-					// 	lock: true,
-					// 	text: 'Loading',
-					// 	spinner: 'el-icon-loading',
-					// 	background: 'rgba(0, 0, 0, 0.7)'
-					// })
-					// this.$api
-					// 	.setDeleteRole('', val.id)
-					// 	.then((res) => {
-					// 		loading.close()
-					// 		this.$message({
-					// 			type: 'success',
-					// 			message: '删除成功!'
-					// 		})
-					// 		this.loadData()
-					// 	})
-					// 	.catch(() => {
-					// 		loading.close()
-					// 	})
+					const loading = this.$loading({
+						lock: true,
+						text: 'Loading',
+						spinner: 'el-icon-loading',
+						background: 'rgba(0, 0, 0, 0.7)'
+					})
+					this.$api
+						.gameSearchDeleteAPI({ id })
+						.then((res) => {
+							loading.close()
+							const { code } = res
+							if (code === 200) {
+								this.$message({
+									type: 'success',
+									message: '删除成功!'
+								})
+							} else {
+								this.$message({
+									type: 'error',
+									message: '删除失败!'
+								})
+							}
+							this.loadData()
+						})
+						.catch(() => {
+							loading.close()
+							this.$message({
+								type: 'error',
+								message: '删除失败!'
+							})
+						})
 				})
 				.catch(() => {})
 		},
