@@ -23,7 +23,7 @@ export function getGameTypes() {
 	return Cookies.get('game_types')
 }
 export function getUserInfo() {
-	return JSON.parse(Cookies.get('userInfo'))
+	return Cookies.get('userInfo') ? JSON.parse(Cookies.get('userInfo')) : {}
 }
 export function getUsername() {
 	return Cookies.get('username')

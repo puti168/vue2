@@ -343,7 +343,7 @@ export default {
     },
     edit(val) {
       this.title = '编辑'
-      this.dialogForm = val
+      this.dialogForm = {...val}
       this.dialogFormVisible = true
     },
     deleteLabel(val) {
@@ -360,7 +360,7 @@ export default {
         .then(() => {
           this.$api.setUpdateDelete(data).then((res) => {
             if (res.code === 200) {
-              this.$message.success('删除成功！')
+              this.$message.success('删除成功')
               this.loadData()
             }
           })
@@ -384,17 +384,26 @@ export default {
               }
             })
           } else {
-            // this.$api.setUpdateLabel().then(res=>{
-            //   console.log(res);
-            // })
+            this.$api.setUpdateLabel(data).then((res) => {
+              if (res.code === 200) {
+                this.$message.success('修改成功')
+                this.loadData()
+              }
+            })
           }
           this.dialogFormVisible = false
         }
       })
     },
     _changeTableSort({ column, prop, order }) {
-      if (prop === 'vipSerialNum') {
+      if (prop === 'gameLabelId') {
         prop = 1
+      }
+      if (prop === 'createdAt') {
+        prop = 2
+      }
+      if (prop === 'updatedAt') {
+        prop = 3
       }
       this.queryData.orderKey = prop
       if (order === 'ascending') {

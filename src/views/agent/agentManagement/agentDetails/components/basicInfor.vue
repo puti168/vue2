@@ -224,9 +224,13 @@
         label-width="110px"
         @submit.native.prevent="enterSearch"
       >
-        <el-form-item v-if="moduleBox === '账号状态'" label="账号状态：" prop="code">
+        <el-form-item
+          v-if="moduleBox === '账号状态'"
+          label="账号状态："
+          prop="accountStatus"
+        >
           <el-select
-            v-model="editData.code"
+            v-model="editData.accountStatus"
             placeholder="请选择"
             @change="changeAccountStatus"
           >
@@ -428,7 +432,7 @@ export default {
           const params = { userId: val.userId, pageNum: 1, pageSize: 3 }
           this.$api.getMemberRemarkList(params).then((res) => {
             if (res.code === 200) {
-              this.tableList = res.data.records
+              this.tableList = res.data.record
             }
           })
         }
@@ -446,8 +450,8 @@ export default {
       })
     },
     // 编辑信息
-    setMemberInfoEdit(val) {
-      this.$api.setMemberInfoEdit(val).then((res) => {
+    setProxyDataInfoEdit(val) {
+      this.$api.setProxyDataInfoEdit(val).then((res) => {
         if (res.code === 200) {
           this.$message.success(res.msg)
           this.getOutlineInfo(this.parentData)
@@ -515,49 +519,34 @@ export default {
           if (this.moduleBox === '账号状态') {
             delete params.code
             data.accountStatusAfter = params
-            this.setMemberInfoEdit(data)
+            this.setProxyDataInfoEdit(data)
             loading.close()
           }
           if (this.moduleBox === '风控层级') {
             data.windControlAfter = params
-            this.setMemberInfoEdit(data)
+            this.setProxyDataInfoEdit(data)
             loading.close()
           }
           if (this.moduleBox === '代理标签') {
             data.labelAfter = params
-            this.setMemberInfoEdit(data)
+            this.setProxyDataInfoEdit(data)
             loading.close()
           }
-          if (this.moduleBox === '出生日期') {
-            data.birthAfter = params
-            this.setMemberInfoEdit(data)
+          if (this.moduleBox === '账号备注') {
+            data.payPasswordAfter = params
+            this.setProxyDataInfoEdit(data)
             loading.close()
           }
-          if (this.moduleBox === '手机号码') {
-            data.mobileAfter = params
-            this.setMemberInfoEdit(data)
-            loading.close()
-          }
-          if (this.moduleBox === '姓名') {
-            data.realNameAfter = params
-            this.setMemberInfoEdit(data)
-            loading.close()
-          }
-          if (this.moduleBox === '性别') {
-            delete params.code
-            data.genderAfter = params
-            this.setMemberInfoEdit(data)
-            loading.close()
-          }
-          if (this.moduleBox === '邮箱') {
-            data.emailAfter = params
-            this.setMemberInfoEdit(data)
+          if (this.moduleBox === '入口权限') {
+            data.entryAuthorityAfter = params
+            this.setProxyDataInfoEdit(data)
             loading.close()
           }
           if (this.moduleBox === '账号备注') {
             params.userName = this.parentData.userName
-            params.userId = this.parentData.userId
-            this.getMemberRemarkAdd(params)
+            params.remarkAfter = params.remark
+            delete params.remark
+            this.setProxyDataInfoEdit(params)
             loading.close()
           }
         } else {
