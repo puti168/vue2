@@ -368,7 +368,7 @@
 				</div>
 			</el-dialog>
 		</div>
-		<createPage v-else @back="back"></createPage>
+		<createPage v-else :rowAssortId="rowAssortId" @back="back"></createPage>
 	</transition>
 </template>
 
@@ -400,7 +400,8 @@ export default {
 			vipDict: [],
 			userLabel: [],
 			dialogGameVisible: false,
-			createPage: false
+			createPage: false,
+			rowAssortId: ''
 		}
 	},
 	computed: {
@@ -531,7 +532,9 @@ export default {
 			}
 		},
 
-		openEdit() {
+		openEdit(val) {
+			const { id } = val
+			this.rowAssortId = id
 			this.createPage = true
 		},
 		back() {

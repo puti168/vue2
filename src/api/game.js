@@ -27,6 +27,14 @@ export function queryChildGameAPI(data) {
 	})
 }
 
+// 游戏配置==> 游戏分类管理 ===> 子游戏配置
+export function queryChildGameConfigAPI(params) {
+	return request({
+		url: '/gameAssort/queryChildrenGame',
+		method: 'get',
+		params
+	})
+}
 // 游戏配置==> 游戏分类管理 ===> 删除
 export function gameDeleteAPI(data) {
 	return request({
@@ -297,6 +305,7 @@ export default {
 	gameLabelList,
 	queryChildGamePageAPI,
 	queryChildGameAPI,
+	queryChildGameConfigAPI,
 	gameDeleteAPI,
 	gameUpdateAPI,
 	gameCreateAPI,
