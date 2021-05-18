@@ -43,8 +43,8 @@
         </el-form-item>
       </el-form>
 
+        <!-- v-show="isShow" -->
       <el-tabs
-        v-show="isShow"
         v-model="activeName"
         class="tabsBox"
         @tab-click="handleClick"
@@ -69,7 +69,8 @@
       </el-tabs>
     </div>
     <div class="marginTb"></div>
-    <div v-show="isShow" class="contentBox">
+    <!-- <div v-show="isShow" class="contentBox"> -->
+    <div class="contentBox">
       <basicInfor
         ref="basicInfor"
         class="floor-item"
@@ -147,10 +148,10 @@ export default {
   },
   methods: {
     // 代理详情-基本信息-概要信息以及个人资料
-    getOutlineInfo(val) {
+    getProxyDetailQueryDetail(val) {
       // const loading = this.$loading(this.loadingRgba);
       this.$api
-        .getOutlineInfo({ userName: val.userName })
+        .getProxyDetailQueryDetail({ userName: val.userName })
         .then((res) => {
           this.isShow = true
           if (res.code === 200) {
@@ -268,7 +269,7 @@ export default {
       const params = this.queryData
       this.$refs.form.validate((valid) => {
         if (valid) {
-          this.getOutlineInfo(params)
+          this.getProxyDetailQueryDetail(params)
         }
       })
     },
