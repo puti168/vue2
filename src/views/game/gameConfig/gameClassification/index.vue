@@ -167,16 +167,6 @@
 								</Copy>
 								<span v-else>-</span>
 							</template>
-							<!--							<template slot-scope="scope">-->
-							<!--								<Copy-->
-							<!--									v-if="!!scope.row.assortName"-->
-							<!--									:title="scope.row.assortName"-->
-							<!--									:copy="copy"-->
-							<!--								>-->
-							<!--									{{ scope.row.assortName }}-->
-							<!--								</Copy>-->
-							<!--								<span v-else>-</span>-->
-							<!--							</template>-->
 						</el-table-column>
 						<el-table-column
 							prop="assortStatus"
