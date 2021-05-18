@@ -5,7 +5,7 @@
 				<span>页签创建</span>
 				<span>
 					<el-button type="info" @click="back">返回</el-button>
-					<el-button type="success">保存</el-button>
+					<el-button type="success" @click="save">保存</el-button>
 				</span>
 			</div>
 			<div class="content-part2">
@@ -320,6 +320,48 @@ export default {
 				})
 			}
 		},
+		// 保存
+		save() {
+			const params = {
+				...this.queryData,
+				relationParams: []
+			}
+			params.supportTerminal =
+				params.supportTerminal && params.supportTerminal.length
+					? params.supportTerminal.join(',')
+					: undefined
+			this.$api
+				.gameUpdateAPI(params)
+				.then((res) => {
+					const { code, msg } = res
+					console.log('res', res)
+					if (code === 200) {
+						this.loading = false
+						this.$message({
+							message: '保存成功!',
+							type: 'success'
+						})
+                        this.reset()
+					} else {
+						this.loading = false
+						this.$message({
+							message: msg,
+							type: 'error'
+						})
+					}
+				})
+				.catch(() => (this.loading = false))
+		},
+        reset() {
+            this.$refs['form'].resetFields()
+            this.queryData = {
+                assortName: undefined,
+                assortSort: undefined,
+                supportTerminal: undefined,
+                remark: undefined,
+                clientDisplay: undefined
+            }
+        },
 		// 列表清空
 		clearAbleList() {
 			console.log('清空列表')
@@ -461,13 +503,6 @@ export default {
 			setTimeout(() => {
 				this.loading = false
 			}, 1000)
-		},
-		reset() {
-			this.$refs['form'].resetFields()
-			this.form = {
-				historyGameLimit: undefined,
-				hotSearch: undefined
-			}
 		},
 		checkValue(val) {},
 		addRow() {

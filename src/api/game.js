@@ -44,7 +44,7 @@ export function gameDeleteAPI(data) {
 	})
 }
 
-// 游戏配置==> 游戏分类管理 ===> 编辑
+// 游戏配置==> 游戏分类管理 ===> 编辑保存
 export function gameUpdateAPI(data) {
 	return request({
 		url: '/gameAssort/update',
