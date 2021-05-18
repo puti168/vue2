@@ -97,7 +97,7 @@
 							ref="transfer"
 							v-model="value"
 							filterable
-							:data="gameNameList"
+							:data="childGameNameList"
 							:gameNameList="gameNameList"
 							:childGameConfigData="childGameConfigData"
 							:filter-method="filterMethod"
@@ -283,42 +283,42 @@ export default {
 		// 子游戏配置查询
 		queryChildGameConfig() {
 			this.childGameNameList = []
-			console.log('this.rowAssortId', this.rowAssortId)
-			const params = {
-				id: this.rowAssortId
-			}
-			this.$api.queryChildGameConfigAPI(params).then((res) => {
-				const { code, data, msg } = res
-				console.log('res', res)
-				if (code === 200) {
-					const {
-						assortName,
-						assortSort,
-						remark,
-						clientDisplay,
-						supportTerminal
-					} = data
-					this.queryData.assortName = assortName
-					this.queryData.assortSort = assortSort
-					this.queryData.remark = remark
-
-					this.gameDisplayArr.forEach((item) => {
-						if (!!(item.code * 1) === clientDisplay) {
-							this.queryData.clientDisplay = item.code
-						}
-					})
-					this.terminalTypeArr.forEach((item) => {
-						if (item.description === supportTerminal) {
-							this.queryData.supportTerminal.push(item.description)
-						}
-					})
-				} else {
-					this.$message({
-						message: msg,
-						type: 'error'
-					})
+			if (this.rowAssortId) {
+				const params = {
+					id: this.rowAssortId
 				}
-			})
+				this.$api.queryChildGameConfigAPI(params).then((res) => {
+					const { code, data, msg } = res
+					if (code === 200) {
+						const {
+							assortName,
+							assortSort,
+							remark,
+							clientDisplay,
+							supportTerminal
+						} = data
+						this.queryData.assortName = assortName
+						this.queryData.assortSort = assortSort
+						this.queryData.remark = remark
+
+						this.gameDisplayArr.forEach((item) => {
+							if (!!(item.code * 1) === clientDisplay) {
+								this.queryData.clientDisplay = item.code
+							}
+						})
+						this.terminalTypeArr.forEach((item) => {
+							if (item.description === supportTerminal) {
+								this.queryData.supportTerminal.push(item.description)
+							}
+						})
+					} else {
+						this.$message({
+							message: msg,
+							type: 'error'
+						})
+					}
+				})
+			}
 		},
 		// 列表清空
 		clearAbleList() {
