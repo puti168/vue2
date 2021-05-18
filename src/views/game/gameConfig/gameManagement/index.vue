@@ -84,7 +84,7 @@
 							:popper-append-to-body="false"
 						>
 							<el-option
-								v-for="item in gameModuleNameList"
+								v-for="item in gameManageList"
 								:key="item.moduleId"
 								:label="item.moduleName"
 								:value="item.moduleId"
@@ -227,17 +227,17 @@
 						width="160px"
 					>
 						<template slot-scope="scope">
-							{{ moduleFilter(scope.row.relationOtherGameId) }}
+							{{ gameManageListFilter(scope.row.relationOtherGameId) }}
 						</template>
 					</el-table-column>
 					<el-table-column
-						prop="relationOtherGameId"
+						prop="relationGameModuleId"
 						align="center"
 						label="关联游戏模块"
 						width="160px"
 					>
 						<template slot-scope="scope">
-							{{ moduleFilter(scope.row.relationOtherGameId) }}
+							{{ moduleFilter(scope.row.relationGameModuleId) }}
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -359,8 +359,10 @@
 			:editType="editType"
 			:labelList="labelList"
 			:gameModuleNameList="gameModuleNameList"
+			:gameManageList="gameManageList"
 			:gamePlantList="gamePlantList"
 			@closeEdit="closeEdit"
+			@refresh="search"
 		></gameManagementEdit>
 	</div>
 </template>
@@ -391,6 +393,7 @@ export default {
 			showDetail: false,
 			labelList: {},
 			gameModuleNameList: {},
+			gameManageList: {},
 			gamePlantList: {},
 			bigImage: '',
 			editType: '',
@@ -454,7 +457,7 @@ export default {
 					}
 				})
 				.catch(() => {})
-			// 关联推荐游戏
+			// 关联游戏模块
 			this.$api
 				.gameModuleNameList()
 				.then((res) => {
@@ -482,11 +485,34 @@ export default {
 					}
 				})
 				.catch(() => {})
+			// 关联推荐游戏
+			this.$api
+				.gameManageList()
+				.then((res) => {
+					if (res.code === 200) {
+						this.gameManageList = res.data
+					} else {
+						this.$message({
+							message: res.msg,
+							type: 'error'
+						})
+					}
+				})
+				.catch(() => {})
 		},
 		gamePlantFilter(val) {
 			let name = ''
 			this.gamePlantList.forEach((item) => {
 				if (item.gameCode === val) {
+					name = item.gameName
+				}
+			})
+			return name
+		},
+		gameManageListFilter(val) {
+			let name = ''
+			this.gameManageList.forEach((item) => {
+				if (item.gameId === val) {
 					name = item.gameName
 				}
 			})
@@ -515,8 +541,6 @@ export default {
 			this.bigImage = val
 		},
 		openEdit(row) {
-			console.log('r')
-			console.log(row)
 			this.showDetail = true
 			if (row) {
 				this.rowData = row
