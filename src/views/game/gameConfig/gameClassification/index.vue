@@ -366,14 +366,14 @@
 					<span>游戏名称</span>
 					<span>添加时间</span>
 				</p>
-				<div class="bodyBox">
+				<div
+					v-for="(item, idx) in childDataList"
+					:key="idx + 'index'"
+					class="bodyBox"
+				>
 					<p>
-						<span>斗地主</span>
-						<span>2016-09-21 08:50:08</span>
-					</p>
-					<p>
-						<span>麻将</span>
-						<span>2016-10-21 08:50:08</span>
+						<span>{{ item.gameName }}</span>
+						<span>{{ item.createAt }}</span>
 					</p>
 				</div>
 			</el-dialog>
@@ -476,7 +476,7 @@ export default {
 			}, 1000)
 		},
 		reset() {
-		    this.pageNum = 1
+			this.pageNum = 1
 			this.queryData = {
 				assortSortMin: undefined,
 				assortSortMax: undefined,
@@ -585,9 +585,9 @@ export default {
 		},
 		lookGame(val) {
 			this.dialogGameVisible = true
-			const { id } = val
+			// const { id } = val
 			const params = {
-				assortId: id,
+				assortId: '598559022856785920',
 				pageNum: 1,
 				pageSize: 10
 			}
