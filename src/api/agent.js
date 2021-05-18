@@ -8,6 +8,25 @@ export function addAgentAPI(data) {
 		data
 	})
 }
+
+// 代理==> 代理管理 ===> 会员转代
+export function memberTransAgentAPI(data) {
+	return request({
+		url: '/memberTransfer/apply',
+		method: 'post',
+		data
+	})
+}
+
+// 代理==> 代理管理 ===> 代理注册信息
+export function agentRegisterInfoAPI(data) {
+	return request({
+		url: '/proxyInformationRegistered/proxyList',
+		method: 'post',
+		data
+	})
+}
+
 // 代理详情-基本信息-信息编辑
 export function setProxyDataInfoEdit(data) {
 	return request({
@@ -83,6 +102,8 @@ export function setDomainUpdate(data) {
 
 export default {
 	addAgentAPI,
+	memberTransAgentAPI,
+	agentRegisterInfoAPI,
 	setProxyDataInfoEdit,
 	getProxyDataBalance,
 	getProxyDataCommission,

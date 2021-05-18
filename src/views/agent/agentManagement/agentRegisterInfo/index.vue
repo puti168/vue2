@@ -273,7 +273,7 @@ export default {
             // 		? params.deviceType
             // 		: undefined
             this.$api
-                .memberRegisterInfoListAPI(params)
+                .agentRegisterInfoAPI(params)
                 .then((res) => {
                     const {
                         code,
