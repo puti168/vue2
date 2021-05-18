@@ -575,9 +575,9 @@ export default {
 		},
 		lookGame(val) {
 			this.dialogGameVisible = true
-			// const { id } = val
+			const { id } = val
 			const params = {
-				assortId: '598559022856785920',
+				assortId: id,
 				pageNum: 1,
 				pageSize: 10
 			}

@@ -97,7 +97,7 @@
 							ref="transfer"
 							v-model="value"
 							filterable
-							:data="data"
+							:data="gameNameList"
 							:gameNameList="gameNameList"
 							:filter-method="filterMethod"
 							:target-order="'push'"
