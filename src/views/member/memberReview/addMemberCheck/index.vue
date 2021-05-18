@@ -382,6 +382,7 @@ export default {
 				orderType: '',
 				orderKey: ''
 			}
+			this.pageNum = 1
 			this.formTime = {
 				time: [start, end],
 				time2: []

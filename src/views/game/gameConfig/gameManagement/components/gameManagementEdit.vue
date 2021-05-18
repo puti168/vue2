@@ -1,10 +1,10 @@
 <template>
 	<div class="review-content">
 		<div class="head">
-			<span class="title">创建/编辑</span>
+			<span class="title">{{ editType === 'edit' ? '编辑' : '创建' }}</span>
 			<div class="right-btn">
 				<el-button plain @click="goBack">取消</el-button>
-				<el-button type="success" @click="confirm(true)">保存</el-button>
+				<el-button type="success" @click="confirm()">保存</el-button>
 			</div>
 		</div>
 		<div class="main-content">
@@ -25,14 +25,14 @@
 						<el-col :span="12">
 							<el-form-item label="图标状态:">
 								<el-select
-									v-model="form.icon"
+									v-model="form.gameIcon"
 									size="medium"
 									placeholder="全部"
 									clearable
 									style="width: 365px"
 								>
 									<el-option
-										v-for="item in accountType"
+										v-for="item in gameIconType"
 										:key="item.code"
 										:label="item.description"
 										:value="item.code"
@@ -41,16 +41,17 @@
 							</el-form-item>
 						</el-col>
 						<el-col :span="12">
-							<el-form-item label="支持终端:" prop="icon">
+							<el-form-item label="支持终端:" prop="supportTerminal">
 								<el-select
-									v-model="form.icon"
+									v-model="form.supportTerminal"
 									size="medium"
 									placeholder="全部"
+									multiple
 									clearable
 									style="width: 365px"
 								>
 									<el-option
-										v-for="item in accountType"
+										v-for="item in terminalnType"
 										:key="item.code"
 										:label="item.description"
 										:value="item.code"
@@ -61,7 +62,7 @@
 						<el-col :span="12">
 							<el-form-item label="备注信息:">
 								<el-input
-									v-model="form.gameName"
+									v-model="form.remark"
 									size="medium"
 									maxlength="50"
 									clearable
@@ -70,11 +71,11 @@
 							</el-form-item>
 						</el-col>
 						<el-col :span="12">
-							<el-form-item label="接入参数:" prop="gameName">
+							<el-form-item label="接入参数:" prop="accessInfo">
 								<el-input
-									v-model="form.gameName"
+									v-model="form.accessInfo"
 									size="medium"
-									maxlength="50"
+									maxlength="100"
 									clearable
 									style="width: 365px"
 								></el-input>
@@ -83,18 +84,18 @@
 						<el-col :span="12">
 							<el-form-item label="游戏描述:">
 								<el-input
-									v-model="form.gameName"
+									v-model="form.description"
 									size="medium"
-									maxlength="50"
+									maxlength="100"
 									clearable
 									style="width: 365px"
 								></el-input>
 							</el-form-item>
 						</el-col>
 						<el-col :span="12">
-							<el-form-item label="关联推荐游戏:" prop="icon">
+							<el-form-item label="关联推荐游戏:" prop="relationOtherGameId">
 								<el-select
-									v-model="form.icon"
+									v-model="form.relationOtherGameId"
 									size="medium"
 									placeholder="全部"
 									multiple
@@ -102,18 +103,18 @@
 									style="width: 365px"
 								>
 									<el-option
-										v-for="item in accountType"
-										:key="item.code"
-										:label="item.description"
-										:value="item.code"
+										v-for="item in gameModuleNameList"
+										:key="item.moduleId"
+										:label="item.moduleName"
+										:value="item.moduleId"
 									></el-option>
 								</el-select>
 							</el-form-item>
 						</el-col>
 						<el-col :span="12">
-							<el-form-item label="关联游戏模块:" prop="icon">
+							<el-form-item label="关联游戏模块:" prop="relationGameModuleId">
 								<el-select
-									v-model="form.icon"
+									v-model="form.relationGameModuleId"
 									size="medium"
 									placeholder="全部"
 									multiple
@@ -121,10 +122,10 @@
 									style="width: 365px"
 								>
 									<el-option
-										v-for="item in accountType"
-										:key="item.code"
-										:label="item.description"
-										:value="item.code"
+										v-for="item in gameModuleNameList"
+										:key="item.moduleId"
+										:label="item.moduleName"
+										:value="item.moduleId"
 									></el-option>
 								</el-select>
 							</el-form-item>
@@ -132,29 +133,27 @@
 						<el-col :span="12">
 							<el-form-item label="游戏返奖率:">
 								<el-input
-									v-model="form.gameName"
+									v-model="form.gameRebateRate"
 									size="medium"
-									maxlength="50"
 									clearable
 									style="width: 365px"
 								></el-input>
 							</el-form-item>
 						</el-col>
 						<el-col :span="12">
-							<el-form-item label="游戏平台:">
+							<el-form-item label="游戏平台:" prop="gamePlatform">
 								<el-select
-									v-model="form.icon"
+									v-model="form.gamePlatform"
 									size="medium"
 									placeholder="全部"
-									multiple
 									clearable
 									style="width: 365px"
 								>
 									<el-option
-										v-for="item in accountType"
-										:key="item.code"
-										:label="item.description"
-										:value="item.code"
+										v-for="item in gamePlantList"
+										:key="item.gameCode"
+										:label="item.gameName"
+										:value="item.gameCode"
 									></el-option>
 								</el-select>
 							</el-form-item>
@@ -162,18 +161,17 @@
 						<el-col :span="12">
 							<el-form-item label="1级标签:">
 								<el-select
-									v-model="form.icon"
+									v-model="gameLabelParam1"
 									size="medium"
 									placeholder="全部"
-									multiple
 									clearable
 									style="width: 365px"
 								>
 									<el-option
-										v-for="item in accountType"
-										:key="item.code"
-										:label="item.description"
-										:value="item.code"
+										v-for="item in labelList"
+										:key="item.gameLabelId"
+										:label="item.gameLabelName"
+										:value="item.gameLabelId"
 									></el-option>
 								</el-select>
 							</el-form-item>
@@ -181,18 +179,17 @@
 						<el-col :span="12">
 							<el-form-item label="2级标签:">
 								<el-select
-									v-model="form.icon"
+									v-model="gameLabelParam2"
 									size="medium"
 									placeholder="全部"
-									multiple
 									clearable
 									style="width: 365px"
 								>
 									<el-option
-										v-for="item in accountType"
-										:key="item.code"
-										:label="item.description"
-										:value="item.code"
+										v-for="item in labelList"
+										:key="item.gameLabelId"
+										:label="item.gameLabelName"
+										:value="item.gameLabelId"
 									></el-option>
 								</el-select>
 							</el-form-item>
@@ -200,18 +197,17 @@
 						<el-col :span="12">
 							<el-form-item label="3级标签:">
 								<el-select
-									v-model="form.icon"
+									v-model="gameLabelParam3"
 									size="medium"
 									placeholder="全部"
-									multiple
 									clearable
 									style="width: 365px"
 								>
 									<el-option
-										v-for="item in accountType"
-										:key="item.code"
-										:label="item.description"
-										:value="item.code"
+										v-for="item in labelList"
+										:key="item.gameLabelId"
+										:label="item.gameLabelName"
+										:value="item.gameLabelId"
 									></el-option>
 								</el-select>
 							</el-form-item>
@@ -219,108 +215,134 @@
 					</el-row>
 					<el-divider></el-divider>
 					<span class="img-title">客户端图片上传</span>
-					<el-form-item label="图片上传" prop="image">
-						<!-- <el-upload
-								:action="uploadUrl"
-								:headers="{
-									'X-Request-Sys': '0',
-									'x-request-token': token
-								}"
-								:data="dataList"
-								:show-file-list="false"
-								accept="image/png"
-								:on-success="
-									(response, file, fileList) =>
-										handleAvatarSuccess(response, file, fileList)
-								"
-								:before-upload="(file) => beforeAvatarUpload(file)"
-							>
-								<img v-if="imageUrl" :src="imageUrl" class="avatar" />
-								<i v-else class="el-icon-plus avatar-uploader-icon"></i>
-							</el-upload> -->
-						<el-upload
-							class="avatar-uploader"
-							action="https://jsonplaceholder.typicode.com/posts/"
-							:show-file-list="false"
-							:on-success="handleAvatarSuccess"
-							:before-upload="beforeAvatarUpload"
-						>
-							<img v-if="imageUrl" :src="imageUrl" class="avatar" />
-							<i v-else class="el-icon-plus avatar-uploader-icon"></i>
-						</el-upload>
+					<el-form-item label="图片上传">
+						<!-- :upload-file-type="'image/jpeg'"
+							:platform="'PC'"
+							:bounds="imageSize" -->
+						<upload
+							ref="imgUpload"
+							:img-urls="form.imageAddress"
+							:upload-file-type="'image/jpeg'"
+							@upoladItemSucess="handleUploadSucess"
+							@startUpoladItem="handleStartUpload"
+							@deleteUpoladItem="handleDeleteUpload"
+							@upoladItemDefeat="handleUploadDefeat"
+						></upload>
+						<p v-if="imgTip" class="imgTip">
+							请上传图片！图片格式仅支持png,图片尺寸： ？？ 图片大小不超过？？
+						</p>
 					</el-form-item>
 				</el-form>
 			</div>
 		</div>
-		<el-dialog
-			title="提交确认"
-			center
-			:visible.sync="visible"
-			:before-close="closeFormDialog"
-			width="610px"
-		>
-			<el-form ref="form" label-width="100px">
-				<el-form-item label="提交审核信息">
-					<el-input
-						v-model="remark"
-						clearable
-						type="textarea"
-						:max="50"
-						:autosize="{ minRows: 4, maxRows: 4 }"
-						size="medium"
-						placeholder="请输入"
-					></el-input>
-				</el-form-item>
-			</el-form>
-			<div slot="footer" class="dialog-footer">
-				<el-button @click="visible = false">取 消</el-button>
-				<el-button type="primary" @click="auditOne">
-					提交
-				</el-button>
-			</div>
-		</el-dialog>
 	</div>
 </template>
 
 <script>
 import list from '@/mixins/list'
 import { routerNames } from '@/utils/consts'
-import { getToken } from '@/utils/auth'
-// import dayjs from 'dayjs'
+import Upload from '@/components/UploadBox'
 export default {
 	name: routerNames.gameManagementEdit,
-	components: {},
+	components: { Upload },
 	mixins: [list],
+	props: {
+		rowData: {
+			type: Object,
+			default: () => {}
+		},
+		editType: {
+			type: String,
+			default: 'add'
+		},
+		labelList: {
+			type: Array,
+			default: () => []
+		},
+		gameModuleNameList: {
+			type: Array,
+			default: () => []
+		},
+		gamePlantList: {
+			type: Array,
+			default: () => []
+		}
+	},
 	data() {
 		return {
-			list: {},
 			form: {
-				icon: '',
-				gameName: ''
+				id: '',
+				gameIcon: '',
+				gamePlatform: '',
+				gameName: '',
+				supportTerminal: [],
+				relationOtherGameId: [],
+				relationGameModuleId: [],
+				imageAddress: '3535test',
+				gameLabelParam1: {},
+				gameLabelParam2: {},
+				gameLabelParam3: {},
+				accessInfo: '',
+				description: '',
+				remark: ''
 			},
-			dataList: {},
-			visible: false,
-			remark: '',
-			action: false,
-			uploadUrl: process.env.VUE_APP_BASE_API + '/agents/uploadAgentLog',
-			imageUrl: '',
-			// 审核 true 仅返回 false
-			type: true
+			gameLabelParam1: '',
+			gameLabelParam2: '',
+			gameLabelParam3: ''
 		}
 	},
 	computed: {
-		token() {
-			return getToken()
+		imgTip() {
+			return this.form.imageAddress ? '' : '请上传图片！'
 		},
-		accountType() {
-			return this.globalDics.accountType
+		imageSize() {
+			return {
+				width: 1920,
+				height: 400
+			}
 		},
-		genderType() {
-			return this.globalDics.genderType
+		gameIconType() {
+			return this.globalDics.gameIconType
+		},
+		terminalnType() {
+			return this.globalDics.terminalnType
 		},
 		rules() {
 			return {
-				icon: [{ required: true, message: '请选择支持终端', trigger: 'blur' }],
+				supportTerminal: [
+					{
+						required: true,
+						message: '请选择支持终端',
+						trigger: 'blur',
+						type: 'array'
+					}
+				],
+				gamePlatform: [
+					{
+						required: true,
+						message: '请选择游戏平台',
+						trigger: 'blur'
+					}
+				],
+				accessInfo: [
+					{ required: true, message: '请输入接入参数', trigger: 'blur' }
+				],
+				relationOtherGameId: [
+					{
+						required: true,
+						message: '请输入关联推荐游戏',
+						trigger: 'blur',
+						type: 'array'
+					}
+				],
+				relationGameModuleId: [
+					{
+						required: true,
+						message: '请输入关联游戏模块',
+						trigger: 'blur',
+						type: 'array'
+					}
+				],
 				image: [
 					{
 						required: true,
@@ -338,131 +360,122 @@ export default {
 			}
 		}
 	},
-	created() {
-		if (this.$route.name === 'addMemberReview') {
-			this.getInfo()
-			this.type = this.$route.query.type
+	watch: {
+		rowData: {
+			handler(val) {
+				this.form = val
+			},
+			immediate: true,
+			deep: true
 		}
 	},
+	created() {},
 	mounted() {},
 	methods: {
-		closeFormDialog() {
-			this.visible = false
-		},
-		confirm(action) {
-			this.remark = ''
-			this.action = action
-			this.visible = true
-		},
-		beforeAvatarUpload(file, row) {
-			// const isPNG = file.type === 'image/png'
-			// if (!isPNG) {
-			// 	this.$message.error(this.$t('new_2771'))
-			// }
-			// const isSize = new Promise(function(resolve, reject) {
-			// 	const _URL = window.URL || window.webkitURL
-			// 	const image = new Image()
-			// 	// image.src = file.url
-			// 	image.onload = () => {
-			// 		const valid = image.width === 240 && image.height === 72
-			// 		valid ? resolve() : reject()
-			// 	}
-			// 	image.src = _URL.createObjectURL(file)
-			// }).then(
-			// 	() => {
-			// 		return file
-			// 	},
-			// 	() => {
-			// 		this.$message({
-			// 			message: this.$t('new_2771'),
-			// 			type: 'error'
-			// 		})
-			// 		return Promise.reject()
-			// 	}
-			// )
-			// this.dataList = {
-			// 	textType: 4,
-			// 	agentId: row.agentId.split('_')[1]
-			// }
-			// return isPNG && isSize
-		},
-		handleAvatarSuccess(response, file, fileList, row) {
-			// if (response.code !== 200) {
-			// 	this.$message({
-			// 		message: this.$i18n.t(`backstage_${response.code}`),
-			// 		type: 'error'
-			// 	})
-			// } else {
-			// 	row.blogo = response.data
-			// 	this.$message({
-			// 		message: this.$t(`new_1111`),
-			// 		type: 'success'
-			// 	})
-			// }
-		},
-		auditOne() {
-			const loading = this.$loading({
-				lock: true,
-				text: 'Loading',
-				spinner: 'el-icon-loading',
-				background: 'rgba(0, 0, 0, 0.7)'
-			})
-			const params = {
-				id: this.$route.query.id,
-				userId: this.$route.query.userId,
-				remark: this.remark,
-				auditStatus: this.action ? 2 : 3
-			}
-
-			this.$api
-				.updateMemberAuditRecord(params)
-				.then((res) => {
-					loading.close()
-					if (res.code === 200) {
-						this.$message({
-							type: 'success',
-							message: '操作成功!'
-						})
-						this.visible = false
-						this.goBack()
-					} else {
-						this.$message({
-							message: res.msg,
-							type: 'error'
-						})
-					}
-				})
-				.catch(() => {
-					loading.close()
-				})
-		},
-		goBack() {
-			this.$router.go(-1)
-		},
-		getInfo() {
-			const params = {
-				id: this.$route.query.id
-			}
-			this.$api.memberAuditDetail(params).then((res) => {
-				if (res.code === 200) {
-					const response = res.data
-					this.loading = false
-					this.list = response
-				} else {
-					this.loading = false
-					this.$message({
-						message: res.msg,
-						type: 'error'
+		confirm() {
+			this.$refs.form.validate((valid) => {
+				if (valid) {
+					const loading = this.$loading({
+						lock: true,
+						text: 'Loading',
+						spinner: 'el-icon-loading',
+						background: 'rgba(0, 0, 0, 0.7)'
 					})
+					const relationGameModuleName = []
+					this.gameModuleNameList.forEach((item) => {
+						this.form.relationGameModuleId.forEach((data) => {
+							if (item.moduleId === data) {
+								relationGameModuleName.push(item.moduleName)
+							}
+						})
+					})
+					this.labelList.forEach((item) => {
+						if (item.gameLabelId === this.gameLabelParam1) {
+							this.form.gameLabelParam1 = {
+								gameLabelId: item.gameLabelId,
+								gameLabelName: item.gameLabelName,
+								id: item.id
+							}
+						}
+						if (item.gameLabelId === this.gameLabelParam2) {
+							this.form.gameLabelParam2 = {
+								gameLabelId: item.gameLabelId,
+								gameLabelName: item.gameLabelName,
+								id: item.id
+							}
+						}
+						if (item.gameLabelId === this.gameLabelParam3) {
+							this.form.gameLabelParam3 = {
+								gameLabelId: item.gameLabelId,
+								gameLabelName: item.gameLabelName,
+								id: item.id
+							}
+						}
+					})
+					console.log(this.form)
+					const params = {
+						...this.form,
+						imageAddress: '3535test',
+						supportTerminal: this.form.supportTerminal.join(','),
+						relationOtherGameId: this.form.relationOtherGameId.join(','),
+						relationGameModuleName: relationGameModuleName.join(','),
+						relationGameModuleId: this.form.relationGameModuleId.join(',')
+					}
+					const url = this.editType === 'add' ? 'addGame' : 'editGame'
+					this.$api[url](params)
+						.then((res) => {
+							loading.close()
+							if (res.code === 200) {
+								this.$message({
+									type: 'success',
+									message: '操作成功!'
+								})
+								this.goBack()
+							} else {
+								this.$message({
+									message: res.msg,
+									type: 'error'
+								})
+							}
+						})
+						.catch(() => {
+							loading.close()
+						})
 				}
 			})
 		},
-		getRowClass({ row, column, rowIndex, columnIndex }) {
-			if (rowIndex === 0) {
-				return 'background:#EFEFEF'
-			} else {
-				return ''
+		handleStartUpload() {
+			this.$message.info('图片开始上传')
+		},
+		handleUploadSucess({ index, file, id }) {
+			// this.form.imageAddress = file.imgUrl
+		},
+		handleUploadDefeat() {
+			// this.form.imageAddress = ''
+			this.$message.error('图片上传失败')
+		},
+		handleDeleteUpload() {
+			// this.form.imageAddress = ''
+			this.$message.warning('图片已被移除')
+		},
+		goBack() {
+			this.form = {
+				id: '',
+				gameIcon: '',
+				gamePlatform: '',
+				gameName: '',
+				imageAddress: '3535test',
+				gameLabelParam1: '',
+				gameLabelParam2: '',
+				gameLabelParam3: '',
+				accessInfo: '',
+				description: '',
+				remark: ''
 			}
+			this.supportTerminal = []
+			this.relationOtherGameId = []
+			this.relationGameModuleId = []
+			this.$emit('closeEdit')
 		}
 	}
 }

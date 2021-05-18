@@ -149,7 +149,6 @@
             >
               <el-option label="已计算" value="1"></el-option>
               <el-option label="未计算" value="2"></el-option>
-              <el-option label="已取消" value="3"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="投注金额:">
@@ -299,7 +298,7 @@
             <template slot-scope="scope">
               {{ scope.row.id }}
               <br />
-              {{ scope.row.thirdId }}
+              {{ scope.row.thirdOrderId }}
             </template>
           </el-table-column>
           <el-table-column prop="bankName" align="center">
@@ -359,15 +358,8 @@
           </el-table-column>
           <el-table-column prop="betStatus" align="center" label="注单状态">
             <template slot-scope="scope">
-              <span v-if="scope.row.betStatus === '1'" class="normalRgba">已结算</span>
-              <span
-v-else-if="scope.row.betStatus === '2'"
-class="deleteRgba"
->未结算</span>
-              <span
-v-else-if="scope.row.betStatus === '3'"
-class="disableRgba"
->已取消</span>
+              <span v-if="scope.row.betStatus === 1" class="normalRgba">已结算</span>
+              <span v-else-if="scope.row.betStatus === 2" class="deleteRgba">未结算</span>
               <span v-else>-</span>
             </template>
           </el-table-column>
@@ -398,7 +390,12 @@ class="disableRgba"
           <el-table-column prop="loginIp" align="center" label="投注IP"></el-table-column>
           <el-table-column prop="deviceType" align="center" label="投注终端">
             <template slot-scope="scope">
-              {{ typeFilter(scope.row.deviceType, "betDeviceType") }}
+              <span v-if="scope.row.deviceType === '其他'">{{
+                scope.row.deviceType
+              }}</span>
+              <span v-else>
+                {{ typeFilter(scope.row.deviceType, "betDeviceType") }}
+              </span>
             </template>
           </el-table-column>
           <el-table-column prop="operation" align="center" label="操作">
@@ -440,7 +437,9 @@ class="disableRgba"
           <strong class="paddingLR strong">投注人信息</strong>
           <div class="paddingLR paddingB">
             <el-row class="paddingLR">
-              <el-col :span="6">账号类型：  {{ typeFilter(scope.row.accountType, "accountType") }}</el-col>
+              <el-col
+:span="6"
+>账号类型： {{ typeFilter(dataList.accountType, "accountType") }}</el-col>
               <el-col :span="6">会员账号： {{ dataList.memberName }}</el-col>
               <el-col :span="6">上级代理：{{ dataList.parentProxyName }}</el-col>
               <el-col :span="6">VIP等级： {{ dataList.vipSerialNum }}</el-col>
@@ -566,7 +565,8 @@ export default {
       params = {
         ...this.getParams(params)
       }
-      if (startTime && endTime && netAtStart && netAtEnd) {
+      console.log(startTime, endTime, netAtStart, netAtEnd)
+      if (startTime || endTime || netAtStart || netAtEnd) {
         this.$api
           .getGameRecordNotes(params)
           .then((res) => {
@@ -597,7 +597,7 @@ export default {
       const data = {}
       data.createAt = val.createAt
       data.gameCode = val.gameCode
-      data.id = val.thirdOrderId
+      data.thirdOrderId = val.thirdOrderId
       const loading = this.$loading({
         lock: true,
         text: 'Loading',
@@ -607,9 +607,13 @@ export default {
       this.$api
         .getGameRecordDetail(data)
         .then((res) => {
-          if (res.code === 200) {
-            this.dataList = res.data.record
+          if (res.code === 200 && res.data.record.length > 0) {
+            this.dataList = res.data.record[0]
             this.gameType = val.gameCode
+            loading.close()
+          } else {
+            this.dataList = {}
+            this.gameType = 'init'
             loading.close()
           }
           console.log(res)

@@ -1,68 +1,89 @@
 <template>
-    <div class="dealer-container">
-      <div class="betslip">
-        <strong class="strong">投注人信息</strong>
-        <div>
-          <el-row class="paddingLR paddingB">
-            <el-col :span="6">注单号： 45646544445451</el-col>
-            <el-col :span="6">三方注单号： 45646544445451</el-col>
-            <el-col :span="6">游戏平台： B端名称</el-col>
-            <el-col :span="6">比赛类型： 足球</el-col>
-            <el-col :span="6">投注金额： 60.00</el-col>
-            <el-col :span="6">投注终端： IOS</el-col>
-            <el-col :span="6">投注IP： 192.168.0.1</el-col>
-            <el-col :span="6">输赢金额： -60.00</el-col>
-            <el-col :span="6">投注时间： 1991/11/11 06:11:12</el-col>
-            <el-col :span="6">结算时间： 1991/11/11 07:11:12</el-col>
-            <el-col :span="6">同步时间： 1991/11/11 08:11:12</el-col>
-            <el-col :span="6">注单状态： 已结算</el-col>
-          </el-row>
-        </div>
-        <el-table
-          border
-          size="mini"
-          class="small-size-table"
-          :data="tableData"
-          style="width: 100%"
-        >
-          <el-table-column prop="bankCode" label="赛事详情" align="center">
-          </el-table-column>
-          <el-table-column prop="bankName" label="盘口详情" align="center">
-          </el-table-column>
-          <el-table-column prop="updateDt" label="注单详情" align="center">
-          </el-table-column>
-          <el-table-column prop="createDt" label="结算时间" align="center">
-          </el-table-column>
-        </el-table>
+  <div class="dealer-container">
+    <div class="betslip">
+      <strong class="strong">注单信息</strong>
+      <div>
+        <el-row class="paddingLR paddingB">
+          <el-col :span="6">注单号： {{ dataList.id }}</el-col>
+          <el-col :span="6">三方注单号： {{ dataList.thirdOrderId }}</el-col>
+          <el-col
+:span="6"
+>游戏平台：
+            <span v-for="item in gameTypeList" :key="item.gameCode">
+              {{ dataList.gameCode === item.gameCode ? item.gameName : "" }}
+            </span>
+          </el-col>
+          <el-col :span="6">比赛类型： {{ dataList.gameTypeName }}</el-col>
+          <el-col :span="6">投注金额： {{ dataList.betAmount }}</el-col>
+          <el-col :span="6">
+            投注终端：
+            {{ typeFilter(dataList.deviceType, "betDeviceType") }}
+          </el-col>
+          <el-col :span="6">投注IP： {{ dataList.loginIp }}</el-col>
+          <el-col :span="6">输赢金额： {{ dataList.netAmount }}</el-col>
+          <el-col :span="6">投注时间： {{ dataList.createAt }}</el-col>
+          <el-col :span="6">结算时间： {{ dataList.netAt }}</el-col>
+          <el-col :span="6">同步时间： {{ dataList.synchronizationTime }}</el-col>
+          <el-col :span="6">注单状态： {{ dataList.betStatus }}</el-col>
+        </el-row>
       </div>
+      <el-table
+        border
+        size="mini"
+        class="small-size-table"
+        :data="dataList.details"
+        style="width: 100%"
+      >
+        <el-table-column prop="matchDetail" label="赛事详情" align="center">
+          <template slot-scope="scope">
+            <span v-html="scope.row.matchDetail"></span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="marketDetail" label="盘口详情" align="center">
+          <template slot-scope="scope">
+            <span v-html="scope.row.marketDetail"></span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="orderDetail" label="注单详情" align="center">
+        </el-table-column>
+        <el-table-column prop="netAt" label="结算时间" align="center"> </el-table-column>
+      </el-table>
     </div>
+  </div>
 </template>
 
 <script>
+import list from '@/mixins/list'
 export default {
   name: 'TyDetails',
-  components: { },
-  props: {},
+  components: {},
+  mixins: [list],
+  props: {
+    dataList: {
+      typeL: Object,
+      default: () => ({})
+    }
+  },
   data() {
     return {
-      tableData: []
+      gameTypeList: {}
     }
   },
   computed: {},
   watch: {},
-  created() {},
-  mounted() {
-    for (let i = 0; i < 2; i++) {
-      this.tableData[i] = {
-        bankCode: '165416416464654',
-        bankName: '中国银行',
-        createDt: '2021-02-13 20:28:54',
-        updateDt: '2021-02-13 20:28:54',
-        index: i
-      }
-    }
+  created() {
+    this.getGameTypeList()
   },
-  methods: {}
+  mounted() {},
+  methods: {
+    getGameTypeList() {
+      this.$api.getMerchantGameGamePlant().then((res) => {
+        if (res.code === 200) {
+          this.gameTypeList = res.data
+        }
+      })
+    }
+  }
 }
 </script>
 
@@ -79,7 +100,7 @@ export default {
   .paddingB {
     padding-bottom: 30px;
   }
-  th{
+  th {
     color: #ffff;
     background: #000;
     border: 1px solid #000;

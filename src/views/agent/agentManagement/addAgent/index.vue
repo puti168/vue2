@@ -26,9 +26,9 @@
                         ></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="代理账号:" prop="username">
+                <el-form-item label="代理账号:" prop="userName">
                     <el-input
-                        v-model="form.username"
+                        v-model="form.userName"
                         size="medium"
                         maxlength="11"
                         placeholder="4-11位，最少2个字母+数字组合，首位字母"
@@ -93,8 +93,8 @@ export default {
         return {
             loading: false,
             form: {
-                accountType: '4',
-                username: '',
+                accountType: '2',
+                userName: '',
                 password: '',
                 applyInfo: ''
             }
@@ -102,7 +102,7 @@ export default {
     },
     computed: {
         accountTypeArr() {
-            return [...this.globalDics.accountType]
+            return this.globalDics.proxyAccountType
         },
         rules() {
             const reg1 = /^[A-Za-z]{1}(?=(.*[a-zA-Z]){1,})(?=(.*[0-9]){1,})[0-9A-Za-z]{3,10}$/
@@ -140,7 +140,7 @@ export default {
                 accountType: [
                     { required: true, message: '请选择账号类型', trigger: 'change' }
                 ],
-                username: [
+                userName: [
                     {
                         required: true,
                         validator: testUserName,
@@ -203,8 +203,8 @@ export default {
         reset() {
             this.$refs['form'].resetFields()
             this.form = {
-                accountType: '4',
-                username: '',
+                accountType: '2',
+                userName: '',
                 password: '',
                 applyInfo: ''
             }

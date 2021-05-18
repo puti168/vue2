@@ -167,16 +167,6 @@
 								</Copy>
 								<span v-else>-</span>
 							</template>
-							<!--							<template slot-scope="scope">-->
-							<!--								<Copy-->
-							<!--									v-if="!!scope.row.assortName"-->
-							<!--									:title="scope.row.assortName"-->
-							<!--									:copy="copy"-->
-							<!--								>-->
-							<!--									{{ scope.row.assortName }}-->
-							<!--								</Copy>-->
-							<!--								<span v-else>-</span>-->
-							<!--							</template>-->
 						</el-table-column>
 						<el-table-column
 							prop="assortStatus"
@@ -366,14 +356,14 @@
 					<span>游戏名称</span>
 					<span>添加时间</span>
 				</p>
-				<div class="bodyBox">
+				<div
+					v-for="(item, idx) in childDataList"
+					:key="idx + 'index'"
+					class="bodyBox"
+				>
 					<p>
-						<span>斗地主</span>
-						<span>2016-09-21 08:50:08</span>
-					</p>
-					<p>
-						<span>麻将</span>
-						<span>2016-10-21 08:50:08</span>
+						<span>{{ item.gameName }}</span>
+						<span>{{ item.createAt }}</span>
 					</p>
 				</div>
 			</el-dialog>
@@ -476,7 +466,7 @@ export default {
 			}, 1000)
 		},
 		reset() {
-		    this.pageNum = 1
+			this.pageNum = 1
 			this.queryData = {
 				assortSortMin: undefined,
 				assortSortMax: undefined,

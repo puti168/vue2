@@ -35,10 +35,7 @@
 				<!--					class="delete-icon"-->
 				<!--					@click.stop="handleDeleteImgUrl"-->
 				<!--				/>-->
-				<i
-					class="delete-icon"
-					@click.stop="handleDeleteImgUrl"
-				></i>
+				<i class="delete-icon" @click.stop="handleDeleteImgUrl"></i>
 			</div>
 			<i
 				class="common-align-center el-icon-plus"
@@ -94,10 +91,6 @@ export default {
 		uploadFileType: {
 			type: String,
 			default: UploadFileTypeConst.Image
-		},
-		platform: {
-			type: String,
-			default: () => true
 		},
 		boundflag: {
 			type: Boolean,
@@ -305,6 +298,7 @@ export default {
 				const img = new Image()
 				const that = this
 				console.log(this.boundflag, 'boundflag')
+				console.log(this.curFile)
 				if (this.boundflag) {
 					img.onload = function() {
 						const width = img.width
@@ -321,13 +315,14 @@ export default {
 					img.src = window.URL.createObjectURL(this.curFile.raw || this.curFile)
 				} else {
 					img.onload = function() {
-						const width = img.width
-						const height = img.height
-						if (width !== that.bounds.width || height !== that.bounds.height) {
-							that.$message.error('图片尺寸不符合，请重新上传....')
-						} else {
-							successCB()
-						}
+						successCB()
+						// const width = img.width
+						// const height = img.height
+						// if (width !== that.bounds.width || height !== that.bounds.height) {
+						// 	that.$message.error('图片尺寸不符合，请重新上传....')
+						// } else {
+						// 	successCB()
+						// }
 					}
 					img.οnerrοr = function() {
 						console.error('error!')
@@ -397,17 +392,7 @@ export default {
 				})
 				const formData = new FormData()
 				formData.append('file', this.curFile)
-				const activiType =
-					this.platform === 'PC' || this.platform === 'MB'
-						? 'ACTIVITY'
-						: this.platform
-				formData.append('activiType', activiType)
-
-				const handle =
-					this.uploadFileType === UploadFileTypeConst.Image
-						? this.$api.uploadActivityImgs
-						: this.$api.uploadActivityImgs
-				handle(formData, this.handleProgress)
+				this.$api.imageUpload(formData)
 					.then((response) => {
 						if (this.isUploading) {
 							this.$message({
@@ -418,9 +403,6 @@ export default {
 						this.handleAvatarSuccess(response.data)
 					})
 					.catch(() => {
-						if (this.isUploading) {
-							this.$message.error('上传失败')
-						}
 						this.handleAvatarDefeat()
 					})
 			})
@@ -491,8 +473,8 @@ $mini-size: 100px;
 	display: block;
 }
 .common-align-center {
-    width: 50px;
-    height: 50px;
+	width: 50px;
+	height: 50px;
 }
 .delete-icon {
 	//position: absolute;

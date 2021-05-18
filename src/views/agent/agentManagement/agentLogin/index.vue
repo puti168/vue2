@@ -19,9 +19,9 @@
               style="width: 375px"
             ></el-date-picker>
           </el-form-item>
-          <el-form-item label="代理账号:">
+          <el-form-item label="代理账号:" prop="userName">
             <el-input
-              v-model="queryData.bankName"
+              v-model="queryData.userName"
               clearable
               :maxlength="11"
               size="medium"
@@ -31,7 +31,7 @@
               @keyup.enter.native="enterSearch"
             ></el-input>
           </el-form-item>
-          <el-form-item label="代理类型:" class="tagheight">
+          <el-form-item label="代理类型:" class="tagheight" prop="accountType">
             <el-select
               v-model="queryData.accountType"
               style="width: 280px"
@@ -47,21 +47,25 @@
               ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="登录状态:" class="tagheight">
+          <el-form-item label="登录状态:" class="tagheight" prop="loginStatus">
             <el-select
-              v-model="queryData.accountType"
+              v-model="queryData.loginStatus"
               style="width: 280px"
+              clearable
               placeholder="默认选择全部"
               :popper-append-to-body="false"
             >
-              <el-option label="全部" value=""></el-option>
-              <el-option label="成功" value="0"></el-option>
-              <el-option label="失败" value="1"></el-option>
+              <el-option
+                v-for="item in loginStatusType"
+                :key="item.description"
+                :label="item.description"
+                :value="item.code"
+              ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="登录IP:">
+          <el-form-item label="登录IP:" prop="loginIp">
             <el-input
-              v-model="queryData.bankCode"
+              v-model="queryData.loginIp"
               clearable
               :maxlength="15"
               size="medium"
@@ -71,9 +75,9 @@
               @keyup.enter.native="enterSearch"
             ></el-input>
           </el-form-item>
-          <el-form-item label="IP归属地:">
+          <el-form-item label="IP归属地:" prop="ipAttribution">
             <el-input
-              v-model="queryData.bankCode"
+              v-model="queryData.ipAttribution"
               clearable
               :maxlength="10"
               size="medium"
@@ -83,25 +87,25 @@
               @keyup.enter.native="enterSearch"
             ></el-input>
           </el-form-item>
-          <el-form-item label="登录终端:" class="tagheight">
+          <el-form-item label="登录终端:" class="tagheight" prop="deviceType">
             <el-select
-              v-model="queryData.accountType"
+              v-model="queryData.deviceType"
               style="width: 280px"
               multiple
               placeholder="默认选择全部"
               :popper-append-to-body="false"
             >
               <el-option
-                v-for="item in accountType"
+                v-for="item in loginDeviceType"
                 :key="item.code"
                 :label="item.description"
                 :value="item.code"
               ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="终端设备号:">
+          <el-form-item label="终端设备号:" prop="deviceNo">
             <el-input
-              v-model="queryData.bankCode"
+              v-model="queryData.deviceNo"
               clearable
               :maxlength="50"
               size="medium"
@@ -147,7 +151,7 @@
             次
           </p>
           <p>
-            登录失败<span class="redColor">{{ summary.successCount }}</span>
+            登录失败<span class="redColor">{{ summary.failCount }}</span>
             次
           </p>
         </div>
@@ -164,60 +168,60 @@
           @sort-change="_changeTableSort"
         >
           <el-table-column
-            prop="vipSerialNum"
+            prop="loginTime"
             align="center"
             label="登录时间"
             sortable="custom"
           ></el-table-column>
-          <el-table-column
-            prop="bankName"
-            align="center"
-            label="登录状态"
-          ></el-table-column>
-          <el-table-column prop="createDt" align="center" label="代理账号">
+          <el-table-column prop="loginStatus" align="center" label="登录状态">
             <template slot-scope="scope">
-              <Copy v-if="!!scope.row.createDt" :title="scope.row.createDt" :copy="copy">
-                {{ scope.row.createDt }}
+              {{ typeFilter(scope.row.loginStatus, "loginStatusType") }}
+            </template>
+          </el-table-column>
+          <el-table-column prop="userName" align="center" label="代理账号">
+            <template slot-scope="scope">
+              <Copy v-if="!!scope.row.userName" :title="scope.row.userName" :copy="copy">
+                {{ scope.row.userName }}
               </Copy>
               <span v-else>-</span>
             </template>
           </el-table-column>
+          <el-table-column prop="accountType" align="center" label="代理类型">
+            <template slot-scope="scope">
+              {{ typeFilter(scope.row.accountType, "accountType") }}
+            </template>
+          </el-table-column>
+          <el-table-column prop="loginIp" align="center" label="登录IP"></el-table-column>
           <el-table-column
-            prop="updateDt"
-            align="center"
-            label="代理类型"
-          ></el-table-column>
-          <el-table-column
-            prop="updateDt"
-            align="center"
-            label="登录IP"
-          ></el-table-column>
-          <el-table-column
-            prop="updateDt"
+            prop="ipAttribution"
             align="center"
             label="IP归属地"
           ></el-table-column>
+          <el-table-column prop="deviceType" align="center" label="登录终端">
+            <template slot-scope="scope">
+              {{ typeFilter(scope.row.deviceType, "loginDeviceType") }}
+            </template>
+          </el-table-column>
           <el-table-column
-            prop="updateDt"
-            align="center"
-            label="登录终端"
-          ></el-table-column>
-          <el-table-column
-            prop="updateDt"
+            prop="deviceNo"
             align="center"
             label="终端设备号"
           ></el-table-column>
           <el-table-column
-            prop="updateDt"
+            prop="loginReference"
             align="center"
             label="登录地址"
           ></el-table-column>
           <el-table-column
-            prop="updateDt"
+            prop="browseContent"
             align="center"
             label="设备版本"
           ></el-table-column>
-          <el-table-column prop="updateDt" align="center" label="备注"></el-table-column>
+          <el-table-column
+            prop="loginError"
+            align="center"
+            label="备注"
+          ></el-table-column>
         </el-table>
         <!-- 分页 -->
         <el-pagination
@@ -249,48 +253,52 @@ export default {
   mixins: [list],
   data() {
     return {
-      queryData: {
-        accountType: []
-      },
+      queryData: {},
       loginTime: [startTime, endTime],
       now: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
-      summary: {
-        count: 0,
-        failCount: 0,
-        successCount: 0
-      },
+      summary: {},
       tableData: []
     }
   },
   computed: {
+    loginDeviceType() {
+      return this.globalDics.loginDeviceType
+    },
+    loginStatusType() {
+      return this.globalDics.loginStatusType
+    },
     accountType() {
       return this.globalDics.accountType
     }
   },
-  mounted() {
-    for (let i = 0; i < 10; i++) {
-      this.tableData[i] = {
-        bankCode: '165416416464654',
-        bankName: '中国银行',
-        createDt: '2021-02-13 20:28:54',
-        updateDt: '2021-02-13 20:28:54'
-      }
-    }
-  },
+  mounted() {},
   methods: {
     loadData() {
-      // this.loading = true;
+      this.loading = true
       const create = this.loginTime || []
       const [startTime, endTime] = create
       let params = {
         ...this.queryData,
-        startTime: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : '',
-        endTime: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
+        loginStartTime: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : '',
+        loginEndTime: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
       }
       params = {
         ...this.getParams(params)
       }
-      console.log(params)
+      this.$api
+        .getProxyDetailProxyLoginLog(params)
+        .then((res) => {
+          this.now = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
+          if (res.code === 200) {
+            this.tableData = res.data.record
+            this.total = res.data.totalRecord
+            this.summary = res.data.summary !== null ? res.data.summary : {}
+          }
+          this.loading = false
+        })
+        .catch(() => {
+          this.loading = false
+        })
     },
     reset() {
       this.queryData = {}

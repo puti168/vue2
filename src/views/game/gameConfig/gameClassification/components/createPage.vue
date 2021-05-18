@@ -97,7 +97,7 @@
 							ref="transfer"
 							v-model="value"
 							filterable
-							:data="data"
+							:data="gameNameList"
 							:gameNameList="gameNameList"
 							:filter-method="filterMethod"
 							:target-order="'push'"
@@ -154,6 +154,7 @@ export default {
 			},
 			dataList: [],
 			gameNameList: [],
+			childGameNameList: [],
 			data: generateData(),
 			value: [4, 2, 1],
 			shiftKey: false,
@@ -251,7 +252,7 @@ export default {
 
 		// 子游戏查询
 		queryChildGame() {
-			this.gameNameList = []
+			this.childGameNameList = []
 			const params = {
 				gameName: '',
 				assortId: ''
@@ -259,7 +260,7 @@ export default {
 			this.$api.queryChildGameAPI(params).then((res) => {
 				const { code, data, msg } = res
 				if (code === 200) {
-					this.gameNameList = data
+					this.childGameNameList = data
 				} else {
 					this.loading = false
 					this.$message({
