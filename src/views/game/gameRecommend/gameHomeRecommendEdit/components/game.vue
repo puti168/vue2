@@ -3,7 +3,7 @@
 		<div class="head">
 			<span class="title">游戏专题模块</span>
 			<div class="right-btn">
-				<el-button plain @click="goBack">取消</el-button>
+				<el-button plain @click="back">取消</el-button>
 				<el-button type="success" @click="confirm(true)">保存</el-button>
 			</div>
 		</div>
@@ -204,7 +204,8 @@ import Sortable from 'sortablejs'
 export default {
 	components: {},
 	mixins: [list],
-	props: { editFormData: { type: Object, default: () => ({}) } },
+    props: {gameDetails: {type: Object, default: () => {}}},
+	// props: { editFormData: { type: Object, default: () => ({}) } },
 	data() {
 		return {
 			list: {},
@@ -236,9 +237,12 @@ export default {
 	},
 	mounted() {},
 	methods: {
-		goBack() {
-			this.$router.go(-1)
-		},
+        back() {
+            this.$emit('back')
+        },
+		// goBack() {
+		// 	this.$router.go(-1)
+		// },
 		confirm() {},
 		deleteRow(row) {
 			console.log(row)

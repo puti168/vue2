@@ -27,6 +27,14 @@ export function queryChildGameAPI(data) {
 	})
 }
 
+// 游戏配置==> 游戏分类管理 ===> 子游戏配置
+export function queryChildGameConfigAPI(data) {
+	return request({
+		url: '/gameAssort/selectById',
+		method: 'post',
+		data
+	})
+}
 // 游戏配置==> 游戏分类管理 ===> 删除
 export function gameDeleteAPI(data) {
 	return request({
@@ -36,7 +44,7 @@ export function gameDeleteAPI(data) {
 	})
 }
 
-// 游戏配置==> 游戏分类管理 ===> 编辑
+// 游戏配置==> 游戏分类管理 ===> 编辑保存
 export function gameUpdateAPI(data) {
 	return request({
 		url: '/gameAssort/update',
@@ -274,6 +282,24 @@ export function gameList(data) {
 	})
 }
 
+// 游戏==> 首页推荐位 ==> 列表
+export function gameHomeRecommendListAPI(data) {
+	return request({
+		url: '/gameCommonModule/gameModuleList',
+		method: 'post',
+		data
+	})
+}
+
+// 游戏==> 首页推荐位 ==> 列表 ===> 详情
+export function gameHomeRecommendDetailsAPI(data) {
+	return request({
+		url: '/gameCommonModule/gameModuleDetail',
+		method: 'post',
+		data
+	})
+}
+
 export default {
 	gameAssortListAPI,
 	gameList,
@@ -288,6 +314,7 @@ export default {
 	gameLabelList,
 	queryChildGamePageAPI,
 	queryChildGameAPI,
+	queryChildGameConfigAPI,
 	gameDeleteAPI,
 	gameUpdateAPI,
 	gameCreateAPI,
@@ -307,5 +334,7 @@ export default {
 	gameSearchListAPI,
 	gameSearchCreateAPI,
 	gameSearchUpdateAPI,
-	gameSearchDeleteAPI
+	gameSearchDeleteAPI,
+	gameHomeRecommendListAPI,
+	gameHomeRecommendDetailsAPI
 }

@@ -57,7 +57,7 @@
 		<transfer-panel
 			ref="rightPanel"
 			v-bind="$props"
-			:data="targetData"
+			:data="gameNameList"
 			:title="titles[1]"
 			:show="true"
 			:default-checked="rightDefaultChecked"

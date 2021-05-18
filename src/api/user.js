@@ -148,6 +148,7 @@ export function addUser(data) {
 		data
 	})
 }
+
 export default {
 	login,
 	logout,

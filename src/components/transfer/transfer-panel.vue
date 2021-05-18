@@ -45,15 +45,37 @@
 			<!--			</div>-->
 			<draggable
 				v-if="show"
-				v-model="selectedTheme"
-				class="selected-list"
+				v-model="gameNameList"
 				tag="ul"
 				v-bind="dragOptions"
+				class="el-transfer-panel__list"
 				:move="onMove"
 				@end="onEnd"
 			>
-				<li v-for="item in selectedTheme" :key="item.id" class="selected-theme">
-					{{ item.id }}{{ item.label }}
+				<li v-for="item in gameNameList" :key="item.id" class="selected-theme">
+					<p class="item-content">
+						<span class="item-label">
+							{{ item.gameName }}
+						</span>
+						<span
+							v-if="item.gameStatus * 1 === 0"
+							class="item-status disableRgba"
+						>
+							禁用
+						</span>
+						<span
+							v-if="item.gameStatus * 1 === 1"
+							class="item-status normalRgba"
+						>
+							开启
+						</span>
+						<span
+							v-if="item.gameStatus * 1 === 2"
+							class="item-status deleteRgba"
+						>
+							维护中
+						</span>
+					</p>
 				</li>
 			</draggable>
 			<draggable
@@ -70,12 +92,27 @@
 					class="el-transfer-panel__item"
 				>
 					<p class="item-content">
-						<span class="item-id">{{ item['id'] }}</span>
+						<span class="item-id">{{ item.assort }}</span>
 						<span class="item-label">
-							{{ item[labelProp] || item[keyProp] }}
+							{{ item.gameName }}
 						</span>
-						<span class="item-status disableRgba">
-							{{ item[statusProp] || '' }}
+						<span
+							v-if="item.gameStatus * 1 === 0"
+							class="item-status disableRgba"
+						>
+							禁用
+						</span>
+						<span
+							v-if="item.gameStatus * 1 === 1"
+							class="item-status normalRgba"
+						>
+							开启
+						</span>
+						<span
+							v-if="item.gameStatus * 1 === 2"
+							class="item-status deleteRgba"
+						>
+							维护中
 						</span>
 						<i class="el-icon-close"></i>
 					</p>
@@ -147,6 +184,12 @@ export default {
 
 	props: {
 		data: {
+			type: Array,
+			default() {
+				return []
+			}
+		},
+		gameNameList: {
 			type: Array,
 			default() {
 				return []

@@ -5,7 +5,7 @@
 				<span>页签创建</span>
 				<span>
 					<el-button type="info" @click="back">返回</el-button>
-					<el-button type="success">保存</el-button>
+					<el-button type="success" @click="save">保存</el-button>
 				</span>
 			</div>
 			<div class="content-part2">
@@ -17,7 +17,7 @@
 					label-width="100px"
 					class="form-content"
 				>
-					<el-form-item label="分类名称:">
+					<el-form-item label="分类名称:" prop="assortName">
 						<el-input
 							v-model="queryData.assortName"
 							size="medium"
@@ -27,7 +27,7 @@
 							style="width: 180px"
 						></el-input>
 					</el-form-item>
-					<el-form-item label="分类顺序:">
+					<el-form-item label="分类顺序:" prop="assortSort">
 						<el-input
 							v-model="queryData.assortSort"
 							size="medium"
@@ -51,7 +51,7 @@
 								v-for="item in terminalTypeArr"
 								:key="item.code"
 								:label="item.description"
-								:value="item.code"
+								:value="item.description"
 							></el-option>
 						</el-select>
 					</el-form-item>
@@ -97,8 +97,9 @@
 							ref="transfer"
 							v-model="value"
 							filterable
-							:data="data"
+							:data="childGameNameList"
 							:gameNameList="gameNameList"
+							:childGameConfigData="childGameConfigData"
 							:filter-method="filterMethod"
 							:target-order="'push'"
 							:titles="['已包含', '游戏平台']"
@@ -107,7 +108,7 @@
 							:right-default-checked="hasCheckedWHRightData"
 							@left-check-change="handleWHLeftChange"
 							@right-check-change="handleWHRightChange"
-                            @clearAbleList="clearAbleList"
+							@clearAbleList="clearAbleList"
 						></Transfer>
 					</div>
 				</div>
@@ -137,6 +138,12 @@ export default {
 	name: 'CreatePage',
 	components: { Transfer },
 	mixins: [list],
+	props: {
+		rowAssortId: {
+			type: String,
+			default: ''
+		}
+	},
 	data() {
 		return {
 			filterMethod(query, item) {
@@ -155,6 +162,7 @@ export default {
 			dataList: [],
 			gameNameList: [],
 			childGameNameList: [],
+			childGameConfigData: undefined,
 			data: generateData(),
 			value: [4, 2, 1],
 			shiftKey: false,
@@ -177,6 +185,7 @@ export default {
 	created() {
 		this.queryChildGame()
 		this.queryGame()
+		this.queryChildGameConfig()
 	},
 	mounted() {
 		document.body.ondrop = function(event) {
@@ -253,9 +262,10 @@ export default {
 		// 子游戏查询
 		queryChildGame() {
 			this.childGameNameList = []
+			console.log('this.rowAssortId', this.rowAssortId)
 			const params = {
 				gameName: '',
-				assortId: ''
+				assortId: this.rowAssortId
 			}
 			this.$api.queryChildGameAPI(params).then((res) => {
 				const { code, data, msg } = res
@@ -270,6 +280,88 @@ export default {
 				}
 			})
 		},
+		// 子游戏配置查询
+		queryChildGameConfig() {
+			this.childGameNameList = []
+			if (this.rowAssortId) {
+				const params = {
+					id: this.rowAssortId
+				}
+				this.$api.queryChildGameConfigAPI(params).then((res) => {
+					const { code, data, msg } = res
+					if (code === 200) {
+						const {
+							assortName,
+							assortSort,
+							remark,
+							clientDisplay,
+							supportTerminal
+						} = data
+						this.queryData.assortName = assortName
+						this.queryData.assortSort = assortSort
+						this.queryData.remark = remark
+
+						this.gameDisplayArr.forEach((item) => {
+							if (!!(item.code * 1) === clientDisplay) {
+								this.queryData.clientDisplay = item.code
+							}
+						})
+						this.terminalTypeArr.forEach((item) => {
+							if (item.description === supportTerminal) {
+								this.queryData.supportTerminal.push(item.description)
+							}
+						})
+					} else {
+						this.$message({
+							message: msg,
+							type: 'error'
+						})
+					}
+				})
+			}
+		},
+		// 保存
+		save() {
+			const params = {
+				...this.queryData,
+				relationParams: []
+			}
+			params.supportTerminal =
+				params.supportTerminal && params.supportTerminal.length
+					? params.supportTerminal.join(',')
+					: undefined
+			this.$api
+				.gameUpdateAPI(params)
+				.then((res) => {
+					const { code, msg } = res
+					console.log('res', res)
+					if (code === 200) {
+						this.loading = false
+						this.$message({
+							message: '保存成功!',
+							type: 'success'
+						})
+                        this.reset()
+					} else {
+						this.loading = false
+						this.$message({
+							message: msg,
+							type: 'error'
+						})
+					}
+				})
+				.catch(() => (this.loading = false))
+		},
+        reset() {
+            this.$refs['form'].resetFields()
+            this.queryData = {
+                assortName: undefined,
+                assortSort: undefined,
+                supportTerminal: undefined,
+                remark: undefined,
+                clientDisplay: undefined
+            }
+        },
 		// 列表清空
 		clearAbleList() {
 			console.log('清空列表')
@@ -411,13 +503,6 @@ export default {
 			setTimeout(() => {
 				this.loading = false
 			}, 1000)
-		},
-		reset() {
-			this.$refs['form'].resetFields()
-			this.form = {
-				historyGameLimit: undefined,
-				hotSearch: undefined
-			}
 		},
 		checkValue(val) {},
 		addRow() {

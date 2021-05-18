@@ -1,5 +1,33 @@
 import request from '@/utils/request'
 
+// 代理==> 代理管理 ===> 代理列表
+export function AgentListAPI(data) {
+	return request({
+		url: '/proxyInformationRegistered/proxyRegisteredList',
+		method: 'post',
+		data
+	})
+}
+
+// 代理==> 代理管理 ===> 代理列表导出
+export function agentListExportAPI(data) {
+	return request({
+		url: '/proxyInformationRegistered/download',
+		method: 'post',
+		data,
+		responseType: 'blob'
+	})
+}
+
+// 代理管理==> 代理列表 ===> 风控层级
+export function agentDictAPI(params) {
+	return request({
+		url: '/proxyInformationRegistered/proxyDict',
+		method: 'get',
+		params
+	})
+}
+
 // 代理==> 代理管理 ===> 新增代理
 export function addAgentAPI(data) {
 	return request({
@@ -8,7 +36,33 @@ export function addAgentAPI(data) {
 		data
 	})
 }
-// 代理详情-信息编辑
+
+// 代理==> 代理管理 ===> 会员转代
+export function memberTransAgentAPI(data) {
+	return request({
+		url: '/memberTransfer/apply',
+		method: 'post',
+		data
+	})
+}
+
+// 代理==> 代理管理 ===> 代理注册信息
+export function agentRegisterInfoAPI(data) {
+	return request({
+		url: '/proxyInformationRegistered/proxyList',
+		method: 'post',
+		data
+	})
+}
+// 代理==>  ===> 代理详情查询
+export function getProxyDetailQueryDetail(data) {
+	return request({
+		url: '/proxyDetail/queryDetail',
+		method: 'post',
+		data
+	})
+}
+// 代理详情-基本信息-信息编辑
 export function setProxyDataInfoEdit(data) {
 	return request({
 		url: '/proxyData/infoEdit',
@@ -80,10 +134,54 @@ export function getProxyDetailTop3Bet(data) {
 		data
 	})
 }
-// 代理详情-登录日志
+// 代理详情-登录日志，登录信息
 export function getProxyDetailProxyLoginLog(data) {
 	return request({
 		url: '/proxyDetail/proxyLoginLog',
+		method: 'post',
+		data
+	})
+}
+// 代理详情-代理信息变更记录 分页查询
+export function getProxyDataInfoChangeRecord(data) {
+	return request({
+		url: '/proxyData/infoChangeRecord',
+		method: 'post',
+		data
+	})
+}
+
+// 代理==> 代理推广 ===> 代理图片列表
+export function agentPictureListAPI(data) {
+	return request({
+		url: '/materialImage/select',
+		method: 'post',
+		data
+	})
+}
+
+// 代理==> 代理推广 ===> 代理图片删除
+export function agentPictureListDeleteAPI(data) {
+	return request({
+		url: '/materialImage/select',
+		method: 'post',
+		data
+	})
+}
+
+// 代理==> 代理推广 ===> 代理图片新增
+export function agentPictureListCreateAPI(data) {
+	return request({
+		url: '/materialImage/select',
+		method: 'post',
+		data
+	})
+}
+
+// 代理==> 代理推广 ===> 代理图片修改
+export function agentPictureListUpdateAPI(data) {
+	return request({
+		url: '/materialImage/select',
 		method: 'post',
 		data
 	})
@@ -123,7 +221,17 @@ export function setDomainUpdate(data) {
 }
 
 export default {
+	AgentListAPI,
+	agentListExportAPI,
+	agentDictAPI,
 	addAgentAPI,
+	memberTransAgentAPI,
+	agentRegisterInfoAPI,
+	getProxyDetailQueryDetail,
+	agentPictureListAPI,
+	agentPictureListDeleteAPI,
+	agentPictureListCreateAPI,
+	agentPictureListUpdateAPI,
 	setProxyDataInfoEdit,
 	getProxyDetailRemark,
 	getProxyDataBalance,
@@ -134,6 +242,7 @@ export default {
 	getProxyDetailTeamBet,
 	getProxyDetailTop3Bet,
 	getProxyDetailProxyLoginLog,
+	getProxyDataInfoChangeRecord,
 	setDomainDelete,
 	addDomainInsert,
 	getDomainSelect,

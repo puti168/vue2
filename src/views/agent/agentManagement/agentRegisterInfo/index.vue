@@ -238,7 +238,7 @@ export default {
     },
     computed: {
         accountTypeArr() {
-            return this.globalDics.accountType
+            return this.globalDics.proxyAccountType
         },
         deviceTypeArr() {
             return this.globalDics.deviceType
@@ -273,7 +273,7 @@ export default {
             // 		? params.deviceType
             // 		: undefined
             this.$api
-                .memberRegisterInfoListAPI(params)
+                .agentRegisterInfoAPI(params)
                 .then((res) => {
                     const {
                         code,
@@ -300,6 +300,7 @@ export default {
         },
         reset() {
             this.$refs['form'].resetFields()
+            this.pageNum = 1
             this.queryData = {
                 registerTime: [start, end],
                 accountType: undefined,

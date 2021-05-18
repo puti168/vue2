@@ -149,7 +149,6 @@
             >
               <el-option label="已计算" value="1"></el-option>
               <el-option label="未计算" value="2"></el-option>
-              <el-option label="已取消" value="3"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="投注金额:">
@@ -359,15 +358,8 @@
           </el-table-column>
           <el-table-column prop="betStatus" align="center" label="注单状态">
             <template slot-scope="scope">
-              <span v-if="scope.row.betStatus === '1'" class="normalRgba">已结算</span>
-              <span
-v-else-if="scope.row.betStatus === '2'"
-class="deleteRgba"
->未结算</span>
-              <span
-v-else-if="scope.row.betStatus === '3'"
-class="disableRgba"
->已取消</span>
+              <span v-if="scope.row.betStatus === 1" class="normalRgba">已结算</span>
+              <span v-else-if="scope.row.betStatus === 2" class="deleteRgba">未结算</span>
               <span v-else>-</span>
             </template>
           </el-table-column>
@@ -398,7 +390,12 @@ class="disableRgba"
           <el-table-column prop="loginIp" align="center" label="投注IP"></el-table-column>
           <el-table-column prop="deviceType" align="center" label="投注终端">
             <template slot-scope="scope">
-              {{ typeFilter(scope.row.deviceType, "betDeviceType") }}
+              <span v-if="scope.row.deviceType === '其他'">{{
+                scope.row.deviceType
+              }}</span>
+              <span v-else>
+                {{ typeFilter(scope.row.deviceType, "betDeviceType") }}
+              </span>
             </template>
           </el-table-column>
           <el-table-column prop="operation" align="center" label="操作">
