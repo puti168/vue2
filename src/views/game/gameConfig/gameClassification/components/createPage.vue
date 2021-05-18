@@ -137,6 +137,12 @@ export default {
 	name: 'CreatePage',
 	components: { Transfer },
 	mixins: [list],
+    props: {
+        rowAssortId: {
+            type: String,
+            default: ''
+        }
+    },
 	data() {
 		return {
 			filterMethod(query, item) {
@@ -155,6 +161,7 @@ export default {
 			dataList: [],
 			gameNameList: [],
 			childGameNameList: [],
+            childGameConfigData: undefined,
 			data: generateData(),
 			value: [4, 2, 1],
 			shiftKey: false,
@@ -177,6 +184,7 @@ export default {
 	created() {
 		this.queryChildGame()
 		this.queryGame()
+        this.queryChildGameConfig()
 	},
 	mounted() {
 		document.body.ondrop = function(event) {
@@ -253,9 +261,10 @@ export default {
 		// 子游戏查询
 		queryChildGame() {
 			this.childGameNameList = []
+            console.log('this.rowAssortId', this.rowAssortId)
 			const params = {
 				gameName: '',
-				assortId: ''
+				assortId: this.rowAssortId
 			}
 			this.$api.queryChildGameAPI(params).then((res) => {
 				const { code, data, msg } = res
@@ -270,6 +279,26 @@ export default {
 				}
 			})
 		},
+        // 子游戏配置查询
+        queryChildGameConfig() {
+            this.childGameNameList = []
+            console.log('this.rowAssortId', this.rowAssortId)
+            const params = {
+                id: this.rowAssortId
+            }
+            this.$api.queryChildGameConfigAPI(params).then((res) => {
+                const { code, data, msg } = res
+                console.log('res', res)
+                if (code === 200) {
+                    this.childGameConfigData = data
+                } else {
+                    this.$message({
+                        message: msg,
+                        type: 'error'
+                    })
+                }
+            })
+        },
 		// 列表清空
 		clearAbleList() {
 			console.log('清空列表')
