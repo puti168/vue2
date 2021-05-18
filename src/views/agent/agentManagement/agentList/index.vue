@@ -25,7 +25,7 @@
 							:default-time="defaultTime"
 						></el-date-picker>
 					</el-form-item>
-					<el-form-item label="代理账号:" prop="userName">
+					<el-form-item label="代理账号:">
 						<el-input
 							v-model="queryData.userName"
 							size="medium"
@@ -35,9 +35,10 @@
 							maxlength="11"
 						></el-input>
 					</el-form-item>
-					<el-form-item label="合营代码:" prop="realName">
+					<el-form-item label="合营代码:">
 						<el-input
-							v-model="queryData.realName"
+							v-model="queryData.invitationCode"
+							oninput="value=value.replace(/[^\d]/g,'')"
 							size="medium"
 							placeholder="请输入"
 							clearable
@@ -147,70 +148,47 @@
 					</el-form-item>
 					<el-form-item label="下级人数:">
 						<el-input
-							v-model="queryData.vipSerialNumMin"
+							v-model="queryData.subNumMin"
 							size="medium"
 							placeholder="最小数值"
 							style="width: 100px"
 							maxlength="3"
-							name="vipSerialNumMin"
+							name="subNumMin"
 							oninput="value=value.replace(/[^\d]/g,'')"
 							@blur="checkValue($event)"
 						></el-input>
 						-
 						<el-input
-							v-model="queryData.vipSerialNumMax"
+							v-model="queryData.subNumMax"
 							size="medium"
 							placeholder="最大数值"
 							style="width: 100px"
 							maxlength="3"
 							oninput="value=value.replace(/[^\d]/g,'')"
-							name="vipSerialNumMax"
+							name="subNumMax"
 							@blur="checkValue($event)"
 						></el-input>
 					</el-form-item>
 					<el-form-item label="有效下级:">
 						<el-input
-							v-model="queryData.firstDepositAmountMin"
+							v-model="queryData.validSubNumMin"
 							size="medium"
 							placeholder="最小数值"
 							style="width: 100px"
 							maxlength="10"
 							oninput="value=value.replace(/[^\d]/g,'')"
-							name="firstDepositAmountMin"
+							name="validSubNumMin"
 							@blur="checkValue($event)"
 						></el-input>
 						-
 						<el-input
-							v-model="queryData.firstDepositAmountMax"
+							v-model="queryData.validSubNumMax"
 							size="medium"
 							placeholder="最大数值"
 							style="width: 100px"
 							maxlength="10"
 							oninput="value=value.replace(/[^\d]/g,'')"
-							name="firstDepositAmountMax"
-							@blur="checkValue($event)"
-						></el-input>
-					</el-form-item>
-					<el-form-item label="返佣:">
-						<el-input
-							v-model="queryData.offLineDaysStart"
-							size="medium"
-							placeholder="最小数值"
-							style="width: 100px"
-							maxlength="5"
-							name="offLineDaysStart"
-							oninput="value=value.replace(/[^\d]/g,'')"
-							@blur="checkValue($event)"
-						></el-input>
-						-
-						<el-input
-							v-model="queryData.offLineDaysEnd"
-							size="medium"
-							placeholder="最大数值"
-							style="width: 100px"
-							maxlength="5"
-							name="offLineDaysEnd"
-							oninput="value=value.replace(/[^\d]/g,'')"
+							name="validSubNumMax"
 							@blur="checkValue($event)"
 						></el-input>
 					</el-form-item>
@@ -233,6 +211,29 @@
 							style="width: 100px"
 							maxlength="5"
 							name="offLineDaysEnd"
+							oninput="value=value.replace(/[^\d]/g,'')"
+							@blur="checkValue($event)"
+						></el-input>
+					</el-form-item>
+					<el-form-item label="返佣:">
+						<el-input
+							v-model="queryData.totalRebateMin"
+							size="medium"
+							placeholder="最小数值"
+							style="width: 100px"
+							maxlength="5"
+							name="totalRebateMin"
+							oninput="value=value.replace(/[^\d]/g,'')"
+							@blur="checkValue($event)"
+						></el-input>
+						-
+						<el-input
+							v-model="queryData.totalRebateMax"
+							size="medium"
+							placeholder="最大数值"
+							style="width: 100px"
+							maxlength="5"
+							name="totalRebateMax"
 							oninput="value=value.replace(/[^\d]/g,'')"
 							@blur="checkValue($event)"
 						></el-input>
@@ -479,22 +480,21 @@ export default {
 			queryData: {
 				registerTime: [start, end],
 				userName: undefined,
-				realName: undefined,
+				invitationCode: undefined,
+				accountType: [],
 				accountStatus: [],
 				windControlId: undefined,
+				lastLoginTime: [start, end],
+				labelId: undefined,
+				entryAuthority: undefined,
+				subNumMin: undefined,
+				subNumMax: undefined,
+				validSubNumMin: undefined,
+				validSubNumMax: undefined,
+				totalRebateMin: undefined,
+				totalRebateMax: undefined,
 				offLineDaysStart: undefined,
 				offLineDaysEnd: undefined,
-				lastLoginTime: [start, end],
-				vipSerialNumMax: undefined,
-				vipSerialNumMin: undefined,
-				accountType: [],
-				deviceType: [],
-                entryAuthority: undefined,
-				firstDepositAmountMin: undefined,
-				firstDepositAmountMax: undefined,
-				firstSaveTime: [],
-				labelId: undefined,
-				parentProxyName: undefined,
 				orderKey: undefined,
 				orderType: undefined
 			},
@@ -511,9 +511,6 @@ export default {
 		accountTypeArr() {
 			return this.globalDics.proxyAccountType
 		},
-		deviceTypeArr() {
-			return this.globalDics.deviceType
-		},
 		entrAuthorityTypeArr() {
 			return this.globalDics.entrAuthorityType
 		}
@@ -527,7 +524,9 @@ export default {
 			this.dataList = []
 			this.loading = true
 			const create = this.queryData.registerTime || []
+			const lastLogin = this.queryData.lastLoginTime || []
 			const [startTime, endTime] = create
+			const [lastLoginTimeStart, lastLoginTimeEnd] = lastLogin
 			let params = {
 				...this.queryData,
 				createDtStart: startTime
@@ -535,6 +534,12 @@ export default {
 					: undefined,
 				createDtEnd: endTime
 					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
+					: undefined,
+				lastLoginTimeStart: startTime
+					? dayjs(lastLoginTimeStart).format('YYYY-MM-DD HH:mm:ss')
+					: undefined,
+				lastLoginTimeEnd: endTime
+					? dayjs(lastLoginTimeEnd).format('YYYY-MM-DD HH:mm:ss')
 					: undefined
 			}
 			params = {
@@ -542,7 +547,6 @@ export default {
 			}
 			delete params.registerTime
 			delete params.lastLoginTime
-			delete params.firstSaveTime
 			this.$api
 				.AgentListAPI(params)
 				.then((res) => {
@@ -589,24 +593,25 @@ export default {
 			})
 		},
 		reset() {
+			this.pageNum = 1
 			this.queryData = {
 				registerTime: [start, end],
 				userName: undefined,
-				realName: undefined,
-				accountStatus: undefined,
+				invitationCode: undefined,
+				accountType: [],
+				accountStatus: [],
 				windControlId: undefined,
+				lastLoginTime: [start, end],
+				labelId: undefined,
+				entryAuthority: undefined,
+				subNumMin: undefined,
+				subNumMax: undefined,
+				validSubNumMin: undefined,
+				validSubNumMax: undefined,
 				offLineDaysStart: undefined,
 				offLineDaysEnd: undefined,
-				lastLoginTime: [start, end],
-				vipSerialNumMax: undefined,
-				vipSerialNumMin: undefined,
-				accountType: undefined,
-				deviceType: undefined,
-				firstDepositAmountMin: undefined,
-				firstDepositAmountMax: undefined,
-				firstSaveTime: [],
-				labelId: undefined,
-				parentProxyName: undefined,
+				totalRebateMin: undefined,
+				totalRebateMax: undefined,
 				orderKey: undefined,
 				orderType: undefined
 			}
@@ -614,23 +619,20 @@ export default {
 			this.loadData()
 		},
 		_changeTableSort({ column, prop, order }) {
-			if (prop === 'vipSerialNum') {
+			if (prop === 'subNum') {
 				prop = 1
 			}
-			if (prop === 'createDt') {
+			if (prop === 'validSubNum') {
 				prop = 2
 			}
-			if (prop === 'firstDepositTime') {
+			if (prop === 'createDt') {
 				prop = 3
 			}
-			if (prop === 'firstDepositAmount') {
+			if (prop === 'lastLoginTime') {
 				prop = 4
 			}
-			if (prop === 'lastLoginTime') {
-				prop = 5
-			}
 			if (prop === 'offLineDays') {
-				prop = 6
+				prop = 5
 			}
 			this.queryData.orderKey = prop
 			if (order === 'ascending') {
@@ -655,6 +657,8 @@ export default {
 							type: 'warning',
 							message: `请输入小于${this.queryData.offLineDaysEnd}天数`
 						})
+					} else {
+						this.queryData.offLineDaysStart = value
 					}
 					break
 				case 'offLineDaysEnd':
@@ -666,50 +670,86 @@ export default {
 							type: 'warning',
 							message: `请输入大于${this.queryData.offLineDaysStart}天数`
 						})
+					} else {
+						this.queryData.offLineDaysEnd = value
 					}
 					break
-				case 'vipSerialNumMin':
+				case 'subNumMin':
 					if (
-						!!this.queryData.vipSerialNumMax &&
-						(value && value * 1 > this.queryData.vipSerialNumMax * 1)
+						!!this.queryData.subNumMax &&
+						(value && value * 1 > this.queryData.subNumMax * 1)
 					) {
 						this.$message({
 							type: 'warning',
-							message: `请输入小于${this.queryData.vipSerialNumMax}等级`
+							message: `请输入小于${this.queryData.subNumMax}人数`
 						})
+					} else {
+						this.queryData.subNumMin = value
 					}
 					break
-				case 'vipSerialNumMax':
+				case 'subNumMax':
 					if (
-						!!this.queryData.vipSerialNumMin &&
-						(value && value * 1 < this.queryData.vipSerialNumMin * 1)
+						!!this.queryData.subNumMin &&
+						(value && value * 1 < this.queryData.subNumMin * 1)
 					) {
 						this.$message({
 							type: 'warning',
-							message: `请输入大于${this.queryData.vipSerialNumMin}等级`
+							message: `请输入大于${this.queryData.subNumMin}人数`
 						})
+					} else {
+						this.queryData.subNumMax = value
 					}
 					break
-				case 'firstDepositAmountMin':
+				case 'validSubNumMin':
 					if (
-						!!this.queryData.firstDepositAmountMax &&
-						(value && value * 1 > this.queryData.firstDepositAmountMax * 1)
+						!!this.queryData.validSubNumMax &&
+						(value && value * 1 > this.queryData.validSubNumMax * 1)
 					) {
 						this.$message({
 							type: 'warning',
-							message: `请输入小于${this.queryData.firstDepositAmountMax}金额`
+							message: `请输入小于${this.queryData.validSubNumMax}人数`
 						})
+					} else {
+						this.queryData.validSubNumMin = value
 					}
 					break
-				case 'firstDepositAmountMax':
+				case 'validSubNumMax':
 					if (
-						!!this.queryData.firstDepositAmountMin &&
-						(value && value * 1 < this.queryData.firstDepositAmountMin * 1)
+						!!this.queryData.validSubNumMin &&
+						(value && value * 1 < this.queryData.validSubNumMin * 1)
 					) {
 						this.$message({
 							type: 'warning',
-							message: `请输入大于${this.queryData.firstDepositAmountMin}金额`
+							message: `请输入大于${this.queryData.validSubNumMin}人数`
 						})
+					} else {
+						this.queryData.validSubNumMax = value
+					}
+					break
+				case 'totalRebateMin':
+					if (
+						!!this.queryData.totalRebateMax &&
+						(value && value * 1 > this.queryData.totalRebateMax * 1)
+					) {
+						this.$message({
+							type: 'warning',
+							message: `请输入小于${this.queryData.totalRebateMax}金额`
+						})
+					} else {
+						this.queryData.totalRebateMin = value
+					}
+					break
+				case 'totalRebateMax':
+					if (
+						!!this.queryData.totalRebateMin &&
+						(value && value * 1 < this.queryData.totalRebateMin * 1)
+					) {
+						this.$message({
+							type: 'warning',
+							message: `请输入大于${this.queryData.totalRebateMin}金额`
+						})
+					} else {
+						this.queryData.totalRebateMax = value
 					}
 					break
 			}
@@ -717,6 +757,8 @@ export default {
 		exportExcel() {
 			const create = this.queryData.registerTime || []
 			const [startTime, endTime] = create
+			const lastLogin = this.queryData.lastLoginTime || []
+			const [lastLoginTimeStart, lastLoginTimeEnd] = lastLogin
 			let params = {
 				...this.queryData,
 				createDtStart: startTime
@@ -724,6 +766,12 @@ export default {
 					: undefined,
 				createDtEnd: endTime
 					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
+					: undefined,
+				lastLoginTimeStart: startTime
+					? dayjs(lastLoginTimeStart).format('YYYY-MM-DD HH:mm:ss')
+					: undefined,
+				lastLoginTimeEnd: endTime
+					? dayjs(lastLoginTimeEnd).format('YYYY-MM-DD HH:mm:ss')
 					: undefined
 			}
 			params = {
@@ -731,10 +779,6 @@ export default {
 			}
 			delete params.registerTime
 			delete params.lastLoginTime
-			delete params.firstSaveTime
-			delete params.accountStatus
-			delete params.deviceType
-			delete params.accountType
 			this.$api
 				.agentListExportAPI(params)
 				.then((res) => {
@@ -757,7 +801,6 @@ export default {
 							URL.revokeObjectURL(elink.href)
 							document.body.removeChild(elink)
 						} else {
-							console.log('进来', 111)
 							window.navigator.msSaveBlob(blob, fileName)
 						}
 						this.$message({
