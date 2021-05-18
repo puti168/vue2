@@ -18,6 +18,15 @@ export function AgentListExportAPI(data) {
 	})
 }
 
+// 代理管理==> 代理列表 ===> 风控层级
+export function agentDictAPI(params) {
+	return request({
+		url: '/proxyInformationRegistered/proxyDict',
+		method: 'get',
+		params
+	})
+}
+
 // 代理==> 代理管理 ===> 新增代理
 export function addAgentAPI(data) {
 	return request({
@@ -126,6 +135,42 @@ export function getProxyDetailProxyLoginLog(data) {
 	})
 }
 
+// 代理==> 代理推广 ===> 代理图片列表
+export function agentPictureListAPI(data) {
+	return request({
+		url: '/materialImage/select',
+		method: 'post',
+		data
+	})
+}
+
+// 代理==> 代理推广 ===> 代理图片删除
+export function agentPictureListDeleteAPI(data) {
+	return request({
+		url: '/materialImage/select',
+		method: 'post',
+		data
+	})
+}
+
+// 代理==> 代理推广 ===> 代理图片新增
+export function agentPictureListCreateAPI(data) {
+	return request({
+		url: '/materialImage/select',
+		method: 'post',
+		data
+	})
+}
+
+// 代理==> 代理推广 ===> 代理图片修改
+export function agentPictureListUpdateAPI(data) {
+	return request({
+		url: '/materialImage/select',
+		method: 'post',
+		data
+	})
+}
+
 //  推广管理-推广域名管理-删除推广域名管理
 export function setDomainDelete(data) {
 	return request({
@@ -162,9 +207,14 @@ export function setDomainUpdate(data) {
 export default {
 	AgentListAPI,
 	AgentListExportAPI,
+	agentDictAPI,
 	addAgentAPI,
 	memberTransAgentAPI,
 	agentRegisterInfoAPI,
+	agentPictureListAPI,
+	agentPictureListDeleteAPI,
+	agentPictureListCreateAPI,
+	agentPictureListUpdateAPI,
 	setProxyDataInfoEdit,
 	getProxyDetailRemark,
 	getProxyDataBalance,
