@@ -35,10 +35,7 @@
 				<!--					class="delete-icon"-->
 				<!--					@click.stop="handleDeleteImgUrl"-->
 				<!--				/>-->
-				<i
-					class="delete-icon"
-					@click.stop="handleDeleteImgUrl"
-				></i>
+				<i class="delete-icon" @click.stop="handleDeleteImgUrl"></i>
 			</div>
 			<i
 				class="common-align-center el-icon-plus"
@@ -395,9 +392,7 @@ export default {
 				})
 				const formData = new FormData()
 				formData.append('file', this.curFile)
-				console.log(formData)
-				console.log(this.curFile)
-				this.$api.imageUpload(formData, this.handleProgress)
+				this.$api.imageUpload(formData)
 					.then((response) => {
 						if (this.isUploading) {
 							this.$message({
@@ -478,8 +473,8 @@ $mini-size: 100px;
 	display: block;
 }
 .common-align-center {
-    width: 50px;
-    height: 50px;
+	width: 50px;
+	height: 50px;
 }
 .delete-icon {
 	//position: absolute;
