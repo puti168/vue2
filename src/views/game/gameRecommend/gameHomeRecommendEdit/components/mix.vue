@@ -3,7 +3,7 @@
 		<div class="head">
 			<span class="title">体育模块</span>
 			<div class="right-btn">
-				<el-button plain @click="goBack">取消</el-button>
+				<el-button plain @click="back">取消</el-button>
 				<el-button type="success" @click="confirm(true)">保存</el-button>
 			</div>
 		</div>
@@ -14,7 +14,7 @@
 						<el-col :span="12">
 							<el-form-item label="主标题信息:" prop="gameName">
 								<el-input
-									v-model="form.gameName"
+									v-model="form.mainTitleInfo"
 									size="medium"
 									maxlength="20"
 									clearable
@@ -25,7 +25,7 @@
 						<el-col :span="12">
 							<el-form-item label="副标题信息:" prop="gameName">
 								<el-input
-									v-model="form.gameName"
+									v-model="form.subTitleInfo"
 									size="medium"
 									maxlength="20"
 									clearable
@@ -36,7 +36,7 @@
 						<el-col :span="12">
 							<el-form-item label="滚屏数量限制:" prop="gameName">
 								<el-input
-									v-model="form.gameName"
+									v-model="form.scrollingNum"
 									size="medium"
 									maxlength="20"
 									clearable
@@ -58,7 +58,7 @@
 						<el-col :span="12">
 							<el-form-item label="模块描述:">
 								<el-input
-									v-model="form.gameName"
+									v-model="form.description"
 									size="medium"
 									maxlength="20"
 									clearable
@@ -84,12 +84,14 @@ import list from '@/mixins/list'
 export default {
 	components: {},
 	mixins: [list],
-	props: {},
+    props: {gameDetails: {type: Object, default: () => {}}},
 	data() {
 		return {
 			form: {
-				icon: '',
-				gameName: ''
+                mainTitleInfo: '',
+                subTitleInfo: '',
+                scrollingNum: 0,
+                description: ''
 			},
       imageUrl: ''
 		}
@@ -113,15 +115,27 @@ export default {
 					}
 				]
 			}
-		}
-	},
-	watch: {},
-	created() {},
-	mounted() {},
-	methods: {
-		goBack() {
-			this.$router.go(-1)
 		},
+        addGameDetails() {
+		    return this.gameDetails
+        }
+	},
+	watch: {
+        addGameDetails: {
+            handler(newV, old) {
+                this.gameDetails = {...newV}
+            }
+        }
+    },
+	created() {},
+	mounted() {
+	    debugger
+	    this.form = this.gameDetails
+    },
+	methods: {
+        back() {
+            this.$emit('back')
+        },
 		confirm(action) {
 			this.remark = ''
 			this.action = action

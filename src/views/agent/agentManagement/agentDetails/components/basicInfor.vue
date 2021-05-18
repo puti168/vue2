@@ -224,13 +224,9 @@
         label-width="110px"
         @submit.native.prevent="enterSearch"
       >
-        <el-form-item
-          v-if="moduleBox === '账号状态'"
-          label="账号状态："
-          prop="accountStatus"
-        >
+        <el-form-item v-if="moduleBox === '账号状态'" label="账号状态：" prop="code">
           <el-select
-            v-model="editData.accountStatus"
+            v-model="editData.code"
             placeholder="请选择"
             @change="changeAccountStatus"
           >
@@ -285,25 +281,7 @@
           <el-input></el-input>
         </el-form-item>
         <el-form-item
-          v-if="moduleBox === '账号备注' || moduleBox === '入口权限'"
-          label="备注信息："
-          prop="remark"
-          :rules="[
-            { required: true, message: '请输入备注信息', trigger: 'blur' },
-            { min: 2, max: 50, message: '长度在 2 到 50 个字符', trigger: 'blur' },
-          ]"
-        >
-          <el-input
-            v-model="editData.remark"
-            :maxlength="50"
-            type="textarea"
-            placeholder="最多可输入50个字符"
-          >
-          </el-input>
-        </el-form-item>
-        <el-form-item
-          v-else
-          label="审核备注："
+          :label="titel"
           prop="remark"
           :rules="[
             { required: true, message: '请输入备注信息', trigger: 'blur' },
@@ -363,8 +341,9 @@ export default {
       outlineInfoList: {}, // 基本信息
       tableList: [],
       moduleBox: '',
+      titel: '审核备注：',
       editVisible: false,
-      editData: {},
+      editData: { code: '' },
       page: 1,
       size: 3
     }
@@ -425,10 +404,25 @@ export default {
       })
     },
     // 会员详情-基本信息-概要信息以及个人资料
-    getOutlineInfo(val) {
-      this.$api.getOutlineInfo({ userName: val.userName }).then((res) => {
+    getProxyDetailQueryDetail(val) {
+      this.$api.getProxyDetailQueryDetail({ userName: val.userName }).then((res) => {
         if (res.code === 200) {
           this.outlineInfoList = res.data
+          if (res.data.auditList && res.data.auditList !== null) {
+            for (let i = 0; i < res.data.auditList.length; i++) {
+              const ele = res.data.auditList[i]
+              for (let j = 0; j < this.editMsgList.length; j++) {
+                const val = this.editMsgList[j].code
+                if (ele.applyName === val) {
+                  this.editMsgList[j].applyStatus = ele.applyStatus
+                }
+              }
+            }
+          } else {
+            for (let i = 0; i < this.editMsgList.length; i++) {
+              this.editMsgList[i].applyStatus = ''
+            }
+          }
           const params = { userId: val.userId, pageNum: 1, pageSize: 3 }
           this.$api.getProxyDetailRemark(params).then((res) => {
             if (res.code === 200) {
@@ -443,7 +437,7 @@ export default {
       this.$api.setProxyDataInfoEdit(val).then((res) => {
         if (res.code === 200) {
           this.$message.success(res.msg)
-          this.getOutlineInfo(this.parentData)
+          this.getProxyDetailQueryDetail(this.parentData)
           this.editData = {}
         }
         this.editVisible = false
@@ -460,17 +454,41 @@ export default {
     },
     refresh() {
       const val = this.parentData
-      this.getOutlineInfo(val)
+      this.getProxyDetailQueryDetail(val)
     },
     editFn(val) {
       this.moduleBox = val
+      switch (val) {
+        case '账号状态':
+          this.editData.code = this.outlineInfoList.applyStatus
+          break
+
+        case '风控层级':
+          this.editData.windControlId = this.outlineInfoList.windControlId
+          break
+        case '代理标签':
+          this.editData.labelId = this.outlineInfoList.labelId
+          break
+        case '账号备注':
+          this.titel = '备注信息：'
+          this.editData.labelId = this.outlineInfoList.labelId
+          break
+        case '入口权限':
+          this.titel = '备注信息：'
+          this.editData.labelId = this.outlineInfoList.labelId
+          break
+
+        default:
+          this.titel = '审核备注：'
+          break
+      }
       this.editVisible = true
     },
     changeAccountStatus(val) {
       this.editData.accountStatus = val
     },
     changeWindControlId(val) {
-      for (let i = 0; i < this.memberLabelList.length; i++) {
+      for (let i = 0; i < this.riskLevelList.length; i++) {
         const ele = this.riskLevelList[i]
         if (ele.windControlId === val) {
           this.editData.windControlName = ele.windControlName

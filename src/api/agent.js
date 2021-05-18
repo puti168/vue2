@@ -54,7 +54,14 @@ export function agentRegisterInfoAPI(data) {
 		data
 	})
 }
-
+// 代理==>  ===> 代理详情查询
+export function getProxyDetailQueryDetail(data) {
+	return request({
+		url: '/proxyDetail/queryDetail',
+		method: 'post',
+		data
+	})
+}
 // 代理详情-基本信息-信息编辑
 export function setProxyDataInfoEdit(data) {
 	return request({
@@ -127,10 +134,18 @@ export function getProxyDetailTop3Bet(data) {
 		data
 	})
 }
-// 代理详情-登录日志
+// 代理详情-登录日志，登录信息
 export function getProxyDetailProxyLoginLog(data) {
 	return request({
 		url: '/proxyDetail/proxyLoginLog',
+		method: 'post',
+		data
+	})
+}
+// 代理详情-代理信息变更记录 分页查询
+export function getProxyDataInfoChangeRecord(data) {
+	return request({
+		url: '/proxyData/infoChangeRecord',
 		method: 'post',
 		data
 	})
@@ -212,6 +227,7 @@ export default {
 	addAgentAPI,
 	memberTransAgentAPI,
 	agentRegisterInfoAPI,
+	getProxyDetailQueryDetail,
 	agentPictureListAPI,
 	agentPictureListDeleteAPI,
 	agentPictureListCreateAPI,
@@ -226,6 +242,7 @@ export default {
 	getProxyDetailTeamBet,
 	getProxyDetailTop3Bet,
 	getProxyDetailProxyLoginLog,
+	getProxyDataInfoChangeRecord,
 	setDomainDelete,
 	addDomainInsert,
 	getDomainSelect,

@@ -1,25 +1,23 @@
 <template>
 	<div class="game-container report-container">
 		<!-- 体育,真人荷官模块，电竞，彩票，棋牌，电子，派奖排行 -->
-		<mix v-if="false"></mix>
+		<mix v-if="isSport" :gemeDetails="gameDetails" @back="back"></mix>
 		<!-- 直播模块 -->
-		<live v-if="false"></live>
+		<live v-if="isLive" :gemeDetails="gameDetails" @back="back"></live>
 		<!-- 游戏专题模块 -->
-		<game v-if="true"></game>
+		<game v-if="isGame" :gemeDetails="gameDetails" @back="back"></game>
 		<!-- 最新游戏 -->
-		<newGame v-if="false"></newGame>
+		<newGame v-if="isLastGame" :gemeDetails="gameDetails" @back="back"></newGame>
 	</div>
 </template>
 
 <script>
 import list from '@/mixins/list'
-import { routerNames } from '@/utils/consts'
 import live from './components/live'
 import mix from './components/mix'
 import game from './components/game'
 import newGame from './components/newGame'
 export default {
-	name: routerNames.gameHomeRecommendEdit,
 	components: {
 		live,
 		game,
@@ -27,34 +25,60 @@ export default {
 		mix
 	},
 	mixins: [list],
+    props: {recommendDetails: {type: Object, default: () => {}}},
 	data() {
 		return {
-			list: {},
+			gameDetails: {},
 			form: {
 				icon: '',
 				gameName: ''
 			},
+            searchData: {
+                moduleId: this.recommendDetails.id
+            },
 			visible: false,
-			type: true
+			type: true,
+            isSport: true,
+            isLive: false,
+            isGame: false,
+            isLastGame: false
 		}
 	},
 	computed: {
 	},
 	created() {
 	},
-	mounted() {},
+	mounted() {
+	    this.initShowDetailsModule()
+        this.getDetailsInfo()
+    },
 	updated() {
 	},
 	methods: {
-		getInfo() {
+	    back() {
+            this.$emit('back')
+        },
+        // 初始化详情
+        initShowDetailsModule() {
+	        const moduleName = this.recommendDetails.moduleName
+            this.isSport = (moduleName.search('体育') !== -1 || moduleName.search('真人荷官') !== -1 ||
+                moduleName.search('电竞') !== -1 || moduleName.search('彩票') !== -1 ||
+                moduleName.search('棋牌') !== -1 || moduleName.search('电子') !== -1 || moduleName.search('派奖排行') !== -1)
+            this.isLive = moduleName.search('直播') !== -1
+            this.isGame = moduleName.search('游戏') !== -1
+            this.isLastGame = moduleName.search('最新游戏') !== -1
+        },
+        // 获取详情信息
+		getDetailsInfo() {
 			const params = {
-				id: this.$route.query.id
+				...this.searchData
 			}
-			this.$api.memberAuditDetail(params).then((res) => {
+			this.$api.gameHomeRecommendDetailsAPI(params).then((res) => {
+			    debugger
 				if (res.code === 200) {
 					const response = res.data
 					this.loading = false
-					this.list = response
+					this.gameDetails = response
 				} else {
 					this.loading = false
 					this.$message({

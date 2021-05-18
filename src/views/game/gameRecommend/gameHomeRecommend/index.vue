@@ -1,5 +1,6 @@
 <template>
-	<div class="game-container report-container">
+    <gameHomeRecommendEdit v-if="isEdit" :recommendDetails="recommendDetails" @back="back" />
+	<div v-else class="game-container report-container">
 		<el-tabs v-model="activeName" @tab-click="handleClick">
 			<el-tab-pane label="APP端" name="first"></el-tab-pane>
 			<el-tab-pane label="H5端" name="second"></el-tab-pane>
@@ -18,38 +19,38 @@
 					@sort-change="changeTableSort"
 				>
 					<el-table-column
-						prop="code"
+						prop="moduleId"
 						align="center"
 						label="模块顺序"
 					></el-table-column>
 					<el-table-column
-						prop="bankName"
+						prop="moduleName"
 						align="center"
 						label="模块名称"
 					></el-table-column>
-					<el-table-column prop="status" align="center" label="状态">
+					<el-table-column prop="moduleStatus" align="center" label="状态">
 						<template slot-scope="scope">
 							<p
 								:class="
-									scope.row.status === '开启中' ? 'successState' : 'dangerState'
+									scope.row.moduleStatus === 1 ? 'successState' : 'dangerState'
 								"
 							>
-								{{ scope.row.status }}
+								{{ scope.row.moduleStatus===1 ? '开启中' : '已禁用' }}
 							</p>
 						</template>
 					</el-table-column>
 					<el-table-column
-						prop="bankName"
+						prop="description"
 						align="center"
 						label="模块描述"
 					></el-table-column>
 					<el-table-column
-						prop="bankName"
+						prop="updatedBy"
 						align="center"
 						label="最近操作人"
 					></el-table-column>
 					<el-table-column
-						prop="createDt"
+						prop="updatedAt"
 						align="center"
 						label="最近操作时间"
 						sortable="custom"
@@ -66,7 +67,7 @@
 								type="danger"
 								size="medium"
 								class="noicon"
-								@click="confrim"
+								@click="disable(scope.row)"
 							>
 								禁用
 							</el-button>
@@ -75,7 +76,7 @@
 								icon="el-icon-edit"
 								:disabled="loading"
 								size="medium"
-								@click="openEdit(scope.row)"
+								@click="openDetails(scope.row)"
 							>
 								编辑信息
 							</el-button>
@@ -103,6 +104,8 @@
 import list from '@/mixins/list'
 import dayjs from 'dayjs'
 import { routerNames } from '@/utils/consts'
+import gameHomeRecommendEdit from '../gameHomeRecommendEdit/index'
+
 const end = dayjs()
 	.endOf('day')
 	.valueOf()
@@ -111,28 +114,48 @@ const start = dayjs()
 	.valueOf()
 export default {
 	name: routerNames.gameHomeRecommend,
-	components: {},
+	components: {gameHomeRecommendEdit},
 	mixins: [list],
 	data() {
 		return {
-			queryData: {
-				accountType: '',
-				bankName: '',
-				dataType: 2,
-				operateType: '',
-				orderType: undefined,
-				parentProxyName: '',
-				userName: '',
-				virtualAddress: '',
-				virtualKind: [],
-				virtualProtocol: []
-			},
-			activeName: 'second',
+            isEdit: false,
+            dataList: [],
+            title: '',
+            // 终端类型
+            terminalType: 1,
+            recommendDetails: {},
+            searchParams: {
+                pageSize: 10,
+                pageNum: 1,
+                terminalType: this.terminalType
+            },
+            searchData: {
+                allGameNum: 0,
+                assortId: 0,
+                bodyTitle: '',
+                contentInfor: '',
+                currentUserName: '',
+                description: '',
+                gameId: 0,
+                iconAddress: '',
+                mainTitleInfo: '',
+                moduleCaption: '',
+                moduleId: 0,
+                moduleStatus: 0,
+                pageNum: 0,
+                pageSize: 0,
+                pictureHome: '',
+                pictureOne: '',
+                pictureTwo: '',
+                scrollingNum: 0,
+                subTitleInfo: '',
+                terminalType: 0,
+                videoSourceAddress: ''
+            },
+			activeName: 'first',
 			formTime: {
 				time: [start, end]
-			},
-			dataList: [],
-			title: ''
+			}
 		}
 	},
 	computed: {
@@ -150,23 +173,34 @@ export default {
 		}
 	},
 	mounted() {
-		for (let i = 0; i < 10; i++) {
-			this.dataList[i] = {
-				bankCode: '165416416464654',
-				bankName: '中国银行',
-				status: '开启中',
-				code: 1,
-				createDt: '2021-02-13 20:28:54',
-				updateDt: '2021-02-13 20:28:54'
-			}
-		}
+        this.loadData()
 	},
 	methods: {
-		handleClick() {},
+        openDetails(val) {
+            this.isEdit = true
+            debugger
+            this.recommendDetails = val
+        },
+        back() {
+            debugger
+            this.isEdit = false
+        },
+        // 切换导航
+		handleClick(tab) {
+            const name = tab.name
+            if (name === 'first') {
+                this.terminalType = 1
+            } else if (name === 'second') {
+                this.terminalType = 2
+            } else {
+                this.terminalType = 3
+            }
+            this.loadData()
+        },
 		loadData() {
 			const [startTime, endTime] = this.formTime.time || []
 			let params = {
-				...this.queryData,
+				...this.searchData,
 				createDtStart: startTime
 					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
 					: '',
@@ -179,13 +213,16 @@ export default {
 				})
 				return
 			}
+			this.searchParams.terminalType = this.terminalType
+			params = {
+			    ...this.searchParams
+            }
 			params = {
 				...this.getParams(params)
 			}
 			this.loading = true
-
 			this.$api
-				.bankRecordListAPI(params)
+				.gameHomeRecommendListAPI(params)
 				.then((res) => {
 					if (res.code === 200) {
 						const response = res.data
@@ -200,17 +237,18 @@ export default {
 						})
 					}
 				})
-				.catch(() => {
+				.catch((res) => {
 					this.loading = false
 				})
 		},
-		openEdit(row) {
-			this.$router.push({
-				path: '/game/gameConfig/gameHomeRecommendEdit',
-				query: { id: row.id, userId: row.userId }
-			})
-		},
-		confrim() {
+		// openEdit(row) {
+		// 	this.$router.push({
+		// 		path: '/game/gameConfig/gameHomeRecommendEdit',
+		// 		query: { id: row.id, userId: row.userId }
+		// 	})
+		// },
+        // 禁用
+        disable(val) {
 			this.$confirm(
 				`<strong>是否对子游戏进行开启/禁用操作?</strong></br><span style='font-size:12px;color:#c1c1c1'>一旦操作将会立即生效</span>`,
 				'确认提示',

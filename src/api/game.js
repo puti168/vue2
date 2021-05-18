@@ -274,6 +274,24 @@ export function gameList(data) {
 	})
 }
 
+// 游戏==> 首页推荐位 ==> 列表
+export function gameHomeRecommendListAPI(data) {
+    return request({
+        url: '/gameCommonModule/gameModuleList',
+        method: 'post',
+        data
+    })
+}
+
+// 游戏==> 首页推荐位 ==> 列表 ===> 详情
+export function gameHomeRecommendDetailsAPI(data) {
+    return request({
+        url: '/gameCommonModule/gameModuleDetail',
+        method: 'post',
+        data
+    })
+}
+
 export default {
 	gameAssortListAPI,
 	gameList,
@@ -307,5 +325,7 @@ export default {
 	gameSearchListAPI,
 	gameSearchCreateAPI,
 	gameSearchUpdateAPI,
-	gameSearchDeleteAPI
+	gameSearchDeleteAPI,
+    gameHomeRecommendListAPI,
+    gameHomeRecommendDetailsAPI
 }
