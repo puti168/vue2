@@ -1,5 +1,23 @@
 import request from '@/utils/request'
 
+// 代理==> 代理管理 ===> 代理列表
+export function AgentListAPI(data) {
+	return request({
+		url: '/proxyInformationRegistered/proxyRegisteredList',
+		method: 'post',
+		data
+	})
+}
+
+// 代理==> 代理管理 ===> 代理列表导出
+export function AgentListExportAPI(data) {
+	return request({
+		url: '/proxyInformationRegistered/download',
+		method: 'post',
+		data
+	})
+}
+
 // 代理==> 代理管理 ===> 新增代理
 export function addAgentAPI(data) {
 	return request({
@@ -8,7 +26,6 @@ export function addAgentAPI(data) {
 		data
 	})
 }
-// 代理详情-信息编辑
 
 // 代理==> 代理管理 ===> 会员转代
 export function memberTransAgentAPI(data) {
@@ -143,6 +160,8 @@ export function setDomainUpdate(data) {
 }
 
 export default {
+	AgentListAPI,
+	AgentListExportAPI,
 	addAgentAPI,
 	memberTransAgentAPI,
 	agentRegisterInfoAPI,
