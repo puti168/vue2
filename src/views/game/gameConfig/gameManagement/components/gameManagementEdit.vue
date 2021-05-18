@@ -222,6 +222,7 @@
 						<upload
 							ref="imgUpload"
 							:img-urls="form.imageAddress"
+							:upload-file-type="'image/jpeg'"
 							@upoladItemSucess="handleUploadSucess"
 							@startUpoladItem="handleStartUpload"
 							@deleteUpoladItem="handleDeleteUpload"
@@ -312,7 +313,7 @@ export default {
 					{
 						required: true,
 						message: '请选择支持终端',
-						trigger: 'change',
+						trigger: 'blur',
 						type: 'array'
 					}
 				],
@@ -320,8 +321,7 @@ export default {
 					{
 						required: true,
 						message: '请选择游戏平台',
-						trigger: 'change',
-						type: 'array'
+						trigger: 'blur'
 					}
 				],
 				accessInfo: [
@@ -373,109 +373,89 @@ export default {
 	mounted() {},
 	methods: {
 		confirm() {
-			const loading = this.$loading({
-				lock: true,
-				text: 'Loading',
-				spinner: 'el-icon-loading',
-				background: 'rgba(0, 0, 0, 0.7)'
-			})
-			const relationGameModuleName = []
-			this.gameModuleNameList.forEach((item) => {
-				this.form.relationGameModuleId.forEach((data) => {
-					if (item.moduleId === data) {
-						relationGameModuleName.push(item.moduleName)
-					}
-				})
-			})
-			this.labelList.forEach((item) => {
-				if (item.gameLabelId === this.gameLabelParam1) {
-					this.form.gameLabelParam1 = {
-						gameLabelId: item.gameLabelId,
-						gameLabelName: item.gameLabelName,
-						id: item.id
-					}
-				}
-				if (item.gameLabelId === this.gameLabelParam2) {
-					this.form.gameLabelParam2 = {
-						gameLabelId: item.gameLabelId,
-						gameLabelName: item.gameLabelName,
-						id: item.id
-					}
-				}
-				if (item.gameLabelId === this.gameLabelParam3) {
-					this.form.gameLabelParam3 = {
-						gameLabelId: item.gameLabelId,
-						gameLabelName: item.gameLabelName,
-						id: item.id
-					}
-				}
-			})
-			console.log(this.form)
-			const params = {
-				...this.form,
-				imageAddress: '3535test',
-				supportTerminal: this.form.supportTerminal.join(','),
-				relationOtherGameId: this.form.relationOtherGameId.join(','),
-				relationGameModuleName: relationGameModuleName.join(','),
-				relationGameModuleId: this.form.relationGameModuleId.join(',')
-			}
-			const url = this.editType === 'add' ? 'addGame' : 'editGame'
-			this.$api[url](params)
-				.then((res) => {
-					loading.close()
-					if (res.code === 200) {
-						this.$message({
-							type: 'success',
-							message: '操作成功!'
+			this.$refs.form.validate((valid) => {
+				if (valid) {
+					const loading = this.$loading({
+						lock: true,
+						text: 'Loading',
+						spinner: 'el-icon-loading',
+						background: 'rgba(0, 0, 0, 0.7)'
+					})
+					const relationGameModuleName = []
+					this.gameModuleNameList.forEach((item) => {
+						this.form.relationGameModuleId.forEach((data) => {
+							if (item.moduleId === data) {
+								relationGameModuleName.push(item.moduleName)
+							}
 						})
-						this.goBack()
-					} else {
-						this.$message({
-							message: res.msg,
-							type: 'error'
-						})
+					})
+					this.labelList.forEach((item) => {
+						if (item.gameLabelId === this.gameLabelParam1) {
+							this.form.gameLabelParam1 = {
+								gameLabelId: item.gameLabelId,
+								gameLabelName: item.gameLabelName,
+								id: item.id
+							}
+						}
+						if (item.gameLabelId === this.gameLabelParam2) {
+							this.form.gameLabelParam2 = {
+								gameLabelId: item.gameLabelId,
+								gameLabelName: item.gameLabelName,
+								id: item.id
+							}
+						}
+						if (item.gameLabelId === this.gameLabelParam3) {
+							this.form.gameLabelParam3 = {
+								gameLabelId: item.gameLabelId,
+								gameLabelName: item.gameLabelName,
+								id: item.id
+							}
+						}
+					})
+					console.log(this.form)
+					const params = {
+						...this.form,
+						imageAddress: '3535test',
+						supportTerminal: this.form.supportTerminal.join(','),
+						relationOtherGameId: this.form.relationOtherGameId.join(','),
+						relationGameModuleName: relationGameModuleName.join(','),
+						relationGameModuleId: this.form.relationGameModuleId.join(',')
 					}
-				})
-				.catch(() => {
-					loading.close()
-				})
-			// this.$refs.form.validate((valid) => {
-			// 	if (valid) {
-
-			// 	}
-			// })
+					const url = this.editType === 'add' ? 'addGame' : 'editGame'
+					this.$api[url](params)
+						.then((res) => {
+							loading.close()
+							if (res.code === 200) {
+								this.$message({
+									type: 'success',
+									message: '操作成功!'
+								})
+								this.goBack()
+							} else {
+								this.$message({
+									message: res.msg,
+									type: 'error'
+								})
+							}
+						})
+						.catch(() => {
+							loading.close()
+						})
+				}
+			})
 		},
 		handleStartUpload() {
 			this.$message.info('图片开始上传')
-			// this.$api.gameManagerUpload(params)
-			// 			.then((res) => {
-			// 				loading.close()
-			// 				if (res.code === 200) {
-			// 					this.$message({
-			// 						type: 'success',
-			// 						message: '操作成功!'
-			// 					})
-			// 					this.goBack()
-			// 				} else {
-			// 					this.$message({
-			// 						message: res.msg,
-			// 						type: 'error'
-			// 					})
-			// 				}
-			// 			})
-			// 			.catch(() => {
-			// 				loading.close()
-			// 			})
 		},
 		handleUploadSucess({ index, file, id }) {
-			this.form.imageAddress = file.imgUrl
+			// this.form.imageAddress = file.imgUrl
 		},
 		handleUploadDefeat() {
-			this.form.imageAddress = ''
+			// this.form.imageAddress = ''
 			this.$message.error('图片上传失败')
 		},
 		handleDeleteUpload() {
-			this.form.imageAddress = ''
+			// this.form.imageAddress = ''
 			this.$message.warning('图片已被移除')
 		},
 		goBack() {
