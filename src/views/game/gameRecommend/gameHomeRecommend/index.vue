@@ -1,5 +1,6 @@
 <template>
-	<div class="game-container report-container">
+    <gameHomeRecommendEdit v-if="isEdit" :recommendDetails="recommendDetails" @back="back" />
+	<div v-else class="game-container report-container">
 		<el-tabs v-model="activeName" @tab-click="handleClick">
 			<el-tab-pane label="APP端" name="first"></el-tab-pane>
 			<el-tab-pane label="H5端" name="second"></el-tab-pane>
@@ -66,7 +67,7 @@
 								type="danger"
 								size="medium"
 								class="noicon"
-								@click="confrim"
+								@click="disable(scope.row)"
 							>
 								禁用
 							</el-button>
@@ -75,7 +76,7 @@
 								icon="el-icon-edit"
 								:disabled="loading"
 								size="medium"
-								@click="openEdit(scope.row)"
+								@click="openDetails(scope.row)"
 							>
 								编辑信息
 							</el-button>
@@ -103,6 +104,8 @@
 import list from '@/mixins/list'
 import dayjs from 'dayjs'
 import { routerNames } from '@/utils/consts'
+import gameHomeRecommendEdit from '../gameHomeRecommendEdit/index'
+
 const end = dayjs()
 	.endOf('day')
 	.valueOf()
@@ -111,14 +114,20 @@ const start = dayjs()
 	.valueOf()
 export default {
 	name: routerNames.gameHomeRecommend,
-	components: {},
+	components: {gameHomeRecommendEdit},
 	mixins: [list],
 	data() {
 		return {
+            isEdit: false,
+            dataList: [],
+            title: '',
+            // 终端类型
+            terminalType: 1,
+            recommendDetails: {},
             searchParams: {
                 pageSize: 10,
                 pageNum: 1,
-                terminalType: 1
+                terminalType: this.terminalType
             },
             searchData: {
                 allGameNum: 0,
@@ -143,14 +152,10 @@ export default {
                 terminalType: 0,
                 videoSourceAddress: ''
             },
-			activeName: 'second',
+			activeName: 'first',
 			formTime: {
 				time: [start, end]
-			},
-			dataList: [],
-			title: '',
-            // 终端类型
-            terminalType: 1
+			}
 		}
 	},
 	computed: {
@@ -171,7 +176,26 @@ export default {
         this.loadData()
 	},
 	methods: {
-		handleClick(value) {
+        openDetails(val) {
+            this.isEdit = true
+            debugger
+            this.recommendDetails = val
+        },
+        back() {
+            debugger
+            this.isEdit = false
+        },
+        // 切换导航
+		handleClick(tab) {
+            const name = tab.name
+            if (name === 'first') {
+                this.terminalType = 1
+            } else if (name === 'second') {
+                this.terminalType = 2
+            } else {
+                this.terminalType = 3
+            }
+            this.loadData()
         },
 		loadData() {
 			const [startTime, endTime] = this.formTime.time || []
@@ -189,6 +213,7 @@ export default {
 				})
 				return
 			}
+			this.searchParams.terminalType = this.terminalType
 			params = {
 			    ...this.searchParams
             }
@@ -196,11 +221,9 @@ export default {
 				...this.getParams(params)
 			}
 			this.loading = true
-
 			this.$api
 				.gameHomeRecommendListAPI(params)
 				.then((res) => {
-				    debugger
 					if (res.code === 200) {
 						const response = res.data
 						this.loading = false
@@ -215,17 +238,17 @@ export default {
 					}
 				})
 				.catch((res) => {
-				    debugger
 					this.loading = false
 				})
 		},
-		openEdit(row) {
-			this.$router.push({
-				path: '/game/gameConfig/gameHomeRecommendEdit',
-				query: { id: row.id, userId: row.userId }
-			})
-		},
-		confrim() {
+		// openEdit(row) {
+		// 	this.$router.push({
+		// 		path: '/game/gameConfig/gameHomeRecommendEdit',
+		// 		query: { id: row.id, userId: row.userId }
+		// 	})
+		// },
+        // 禁用
+        disable(val) {
 			this.$confirm(
 				`<strong>是否对子游戏进行开启/禁用操作?</strong></br><span style='font-size:12px;color:#c1c1c1'>一旦操作将会立即生效</span>`,
 				'确认提示',
