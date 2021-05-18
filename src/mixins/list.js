@@ -72,7 +72,7 @@ export default {
 				['applyTime', 'applyTime'],
 				['gameId', 'gameId'],
 				['createdAt', 'createdAt'],
-				['updateAt', 'updateAt'],
+				['updatedAt', 'updatedAt'],
 				['loginTime', 'loginTime'],
 				['modifyDt', 'modifyDt']
 			])

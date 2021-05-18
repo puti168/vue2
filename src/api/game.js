@@ -136,6 +136,14 @@ export function getMerchantGameGamePlant(data) {
 		data
 	})
 }
+//  游戏注单 ===> 关联推荐游戏
+export function gameManageList(data) {
+	return request({
+		url: '/gameManager/gameManageList',
+		method: 'post',
+		data
+	})
+}
 //  游戏注单 ===> 游戏注单分页
 export function getGameRecordNotes(data) {
 	return request({
@@ -299,6 +307,7 @@ export default {
 	addGame,
 	editGameStatus,
 	imageUpload,
+	gameManageList,
 	gameModuleNameList,
 	gamePlant,
 	gameManageDetail,

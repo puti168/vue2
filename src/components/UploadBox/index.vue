@@ -11,15 +11,15 @@
 			:on-progress="handleProgress"
 			:on-change="handleChange"
 		>
-			<el-progress
+			<!-- <el-progress
 				v-if="state === 'progress'"
 				type="circle"
 				:percentage="percent"
 				class="common-align-center"
 				:width="progressBarWidth"
-			></el-progress>
+			></el-progress> -->
 			<div
-				v-else-if="
+				v-if="
 					state === 'image' || state === 'image/gif' || state === 'image/jpeg'
 				"
 			>
@@ -76,7 +76,8 @@ const UploadFileTypeConst = {
 const UploadStateConst = {
 	showAdd: 'add',
 	showProgress: 'progress',
-	showImage: 'image'
+	showImage: 'image',
+	showAudio: 'audio'
 }
 export default {
 	name: 'UploadBox',
@@ -172,7 +173,8 @@ export default {
 				this.state = UploadStateConst.showAdd
 			}
 		},
-		state(value) {}
+		state(value) {
+		}
 	},
 	mounted() {
 		console.log(this.boundflag, 'boundflag')
@@ -232,12 +234,12 @@ export default {
 		handleChange(file) {
 			console.log('触发了change事件')
 			this.curFile = file.raw
+			this.showProgress = true
 			this.uploadFile()
 		},
 		handleProgress(progress) {
-			if (!this.showProgress) {
-				this.showProgress = true
-			}
+			console.log('proge')
+			this.showProgress = true
 			this.percent = progress
 		},
 		handleDeleteImgUrl() {
@@ -297,8 +299,6 @@ export default {
 			if (this.curFile) {
 				const img = new Image()
 				const that = this
-				console.log(this.boundflag, 'boundflag')
-				console.log(this.curFile)
 				if (this.boundflag) {
 					img.onload = function() {
 						const width = img.width
@@ -367,12 +367,12 @@ export default {
 		},
 		getIndex() {
 			// 根据参数id取得该节点
-            const obj = document.getElementById(this.randomId)
-            // 获取该节点的父节点
-            const p = obj.parentNode
-            // 取得父节点下的所有节点
-            const tags = p.children
-            // 在父节点的所有子节点中查找自己所在的位置
+			const obj = document.getElementById(this.randomId)
+			// 获取该节点的父节点
+			const p = obj.parentNode
+			// 取得父节点下的所有节点
+			const tags = p.children
+			// 在父节点的所有子节点中查找自己所在的位置
 			for (let i = 0, len = tags.length; i < len; i++) {
 				// 找到节点，返回下标
 				if (tags[i] === obj) {
@@ -392,7 +392,8 @@ export default {
 				})
 				const formData = new FormData()
 				formData.append('file', this.curFile)
-				this.$api.imageUpload(formData)
+				this.$api
+					.imageUpload(formData)
 					.then((response) => {
 						if (this.isUploading) {
 							this.$message({

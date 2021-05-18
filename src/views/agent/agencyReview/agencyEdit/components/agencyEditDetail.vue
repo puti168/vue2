@@ -1,53 +1,90 @@
 <template>
-	<div class="game-container report-container">
-		<div class="review-content">
-			<div class="head">
-				<span class="title">新增会员审核详情</span>
-				<div v-if="type" class="right-btn">
-					<el-button plain @click="goBack">取消</el-button>
-					<el-button type="success" @click="confirm(true)">一审通过</el-button>
-					<el-button type="danger" @click="confirm(false)">一审拒绝</el-button>
-				</div>
-				<div v-else class="right-btn">
-					<el-button plain @click="goBack">返回</el-button>
+	<div class="review-content">
+		<div class="head">
+			<span class="title">代理账户修改审核详情</span>
+			<div v-if="type" class="right-btn">
+				<el-button plain @click="goBack">取消</el-button>
+				<el-button type="success" @click="confirm(true)">一审通过</el-button>
+				<el-button type="danger" @click="confirm(false)">一审拒绝</el-button>
+			</div>
+			<div v-else class="right-btn">
+				<el-button plain @click="goBack">返回</el-button>
+			</div>
+		</div>
+		<div class="main-content">
+			<div class="review-content">
+				<p class="name">代理注册信息</p>
+				<div class="review-flex">
+					<div>注册时间: {{ list.createDt }}</div>
+					<div>代理类型: {{ typeFilter(list.accountType, 'accountType') }}</div>
+					<div>上次登录时间: {{ list.lastLoginTime }}</div>
+					<div>注册端:  {{ typeFilter(list.deviceType, "deviceType") }}</div>
 				</div>
 			</div>
-			<div class="main-content">
-				<div class="review-content">
-					<p class="name">新增会员信息</p>
-					<div class="review-flex">
-						<div>
-							账号类型: {{ typeFilter(list.accountType, 'accountType') }}
-						</div>
-						<div>会员账号: {{ list.userName }}</div>
-						<div>登录密码: {{ list.password }}</div>
-						<div>上级代理: {{ list.parentProxyName }}</div>
-					</div>
-					<div class="review-flex">
-						<div>性别: {{ typeFilter(list.gender, 'genderType') }}</div>
-						<div>VIP经验: {{ list.vipExperienceVal }}</div>
-						<div>邮箱: {{ list.email }}</div>
-						<div>姓名: {{ list.realName }}</div>
-					</div>
-					<div class="review-flex">
-						<div>手机号码: {{ list.mobile }}</div>
-					</div>
+			<div class="review-content">
+				<p class="name">代理账号信息</p>
+				<div class="review-flex">
+					<div>账号: {{ list.userName }}</div>
+					<div>账号状态: {{ typeFilter(list.accountStatus, 'accountStatusType') }}</div>
+					<div>风控层级: {{ list.windControlName }}</div>
+					<div>代理标签: {{ list.labelName }}</div>
 				</div>
-				<div class="review-content">
-					<p class="name">申请信息</p>
-					<div class="review-flex">
-						<div>申请人: {{ list.applyName }}</div>
-						<div>申请时间: {{ list.applyTime }}</div>
-						<div>申请信息: {{ list.applyInfo }}</div>
-					</div>
+				<div class="review-flex">
+					<div>备注信息: {{ list.remark }}</div>
 				</div>
-				<div class="review-content">
-					<p class="name">审核信息信息</p>
-					<div class="review-flex">
-						<div>一审人: {{ list.auditName }}</div>
-						<div>一审时间: {{ list.auditTime }}</div>
-						<div>一审备注: {{ list.remark }}</div>
-					</div>
+			</div>
+			<div class="review-content" style="height: 200px">
+				<p class="name">申请信息</p>
+				<div class="review-flex">
+					<div>申请人: {{ list.auditName }}</div>
+					<div>申请时间: {{ list.auditTime }}</div>
+					<div>审核申请类型: {{ typeFilter(list.applyType, 'applyType') }}</div>
+					<div>申请原因: {{ list.applyInfo }}</div>
+				</div>
+				<div class="review-flex">
+					<el-table
+						border
+						size="mini"
+						:data="[1]"
+						style="width: 100%"
+						:header-cell-style="getRowClass"
+					>
+						<el-table-column align="center" label="修改前">
+							<template>
+								<template v-if="Number(list.applyType === 2)">
+									{{ typeFilter(list.beforeModify, 'genderType') }}
+								</template>
+								<template v-else-if="Number(list.applyType === 6)">
+									{{ typeFilter(list.beforeModify, 'accountStatusType') }}
+								</template>
+								<template v-else>
+									{{ list.beforeModify ? list.beforeModify : '-' }}
+								</template>
+							</template>
+						</el-table-column>
+						<el-table-column align="center" label="修改后">
+							<template>
+								<template v-if="Number(list.applyType === 2)">
+									{{ typeFilter(list.afterModify, 'genderType') }}
+								</template>
+								<template v-else-if="Number(list.applyType === 6)">
+									{{ typeFilter(list.afterModify, 'accountStatusType') }}
+								</template>
+								<template v-else>
+									{{ list.afterModify ? list.afterModify : '-' }}
+								</template>
+							</template>
+						</el-table-column>
+					</el-table>
+				</div>
+			</div>
+			<div class="review-content">
+				<p class="name">审核信息</p>
+				<div class="review-flex">
+					<div>一审人: {{ list.auditName }}</div>
+					<div>一审时间: {{ list.auditTime }}</div>
+					<div>一审备注: {{ list.auditRemark }}</div>
+					<div>一审状态: {{ list.auditRemark }}</div>
 				</div>
 			</div>
 		</div>
@@ -101,16 +138,22 @@ export default {
 	name: routerNames.addMemberReview,
 	components: {},
 	mixins: [list],
+	props: {
+		// 审核 true 仅返回 false
+		type: Boolean,
+		rowData: {
+			type: Object,
+			default: () => {}
+		}
+	},
 	data() {
 		return {
 			list: {},
-			visible: false,
 			form: {
 				remark: ''
 			},
-			action: false,
-			// 审核 true 仅返回 false
-			type: true
+			visible: false,
+			action: false
 		}
 	},
 	computed: {
@@ -123,10 +166,7 @@ export default {
 		}
 	},
 	created() {
-		if (this.$route.name === 'addMemberReview') {
-			this.getInfo()
-			this.type = this.$route.query.type
-		}
+		this.getInfo()
 	},
 	mounted() {},
 	methods: {
@@ -147,14 +187,14 @@ export default {
 					background: 'rgba(0, 0, 0, 0.7)'
 				})
 				const params = {
-					id: this.$route.query.id,
-					userId: this.$route.query.userId,
-					remark: this.form.remark,
+					id: this.rowData.id,
+					userId: this.rowData.userId,
+					auditRemark: this.form.remark,
 					auditStatus: this.action ? 2 : 3
 				}
 
 				this.$api
-					.updateMemberAuditRecord(params)
+					.proxyDataAudit(params)
 					.then((res) => {
 						loading.close()
 						if (res.code === 200) {
@@ -184,14 +224,14 @@ export default {
 							background: 'rgba(0, 0, 0, 0.7)'
 						})
 						const params = {
-							id: this.$route.query.id,
-							userId: this.$route.query.userId,
-							remark: this.form.remark,
+							id: this.rowData.id,
+							userId: this.rowData.userId,
+							auditRemark: this.form.remark,
 							auditStatus: this.action ? 2 : 3
 						}
 
 						this.$api
-							.updateMemberAuditRecord(params)
+							.proxyDataAudit(params)
 							.then((res) => {
 								loading.close()
 								if (res.code === 200) {
@@ -216,13 +256,14 @@ export default {
 			}
 		},
 		goBack() {
-			this.$router.go(-1)
+			this.$emit('goBack')
 		},
 		getInfo() {
 			const params = {
-				id: this.$route.query.id
+				recordId: this.rowData.id,
+				userId: this.rowData.userId
 			}
-			this.$api.memberAuditDetail(params).then((res) => {
+			this.$api.proxyDataRecordInfo(params).then((res) => {
 				if (res.code === 200) {
 					const response = res.data
 					this.loading = false
@@ -275,7 +316,7 @@ export default {
 			.review-flex {
 				position: relative;
 				width: 100%;
-				margin-top: 10px;
+				margin-top: 15px;
 				div {
 					display: inline-block;
 					width: 24%;

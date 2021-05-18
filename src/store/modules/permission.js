@@ -218,14 +218,6 @@ const actions = {
 						if (data.name === '代理审核') {
 							data.children.push(
 								{
-									path: '/agent/agencyReview/agencyEditDetail',
-									name: 'agencyEditDetail',
-									component: () =>
-										import(`@/views/agent/agencyReview/agencyEditDetail/index`),
-									meta: { title: '代理账户修改审核详情' },
-									hidden: true
-								},
-								{
 									path: '/agent/agencyReview/addReviewDetail',
 									name: 'addReviewDetail',
 									component: () =>

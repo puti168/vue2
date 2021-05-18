@@ -56,6 +56,36 @@ export function playerAuditList(data) {
 		data
 	})
 }
+// 代理审核
+export function proxyDataAudit(data) {
+	return request({
+		url: '/proxyData/audit',
+		method: 'post',
+		data
+	})
+}
+
+export function proxyDataLock(data) {
+	return request({
+		url: '/proxyData/lock',
+		method: 'post',
+		data
+	})
+}
+export function proxyDataRecordInfo(data) {
+	return request({
+		url: '/proxyData/recordInfo',
+		method: 'post',
+		data
+	})
+}
+export function proxyDataPage(data) {
+	return request({
+		url: '/proxyData/page',
+		method: 'post',
+		data
+	})
+}
 export function lock(data) {
 	return request({
 		url: '/memberData/lock',
@@ -95,7 +125,11 @@ export function addBlackList(data) {
 export default {
 	recordInfo,
 	memberChange,
+	proxyDataAudit,
+	proxyDataLock,
+	proxyDataRecordInfo,
 	memberAuditDetail,
+	proxyDataPage,
 	audit,
 	lockMemberAuditRecord,
 	updateMemberAuditRecord,

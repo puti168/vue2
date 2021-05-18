@@ -215,7 +215,7 @@
 					</el-row>
 					<el-divider></el-divider>
 					<span class="img-title">客户端图片上传</span>
-					<el-form-item label="图片上传">
+					<el-form-item label="图片上传" prop="image">
 						<!-- :upload-file-type="'image/jpeg'"
 							:platform="'PC'"
 							:bounds="imageSize" -->
@@ -263,6 +263,10 @@ export default {
 			type: Array,
 			default: () => []
 		},
+		gameManageList: {
+			type: Array,
+			default: () => []
+		},
 		gamePlantList: {
 			type: Array,
 			default: () => []
@@ -278,7 +282,7 @@ export default {
 				supportTerminal: [],
 				relationOtherGameId: [],
 				relationGameModuleId: [],
-				imageAddress: '3535test',
+				imageAddress: '',
 				gameLabelParam1: {},
 				gameLabelParam2: {},
 				gameLabelParam3: {},
@@ -308,6 +312,10 @@ export default {
 			return this.globalDics.terminalnType
 		},
 		rules() {
+			const valiIMG = (rule, value, callback) => {
+				// 图片验证
+				callback()
+			}
 			return {
 				supportTerminal: [
 					{
@@ -346,6 +354,7 @@ export default {
 				image: [
 					{
 						required: true,
+						validator: valiIMG,
 						message: '请选择图片上传',
 						trigger: ['blur', 'change']
 					}
@@ -363,6 +372,11 @@ export default {
 	watch: {
 		rowData: {
 			handler(val) {
+				if (val) {
+					val.supportTerminal = val.supportTerminal.split(',')
+					val.relationOtherGameId = val.relationOtherGameId.split(',')
+					val.relationGameModuleId = val.relationGameModuleId.split(',')
+				}
 				this.form = val
 			},
 			immediate: true,
@@ -373,6 +387,13 @@ export default {
 	mounted() {},
 	methods: {
 		confirm() {
+			// if (!this.imageAddress) {
+			// 	this.$message({
+			// 						message: res.msg,
+			// 						type: 'error'
+			// 					})
+			// 	return
+			// }
 			this.$refs.form.validate((valid) => {
 				if (valid) {
 					const loading = this.$loading({
@@ -415,7 +436,6 @@ export default {
 					console.log(this.form)
 					const params = {
 						...this.form,
-						imageAddress: '3535test',
 						supportTerminal: this.form.supportTerminal.join(','),
 						relationOtherGameId: this.form.relationOtherGameId.join(','),
 						relationGameModuleName: relationGameModuleName.join(','),
@@ -448,14 +468,14 @@ export default {
 			this.$message.info('图片开始上传')
 		},
 		handleUploadSucess({ index, file, id }) {
-			// this.form.imageAddress = file.imgUrl
+			this.form.imageAddress = file.imgUrl
 		},
 		handleUploadDefeat() {
-			// this.form.imageAddress = ''
+			this.form.imageAddress = ''
 			this.$message.error('图片上传失败')
 		},
 		handleDeleteUpload() {
-			// this.form.imageAddress = ''
+			this.form.imageAddress = ''
 			this.$message.warning('图片已被移除')
 		},
 		goBack() {
@@ -464,7 +484,7 @@ export default {
 				gameIcon: '',
 				gamePlatform: '',
 				gameName: '',
-				imageAddress: '3535test',
+				imageAddress: '',
 				gameLabelParam1: '',
 				gameLabelParam2: '',
 				gameLabelParam3: '',
@@ -476,6 +496,7 @@ export default {
 			this.relationOtherGameId = []
 			this.relationGameModuleId = []
 			this.$emit('closeEdit')
+			this.$emit('refresh')
 		}
 	}
 }
