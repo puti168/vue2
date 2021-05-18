@@ -28,11 +28,11 @@ export function queryChildGameAPI(data) {
 }
 
 // 游戏配置==> 游戏分类管理 ===> 子游戏配置
-export function queryChildGameConfigAPI(params) {
+export function queryChildGameConfigAPI(data) {
 	return request({
-		url: '/gameAssort/queryChildrenGame',
-		method: 'get',
-		params
+		url: '/gameAssort/selectById',
+		method: 'post',
+		data
 	})
 }
 // 游戏配置==> 游戏分类管理 ===> 删除
@@ -276,20 +276,20 @@ export function gameList(data) {
 
 // 游戏==> 首页推荐位 ==> 列表
 export function gameHomeRecommendListAPI(data) {
-    return request({
-        url: '/gameCommonModule/gameModuleList',
-        method: 'post',
-        data
-    })
+	return request({
+		url: '/gameCommonModule/gameModuleList',
+		method: 'post',
+		data
+	})
 }
 
 // 游戏==> 首页推荐位 ==> 列表 ===> 详情
 export function gameHomeRecommendDetailsAPI(data) {
-    return request({
-        url: '/gameCommonModule/gameModuleDetail',
-        method: 'post',
-        data
-    })
+	return request({
+		url: '/gameCommonModule/gameModuleDetail',
+		method: 'post',
+		data
+	})
 }
 
 export default {
@@ -326,6 +326,6 @@ export default {
 	gameSearchCreateAPI,
 	gameSearchUpdateAPI,
 	gameSearchDeleteAPI,
-    gameHomeRecommendListAPI,
-    gameHomeRecommendDetailsAPI
+	gameHomeRecommendListAPI,
+	gameHomeRecommendDetailsAPI
 }

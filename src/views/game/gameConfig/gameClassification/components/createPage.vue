@@ -17,7 +17,7 @@
 					label-width="100px"
 					class="form-content"
 				>
-					<el-form-item label="分类名称:">
+					<el-form-item label="分类名称:" prop="assortName">
 						<el-input
 							v-model="queryData.assortName"
 							size="medium"
@@ -27,7 +27,7 @@
 							style="width: 180px"
 						></el-input>
 					</el-form-item>
-					<el-form-item label="分类顺序:">
+					<el-form-item label="分类顺序:" prop="assortSort">
 						<el-input
 							v-model="queryData.assortSort"
 							size="medium"
@@ -51,7 +51,7 @@
 								v-for="item in terminalTypeArr"
 								:key="item.code"
 								:label="item.description"
-								:value="item.code"
+								:value="item.description"
 							></el-option>
 						</el-select>
 					</el-form-item>
@@ -99,6 +99,7 @@
 							filterable
 							:data="gameNameList"
 							:gameNameList="gameNameList"
+							:childGameConfigData="childGameConfigData"
 							:filter-method="filterMethod"
 							:target-order="'push'"
 							:titles="['已包含', '游戏平台']"
@@ -107,7 +108,7 @@
 							:right-default-checked="hasCheckedWHRightData"
 							@left-check-change="handleWHLeftChange"
 							@right-check-change="handleWHRightChange"
-                            @clearAbleList="clearAbleList"
+							@clearAbleList="clearAbleList"
 						></Transfer>
 					</div>
 				</div>
@@ -137,12 +138,12 @@ export default {
 	name: 'CreatePage',
 	components: { Transfer },
 	mixins: [list],
-    props: {
-        rowAssortId: {
-            type: String,
-            default: ''
-        }
-    },
+	props: {
+		rowAssortId: {
+			type: String,
+			default: ''
+		}
+	},
 	data() {
 		return {
 			filterMethod(query, item) {
@@ -161,7 +162,7 @@ export default {
 			dataList: [],
 			gameNameList: [],
 			childGameNameList: [],
-            childGameConfigData: undefined,
+			childGameConfigData: undefined,
 			data: generateData(),
 			value: [4, 2, 1],
 			shiftKey: false,
@@ -184,7 +185,7 @@ export default {
 	created() {
 		this.queryChildGame()
 		this.queryGame()
-        this.queryChildGameConfig()
+		this.queryChildGameConfig()
 	},
 	mounted() {
 		document.body.ondrop = function(event) {
@@ -261,7 +262,7 @@ export default {
 		// 子游戏查询
 		queryChildGame() {
 			this.childGameNameList = []
-            console.log('this.rowAssortId', this.rowAssortId)
+			console.log('this.rowAssortId', this.rowAssortId)
 			const params = {
 				gameName: '',
 				assortId: this.rowAssortId
@@ -279,26 +280,46 @@ export default {
 				}
 			})
 		},
-        // 子游戏配置查询
-        queryChildGameConfig() {
-            this.childGameNameList = []
-            console.log('this.rowAssortId', this.rowAssortId)
-            const params = {
-                id: this.rowAssortId
-            }
-            this.$api.queryChildGameConfigAPI(params).then((res) => {
-                const { code, data, msg } = res
-                console.log('res', res)
-                if (code === 200) {
-                    this.childGameConfigData = data
-                } else {
-                    this.$message({
-                        message: msg,
-                        type: 'error'
-                    })
-                }
-            })
-        },
+		// 子游戏配置查询
+		queryChildGameConfig() {
+			this.childGameNameList = []
+			console.log('this.rowAssortId', this.rowAssortId)
+			const params = {
+				id: this.rowAssortId
+			}
+			this.$api.queryChildGameConfigAPI(params).then((res) => {
+				const { code, data, msg } = res
+				console.log('res', res)
+				if (code === 200) {
+					const {
+						assortName,
+						assortSort,
+						remark,
+						clientDisplay,
+						supportTerminal
+					} = data
+					this.queryData.assortName = assortName
+					this.queryData.assortSort = assortSort
+					this.queryData.remark = remark
+
+					this.gameDisplayArr.forEach((item) => {
+						if (!!(item.code * 1) === clientDisplay) {
+							this.queryData.clientDisplay = item.code
+						}
+					})
+					this.terminalTypeArr.forEach((item) => {
+						if (item.description === supportTerminal) {
+							this.queryData.supportTerminal.push(item.description)
+						}
+					})
+				} else {
+					this.$message({
+						message: msg,
+						type: 'error'
+					})
+				}
+			})
+		},
 		// 列表清空
 		clearAbleList() {
 			console.log('清空列表')
