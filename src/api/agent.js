@@ -10,11 +10,12 @@ export function AgentListAPI(data) {
 }
 
 // 代理==> 代理管理 ===> 代理列表导出
-export function AgentListExportAPI(data) {
+export function agentListExportAPI(data) {
 	return request({
 		url: '/proxyInformationRegistered/download',
 		method: 'post',
-		data
+		data,
+		responseType: 'blob'
 	})
 }
 
@@ -206,7 +207,7 @@ export function setDomainUpdate(data) {
 
 export default {
 	AgentListAPI,
-	AgentListExportAPI,
+	agentListExportAPI,
 	agentDictAPI,
 	addAgentAPI,
 	memberTransAgentAPI,
