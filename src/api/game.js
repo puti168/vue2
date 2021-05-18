@@ -225,15 +225,14 @@ export function editGame(data) {
 		data
 	})
 }
-export function imageUpload(data, cb) {
+export function imageUpload(data) {
 	return request({
 		url: '/gameManager/upload',
 		method: 'post',
+		data,
 		headers: {
 			'Content-Type': 'multipart/form-data'
-		},
-		data,
-		cb
+		}
 	})
 }
 export function editGameStatus(data) {
