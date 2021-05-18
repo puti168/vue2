@@ -326,7 +326,7 @@ class="textC"
       >
         <el-form-item v-if="moduleBox === '账号状态'" label="账号状态：" prop="code">
           <el-select
-            v-model="editData.accountStatus"
+            v-model="editData.code"
             placeholder="请选择"
             @change="changeAccountStatus"
           >
@@ -537,7 +537,7 @@ export default {
       tableList: [],
       moduleBox: '',
       editVisible: false,
-      editData: {},
+      editData: { code: '', windControlId: '', labelId: '' },
       page: 1,
       size: 3,
       rules: {
@@ -546,10 +546,16 @@ export default {
       titel: '审核备注：'
     }
   },
-  computed: {},
+  computed: {
+    allData() {
+      console.log('变化了')
+      return this.outlineInfo
+    }
+  },
   watch: {
-    outlineInfo: {
-      handler(newV) {
+    allData: {
+      handler(newV, oldV) {
+        console.log(111111111111, newV, oldV)
         this.outlineInfoList = { ...newV }
         console.log('newV.auditList', newV.auditList)
         if (newV.auditList && newV.auditList !== null) {
@@ -632,6 +638,23 @@ export default {
       this.$api.getOutlineInfo({ userName: val.userName }).then((res) => {
         if (res.code === 200) {
           this.outlineInfoList = res.data
+          if (res.data.auditList && res.data.auditList !== null) {
+            this.isshow = false
+            for (let i = 0; i < res.data.auditList.length; i++) {
+              const ele = res.data.auditList[i]
+              for (let j = 0; j < this.editMsgList.length; j++) {
+                const val = this.editMsgList[j].code
+                if (ele.applyName === val) {
+                  this.editMsgList[j].applyStatus = ele.applyStatus
+                }
+              }
+            }
+          } else {
+            for (let i = 0; i < this.editMsgList.length; i++) {
+              this.editMsgList[i].applyStatus = ''
+            }
+            this.isshow = false
+          }
           this.getVipInfo(res.data.id)
           const params = { userId: val.userId, pageNum: 1, pageSize: 3 }
           this.$api.getMemberRemarkList(params).then((res) => {
@@ -667,10 +690,10 @@ export default {
     // 添加会员备注
     getMemberRemarkAdd(val) {
       this.$api.getMemberRemarkAdd(val).then((res) => {
-        this.editData = {}
+        this.editData = { code: '', windControlId: '', labelId: '' }
         if (res.code === 200) {
+          this.refresh()
           this.$message.success('添加成功')
-          this.getOutlineInfo(this.parentData)
         }
         this.editVisible = false
       })
@@ -681,7 +704,7 @@ export default {
         if (res.code === 200) {
           this.$message.success(res.msg)
           this.getOutlineInfo(this.parentData)
-          this.editData = {}
+          this.editData = { code: '', windControlId: '', labelId: '' }
         }
         this.editVisible = false
       })
@@ -708,14 +731,14 @@ export default {
       switch (val) {
         case '账号状态':
           this.titel = '备注信息：'
-          this.editData.accountStatus = this.outlineInfo.accountStatus
+          this.editData.code = this.outlineInfoList.accountStatus
           break
         case '风控层级':
           this.titel = '备注信息：'
-          this.editData.windControlId = this.outlineInfo.windControlId
+          this.editData.windControlId = this.outlineInfoList.windControlId
           break
         case '会员标签':
-          this.editData.labelId = this.outlineInfo.labelId
+          this.editData.labelId = this.outlineInfoList.labelId
           break
         case '账号备注':
           this.titel = '备注信息：'
@@ -727,20 +750,23 @@ export default {
       this.editVisible = true
     },
     changeAccountStatus(val) {
-      this.editData.accountStatus = val
+      this.editData.code = val
     },
     changeWindControlId(val) {
-      for (let i = 0; i < this.memberLabelList.length; i++) {
+      this.editData.windControlId = val
+      for (let i = 0; i < this.riskLevelList.length; i++) {
         const ele = this.riskLevelList[i]
-        if (ele.windControlId === val) {
+        if (val === ele.windControlId) {
           this.editData.windControlName = ele.windControlName
         }
       }
     },
     changeLabelId(val) {
+      this.editData.labelId = val
       for (let i = 0; i < this.memberLabelList.length; i++) {
         const ele = this.memberLabelList[i]
-        if (ele.labelId === val) {
+        if (val === ele.labelId) {
+          console.log(ele)
           this.editData.labelName = ele.labelName
         }
       }
@@ -750,7 +776,7 @@ export default {
     },
     cancel() {
       this.$refs.editForm.resetFields()
-      this.editData = {}
+      this.editData = { code: '', windControlId: '', labelId: '' }
       this.editVisible = false
     },
     submitEdit() {
@@ -768,11 +794,14 @@ export default {
           })
           if (this.moduleBox === '账号状态') {
             // delete params.code;
+            params.accountStatus = params.code
             data.accountStatusAfter = params
             this.setMemberInfoEdit(data)
             loading.close()
           }
           if (this.moduleBox === '风控层级') {
+            // delete params.code;
+            // delete params.labelId;
             data.windControlAfter = params
             this.setMemberInfoEdit(data)
             loading.close()
@@ -821,7 +850,7 @@ export default {
     },
     closeFormDialog() {
       this.$refs.editForm.resetFields()
-      this.editData = {}
+      this.editData = { code: '', windControlId: '', labelId: '' }
       this.editVisible = false
     },
     handleCurrentChange(val) {
