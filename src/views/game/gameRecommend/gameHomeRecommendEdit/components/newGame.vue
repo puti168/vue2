@@ -14,7 +14,7 @@
                         <el-col :span="12">
                             <el-form-item label="主标题信息:" prop="gameName">
                                 <el-input
-                                    v-model="form.gameName"
+                                    v-model="form.mainTitleInfo"
                                     size="medium"
                                     maxlength="20"
                                     clearable
@@ -25,7 +25,7 @@
                         <el-col :span="12">
                             <el-form-item label="副标题信息:" prop="gameName">
                                 <el-input
-                                    v-model="form.gameName"
+                                    v-model="form.subTitleInfo"
                                     size="medium"
                                     maxlength="20"
                                     clearable
@@ -36,7 +36,7 @@
                         <el-col :span="12">
                             <el-form-item label="滚屏数量限制:" prop="gameName">
                                 <el-input
-                                    v-model="form.gameName"
+                                    v-model="form.scrollingNum"
                                     size="medium"
                                     maxlength="20"
                                     clearable
@@ -47,7 +47,7 @@
                         <el-col :span="12">
                             <el-form-item label="全部游戏数量:" prop="gameName">
                                 <el-input
-                                    v-model="form.gameName"
+                                    v-model="form.allGameNum"
                                     size="medium"
                                     maxlength="20"
                                     clearable
@@ -58,7 +58,7 @@
                         <el-col :span="12">
                             <el-form-item label="模块描述:">
                                 <el-input
-                                    v-model="form.gameName"
+                                    v-model="form.description"
                                     size="medium"
                                     maxlength="20"
                                     clearable
@@ -100,7 +100,7 @@
                             :on-success="handleAvatarSuccess"
                             :before-upload="beforeAvatarUpload"
                         >
-                            <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+                            <img v-if="form.pictureOne" :src="form.pictureOne" class="avatar" />
                             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                         </el-upload>
                     </el-form-item>
@@ -134,7 +134,7 @@
                             :on-success="handleAvatarSuccess"
                             :before-upload="beforeAvatarUpload"
                         >
-                            <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+                            <img v-if="form.pictureTwo" :src="form.pictureTwo" class="avatar" />
                             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                         </el-upload>
                     </el-form-item>
@@ -168,7 +168,7 @@
                             :on-success="handleAvatarSuccess"
                             :before-upload="beforeAvatarUpload"
                         >
-                            <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+                            <img v-if="form.pictureThree" :src="form.pictureThree" class="avatar" />
                             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                         </el-upload>
                     </el-form-item>
@@ -178,7 +178,7 @@
                         <el-col :span="24">
                             <el-form-item label="正文标题:" prop="gameName">
                                 <el-input
-                                    v-model="form.gameName"
+                                    v-model="form.bodyTitle"
                                     size="medium"
                                     maxlength="20"
                                     clearable
@@ -189,7 +189,7 @@
                         <el-col :span="24">
                             <el-form-item label="内容信息:" prop="gameName">
                                 <el-input
-                                    v-model="form.gameName"
+                                    v-model="form.contentInfor"
                                     clearable
                                     type="textarea"
                                     :max="50"
@@ -222,8 +222,16 @@ export default {
         return {
             editData: {},
             form: {
-                icon: '',
-                gameName: ''
+                mainTitleInfo: '',
+                subTitleInfo: '',
+                scrollingNum: 0,
+                allGameNum: '',
+                description: '',
+                pictureOne: '',
+                pictureTwo: '',
+                pictureThree: '',
+                bodyTitle: '',
+                contentInfor: ''
             },
             imageUrl: ''
         }
@@ -266,9 +274,6 @@ export default {
             this.remark = ''
             this.action = action
             this.visible = true
-        },
-        goBack() {
-            this.$router.go(-1)
         },
         beforeAvatarUpload() {
             // const isPNG = file.type === 'image/png'

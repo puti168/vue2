@@ -15,7 +15,7 @@
 							<el-col :span="12">
 								<el-form-item label="模块描述:">
 									<el-input
-										v-model="form.gameName"
+										v-model="form.description"
 										size="medium"
 										maxlength="100"
                     minlength="2"
@@ -62,9 +62,9 @@
 								width="220px"
 							>
 								<template slot-scope="scope">
-									<span v-if="!!scope.row.bankName">
+									<span v-if="!!scope.row.moduleStatus">
 										<el-input
-											v-model="scope.row.bankName"
+											v-model="scope.row.moduleStatus"
 											size="medium"
 											maxlength="20"
 											placeholder="请输入"
@@ -82,9 +82,9 @@
 								width="220px"
 							>
 								<template slot-scope="scope">
-									<span v-if="!!scope.row.bankName">
+									<span v-if="!!scope.row.assortId">
 										<el-input
-											v-model="scope.row.bankName"
+											v-model="scope.row.assortId"
 											size="medium"
 											maxlength="20"
 											placeholder="请输入"
