@@ -103,9 +103,13 @@ export default {
       dataList: []
     }
   },
-  computed: {},
+  computed: {
+    lonRecordData() {
+      return this.lonRecord
+    }
+  },
   watch: {
-    lonRecord: {
+    lonRecordData: {
       handler(newV) {
         if (newV.totalRecord) {
           this.total = newV.totalRecord

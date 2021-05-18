@@ -30,7 +30,7 @@
       <el-col :span="5">
         代理类型：<i v-if="activeL" class="el-icon-loading"></i>
         <span v-else>
-          {{ typeFilter(outlineInfoList.accountType, "accountType") }}
+          {{ typeFilter(outlineInfoList.accountType, "proxyAccountType") }}
         </span>
       </el-col>
       <el-col
@@ -51,14 +51,14 @@
 :span="5"
 >合营代码：<i v-if="activeL" class="el-icon-loading"></i>
         <span v-else>
-          {{ outlineInfoList.firstDepositTime }}
+          {{ outlineInfoList.invitationCode }}
         </span>
       </el-col>
       <el-col
 :span="5"
 >代理标签：<i v-if="activeL" class="el-icon-loading"></i>
         <span v-else>
-          {{ outlineInfoList.firstDepositAmount }}
+          {{ outlineInfoList.labelName }}
         </span>
       </el-col>
       <el-col
@@ -72,7 +72,7 @@
 :span="5"
 >离线天数：<i v-if="activeL" class="el-icon-loading"></i>
         <span v-else>
-          {{ outlineInfoList.leaveLineTime }}
+          {{ outlineInfoList.offLineDays }}
         </span>
       </el-col>
       <el-col
@@ -100,7 +100,7 @@
 :span="5"
 >入口权限：<i v-if="activeL" class="el-icon-loading"></i>
         <span v-else>
-          {{ outlineInfoList.registerIp }}
+          {{ typeFilter(outlineInfoList.entryAuthority, "entrAuthorityType") }}
         </span>
       </el-col>
     </el-row>
@@ -132,7 +132,7 @@
 :span="5"
 >手机号码：<i v-if="activeL" class="el-icon-loading"></i>
         <span v-else>
-          {{ outlineInfoList.registerPhone }}
+          {{ outlineInfoList.mobile }}
         </span>
       </el-col>
       <el-col
@@ -146,14 +146,14 @@
 :span="5"
 >QQ：<i v-if="activeL" class="el-icon-loading"></i>
         <span v-else>
-          {{ outlineInfoList.email }}
+          {{ outlineInfoList.qq }}
         </span>
       </el-col>
       <el-col
 :span="5"
 >支付密码：<i v-if="activeL" class="el-icon-loading"></i>
         <span v-else>
-          {{ outlineInfoList.email }}
+          {{ outlineInfoList.payPassword }}
         </span>
       </el-col>
     </el-row>
@@ -343,7 +343,7 @@ export default {
       moduleBox: '',
       titel: '审核备注：',
       editVisible: false,
-      editData: { code: '' },
+      editData: { code: '', windControlId: '', labelId: '' },
       page: 1,
       size: 3
     }
@@ -353,7 +353,6 @@ export default {
     outlineInfo: {
       handler(newV) {
         this.outlineInfoList = { ...newV }
-        console.log('newV.auditList', newV.auditList)
         if (newV.auditList && newV.auditList !== null) {
           for (let i = 0; i < newV.auditList.length; i++) {
             const ele = newV.auditList[i]
@@ -387,7 +386,9 @@ export default {
   created() {
     this.initGetDics()
   },
-  mounted() {},
+  mounted() {
+    console.log(this.remarksTableData)
+  },
   methods: {
     initGetDics() {
       getDics().then((res) => {
@@ -408,6 +409,7 @@ export default {
       this.$api.getProxyDetailQueryDetail({ userName: val.userName }).then((res) => {
         if (res.code === 200) {
           this.outlineInfoList = res.data
+          this.editData = { code: '', windControlId: '', labelId: '' }
           if (res.data.auditList && res.data.auditList !== null) {
             for (let i = 0; i < res.data.auditList.length; i++) {
               const ele = res.data.auditList[i]
@@ -438,7 +440,7 @@ export default {
         if (res.code === 200) {
           this.$message.success(res.msg)
           this.getProxyDetailQueryDetail(this.parentData)
-          this.editData = {}
+          this.editData = { code: '', windControlId: '', labelId: '' }
         }
         this.editVisible = false
       })
@@ -458,9 +460,10 @@ export default {
     },
     editFn(val) {
       this.moduleBox = val
+      this.editData = { code: '', windControlId: '', labelId: '' }
       switch (val) {
         case '账号状态':
-          this.editData.code = this.outlineInfoList.applyStatus
+          this.editData.code = this.outlineInfoList.accountStatus + ''
           break
 
         case '风控层级':
@@ -485,9 +488,10 @@ export default {
       this.editVisible = true
     },
     changeAccountStatus(val) {
-      this.editData.accountStatus = val
+      this.editData.code = val
     },
     changeWindControlId(val) {
+      this.editData.windControlId = val
       for (let i = 0; i < this.riskLevelList.length; i++) {
         const ele = this.riskLevelList[i]
         if (ele.windControlId === val) {
@@ -508,7 +512,7 @@ export default {
     },
     cancel() {
       this.$refs.editForm.resetFields()
-      this.editData = {}
+      this.editData = { code: '', windControlId: '', labelId: '' }
       this.editVisible = false
     },
     submitEdit() {
@@ -524,33 +528,49 @@ export default {
             background: 'rgba(0, 0, 0, 0.7)'
           })
           if (this.moduleBox === '账号状态') {
+            params.accountStatus = params.code
             delete params.code
+            delete params.labelId
+            delete params.windControlId
             data.accountStatusAfter = params
             this.setProxyDataInfoEdit(data)
             loading.close()
           }
           if (this.moduleBox === '风控层级') {
             data.windControlAfter = params
+            delete params.code
+            delete params.labelId
             this.setProxyDataInfoEdit(data)
             loading.close()
           }
           if (this.moduleBox === '代理标签') {
             data.labelAfter = params
+            delete params.code
+            delete params.windControlId
             this.setProxyDataInfoEdit(data)
             loading.close()
           }
           if (this.moduleBox === '账号备注') {
-            data.payPasswordAfter = params
+            data.remarkAfter = params.remark
+            delete params.code
+            delete params.labelId
+            delete params.windControlId
             this.setProxyDataInfoEdit(data)
             loading.close()
           }
           if (this.moduleBox === '入口权限') {
             data.entryAuthorityAfter = params
+            delete params.code
+            delete params.labelId
+            delete params.windControlId
             this.setProxyDataInfoEdit(data)
             loading.close()
           }
-          if (this.moduleBox === '账号备注') {
+          if (this.moduleBox === '支付密码重置') {
             params.userName = this.parentData.userName
+            delete params.code
+            delete params.labelId
+            delete params.windControlId
             params.remarkAfter = params.remark
             delete params.remark
             this.setProxyDataInfoEdit(params)
@@ -563,7 +583,7 @@ export default {
     },
     closeFormDialog() {
       this.$refs.editForm.resetFields()
-      this.editData = {}
+      this.editData = { code: '', windControlId: '', labelId: '' }
       this.editVisible = false
     },
     handleCurrentChange(val) {
