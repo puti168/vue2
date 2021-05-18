@@ -289,7 +289,7 @@ class="textC"
         ></el-table-column>
         <el-table-column prop="remark" align="center" label="备注信息"></el-table-column>
         <el-table-column
-          prop="userName"
+          prop="operator"
           align="center"
           width="150px"
           label="备注账号"
@@ -447,7 +447,7 @@ class="textC"
         </el-form-item>
 
         <el-form-item
-          label="审核备注："
+          :label="titel"
           prop="remark"
           :rules="[
             { required: true, message: '请输入备注信息', trigger: 'blur' },
@@ -542,7 +542,8 @@ export default {
       size: 3,
       rules: {
         mobile: [{ required: true, validator: checkPhone, trigger: 'blur' }]
-      }
+      },
+      titel: '审核备注：'
     }
   },
   computed: {},
@@ -704,14 +705,24 @@ export default {
     },
     editFn(val) {
       this.moduleBox = val
-      if (val === '账号状态') {
-        this.editData.accountStatus = this.outlineInfo.accountStatus
-      }
-      if (val === '风控层级') {
-        this.editData.windControlId = this.outlineInfo.windControlId
-      }
-      if (val === '会员标签') {
-        this.editData.labelId = this.outlineInfo.labelId
+      switch (val) {
+        case '账号状态':
+          this.titel = '备注信息：'
+          this.editData.accountStatus = this.outlineInfo.accountStatus
+          break
+        case '风控层级':
+          this.titel = '备注信息：'
+          this.editData.windControlId = this.outlineInfo.windControlId
+          break
+        case '会员标签':
+          this.editData.labelId = this.outlineInfo.labelId
+          break
+        case '账号备注':
+          this.titel = '备注信息：'
+          break
+        default:
+          this.titel = '审核备注：'
+          break
       }
       this.editVisible = true
     },

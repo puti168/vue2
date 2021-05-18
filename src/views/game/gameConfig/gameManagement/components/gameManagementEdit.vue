@@ -43,7 +43,7 @@
 						<el-col :span="12">
 							<el-form-item label="支持终端:" prop="supportTerminal">
 								<el-select
-									v-model="supportTerminal"
+									v-model="form.supportTerminal"
 									size="medium"
 									placeholder="全部"
 									multiple
@@ -95,7 +95,7 @@
 						<el-col :span="12">
 							<el-form-item label="关联推荐游戏:" prop="relationOtherGameId">
 								<el-select
-									v-model="relationOtherGameId"
+									v-model="form.relationOtherGameId"
 									size="medium"
 									placeholder="全部"
 									multiple
@@ -112,9 +112,9 @@
 							</el-form-item>
 						</el-col>
 						<el-col :span="12">
-							<el-form-item label="关联游戏模块:" prop="relationGameModuleName">
+							<el-form-item label="关联游戏模块:" prop="relationGameModuleId">
 								<el-select
-									v-model="relationGameModuleName"
+									v-model="form.relationGameModuleId"
 									size="medium"
 									placeholder="全部"
 									multiple
@@ -141,7 +141,7 @@
 							</el-form-item>
 						</el-col>
 						<el-col :span="12">
-							<el-form-item label="游戏平台:">
+							<el-form-item label="游戏平台:" prop="gamePlatform">
 								<el-select
 									v-model="form.gamePlatform"
 									size="medium"
@@ -161,7 +161,7 @@
 						<el-col :span="12">
 							<el-form-item label="1级标签:">
 								<el-select
-									v-model="form.gameLabelParam1"
+									v-model="gameLabelParam1"
 									size="medium"
 									placeholder="全部"
 									clearable
@@ -179,7 +179,7 @@
 						<el-col :span="12">
 							<el-form-item label="2级标签:">
 								<el-select
-									v-model="form.gameLabelParam2"
+									v-model="gameLabelParam2"
 									size="medium"
 									placeholder="全部"
 									clearable
@@ -197,7 +197,7 @@
 						<el-col :span="12">
 							<el-form-item label="3级标签:">
 								<el-select
-									v-model="form.gameLabelParam3"
+									v-model="gameLabelParam3"
 									size="medium"
 									placeholder="全部"
 									clearable
@@ -217,6 +217,7 @@
 					<span class="img-title">客户端图片上传</span>
 					<el-form-item label="图片上传">
 						<!-- :upload-file-type="'image/jpeg'"
+							:platform="'PC'"
 							:bounds="imageSize" -->
 						<upload
 							ref="imgUpload"
@@ -273,17 +274,20 @@ export default {
 				gameIcon: '',
 				gamePlatform: '',
 				gameName: '',
-				imageAddress: '',
-				gameLabelParam1: '',
-				gameLabelParam2: '',
-				gameLabelParam3: '',
+				supportTerminal: [],
+				relationOtherGameId: [],
+				relationGameModuleId: [],
+				imageAddress: '3535test',
+				gameLabelParam1: {},
+				gameLabelParam2: {},
+				gameLabelParam3: {},
 				accessInfo: '',
 				description: '',
 				remark: ''
 			},
-			supportTerminal: [],
-			relationOtherGameId: [],
-			relationGameModuleName: []
+			gameLabelParam1: '',
+			gameLabelParam2: '',
+			gameLabelParam3: ''
 		}
 	},
 	computed: {
@@ -308,7 +312,15 @@ export default {
 					{
 						required: true,
 						message: '请选择支持终端',
-						trigger: 'blur',
+						trigger: 'change',
+						type: 'array'
+					}
+				],
+				gamePlatform: [
+					{
+						required: true,
+						message: '请选择游戏平台',
+						trigger: 'change',
 						type: 'array'
 					}
 				],
@@ -323,7 +335,7 @@ export default {
 						type: 'array'
 					}
 				],
-				relationGameModuleName: [
+				relationGameModuleId: [
 					{
 						required: true,
 						message: '请输入关联游戏模块',
@@ -361,45 +373,99 @@ export default {
 	mounted() {},
 	methods: {
 		confirm() {
-			this.$refs.form.validate((valid) => {
-				if (valid) {
-					const loading = this.$loading({
-						lock: true,
-						text: 'Loading',
-						spinner: 'el-icon-loading',
-						background: 'rgba(0, 0, 0, 0.7)'
-					})
-					const params = {
-						...this.form,
-						supportTerminal: this.supportTerminal.join(','),
-						relationOtherGameId: this.relationOtherGameId.join(','),
-						relationGameModuleName: this.relationGameModuleName.join(',')
+			const loading = this.$loading({
+				lock: true,
+				text: 'Loading',
+				spinner: 'el-icon-loading',
+				background: 'rgba(0, 0, 0, 0.7)'
+			})
+			const relationGameModuleName = []
+			this.gameModuleNameList.forEach((item) => {
+				this.form.relationGameModuleId.forEach((data) => {
+					if (item.moduleId === data) {
+						relationGameModuleName.push(item.moduleName)
 					}
-					const url = this.editType === 'add' ? 'addGame' : 'editGame'
-					this.$api[url](params)
-						.then((res) => {
-							loading.close()
-							if (res.code === 200) {
-								this.$message({
-									type: 'success',
-									message: '操作成功!'
-								})
-								this.goBack()
-							} else {
-								this.$message({
-									message: res.msg,
-									type: 'error'
-								})
-							}
-						})
-						.catch(() => {
-							loading.close()
-						})
+				})
+			})
+			this.labelList.forEach((item) => {
+				if (item.gameLabelId === this.gameLabelParam1) {
+					this.form.gameLabelParam1 = {
+						gameLabelId: item.gameLabelId,
+						gameLabelName: item.gameLabelName,
+						id: item.id
+					}
+				}
+				if (item.gameLabelId === this.gameLabelParam2) {
+					this.form.gameLabelParam2 = {
+						gameLabelId: item.gameLabelId,
+						gameLabelName: item.gameLabelName,
+						id: item.id
+					}
+				}
+				if (item.gameLabelId === this.gameLabelParam3) {
+					this.form.gameLabelParam3 = {
+						gameLabelId: item.gameLabelId,
+						gameLabelName: item.gameLabelName,
+						id: item.id
+					}
 				}
 			})
+			console.log(this.form)
+			const params = {
+				...this.form,
+				imageAddress: '3535test',
+				supportTerminal: this.form.supportTerminal.join(','),
+				relationOtherGameId: this.form.relationOtherGameId.join(','),
+				relationGameModuleName: relationGameModuleName.join(','),
+				relationGameModuleId: this.form.relationGameModuleId.join(',')
+			}
+			const url = this.editType === 'add' ? 'addGame' : 'editGame'
+			this.$api[url](params)
+				.then((res) => {
+					loading.close()
+					if (res.code === 200) {
+						this.$message({
+							type: 'success',
+							message: '操作成功!'
+						})
+						this.goBack()
+					} else {
+						this.$message({
+							message: res.msg,
+							type: 'error'
+						})
+					}
+				})
+				.catch(() => {
+					loading.close()
+				})
+			// this.$refs.form.validate((valid) => {
+			// 	if (valid) {
+
+			// 	}
+			// })
 		},
 		handleStartUpload() {
 			this.$message.info('图片开始上传')
+			// this.$api.gameManagerUpload(params)
+			// 			.then((res) => {
+			// 				loading.close()
+			// 				if (res.code === 200) {
+			// 					this.$message({
+			// 						type: 'success',
+			// 						message: '操作成功!'
+			// 					})
+			// 					this.goBack()
+			// 				} else {
+			// 					this.$message({
+			// 						message: res.msg,
+			// 						type: 'error'
+			// 					})
+			// 				}
+			// 			})
+			// 			.catch(() => {
+			// 				loading.close()
+			// 			})
 		},
 		handleUploadSucess({ index, file, id }) {
 			this.form.imageAddress = file.imgUrl
@@ -418,7 +484,7 @@ export default {
 				gameIcon: '',
 				gamePlatform: '',
 				gameName: '',
-				imageAddress: '',
+				imageAddress: '3535test',
 				gameLabelParam1: '',
 				gameLabelParam2: '',
 				gameLabelParam3: '',
@@ -428,7 +494,7 @@ export default {
 			}
 			this.supportTerminal = []
 			this.relationOtherGameId = []
-			this.relationGameModuleName = []
+			this.relationGameModuleId = []
 			this.$emit('closeEdit')
 		}
 	}

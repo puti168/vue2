@@ -299,7 +299,7 @@
             <template slot-scope="scope">
               {{ scope.row.id }}
               <br />
-              {{ scope.row.thirdId }}
+              {{ scope.row.thirdOrderId }}
             </template>
           </el-table-column>
           <el-table-column prop="bankName" align="center">
@@ -440,7 +440,9 @@ class="disableRgba"
           <strong class="paddingLR strong">投注人信息</strong>
           <div class="paddingLR paddingB">
             <el-row class="paddingLR">
-              <el-col :span="6">账号类型：  {{ typeFilter(scope.row.accountType, "accountType") }}</el-col>
+              <el-col
+:span="6"
+>账号类型： {{ typeFilter(dataList.accountType, "accountType") }}</el-col>
               <el-col :span="6">会员账号： {{ dataList.memberName }}</el-col>
               <el-col :span="6">上级代理：{{ dataList.parentProxyName }}</el-col>
               <el-col :span="6">VIP等级： {{ dataList.vipSerialNum }}</el-col>
@@ -566,7 +568,8 @@ export default {
       params = {
         ...this.getParams(params)
       }
-      if (startTime && endTime && netAtStart && netAtEnd) {
+      console.log(startTime, endTime, netAtStart, netAtEnd)
+      if (startTime || endTime || netAtStart || netAtEnd) {
         this.$api
           .getGameRecordNotes(params)
           .then((res) => {
@@ -597,7 +600,7 @@ export default {
       const data = {}
       data.createAt = val.createAt
       data.gameCode = val.gameCode
-      data.id = val.thirdOrderId
+      data.thirdOrderId = val.thirdOrderId
       const loading = this.$loading({
         lock: true,
         text: 'Loading',
@@ -607,9 +610,13 @@ export default {
       this.$api
         .getGameRecordDetail(data)
         .then((res) => {
-          if (res.code === 200) {
-            this.dataList = res.data.record
+          if (res.code === 200 && res.data.record.length > 0) {
+            this.dataList = res.data.record[0]
             this.gameType = val.gameCode
+            loading.close()
+          } else {
+            this.dataList = {}
+            this.gameType = 'init'
             loading.close()
           }
           console.log(res)

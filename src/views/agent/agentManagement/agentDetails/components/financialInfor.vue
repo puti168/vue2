@@ -7,7 +7,11 @@
           <span>代理余额</span>
         </el-col>
         <el-col :span="2" class="refrestBox cell">
-          <el-button type="primary" icon="el-icon-refresh">刷新</el-button>
+          <el-button
+type="primary"
+icon="el-icon-refresh"
+@click="refresh('余额')"
+>刷新</el-button>
         </el-col>
       </el-row>
     </div>
@@ -15,25 +19,25 @@
       <el-col :span="4">
         总余额： <i v-if="activeL" class="el-icon-loading"></i>
         <span v-else>
-          {{ resWaterList.userBalance }}
+          {{ resBalanceList.userBalance }}
         </span>
       </el-col>
       <el-col :span="4">
         佣金余额：<i v-if="activeL" class="el-icon-loading"></i>
         <span v-else>
-          {{ resWaterList.runningWaterRequired }}
+          {{ resBalanceList.runningWaterRequired }}
         </span>
       </el-col>
       <el-col :span="16">
         额度余额：<i v-if="activeL" class="el-icon-loading"></i>
         <span v-else>
-          {{ resWaterList.finishDetOnWater }}
+          {{ resBalanceList.finishDetOnWater }}
         </span>
       </el-col>
       <el-col>
         提现冻结金额：<i v-if="activeL" class="el-icon-loading"></i>
         <span v-else>
-          {{ resWaterList.residualFlow }}
+          {{ resBalanceList.residualFlow }}
         </span>
       </el-col>
     </el-row>
@@ -42,11 +46,11 @@
     <el-row class="msgList">
       <el-col :span="4">
         累计返佣： <i v-if="activeL" class="el-icon-loading"></i>
-        <span v-else> 0 </span>
+        <span v-else> {{ commission.commission }} </span>
       </el-col>
       <el-col :span="4">
         上月返佣： <i v-if="activeL" class="el-icon-loading"></i>
-        <span v-else> 0 </span>
+        <span v-else> {{ commission.commission }} </span>
       </el-col>
     </el-row>
     <el-divider></el-divider>
@@ -56,34 +60,38 @@
           <span>充提信息</span>
         </el-col>
         <el-col :span="2" class="refrestBox cell">
-          <el-button type="primary" icon="el-icon-refresh">刷新</el-button>
+          <el-button
+type="primary"
+icon="el-icon-refresh"
+@click="refresh('充提')"
+>刷新</el-button>
         </el-col>
       </el-row>
     </div>
     <el-row class="msgList">
       <el-col :span="4">
         存款总额： <i v-if="activeL" class="el-icon-loading"></i>
-        <span v-else> 0 </span>
+        <span v-else> {{ resPlayerList.resPlayerList }} </span>
       </el-col>
       <el-col :span="4">
         取款总额： <i v-if="activeL" class="el-icon-loading"></i>
-        <span v-else> 0 </span>
+        <span v-else> {{ resPlayerList.resPlayerList }} </span>
       </el-col>
       <el-col :span="16">
         银行卡数量： <i v-if="activeL" class="el-icon-loading"></i>
-        <span v-else> 0 </span>
+        <span v-else> {{ resPlayerList.resPlayerList }} </span>
       </el-col>
       <el-col :span="4">
         存款次数： <i v-if="activeL" class="el-icon-loading"></i>
-        <span v-else> 0 </span>
+        <span v-else> {{ resPlayerList.resPlayerList }} </span>
       </el-col>
       <el-col :span="4">
         取款次数： <i v-if="activeL" class="el-icon-loading"></i>
-        <span v-else> 0 </span>
+        <span v-else> {{ resPlayerList.resPlayerList }} </span>
       </el-col>
       <el-col :span="16">
         虚拟币账号数量： <i v-if="activeL" class="el-icon-loading"></i>
-        <span v-else> 0 </span>
+        <span v-else> {{ resPlayerList.resPlayerList }} </span>
       </el-col>
     </el-row>
     <el-divider></el-divider>
@@ -91,7 +99,11 @@
       <el-row>
         <el-col :span="1"> 代存信息 </el-col>
         <el-col :span="2" class="refrestBox cell">
-          <el-button type="primary" icon="el-icon-refresh">刷新</el-button>
+          <el-button
+type="primary"
+icon="el-icon-refresh"
+@click="refresh('代存')"
+>刷新</el-button>
         </el-col>
       </el-row>
     </div>
@@ -99,37 +111,37 @@
       <el-col :span="4">
         代存总额： <i v-if="activeL" class="el-icon-loading"></i>
         <span v-else>
-          {{ resWaterList.userBalance }}
+          {{ resSurrogateList.userBalance }}
         </span>
       </el-col>
       <el-col :span="4">
         佣金代存总额：<i v-if="activeL" class="el-icon-loading"></i>
         <span v-else>
-          {{ resWaterList.runningWaterRequired }}
+          {{ resSurrogateList.runningWaterRequired }}
         </span>
       </el-col>
       <el-col :span="16">
         额度代存总额：<i v-if="activeL" class="el-icon-loading"></i>
         <span v-else>
-          {{ resWaterList.finishDetOnWater }}
+          {{ resSurrogateList.finishDetOnWater }}
         </span>
       </el-col>
       <el-col :span="4">
         代存总次数：<i v-if="activeL" class="el-icon-loading"></i>
         <span v-else>
-          {{ resWaterList.residualFlow }}
+          {{ resSurrogateList.residualFlow }}
         </span>
       </el-col>
       <el-col :span="4">
         佣金代存次数：<i v-if="activeL" class="el-icon-loading"></i>
         <span v-else>
-          {{ resWaterList.waterStarTime }}
+          {{ resSurrogateList.waterStarTime }}
         </span>
       </el-col>
       <el-col :span="4">
         额度代存次数：<i v-if="activeL" class="el-icon-loading"></i>
         <span v-else>
-          {{ resWaterList.waterStarTime }}
+          {{ resSurrogateList.waterStarTime }}
         </span>
       </el-col>
     </el-row>
@@ -152,22 +164,83 @@ export default {
   data() {
     return {
       activeL: true,
-      moneyList: {}, // 代理余额
-      resWaterList: {} // 充提信息
+      resBalanceList: {}, // 代理余额
+      resPlayerList: {}, // 充提信息
+      resSurrogateList: {} // 代存信息
     }
   },
   computed: {},
   watch: {
     balanceList: {
       handler(newV) {
-        this.moneyList = newV
+        this.resBalanceList = newV
+      },
+      deep: true
+    },
+    playerList: {
+      handler(newV) {
+        this.resPlayerList = newV
+      },
+      deep: true
+    },
+    surrogateList: {
+      handler(newV) {
+        this.resSurrogateList = newV
       },
       deep: true
     }
   },
   created() {},
   mounted() {},
-  methods: {}
+  methods: {
+    // 代理余额
+    getProxyDataBalance(val) {
+      const params = { userId: val }
+      this.$api.getProxyDataBalance(params).then((res) => {
+        if (res === 200) {
+          this.resBalanceList = res
+          console.log('代理余额', res)
+        }
+      })
+    },
+    // 存提信息
+    getRechargeAndWithdrawInfo(val) {
+      const params = { userId: val }
+      this.$api.getRechargeAndWithdrawInfo(params).then((res) => {
+        if (res === 200) {
+          this.resPlayerList = res
+          console.log('存提信息', res)
+        }
+      })
+    },
+    // 代存信息
+    getProxyDetailProxyRechargeInfo(val) {
+      const params = { userId: val }
+      this.$api.getProxyDetailProxyRechargeInfo(params).then((res) => {
+        if (res === 200) {
+          this.resSurrogateList = res
+          console.log('代存信息', res)
+        }
+      })
+    },
+    refresh(val) {
+      const params = this.parentData
+      switch (val) {
+        case '余额':
+          this.getProxyDataBalance(params)
+          break
+        case '充提':
+          this.getRechargeAndWithdrawInfo(params)
+          break
+        case '代存':
+          this.getProxyDetailProxyRechargeInfo(params)
+          break
+
+        default:
+          break
+      }
+    }
+  }
 }
 </script>
 

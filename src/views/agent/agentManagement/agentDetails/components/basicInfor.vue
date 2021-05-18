@@ -430,23 +430,12 @@ export default {
         if (res.code === 200) {
           this.outlineInfoList = res.data
           const params = { userId: val.userId, pageNum: 1, pageSize: 3 }
-          this.$api.getMemberRemarkList(params).then((res) => {
+          this.$api.getProxyDetailRemark(params).then((res) => {
             if (res.code === 200) {
               this.tableList = res.data.record
             }
           })
         }
-      })
-    },
-    // 添加会员备注
-    getMemberRemarkAdd(val) {
-      this.$api.getMemberRemarkAdd(val).then((res) => {
-        this.editData = {}
-        if (res.code === 200) {
-          this.$message.success('添加成功')
-          this.getOutlineInfo(this.parentData)
-        }
-        this.editVisible = false
       })
     },
     // 编辑信息
@@ -461,9 +450,9 @@ export default {
       })
     },
     // 备注信息
-    getMemberRemarkList(val) {
+    getProxyDetailRemark(val) {
       const params = { userId: val, pageNum: this.page, pageSize: this.size }
-      this.$api.getMemberRemarkList(params).then((res) => {
+      this.$api.getProxyDetailRemark(params).then((res) => {
         if (res.code === 200) {
           this.tableList = res.data.record
         }
@@ -562,13 +551,13 @@ export default {
     handleCurrentChange(val) {
       this.page = val
       if (this.parentData.userId !== null) {
-        this.getMemberRemarkList(this.parentData.userId)
+        this.getProxyDetailRemark(this.parentData.userId)
       }
     },
     handleSizeChange(val) {
       this.size = val
       if (this.parentData.userId !== null) {
-        this.getMemberRemarkList(this.parentData.userId)
+        this.getProxyDetailRemark(this.parentData.userId)
       }
     }
   }
