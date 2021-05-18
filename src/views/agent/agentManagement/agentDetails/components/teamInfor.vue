@@ -10,7 +10,7 @@
           <el-button
 type="primary"
 icon="el-icon-refresh"
-@click="refresh"
+@click="refresh('余额')"
 >刷新</el-button>
         </el-col>
       </el-row>
@@ -280,58 +280,11 @@ export default {
   created() {},
   mounted() {},
   methods: {
-    // 查询中心钱包余额
-    getAccountCashAccount(val) {
-      this.$api.getAccountCashAccount({ userId: val }).then((res) => {
+    // 查询余额
+    getProxyDataBalance(val) {
+      this.$api.getProxyDataBalance({ userId: val }).then((res) => {
         if (res.code === 200) {
           this.moneyList.balance = res.data.balance
-        }
-      })
-    },
-    // 提现冻结余额
-    getWithdrawalFreeze(val) {
-      this.$api.getWithdrawalFreeze({ userId: val }).then((res) => {
-        if (res.code === 200) {
-          this.moneyList.freezeBalance = res.data.freezeBalance
-        }
-      })
-    },
-    // 一键查询所有场馆余额
-    getOneKeyBalance(val) {
-      this.$api
-        .getOneKeyBalance({ userId: val })
-        .then((res) => {
-          if (res.code === 200) {
-            this.balanceAllList = res.data
-          }
-        })
-        .catch(() => {
-          this.borderL = true
-        })
-    },
-    // 一键下分
-    getOneKeyWithdraw(val) {
-      this.$api
-        .getOneKeyWithdraw(val)
-        .then((res) => {
-          if (res.code === 200) {
-            this.refresh()
-            this.$message({
-              type: 'success',
-              message: '回收成功!'
-            })
-          }
-          console.log(res)
-        })
-        .catch(() => {
-          this.borderL = true
-        })
-    },
-    // 提现流水查询
-    getWithdrawWater(val) {
-      this.$api.getWithdrawWater({ userId: val }).then((res) => {
-        if (res.code === 200) {
-          this.resWaterList = res.data
         }
       })
     },
@@ -341,29 +294,8 @@ export default {
     },
     refresh() {
       const params = this.parentData.userId
-      this.getAccountCashAccount(params)
-      this.getWithdrawalFreeze(params)
+      this.getProxyDataBalance(params)
       this.borderL = true
-    },
-    refreshTWithdrawWater() {
-      const val = this.parentData.userId
-      this.getWithdrawWater(val)
-    },
-    recycle(val) {
-      this.$confirm(
-        `<strong>是否一键将所有钱汇总至中心钱包?</strong></br><span style='font-size:12px;color:#c1c1c1'>提现冻结金额不受影响</span>`,
-        '确认提示',
-        {
-          dangerouslyUseHTMLString: true,
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }
-      )
-        .then(() => {
-          this.getOneKeyWithdraw({ userId: this.parentData.userId }) // 一键下分
-        })
-        .catch(() => {})
     },
     tabHeaderFn(val) {
       this.tabHeader = val
