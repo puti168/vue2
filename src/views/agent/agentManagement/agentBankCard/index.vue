@@ -268,12 +268,6 @@ export default {
 		}
 	},
 	computed: {
-		bindType() {
-			return [
-				{ description: '全部', code: undefined },
-				...this.globalDics.bindType
-			]
-		},
 		accountTypeArr() {
 			return this.globalDics.proxyAccountType
 		}
