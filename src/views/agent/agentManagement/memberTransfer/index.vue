@@ -115,7 +115,8 @@ export default {
 				parentProxyName: '',
 				agentName: '',
 				applyInfo: '',
-                userId: undefined
+                userId: undefined,
+                parentProxyId: undefined
 			},
 			tipsShow: null
 		}
@@ -182,6 +183,7 @@ export default {
 								this.form.accountType = data.accountType + ''
 								this.form.parentProxyName = data.parentProxyName
                                 this.form.userId = data.id
+                                this.form.parentProxyId = data.parentProxyId
 							} else {
 								this.tipsShow = msg
 							}

@@ -278,7 +278,7 @@ export default {
             }
             delete params.createDt
             this.$api
-                .bankRecordListAPI(params)
+                .agentBankRecordAPI(params)
                 .then((res) => {
                     const {
                         code,
