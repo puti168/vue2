@@ -43,8 +43,12 @@
         </el-form-item>
       </el-form>
 
-      <!-- v-show="isShow" -->
-      <el-tabs v-model="activeName" class="tabsBox" @tab-click="handleClick">
+      <el-tabs
+        v-show="isShow"
+        v-model="activeName"
+        class="tabsBox"
+        @tab-click="handleClick"
+      >
         <el-tab-pane label="基本信息" name="basicInfor" class="nav-list-item">
         </el-tab-pane>
         <el-tab-pane
@@ -65,8 +69,7 @@
       </el-tabs>
     </div>
     <div class="marginTb"></div>
-    <!-- <div v-show="isShow" class="contentBox"> -->
-    <div class="contentBox">
+    <div v-show="isShow" class="contentBox">
       <basicInfor
         ref="basicInfor"
         class="floor-item"
@@ -149,8 +152,8 @@ export default {
       this.$api
         .getProxyDetailQueryDetail({ userName: val.userName })
         .then((res) => {
-          this.isShow = true
-          if (res.code === 200) {
+          if (res.code === 200 && res.data !== null) {
+            this.isShow = true
             this.outlineInfo = res.data
             this.parentData.userName = res.data.userName
             this.parentData.userId = res.data.id
@@ -163,6 +166,9 @@ export default {
             this.getProxyDetailTeamBet(res.data.id)
             this.getProxyDetailTop3Bet(res.data.id)
             this.getProxyDetailProxyLoginLog(res.data.id)
+          } else {
+            this.isShow = false
+            this.$message.success(res.msg)
           }
           this.$refs.basicInfor.activeL = false
           this.$refs.financialInfor.activeL = false

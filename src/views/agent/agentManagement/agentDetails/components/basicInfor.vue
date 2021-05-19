@@ -274,7 +274,11 @@
           </el-select>
         </el-form-item>
         <el-form-item v-if="moduleBox === '入口权限'" label="入口权限：" prop="code">
-          <el-select v-model="editData.code" placeholder="请选择" @change="changeLabelId">
+          <el-select
+            v-model="editData.code"
+            placeholder="请选择"
+            @change="changeEntrAuthorityType"
+          >
             <el-option
               v-for="item in entrAuthorityType"
               :key="item.description"
@@ -360,11 +364,15 @@ export default {
     },
     entrAuthorityType() {
       return this.globalDics.entrAuthorityType
+    },
+    outlineInfoData() {
+      return this.outlineInfo
     }
   },
   watch: {
-    outlineInfo: {
+    outlineInfoData: {
       handler(newV) {
+        console.log(newV)
         this.outlineInfoList = { ...newV }
         if (newV.auditList && newV.auditList !== null) {
           for (let i = 0; i < newV.auditList.length; i++) {
@@ -386,10 +394,11 @@ export default {
     },
     remarksTableData: {
       handler(newV) {
-        if (newV.totalRecord) {
+        if (newV.totalRecord && newV.totalRecord > 0) {
           this.total = newV.totalRecord
           this.tableList = newV.record
         } else {
+          this.total = 0
           this.tableList = []
         }
       },
@@ -399,9 +408,7 @@ export default {
   created() {
     this.initGetDics()
   },
-  mounted() {
-    console.log(this.remarksTableData)
-  },
+  mounted() {},
   methods: {
     initGetDics() {
       this.$api.agentDictAPI().then((res) => {
@@ -514,6 +521,10 @@ export default {
         }
       }
     },
+    changeEntrAuthorityType(val) {
+      console.log(val)
+      this.editData.entryAuthority = val
+    },
     changeGender(val) {
       this.editData.gender = val
     },
@@ -544,32 +555,32 @@ export default {
             loading.close()
           }
           if (this.moduleBox === '风控层级') {
-            data.windControlAfter = params
             delete params.code
             delete params.labelId
+            data.windControlAfter = params
             this.setProxyDataInfoEdit(data)
             loading.close()
           }
           if (this.moduleBox === '代理标签') {
-            data.labelAfter = params
             delete params.code
             delete params.windControlId
+            data.labelAfter = params
             this.setProxyDataInfoEdit(data)
             loading.close()
           }
           if (this.moduleBox === '账号备注') {
-            data.remarkAfter = params.remark
             delete params.code
             delete params.labelId
             delete params.windControlId
+            data.remarkAfter = params.remark
             this.setProxyDataInfoEdit(data)
             loading.close()
           }
           if (this.moduleBox === '入口权限') {
-            data.entryAuthorityAfter = params
             delete params.code
             delete params.labelId
             delete params.windControlId
+            data.entryAuthorityAfter = params
             this.setProxyDataInfoEdit(data)
             loading.close()
           }
