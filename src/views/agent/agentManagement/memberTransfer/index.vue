@@ -47,7 +47,7 @@
 				</el-form-item>
 				<el-form-item label="当前上级:">
 					<el-input
-						v-model="form.parentProxyName"
+						v-model="form.transferProxyName"
 						size="medium"
 						maxlength="11"
 						:disabled="true"
@@ -112,11 +112,11 @@ export default {
 			form: {
 				userName: '',
 				accountType: '',
-				parentProxyName: '',
+                transferProxyName: '',
 				agentName: '',
 				applyInfo: '',
                 userId: undefined,
-                parentProxyId: undefined
+                transferProxyId: undefined
 			},
 			tipsShow: null
 		}
@@ -181,9 +181,9 @@ export default {
 							if (data) {
                                 this.tipsShow = null
 								this.form.accountType = data.accountType + ''
-								this.form.parentProxyName = data.parentProxyName
+								this.form.transferProxyName = data.parentProxyName
                                 this.form.userId = data.id
-                                this.form.parentProxyId = data.parentProxyId
+                                this.form.transferProxyId = data.parentProxyId
 							} else {
 								this.tipsShow = msg
 							}

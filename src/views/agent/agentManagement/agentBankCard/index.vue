@@ -288,14 +288,14 @@ export default {
 			this.dataList = []
 			this.loading = true
 			const create = this.queryData.createDt || []
-			const [beginDate, endDate] = create
+			const [startTime, endTime] = create
 			let params = {
 				...this.queryData,
-				createDtStart: beginDate
-					? dayjs(beginDate).format('YYYY-MM-DD HH:mm:ss')
+                beginDate: startTime
+					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
 					: undefined,
-				createDtEnd: endDate
-					? dayjs(endDate).format('YYYY-MM-DD HH:mm:ss')
+                endDate: endTime
+					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
 					: undefined
 			}
 			params = {

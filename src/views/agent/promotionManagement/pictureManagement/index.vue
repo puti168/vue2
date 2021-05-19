@@ -312,12 +312,12 @@ export default {
 		return {
 			queryData: {
 				createDt: [start, end],
-                createdBy: '',
-                imageName: '',
-                imageType: '',
-                imageSize: '',
-                updatedDt: [start, end],
-                updatedBy: '',
+				createdBy: undefined,
+				imageName: undefined,
+				imageType: undefined,
+				imageSize: undefined,
+				updatedDt: [start, end],
+				updatedBy: undefined,
 				orderType: undefined
 			},
 			dataList: [],
@@ -339,43 +339,51 @@ export default {
 		loadData() {
 			this.dataList = []
 			this.loading = true
-			// const create = this.queryData.createDt || []
-			// const [startTime, endTime] = create
-			// let params = {
-			// 	...this.queryData,
-			// 	dataType: 1,
-			// 	createDtStart: startTime
-			// 		? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
-			// 		: undefined,
-			// 	createDtEnd: endTime
-			// 		? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
-			// 		: undefined
-			// }
-			// params = {
-			// 	...this.getParams(params)
-			// }
-			// delete params.createDt
-			// this.$api
-			// 	.bankRecordListAPI(params)
-			// 	.then((res) => {
-			// 		const {
-			// 			code,
-			// 			data: { record, totalRecord },
-			// 			msg
-			// 		} = res
-			// 		if (code === 200) {
-			// 			this.loading = false
-			// 			this.dataList = record || []
-			// 			this.total = totalRecord || 0
-			// 		} else {
-			// 			this.loading = false
-			// 			this.$message({
-			// 				message: msg,
-			// 				type: 'error'
-			// 			})
-			// 		}
-			// 	})
-			// 	.catch(() => (this.loading = false))
+			const create = this.queryData.createDt || []
+			const updatedDt = this.queryData.updatedDt || []
+			const [startTime, endTime] = create
+			const [updateTimeStart, updateTimeEnd] = updatedDt
+			let params = {
+				...this.queryData,
+				beginDate: startTime
+					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
+					: undefined,
+				endDate: endTime
+					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
+					: undefined,
+				beginUpdateDate: updateTimeStart
+					? dayjs(updateTimeStart).format('YYYY-MM-DD HH:mm:ss')
+					: undefined,
+				endUpdateDate: updateTimeEnd
+					? dayjs(updateTimeEnd).format('YYYY-MM-DD HH:mm:ss')
+					: undefined
+			}
+			params = {
+				...this.getParams(params)
+			}
+			delete params.createDt
+			delete params.updatedDt
+			this.$api
+				.agentPictureListAPI(params)
+				.then((res) => {
+					const {
+						code,
+						data: { record, totalRecord },
+						msg
+					} = res
+					if (code === 200) {
+						this.loading = false
+						this.dataList = record || []
+						this.total = totalRecord || 0
+					} else {
+						this.loading = false
+						this.$message({
+							message: msg,
+							type: 'error'
+						})
+					}
+				})
+				.catch(() => (this.loading = false))
 
 			setTimeout(() => {
 				this.loading = false
@@ -383,15 +391,15 @@ export default {
 		},
 		reset() {
 			this.$refs['form'].resetFields()
-            this.pageNum = 1
+			this.pageNum = 1
 			this.queryData = {
                 createDt: [start, end],
-                createdBy: '',
-                imageName: '',
-                imageType: '',
-                imageSize: '',
+                createdBy: undefined,
+                imageName: undefined,
+                imageType: undefined,
+                imageSize: undefined,
                 updatedDt: [start, end],
-                updatedBy: '',
+                updatedBy: undefined,
                 orderType: undefined
 			}
 			this.loadData()
@@ -401,6 +409,7 @@ export default {
 		},
 		back() {
 			this.editPage = false
+            this.loadData()
 		},
 		preViewPicture(val) {
 			this.dialogPictureVisible = true
