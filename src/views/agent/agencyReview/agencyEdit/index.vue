@@ -216,15 +216,37 @@
 						width="100"
 					></el-table-column>
 					<el-table-column
-						prop="applyName"
 						align="center"
 						label="修改前"
-					></el-table-column>
+					><template slot-scope="scope">
+									<template v-if="Number(scope.row.applyType) === 2">
+										{{ typeFilter(scope.row.beforeModify, 'genderType') }}
+									</template>
+									<template v-else-if="Number(scope.row.applyType) === 6">
+										{{
+											typeFilter(scope.row.beforeModify, 'accountStatusType')
+										}}
+									</template>
+									<template v-else>
+										{{ scope.row.beforeModify ? scope.row.beforeModify : '-' }}
+									</template>
+								</template></el-table-column>
 					<el-table-column
-						prop="applyName"
 						align="center"
 						label="修改后"
-					></el-table-column>
+					><template slot-scope="scope">
+									<template v-if="Number(scope.row.applyType) === 2">
+										{{ typeFilter(scope.row.afterModify, 'genderType') }}
+									</template>
+									<template v-else-if="Number(scope.row.applyType) === 6">
+										{{
+											typeFilter(scope.row.afterModify, 'accountStatusType')
+										}}
+									</template>
+									<template v-else>
+										{{ scope.row.afterModify ? scope.row.afterModify : '-' }}
+									</template>
+								</template></el-table-column>
 					<el-table-column
 						prop="auditTime"
 						align="center"
@@ -254,7 +276,7 @@
 						label="申请时间"
 					></el-table-column>
 					<el-table-column
-						prop="applyInfo"
+						prop="scope.row"
 						align="center"
 						label="申请信息"
 					></el-table-column>

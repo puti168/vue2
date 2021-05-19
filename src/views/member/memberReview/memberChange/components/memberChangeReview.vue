@@ -66,12 +66,30 @@
 						>
 							<el-table-column align="center" label="修改前">
 								<template>
-									{{ applyInfo.beforeModify }}
+									<template v-if="Number(applyInfo.applyType === 2)">
+										{{ typeFilter(applyInfo.beforeModify, 'genderType') }}
+									</template>
+									<template v-else-if="Number(applyInfo.applyType === 6)">
+										{{
+											typeFilter(applyInfo.beforeModify, 'accountStatusType')
+										}}
+									</template>
+									<template v-else>
+										{{ applyInfo.beforeModify ? applyInfo.beforeModify : '-' }}
+									</template>
 								</template>
 							</el-table-column>
 							<el-table-column align="center" label="修改后">
 								<template>
-									{{ applyInfo.afterModify }}
+									<template v-if="Number(applyInfo.applyType === 2)">
+										{{ typeFilter(applyInfo.afterModify, 'genderType') }}
+									</template>
+									<template v-else-if="Number(applyInfo.applyType === 6)">
+										{{ typeFilter(applyInfo.afterModify, 'accountStatusType') }}
+									</template>
+									<template v-else>
+										{{ applyInfo.afterModify ? applyInfo.afterModify : '-' }}
+									</template>
 								</template>
 							</el-table-column>
 						</el-table>

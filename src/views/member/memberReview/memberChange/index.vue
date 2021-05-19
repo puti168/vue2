@@ -238,15 +238,37 @@
 						</template>
 					</el-table-column>
 					<el-table-column
-						prop="beforeModify"
 						align="center"
 						label="修改前"
-					></el-table-column>
+					><template slot-scope="scope">
+									<template v-if="Number(scope.row.applyType) === 2">
+										{{ typeFilter(scope.row.beforeModify, 'genderType') }}
+									</template>
+									<template v-else-if="Number(scope.row.applyType) === 6">
+										{{
+											typeFilter(scope.row.beforeModify, 'accountStatusType')
+										}}
+									</template>
+									<template v-else>
+										{{ scope.row.beforeModify ? scope.row.beforeModify : '-' }}
+									</template>
+								</template></el-table-column>
 					<el-table-column
-						prop="afterModify"
 						align="center"
 						label="修改后"
-					></el-table-column>
+					><template slot-scope="scope">
+									<template v-if="Number(scope.row.applyType) === 2">
+										{{ typeFilter(scope.row.afterModify, 'genderType') }}
+									</template>
+									<template v-else-if="Number(scope.row.applyType) === 6">
+										{{
+											typeFilter(scope.row.afterModify, 'accountStatusType')
+										}}
+									</template>
+									<template v-else>
+										{{ scope.row.afterModify ? scope.row.afterModify : '-' }}
+									</template>
+								</template></el-table-column>
 					<el-table-column align="center" label="操作类型">
 						<template slot="header">
 							<p style="font-weight: 600">会员账号</p>
