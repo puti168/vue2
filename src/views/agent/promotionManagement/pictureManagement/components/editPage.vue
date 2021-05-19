@@ -5,7 +5,7 @@
 				<span>创建/编辑</span>
 				<span>
 					<el-button type="info" @click="back">取消</el-button>
-					<el-button type="success">保存</el-button>
+					<el-button type="success" :disabled="loading" @click="add">保存</el-button>
 				</span>
 			</div>
 			<div class="content-part2">
@@ -74,8 +74,7 @@
 							ref="imgUpload"
 							:upload-file-type="'image/jpeg'"
 							:platform="'PC'"
-							:bounds="imageSize"
-							:img-urls="queryData.imgUrl"
+							:img-urls="queryData.imageAddress"
 							@upoladItemSucess="handleUploadSucess"
 							@startUpoladItem="handleStartUpload"
 							@deleteUpoladItem="handleDeleteUpload"
@@ -96,25 +95,6 @@
 							style="width: 365px"
 						></el-input>
 					</el-form-item>
-					<el-form-item>
-						<el-button
-							type="primary"
-							icon="el-icon-search"
-							:disabled="loading"
-							size="medium"
-							@click="add"
-						>
-							提交
-						</el-button>
-						<el-button
-							icon="el-icon-refresh-left"
-							:disabled="loading"
-							size="medium"
-							@click="reset"
-						>
-							重置
-						</el-button>
-					</el-form-item>
 				</el-form>
 			</div>
 		</div>
@@ -124,7 +104,7 @@
 <script>
 import list from '@/mixins/list'
 import { isHaveEmoji, notSpecial2 } from '@/utils/validate'
-import Upload from '@/components/UploadBox'
+import Upload from './uploadItem'
 // import Sortable from 'sortablejs'
 // import Transfer from '@/components/transfer'
 
@@ -140,7 +120,7 @@ export default {
                 imageSize: undefined,
                 imageType: undefined,
                 displayOrder: undefined,
-                imgUrl: undefined,
+                imageAddress: null,
                 remark: undefined
 			},
 			dataList: []
@@ -186,7 +166,7 @@ export default {
                 imageType: [
                     { required: true, message: '请选择图片类型', trigger: 'change' }
                 ],
-                imgUrl: [
+                imageAddress: [
                     { required: true, message: '请上传图片', trigger: 'change' }
                 ],
                 imageName: [
@@ -206,21 +186,7 @@ export default {
 			}
 		}
 	},
-	mounted() {
-		document.body.ondrop = function(event) {
-			event.preventDefault()
-			event.stopPropagation()
-		}
-
-		window.addEventListener('keydown', (e) => {
-			if (e.keyCode === 16 && e.shiftKey) {
-				this.shiftKey = true
-			}
-		})
-		window.addEventListener('keyup', (e) => {
-			this.shiftKey = false
-		})
-	},
+	mounted() {},
 	updated() {},
 	methods: {
 		back() {
@@ -229,34 +195,34 @@ export default {
 		add() {
 			this.loading = true
 			const params = {
-				...this.form
+				...this.queryData
 			}
 			this.$refs['form'].validate((valid) => {
+                this.$api
+                    .agentPictureListCreateAPI(params)
+                    .then((res) => {
+                        this.loading = false
+                        const { code, msg } = res
+                        if (code === 200) {
+                            this.$confirm(`提交成功`, {
+                                confirmButtonText: '确定',
+                                type: 'success',
+                                showCancelButton: false
+                            })
+                            this.reset()
+                        } else {
+                            this.$message({
+                                message: msg,
+                                type: 'error'
+                            })
+                        }
+                    })
+                    .catch(() => {
+                        this.loading = false
+                    })
 				console.log('valid', valid)
-				if (valid) {
-					this.$api
-						.addMemberAPI(params)
-						.then((res) => {
-							this.loading = false
-							const { code, data, msg } = res
-							if (code === 200) {
-								this.$confirm(`会员${data}资料提交成功`, {
-									confirmButtonText: '确定',
-									type: 'success',
-									showCancelButton: false
-								})
-								this.reset()
-							} else {
-								this.$message({
-									message: msg,
-									type: 'error'
-								})
-							}
-						})
-						.catch(() => {
-							this.loading = false
-						})
-				}
+				// if (valid) {
+				// }
 			})
 
 			setTimeout(() => {
@@ -309,14 +275,15 @@ export default {
 			this.$message.info('图片开始上传')
 		},
 		handleUploadSucess({ index, file, id }) {
-			this.form.imgUrl = file.imgUrl
+		    console.log('this.queryData.imgUr', file.imgUrl)
+			this.queryData.imageAddress = file.imgUrl
 		},
 		handleUploadDefeat() {
-			this.form.imgUrl = ''
+			this.queryData.imageAddress = ''
 			this.$message.error('图片上传失败')
 		},
 		handleDeleteUpload() {
-			this.form.imgUrl = ''
+			this.queryData.imageAddress = ''
 			this.$message.warning('图片已被移除')
 		}
 	}
