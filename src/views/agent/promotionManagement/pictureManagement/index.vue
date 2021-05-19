@@ -54,10 +54,10 @@
 								size="medium"
 								placeholder="默认选择全部"
 								clearable
-								style="width: 300px"
+                                style="width: 180px"
 							>
 								<el-option
-									v-for="item in bindType"
+									v-for="item in materialPictureTypeArr"
 									:key="item.code"
 									:label="item.description"
 									:value="item.code"
@@ -70,10 +70,10 @@
 								size="medium"
 								placeholder="默认选择全部"
 								clearable
-								style="width: 300px"
+                                style="width: 180px"
 							>
 								<el-option
-									v-for="item in bindType"
+									v-for="item in pictureSizeTypeArr"
 									:key="item.code"
 									:label="item.description"
 									:value="item.code"
@@ -149,28 +149,30 @@
 						:header-cell-style="getRowClass"
 						@sort-change="changeTableSort"
 					>
-						<el-table-column prop="userName" align="center" label="排序">
+						<el-table-column prop="displayOrder" align="center" label="排序">
 							<template slot-scope="scope">
-								<span v-if="!!scope.row.userName" />
-								<span v-else>-</span>
-							</template>
-						</el-table-column>
-						<el-table-column prop="accountType" align="center" label="图片标题">
-							<template slot-scope="scope">
-								<span v-if="!!scope.row.accountType">
-									{{ typeFilter(scope.row.accountType, 'accountType') }}
+								<span
+									v-if="
+										!!scope.row.displayOrder || scope.row.displayOrder === 0
+									"
+								>
+									{{ scope.row.displayOrder }}
 								</span>
 								<span v-else>-</span>
 							</template>
 						</el-table-column>
-						<el-table-column
-							prop="parentProxyName"
-							align="center"
-							label="图片类型"
-						>
+						<el-table-column prop="imageName" align="center" label="图片标题">
 							<template slot-scope="scope">
-								<span v-if="!!scope.row.accountType">
-									{{ typeFilter(scope.row.accountType, 'accountType') }}
+								<span v-if="!!scope.row.imageName">
+									{{ scope.row.imageName }}
+								</span>
+								<span v-else>-</span>
+							</template>
+						</el-table-column>
+						<el-table-column prop="imageSize" align="center" label="图片类型">
+							<template slot-scope="scope">
+								<span v-if="!!scope.row.imageSize">
+									{{ typeFilter(scope.row.imageSize, 'accountType') }}
 								</span>
 								<span v-else>-</span>
 							</template>
@@ -183,10 +185,10 @@
 								<span v-else>-</span>
 							</template>
 						</el-table-column>
-						<el-table-column prop="bankName" align="center" label="创建人">
+						<el-table-column prop="createdBy" align="center" label="创建人">
 							<template slot-scope="scope">
-								<span v-if="!!scope.row.bankName">
-									{{ scope.row.bankName }}
+								<span v-if="!!scope.row.createdBy">
+									{{ scope.row.createdBy }}
 								</span>
 								<span v-else>-</span>
 							</template>
@@ -206,21 +208,21 @@
 						</el-table-column>
 						<el-table-column prop="cnName" align="center" label="最近操作人">
 							<template slot-scope="scope">
-								<span v-if="!!scope.row.bankName">
-									{{ scope.row.bankName }}
+								<span v-if="!!scope.row.updatedBy">
+									{{ scope.row.updatedBy }}
 								</span>
 								<span v-else>-</span>
 							</template>
 						</el-table-column>
 						<el-table-column
-							prop="createDt"
+							prop="updatedAt"
 							align="center"
 							label="最近操作时间"
 							sortable="custom"
 						>
 							<template slot-scope="scope">
-								<span v-if="!!scope.row.createDt">
-									{{ scope.row.createDt }}
+								<span v-if="!!scope.row.updatedAt">
+									{{ scope.row.updatedAt }}
 								</span>
 								<span v-else>-</span>
 							</template>
@@ -312,12 +314,12 @@ export default {
 		return {
 			queryData: {
 				createDt: [start, end],
-                createdBy: '',
-                imageName: '',
-                imageType: '',
-                imageSize: '',
-                updatedDt: [start, end],
-                updatedBy: '',
+				createdBy: undefined,
+				imageName: undefined,
+				imageType: undefined,
+				imageSize: undefined,
+				updatedDt: [start, end],
+				updatedBy: undefined,
 				orderType: undefined
 			},
 			dataList: [],
@@ -327,11 +329,11 @@ export default {
 		}
 	},
 	computed: {
-		bindType() {
-			return [
-				{ description: '全部', code: undefined },
-				...this.globalDics.bindType
-			]
+		materialPictureTypeArr() {
+			return this.globalDics.materialPictureType
+		},
+		pictureSizeTypeArr() {
+			return this.globalDics.pictureSizeType
 		}
 	},
 	mounted() {},
@@ -339,43 +341,51 @@ export default {
 		loadData() {
 			this.dataList = []
 			this.loading = true
-			// const create = this.queryData.createDt || []
-			// const [startTime, endTime] = create
-			// let params = {
-			// 	...this.queryData,
-			// 	dataType: 1,
-			// 	createDtStart: startTime
-			// 		? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
-			// 		: undefined,
-			// 	createDtEnd: endTime
-			// 		? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
-			// 		: undefined
-			// }
-			// params = {
-			// 	...this.getParams(params)
-			// }
-			// delete params.createDt
-			// this.$api
-			// 	.bankRecordListAPI(params)
-			// 	.then((res) => {
-			// 		const {
-			// 			code,
-			// 			data: { record, totalRecord },
-			// 			msg
-			// 		} = res
-			// 		if (code === 200) {
-			// 			this.loading = false
-			// 			this.dataList = record || []
-			// 			this.total = totalRecord || 0
-			// 		} else {
-			// 			this.loading = false
-			// 			this.$message({
-			// 				message: msg,
-			// 				type: 'error'
-			// 			})
-			// 		}
-			// 	})
-			// 	.catch(() => (this.loading = false))
+			const create = this.queryData.createDt || []
+			const updatedDt = this.queryData.updatedDt || []
+			const [startTime, endTime] = create
+			const [updateTimeStart, updateTimeEnd] = updatedDt
+			let params = {
+				...this.queryData,
+				beginDate: startTime
+					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
+					: undefined,
+				endDate: endTime
+					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
+					: undefined,
+				beginUpdateDate: updateTimeStart
+					? dayjs(updateTimeStart).format('YYYY-MM-DD HH:mm:ss')
+					: undefined,
+				endUpdateDate: updateTimeEnd
+					? dayjs(updateTimeEnd).format('YYYY-MM-DD HH:mm:ss')
+					: undefined
+			}
+			params = {
+				...this.getParams(params)
+			}
+			delete params.createDt
+			delete params.updatedDt
+			this.$api
+				.agentPictureListAPI(params)
+				.then((res) => {
+					const {
+						code,
+						data: { record, totalRecord },
+						msg
+					} = res
+					if (code === 200) {
+						this.loading = false
+						this.dataList = record || []
+						this.total = totalRecord || 0
+					} else {
+						this.loading = false
+						this.$message({
+							message: msg,
+							type: 'error'
+						})
+					}
+				})
+				.catch(() => (this.loading = false))
 
 			setTimeout(() => {
 				this.loading = false
@@ -383,16 +393,16 @@ export default {
 		},
 		reset() {
 			this.$refs['form'].resetFields()
-            this.pageNum = 1
+			this.pageNum = 1
 			this.queryData = {
-                createDt: [start, end],
-                createdBy: '',
-                imageName: '',
-                imageType: '',
-                imageSize: '',
-                updatedDt: [start, end],
-                updatedBy: '',
-                orderType: undefined
+				createDt: [start, end],
+				createdBy: undefined,
+				imageName: undefined,
+				imageType: undefined,
+				imageSize: undefined,
+				updatedDt: [start, end],
+				updatedBy: undefined,
+				orderType: undefined
 			}
 			this.loadData()
 		},
@@ -401,6 +411,7 @@ export default {
 		},
 		back() {
 			this.editPage = false
+			this.loadData()
 		},
 		preViewPicture(val) {
 			this.dialogPictureVisible = true

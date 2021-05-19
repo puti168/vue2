@@ -47,16 +47,16 @@
 				</el-form-item>
 				<el-form-item label="当前上级:">
 					<el-input
-						v-model="form.parentProxyName"
+						v-model="form.currentProxyName"
 						size="medium"
 						maxlength="11"
 						:disabled="true"
 						style="width: 365px"
 					></el-input>
 				</el-form-item>
-				<el-form-item label="转入代理:" prop="agentName">
+				<el-form-item label="转入代理:" prop="transferProxyName">
 					<el-input
-						v-model="form.agentName"
+						v-model="form.transferProxyName"
 						size="medium"
 						maxlength="11"
 						placeholder="请输入"
@@ -112,11 +112,12 @@ export default {
 			form: {
 				userName: '',
 				accountType: '',
-				parentProxyName: '',
-				agentName: '',
+                transferProxyName: '',
 				applyInfo: '',
                 userId: undefined,
-                parentProxyId: undefined
+                transferProxyId: undefined,
+                currentProxyId: undefined,
+                currentProxyName: undefined
 			},
 			tipsShow: null
 		}
@@ -153,7 +154,7 @@ export default {
 						trigger: 'blur'
 					}
 				],
-				agentName: [
+                transferProxyName: [
 					{
 						required: true,
 						validator: testUserName,
@@ -181,9 +182,9 @@ export default {
 							if (data) {
                                 this.tipsShow = null
 								this.form.accountType = data.accountType + ''
-								this.form.parentProxyName = data.parentProxyName
+								this.form.currentProxyName = data.parentProxyName
                                 this.form.userId = data.id
-                                this.form.parentProxyId = data.parentProxyId
+                                this.form.currentProxyId = data.parentProxyId
 							} else {
 								this.tipsShow = msg
 							}

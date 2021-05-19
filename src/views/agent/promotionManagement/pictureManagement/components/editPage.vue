@@ -16,9 +16,9 @@
 					label-width="100px"
 					class="picture-form"
 				>
-					<el-form-item label="图片名称:" prop="picName">
+					<el-form-item label="图片名称:" prop="imageName">
 						<el-input
-							v-model="queryData.picName"
+							v-model="queryData.imageName"
 							size="medium"
 							maxlength="50"
 							placeholder="请输入"
@@ -26,41 +26,41 @@
 							style="width: 365px"
 						></el-input>
 					</el-form-item>
-					<el-form-item label="图片尺寸:" prop="picType">
+					<el-form-item label="图片尺寸:" prop="imageSize">
 						<el-select
-							v-model="queryData.picType"
+							v-model="queryData.imageSize"
 							size="medium"
 							placeholder="全部"
 							clearable
 							style="width: 365px"
 						>
 							<el-option
-								v-for="item in terminalTypeArr"
+								v-for="item in pictureSizeTypeArr"
 								:key="item.code"
 								:label="item.description"
 								:value="item.code"
 							></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="图片类型:" prop="picSize">
-						<el-select
-							v-model="queryData.picSize"
-							size="medium"
-							placeholder="全部"
-							clearable
-							style="width: 365px"
-						>
-							<el-option
-								v-for="item in gameDisplayArr"
-								:key="item.code"
-								:label="item.description"
-								:value="item.code"
-							></el-option>
-						</el-select>
-					</el-form-item>
-					<el-form-item label="排序:" prop="sort">
+                    <el-form-item label="图片类型:" prop="imageType">
+                        <el-select
+                            v-model="queryData.imageType"
+                            size="medium"
+                            placeholder="默认选择全部"
+                            clearable
+                            style="width: 365px"
+                        >
+                            <el-option
+                                v-for="item in materialPictureTypeArr"
+                                :key="item.code"
+                                :label="item.description"
+                                :value="item.code"
+                            ></el-option>
+                        </el-select>
+                    </el-form-item>
+					<el-form-item label="排序:" prop="displayOrder">
 						<el-input
-							v-model="queryData.sort"
+							v-model="queryData.displayOrder"
 							size="medium"
 							placeholder="请输入"
 							clearable
@@ -87,7 +87,7 @@
 					</el-form-item>
 					<el-form-item label="审核信息:">
 						<el-input
-							v-model="queryData.applyInfo"
+							v-model="queryData.remark"
 							size="medium"
 							type="textarea"
 							placeholder="请输入"
@@ -136,23 +136,23 @@ export default {
 		return {
 			loading: false,
 			queryData: {
-				picName: undefined,
-				picType: undefined,
-				picSize: undefined,
-				sort: undefined,
-				applyInfo: undefined,
-                imgUrl: undefined
+                imageName: undefined,
+                imageSize: undefined,
+                imageType: undefined,
+                displayOrder: undefined,
+                imgUrl: undefined,
+                remark: undefined
 			},
 			dataList: []
 		}
 	},
 	computed: {
-		terminalTypeArr() {
-			return [...this.globalDics.terminalnType]
-		},
-		gameDisplayArr() {
-			return [...this.globalDics.gameDisplayType]
-		},
+        materialPictureTypeArr() {
+            return this.globalDics.materialPictureType
+        },
+        pictureSizeTypeArr() {
+            return this.globalDics.pictureSizeType
+        },
 		imageSize() {
 			return {
 				width: 1920,
@@ -164,7 +164,6 @@ export default {
         },
 		rules() {
 			const reg1 = /^[A-Za-z]{1}(?=(.*[a-zA-Z]){1,})(?=(.*[0-9]){1,})[0-9A-Za-z]{3,10}$/
-			const reg2 = /(?=.*[a-zA-Z])(?=.*[0-9])[a-zA-Z0-9]{8,12}/
 
 			const testPicName = (rule, value, callback) => {
 				const isSpecial = !notSpecial2(String(value))
@@ -180,48 +179,27 @@ export default {
 				}
 			}
 
-			const testPassword = (rule, value, callback) => {
-				const isSpecial = !notSpecial2(String(value))
-				const isRmoji = isHaveEmoji(String(value))
-				if (isSpecial) {
-					callback(new Error('不支持空格及特殊字符'))
-				} else if (isRmoji) {
-					callback(new Error('不支持表情'))
-				} else if (!reg2.test(value)) {
-					callback(new Error('请输入8-12位，字母+数字组合'))
-				} else {
-					callback()
-				}
-			}
-
 			return {
-				picType: [
-					{ required: true, message: '请选择图片类型', trigger: 'change' }
-				],
-				picSize: [
+                imageSize: [
 					{ required: true, message: '请选择图片尺寸', trigger: 'change' }
 				],
+                imageType: [
+                    { required: true, message: '请选择图片类型', trigger: 'change' }
+                ],
                 imgUrl: [
                     { required: true, message: '请上传图片', trigger: 'change' }
                 ],
-				picName: [
+                imageName: [
 					{
 						required: true,
 						validator: testPicName,
 						trigger: 'blur'
 					}
 				],
-				sort: [
+                displayOrder: [
 					{
 						required: true,
 						message: '请输入排序',
-						trigger: 'blur'
-					}
-				],
-				password: [
-					{
-						required: true,
-						validator: testPassword,
 						trigger: 'blur'
 					}
 				]
