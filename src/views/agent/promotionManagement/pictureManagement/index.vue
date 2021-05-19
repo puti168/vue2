@@ -54,10 +54,10 @@
 								size="medium"
 								placeholder="默认选择全部"
 								clearable
-								style="width: 300px"
+                                style="width: 180px"
 							>
 								<el-option
-									v-for="item in bindType"
+									v-for="item in materialPictureTypeArr"
 									:key="item.code"
 									:label="item.description"
 									:value="item.code"
@@ -70,10 +70,10 @@
 								size="medium"
 								placeholder="默认选择全部"
 								clearable
-								style="width: 300px"
+                                style="width: 180px"
 							>
 								<el-option
-									v-for="item in bindType"
+									v-for="item in pictureSizeTypeArr"
 									:key="item.code"
 									:label="item.description"
 									:value="item.code"
@@ -169,11 +169,7 @@
 								<span v-else>-</span>
 							</template>
 						</el-table-column>
-						<el-table-column
-							prop="imageSize"
-							align="center"
-							label="图片类型"
-						>
+						<el-table-column prop="imageSize" align="center" label="图片类型">
 							<template slot-scope="scope">
 								<span v-if="!!scope.row.imageSize">
 									{{ typeFilter(scope.row.imageSize, 'accountType') }}
@@ -333,11 +329,11 @@ export default {
 		}
 	},
 	computed: {
-		bindType() {
-			return [
-				{ description: '全部', code: undefined },
-				...this.globalDics.bindType
-			]
+		materialPictureTypeArr() {
+			return this.globalDics.materialPictureType
+		},
+		pictureSizeTypeArr() {
+			return this.globalDics.pictureSizeType
 		}
 	},
 	mounted() {},

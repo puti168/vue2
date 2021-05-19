@@ -212,6 +212,16 @@ export function agentPictureListUpdateAPI(data) {
 		data
 	})
 }
+export function agentImageUploadAPI(data) {
+	return request({
+		url: '/materialImage/upload',
+		method: 'post',
+		data,
+		headers: {
+			'Content-Type': 'multipart/form-data'
+		}
+	})
+}
 
 //  推广管理-推广域名管理-删除推广域名管理
 export function setDomainDelete(data) {
@@ -257,6 +267,7 @@ export default {
 	agentVirtualRecordAPI,
 	getProxyDetailQueryDetail,
 	agentPictureListAPI,
+	agentImageUploadAPI,
 	agentPictureListDeleteAPI,
 	agentPictureListCreateAPI,
 	agentPictureListUpdateAPI,
