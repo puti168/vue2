@@ -130,7 +130,7 @@
 								type="warning"
 								icon="el-icon-folder-add"
 								size="medium"
-								@click="openEdit"
+								@click="openEdit('')"
 							>
 								创建
 							</el-button>
@@ -257,7 +257,7 @@
 									type="danger"
 									size="medium"
 									class="noicon"
-									@click="deleteRow"
+									@click="deleteRow(scope.row)"
 								>
 									删除
 								</el-button>
@@ -289,7 +289,7 @@
 				<img :src="imageAddress" />
 			</el-dialog>
 		</div>
-		<editPage v-else @back="back"></editPage>
+		<editPage v-else :editData="editData" @back="back"></editPage>
 	</transition>
 </template>
 
@@ -326,7 +326,8 @@ export default {
 			total: 0,
 			dialogPictureVisible: false,
 			imageAddress: null,
-			editPage: false
+			editPage: false,
+			editData: {}
 		}
 	},
 	computed: {
@@ -408,10 +409,12 @@ export default {
 			this.loadData()
 		},
 		openEdit(val) {
+			val ? (this.editData = val) : (this.editData = {})
 			this.editPage = true
 		},
 		back() {
 			this.editPage = false
+            this.editData = {}
 			this.loadData()
 		},
 		preViewPicture(val) {
@@ -420,6 +423,13 @@ export default {
 			this.dialogPictureVisible = true
 		},
 		deleteRow(val) {
+			const { id } = val
+			const loading = this.$loading({
+				lock: true,
+				text: 'Loading',
+				spinner: 'el-icon-loading',
+				background: 'rgba(0, 0, 0, 0.7)'
+			})
 			this.$confirm(
 				`<strong>是否删除该图片</strong></br><span style='font-size:12px;color:#c1c1c1'>请慎重操作</span>`,
 				'确认提示',
@@ -431,27 +441,35 @@ export default {
 				}
 			)
 				.then(() => {
-					// const loading = this.$loading({
-					// 	lock: true,
-					// 	text: 'Loading',
-					// 	spinner: 'el-icon-loading',
-					// 	background: 'rgba(0, 0, 0, 0.7)'
-					// })
-					// this.$api
-					// 	.setDeleteRole('', val.id)
-					// 	.then((res) => {
-					// 		loading.close()
-					// 		this.$message({
-					// 			type: 'success',
-					// 			message: '删除成功!'
-					// 		})
-					// 		this.loadData()
-					// 	})
-					// 	.catch(() => {
-					// 		loading.close()
-					// 	})
+					this.$api
+						.agentPictureListDeleteAPI({ id })
+						.then((res) => {
+							loading.close()
+							const { code } = res
+							if (code === 200) {
+								this.$message({
+									type: 'success',
+									message: '删除成功!'
+								})
+							} else {
+								this.$message({
+									type: 'error',
+									message: '删除失败!'
+								})
+							}
+							this.loadData()
+						})
+						.catch(() => {
+							loading.close()
+						})
 				})
-				.catch(() => {})
+				.catch(() => {
+					loading.close()
+				})
+
+			setTimeout(() => {
+				loading.close()
+			}, 1000)
 		}
 	}
 }
