@@ -15,36 +15,26 @@
 			<div class="review-content">
 				<p class="name">转代会员信息</p>
 				<div class="review-flex">
-					<div>会员账号: {{ list.createDt }}</div>
-					<div>账号类型: {{ typeFilter(list.accountType, 'proxyAccountType') }}</div>
-					<div>注册时间: {{ list.lastLoginTime }}</div>
+					<div>会员账号: {{ list.userName }}</div>
+					<div>账号类型: {{ typeFilter(list.accountType, 'accountType') }}</div>
+					<div>注册时间: {{ list.registerDt }}</div>
 				</div>
 				<div class="review-flex">
-					<div>当前上级代理: {{ list.createDt }}</div>
-					<div>代理类型: {{ typeFilter(list.accountType, 'proxyAccountType') }}</div>
-					<div>绑定时间: {{ list.lastLoginTime }}</div>
+					<div>当前上级代理: {{ list.parentProxyName }}</div>
+					<div>代理类型: {{ typeFilter(list.proxyType, 'proxyAccountType') }}</div>
+					<div>绑定时间: {{ list.bindingDt }}</div>
 				</div>
 			</div>
 			<div class="review-content">
-				<p class="name">代理账号信息</p>
+				<p class="name">转入代理信息</p>
 				<div class="review-flex">
-					<div>账号: {{ list.userName }}</div>
-					<div>账号状态: {{ typeFilter(list.accountStatus, 'accountStatusType') }}</div>
-					<div>风控层级: {{ list.windControlName }}</div>
-					<div>代理标签: {{ list.labelName }}</div>
-				</div>
-				<div class="review-flex">
-					<div>备注信息: {{ list.remark }}</div>
+					<div>代理账号: {{ list.transferProxyName }}</div>
+					<div>代理类型: {{ typeFilter(list.accountType, 'proxyAccountType') }}</div>
+					<div>注册时间: {{ list.labelName }}</div>
 				</div>
 			</div>
 			<div class="review-content" style="height: 200px">
 				<p class="name">申请信息</p>
-				<div class="review-flex">
-					<div>申请人: {{ list.applyName }}</div>
-					<div>申请时间: {{ list.applyTime }}</div>
-					<div>审核申请类型: {{ typeFilter(list.applyType, 'applyType') }}</div>
-					<div>申请原因: {{ list.applyInfo }}</div>
-				</div>
 				<div class="review-flex">
 					<el-table
 						border
@@ -53,33 +43,22 @@
 						style="width: 100%"
 						:header-cell-style="getRowClass"
 					>
-						<el-table-column align="center" label="修改前">
+						<el-table-column align="center" label="修改前上级代理">
 							<template>
-								<template v-if="Number(list.applyType === 2)">
-									{{ typeFilter(list.beforeModify, 'genderType') }}
-								</template>
-								<template v-else-if="Number(list.applyType === 6)">
-									{{ typeFilter(list.beforeModify, 'accountStatusType') }}
-								</template>
-								<template v-else>
-									{{ list.beforeModify ? list.beforeModify : '-' }}
-								</template>
+								{{ list.currentProxyName }}
 							</template>
 						</el-table-column>
-						<el-table-column align="center" label="修改后">
+						<el-table-column align="center" label="修改后上级代理">
 							<template>
-								<template v-if="Number(list.applyType === 2)">
-									{{ typeFilter(list.afterModify, 'genderType') }}
-								</template>
-								<template v-else-if="Number(list.applyType === 6)">
-									{{ typeFilter(list.afterModify, 'accountStatusType') }}
-								</template>
-								<template v-else>
-									{{ list.afterModify ? list.afterModify : '-' }}
-								</template>
+								{{ list.transferProxyName }}
 							</template>
 						</el-table-column>
 					</el-table>
+				</div>
+				<div class="review-flex">
+					<div>申请人: {{ list.applyName }}</div>
+					<div>申请时间: {{ list.applyTime }}</div>
+					<div>申请信息: {{ list.applyInfo }}</div>
 				</div>
 			</div>
 			<div class="review-content">
@@ -88,7 +67,6 @@
 					<div>一审人: {{ list.auditName }}</div>
 					<div>一审时间: {{ list.auditTime }}</div>
 					<div>一审备注: {{ list.auditRemark }}</div>
-					<div>一审状态: {{ list.auditRemark }}</div>
 				</div>
 			</div>
 		</div>
@@ -190,7 +168,6 @@ export default {
 				})
 				const params = {
 					id: this.rowData.id,
-					userId: this.rowData.userId,
 					auditRemark: this.form.remark,
 					auditStatus: this.action ? 2 : 3
 				}
@@ -227,7 +204,6 @@ export default {
 						})
 						const params = {
 							id: this.rowData.id,
-							userId: this.rowData.userId,
 							auditRemark: this.form.remark,
 							auditStatus: this.action ? 2 : 3
 						}
