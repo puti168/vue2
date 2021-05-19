@@ -37,7 +37,7 @@
 :span="5"
 >帐号状态：<i v-if="activeL" class="el-icon-loading"></i>
         <span v-else>
-          {{ typeFilter(outlineInfoList.accountStatus, "accountStatusType") }}
+          {{ typeFilter(outlineInfoList.accountStatus, "proxyAccountStatusType") }}
         </span>
       </el-col>
       <el-col
@@ -231,7 +231,7 @@
             @change="changeAccountStatus"
           >
             <el-option
-              v-for="item in accountStatusList"
+              v-for="item in proxyAccountStatusType"
               :key="item.description"
               :label="item.description"
               :value="item.code"
@@ -273,12 +273,23 @@
             </el-option>
           </el-select>
         </el-form-item>
+        <el-form-item v-if="moduleBox === '入口权限'" label="入口权限：" prop="code">
+          <el-select v-model="editData.code" placeholder="请选择" @change="changeLabelId">
+            <el-option
+              v-for="item in entrAuthorityType"
+              :key="item.description"
+              :label="item.description"
+              :value="item.code"
+            >
+            </el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item
           v-if="moduleBox === '支付密码重置'"
           label="支付密码重置："
-          prop="labelId"
+          prop="pws"
         >
-          <el-input></el-input>
+          <el-input placeholder="密码重置" disabled></el-input>
         </el-form-item>
         <el-form-item
           :label="titel"
@@ -308,7 +319,6 @@
 
 <script>
 import list from '@/mixins/list'
-import { getDics } from '@/api/user'
 // import dayjs from 'dayjs'
 export default {
   mixins: [list],
@@ -330,14 +340,10 @@ export default {
         { code: '', label: '入口权限', applyStatus: '' },
         { code: '3', label: '支付密码重置', applyStatus: '' }
       ],
-      // 账号状态
-      accountStatusList: [],
       // 风控层级
       riskLevelList: [],
       // 代理标签
       memberLabelList: [],
-      // 性别
-      genderTypeList: [],
       outlineInfoList: {}, // 基本信息
       tableList: [],
       moduleBox: '',
@@ -348,7 +354,14 @@ export default {
       size: 3
     }
   },
-  computed: {},
+  computed: {
+    proxyAccountStatusType() {
+      return this.globalDics.proxyAccountStatusType
+    },
+    entrAuthorityType() {
+      return this.globalDics.entrAuthorityType
+    }
+  },
   watch: {
     outlineInfo: {
       handler(newV) {
@@ -391,16 +404,11 @@ export default {
   },
   methods: {
     initGetDics() {
-      getDics().then((res) => {
-        if (res.code === 200) {
-          this.accountStatusList = res.data.accountStatusType
-          this.genderTypeList = res.data.genderType
-        }
-      })
-      this.$api.getMerchantDict().then((res) => {
+      this.$api.agentDictAPI().then((res) => {
         if (res.code === 200) {
           this.riskLevelList = res.data.windControl
           this.memberLabelList = res.data.userLabel
+          console.log('风控，标签', res)
         }
       })
     },
@@ -474,11 +482,10 @@ export default {
           break
         case '账号备注':
           this.titel = '备注信息：'
-          this.editData.labelId = this.outlineInfoList.labelId
           break
         case '入口权限':
           this.titel = '备注信息：'
-          this.editData.labelId = this.outlineInfoList.labelId
+          this.editData.code = this.outlineInfoList.entryAuthority
           break
 
         default:
@@ -567,13 +574,11 @@ export default {
             loading.close()
           }
           if (this.moduleBox === '支付密码重置') {
-            params.userName = this.parentData.userName
             delete params.code
             delete params.labelId
             delete params.windControlId
-            params.remarkAfter = params.remark
-            delete params.remark
-            this.setProxyDataInfoEdit(params)
+            data.payPasswordAfter = params
+            this.setProxyDataInfoEdit(data)
             loading.close()
           }
         } else {

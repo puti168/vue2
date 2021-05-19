@@ -190,7 +190,6 @@ icon="el-icon-refresh"
         <el-table-column
           align="center"
           prop="gameName"
-          type="index"
           label="平台"
         ></el-table-column>
         <el-table-column
@@ -218,7 +217,6 @@ icon="el-icon-refresh"
         <el-table-column
           align="center"
           prop="gameName"
-          type="index"
           label="平台"
         ></el-table-column>
         <el-table-column
