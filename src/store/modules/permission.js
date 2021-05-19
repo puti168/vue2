@@ -215,26 +215,6 @@ const actions = {
 				}
 				if (item.name === '代理') {
 					item.children.forEach((data) => {
-						if (data.name === '代理审核') {
-							data.children.push(
-								{
-									path: '/agent/agencyReview/addReviewDetail',
-									name: 'addReviewDetail',
-									component: () =>
-										import(`@/views/agent/agencyReview/addReviewDetail/index`),
-									meta: { title: '新增代理审核详情' },
-									hidden: true
-								},
-								{
-									path: '/agent/agencyReview/transformationDetail',
-									name: 'transformationDetail',
-									component: () =>
-										import(`@/views/agent/agencyReview/transformationDetail/index`),
-									meta: { title: '会员转代审核详情' },
-									hidden: true
-								}
-							)
-						}
 						if (data.name === '推广管理') {
 							data.children.push({
 								path: '/agent/promotionManagement/domainCreateAndEidt',
