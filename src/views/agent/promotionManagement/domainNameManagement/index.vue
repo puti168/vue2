@@ -1,6 +1,6 @@
 <template>
   <div class="game-container report-container">
-    <div class="view-container dealer-container">
+    <div v-show="editDomeShow" class="view-container dealer-container">
       <div class="params">
         <el-form ref="form" :inline="true" :model="queryData">
           <el-form-item label="创建时间:">
@@ -63,8 +63,12 @@
               placeholder="默认选择全部"
               :popper-append-to-body="false"
             >
-              <el-option label="已启用" :value="0"></el-option>
-              <el-option label="已禁用" :value="1"></el-option>
+              <el-option
+                v-for="item in domainStatusType"
+                :key="item.description"
+                :label="item.description"
+                :value="item.code"
+              ></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="最近修改时间:">
@@ -106,7 +110,7 @@
               icon="el-icon-folder"
               :disabled="loading"
               size="medium"
-              @click="domainLabel()"
+              @click="domainLabel('创建')"
             >
               创建
             </el-button>
@@ -143,8 +147,12 @@
           ></el-table-column>
           <el-table-column prop="status" align="center" label="状态" width="100px">
             <template slot-scope="scope">
-              <div v-if="scope.row.code === 1" class="normalRgba">已启用</div>
-              <div v-else class="disableRgba">已停用</div>
+              <div v-if="scope.row.status === '1'" class="normalRgba">
+                {{ typeFilter(scope.row.status, "domainStatusType") }}
+              </div>
+              <div v-else class="disableRgba">
+                {{ typeFilter(scope.row.status, "domainStatusType") }}
+              </div>
             </template>
           </el-table-column>
           <el-table-column prop="remark" align="center" label="备注"></el-table-column>
@@ -235,21 +243,20 @@
       >
         <el-row v-if="mTitle === '生成二维码'" type="flex" justify="space-around">
           <el-col class="textCenter">
-            <img :src="wechatQrCode" alt="" />
+            <img :src="wechatShortChain" alt="" />
             <div>防封微信二维码</div>
           </el-col>
           <el-col class="textCenter">
-            <img :src="qqQrCode" alt="" />
+            <img :src="qqShortChain" alt="" />
             <div>防封QQ二维码</div></el-col>
         </el-row>
         <el-row v-else class="marginT">
           <el-col>
-            防封微信短链：<Copy :title="'http://bdqjxxx.com/ajnZDDX'" :copy="copy">
-            </Copy>
+            防封微信短链：<Copy :title="wechatShortChain" :copy="copy"> </Copy>
           </el-col>
           <el-col>
             防封QQ短链：
-            <Copy :title="'http://bdqjaaaaas.com/ajnZDDX'" :copy="copy"> </Copy>
+            <Copy :title="qqShortChain" :copy="copy"> </Copy>
           </el-col>
         </el-row>
         <div slot="footer" class="dialog-footer">
@@ -257,6 +264,12 @@
         </div>
       </el-dialog>
     </div>
+    <editDome
+      v-show="!editDomeShow"
+      ref="editDome"
+      :editData="editData"
+      @change-type="onChangeType"
+    ></editDome>
   </div>
 </template>
 
@@ -264,12 +277,13 @@
 import list from '@/mixins/list'
 import dayjs from 'dayjs'
 import { routerNames } from '@/utils/consts'
+import editDome from './components/editDome'
 const startTime = dayjs().startOf('day').valueOf()
 const endTime = dayjs().endOf('day').valueOf()
 
 export default {
   name: routerNames.domainNameManagement,
-  components: {},
+  components: { editDome },
   mixins: [list],
   data() {
     return {
@@ -284,16 +298,22 @@ export default {
       wechatQrCode: '',
       qqQrCode: '',
       wechatShortChain: '',
-      qqShortChain: ''
+      qqShortChain: '',
+      editDomeShow: true,
+      editData: {}
     }
   },
-  computed: {},
+  computed: {
+    domainStatusType() {
+      return this.globalDics.domainStatusType
+    }
+  },
   mounted() {},
   methods: {
     loadData() {
       // this.loading = true;
       const create = this.createTime || []
-      const edit = this.createTime || []
+      const edit = this.editTime || []
       const [beginDate, endDate] = create
       const [beginUpdateDate, endUpdateDate] = edit
       let params = {
@@ -311,6 +331,10 @@ export default {
         ...this.getParams(params)
       }
       this.$api.getDomainSelect(params).then((res) => {
+        if (res.code === 200) {
+          this.total = res.data.totalRecord
+          this.tableData = res.data.record
+        }
         console.log(res)
       })
       console.log(params)
@@ -321,16 +345,18 @@ export default {
       this.editTime = [startTime, endTime]
     },
     domainLabel(val) {
-      console.log(val)
-      this.$store.dispatch('tagsView/delView', {
-        name: routerNames.domainCreateAndEidt
-      })
-      this.$nextTick(() => {
-        this.$router.push({
-          path: '/agent/promotionManagement/domainCreateAndEidt',
-          query: val || ''
-        })
-      })
+      if (val === '创建') {
+        this.$refs.editDome.control = true
+        this.editData = { status: '0' }
+      } else {
+        this.$refs.editDome.control = false
+        this.editData = val
+      }
+      this.editDomeShow = false
+    },
+    onChangeType(type) {
+      // type是子组件$emit传递的参数
+      this.editDomeShow = type
     },
     // 二维码、短链接
     codeAndLink(val, row) {
@@ -365,8 +391,11 @@ export default {
         .catch(() => {})
     },
     _changeTableSort({ column, prop, order }) {
-      if (prop === 'vipSerialNum') {
+      if (prop === 'createdAt') {
         prop = 1
+      }
+      if (prop === 'updatedAt') {
+        prop = 2
       }
       this.queryData.orderKey = prop
       if (order === 'ascending') {
@@ -446,6 +475,7 @@ p {
   p {
     display: inline-block;
     border: none;
+    line-height: 24px;
     i {
       margin-left: 10px;
     }

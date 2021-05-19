@@ -66,12 +66,30 @@
 						>
 							<el-table-column align="center" label="修改前">
 								<template>
-									{{ applyInfo.beforeModify }}
+									<template v-if="Number(applyInfo.applyType === 2)">
+										{{ typeFilter(applyInfo.beforeModify, 'genderType') }}
+									</template>
+									<template v-else-if="Number(applyInfo.applyType === 6)">
+										{{
+											typeFilter(applyInfo.beforeModify, 'accountStatusType')
+										}}
+									</template>
+									<template v-else>
+										{{ applyInfo.beforeModify ? applyInfo.beforeModify : '-' }}
+									</template>
 								</template>
 							</el-table-column>
 							<el-table-column align="center" label="修改后">
 								<template>
-									{{ applyInfo.afterModify }}
+									<template v-if="Number(applyInfo.applyType === 2)">
+										{{ typeFilter(applyInfo.afterModify, 'genderType') }}
+									</template>
+									<template v-else-if="Number(applyInfo.applyType === 6)">
+										{{ typeFilter(applyInfo.afterModify, 'accountStatusType') }}
+									</template>
+									<template v-else>
+										{{ applyInfo.afterModify ? applyInfo.afterModify : '-' }}
+									</template>
 								</template>
 							</el-table-column>
 						</el-table>
@@ -137,6 +155,14 @@ export default {
 	name: routerNames.memberChangeReview,
 	components: {},
 	mixins: [list],
+	props: {
+		// 审核 true 仅返回 false
+		type: Boolean,
+		rowData: {
+			type: Object,
+			default: () => {}
+		}
+	},
 	data() {
 		return {
 			accountInfo: '',
@@ -147,9 +173,7 @@ export default {
 				auditRemark: ''
 			},
 			visible: false,
-			action: false,
-			// 审核 true 仅返回 false
-			type: true
+			action: false
 		}
 	},
 	computed: {
@@ -171,10 +195,7 @@ export default {
 		}
 	},
 	created() {
-		if (this.$route.name === 'memberChangeReview') {
-			this.getInfo()
-			this.type = this.$route.query.type
-		}
+		this.getInfo()
 	},
 	mounted() {},
 	methods: {
@@ -195,8 +216,8 @@ export default {
 					background: 'rgba(0, 0, 0, 0.7)'
 				})
 				const params = {
-					id: this.$route.query.id,
-					userId: this.$route.query.userId,
+					id: this.rowData.id,
+					userId: this.rowData.userId,
 					auditRemark: this.form.auditRemark,
 					auditStatus: this.action ? 2 : 3
 				}
@@ -231,8 +252,8 @@ export default {
 							background: 'rgba(0, 0, 0, 0.7)'
 						})
 						const params = {
-							id: this.$route.query.id,
-							userId: this.$route.query.userId,
+							id: this.rowData.id,
+							userId: this.rowData.userId,
 							auditRemark: this.form.auditRemark,
 							auditStatus: this.action ? 2 : 3
 						}
@@ -262,12 +283,12 @@ export default {
 			}
 		},
 		goBack() {
-			this.$router.go(-1)
+			this.$emit('goBack')
 		},
 		getInfo() {
 			const params = {
-				userId: this.$route.query.userId,
-				recordId: this.$route.query.id
+				userId: this.rowData.userId,
+				recordId: this.rowData.id
 			}
 			this.$api.recordInfo(params).then((res) => {
 				if (res.code === 200) {
@@ -285,13 +306,6 @@ export default {
 					})
 				}
 			})
-		},
-		getRowClass({ row, column, rowIndex, columnIndex }) {
-			if (rowIndex === 0) {
-				return 'background:#EFEFEF'
-			} else {
-				return ''
-			}
 		}
 	}
 }

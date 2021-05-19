@@ -20,7 +20,11 @@
           <el-col :span="6">投注IP： {{ dataList.loginIp }}</el-col>
           <el-col :span="6">
             投注终端：
-            {{ typeFilter(dataList.deviceType, "betDeviceType") }}
+            {{
+              dataList.deviceType === "其他"
+                ? dataList.deviceType
+                : typeFilter(dataList.deviceType, "betDeviceType")
+            }}
           </el-col>
           <el-col :span="6">投注金额：{{ dataList.betAmount }}</el-col>
           <el-col :span="6">有效投注：{{ dataList.validBetAmount }}</el-col>
@@ -43,7 +47,7 @@ export default {
   mixins: [list],
   props: {
     dataList: {
-      typeL: Object,
+      type: Object,
       default: () => ({})
     }
   },

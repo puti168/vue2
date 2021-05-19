@@ -18,16 +18,34 @@
           <el-col :span="6">期号： {{ dataList.ticketPlanNo }}</el-col>
           <el-col :span="6">模式： {{ dataList.betModel }}</el-col>
           <el-col :span="6">赔率： {{ dataList.oddsValue }}</el-col>
-          <el-col :span="6">
-            <span> 投注内容：</span>
-            <span> {{ dataList.betNum }}</span>
+          <el-col :span="6" class="tipsBox">
+            <div class="tipsH">投注内容：</div>
+            <div class="tipsC">
+              <el-tooltip :content="dataList.betNum" placement="left-start">
+                <span>
+                  {{ dataList.betNum }}
+                </span>
+              </el-tooltip>
+            </div>
           </el-col>
-          <el-col :span="6">
-            判奖内容： <span>{{ dataList.judgeResultCn }}</span>
+          <el-col :span="6" class="tipsBox">
+            <div class="tipsH">判奖内容：</div>
+            <div class="tipsC">
+              <el-tooltip :content="dataList.judgeResultCn" placement="left-start">
+                <span>
+                  {{ dataList.judgeResultCn }}
+                </span>
+              </el-tooltip>
+            </div>
           </el-col>
           <el-col :span="6">输赢金额： {{ dataList.netAmount }}</el-col>
           <el-col :span="6">
-            终端： {{ typeFilter(dataList.deviceType, "betDeviceType") }}
+            终端：
+            {{
+              dataList.deviceType === "其他"
+                ? dataList.deviceType
+                : typeFilter(dataList.deviceType, "betDeviceType")
+            }}
           </el-col>
           <el-col :span="6">投注IP： {{ dataList.loginIp }}</el-col>
           <el-col :span="6">投注时间： {{ dataList.createAt }}</el-col>
@@ -64,7 +82,7 @@ export default {
   mixins: [list],
   props: {
     dataList: {
-      typeL: Object,
+      type: Object,
       default: () => ({})
     }
   },
@@ -117,6 +135,22 @@ export default {
     color: #ffff;
     background: #000;
     border: 1px solid #000;
+  }
+}
+.tipsBox {
+  height: 30px;
+  line-height: 30px;
+  .tipsH {
+    max-width: 100px;
+    overflow: hidden;
+    display: inline-block;
+  }
+  .tipsC {
+    max-width: 140px;
+    overflow: hidden;
+    display: inline-block;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }
 </style>

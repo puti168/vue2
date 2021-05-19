@@ -189,7 +189,7 @@ export function agentPictureListAPI(data) {
 // 代理==> 代理推广 ===> 代理图片删除
 export function agentPictureListDeleteAPI(data) {
 	return request({
-		url: '/materialImage/select',
+		url: '/materialImage/delete',
 		method: 'post',
 		data
 	})
@@ -198,7 +198,7 @@ export function agentPictureListDeleteAPI(data) {
 // 代理==> 代理推广 ===> 代理图片新增
 export function agentPictureListCreateAPI(data) {
 	return request({
-		url: '/materialImage/select',
+		url: '/materialImage/insert',
 		method: 'post',
 		data
 	})
@@ -207,7 +207,7 @@ export function agentPictureListCreateAPI(data) {
 // 代理==> 代理推广 ===> 代理图片修改
 export function agentPictureListUpdateAPI(data) {
 	return request({
-		url: '/materialImage/select',
+		url: '/materialImage/update',
 		method: 'post',
 		data
 	})

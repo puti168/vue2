@@ -17,7 +17,11 @@
           <el-col :span="6">投注金额： {{ dataList.betAmount }}</el-col>
           <el-col :span="6">
             投注终端：
-            {{ typeFilter(dataList.deviceType, "betDeviceType") }}
+            {{
+              dataList.deviceType === "其他"
+                ? dataList.deviceType
+                : typeFilter(dataList.deviceType, "betDeviceType")
+            }}
           </el-col>
           <el-col :span="6">投注IP： {{ dataList.loginIp }}</el-col>
           <el-col :span="6">输赢金额： {{ dataList.netAmount }}</el-col>
@@ -45,6 +49,9 @@
           </template>
         </el-table-column>
         <el-table-column prop="orderDetail" label="注单详情" align="center">
+          <template slot-scope="scope">
+            <span v-html="scope.row.orderDetail"></span>
+          </template>
         </el-table-column>
         <el-table-column prop="netAt" label="结算时间" align="center"> </el-table-column>
       </el-table>
@@ -60,7 +67,7 @@ export default {
   mixins: [list],
   props: {
     dataList: {
-      typeL: Object,
+      type: Object,
       default: () => ({})
     }
   },

@@ -54,7 +54,7 @@
 								size="medium"
 								placeholder="默认选择全部"
 								clearable
-                                style="width: 180px"
+								style="width: 180px"
 							>
 								<el-option
 									v-for="item in materialPictureTypeArr"
@@ -70,7 +70,7 @@
 								size="medium"
 								placeholder="默认选择全部"
 								clearable
-                                style="width: 180px"
+								style="width: 180px"
 							>
 								<el-option
 									v-for="item in pictureSizeTypeArr"
@@ -169,18 +169,18 @@
 								<span v-else>-</span>
 							</template>
 						</el-table-column>
-						<el-table-column prop="imageSize" align="center" label="图片类型">
+						<el-table-column prop="imageType" align="center" label="图片类型">
 							<template slot-scope="scope">
-								<span v-if="!!scope.row.imageSize">
-									{{ typeFilter(scope.row.imageSize, 'accountType') }}
+								<span v-if="!!scope.row.imageType">
+									{{ typeFilter(scope.row.imageType, 'materialPictureType') }}
 								</span>
 								<span v-else>-</span>
 							</template>
 						</el-table-column>
-						<el-table-column prop="cardNumber" align="center" label="图片尺寸">
+						<el-table-column prop="imageSize" align="center" label="图片尺寸">
 							<template slot-scope="scope">
-								<span v-if="!!scope.row.accountType">
-									{{ typeFilter(scope.row.accountType, 'accountType') }}
+								<span v-if="!!scope.row.imageSize">
+									{{ typeFilter(scope.row.imageSize, 'pictureSizeType') }}
 								</span>
 								<span v-else>-</span>
 							</template>
@@ -194,14 +194,14 @@
 							</template>
 						</el-table-column>
 						<el-table-column
-							prop="createDt"
+							prop="createdAt"
 							align="center"
 							label="创建时间"
 							sortable="custom"
 						>
 							<template slot-scope="scope">
-								<span v-if="!!scope.row.createDt">
-									{{ scope.row.createDt }}
+								<span v-if="!!scope.row.createdAt">
+									{{ scope.row.createdAt }}
 								</span>
 								<span v-else>-</span>
 							</template>
@@ -239,7 +239,7 @@
 									type="success"
 									size="medium"
 									class="noicon"
-									@click="preViewPicture"
+									@click="preViewPicture(scope.row)"
 								>
 									预览
 								</el-button>
@@ -286,7 +286,7 @@
 				width="480px"
 				class="imgCenter"
 			>
-				<img src="@/assets/img/bb_bt_logout.png" />
+				<img :src="imageAddress" />
 			</el-dialog>
 		</div>
 		<editPage v-else @back="back"></editPage>
@@ -325,6 +325,7 @@ export default {
 			dataList: [],
 			total: 0,
 			dialogPictureVisible: false,
+			imageAddress: null,
 			editPage: false
 		}
 	},
@@ -414,6 +415,8 @@ export default {
 			this.loadData()
 		},
 		preViewPicture(val) {
+			const { imageAddress } = val
+			this.imageAddress = imageAddress
 			this.dialogPictureVisible = true
 		},
 		deleteRow(val) {

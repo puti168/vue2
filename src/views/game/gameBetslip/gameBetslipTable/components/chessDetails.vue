@@ -23,7 +23,12 @@
           <el-col :span="6">投注时间： {{ dataList.createAt }}</el-col>
           <el-col :span="6">结算时间： {{ dataList.netAt }}</el-col>
           <el-col :span="6">
-            投注终端： {{ typeFilter(dataList.deviceType, "betDeviceType") }}
+            投注终端：
+            {{
+              dataList.deviceType === "其他"
+                ? dataList.deviceType
+                : typeFilter(dataList.deviceType, "betDeviceType")
+            }}
           </el-col>
           <el-col :span="6">注单状态： {{ dataList.betStatus }}</el-col>
           <el-col :span="6">同步时间： {{ dataList.synchronizationTime }}</el-col>
@@ -41,7 +46,7 @@ export default {
   mixins: [list],
   props: {
     dataList: {
-      typeL: Object,
+      type: Object,
       default: () => ({})
     }
   },
