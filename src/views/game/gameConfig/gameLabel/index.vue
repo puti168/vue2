@@ -64,7 +64,7 @@
               icon="el-icon-folder"
               :disabled="loading"
               size="medium"
-              @click="dialogFormVisible = true"
+              @click="addLabel"
             >
               创建
             </el-button>
@@ -341,6 +341,10 @@ export default {
           })
         })
         .catch(() => {})
+    },
+    addLabel() {
+      this.dialogFormVisible = true
+      // this.dialogForm = {};
     },
     edit(val) {
       this.title = '编辑'

@@ -123,9 +123,14 @@
           <el-table-column prop="updateDt" align="center" label="变更类型">
             <template slot-scope="scope">
               <span v-if="scope.row.applyType === '1'">
-                {{ typeFilter(scope.row.applyType, "accountStatusType") }}
+                {{ typeFilter(scope.row.applyType, "proxyAccountStatusType") }}
               </span>
-              {{ typeFilter(scope.row.applyType, "porxyApplyType") }}
+              <span v-else-if="scope.row.applyType === '5'">
+                {{ typeFilter(scope.row.applyType, "entrAuthorityType") }}
+              </span>
+              <span v-else>
+                {{ typeFilter(scope.row.applyType, "porxyApplyType") }}
+              </span>
             </template>
           </el-table-column>
           <el-table-column
