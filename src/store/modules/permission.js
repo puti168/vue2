@@ -161,7 +161,6 @@ const actions = {
 					}
 				}
 			})
-			console.log('2232')
 			parentRoutes = parentRoutes.filter((val) => {
 				return !val.children || (val.children && val.children.length)
 			})
