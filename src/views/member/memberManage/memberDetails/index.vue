@@ -216,8 +216,10 @@ export default {
     // 查询中心钱包余额
     getAccountCashAccount(val) {
       this.$api.getAccountCashAccount({ userId: val }).then((res) => {
-        if (res.code === 200) {
+        if (res.code === 200 && res.data !== null) {
           this.balanceList.balance = res.data.balance
+        } else {
+          this.balanceList.balance = ''
         }
       })
     },
@@ -260,7 +262,6 @@ export default {
         if (res.code === 200) {
           this.top3Sy = res.data
         }
-        console.log(res)
       })
     },
     // 会员登录日志查询
@@ -342,7 +343,6 @@ export default {
       // const targetOffsetTop = document.querySelector(
       //   `.floor-item:nth-child(${index + 1})`
       // ).offsetTop;
-      console.log(targetOffsetTop)
       // 获取当前 offsetTop
       let scrollTop = document.documentElement.scrollTop || document.body.scrollTop
       // 定义一次跳 50 个像素，数字越大跳得越快，但是会有掉帧得感觉，步子迈大了会扯到蛋
