@@ -211,7 +211,7 @@ export default {
   mounted() {},
   methods: {
     loadData() {
-      // this.loading = true;
+      this.loading = true
       const create = this.searchTime || []
       const [startTime, endTime] = create
       let params = {
@@ -222,13 +222,20 @@ export default {
       params = {
         ...this.getParams(params)
       }
-      this.$api.getProxyDataInfoChangeRecord(params).then((res) => {
-        if (res.code === 200) {
-          this.tableData = res.data.record
-          this.total = res.data.totalRecord
-        }
-      })
-      console.log(params)
+      this.$api
+        .getProxyDataInfoChangeRecord(params)
+        .then((res) => {
+          if (res.code === 200) {
+            this.tableData = res.data.record
+            this.total = res.data.totalRecord
+            this.loading = false
+          } else {
+            this.loading = false
+          }
+        })
+        .catch(() => {
+          this.loading = false
+        })
     },
     reset() {
       this.pageNum = 1

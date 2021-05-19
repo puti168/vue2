@@ -195,7 +195,7 @@ export default {
   mounted() {},
   methods: {
     loadData() {
-      // this.loading = true;
+      this.loading = true
       const create = this.searchTime || []
       const [startTime, endTime] = create
       let params = {
@@ -206,16 +206,22 @@ export default {
       params = {
         ...this.getParams(params)
       }
-      this.$api.getGameSearchLog(params).then((res) => {
-        if (res.code === 200) {
-          this.tableData = res.data.record
-          this.summary = res.data.summary === null ? {} : res.data.summary
-          this.total = res.data.totalRecord
-          this.now = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
-        }
-        console.log(res)
-      })
-      console.log(params)
+      this.$api
+        .getGameSearchLog(params)
+        .then((res) => {
+          if (res.code === 200) {
+            this.tableData = res.data.record
+            this.summary = res.data.summary === null ? {} : res.data.summary
+            this.total = res.data.totalRecord
+            this.now = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
+            this.loading = false
+          } else {
+            this.loading = false
+          }
+        })
+        .catch(() => {
+          this.loading = false
+        })
     },
     reset() {
       this.queryData = {}
