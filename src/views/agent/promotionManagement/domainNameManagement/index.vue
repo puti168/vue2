@@ -311,7 +311,7 @@ export default {
   mounted() {},
   methods: {
     loadData() {
-      // this.loading = true;
+      this.loading = true
       const create = this.createTime || []
       const edit = this.editTime || []
       const [beginDate, endDate] = create
@@ -330,14 +330,20 @@ export default {
       params = {
         ...this.getParams(params)
       }
-      this.$api.getDomainSelect(params).then((res) => {
-        if (res.code === 200) {
-          this.total = res.data.totalRecord
-          this.tableData = res.data.record
-        }
-        console.log(res)
-      })
-      console.log(params)
+      this.$api
+        .getDomainSelect(params)
+        .then((res) => {
+          if (res.code === 200) {
+            this.total = res.data.totalRecord
+            this.tableData = res.data.record
+            this.loading = false
+          } else {
+            this.loading = false
+          }
+        })
+        .catch(() => {
+          this.loading = false
+        })
     },
     reset() {
       this.queryData = {}

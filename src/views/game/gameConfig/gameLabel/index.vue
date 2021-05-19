@@ -289,21 +289,27 @@ export default {
   mounted() {},
   methods: {
     loadData() {
-      // this.loading = true;
+      this.loading = true
       let params = {
         ...this.queryData
       }
       params = {
         ...this.getParams(params)
       }
-      this.$api.getTabelData(params).then((res) => {
-        if (res.code === 200) {
-          this.tableData = res.data.record
-          this.total = res.data.totalRecord
-        }
-        console.log(res)
-      })
-      console.log(params)
+      this.$api
+        .getTabelData(params)
+        .then((res) => {
+          if (res.code === 200) {
+            this.tableData = res.data.record
+            this.total = res.data.totalRecord
+            this.loading = false
+          } else {
+            this.loading = false
+          }
+        })
+        .catch(() => {
+          this.loading = false
+        })
     },
     lookGame(val) {
       this.labelName = val.gameLabelName
