@@ -373,7 +373,7 @@ export default {
 						this.now = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
 						const response = res.data
 						this.loading = false
-						this.dataList = response.records
+						this.dataList = response.record
 						if (this.dataList) {
 							this.dataList.forEach((item) => {
 								if (Number(item.lockOrder) === 1) {
@@ -383,7 +383,7 @@ export default {
 								}
 							})
 						}
-						this.total = response.total
+						this.total = response.totalRecord
 					} else {
 						this.loading = false
 						this.$message({

@@ -20,6 +20,18 @@ const state = {
 	rolesIds: [],
 	name: '',
 	username: '',
+	// 新增用户审核数量
+	auditNewUser: '',
+	// 会员资料变更审核数量
+	auditUpdateInfoUser: '',
+	// 新增代理数量
+	auditNewAgent: '',
+	// 代理资料变更审核数量
+	auditUpdateInfoAgent: '',
+	// 变更会员上级代理审核数量
+	auditChangeAgent: '',
+	// 溢出会员审核数量
+	auditPatchAgent: '',
 	nickName: '',
 	userInfo: getUserInfo(),
 	avatar: '',
@@ -28,6 +40,9 @@ const state = {
 }
 
 const mutations = {
+	SET_AUDIT: (state, {value, type}) => {
+		state[type] = value
+	},
 	SET_TOKEN: (state, token) => {
 		state.token = token
 	},
@@ -90,6 +105,9 @@ const mutations = {
 }
 
 const actions = {
+	setAudit({ commit }, {value, type}) {
+		commit('SET_AUDIT', {value, type})
+	},
 	// user login
 	login({ commit }, userInfo) {
 		const { username, password, googleAuth } = userInfo

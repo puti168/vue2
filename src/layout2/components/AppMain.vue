@@ -40,8 +40,6 @@ export default {
 				mode: CryptoJS.mode.CBC,
 				padding: CryptoJS.pad.Pkcs7
 			})
-			// console.log(encrypt)
-			// console.log(encrypt.ciphertext)
 			return this.u8stringify(encrypt.ciphertext)
 		},
 		u8stringify(wordArray) {
@@ -72,14 +70,8 @@ export default {
 				padding: CryptoJS.pad.Pkcs7
 			})
 
-			// console.log(data);
-			// alert(data);
-			// alert(decrypted);
-
 			var message = decrypted.toString(CryptoJS.enc.Utf8)
 			return message
-			// console.log(message)
-			// console.log(JSON.parse(message))
 			// console.log(JSON.parse(JSON.parse(message).body))
 		},
 		sendHeart() {
@@ -111,13 +103,77 @@ export default {
 				thiss.timer = window.setInterval(thiss.sendHeart, 5000)
 			}
 			this.wss.onmessage = function(event) {
-				const jsonStr = thiss.decrypte(event.data)
-				return jsonStr
-				// console.log('jsonStr')
-				// console.log(jsonStr)
+				const msg = JSON.parse(thiss.decrypte(event.data))
+				if (msg.commandId !== 1) {
+					console.log('有消息来了')
+					console.log(msg)
+				}
+				const jsonStr = JSON.parse(
+						JSON.parse(thiss.decrypte(event.data)).body
+					)
+				if (msg.commandId === 100) {
+					thiss.$store.dispatch('user/setAudit', {
+						value: jsonStr.auditNewUser,
+						type: 'auditNewUser'
+					})
+					thiss.$store.dispatch('user/setAudit', {
+						value: jsonStr.auditUpdateInfoUser,
+						type: 'auditUpdateInfoUser'
+					})
+					thiss.$store.dispatch('user/setAudit', {
+						value: jsonStr.auditNewAgent,
+						type: 'auditNewAgent'
+					})
+					thiss.$store.dispatch('user/setAudit', {
+						value: jsonStr.auditUpdateInfoAgent,
+						type: 'auditUpdateInfoAgent'
+					})
+					thiss.$store.dispatch('user/setAudit', {
+						value: jsonStr.auditChangeAgent,
+						type: 'auditChangeAgent'
+					})
+					thiss.$store.dispatch('user/setAudit', {
+						value: jsonStr.auditPatchAgent,
+						type: 'auditPatchAgent'
+					})
+				} else if (msg.commandId === 101) {
+					thiss.$store.dispatch('user/setAudit', {
+						value: jsonStr.auditNewUser,
+						type: 'auditNewUser'
+					})
+				} else if (msg.commandId === 102) {
+					thiss.$store.dispatch('user/setAudit', {
+						value: jsonStr.auditUpdateInfoUser,
+						type: 'auditUpdateInfoUser'
+					})
+				} else if (msg.commandId === 103) {
+					thiss.$store.dispatch('user/setAudit', {
+						value: jsonStr.auditNewAgent,
+						type: 'auditNewAgent'
+					})
+				} else if (msg.commandId === 104) {
+					thiss.$store.dispatch('user/setAudit', {
+						value: jsonStr.auditUpdateInfoAgent,
+						type: 'auditUpdateInfoAgent'
+					})
+				} else if (msg.commandId === 105) {
+					thiss.$store.dispatch('user/setAudit', {
+						value: jsonStr.auditChangeAgent,
+						type: 'auditChangeAgent'
+					})
+				} else if (msg.commandId === 106) {
+					thiss.$store.dispatch('user/setAudit', {
+						value: jsonStr.auditPatchAgent,
+						type: 'auditPatchAgent'
+					})
+				}
 			}
 			this.wss.onclose = function() {
 				// console.log('断开')
+				window.clearInterval(thiss.timer)
+				setTimeout(() => {
+					thiss.ws()
+				}, 10000)
 			}
 			this.wss.onerror = function() {
 				// console.log(evt)
