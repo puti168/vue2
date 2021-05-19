@@ -1,5 +1,6 @@
 <template>
 	<div class="game-container report-container">
+		<template v-if="!showDetail">
 		<div class="params">
 			<el-form ref="form" :inline="true" :model="queryData">
 				<el-form-item label="申请时间:">
@@ -323,12 +324,20 @@
 				></el-pagination>
 			</div>
 		</div>
+		</template>
+		<memberChangeReview
+			v-else
+			:type="type"
+			:rowData="rowData"
+			@goBack="goBack"
+		></memberChangeReview>
 	</div>
 </template>
 
 <script>
 import list from '@/mixins/list'
 import dayjs from 'dayjs'
+import memberChangeReview from './components/memberChangeReview'
 import { routerNames } from '@/utils/consts'
 import { getUsername } from '@/utils/auth'
 const end = dayjs()
@@ -339,7 +348,7 @@ const start = dayjs()
 	.valueOf()
 export default {
 	name: routerNames.memberChange,
-	components: {},
+	components: {memberChangeReview},
 	mixins: [list],
 	data() {
 		return {
@@ -356,6 +365,9 @@ export default {
 				orderType: '',
 				orderKey: ''
 			},
+			showDetail: false,
+			rowData: {},
+			type: true,
 			now: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
 			formTime: {
 				time: [start, end],
@@ -436,16 +448,13 @@ export default {
 			})
 		},
 		goDetail(row) {
-			const type = Number(row.auditStep) === 1 && row.auditName === this.name
-			this.$store.dispatch('tagsView/delView', {
-				name: routerNames.memberChangeReview
-			})
-			this.$nextTick(() => {
-				this.$router.push({
-					path: '/member/memberReview/memberChangeReview',
-					query: { id: row.id, userId: row.userId, type: type }
-				})
-			})
+			this.type = Number(row.auditStep) === 1 && row.auditName === this.name
+			this.rowData = row
+			this.showDetail = true
+		},
+		goBack() {
+			this.showDetail = false
+			this.loadData()
 		},
 		reset() {
 			this.queryData = {
