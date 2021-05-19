@@ -122,27 +122,35 @@
           </el-table-column>
           <el-table-column prop="updateDt" align="center" label="变更类型">
             <template slot-scope="scope">
+              {{ typeFilter(scope.row.applyType, "porxyApplyType") }}
+            </template>
+          </el-table-column>
+          <el-table-column prop="beforeModify" align="center" label="变更前">
+            <template slot-scope="scope">
               <span v-if="scope.row.applyType === '1'">
-                {{ typeFilter(scope.row.applyType, "proxyAccountStatusType") }}
+                {{ typeFilter(scope.row.beforeModify, "proxyAccountStatusType") }}
               </span>
               <span v-else-if="scope.row.applyType === '5'">
-                {{ typeFilter(scope.row.applyType, "entrAuthorityType") }}
+                {{ typeFilter(scope.row.beforeModify, "entrAuthorityType") }}
               </span>
               <span v-else>
-                {{ typeFilter(scope.row.applyType, "porxyApplyType") }}
+                {{ scope.row.beforeModify }}
               </span>
             </template>
           </el-table-column>
-          <el-table-column
-            prop="beforeModify"
-            align="center"
-            label="变更前"
-          ></el-table-column>
-          <el-table-column
-            prop="afterModify"
-            align="center"
-            label="变更后"
-          ></el-table-column>
+          <el-table-column prop="afterModify" align="center" label="变更后">
+            <template slot-scope="scope">
+              <span v-if="scope.row.applyType === '1'">
+                {{ typeFilter(scope.row.afterModify, "proxyAccountStatusType") }}
+              </span>
+              <span v-else-if="scope.row.applyType === '5'">
+                {{ typeFilter(scope.row.afterModify, "entrAuthorityType") }}
+              </span>
+              <span v-else>
+                {{ scope.row.afterModify }}
+              </span>
+            </template>
+          </el-table-column>
           <el-table-column
             prop="applyName"
             align="center"

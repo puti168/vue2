@@ -483,9 +483,11 @@ export default {
 
         case '风控层级':
           this.editData.windControlId = this.outlineInfoList.windControlId
+          this.editData.windControlName = this.outlineInfoList.windControlName
           break
         case '代理标签':
           this.editData.labelId = this.outlineInfoList.labelId
+          this.editData.labelName = this.outlineInfoList.labelName
           break
         case '账号备注':
           this.titel = '备注信息：'

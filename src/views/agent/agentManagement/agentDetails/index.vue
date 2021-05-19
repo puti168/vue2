@@ -284,8 +284,7 @@ export default {
         }
       })
     },
-    enterSubmit() {
-      console.log(11111)
+    enterSearch() {
       this.query()
     },
     reset() {
