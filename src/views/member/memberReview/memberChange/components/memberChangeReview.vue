@@ -2,7 +2,7 @@
 	<div class="game-container report-container">
 		<div class="review-content">
 			<div class="head">
-				<span class="title">新增会员审核详情</span>
+				<span class="title">会员账户修改审核详情</span>
 				<div v-if="type" class="right-btn">
 					<el-button plain @click="goBack">取消</el-button>
 					<el-button type="success" @click="confirm(true)">一审通过</el-button>
@@ -13,40 +13,94 @@
 				</div>
 			</div>
 			<div class="main-content">
-				<div class="review-content">
-					<p class="name">新增会员信息</p>
+				<div v-if="registerInfo" class="review-content">
+					<p class="name">会员注册信息</p>
 					<div class="review-flex">
+						<div>注册时间: {{ registerInfo.createDt }}</div>
+						<div>上次登录时间: {{ registerInfo.lastLoginTime }}</div>
+						<div>最后下注时间时间: {{ registerInfo.lastBetTime }}</div>
 						<div>
-							账号类型: {{ typeFilter(list.accountType, 'accountType') }}
+							注册端: {{ typeFilter(registerInfo.deviceType, 'deviceType') }}
 						</div>
-						<div>会员账号: {{ list.userName }}</div>
-						<div>登录密码: {{ list.password }}</div>
-						<div>上级代理: {{ list.parentProxyName }}</div>
 					</div>
 					<div class="review-flex">
-						<div>性别: {{ typeFilter(list.gender, 'genderType') }}</div>
-						<div>VIP经验: {{ list.vipExperienceVal }}</div>
-						<div>邮箱: {{ list.email }}</div>
-						<div>姓名: {{ list.realName }}</div>
-					</div>
-					<div class="review-flex">
-						<div>手机号码: {{ list.mobile }}</div>
+						<div>上级代理: {{ registerInfo.parentProxyName }}</div>
+						<div>
+							账号类型:
+							{{ typeFilter(registerInfo.accountType, 'accountType') }}
+						</div>
 					</div>
 				</div>
-				<div class="review-content">
+				<div v-if="accountInfo" class="review-content">
+					<p class="name">会员账号信息</p>
+					<div class="review-flex">
+						<div>账号: {{ accountInfo.userName }}</div>
+						<div>账号状态: {{ accountInfo.accountStatus }}</div>
+						<div>VIP等级: {{ accountInfo.viptualNum }}</div>
+						<div>银行卡数量: {{ accountInfo.cardNum }}</div>
+					</div>
+					<div class="review-flex">
+						<div>虚拟币账号数量: {{ accountInfo.virtualNum }}</div>
+						<div>风控层级: {{ accountInfo.windControlName }}</div>
+						<div>会员标签: {{ accountInfo.labelName }}</div>
+						<div>备注信息: {{ accountInfo.remark }}div></div>
+					</div>
+				</div>
+				<div v-if="applyInfo" class="review-content more-height">
 					<p class="name">申请信息</p>
 					<div class="review-flex">
-						<div>申请人: {{ list.applyName }}</div>
-						<div>申请时间: {{ list.applyTime }}</div>
-						<div>申请信息: {{ list.applyInfo }}</div>
+						<div>申请人: {{ applyInfo.applyName }}</div>
+						<div>申请时间: {{ applyInfo.applyTime }}</div>
+						<div>
+							审核申请类型: {{ typeFilter(applyInfo.applyType, 'applyType') }}
+						</div>
+						<div>申请原因: {{ applyInfo.applyInfo }}</div>
+					</div>
+					<div class="review-flex">
+						<el-table
+							border
+							size="mini"
+							:data="[1]"
+							style="width: 100%"
+							:header-cell-style="getRowClass"
+						>
+							<el-table-column align="center" label="修改前">
+								<template>
+									<template v-if="Number(applyInfo.applyType === 2)">
+										{{ typeFilter(applyInfo.beforeModify, 'genderType') }}
+									</template>
+									<template v-else-if="Number(applyInfo.applyType === 6)">
+										{{
+											typeFilter(applyInfo.beforeModify, 'accountStatusType')
+										}}
+									</template>
+									<template v-else>
+										{{ applyInfo.beforeModify ? applyInfo.beforeModify : '-' }}
+									</template>
+								</template>
+							</el-table-column>
+							<el-table-column align="center" label="修改后">
+								<template>
+									<template v-if="Number(applyInfo.applyType === 2)">
+										{{ typeFilter(applyInfo.afterModify, 'genderType') }}
+									</template>
+									<template v-else-if="Number(applyInfo.applyType === 6)">
+										{{ typeFilter(applyInfo.afterModify, 'accountStatusType') }}
+									</template>
+									<template v-else>
+										{{ applyInfo.afterModify ? applyInfo.afterModify : '-' }}
+									</template>
+								</template>
+							</el-table-column>
+						</el-table>
 					</div>
 				</div>
-				<div class="review-content">
-					<p class="name">审核信息信息</p>
+				<div v-if="auditInfo" class="review-content">
+					<p class="name">会员账号信息</p>
 					<div class="review-flex">
-						<div>一审人: {{ list.auditName }}</div>
-						<div>一审时间: {{ list.auditTime }}</div>
-						<div>一审备注: {{ list.remark }}</div>
+						<div>一审人: {{ auditInfo.auditName }}</div>
+						<div>一审时间: {{ auditInfo.auditTime }}</div>
+						<div>一审备注: {{ auditInfo.auditRemark }}</div>
 					</div>
 				</div>
 			</div>
@@ -62,7 +116,7 @@
 			<el-form ref="form" :model="form" :rules="formRules">
 				<el-form-item v-if="action" label="提交审核信息">
 					<el-input
-						v-model="form.remark"
+						v-model="form.auditRemark"
 						clearable
 						type="textarea"
 						:max="50"
@@ -71,9 +125,9 @@
 						placeholder="请输入"
 					></el-input>
 				</el-form-item>
-				<el-form-item v-else label="提交审核信息" prop="remark">
+				<el-form-item v-else label="提交审核信息" prop="auditRemark">
 					<el-input
-						v-model="form.remark"
+						v-model="form.auditRemark"
 						clearable
 						type="textarea"
 						:max="50"
@@ -94,39 +148,54 @@
 </template>
 
 <script>
-import list from '@/mixins/list'
-import { routerNames } from '@/utils/consts'
 // import dayjs from 'dayjs'
+import { routerNames } from '@/utils/consts'
+import list from '@/mixins/list'
 export default {
-	name: routerNames.addMemberReview,
+	name: routerNames.memberChangeReview,
 	components: {},
 	mixins: [list],
+	props: {
+		// 审核 true 仅返回 false
+		type: Boolean,
+		rowData: {
+			type: Object,
+			default: () => {}
+		}
+	},
 	data() {
 		return {
-			list: {},
-			visible: false,
+			accountInfo: '',
+			auditInfo: '',
+			applyInfo: '',
+			registerInfo: '',
 			form: {
-				remark: ''
+				auditRemark: ''
 			},
-			action: false,
-			// 审核 true 仅返回 false
-			type: true
+			visible: false,
+			action: false
 		}
 	},
 	computed: {
+		accountType() {
+			return this.globalDics.accountType
+		},
+		deviceType() {
+			return this.globalDics.deviceType
+		},
+		applyType() {
+			return this.globalDics.applyType
+		},
 		formRules() {
 			return {
-				remark: [
+				auditRemark: [
 					{ required: true, message: '审核拒绝备注必填', trigger: 'blur' }
 				]
 			}
 		}
 	},
 	created() {
-		if (this.$route.name === 'addMemberReview') {
-			this.getInfo()
-			this.type = this.$route.query.type
-		}
+		this.getInfo()
 	},
 	mounted() {},
 	methods: {
@@ -134,9 +203,9 @@ export default {
 			this.visible = false
 		},
 		confirm(action) {
-			this.remark = ''
-			this.action = action
 			this.visible = true
+			this.auditRemark = ''
+			this.action = action
 		},
 		auditOne() {
 			if (this.action) {
@@ -147,14 +216,13 @@ export default {
 					background: 'rgba(0, 0, 0, 0.7)'
 				})
 				const params = {
-					id: this.$route.query.id,
-					userId: this.$route.query.userId,
-					remark: this.form.remark,
+					id: this.rowData.id,
+					userId: this.rowData.userId,
+					auditRemark: this.form.auditRemark,
 					auditStatus: this.action ? 2 : 3
 				}
-
 				this.$api
-					.updateMemberAuditRecord(params)
+					.audit(params)
 					.then((res) => {
 						loading.close()
 						if (res.code === 200) {
@@ -184,14 +252,13 @@ export default {
 							background: 'rgba(0, 0, 0, 0.7)'
 						})
 						const params = {
-							id: this.$route.query.id,
-							userId: this.$route.query.userId,
-							remark: this.form.remark,
+							id: this.rowData.id,
+							userId: this.rowData.userId,
+							auditRemark: this.form.auditRemark,
 							auditStatus: this.action ? 2 : 3
 						}
-
 						this.$api
-							.updateMemberAuditRecord(params)
+							.audit(params)
 							.then((res) => {
 								loading.close()
 								if (res.code === 200) {
@@ -216,17 +283,21 @@ export default {
 			}
 		},
 		goBack() {
-			this.$router.go(-1)
+			this.$emit('goBack')
 		},
 		getInfo() {
 			const params = {
-				id: this.$route.query.id
+				userId: this.rowData.userId,
+				recordId: this.rowData.id
 			}
-			this.$api.memberAuditDetail(params).then((res) => {
+			this.$api.recordInfo(params).then((res) => {
 				if (res.code === 200) {
 					const response = res.data
 					this.loading = false
-					this.list = response
+					this.registerInfo = response.registerInfo
+					this.applyInfo = response.applyInfo
+					this.auditInfo = response.auditInfo
+					this.accountInfo = response.accountInfo
 				} else {
 					this.loading = false
 					this.$message({
@@ -235,13 +306,6 @@ export default {
 					})
 				}
 			})
-		},
-		getRowClass({ row, column, rowIndex, columnIndex }) {
-			if (rowIndex === 0) {
-				return 'background:#EFEFEF'
-			} else {
-				return ''
-			}
 		}
 	}
 }
