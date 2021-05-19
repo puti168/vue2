@@ -103,13 +103,20 @@ export default {
       dataList: []
     }
   },
-  computed: {},
+  computed: {
+    lonRecordData() {
+      return this.lonRecord
+    }
+  },
   watch: {
-    lonRecord: {
+    lonRecordData: {
       handler(newV) {
-        if (newV.totalRecord) {
+        if (newV.totalRecord && newV.totalRecord > 0) {
           this.total = newV.totalRecord
           this.dataList = newV.record
+        } else {
+          this.dataList = []
+          this.total = 0
         }
       },
       deep: true

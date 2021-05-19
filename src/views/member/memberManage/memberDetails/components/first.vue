@@ -548,16 +548,13 @@ export default {
   },
   computed: {
     allData() {
-      console.log('变化了')
       return this.outlineInfo
     }
   },
   watch: {
     allData: {
       handler(newV, oldV) {
-        console.log(111111111111, newV, oldV)
         this.outlineInfoList = { ...newV }
-        console.log('newV.auditList', newV.auditList)
         if (newV.auditList && newV.auditList !== null) {
           this.isshow = false
           for (let i = 0; i < newV.auditList.length; i++) {
@@ -766,7 +763,6 @@ export default {
       for (let i = 0; i < this.memberLabelList.length; i++) {
         const ele = this.memberLabelList[i]
         if (val === ele.labelId) {
-          console.log(ele)
           this.editData.labelName = ele.labelName
         }
       }
@@ -781,7 +777,6 @@ export default {
     },
     submitEdit() {
       const params = this.editData
-      console.log(params)
       const data = {}
       data.userName = this.parentData.userName
       this.$refs.editForm.validate((valid) => {
@@ -793,51 +788,72 @@ export default {
             background: 'rgba(0, 0, 0, 0.7)'
           })
           if (this.moduleBox === '账号状态') {
-            // delete params.code;
             params.accountStatus = params.code
             data.accountStatusAfter = params
+            delete params.code
+            delete params.labelId
+            delete params.windControlId
             this.setMemberInfoEdit(data)
             loading.close()
           }
           if (this.moduleBox === '风控层级') {
-            // delete params.code;
-            // delete params.labelId;
+            delete params.code
+            delete params.labelId
             data.windControlAfter = params
             this.setMemberInfoEdit(data)
             loading.close()
           }
           if (this.moduleBox === '会员标签') {
+            delete params.code
+            delete params.windControlId
             data.labelAfter = params
             this.setMemberInfoEdit(data)
             loading.close()
           }
           if (this.moduleBox === '出生日期') {
+            delete params.code
+            delete params.labelId
+            delete params.windControlId
             data.birthAfter = params
             this.setMemberInfoEdit(data)
             loading.close()
           }
           if (this.moduleBox === '手机号码') {
+            delete params.code
+            delete params.labelId
+            delete params.windControlId
             data.mobileAfter = params
             this.setMemberInfoEdit(data)
             loading.close()
           }
           if (this.moduleBox === '姓名') {
+            delete params.code
+            delete params.labelId
+            delete params.windControlId
             data.realNameAfter = params
             this.setMemberInfoEdit(data)
             loading.close()
           }
           if (this.moduleBox === '性别') {
             delete params.code
+            delete params.labelId
+            delete params.windControlId
             data.genderAfter = params
             this.setMemberInfoEdit(data)
             loading.close()
           }
           if (this.moduleBox === '邮箱') {
+            delete params.code
+            delete params.labelId
+            delete params.windControlId
             data.emailAfter = params
             this.setMemberInfoEdit(data)
             loading.close()
           }
           if (this.moduleBox === '账号备注') {
+            delete params.code
+            delete params.labelId
+            delete params.windControlId
             params.userName = this.parentData.userName
             params.userId = this.parentData.userId
             this.getMemberRemarkAdd(params)

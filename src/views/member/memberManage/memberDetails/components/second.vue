@@ -212,12 +212,7 @@ icon="el-icon-refresh"
         style="margin: 10px 0 30px 0; z-index: 0"
         :header-cell-style="getRowClass"
       >
-        <el-table-column
-          align="center"
-          prop="gameName"
-          type="index"
-          label="平台"
-        ></el-table-column>
+        <el-table-column align="center" prop="gameName" label="平台"></el-table-column>
         <el-table-column
           prop="netAmount"
           align="center"
@@ -240,12 +235,7 @@ icon="el-icon-refresh"
         style="margin: 10px 0 30px 0; z-index: 0"
         :header-cell-style="getRowClass"
       >
-        <el-table-column
-          align="center"
-          prop="gameName"
-          type="index"
-          label="平台"
-        ></el-table-column>
+        <el-table-column align="center" prop="gameName" label="平台"></el-table-column>
         <el-table-column
           prop="betAmount"
           align="center"
@@ -301,7 +291,7 @@ export default {
       handler(newV) {
         // this.balance = newV.balance;
         // this.freezeBalance = newV.freezeBalance;
-        this.moneyList = newV
+        this.moneyList = { ...newV }
       },
       deep: true
     },
@@ -324,8 +314,10 @@ export default {
     // 查询中心钱包余额
     getAccountCashAccount(val) {
       this.$api.getAccountCashAccount({ userId: val }).then((res) => {
-        if (res.code === 200) {
+        if (res.code === 200 && res.data !== null) {
           this.moneyList.balance = res.data.balance
+        } else {
+          this.moneyList.balance = ''
         }
       })
     },
@@ -362,7 +354,6 @@ export default {
               message: '回收成功!'
             })
           }
-          console.log(res)
         })
         .catch(() => {
           this.borderL = true
