@@ -149,28 +149,34 @@
 						:header-cell-style="getRowClass"
 						@sort-change="changeTableSort"
 					>
-						<el-table-column prop="userName" align="center" label="排序">
+						<el-table-column prop="displayOrder" align="center" label="排序">
 							<template slot-scope="scope">
-								<span v-if="!!scope.row.userName" />
+								<span
+									v-if="
+										!!scope.row.displayOrder || scope.row.displayOrder === 0
+									"
+								>
+									{{ scope.row.displayOrder }}
+								</span>
 								<span v-else>-</span>
 							</template>
 						</el-table-column>
-						<el-table-column prop="accountType" align="center" label="图片标题">
+						<el-table-column prop="imageName" align="center" label="图片标题">
 							<template slot-scope="scope">
-								<span v-if="!!scope.row.accountType">
-									{{ typeFilter(scope.row.accountType, 'accountType') }}
+								<span v-if="!!scope.row.imageName">
+									{{ scope.row.imageName }}
 								</span>
 								<span v-else>-</span>
 							</template>
 						</el-table-column>
 						<el-table-column
-							prop="parentProxyName"
+							prop="imageSize"
 							align="center"
 							label="图片类型"
 						>
 							<template slot-scope="scope">
-								<span v-if="!!scope.row.accountType">
-									{{ typeFilter(scope.row.accountType, 'accountType') }}
+								<span v-if="!!scope.row.imageSize">
+									{{ typeFilter(scope.row.imageSize, 'accountType') }}
 								</span>
 								<span v-else>-</span>
 							</template>
@@ -183,10 +189,10 @@
 								<span v-else>-</span>
 							</template>
 						</el-table-column>
-						<el-table-column prop="bankName" align="center" label="创建人">
+						<el-table-column prop="createdBy" align="center" label="创建人">
 							<template slot-scope="scope">
-								<span v-if="!!scope.row.bankName">
-									{{ scope.row.bankName }}
+								<span v-if="!!scope.row.createdBy">
+									{{ scope.row.createdBy }}
 								</span>
 								<span v-else>-</span>
 							</template>
@@ -206,21 +212,21 @@
 						</el-table-column>
 						<el-table-column prop="cnName" align="center" label="最近操作人">
 							<template slot-scope="scope">
-								<span v-if="!!scope.row.bankName">
-									{{ scope.row.bankName }}
+								<span v-if="!!scope.row.updatedBy">
+									{{ scope.row.updatedBy }}
 								</span>
 								<span v-else>-</span>
 							</template>
 						</el-table-column>
 						<el-table-column
-							prop="createDt"
+							prop="updatedAt"
 							align="center"
 							label="最近操作时间"
 							sortable="custom"
 						>
 							<template slot-scope="scope">
-								<span v-if="!!scope.row.createDt">
-									{{ scope.row.createDt }}
+								<span v-if="!!scope.row.updatedAt">
+									{{ scope.row.updatedAt }}
 								</span>
 								<span v-else>-</span>
 							</template>
@@ -393,14 +399,14 @@ export default {
 			this.$refs['form'].resetFields()
 			this.pageNum = 1
 			this.queryData = {
-                createDt: [start, end],
-                createdBy: undefined,
-                imageName: undefined,
-                imageType: undefined,
-                imageSize: undefined,
-                updatedDt: [start, end],
-                updatedBy: undefined,
-                orderType: undefined
+				createDt: [start, end],
+				createdBy: undefined,
+				imageName: undefined,
+				imageType: undefined,
+				imageSize: undefined,
+				updatedDt: [start, end],
+				updatedBy: undefined,
+				orderType: undefined
 			}
 			this.loadData()
 		},
@@ -409,7 +415,7 @@ export default {
 		},
 		back() {
 			this.editPage = false
-            this.loadData()
+			this.loadData()
 		},
 		preViewPicture(val) {
 			this.dialogPictureVisible = true
