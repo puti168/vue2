@@ -143,7 +143,7 @@ export default {
 				}
 
 				this.$api
-					.proxyDataAudit(params)
+					.updateProxyAuditRecord(params)
 					.then((res) => {
 						loading.close()
 						if (res.code === 200) {
@@ -174,7 +174,6 @@ export default {
 						})
 						const params = {
 							id: this.rowData.id,
-							userId: this.rowData.userId,
 							auditRemark: this.form.remark,
 							auditStatus: this.action ? 2 : 3
 						}

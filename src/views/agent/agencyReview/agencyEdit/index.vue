@@ -112,7 +112,7 @@
 					</el-form-item>
 					<el-form-item label="锁单状态:">
 						<el-select
-							v-model="queryData.lockOrder"
+							v-model="queryData.lockStatus"
 							style="width: 180px"
 							:popper-append-to-body="false"
 						>
@@ -176,7 +176,7 @@
 										Number(scope.row.auditStep) === 1 &&
 											(scope.row.auditName === name || !scope.row.auditName)
 									"
-									v-model="scope.row.lockOrder"
+									v-model="scope.row.lockStatus"
 									@change="lockChange(scope.row)"
 								></el-checkbox>
 							</template>
@@ -360,7 +360,7 @@ export default {
 				auditStep: '',
 				applyName: '',
 				auditName: '',
-				lockOrder: '',
+				lockStatus: '',
 				auditNum: '',
 				orderType: '',
 				orderKey: ''
@@ -431,9 +431,9 @@ export default {
 						if (this.dataList) {
 							this.dataList.forEach((item) => {
 								if (Number(item.lockOrder) === 1) {
-									item.lockOrder = true
+									item.lockStatus = true
 								} else {
-									item.lockOrder = false
+									item.lockStatus = false
 								}
 							})
 						}
@@ -468,7 +468,7 @@ export default {
 				auditStep: '',
 				applyName: '',
 				auditName: '',
-				lockOrder: '',
+				lockStatus: '',
 				auditNum: '',
 				orderType: '',
 				orderKey: ''
