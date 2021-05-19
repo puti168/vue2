@@ -28,7 +28,7 @@
 						</el-form-item>
 						<el-form-item label="创建人:">
 							<el-input
-								v-model="queryData.userName"
+								v-model="queryData.createdBy"
 								size="medium"
 								placeholder="请输入"
 								clearable
@@ -39,7 +39,7 @@
 						</el-form-item>
 						<el-form-item label="图片标题:">
 							<el-input
-								v-model="queryData.imgTips"
+								v-model="queryData.imageName"
 								size="medium"
 								placeholder="请输入"
 								clearable
@@ -50,7 +50,7 @@
 						</el-form-item>
 						<el-form-item label="图片类型:">
 							<el-select
-								v-model="queryData.operateType"
+								v-model="queryData.imageType"
 								size="medium"
 								placeholder="默认选择全部"
 								clearable
@@ -66,7 +66,7 @@
 						</el-form-item>
 						<el-form-item label="图片尺寸:">
 							<el-select
-								v-model="queryData.operateType"
+								v-model="queryData.imageSize"
 								size="medium"
 								placeholder="默认选择全部"
 								clearable
@@ -82,7 +82,7 @@
 						</el-form-item>
 						<el-form-item label="最近操作时间:">
 							<el-date-picker
-								v-model="queryData.createDt"
+								v-model="queryData.updatedDt"
 								size="medium"
 								:picker-options="pickerOptions"
 								format="yyyy-MM-dd HH:mm:ss"
@@ -99,7 +99,7 @@
 						</el-form-item>
 						<el-form-item label="最近操作人:">
 							<el-input
-								v-model="queryData.cnName"
+								v-model="queryData.updatedBy"
 								size="medium"
 								placeholder="请输入"
 								clearable
@@ -312,13 +312,12 @@ export default {
 		return {
 			queryData: {
 				createDt: [start, end],
-				userName: '',
-				imgTips: '',
-				operateType: '',
-				cnName: '',
-				bankName: '',
-				cardNumber: '',
-				parentProxyName: '',
+                createdBy: '',
+                imageName: '',
+                imageType: '',
+                imageSize: '',
+                updatedDt: [start, end],
+                updatedBy: '',
 				orderType: undefined
 			},
 			dataList: [],
@@ -335,18 +334,7 @@ export default {
 			]
 		}
 	},
-	mounted() {
-		for (let i = 0; i < 10; i++) {
-			this.dataList[i] = {
-				bankCode: '165416416464654',
-				bankName: 'mico',
-				content: '高频率',
-				code: 1,
-				createDt: '2021-02-13 20:28:54',
-				updateDt: '2021-02-13 20:28:54'
-			}
-		}
-	},
+	mounted() {},
 	methods: {
 		loadData() {
 			this.dataList = []
@@ -395,14 +383,16 @@ export default {
 		},
 		reset() {
 			this.$refs['form'].resetFields()
+            this.pageNum = 1
 			this.queryData = {
-				operateType: '',
-				createDt: [start, end],
-				userName: '',
-				cnName: '',
-				bankName: '',
-				cardNumber: '',
-				parentProxyName: ''
+                createDt: [start, end],
+                createdBy: '',
+                imageName: '',
+                imageType: '',
+                imageSize: '',
+                updatedDt: [start, end],
+                updatedBy: '',
+                orderType: undefined
 			}
 			this.loadData()
 		},

@@ -43,8 +43,8 @@
         </el-form-item>
       </el-form>
 
-        <!-- v-show="isShow" -->
       <el-tabs
+        v-show="isShow"
         v-model="activeName"
         class="tabsBox"
         @tab-click="handleClick"
@@ -69,8 +69,7 @@
       </el-tabs>
     </div>
     <div class="marginTb"></div>
-    <!-- <div v-show="isShow" class="contentBox"> -->
-    <div class="contentBox">
+    <div v-show="isShow" class="contentBox">
       <basicInfor
         ref="basicInfor"
         class="floor-item"
@@ -153,11 +152,23 @@ export default {
       this.$api
         .getProxyDetailQueryDetail({ userName: val.userName })
         .then((res) => {
-          this.isShow = true
-          if (res.code === 200) {
+          if (res.code === 200 && res.data !== null) {
+            this.isShow = true
             this.outlineInfo = res.data
             this.parentData.userName = res.data.userName
             this.parentData.userId = res.data.id
+            this.getProxyDetailRemark(res.data.id)
+            this.getProxyDataBalance(res.data.id)
+            this.getProxyDataCommission(res.data.id)
+            this.getRechargeAndWithdrawInfo(res.data.id)
+            this.getProxyDetailProxyRechargeInfo(res.data.id)
+            this.getProxyDetailTeamInfo(res.data.id)
+            this.getProxyDetailTeamBet(res.data.id)
+            this.getProxyDetailTop3Bet(res.data.id)
+            this.getProxyDetailProxyLoginLog(res.data.id)
+          } else {
+            this.isShow = false
+            this.$message.success(res.msg)
           }
           this.$refs.basicInfor.activeL = false
           this.$refs.financialInfor.activeL = false
@@ -179,8 +190,8 @@ export default {
     getProxyDetailRemark(val) {
       const params = { userId: val, pageNum: 1, pageSize: 3 }
       this.$api.getProxyDetailRemark(params).then((res) => {
-        if (res === 200) {
-          this.remarksTableData = res
+        if (res.code === 200) {
+          this.remarksTableData = res.data
           console.log('备注信息', res)
         }
       })
@@ -189,8 +200,8 @@ export default {
     getProxyDataBalance(val) {
       const params = { userId: val }
       this.$api.getProxyDataBalance(params).then((res) => {
-        if (res === 200) {
-          this.balanceList = res
+        if (res.code === 200) {
+          this.balanceList = res.data
           console.log('代理余额', res)
         }
       })
@@ -199,8 +210,8 @@ export default {
     getProxyDataCommission(val) {
       const params = { userId: val }
       this.$api.getProxyDataCommission(params).then((res) => {
-        if (res === 200) {
-          this.commission = res
+        if (res.code === 200) {
+          this.commission = res.data
           console.log('佣金信息', res)
         }
       })
@@ -209,8 +220,8 @@ export default {
     getRechargeAndWithdrawInfo(val) {
       const params = { userId: val }
       this.$api.getRechargeAndWithdrawInfo(params).then((res) => {
-        if (res === 200) {
-          this.playerList = res
+        if (res.code === 200) {
+          this.playerList = res.data
           console.log('存提信息', res)
         }
       })
@@ -219,8 +230,8 @@ export default {
     getProxyDetailProxyRechargeInfo(val) {
       const params = { userId: val }
       this.$api.getProxyDetailProxyRechargeInfo(params).then((res) => {
-        if (res === 200) {
-          this.surrogateList = res
+        if (res.code === 200) {
+          this.surrogateList = res.data
           console.log('代存信息', res)
         }
       })
@@ -229,8 +240,8 @@ export default {
     getProxyDetailTeamInfo(val) {
       const params = { userId: val }
       this.$api.getProxyDetailTeamInfo(params).then((res) => {
-        if (res === 200) {
-          this.overviewList = res
+        if (res.code === 200) {
+          this.overviewList = res.data
           console.log('成员概况', res)
         }
       })
@@ -239,8 +250,8 @@ export default {
     getProxyDetailTeamBet(val) {
       const params = { userId: val }
       this.$api.getProxyDetailTeamBet(params).then((res) => {
-        if (res === 200) {
-          this.bettingList = res
+        if (res.code === 200) {
+          this.bettingList = res.data
           console.log('成员投注', res)
         }
       })
@@ -249,8 +260,8 @@ export default {
     getProxyDetailTop3Bet(val) {
       const params = { orderKey: 1, userId: val }
       this.$api.getProxyDetailTop3Bet(params).then((res) => {
-        if (res === 200) {
-          this.top3Sy = res
+        if (res.code === 200) {
+          this.top3Sy = res.data
           console.log('top3', res)
         }
       })
@@ -259,8 +270,8 @@ export default {
     getProxyDetailProxyLoginLog(val) {
       const params = { userId: val, pageNum: 1, pageSize: 10 }
       this.$api.getProxyDetailProxyLoginLog(params).then((res) => {
-        if (res === 200) {
-          this.lonRecord = res
+        if (res.code === 200) {
+          this.lonRecord = res.data
           console.log('登录日志', res)
         }
       })
@@ -320,7 +331,6 @@ export default {
       // const targetOffsetTop = document.querySelector(
       //   `.floor-item:nth-child(${index + 1})`
       // ).offsetTop;
-      console.log(targetOffsetTop)
       // 获取当前 offsetTop
       let scrollTop = document.documentElement.scrollTop || document.body.scrollTop
       // 定义一次跳 50 个像素，数字越大跳得越快，但是会有掉帧得感觉，步子迈大了会扯到蛋

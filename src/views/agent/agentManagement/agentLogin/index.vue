@@ -304,7 +304,7 @@ export default {
       this.queryData = {}
     },
     _changeTableSort({ column, prop, order }) {
-      if (prop === 'vipSerialNum') {
+      if (prop === 'loginTime') {
         prop = 1
       }
       this.queryData.orderKey = prop

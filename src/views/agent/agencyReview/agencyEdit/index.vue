@@ -52,7 +52,7 @@
 							:popper-append-to-body="false"
 						>
 							<el-option
-								v-for="item in accountType"
+								v-for="item in proxyAccountType"
 								:key="item.code"
 								:label="item.description"
 								:value="item.code"
@@ -258,7 +258,7 @@
 								<p>
 									{{
 										scope.row.accountType
-											? typeFilter(dataList.accountType, 'accountType')
+											? typeFilter(dataList.accountType, 'proxyAccountType')
 											: '-'
 									}}
 								</p>
@@ -378,8 +378,8 @@ export default {
 		}
 	},
 	computed: {
-		accountType() {
-			return this.globalDics.accountType
+		proxyAccountType() {
+			return this.globalDics.proxyAccountType
 		},
 		auditStatus() {
 			return this.globalDics.auditStatusType

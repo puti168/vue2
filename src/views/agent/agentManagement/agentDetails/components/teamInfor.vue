@@ -10,7 +10,7 @@
           <el-button
 type="primary"
 icon="el-icon-refresh"
-@click="refresh('余额')"
+@click="refresh('概览')"
 >刷新</el-button>
         </el-col>
       </el-row>
@@ -18,71 +18,71 @@ icon="el-icon-refresh"
     <el-row class="msgList">
       <el-col :span="4">
         下级人数： <i v-if="activeL" class="el-icon-loading"></i>
-        <span v-else> 123456 </span>
+        <span v-else> {{ resOverviewList.lowerLevelCount }} </span>
       </el-col>
       <el-col :span="4">
         活跃人数：<i v-if="activeL" class="el-icon-loading"></i>
-        <span v-else> 0 </span>
+        <span v-else> {{ resOverviewList.activeCount }} </span>
       </el-col>
       <el-col :span="4">
         有效活跃人数：<i v-if="activeL" class="el-icon-loading"></i>
-        <span v-else> 0 </span>
+        <span v-else> {{ resOverviewList.effectiveActiveCount }} </span>
       </el-col>
       <el-col :span="4">
         首存人数：<i v-if="activeL" class="el-icon-loading"></i>
-        <span v-else> 0 </span>
+        <span v-else> {{ resOverviewList.firstCount }} </span>
       </el-col>
       <el-col :span="8">
         首存金额：<i v-if="activeL" class="el-icon-loading"></i>
-        <span v-else> 0 </span>
+        <span v-else> {{ resOverviewList.firstAmount }} </span>
       </el-col>
       <el-col :span="4">
         今日新增： <i v-if="activeL" class="el-icon-loading"></i>
-        <span v-else> 123456 </span>
+        <span v-else> {{ resOverviewList.todayCount }} </span>
       </el-col>
       <el-col :span="4">
         今日活跃人数：<i v-if="activeL" class="el-icon-loading"></i>
-        <span v-else> 0 </span>
+        <span v-else> {{ resOverviewList.todayActiveCount }} </span>
       </el-col>
       <el-col :span="4">
         今日有效活跃人数：<i v-if="activeL" class="el-icon-loading"></i>
-        <span v-else> 0 </span>
+        <span v-else> {{ resOverviewList.todayEffectiveActiveCount }} </span>
       </el-col>
       <el-col :span="4">
         今日首存人数：<i v-if="activeL" class="el-icon-loading"></i>
-        <span v-else> 0 </span>
+        <span v-else> {{ resOverviewList.todayFirstCount }} </span>
       </el-col>
       <el-col :span="8">
         今日首存金额：<i v-if="activeL" class="el-icon-loading"></i>
-        <span v-else> 0 </span>
+        <span v-else> {{ resOverviewList.todayFirstAmount }} </span>
       </el-col>
       <el-col :span="4">
         本月新增： <i v-if="activeL" class="el-icon-loading"></i>
-        <span v-else> 123456 </span>
+        <span v-else> {{ resOverviewList.monthCount }} </span>
       </el-col>
       <el-col :span="4">
         本月活跃人数：<i v-if="activeL" class="el-icon-loading"></i>
-        <span v-else> 0 </span>
+        <span v-else> {{ resOverviewList.monthActiveCount }} </span>
       </el-col>
       <el-col :span="4">
         本月有效活跃人数：<i v-if="activeL" class="el-icon-loading"></i>
-        <span v-else> 0 </span>
+        <span v-else> {{ resOverviewList.monthEffectiveActiveCount }} </span>
       </el-col>
       <el-col :span="4">
         本月首存人数：<i v-if="activeL" class="el-icon-loading"></i>
-        <span v-else> 0 </span>
+        <span v-else> {{ resOverviewList.monthFirstCount }} </span>
       </el-col>
       <el-col :span="8">
         本月首存金额：<i v-if="activeL" class="el-icon-loading"></i>
-        <span v-else> 0 </span>
+        <span v-else> {{ resOverviewList.monthFirstAmount }} </span>
       </el-col>
       <el-col :span="4">
         转入会员人数：<i v-if="activeL" class="el-icon-loading"></i>
-        <span v-else> 0 </span>
+        <span v-else> {{ resOverviewList.transferInMemberCount }} </span>
       </el-col>
       <el-col :span="4">
         转出会员人数：<i v-if="activeL" class="el-icon-loading"></i>
-        <span v-else> 0 </span>
+        <span v-else> {{ resOverviewList.transferOutMemberCount }} </span>
       </el-col>
     </el-row>
     <el-divider></el-divider>
@@ -95,7 +95,7 @@ icon="el-icon-refresh"
           <el-button
 type="primary"
 icon="el-icon-refresh"
-@click="refresh"
+@click="refresh('投注')"
 >刷新</el-button>
         </el-col>
       </el-row>
@@ -103,53 +103,53 @@ icon="el-icon-refresh"
     <el-row class="msgList" style="margin-bottom: 30px">
       <el-col :span="4">
         今日活动： <i v-if="activeL" class="el-icon-loading"></i>
-        <span v-else> 0 </span>
+        <span v-else> {{ resBettingList.todayActive }} </span>
       </el-col>
       <el-col :span="4">
         今日返水： <i v-if="activeL" class="el-icon-loading"></i>
-        <span v-else> 0 </span>
+        <span v-else> {{ resBettingList.todayCashRebate }} </span>
       </el-col>
       <el-col :span="16">
         今日总派彩： <i v-if="activeL" class="el-icon-loading"></i>
-        <span v-else> 0 </span>
+        <span v-else> {{ resBettingList.todayPayout }} </span>
       </el-col>
       <el-col :span="4">
         今日总投注： <i v-if="activeL" class="el-icon-loading"></i>
-        <span v-else> 0 </span>
+        <span v-else> {{ resBettingList.todayBet }} </span>
       </el-col>
       <el-col :span="4">
         今日总有效投注： <i v-if="activeL" class="el-icon-loading"></i>
-        <span v-else> 0 </span>
+        <span v-else> {{ resBettingList.todayEffectiveBet }} </span>
       </el-col>
       <el-col :span="16">
         今日总输赢： <i v-if="activeL" class="el-icon-loading"></i>
-        <span v-else> 0 </span>
+        <span v-else> {{ resBettingList.todayWinAndLose }} </span>
       </el-col>
     </el-row>
     <el-row class="msgList">
       <el-col :span="4">
         本月活动： <i v-if="activeL" class="el-icon-loading"></i>
-        <span v-else> 0 </span>
+        <span v-else> {{ resBettingList.monthActive }} </span>
       </el-col>
       <el-col :span="4">
         本月返水： <i v-if="activeL" class="el-icon-loading"></i>
-        <span v-else> 0 </span>
+        <span v-else> {{ resBettingList.monthCashRebate }} </span>
       </el-col>
       <el-col :span="16">
         本月总派彩： <i v-if="activeL" class="el-icon-loading"></i>
-        <span v-else> 0 </span>
+        <span v-else> {{ resBettingList.monthPayout }} </span>
       </el-col>
       <el-col :span="4">
         本月总投注： <i v-if="activeL" class="el-icon-loading"></i>
-        <span v-else> 0 </span>
+        <span v-else> {{ resBettingList.monthBet }} </span>
       </el-col>
       <el-col :span="4">
         本月总有效投注： <i v-if="activeL" class="el-icon-loading"></i>
-        <span v-else> 0 </span>
+        <span v-else> {{ resBettingList.monthEffectiveBet }} </span>
       </el-col>
       <el-col :span="16">
         本月总输赢： <i v-if="activeL" class="el-icon-loading"></i>
-        <span v-else> 0 </span>
+        <span v-else> {{ resBettingList.monthWinAndLose }} </span>
       </el-col>
     </el-row>
     <el-divider></el-divider>
@@ -190,7 +190,6 @@ icon="el-icon-refresh"
         <el-table-column
           align="center"
           prop="gameName"
-          type="index"
           label="平台"
         ></el-table-column>
         <el-table-column
@@ -218,7 +217,6 @@ icon="el-icon-refresh"
         <el-table-column
           align="center"
           prop="gameName"
-          type="index"
           label="平台"
         ></el-table-column>
         <el-table-column
@@ -256,21 +254,38 @@ export default {
   data() {
     return {
       activeL: true,
-      moneyList: {
-        balance: '', // 提现冻结
-        freezeBalance: '' // 中心钱包
-      },
-      balanceAllList: [], // 一键查询所有场馆
-      resWaterList: {}, // 充提信息
+      resOverviewList: {}, // 成员概览
+      resBettingList: {}, // 成员投注
       top3SyList: [],
       top3TzList: [],
-      borderL: true,
       tabHeader: 'sy'
     }
   },
-  computed: {},
+  computed: {
+    overviewData() {
+      return this.overviewList
+    },
+    bettingData() {
+      return this.bettingList
+    },
+    top3SyData() {
+      return this.top3Sy
+    }
+  },
   watch: {
-    top3Sy: {
+    overviewData: {
+      handler(newV) {
+        this.resOverviewList = { ...newV }
+      },
+      deep: true
+    },
+    bettingData: {
+      handler(newV) {
+        this.resBettingList = { ...newV }
+      },
+      deep: true
+    },
+    top3SyData: {
       handler(newV) {
         this.top3SyList = newV
       },
@@ -280,35 +295,42 @@ export default {
   created() {},
   mounted() {},
   methods: {
-    // 查询余额
-    getProxyDataBalance(val) {
-      this.$api.getProxyDataBalance({ userId: val }).then((res) => {
+    // 成员概览
+    getProxyDetailTeamInfo(val) {
+      this.$api.getProxyDetailTeamInfo({ userId: val }).then((res) => {
         if (res.code === 200) {
-          this.moneyList.balance = res.data.balance
+          this.resOverviewList = res.data
         }
       })
     },
-    balanceAll() {
-      this.getOneKeyBalance(this.parentData.userId)
-      this.borderL = false
+    // 成员下注
+    getProxyDetailTeamBet(val) {
+      this.$api.getProxyDetailTeamBet({ userId: val }).then((res) => {
+        if (res.code === 200) {
+          this.resBettingList = res.data
+        }
+      })
     },
-    refresh() {
+    refresh(val) {
       const params = this.parentData.userId
-      this.getProxyDataBalance(params)
-      this.borderL = true
+      if (val === '概览') {
+        this.getProxyDetailTeamInfo(params)
+      } else {
+        this.getProxyDetailTeamBet(params)
+      }
     },
     tabHeaderFn(val) {
       this.tabHeader = val
       if (val === 'sy') {
         const params = { userId: this.parentData.userId, orderKey: 1 }
-        this.$api.getPlayerTop3(params).then((res) => {
+        this.$api.getProxyDetailTop3Bet(params).then((res) => {
           if (res.code === 200) {
             this.top3SyList = res.data
           }
         })
       } else {
         const params = { userId: this.parentData.userId, orderKey: 2 }
-        this.$api.getPlayerTop3(params).then((res) => {
+        this.$api.getProxyDetailTop3Bet(params).then((res) => {
           if (res.code === 200) {
             this.top3TzList = res.data
           }
@@ -354,10 +376,6 @@ export default {
 .msgList {
   line-height: 24px;
   margin-bottom: 10px;
-}
-.borderL {
-  min-height: 72px;
-  border-left: 1px solid #ccc;
 }
 .textR {
   text-align: right;
