@@ -52,7 +52,7 @@
 							:popper-append-to-body="false"
 						>
 							<el-option
-								v-for="item in accountType"
+								v-for="item in proxyAccountType"
 								:key="item.code"
 								:label="item.description"
 								:value="item.code"
@@ -112,7 +112,7 @@
 					</el-form-item>
 					<el-form-item label="锁单状态:">
 						<el-select
-							v-model="queryData.lockStatus"
+							v-model="queryData.lockOrder"
 							style="width: 180px"
 							:popper-append-to-body="false"
 						>
@@ -176,7 +176,7 @@
 										Number(scope.row.auditStep) === 1 &&
 											(scope.row.auditName === name || !scope.row.auditName)
 									"
-									v-model="scope.row.lockStatus"
+									v-model="scope.row.lockOrder"
 									@change="lockChange(scope.row)"
 								></el-checkbox>
 							</template>
@@ -258,7 +258,7 @@
 								<p>
 									{{
 										scope.row.accountType
-											? typeFilter(dataList.accountType, 'accountType')
+											? typeFilter(dataList.accountType, 'proxyAccountType')
 											: '-'
 									}}
 								</p>
@@ -360,7 +360,7 @@ export default {
 				auditStep: '',
 				applyName: '',
 				auditName: '',
-				lockStatus: '',
+				lockOrder: '',
 				auditNum: '',
 				orderType: '',
 				orderKey: ''
@@ -378,8 +378,8 @@ export default {
 		}
 	},
 	computed: {
-		accountType() {
-			return this.globalDics.accountType
+		proxyAccountType() {
+			return this.globalDics.proxyAccountType
 		},
 		auditStatus() {
 			return this.globalDics.auditStatusType
@@ -431,9 +431,9 @@ export default {
 						if (this.dataList) {
 							this.dataList.forEach((item) => {
 								if (Number(item.lockOrder) === 1) {
-									item.lockStatus = true
+									item.lockOrder = true
 								} else {
-									item.lockStatus = false
+									item.lockOrder = false
 								}
 							})
 						}
@@ -468,7 +468,7 @@ export default {
 				auditStep: '',
 				applyName: '',
 				auditName: '',
-				lockStatus: '',
+				lockOrder: '',
 				auditNum: '',
 				orderType: '',
 				orderKey: ''

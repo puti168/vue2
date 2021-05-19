@@ -1,7 +1,7 @@
 <template>
 	<div class="review-content">
 		<div class="head">
-			<span class="title">代理账户修改审核详情</span>
+			<span class="title">新增代理审核详情</span>
 			<div v-if="type" class="right-btn">
 				<el-button plain @click="goBack">取消</el-button>
 				<el-button type="success" @click="confirm(true)">一审通过</el-button>
@@ -13,69 +13,19 @@
 		</div>
 		<div class="main-content">
 			<div class="review-content">
-				<p class="name">代理注册信息</p>
+				<p class="name">新增代理信息</p>
 				<div class="review-flex">
-					<div>注册时间: {{ list.createDt }}</div>
 					<div>代理类型: {{ typeFilter(list.accountType, 'proxyAccountType') }}</div>
-					<div>上次登录时间: {{ list.lastLoginTime }}</div>
-					<div>注册端:  {{ typeFilter(list.deviceType, "deviceType") }}</div>
+					<div>代理账号: {{ list.userName }}</div>
+					<div>登录密码: {{ list.password }}</div>
 				</div>
 			</div>
 			<div class="review-content">
-				<p class="name">代理账号信息</p>
-				<div class="review-flex">
-					<div>账号: {{ list.userName }}</div>
-					<div>账号状态: {{ typeFilter(list.accountStatus, 'accountStatusType') }}</div>
-					<div>风控层级: {{ list.windControlName }}</div>
-					<div>代理标签: {{ list.labelName }}</div>
-				</div>
-				<div class="review-flex">
-					<div>备注信息: {{ list.remark }}</div>
-				</div>
-			</div>
-			<div class="review-content" style="height: 200px">
 				<p class="name">申请信息</p>
 				<div class="review-flex">
 					<div>申请人: {{ list.applyName }}</div>
 					<div>申请时间: {{ list.applyTime }}</div>
-					<div>审核申请类型: {{ typeFilter(list.applyType, 'applyType') }}</div>
-					<div>申请原因: {{ list.applyInfo }}</div>
-				</div>
-				<div class="review-flex">
-					<el-table
-						border
-						size="mini"
-						:data="[1]"
-						style="width: 100%"
-						:header-cell-style="getRowClass"
-					>
-						<el-table-column align="center" label="修改前">
-							<template>
-								<template v-if="Number(list.applyType === 2)">
-									{{ typeFilter(list.beforeModify, 'genderType') }}
-								</template>
-								<template v-else-if="Number(list.applyType === 6)">
-									{{ typeFilter(list.beforeModify, 'accountStatusType') }}
-								</template>
-								<template v-else>
-									{{ list.beforeModify ? list.beforeModify : '-' }}
-								</template>
-							</template>
-						</el-table-column>
-						<el-table-column align="center" label="修改后">
-							<template>
-								<template v-if="Number(list.applyType === 2)">
-									{{ typeFilter(list.afterModify, 'genderType') }}
-								</template>
-								<template v-else-if="Number(list.applyType === 6)">
-									{{ typeFilter(list.afterModify, 'accountStatusType') }}
-								</template>
-								<template v-else>
-									{{ list.afterModify ? list.afterModify : '-' }}
-								</template>
-							</template>
-						</el-table-column>
-					</el-table>
+					<div>申请信息: {{ list.applyInfo }}</div>
 				</div>
 			</div>
 			<div class="review-content">
@@ -84,7 +34,6 @@
 					<div>一审人: {{ list.auditName }}</div>
 					<div>一审时间: {{ list.auditTime }}</div>
 					<div>一审备注: {{ list.auditRemark }}</div>
-					<div>一审状态: {{ list.auditRemark }}</div>
 				</div>
 			</div>
 		</div>
@@ -231,7 +180,7 @@ export default {
 						}
 
 						this.$api
-							.proxyDataAudit(params)
+							.updateProxyAuditRecord(params)
 							.then((res) => {
 								loading.close()
 								if (res.code === 200) {
@@ -260,10 +209,9 @@ export default {
 		},
 		getInfo() {
 			const params = {
-				recordId: this.rowData.id,
-				userId: this.rowData.userId
+				id: this.rowData.id
 			}
-			this.$api.proxyDataRecordInfo(params).then((res) => {
+			this.$api.proxyDetail(params).then((res) => {
 				if (res.code === 200) {
 					const response = res.data
 					this.loading = false
