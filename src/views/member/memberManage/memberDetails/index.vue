@@ -167,7 +167,7 @@ export default {
             this.getBankCardBank(res.data.id)
           } else {
             this.isShow = false
-            this.$massage.success(res.msg)
+            this.$messag.success(res.msg)
           }
           this.$refs.first.activeL = false
           this.$refs.second.activeL = false
