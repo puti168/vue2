@@ -54,6 +54,25 @@ export function agentRegisterInfoAPI(data) {
 		data
 	})
 }
+
+// 代理==> 代理管理 ===> 代理银行卡记录
+export function agentBankRecordAPI(data) {
+	return request({
+		url: '/bankProxyRecord/bankRecord',
+		method: 'post',
+		data
+	})
+}
+
+// 代理==> 代理管理 ===> 代理虚拟币记录
+export function agentVirtualRecordAPI(data) {
+	return request({
+		url: '/bankProxyRecord/virtualRecord',
+		method: 'post',
+		data
+	})
+}
+
 // 代理==>  ===> 代理详情查询
 export function getProxyDetailQueryDetail(data) {
 	return request({
@@ -62,6 +81,7 @@ export function getProxyDetailQueryDetail(data) {
 		data
 	})
 }
+
 // 代理详情-基本信息-信息编辑
 export function setProxyDataInfoEdit(data) {
 	return request({
@@ -70,6 +90,7 @@ export function setProxyDataInfoEdit(data) {
 		data
 	})
 }
+
 // 代理详情-代理备注信息分页
 export function getProxyDetailRemark(data) {
 	return request({
@@ -78,6 +99,7 @@ export function getProxyDetailRemark(data) {
 		data
 	})
 }
+
 // 代理详情-余额查询接口
 export function getProxyDataBalance(data) {
 	return request({
@@ -86,6 +108,7 @@ export function getProxyDataBalance(data) {
 		data
 	})
 }
+
 // 代理详情-佣金信息
 export function getProxyDataCommission(data) {
 	return request({
@@ -94,6 +117,7 @@ export function getProxyDataCommission(data) {
 		data
 	})
 }
+
 // 代理详情-存提信息
 export function getRechargeAndWithdrawInfo(data) {
 	return request({
@@ -102,6 +126,7 @@ export function getRechargeAndWithdrawInfo(data) {
 		data
 	})
 }
+
 // 代理详情-代存信息
 export function getProxyDetailProxyRechargeInfo(data) {
 	return request({
@@ -110,6 +135,7 @@ export function getProxyDetailProxyRechargeInfo(data) {
 		data
 	})
 }
+
 // 代理详情-团队成员概览
 export function getProxyDetailTeamInfo(data) {
 	return request({
@@ -227,6 +253,8 @@ export default {
 	addAgentAPI,
 	memberTransAgentAPI,
 	agentRegisterInfoAPI,
+	agentBankRecordAPI,
+	agentVirtualRecordAPI,
 	getProxyDetailQueryDetail,
 	agentPictureListAPI,
 	agentPictureListDeleteAPI,

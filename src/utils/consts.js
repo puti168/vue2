@@ -25,11 +25,12 @@ export const routerNames = {
 	transformationReview: 'transformationReview',
 	gameSearchManage: 'gameSearchManage',
 	gameBetslipDetails: 'gameBetslipDetails',
-	pictureManagement: 'pictureManagement',
+	agentList: 'agentList',
 	agentBankCard: 'agentBankCard',
-	agentList: 'AgentList',
+	agentTrans: 'agentTrans',
+	pictureManagement: 'pictureManagement',
 	domainCreateAndEidt: 'domainCreateAndEidt',
-    levelWelfareConfig: 'levelWelfareConfig'
+	levelWelfareConfig: 'levelWelfareConfig'
 }
 const month = dayjs().month()
 const year = dayjs().year()
