@@ -111,7 +111,7 @@
 					</el-form-item>
 					<el-form-item label="转入代理账号:">
 						<el-input
-							v-model="queryData.transferproxyname"
+							v-model="queryData.transferProxyName"
 							clearable
 							size="medium"
 							style="width: 180px"
@@ -210,7 +210,7 @@
 							label="转代会员账号"
 						></el-table-column>
 						<el-table-column
-							prop="transferproxyname"
+							prop="transferProxyName"
 							align="center"
 							label="转入代理账号"
 						></el-table-column>
@@ -304,7 +304,6 @@ export default {
 		return {
 			queryData: {
 				userName: '',
-				applyType: '',
 				auditStatus: [],
 				auditStep: '',
 				transferProxyName: '',
@@ -339,9 +338,6 @@ export default {
 		},
 		lockOrderType() {
 			return this.globalDics.lockOrderType
-		},
-		applyType() {
-			return this.globalDics.applyType
 		}
 	},
 	mounted() {
@@ -354,16 +350,16 @@ export default {
 			const [startTime2, endTime2] = this.formTime.time2 || []
 			let params = {
 				...this.queryData,
-				applyTimeStart: startTime
+				applyStartTime: startTime
 					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
 					: '',
-				applyTimeEnd: endTime
+				applyEndTime: endTime
 					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
 					: '',
-				auditTimeStart: startTime2
+				auditStartTime: startTime2
 					? dayjs(startTime2).format('YYYY-MM-DD HH:mm:ss')
 					: '',
-				auditTimeEnd: endTime2
+				auditEndTime: endTime2
 					? dayjs(endTime2).format('YYYY-MM-DD HH:mm:ss')
 					: ''
 			}
@@ -377,7 +373,7 @@ export default {
 						this.now = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
 						const response = res.data
 						this.loading = false
-						this.dataList = response.record
+						this.dataList = response.records
 						if (this.dataList) {
 							this.dataList.forEach((item) => {
 								if (Number(item.lockOrder) === 1) {
@@ -387,7 +383,7 @@ export default {
 								}
 							})
 						}
-						this.total = response.totalRecord
+						this.total = response.total
 					} else {
 						this.loading = false
 						this.$message({
@@ -412,7 +408,6 @@ export default {
 		reset() {
 			this.queryData = {
 				userName: '',
-				applyType: '',
 				transferProxyName: '',
 				auditStatus: [],
 				auditStep: '',
@@ -439,7 +434,7 @@ export default {
 			this.$api
 				.memberTransferLockOrder({
 					id: val.id,
-					lockFlag: Number(val.lockOrder) === 0 ? 0 : 1
+					lockOrderStatus: Number(val.lockOrder) === 0 ? 0 : 1
 				})
 				.then((res) => {
 					if (res.code === 200) {

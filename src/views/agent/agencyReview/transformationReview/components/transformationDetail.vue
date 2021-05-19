@@ -262,8 +262,7 @@ export default {
 		},
 		getInfo() {
 			const params = {
-				recordId: this.rowData.id,
-				userId: this.rowData.userId
+				id: this.rowData.id
 			}
 			this.$api.memberTransferDetail(params).then((res) => {
 				if (res.code === 200) {
