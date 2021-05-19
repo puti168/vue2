@@ -56,6 +56,33 @@ export function playerAuditList(data) {
 		data
 	})
 }
+// 会员转代
+export function memberTransferAudit(data) {
+	return request({
+		url: '/memberTransfer/audit',
+		method: 'post',
+		data
+	})
+}
+export function memberTransferDetail(data) {
+	return request({
+		url: '/memberTransfer/detail',
+		method: 'post',
+		data
+	})
+} export function memberTransferLockOrder(data) {
+	return request({
+		url: '/memberTransfer/lockOrder',
+		method: 'post',
+		data
+	})
+} export function memberTransferSelectPage(data) {
+	return request({
+		url: '/memberTransfer/selectPage',
+		method: 'post',
+		data
+	})
+}
 // 新增代理审核
 export function lockProxyAuditRecord(data) {
 	return request({
@@ -152,6 +179,10 @@ export function addBlackList(data) {
 }
 
 export default {
+	memberTransferAudit,
+	memberTransferDetail,
+	memberTransferLockOrder,
+	memberTransferSelectPage,
 	updateProxyAuditRecord,
 	lockProxyAuditRecord,
 	proxyDetail,

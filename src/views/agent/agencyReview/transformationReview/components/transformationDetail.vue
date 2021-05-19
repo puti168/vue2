@@ -1,7 +1,7 @@
 <template>
 	<div class="review-content">
 		<div class="head">
-			<span class="title">代理账户修改审核详情</span>
+			<span class="title">会员转代审核详情</span>
 			<div v-if="type" class="right-btn">
 				<el-button plain @click="goBack">取消</el-button>
 				<el-button type="success" @click="confirm(true)">一审通过</el-button>
@@ -13,12 +13,16 @@
 		</div>
 		<div class="main-content">
 			<div class="review-content">
-				<p class="name">代理注册信息</p>
+				<p class="name">转代会员信息</p>
 				<div class="review-flex">
-					<div>注册时间: {{ list.createDt }}</div>
+					<div>会员账号: {{ list.createDt }}</div>
+					<div>账号类型: {{ typeFilter(list.accountType, 'proxyAccountType') }}</div>
+					<div>注册时间: {{ list.lastLoginTime }}</div>
+				</div>
+				<div class="review-flex">
+					<div>当前上级代理: {{ list.createDt }}</div>
 					<div>代理类型: {{ typeFilter(list.accountType, 'proxyAccountType') }}</div>
-					<div>上次登录时间: {{ list.lastLoginTime }}</div>
-					<div>注册端:  {{ typeFilter(list.deviceType, "deviceType") }}</div>
+					<div>绑定时间: {{ list.lastLoginTime }}</div>
 				</div>
 			</div>
 			<div class="review-content">
@@ -192,7 +196,7 @@ export default {
 				}
 
 				this.$api
-					.proxyDataAudit(params)
+					.memberTransferAudit(params)
 					.then((res) => {
 						loading.close()
 						if (res.code === 200) {
@@ -229,7 +233,7 @@ export default {
 						}
 
 						this.$api
-							.proxyDataAudit(params)
+							.memberTransferAudit(params)
 							.then((res) => {
 								loading.close()
 								if (res.code === 200) {
@@ -258,10 +262,9 @@ export default {
 		},
 		getInfo() {
 			const params = {
-				recordId: this.rowData.id,
-				userId: this.rowData.userId
+				id: this.rowData.id
 			}
-			this.$api.proxyDataRecordInfo(params).then((res) => {
+			this.$api.memberTransferDetail(params).then((res) => {
 				if (res.code === 200) {
 					const response = res.data
 					this.loading = false

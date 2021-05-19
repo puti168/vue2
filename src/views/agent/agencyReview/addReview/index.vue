@@ -51,7 +51,7 @@
 					</el-form-item>
 					<el-form-item label="锁单状态:">
 						<el-select
-							v-model="queryData.lockStatus"
+							v-model="queryData.lockOrder"
 							style="width: 180px"
 							:popper-append-to-body="false"
 						>
@@ -267,7 +267,7 @@ const start = dayjs()
 	.startOf('day')
 	.valueOf()
 export default {
-	name: routerNames.agencyEdit,
+	name: routerNames.addReview,
 	components: { addDetail },
 	mixins: [list],
 	data() {
@@ -275,7 +275,7 @@ export default {
 			queryData: {
 				auditStatusList: [],
 				auditStep: '',
-				lockStatus: '',
+				lockOrder: '',
 				applyName: '',
 				auditName: '',
 				auditNum: '',
@@ -380,7 +380,7 @@ export default {
 			this.queryData = {
 				auditStatusList: [],
 				auditStep: '',
-				lockStatus: '',
+				lockOrder: '',
 				applyName: '',
 				auditName: '',
 				auditNum: '',
