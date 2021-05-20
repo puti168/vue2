@@ -37,6 +37,7 @@
 						<el-input
 							v-model="queryData.userName"
 							clearable
+							:maxlength="11"
 							size="medium"
 							style="width: 180px"
 							placeholder="请输入"
@@ -93,6 +94,7 @@
 					<el-form-item label="申请人:">
 						<el-input
 							v-model="queryData.applyName"
+							:maxlength="12"
 							clearable
 							size="medium"
 							style="width: 180px"
@@ -105,6 +107,7 @@
 							v-model="queryData.auditName"
 							clearable
 							size="medium"
+							:maxlength="12"
 							style="width: 180px"
 							placeholder="请输入"
 							@keyup.enter.native="enterSearch"
@@ -130,6 +133,7 @@
 							v-model="queryData.auditNum"
 							clearable
 							size="medium"
+							:maxlength="19"
 							style="width: 180px"
 							placeholder="请输入"
 							@keyup.enter.native="enterSearch"

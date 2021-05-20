@@ -8,12 +8,10 @@ const getters = {
 	lookUpData: (state) => state.app.lookUpData,
 	token: (state) => state.user.token,
 	avatar: (state) => state.user.avatar,
-	name: (state) => state.user.nickName,
 	nowRoute: (state) => state.permission.nowRoute,
 	globalDics: (state) => state.user.globalDics,
 	username: (state) => state.user.username,
 	userId: (state) => state.user.id,
-	tree: (state) => state.user.tree,
 	userInfo: (state) => state.user.userInfo,
 	// 按钮权限
 	buttonPermissions: (state) => state.permission.userBtns

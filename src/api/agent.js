@@ -54,7 +54,35 @@ export function agentRegisterInfoAPI(data) {
 		data
 	})
 }
-
+// 溢出审核
+export function listOverflowMember(data) {
+	return request({
+		url: '/memberOverflow/listOverflowMember',
+		method: 'post',
+		data
+	})
+}
+export function lockMemberAuditRecord(data) {
+	return request({
+		url: '/memberOverflow/lockMemberAuditRecord',
+		method: 'post',
+		data
+	})
+}
+export function memberOverflowDetail(data) {
+	return request({
+		url: '/memberOverflow/memberOverflowDetail',
+		method: 'post',
+		data
+	})
+}
+export function updateMemberOverflowRecord(data) {
+	return request({
+		url: '/memberOverflow/updateMemberOverflowRecord',
+		method: 'post',
+		data
+	})
+}
 // 代理==> 代理管理 ===> 代理银行卡记录
 export function agentBankRecordAPI(data) {
 	return request({
@@ -257,6 +285,10 @@ export function setDomainUpdate(data) {
 }
 
 export default {
+	updateMemberOverflowRecord,
+	memberOverflowDetail,
+	lockMemberAuditRecord,
+	listOverflowMember,
 	AgentListAPI,
 	agentListExportAPI,
 	agentDictAPI,

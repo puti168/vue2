@@ -84,6 +84,7 @@
 							v-model="queryData.applyName"
 							clearable
 							size="medium"
+							:maxlength="12"
 							style="width: 180px"
 							placeholder="请输入"
 							@keyup.enter.native="enterSearch"
@@ -94,6 +95,7 @@
 							v-model="queryData.auditName"
 							clearable
 							size="medium"
+							:maxlength="12"
 							style="width: 180px"
 							placeholder="请输入"
 							@keyup.enter.native="enterSearch"
@@ -104,6 +106,7 @@
 							v-model="queryData.auditNum"
 							clearable
 							size="medium"
+							:maxlength="19"
 							style="width: 180px"
 							placeholder="请输入"
 							@keyup.enter.native="enterSearch"
