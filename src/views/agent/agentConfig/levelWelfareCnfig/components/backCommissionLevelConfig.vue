@@ -1,6 +1,7 @@
 <template>
   <div class="view-container dealer-container">
     <el-button
+      v-show="!edit"
       type="warning"
       icon="el-icon-folder"
       :disabled="loading"
@@ -17,50 +18,43 @@
         border
         size="mini"
         class="small-size-table"
-        :data="backCommDataList"
+        :data="backCommData"
         style="width: 100%"
         :header-cell-style="getRowClass"
         @sort-change="changeTableSort"
       >
-        <el-table-column prop="code" align="center" label="序号"></el-table-column>
+        <el-table-column type="index" align="center" label="序号"></el-table-column>
         <el-table-column
-          prop="commissionLevel"
+          prop="rebateLevel"
           align="center"
           label="佣金等级"
         ></el-table-column>
+        <el-table-column prop="totalMinNetAmount" align="center" label="本月总输赢">
+          <template slot-scope="scope">
+            {{ scope.row.totalMinNetAmount }} ~
+            {{ scope.row.totalMaxNetAmount }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="monthActiveNum" align="center" label="本月活跃人数">
+          <template slot-scope="scope"> ≥ &nbsp;{{ scope.row.monthActiveNum }} </template>
+        </el-table-column>
+        <el-table-column prop="commissionRate" align="center" label="佣金比例">
+          <template slot-scope="scope"> {{ scope.row.commissionRate }}% </template>
+        </el-table-column>
+        <el-table-column prop="createdBy" align="center" label="创建人"></el-table-column>
         <el-table-column
-          prop="totalProfit"
-          align="center"
-          label="本月总输赢"
-        ></el-table-column>
-        <el-table-column
-          prop="activeCount"
-          align="center"
-          label="本月活跃人数"
-        ></el-table-column>
-        <el-table-column
-          prop="commissionRate"
-          align="center"
-          label="佣金比例"
-        ></el-table-column>
-        <el-table-column
-          prop="createUser"
-          align="center"
-          label="创建人"
-        ></el-table-column>
-        <el-table-column
-          prop="createTime"
+          prop="createdAt"
           align="center"
           label="创建时间"
           sortable="custom"
         ></el-table-column>
         <el-table-column
-          prop="modifyUser"
+          prop="updatedBy"
           align="center"
           label="最近操作人"
         ></el-table-column>
         <el-table-column
-          prop="modifyTime"
+          prop="updatedAt"
           align="center"
           label="最近操作时间"
           sortable="custom"
@@ -155,12 +149,29 @@ export default {
       this.edit = true
     },
     openEdit(val) {
+      const {
+        id,
+        rebateLevel,
+        totalMinNetAmount,
+        totalMaxNetAmount,
+        monthActiveNum,
+        commissionRate
+      } = { ...val }
+      this.editRowData = {
+        id,
+        rebateLevel,
+        totalMinNetAmount,
+        totalMaxNetAmount,
+        monthActiveNum,
+        commissionRate
+      }
       this.edit = true
     },
     back() {
       this.edit = false
     },
     // 删除
+
     confined(val) {
       this.$confirm(
         `<strong>是否删除该条配置?</strong></br><span style='font-size:12px;color:#c1c1c1'>请谨慎操作</span>`,
@@ -173,12 +184,43 @@ export default {
         }
       )
         .then(() => {
-          // this.getOneKeyWithdraw({ userId: this.parentData.userId }) // 一键下分
+          this.setProxyCommissionDelete(val)
         })
         .catch(() => {})
+    },
+    setProxyCommissionDelete(val) {
+      this.$api.setProxyCommissionDelete({ id: val.id }).then((res) => {
+        if (res.code === 200) {
+          this.$message.success('删除成功')
+          this.loadData()
+        }
+      })
+    },
+    changeTableSort({ column, prop, order }) {
+      if (prop === 'createdAt') {
+        prop = 1
+      }
+      if (prop === 'updatedAt') {
+        prop = 2
+      }
+      this.queryData.orderKey = prop
+      if (order === 'ascending') {
+        // 升序
+        this.queryData.orderType = 'asc'
+      } else if (column.order === 'descending') {
+        // 降序
+        this.queryData.orderType = 'desc'
+      }
+      this.loadData()
     }
   }
 }
 </script>
 
-<style scoped></style>
+<style lang="scss" scoped>
+.fr {
+  position: fixed;
+  top: 126px;
+  right: 20px;
+}
+</style>

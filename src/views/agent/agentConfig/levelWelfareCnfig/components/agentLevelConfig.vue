@@ -1,6 +1,7 @@
 <template>
   <div class="view-container dealer-container">
     <el-button
+      v-show="!edit"
       type="warning"
       icon="el-icon-folder"
       :disabled="loading"
@@ -28,27 +29,22 @@
           align="center"
           label="代理等级"
         ></el-table-column>
-        <el-table-column
-          prop="monthActiveNum"
-          align="center"
-          label="本月活跃人数"
-        ></el-table-column>
-        <el-table-column
-          prop="monthNewNum"
-          align="center"
-          label="本月新增活跃人数"
-        ></el-table-column>
+        <el-table-column prop="monthActiveNum" align="center" label="本月活跃人数">
+          <template slot-scope="scope"> ≥ &nbsp;{{ scope.row.monthActiveNum }} </template>
+        </el-table-column>
+        <el-table-column prop="monthNewNum" align="center" label="本月新增活跃人数">
+          <template slot-scope="scope"> ≥ &nbsp;{{ scope.row.monthNewNum }} </template>
+        </el-table-column>
         <el-table-column align="center" label="等级福利">
           <template slot-scope="scope">
-            {{ scope.row.additionalCommission }}
-            {{ scope.row.additionalCommissionLimit }}
+            佣金加赠{{ scope.row.additionalCommission }}%, 最高{{
+              scope.row.additionalCommissionLimit
+            }}元
           </template>
         </el-table-column>
-        <el-table-column
-          prop="giveJackpot"
-          align="center"
-          label="游戏彩金"
-        ></el-table-column>
+        <el-table-column prop="giveJackpot" align="center" label="游戏彩金">
+          <template slot-scope="scope"> {{ scope.row.giveJackpot }}元 </template>
+        </el-table-column>
         <el-table-column prop="createdBy" align="center" label="创建人"></el-table-column>
         <el-table-column
           prop="createdAt"
@@ -157,14 +153,31 @@ export default {
       this.edit = true
     },
     openEdit(val) {
-      this.editRowData = val
+      const {
+        id,
+        proxyGradeName,
+        monthActiveNum,
+        monthNewNum,
+        additionalCommission,
+        additionalCommissionLimit,
+        giveJackpot
+      } = { ...val }
+      this.editRowData = {
+        id,
+        proxyGradeName,
+        monthActiveNum,
+        monthNewNum,
+        additionalCommission,
+        additionalCommissionLimit,
+        giveJackpot
+      }
       this.edit = true
     },
     back() {
       this.edit = false
     },
     // 删除
-    confined() {
+    confined(val) {
       this.$confirm(
         `<strong>是否删除该条配置?</strong></br><span style='font-size:12px;color:#c1c1c1'>请谨慎操作</span>`,
         '确认提示',
@@ -176,9 +189,17 @@ export default {
         }
       )
         .then(() => {
-          // this.getOneKeyWithdraw({ userId: this.parentData.userId }) // 一键下分
+          this.setProxyGradeDelete(val)
         })
         .catch(() => {})
+    },
+    setProxyGradeDelete(val) {
+      this.$api.setProxyGradeDelete({ id: val.id }).then((res) => {
+        if (res.code === 200) {
+          this.$message.success('删除成功')
+          this.loadData()
+        }
+      })
     },
     changeTableSort({ column, prop, order }) {
       if (prop === 'createdAt') {
