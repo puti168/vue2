@@ -299,7 +299,7 @@ export default {
         }
       })
     },
-    enterSubmit() {
+    enterSearch() {
       this.query()
     },
     reset() {
