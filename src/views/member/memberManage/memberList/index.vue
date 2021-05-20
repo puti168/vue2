@@ -551,7 +551,7 @@ export default {
 	},
 	computed: {
 		accountStatusArr() {
-			return [...this.globalDics.accountStatusType]
+			return this.globalDics.accountStatusType
 		},
 		accountTypeArr() {
 			return this.globalDics.accountType
@@ -569,7 +569,11 @@ export default {
 			this.dataList = []
 			this.loading = true
 			const create = this.queryData.registerTime || []
+			const lastLoginTime = this.queryData.lastLoginTime || []
+			const firstSaveTime = this.queryData.firstSaveTime || []
 			const [startTime, endTime] = create
+			const [loginTimeStart, loginTimeEnd] = lastLoginTime
+			const [firstDepositTimeStart, firstDepositTimeEnd] = firstSaveTime
 			let params = {
 				...this.queryData,
 				createDtStart: startTime
@@ -577,6 +581,18 @@ export default {
 					: undefined,
 				createDtEnd: endTime
 					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
+					: undefined,
+				lastLoginTimeStart: loginTimeStart
+					? dayjs(loginTimeStart).format('YYYY-MM-DD HH:mm:ss')
+					: undefined,
+				lastLoginTimeEnd: loginTimeEnd
+					? dayjs(loginTimeEnd).format('YYYY-MM-DD HH:mm:ss')
+					: undefined,
+				firstDepositTimeStart: firstDepositTimeStart
+					? dayjs(firstDepositTimeStart).format('YYYY-MM-DD HH:mm:ss')
+					: undefined,
+				firstDepositTimeEnd: firstDepositTimeEnd
+					? dayjs(firstDepositTimeEnd).format('YYYY-MM-DD HH:mm:ss')
 					: undefined
 			}
 			params = {
@@ -776,7 +792,11 @@ export default {
 		},
 		exportExcel() {
 			const create = this.queryData.registerTime || []
+			const lastLoginTime = this.queryData.lastLoginTime || []
+			const firstSaveTime = this.queryData.firstSaveTime || []
 			const [startTime, endTime] = create
+			const [loginTimeStart, loginTimeEnd] = lastLoginTime
+			const [firstDepositTimeStart, firstDepositTimeEnd] = firstSaveTime
 			let params = {
 				...this.queryData,
 				createDtStart: startTime
@@ -784,6 +804,18 @@ export default {
 					: undefined,
 				createDtEnd: endTime
 					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
+					: undefined,
+				lastLoginTimeStart: loginTimeStart
+					? dayjs(loginTimeStart).format('YYYY-MM-DD HH:mm:ss')
+					: undefined,
+				lastLoginTimeEnd: loginTimeEnd
+					? dayjs(loginTimeEnd).format('YYYY-MM-DD HH:mm:ss')
+					: undefined,
+				firstDepositTimeStart: firstDepositTimeStart
+					? dayjs(firstDepositTimeStart).format('YYYY-MM-DD HH:mm:ss')
+					: undefined,
+				firstDepositTimeEnd: firstDepositTimeEnd
+					? dayjs(firstDepositTimeEnd).format('YYYY-MM-DD HH:mm:ss')
 					: undefined
 			}
 			params = {
@@ -808,16 +840,15 @@ export default {
 							type: 'application/octet-stream'
 						})
 						if ('download' in document.createElement('a')) {
-							const elink = document.createElement('a')
-							elink.download = fileName || ''
-							elink.style.display = 'none'
-							elink.href = URL.createObjectURL(blob)
-							document.body.appendChild(elink)
-							elink.click()
-							URL.revokeObjectURL(elink.href)
-							document.body.removeChild(elink)
+							const downloadLink = document.createElement('a')
+							downloadLink.download = fileName || ''
+							downloadLink.style.display = 'none'
+							downloadLink.href = URL.createObjectURL(blob)
+							document.body.appendChild(downloadLink)
+							downloadLink.click()
+							URL.revokeObjectURL(downloadLink.href)
+							document.body.removeChild(downloadLink)
 						} else {
-							console.log('进来', 111)
 							window.navigator.msSaveBlob(blob, fileName)
 						}
 						this.$message({
