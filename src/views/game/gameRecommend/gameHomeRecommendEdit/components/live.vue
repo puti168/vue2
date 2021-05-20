@@ -44,9 +44,9 @@
                                 width="220px"
                             >
                                 <template slot-scope="scope">
-									<span v-if="!!scope.row.bankName">
+									<span v-if="!!scope.row.mainTitleInfo">
 										<el-input
-                                            v-model="scope.row.bankName"
+                                            v-model="scope.row.mainTitleInfo"
                                             size="medium"
                                             maxlength="20"
                                             placeholder="请输入"
@@ -58,15 +58,15 @@
                                 </template>
                             </el-table-column>
                             <el-table-column
-                                prop="accountType"
+                                prop="iconAddress"
                                 align="center"
                                 label="图标上传"
                                 width="220px"
                             >
                                 <template slot-scope="scope">
-									<span v-if="!!scope.row.bankName">
+									<span v-if="!!scope.row.iconAddress">
 										<el-input
-                                            v-model="scope.row.bankName"
+                                            v-model="scope.row.iconAddress"
                                             size="medium"
                                             maxlength="20"
                                             placeholder="请输入"
@@ -78,15 +78,15 @@
                                 </template>
                             </el-table-column>
                             <el-table-column
-                                prop="accountType"
+                                prop="videoSourceAddress"
                                 align="center"
                                 label="视频源地址"
                                 width="220px"
                             >
                                 <template slot-scope="scope">
-									<span v-if="!!scope.row.bankName">
+									<span v-if="!!scope.row.videoSourceAddress">
 										<el-input
-                                            v-model="scope.row.bankName"
+                                            v-model="scope.row.videoSourceAddress"
                                             size="medium"
                                             maxlength="20"
                                             placeholder="请输入"
@@ -98,15 +98,15 @@
                                 </template>
                             </el-table-column>
                             <el-table-column
-                                prop="accountType"
+                                prop="moduleStatus"
                                 align="center"
                                 label="状态"
                                 width="220px"
                             >
                                 <template slot-scope="scope">
-									<span v-if="!!scope.row.bankName">
+									<span v-if="!!scope.row.moduleStatus">
 										<el-input
-                                            v-model="scope.row.bankName"
+                                            v-model="scope.row.moduleStatus"
                                             size="medium"
                                             maxlength="20"
                                             placeholder="请输入"
