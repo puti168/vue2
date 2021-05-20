@@ -103,6 +103,7 @@
 						placeholder="请输入"
 						clearable
 						maxlength="32"
+                        oninput="value=value.replace(/(^\s*)|(\s*$)/g ,'')"
 						style="width: 365px"
 					></el-input>
 				</el-form-item>
