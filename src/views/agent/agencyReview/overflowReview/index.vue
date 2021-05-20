@@ -236,7 +236,12 @@
 								</span>
 							</template>
 							<template slot-scope="scope">
-								{{ scope.row.auditName ? scope.row.auditName : '-' }}
+								<Copy
+									v-if="!!scope.row.auditName"
+									:title="scope.row.auditName"
+									:copy="copy"
+								/>
+								<span v-else>-</span>
 								<p>{{ scope.row.auditTime ? scope.row.auditTime : '-' }}</p>
 							</template>
 						</el-table-column>
@@ -249,7 +254,12 @@
 								</span>
 							</template>
 							<template slot-scope="scope">
-								{{ scope.row.auditName ? scope.row.auditName : '-' }}
+								<Copy
+									v-if="!!scope.row.auditName"
+									:title="scope.row.auditName"
+									:copy="copy"
+								/>
+								<span v-else>-</span>
 								<p>{{ scope.row.auditTime ? scope.row.auditTime : '-' }}</p>
 							</template>
 						</el-table-column>

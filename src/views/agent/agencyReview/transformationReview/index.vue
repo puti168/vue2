@@ -213,12 +213,26 @@
 							prop="userName"
 							align="center"
 							label="转代会员账号"
-						></el-table-column>
+						><template slot-scope="scope">
+								<Copy
+									v-if="!!scope.row.userName"
+									:title="scope.row.userName"
+									:copy="copy"
+								/>
+								<span v-else>-</span>
+							</template></el-table-column>
 						<el-table-column
 							prop="transferProxyName"
 							align="center"
 							label="转入代理账号"
-						></el-table-column>
+						><template slot-scope="scope">
+								<Copy
+									v-if="!!scope.row.transferProxyName"
+									:title="scope.row.transferProxyName"
+									:copy="copy"
+								/>
+								<span v-else>-</span>
+							</template></el-table-column>
 						<el-table-column
 							prop="applyName"
 							align="center"
