@@ -95,15 +95,16 @@ const ifVersionCorrect = async (to, from, next) => {
 }
 
 router.beforeEach(async (to, from, next) => {
-	if (
-		process.env.NODE_ENV === 'development' ||
-		process.env.NODE_ENV === 'test'
-	) {
-		ifVersionCorrect(to, from, next)
-	} else {
-		// 检测版本
-		checkVersion(to, from, next)
-	}
+	checkVersion(to, from, next)
+	// if (
+	// 	process.env.NODE_ENV === 'development' ||
+	// 	process.env.NODE_ENV === 'test'
+	// ) {
+	// 	ifVersionCorrect(to, from, next)
+	// } else {
+	// 	// 检测版本
+
+	// }
 })
 router.afterEach(() => {
 	NProgress.done()

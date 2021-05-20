@@ -35,7 +35,7 @@
 					<p class="name">会员账号信息</p>
 					<div class="review-flex">
 						<div>账号: {{ accountInfo.userName }}</div>
-						<div>账号状态: {{ accountInfo.accountStatus }}</div>
+						<div>账号状态: {{ typeFilter(accountInfo.accountStatus, 'accountStatusType') }}</div>
 						<div>VIP等级: {{ accountInfo.viptualNum }}</div>
 						<div>银行卡数量: {{ accountInfo.cardNum }}</div>
 					</div>
