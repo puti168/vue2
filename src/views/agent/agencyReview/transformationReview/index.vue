@@ -166,7 +166,7 @@
 						:data="dataList"
 						style="width: 100%"
 						:header-cell-style="getRowClass"
-						@sort-change="changeTableSort"
+						@sort-change="changeTableSort2"
 					>
 						<el-table-column align="center" label="锁单" width="60">
 							<template slot-scope="scope">
@@ -400,6 +400,18 @@ export default {
 				.catch(() => {
 					this.loading = false
 				})
+		},
+		changeTableSort2({ column, prop, order }) {
+			this.pageNum = 1
+			this.queryData.orderKey = prop === 'applyTime' ? 1 : 2
+			if (order === 'ascending') {
+				// 升序
+				this.queryData.orderType = 'asc'
+			} else if (column.order === 'descending') {
+				// 降序
+				this.queryData.orderType = 'desc'
+			}
+			this.loadData()
 		},
 		goDetail(row) {
 			this.type = Number(row.auditStep) === 1 && row.auditName === this.name

@@ -227,7 +227,7 @@
 							align="center"
 							label="审核单号"
 						></el-table-column>
-                        <el-table-column align="center" sortable="custom" width="200px">
+                        <el-table-column align="center" width="200px">
 							<template slot="header">
 								<span>
 									申请代理
@@ -240,7 +240,7 @@
 								<p>{{ scope.row.auditTime ? scope.row.auditTime : '-' }}</p>
 							</template>
 						</el-table-column>
-                        <el-table-column align="center" sortable="custom" width="200px">
+                        <el-table-column align="center" width="200px">
 							<template slot="header">
 								<span>
 									溢出账号
