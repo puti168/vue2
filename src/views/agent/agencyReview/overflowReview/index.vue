@@ -255,12 +255,12 @@
 							</template>
 							<template slot-scope="scope">
 								<Copy
-									v-if="!!scope.row.auditName"
-									:title="scope.row.auditName"
+									v-if="!!scope.row.userName"
+									:title="scope.row.userName"
 									:copy="copy"
 								/>
 								<span v-else>-</span>
-								<p>{{ scope.row.auditTime ? scope.row.auditTime : '-' }}</p>
+								<p>{{ scope.row.accountType ? typeFilter(scope.row.accountType, 'accountType') : '-' }}</p>
 							</template>
 						</el-table-column>
 						<el-table-column

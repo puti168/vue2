@@ -18,13 +18,13 @@
 					<div>注册时间: {{ list.proxyRegistTime }}</div>
 					<div>代理类型: {{ typeFilter(list.accountType, 'proxyAccountType') }}</div>
 					<div>上次登录时间: {{ list.proxyLastLoginTime }}</div>
-					<div>注册端: {{ list.password }}</div>
+					<div>注册端: {{ list.deviceType }}</div>
 				</div>
 			</div>
 			<div class="review-content">
 				<p class="name">代理账号信息</p>
 				<div class="review-flex">
-					<div>账号: {{ list.transferProxyName }}</div>
+					<div>账号: {{ list.userName }}</div>
 					<div>账号状态: {{ typeFilter(list.proxyAccountStatus, 'proxyAccountStatusType') }}</div>
 					<div>风控层级: {{ list.proxyWindControlName }}</div>
 					<div>代理标签: {{ list.proxyLabelName }}</div>
@@ -175,7 +175,6 @@ export default {
 				})
 				const params = {
 					id: this.rowData.id,
-					userId: this.rowData.userId,
 					auditRemark: this.form.remark,
 					auditStatus: this.action ? 2 : 3
 				}

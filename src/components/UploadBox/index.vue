@@ -23,18 +23,7 @@
 					state === 'image' || state === 'image/gif' || state === 'image/jpeg'
 				"
 			>
-				<img v-if="isImage" :src="fileUrl" class="avatar imgSize" alt />
-				<video
-					v-else
-					:src="fileUrl"
-					class="avatar imgSize"
-					@click.stop="handleClick"
-				/>
-				<!--				<i-->
-				<!--					icon-class="bb_icon_delete"-->
-				<!--					class="delete-icon"-->
-				<!--					@click.stop="handleDeleteImgUrl"-->
-				<!--				/>-->
+				<img :src="fileUrl" class="avatar imgSize" alt />
 				<i class="delete-icon" @click.stop="handleDeleteImgUrl"></i>
 			</div>
 			<i
@@ -42,20 +31,13 @@
 				@click.stop="handleDeleteImgUrl"
 			></i>
 		</el-upload>
-		<el-dialog v-if="isImage" :visible.sync="dialogVisible" size="tiny">
+		<el-dialog :visible.sync="dialogVisible" size="tiny">
 			<img width="100%" :src="dialogUrl" alt />
 		</el-dialog>
-		<Video
-			v-else
-			:src="dialogUrl"
-			:value="dialogVisible"
-			@input="handleClose"
-		/>
 	</div>
 </template>
 
 <script>
-import Video from '@/components/Video'
 const FileTypeConst = {
 	ImageJpeg: 'image/jpeg',
 	ImagePng: 'image/png',
@@ -81,9 +63,7 @@ const UploadStateConst = {
 }
 export default {
 	name: 'UploadBox',
-	components: {
-		Video
-	},
+	components: {},
 	props: {
 		size: {
 			type: String,
@@ -173,8 +153,7 @@ export default {
 				this.state = UploadStateConst.showAdd
 			}
 		},
-		state(value) {
-		}
+		state(value) {}
 	},
 	mounted() {
 		console.log(this.boundflag, 'boundflag')

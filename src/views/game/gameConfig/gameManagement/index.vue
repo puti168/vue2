@@ -245,7 +245,7 @@
 						width="100px"
 					>
 						<template slot-scope="scope">
-							{{ labelListFilter(scope.row.gameLabelName) }}
+							{{ scope.row.gameLabelName }}
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -309,7 +309,7 @@
 							<el-button
 								v-if="Number(scope.row.gameStatus) !== 2"
 								:disabled="loading"
-								type="success"
+								type="warning"
 								size="medium"
 								class="noicon"
 								@click="changeStatus(scope.row.id, 2)"
@@ -508,31 +508,40 @@ export default {
 			return name
 		},
 		gameManageListFilter(val) {
+			const arr = val.split(',')
 			let name = ''
 			this.gameManageList.forEach((item) => {
-				if (item.gameId === val) {
-					name = item.gameName
-				}
+				arr.forEach((data) => {
+					if (item.gameId + '' === data + '') {
+						name = name + item.gameName + '/'
+					}
+				})
 			})
-			return name
+			return name.slice(0, -1)
 		},
 		moduleFilter(val) {
+			const arr = val.split(',')
 			let name = ''
 			this.gameModuleNameList.forEach((item) => {
-				if (item.moduleId === val) {
-					name = item.moduleName
-				}
+				arr.forEach((data) => {
+					if (item.moduleId + '' === data + '') {
+						name = name + item.moduleName + '/'
+					}
+				})
 			})
-			return name
+			return name.slice(0, -1)
 		},
 		labelListFilter(val) {
+			const arr = val.split(',')
 			let name = ''
 			this.labelList.forEach((item) => {
-				if (item.gameLabelId === val) {
-					name = item.gameLabelName
-				}
+				arr.forEach((data) => {
+					if (item.gameLabelId + '' === data + '') {
+						name = name + item.gameLabelName + '/'
+					}
+				})
 			})
-			return name
+			return name.slice(0, -1)
 		},
 		lookGame(val) {
 			this.dialogGameVisible = true
@@ -540,8 +549,9 @@ export default {
 		},
 		openEdit(row) {
 			this.showDetail = true
+
 			if (row) {
-				this.rowData = row
+				this.rowData = JSON.parse(JSON.stringify(row))
 				this.editType = 'edit'
 			} else {
 				this.rowData = {}

@@ -106,7 +106,7 @@
 										v-for="item in gameModuleNameList"
 										:key="item.moduleId"
 										:label="item.moduleName"
-										:value="item.moduleId"
+										:value="change(item.moduleId)"
 									></el-option>
 								</el-select>
 							</el-form-item>
@@ -125,7 +125,7 @@
 										v-for="item in gameModuleNameList"
 										:key="item.moduleId"
 										:label="item.moduleName"
-										:value="item.moduleId"
+										:value="change(item.moduleId)"
 									></el-option>
 								</el-select>
 							</el-form-item>
@@ -373,19 +373,26 @@ export default {
 	watch: {
 		rowData: {
 			handler(val) {
+				console.log('val')
+				console.log(val)
+				const arr = JSON.parse(JSON.stringify(val))
 				if (val) {
-					val.supportTerminal = val.supportTerminal.split(',')
-					val.relationOtherGameId = val.relationOtherGameId.split(',')
-					val.relationGameModuleId = val.relationGameModuleId.split(',')
+					arr.supportTerminal = arr.supportTerminal.split(',')
+					arr.relationOtherGameId = arr.relationOtherGameId.split(',')
+					arr.relationGameModuleId = arr.relationGameModuleId.split(',')
+					arr.gameIcon = arr.gameIcon + ''
 				}
-				this.form = val
+				this.form = arr
+				console.log(this.form)
 			},
 			immediate: true,
 			deep: true
 		}
 	},
 	created() {},
-	mounted() {},
+	mounted() {
+
+	},
 	methods: {
 		confirm() {
 			this.$refs.form.validate((valid) => {
@@ -457,6 +464,9 @@ export default {
 						})
 				}
 			})
+		},
+		change(value) {
+			return value + ''
 		},
 		handleStartUpload() {
 			this.$message.info('图片开始上传')
