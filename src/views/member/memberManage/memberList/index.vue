@@ -386,7 +386,11 @@
 					</el-table-column>
 					<el-table-column prop="transforNum" align="center" label="转代次数">
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.transforNum">
+							<span
+								v-if="
+									!!scope.row.transforNum || scope.row.transforNum * 1 === 0
+								"
+							>
 								{{ scope.row.transforNum }}
 							</span>
 							<span v-else>-</span>
