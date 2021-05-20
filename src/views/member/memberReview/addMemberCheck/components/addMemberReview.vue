@@ -2,7 +2,7 @@
 	<div class="game-container report-container">
 		<div class="review-content">
 			<div class="head">
-				<span class="title">新增代理审核详情</span>
+				<span class="title">新增会员审核详情</span>
 				<div v-if="type" class="right-btn">
 					<el-button plain @click="goBack">取消</el-button>
 					<el-button type="success" @click="confirm(true)">一审通过</el-button>
@@ -14,13 +14,23 @@
 			</div>
 			<div class="main-content">
 				<div class="review-content">
-					<p class="name">新增代理信息</p>
+					<p class="name">新增会员信息</p>
 					<div class="review-flex">
 						<div>
-							代理类型: {{ typeFilter(list.accountType, 'accountType') }}
+							账号类型: {{ typeFilter(list.accountType, 'accountType') }}
 						</div>
-						<div>代理账号: {{ list.userName }}</div>
+						<div>会员账号: {{ list.userName }}</div>
 						<div>登录密码: {{ list.password }}</div>
+						<div>上级代理: {{ list.parentProxyName }}</div>
+					</div>
+					<div class="review-flex">
+						<div>性别: {{ typeFilter(list.gender, 'genderType') }}</div>
+						<div>VIP经验: {{ list.vipExperienceVal }}</div>
+						<div>邮箱: {{ list.email }}</div>
+						<div>姓名: {{ list.realName }}</div>
+					</div>
+					<div class="review-flex">
+						<div>手机号码: {{ list.mobile }}</div>
 					</div>
 				</div>
 				<div class="review-content">
@@ -32,7 +42,7 @@
 					</div>
 				</div>
 				<div class="review-content">
-					<p class="name">审核信息</p>
+					<p class="name">审核信息信息</p>
 					<div class="review-flex">
 						<div>一审人: {{ list.auditName }}</div>
 						<div>一审时间: {{ list.auditTime }}</div>
@@ -47,16 +57,28 @@
 			:visible.sync="visible"
 			:before-close="closeFormDialog"
 			width="610px"
+			class="audit-confirm"
 		>
-			<el-form ref="form" label-width="100px">
-				<el-form-item label="提交审核信息">
+			<el-form ref="form" :model="form" :rules="formRules">
+				<el-form-item v-if="action" label="提交审核信息">
 					<el-input
-						v-model="remark"
+						v-model="form.remark"
 						clearable
 						type="textarea"
 						:max="50"
 						:autosize="{ minRows: 4, maxRows: 4 }"
-						size="medium"
+						style="width: 380px"
+						placeholder="请输入"
+					></el-input>
+				</el-form-item>
+				<el-form-item v-else label="提交审核信息" prop="remark">
+					<el-input
+						v-model="form.remark"
+						clearable
+						type="textarea"
+						:max="50"
+						:autosize="{ minRows: 4, maxRows: 4 }"
+						style="width: 380px"
 						placeholder="请输入"
 					></el-input>
 				</el-form-item>
@@ -79,22 +101,35 @@ export default {
 	name: routerNames.addMemberReview,
 	components: {},
 	mixins: [list],
+	props: {
+		// 审核 true 仅返回 false
+		type: Boolean,
+		rowData: {
+			type: Object,
+			default: () => {}
+		}
+	},
 	data() {
 		return {
 			list: {},
 			visible: false,
-			remark: '',
-			action: false,
-			// 审核 true 仅返回 false
-			type: true
+			form: {
+				remark: ''
+			},
+			action: false
 		}
 	},
-	computed: {},
-	created() {
-		if (this.$route.name === 'addMemberReview') {
-			this.getInfo()
-			this.type = this.$route.query.type
+	computed: {
+		formRules() {
+			return {
+				remark: [
+					{ required: true, message: '审核拒绝备注必填', trigger: 'blur' }
+				]
+			}
 		}
+	},
+	created() {
+		this.getInfo()
 	},
 	mounted() {},
 	methods: {
@@ -107,47 +142,88 @@ export default {
 			this.visible = true
 		},
 		auditOne() {
-			const loading = this.$loading({
-				lock: true,
-				text: 'Loading',
-				spinner: 'el-icon-loading',
-				background: 'rgba(0, 0, 0, 0.7)'
-			})
-			const params = {
-				id: this.$route.query.id,
-				userId: this.$route.query.userId,
-				remark: this.remark,
-				auditStatus: this.action ? 2 : 3
-			}
+			if (this.action) {
+				const loading = this.$loading({
+					lock: true,
+					text: 'Loading',
+					spinner: 'el-icon-loading',
+					background: 'rgba(0, 0, 0, 0.7)'
+				})
+				const params = {
+					id: this.rowData.id,
+					userId: this.rowData.userId,
+					remark: this.form.remark,
+					auditStatus: this.action ? 2 : 3
+				}
 
-			this.$api
-				.updateMemberAuditRecord(params)
-				.then((res) => {
-					loading.close()
-					if (res.code === 200) {
-						this.$message({
-							type: 'success',
-							message: '操作成功!'
+				this.$api
+					.updateMemberAuditRecord(params)
+					.then((res) => {
+						loading.close()
+						if (res.code === 200) {
+							this.$message({
+								type: 'success',
+								message: '操作成功!'
+							})
+							this.visible = false
+							this.goBack()
+						} else {
+							this.$message({
+								message: res.msg,
+								type: 'error'
+							})
+						}
+					})
+					.catch(() => {
+						loading.close()
+					})
+			} else {
+				this.$refs.form.validate((valid) => {
+					if (valid) {
+						const loading = this.$loading({
+							lock: true,
+							text: 'Loading',
+							spinner: 'el-icon-loading',
+							background: 'rgba(0, 0, 0, 0.7)'
 						})
-						this.visible = false
-						this.goBack()
-					} else {
-						this.$message({
-							message: res.msg,
-							type: 'error'
-						})
+						const params = {
+							id: this.rowData.id,
+							userId: this.rowData.userId,
+							remark: this.form.remark,
+							auditStatus: this.action ? 2 : 3
+						}
+
+						this.$api
+							.updateMemberAuditRecord(params)
+							.then((res) => {
+								loading.close()
+								if (res.code === 200) {
+									this.$message({
+										type: 'success',
+										message: '操作成功!'
+									})
+									this.visible = false
+									this.goBack()
+								} else {
+									this.$message({
+										message: res.msg,
+										type: 'error'
+									})
+								}
+							})
+							.catch(() => {
+								loading.close()
+							})
 					}
 				})
-				.catch(() => {
-					loading.close()
-				})
+			}
 		},
 		goBack() {
-			this.$router.go(-1)
+			this.$emit('goBack')
 		},
 		getInfo() {
 			const params = {
-				id: this.$route.query.id
+				id: this.rowData.id
 			}
 			this.$api.memberAuditDetail(params).then((res) => {
 				if (res.code === 200) {
@@ -162,13 +238,6 @@ export default {
 					})
 				}
 			})
-		},
-		getRowClass({ row, column, rowIndex, columnIndex }) {
-			if (rowIndex === 0) {
-				return 'background:#EFEFEF'
-			} else {
-				return ''
-			}
 		}
 	}
 }

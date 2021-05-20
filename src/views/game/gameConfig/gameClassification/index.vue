@@ -167,16 +167,6 @@
 								</Copy>
 								<span v-else>-</span>
 							</template>
-							<!--							<template slot-scope="scope">-->
-							<!--								<Copy-->
-							<!--									v-if="!!scope.row.assortName"-->
-							<!--									:title="scope.row.assortName"-->
-							<!--									:copy="copy"-->
-							<!--								>-->
-							<!--									{{ scope.row.assortName }}-->
-							<!--								</Copy>-->
-							<!--								<span v-else>-</span>-->
-							<!--							</template>-->
 						</el-table-column>
 						<el-table-column
 							prop="assortStatus"
@@ -185,13 +175,10 @@
 							width="110px"
 						>
 							<template slot-scope="scope">
-								<div v-if="scope.row.assortStatus * 1 === 1" class="normalRgba">
+								<div v-if="scope.row.assortStatus" class="normalRgba">
 									开启中
 								</div>
-								<div
-									v-else-if="scope.row.assortStatus * 1 === 0"
-									class="disableRgba"
-								>
+								<div v-else-if="!scope.row.assortStatus" class="disableRgba">
 									已禁用
 								</div>
 								<div v-else>-</div>
@@ -311,15 +298,19 @@
 						<el-table-column align="center" label="操作" width="300px">
 							<template slot-scope="scope">
 								<el-button
-									type="danger"
-									icon="el-icon-delete"
+									:type="scope.row.assortStatus ? 'danger' : 'success'"
 									size="medium"
-									@click="recycle"
+									@click="recycle(scope.row)"
 								>
-									禁用
+									<div v-if="scope.row.assortStatus">
+										禁用
+									</div>
+									<div v-else>
+										开启
+									</div>
 								</el-button>
 								<el-button
-                                    type="primary"
+									type="primary"
 									icon="el-icon-edit"
 									size="medium"
 									@click="openEdit(scope.row)"
@@ -365,19 +356,19 @@
 					<span>游戏名称</span>
 					<span>添加时间</span>
 				</p>
-				<div class="bodyBox">
+				<div
+					v-for="(item, idx) in childDataList"
+					:key="idx + 'index'"
+					class="bodyBox"
+				>
 					<p>
-						<span>斗地主</span>
-						<span>2016-09-21 08:50:08</span>
-					</p>
-					<p>
-						<span>麻将</span>
-						<span>2016-10-21 08:50:08</span>
+						<span>{{ item.gameName }}</span>
+						<span>{{ item.createAt }}</span>
 					</p>
 				</div>
 			</el-dialog>
 		</div>
-		<createPage v-else @back="back"></createPage>
+		<createPage v-else :rowAssortId="rowAssortId" @back="back"></createPage>
 	</transition>
 </template>
 
@@ -404,10 +395,13 @@ export default {
 			},
 			dataList: [],
 			total: 0,
+			childDataList: [],
+			childTotal: 0,
 			vipDict: [],
 			userLabel: [],
 			dialogGameVisible: false,
-			createPage: false
+			createPage: false,
+			rowAssortId: ''
 		}
 	},
 	computed: {
@@ -433,9 +427,18 @@ export default {
 			params = {
 				...this.getParams(params)
 			}
-			delete params.assortStatus
-			delete params.supportTerminal
-			delete params.clientDisplay
+			params.assortStatus =
+				params.assortStatus && params.assortStatus.length
+					? params.assortStatus.join(',')
+					: undefined
+			params.supportTerminal =
+				params.supportTerminal && params.supportTerminal.length
+					? params.deviceType.join(',')
+					: undefined
+			params.clientDisplay =
+				params.clientDisplay && params.clientDisplay.length
+					? params.clientDisplay.join(',')
+					: undefined
 
 			this.$api
 				.gameAssortListAPI(params)
@@ -464,6 +467,7 @@ export default {
 			}, 1000)
 		},
 		reset() {
+			this.pageNum = 1
 			this.queryData = {
 				assortSortMin: undefined,
 				assortSortMax: undefined,
@@ -474,7 +478,6 @@ export default {
 				orderKey: undefined,
 				orderType: undefined
 			}
-			this.$refs['form'].resetFields()
 			this.loadData()
 		},
 		_changeTableSort({ column, prop, order }) {
@@ -484,7 +487,7 @@ export default {
 			if (prop === 'createdAt') {
 				prop = 2
 			}
-			if (prop === 'updatedBy') {
+			if (prop === 'updatedAt') {
 				prop = 3
 			}
 			this.queryData.orderKey = prop
@@ -529,15 +532,20 @@ export default {
 			}
 		},
 
-		openEdit() {
+		openEdit(val) {
+			const { id } = val
+			this.rowAssortId = id
 			this.createPage = true
 		},
 		back() {
 			this.createPage = false
+			this.loadData()
 		},
-		recycle() {
+		recycle(val) {
+			const { id, assortStatus } = val
+			const status = !assortStatus
 			this.$confirm(
-				`<strong>是否对子游戏进行开启/维护/禁用操作</strong></br>
+				`<strong>是否对子游戏进行开启/禁用操作</strong></br>
                  <span style='font-size:12px;color:#c1c1c1'>一旦操作将会立即生效</span>`,
 				'确认提示',
 				{
@@ -548,7 +556,23 @@ export default {
 				}
 			)
 				.then(() => {
-					// this.getOneKeyWithdraw({ userId: this.parentData.userId })
+					this.$api
+						.gameUpdateStatusAPI({ assortId: id, status })
+						.then((res) => {
+							const { code, msg } = res
+							if (code === 200) {
+								this.$message({
+									message: '操作成功',
+									type: 'success'
+								})
+							} else {
+								this.$message({
+									message: msg,
+									type: 'error'
+								})
+							}
+							this.loadData()
+						})
 				})
 				.catch(() => {})
 		},
@@ -561,27 +585,24 @@ export default {
 				pageSize: 10
 			}
 			this.$api
-				.queryChildGameAPI(params)
+				.queryChildGamePageAPI(params)
 				.then((res) => {
-					console.log('分类res', res)
 					const {
 						code,
 						data: { record, totalRecord },
 						msg
 					} = res
 					if (code === 200) {
-						this.loading = false
-						this.dataList = record || []
-						this.total = totalRecord || 0
+						this.childDataList = record || []
+						this.childTotal = totalRecord || 0
 					} else {
-						this.loading = false
 						this.$message({
 							message: msg,
 							type: 'error'
 						})
 					}
 				})
-				.catch(() => (this.loading = false))
+				.catch(() => {})
 		},
 		deleteRow(val) {
 			const { id } = val
@@ -606,6 +627,11 @@ export default {
 								this.$message({
 									type: 'success',
 									message: '删除成功!'
+								})
+							} else {
+								this.$message({
+									type: 'error',
+									message: '删除失败!'
 								})
 							}
 							this.loadData()

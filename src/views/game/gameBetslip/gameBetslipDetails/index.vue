@@ -25,36 +25,36 @@
         </div>
         <el-divider></el-divider>
       </div>
-      <realDetails v-if="gameType === 'zr'" :dataList="dataList"></realDetails>
+      <!-- <realDetails v-if="gameType === 'zr'" :dataList="dataList"></realDetails>
       <chessDetails v-else-if="gameType === 'qp'" :dataList="dataList"></chessDetails>
       <sportDetails v-else-if="gameType === 'ty'" :dataList="dataList"></sportDetails>
       <eSportDetails v-else-if="gameType === 'dj'" :dataList="dataList"></eSportDetails>
       <lotteryDetails v-else-if="gameType === 'cp'" :dataList="dataList"></lotteryDetails>
       <eGameDetails v-else-if="gameType === 'dy'" :dataList="dataList"></eGameDetails>
-      <slotDetails v-else></slotDetails>
+      <slotDetails v-else></slotDetails> -->
     </div>
   </div>
 </template>
 
 <script>
 import { routerNames } from '@/utils/consts'
-import realDetails from './components/realDetails'
-import chessDetails from './components/chessDetails'
-import sportDetails from './components/sportDetails'
-import eSportDetails from './components/eSportDetails'
-import lotteryDetails from './components/lotteryDetails'
-import eGameDetails from './components/eGameDetails'
-import slotDetails from './components/slotDetails'
+// import realDetails from './components/realDetails'
+// import chessDetails from './components/chessDetails'
+// import sportDetails from './components/sportDetails'
+// import eSportDetails from './components/eSportDetails'
+// import lotteryDetails from './components/lotteryDetails'
+// import eGameDetails from './components/eGameDetails'
+// import slotDetails from './components/slotDetails'
 export default {
   name: routerNames.gameBetslipDetails,
   components: {
-    realDetails,
-    chessDetails,
-    sportDetails,
-    eSportDetails,
-    lotteryDetails,
-    eGameDetails,
-    slotDetails
+    // realDetails,
+    // chessDetails,
+    // sportDetails,
+    // eSportDetails,
+    // lotteryDetails,
+    // eGameDetails,
+    // slotDetails
   },
   props: {},
   data() {

@@ -9,6 +9,15 @@ export function gameAssortListAPI(data) {
 	})
 }
 
+// 游戏配置==> 游戏分类管理 ===> 子游戏分页查询
+export function queryChildGamePageAPI(data) {
+	return request({
+		url: '/gameAssort/queryChildrenGamePage',
+		method: 'post',
+		data
+	})
+}
+
 // 游戏配置==> 游戏分类管理 ===> 子游戏查询
 export function queryChildGameAPI(data) {
 	return request({
@@ -18,6 +27,14 @@ export function queryChildGameAPI(data) {
 	})
 }
 
+// 游戏配置==> 游戏分类管理 ===> 子游戏配置
+export function queryChildGameConfigAPI(data) {
+	return request({
+		url: '/gameAssort/selectById',
+		method: 'post',
+		data
+	})
+}
 // 游戏配置==> 游戏分类管理 ===> 删除
 export function gameDeleteAPI(data) {
 	return request({
@@ -27,7 +44,7 @@ export function gameDeleteAPI(data) {
 	})
 }
 
-// 游戏配置==> 游戏分类管理 ===> 编辑
+// 游戏配置==> 游戏分类管理 ===> 编辑保存
 export function gameUpdateAPI(data) {
 	return request({
 		url: '/gameAssort/update',
@@ -35,10 +52,29 @@ export function gameUpdateAPI(data) {
 		data
 	})
 }
+
+// 游戏配置==> 游戏分类管理 ===> 编辑
+export function gameUpdateStatusAPI(data) {
+	return request({
+		url: '/gameAssort/updateStatus',
+		method: 'post',
+		data
+	})
+}
+
 // 游戏配置==> 游戏分类管理 ===> 创建
 export function gameCreateAPI(data) {
 	return request({
 		url: '/gameAssort/create',
+		method: 'post',
+		data
+	})
+}
+
+// 游戏配置==> 游戏分类管理 ===>游戏平台查询
+export function queryGameAPI(data) {
+	return request({
+		url: '/gameAssort/queryGame',
 		method: 'post',
 		data
 	})
@@ -92,6 +128,65 @@ export function setUpdateDelete(data) {
 		data
 	})
 }
+//  游戏注单 ===> 游戏平台
+export function getMerchantGameGamePlant(data) {
+	return request({
+		url: '/merchantGame/gamePlant',
+		method: 'post',
+		data
+	})
+}
+//  游戏注单 ===> 关联推荐游戏
+export function gameManageList(data) {
+	return request({
+		url: '/gameManager/gameManageList',
+		method: 'post',
+		data
+	})
+}
+//  游戏注单 ===> 游戏注单分页
+export function getGameRecordNotes(data) {
+	return request({
+		url: '/gameRecord/notes',
+		method: 'post',
+		data
+	})
+}
+//  游戏注单 ===> 游戏注单列表导出
+export function getGameRecordDownload(data) {
+	return request({
+		url: '/gameRecord/download',
+		method: 'post',
+		responseType: 'blob',
+		data
+	})
+}
+//  游戏注单 ===> 获取注单明细
+export function getGameRecordDetail(data) {
+	return request({
+		url: '/gameRecord/detail',
+		method: 'post',
+		data
+	})
+}
+//  游戏搜索管理 ===> 游戏搜索日志
+export function getGameSearchLog(data) {
+	return request({
+		url: '/gameSearchLog/selectLog',
+		method: 'post',
+		data
+	})
+}
+
+// 游戏配置==> 游戏搜索管理 ===> 列表
+export function gameSearchListAPI(data) {
+	return request({
+		url: '/obSearchConfig/select',
+		method: 'post',
+		data
+	})
+}
+
 // 游戏配置==> 游戏搜索管理 ===> 新增
 export function gameSearchCreateAPI(data) {
 	return request({
@@ -104,7 +199,7 @@ export function gameSearchCreateAPI(data) {
 // 游戏配置==> 游戏搜索管理 ===> 修改
 export function gameSearchUpdateAPI(data) {
 	return request({
-		url: '/obSearchConfig/update',
+		url: '/obSearchConfig/save',
 		method: 'post',
 		data
 	})
@@ -118,19 +213,128 @@ export function gameSearchDeleteAPI(data) {
 		data
 	})
 }
+export function gameLabelList(data) {
+	return request({
+		url: '/gameManager/gameLabelList',
+		method: 'post',
+		data
+	})
+}
+export function gameModuleNameList(data) {
+	return request({
+		url: '/gameManager/gameModuleNameList',
+		method: 'post',
+		data
+	})
+}
+export function addGame(data) {
+	return request({
+		url: '/gameManager/addGame',
+		method: 'post',
+		data
+	})
+}
+export function editGame(data) {
+	return request({
+		url: '/gameManager/editGame',
+		method: 'post',
+		data
+	})
+}
+export function imageUpload(data) {
+	return request({
+		url: '/gameManager/upload',
+		method: 'post',
+		data,
+		headers: {
+			'Content-Type': 'multipart/form-data'
+		}
+	})
+}
+export function editGameStatus(data) {
+	return request({
+		url: '/gameManager/editStatus',
+		method: 'post',
+		data
+	})
+}
+export function gameManageDetail(data) {
+	return request({
+		url: '/gameManager/gameManageDetail',
+		method: 'post',
+		data
+	})
+}
+export function gamePlant(data) {
+	return request({
+		url: '/merchantGame/gamePlant',
+		method: 'post',
+		data
+	})
+}
+
+// 游戏配置==> 游戏搜索管理 ===> 删除
+export function gameList(data) {
+	return request({
+		url: '/gameManager/gameList',
+		method: 'post',
+		data
+	})
+}
+
+// 游戏==> 首页推荐位 ==> 列表
+export function gameHomeRecommendListAPI(data) {
+	return request({
+		url: '/gameCommonModule/gameModuleList',
+		method: 'post',
+		data
+	})
+}
+
+// 游戏==> 首页推荐位 ==> 列表 ===> 详情
+export function gameHomeRecommendDetailsAPI(data) {
+	return request({
+		url: '/gameCommonModule/gameModuleDetail',
+		method: 'post',
+		data
+	})
+}
+
 export default {
 	gameAssortListAPI,
+	gameList,
+	editGame,
+	addGame,
+	editGameStatus,
+	imageUpload,
+	gameManageList,
+	gameModuleNameList,
+	gamePlant,
+	gameManageDetail,
+	gameLabelList,
+	queryChildGamePageAPI,
 	queryChildGameAPI,
+	queryChildGameConfigAPI,
 	gameDeleteAPI,
 	gameUpdateAPI,
 	gameCreateAPI,
+	queryGameAPI,
+	gameUpdateStatusAPI,
 	getTabelData,
 	addObGameLabel,
 	getGameLabelRelation,
 	setUpdateStatus,
 	setUpdateLabel,
 	setUpdateDelete,
+	getMerchantGameGamePlant,
+	getGameRecordNotes,
+	getGameRecordDownload,
+	getGameRecordDetail,
+	getGameSearchLog,
+	gameSearchListAPI,
 	gameSearchCreateAPI,
 	gameSearchUpdateAPI,
-	gameSearchDeleteAPI
+	gameSearchDeleteAPI,
+	gameHomeRecommendListAPI,
+	gameHomeRecommendDetailsAPI
 }

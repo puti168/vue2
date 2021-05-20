@@ -62,10 +62,13 @@ service.interceptors.request.use(
 			const sign = md5(Finger.get() + nonce + timestamp)
 			// console.log('nonce, timestamp:', nonce, timestamp)
 			config.headers['ob-nonce'] = nonce
-			config.headers['Content-Type'] = 'application/json;charset=UTF-8'
+			// 上传图片不处理
+			if (!config.url.includes('/gameManager/upload')) {
+				config.headers['Content-Type'] = 'application/json;charset=UTF-8'
+				config.data = JSON.stringify(config.data)
+			}
 			config.headers['ob-timestamp'] = timestamp
 			config.headers['ob-sign'] = sign
-			config.data = JSON.stringify(config.data)
 			// config.headers['zr-encrypted'] = false
 		}
 		return config

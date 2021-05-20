@@ -1,26 +1,23 @@
 <template>
 	<div class="menu-wrapper">
 		<template
-			v-if="
-				hasOneShowingChild(item.children, item) &&
-					(!onlyOneChild.children || onlyOneChild.noShowingChildren) &&
-					!item.alwaysShow &&
-					!item.hidden
-			"
+			v-if="hasOneShowingChild(item.children,item) && (!onlyOneChild.children||onlyOneChild.noShowingChildren)&&!item.alwaysShow && !item.hidden"
 		>
 			<app-link v-if="onlyOneChild.meta" :to="resolvePath(onlyOneChild.path)">
-				<el-menu-item
-					:index="resolvePath(onlyOneChild.path)"
-					:class="{ 'submenu-title-noDropdown': !isNest }"
-					style="text-align: left"
-				>
-					<item
-						:active-path="activePath"
-						:path="item.path"
-						:icon="onlyOneChild.meta.icon || (item.meta && item.meta.icon)"
-						:title="generateTitle(onlyOneChild.meta.title)"
-					/>
-				</el-menu-item>
+				<el-badge :value="showNumber(item.meta.title)" class="pop-star">
+					<el-menu-item
+						:index="resolvePath(onlyOneChild.path)"
+						:class="{ 'submenu-title-noDropdown': !isNest }"
+						style="text-align: left"
+					>
+						<item
+							:active-path="activePath"
+							:path="item.path"
+							:icon="onlyOneChild.meta.icon || (item.meta && item.meta.icon)"
+							:title="generateTitle(onlyOneChild.meta.title)"
+						/>
+					</el-menu-item>
+				</el-badge>
 			</app-link>
 		</template>
 		<el-submenu
@@ -38,6 +35,7 @@
 					:title="generateTitle(item.meta.title)"
 				/>
 			</template>
+
 			<sidebar-item
 				v-for="child in item.children"
 				:key="child.path"
@@ -116,6 +114,22 @@ export default {
 
 			return false
 		},
+		showNumber(name) {
+			switch (name) {
+				case '会员账户修改审核':
+					return this.$store.state.user.auditUpdateInfoUser > 0 ? this.$store.state.user.auditUpdateInfoUser : null
+				case '新增会员审核':
+					return this.$store.state.user.auditNewUser > 0 ? this.$store.state.user.auditNewUser : null
+				case '代理账户修改审核':
+					return this.$store.state.user.auditUpdateInfoAgent > 0 ? this.$store.state.user.auditUpdateInfoAgent : null
+				case '会员溢出审核':
+					return this.$store.state.user.auditPatchAgent > 0 ? this.$store.state.user.auditPatchAgent : null
+				case '新增代理审核':
+					return this.$store.state.user.auditNewAgent > 0 ? this.$store.state.user.auditNewAgent : null
+				case '会员转代审核':
+					return this.$store.state.user.auditChangeAgent > 0 ? this.$store.state.user.auditChangeAgent : null
+			}
+		},
 		resolvePath(routePath) {
 			if (isExternal(routePath)) {
 				return routePath
@@ -129,3 +143,13 @@ export default {
 	}
 }
 </script>
+<style lang="scss" scoped>
+/deep/ .pop-star {
+	vertical-align: middle;
+	.el-badge__content {
+		border-radius: 12px;
+		top: 18px;
+		right: 32px;
+	}
+}
+</style>

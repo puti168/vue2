@@ -14,14 +14,14 @@
               start-placeholder="开始日期"
               end-placeholder="结束日期"
               align="right"
-              clearable
+              :clearable="false"
               :default-time="defaultTime"
               style="width: 375px"
             ></el-date-picker>
           </el-form-item>
           <el-form-item label="搜索内容:">
             <el-input
-              v-model="queryData.bankCode"
+              v-model="queryData.searchContent"
               clearable
               :maxlength="30"
               size="medium"
@@ -49,7 +49,7 @@
           </el-form-item>
           <el-form-item label="会员账号:">
             <el-input
-              v-model="queryData.bankName"
+              v-model="queryData.memberName"
               clearable
               :maxlength="11"
               size="medium"
@@ -92,16 +92,19 @@
         </div>
         <div class="msgList">
           <p style="line-height: 24px">
-            搜索词条top1：<span class="gray">{{ summary.successCount }}</span>
-            次
+            搜索词条top1：<span class="gray">{{
+              summary.topContent ? summary.topContent[0] : "无"
+            }}</span>
           </p>
           <p style="line-height: 24px">
-            搜索词条top2：<span class="gray">{{ summary.successCount }}</span>
-            次
+            搜索词条top2：<span class="gray">{{
+              summary.topContent ? summary.topContent[1] : "无"
+            }}</span>
           </p>
           <p style="line-height: 24px">
-            搜索词条top3：<span class="gray">{{ summary.successCount }}</span>
-            次
+            搜索词条top3：<span class="gray">{{
+              summary.topContent ? summary.topContent[2] : "无"
+            }}</span>
           </p>
         </div>
       </div>
@@ -117,29 +120,33 @@
           @sort-change="_changeTableSort"
         >
           <el-table-column
-            prop="vipSerialNum"
+            prop="createDt"
             align="center"
             label="搜索时间"
             sortable="custom"
           ></el-table-column>
           <el-table-column
-            prop="bankName"
+            prop="searchContent"
             align="center"
             label="搜索内容"
           ></el-table-column>
-          <el-table-column prop="createDt" align="center" label="会员账号">
+          <el-table-column prop="memberName" align="center" label="会员账号">
             <template slot-scope="scope">
-              <Copy v-if="!!scope.row.createDt" :title="scope.row.createDt" :copy="copy">
-                {{ scope.row.createDt }}
+              <Copy
+                v-if="!!scope.row.memberName"
+                :title="scope.row.memberName"
+                :copy="copy"
+              >
+                {{ scope.row.memberName }}
               </Copy>
               <span v-else>-</span>
             </template>
           </el-table-column>
-          <el-table-column
-            prop="updateDt"
-            align="center"
-            label="账号类型"
-          ></el-table-column>
+          <el-table-column prop="accountType" align="center" label="账号类型">
+            <template slot-scope="scope">
+              {{ typeFilter(scope.row.accountType, "accountType") }}
+            </template>
+          </el-table-column>
         </el-table>
         <!-- 分页 -->
         <el-pagination
@@ -176,11 +183,7 @@ export default {
       },
       searchTime: [startTime, endTime],
       now: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
-      summary: {
-        count: 0,
-        failCount: 0,
-        successCount: 0
-      },
+      summary: {},
       tableData: []
     }
   },
@@ -189,36 +192,44 @@ export default {
       return this.globalDics.accountType
     }
   },
-  mounted() {
-    for (let i = 0; i < 10; i++) {
-      this.tableData[i] = {
-        bankCode: '165416416464654',
-        bankName: '中国银行',
-        createDt: '2021-02-13 20:28:54',
-        updateDt: '2021-02-13 20:28:54'
-      }
-    }
-  },
+  mounted() {},
   methods: {
     loadData() {
-      // this.loading = true;
+      this.loading = true
       const create = this.searchTime || []
       const [startTime, endTime] = create
       let params = {
         ...this.queryData,
-        startTime: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : '',
-        endTime: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
+        createDtStart: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : '',
+        createDtEnd: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
       }
       params = {
         ...this.getParams(params)
       }
-      console.log(params)
+      this.$api
+        .getGameSearchLog(params)
+        .then((res) => {
+          if (res.code === 200) {
+            this.tableData = res.data.record
+            this.summary = res.data.summary === null ? {} : res.data.summary
+            this.total = res.data.totalRecord
+            this.now = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
+            this.loading = false
+          } else {
+            this.loading = false
+          }
+        })
+        .catch(() => {
+          this.loading = false
+        })
     },
     reset() {
       this.queryData = {}
+      this.pageNum = 1
     },
     _changeTableSort({ column, prop, order }) {
-      if (prop === 'vipSerialNum') {
+      console.log(column, prop, order)
+      if (prop === 'createDt') {
         prop = 1
       }
       this.queryData.orderKey = prop

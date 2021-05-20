@@ -146,25 +146,29 @@ export default {
     window.removeEventListener('scroll', this.onScroll)
   },
   methods: {
-    // 会员详情-基本信息-概要信息以及个人资料
-    getOutlineInfo(val) {
+    // 代理详情-基本信息-概要信息以及个人资料
+    getProxyDetailQueryDetail(val) {
       // const loading = this.$loading(this.loadingRgba);
       this.$api
-        .getOutlineInfo({ userName: val.userName })
+        .getProxyDetailQueryDetail({ userName: val.userName })
         .then((res) => {
-          this.isShow = true
-          if (res.code === 200) {
+          if (res.code === 200 && res.data !== null) {
+            this.isShow = true
             this.outlineInfo = res.data
             this.parentData.userName = res.data.userName
             this.parentData.userId = res.data.id
-            this.getMemberRemarkList(res.data.id)
-            this.getAccountCashAccount(res.data.id)
-            this.getWithdrawalFreeze(res.data.id)
-            this.getWithdrawWater(res.data.id)
-            this.getPlayerOrderSumInfo(res.data.id)
-            this.getPlayerBetHistorySum(res.data.id)
-            this.getPlayerTop3(res.data.id)
-            this.getLogMemberLoginLog(res.data.id)
+            this.getProxyDetailRemark(res.data.id)
+            this.getProxyDataBalance(res.data.id)
+            this.getProxyDataCommission(res.data.id)
+            this.getRechargeAndWithdrawInfo(res.data.id)
+            this.getProxyDetailProxyRechargeInfo(res.data.id)
+            this.getProxyDetailTeamInfo(res.data.id)
+            this.getProxyDetailTeamBet(res.data.id)
+            this.getProxyDetailTop3Bet(res.data.id)
+            this.getProxyDetailProxyLoginLog(res.data.id)
+          } else {
+            this.isShow = false
+            this.$message.success(res.msg)
           }
           this.$refs.basicInfor.activeL = false
           this.$refs.financialInfor.activeL = false
@@ -183,70 +187,92 @@ export default {
         })
     },
     // 备注信息
-    getMemberRemarkList(val) {
+    getProxyDetailRemark(val) {
       const params = { userId: val, pageNum: 1, pageSize: 3 }
-      this.$api.getMemberRemarkList(params).then((res) => {
+      this.$api.getProxyDetailRemark(params).then((res) => {
         if (res.code === 200) {
           this.remarksTableData = res.data
+          console.log('备注信息', res)
         }
       })
     },
-    // 查询中心钱包余额
-    getAccountCashAccount(val) {
-      this.$api.getAccountCashAccount({ userId: val }).then((res) => {
+    // 代理余额
+    getProxyDataBalance(val) {
+      const params = { userId: val }
+      this.$api.getProxyDataBalance(params).then((res) => {
         if (res.code === 200) {
-          this.balanceList.balance = res.data.balance
+          this.balanceList = res.data
+          console.log('代理余额', res)
         }
       })
     },
-    // 提现冻结余额
-    getWithdrawalFreeze(val) {
-      this.$api.getWithdrawalFreeze({ userId: val }).then((res) => {
+    // 佣金信息
+    getProxyDataCommission(val) {
+      const params = { userId: val }
+      this.$api.getProxyDataCommission(params).then((res) => {
         if (res.code === 200) {
-          this.balanceList.freezeBalance = res.data.freezeBalance
+          this.commission = res.data
+          console.log('佣金信息', res)
         }
       })
     },
-    // 提现流水查询
-    getWithdrawWater(val) {
-      this.$api.getWithdrawWater({ userId: val }).then((res) => {
-        if (res.code === 200) {
-          this.waterList = res.data
-        }
-      })
-    },
-    // 会员充提信息
-    getPlayerOrderSumInfo(val) {
-      this.$api.getPlayerOrderSumInfo({ userId: val }).then((res) => {
+    // 存提信息
+    getRechargeAndWithdrawInfo(val) {
+      const params = { userId: val }
+      this.$api.getRechargeAndWithdrawInfo(params).then((res) => {
         if (res.code === 200) {
           this.playerList = res.data
+          console.log('存提信息', res)
         }
       })
     },
-    // 会员投注信息
-    getPlayerBetHistorySum(val) {
-      this.$api.getPlayerBetHistorySum({ userId: val }).then((res) => {
+    // 代存信息
+    getProxyDetailProxyRechargeInfo(val) {
+      const params = { userId: val }
+      this.$api.getProxyDetailProxyRechargeInfo(params).then((res) => {
         if (res.code === 200) {
-          this.sumList = res.data
+          this.surrogateList = res.data
+          console.log('代存信息', res)
         }
       })
     },
-    // top3平台统计
-    getPlayerTop3(val) {
-      const params = { userId: val, orderKey: 1 }
-      this.$api.getPlayerTop3(params).then((res) => {
+    // 成员概况
+    getProxyDetailTeamInfo(val) {
+      const params = { userId: val }
+      this.$api.getProxyDetailTeamInfo(params).then((res) => {
+        if (res.code === 200) {
+          this.overviewList = res.data
+          console.log('成员概况', res)
+        }
+      })
+    },
+    // 成员投注
+    getProxyDetailTeamBet(val) {
+      const params = { userId: val }
+      this.$api.getProxyDetailTeamBet(params).then((res) => {
+        if (res.code === 200) {
+          this.bettingList = res.data
+          console.log('成员投注', res)
+        }
+      })
+    },
+    // top3
+    getProxyDetailTop3Bet(val) {
+      const params = { orderKey: 1, userId: val }
+      this.$api.getProxyDetailTop3Bet(params).then((res) => {
         if (res.code === 200) {
           this.top3Sy = res.data
+          console.log('top3', res)
         }
-        console.log(res)
       })
     },
-    // 会员登录日志查询
-    getLogMemberLoginLog(val) {
+    // 登录日志
+    getProxyDetailProxyLoginLog(val) {
       const params = { userId: val, pageNum: 1, pageSize: 10 }
-      this.$api.getLogMemberLoginLog(params).then((res) => {
+      this.$api.getProxyDetailProxyLoginLog(params).then((res) => {
         if (res.code === 200) {
           this.lonRecord = res.data
+          console.log('登录日志', res)
         }
       })
     },
@@ -254,11 +280,11 @@ export default {
       const params = this.queryData
       this.$refs.form.validate((valid) => {
         if (valid) {
-          this.getOutlineInfo(params)
+          this.getProxyDetailQueryDetail(params)
         }
       })
     },
-    enterSubmit() {
+    enterSearch() {
       this.query()
     },
     reset() {
@@ -305,7 +331,6 @@ export default {
       // const targetOffsetTop = document.querySelector(
       //   `.floor-item:nth-child(${index + 1})`
       // ).offsetTop;
-      console.log(targetOffsetTop)
       // 获取当前 offsetTop
       let scrollTop = document.documentElement.scrollTop || document.body.scrollTop
       // 定义一次跳 50 个像素，数字越大跳得越快，但是会有掉帧得感觉，步子迈大了会扯到蛋

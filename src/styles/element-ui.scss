@@ -156,3 +156,8 @@
 .el-table td .cell .noicon {
     min-width: 40px;
 }
+.audit-confirm {
+    .el-form-item__error {
+        left: 100px;
+    }
+}

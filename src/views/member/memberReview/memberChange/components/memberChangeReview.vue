@@ -19,11 +19,16 @@
 						<div>注册时间: {{ registerInfo.createDt }}</div>
 						<div>上次登录时间: {{ registerInfo.lastLoginTime }}</div>
 						<div>最后下注时间时间: {{ registerInfo.lastBetTime }}</div>
-						<div>注册端: {{ typeFilter(registerInfo.deviceType, "deviceType") }}</div>
+						<div>
+							注册端: {{ typeFilter(registerInfo.deviceType, 'deviceType') }}
+						</div>
 					</div>
 					<div class="review-flex">
 						<div>上级代理: {{ registerInfo.parentProxyName }}</div>
-						<div>账号类型: {{ typeFilter(registerInfo.accountType, 'accountType') }}</div>
+						<div>
+							账号类型:
+							{{ typeFilter(registerInfo.accountType, 'accountType') }}
+						</div>
 					</div>
 				</div>
 				<div v-if="accountInfo" class="review-content">
@@ -46,7 +51,9 @@
 					<div class="review-flex">
 						<div>申请人: {{ applyInfo.applyName }}</div>
 						<div>申请时间: {{ applyInfo.applyTime }}</div>
-						<div>审核申请类型: {{ typeFilter(applyInfo.applyType, 'applyType') }}</div>
+						<div>
+							审核申请类型: {{ typeFilter(applyInfo.applyType, 'applyType') }}
+						</div>
 						<div>申请原因: {{ applyInfo.applyInfo }}</div>
 					</div>
 					<div class="review-flex">
@@ -59,12 +66,30 @@
 						>
 							<el-table-column align="center" label="修改前">
 								<template>
-									{{ applyInfo.beforeModify }}
+									<template v-if="Number(applyInfo.applyType === 2)">
+										{{ typeFilter(applyInfo.beforeModify, 'genderType') }}
+									</template>
+									<template v-else-if="Number(applyInfo.applyType === 6)">
+										{{
+											typeFilter(applyInfo.beforeModify, 'accountStatusType')
+										}}
+									</template>
+									<template v-else>
+										{{ applyInfo.beforeModify ? applyInfo.beforeModify : '-' }}
+									</template>
 								</template>
 							</el-table-column>
 							<el-table-column align="center" label="修改后">
 								<template>
-									{{ applyInfo.afterModify }}
+									<template v-if="Number(applyInfo.applyType === 2)">
+										{{ typeFilter(applyInfo.afterModify, 'genderType') }}
+									</template>
+									<template v-else-if="Number(applyInfo.applyType === 6)">
+										{{ typeFilter(applyInfo.afterModify, 'accountStatusType') }}
+									</template>
+									<template v-else>
+										{{ applyInfo.afterModify ? applyInfo.afterModify : '-' }}
+									</template>
 								</template>
 							</el-table-column>
 						</el-table>
@@ -86,16 +111,28 @@
 			:visible.sync="visible"
 			:before-close="closeFormDialog"
 			width="610px"
+			class="audit-confirm"
 		>
-			<el-form ref="form" label-width="100px">
-				<el-form-item label="提交审核信息">
+			<el-form ref="form" :model="form" :rules="formRules">
+				<el-form-item v-if="action" label="提交审核信息">
 					<el-input
-						v-model="auditRemark"
+						v-model="form.auditRemark"
 						clearable
 						type="textarea"
 						:max="50"
 						:autosize="{ minRows: 4, maxRows: 4 }"
-						style="width: 280px"
+						style="width: 380px"
+						placeholder="请输入"
+					></el-input>
+				</el-form-item>
+				<el-form-item v-else label="提交审核信息" prop="auditRemark">
+					<el-input
+						v-model="form.auditRemark"
+						clearable
+						type="textarea"
+						:max="50"
+						:autosize="{ minRows: 4, maxRows: 4 }"
+						style="width: 380px"
 						placeholder="请输入"
 					></el-input>
 				</el-form-item>
@@ -118,17 +155,25 @@ export default {
 	name: routerNames.memberChangeReview,
 	components: {},
 	mixins: [list],
+	props: {
+		// 审核 true 仅返回 false
+		type: Boolean,
+		rowData: {
+			type: Object,
+			default: () => {}
+		}
+	},
 	data() {
 		return {
 			accountInfo: '',
 			auditInfo: '',
 			applyInfo: '',
 			registerInfo: '',
-			auditRemark: '',
+			form: {
+				auditRemark: ''
+			},
 			visible: false,
-			action: false,
-			// 审核 true 仅返回 false
-			type: true
+			action: false
 		}
 	},
 	computed: {
@@ -140,13 +185,17 @@ export default {
 		},
 		applyType() {
 			return this.globalDics.applyType
+		},
+		formRules() {
+			return {
+				auditRemark: [
+					{ required: true, message: '审核拒绝备注必填', trigger: 'blur' }
+				]
+			}
 		}
 	},
 	created() {
-		if (this.$route.name === 'memberChangeReview') {
-			this.getInfo()
-			this.type = this.$route.query.type
-		}
+		this.getInfo()
 	},
 	mounted() {},
 	methods: {
@@ -159,47 +208,87 @@ export default {
 			this.action = action
 		},
 		auditOne() {
-			const loading = this.$loading({
-				lock: true,
-				text: 'Loading',
-				spinner: 'el-icon-loading',
-				background: 'rgba(0, 0, 0, 0.7)'
-			})
-			const params = {
-				id: this.$route.query.id,
-				userId: this.$route.query.userId,
-				auditRemark: this.auditRemark,
-				auditStatus: this.action ? 2 : 3
-			}
-			this.$api
-				.audit(params)
-				.then((res) => {
-					loading.close()
-					if (res.code === 200) {
-						this.$message({
-							type: 'success',
-							message: '操作成功!'
+			if (this.action) {
+				const loading = this.$loading({
+					lock: true,
+					text: 'Loading',
+					spinner: 'el-icon-loading',
+					background: 'rgba(0, 0, 0, 0.7)'
+				})
+				const params = {
+					id: this.rowData.id,
+					userId: this.rowData.userId,
+					auditRemark: this.form.auditRemark,
+					auditStatus: this.action ? 2 : 3
+				}
+				this.$api
+					.audit(params)
+					.then((res) => {
+						loading.close()
+						if (res.code === 200) {
+							this.$message({
+								type: 'success',
+								message: '操作成功!'
+							})
+							this.visible = false
+							this.goBack()
+						} else {
+							this.$message({
+								message: res.msg,
+								type: 'error'
+							})
+						}
+					})
+					.catch(() => {
+						loading.close()
+					})
+			} else {
+				this.$refs.form.validate((valid) => {
+					if (valid) {
+						const loading = this.$loading({
+							lock: true,
+							text: 'Loading',
+							spinner: 'el-icon-loading',
+							background: 'rgba(0, 0, 0, 0.7)'
 						})
-						this.visible = false
-						this.goBack()
-					} else {
-						this.$message({
-							message: res.msg,
-							type: 'error'
-						})
+						const params = {
+							id: this.rowData.id,
+							userId: this.rowData.userId,
+							auditRemark: this.form.auditRemark,
+							auditStatus: this.action ? 2 : 3
+						}
+						this.$api
+							.audit(params)
+							.then((res) => {
+								loading.close()
+								if (res.code === 200) {
+									this.$message({
+										type: 'success',
+										message: '操作成功!'
+									})
+									this.visible = false
+									this.goBack()
+								} else {
+									this.$message({
+										message: res.msg,
+										type: 'error'
+									})
+								}
+							})
+							.catch(() => {
+								loading.close()
+							})
 					}
 				})
-				.catch(() => {
-					loading.close()
-				})
+			}
 		},
 		goBack() {
-			this.$router.go(-1)
+			this.$emit('goBack')
 		},
 		getInfo() {
 			const params = {
-				userId: this.$route.query.userId,
-				recordId: this.$route.query.id
+				userId: this.rowData.userId,
+				recordId: this.rowData.id
 			}
 			this.$api.recordInfo(params).then((res) => {
 				if (res.code === 200) {
@@ -217,13 +306,6 @@ export default {
 					})
 				}
 			})
-		},
-		getRowClass({ row, column, rowIndex, columnIndex }) {
-			if (rowIndex === 0) {
-				return 'background:#EFEFEF'
-			} else {
-				return ''
-			}
 		}
 	}
 }

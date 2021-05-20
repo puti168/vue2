@@ -30,14 +30,14 @@
       <el-col :span="5">
         代理类型：<i v-if="activeL" class="el-icon-loading"></i>
         <span v-else>
-          {{ typeFilter(outlineInfoList.accountType, "accountType") }}
+          {{ typeFilter(outlineInfoList.accountType, "proxyAccountType") }}
         </span>
       </el-col>
       <el-col
 :span="5"
 >帐号状态：<i v-if="activeL" class="el-icon-loading"></i>
         <span v-else>
-          {{ typeFilter(outlineInfoList.accountStatus, "accountStatusType") }}
+          {{ typeFilter(outlineInfoList.accountStatus, "proxyAccountStatusType") }}
         </span>
       </el-col>
       <el-col
@@ -51,14 +51,14 @@
 :span="5"
 >合营代码：<i v-if="activeL" class="el-icon-loading"></i>
         <span v-else>
-          {{ outlineInfoList.firstDepositTime }}
+          {{ outlineInfoList.invitationCode }}
         </span>
       </el-col>
       <el-col
 :span="5"
 >代理标签：<i v-if="activeL" class="el-icon-loading"></i>
         <span v-else>
-          {{ outlineInfoList.firstDepositAmount }}
+          {{ outlineInfoList.labelName }}
         </span>
       </el-col>
       <el-col
@@ -72,7 +72,7 @@
 :span="5"
 >离线天数：<i v-if="activeL" class="el-icon-loading"></i>
         <span v-else>
-          {{ outlineInfoList.leaveLineTime }}
+          {{ outlineInfoList.offLineDays }}
         </span>
       </el-col>
       <el-col
@@ -100,7 +100,7 @@
 :span="5"
 >入口权限：<i v-if="activeL" class="el-icon-loading"></i>
         <span v-else>
-          {{ outlineInfoList.registerIp }}
+          {{ typeFilter(outlineInfoList.entryAuthority, "entrAuthorityType") }}
         </span>
       </el-col>
     </el-row>
@@ -132,7 +132,7 @@
 :span="5"
 >手机号码：<i v-if="activeL" class="el-icon-loading"></i>
         <span v-else>
-          {{ outlineInfoList.registerPhone }}
+          {{ outlineInfoList.mobile }}
         </span>
       </el-col>
       <el-col
@@ -146,14 +146,14 @@
 :span="5"
 >QQ：<i v-if="activeL" class="el-icon-loading"></i>
         <span v-else>
-          {{ outlineInfoList.email }}
+          {{ outlineInfoList.qq }}
         </span>
       </el-col>
       <el-col
 :span="5"
 >支付密码：<i v-if="activeL" class="el-icon-loading"></i>
         <span v-else>
-          {{ outlineInfoList.email }}
+          {{ outlineInfoList.payPassword }}
         </span>
       </el-col>
     </el-row>
@@ -231,7 +231,7 @@
             @change="changeAccountStatus"
           >
             <el-option
-              v-for="item in accountStatusList"
+              v-for="item in proxyAccountStatusType"
               :key="item.description"
               :label="item.description"
               :value="item.code"
@@ -273,33 +273,30 @@
             </el-option>
           </el-select>
         </el-form-item>
+        <el-form-item v-if="moduleBox === '入口权限'" label="入口权限：" prop="code">
+          <el-select
+            v-model="editData.code"
+            placeholder="请选择"
+            @change="changeEntrAuthorityType"
+          >
+            <el-option
+              v-for="item in entrAuthorityType"
+              :key="item.description"
+              :label="item.description"
+              :value="item.code"
+            >
+            </el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item
           v-if="moduleBox === '支付密码重置'"
           label="支付密码重置："
-          prop="labelId"
+          prop="pws"
         >
-          <el-input></el-input>
+          <el-input placeholder="密码重置" disabled></el-input>
         </el-form-item>
         <el-form-item
-          v-if="moduleBox === '账号备注' || moduleBox === '入口权限'"
-          label="备注信息："
-          prop="remark"
-          :rules="[
-            { required: true, message: '请输入备注信息', trigger: 'blur' },
-            { min: 2, max: 50, message: '长度在 2 到 50 个字符', trigger: 'blur' },
-          ]"
-        >
-          <el-input
-            v-model="editData.remark"
-            :maxlength="50"
-            type="textarea"
-            placeholder="最多可输入50个字符"
-          >
-          </el-input>
-        </el-form-item>
-        <el-form-item
-          v-else
-          label="审核备注："
+          :label="titel"
           prop="remark"
           :rules="[
             { required: true, message: '请输入备注信息', trigger: 'blur' },
@@ -326,7 +323,6 @@
 
 <script>
 import list from '@/mixins/list'
-import { getDics } from '@/api/user'
 // import dayjs from 'dayjs'
 export default {
   mixins: [list],
@@ -341,36 +337,43 @@ export default {
       activeL: true,
       // 编辑信息按钮
       editMsgList: [
-        { code: '6', label: '账号状态', applyStatus: '' },
-        { code: '8', label: '风控层级', applyStatus: '' },
-        { code: '9', label: '代理标签', applyStatus: '' },
+        { code: '', label: '账号状态', applyStatus: '' },
+        { code: '', label: '风控层级', applyStatus: '' },
+        { code: '', label: '代理标签', applyStatus: '' },
         { code: '', label: '账号备注', applyStatus: '' },
         { code: '', label: '入口权限', applyStatus: '' },
-        { code: '3', label: '支付密码重置', applyStatus: '' }
+        { code: '6', label: '支付密码重置', applyStatus: '' }
       ],
-      // 账号状态
-      accountStatusList: [],
       // 风控层级
       riskLevelList: [],
       // 代理标签
       memberLabelList: [],
-      // 性别
-      genderTypeList: [],
       outlineInfoList: {}, // 基本信息
       tableList: [],
       moduleBox: '',
+      titel: '审核备注：',
       editVisible: false,
-      editData: {},
+      editData: { code: '', windControlId: '', labelId: '' },
       page: 1,
       size: 3
     }
   },
-  computed: {},
+  computed: {
+    proxyAccountStatusType() {
+      return this.globalDics.proxyAccountStatusType
+    },
+    entrAuthorityType() {
+      return this.globalDics.entrAuthorityType
+    },
+    outlineInfoData() {
+      return this.outlineInfo
+    }
+  },
   watch: {
-    outlineInfo: {
+    outlineInfoData: {
       handler(newV) {
+        console.log(newV)
         this.outlineInfoList = { ...newV }
-        console.log('newV.auditList', newV.auditList)
         if (newV.auditList && newV.auditList !== null) {
           for (let i = 0; i < newV.auditList.length; i++) {
             const ele = newV.auditList[i]
@@ -391,10 +394,11 @@ export default {
     },
     remarksTableData: {
       handler(newV) {
-        if (newV.totalRecord) {
+        if (newV.totalRecord && newV.totalRecord > 0) {
           this.total = newV.totalRecord
           this.tableList = newV.record
         } else {
+          this.total = 0
           this.tableList = []
         }
       },
@@ -407,59 +411,59 @@ export default {
   mounted() {},
   methods: {
     initGetDics() {
-      getDics().then((res) => {
-        if (res.code === 200) {
-          this.accountStatusList = res.data.accountStatusType
-          this.genderTypeList = res.data.genderType
-        }
-      })
-      this.$api.getMerchantDict().then((res) => {
+      this.$api.agentDictAPI().then((res) => {
         if (res.code === 200) {
           this.riskLevelList = res.data.windControl
           this.memberLabelList = res.data.userLabel
+          console.log('风控，标签', res)
         }
       })
     },
     // 会员详情-基本信息-概要信息以及个人资料
-    getOutlineInfo(val) {
-      this.$api.getOutlineInfo({ userName: val.userName }).then((res) => {
+    getProxyDetailQueryDetail(val) {
+      this.$api.getProxyDetailQueryDetail({ userName: val.userName }).then((res) => {
         if (res.code === 200) {
           this.outlineInfoList = res.data
+          this.editData = { code: '', windControlId: '', labelId: '' }
+          if (res.data.auditList && res.data.auditList !== null) {
+            for (let i = 0; i < res.data.auditList.length; i++) {
+              const ele = res.data.auditList[i]
+              for (let j = 0; j < this.editMsgList.length; j++) {
+                const val = this.editMsgList[j].code
+                if (ele.applyName === val) {
+                  this.editMsgList[j].applyStatus = ele.applyStatus
+                }
+              }
+            }
+          } else {
+            for (let i = 0; i < this.editMsgList.length; i++) {
+              this.editMsgList[i].applyStatus = ''
+            }
+          }
           const params = { userId: val.userId, pageNum: 1, pageSize: 3 }
-          this.$api.getMemberRemarkList(params).then((res) => {
+          this.$api.getProxyDetailRemark(params).then((res) => {
             if (res.code === 200) {
-              this.tableList = res.data.records
+              this.tableList = res.data.record
             }
           })
         }
       })
     },
-    // 添加会员备注
-    getMemberRemarkAdd(val) {
-      this.$api.getMemberRemarkAdd(val).then((res) => {
-        this.editData = {}
-        if (res.code === 200) {
-          this.$message.success('添加成功')
-          this.getOutlineInfo(this.parentData)
-        }
-        this.editVisible = false
-      })
-    },
     // 编辑信息
-    setMemberInfoEdit(val) {
-      this.$api.setMemberInfoEdit(val).then((res) => {
+    setProxyDataInfoEdit(val) {
+      this.$api.setProxyDataInfoEdit(val).then((res) => {
         if (res.code === 200) {
           this.$message.success(res.msg)
-          this.getOutlineInfo(this.parentData)
-          this.editData = {}
+          this.getProxyDetailQueryDetail(this.parentData)
+          this.editData = { code: '', windControlId: '', labelId: '' }
         }
         this.editVisible = false
       })
     },
     // 备注信息
-    getMemberRemarkList(val) {
+    getProxyDetailRemark(val) {
       const params = { userId: val, pageNum: this.page, pageSize: this.size }
-      this.$api.getMemberRemarkList(params).then((res) => {
+      this.$api.getProxyDetailRemark(params).then((res) => {
         if (res.code === 200) {
           this.tableList = res.data.record
         }
@@ -467,17 +471,44 @@ export default {
     },
     refresh() {
       const val = this.parentData
-      this.getOutlineInfo(val)
+      this.getProxyDetailQueryDetail(val)
     },
     editFn(val) {
       this.moduleBox = val
+      this.editData = { code: '', windControlId: '', labelId: '' }
+      switch (val) {
+        case '账号状态':
+          this.editData.code = this.outlineInfoList.accountStatus + ''
+          break
+
+        case '风控层级':
+          this.editData.windControlId = this.outlineInfoList.windControlId
+          this.editData.windControlName = this.outlineInfoList.windControlName
+          break
+        case '代理标签':
+          this.editData.labelId = this.outlineInfoList.labelId
+          this.editData.labelName = this.outlineInfoList.labelName
+          break
+        case '账号备注':
+          this.titel = '备注信息：'
+          break
+        case '入口权限':
+          this.titel = '备注信息：'
+          this.editData.code = this.outlineInfoList.entryAuthority
+          break
+
+        default:
+          this.titel = '审核备注：'
+          break
+      }
       this.editVisible = true
     },
     changeAccountStatus(val) {
-      this.editData.accountStatus = val
+      this.editData.code = val
     },
     changeWindControlId(val) {
-      for (let i = 0; i < this.memberLabelList.length; i++) {
+      this.editData.windControlId = val
+      for (let i = 0; i < this.riskLevelList.length; i++) {
         const ele = this.riskLevelList[i]
         if (ele.windControlId === val) {
           this.editData.windControlName = ele.windControlName
@@ -492,12 +523,16 @@ export default {
         }
       }
     },
+    changeEntrAuthorityType(val) {
+      console.log(val)
+      this.editData.entryAuthority = val
+    },
     changeGender(val) {
       this.editData.gender = val
     },
     cancel() {
       this.$refs.editForm.resetFields()
-      this.editData = {}
+      this.editData = { code: '', windControlId: '', labelId: '' }
       this.editVisible = false
     },
     submitEdit() {
@@ -513,51 +548,50 @@ export default {
             background: 'rgba(0, 0, 0, 0.7)'
           })
           if (this.moduleBox === '账号状态') {
+            params.accountStatus = params.code
             delete params.code
+            delete params.labelId
+            delete params.windControlId
             data.accountStatusAfter = params
-            this.setMemberInfoEdit(data)
+            this.setProxyDataInfoEdit(data)
             loading.close()
           }
           if (this.moduleBox === '风控层级') {
+            delete params.code
+            delete params.labelId
             data.windControlAfter = params
-            this.setMemberInfoEdit(data)
+            this.setProxyDataInfoEdit(data)
             loading.close()
           }
           if (this.moduleBox === '代理标签') {
-            data.labelAfter = params
-            this.setMemberInfoEdit(data)
-            loading.close()
-          }
-          if (this.moduleBox === '出生日期') {
-            data.birthAfter = params
-            this.setMemberInfoEdit(data)
-            loading.close()
-          }
-          if (this.moduleBox === '手机号码') {
-            data.mobileAfter = params
-            this.setMemberInfoEdit(data)
-            loading.close()
-          }
-          if (this.moduleBox === '姓名') {
-            data.realNameAfter = params
-            this.setMemberInfoEdit(data)
-            loading.close()
-          }
-          if (this.moduleBox === '性别') {
             delete params.code
-            data.genderAfter = params
-            this.setMemberInfoEdit(data)
-            loading.close()
-          }
-          if (this.moduleBox === '邮箱') {
-            data.emailAfter = params
-            this.setMemberInfoEdit(data)
+            delete params.windControlId
+            data.labelAfter = params
+            this.setProxyDataInfoEdit(data)
             loading.close()
           }
           if (this.moduleBox === '账号备注') {
-            params.userName = this.parentData.userName
-            params.userId = this.parentData.userId
-            this.getMemberRemarkAdd(params)
+            delete params.code
+            delete params.labelId
+            delete params.windControlId
+            data.remarkAfter = params.remark
+            this.setProxyDataInfoEdit(data)
+            loading.close()
+          }
+          if (this.moduleBox === '入口权限') {
+            delete params.code
+            delete params.labelId
+            delete params.windControlId
+            data.entryAuthorityAfter = params
+            this.setProxyDataInfoEdit(data)
+            loading.close()
+          }
+          if (this.moduleBox === '支付密码重置') {
+            delete params.code
+            delete params.labelId
+            delete params.windControlId
+            data.payPasswordAfter = params
+            this.setProxyDataInfoEdit(data)
             loading.close()
           }
         } else {
@@ -567,19 +601,19 @@ export default {
     },
     closeFormDialog() {
       this.$refs.editForm.resetFields()
-      this.editData = {}
+      this.editData = { code: '', windControlId: '', labelId: '' }
       this.editVisible = false
     },
     handleCurrentChange(val) {
       this.page = val
       if (this.parentData.userId !== null) {
-        this.getMemberRemarkList(this.parentData.userId)
+        this.getProxyDetailRemark(this.parentData.userId)
       }
     },
     handleSizeChange(val) {
       this.size = val
       if (this.parentData.userId !== null) {
-        this.getMemberRemarkList(this.parentData.userId)
+        this.getProxyDetailRemark(this.parentData.userId)
       }
     }
   }

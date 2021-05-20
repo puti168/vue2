@@ -5,7 +5,9 @@
 				<span>创建/编辑</span>
 				<span>
 					<el-button type="info" @click="back">取消</el-button>
-					<el-button type="success">保存</el-button>
+					<el-button type="success" :disabled="loading" @click="add">
+						保存
+					</el-button>
 				</span>
 			</div>
 			<div class="content-part2">
@@ -16,9 +18,9 @@
 					label-width="100px"
 					class="picture-form"
 				>
-					<el-form-item label="图片名称:" prop="picName">
+					<el-form-item label="图片名称:" prop="imageName">
 						<el-input
-							v-model="queryData.picName"
+							v-model="queryData.imageName"
 							size="medium"
 							maxlength="50"
 							placeholder="请输入"
@@ -26,41 +28,41 @@
 							style="width: 365px"
 						></el-input>
 					</el-form-item>
-					<el-form-item label="图片尺寸:" prop="picType">
+					<el-form-item label="图片尺寸:" prop="imageSize">
 						<el-select
-							v-model="queryData.picType"
+							v-model="queryData.imageSize"
 							size="medium"
 							placeholder="全部"
 							clearable
 							style="width: 365px"
 						>
 							<el-option
-								v-for="item in terminalTypeArr"
+								v-for="item in pictureSizeTypeArr"
 								:key="item.code"
 								:label="item.description"
 								:value="item.code"
 							></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="图片类型:" prop="picSize">
+					<el-form-item label="图片类型:" prop="imageType">
 						<el-select
-							v-model="queryData.picSize"
+							v-model="queryData.imageType"
 							size="medium"
-							placeholder="全部"
+							placeholder="默认选择全部"
 							clearable
 							style="width: 365px"
 						>
 							<el-option
-								v-for="item in gameDisplayArr"
+								v-for="item in materialPictureTypeArr"
 								:key="item.code"
 								:label="item.description"
 								:value="item.code"
 							></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="排序:" prop="sort">
+					<el-form-item label="排序:" prop="displayOrder">
 						<el-input
-							v-model="queryData.sort"
+							v-model="queryData.displayOrder"
 							size="medium"
 							placeholder="请输入"
 							clearable
@@ -74,20 +76,19 @@
 							ref="imgUpload"
 							:upload-file-type="'image/jpeg'"
 							:platform="'PC'"
-							:bounds="imageSize"
-							:img-urls="queryData.imgUrl"
+							:img-urls="queryData.imageAddress"
 							@upoladItemSucess="handleUploadSucess"
 							@startUpoladItem="handleStartUpload"
 							@deleteUpoladItem="handleDeleteUpload"
 							@upoladItemDefeat="handleUploadDefeat"
 						></upload>
 						<p v-if="imgTip" class="imgTip">
-                            <code style="color:#FF3B30;">*</code>&nbsp;图片格式仅支持png, jpg, 图片大小不超过2MB
+							请上传图片！图片格式仅支持png,图片尺寸： ？？ 图片大小不超过？？
 						</p>
 					</el-form-item>
 					<el-form-item label="审核信息:">
 						<el-input
-							v-model="queryData.applyInfo"
+							v-model="queryData.remark"
 							size="medium"
 							type="textarea"
 							placeholder="请输入"
@@ -95,25 +96,6 @@
 							maxlength="50"
 							style="width: 365px"
 						></el-input>
-					</el-form-item>
-					<el-form-item>
-						<el-button
-							type="primary"
-							icon="el-icon-search"
-							:disabled="loading"
-							size="medium"
-							@click="add"
-						>
-							提交
-						</el-button>
-						<el-button
-							icon="el-icon-refresh-left"
-							:disabled="loading"
-							size="medium"
-							@click="reset"
-						>
-							重置
-						</el-button>
 					</el-form-item>
 				</el-form>
 			</div>
@@ -124,7 +106,7 @@
 <script>
 import list from '@/mixins/list'
 import { isHaveEmoji, notSpecial2 } from '@/utils/validate'
-import Upload from '@/components/UploadBox'
+import Upload from './uploadItem'
 // import Sortable from 'sortablejs'
 // import Transfer from '@/components/transfer'
 
@@ -132,26 +114,35 @@ export default {
 	name: 'EditPage',
 	components: { Upload },
 	mixins: [list],
+	props: {
+		editData: {
+			type: Object,
+			default: function() {
+				return {}
+			}
+		}
+	},
 	data() {
 		return {
 			loading: false,
 			queryData: {
-				picName: undefined,
-				picType: undefined,
-				picSize: undefined,
-				sort: undefined,
-				applyInfo: undefined,
-                imgUrl: undefined
+				imageName: undefined,
+				imageSize: undefined,
+				imageType: undefined,
+				displayOrder: undefined,
+				imageAddress: null,
+				remark: undefined,
+				id: undefined
 			},
-			dataList: []
+			updateStatus: false
 		}
 	},
 	computed: {
-		terminalTypeArr() {
-			return [...this.globalDics.terminalnType]
+		materialPictureTypeArr() {
+			return this.globalDics.materialPictureType
 		},
-		gameDisplayArr() {
-			return [...this.globalDics.gameDisplayType]
+		pictureSizeTypeArr() {
+			return this.globalDics.pictureSizeType
 		},
 		imageSize() {
 			return {
@@ -159,12 +150,11 @@ export default {
 				height: 400
 			}
 		},
-        imgTip() {
-            return this.queryData.imgUrl ? '' : '请上传图片！'
-        },
+		imgTip() {
+			return this.queryData.imgUrl ? '' : '请上传图片！'
+		},
 		rules() {
 			const reg1 = /^[A-Za-z]{1}(?=(.*[a-zA-Z]){1,})(?=(.*[0-9]){1,})[0-9A-Za-z]{3,10}$/
-			const reg2 = /(?=.*[a-zA-Z])(?=.*[0-9])[a-zA-Z0-9]{8,12}/
 
 			const testPicName = (rule, value, callback) => {
 				const isSpecial = !notSpecial2(String(value))
@@ -180,69 +170,57 @@ export default {
 				}
 			}
 
-			const testPassword = (rule, value, callback) => {
-				const isSpecial = !notSpecial2(String(value))
-				const isRmoji = isHaveEmoji(String(value))
-				if (isSpecial) {
-					callback(new Error('不支持空格及特殊字符'))
-				} else if (isRmoji) {
-					callback(new Error('不支持表情'))
-				} else if (!reg2.test(value)) {
-					callback(new Error('请输入8-12位，字母+数字组合'))
-				} else {
-					callback()
-				}
-			}
-
 			return {
-				picType: [
-					{ required: true, message: '请选择图片类型', trigger: 'change' }
-				],
-				picSize: [
+				imageSize: [
 					{ required: true, message: '请选择图片尺寸', trigger: 'change' }
 				],
-                imgUrl: [
-                    { required: true, message: '请上传图片', trigger: 'change' }
-                ],
-				picName: [
+				imageType: [
+					{ required: true, message: '请选择图片类型', trigger: 'change' }
+				],
+				imageAddress: [
+					{ required: true, message: '请上传图片', trigger: 'change' }
+				],
+				imageName: [
 					{
 						required: true,
 						validator: testPicName,
 						trigger: 'blur'
 					}
 				],
-				sort: [
+				displayOrder: [
 					{
 						required: true,
 						message: '请输入排序',
-						trigger: 'blur'
-					}
-				],
-				password: [
-					{
-						required: true,
-						validator: testPassword,
 						trigger: 'blur'
 					}
 				]
 			}
 		}
 	},
-	mounted() {
-		document.body.ondrop = function(event) {
-			event.preventDefault()
-			event.stopPropagation()
+	watch: {
+		editData: {
+			handler(newData) {
+				if (Object.keys(newData).length) {
+					delete newData.createdAt
+					delete newData.createdBy
+					delete newData.updatedAt
+					delete newData.updatedBy
+					newData.imageType = newData.imageType + ''
+					this.queryData = {
+						...newData
+					}
+					this.updateStatus = true
+					console.log('this.queryData', this.queryData)
+				} else {
+					this.updateStatus = false
+					this.reset()
+				}
+			},
+			deep: true,
+			immediate: true
 		}
-
-		window.addEventListener('keydown', (e) => {
-			if (e.keyCode === 16 && e.shiftKey) {
-				this.shiftKey = true
-			}
-		})
-		window.addEventListener('keyup', (e) => {
-			this.shiftKey = false
-		})
 	},
+	mounted() {},
 	updated() {},
 	methods: {
 		back() {
@@ -251,34 +229,36 @@ export default {
 		add() {
 			this.loading = true
 			const params = {
-				...this.form
+				...this.queryData
 			}
+			const handle = this.updateStatus
+				? this.$api.agentPictureListUpdateAPI
+				: this.$api.agentPictureListCreateAPI
 			this.$refs['form'].validate((valid) => {
+				handle(params)
+					.then((res) => {
+						this.loading = false
+						const { code, msg } = res
+						if (code === 200) {
+							this.$confirm(`${this.updateStatus ? '更新' : '新增'}成功`, {
+								confirmButtonText: '确定',
+								type: 'success',
+								showCancelButton: false
+							})
+							this.reset()
+						} else {
+							this.$message({
+								message: msg,
+								type: 'error'
+							})
+						}
+					})
+					.catch(() => {
+						this.loading = false
+					})
 				console.log('valid', valid)
-				if (valid) {
-					this.$api
-						.addMemberAPI(params)
-						.then((res) => {
-							this.loading = false
-							const { code, data, msg } = res
-							if (code === 200) {
-								this.$confirm(`会员${data}资料提交成功`, {
-									confirmButtonText: '确定',
-									type: 'success',
-									showCancelButton: false
-								})
-								this.reset()
-							} else {
-								this.$message({
-									message: msg,
-									type: 'error'
-								})
-							}
-						})
-						.catch(() => {
-							this.loading = false
-						})
-				}
+				// if (valid) {
+				// }
 			})
 
 			setTimeout(() => {
@@ -288,57 +268,28 @@ export default {
 		reset() {
 			this.$refs['form'].resetFields()
 			this.form = {
-				historyGameLimit: undefined,
-				hotSearch: undefined
+				imageName: undefined,
+				imageSize: undefined,
+				imageType: undefined,
+				displayOrder: undefined,
+				imageAddress: null,
+				remark: undefined,
+				id: undefined
 			}
-		},
-		checkValue(val) {},
-		addRow() {
-			const lastRow = this.dataList[this.dataList.length - 1]
-			const new_row = lastRow.id + 1
-			this.dataList.push({ id: new_row })
-		},
-		deleteRow(val) {
-			this.$confirm('确定删除此游戏吗?', {
-				confirmButtonText: '确定',
-				cancelButtonText: '取消',
-				type: 'warning'
-			})
-				.then(() => {
-					// const loading = this.$loading({
-					// 	lock: true,
-					// 	text: 'Loading',
-					// 	spinner: 'el-icon-loading',
-					// 	background: 'rgba(0, 0, 0, 0.7)'
-					// })
-					// this.$api
-					// 	.setDeleteRole('', val.id)
-					// 	.then((res) => {
-					// 		loading.close()
-					// 		this.$message({
-					// 			type: 'success',
-					// 			message: '删除成功!'
-					// 		})
-					// 		this.loadData()
-					// 	})
-					// 	.catch(() => {
-					// 		loading.close()
-					// 	})
-				})
-				.catch(() => {})
 		},
 		handleStartUpload() {
 			this.$message.info('图片开始上传')
 		},
 		handleUploadSucess({ index, file, id }) {
-			this.form.imgUrl = file.imgUrl
+			console.log('this.queryData.imgUr', file.imgUrl)
+			this.queryData.imageAddress = file.imgUrl
 		},
 		handleUploadDefeat() {
-			this.form.imgUrl = ''
+			this.queryData.imageAddress = ''
 			this.$message.error('图片上传失败')
 		},
 		handleDeleteUpload() {
-			this.form.imgUrl = ''
+			this.queryData.imageAddress = ''
 			this.$message.warning('图片已被移除')
 		}
 	}

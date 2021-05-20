@@ -57,32 +57,49 @@ const ifVersionCorrect = async (to, from, next) => {
 			// console.log(addRoutes)
 			if (!addRoutes.length) {
 				let roles = JSON.parse(window.localStorage.getItem('role'))
-				if (!!roles && roles.length) {
-					const accessRoutes = await store.dispatch(
-						'permission/generateRoutes',
-						roles
-					)
-					router.addRoutes(accessRoutes)
-					next({ ...to, replace: true })
-				} else {
-					roles = await store.dispatch('user/getRoles')
-					try {
-						if (roles === '无效权限') {
-							await store.dispatch('user/resetToken')
-							next(`/login?redirect=nopermission`)
-							NProgress.done()
-						} else {
-							const accessRoutes = await store.dispatch(
-								'permission/generateRoutes',
-								roles
-							)
-							router.addRoutes(accessRoutes)
-							next({ ...to, replace: true })
-						}
-					} catch (e) {
-						Message.error(e || 'roles获取失败')
+				roles = await store.dispatch('user/getRoles')
+				try {
+					if (roles === '无效权限') {
+						await store.dispatch('user/resetToken')
+						next(`/login?redirect=nopermission`)
+						NProgress.done()
+					} else {
+						const accessRoutes = await store.dispatch(
+							'permission/generateRoutes',
+							roles
+						)
+						router.addRoutes(accessRoutes)
+						next({ ...to, replace: true })
 					}
+				} catch (e) {
+					Message.error(e || 'roles获取失败')
 				}
+				// if (!!roles && roles.length) {
+				// 	const accessRoutes = await store.dispatch(
+				// 		'permission/generateRoutes',
+				// 		roles
+				// 	)
+				// 	router.addRoutes(accessRoutes)
+				// 	next({ ...to, replace: true })
+				// } else {
+				// 	roles = await store.dispatch('user/getRoles')
+				// 	try {
+				// 		if (roles === '无效权限') {
+				// 			await store.dispatch('user/resetToken')
+				// 			next(`/login?redirect=nopermission`)
+				// 			NProgress.done()
+				// 		} else {
+				// 			const accessRoutes = await store.dispatch(
+				// 				'permission/generateRoutes',
+				// 				roles
+				// 			)
+				// 			router.addRoutes(accessRoutes)
+				// 			next({ ...to, replace: true })
+				// 		}
+				// 	} catch (e) {
+				// 		Message.error(e || 'roles获取失败')
+				// 	}
+				// }
 			} else {
 				try {
 					// await store.dispatch('user/getInfo')

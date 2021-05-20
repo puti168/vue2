@@ -5,7 +5,7 @@
 				<span>页签创建</span>
 				<span>
 					<el-button type="info" @click="back">返回</el-button>
-					<el-button type="success">保存</el-button>
+					<el-button type="success" @click="save">保存</el-button>
 				</span>
 			</div>
 			<div class="content-part2">
@@ -17,9 +17,9 @@
 					label-width="100px"
 					class="form-content"
 				>
-					<el-form-item label="分类名称:">
+					<el-form-item label="分类名称:" prop="assortName">
 						<el-input
-							v-model="queryData.historyGameLimit"
+							v-model="queryData.assortName"
 							size="medium"
 							maxlength="10"
 							placeholder="请输入"
@@ -27,12 +27,12 @@
 							style="width: 180px"
 						></el-input>
 					</el-form-item>
-					<el-form-item label="分类顺序:">
+					<el-form-item label="分类顺序:" prop="assortSort">
 						<el-input
-							v-model="queryData.hotSearch"
+							v-model="queryData.assortSort"
 							size="medium"
 							maxlength="11"
-							oninput="value=value.replace(/(^\s*)|(\s*$)/g ,'')"
+							onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
 							placeholder="请输入"
 							clearable
 							style="width: 180px"
@@ -51,13 +51,13 @@
 								v-for="item in terminalTypeArr"
 								:key="item.code"
 								:label="item.description"
-								:value="item.code"
+								:value="item.description"
 							></el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item label="页签备注:">
 						<el-input
-							v-model="queryData.hotSearch"
+							v-model="queryData.remark"
 							size="medium"
 							maxlength="11"
 							oninput="value=value.replace(/(^\s*)|(\s*$)/g ,'')"
@@ -97,7 +97,9 @@
 							ref="transfer"
 							v-model="value"
 							filterable
-							:data="data"
+							:data="childGameNameList"
+							:gameNameList="gameNameList"
+							:childGameConfigData="childGameConfigData"
 							:filter-method="filterMethod"
 							:target-order="'push'"
 							:titles="['已包含', '游戏平台']"
@@ -106,6 +108,7 @@
 							:right-default-checked="hasCheckedWHRightData"
 							@left-check-change="handleWHLeftChange"
 							@right-check-change="handleWHRightChange"
+							@clearAbleList="clearAbleList"
 						></Transfer>
 					</div>
 				</div>
@@ -118,7 +121,6 @@
 import list from '@/mixins/list'
 // import Sortable from 'sortablejs'
 import Transfer from '@/components/transfer'
-// import DragDrop from './demo'
 
 const generateData = () => {
 	const data = []
@@ -136,6 +138,12 @@ export default {
 	name: 'CreatePage',
 	components: { Transfer },
 	mixins: [list],
+	props: {
+		rowAssortId: {
+			type: String,
+			default: ''
+		}
+	},
 	data() {
 		return {
 			filterMethod(query, item) {
@@ -145,12 +153,16 @@ export default {
 			},
 			loading: false,
 			queryData: {
-				historyGameLimit: undefined,
-				hotSearch: undefined,
+				assortName: undefined,
+				assortSort: undefined,
 				supportTerminal: undefined,
+				remark: undefined,
 				clientDisplay: undefined
 			},
 			dataList: [],
+			gameNameList: [],
+			childGameNameList: [],
+			childGameConfigData: undefined,
 			data: generateData(),
 			value: [4, 2, 1],
 			shiftKey: false,
@@ -164,18 +176,22 @@ export default {
 	},
 	computed: {
 		terminalTypeArr() {
-			return [...this.globalDics.terminalnType]
+			return this.globalDics.terminalnType
 		},
 		gameDisplayArr() {
-			return [...this.globalDics.gameDisplayType]
+			return this.globalDics.gameDisplayType
 		}
+	},
+	created() {
+		this.queryChildGame()
+		this.queryGame()
+		this.queryChildGameConfig()
 	},
 	mounted() {
 		document.body.ondrop = function(event) {
 			event.preventDefault()
 			event.stopPropagation()
 		}
-
 		window.addEventListener('keydown', (e) => {
 			if (e.keyCode === 16 && e.shiftKey) {
 				this.shiftKey = true
@@ -222,6 +238,134 @@ export default {
 		back() {
 			this.$emit('back')
 		},
+		// 游戏平台查询
+		queryGame() {
+			this.gameNameList = []
+			const params = {
+				gameName: '',
+				gamePlatform: ''
+			}
+			this.$api.queryGameAPI(params).then((res) => {
+				const { code, data, msg } = res
+				if (code === 200) {
+					this.gameNameList = data
+				} else {
+					this.loading = false
+					this.$message({
+						message: msg,
+						type: 'error'
+					})
+				}
+			})
+		},
+
+		// 子游戏查询
+		queryChildGame() {
+			this.childGameNameList = []
+			console.log('this.rowAssortId', this.rowAssortId)
+			const params = {
+				gameName: '',
+				assortId: this.rowAssortId
+			}
+			this.$api.queryChildGameAPI(params).then((res) => {
+				const { code, data, msg } = res
+				if (code === 200) {
+					this.childGameNameList = data
+				} else {
+					this.loading = false
+					this.$message({
+						message: msg,
+						type: 'error'
+					})
+				}
+			})
+		},
+		// 子游戏配置查询
+		queryChildGameConfig() {
+			this.childGameNameList = []
+			if (this.rowAssortId) {
+				const params = {
+					id: this.rowAssortId
+				}
+				this.$api.queryChildGameConfigAPI(params).then((res) => {
+					const { code, data, msg } = res
+					if (code === 200) {
+						const {
+							assortName,
+							assortSort,
+							remark,
+							clientDisplay,
+							supportTerminal
+						} = data
+						this.queryData.assortName = assortName
+						this.queryData.assortSort = assortSort
+						this.queryData.remark = remark
+
+						this.gameDisplayArr.forEach((item) => {
+							if (!!(item.code * 1) === clientDisplay) {
+								this.queryData.clientDisplay = item.code
+							}
+						})
+						this.terminalTypeArr.forEach((item) => {
+							if (item.description === supportTerminal) {
+								this.queryData.supportTerminal.push(item.description)
+							}
+						})
+					} else {
+						this.$message({
+							message: msg,
+							type: 'error'
+						})
+					}
+				})
+			}
+		},
+		// 保存
+		save() {
+			const params = {
+				...this.queryData,
+				relationParams: []
+			}
+			params.supportTerminal =
+				params.supportTerminal && params.supportTerminal.length
+					? params.supportTerminal.join(',')
+					: undefined
+			this.$api
+				.gameUpdateAPI(params)
+				.then((res) => {
+					const { code, msg } = res
+					console.log('res', res)
+					if (code === 200) {
+						this.loading = false
+						this.$message({
+							message: '保存成功!',
+							type: 'success'
+						})
+                        this.reset()
+					} else {
+						this.loading = false
+						this.$message({
+							message: msg,
+							type: 'error'
+						})
+					}
+				})
+				.catch(() => (this.loading = false))
+		},
+        reset() {
+            this.$refs['form'].resetFields()
+            this.queryData = {
+                assortName: undefined,
+                assortSort: undefined,
+                supportTerminal: undefined,
+                remark: undefined,
+                clientDisplay: undefined
+            }
+        },
+		// 列表清空
+		clearAbleList() {
+			console.log('清空列表')
+		},
 		handleWHLeftChange(key, key1) {
 			const _this = this
 			console.log(_this.hasCheckedWHLeftData)
@@ -262,7 +406,6 @@ export default {
 			let k
 			const _this = this
 			let cFlag = false // 取消勾选
-			// debugger
 			for (var i = 0; i < key.length; i++) {
 				if (key[i] === key1[0]) {
 					cFlag = true // 选中
@@ -360,13 +503,6 @@ export default {
 			setTimeout(() => {
 				this.loading = false
 			}, 1000)
-		},
-		reset() {
-			this.$refs['form'].resetFields()
-			this.form = {
-				historyGameLimit: undefined,
-				hotSearch: undefined
-			}
 		},
 		checkValue(val) {},
 		addRow() {
@@ -501,15 +637,15 @@ export default {
 				width: 100%;
 				padding-left: 100px;
 				padding-bottom: 50px;
-                overflow-x: scroll;
-                //overflow-y: hidden;
+				overflow-x: scroll;
+				//overflow-y: hidden;
 				.hotConfig {
 					color: rgba(0, 0, 0, 0.847058823529412);
 					font-size: 14px;
 					font-weight: 650;
 					display: inline-block;
 					margin-left: 82px;
-                    margin-top: 10px;
+					margin-top: 10px;
 					margin-bottom: 18px;
 				}
 			}

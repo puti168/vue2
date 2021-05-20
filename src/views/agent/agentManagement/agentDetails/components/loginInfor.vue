@@ -103,9 +103,13 @@ export default {
       dataList: []
     }
   },
-  computed: {},
+  computed: {
+    lonRecordData() {
+      return this.lonRecord
+    }
+  },
   watch: {
-    lonRecord: {
+    lonRecordData: {
       handler(newV) {
         if (newV.totalRecord) {
           this.total = newV.totalRecord
@@ -118,10 +122,10 @@ export default {
   created() {},
   mounted() {},
   methods: {
-    // 会员登录日志查询
-    getLogMemberLoginLog(val) {
+    // 登录日志查询
+    getProxyDetailProxyLoginLog(val) {
       const params = { userId: val, pageNum: this.page, pageSize: this.size }
-      this.$api.getLogMemberLoginLog(params).then((res) => {
+      this.$api.getProxyDetailProxyLoginLog(params).then((res) => {
         if (res.code === 200) {
           this.dataList = res.data.record
         }
@@ -130,18 +134,18 @@ export default {
     refresh() {
       this.page = 1
       this.size = 10
-      this.getLogMemberLoginLog(this.parentData.userId)
+      this.getProxyDetailProxyLoginLog(this.parentData.userId)
     },
     handleCurrentChange(val) {
       this.page = val
       if (this.parentData.userId !== null) {
-        this.getLogMemberLoginLog(this.parentData.userId)
+        this.getProxyDetailProxyLoginLog(this.parentData.userId)
       }
     },
     handleSizeChange(val) {
       this.size = val
       if (this.parentData.userId !== null) {
-        this.getLogMemberLoginLog(this.parentData.userId)
+        this.getProxyDetailProxyLoginLog(this.parentData.userId)
       }
     }
   }

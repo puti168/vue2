@@ -56,6 +56,92 @@ export function playerAuditList(data) {
 		data
 	})
 }
+// 会员转代
+export function memberTransferAudit(data) {
+	return request({
+		url: '/memberTransfer/audit',
+		method: 'post',
+		data
+	})
+}
+export function memberTransferDetail(data) {
+	return request({
+		url: '/memberTransfer/detail',
+		method: 'post',
+		data
+	})
+} export function memberTransferLockOrder(data) {
+	return request({
+		url: '/memberTransfer/lockOrder',
+		method: 'post',
+		data
+	})
+} export function memberTransferSelectPage(data) {
+	return request({
+		url: '/memberTransfer/selectPage',
+		method: 'post',
+		data
+	})
+}
+// 新增代理审核
+export function lockProxyAuditRecord(data) {
+	return request({
+		url: '/proxy/lockProxyAuditRecord',
+		method: 'post',
+		data
+	})
+}
+export function proxyDetail(data) {
+	return request({
+		url: '/proxy/proxyDetail',
+		method: 'post',
+		data
+	})
+}
+export function updateProxyAuditRecord(data) {
+	return request({
+		url: '/proxy/updateProxyAuditRecord',
+		method: 'post',
+		data
+	})
+}
+export function proxyList(data) {
+	return request({
+		url: '/proxy/proxyList',
+		method: 'post',
+		data
+	})
+}
+// 代理审核
+export function proxyDataAudit(data) {
+	return request({
+		url: '/proxyData/audit',
+		method: 'post',
+		data
+	})
+}
+
+export function proxyDataLock(data) {
+	return request({
+		url: '/proxyData/lock',
+		method: 'post',
+		data
+	})
+}
+export function proxyDataRecordInfo(data) {
+	return request({
+		url: '/proxyData/recordInfo',
+		method: 'post',
+		data
+	})
+}
+export function proxyDataPage(data) {
+	return request({
+		url: '/proxyData/page',
+		method: 'post',
+		data
+	})
+}
 export function lock(data) {
 	return request({
 		url: '/memberData/lock',
@@ -93,9 +179,21 @@ export function addBlackList(data) {
 }
 
 export default {
+	memberTransferAudit,
+	memberTransferDetail,
+	memberTransferLockOrder,
+	memberTransferSelectPage,
+	updateProxyAuditRecord,
+	lockProxyAuditRecord,
+	proxyDetail,
+	proxyList,
 	recordInfo,
 	memberChange,
+	proxyDataAudit,
+	proxyDataLock,
+	proxyDataRecordInfo,
 	memberAuditDetail,
+	proxyDataPage,
 	audit,
 	lockMemberAuditRecord,
 	updateMemberAuditRecord,

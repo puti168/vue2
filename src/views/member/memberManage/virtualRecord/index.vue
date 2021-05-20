@@ -336,6 +336,7 @@ export default {
 				virtualKind: [],
 				virtualProtocol: []
 			}
+			this.pageNum = 1
 			this.formTime.time = [start, end]
 			this.loadData()
 		},

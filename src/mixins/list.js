@@ -70,7 +70,11 @@ export default {
 				['createDt', 'createDt'],
 				['auditTime', 'auditTime'],
 				['applyTime', 'applyTime'],
+				['gameId', 'gameId'],
+				['createdAt', 'createdAt'],
+				['updatedAt', 'updatedAt'],
 				['loginTime', 'loginTime'],
+				['withdrawalTime', 'withdrawalTime'],
 				['modifyDt', 'modifyDt']
 			])
 			return SortLine
@@ -142,16 +146,12 @@ export default {
 			this.pageNum = value
 			this.loadData()
 		},
-		enterSubmit() {
-			// 按下回车键提交表单方法需要重写
-		},
 		enterSearch(e) {
 			const event = e || window.event
 			const key = event.which || event.keyCode || event.charCode
 			if (key === 13) {
-				this.hadSearch = true
 				this.pageNum = 1
-				this.enterSubmit()
+				this.loadData()
 			}
 		},
 		search() {

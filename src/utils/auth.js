@@ -22,8 +22,8 @@ export function setGameTypes(val) {
 export function getGameTypes() {
 	return Cookies.get('game_types')
 }
-export function getId() {
-	return Cookies.get('id')
+export function getUserInfo() {
+	return Cookies.get('userInfo') ? JSON.parse(Cookies.get('userInfo')) : {}
 }
 export function getUsername() {
 	return Cookies.get('username')
@@ -34,8 +34,8 @@ export function getNickName() {
 export function setToken(token) {
 	return Cookies.set(TokenKey, token)
 }
-export function setId(token) {
-	return Cookies.set('id', token)
+export function setUserInfo(userInfo) {
+	return Cookies.set('userInfo', JSON.stringify(userInfo))
 }
 export function setUsername(token) {
 	return Cookies.set('username', token)

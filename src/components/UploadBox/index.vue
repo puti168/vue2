@@ -11,15 +11,15 @@
 			:on-progress="handleProgress"
 			:on-change="handleChange"
 		>
-			<el-progress
+			<!-- <el-progress
 				v-if="state === 'progress'"
 				type="circle"
 				:percentage="percent"
 				class="common-align-center"
 				:width="progressBarWidth"
-			></el-progress>
+			></el-progress> -->
 			<div
-				v-else-if="
+				v-if="
 					state === 'image' || state === 'image/gif' || state === 'image/jpeg'
 				"
 			>
@@ -35,10 +35,7 @@
 				<!--					class="delete-icon"-->
 				<!--					@click.stop="handleDeleteImgUrl"-->
 				<!--				/>-->
-				<i
-					class="delete-icon"
-					@click.stop="handleDeleteImgUrl"
-				></i>
+				<i class="delete-icon" @click.stop="handleDeleteImgUrl"></i>
 			</div>
 			<i
 				class="common-align-center el-icon-plus"
@@ -79,7 +76,8 @@ const UploadFileTypeConst = {
 const UploadStateConst = {
 	showAdd: 'add',
 	showProgress: 'progress',
-	showImage: 'image'
+	showImage: 'image',
+	showAudio: 'audio'
 }
 export default {
 	name: 'UploadBox',
@@ -94,10 +92,6 @@ export default {
 		uploadFileType: {
 			type: String,
 			default: UploadFileTypeConst.Image
-		},
-		platform: {
-			type: String,
-			default: () => true
 		},
 		boundflag: {
 			type: Boolean,
@@ -179,7 +173,8 @@ export default {
 				this.state = UploadStateConst.showAdd
 			}
 		},
-		state(value) {}
+		state(value) {
+		}
 	},
 	mounted() {
 		console.log(this.boundflag, 'boundflag')
@@ -239,12 +234,12 @@ export default {
 		handleChange(file) {
 			console.log('触发了change事件')
 			this.curFile = file.raw
+			this.showProgress = true
 			this.uploadFile()
 		},
 		handleProgress(progress) {
-			if (!this.showProgress) {
-				this.showProgress = true
-			}
+			console.log('proge')
+			this.showProgress = true
 			this.percent = progress
 		},
 		handleDeleteImgUrl() {
@@ -304,7 +299,6 @@ export default {
 			if (this.curFile) {
 				const img = new Image()
 				const that = this
-				console.log(this.boundflag, 'boundflag')
 				if (this.boundflag) {
 					img.onload = function() {
 						const width = img.width
@@ -321,13 +315,14 @@ export default {
 					img.src = window.URL.createObjectURL(this.curFile.raw || this.curFile)
 				} else {
 					img.onload = function() {
-						const width = img.width
-						const height = img.height
-						if (width !== that.bounds.width || height !== that.bounds.height) {
-							that.$message.error('图片尺寸不符合，请重新上传....')
-						} else {
-							successCB()
-						}
+						successCB()
+						// const width = img.width
+						// const height = img.height
+						// if (width !== that.bounds.width || height !== that.bounds.height) {
+						// 	that.$message.error('图片尺寸不符合，请重新上传....')
+						// } else {
+						// 	successCB()
+						// }
 					}
 					img.οnerrοr = function() {
 						console.error('error!')
@@ -372,12 +367,12 @@ export default {
 		},
 		getIndex() {
 			// 根据参数id取得该节点
-            const obj = document.getElementById(this.randomId)
-            // 获取该节点的父节点
-            const p = obj.parentNode
-            // 取得父节点下的所有节点
-            const tags = p.children
-            // 在父节点的所有子节点中查找自己所在的位置
+			const obj = document.getElementById(this.randomId)
+			// 获取该节点的父节点
+			const p = obj.parentNode
+			// 取得父节点下的所有节点
+			const tags = p.children
+			// 在父节点的所有子节点中查找自己所在的位置
 			for (let i = 0, len = tags.length; i < len; i++) {
 				// 找到节点，返回下标
 				if (tags[i] === obj) {
@@ -397,17 +392,8 @@ export default {
 				})
 				const formData = new FormData()
 				formData.append('file', this.curFile)
-				const activiType =
-					this.platform === 'PC' || this.platform === 'MB'
-						? 'ACTIVITY'
-						: this.platform
-				formData.append('activiType', activiType)
-
-				const handle =
-					this.uploadFileType === UploadFileTypeConst.Image
-						? this.$api.uploadActivityImgs
-						: this.$api.uploadActivityImgs
-				handle(formData, this.handleProgress)
+				this.$api
+					.imageUpload(formData)
 					.then((response) => {
 						if (this.isUploading) {
 							this.$message({
@@ -418,9 +404,6 @@ export default {
 						this.handleAvatarSuccess(response.data)
 					})
 					.catch(() => {
-						if (this.isUploading) {
-							this.$message.error('上传失败')
-						}
 						this.handleAvatarDefeat()
 					})
 			})
@@ -491,8 +474,8 @@ $mini-size: 100px;
 	display: block;
 }
 .common-align-center {
-    width: 50px;
-    height: 50px;
+	width: 50px;
+	height: 50px;
 }
 .delete-icon {
 	//position: absolute;

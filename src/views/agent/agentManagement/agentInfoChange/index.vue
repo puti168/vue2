@@ -21,7 +21,7 @@
           </el-form-item>
           <el-form-item label="代理账号:">
             <el-input
-              v-model="queryData.bankName"
+              v-model="queryData.userName"
               clearable
               :maxlength="11"
               size="medium"
@@ -31,7 +31,7 @@
               @keyup.enter.native="enterSearch"
             ></el-input>
           </el-form-item>
-          <el-form-item label="代理类型:" class="tagheight">
+          <el-form-item label="代理类型:" class="tagheight" prop="accountType">
             <el-select
               v-model="queryData.accountType"
               style="width: 280px"
@@ -40,7 +40,7 @@
               :popper-append-to-body="false"
             >
               <el-option
-                v-for="item in accountType"
+                v-for="item in proxyAccountType"
                 :key="item.code"
                 :label="item.description"
                 :value="item.code"
@@ -49,14 +49,14 @@
           </el-form-item>
           <el-form-item label="变更类型:" class="tagheight">
             <el-select
-              v-model="queryData.accountType"
+              v-model="queryData.applyType"
               style="width: 280px"
               multiple
               placeholder="默认选择全部"
               :popper-append-to-body="false"
             >
               <el-option
-                v-for="item in accountType"
+                v-for="item in porxyApplyType"
                 :key="item.code"
                 :label="item.description"
                 :value="item.code"
@@ -65,7 +65,7 @@
           </el-form-item>
           <el-form-item label="操作人:">
             <el-input
-              v-model="queryData.bankCode"
+              v-model="queryData.applyName"
               clearable
               :maxlength="12"
               size="medium"
@@ -107,42 +107,58 @@
           :header-cell-style="getRowClass"
           @sort-change="_changeTableSort"
         >
-          <el-table-column prop="createDt" align="center" label="代理账号">
+          <el-table-column prop="userName" align="center" label="代理账号">
             <template slot-scope="scope">
-              <Copy v-if="!!scope.row.createDt" :title="scope.row.createDt" :copy="copy">
-                {{ scope.row.createDt }}
+              <Copy v-if="!!scope.row.userName" :title="scope.row.userName" :copy="copy">
+                {{ scope.row.userName }}
               </Copy>
               <span v-else>-</span>
             </template>
           </el-table-column>
+          <el-table-column prop="applyType" align="center" label="代理类型">
+            <template slot-scope="scope">
+              {{ typeFilter(scope.row.accountType, "proxyAccountType") }}
+            </template>
+          </el-table-column>
+          <el-table-column prop="updateDt" align="center" label="变更类型">
+            <template slot-scope="scope">
+              {{ typeFilter(scope.row.applyType, "porxyApplyType") }}
+            </template>
+          </el-table-column>
+          <el-table-column prop="beforeModify" align="center" label="变更前">
+            <template slot-scope="scope">
+              <span v-if="scope.row.applyType === '1'">
+                {{ typeFilter(scope.row.beforeModify, "proxyAccountStatusType") }}
+              </span>
+              <span v-else-if="scope.row.applyType === '5'">
+                {{ typeFilter(scope.row.beforeModify, "entrAuthorityType") }}
+              </span>
+              <span v-else>
+                {{ scope.row.beforeModify }}
+              </span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="afterModify" align="center" label="变更后">
+            <template slot-scope="scope">
+              <span v-if="scope.row.applyType === '1'">
+                {{ typeFilter(scope.row.afterModify, "proxyAccountStatusType") }}
+              </span>
+              <span v-else-if="scope.row.applyType === '5'">
+                {{ typeFilter(scope.row.afterModify, "entrAuthorityType") }}
+              </span>
+              <span v-else>
+                {{ scope.row.afterModify }}
+              </span>
+            </template>
+          </el-table-column>
           <el-table-column
-            prop="updateDt"
-            align="center"
-            label="代理类型"
-          ></el-table-column>
-          <el-table-column
-            prop="updateDt"
-            align="center"
-            label="变更类型"
-          ></el-table-column>
-          <el-table-column
-            prop="updateDt"
-            align="center"
-            label="变更前"
-          ></el-table-column>
-          <el-table-column
-            prop="updateDt"
-            align="center"
-            label="变更后"
-          ></el-table-column>
-          <el-table-column
-            prop="updateDt"
+            prop="applyName"
             align="center"
             label="操作人"
           ></el-table-column>
-          <el-table-column prop="updateDt" align="center" label="备注"></el-table-column>
+          <el-table-column prop="applyInfo" align="center" label="备注"></el-table-column>
           <el-table-column
-            prop="vipSerialNum"
+            prop="applyTime"
             align="center"
             label="操作时间"
             sortable="custom"
@@ -179,7 +195,8 @@ export default {
   data() {
     return {
       queryData: {
-        accountType: []
+        accountType: [],
+        applyType: []
       },
       searchTime: [startTime, endTime],
       now: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
@@ -192,40 +209,48 @@ export default {
     }
   },
   computed: {
-    accountType() {
-      return this.globalDics.accountType
+    proxyAccountType() {
+      return this.globalDics.proxyAccountType
+    },
+    porxyApplyType() {
+      return this.globalDics.porxyApplyType
     }
   },
-  mounted() {
-    for (let i = 0; i < 10; i++) {
-      this.tableData[i] = {
-        bankCode: '165416416464654',
-        bankName: '中国银行',
-        createDt: '2021-02-13 20:28:54',
-        updateDt: '2021-02-13 20:28:54'
-      }
-    }
-  },
+  mounted() {},
   methods: {
     loadData() {
-      // this.loading = true;
+      this.loading = true
       const create = this.searchTime || []
       const [startTime, endTime] = create
       let params = {
         ...this.queryData,
-        startTime: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : '',
-        endTime: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
+        applyTimeStart: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : '',
+        applyTimeEnd: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
       }
       params = {
         ...this.getParams(params)
       }
-      console.log(params)
+      this.$api
+        .getProxyDataInfoChangeRecord(params)
+        .then((res) => {
+          if (res.code === 200) {
+            this.tableData = res.data.record
+            this.total = res.data.totalRecord
+            this.loading = false
+          } else {
+            this.loading = false
+          }
+        })
+        .catch(() => {
+          this.loading = false
+        })
     },
     reset() {
+      this.pageNum = 1
       this.queryData = {}
     },
     _changeTableSort({ column, prop, order }) {
-      if (prop === 'vipSerialNum') {
+      if (prop === 'applyTime') {
         prop = 1
       }
       this.queryData.orderKey = prop

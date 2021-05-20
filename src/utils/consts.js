@@ -18,13 +18,20 @@ export const routerNames = {
 	addMemberCheck: 'addMemberCheck',
 	gameHomeRecommendEdit: 'gameHomeRecommendEdit',
 	gameManagement: 'gameManagement',
-	gameClassification: 'gameClassification',
+	gameHomeRecommend: 'gameHomeRecommend',
+	gameClassification: 'GameClassification',
+	addReview: 'addReview',
+	agencyEdit: 'agencyEdit',
+	transformationReview: 'transformationReview',
 	gameSearchManage: 'gameSearchManage',
 	gameBetslipDetails: 'gameBetslipDetails',
-	pictureManagement: 'pictureManagement',
+	agentList: 'agentList',
 	agentBankCard: 'agentBankCard',
-	agentList: 'AgentList',
-	domainCreateAndEidt: 'domainCreateAndEidt'
+	agentVirtualRecord: 'agentVirtualRecord',
+	agentTrans: 'agentTrans',
+	pictureManagement: 'pictureManagement',
+	domainCreateAndEidt: 'domainCreateAndEidt',
+	levelWelfareConfig: 'levelWelfareConfig'
 }
 const month = dayjs().month()
 const year = dayjs().year()

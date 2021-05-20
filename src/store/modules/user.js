@@ -6,7 +6,8 @@ import {
 	setToken,
 	removeToken,
 	setUsername,
-	setId,
+	setUserInfo,
+	getUserInfo,
 	setNickName,
 	clearCookie
 } from '@/utils/auth'
@@ -19,22 +20,37 @@ const state = {
 	rolesIds: [],
 	name: '',
 	username: '',
+	// 新增用户审核数量
+	auditNewUser: '',
+	// 会员资料变更审核数量
+	auditUpdateInfoUser: '',
+	// 新增代理数量
+	auditNewAgent: '',
+	// 代理资料变更审核数量
+	auditUpdateInfoAgent: '',
+	// 变更会员上级代理审核数量
+	auditChangeAgent: '',
+	// 溢出会员审核数量
+	auditPatchAgent: '',
 	nickName: '',
-	id: '',
+	userInfo: getUserInfo(),
 	avatar: '',
 	globalDics: {},
 	datas: {}
 }
 
 const mutations = {
+	SET_AUDIT: (state, {value, type}) => {
+		state[type] = value
+	},
 	SET_TOKEN: (state, token) => {
 		state.token = token
 	},
 	SET_GLABALDICS: (state, dics) => {
 		state.globalDics = dics
 	},
-	SET_ID: (state, token) => {
-		state.id = token
+	SET_USERINFO: (state, userInfo) => {
+		state.userInfo = userInfo
 	},
 	SET_NAME: (state, name) => {
 		state.nickName = name
@@ -89,6 +105,9 @@ const mutations = {
 }
 
 const actions = {
+	setAudit({ commit }, {value, type}) {
+		commit('SET_AUDIT', {value, type})
+	},
 	// user login
 	login({ commit }, userInfo) {
 		const { username, password, googleAuth } = userInfo
@@ -111,9 +130,9 @@ const actions = {
 						commit('SET_TOKEN', data.token)
 						commit('SET_ACCOUNT', data.userInfo.username)
 						commit('SET_NAME', data.userInfo.nickName)
-						commit('SET_ID', data.userInfo.id)
+						commit('SET_USERINFO', data.userInfo)
 						setToken(data.token)
-						setId(data.userInfo.id)
+						setUserInfo(data.userInfo)
 						setUsername(data.userInfo.username)
 						setNickName(data.userInfo.nickName)
 						resolve(data)
