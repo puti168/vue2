@@ -5,8 +5,10 @@ import {
 	getToken,
 	setToken,
 	removeToken,
+	setUsername,
 	setUserInfo,
 	getUserInfo,
+	setNickName,
 	clearCookie
 } from '@/utils/auth'
 import { resetRouter } from '@/router'
@@ -126,8 +128,13 @@ const actions = {
 					if (response && response.code === 200) {
 						const { data } = response
 						commit('SET_TOKEN', data.token)
+						commit('SET_ACCOUNT', data.userInfo.username)
+						commit('SET_NAME', data.userInfo.nickName)
+						commit('SET_USERINFO', data.userInfo)
 						setToken(data.token)
 						setUserInfo(data.userInfo)
+						setUsername(data.userInfo.username)
+						setNickName(data.userInfo.nickName)
 						resolve(data)
 					} else {
 						reject(response.data)
