@@ -23,10 +23,10 @@ const checkVersion = (to, from, next) => {
 				} else if (VERSION !== response.data.version) {
 					Cookies.set('version', response.data.version)
 					console.info('新版本：', response.data.version)
-					// setTimeout(() => {
-					// 	location.reload(true)
-					// }, 0)
-					// return
+					setTimeout(() => {
+						location.reload(true)
+					}, 100)
+					return
 				}
 			}
 			ifVersionCorrect(to, from, next)
