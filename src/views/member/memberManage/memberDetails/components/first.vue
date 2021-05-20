@@ -150,7 +150,7 @@
 :span="5"
 >手机号码：<i v-if="activeL" class="el-icon-loading"></i>
         <span v-else>
-          {{ outlineInfoList.registerPhone }}
+          {{ outlineInfoList.mobile }}
         </span>
       </el-col>
       <el-col
@@ -732,10 +732,22 @@ export default {
           break
         case '风控层级':
           this.titel = '备注信息：'
-          this.editData.windControlId = this.outlineInfoList.windControlId
+          this.editData.windControlId = this.outlineInfoList.windControlId + ''
+          for (let i = 0; i < this.riskLevelList.length; i++) {
+            const ele = this.riskLevelList[i]
+            if (val === ele.windControlId) {
+              this.editData.windControlName = ele.windControlName
+            }
+          }
           break
         case '会员标签':
-          this.editData.labelId = this.outlineInfoList.labelId
+          this.editData.labelId = this.outlineInfoList.labelId + ''
+          for (let i = 0; i < this.memberLabelList.length; i++) {
+            const ele = this.memberLabelList[i]
+            if (val === ele.labelId) {
+              this.editData.labelName = ele.labelName
+            }
+          }
           break
         case '账号备注':
           this.titel = '备注信息：'
