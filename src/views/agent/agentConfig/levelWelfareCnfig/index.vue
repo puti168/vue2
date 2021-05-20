@@ -108,4 +108,7 @@ export default {
 /deep/.el-tabs__nav-wrap::after {
   display: none;
 }
+/deep/.el-tabs__item {
+  font-weight: 700;
+}
 </style>

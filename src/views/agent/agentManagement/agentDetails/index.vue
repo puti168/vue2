@@ -210,7 +210,7 @@ export default {
     getProxyDataCommission(val) {
       const params = { userId: val }
       this.$api.getProxyDataCommission(params).then((res) => {
-        if (res.code === 200) {
+        if (res.code === 200 && res.data !== null) {
           this.commission = res.data
           console.log('佣金信息', res)
         }
