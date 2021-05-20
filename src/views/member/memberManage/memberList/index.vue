@@ -364,12 +364,10 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="labelId" align="center" label="会员标签">
+					<el-table-column prop="labelName" align="center" label="会员标签">
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.labelId">
-								{{
-									userLabel.filter((item) => (item.labelId = labelId)).labelName
-								}}
+							<span v-if="!!scope.row.labelName">
+								{{ scope.row.labelName }}
 							</span>
 							<span v-else>-</span>
 						</template>
@@ -386,18 +384,14 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-                    <el-table-column
-                        prop="transforNum"
-                        align="center"
-                        label="转代次数"
-                    >
-                        <template slot-scope="scope">
+					<el-table-column prop="transforNum" align="center" label="转代次数">
+						<template slot-scope="scope">
 							<span v-if="!!scope.row.transforNum">
 								{{ scope.row.transforNum }}
 							</span>
-                            <span v-else>-</span>
-                        </template>
-                    </el-table-column>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
 					<el-table-column prop="accountStatus" align="center" label="账号状态">
 						<template slot-scope="scope">
 							<span v-if="!!scope.row.accountStatus">
@@ -568,8 +562,8 @@ export default {
 				lastLoginTime: [start, end],
 				vipSerialNumMax: undefined,
 				vipSerialNumMin: undefined,
-                transforNumMin: undefined,
-                transforNumMax: undefined,
+				transforNumMin: undefined,
+				transforNumMax: undefined,
 				accountType: [],
 				deviceType: [],
 				firstDepositAmountMin: undefined,
@@ -684,7 +678,7 @@ export default {
 			})
 		},
 		reset() {
-		    this.pageNum = 1
+			this.pageNum = 1
 			this.queryData = {
 				registerTime: [start, end],
 				userName: undefined,
@@ -696,8 +690,8 @@ export default {
 				lastLoginTime: [start, end],
 				vipSerialNumMax: undefined,
 				vipSerialNumMin: undefined,
-                transforNumMin: undefined,
-                transforNumMax: undefined,
+				transforNumMin: undefined,
+				transforNumMax: undefined,
 				accountType: undefined,
 				deviceType: undefined,
 				firstDepositAmountMin: undefined,
@@ -828,34 +822,34 @@ export default {
 						this.queryData.firstDepositAmountMax = value
 					}
 					break
-                case 'transforNumMin':
-                    if (
-                        !!this.queryData.transforNumMax &&
-                        value &&
-                        value * 1 > this.queryData.transforNumMax * 1
-                    ) {
-                        this.$message({
-                            type: 'warning',
-                            message: `请输入小于${this.queryData.transforNumMax}次数`
-                        })
-                    } else {
-                        this.queryData.transforNumMin = value
-                    }
-                    break
-                case 'transforNumMax':
-                    if (
-                        !!this.queryData.transforNumMin &&
-                        value &&
-                        value * 1 < this.queryData.transforNumMin * 1
-                    ) {
-                        this.$message({
-                            type: 'warning',
-                            message: `请输入大于${this.queryData.transforNumMin}次数`
-                        })
-                    } else {
-                        this.queryData.transforNumMin = value
-                    }
-                    break
+				case 'transforNumMin':
+					if (
+						!!this.queryData.transforNumMax &&
+						value &&
+						value * 1 > this.queryData.transforNumMax * 1
+					) {
+						this.$message({
+							type: 'warning',
+							message: `请输入小于${this.queryData.transforNumMax}次数`
+						})
+					} else {
+						this.queryData.transforNumMin = value
+					}
+					break
+				case 'transforNumMax':
+					if (
+						!!this.queryData.transforNumMin &&
+						value &&
+						value * 1 < this.queryData.transforNumMin * 1
+					) {
+						this.$message({
+							type: 'warning',
+							message: `请输入大于${this.queryData.transforNumMin}次数`
+						})
+					} else {
+						this.queryData.transforNumMin = value
+					}
+					break
 			}
 		},
 		exportExcel() {
