@@ -12,70 +12,147 @@
         <el-form
           ref="form"
           :model="queryData"
-          :rules="rules"
-          label-width="180px"
+          :inline="true"
+          label-width="150px"
           class="agent-form"
         >
-          <el-form-item label="代理等级:" prop="proxyGradeName">
+          <el-form-item
+            label="代理等级:"
+            prop="proxyGradeName"
+            :rules="[
+              {
+                required: true,
+                min: 1,
+                message: '代理等级不能为空',
+                trigger: ['blur'],
+              },
+            ]"
+          >
             <el-input
               v-model="queryData.proxyGradeName"
               size="medium"
-              maxlength="50"
+              maxlength="8"
               placeholder="请输入"
               clearable
-              style="width: 365px"
+              style="width: 405px"
             ></el-input>
           </el-form-item>
-          <el-form-item label="本月活跃人数≥:" prop="monthActiveNum">
-            <el-input
+          <el-form-item
+            label="本月活跃人数≥:"
+            prop="monthActiveNum"
+            :rules="[
+              {
+                required: true,
+                min: 1,
+                type: 'number',
+                message: '请输入大于0的数字',
+                trigger: ['blur'],
+              },
+            ]"
+          >
+            <el-input-number
               v-model="queryData.monthActiveNum"
               size="medium"
-              maxlength="50"
-              placeholder="请输入"
+              maxlength="7"
+              placeholder="请输入数字"
               clearable
-              style="width: 365px"
-            ></el-input>
+              style="width: 120px"
+              autocomplete="off"
+            ></el-input-number>
           </el-form-item>
-          <el-form-item label="本月新增活跃人数≥:" prop="monthNewNum">
-            <el-input
+          <el-form-item
+            label="本月新增活跃人数≥:"
+            prop="monthNewNum"
+            :rules="[
+              {
+                required: true,
+                min: 1,
+                type: 'number',
+                message: '请输入大于0的数字',
+                trigger: ['blur'],
+              },
+            ]"
+          >
+            <el-input-number
               v-model="queryData.monthNewNum"
               size="medium"
-              maxlength="50"
-              placeholder="请输入"
+              maxlength="7"
+              placeholder="请输入数字"
               clearable
-              style="width: 365px"
-            ></el-input>
+              style="width: 120px"
+              autocomplete="off"
+            ></el-input-number>
           </el-form-item>
-          <el-form-item label="额外赠佣比例%:" prop="additionalCommission">
-            <el-input
-              v-model="queryData.additionalCommission"
+          <el-form-item
+            label="额外赠佣比例%:"
+            prop="additionalCommission"
+            :rules="[
+              {
+                required: true,
+                min: 0,
+                max: 100,
+                type: 'number',
+                message: '输入值不能小于0大于100，最多2位小数',
+                trigger: ['blur'],
+              },
+            ]"
+          >
+            <el-input-number
+              v-model.number="queryData.additionalCommission"
               size="medium"
-              maxlength="50"
-              placeholder="请输入"
+              maxlength="7"
+              placeholder="请输入数字"
               clearable
-              style="width: 365px"
-            ></el-input>
+              :precision="2"
+              style="width: 120px"
+              autocomplete="off"
+            ></el-input-number>
           </el-form-item>
-          <el-form-item label="赠佣上限:" prop="additionalCommissionLimit">
-            <el-input
+          <el-form-item
+            label="赠佣上限:"
+            prop="additionalCommissionLimit"
+            :rules="[
+              {
+                required: true,
+                min: 1,
+                type: 'number',
+                message: '请输入大于0的数字',
+                trigger: ['blur'],
+              },
+            ]"
+          >
+            <el-input-number
               v-model="queryData.additionalCommissionLimit"
               size="medium"
-              maxlength="50"
-              placeholder="请输入"
+              maxlength="5"
+              placeholder="请输入数字"
               clearable
-              style="width: 365px"
-            ></el-input>
+              style="width: 120px"
+              autocomplete="off"
+            ></el-input-number>
           </el-form-item>
-          <el-form-item label="赠送彩金:" prop="giveJackpot">
-            <el-input
+          <el-form-item
+            label="赠送彩金:"
+            prop="giveJackpot"
+            :rules="[
+              {
+                required: true,
+                min: 0,
+                type: 'number',
+                message: '请输入大于0的数字',
+                trigger: ['blur'],
+              },
+            ]"
+          >
+            <el-input-number
               v-model="queryData.giveJackpot"
               size="medium"
-              type="textarea"
-              placeholder="请输入"
+              placeholder="请输入数字"
               clearable
-              maxlength="50"
-              style="width: 365px"
-            ></el-input>
+              maxlength="7"
+              style="width: 405px"
+              autocomplete="off"
+            ></el-input-number>
           </el-form-item>
         </el-form>
       </div>
@@ -92,96 +169,75 @@ export default {
   data() {
     return {
       loading: false,
-      queryData: {...this.editRowData},
-      dataList: []
+      queryData: { ...this.editRowData }
     }
   },
-  computed: {
-    rules() {
-      return {
-        proxyGradeName: [{ required: true, message: '请输入', trigger: 'change' }],
-        monthActiveNum: [{ required: true, message: '请输入', trigger: 'change' }],
-        monthNewNum: [{ required: true, message: '请输入', trigger: 'change' }],
-        additionalCommissionLimit: [
-          { required: true, message: '请输入', trigger: 'change' }
-        ],
-        additionalCommission: [{ required: true, message: '请输入', trigger: 'change' }],
-        giveJackpot: [{ required: true, message: '请输入', trigger: 'change' }]
-      }
-    }
-    // agentDataR() {
-    //   console.log(55555, this.editRowData);
-    //   this.queryData = this.editRowData;
-    //   return this.editRowData;
-    // },
-  },
-  watch: {
-      queryData: {
-          handler(newV) {
-
-          }
-      }
-    // agentDataR: {
-    //   handler(newV) {
-    //     let {
-    //       proxyGradeName,
-    //       monthActiveNum,
-    //       monthNewNum,
-    //       additionalCommission,
-    //       additionalCommissionLimit,
-    //       giveJackpot,
-    //     } = { ...newV };
-    //     this.queryData = {
-    //       proxyGradeName,
-    //       monthActiveNum,
-    //       monthNewNum,
-    //       additionalCommission,
-    //       additionalCommissionLimit,
-    //       giveJackpot,
-    //     };
-    //     console.log(99999, { ...newV });
-    //   },
-    //   deep: true,
-    // },
-  },
+  computed: {},
+  watch: {},
   mounted() {},
   methods: {
     back() {
       this.$emit('back')
+      this.$parent.loadData()
+    },
+    setProxyGradeInsert(val) {
+      this.$api
+        .setProxyGradeInsert(val)
+        .then((res) => {
+          this.loading = false
+          if (res.code === 200) {
+            this.$message.success('创建成功')
+            this.reset()
+          }
+        })
+        .catch(() => {
+          this.loading = false
+        })
+    },
+    setProxyGradeUpdate(val) {
+      this.$api
+        .setProxyGradeUpdate(val)
+        .then((res) => {
+          this.loading = false
+          if (res.code === 200) {
+            this.$message.success('修改成功')
+          }
+        })
+        .catch(() => {
+          this.loading = false
+        })
     },
     add() {
       this.loading = true
-    //   const params = {
-    //     ...this.form
-    //   }
-      console.log(this.queryData)
-      //   this.$refs["form"].validate((valid) => {
-      //     console.log("valid", valid);
-      //     if (valid) {
-      //       this.$api
-      //         .addMemberAPI(params)
-      //         .then((res) => {
-      //           this.loading = false;
-      //           const { code, data, msg } = res;
-      //           if (code === 200) {
-      //             this.$confirm(`会员${data}资料提交成功`, {
-      //               confirmButtonText: "确定",
-      //               type: "success",
-      //               showCancelButton: false,
-      //             });
-      //             this.reset();
-      //           } else {
-      //             this.$message({
-      //               message: msg,
-      //               type: "error",
-      //             });
-      //           }
-      //         })
-      //         .catch(() => {
-      //           this.loading = false;
-      //         });
-      //     }
-      //   });
+      const params = {
+        ...this.queryData
+      }
+      console.log(params)
+      this.$refs['form'].validate((valid) => {
+        if (valid) {
+          if (params.id) {
+            this.$confirm(`确定修改吗？`, {
+              confirmButtonText: '确定',
+              type: 'warning',
+              showCancelButton: false
+            })
+              .then(() => {
+                this.setProxyGradeUpdate(params)
+              })
+              .catch(() => {})
+          } else {
+            this.$confirm(`确定创建吗？`, {
+              confirmButtonText: '确定',
+              type: 'success',
+              showCancelButton: false
+            })
+              .then(() => {
+                this.setProxyGradeInsert(params)
+              })
+              .catch(() => {})
+          }
+        }
+      })
     },
     reset() {
       this.$refs['form'].resetFields()
@@ -203,10 +259,21 @@ export default {
 /deep/ .el-button--info:hover {
   background-color: #eeeded;
 }
+/deep/.el-input-number__decrease,
+/deep/.el-input-number__increase {
+  display: none;
+}
+/deep/.el-input-number .el-input__inner {
+  padding: 0 15px;
+  text-align: left;
+}
+/deep/.el-form-item {
+  margin-bottom: 25px;
+}
 .editPicturePage-container {
   background-color: #f5f5f5;
   margin: 0;
-  min-height: calc(100vh - 105px);
+  min-height: calc(90vh - 120px);
   .editPicturePage-content {
     width: 50%;
     margin: 0 auto;

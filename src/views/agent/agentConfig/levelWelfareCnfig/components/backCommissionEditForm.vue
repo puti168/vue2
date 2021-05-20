@@ -5,65 +5,105 @@
         <span>创建/编辑</span>
         <span>
           <el-button type="info" @click="back">取消</el-button>
-          <el-button type="success">保存</el-button>
+          <el-button type="success" @click="add">保存</el-button>
         </span>
       </div>
       <div class="content-part2">
         <el-form
           ref="form"
-          :model="queryData"
+          :inline="true"
           :rules="rules"
-          label-width="150px"
+          :model="queryData"
+          label-width="120px"
           class="picture-form"
         >
-          <el-form-item label="返佣等级:" prop="commissionLevel">
+          <el-form-item
+            label="返佣等级:"
+            prop="rebateLevel"
+            :rules="[
+              {
+                required: true,
+                min: 1,
+                message: '返佣等级不能为空',
+                trigger: ['blur'],
+              },
+            ]"
+          >
             <el-input
-              v-model="queryData.commissionLevel"
+              v-model="queryData.rebateLevel"
               size="medium"
-              maxlength="50"
+              maxlength="8"
               placeholder="请输入"
               clearable
-              style="width: 365px"
+              style="width: 370px"
             ></el-input>
           </el-form-item>
-          <el-form-item label="公司总输赢:" prop="totalProfit">
-            <el-input
-              v-model="queryData.totalProfitStart"
+          <el-form-item label="公司总输赢:" prop="totalMinNetAmount">
+            <el-input-number
+              v-model="queryData.totalMinNetAmount"
               size="medium"
-              maxlength="50"
-              placeholder="请输入"
+              placeholder="请输入数字"
               clearable
-              style="width: 100px"
-            ></el-input>
-            -
-            <el-input
-              v-model="queryData.totalProfitEnd"
-              size="medium"
-              maxlength="50"
-              placeholder="请输入"
-              clearable
-              style="width: 100px"
-            ></el-input>
+              style="width: 164px"
+            ></el-input-number>
           </el-form-item>
-          <el-form-item label="本月活跃人数:" prop="activeCount">
-            <el-input
-              v-model="queryData.activeCount"
+          <el-form-item> — </el-form-item>
+          <el-form-item prop="totalMaxNetAmount">
+            <el-input-number
+              v-model="queryData.totalMaxNetAmount"
               size="medium"
-              maxlength="50"
-              placeholder="请输入"
+              placeholder="请输入数字"
               clearable
-              style="width: 365px"
-            ></el-input>
+              style="width: 164px"
+            ></el-input-number>
           </el-form-item>
-          <el-form-item label="佣金比例%:" prop="commissionRate">
-            <el-input
-              v-model="queryData.commissionRate"
+          <el-form-item
+            label="本月活跃人数:"
+            prop="monthActiveNum"
+            :rules="[
+              {
+                required: true,
+                min: 1,
+                type: 'number',
+                message: '请输入大于0的数字',
+                trigger: ['blur'],
+              },
+            ]"
+          >
+            <el-input-number
+              v-model="queryData.monthActiveNum"
               size="medium"
-              maxlength="50"
-              placeholder="请输入"
+              maxlength="7"
+              placeholder="请输入数字"
               clearable
-              style="width: 365px"
-            ></el-input>
+              style="width: 118px"
+              autocomplete="off"
+            ></el-input-number>
+          </el-form-item>
+          <el-form-item
+            label="佣金比例%:"
+            prop="commissionRate"
+            :rules="[
+              {
+                required: true,
+                min: 0,
+                max: 100,
+                type: 'number',
+                message: '输入值不能小于0大于100，最多2位小数',
+                trigger: ['blur'],
+              },
+            ]"
+          >
+            <el-input-number
+              v-model.number="queryData.commissionRate"
+              size="medium"
+              maxlength="7"
+              placeholder="请输入数字"
+              clearable
+              :precision="2"
+              style="width: 118px"
+              autocomplete="off"
+            ></el-input-number>
           </el-form-item>
         </el-form>
       </div>
@@ -73,207 +113,117 @@
 
 <script>
 import list from '@/mixins/list'
-import { isHaveEmoji, notSpecial2 } from '@/utils/validate'
-
 export default {
   name: 'EditPage',
   mixins: [list],
+  props: { editRowData: { type: Object, default: () => {} } },
   data() {
     return {
       loading: false,
-      queryData: {
-        commissionLevel: '',
-        totalProfitStart: '',
-        totalProfitEnd: '',
-        activeCount: '',
-        commissionRate: ''
-      }
+      queryData: { ...this.editRowData }
     }
   },
   computed: {
-    terminalTypeArr() {
-      return [...this.globalDics.terminalnType]
-    },
-    gameDisplayArr() {
-      return [...this.globalDics.gameDisplayType]
-    },
-    imageSize() {
-      return {
-        width: 1920,
-        height: 400
-      }
-    },
-    imgTip() {
-      return this.queryData.imgUrl ? '' : '请上传图片！'
-    },
     rules() {
-      // const reg1 = /^[A-Za-z]{1}(?=(.*[a-zA-Z]){1,})(?=(.*[0-9]){1,})[0-9A-Za-z]{3,10}$/
-      const reg2 = /(?=.*[a-zA-Z])(?=.*[0-9])[a-zA-Z0-9]{8,12}/
-
-      // const testPicName = (rule, value, callback) => {
-      //     const isSpecial = !notSpecial2(String(value))
-      //     const isRmoji = isHaveEmoji(String(value))
-      //     if (isSpecial) {
-      //         callback(new Error('不支持空格及特殊字符'))
-      //     } else if (isRmoji) {
-      //         callback(new Error('不支持表情'))
-      //     } else if (!reg1.test(value)) {
-      //         callback(new Error('请填入图片标题'))
-      //     } else {
-      //         callback()
-      //     }
-      // }
-
-      const testPassword = (rule, value, callback) => {
-        const isSpecial = !notSpecial2(String(value))
-        const isRmoji = isHaveEmoji(String(value))
-        if (isSpecial) {
-          callback(new Error('不支持空格及特殊字符'))
-        } else if (isRmoji) {
-          callback(new Error('不支持表情'))
-        } else if (!reg2.test(value)) {
-          callback(new Error('请输入8-12位，字母+数字组合'))
+      const totalMinNetAmountRules = (rule, value, callback) => {
+        console.log(value)
+        if (!Number.isInteger(value) || value < 1) {
+          callback(new Error('请输入大于0的数字'))
+        } else if (value > 9999999999) {
+          callback(new Error('输入值最多为9999999999'))
         } else {
           callback()
         }
       }
-
-      return {
-        commissionLevel: [
-          { required: true, message: '请选输入佣金等级', trigger: 'change' }
-        ],
-        totalProfit: [{ required: true, message: '请输入', trigger: 'change' }],
-        activeCount: [{ required: true, message: '请上传图片', trigger: 'change' }],
-        commissionRate: [{ required: true, message: '请上传图片', trigger: 'change' }],
-        sort: [
-          {
-            required: true,
-            message: '请输入排序',
-            trigger: 'blur'
-          }
-        ],
-        password: [
-          {
-            required: true,
-            validator: testPassword,
-            trigger: 'blur'
-          }
-        ]
+      const totalMaxNetAmountRules = (rule, value, callback) => {
+        console.log(value)
+        if (!Number.isInteger(value) || value < 1) {
+          callback(new Error('请输入大于0的数字'))
+        } else if (value <= this.queryData.totalMinNetAmount) {
+          callback(new Error('输入值必须大于前面的值'))
+        } else if (value > 9999999999) {
+          callback(new Error('输入值最多为9999999999'))
+        } else {
+          callback()
+        }
       }
+      const totalMinNetAmount = [
+        { required: true, validator: totalMinNetAmountRules, trigger: 'blur' }
+      ]
+      const totalMaxNetAmount = [
+        { required: true, validator: totalMaxNetAmountRules, trigger: 'blur' }
+      ]
+      return { totalMinNetAmount, totalMaxNetAmount }
     }
   },
-  mounted() {
-    document.body.ondrop = function (event) {
-      event.preventDefault()
-      event.stopPropagation()
-    }
-
-    window.addEventListener('keydown', (e) => {
-      if (e.keyCode === 16 && e.shiftKey) {
-        this.shiftKey = true
-      }
-    })
-    window.addEventListener('keyup', (e) => {
-      this.shiftKey = false
-    })
-  },
-  updated() {},
+  watch: {},
+  mounted() {},
   methods: {
     back() {
       this.$emit('back')
+      this.$parent.loadData()
+    },
+    setProxyCommissionInsert(val) {
+      this.$api
+        .setProxyCommissionInsert(val)
+        .then((res) => {
+          this.loading = false
+          if (res.code === 200) {
+            this.$message.success('创建成功')
+            this.reset()
+          }
+        })
+        .catch(() => {
+          this.loading = false
+        })
+    },
+    setProxyCommissionUpdate(val) {
+      this.$api
+        .setProxyCommissionUpdate(val)
+        .then((res) => {
+          this.loading = false
+          if (res.code === 200) {
+            this.$message.success('修改成功')
+          }
+        })
+        .catch(() => {
+          this.loading = false
+        })
     },
     add() {
       this.loading = true
       const params = {
-        ...this.form
+        ...this.queryData
       }
+      console.log(params)
       this.$refs['form'].validate((valid) => {
-        console.log('valid', valid)
         if (valid) {
-          this.$api
-            .addMemberAPI(params)
-            .then((res) => {
-              this.loading = false
-              const { code, data, msg } = res
-              if (code === 200) {
-                this.$confirm(`会员${data}资料提交成功`, {
-                  confirmButtonText: '确定',
-                  type: 'success',
-                  showCancelButton: false
-                })
-                this.reset()
-              } else {
-                this.$message({
-                  message: msg,
-                  type: 'error'
-                })
-              }
+          if (params.id) {
+            this.$confirm(`确定修改吗？`, {
+              confirmButtonText: '确定',
+              type: 'warning',
+              showCancelButton: false
             })
-            .catch(() => {
-              this.loading = false
+              .then(() => {
+                this.setProxyCommissionUpdate(params)
+              })
+              .catch(() => {})
+          } else {
+            this.$confirm(`确定创建吗？`, {
+              confirmButtonText: '确定',
+              type: 'success',
+              showCancelButton: false
             })
+              .then(() => {
+                this.setProxyCommissionInsert(params)
+              })
+              .catch(() => {})
+          }
         }
       })
-
-      setTimeout(() => {
-        this.loading = false
-      }, 1000)
     },
     reset() {
       this.$refs['form'].resetFields()
-      this.form = {
-        historyGameLimit: undefined,
-        hotSearch: undefined
-      }
-    },
-    checkValue(val) {},
-    addRow() {
-      const lastRow = this.dataList[this.dataList.length - 1]
-      const new_row = lastRow.id + 1
-      this.dataList.push({ id: new_row })
-    },
-    deleteRow(val) {
-      this.$confirm('确定删除此游戏吗?', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      })
-        .then(() => {
-          // const loading = this.$loading({
-          // 	lock: true,
-          // 	text: 'Loading',
-          // 	spinner: 'el-icon-loading',
-          // 	background: 'rgba(0, 0, 0, 0.7)'
-          // })
-          // this.$api
-          // 	.setDeleteRole('', val.id)
-          // 	.then((res) => {
-          // 		loading.close()
-          // 		this.$message({
-          // 			type: 'success',
-          // 			message: '删除成功!'
-          // 		})
-          // 		this.loadData()
-          // 	})
-          // 	.catch(() => {
-          // 		loading.close()
-          // 	})
-        })
-        .catch(() => {})
-    },
-    handleStartUpload() {
-      this.$message.info('图片开始上传')
-    },
-    handleUploadSucess({ index, file, id }) {
-      this.form.imgUrl = file.imgUrl
-    },
-    handleUploadDefeat() {
-      this.form.imgUrl = ''
-      this.$message.error('图片上传失败')
-    },
-    handleDeleteUpload() {
-      this.form.imgUrl = ''
-      this.$message.warning('图片已被移除')
     }
   }
 }
@@ -292,16 +242,24 @@ export default {
 /deep/ .el-button--info:hover {
   background-color: #eeeded;
 }
+/deep/.el-input-number__decrease,
+/deep/.el-input-number__increase {
+  display: none;
+}
+/deep/.el-input-number .el-input__inner {
+  padding: 0 15px;
+  text-align: left;
+}
 .editPicturePage-container {
   background-color: #f5f5f5;
   margin: 0;
-  min-height: calc(100vh - 105px);
+  min-height: calc(100vh);
   .editPicturePage-content {
     width: 50%;
     margin: 0 auto;
     background-color: #fff;
     position: relative;
-    padding-bottom: 30px;
+
     .form-header {
       height: 55px;
       line-height: 55px;
@@ -332,13 +290,14 @@ export default {
     }
     .content-part2 {
       width: 100%;
-      padding: 25px 35px 20px;
+      height: 300px;
       position: relative;
       margin: 0 auto;
       .picture-form {
         position: relative;
         width: 600px;
         max-width: 100%;
+        min-height: 100%;
         padding: 35px 35px 0;
         margin: 0 auto;
         overflow: hidden;

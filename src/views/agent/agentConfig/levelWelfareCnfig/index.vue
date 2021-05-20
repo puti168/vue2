@@ -106,6 +106,6 @@ export default {
 }
 
 /deep/.el-tabs__nav-wrap::after {
-  background: #ffffff;
+  display: none;
 }
 </style>
