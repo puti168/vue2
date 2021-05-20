@@ -11,7 +11,6 @@
 							size="medium"
 							style="width: 180px"
 							placeholder="请输入"
-							:disabled="loading"
 							@keyup.enter.native="enterSearch"
 						></el-input>
 					</el-form-item>
@@ -23,7 +22,6 @@
 							size="medium"
 							style="width: 180px; margin-right: 20px"
 							placeholder="请输入"
-							:disabled="loading"
 							@keyup.enter.native="enterSearch"
 						></el-input>
 					</el-form-item>

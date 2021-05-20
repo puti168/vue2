@@ -37,6 +37,7 @@
 						<el-input
 							v-model="queryData.userName"
 							clearable
+							:maxlength="11"
 							size="medium"
 							style="width: 180px"
 							placeholder="请输入"
@@ -93,6 +94,7 @@
 					<el-form-item label="申请人:">
 						<el-input
 							v-model="queryData.applyName"
+							:maxlength="12"
 							clearable
 							size="medium"
 							style="width: 180px"
@@ -105,6 +107,7 @@
 							v-model="queryData.auditName"
 							clearable
 							size="medium"
+							:maxlength="12"
 							style="width: 180px"
 							placeholder="请输入"
 							@keyup.enter.native="enterSearch"
@@ -130,6 +133,7 @@
 							v-model="queryData.auditNum"
 							clearable
 							size="medium"
+							:maxlength="19"
 							style="width: 180px"
 							placeholder="请输入"
 							@keyup.enter.native="enterSearch"
@@ -167,7 +171,7 @@
 						:data="dataList"
 						style="width: 100%"
 						:header-cell-style="getRowClass"
-						@sort-change="changeTableSort"
+						@sort-change="changeTableSort2"
 					>
 						<el-table-column align="center" label="锁单" width="60">
 							<template slot-scope="scope">
@@ -254,7 +258,12 @@
 								</span>
 							</template>
 							<template slot-scope="scope">
-								{{ scope.row.userName ? scope.row.userName : '-' }}
+								<Copy
+									v-if="!!scope.row.userName"
+									:title="scope.row.userName"
+									:copy="copy"
+								/>
+								<span v-else>-</span>
 								<p>
 									{{
 										scope.row.accountType
@@ -449,6 +458,18 @@ export default {
 				.catch(() => {
 					this.loading = false
 				})
+		},
+		changeTableSort2({ column, prop, order }) {
+			this.pageNum = 1
+			this.queryData.orderKey = prop === 'applyTime' ? 1 : 2
+			if (order === 'ascending') {
+				// 升序
+				this.queryData.orderType = 'asc'
+			} else if (column.order === 'descending') {
+				// 降序
+				this.queryData.orderType = 'desc'
+			}
+			this.loadData()
 		},
 		goDetail(row) {
 			this.type = Number(row.auditStep) === 1 && row.auditName === this.name

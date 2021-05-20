@@ -1,7 +1,7 @@
 <template>
 	<div class="review-content">
 		<div class="head">
-			<span class="title">会员转代审核详情</span>
+			<span class="title">会员溢出审核详情</span>
 			<div v-if="type" class="right-btn">
 				<el-button plain @click="goBack">取消</el-button>
 				<el-button type="success" @click="confirm(true)">一审通过</el-button>
@@ -13,52 +13,59 @@
 		</div>
 		<div class="main-content">
 			<div class="review-content">
-				<p class="name">转代会员信息</p>
+				<p class="name">代理注册信息</p>
 				<div class="review-flex">
-					<div>会员账号: {{ list.userName }}</div>
-					<div>账号类型: {{ typeFilter(list.accountType, 'accountType') }}</div>
-					<div>注册时间: {{ list.registerDt }}</div>
-				</div>
-				<div class="review-flex">
-					<div>当前上级代理: {{ list.parentProxyName }}</div>
-					<div>代理类型: {{ typeFilter(list.proxyType, 'proxyAccountType') }}</div>
-					<div>绑定时间: {{ list.bindingDt }}</div>
+					<div>注册时间: {{ list.proxyRegistTime }}</div>
+					<div>代理类型: {{ typeFilter(list.accountType, 'proxyAccountType') }}</div>
+					<div>上次登录时间: {{ list.proxyLastLoginTime }}</div>
+					<div>注册端: {{ list.password }}</div>
 				</div>
 			</div>
 			<div class="review-content">
-				<p class="name">转入代理信息</p>
+				<p class="name">代理账号信息</p>
 				<div class="review-flex">
-					<div>代理账号: {{ list.transferProxyName }}</div>
-					<div>代理类型: {{ typeFilter(list.transferProxyType, 'proxyAccountType') }}</div>
-					<div>注册时间: {{ list.transferProxyRegisterDt }}</div>
+					<div>账号: {{ list.transferProxyName }}</div>
+					<div>账号状态: {{ typeFilter(list.proxyAccountStatus, 'proxyAccountStatusType') }}</div>
+					<div>风控层级: {{ list.proxyWindControlName }}</div>
+					<div>代理标签: {{ list.proxyLabelName }}</div>
+				</div>
+				<div class="review-flex">
+					<div>备注信息: {{ list.proxyRemark }}</div>
 				</div>
 			</div>
-			<div class="review-content" style="height: 200px">
-				<p class="name">申请信息</p>
+			<div class="review-content">
+				<p class="name">溢出会员信息</p>
 				<div class="review-flex">
-					<el-table
-						border
-						size="mini"
-						:data="[1]"
-						style="width: 100%"
-						:header-cell-style="getRowClass"
-					>
-						<el-table-column align="center" label="修改前上级代理">
-							<template>
-								{{ list.currentProxyName }}
-							</template>
-						</el-table-column>
-						<el-table-column align="center" label="修改后上级代理">
-							<template>
-								{{ list.transferProxyName }}
-							</template>
-						</el-table-column>
-					</el-table>
+					<div>账号: {{ list.userName }}</div>
+					<div>账号状态: {{ typeFilter(list.memberAccountStatus, 'accountStatusType') }}</div>
+					<div>风控层级: {{ list.memberWindControlName }}</div>
+					<div>会员标签: {{ list.auditRemark }}</div>
 				</div>
 				<div class="review-flex">
-					<div>申请人: {{ list.applyName }}</div>
-					<div>申请时间: {{ list.applyTime }}</div>
-					<div>申请信息: {{ list.applyInfo }}</div>
+					<div>VIP等级: {{ list.memberVipLevel }}</div>
+					<div>银行卡数量: {{ list.bankCardNum }}</div>
+					<div>虚拟账号数量: {{ list.virtureAccountNum }}</div>
+					<div>备注信息: {{ list.memberRemark }}</div>
+				</div>
+				<div class="review-flex">
+					<div>注册时间: {{ list.memberRegistTime }}</div>
+					<div>上次登录时间: {{ list.memberLastLoginTime }}</div>
+					<div>注册端: {{ typeFilter(list.deviceType, "deviceType") }}</div>
+				</div>
+			</div>
+			<div class="review-content">
+				<p class="name">申请信息</p>
+				<div class="review-flex">
+					<div>溢出会员: {{ list.userName }}</div>
+					<div>上级代理: {{ list.transferProxyName }}</div>
+					<div>推广链接: {{ list.promotionLink }}</div>
+				</div>
+				<div class="review-flex">
+					<div>推广设备: {{ list.promotionDevice }}</div>
+					<div>申请理由: {{ list.applyInfo }}</div>
+				</div>
+				<div class="review-flex">
+					<div>申请附图: {{ list.list }}</div>
 				</div>
 			</div>
 			<div class="review-content">
@@ -168,12 +175,13 @@ export default {
 				})
 				const params = {
 					id: this.rowData.id,
+					userId: this.rowData.userId,
 					auditRemark: this.form.remark,
 					auditStatus: this.action ? 2 : 3
 				}
 
 				this.$api
-					.memberTransferAudit(params)
+					.updateMemberOverflowRecord(params)
 					.then((res) => {
 						loading.close()
 						if (res.code === 200) {
@@ -209,7 +217,7 @@ export default {
 						}
 
 						this.$api
-							.memberTransferAudit(params)
+							.updateMemberOverflowRecord(params)
 							.then((res) => {
 								loading.close()
 								if (res.code === 200) {
@@ -240,7 +248,7 @@ export default {
 			const params = {
 				id: this.rowData.id
 			}
-			this.$api.memberTransferDetail(params).then((res) => {
+			this.$api.memberOverflowDetail(params).then((res) => {
 				if (res.code === 200) {
 					const response = res.data
 					this.loading = false

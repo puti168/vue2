@@ -16,7 +16,7 @@
 								<el-input
 									v-model="form.gameName"
 									size="medium"
-									maxlength="20"
+									:maxlength="20"
 									clearable
 									style="width: 365px"
 								></el-input>
@@ -64,7 +64,7 @@
 								<el-input
 									v-model="form.remark"
 									size="medium"
-									maxlength="50"
+									:maxlength="50"
 									clearable
 									style="width: 365px"
 								></el-input>
@@ -75,7 +75,7 @@
 								<el-input
 									v-model="form.accessInfo"
 									size="medium"
-									maxlength="100"
+									:maxlength="100"
 									clearable
 									style="width: 365px"
 								></el-input>
@@ -86,7 +86,7 @@
 								<el-input
 									v-model="form.description"
 									size="medium"
-									maxlength="100"
+									:maxlength="100"
 									clearable
 									style="width: 365px"
 								></el-input>
@@ -135,6 +135,7 @@
 								<el-input
 									v-model="form.gameRebateRate"
 									size="medium"
+									maxlength="5"
 									clearable
 									style="width: 365px"
 								></el-input>
@@ -387,13 +388,6 @@ export default {
 	mounted() {},
 	methods: {
 		confirm() {
-			// if (!this.imageAddress) {
-			// 	this.$message({
-			// 						message: res.msg,
-			// 						type: 'error'
-			// 					})
-			// 	return
-			// }
 			this.$refs.form.validate((valid) => {
 				if (valid) {
 					const loading = this.$loading({

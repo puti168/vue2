@@ -54,7 +54,35 @@ export function agentRegisterInfoAPI(data) {
 		data
 	})
 }
-
+// 溢出审核
+export function listOverflowMember(data) {
+	return request({
+		url: '/memberOverflow/listOverflowMember',
+		method: 'post',
+		data
+	})
+}
+export function lockMemberAuditRecord(data) {
+	return request({
+		url: '/memberOverflow/lockMemberAuditRecord',
+		method: 'post',
+		data
+	})
+}
+export function memberOverflowDetail(data) {
+	return request({
+		url: '/memberOverflow/memberOverflowDetail',
+		method: 'post',
+		data
+	})
+}
+export function updateMemberOverflowRecord(data) {
+	return request({
+		url: '/memberOverflow/updateMemberOverflowRecord',
+		method: 'post',
+		data
+	})
+}
 // 代理==> 代理管理 ===> 代理银行卡记录
 export function agentBankRecordAPI(data) {
 	return request({
@@ -255,8 +283,76 @@ export function setDomainUpdate(data) {
 		data
 	})
 }
+//  等级福利配置-分页查询代理等级管理
+export function getProxyGradesSelect(data) {
+	return request({
+		url: '/proxyGrade/select',
+		method: 'post',
+		data
+	})
+}
+//  等级福利配置-删除代理等级管理
+export function setProxyGradeDelete(data) {
+	return request({
+		url: '/proxyGrade/delete',
+		method: 'post',
+		data
+	})
+}
+//  等级福利配置-新增代理等级管理
+export function setProxyGradeInsert(data) {
+	return request({
+		url: '/proxyGrade/insert',
+		method: 'post',
+		data
+	})
+}
+//  等级福利配置-修改代理等级管理
+export function setProxyGradeUpdate(data) {
+	return request({
+		url: '/proxyGrade/update',
+		method: 'post',
+		data
+	})
+}
+//  等级福利配置-分页查询代理返佣等级管理
+export function getProxyCommissionSelect(data) {
+	return request({
+		url: '/proxyCommission/select',
+		method: 'post',
+		data
+	})
+}
+//  等级福利配置-删除代理返佣等级管理
+export function setProxyCommissionDelete(data) {
+	return request({
+		url: '/proxyCommission/delete',
+		method: 'post',
+		data
+	})
+}
+//  等级福利配置-新增代理返佣等级管理
+export function setProxyCommissionInsert(data) {
+	return request({
+		url: '/proxyCommission/insert',
+		method: 'post',
+		data
+	})
+}
+//  等级福利配置-修改代理返佣等级管理
+export function setProxyCommissionUpdate(data) {
+	return request({
+		url: '/proxyCommission/update',
+		method: 'post',
+		data
+	})
+}
 
 export default {
+	updateMemberOverflowRecord,
+	memberOverflowDetail,
+	lockMemberAuditRecord,
+	listOverflowMember,
 	AgentListAPI,
 	agentListExportAPI,
 	agentDictAPI,
@@ -285,5 +381,13 @@ export default {
 	setDomainDelete,
 	addDomainInsert,
 	getDomainSelect,
-	setDomainUpdate
+	setDomainUpdate,
+	getProxyGradesSelect,
+	setProxyGradeDelete,
+	setProxyGradeInsert,
+	setProxyGradeUpdate,
+	getProxyCommissionSelect,
+	setProxyCommissionDelete,
+	setProxyCommissionInsert,
+	setProxyCommissionUpdate
 }
