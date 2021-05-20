@@ -30,7 +30,6 @@
 					<el-input
 						v-model="form.username"
 						size="medium"
-						minlength="4"
 						maxlength="11"
 						placeholder="4-11位，最少2个字母+数字组合，首位字母"
 						clearable
@@ -44,7 +43,6 @@
 						placeholder="8-12位，字母+数字组合"
 						clearable
 						oninput="value=value.replace(/(^\s*)|(\s*$)/g ,'')"
-						minlength="8"
 						maxlength="12"
 						style="width: 365px"
 					></el-input>
