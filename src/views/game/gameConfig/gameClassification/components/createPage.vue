@@ -15,6 +15,7 @@
 					:model="queryData"
 					:inline="true"
 					label-width="100px"
+					:rules="rules"
 					class="form-content"
 				>
 					<el-form-item label="分类名称:" prop="assortName">
@@ -217,6 +218,31 @@ export default {
 		},
 		gameDisplayArr() {
 			return this.globalDics.gameDisplayType
+		},
+		rules() {
+			return {
+				assortName: [
+					{
+						required: true,
+						message: '请输入分类名称',
+						trigger: 'blur'
+					}
+				],
+				assortSort: [
+					{
+						required: true,
+						message: '请输入分类顺序',
+						trigger: 'blur'
+					}
+				],
+				clientDisplay: [
+					{
+						required: true,
+						message: '请选择客户端分类显示',
+						trigger: 'blur'
+					}
+				]
+			}
 		}
 	},
 	created() {
@@ -427,44 +453,46 @@ export default {
 		},
 		// 保存
 		save() {
-			const arr = []
-			this.leftList.forEach((item) => {
-				arr.push({
-					assortSort: item.assortSort,
-					gameId: item.id,
-					gameName: item.gameName
-				})
-			})
-			const params = {
-				...this.queryData,
-				relationParams: arr
-			}
-			params.supportTerminal =
-				params.supportTerminal && params.supportTerminal.length
-					? params.supportTerminal.join(',')
-					: undefined
-			const url = this.rowAssortId ? 'gameUpdateAPI' : 'gameCreateAPI'
-			this.$api[url](params)
-				.then((res) => {
-					const { code, msg } = res
-					console.log('res', res)
-					if (code === 200) {
-						this.loading = false
-						this.$message({
-							message: '保存成功!',
-							type: 'success'
+			this.$refs.form.validate((valid) => {
+				if (valid) {
+					const arr = []
+					this.leftList.forEach((item) => {
+						arr.push({
+							assortSort: item.assortSort,
+							gameId: item.id,
+							gameName: item.gameName
 						})
-						this.back()
-						this.reset()
-					} else {
-						this.loading = false
-						this.$message({
-							message: msg,
-							type: 'error'
-						})
+					})
+					const params = {
+						...this.queryData,
+						relationParams: arr,
+						id: this.rowAssortId.id
 					}
-				})
-				.catch(() => (this.loading = false))
+					params.supportTerminal =
+						params.supportTerminal && params.supportTerminal.length
+							? params.supportTerminal.join(',')
+							: undefined
+					const url = this.rowAssortId ? 'gameUpdateAPI' : 'gameCreateAPI'
+					this.$api[url](params)
+						.then((res) => {
+							const { code, msg } = res
+							console.log('res', res)
+							if (code === 200) {
+								this.$message({
+									message: '保存成功!',
+									type: 'success'
+								})
+								this.back()
+								this.reset()
+							} else {
+								this.$message({
+									message: msg,
+									type: 'error'
+								})
+							}
+						})
+				}
+			})
 		},
 		deleteAll() {
 			this.leftList = []
