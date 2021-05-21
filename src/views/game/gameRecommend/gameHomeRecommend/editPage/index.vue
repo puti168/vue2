@@ -2,23 +2,25 @@
 	<div class="game-container report-container">
 		<!-- 体育,真人荷官模块，电竞，彩票，棋牌，电子，派奖排行 -->
 		<mix v-if="isSport" :recommendDetails="recommendDetails" @back="back"></mix>
-		<span>{{ recommendDetails }}</span>
-		<!-- 直播模块 -->
-		<live v-if="isLive" :gemeDetails="gameDetails" @back="back"></live>
-		<!-- 游戏专题模块 -->
-		<game v-if="isGame" :gemeDetails="gameDetails" @back="back"></game>
+		<!--		<span>{{ recommendDetails }}</span>-->
+		<!--		&lt;!&ndash; 直播模块 &ndash;&gt;-->
+		<!--		<live v-if="isLive" :gemeDetails="gameDetails" @back="back"></live>-->
+		<!--		&lt;!&ndash; 游戏专题模块 &ndash;&gt;-->
+		<!--		<game v-if="isGame" :gemeDetails="gameDetails" @back="back"></game>-->
 		<!-- 最新游戏 -->
 		<newGame
 			v-if="isLastGame"
 			:gemeDetails="gameDetails"
 			@back="back"
 		></newGame>
+		<component :is="component"></component>
 	</div>
 </template>
 
 <script>
 import list from '@/mixins/list'
 import live from './components/live'
+import common from './components/common'
 import mix from './components/mix'
 import game from './components/game'
 import newGame from './components/newGame'
@@ -27,10 +29,16 @@ export default {
 		live,
 		game,
 		newGame,
-		mix
+		mix,
+		common
 	},
 	mixins: [list],
-	props: { recommendDetails: { type: Object, default: () => ({}) } },
+	props: {
+		recommendDetails: {
+			type: Object,
+			default: () => {}
+		}
+	},
 	data() {
 		return {
 			gameDetails: {},
@@ -46,7 +54,8 @@ export default {
 			isSport: true,
 			isLive: false,
 			isGame: false,
-			isLastGame: false
+			isLastGame: false,
+			component: common
 		}
 	},
 	computed: {},
