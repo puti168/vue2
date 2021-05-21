@@ -295,7 +295,18 @@ export default {
             this.dialogVisible = true
         },
         search() {
-            console.log('查询数据弹窗！#todo')
+             this.$api
+                        .overflowMemberInfo(
+                            {userName: this.form.username}
+                        )
+                        .then((res) => {
+                            const { code, data} = res
+                            if (code === 200) {
+                               this.form.accountType = this.typeFilter(data, 'accountType')
+                            }
+                        })
+                        .catch(() => {
+                        })
         },
         add() {
             this.loading = true

@@ -283,7 +283,7 @@ export default {
 	}
 	.main-content {
 		.review-content {
-			height: 150px;
+			min-height: 150px;
 			border: 1px solid rgba(192, 190, 190, 0.5);
 			border-top: 0px;
 			padding: 30px;
