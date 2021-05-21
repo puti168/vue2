@@ -111,4 +111,7 @@ export default {
 /deep/.el-tabs__item {
   font-weight: 700;
 }
+/deep/.el-tabs__content{
+  padding: 0 10px 20px 10px;
+}
 </style>
