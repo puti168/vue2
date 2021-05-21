@@ -66,9 +66,7 @@
       <el-col
 :span="5"
 >风控层级：<i v-if="activeL" class="el-icon-loading"></i>
-        <span v-else>
-          {{ outlineInfoList.windControlName }}
-        </span>
+        <span v-else>{{ outlineInfoList.windControlName }}</span>
       </el-col>
       <el-col
 :span="5"
@@ -120,7 +118,17 @@
         </span>
       </el-col>
       <el-col :span="5">上级代理：{{ outlineInfoList.parentProxyName }}</el-col>
-      <el-col :span="5">会员标签：{{ outlineInfoList.labelName }}</el-col>
+      <el-col
+:span="5"
+>会员标签：
+        <i v-if="activeL" class="el-icon-loading"></i>
+        <span v-else-if="editMsgList[2].applyStatus === '1'" class="orangeColor">
+          审核中 &nbsp; {{ outlineInfoList.labelName }}
+        </span>
+        <span v-else>
+          {{ outlineInfoList.labelName }}
+        </span>
+      </el-col>
     </el-row>
     <el-divider></el-divider>
     <div class="titelBox">个人资料</div>
@@ -128,6 +136,9 @@
       <el-col
 :span="5"
 >姓名：<i v-if="activeL" class="el-icon-loading"></i>
+        <span v-else-if="editMsgList[5].applyStatus === '1'" class="orangeColor">
+          审核中 &nbsp; {{ outlineInfoList.realName }}
+        </span>
         <span v-else>
           {{ outlineInfoList.realName }}
         </span>
@@ -135,6 +146,9 @@
       <el-col
 :span="5"
 >性别：<i v-if="activeL" class="el-icon-loading"></i>
+        <span v-else-if="editMsgList[6].applyStatus === '1'" class="orangeColor">
+          审核中 &nbsp; {{ typeFilter(outlineInfoList.gender, "genderType") }}
+        </span>
         <span v-else>
           {{ typeFilter(outlineInfoList.gender, "genderType") }}
         </span>
@@ -142,6 +156,9 @@
       <el-col
 :span="5"
 >出生日期：<i v-if="activeL" class="el-icon-loading"></i>
+        <span v-else-if="editMsgList[3].applyStatus === '1'" class="orangeColor">
+          审核中 &nbsp; {{ outlineInfoList.birth }}
+        </span>
         <span v-else>
           {{ outlineInfoList.birth }}
         </span>
@@ -149,6 +166,9 @@
       <el-col
 :span="5"
 >手机号码：<i v-if="activeL" class="el-icon-loading"></i>
+        <span v-else-if="editMsgList[4].applyStatus === '1'" class="orangeColor">
+          审核中 &nbsp; {{ outlineInfoList.mobile }}
+        </span>
         <span v-else>
           {{ outlineInfoList.mobile }}
         </span>
@@ -156,6 +176,9 @@
       <el-col
 :span="5"
 >邮箱：<i v-if="activeL" class="el-icon-loading"></i>
+        <span v-else-if="editMsgList[7].applyStatus === '1'" class="orangeColor">
+          审核中 &nbsp; {{ outlineInfoList.email }}
+        </span>
         <span v-else>
           {{ outlineInfoList.email }}
         </span>
