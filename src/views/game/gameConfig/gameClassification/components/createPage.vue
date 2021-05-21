@@ -138,7 +138,7 @@
 								placeholder="全部"
 								clearable
 								style="width: 180px"
-								@change="queryGame"
+								@change="changeSelect"
 							>
 								<el-option
 									v-for="item in gamePlantList"
@@ -221,7 +221,9 @@ export default {
 	},
 	created() {
 		this.getPlatform()
-		this.queryChildGame()
+		if (this.rowAssortId) {
+			this.queryChildGame()
+		}
 		this.queryChildGameConfig()
 	},
 	mounted() {},
@@ -231,10 +233,9 @@ export default {
 			this.$emit('back')
 		},
 		changeInput(value) {
-			console.log('xinzhi')
+			// 与旧值相同就互换
 			this.leftList.forEach((item, index) => {
 				if (item.assortSort === Number(value)) {
-					// this.$set(this.leftList, 'imageAddress', response.data)
 					item.assortSort = this.oldValue
 				}
 			})
@@ -249,21 +250,31 @@ export default {
 					val.check = false
 				}
 			})
-			console.log(this.leftList)
 		},
 		getOld(oldValue) {
 			this.oldValue = oldValue
 		},
 		lockChange(item) {
-			if (item.check && !this.leftList.includes(item)) {
+			let includes = false
+			this.leftList.forEach((data) => {
+				if (data.id === item.id) {
+					includes = true
+				}
+			})
+			// 勾选并且左边不包含。插入一个
+			if (item.check && !includes) {
 				if (this.leftList.length > 0) {
-					item.assortSort =
-						this.leftList[this.leftList.length - 1].assortSort + 1
+					const arr = []
+					this.leftList.forEach((val) => {
+						arr.push(val.assortSort)
+					})
+					item.assortSort = Math.max(...arr) + 1
 				} else {
 					item.assortSort = 0
 				}
 				this.leftList.push(item)
 			} else {
+				// 否则删除一个
 				const index = this.leftList.indexOf(item)
 				if (index > -1) {
 					this.leftList.splice(index, 1)
@@ -278,6 +289,7 @@ export default {
 					if (res.code === 200) {
 						this.gamePlantList = res.data
 						this.gameCode = res.data[0].gameCode
+						this.gameName = res.data[0].gameName
 						this.queryGame()
 					} else {
 						this.$message({
@@ -287,6 +299,38 @@ export default {
 					}
 				})
 				.catch(() => {})
+		},
+		changeSelect() {
+			// 更换后为check重新赋值
+			this.gameList = []
+			const params = {
+				gameCode: this.gameCode
+			}
+			this.$api.queryGameAPI(params).then((res) => {
+				const { code, data, msg } = res
+				if (code === 200) {
+					data.forEach((item, index) => {
+						item.check = false
+						item.assortSort = Number(index + 1)
+						item.gameCode = this.gameCode
+					})
+					this.gameList = data
+					// 判断右边是否勾选
+					this.gameList.forEach((item) => {
+						this.leftList.forEach((val) => {
+							if (val.id === item.id) {
+								item.check = true
+							}
+						})
+					})
+				} else {
+					this.loading = false
+					this.$message({
+						message: msg,
+						type: 'error'
+					})
+				}
+			})
 		},
 		// 游戏平台对应玩法查询
 		queryGame() {
@@ -300,6 +344,7 @@ export default {
 					data.forEach((item, index) => {
 						item.check = false
 						item.assortSort = Number(index + 1)
+						item.gameCode = this.gameCode
 					})
 					this.gameList = data
 				} else {
@@ -314,16 +359,23 @@ export default {
 
 		// 子游戏查询
 		queryChildGame() {
-			this.childGameNameList = []
+			this.leftList = []
 			console.log('this.rowAssortId', this.rowAssortId)
 			const params = {
-				gameName: '',
 				assortId: this.rowAssortId
 			}
 			this.$api.queryChildGameAPI(params).then((res) => {
 				const { code, data, msg } = res
 				if (code === 200) {
-					this.childGameNameList = data
+					this.leftList = data
+					// 判断右边是否勾选
+					this.gameList.forEach((item) => {
+						this.leftList.forEach((val) => {
+							if (val.id === item.id) {
+								item.check = true
+							}
+						})
+					})
 				} else {
 					this.loading = false
 					this.$message({
@@ -376,10 +428,11 @@ export default {
 		// 保存
 		save() {
 			const arr = []
-			this.leftList.forEach(item => {
+			this.leftList.forEach((item) => {
 				arr.push({
 					assortSort: item.assortSort,
-					gameCode: item.gameCode
+					gameId: item.id,
+					gameName: item.gameName
 				})
 			})
 			const params = {
@@ -390,8 +443,8 @@ export default {
 				params.supportTerminal && params.supportTerminal.length
 					? params.supportTerminal.join(',')
 					: undefined
-			this.$api
-				.gameUpdateAPI(params)
+					const url = this.rowAssortId ? 'gameUpdateAPI' : 'gameCreateAPI'
+			this.$api[url](params)
 				.then((res) => {
 					const { code, msg } = res
 					console.log('res', res)
@@ -401,6 +454,7 @@ export default {
 							message: '保存成功!',
 							type: 'success'
 						})
+						this.back()
 						this.reset()
 					} else {
 						this.loading = false
