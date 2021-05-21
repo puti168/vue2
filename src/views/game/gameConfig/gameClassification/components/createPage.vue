@@ -466,6 +466,7 @@ export default {
 					const params = {
 						...this.queryData,
 						relationParams: arr,
+						clientDisplay: Number(this.queryData.clientDisplay) === 1,
 						id: this.rowAssortId.id
 					}
 					params.supportTerminal =
