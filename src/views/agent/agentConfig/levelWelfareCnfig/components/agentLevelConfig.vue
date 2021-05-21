@@ -63,7 +63,7 @@
           label="最近操作时间"
           sortable="custom"
         ></el-table-column>
-        <el-table-column prop="operating" align="center" label="操作" width="240px">
+        <el-table-column prop="operating" align="center" label="操作" width="150px">
           <template slot-scope="scope">
             <el-button
               type="primary"
