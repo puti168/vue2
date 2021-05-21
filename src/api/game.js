@@ -291,6 +291,15 @@ export function gameHomeRecommendListAPI(data) {
 	})
 }
 
+// 游戏==> 首页推荐位 ==> 列表状态变更
+export function recommendStatusChangeAPI(data) {
+	return request({
+		url: '/gameCommonModule/editModuleStatus',
+		method: 'post',
+		data
+	})
+}
+
 // 游戏==> 首页推荐位 ==> 列表 ===> 详情
 export function gameHomeRecommendDetailsAPI(data) {
 	return request({
@@ -336,5 +345,6 @@ export default {
 	gameSearchUpdateAPI,
 	gameSearchDeleteAPI,
 	gameHomeRecommendListAPI,
+	recommendStatusChangeAPI,
 	gameHomeRecommendDetailsAPI
 }
