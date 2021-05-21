@@ -11,9 +11,9 @@
       </div>
       <!--   溢出会员表单          -->
       <el-form ref="memberForm" :model="memberForm" :rules="rules" label-width="100px">
-        <el-form-item label="溢出会员:" prop="username">
+        <el-form-item label="溢出会员:" prop="userName">
           <el-input
-            v-model="memberForm.username"
+            v-model="memberForm.userName"
             size="medium"
             minlength="4"
             maxlength="11"
@@ -96,20 +96,25 @@
           ></el-input>
         </el-form-item>
         <el-form-item label="上传图片:" prop="uploadImage">
-          <el-input v-if="false" v-model="memberForm.uploadImage"></el-input>
+          <el-input v-show="false" v-model="memberForm.uploadImage"></el-input>
           <el-upload
+            ref="upload"
             action="https://jsonplaceholder.typicode.com/posts/"
             list-type="picture-card"
             accept="jpg/png"
             :limit="6"
             :class="{ hide: hideUpload }"
             :auto-upload="false"
-            :on-success="uploadSuccess"
+            :on-success="
+              (response, file, fileList) =>
+                uploadSuccess(response, file, fileList, form.imageAddress)
+            "
             :on-exceed="uploadLimit"
             :on-error="uploadFalse"
             :before-upload="handleUploadBefore"
             :on-preview="handlePictureCardPreview"
             :on-remove="handleRemove"
+            :on-change="uploadFile"
           >
             <i class="el-icon-plus"></i>
           </el-upload>
@@ -134,7 +139,7 @@
           <el-button
             type="primary"
             icon="el-icon-search"
-            :disabled="loading"
+            :disabled="isSub"
             size="medium"
             @click="add"
           >
@@ -166,28 +171,30 @@ export default {
     return {
       loading: false,
       memberForm: {
-        username: '',
+        userName: '',
         accountType: '',
         currentProxyName: '',
         transferProxyName: '',
         promotionDevice: '',
         promotionLink: '',
-        uploadPicture: '',
         applyInfo: '',
-        uploadImage: ['115164654564']
+        uploadImage: '',
+        imgPath: []
       },
       dialogImageUrl: '',
       dialogVisible: false,
-      hideUpload: false
+      hideUpload: false,
+      picList: [],
+      isSub: true
     }
   },
   computed: {
     // 设备列表
     promoteDeviceList() {
       return [
-        { description: 'WEB', code: 'WEB' },
-        { description: 'APP', code: 'APP', change: true },
-        { description: 'H5', code: 'H5' }
+        { description: 'APP', code: '1' },
+        { description: 'WEB', code: '2' },
+        { description: 'H5', code: '3' }
       ]
     },
     accountTypeArr() {
@@ -217,7 +224,7 @@ export default {
         promotionDevice: [
           { required: true, message: '请选择账号类型', trigger: 'change' }
         ],
-        username: [
+        userName: [
           {
             required: true,
             validator: testUserName,
@@ -228,12 +235,6 @@ export default {
           {
             required: true,
             validator: testUserName,
-            trigger: 'blur'
-          }
-        ],
-        uploadPicture: [
-          {
-            required: false,
             trigger: 'blur'
           }
         ],
@@ -248,7 +249,8 @@ export default {
           {
             required: true,
             min: 1,
-            message: '最多上传6张图片,图片格式仅支持png,jpg, 每张图片大小不能超过2MB',
+            message:
+              '至少上传一张，最多上传6张图片,图片格式仅支持png,jpg, 每张图片大小不能超过2MB',
             trigger: 'blur'
           }
         ]
@@ -258,22 +260,11 @@ export default {
   mounted() {},
   methods: {
     // 文件上传成功触发
-    uploadSuccess(response, file, fileList) {
-      console.log(response)
-      if (response.code === 0) {
-        this.$message({
-          message: '导入成功',
-          type: 'success'
-        })
-      } else {
-        this.$message({
-          message: '导入失败',
-          type: 'error'
-        })
-      }
+    uploadSuccess(res, file, fileList) {
+      console.log(111111, res)
     },
     // 文件上传失败触发
-    uploadFalse(response, file, fileList) {
+    uploadFalse(res, file, fileList) {
       this.$message({
         message: '文件上传失败！',
         type: 'error'
@@ -283,13 +274,14 @@ export default {
     beforeAvatarUpload(file) {
       const extension = file.name.split('.')[1] === 'jpg'
       const extension2 = file.name.split('.')[1] === 'png'
+      const isLt2M = file.size / 1024 / 1024 < 2
       if (!extension && !extension2) {
         this.$message({
           message: '图片只能是 jpg、png格式!',
           type: 'error'
         })
       }
-      return extension || extension2
+      return (extension || extension2) && isLt2M
     },
     handleUploadBefore(file) {
       this.beforeAvatarUpload(file)
@@ -302,74 +294,115 @@ export default {
       }
     },
     handleRemove(file, fileList) {
-      console.log(file, fileList)
+      console.log(11111111, file, fileList, this.picList)
+      for (const i in this.picList) {
+        if (this.picList[i].key === file.uid) {
+          this.picList.splice(i, 1)
+        } else {
+          console.log(888, fileList)
+        }
+      }
     },
     handlePictureCardPreview(file) {
       this.dialogImageUrl = file.url
       this.dialogVisible = true
     },
+    uploadFile(file) {
+      console.log('触发了change事件')
+      const curFile = file.raw
+      const formData = new FormData()
+      const uid = file.uid
+      formData.append('file', curFile)
+      this.$api
+        .imageUpload(formData)
+        .then((res) => {
+          this.picList.push({ key: uid, value: res.data })
+          this.$message({
+            message: '上传成功!',
+            type: 'success'
+          })
+          this.memberForm.uploadImage = ''
+          this.memberForm.uploadImage = res.data
+          this.$refs['memberForm'].validateField('uploadImage')
+          //   this.$set(this.form, "imageAddress", res.data);
+        })
+        .catch(() => {
+          this.$refs.upload.clearFiles()
+        })
+    },
     searchMemeber() {
-      const { username } = this.memberForm
-      this.$api.overflowMemberInfo({ username: username }).then((res) => {
-        if (res.code === 200) {
-          console.log('查询数据弹窗！#todo', res)
+      const { userName } = this.memberForm
+      this.$api.overflowMemberInfo({ userName: userName }).then((res) => {
+        if (res.code === 200 && res.data !== null) {
+          this.memberForm.accountType = res.data.accountType + ''
+          this.memberForm.currentProxyName = res.data.currentUserName
+          this.isSub = false
         }
       })
     },
     add() {
-      this.loading = true
+      //   this.loading = true;
+      this.memberForm.imgPath = []
+
+      for (let i = 0; i < this.picList.length; i++) {
+        const ele = this.picList[i]
+        this.memberForm.imgPath.push(ele.value)
+      }
       const params = {
         ...this.memberForm
       }
-      let lock = true
+      console.log('保存', params, this.picList)
       this.$refs['memberForm'].validate((valid) => {
-        if (valid && lock) {
-          lock = false
-          this.$api
-            .addMemberAPI(params)
-            .then((res) => {
-              this.loading = false
-              lock = true
-              const { code, data, msg } = res
-              if (code === 200) {
-                this.$confirm(`溢出会员${data}资料提交成功`, {
-                  confirmButtonText: '确定',
-                  type: 'success',
-                  showCancelButton: false
+        if (valid) {
+          this.$confirm(`确定修改吗？`, {
+            confirmButtonText: '确定',
+            type: 'success',
+            showCancelButton: false
+          })
+            .then(() => {
+              delete params.uploadImage
+              this.$api
+                .addOverflowMember(params)
+                .then((res) => {
+                  this.loading = false
+                  if (res.code === 200) {
+                    this.$message({
+                      message: '修改成功',
+                      type: 'success'
+                    })
+                    this.picList = []
+                    this.isSub = true
+                    this.reset()
+                  } else {
+                    this.$message({
+                      message: res.msg,
+                      type: 'error'
+                    })
+                  }
                 })
-                this.reset()
-              } else {
-                this.$message({
-                  message: msg,
-                  type: 'error'
+                .catch(() => {
+                  this.loading = false
                 })
-              }
             })
-            .catch(() => {
-              this.loading = false
-              lock = true
-            })
+            .catch(() => {})
         }
       })
-
-      setTimeout(() => {
-        this.loading = false
-        lock = true
-      }, 1000)
     },
     // 数据重置
     reset() {
       this.$refs['memberForm'].resetFields()
+      this.$refs.upload.clearFiles()
+      this.picList = []
       this.memberForm = {
-        username: '',
+        userName: '',
         accountType: '',
         currentProxyName: '',
         transferProxyName: '',
         promotionDevice: '',
         promotionLink: '',
-        uploadPicture: '',
         applyInfo: '',
-        uploadImage: []
+        uploadImage: '',
+        imgPath: []
       }
     },
     enterSearch() {
