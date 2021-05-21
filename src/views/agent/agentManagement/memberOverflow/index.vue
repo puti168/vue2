@@ -10,30 +10,47 @@
         </span>
       </div>
       <!--   溢出会员表单          -->
-      <el-form ref="form" :model="form" :rules="rules" label-width="100px">
+      <el-form ref="memberForm" :model="memberForm" :rules="rules" label-width="100px">
         <el-form-item label="溢出会员:" prop="username">
           <el-input
-            v-model="form.username"
+            v-model="memberForm.username"
             size="medium"
             minlength="4"
             maxlength="11"
             placeholder="请输入"
             clearable
             style="width: 365px"
+            @keyup.enter.native="enterSearch"
           ></el-input>
           <el-button
             type="primary"
             :disabled="loading"
             size="medium"
             style="margin-left: 10px"
-            @click="search"
+            @click="searchMemeber"
           >
             查询
           </el-button>
         </el-form-item>
         <el-form-item label="账号类型:" prop="accountType">
+          <el-select
+            v-model="memberForm.accountType"
+            placeholder="请选择"
+            clearable
+            disabled
+            style="width: 365px"
+          >
+            <el-option
+              v-for="item in accountTypeArr"
+              :key="item.code"
+              :label="item.description"
+              :value="item.code"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="当前上级:" prop="currentProxyName">
           <el-input
-            v-model="form.accountType"
+            v-model="memberForm.currentProxyName"
             size="medium"
             placeholder=""
             clearable
@@ -41,19 +58,9 @@
             :disabled="true"
           ></el-input>
         </el-form-item>
-        <el-form-item label="当前上级:" prop="currentSuperior">
+        <el-form-item label="转入代理:" prop="transferProxyName">
           <el-input
-            v-model="form.currentSuperior"
-            size="medium"
-            placeholder=""
-            clearable
-            style="width: 365px"
-            :disabled="true"
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="转入代理:" prop="transferAgent">
-          <el-input
-            v-model="form.transferAgent"
+            v-model="memberForm.transferProxyName"
             size="medium"
             minlength="4"
             maxlength="11"
@@ -62,9 +69,9 @@
             style="width: 365px"
           ></el-input>
         </el-form-item>
-        <el-form-item label="推广设备:" prop="promoteDevice">
+        <el-form-item label="推广设备:" prop="promotionDevice">
           <el-select
-            v-model="form.promoteDevice"
+            v-model="memberForm.promotionDevice"
             placeholder="请选择"
             clearable
             style="width: 365px"
@@ -78,9 +85,9 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="推广链接:" prop="promoteLinkUrl">
+        <el-form-item label="推广链接:" prop="promotionLink">
           <el-input
-            v-model="form.promoteLinkUrl"
+            v-model="memberForm.promotionLink"
             size="medium"
             maxlength="50"
             placeholder="请输入"
@@ -89,7 +96,7 @@
           ></el-input>
         </el-form-item>
         <el-form-item label="上传图片:" prop="uploadImage">
-          <el-input v-if="false" v-model="form.uploadImage"></el-input>
+          <el-input v-if="false" v-model="memberForm.uploadImage"></el-input>
           <el-upload
             action="https://jsonplaceholder.typicode.com/posts/"
             list-type="picture-card"
@@ -110,9 +117,9 @@
             <img width="100%" :src="dialogImageUrl" alt="" />
           </el-dialog>
         </el-form-item>
-        <el-form-item label="审核信息:" prop="auditInfo">
+        <el-form-item label="审核信息:" prop="applyInfo">
           <el-input
-            v-model="form.auditInfo"
+            v-model="memberForm.applyInfo"
             size="medium"
             minlength="2"
             maxlength="50"
@@ -151,7 +158,6 @@
 import { routerNames } from '@/utils/consts'
 import list from '@/mixins/list'
 import { isHaveEmoji, notSpecial2 } from '@/utils/validate'
-// import {EMAIL_PATTERN, MOBILE_PATTERN} from '@/utils/pattern'
 
 export default {
   name: routerNames.memberOverflow,
@@ -159,16 +165,16 @@ export default {
   data() {
     return {
       loading: false,
-      form: {
+      memberForm: {
         username: '',
         accountType: '',
-        currentSuperior: '',
-        transferAgent: '',
-        promoteDevice: '',
-        promoteLinkUrl: '',
+        currentProxyName: '',
+        transferProxyName: '',
+        promotionDevice: '',
+        promotionLink: '',
         uploadPicture: '',
-        auditInfo: '',
-        uploadImage: []
+        applyInfo: '',
+        uploadImage: ['115164654564']
       },
       dialogImageUrl: '',
       dialogVisible: false,
@@ -185,7 +191,7 @@ export default {
       ]
     },
     accountTypeArr() {
-      return [...this.globalDics.accountType]
+      return this.globalDics.accountType
     },
     genderType() {
       return [...this.globalDics.genderType].reverse()
@@ -193,7 +199,6 @@ export default {
     // 输入规则处理
     rules() {
       const reg1 = /^[A-Za-z]{1}(?=(.*[a-zA-Z]){1,})(?=(.*[0-9]){1,})[0-9A-Za-z]{3,10}$/
-      // const reg2 = /(?=.*[a-zA-Z])(?=.*[0-9])[a-zA-Z0-9]{8,12}/
       const testUserName = (rule, value, callback) => {
         const isSpecial = !notSpecial2(String(value))
         const isRmoji = isHaveEmoji(String(value))
@@ -209,7 +214,9 @@ export default {
       }
 
       return {
-        promoteDevice: [{ required: true, message: '请选择账号类型', trigger: 'change' }],
+        promotionDevice: [
+          { required: true, message: '请选择账号类型', trigger: 'change' }
+        ],
         username: [
           {
             required: true,
@@ -217,7 +224,7 @@ export default {
             trigger: 'blur'
           }
         ],
-        transferAgent: [
+        transferProxyName: [
           {
             required: true,
             validator: testUserName,
@@ -230,7 +237,7 @@ export default {
             trigger: 'blur'
           }
         ],
-        auditInfo: [
+        applyInfo: [
           {
             required: true,
             message: '请输入≥2个字符',
@@ -240,6 +247,7 @@ export default {
         uploadImage: [
           {
             required: true,
+            min: 1,
             message: '最多上传6张图片,图片格式仅支持png,jpg, 每张图片大小不能超过2MB',
             trigger: 'blur'
           }
@@ -300,16 +308,21 @@ export default {
       this.dialogImageUrl = file.url
       this.dialogVisible = true
     },
-    search() {
-      console.log('查询数据弹窗！#todo')
+    searchMemeber() {
+      const { username } = this.memberForm
+      this.$api.overflowMemberInfo({ username: username }).then((res) => {
+        if (res.code === 200) {
+          console.log('查询数据弹窗！#todo', res)
+        }
+      })
     },
     add() {
       this.loading = true
       const params = {
-        ...this.form
+        ...this.memberForm
       }
       let lock = true
-      this.$refs['form'].validate((valid) => {
+      this.$refs['memberForm'].validate((valid) => {
         if (valid && lock) {
           lock = false
           this.$api
@@ -346,20 +359,22 @@ export default {
     },
     // 数据重置
     reset() {
-      this.$refs['form'].resetFields()
-      this.form = {
+      this.$refs['memberForm'].resetFields()
+      this.memberForm = {
         username: '',
         accountType: '',
-        currentSuperior: '',
-        transferAgent: '',
-        promoteDevice: '',
-        promoteLinkUrl: '',
+        currentProxyName: '',
+        transferProxyName: '',
+        promotionDevice: '',
+        promotionLink: '',
         uploadPicture: '',
-        auditInfo: '',
+        applyInfo: '',
         uploadImage: []
       }
     },
-    checkValue(val) {}
+    enterSearch() {
+      this.searchMemeber()
+    }
   }
 }
 </script>
