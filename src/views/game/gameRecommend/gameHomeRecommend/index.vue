@@ -320,7 +320,7 @@ export default {
 			// 终端类型
 			terminalType: 1,
 			recommendDetails: {},
-			searchParams: {
+			queryData: {
 				terminalType: 1
 			},
 			searchData: {
@@ -383,19 +383,19 @@ export default {
 		handleClick(tab) {
 			const name = tab.name
 			if (name === 'first') {
-				this.searchParams.terminalType = 1
+				this.queryData.terminalType = 1
 			} else if (name === 'second') {
-				this.searchParams.terminalType = 2
+				this.queryData.terminalType = 2
 			} else {
-                this.searchParams.terminalType = 2
+				this.queryData.terminalType = 2
 			}
 			this.loadData()
 		},
 		loadData() {
 			let params = {
-                ...this.searchParams
+				...this.queryData
 			}
-			 params = {
+			params = {
 				...this.getParams(params)
 			}
 			this.loading = true
@@ -460,16 +460,7 @@ export default {
 		reset() {
 			this.pageNum = 1
 			this.queryData = {
-				accountType: [],
-				bankName: '',
-				dataType: 2,
-				operateType: '',
-				orderType: '',
-				parentProxyName: '',
-				userName: '',
-				virtualAddress: '',
-				virtualKind: [],
-				virtualProtocol: []
+				terminalType: 1
 			}
 			this.loadData()
 		},
