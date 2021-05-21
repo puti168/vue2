@@ -29,16 +29,14 @@
 								align="center"
 								label="模块名称"
 							></el-table-column>
-							<el-table-column prop="moduleStatus" align="center" label="状态">
+							<el-table-column prop="status" align="center" label="状态">
 								<template slot-scope="scope">
 									<p
 										:class="
-											scope.row.moduleStatus === 1
-												? 'successState'
-												: 'dangerState'
+											scope.row.status === 1 ? 'successState' : 'dangerState'
 										"
 									>
-										{{ scope.row.moduleStatus === 1 ? '开启中' : '已禁用' }}
+										{{ scope.row.status === 1 ? '开启中' : '已禁用' }}
 									</p>
 								</template>
 							</el-table-column>
@@ -69,10 +67,14 @@
 										:disabled="loading"
 										type="danger"
 										size="medium"
-										class="noicon"
+										:class="
+											scope.row.status === 0
+												? 'successState noicon'
+												: 'dangerState noicon'
+										"
 										@click="disable(scope.row)"
 									>
-										禁用
+										{{ scope.row.status === 0 ? '启用' : '禁用' }}
 									</el-button>
 									<el-button
 										v-if="false"
@@ -80,7 +82,7 @@
 										icon="el-icon-edit"
 										:disabled="loading"
 										size="medium"
-                                        @click="openDetails(scope.row)"
+										@click="openDetails(scope.row)"
 									>
 										编辑信息
 									</el-button>
@@ -175,7 +177,7 @@
 										type="primary"
 										icon="el-icon-edit"
 										:disabled="loading"
-                                        size="medium"
+										size="medium"
 										@click="openDetails(scope.row)"
 									>
 										编辑信息
@@ -221,16 +223,14 @@
 								align="center"
 								label="模块名称"
 							></el-table-column>
-							<el-table-column prop="moduleStatus" align="center" label="状态">
+							<el-table-column prop="status" align="center" label="状态">
 								<template slot-scope="scope">
 									<p
 										:class="
-											scope.row.moduleStatus === 1
-												? 'successState'
-												: 'dangerState'
+											scope.row.status === 1 ? 'successState' : 'dangerState'
 										"
 									>
-										{{ scope.row.moduleStatus === 1 ? '开启中' : '已禁用' }}
+										{{ scope.row.status === 1 ? '开启中' : '已禁用' }}
 									</p>
 								</template>
 							</el-table-column>
@@ -271,7 +271,7 @@
 										type="primary"
 										icon="el-icon-edit"
 										:disabled="loading"
-                                        size="medium"
+										size="medium"
 										@click="openDetails(scope.row)"
 									>
 										编辑信息
@@ -430,8 +430,8 @@ export default {
 		// },
 		// 禁用
 		disable(val) {
-			const { commonId, moduleStatus, id } = val
-			const status = moduleStatus === 1 ? 0 : 1
+			const { commonId, status, id } = val
+			const key = status === 1 ? 0 : 1
 			const loading = this.$loading({
 				lock: true,
 				text: 'Loading',
@@ -450,7 +450,7 @@ export default {
 			)
 				.then(() => {
 					this.$api
-						.recommendStatusChangeAPI({ id, commonId, moduleStatus: status })
+						.recommendStatusChangeAPI({ id, commonId, moduleStatus: key })
 						.then((res) => {
 							const { code } = res
 							loading.close()
