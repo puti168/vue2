@@ -75,11 +75,12 @@
 										禁用
 									</el-button>
 									<el-button
+										v-if="false"
 										type="primary"
 										icon="el-icon-edit"
 										:disabled="loading"
 										size="medium"
-										@click="openDetails(scope.row)"
+                                        @click="openDetails(scope.row)"
 									>
 										编辑信息
 									</el-button>
@@ -170,10 +171,11 @@
 										禁用
 									</el-button>
 									<el-button
+										v-if="false"
 										type="primary"
 										icon="el-icon-edit"
 										:disabled="loading"
-										size="medium"
+                                        size="medium"
 										@click="openDetails(scope.row)"
 									>
 										编辑信息
@@ -265,10 +267,11 @@
 										禁用
 									</el-button>
 									<el-button
+										v-if="false"
 										type="primary"
 										icon="el-icon-edit"
 										:disabled="loading"
-										size="medium"
+                                        size="medium"
 										@click="openDetails(scope.row)"
 									>
 										编辑信息
@@ -366,7 +369,6 @@ export default {
 	mounted() {},
 	methods: {
 		openDetails(val) {
-			console.log(1111, val)
 			this.recommendDetails = {
 				mainTitleInfo: '11111',
 				subTitleInfo: '111',
@@ -428,6 +430,14 @@ export default {
 		// },
 		// 禁用
 		disable(val) {
+			const { commonId, moduleStatus, id } = val
+			const status = moduleStatus === 1 ? 0 : 1
+			const loading = this.$loading({
+				lock: true,
+				text: 'Loading',
+				spinner: 'el-icon-loading',
+				background: 'rgba(0, 0, 0, 0.7)'
+			})
 			this.$confirm(
 				`<strong>是否对子游戏进行开启/禁用操作?</strong></br><span style='font-size:12px;color:#c1c1c1'>一旦操作将会立即生效</span>`,
 				'确认提示',
@@ -439,9 +449,32 @@ export default {
 				}
 			)
 				.then(() => {
-					// this.getOneKeyWithdraw({ userId: this.parentData.userId }) // 一键下分
+					this.$api
+						.recommendStatusChangeAPI({ id, commonId, moduleStatus: status })
+						.then((res) => {
+							const { code } = res
+							loading.close()
+							if (code === 200) {
+								this.$message({
+									type: 'success',
+									message: '操作成功!'
+								})
+							} else {
+								this.$message({
+									type: 'error',
+									message: '操作失败!'
+								})
+							}
+							this.loadData()
+						}) // 一键下分
 				})
-				.catch(() => {})
+				.catch(() => {
+					loading.close()
+				})
+
+			setTimeout(() => {
+				loading.close()
+			}, 1000)
 		},
 		changeTableSort({ column, prop, order }) {
 			this.pageNum = 1
