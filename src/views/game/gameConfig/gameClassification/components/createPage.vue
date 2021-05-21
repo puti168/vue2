@@ -91,25 +91,34 @@
 			<div class="content-part3">
 				<div class="content">
 					<p class="hotConfig">分类包含游戏</p>
-					<div class="transfer-wrapper">
-						<Transfer
-							id="transfer"
-							ref="transfer"
-							v-model="value"
-							filterable
-							:data="childGameNameList"
-							:gameNameList="gameNameList"
-							:childGameConfigData="childGameConfigData"
-							:filter-method="filterMethod"
-							:target-order="'push'"
-							:titles="['已包含', '游戏平台']"
-							:props="{ key: 'id', label: 'label', status: 'status' }"
-							:left-default-checked="hasCheckedWHLeftData"
-							:right-default-checked="hasCheckedWHRightData"
-							@left-check-change="handleWHLeftChange"
-							@right-check-change="handleWHRightChange"
-							@clearAbleList="clearAbleList"
-						></Transfer>
+					<div class="left-page">
+						<span class="left-word">已包含： 100个</span>
+						<el-button type="primary" class="clear-list" @click="clearAbleList">
+							列表清空
+						</el-button>
+						<div class="page-main"></div>
+					</div>
+					<span class="mid-word">
+						<i class="el-icon-d-arrow-left"></i>
+						勾选游戏移入分类列表
+					</span>
+					<div class="right-page">
+						游戏平台：
+						<el-select
+							v-model="gamePlatform"
+							size="medium"
+							placeholder="全部"
+							clearable
+							style="width: 180px"
+						>
+							<el-option
+								v-for="item in gameNameList"
+								:key="item.id"
+								:label="item.gameName"
+								:value="item.id"
+							></el-option>
+						</el-select>
+						<div class="page-main"></div>
 					</div>
 				</div>
 			</div>
@@ -120,23 +129,10 @@
 <script>
 import list from '@/mixins/list'
 // import Sortable from 'sortablejs'
-import Transfer from '@/components/transfer'
-
-const generateData = () => {
-	const data = []
-	for (let i = 1; i <= 30; i++) {
-		data.push({
-			id: i,
-			label: `斗地主`,
-			status: '维护中'
-		})
-	}
-	return data
-}
 
 export default {
 	name: 'CreatePage',
-	components: { Transfer },
+	components: {},
 	mixins: [list],
 	props: {
 		rowAssortId: {
@@ -146,11 +142,6 @@ export default {
 	},
 	data() {
 		return {
-			filterMethod(query, item) {
-				const regStr = query.replace(/\*/g, '.*')
-				const reg = new RegExp(regStr)
-				return reg.test(item.label)
-			},
 			loading: false,
 			queryData: {
 				assortName: undefined,
@@ -159,19 +150,11 @@ export default {
 				remark: undefined,
 				clientDisplay: undefined
 			},
-			dataList: [],
 			gameNameList: [],
 			childGameNameList: [],
-			childGameConfigData: undefined,
-			data: generateData(),
-			value: [4, 2, 1],
-			shiftKey: false,
-			firstWHLeftLocation: -1, // 数据左边起始值
-			lastWHLeftLocation: -1, // 数据左边终止值
-			hasCheckedWHLeftData: [], // 数据左边选中的数据
-			firstWHRightLocation: -1, // 数据右边起始值
-			lastWHRightLocation: -1, // 数据右边终止值
-			hasCheckedWHRightData: [] // 数据右边选中的数据
+			data: {},
+			gamePlatform: '',
+			value: [4, 2, 1]
 		}
 	},
 	computed: {
@@ -187,53 +170,8 @@ export default {
 		this.queryGame()
 		this.queryChildGameConfig()
 	},
-	mounted() {
-		document.body.ondrop = function(event) {
-			event.preventDefault()
-			event.stopPropagation()
-		}
-		window.addEventListener('keydown', (e) => {
-			if (e.keyCode === 16 && e.shiftKey) {
-				this.shiftKey = true
-			}
-		})
-		window.addEventListener('keyup', (e) => {
-			this.shiftKey = false
-		})
-		// const el = document
-		// 	.querySelector('.el-transfer')
-		// 	.querySelectorAll('.el-checkbox-group')[1]
-		// new Sortable(el, {
-		// 	forceFallback: false,
-		// 	onUpdate: (event) => {
-		// 		const box = this.$el
-		// 			.querySelector('.el-transfer')
-		// 			.querySelectorAll('.el-checkbox-group')[1]
-		// 		const nums = this.$el
-		// 			.querySelector('.el-transfer')
-		// 			.querySelectorAll('.el-checkbox-group')[1].childNodes.length
-		// 		console.log(nums, event.newIndex)
-		// 		if (event.newIndex >= nums) {
-		// 			return
-		// 		}
-		// 		const newIndex = event.newIndex
-		// 		const oldIndex = event.oldIndex
-		// 		const $label = box.children[newIndex]
-		// 		const $oldLabel = box.children[oldIndex]
-		// 		box.removeChild($label)
-		// 		if (newIndex < oldIndex) {
-		// 			box.insertBefore($label, $oldLabel)
-		// 		} else {
-		// 			box.insertBefore($label, $oldLabel.nextSibling)
-		// 		}
-		// 		const item = this.value.splice(oldIndex, 1)
-		// 		this.value.splice(newIndex, 0, item[0])
-		// 	}
-		// })
-	},
-	updated() {
-		// console.log('新表格数据', this.dataList)
-	},
+	mounted() {},
+	updated() {},
 	methods: {
 		back() {
 			this.$emit('back')
@@ -341,7 +279,7 @@ export default {
 							message: '保存成功!',
 							type: 'success'
 						})
-                        this.reset()
+						this.reset()
 					} else {
 						this.loading = false
 						this.$message({
@@ -352,192 +290,15 @@ export default {
 				})
 				.catch(() => (this.loading = false))
 		},
-        reset() {
-            this.$refs['form'].resetFields()
-            this.queryData = {
-                assortName: undefined,
-                assortSort: undefined,
-                supportTerminal: undefined,
-                remark: undefined,
-                clientDisplay: undefined
-            }
-        },
-		// 列表清空
-		clearAbleList() {
-			console.log('清空列表')
-		},
-		handleWHLeftChange(key, key1) {
-			const _this = this
-			console.log(_this.hasCheckedWHLeftData)
-			_this.hasCheckedWHLeftData = _this.commonChangeFuc(
-				key,
-				key1,
-				_this.hasCheckedWHLeftData,
-				_this.firstWHLeftLocation,
-				_this.lastWHLeftLocation,
-				_this.data,
-				'id'
-			)
-			console.log(_this.hasCheckedWHLeftData)
-		},
-		handleWHRightChange(key, key1) {
-			var _this = this
-			console.log(_this.hasCheckedWHRightData)
-			_this.hasCheckedWHRightData = _this.commonChangeFuc(
-				key,
-				key1,
-				_this.hasCheckedWHRightData,
-				_this.firstWHRightLocation,
-				_this.lastWHRightLocation,
-				_this.value,
-				false
-			)
-			console.log(_this.hasCheckedWHRightData)
-		},
-		commonChangeFuc(
-			key,
-			key1,
-			hasCheckedData,
-			firstLocation,
-			lastLocation,
-			arrList,
-			value
-		) {
-			let k
-			const _this = this
-			let cFlag = false // 取消勾选
-			for (var i = 0; i < key.length; i++) {
-				if (key[i] === key1[0]) {
-					cFlag = true // 选中
-				}
+		reset() {
+			this.$refs['form'].resetFields()
+			this.queryData = {
+				assortName: undefined,
+				assortSort: undefined,
+				supportTerminal: undefined,
+				remark: undefined,
+				clientDisplay: undefined
 			}
-			if (cFlag) {
-				if (key.length === 1) {
-					firstLocation = 0
-					hasCheckedData.push(key[0])
-				} else if (key.length > 1) {
-					// eslint-disable-next-line no-unused-vars
-					const arr = []
-					// 当前有选中数据 并且 按住shift
-					if (_this.shiftKey) {
-						// if (isRight) {
-						for (let i = 0; i < arrList.length; i++) {
-							const item = value ? arrList[i][value] : arrList[i]
-							if (item === key[key.length - 2]) {
-								firstLocation = i
-							}
-							if (item === key1[0]) {
-								lastLocation = i
-							}
-						}
-						if (firstLocation !== -1 && lastLocation !== -1) {
-							if (firstLocation < lastLocation) {
-								for (k = 0; k < arrList.length; k++) {
-									const item = value ? arrList[k][value] : arrList[k]
-
-									if (k >= firstLocation && k <= lastLocation) {
-										hasCheckedData.push(item)
-									}
-								}
-							} else if (firstLocation > lastLocation) {
-								for (k = 0; k < arrList.length; k++) {
-									if (k >= lastLocation && k <= firstLocation) {
-										// eslint-disable-next-line no-undef
-										hasCheckedData.push(item)
-									}
-								}
-							}
-						}
-					} else {
-						// 不再按shift
-						hasCheckedData.push(key1[0])
-					}
-				}
-			} else {
-				// 取消选中的
-				hasCheckedData = []
-				for (let i = 0; i < key.length; i++) {
-					if (key[i] !== key1[0]) {
-						hasCheckedData.push(key[i])
-					}
-				}
-			}
-			// 去重
-			hasCheckedData = new Set(hasCheckedData)
-			hasCheckedData = Array.from(hasCheckedData)
-			return hasCheckedData
-		},
-		add() {
-			this.loading = true
-			const params = {
-				...this.form
-			}
-			this.$refs['form'].validate((valid) => {
-				console.log('valid', valid)
-				if (valid) {
-					this.$api
-						.addMemberAPI(params)
-						.then((res) => {
-							this.loading = false
-							const { code, data, msg } = res
-							if (code === 200) {
-								this.$confirm(`会员${data}资料提交成功`, {
-									confirmButtonText: '确定',
-									type: 'success',
-									showCancelButton: false
-								})
-								this.reset()
-							} else {
-								this.$message({
-									message: msg,
-									type: 'error'
-								})
-							}
-						})
-						.catch(() => {
-							this.loading = false
-						})
-				}
-			})
-
-			setTimeout(() => {
-				this.loading = false
-			}, 1000)
-		},
-		checkValue(val) {},
-		addRow() {
-			const lastRow = this.dataList[this.dataList.length - 1]
-			const new_row = lastRow.id + 1
-			this.dataList.push({ id: new_row })
-		},
-		deleteRow(val) {
-			this.$confirm('确定删除此游戏吗?', {
-				confirmButtonText: '确定',
-				cancelButtonText: '取消',
-				type: 'warning'
-			})
-				.then(() => {
-					// const loading = this.$loading({
-					// 	lock: true,
-					// 	text: 'Loading',
-					// 	spinner: 'el-icon-loading',
-					// 	background: 'rgba(0, 0, 0, 0.7)'
-					// })
-					// this.$api
-					// 	.setDeleteRole('', val.id)
-					// 	.then((res) => {
-					// 		loading.close()
-					// 		this.$message({
-					// 			type: 'success',
-					// 			message: '删除成功!'
-					// 		})
-					// 		this.loadData()
-					// 	})
-					// 	.catch(() => {
-					// 		loading.close()
-					// 	})
-				})
-				.catch(() => {})
 		}
 	}
 }
@@ -568,6 +329,32 @@ export default {
 .transfer-wrapper {
 	text-align: left;
 	height: 450px;
+}
+.left-page {
+	width: 300px;
+	height: 500px;
+	.left-word {
+		margin-left: 5px;
+	}
+	.clear-list {
+		float: right;
+		margin-right: 20px;
+	}
+	.page-main {
+		height: 400px;
+		margin-top: 100px;
+	}
+}
+.mid-word {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	font-weight: 600;
+	color: #0291CE;
+}
+.right-page {
+	position: absolute;
+	right: 100px;
 }
 .gameCreatePage-container {
 	background-color: #f5f5f5;
@@ -633,6 +420,7 @@ export default {
 			width: 100%;
 			padding: 25px 35px 20px;
 			.content {
+				position: relative;
 				margin: 0 auto;
 				width: 100%;
 				padding-left: 100px;
