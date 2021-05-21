@@ -30,7 +30,6 @@
 					<el-input
 						v-model="form.username"
 						size="medium"
-						minlength="4"
 						maxlength="11"
 						placeholder="4-11位，最少2个字母+数字组合，首位字母"
 						clearable
@@ -44,7 +43,6 @@
 						placeholder="8-12位，字母+数字组合"
 						clearable
 						oninput="value=value.replace(/(^\s*)|(\s*$)/g ,'')"
-						minlength="8"
 						maxlength="12"
 						style="width: 365px"
 					></el-input>
@@ -103,6 +101,7 @@
 						placeholder="请输入"
 						clearable
 						maxlength="32"
+                        oninput="value=value.replace(/(^\s*)|(\s*$)/g ,'')"
 						style="width: 365px"
 					></el-input>
 				</el-form-item>
@@ -178,10 +177,16 @@ export default {
 	},
 	computed: {
 		accountTypeArr() {
-			return [...this.globalDics.accountType]
+			return this.globalDics.accountType
 		},
 		genderType() {
-			return [...this.globalDics.genderType].reverse()
+			const arr = []
+			if (this.globalDics.genderType && this.globalDics.genderType.length) {
+				this.globalDics.genderType.forEach((item) => {
+					arr.unshift(item)
+				})
+			}
+			return arr
 		},
 		rules() {
 			const reg1 = /^[A-Za-z]{1}(?=(.*[a-zA-Z]){1,})(?=(.*[0-9]){1,})[0-9A-Za-z]{3,10}$/

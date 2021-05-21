@@ -27,17 +27,21 @@ export function filterAsyncRoutes(routes, roles) {
 	return res
 }
 
+// console.log('serviceMap', serviceMap)
+
 const state = {
 	routes: [],
 	addRoutes: [],
 	userBtns: [],
-	nowRoute: '2'
+	nowRoute: '2',
+	currentRoutes: {}
 }
 
+const userBtns = []
 const mutations = {
 	SET_ROUTES: (state, value) => {
-		state.addRoutes = value.parentRoutes
-		state.routes = constantRoutes.concat(value.parentRoutes)
+		state.addRoutes = value.asyncRouterMap
+		state.routes = constantRoutes.concat(value.asyncRouterMap)
 		state.userBtns = value.userBtns
 	},
 	CLEAR_ROUTES: (state) => {
@@ -45,129 +49,20 @@ const mutations = {
 	},
 	SET_NOWROUTE: (state, value) => {
 		state.nowRoute = value
+	},
+	SET_CURRENT_ROUTES: (state, routes) => {
+		state.currentRoutes = routes
 	}
 }
 
 const actions = {
 	generateRoutes({ commit }, roles) {
 		return new Promise((resolve) => {
-			const userRoutes = loop(roles, [])
-			let parentRoutes = []
-			const userBtns = userRoutes.map((val) => val.id)
-			userRoutes.forEach((element, val) => {
-				const mapElement = serviceMap.find((item) => item.id === element.id)
-				element = {
-					...element,
-					...mapElement
-				}
-				// 二级菜单集合
-				if (mapElement) {
-					// 一级菜单
-					if (element.parentId === '0') {
-						parentRoutes.push({
-							id: element.id,
-							path: element.path,
-							name: element.permissionName,
-							show: true,
-							component: Layout,
-							children: [],
-							checked: false
-						})
-						setTimeout(() => {
-							parentRoutes.forEach((data) => {
-								if (
-									data.id ===
-									store.state.tagsView.visitedViews[1].matched[0].path.substr(1)
-								) {
-									data.checked = true
-								}
-							})
-							store.dispatch(
-								'permission/setNowroute',
-								store.state.tagsView.visitedViews[1].matched[0].path.substr(1)
-							)
-						}, 200)
-					} else if (element.level === 2) {
-						// 二级菜单
-						const index = parentRoutes.findIndex(
-							(val) => val.id === element.parentId
-						)
-						if (index > -1 && parentRoutes[index]) {
-							parentRoutes[index].children.push({
-								id: element.id,
-								path: element.path,
-								name: element.permissionName,
-								component: Layout2,
-								parentId: element.parentId,
-								checked: false,
-								meta: {
-									title: mapElement.title,
-									icon: mapElement.icon
-								},
-								children: [],
-								isRedirect: element.isRedirect
-							})
-						}
-					} else if (element.level === 3) {
-						// 三级菜单
-						const midIndex = userRoutes.findIndex(
-							(val) => val.id === element.parentId
-						)
-						const index = parentRoutes.findIndex(
-							(val) => val.id === userRoutes[midIndex].parentId
-						)
-						if (parentRoutes[index]) {
-							const index2 = parentRoutes[index].children.findIndex(
-								(val) => val.id === element.parentId
-							)
-							const fullPath = element.path
-							const pos = fullPath.lastIndexOf('/')
-							const filePath = fullPath.substr(pos + 1)
-							if (index > -1 && parentRoutes[index].children[index2]) {
-								parentRoutes[index].children[index2].children.push({
-									path: element.path,
-									name: element.name ? element.name : filePath,
-									children: [],
-									component: (resolve) =>
-										require(['@/views' + element.path + '/index'], resolve),
-									meta: {
-										title: mapElement.title,
-										icon: element.icon
-									}
-								})
-							}
-						}
-					} else {
-						// 四级菜单
-						const midIndex = userRoutes.findIndex(
-							(val) => val.id === element.parentId
-						)
-						const index = parentRoutes.findIndex(
-							(val) => val.id === userRoutes[midIndex].parentId
-						)
-						const index2 = parentRoutes[index].children.findIndex(
-							(val) => val.id === element.parentId
-						)
-						const index3 = parentRoutes[index].children[index2].findIndex(
-							(val) => val.id === element.parentId
-						)
-						if (index > -1) {
-							parentRoutes[index].children[index2].children[index3].push({
-								path: element.path,
-								name: element.permissionName,
-								id: element.id
-							})
-						}
-					}
-				}
-			})
-			parentRoutes = parentRoutes.filter((val) => {
-				return !val.children || (val.children && val.children.length)
-			})
-			// 根路由跳转, 定义根路由
+			let asyncRouterMap = JSON.stringify(roles)
+			asyncRouterMap = filterAsyncRouter(JSON.parse(asyncRouterMap))
 			const rootRoutes = []
-			if (parentRoutes.length) {
-				const rootRoute = parentRoutes[0]
+			if (asyncRouterMap.length) {
+				const rootRoute = asyncRouterMap[0]
 				if (rootRoute.children && rootRoute.children.length) {
 					rootRoutes.push({
 						path: '/',
@@ -181,58 +76,14 @@ const actions = {
 					})
 				}
 			}
-			parentRoutes.push({
-				path: '*',
-				redirect: '/404',
-				hidden: true
-			})
-			// 前端写死路由
-			parentRoutes.forEach((item) => {
-				if (item.name === '代理') {
-					item.children.forEach((data) => {
-						if (data.name === '推广管理') {
-							data.children.push({
-								path: '/agent/promotionManagement/domainCreateAndEidt',
-								name: 'domainCreateAndEidt',
-								component: () =>
-									import(`@/views/agent/promotionManagement/domainCreateAndEidt/index`),
-								meta: { title: '推广域名创建/编辑' },
-								hidden: true
-							})
-						}
-					})
-				}
-				if (item.name === '游戏') {
-					item.children.forEach((data) => {
-						if (data.name === '游戏推荐') {
-							data.children.push({
-								path: '/game/gameConfig/gameHomeRecommendEdit',
-								name: 'gameHomeRecommendEdit',
-								component: () =>
-									import(`@/views/game/gameRecommend/gameHomeRecommendEdit/index`),
-								meta: { title: '推荐位管理编辑' },
-								hidden: true
-							})
-						}
-						if (data.name === '游戏注单') {
-							data.children.push({
-								path: '/game/gameBetslip/gameBetslipDetails',
-								name: 'gameBetslipDetails',
-								component: () =>
-									import(`@/views/game/gameBetslip/gameBetslipDetails/index`),
-								meta: { title: '游戏注单详情' },
-								hidden: true
-							})
-						}
-					})
-				}
-			})
-			parentRoutes = parentRoutes.concat(rootRoutes)
+			asyncRouterMap = asyncRouterMap.concat(rootRoutes)
+			const id = window.sessionStorage.getItem('activeId')
+			id ? store.dispatch('permission/setNowroute', id) : ''
 			commit('SET_ROUTES', {
-				parentRoutes,
+				asyncRouterMap,
 				userBtns
 			})
-			resolve(parentRoutes)
+			resolve(asyncRouterMap)
 		})
 	},
 	clearRoutes({ commit }) {
@@ -242,19 +93,67 @@ const actions = {
 		commit('SET_NOWROUTE', id)
 	}
 }
+//
+// // 迭代拍平
+// function loop(roles, arr) {
+// 	if (!roles || !roles.length) return []
+//
+// 	roles.forEach((i) => {
+// 		arr.push(i)
+// 		if (i && i.children && i.children.length) {
+// 			loop(i.children, arr)
+// 		}
+// 	})
+// 	return arr
+// }
 
-// 迭代拍平
-function loop(roles, arr) {
-	if (!roles || !roles.length) return []
+// 路由鉴权
+function filterAsyncRouter(asyncRouterMap) {
+	return asyncRouterMap.filter((route) => {
+		if (route.type !== 0) {
+			if (!route.component) {
+				if (route.level !== 3) {
+					route.level === 1
+						? (route.component = Layout)
+						: (route.component = Layout2)
+				} else {
+					route.component = (resolve) =>
+						require(['@/views' + route.path + '/index'], resolve)
+				}
+			}
+			serviceMap.forEach((item) => {
+				if (item.id === route.id) {
+					Object.assign(route, {
+						path: item.path ? item.path : route.path,
+						name: route.permissionName,
+						meta: {
+							title: item.title,
+							icon: item.icon
+						},
+						show: true,
+						checked: false
+					})
+					if (route.level === 3) {
+						const fullPath = route.path
+						const pos = fullPath.lastIndexOf('/')
+						const filePath = fullPath.substr(pos + 1)
+						route.name = filePath
+						// 按钮id
+						userBtns.push(route.id)
+					}
+				}
+			})
 
-	roles.forEach((i) => {
-		arr.push(i)
-		if (i && i.children && i.children.length) {
-			loop(i.children, arr)
+			if (route.children !== null && route.children && route.children.length) {
+				route.children = filterAsyncRouter(route.children)
+			}
 		}
+		return true
 	})
+}
 
-	return arr
+export const loadView = (view) => {
+	return () => import(`@/views/${view}`)
 }
 
 export default {

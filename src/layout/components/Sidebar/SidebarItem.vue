@@ -1,12 +1,7 @@
 <template>
 	<div class="menu-wrapper">
 		<template
-			v-if="
-				hasOneShowingChild(item.children, item) &&
-					(!onlyOneChild.children || onlyOneChild.noShowingChildren) &&
-					!item.alwaysShow &&
-					!item.hidden
-			"
+			v-if="hasOneShowingChild(item.children,item) && (!onlyOneChild.children||onlyOneChild.noShowingChildren)&&!item.alwaysShow && !item.hidden"
 		>
 			<app-link v-if="onlyOneChild.meta" :to="resolvePath(onlyOneChild.path)">
 				<el-badge :value="showNumber(item.meta.title)" class="pop-star">
@@ -91,27 +86,25 @@ export default {
 		this.onlyOneChild = null
 		return {}
 	},
-	watch: {
-		// $store: {
-		// 	handler: function(state) {
-		// 		console.log('state')
-		// 		console.log(state)
-		// 		this.vue.se
-		// 	},
-		// 	immediate: true
-		// }
-	},
 	methods: {
-		hasOneShowingChild(children = [], parent) {
-			const showingChildren = children.filter((item) => {
-				if (item.hidden) {
-					return false
-				} else {
-					// Temp set(will be used if only has one showing child)
-					this.onlyOneChild = item
-					return true
-				}
-			})
+		hasOneShowingChild(children, parent) {
+			let showingChildren = []
+			if (children) {
+				showingChildren = children.filter((item) => {
+					if (item.hidden) {
+						return false
+					} else {
+						// Temp set(will be used if only has one showing child)
+						this.onlyOneChild = item
+						return true
+					}
+				})
+			}
+
+			// When there is only one child router, the child router is displayed by default
+			// if (showingChildren.length === 1) {
+			// 	return true
+			// }
 
 			// Show parent if there are no child router to display
 			if (showingChildren.length === 0) {

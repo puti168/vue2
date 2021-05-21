@@ -49,7 +49,6 @@ export default {
   watch: {
     recommendDetails: {
       handler(newV) {
-        debugger
         console.log(888888, newV)
       },
       deep: true

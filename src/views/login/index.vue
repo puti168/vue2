@@ -29,6 +29,7 @@
 						name="username"
 						type="text"
 						tabindex="1"
+                        maxlength="11"
 						auto-complete="off"
 					/>
 				</el-form-item>
@@ -45,6 +46,8 @@
 						:placeholder="$t('login.password')"
 						name="password"
 						tabindex="2"
+                        maxlength="12"
+                        oninput="value=value.replace(/(^\s*)|(\s*$)/g ,'')"
 						auto-complete="off"
 					/>
 					<span class="show-pwd" @click="showPwd">
@@ -189,8 +192,8 @@ export default {
 					this.$store
 						.dispatch('user/login', this.loginForm)
 						.then(() => {
+							console.log('push进入页面')
 							this.$router.push({ path: this.redirect || '/' })
-							// this.$router.push({ path: '/' })
 							this.loading = false
 						})
 						.catch(() => {

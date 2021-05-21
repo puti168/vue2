@@ -4,7 +4,6 @@ import { Message } from 'element-ui'
 import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css' // progress bar style
 import { getToken } from '@/utils/auth' // get token from cookie
-import getPageTitle from '@/utils/get-page-title'
 import axios from 'axios'
 import Cookies from 'js-cookie'
 import { checkNullObj } from '@/utils'
@@ -40,7 +39,6 @@ const checkVersion = (to, from, next) => {
 
 const ifVersionCorrect = async (to, from, next) => {
 	NProgress.start()
-	document.title = getPageTitle(to.meta.title)
 	const hasToken = getToken()
 	const addRoutes = store.state.permission.addRoutes
 	if (hasToken) {
@@ -55,9 +53,8 @@ const ifVersionCorrect = async (to, from, next) => {
 				await store.dispatch('user/getDics')
 			}
 			// console.log(addRoutes)
-			if (!addRoutes.length) {
-				let roles = JSON.parse(window.localStorage.getItem('role'))
-				roles = await store.dispatch('user/getRoles')
+			if (addRoutes.length === 0) {
+				const roles = await store.dispatch('user/getRoles')
 				try {
 					if (roles === '无效权限') {
 						await store.dispatch('user/resetToken')
@@ -74,32 +71,6 @@ const ifVersionCorrect = async (to, from, next) => {
 				} catch (e) {
 					Message.error(e || 'roles获取失败')
 				}
-				// if (!!roles && roles.length) {
-				// 	const accessRoutes = await store.dispatch(
-				// 		'permission/generateRoutes',
-				// 		roles
-				// 	)
-				// 	router.addRoutes(accessRoutes)
-				// 	next({ ...to, replace: true })
-				// } else {
-				// 	roles = await store.dispatch('user/getRoles')
-				// 	try {
-				// 		if (roles === '无效权限') {
-				// 			await store.dispatch('user/resetToken')
-				// 			next(`/login?redirect=nopermission`)
-				// 			NProgress.done()
-				// 		} else {
-				// 			const accessRoutes = await store.dispatch(
-				// 				'permission/generateRoutes',
-				// 				roles
-				// 			)
-				// 			router.addRoutes(accessRoutes)
-				// 			next({ ...to, replace: true })
-				// 		}
-				// 	} catch (e) {
-				// 		Message.error(e || 'roles获取失败')
-				// 	}
-				// }
 			} else {
 				try {
 					// await store.dispatch('user/getInfo')
@@ -110,6 +81,7 @@ const ifVersionCorrect = async (to, from, next) => {
 					next(`/login?redirect=${to.path}`)
 					NProgress.done()
 				}
+				next()
 			}
 		}
 	} else {

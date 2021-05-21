@@ -337,12 +337,12 @@ export default {
       activeL: true,
       // 编辑信息按钮
       editMsgList: [
-        { code: '6', label: '账号状态', applyStatus: '' },
-        { code: '8', label: '风控层级', applyStatus: '' },
-        { code: '9', label: '代理标签', applyStatus: '' },
+        { code: '', label: '账号状态', applyStatus: '' },
+        { code: '', label: '风控层级', applyStatus: '' },
+        { code: '', label: '代理标签', applyStatus: '' },
         { code: '', label: '账号备注', applyStatus: '' },
         { code: '', label: '入口权限', applyStatus: '' },
-        { code: '3', label: '支付密码重置', applyStatus: '' }
+        { code: '6', label: '支付密码重置', applyStatus: '' }
       ],
       // 风控层级
       riskLevelList: [],
@@ -483,9 +483,11 @@ export default {
 
         case '风控层级':
           this.editData.windControlId = this.outlineInfoList.windControlId
+          this.editData.windControlName = this.outlineInfoList.windControlName
           break
         case '代理标签':
           this.editData.labelId = this.outlineInfoList.labelId
+          this.editData.labelName = this.outlineInfoList.labelName
           break
         case '账号备注':
           this.titel = '备注信息：'

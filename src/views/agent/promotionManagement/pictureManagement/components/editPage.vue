@@ -5,7 +5,9 @@
 				<span>创建/编辑</span>
 				<span>
 					<el-button type="info" @click="back">取消</el-button>
-					<el-button type="success" :disabled="loading" @click="add">保存</el-button>
+					<el-button type="success" :disabled="loading" @click="add">
+						保存
+					</el-button>
 				</span>
 			</div>
 			<div class="content-part2">
@@ -42,22 +44,22 @@
 							></el-option>
 						</el-select>
 					</el-form-item>
-                    <el-form-item label="图片类型:" prop="imageType">
-                        <el-select
-                            v-model="queryData.imageType"
-                            size="medium"
-                            placeholder="默认选择全部"
-                            clearable
-                            style="width: 365px"
-                        >
-                            <el-option
-                                v-for="item in materialPictureTypeArr"
-                                :key="item.code"
-                                :label="item.description"
-                                :value="item.code"
-                            ></el-option>
-                        </el-select>
-                    </el-form-item>
+					<el-form-item label="图片类型:" prop="imageType">
+						<el-select
+							v-model="queryData.imageType"
+							size="medium"
+							placeholder="默认选择全部"
+							clearable
+							style="width: 365px"
+						>
+							<el-option
+								v-for="item in materialPictureTypeArr"
+								:key="item.code"
+								:label="item.description"
+								:value="item.code"
+							></el-option>
+						</el-select>
+					</el-form-item>
 					<el-form-item label="排序:" prop="displayOrder">
 						<el-input
 							v-model="queryData.displayOrder"
@@ -81,7 +83,7 @@
 							@upoladItemDefeat="handleUploadDefeat"
 						></upload>
 						<p v-if="imgTip" class="imgTip">
-                            请上传图片！图片格式仅支持png,图片尺寸： ？？ 图片大小不超过？？
+							请上传图片！图片格式仅支持png,图片尺寸： ？？ 图片大小不超过？？
 						</p>
 					</el-form-item>
 					<el-form-item label="审核信息:">
@@ -112,36 +114,45 @@ export default {
 	name: 'EditPage',
 	components: { Upload },
 	mixins: [list],
+	props: {
+		editData: {
+			type: Object,
+			default: function() {
+				return {}
+			}
+		}
+	},
 	data() {
 		return {
 			loading: false,
 			queryData: {
-                imageName: undefined,
-                imageSize: undefined,
-                imageType: undefined,
-                displayOrder: undefined,
-                imageAddress: null,
-                remark: undefined
+				imageName: undefined,
+				imageSize: undefined,
+				imageType: undefined,
+				displayOrder: undefined,
+				imageAddress: null,
+				remark: undefined,
+				id: undefined
 			},
-			dataList: []
+			updateStatus: false
 		}
 	},
 	computed: {
-        materialPictureTypeArr() {
-            return this.globalDics.materialPictureType
-        },
-        pictureSizeTypeArr() {
-            return this.globalDics.pictureSizeType
-        },
+		materialPictureTypeArr() {
+			return this.globalDics.materialPictureType
+		},
+		pictureSizeTypeArr() {
+			return this.globalDics.pictureSizeType
+		},
 		imageSize() {
 			return {
 				width: 1920,
 				height: 400
 			}
 		},
-        imgTip() {
-            return this.queryData.imgUrl ? '' : '请上传图片！'
-        },
+		imgTip() {
+			return this.queryData.imgUrl ? '' : '请上传图片！'
+		},
 		rules() {
 			const reg1 = /^[A-Za-z]{1}(?=(.*[a-zA-Z]){1,})(?=(.*[0-9]){1,})[0-9A-Za-z]{3,10}$/
 
@@ -160,23 +171,23 @@ export default {
 			}
 
 			return {
-                imageSize: [
+				imageSize: [
 					{ required: true, message: '请选择图片尺寸', trigger: 'change' }
 				],
-                imageType: [
-                    { required: true, message: '请选择图片类型', trigger: 'change' }
-                ],
-                imageAddress: [
-                    { required: true, message: '请上传图片', trigger: 'change' }
-                ],
-                imageName: [
+				imageType: [
+					{ required: true, message: '请选择图片类型', trigger: 'change' }
+				],
+				imageAddress: [
+					{ required: true, message: '请上传图片', trigger: 'change' }
+				],
+				imageName: [
 					{
 						required: true,
 						validator: testPicName,
 						trigger: 'blur'
 					}
 				],
-                displayOrder: [
+				displayOrder: [
 					{
 						required: true,
 						message: '请输入排序',
@@ -184,6 +195,29 @@ export default {
 					}
 				]
 			}
+		}
+	},
+	watch: {
+		editData: {
+			handler(newData) {
+				if (Object.keys(newData).length) {
+					delete newData.createdAt
+					delete newData.createdBy
+					delete newData.updatedAt
+					delete newData.updatedBy
+					newData.imageType = newData.imageType + ''
+					this.queryData = {
+						...newData
+					}
+					this.updateStatus = true
+					console.log('this.queryData', this.queryData)
+				} else {
+					this.updateStatus = false
+					this.reset()
+				}
+			},
+			deep: true,
+			immediate: true
 		}
 	},
 	mounted() {},
@@ -197,29 +231,31 @@ export default {
 			const params = {
 				...this.queryData
 			}
+			const handle = this.updateStatus
+				? this.$api.agentPictureListUpdateAPI
+				: this.$api.agentPictureListCreateAPI
 			this.$refs['form'].validate((valid) => {
-                this.$api
-                    .agentPictureListCreateAPI(params)
-                    .then((res) => {
-                        this.loading = false
-                        const { code, msg } = res
-                        if (code === 200) {
-                            this.$confirm(`提交成功`, {
-                                confirmButtonText: '确定',
-                                type: 'success',
-                                showCancelButton: false
-                            })
-                            this.reset()
-                        } else {
-                            this.$message({
-                                message: msg,
-                                type: 'error'
-                            })
-                        }
-                    })
-                    .catch(() => {
-                        this.loading = false
-                    })
+				handle(params)
+					.then((res) => {
+						this.loading = false
+						const { code, msg } = res
+						if (code === 200) {
+							this.$confirm(`${this.updateStatus ? '更新' : '新增'}成功`, {
+								confirmButtonText: '确定',
+								type: 'success',
+								showCancelButton: false
+							})
+							this.reset()
+						} else {
+							this.$message({
+								message: msg,
+								type: 'error'
+							})
+						}
+					})
+					.catch(() => {
+						this.loading = false
+					})
 				console.log('valid', valid)
 				// if (valid) {
 				// }
@@ -232,50 +268,20 @@ export default {
 		reset() {
 			this.$refs['form'].resetFields()
 			this.form = {
-				historyGameLimit: undefined,
-				hotSearch: undefined
+				imageName: undefined,
+				imageSize: undefined,
+				imageType: undefined,
+				displayOrder: undefined,
+				imageAddress: null,
+				remark: undefined,
+				id: undefined
 			}
-		},
-		checkValue(val) {},
-		addRow() {
-			const lastRow = this.dataList[this.dataList.length - 1]
-			const new_row = lastRow.id + 1
-			this.dataList.push({ id: new_row })
-		},
-		deleteRow(val) {
-			this.$confirm('确定删除此游戏吗?', {
-				confirmButtonText: '确定',
-				cancelButtonText: '取消',
-				type: 'warning'
-			})
-				.then(() => {
-					// const loading = this.$loading({
-					// 	lock: true,
-					// 	text: 'Loading',
-					// 	spinner: 'el-icon-loading',
-					// 	background: 'rgba(0, 0, 0, 0.7)'
-					// })
-					// this.$api
-					// 	.setDeleteRole('', val.id)
-					// 	.then((res) => {
-					// 		loading.close()
-					// 		this.$message({
-					// 			type: 'success',
-					// 			message: '删除成功!'
-					// 		})
-					// 		this.loadData()
-					// 	})
-					// 	.catch(() => {
-					// 		loading.close()
-					// 	})
-				})
-				.catch(() => {})
 		},
 		handleStartUpload() {
 			this.$message.info('图片开始上传')
 		},
 		handleUploadSucess({ index, file, id }) {
-		    console.log('this.queryData.imgUr', file.imgUrl)
+			console.log('this.queryData.imgUr', file.imgUrl)
 			this.queryData.imageAddress = file.imgUrl
 		},
 		handleUploadDefeat() {

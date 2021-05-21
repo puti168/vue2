@@ -74,6 +74,7 @@ export default {
 				['createdAt', 'createdAt'],
 				['updatedAt', 'updatedAt'],
 				['loginTime', 'loginTime'],
+				['withdrawalTime', 'withdrawalTime'],
 				['modifyDt', 'modifyDt']
 			])
 			return SortLine

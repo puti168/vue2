@@ -16,7 +16,7 @@
 								<el-input
 									v-model="form.gameName"
 									size="medium"
-									maxlength="20"
+									:maxlength="20"
 									clearable
 									style="width: 365px"
 								></el-input>
@@ -64,7 +64,7 @@
 								<el-input
 									v-model="form.remark"
 									size="medium"
-									maxlength="50"
+									:maxlength="50"
 									clearable
 									style="width: 365px"
 								></el-input>
@@ -75,7 +75,7 @@
 								<el-input
 									v-model="form.accessInfo"
 									size="medium"
-									maxlength="100"
+									:maxlength="100"
 									clearable
 									style="width: 365px"
 								></el-input>
@@ -86,7 +86,7 @@
 								<el-input
 									v-model="form.description"
 									size="medium"
-									maxlength="100"
+									:maxlength="100"
 									clearable
 									style="width: 365px"
 								></el-input>
@@ -106,7 +106,7 @@
 										v-for="item in gameModuleNameList"
 										:key="item.moduleId"
 										:label="item.moduleName"
-										:value="item.moduleId"
+										:value="change(item.moduleId)"
 									></el-option>
 								</el-select>
 							</el-form-item>
@@ -125,7 +125,7 @@
 										v-for="item in gameModuleNameList"
 										:key="item.moduleId"
 										:label="item.moduleName"
-										:value="item.moduleId"
+										:value="change(item.moduleId)"
 									></el-option>
 								</el-select>
 							</el-form-item>
@@ -135,6 +135,7 @@
 								<el-input
 									v-model="form.gameRebateRate"
 									size="medium"
+									maxlength="5"
 									clearable
 									style="width: 365px"
 								></el-input>
@@ -216,19 +217,34 @@
 					<el-divider></el-divider>
 					<span class="img-title">客户端图片上传</span>
 					<el-form-item label="图片上传" prop="image">
-						<!-- :upload-file-type="'image/jpeg'"
-							:platform="'PC'"
-							:bounds="imageSize" -->
-						<upload
-							ref="imgUpload"
-							:img-urls="form.imageAddress"
-							:upload-file-type="'image/jpeg'"
-							@upoladItemSucess="handleUploadSucess"
-							@startUpoladItem="handleStartUpload"
-							@deleteUpoladItem="handleDeleteUpload"
-							@upoladItemDefeat="handleUploadDefeat"
-						></upload>
-						<p v-if="imgTip" class="imgTip">
+						<el-upload
+							class="avatar-uploader"
+							action="#"
+							:show-file-list="false"
+							:auto-upload="false"
+							accept="image/*"
+							:on-success="
+								(response, file, fileList) =>
+									handleAvatarSuccess(
+										response,
+										file,
+										fileList,
+										form.imageAddress
+									)
+							"
+							:before-upload="
+								(file) => beforeAvatarUpload(file, form.imageAddress)
+							"
+							:on-change="handleChange"
+						>
+							<img
+								v-if="form.imageAddress"
+								:src="form.imageAddress"
+								class="avatar"
+							/>
+							<i v-else class="el-icon-plus avatar-uploader-icon"></i>
+						</el-upload>
+						<p class="imgTip">
 							请上传图片！图片格式仅支持png,图片尺寸： ？？ 图片大小不超过？？
 						</p>
 					</el-form-item>
@@ -241,10 +257,10 @@
 <script>
 import list from '@/mixins/list'
 import { routerNames } from '@/utils/consts'
-import Upload from '@/components/UploadBox'
+import { getToken } from '@/utils/auth'
 export default {
 	name: routerNames.gameManagementEdit,
-	components: { Upload },
+	components: {},
 	mixins: [list],
 	props: {
 		rowData: {
@@ -290,14 +306,17 @@ export default {
 				description: '',
 				remark: ''
 			},
+			datalist: {},
+			curFile: null, // 当前上传的文件
+			uploadUrl: process.env.VUE_APP_BASE_API + '/gameManager/imageUpload',
 			gameLabelParam1: '',
 			gameLabelParam2: '',
 			gameLabelParam3: ''
 		}
 	},
 	computed: {
-		imgTip() {
-			return this.form.imageAddress ? '' : '请上传图片！'
+		token() {
+			return getToken()
 		},
 		imageSize() {
 			return {
@@ -372,12 +391,17 @@ export default {
 	watch: {
 		rowData: {
 			handler(val) {
-				if (val) {
-					val.supportTerminal = val.supportTerminal.split(',')
-					val.relationOtherGameId = val.relationOtherGameId.split(',')
-					val.relationGameModuleId = val.relationGameModuleId.split(',')
-				}
-				this.form = val
+				const arr = {}
+				// if (val) {
+				// 	arr = JSON.parse(JSON.stringify(val))
+				// 	console.log(val)
+				// 	console.log('val2')
+				// 	arr.supportTerminal = arr.supportTerminal.split(',')
+				// 	arr.relationOtherGameId = arr.relationOtherGameId.split(',')
+				// 	arr.relationGameModuleId = arr.relationGameModuleId.split(',')
+				// 	arr.gameIcon = arr.gameIcon + ''
+				// }
+				this.form = arr
 			},
 			immediate: true,
 			deep: true
@@ -387,13 +411,6 @@ export default {
 	mounted() {},
 	methods: {
 		confirm() {
-			// if (!this.imageAddress) {
-			// 	this.$message({
-			// 						message: res.msg,
-			// 						type: 'error'
-			// 					})
-			// 	return
-			// }
 			this.$refs.form.validate((valid) => {
 				if (valid) {
 					const loading = this.$loading({
@@ -464,19 +481,71 @@ export default {
 				}
 			})
 		},
-		handleStartUpload() {
-			this.$message.info('图片开始上传')
+		change(value) {
+			return value + ''
 		},
-		handleUploadSucess({ index, file, id }) {
-			this.form.imageAddress = file.imgUrl
+		handleAvatarSuccess() {
+			this.uploadFile()
 		},
-		handleUploadDefeat() {
-			this.form.imageAddress = ''
-			this.$message.error('图片上传失败')
+		handleChange(file) {
+			console.log('触发了change事件')
+			this.curFile = file.raw
+			this.handleAvatarSuccess()
 		},
-		handleDeleteUpload() {
-			this.form.imageAddress = ''
-			this.$message.warning('图片已被移除')
+		uploadFile() {
+			const formData = new FormData()
+			formData.append('file', this.curFile)
+			this.$api
+				.imageUpload(formData)
+				.then((response) => {
+					this.$message({
+						message: '上传成功!',
+						type: 'success'
+					})
+					console.log('response')
+					console.log(response)
+					this.$set(this.form, 'imageAddress', response.data)
+					console.log(this.form)
+				})
+				.catch(() => {
+					this.handleAvatarDefeat()
+				})
+		},
+		handleAvatarDefeat() {
+			this.curFile = ''
+		},
+		beforeAvatarUpload(file, row) {
+			// const isPNG = file.type === 'image/png'
+			// if (!isPNG) {
+			// 	this.$message.error('您选择的图片不符合要求，请重新选择！')
+			// }
+			// const isSize = new Promise(function(resolve, reject) {
+			// 	const _URL = window.URL || window.webkitURL
+			// 	const image = new Image()
+			// 	// image.src = file.url
+			// 	image.onload = () => {
+			// 		const valid = image.width === 240 && image.height === 72
+			// 		valid ? resolve() : reject()
+			// 	}
+			// 	image.src = _URL.createObjectURL(file)
+			// }).then(
+			// 	() => {
+			// 		return file
+			// 	},
+			// 	() => {
+			// 		this.$message({
+			// 			message: '您选择的图片不符合要求，请重新选择！',
+			// 			type: 'error'
+			// 		})
+			// 		return Promise.reject()
+			// 	}
+			// )
+			// this.dataList = {
+			// 	textType: 4,
+			// 	agentId: row.agentId.split('_')[1]
+			// }
+			// return isPNG && isSize
+			return true
 		},
 		goBack() {
 			this.form = {

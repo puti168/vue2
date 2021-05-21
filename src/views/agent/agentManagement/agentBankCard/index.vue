@@ -65,22 +65,22 @@
 							@keyup.enter.native="enterSearch"
 						></el-input>
 					</el-form-item>
-<!--					<el-form-item label="风控层级:">-->
-<!--						<el-select-->
-<!--							v-model="queryData.windControlId"-->
-<!--							size="medium"-->
-<!--							placeholder="全部"-->
-<!--							clearable-->
-<!--							style="width: 180px"-->
-<!--						>-->
-<!--							<el-option-->
-<!--								v-for="item in vipDict"-->
-<!--								:key="item.windControlId"-->
-<!--								:label="item.windControlName"-->
-<!--								:value="item.windControlId"-->
-<!--							></el-option>-->
-<!--						</el-select>-->
-<!--					</el-form-item>-->
+					<!--					<el-form-item label="风控层级:">-->
+					<!--						<el-select-->
+					<!--							v-model="queryData.windControlId"-->
+					<!--							size="medium"-->
+					<!--							placeholder="全部"-->
+					<!--							clearable-->
+					<!--							style="width: 180px"-->
+					<!--						>-->
+					<!--							<el-option-->
+					<!--								v-for="item in vipDict"-->
+					<!--								:key="item.windControlId"-->
+					<!--								:label="item.windControlName"-->
+					<!--								:value="item.windControlId"-->
+					<!--							></el-option>-->
+					<!--						</el-select>-->
+					<!--					</el-form-item>-->
 					<el-form-item label="银行名称:">
 						<el-input
 							v-model="queryData.bankName"
@@ -187,22 +187,22 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-                    <el-table-column prop="bankAddress" align="center" label="开户地址">
-                        <template slot-scope="scope">
+					<el-table-column prop="bankAddress" align="center" label="开户地址">
+						<template slot-scope="scope">
 							<span v-if="!!scope.row.bankAddress">
 								{{ scope.row.bankAddress }}
 							</span>
-                            <span v-else>-</span>
-                        </template>
-                    </el-table-column>
-<!--					<el-table-column prop="operateType" align="center" label="风控层级">-->
-<!--						<template slot-scope="scope">-->
-<!--							<span v-if="!!scope.row.windControlName">-->
-<!--								{{ scope.row.windControlName }}-->
-<!--							</span>-->
-<!--							<span v-else>-</span>-->
-<!--						</template>-->
-<!--					</el-table-column>-->
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
+					<!--					<el-table-column prop="operateType" align="center" label="风控层级">-->
+					<!--						<template slot-scope="scope">-->
+					<!--							<span v-if="!!scope.row.windControlName">-->
+					<!--								{{ scope.row.windControlName }}-->
+					<!--							</span>-->
+					<!--							<span v-else>-</span>-->
+					<!--						</template>-->
+					<!--					</el-table-column>-->
 					<el-table-column
 						prop="createDt"
 						align="center"
@@ -268,12 +268,6 @@ export default {
 		}
 	},
 	computed: {
-		bindType() {
-			return [
-				{ description: '全部', code: undefined },
-				...this.globalDics.bindType
-			]
-		},
 		accountTypeArr() {
 			return this.globalDics.proxyAccountType
 		}
@@ -290,10 +284,10 @@ export default {
 			const [startTime, endTime] = create
 			let params = {
 				...this.queryData,
-                beginDate: startTime
+				beginDate: startTime
 					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
 					: undefined,
-                endDate: endTime
+				endDate: endTime
 					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
 					: undefined
 			}
@@ -301,6 +295,9 @@ export default {
 				...this.getParams(params)
 			}
 			delete params.createDt
+			params.accountType = params.accountType.length
+				? params.accountType
+				: undefined
 			this.$api
 				.agentBankRecordAPI(params)
 				.then((res) => {
@@ -347,16 +344,16 @@ export default {
 			})
 		},
 		reset() {
-		    this.pageNum = 1
+			this.pageNum = 1
 			this.$refs['form'].resetFields()
 			this.queryData = {
-                createDt: [start, end],
-                userName: undefined,
-                accountType: [],
-                cardNumber: undefined,
-                bankName: undefined,
-                cnName: undefined,
-                orderType: undefined
+				createDt: [start, end],
+				userName: undefined,
+				accountType: [],
+				cardNumber: undefined,
+				bankName: undefined,
+				cnName: undefined,
+				orderType: undefined
 			}
 			this.loadData()
 		}

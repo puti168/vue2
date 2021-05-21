@@ -199,6 +199,29 @@
 							@blur="checkValue($event)"
 						></el-input>
 					</el-form-item>
+					<el-form-item label="转代次数:">
+						<el-input
+							v-model="queryData.transforNumMin"
+							size="medium"
+							placeholder="最小数值"
+							style="width: 100px"
+							maxlength="10"
+							oninput="value=value.replace(/[^\d]/g,'')"
+							name="transforNumMin"
+							@blur="checkValue($event)"
+						></el-input>
+						-
+						<el-input
+							v-model="queryData.transforNumMax"
+							size="medium"
+							placeholder="最大数值"
+							style="width: 100px"
+							maxlength="10"
+							oninput="value=value.replace(/[^\d]/g,'')"
+							name="transforNumMax"
+							@blur="checkValue($event)"
+						></el-input>
+					</el-form-item>
 					<el-form-item label="首存时间:" label-width="100px">
 						<el-date-picker
 							v-model="queryData.firstSaveTime"
@@ -341,24 +364,34 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="labelId" align="center" label="会员标签">
+					<el-table-column prop="labelName" align="center" label="会员标签">
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.labelId">
-								{{
-									userLabel.filter((item) => (item.labelId = labelId)).labelName
-								}}
+							<span v-if="!!scope.row.labelName">
+								{{ scope.row.labelName }}
 							</span>
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="windControlId" align="center" label="风控层级">
+					<el-table-column
+						prop="windControlName"
+						align="center"
+						label="风控层级"
+					>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.labelId">
-								{{
-									userLabel.filter(
-										(item) => (item.windControlId = windControlId)
-									).windControlName
-								}}
+							<span v-if="!!scope.row.windControlName">
+								{{ scope.row.windControlName }}
+							</span>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
+					<el-table-column prop="transforNum" align="center" label="转代次数">
+						<template slot-scope="scope">
+							<span
+								v-if="
+									!!scope.row.transforNum || scope.row.transforNum * 1 === 0
+								"
+							>
+								{{ scope.row.transforNum }}
 							</span>
 							<span v-else>-</span>
 						</template>
@@ -533,6 +566,8 @@ export default {
 				lastLoginTime: [start, end],
 				vipSerialNumMax: undefined,
 				vipSerialNumMin: undefined,
+				transforNumMin: undefined,
+				transforNumMax: undefined,
 				accountType: [],
 				deviceType: [],
 				firstDepositAmountMin: undefined,
@@ -569,7 +604,11 @@ export default {
 			this.dataList = []
 			this.loading = true
 			const create = this.queryData.registerTime || []
+			const lastLoginTime = this.queryData.lastLoginTime || []
+			const firstSaveTime = this.queryData.firstSaveTime || []
 			const [startTime, endTime] = create
+			const [loginTimeStart, loginTimeEnd] = lastLoginTime
+			const [firstDepositTimeStart, firstDepositTimeEnd] = firstSaveTime
 			let params = {
 				...this.queryData,
 				createDtStart: startTime
@@ -577,6 +616,18 @@ export default {
 					: undefined,
 				createDtEnd: endTime
 					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
+					: undefined,
+				lastLoginTimeStart: loginTimeStart
+					? dayjs(loginTimeStart).format('YYYY-MM-DD HH:mm:ss')
+					: undefined,
+				lastLoginTimeEnd: loginTimeEnd
+					? dayjs(loginTimeEnd).format('YYYY-MM-DD HH:mm:ss')
+					: undefined,
+				firstDepositTimeStart: firstDepositTimeStart
+					? dayjs(firstDepositTimeStart).format('YYYY-MM-DD HH:mm:ss')
+					: undefined,
+				firstDepositTimeEnd: firstDepositTimeEnd
+					? dayjs(firstDepositTimeEnd).format('YYYY-MM-DD HH:mm:ss')
 					: undefined
 			}
 			params = {
@@ -631,6 +682,7 @@ export default {
 			})
 		},
 		reset() {
+			this.pageNum = 1
 			this.queryData = {
 				registerTime: [start, end],
 				userName: undefined,
@@ -642,6 +694,8 @@ export default {
 				lastLoginTime: [start, end],
 				vipSerialNumMax: undefined,
 				vipSerialNumMin: undefined,
+				transforNumMin: undefined,
+				transforNumMax: undefined,
 				accountType: undefined,
 				deviceType: undefined,
 				firstDepositAmountMin: undefined,
@@ -772,11 +826,43 @@ export default {
 						this.queryData.firstDepositAmountMax = value
 					}
 					break
+				case 'transforNumMin':
+					if (
+						!!this.queryData.transforNumMax &&
+						value &&
+						value * 1 > this.queryData.transforNumMax * 1
+					) {
+						this.$message({
+							type: 'warning',
+							message: `请输入小于${this.queryData.transforNumMax}次数`
+						})
+					} else {
+						this.queryData.transforNumMin = value
+					}
+					break
+				case 'transforNumMax':
+					if (
+						!!this.queryData.transforNumMin &&
+						value &&
+						value * 1 < this.queryData.transforNumMin * 1
+					) {
+						this.$message({
+							type: 'warning',
+							message: `请输入大于${this.queryData.transforNumMin}次数`
+						})
+					} else {
+						this.queryData.transforNumMin = value
+					}
+					break
 			}
 		},
 		exportExcel() {
 			const create = this.queryData.registerTime || []
+			const lastLoginTime = this.queryData.lastLoginTime || []
+			const firstSaveTime = this.queryData.firstSaveTime || []
 			const [startTime, endTime] = create
+			const [loginTimeStart, loginTimeEnd] = lastLoginTime
+			const [firstDepositTimeStart, firstDepositTimeEnd] = firstSaveTime
 			let params = {
 				...this.queryData,
 				createDtStart: startTime
@@ -784,6 +870,18 @@ export default {
 					: undefined,
 				createDtEnd: endTime
 					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
+					: undefined,
+				lastLoginTimeStart: loginTimeStart
+					? dayjs(loginTimeStart).format('YYYY-MM-DD HH:mm:ss')
+					: undefined,
+				lastLoginTimeEnd: loginTimeEnd
+					? dayjs(loginTimeEnd).format('YYYY-MM-DD HH:mm:ss')
+					: undefined,
+				firstDepositTimeStart: firstDepositTimeStart
+					? dayjs(firstDepositTimeStart).format('YYYY-MM-DD HH:mm:ss')
+					: undefined,
+				firstDepositTimeEnd: firstDepositTimeEnd
+					? dayjs(firstDepositTimeEnd).format('YYYY-MM-DD HH:mm:ss')
 					: undefined
 			}
 			params = {
@@ -808,16 +906,15 @@ export default {
 							type: 'application/octet-stream'
 						})
 						if ('download' in document.createElement('a')) {
-							const elink = document.createElement('a')
-							elink.download = fileName || ''
-							elink.style.display = 'none'
-							elink.href = URL.createObjectURL(blob)
-							document.body.appendChild(elink)
-							elink.click()
-							URL.revokeObjectURL(elink.href)
-							document.body.removeChild(elink)
+							const downloadLink = document.createElement('a')
+							downloadLink.download = fileName || ''
+							downloadLink.style.display = 'none'
+							downloadLink.href = URL.createObjectURL(blob)
+							document.body.appendChild(downloadLink)
+							downloadLink.click()
+							URL.revokeObjectURL(downloadLink.href)
+							document.body.removeChild(downloadLink)
 						} else {
-							console.log('进来', 111)
 							window.navigator.msSaveBlob(blob, fileName)
 						}
 						this.$message({

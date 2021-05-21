@@ -14,7 +14,7 @@
                 {{ dataList.gameCode === item.gameCode ? item.gameName : "" }}
               </span>
             </el-col>
-            <el-col :span="6">玩法名称： {{ dataList.playName }}</el-col>
+            <el-col :span="6">玩法名称： {{ dataList.gameTypeName }}</el-col>
             <el-col :span="6"> 游戏桌台号： {{ dataList.tableCode }} </el-col>
             <el-col :span="6">投注玩法： {{ dataList.playOptionName }}</el-col>
             <el-col :span="6">玩法赔率： {{ dataList.oddsValue }}</el-col>

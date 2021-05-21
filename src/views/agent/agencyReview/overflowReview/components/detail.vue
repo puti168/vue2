@@ -1,53 +1,79 @@
 <template>
-	<div class="game-container report-container">
-		<div class="review-content">
-			<div class="head">
-				<span class="title">新增会员审核详情</span>
-				<div v-if="type" class="right-btn">
-					<el-button plain @click="goBack">取消</el-button>
-					<el-button type="success" @click="confirm(true)">一审通过</el-button>
-					<el-button type="danger" @click="confirm(false)">一审拒绝</el-button>
-				</div>
-				<div v-else class="right-btn">
-					<el-button plain @click="goBack">返回</el-button>
+	<div class="review-content">
+		<div class="head">
+			<span class="title">会员溢出审核详情</span>
+			<div v-if="type" class="right-btn">
+				<el-button plain @click="goBack">取消</el-button>
+				<el-button type="success" @click="confirm(true)">一审通过</el-button>
+				<el-button type="danger" @click="confirm(false)">一审拒绝</el-button>
+			</div>
+			<div v-else class="right-btn">
+				<el-button plain @click="goBack">返回</el-button>
+			</div>
+		</div>
+		<div class="main-content">
+			<div class="review-content">
+				<p class="name">代理注册信息</p>
+				<div class="review-flex">
+					<div>注册时间: {{ list.proxyRegistTime }}</div>
+					<div>代理类型: {{ typeFilter(list.accountType, 'proxyAccountType') }}</div>
+					<div>上次登录时间: {{ list.proxyLastLoginTime }}</div>
+					<div>注册端: {{ list.deviceType }}</div>
 				</div>
 			</div>
-			<div class="main-content">
-				<div class="review-content">
-					<p class="name">新增会员信息</p>
-					<div class="review-flex">
-						<div>
-							账号类型: {{ typeFilter(list.accountType, 'accountType') }}
-						</div>
-						<div>会员账号: {{ list.userName }}</div>
-						<div>登录密码: {{ list.password }}</div>
-						<div>上级代理: {{ list.parentProxyName }}</div>
-					</div>
-					<div class="review-flex">
-						<div>性别: {{ typeFilter(list.gender, 'genderType') }}</div>
-						<div>VIP经验: {{ list.vipExperienceVal }}</div>
-						<div>邮箱: {{ list.email }}</div>
-						<div>姓名: {{ list.realName }}</div>
-					</div>
-					<div class="review-flex">
-						<div>手机号码: {{ list.mobile }}</div>
-					</div>
+			<div class="review-content">
+				<p class="name">代理账号信息</p>
+				<div class="review-flex">
+					<div>账号: {{ list.userName }}</div>
+					<div>账号状态: {{ typeFilter(list.proxyAccountStatus, 'proxyAccountStatusType') }}</div>
+					<div>风控层级: {{ list.proxyWindControlName }}</div>
+					<div>代理标签: {{ list.proxyLabelName }}</div>
 				</div>
-				<div class="review-content">
-					<p class="name">申请信息</p>
-					<div class="review-flex">
-						<div>申请人: {{ list.applyName }}</div>
-						<div>申请时间: {{ list.applyTime }}</div>
-						<div>申请信息: {{ list.applyInfo }}</div>
-					</div>
+				<div class="review-flex">
+					<div>备注信息: {{ list.proxyRemark }}</div>
 				</div>
-				<div class="review-content">
-					<p class="name">审核信息信息</p>
-					<div class="review-flex">
-						<div>一审人: {{ list.auditName }}</div>
-						<div>一审时间: {{ list.auditTime }}</div>
-						<div>一审备注: {{ list.remark }}</div>
-					</div>
+			</div>
+			<div class="review-content">
+				<p class="name">溢出会员信息</p>
+				<div class="review-flex" style="margin-bottom: 20px">
+					<div>账号: {{ list.userName }}</div>
+					<div>账号状态: {{ typeFilter(list.memberAccountStatus, 'accountStatusType') }}</div>
+					<div>风控层级: {{ list.memberWindControlName }}</div>
+					<div>会员标签: {{ list.auditRemark }}</div>
+				</div>
+				<div class="review-flex">
+					<div>VIP等级: {{ list.memberVipLevel }}</div>
+					<div>银行卡数量: {{ list.bankCardNum }}</div>
+					<div>虚拟账号数量: {{ list.virtureAccountNum }}</div>
+					<div>备注信息: {{ list.memberRemark }}</div>
+				</div>
+				<div class="review-flex">
+					<div>注册时间: {{ list.memberRegistTime }}</div>
+					<div>上次登录时间: {{ list.memberLastLoginTime }}</div>
+					<div>注册端: {{ typeFilter(list.deviceType, "deviceType") }}</div>
+				</div>
+			</div>
+			<div class="review-content">
+				<p class="name">申请信息</p>
+				<div class="review-flex">
+					<div>溢出会员: {{ list.userName }}</div>
+					<div>上级代理: {{ list.transferProxyName }}</div>
+					<div>推广链接: {{ list.promotionLink }}</div>
+				</div>
+				<div class="review-flex">
+					<div>推广设备: {{ list.promotionDevice }}</div>
+					<div>申请理由: {{ list.applyInfo }}</div>
+				</div>
+				<div class="review-flex">
+					<div>申请附图: <img v-for="item in list.list" :key="item.imageAddress" :src="item.imageAddress" class="detail-img"></div>
+				</div>
+			</div>
+			<div class="review-content">
+				<p class="name">审核信息</p>
+				<div class="review-flex">
+					<div>一审人: {{ list.auditName }}</div>
+					<div>一审时间: {{ list.auditTime }}</div>
+					<div>一审备注: {{ list.auditRemark }}</div>
 				</div>
 			</div>
 		</div>
@@ -95,10 +121,8 @@
 
 <script>
 import list from '@/mixins/list'
-import { routerNames } from '@/utils/consts'
 // import dayjs from 'dayjs'
 export default {
-	name: routerNames.addMemberReview,
 	components: {},
 	mixins: [list],
 	props: {
@@ -112,10 +136,10 @@ export default {
 	data() {
 		return {
 			list: {},
-			visible: false,
 			form: {
 				remark: ''
 			},
+			visible: false,
 			action: false
 		}
 	},
@@ -151,13 +175,12 @@ export default {
 				})
 				const params = {
 					id: this.rowData.id,
-					userId: this.rowData.userId,
-					remark: this.form.remark,
+					auditRemark: this.form.remark,
 					auditStatus: this.action ? 2 : 3
 				}
 
 				this.$api
-					.updateMemberAuditRecord(params)
+					.updateMemberOverflowRecord(params)
 					.then((res) => {
 						loading.close()
 						if (res.code === 200) {
@@ -188,13 +211,12 @@ export default {
 						})
 						const params = {
 							id: this.rowData.id,
-							userId: this.rowData.userId,
-							remark: this.form.remark,
+							auditRemark: this.form.remark,
 							auditStatus: this.action ? 2 : 3
 						}
 
 						this.$api
-							.updateMemberAuditRecord(params)
+							.updateMemberOverflowRecord(params)
 							.then((res) => {
 								loading.close()
 								if (res.code === 200) {
@@ -225,7 +247,7 @@ export default {
 			const params = {
 				id: this.rowData.id
 			}
-			this.$api.memberAuditDetail(params).then((res) => {
+			this.$api.memberOverflowDetail(params).then((res) => {
 				if (res.code === 200) {
 					const response = res.data
 					this.loading = false
@@ -248,6 +270,11 @@ export default {
 	text-align: center;
 	color: #909399;
 	font-weight: 700;
+}
+.detail-img {
+	width: 80px;
+	height: 80px;
+	display: inline-block;
 }
 .review-content {
 	width: 100%;
@@ -278,7 +305,7 @@ export default {
 			.review-flex {
 				position: relative;
 				width: 100%;
-				margin-top: 10px;
+				margin-top: 15px;
 				div {
 					display: inline-block;
 					width: 24%;

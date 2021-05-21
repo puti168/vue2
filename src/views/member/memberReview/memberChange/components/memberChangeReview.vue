@@ -35,7 +35,7 @@
 					<p class="name">会员账号信息</p>
 					<div class="review-flex">
 						<div>账号: {{ accountInfo.userName }}</div>
-						<div>账号状态: {{ accountInfo.accountStatus }}</div>
+						<div>账号状态: {{ typeFilter(accountInfo.accountStatus, 'accountStatusType') }}</div>
 						<div>VIP等级: {{ accountInfo.viptualNum }}</div>
 						<div>银行卡数量: {{ accountInfo.cardNum }}</div>
 					</div>
@@ -336,7 +336,7 @@ export default {
 	}
 	.main-content {
 		.review-content {
-			height: 150px;
+			min-height: 150px;
 			border: 1px solid rgba(192, 190, 190, 0.5);
 			border-top: 0px;
 			padding: 30px;

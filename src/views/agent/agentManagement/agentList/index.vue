@@ -32,7 +32,7 @@
 							placeholder="请输入"
 							clearable
 							style="width: 180px"
-							maxlength="11"
+							:maxlength="11"
 						></el-input>
 					</el-form-item>
 					<el-form-item label="合营代码:">

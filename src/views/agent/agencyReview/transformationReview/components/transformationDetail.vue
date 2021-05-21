@@ -29,8 +29,8 @@
 				<p class="name">转入代理信息</p>
 				<div class="review-flex">
 					<div>代理账号: {{ list.transferProxyName }}</div>
-					<div>代理类型: {{ typeFilter(list.accountType, 'proxyAccountType') }}</div>
-					<div>注册时间: {{ list.labelName }}</div>
+					<div>代理类型: {{ typeFilter(list.transferProxyType, 'proxyAccountType') }}</div>
+					<div>注册时间: {{ list.transferProxyRegisterDt }}</div>
 				</div>
 			</div>
 			<div class="review-content" style="height: 200px">
@@ -283,7 +283,7 @@ export default {
 	}
 	.main-content {
 		.review-content {
-			height: 150px;
+			min-height: 150px;
 			border: 1px solid rgba(192, 190, 190, 0.5);
 			border-top: 0px;
 			padding: 30px;

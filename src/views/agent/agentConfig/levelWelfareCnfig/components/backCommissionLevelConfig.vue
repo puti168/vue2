@@ -1,260 +1,226 @@
 <template>
-    <backCommissionEditForm v-if="edit" @back="back" />
-    <div v-else class="view-container dealer-container">
-        <div class="content">
-            <el-table
-                v-loading="loading"
-                border
-                size="mini"
-                class="small-size-table"
-                :data="backCommDataList"
-                style="width: 100%"
-                :header-cell-style="getRowClass"
-                @sort-change="changeTableSort"
+  <div class="view-container dealer-container">
+    <el-button
+      v-show="!edit"
+      type="warning"
+      icon="el-icon-folder"
+      :disabled="loading"
+      size="medium"
+      class="fr"
+      @click="addLevelConfig"
+    >
+      创建
+    </el-button>
+    <backCommissionEditForm v-if="edit" :editRowData="editRowData" @back="back" />
+    <div v-else class="content">
+      <el-table
+        v-loading="loading"
+        border
+        size="mini"
+        class="small-size-table"
+        :data="backCommData"
+        style="width: 100%"
+        :header-cell-style="getRowClass"
+        @sort-change="changeTableSort"
+      >
+        <el-table-column type="index" align="center" label="序号"></el-table-column>
+        <el-table-column
+          prop="rebateLevel"
+          align="center"
+          label="佣金等级"
+        ></el-table-column>
+        <el-table-column prop="totalMinNetAmount" align="center" label="本月总输赢">
+          <template slot-scope="scope">
+            {{ scope.row.totalMinNetAmount }} ~
+            {{ scope.row.totalMaxNetAmount }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="monthActiveNum" align="center" label="本月活跃人数">
+          <template slot-scope="scope"> ≥ &nbsp;{{ scope.row.monthActiveNum }} </template>
+        </el-table-column>
+        <el-table-column prop="commissionRate" align="center" label="佣金比例">
+          <template slot-scope="scope"> {{ scope.row.commissionRate }}% </template>
+        </el-table-column>
+        <el-table-column prop="createdBy" align="center" label="创建人"></el-table-column>
+        <el-table-column
+          prop="createdAt"
+          align="center"
+          label="创建时间"
+          sortable="custom"
+        ></el-table-column>
+        <el-table-column
+          prop="updatedBy"
+          align="center"
+          label="最近操作人"
+        ></el-table-column>
+        <el-table-column
+          prop="updatedAt"
+          align="center"
+          label="最近操作时间"
+          sortable="custom"
+        ></el-table-column>
+        <el-table-column prop="operating" align="center" label="操作" width="150px">
+          <template slot-scope="scope">
+            <el-button
+              type="primary"
+              icon="el-icon-edit"
+              :disabled="loading"
+              size="medium"
+              @click="openEdit(scope.row)"
             >
-                <el-table-column
-                    prop="code"
-                    align="center"
-                    label="序号"
-                ></el-table-column>
-                <el-table-column
-                    prop="commissionLevel"
-                    align="center"
-                    label="佣金等级"
-                ></el-table-column>
-                <el-table-column
-                    prop="totalProfit"
-                    align="center"
-                    label="本月总输赢"
-                ></el-table-column>
-                <el-table-column
-                    prop="activeCount"
-                    align="center"
-                    label="本月活跃人数"
-                ></el-table-column>
-                <el-table-column
-                    prop="commissionRate"
-                    align="center"
-                    label="佣金比例"
-                ></el-table-column>
-                <el-table-column
-                    prop="createUser"
-                    align="center"
-                    label="创建人"
-                ></el-table-column>
-                <el-table-column
-                    prop="createTime"
-                    align="center"
-                    label="创建时间"
-                    sortable="custom"
-                ></el-table-column>
-                <el-table-column
-                    prop="modifyUser"
-                    align="center"
-                    label="最近操作人"
-                ></el-table-column>
-                <el-table-column
-                    prop="modifyTime"
-                    align="center"
-                    label="最近操作时间"
-                    sortable="custom"
-                ></el-table-column>
-                <el-table-column
-                    prop="operating"
-                    align="center"
-                    label="操作"
-                    width="240px"
-                >
-                    <template slot-scope="scope">
-                        <el-button
-                            type="primary"
-                            icon="el-icon-edit"
-                            :disabled="loading"
-                            size="medium"
-                            @click="openEdit(scope.row)"
-                        >
-                            编辑
-                        </el-button>
-                        <el-button
-                            :disabled="loading"
-                            type="danger"
-                            size="medium"
-                            class="noicon"
-                            @click="confined(scope.row)"
-                        >
-                            删除
-                        </el-button>
-                    </template>
-                </el-table-column>
-            </el-table>
-            <!-- 分页 -->
-            <el-pagination
-                :current-page.sync="pageNum"
-                class="pageValue"
-                background
-                layout="total, sizes,prev, pager, next, jumper"
-                :page-size="pageSize"
-                :page-sizes="pageSizes"
-                :total="total"
-                @current-change="handleCurrentChange"
-                @size-change="handleSizeChange"
-            ></el-pagination>
-        </div>
+              编辑
+            </el-button>
+            <el-button
+              :disabled="loading"
+              type="danger"
+              size="medium"
+              class="noicon"
+              @click="confined(scope.row)"
+            >
+              删除
+            </el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <!-- 分页 -->
+      <el-pagination
+        :current-page.sync="pageNum"
+        class="pageValue"
+        background
+        layout="total, sizes,prev, pager, next, jumper"
+        :page-size="pageSize"
+        :page-sizes="pageSizes"
+        :total="total"
+        @current-change="handleCurrentChange"
+        @size-change="handleSizeChange"
+      ></el-pagination>
     </div>
+  </div>
 </template>
 
 <script>
-
 import list from '@/mixins/list'
-import dayjs from 'dayjs'
-import backCommissionEditForm from '@/views/agent/agentConfig/levelWelfareCnfig/components/backCommissionEditForm'
+import backCommissionEditForm from './backCommissionEditForm'
 
 export default {
-    components: {backCommissionEditForm},
-    mixins: [list],
-    props: {backCommDataList: { type: Array, default: () => []}},
-    data() {
-        return {
-            total: 50,
-            loading: false,
-            pageNum: 10,
-            pageSize: 10,
-            pageSizes: [10, 20, 50],
-            layout: 'total, sizes, prev, pager, next, jumper',
-            defaultTime: ['00:00:00', '23:59:59'],
-            sortable: true,
-            edit: false
-        }
-    },
-    computed: {
-        accountType() {
-            return this.globalDics.accountType
-        },
-        virtualType() {
-            return this.globalDics.virtualType
-        },
-        virtualProtocolType() {
-            return this.globalDics.virtualProtocolType
-        },
-        bindType() {
-            return this.globalDics.bindType
-        }
-    },
-    mounted() {
-    },
-    methods: {
-        deleteLabel(val) {
-            this.$confirm(`<strong>是否删除该条配置?</strong>`, `确认提示`, {
-                dangerouslyUseHTMLString: true,
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-            })
-                .then(() => {
-                    console.log(2222222222)
-                })
-                .catch(() => {})
-        },
-        loadData() {
-            const [startTime, endTime] = []
-            let params = {
-                ...this.queryData,
-                createDtStart: startTime
-                    ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
-                    : '',
-                createDtEnd: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
-            }
-            if (!params.createDtStart || !params.createDtEnd) {
-                // this.$message({
-                //     message: '操作时间参数必传',
-                //     type: 'info'
-                // })
-                return
-            }
-            params = {
-                ...this.getParams(params)
-            }
-            this.loading = true
-
-            this.$api
-                .bankRecordListAPI(params)
-                .then((res) => {
-                    if (res.code === 200) {
-                        const response = res.data
-                        this.loading = false
-                        this.dataList = response.record
-                        this.total = response.totalRecord
-                    } else {
-                        this.loading = false
-                        this.$message({
-                            message: res.msg,
-                            type: 'error'
-                        })
-                    }
-                })
-                .catch(() => {
-                    this.loading = false
-                })
-        },
-        openEdit(val) {
-            this.edit = true
-        },
-        back() {
-            this.edit = false
-        },
-        // 删除
-        confined(val) {
-            this.$confirm(
-                `<strong>是否删除该条配置?</strong></br><span style='font-size:12px;color:#c1c1c1'>请谨慎操作</span>`,
-                '确认提示',
-                {
-                    dangerouslyUseHTMLString: true,
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }
-            )
-                .then(() => {
-                    // this.getOneKeyWithdraw({ userId: this.parentData.userId }) // 一键下分
-                })
-                .catch(() => {})
-        },
-        changeTableSort({ column, prop, order }) {
-            this.pageNum = 1
-            const orderParams = this.checkOrderParams.get(prop)
-            if (orderParams) {
-                if (order === 'ascending') {
-                    // 升序
-                    this.queryData.orderType = 'asc'
-                } else if (column.order === 'descending') {
-                    // 降序
-                    this.queryData.orderType = 'desc'
-                }
-                this.loadData()
-            }
-        },
-        reset() {
-            this.queryData = {
-                accountType: [],
-                bankName: '',
-                dataType: 2,
-                operateType: '',
-                orderType: '',
-                parentProxyName: '',
-                userName: '',
-                virtualAddress: '',
-                virtualKind: [],
-                virtualProtocol: []
-            }
-            this.loadData()
-        },
-        handleCurrentChange() {
-            this.loadData()
-        }
+  components: { backCommissionEditForm },
+  mixins: [list],
+  data() {
+    return {
+      queryData: {},
+      edit: false,
+      backCommData: [],
+      editRowData: {}
     }
+  },
+  computed: {},
+  mounted() {},
+  methods: {
+    loadData() {
+      this.loading = true
+      let params = {
+        ...this.queryData
+      }
+      params = {
+        ...this.getParams(params)
+      }
+      this.$api
+        .getProxyCommissionSelect(params)
+        .then((res) => {
+          if (res.code === 200) {
+            this.loading = false
+            this.total = res.data.totalRecord
+            this.backCommData = res.data.record
+          } else {
+            this.loading = false
+            this.$message({
+              message: res.msg,
+              type: 'error'
+            })
+          }
+        })
+        .catch(() => {
+          this.loading = false
+        })
+    },
+    addLevelConfig() {
+      console.log(1111111)
+      this.editRowData = {}
+      this.edit = true
+    },
+    openEdit(val) {
+      const {
+        id,
+        rebateLevel,
+        totalMinNetAmount,
+        totalMaxNetAmount,
+        monthActiveNum,
+        commissionRate
+      } = { ...val }
+      this.editRowData = {
+        id,
+        rebateLevel,
+        totalMinNetAmount,
+        totalMaxNetAmount,
+        monthActiveNum,
+        commissionRate
+      }
+      this.edit = true
+    },
+    back() {
+      this.edit = false
+    },
+    // 删除
+
+    confined(val) {
+      this.$confirm(
+        `<strong>是否删除该条配置?</strong></br><span style='font-size:12px;color:#c1c1c1'>请谨慎操作</span>`,
+        '确认提示',
+        {
+          dangerouslyUseHTMLString: true,
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }
+      )
+        .then(() => {
+          this.setProxyCommissionDelete(val)
+        })
+        .catch(() => {})
+    },
+    setProxyCommissionDelete(val) {
+      this.$api.setProxyCommissionDelete({ id: val.id }).then((res) => {
+        if (res.code === 200) {
+          this.$message.success('删除成功')
+          this.loadData()
+        }
+      })
+    },
+    changeTableSort({ column, prop, order }) {
+      if (prop === 'createdAt') {
+        prop = 1
+      }
+      if (prop === 'updatedAt') {
+        prop = 2
+      }
+      this.queryData.orderKey = prop
+      if (order === 'ascending') {
+        // 升序
+        this.queryData.orderType = 'asc'
+      } else if (column.order === 'descending') {
+        // 降序
+        this.queryData.orderType = 'desc'
+      }
+      this.loadData()
+    }
+  }
 }
 </script>
 
-<style scoped>
-
+<style lang="scss" scoped>
+.fr {
+  position: fixed;
+  top: 126px;
+  right: 20px;
+}
 </style>
