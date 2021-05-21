@@ -92,17 +92,22 @@
 				<div class="content">
 					<div class="game-page left-page">
 						<p class="hotConfig">分类包含游戏</p>
-						<p class="left-word">已包含： 100个</p>
-						<el-button type="primary" class="clear-list" @click="clearAbleList">
+						<p class="left-word">已包含： {{ leftList.length }}</p>
+						<el-button type="primary" class="clear-list" @click="deleteAll">
 							列表清空
 						</el-button>
 						<div class="page-main">
-							<div v-for="item in gameList" :key="item.id" class="page-data">
-								<el-checkbox
-									v-model="item.check"
-									class="page-check"
-									@change="lockChange()"
-								></el-checkbox>
+							<div v-for="item in leftList" :key="item.id" class="page-data">
+								<el-input
+									v-model="item.assortSort"
+									:maxlength="12"
+									size="medium"
+									style="width: 90px"
+									class="left-input"
+									placeholder="序号"
+									@focus="getOld(item.assortSort)"
+									@change="changeInput(item.assortSort)"
+								></el-input>
 								{{ item.gameName }}
 								<span
 									class="right-span"
@@ -116,7 +121,7 @@
 								>
 									{{ typeFilter(item.gameStatus, 'gameStatusType') }}
 								</span>
-								<i class="el-icon-close"></i>
+								<i class="el-icon-close" @click="deleteItem(item)"></i>
 							</div>
 						</div>
 					</div>
@@ -133,6 +138,7 @@
 								placeholder="全部"
 								clearable
 								style="width: 180px"
+								@change="queryGame"
 							>
 								<el-option
 									v-for="item in gamePlantList"
@@ -147,7 +153,7 @@
 								<el-checkbox
 									v-model="item.check"
 									class="page-check"
-									@change="lockChange()"
+									@change="lockChange(item)"
 								></el-checkbox>
 								{{ item.gameName }}
 								<span
@@ -197,8 +203,10 @@ export default {
 			},
 			gamePlantList: [],
 			gameList: [],
+			leftList: [],
 			childGameNameList: [],
 			data: {},
+			oldValue: '',
 			gameCode: '',
 			value: [4, 2, 1]
 		}
@@ -214,7 +222,6 @@ export default {
 	created() {
 		this.getPlatform()
 		this.queryChildGame()
-		this.queryGame()
 		this.queryChildGameConfig()
 	},
 	mounted() {},
@@ -223,7 +230,46 @@ export default {
 		back() {
 			this.$emit('back')
 		},
-		lockChange() {},
+		changeInput(value) {
+			console.log('xinzhi')
+			this.leftList.forEach((item, index) => {
+				if (item.assortSort === Number(value)) {
+					// this.$set(this.leftList, 'imageAddress', response.data)
+					item.assortSort = this.oldValue
+				}
+			})
+		},
+		deleteItem(item) {
+			const index = this.leftList.indexOf(item)
+			if (index > -1) {
+				this.leftList.splice(index, 1)
+			}
+			this.gameList.forEach((val) => {
+				if (val.id === item.id) {
+					val.check = false
+				}
+			})
+			console.log(this.leftList)
+		},
+		getOld(oldValue) {
+			this.oldValue = oldValue
+		},
+		lockChange(item) {
+			if (item.check && !this.leftList.includes(item)) {
+				if (this.leftList.length > 0) {
+					item.assortSort =
+						this.leftList[this.leftList.length - 1].assortSort + 1
+				} else {
+					item.assortSort = 0
+				}
+				this.leftList.push(item)
+			} else {
+				const index = this.leftList.indexOf(item)
+				if (index > -1) {
+					this.leftList.splice(index, 1)
+				}
+			}
+		},
 		// 游戏平台
 		getPlatform() {
 			this.$api
@@ -231,6 +277,8 @@ export default {
 				.then((res) => {
 					if (res.code === 200) {
 						this.gamePlantList = res.data
+						this.gameCode = res.data[0].gameCode
+						this.queryGame()
 					} else {
 						this.$message({
 							message: res.msg,
@@ -249,6 +297,10 @@ export default {
 			this.$api.queryGameAPI(params).then((res) => {
 				const { code, data, msg } = res
 				if (code === 200) {
+					data.forEach((item, index) => {
+						item.check = false
+						item.assortSort = Number(index + 1)
+					})
 					this.gameList = data
 				} else {
 					this.loading = false
@@ -323,9 +375,16 @@ export default {
 		},
 		// 保存
 		save() {
+			const arr = []
+			this.leftList.forEach(item => {
+				arr.push({
+					assortSort: item.assortSort,
+					gameCode: item.gameCode
+				})
+			})
 			const params = {
 				...this.queryData,
-				relationParams: []
+				relationParams: arr
 			}
 			params.supportTerminal =
 				params.supportTerminal && params.supportTerminal.length
@@ -353,7 +412,12 @@ export default {
 				})
 				.catch(() => (this.loading = false))
 		},
-		clearAbleList() {},
+		deleteAll() {
+			this.leftList = []
+			this.gameList.forEach((val) => {
+				val.check = false
+			})
+		},
 		reset() {
 			this.$refs['form'].resetFields()
 			this.queryData = {
@@ -429,9 +493,9 @@ export default {
 		top: 50%;
 		transform: translate(0, -50%);
 	}
-	.page-check {
+	.left-input {
 		position: absolute;
-		left: 30px;
+		left: 10px;
 	}
 	.el-icon-close {
 		position: absolute;
