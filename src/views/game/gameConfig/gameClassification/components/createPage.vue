@@ -90,35 +90,72 @@
 			</div>
 			<div class="content-part3">
 				<div class="content">
-					<p class="hotConfig">分类包含游戏</p>
 					<div class="left-page">
-						<span class="left-word">已包含： 100个</span>
+						<p class="hotConfig">分类包含游戏</p>
+						<p class="left-word">已包含： 100个</p>
 						<el-button type="primary" class="clear-list" @click="clearAbleList">
 							列表清空
 						</el-button>
-						<div class="page-main"></div>
+						<div class="page-main">
+							<div>
+								<el-input
+									v-model="queryData.applyName"
+									size="medium"
+									:maxlength="12"
+									style="width: 90px"
+									placeholder="请输入排序"
+								></el-input>
+								斗地主 状态 清除
+							</div>
+						</div>
 					</div>
 					<span class="mid-word">
 						<i class="el-icon-d-arrow-left"></i>
 						勾选游戏移入分类列表
 					</span>
 					<div class="right-page">
-						游戏平台：
-						<el-select
-							v-model="gamePlatform"
-							size="medium"
-							placeholder="全部"
-							clearable
-							style="width: 180px"
-						>
-							<el-option
-								v-for="item in gameNameList"
-								:key="item.id"
-								:label="item.gameName"
-								:value="item.id"
-							></el-option>
-						</el-select>
-						<div class="page-main"></div>
+						<div class="platform">
+							游戏平台：
+							<el-select
+								v-model="gamePlatform"
+								size="medium"
+								placeholder="全部"
+								clearable
+								style="width: 180px"
+							>
+								<el-option
+									v-for="item in gamePlantList"
+									:key="item.gameCode"
+									:label="item.gameName"
+									:value="item.gameCode"
+								></el-option>
+							</el-select>
+						</div>
+						<div class="page-main">
+							<el-checkbox
+								v-model="scope.row.lockStatus"
+								@change="lockChange(scope.row)"
+							></el-checkbox>
+							斗地主
+							<span
+								v-if="item.gameStatus * 1 === 0"
+								class="item-status disableRgba"
+							>
+								禁用
+							</span>
+							<span
+								v-if="item.gameStatus * 1 === 1"
+								class="item-status normalRgba"
+							>
+								开启
+							</span>
+							<span
+								v-if="item.gameStatus * 1 === 2"
+								class="item-status deleteRgba"
+							>
+								维护中
+							</span>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -150,7 +187,8 @@ export default {
 				remark: undefined,
 				clientDisplay: undefined
 			},
-			gameNameList: [],
+			gamePlantList: [],
+			gameList: [],
 			childGameNameList: [],
 			data: {},
 			gamePlatform: '',
@@ -166,6 +204,7 @@ export default {
 		}
 	},
 	created() {
+		this.getPlatform()
 		this.queryChildGame()
 		this.queryGame()
 		this.queryChildGameConfig()
@@ -176,17 +215,32 @@ export default {
 		back() {
 			this.$emit('back')
 		},
-		// 游戏平台查询
+		// 游戏平台
+		getPlatform() {
+			this.$api
+				.gamePlant()
+				.then((res) => {
+					if (res.code === 200) {
+						this.gamePlantList = res.data
+					} else {
+						this.$message({
+							message: res.msg,
+							type: 'error'
+						})
+					}
+				})
+				.catch(() => {})
+		},
+		// 游戏平台对应玩法查询
 		queryGame() {
-			this.gameNameList = []
+			this.gameList = []
 			const params = {
-				gameName: '',
-				gamePlatform: ''
+				gamePlatform: this.gamePlatform
 			}
 			this.$api.queryGameAPI(params).then((res) => {
 				const { code, data, msg } = res
 				if (code === 200) {
-					this.gameNameList = data
+					this.gameList = data
 				} else {
 					this.loading = false
 					this.$message({
@@ -290,6 +344,7 @@ export default {
 				})
 				.catch(() => (this.loading = false))
 		},
+		clearAbleList() {},
 		reset() {
 			this.$refs['form'].resetFields()
 			this.queryData = {
@@ -333,6 +388,7 @@ export default {
 .left-page {
 	width: 300px;
 	height: 500px;
+	display: inline-block;
 	.left-word {
 		margin-left: 5px;
 	}
@@ -342,7 +398,8 @@ export default {
 	}
 	.page-main {
 		height: 400px;
-		margin-top: 100px;
+		background: red;
+		margin-top: 30px;
 	}
 }
 .mid-word {
@@ -350,11 +407,28 @@ export default {
 	left: 50%;
 	top: 50%;
 	font-weight: 600;
-	color: #0291CE;
+	color: #0291ce;
 }
 .right-page {
-	position: absolute;
-	right: 100px;
+	display: block;
+	float: right;
+	width: 300px;
+	height: 500px;
+	.left-word {
+		margin-left: 5px;
+	}
+	.clear-list {
+		float: right;
+		margin-right: 20px;
+	}
+	.page-main {
+		height: 400px;
+		background: yellow;
+		margin-top: 55px;
+	}
+	.platform {
+		text-align: center;
+	}
 }
 .gameCreatePage-container {
 	background-color: #f5f5f5;
@@ -431,7 +505,6 @@ export default {
 					color: rgba(0, 0, 0, 0.847058823529412);
 					font-size: 14px;
 					font-weight: 650;
-					display: inline-block;
 					margin-left: 82px;
 					margin-top: 10px;
 					margin-bottom: 18px;
