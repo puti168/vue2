@@ -508,6 +508,7 @@ export default {
 			return name
 		},
 		gameManageListFilter(val) {
+			if (!this.gameManageList) return
 			const arr = val.split(',')
 			let name = ''
 			this.gameManageList.forEach((item) => {
@@ -520,6 +521,7 @@ export default {
 			return name.slice(0, -1)
 		},
 		moduleFilter(val) {
+			if (!this.gameModuleNameList) return
 			const arr = val.split(',')
 			let name = ''
 			this.gameModuleNameList.forEach((item) => {
@@ -532,6 +534,7 @@ export default {
 			return name.slice(0, -1)
 		},
 		labelListFilter(val) {
+			if (!this.labelList) return
 			const arr = val.split(',')
 			let name = ''
 			this.labelList.forEach((item) => {
