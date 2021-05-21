@@ -83,9 +83,9 @@
 						>
 							<el-option
 								v-for="item in gameManageList"
-								:key="item.moduleId"
-								:label="item.moduleName"
-								:value="item.moduleId"
+								:key="item.gameId"
+								:label="item.gameName"
+								:value="item.gameId"
 							></el-option>
 						</el-select>
 					</el-form-item>

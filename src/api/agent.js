@@ -62,7 +62,7 @@ export function listOverflowMember(data) {
 		data
 	})
 }
-export function lockMemberAuditRecord(data) {
+export function lockMemberAuditRecordProxy(data) {
 	return request({
 		url: '/memberOverflow/lockMemberAuditRecord',
 		method: 'post',
@@ -367,7 +367,7 @@ export default {
 	overflowMemberInfo,
 	addOverflowMember,
 	memberOverflowDetail,
-	lockMemberAuditRecord,
+	lockMemberAuditRecordProxy,
 	listOverflowMember,
 	AgentListAPI,
 	agentListExportAPI,
