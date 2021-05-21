@@ -152,6 +152,9 @@
       <el-col
 :span="5"
 >支付密码：<i v-if="activeL" class="el-icon-loading"></i>
+        <span v-else-if="editMsgList[5].applyStatus === '1'" class="orangeColor">
+          审核中 &nbsp;&nbsp; {{ outlineInfoList.payPassword }}
+        </span>
         <span v-else>
           {{ outlineInfoList.payPassword }}
         </span>
