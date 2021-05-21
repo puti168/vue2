@@ -443,7 +443,7 @@ export default {
 				params.supportTerminal && params.supportTerminal.length
 					? params.supportTerminal.join(',')
 					: undefined
-					const url = this.rowAssortId ? 'gameUpdateAPI' : 'gameCreateAPI'
+			const url = this.rowAssortId ? 'gameUpdateAPI' : 'gameCreateAPI'
 			this.$api[url](params)
 				.then((res) => {
 					const { code, msg } = res
