@@ -43,7 +43,7 @@
 						<div>虚拟币账号数量: {{ accountInfo.virtualNum }}</div>
 						<div>风控层级: {{ accountInfo.windControlName }}</div>
 						<div>会员标签: {{ accountInfo.labelName }}</div>
-						<div>备注信息: {{ accountInfo.remark }}div></div>
+						<div>备注信息: {{ accountInfo.remark }}</div>
 					</div>
 				</div>
 				<div v-if="applyInfo" class="review-content more-height">
@@ -54,7 +54,7 @@
 						<div>
 							审核申请类型: {{ typeFilter(applyInfo.applyType, 'applyType') }}
 						</div>
-						<div>申请原因: {{ applyInfo.applyInfo }}</div>
+						<div>申请原因: {{ applyInfo.remark }}</div>
 					</div>
 					<div class="review-flex">
 						<el-table
