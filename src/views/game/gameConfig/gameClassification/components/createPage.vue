@@ -472,8 +472,8 @@ export default {
 						params.supportTerminal && params.supportTerminal.length
 							? params.supportTerminal.join(',')
 							: undefined
-					const url = this.rowAssortId ? 'gameUpdateAPI' : 'gameCreateAPI'
-					this.$api[url](params)
+					// 后端说都用update const url = this.rowAssortId ? 'gameUpdateAPI' : 'gameCreateAPI'
+					this.$api.gameUpdateAPI(params)
 						.then((res) => {
 							const { code, msg } = res
 							console.log('res', res)

@@ -141,32 +141,32 @@ export default {
 					})
 				} else if (msg.commandId === 101) {
 					thiss.$store.dispatch('user/setAudit', {
-						value: jsonStr.auditNewUser,
+						value: jsonStr.count,
 						type: 'auditNewUser'
 					})
 				} else if (msg.commandId === 102) {
 					thiss.$store.dispatch('user/setAudit', {
-						value: jsonStr.auditUpdateInfoUser,
+						value: jsonStr.count,
 						type: 'auditUpdateInfoUser'
 					})
 				} else if (msg.commandId === 103) {
 					thiss.$store.dispatch('user/setAudit', {
-						value: jsonStr.auditNewAgent,
+						value: jsonStr.count,
 						type: 'auditNewAgent'
 					})
 				} else if (msg.commandId === 104) {
 					thiss.$store.dispatch('user/setAudit', {
-						value: jsonStr.auditUpdateInfoAgent,
+						value: jsonStr.count,
 						type: 'auditUpdateInfoAgent'
 					})
 				} else if (msg.commandId === 105) {
 					thiss.$store.dispatch('user/setAudit', {
-						value: jsonStr.auditChangeAgent,
+						value: jsonStr.count,
 						type: 'auditChangeAgent'
 					})
 				} else if (msg.commandId === 106) {
 					thiss.$store.dispatch('user/setAudit', {
-						value: jsonStr.auditPatchAgent,
+						value: jsonStr.count,
 						type: 'auditPatchAgent'
 					})
 				}
