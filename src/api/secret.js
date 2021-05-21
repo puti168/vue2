@@ -149,7 +149,7 @@ export function lock(data) {
 		data
 	})
 }
-export function lockMemberAuditRecordProxy(data) {
+export function lockMemberAuditRecord(data) {
 	return request({
 		url: '/player/lockMemberAuditRecord',
 		method: 'post',
@@ -195,7 +195,7 @@ export default {
 	memberAuditDetail,
 	proxyDataPage,
 	audit,
-	lockMemberAuditRecordProxy,
+	lockMemberAuditRecord,
 	updateMemberAuditRecord,
 	lock,
 	playerAuditList,
