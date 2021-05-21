@@ -15,6 +15,7 @@
 					:model="queryData"
 					:inline="true"
 					label-width="100px"
+					:rules="rules"
 					class="form-content"
 				>
 					<el-form-item label="分类名称:" prop="assortName">
@@ -90,26 +91,86 @@
 			</div>
 			<div class="content-part3">
 				<div class="content">
-					<p class="hotConfig">分类包含游戏</p>
-					<div class="transfer-wrapper">
-						<Transfer
-							id="transfer"
-							ref="transfer"
-							v-model="value"
-							filterable
-							:data="childGameNameList"
-							:gameNameList="gameNameList"
-							:childGameConfigData="childGameConfigData"
-							:filter-method="filterMethod"
-							:target-order="'push'"
-							:titles="['已包含', '游戏平台']"
-							:props="{ key: 'id', label: 'label', status: 'status' }"
-							:left-default-checked="hasCheckedWHLeftData"
-							:right-default-checked="hasCheckedWHRightData"
-							@left-check-change="handleWHLeftChange"
-							@right-check-change="handleWHRightChange"
-							@clearAbleList="clearAbleList"
-						></Transfer>
+					<div class="game-page left-page">
+						<p class="hotConfig">分类包含游戏</p>
+						<p class="left-word">已包含： {{ leftList.length }}</p>
+						<el-button type="primary" class="clear-list" @click="deleteAll">
+							列表清空
+						</el-button>
+						<div class="page-main">
+							<div v-for="item in leftList" :key="item.id" class="page-data">
+								<el-input
+									v-model="item.assortSort"
+									:maxlength="12"
+									size="medium"
+									style="width: 90px"
+									class="left-input"
+									placeholder="序号"
+									@focus="getOld(item.assortSort)"
+									@change="changeInput(item.assortSort)"
+								></el-input>
+								{{ item.gameName }}
+								<span
+									class="right-span"
+									:class="
+										Number(item.gameStatus) === 1
+											? 'infoState'
+											: Number(item.gameStatus) === 2
+											? 'successState'
+											: 'dangerState'
+									"
+								>
+									{{ typeFilter(item.gameStatus, 'gameStatusType') }}
+								</span>
+								<i class="el-icon-close" @click="deleteItem(item)"></i>
+							</div>
+						</div>
+					</div>
+					<span class="mid-word">
+						<i class="el-icon-d-arrow-left"></i>
+						勾选游戏移入分类列表
+					</span>
+					<div class="game-page right-page">
+						<div class="platform">
+							游戏平台：
+							<el-select
+								v-model="gameCode"
+								size="medium"
+								placeholder="全部"
+								clearable
+								style="width: 180px"
+								@change="changeSelect"
+							>
+								<el-option
+									v-for="item in gamePlantList"
+									:key="item.gameCode"
+									:label="item.gameName"
+									:value="item.gameCode"
+								></el-option>
+							</el-select>
+						</div>
+						<div class="page-main">
+							<div v-for="item in gameList" :key="item.id" class="page-data">
+								<el-checkbox
+									v-model="item.check"
+									class="page-check"
+									@change="lockChange(item)"
+								></el-checkbox>
+								{{ item.gameName }}
+								<span
+									class="right-span"
+									:class="
+										Number(item.gameStatus) === 1
+											? 'infoState'
+											: Number(item.gameStatus) === 2
+											? 'successState'
+											: 'dangerState'
+									"
+								>
+									{{ typeFilter(item.gameStatus, 'gameStatusType') }}
+								</span>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -120,23 +181,10 @@
 <script>
 import list from '@/mixins/list'
 // import Sortable from 'sortablejs'
-import Transfer from '@/components/transfer'
-
-const generateData = () => {
-	const data = []
-	for (let i = 1; i <= 30; i++) {
-		data.push({
-			id: i,
-			label: `斗地主`,
-			status: '维护中'
-		})
-	}
-	return data
-}
 
 export default {
 	name: 'CreatePage',
-	components: { Transfer },
+	components: {},
 	mixins: [list],
 	props: {
 		rowAssortId: {
@@ -146,11 +194,6 @@ export default {
 	},
 	data() {
 		return {
-			filterMethod(query, item) {
-				const regStr = query.replace(/\*/g, '.*')
-				const reg = new RegExp(regStr)
-				return reg.test(item.label)
-			},
 			loading: false,
 			queryData: {
 				assortName: undefined,
@@ -159,19 +202,14 @@ export default {
 				remark: undefined,
 				clientDisplay: undefined
 			},
-			dataList: [],
-			gameNameList: [],
+			gamePlantList: [],
+			gameList: [],
+			leftList: [],
 			childGameNameList: [],
-			childGameConfigData: undefined,
-			data: generateData(),
-			value: [4, 2, 1],
-			shiftKey: false,
-			firstWHLeftLocation: -1, // 数据左边起始值
-			lastWHLeftLocation: -1, // 数据左边终止值
-			hasCheckedWHLeftData: [], // 数据左边选中的数据
-			firstWHRightLocation: -1, // 数据右边起始值
-			lastWHRightLocation: -1, // 数据右边终止值
-			hasCheckedWHRightData: [] // 数据右边选中的数据
+			data: {},
+			oldValue: '',
+			gameCode: '',
+			value: [4, 2, 1]
 		}
 	},
 	computed: {
@@ -180,75 +218,161 @@ export default {
 		},
 		gameDisplayArr() {
 			return this.globalDics.gameDisplayType
+		},
+		rules() {
+			return {
+				assortName: [
+					{
+						required: true,
+						message: '请输入分类名称',
+						trigger: 'blur'
+					}
+				],
+				assortSort: [
+					{
+						required: true,
+						message: '请输入分类顺序',
+						trigger: 'blur'
+					}
+				],
+				clientDisplay: [
+					{
+						required: true,
+						message: '请选择客户端分类显示',
+						trigger: 'blur'
+					}
+				]
+			}
 		}
 	},
 	created() {
-		this.queryChildGame()
-		this.queryGame()
+		this.getPlatform()
+		if (this.rowAssortId) {
+			this.queryChildGame()
+		}
 		this.queryChildGameConfig()
 	},
-	mounted() {
-		document.body.ondrop = function(event) {
-			event.preventDefault()
-			event.stopPropagation()
-		}
-		window.addEventListener('keydown', (e) => {
-			if (e.keyCode === 16 && e.shiftKey) {
-				this.shiftKey = true
-			}
-		})
-		window.addEventListener('keyup', (e) => {
-			this.shiftKey = false
-		})
-		// const el = document
-		// 	.querySelector('.el-transfer')
-		// 	.querySelectorAll('.el-checkbox-group')[1]
-		// new Sortable(el, {
-		// 	forceFallback: false,
-		// 	onUpdate: (event) => {
-		// 		const box = this.$el
-		// 			.querySelector('.el-transfer')
-		// 			.querySelectorAll('.el-checkbox-group')[1]
-		// 		const nums = this.$el
-		// 			.querySelector('.el-transfer')
-		// 			.querySelectorAll('.el-checkbox-group')[1].childNodes.length
-		// 		console.log(nums, event.newIndex)
-		// 		if (event.newIndex >= nums) {
-		// 			return
-		// 		}
-		// 		const newIndex = event.newIndex
-		// 		const oldIndex = event.oldIndex
-		// 		const $label = box.children[newIndex]
-		// 		const $oldLabel = box.children[oldIndex]
-		// 		box.removeChild($label)
-		// 		if (newIndex < oldIndex) {
-		// 			box.insertBefore($label, $oldLabel)
-		// 		} else {
-		// 			box.insertBefore($label, $oldLabel.nextSibling)
-		// 		}
-		// 		const item = this.value.splice(oldIndex, 1)
-		// 		this.value.splice(newIndex, 0, item[0])
-		// 	}
-		// })
-	},
-	updated() {
-		// console.log('新表格数据', this.dataList)
-	},
+	mounted() {},
+	updated() {},
 	methods: {
 		back() {
 			this.$emit('back')
 		},
-		// 游戏平台查询
-		queryGame() {
-			this.gameNameList = []
+		changeInput(value) {
+			// 与旧值相同就互换
+			this.leftList.forEach((item, index) => {
+				if (item.assortSort === Number(value)) {
+					item.assortSort = this.oldValue
+				}
+			})
+		},
+		deleteItem(item) {
+			const index = this.leftList.indexOf(item)
+			if (index > -1) {
+				this.leftList.splice(index, 1)
+			}
+			this.gameList.forEach((val) => {
+				if (val.id === item.id) {
+					val.check = false
+				}
+			})
+		},
+		getOld(oldValue) {
+			this.oldValue = oldValue
+		},
+		lockChange(item) {
+			let includes = false
+			this.leftList.forEach((data) => {
+				if (data.id === item.id) {
+					includes = true
+				}
+			})
+			// 勾选并且左边不包含。插入一个
+			if (item.check && !includes) {
+				if (this.leftList.length > 0) {
+					const arr = []
+					this.leftList.forEach((val) => {
+						arr.push(val.assortSort)
+					})
+					item.assortSort = Math.max(...arr) + 1
+				} else {
+					item.assortSort = 0
+				}
+				this.leftList.push(item)
+			} else {
+				// 否则删除一个
+				const index = this.leftList.indexOf(item)
+				if (index > -1) {
+					this.leftList.splice(index, 1)
+				}
+			}
+		},
+		// 游戏平台
+		getPlatform() {
+			this.$api
+				.gamePlant()
+				.then((res) => {
+					if (res.code === 200) {
+						this.gamePlantList = res.data
+						this.gameCode = res.data[0].gameCode
+						this.gameName = res.data[0].gameName
+						this.queryGame()
+					} else {
+						this.$message({
+							message: res.msg,
+							type: 'error'
+						})
+					}
+				})
+				.catch(() => {})
+		},
+		changeSelect() {
+			// 更换后为check重新赋值
+			this.gameList = []
 			const params = {
-				gameName: '',
-				gamePlatform: ''
+				gameCode: this.gameCode
 			}
 			this.$api.queryGameAPI(params).then((res) => {
 				const { code, data, msg } = res
 				if (code === 200) {
-					this.gameNameList = data
+					data.forEach((item, index) => {
+						item.check = false
+						item.assortSort = Number(index + 1)
+						item.gameCode = this.gameCode
+					})
+					this.gameList = data
+					// 判断右边是否勾选
+					this.gameList.forEach((item) => {
+						this.leftList.forEach((val) => {
+							if (val.id === item.id) {
+								item.check = true
+							}
+						})
+					})
+				} else {
+					this.loading = false
+					this.$message({
+						message: msg,
+						type: 'error'
+					})
+				}
+			})
+		},
+		// 游戏平台对应玩法查询
+		queryGame() {
+			this.gameList = []
+			const params = {
+				gameCode: this.gameCode
+			}
+			this.$api.queryGameAPI(params).then((res) => {
+				const { code, data, msg } = res
+				if (code === 200) {
+					data.forEach((item, index) => {
+						item.check = false
+						item.assortSort = Number(index + 1)
+						item.gameCode = this.gameCode
+					})
+					this.gameList = data
 				} else {
 					this.loading = false
 					this.$message({
@@ -261,16 +385,23 @@ export default {
 
 		// 子游戏查询
 		queryChildGame() {
-			this.childGameNameList = []
+			this.leftList = []
 			console.log('this.rowAssortId', this.rowAssortId)
 			const params = {
-				gameName: '',
 				assortId: this.rowAssortId
 			}
 			this.$api.queryChildGameAPI(params).then((res) => {
 				const { code, data, msg } = res
 				if (code === 200) {
-					this.childGameNameList = data
+					this.leftList = data
+					// 判断右边是否勾选
+					this.gameList.forEach((item) => {
+						this.leftList.forEach((val) => {
+							if (val.id === item.id) {
+								item.check = true
+							}
+						})
+					})
 				} else {
 					this.loading = false
 					this.$message({
@@ -322,170 +453,37 @@ export default {
 		},
 		// 保存
 		save() {
-			const params = {
-				...this.queryData,
-				relationParams: []
-			}
-			params.supportTerminal =
-				params.supportTerminal && params.supportTerminal.length
-					? params.supportTerminal.join(',')
-					: undefined
-			this.$api
-				.gameUpdateAPI(params)
-				.then((res) => {
-					const { code, msg } = res
-					console.log('res', res)
-					if (code === 200) {
-						this.loading = false
-						this.$message({
-							message: '保存成功!',
-							type: 'success'
-						})
-                        this.reset()
-					} else {
-						this.loading = false
-						this.$message({
-							message: msg,
-							type: 'error'
-						})
-					}
-				})
-				.catch(() => (this.loading = false))
-		},
-        reset() {
-            this.$refs['form'].resetFields()
-            this.queryData = {
-                assortName: undefined,
-                assortSort: undefined,
-                supportTerminal: undefined,
-                remark: undefined,
-                clientDisplay: undefined
-            }
-        },
-		// 列表清空
-		clearAbleList() {
-			console.log('清空列表')
-		},
-		handleWHLeftChange(key, key1) {
-			const _this = this
-			console.log(_this.hasCheckedWHLeftData)
-			_this.hasCheckedWHLeftData = _this.commonChangeFuc(
-				key,
-				key1,
-				_this.hasCheckedWHLeftData,
-				_this.firstWHLeftLocation,
-				_this.lastWHLeftLocation,
-				_this.data,
-				'id'
-			)
-			console.log(_this.hasCheckedWHLeftData)
-		},
-		handleWHRightChange(key, key1) {
-			var _this = this
-			console.log(_this.hasCheckedWHRightData)
-			_this.hasCheckedWHRightData = _this.commonChangeFuc(
-				key,
-				key1,
-				_this.hasCheckedWHRightData,
-				_this.firstWHRightLocation,
-				_this.lastWHRightLocation,
-				_this.value,
-				false
-			)
-			console.log(_this.hasCheckedWHRightData)
-		},
-		commonChangeFuc(
-			key,
-			key1,
-			hasCheckedData,
-			firstLocation,
-			lastLocation,
-			arrList,
-			value
-		) {
-			let k
-			const _this = this
-			let cFlag = false // 取消勾选
-			for (var i = 0; i < key.length; i++) {
-				if (key[i] === key1[0]) {
-					cFlag = true // 选中
-				}
-			}
-			if (cFlag) {
-				if (key.length === 1) {
-					firstLocation = 0
-					hasCheckedData.push(key[0])
-				} else if (key.length > 1) {
-					// eslint-disable-next-line no-unused-vars
-					const arr = []
-					// 当前有选中数据 并且 按住shift
-					if (_this.shiftKey) {
-						// if (isRight) {
-						for (let i = 0; i < arrList.length; i++) {
-							const item = value ? arrList[i][value] : arrList[i]
-							if (item === key[key.length - 2]) {
-								firstLocation = i
-							}
-							if (item === key1[0]) {
-								lastLocation = i
-							}
-						}
-						if (firstLocation !== -1 && lastLocation !== -1) {
-							if (firstLocation < lastLocation) {
-								for (k = 0; k < arrList.length; k++) {
-									const item = value ? arrList[k][value] : arrList[k]
-
-									if (k >= firstLocation && k <= lastLocation) {
-										hasCheckedData.push(item)
-									}
-								}
-							} else if (firstLocation > lastLocation) {
-								for (k = 0; k < arrList.length; k++) {
-									if (k >= lastLocation && k <= firstLocation) {
-										// eslint-disable-next-line no-undef
-										hasCheckedData.push(item)
-									}
-								}
-							}
-						}
-					} else {
-						// 不再按shift
-						hasCheckedData.push(key1[0])
-					}
-				}
-			} else {
-				// 取消选中的
-				hasCheckedData = []
-				for (let i = 0; i < key.length; i++) {
-					if (key[i] !== key1[0]) {
-						hasCheckedData.push(key[i])
-					}
-				}
-			}
-			// 去重
-			hasCheckedData = new Set(hasCheckedData)
-			hasCheckedData = Array.from(hasCheckedData)
-			return hasCheckedData
-		},
-		add() {
-			this.loading = true
-			const params = {
-				...this.form
-			}
-			this.$refs['form'].validate((valid) => {
-				console.log('valid', valid)
+			this.$refs.form.validate((valid) => {
 				if (valid) {
-					this.$api
-						.addMemberAPI(params)
+					const arr = []
+					this.leftList.forEach((item) => {
+						arr.push({
+							assortSort: item.assortSort,
+							gameId: item.id,
+							gameName: item.gameName
+						})
+					})
+					const params = {
+						...this.queryData,
+						relationParams: arr,
+						clientDisplay: Number(this.queryData.clientDisplay) === 1,
+						id: this.rowAssortId.id
+					}
+					params.supportTerminal =
+						params.supportTerminal && params.supportTerminal.length
+							? params.supportTerminal.join(',')
+							: undefined
+					// 后端说都用update const url = this.rowAssortId ? 'gameUpdateAPI' : 'gameCreateAPI'
+					this.$api.gameUpdateAPI(params)
 						.then((res) => {
-							this.loading = false
-							const { code, data, msg } = res
+							const { code, msg } = res
+							console.log('res', res)
 							if (code === 200) {
-								this.$confirm(`会员${data}资料提交成功`, {
-									confirmButtonText: '确定',
-									type: 'success',
-									showCancelButton: false
+								this.$message({
+									message: '保存成功!',
+									type: 'success'
 								})
+								this.back()
 								this.reset()
 							} else {
 								this.$message({
@@ -494,50 +492,24 @@ export default {
 								})
 							}
 						})
-						.catch(() => {
-							this.loading = false
-						})
 				}
 			})
-
-			setTimeout(() => {
-				this.loading = false
-			}, 1000)
 		},
-		checkValue(val) {},
-		addRow() {
-			const lastRow = this.dataList[this.dataList.length - 1]
-			const new_row = lastRow.id + 1
-			this.dataList.push({ id: new_row })
-		},
-		deleteRow(val) {
-			this.$confirm('确定删除此游戏吗?', {
-				confirmButtonText: '确定',
-				cancelButtonText: '取消',
-				type: 'warning'
+		deleteAll() {
+			this.leftList = []
+			this.gameList.forEach((val) => {
+				val.check = false
 			})
-				.then(() => {
-					// const loading = this.$loading({
-					// 	lock: true,
-					// 	text: 'Loading',
-					// 	spinner: 'el-icon-loading',
-					// 	background: 'rgba(0, 0, 0, 0.7)'
-					// })
-					// this.$api
-					// 	.setDeleteRole('', val.id)
-					// 	.then((res) => {
-					// 		loading.close()
-					// 		this.$message({
-					// 			type: 'success',
-					// 			message: '删除成功!'
-					// 		})
-					// 		this.loadData()
-					// 	})
-					// 	.catch(() => {
-					// 		loading.close()
-					// 	})
-				})
-				.catch(() => {})
+		},
+		reset() {
+			this.$refs['form'].resetFields()
+			this.queryData = {
+				assortName: undefined,
+				assortSort: undefined,
+				supportTerminal: undefined,
+				remark: undefined,
+				clientDisplay: undefined
+			}
 		}
 	}
 }
@@ -568,6 +540,80 @@ export default {
 .transfer-wrapper {
 	text-align: left;
 	height: 450px;
+}
+.game-page {
+	width: 300px;
+	height: 500px;
+	position: relative;
+	.left-word {
+		margin-left: 5px;
+	}
+	.clear-list {
+		position: absolute;
+		right: 20px;
+		top: 42px;
+	}
+	.page-main {
+		height: 400px;
+		margin-top: 35px;
+		border: 1px solid #ababab;
+		.page-data {
+			width: 100%;
+			border-bottom: 1px solid #ababab;
+			height: 40px;
+			line-height: 40px;
+			text-align: center;
+			position: relative;
+		}
+	}
+}
+.left-page {
+	display: inline-block;
+	.right-span {
+		margin-left: 50px;
+		position: absolute;
+		right: 50px;
+		top: 50%;
+		transform: translate(0, -50%);
+	}
+	.left-input {
+		position: absolute;
+		left: 10px;
+	}
+	.el-icon-close {
+		position: absolute;
+		right: 20px;
+		top: 50%;
+		transform: translate(0, -50%);
+		cursor: pointer;
+	}
+}
+.mid-word {
+	position: absolute;
+	left: 40%;
+	top: 50%;
+	font-weight: 600;
+	color: #0291ce;
+}
+.right-page {
+	display: block;
+	float: right;
+	margin-right: 100px;
+	.platform {
+		margin-top: 26px;
+		text-align: center;
+	}
+	.right-span {
+		margin-left: 50px;
+		position: absolute;
+		right: 50px;
+		top: 50%;
+		transform: translate(0, -50%);
+	}
+	.page-check {
+		position: absolute;
+		left: 35px;
+	}
 }
 .gameCreatePage-container {
 	background-color: #f5f5f5;
@@ -633,6 +679,7 @@ export default {
 			width: 100%;
 			padding: 25px 35px 20px;
 			.content {
+				position: relative;
 				margin: 0 auto;
 				width: 100%;
 				padding-left: 100px;
@@ -643,7 +690,6 @@ export default {
 					color: rgba(0, 0, 0, 0.847058823529412);
 					font-size: 14px;
 					font-weight: 650;
-					display: inline-block;
 					margin-left: 82px;
 					margin-top: 10px;
 					margin-bottom: 18px;
