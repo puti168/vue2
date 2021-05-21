@@ -217,7 +217,7 @@
 					<el-divider></el-divider>
 					<span class="img-title">客户端图片上传</span>
 					<el-form-item label="图片上传" prop="image">
-						<Upload></Upload>
+						<Upload @uploadSuccess="uploadSuccess"></Upload>
 						<p class="imgTip">
 							请上传图片！图片格式仅支持png,图片尺寸： ？？ 图片大小不超过？？
 						</p>
@@ -282,7 +282,7 @@ export default {
 				remark: ''
 			},
 			datalist: {},
-			curFile: null, // 当前上传的文件
+
 			uploadUrl: process.env.VUE_APP_BASE_API + '/gameManager/imageUpload',
 			gameLabelParam1: '',
 			gameLabelParam2: '',
@@ -366,16 +366,16 @@ export default {
 	watch: {
 		rowData: {
 			handler(val) {
-				const arr = {}
-				// if (val) {
-				// 	arr = JSON.parse(JSON.stringify(val))
-				// 	console.log(val)
-				// 	console.log('val2')
-				// 	arr.supportTerminal = arr.supportTerminal.split(',')
-				// 	arr.relationOtherGameId = arr.relationOtherGameId.split(',')
-				// 	arr.relationGameModuleId = arr.relationGameModuleId.split(',')
-				// 	arr.gameIcon = arr.gameIcon + ''
-				// }
+				let arr = {}
+				if (val) {
+					arr = JSON.parse(JSON.stringify(val))
+					console.log(val)
+					console.log('val2')
+					arr.supportTerminal = arr.supportTerminal.split(',')
+					arr.relationOtherGameId = arr.relationOtherGameId.split(',')
+					arr.relationGameModuleId = arr.relationGameModuleId.split(',')
+					arr.gameIcon = arr.gameIcon + ''
+				}
 				this.form = arr
 			},
 			immediate: true,
@@ -385,6 +385,9 @@ export default {
 	created() {},
 	mounted() {},
 	methods: {
+		uploadSuccess(data) {
+			this.$set(this.form, 'imageAddress', data)
+		},
 		confirm() {
 			this.$refs.form.validate((valid) => {
 				if (valid) {

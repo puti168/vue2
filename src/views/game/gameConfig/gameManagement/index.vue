@@ -549,7 +549,6 @@ export default {
 		},
 		openEdit(row) {
 			this.showDetail = true
-
 			if (row) {
 				this.rowData = JSON.parse(JSON.stringify(row))
 				this.editType = 'edit'
