@@ -43,7 +43,7 @@
 						<div>虚拟币账号数量: {{ accountInfo.virtualNum }}</div>
 						<div>风控层级: {{ accountInfo.windControlName }}</div>
 						<div>会员标签: {{ accountInfo.labelName }}</div>
-						<div>备注信息: {{ accountInfo.remark }}div></div>
+						<div>备注信息: {{ accountInfo.remark }}</div>
 					</div>
 				</div>
 				<div v-if="applyInfo" class="review-content more-height">
