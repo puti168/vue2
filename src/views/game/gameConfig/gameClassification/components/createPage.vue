@@ -90,22 +90,33 @@
 			</div>
 			<div class="content-part3">
 				<div class="content">
-					<div class="left-page">
+					<div class="game-page left-page">
 						<p class="hotConfig">分类包含游戏</p>
 						<p class="left-word">已包含： 100个</p>
 						<el-button type="primary" class="clear-list" @click="clearAbleList">
 							列表清空
 						</el-button>
 						<div class="page-main">
-							<div>
-								<el-input
-									v-model="queryData.applyName"
-									size="medium"
-									:maxlength="12"
-									style="width: 90px"
-									placeholder="请输入排序"
-								></el-input>
-								斗地主 状态 清除
+							<div v-for="item in gameList" :key="item.id" class="page-data">
+								<el-checkbox
+									v-model="item.check"
+									class="page-check"
+									@change="lockChange()"
+								></el-checkbox>
+								{{ item.gameName }}
+								<span
+									class="right-span"
+									:class="
+										Number(item.gameStatus) === 1
+											? 'infoState'
+											: Number(item.gameStatus) === 2
+											? 'successState'
+											: 'dangerState'
+									"
+								>
+									{{ typeFilter(item.gameStatus, 'gameStatusType') }}
+								</span>
+								<i class="el-icon-close"></i>
 							</div>
 						</div>
 					</div>
@@ -113,11 +124,11 @@
 						<i class="el-icon-d-arrow-left"></i>
 						勾选游戏移入分类列表
 					</span>
-					<div class="right-page">
+					<div class="game-page right-page">
 						<div class="platform">
 							游戏平台：
 							<el-select
-								v-model="gamePlatform"
+								v-model="gameCode"
 								size="medium"
 								placeholder="全部"
 								clearable
@@ -132,29 +143,26 @@
 							</el-select>
 						</div>
 						<div class="page-main">
-							<el-checkbox
-								v-model="scope.row.lockStatus"
-								@change="lockChange(scope.row)"
-							></el-checkbox>
-							斗地主
-							<span
-								v-if="item.gameStatus * 1 === 0"
-								class="item-status disableRgba"
-							>
-								禁用
-							</span>
-							<span
-								v-if="item.gameStatus * 1 === 1"
-								class="item-status normalRgba"
-							>
-								开启
-							</span>
-							<span
-								v-if="item.gameStatus * 1 === 2"
-								class="item-status deleteRgba"
-							>
-								维护中
-							</span>
+							<div v-for="item in gameList" :key="item.id" class="page-data">
+								<el-checkbox
+									v-model="item.check"
+									class="page-check"
+									@change="lockChange()"
+								></el-checkbox>
+								{{ item.gameName }}
+								<span
+									class="right-span"
+									:class="
+										Number(item.gameStatus) === 1
+											? 'infoState'
+											: Number(item.gameStatus) === 2
+											? 'successState'
+											: 'dangerState'
+									"
+								>
+									{{ typeFilter(item.gameStatus, 'gameStatusType') }}
+								</span>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -191,7 +199,7 @@ export default {
 			gameList: [],
 			childGameNameList: [],
 			data: {},
-			gamePlatform: '',
+			gameCode: '',
 			value: [4, 2, 1]
 		}
 	},
@@ -215,6 +223,7 @@ export default {
 		back() {
 			this.$emit('back')
 		},
+		lockChange() {},
 		// 游戏平台
 		getPlatform() {
 			this.$api
@@ -235,7 +244,7 @@ export default {
 		queryGame() {
 			this.gameList = []
 			const params = {
-				gamePlatform: this.gamePlatform
+				gameCode: this.gameCode
 			}
 			this.$api.queryGameAPI(params).then((res) => {
 				const { code, data, msg } = res
@@ -385,26 +394,56 @@ export default {
 	text-align: left;
 	height: 450px;
 }
-.left-page {
+.game-page {
 	width: 300px;
 	height: 500px;
-	display: inline-block;
+	position: relative;
 	.left-word {
 		margin-left: 5px;
 	}
 	.clear-list {
-		float: right;
-		margin-right: 20px;
+		position: absolute;
+		right: 20px;
+		top: 42px;
 	}
 	.page-main {
 		height: 400px;
-		background: red;
-		margin-top: 30px;
+		margin-top: 35px;
+		border: 1px solid #ababab;
+		.page-data {
+			width: 100%;
+			border-bottom: 1px solid #ababab;
+			height: 40px;
+			line-height: 40px;
+			text-align: center;
+			position: relative;
+		}
+	}
+}
+.left-page {
+	display: inline-block;
+	.right-span {
+		margin-left: 50px;
+		position: absolute;
+		right: 50px;
+		top: 50%;
+		transform: translate(0, -50%);
+	}
+	.page-check {
+		position: absolute;
+		left: 30px;
+	}
+	.el-icon-close {
+		position: absolute;
+		right: 20px;
+		top: 50%;
+		transform: translate(0, -50%);
+		cursor: pointer;
 	}
 }
 .mid-word {
 	position: absolute;
-	left: 50%;
+	left: 40%;
 	top: 50%;
 	font-weight: 600;
 	color: #0291ce;
@@ -412,22 +451,21 @@ export default {
 .right-page {
 	display: block;
 	float: right;
-	width: 300px;
-	height: 500px;
-	.left-word {
-		margin-left: 5px;
-	}
-	.clear-list {
-		float: right;
-		margin-right: 20px;
-	}
-	.page-main {
-		height: 400px;
-		background: yellow;
-		margin-top: 55px;
-	}
+	margin-right: 100px;
 	.platform {
+		margin-top: 26px;
 		text-align: center;
+	}
+	.right-span {
+		margin-left: 50px;
+		position: absolute;
+		right: 50px;
+		top: 50%;
+		transform: translate(0, -50%);
+	}
+	.page-check {
+		position: absolute;
+		left: 35px;
 	}
 }
 .gameCreatePage-container {
