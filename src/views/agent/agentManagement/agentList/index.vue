@@ -19,9 +19,9 @@
 							start-placeholder="开始日期"
 							end-placeholder="结束日期"
 							align="right"
-							:clearable="false"
+							clearable
 							value-format="timestamp"
-							style="width: 382px"
+							style="width: 388px"
 							:default-time="defaultTime"
 						></el-date-picker>
 					</el-form-item>
@@ -108,9 +108,9 @@
 							start-placeholder="开始日期"
 							end-placeholder="结束日期"
 							align="right"
-							:clearable="false"
+							clearable
 							value-format="timestamp"
-							style="width: 382px"
+							style="width: 388px"
 							:default-time="defaultTime"
 						></el-date-picker>
 					</el-form-item>
@@ -545,6 +545,18 @@ export default {
 			params = {
 				...this.getParams(params)
 			}
+            if (
+                !startTime &&
+                !endTime &&
+                !lastLoginTimeStart &&
+                !lastLoginTimeEnd
+            ) {
+                this.$message({
+                    type: 'warning',
+                    message: `请选择注册时间, 最后登录时间,任意其中一个时间维度`
+                })
+                return false
+            }
 			delete params.registerTime
 			delete params.lastLoginTime
 			this.$api
