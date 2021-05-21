@@ -54,7 +54,7 @@
 						<div>
 							审核申请类型: {{ typeFilter(applyInfo.applyType, 'applyType') }}
 						</div>
-						<div>申请原因: {{ applyInfo.remark }}</div>
+						<div>申请原因: {{ applyInfo.applyInfo }}</div>
 					</div>
 					<div class="review-flex">
 						<el-table
