@@ -91,7 +91,7 @@ export default {
 			this.wss.send(this.encrypt(m))
 		},
 		ws() {
-			const wsurl = 'ws://172.21.168.139:18023/client-push-server?'
+			const wsurl = 'wss://client-push-websocket.local.zhanggao223.com/?'
 			const url =
 				wsurl +
 				'playerId=' +
