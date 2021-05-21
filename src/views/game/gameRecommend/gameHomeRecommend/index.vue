@@ -7,299 +7,307 @@
 	<div v-else class="game-container report-container">
 		<el-tabs v-model="activeName" @tab-click="handleClick">
 			<el-tab-pane label="APP端" name="first">
-                <div class="view-container dealer-container">
-                    <div class="content">
-                        <el-table
-                            v-loading="loading"
-                            border
-                            size="mini"
-                            class="small-size-table"
-                            :data="dataList"
-                            style="width: 100%"
-                            :header-cell-style="getRowClass"
-                            @sort-change="changeTableSort"
-                        >
-                            <el-table-column
-                                prop="moduleId"
-                                align="center"
-                                label="模块顺序"
-                            ></el-table-column>
-                            <el-table-column
-                                prop="moduleName"
-                                align="center"
-                                label="模块名称"
-                            ></el-table-column>
-                            <el-table-column prop="moduleStatus" align="center" label="状态">
-                                <template slot-scope="scope">
-                                    <p
-                                        :class="
-									scope.row.moduleStatus === 1 ? 'successState' : 'dangerState'
-								"
-                                    >
-                                        {{ scope.row.moduleStatus === 1 ? '开启中' : '已禁用' }}
-                                    </p>
-                                </template>
-                            </el-table-column>
-                            <el-table-column
-                                prop="description"
-                                align="center"
-                                label="模块描述"
-                            ></el-table-column>
-                            <el-table-column
-                                prop="updatedBy"
-                                align="center"
-                                label="最近操作人"
-                            ></el-table-column>
-                            <el-table-column
-                                prop="updatedAt"
-                                align="center"
-                                label="最近操作时间"
-                                sortable="custom"
-                            ></el-table-column>
-                            <el-table-column
-                                prop="operating"
-                                align="center"
-                                label="操作"
-                                width="240px"
-                            >
-                                <template slot-scope="scope">
-                                    <el-button
-                                        :disabled="loading"
-                                        type="danger"
-                                        size="medium"
-                                        class="noicon"
-                                        @click="disable(scope.row)"
-                                    >
-                                        禁用
-                                    </el-button>
-                                    <el-button
-                                        type="primary"
-                                        icon="el-icon-edit"
-                                        :disabled="loading"
-                                        size="medium"
-                                        @click="openDetails(scope.row)"
-                                    >
-                                        编辑信息
-                                    </el-button>
-                                </template>
-                            </el-table-column>
-                        </el-table>
-                        <!-- 分页 -->
-                        <el-pagination
-                            :current-page.sync="pageNum"
-                            class="pageValue"
-                            background
-                            layout="total, sizes,prev, pager, next, jumper"
-                            :page-size="pageSize"
-                            :page-sizes="pageSizes"
-                            :total="total"
-                            @current-change="handleCurrentChange"
-                            @size-change="handleSizeChange"
-                        ></el-pagination>
-                    </div>
-                </div>
-            </el-tab-pane>
+				<div class="view-container dealer-container">
+					<div class="content">
+						<el-table
+							v-loading="loading"
+							border
+							size="mini"
+							class="small-size-table"
+							:data="dataList"
+							style="width: 100%"
+							:header-cell-style="getRowClass"
+							@sort-change="changeTableSort"
+						>
+							<el-table-column
+								prop="moduleId"
+								align="center"
+								label="模块顺序"
+							></el-table-column>
+							<el-table-column
+								prop="moduleName"
+								align="center"
+								label="模块名称"
+							></el-table-column>
+							<el-table-column prop="moduleStatus" align="center" label="状态">
+								<template slot-scope="scope">
+									<p
+										:class="
+											scope.row.moduleStatus === 1
+												? 'successState'
+												: 'dangerState'
+										"
+									>
+										{{ scope.row.moduleStatus === 1 ? '开启中' : '已禁用' }}
+									</p>
+								</template>
+							</el-table-column>
+							<el-table-column
+								prop="description"
+								align="center"
+								label="模块描述"
+							></el-table-column>
+							<el-table-column
+								prop="updatedBy"
+								align="center"
+								label="最近操作人"
+							></el-table-column>
+							<el-table-column
+								prop="updatedAt"
+								align="center"
+								label="最近操作时间"
+								sortable="custom"
+							></el-table-column>
+							<el-table-column
+								prop="operating"
+								align="center"
+								label="操作"
+								width="240px"
+							>
+								<template slot-scope="scope">
+									<el-button
+										:disabled="loading"
+										type="danger"
+										size="medium"
+										class="noicon"
+										@click="disable(scope.row)"
+									>
+										禁用
+									</el-button>
+									<el-button
+										type="primary"
+										icon="el-icon-edit"
+										:disabled="loading"
+										size="medium"
+										@click="openDetails(scope.row)"
+									>
+										编辑信息
+									</el-button>
+								</template>
+							</el-table-column>
+						</el-table>
+						<!-- 分页 -->
+						<el-pagination
+							:current-page.sync="pageNum"
+							class="pageValue"
+							background
+							layout="total, sizes,prev, pager, next, jumper"
+							:page-size="pageSize"
+							:page-sizes="pageSizes"
+							:total="total"
+							@current-change="handleCurrentChange"
+							@size-change="handleSizeChange"
+						></el-pagination>
+					</div>
+				</div>
+			</el-tab-pane>
 			<el-tab-pane label="H5端" name="second">
-                <div class="view-container dealer-container">
-                    <div class="content">
-                        <el-table
-                            v-loading="loading"
-                            border
-                            size="mini"
-                            class="small-size-table"
-                            :data="dataList"
-                            style="width: 100%"
-                            :header-cell-style="getRowClass"
-                            @sort-change="changeTableSort"
-                        >
-                            <el-table-column
-                                prop="moduleId"
-                                align="center"
-                                label="模块顺序"
-                            ></el-table-column>
-                            <el-table-column
-                                prop="moduleName"
-                                align="center"
-                                label="模块名称"
-                            ></el-table-column>
-                            <el-table-column prop="moduleStatus" align="center" label="状态">
-                                <template slot-scope="scope">
-                                    <p
-                                        :class="
-									scope.row.moduleStatus === 1 ? 'successState' : 'dangerState'
-								"
-                                    >
-                                        {{ scope.row.moduleStatus === 1 ? '开启中' : '已禁用' }}
-                                    </p>
-                                </template>
-                            </el-table-column>
-                            <el-table-column
-                                prop="description"
-                                align="center"
-                                label="模块描述"
-                            ></el-table-column>
-                            <el-table-column
-                                prop="updatedBy"
-                                align="center"
-                                label="最近操作人"
-                            ></el-table-column>
-                            <el-table-column
-                                prop="updatedAt"
-                                align="center"
-                                label="最近操作时间"
-                                sortable="custom"
-                            ></el-table-column>
-                            <el-table-column
-                                prop="operating"
-                                align="center"
-                                label="操作"
-                                width="240px"
-                            >
-                                <template slot-scope="scope">
-                                    <el-button
-                                        :disabled="loading"
-                                        type="danger"
-                                        size="medium"
-                                        class="noicon"
-                                        @click="disable(scope.row)"
-                                    >
-                                        禁用
-                                    </el-button>
-                                    <el-button
-                                        type="primary"
-                                        icon="el-icon-edit"
-                                        :disabled="loading"
-                                        size="medium"
-                                        @click="openDetails(scope.row)"
-                                    >
-                                        编辑信息
-                                    </el-button>
-                                </template>
-                            </el-table-column>
-                        </el-table>
-                        <!-- 分页 -->
-                        <el-pagination
-                            :current-page.sync="pageNum"
-                            class="pageValue"
-                            background
-                            layout="total, sizes,prev, pager, next, jumper"
-                            :page-size="pageSize"
-                            :page-sizes="pageSizes"
-                            :total="total"
-                            @current-change="handleCurrentChange"
-                            @size-change="handleSizeChange"
-                        ></el-pagination>
-                    </div>
-                </div>
-            </el-tab-pane>
+				<div class="view-container dealer-container">
+					<div class="content">
+						<el-table
+							v-loading="loading"
+							border
+							size="mini"
+							class="small-size-table"
+							:data="dataList"
+							style="width: 100%"
+							:header-cell-style="getRowClass"
+							@sort-change="changeTableSort"
+						>
+							<el-table-column
+								prop="moduleId"
+								align="center"
+								label="模块顺序"
+							></el-table-column>
+							<el-table-column
+								prop="moduleName"
+								align="center"
+								label="模块名称"
+							></el-table-column>
+							<el-table-column prop="moduleStatus" align="center" label="状态">
+								<template slot-scope="scope">
+									<p
+										:class="
+											scope.row.moduleStatus === 1
+												? 'successState'
+												: 'dangerState'
+										"
+									>
+										{{ scope.row.moduleStatus === 1 ? '开启中' : '已禁用' }}
+									</p>
+								</template>
+							</el-table-column>
+							<el-table-column
+								prop="description"
+								align="center"
+								label="模块描述"
+							></el-table-column>
+							<el-table-column
+								prop="updatedBy"
+								align="center"
+								label="最近操作人"
+							></el-table-column>
+							<el-table-column
+								prop="updatedAt"
+								align="center"
+								label="最近操作时间"
+								sortable="custom"
+							></el-table-column>
+							<el-table-column
+								prop="operating"
+								align="center"
+								label="操作"
+								width="240px"
+							>
+								<template slot-scope="scope">
+									<el-button
+										:disabled="loading"
+										type="danger"
+										size="medium"
+										class="noicon"
+										@click="disable(scope.row)"
+									>
+										禁用
+									</el-button>
+									<el-button
+										type="primary"
+										icon="el-icon-edit"
+										:disabled="loading"
+										size="medium"
+										@click="openDetails(scope.row)"
+									>
+										编辑信息
+									</el-button>
+								</template>
+							</el-table-column>
+						</el-table>
+						<!-- 分页 -->
+						<el-pagination
+							:current-page.sync="pageNum"
+							class="pageValue"
+							background
+							layout="total, sizes,prev, pager, next, jumper"
+							:page-size="pageSize"
+							:page-sizes="pageSizes"
+							:total="total"
+							@current-change="handleCurrentChange"
+							@size-change="handleSizeChange"
+						></el-pagination>
+					</div>
+				</div>
+			</el-tab-pane>
 			<el-tab-pane label="PC端" name="third">
-                <div class="view-container dealer-container">
-                    <div class="content">
-                        <el-table
-                            v-loading="loading"
-                            border
-                            size="mini"
-                            class="small-size-table"
-                            :data="dataList"
-                            style="width: 100%"
-                            :header-cell-style="getRowClass"
-                            @sort-change="changeTableSort"
-                        >
-                            <el-table-column
-                                prop="moduleId"
-                                align="center"
-                                label="模块顺序"
-                            ></el-table-column>
-                            <el-table-column
-                                prop="moduleName"
-                                align="center"
-                                label="模块名称"
-                            ></el-table-column>
-                            <el-table-column prop="moduleStatus" align="center" label="状态">
-                                <template slot-scope="scope">
-                                    <p
-                                        :class="
-									scope.row.moduleStatus === 1 ? 'successState' : 'dangerState'
-								"
-                                    >
-                                        {{ scope.row.moduleStatus === 1 ? '开启中' : '已禁用' }}
-                                    </p>
-                                </template>
-                            </el-table-column>
-                            <el-table-column
-                                prop="description"
-                                align="center"
-                                label="模块描述"
-                            ></el-table-column>
-                            <el-table-column
-                                prop="updatedBy"
-                                align="center"
-                                label="最近操作人"
-                            ></el-table-column>
-                            <el-table-column
-                                prop="updatedAt"
-                                align="center"
-                                label="最近操作时间"
-                                sortable="custom"
-                            ></el-table-column>
-                            <el-table-column
-                                prop="operating"
-                                align="center"
-                                label="操作"
-                                width="240px"
-                            >
-                                <template slot-scope="scope">
-                                    <el-button
-                                        :disabled="loading"
-                                        type="danger"
-                                        size="medium"
-                                        class="noicon"
-                                        @click="disable(scope.row)"
-                                    >
-                                        禁用
-                                    </el-button>
-                                    <el-button
-                                        type="primary"
-                                        icon="el-icon-edit"
-                                        :disabled="loading"
-                                        size="medium"
-                                        @click="openDetails(scope.row)"
-                                    >
-                                        编辑信息
-                                    </el-button>
-                                </template>
-                            </el-table-column>
-                        </el-table>
-                        <!-- 分页 -->
-                        <el-pagination
-                            :current-page.sync="pageNum"
-                            class="pageValue"
-                            background
-                            layout="total, sizes,prev, pager, next, jumper"
-                            :page-size="pageSize"
-                            :page-sizes="pageSizes"
-                            :total="total"
-                            @current-change="handleCurrentChange"
-                            @size-change="handleSizeChange"
-                        ></el-pagination>
-                    </div>
-                </div>
-            </el-tab-pane>
-		</el-tabs></div>
+				<div class="view-container dealer-container">
+					<div class="content">
+						<el-table
+							v-loading="loading"
+							border
+							size="mini"
+							class="small-size-table"
+							:data="dataList"
+							style="width: 100%"
+							:header-cell-style="getRowClass"
+							@sort-change="changeTableSort"
+						>
+							<el-table-column
+								prop="moduleId"
+								align="center"
+								label="模块顺序"
+							></el-table-column>
+							<el-table-column
+								prop="moduleName"
+								align="center"
+								label="模块名称"
+							></el-table-column>
+							<el-table-column prop="moduleStatus" align="center" label="状态">
+								<template slot-scope="scope">
+									<p
+										:class="
+											scope.row.moduleStatus === 1
+												? 'successState'
+												: 'dangerState'
+										"
+									>
+										{{ scope.row.moduleStatus === 1 ? '开启中' : '已禁用' }}
+									</p>
+								</template>
+							</el-table-column>
+							<el-table-column
+								prop="description"
+								align="center"
+								label="模块描述"
+							></el-table-column>
+							<el-table-column
+								prop="updatedBy"
+								align="center"
+								label="最近操作人"
+							></el-table-column>
+							<el-table-column
+								prop="updatedAt"
+								align="center"
+								label="最近操作时间"
+								sortable="custom"
+							></el-table-column>
+							<el-table-column
+								prop="operating"
+								align="center"
+								label="操作"
+								width="240px"
+							>
+								<template slot-scope="scope">
+									<el-button
+										:disabled="loading"
+										type="danger"
+										size="medium"
+										class="noicon"
+										@click="disable(scope.row)"
+									>
+										禁用
+									</el-button>
+									<el-button
+										type="primary"
+										icon="el-icon-edit"
+										:disabled="loading"
+										size="medium"
+										@click="openDetails(scope.row)"
+									>
+										编辑信息
+									</el-button>
+								</template>
+							</el-table-column>
+						</el-table>
+						<!-- 分页 -->
+						<el-pagination
+							:current-page.sync="pageNum"
+							class="pageValue"
+							background
+							layout="total, sizes,prev, pager, next, jumper"
+							:page-size="pageSize"
+							:page-sizes="pageSizes"
+							:total="total"
+							@current-change="handleCurrentChange"
+							@size-change="handleSizeChange"
+						></el-pagination>
+					</div>
+				</div>
+			</el-tab-pane>
+		</el-tabs>
+	</div>
 </template>
 
 <script>
 import list from '@/mixins/list'
-import dayjs from 'dayjs'
+// import dayjs from 'dayjs'
 import { routerNames } from '@/utils/consts'
 import gameHomeRecommendEdit from './editPage/index'
 
-const end = dayjs()
-	.endOf('day')
-	.valueOf()
-const start = dayjs()
-	.startOf('day')
-	.valueOf()
+// const end = dayjs()
+// 	.endOf('day')
+// 	.valueOf()
+// const start = dayjs()
+// 	.startOf('day')
+// 	.valueOf()
+
 export default {
 	name: routerNames.gameHomeRecommend,
 	components: { gameHomeRecommendEdit },
@@ -313,9 +321,7 @@ export default {
 			terminalType: 1,
 			recommendDetails: {},
 			searchParams: {
-				pageSize: 10,
-				pageNum: 1,
-				terminalType: this.terminalType
+				terminalType: 1
 			},
 			searchData: {
 				allGameNum: 0,
@@ -340,10 +346,7 @@ export default {
 				terminalType: 0,
 				videoSourceAddress: ''
 			},
-			activeName: 'first',
-			formTime: {
-				time: [start, end]
-			}
+			activeName: 'first'
 		}
 	},
 	computed: {
@@ -380,42 +383,27 @@ export default {
 		handleClick(tab) {
 			const name = tab.name
 			if (name === 'first') {
-				this.terminalType = 1
+				this.searchParams.terminalType = 1
 			} else if (name === 'second') {
-				this.terminalType = 2
+				this.searchParams.terminalType = 2
 			} else {
-				this.terminalType = 3
+                this.searchParams.terminalType = 2
 			}
 			this.loadData()
 		},
 		loadData() {
-			const [startTime, endTime] = this.formTime.time || []
 			let params = {
-				...this.searchData,
-				createDtStart: startTime
-					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
-					: '',
-				createDtEnd: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
+                ...this.searchParams
 			}
-			if (!params.createDtStart || !params.createDtEnd) {
-				this.$message({
-					message: '操作时间参数必传',
-					type: 'info'
-				})
-				return
-			}
-			this.searchParams.terminalType = this.terminalType
-			params = {
-				...this.searchParams
-			}
-			params = {
+			 params = {
 				...this.getParams(params)
 			}
 			this.loading = true
 			this.$api
 				.gameHomeRecommendListAPI(params)
 				.then((res) => {
-					if (res.code === 200) {
+					const { code } = res
+					if (code === 200) {
 						const response = res.data
 						this.loading = false
 						this.dataList = response.record
@@ -470,6 +458,7 @@ export default {
 			}
 		},
 		reset() {
+			this.pageNum = 1
 			this.queryData = {
 				accountType: [],
 				bankName: '',
@@ -482,7 +471,6 @@ export default {
 				virtualKind: [],
 				virtualProtocol: []
 			}
-			this.formTime.time = [start, end]
 			this.loadData()
 		},
 		handleCurrentChange() {
