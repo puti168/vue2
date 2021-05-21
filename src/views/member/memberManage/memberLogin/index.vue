@@ -189,7 +189,7 @@
 					></el-table-column>
 					<el-table-column prop="deviceType" align="center" label="登录终端" width="80">
 						<template slot-scope="scope">
-							{{ typeFilter(scope.row.deviceType, 'deviceType') }}
+							{{ typeFilter(scope.row.deviceType, 'loginDeviceType') }}
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -278,7 +278,7 @@ export default {
 			return this.globalDics.loginStatusType
 		},
 		deviceType() {
-			return this.globalDics.deviceType
+			return this.globalDics.loginDeviceType
 		}
 	},
 	mounted() {},
