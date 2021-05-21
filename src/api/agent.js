@@ -83,6 +83,20 @@ export function updateMemberOverflowRecord(data) {
 		data
 	})
 }
+export function overflowMemberInfo(data) {
+	return request({
+		url: '/memberOverflow/overflowMemberInfo',
+		method: 'post',
+		data
+	})
+}
+export function addOverflowMember(data) {
+	return request({
+		url: '/memberOverflow/addOverflowMember',
+		method: 'post',
+		data
+	})
+}
 // 代理==> 代理管理 ===> 代理银行卡记录
 export function agentBankRecordAPI(data) {
 	return request({
@@ -350,6 +364,8 @@ export function setProxyCommissionUpdate(data) {
 
 export default {
 	updateMemberOverflowRecord,
+	overflowMemberInfo,
+	addOverflowMember,
 	memberOverflowDetail,
 	lockMemberAuditRecord,
 	listOverflowMember,

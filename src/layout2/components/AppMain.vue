@@ -13,7 +13,8 @@ export default {
 		return {
 			wss: '',
 			aesKey: '0123456789ABCDEF',
-			timer: ''
+			timer: '',
+			canWs: false
 		}
 	},
 	computed: {
@@ -30,7 +31,9 @@ export default {
 	mounted() {
 		this.ws()
 	},
-	destroyed() {},
+	destroyed() {
+		window.clearInterval(this.timer)
+	},
 	methods: {
 		// aes加密
 		encrypt(data) {
@@ -88,7 +91,7 @@ export default {
 			this.wss.send(this.encrypt(m))
 		},
 		ws() {
-			const wsurl = 'ws://172.21.168.139:18023/client-push-server?'
+			const wsurl = 'wss://client-push-websocket.local.zhanggao223.com/?'
 			const url =
 				wsurl +
 				'playerId=' +
@@ -104,13 +107,13 @@ export default {
 			}
 			this.wss.onmessage = function(event) {
 				const msg = JSON.parse(thiss.decrypte(event.data))
+				const jsonStr = JSON.parse(JSON.parse(thiss.decrypte(event.data)).body)
 				if (msg.commandId !== 1) {
 					console.log('有消息来了')
 					console.log(msg)
+					console.log(jsonStr)
 				}
-				const jsonStr = JSON.parse(
-						JSON.parse(thiss.decrypte(event.data)).body
-					)
+
 				if (msg.commandId === 100) {
 					thiss.$store.dispatch('user/setAudit', {
 						value: jsonStr.auditNewUser,
@@ -169,10 +172,12 @@ export default {
 				}
 			}
 			this.wss.onclose = function() {
-				// console.log('断开')
 				window.clearInterval(thiss.timer)
+				this.canWs = true
 				setTimeout(() => {
-					thiss.ws()
+					if (this.canWs) {
+						thiss.ws()
+					}
 				}, 10000)
 			}
 			this.wss.onerror = function() {

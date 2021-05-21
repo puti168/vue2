@@ -35,7 +35,7 @@
 			</div>
 			<div class="review-content">
 				<p class="name">溢出会员信息</p>
-				<div class="review-flex">
+				<div class="review-flex" style="margin-bottom: 20px">
 					<div>账号: {{ list.userName }}</div>
 					<div>账号状态: {{ typeFilter(list.memberAccountStatus, 'accountStatusType') }}</div>
 					<div>风控层级: {{ list.memberWindControlName }}</div>
@@ -65,7 +65,7 @@
 					<div>申请理由: {{ list.applyInfo }}</div>
 				</div>
 				<div class="review-flex">
-					<div>申请附图: {{ list.list }}</div>
+					<div>申请附图: <img v-for="item in list.list" :key="item.imageAddress" :src="item.imageAddress" class="detail-img"></div>
 				</div>
 			</div>
 			<div class="review-content">
@@ -271,6 +271,11 @@ export default {
 	color: #909399;
 	font-weight: 700;
 }
+.detail-img {
+	width: 80px;
+	height: 80px;
+	display: inline-block;
+}
 .review-content {
 	width: 100%;
 	.head {
@@ -290,7 +295,7 @@ export default {
 	}
 	.main-content {
 		.review-content {
-			height: 150px;
+			min-height: 150px;
 			border: 1px solid rgba(192, 190, 190, 0.5);
 			border-top: 0px;
 			padding: 30px;

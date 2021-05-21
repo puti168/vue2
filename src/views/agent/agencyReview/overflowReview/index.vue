@@ -237,12 +237,12 @@
 							</template>
 							<template slot-scope="scope">
 								<Copy
-									v-if="!!scope.row.auditName"
-									:title="scope.row.auditName"
+									v-if="!!scope.row.transferProxyName"
+									:title="scope.row.transferProxyName"
 									:copy="copy"
 								/>
 								<span v-else>-</span>
-								<p>{{ scope.row.auditTime ? scope.row.auditTime : '-' }}</p>
+								<p>{{ scope.row.tranferProxyAccountType ? typeFilter(scope.row.tranferProxyAccountType, 'proxyAccountType') : '-' }}</p>
 							</template>
 						</el-table-column>
                         <el-table-column align="center" width="200px">
@@ -263,6 +263,11 @@
 								<p>{{ scope.row.accountType ? typeFilter(scope.row.accountType, 'accountType') : '-' }}</p>
 							</template>
 						</el-table-column>
+						<el-table-column
+							prop="applyName"
+							align="center"
+							label="申请人"
+						></el-table-column>
 						<el-table-column
 							prop="applyTime"
 							align="center"
@@ -480,7 +485,7 @@ auditNum: '',
 				background: 'rgba(0, 0, 0, 0.7)'
 			})
 			this.$api
-				.lockMemberAuditRecord({
+				.lockMemberAuditRecordProxy({
 					id: val.id,
 					lockFlag: Number(val.lockOrder) === 0 ? 0 : 1
 				})
