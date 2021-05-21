@@ -103,10 +103,10 @@
 									style="width: 365px"
 								>
 									<el-option
-										v-for="item in gameModuleNameList"
-										:key="item.moduleId"
-										:label="item.moduleName"
-										:value="change(item.moduleId)"
+										v-for="item in gameManageList"
+										:key="item.gameId"
+										:label="item.gameName"
+										:value="change(item.gameId)"
 									></el-option>
 								</el-select>
 							</el-form-item>
