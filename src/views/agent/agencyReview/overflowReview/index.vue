@@ -33,7 +33,7 @@
 							:default-time="defaultTime"
 						></el-date-picker>
 					</el-form-item>
-                    <el-form-item label="代理账号:">
+					<el-form-item label="代理账号:">
 						<el-input
 							v-model="queryData.proxyName"
 							clearable
@@ -44,7 +44,7 @@
 							@keyup.enter.native="enterSearch"
 						></el-input>
 					</el-form-item>
-                    <el-form-item label="审核单号:">
+					<el-form-item label="审核单号:">
 						<el-input
 							v-model="queryData.auditNum"
 							clearable
@@ -55,7 +55,7 @@
 							@keyup.enter.native="enterSearch"
 						></el-input>
 					</el-form-item>
-                    <el-form-item label="审核操作:">
+					<el-form-item label="审核操作:">
 						<el-select
 							v-model="queryData.auditStep"
 							style="width: 180px"
@@ -86,7 +86,7 @@
 							></el-option>
 						</el-select>
 					</el-form-item>
-                    <el-form-item label="申请人:">
+					<el-form-item label="申请人:">
 						<el-input
 							v-model="queryData.applyName"
 							clearable
@@ -227,7 +227,7 @@
 							align="center"
 							label="审核单号"
 						></el-table-column>
-                        <el-table-column align="center" width="200px">
+						<el-table-column align="center" width="200px">
 							<template slot="header">
 								<span>
 									申请代理
@@ -242,10 +242,19 @@
 									:copy="copy"
 								/>
 								<span v-else>-</span>
-								<p>{{ scope.row.tranferProxyAccountType ? typeFilter(scope.row.tranferProxyAccountType, 'proxyAccountType') : '-' }}</p>
+								<p>
+									{{
+										scope.row.tranferProxyAccountType
+											? typeFilter(
+													scope.row.tranferProxyAccountType,
+													'proxyAccountType'
+											  )
+											: '-'
+									}}
+								</p>
 							</template>
 						</el-table-column>
-                        <el-table-column align="center" width="200px">
+						<el-table-column align="center" width="200px">
 							<template slot="header">
 								<span>
 									溢出账号
@@ -260,7 +269,13 @@
 									:copy="copy"
 								/>
 								<span v-else>-</span>
-								<p>{{ scope.row.accountType ? typeFilter(scope.row.accountType, 'accountType') : '-' }}</p>
+								<p>
+									{{
+										scope.row.accountType
+											? typeFilter(scope.row.accountType, 'accountType')
+											: '-'
+									}}
+								</p>
 							</template>
 						</el-table-column>
 						<el-table-column
@@ -295,7 +310,7 @@
 								</span>
 							</template>
 						</el-table-column>
-						<el-table-column align="center" sortable="custom" width="200px">
+						<el-table-column align="center" sortable="custom" width="200px" prop="auditTime">
 							<template slot="header">
 								<span>
 									一审审核人
@@ -324,12 +339,7 @@
 				</div>
 			</div>
 		</template>
-		<detail
-			v-else
-			:type="type"
-			:rowData="rowData"
-			@goBack="goBack"
-		></detail>
+		<detail v-else :type="type" :rowData="rowData" @goBack="goBack"></detail>
 	</div>
 </template>
 
@@ -355,7 +365,7 @@ export default {
 				auditStatusList: [],
 				auditStep: '',
 				proxyName: '',
-auditNum: '',
+				auditNum: '',
 				applyName: '',
 				auditName: '',
 				accountType: '',
@@ -376,7 +386,7 @@ auditNum: '',
 		}
 	},
 	computed: {
-        accountTypeArr() {
+		accountTypeArr() {
 			return this.globalDics.proxyAccountType
 		},
 		proxyAccountType() {

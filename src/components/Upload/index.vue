@@ -21,19 +21,25 @@
 export default {
 	name: 'Upload',
 	components: {},
-	props: {},
+	props: {
+		nowImage: {
+			type: String,
+			default: ''
+		}
+	},
 	data() {
 		return {
 			curFile: null, // 当前上传的文件,
-            image: ''
+			image: ''
 		}
 	},
 	computed: {},
 	watch: {},
-	mounted() {},
+	mounted() {
+		this.image = this.nowImage
+	},
 	methods: {
 		handleChange(file) {
-			console.log('触发了change事件')
 			this.curFile = file.raw
 			this.handleAvatarSuccess()
 		},
@@ -47,8 +53,8 @@ export default {
 						message: '上传成功!',
 						type: 'success'
 					})
-                    this.image = response.data
-                    this.$emit('uploadSuccess', response.data)
+					this.image = response.data
+					this.$emit('uploadSuccess', response.data)
 				})
 				.catch(() => {
 					this.handleAvatarDefeat()
