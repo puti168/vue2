@@ -16,7 +16,7 @@
 								<el-input
 									v-model="form.gameName"
 									size="medium"
-									:maxlength="20"
+									:maxlength="6"
 									clearable
 									style="width: 365px"
 								></el-input>
@@ -27,7 +27,7 @@
 								<el-select
 									v-model="form.gameIcon"
 									size="medium"
-									placeholder="全部"
+									placeholder="请选择"
 									clearable
 									style="width: 365px"
 								>
@@ -45,7 +45,7 @@
 								<el-select
 									v-model="form.supportTerminal"
 									size="medium"
-									placeholder="全部"
+									placeholder="请选择"
 									multiple
 									clearable
 									style="width: 365px"
@@ -97,7 +97,7 @@
 								<el-select
 									v-model="form.relationOtherGameId"
 									size="medium"
-									placeholder="全部"
+									placeholder="请选择"
 									multiple
 									clearable
 									style="width: 365px"
@@ -116,7 +116,7 @@
 								<el-select
 									v-model="form.relationGameModuleId"
 									size="medium"
-									placeholder="全部"
+									placeholder="请选择"
 									multiple
 									clearable
 									style="width: 365px"
@@ -131,14 +131,17 @@
 							</el-form-item>
 						</el-col>
 						<el-col :span="12">
-							<el-form-item label="游戏返奖率:">
-								<el-input
-									v-model="form.gameRebateRate"
+							<el-form-item label="游戏返奖率:" prop="gameRebateRate">
+								<el-input-number
+									v-model.number="form.gameRebateRate"
 									size="medium"
 									maxlength="5"
 									clearable
 									style="width: 365px"
-								></el-input>
+									placeholder="支持小数点后1位，最大为99.9，最小为1"
+									:precision="1"
+									autocomplete="off"
+								></el-input-number>
 							</el-form-item>
 						</el-col>
 						<el-col :span="12">
@@ -146,7 +149,7 @@
 								<el-select
 									v-model="form.gamePlatform"
 									size="medium"
-									placeholder="全部"
+									placeholder="请选择"
 									clearable
 									style="width: 365px"
 								>
@@ -164,7 +167,7 @@
 								<el-select
 									v-model="gameLabelParam1"
 									size="medium"
-									placeholder="全部"
+									placeholder="请选择"
 									clearable
 									style="width: 365px"
 								>
@@ -182,7 +185,7 @@
 								<el-select
 									v-model="gameLabelParam2"
 									size="medium"
-									placeholder="全部"
+									placeholder="请选择"
 									clearable
 									style="width: 365px"
 								>
@@ -200,7 +203,7 @@
 								<el-select
 									v-model="gameLabelParam3"
 									size="medium"
-									placeholder="全部"
+									placeholder="请选择"
 									clearable
 									style="width: 365px"
 								>
@@ -217,7 +220,10 @@
 					<el-divider></el-divider>
 					<span class="img-title">客户端图片上传</span>
 					<el-form-item label="图片上传" prop="image">
-						<Upload :nowImage="nowImage" @uploadSuccess="uploadSuccess"></Upload>
+						<Upload
+							:nowImage="nowImage"
+							@uploadSuccess="uploadSuccess"
+						></Upload>
 						<p class="imgTip">
 							请上传图片！图片格式仅支持png,图片尺寸： ？？ 图片大小不超过？？
 						</p>
@@ -235,7 +241,7 @@ import Upload from '@/components/Upload'
 import { getToken } from '@/utils/auth'
 export default {
 	name: routerNames.gameManagementEdit,
-	components: {Upload},
+	components: { Upload },
 	mixins: [list],
 	props: {
 		rowData: {
@@ -269,7 +275,6 @@ export default {
 				id: '',
 				gameIcon: '',
 				gamePlatform: '',
-				nowImage: '',
 				gameName: '',
 				supportTerminal: [],
 				relationOtherGameId: [],
@@ -283,7 +288,7 @@ export default {
 				remark: ''
 			},
 			datalist: {},
-
+			nowImage: '',
 			uploadUrl: process.env.VUE_APP_BASE_API + '/gameManager/imageUpload',
 			gameLabelParam1: '',
 			gameLabelParam2: '',
@@ -312,6 +317,16 @@ export default {
 				callback()
 			}
 			return {
+				gameRebateRate: [
+					{
+						required: false,
+						min: 1,
+						max: 99.9,
+						type: 'number',
+						message: '请输入1-99.9的数字',
+						trigger: ['blur']
+					}
+				],
 				supportTerminal: [
 					{
 						required: true,
@@ -368,8 +383,8 @@ export default {
 		rowData: {
 			handler(val) {
 				let arr = {}
-				if (val) {
-					arr = JSON.parse(JSON.stringify(val))
+				arr = JSON.parse(JSON.stringify(val))
+				if (arr.supportTerminal) {
 					arr.supportTerminal = arr.supportTerminal.split(',')
 					arr.relationOtherGameId = arr.relationOtherGameId.split(',')
 					arr.relationGameModuleId = arr.relationGameModuleId.split(',')

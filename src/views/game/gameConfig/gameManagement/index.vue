@@ -499,6 +499,7 @@ export default {
 				.catch(() => {})
 		},
 		gamePlantFilter(val) {
+			if (!this.gamePlantList) return
 			let name = ''
 			this.gamePlantList.forEach((item) => {
 				if (item.gameCode === val) {
