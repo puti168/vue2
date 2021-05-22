@@ -154,8 +154,6 @@ export default {
 			return this.queryData.imgUrl ? '' : '请上传图片！'
 		},
 		rules() {
-			const reg1 = /^[A-Za-z]{1}(?=(.*[a-zA-Z]){1,})(?=(.*[0-9]){1,})[0-9A-Za-z]{3,10}$/
-
 			const testPicName = (rule, value, callback) => {
 				const isSpecial = !notSpecial2(String(value))
 				const isRmoji = isHaveEmoji(String(value))
@@ -163,8 +161,6 @@ export default {
 					callback(new Error('不支持空格及特殊字符'))
 				} else if (isRmoji) {
 					callback(new Error('不支持表情'))
-				} else if (!reg1.test(value)) {
-					callback(new Error('请填入图片标题'))
 				} else {
 					callback()
 				}
