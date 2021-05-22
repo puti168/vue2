@@ -356,8 +356,8 @@ export default {
         if (valid) {
           this.$confirm(`确定修改吗？`, {
             confirmButtonText: '确定',
-            type: 'success',
-            showCancelButton: false
+            cancelButtonText: '取消',
+            type: 'warning'
           })
             .then(() => {
               delete params.uploadImage

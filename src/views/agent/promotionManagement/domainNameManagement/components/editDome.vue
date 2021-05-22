@@ -48,10 +48,10 @@
           ></el-input>
         </el-form-item>
         <el-form-item label="排序:" prop="displayOrder">
-          <el-input v-model.number="formData.displayOrder" :disabled="control"></el-input>
+          <el-input v-model.number="formData.displayOrder" :disabled="!control"></el-input>
         </el-form-item>
         <el-form-item label="状态:">
-          <el-select v-model="formData.status" placeholder="请选择" :disabled="control">
+          <el-select v-model="formData.status" placeholder="请选择" :disabled="!control">
             <el-option
               v-for="item in domainStatusType"
               :key="item.description"
@@ -60,21 +60,11 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item v-if="control" label="备注:">
-          <el-input
-            v-model="formData.remark"
-            type="textarea"
-            :maxlength="50"
-            show-word-limit
-            placeholder="请输入"
-          ></el-input>
-        </el-form-item>
         <el-form-item
-          v-else
           label="备注:"
           prop="remark"
           :rules="[
-            { required: true, message: '请输入备注信息', trigger: 'blur' },
+            { required: control, message: '请输入备注信息', trigger: 'blur' },
             { min: 2, max: 50, message: '长度在 2 到 50 个字符', trigger: 'blur' },
           ]"
         >
@@ -120,7 +110,7 @@ export default {
       }, 100)
     }
     return {
-      formData: {},
+      formData: this.editData,
       control: true,
       rules: {
         displayOrder: [{ validator: checkAge, trigger: 'blur' }]
@@ -130,26 +120,11 @@ export default {
   computed: {
     domainStatusType() {
       return this.globalDics.domainStatusType
-    },
-    editDataList() {
-      return this.editData
     }
   },
-  watch: {
-    editDataList: {
-      handler(newV) {
-        const { id, description, displayOrder, domainName, remark, status } = {
-          ...newV
-        }
-        this.formData = { id, description, displayOrder, domainName, remark, status }
-        console.log(9999, this.formData)
-      },
-      deep: true
-    }
-  },
+  watch: {},
   created() {},
   mounted() {
-    console.log(this.control)
   },
   methods: {
     goBack(val) {
@@ -162,21 +137,37 @@ export default {
       this.$refs.form.validate((valid) => {
         if (valid) {
           if (this.control) {
-            this.$api.addDomainInsert(this.formData).then((res) => {
-              if (res.code === 200) {
-                this.$message.success('创建成功')
-                this.$emit('change-type', true)
-                this.$parent.loadData()
-              }
+            this.$confirm(`确定创建吗？`, {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'success'
             })
+              .then(() => {
+                this.$api.addDomainInsert(this.formData).then((res) => {
+                  if (res.code === 200) {
+                    this.$message.success('创建成功')
+                    this.$emit('change-type', true)
+                    this.$parent.loadData()
+                  }
+                })
+              })
+              .catch(() => {})
           } else {
-            this.$api.setDomainUpdate(this.formData).then((res) => {
-              if (res.code === 200) {
-                this.$message.success('修改成功')
-                this.$emit('change-type', true)
-                this.$parent.loadData()
-              }
+            this.$confirm(`确定修改吗？`, {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
             })
+              .then(() => {
+                this.$api.setDomainUpdate(this.formData).then((res) => {
+                  if (res.code === 200) {
+                    this.$message.success('修改成功')
+                    this.$emit('change-type', true)
+                    this.$parent.loadData()
+                  }
+                })
+              })
+              .catch(() => {})
           }
         }
       })

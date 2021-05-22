@@ -93,7 +93,7 @@
 :span="5"
 >离线天数：<i v-if="activeL" class="el-icon-loading"></i>
         <span v-else>
-          {{ outlineInfoList.leaveLineTime }}
+          {{ outlineInfoList.leaveLineTime }}天
         </span>
       </el-col>
       <el-col
@@ -128,6 +128,12 @@
         <span v-else>
           {{ outlineInfoList.labelName }}
         </span>
+      </el-col>
+      <el-col
+:span="5"
+>转代次数：
+        <i v-if="activeL" class="el-icon-loading"></i>
+        <span v-else> {{ outlineInfoList.transforNum }}次 </span>
       </el-col>
     </el-row>
     <el-divider></el-divider>
