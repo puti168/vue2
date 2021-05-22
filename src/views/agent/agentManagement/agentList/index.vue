@@ -533,10 +533,10 @@ export default {
 				createDtEnd: endTime
 					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
 					: undefined,
-				lastLoginTimeStart: startTime
+				lastLoginTimeStart: lastLoginTimeStart
 					? dayjs(lastLoginTimeStart).format('YYYY-MM-DD HH:mm:ss')
 					: undefined,
-				lastLoginTimeEnd: endTime
+				lastLoginTimeEnd: lastLoginTimeEnd
 					? dayjs(lastLoginTimeEnd).format('YYYY-MM-DD HH:mm:ss')
 					: undefined
 			}

@@ -601,7 +601,6 @@ export default {
 	mounted() {},
 	methods: {
 		loadData() {
-            this.dataList = []
 			const create = this.queryData.registerTime || []
 			const lastLoginTime = this.queryData.lastLoginTime || []
 			const firstSaveTime = this.queryData.firstSaveTime || []
@@ -646,7 +645,7 @@ export default {
 				})
                 return false
 			}
-
+            this.dataList = []
             this.loading = true
 			delete params.registerTime
 			delete params.lastLoginTime
