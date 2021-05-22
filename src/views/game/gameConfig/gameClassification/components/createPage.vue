@@ -555,6 +555,7 @@ export default {
 	}
 	.page-main {
 		height: 400px;
+		overflow-y: scroll;
 		margin-top: 35px;
 		border: 1px solid #ababab;
 		.page-data {
