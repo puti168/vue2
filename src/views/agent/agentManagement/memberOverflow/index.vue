@@ -20,6 +20,7 @@
             placeholder="请输入"
             clearable
             style="width: 365px"
+            oninput="value=value.replace(/[^\w\.\/]/ig ,'')"
             @keyup.enter.native="enterSearch"
           ></el-input>
           <el-button
@@ -66,6 +67,7 @@
             maxlength="11"
             placeholder="请输入"
             clearable
+            oninput="value=value.replace(/[^\w\.\/]/ig ,'')"
             style="width: 365px"
           ></el-input>
         </el-form-item>
@@ -92,6 +94,7 @@
             maxlength="50"
             placeholder="请输入"
             clearable
+            oninput="value=value.replace(/[^\w\.\/]/ig ,'')"
             style="width: 365px"
           ></el-input>
         </el-form-item>
@@ -301,6 +304,9 @@ export default {
         } else {
           console.log(888, fileList)
         }
+      }
+      if (this.picList.length <= 0) {
+        this.memberForm.uploadImage = ''
       }
     },
     handlePictureCardPreview(file) {

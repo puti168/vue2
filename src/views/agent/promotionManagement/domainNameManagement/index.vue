@@ -349,6 +349,8 @@ export default {
       this.queryData = {}
       this.createTime = [startTime, endTime]
       this.editTime = [startTime, endTime]
+      this.pageNum = 1
+      this.loadData()
     },
     domainLabel(val) {
       this.editDomeShow = false

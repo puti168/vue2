@@ -19,6 +19,7 @@
             style="width: 280px"
             placeholder="请输入代理账号"
             :disabled="loading"
+            oninput="value=value.replace(/[^\w\.\/]/ig ,'')"
             @keyup.enter.native="enterSearch"
           ></el-input>
         </el-form-item>

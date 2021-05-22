@@ -28,6 +28,7 @@
               style="width: 180px; margin-right: 20px"
               placeholder="请输入"
               :disabled="loading"
+              oninput="value=value.replace(/[^\w\.\/]/ig ,'')"
               @keyup.enter.native="enterSearch"
             ></el-input>
           </el-form-item>
@@ -248,6 +249,7 @@ export default {
     reset() {
       this.pageNum = 1
       this.queryData = {}
+      this.loadData()
     },
     _changeTableSort({ column, prop, order }) {
       if (prop === 'applyTime') {

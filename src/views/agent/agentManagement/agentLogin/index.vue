@@ -19,15 +19,16 @@
               style="width: 375px"
             ></el-date-picker>
           </el-form-item>
-          <el-form-item label="代理账号:" prop="userName">
+          <el-form-item label="代理账号:">
             <el-input
               v-model="queryData.userName"
               clearable
-              :maxlength="11"
+              maxlength="11"
               size="medium"
               style="width: 180px; margin-right: 20px"
               placeholder="请输入"
               :disabled="loading"
+              oninput="value=value.replace(/[^\w\.\/]/ig ,'')"
               @keyup.enter.native="enterSearch"
             ></el-input>
           </el-form-item>
@@ -72,6 +73,7 @@
               style="width: 180px"
               placeholder="请输入内容"
               :disabled="loading"
+              oninput="value=value.replace(/[^\w\.\/]/ig ,'')"
               @keyup.enter.native="enterSearch"
             ></el-input>
           </el-form-item>
@@ -112,6 +114,7 @@
               style="width: 180px"
               placeholder="请输入内容"
               :disabled="loading"
+              oninput="value=value.replace(/[^\w\.\/]/ig ,'')"
               @keyup.enter.native="enterSearch"
             ></el-input>
           </el-form-item>
@@ -256,7 +259,11 @@ export default {
       queryData: {},
       loginTime: [startTime, endTime],
       now: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
-      summary: {},
+      summary: {
+        count: 0,
+        failCount: 0,
+        successCount: 0
+      },
       tableData: []
     }
   },
@@ -292,7 +299,10 @@ export default {
           if (res.code === 200) {
             this.tableData = res.data.record
             this.total = res.data.totalRecord
-            this.summary = res.data.summary !== null ? res.data.summary : {}
+            this.summary =
+              res.data.summary !== null
+                ? res.data.summary
+                : { count: 0, failCount: 0, successCount: 0 }
           }
           this.loading = false
         })
@@ -302,6 +312,8 @@ export default {
     },
     reset() {
       this.queryData = {}
+      this.pageNum = 1
+      this.loadData()
     },
     _changeTableSort({ column, prop, order }) {
       if (prop === 'loginTime') {

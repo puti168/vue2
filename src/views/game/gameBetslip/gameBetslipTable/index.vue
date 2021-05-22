@@ -96,6 +96,7 @@
               style="width: 180px"
               placeholder="请输入"
               :disabled="loading"
+              oninput="value=value.replace(/[^\w\.\/]/ig ,'')"
               @keyup.enter.native="enterSearch"
             ></el-input>
           </el-form-item>
@@ -124,6 +125,7 @@
               style="width: 180px"
               placeholder="请输入"
               :disabled="loading"
+              oninput="value=value.replace(/[^\w\.\/]/ig ,'')"
               @keyup.enter.native="enterSearch"
             ></el-input>
           </el-form-item>
@@ -411,8 +413,18 @@
             sortable="custom"
             width="160px"
           ></el-table-column>
-          <el-table-column prop="loginIp" align="center" label="投注IP" width="150px"></el-table-column>
-          <el-table-column prop="deviceType" align="center" label="投注终端" width="120px">
+          <el-table-column
+            prop="loginIp"
+            align="center"
+            label="投注IP"
+            width="150px"
+          ></el-table-column>
+          <el-table-column
+            prop="deviceType"
+            align="center"
+            label="投注终端"
+            width="120px"
+          >
             <template slot-scope="scope">
               <span v-if="scope.row.deviceType === '其他'">{{
                 scope.row.deviceType
@@ -548,7 +560,13 @@ export default {
       searchTime: [startTime, endTime],
       netTime: [startTime, endTime],
       now: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
-      summary: {},
+      summary: {
+        totalCount: 0,
+        settledCount: 0,
+        unSettledCount: 0,
+        betAmount: 0,
+        netAmount: 0
+      },
       tableData: [],
       gameType: 'init',
       dataList: {}
@@ -597,7 +615,17 @@ export default {
             if (res.code === 200) {
               this.tableData = res.data.record
               this.total = res.data.totalRecord
-              this.summary = res.data.summary !== null ? res.data.summary : {}
+              this.now = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
+              this.summary =
+                res.data.summary !== null
+                  ? res.data.summary
+                  : {
+                      totalCount: 0,
+                      settledCount: 0,
+                      unSettledCount: 0,
+                      betAmount: 0,
+                      netAmount: 0
+                    }
             }
             this.loading = false
           })
@@ -614,6 +642,7 @@ export default {
       this.searchTime = [startTime, endTime]
       this.netTime = [startTime, endTime]
       this.pageNum = 1
+      this.loadData()
     },
     lookMsg(val) {
       console.log(val)

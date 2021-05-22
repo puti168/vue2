@@ -25,6 +25,7 @@
               style="width: 180px; margin-right: 20px"
               placeholder="请输入"
               :disabled="loading"
+              oninput="value=value.replace(/[^\w\.\/]/ig ,'')"
               @keyup.enter.native="enterSearch"
             ></el-input>
           </el-form-item>
@@ -169,7 +170,7 @@
               <el-button
                 type="primary"
                 icon="el-icon-edit"
-                :disabled="loading"
+                :disabled="scope.row.labelStatus === 1"
                 size="medium"
                 @click="edit(scope.row)"
               >
@@ -179,7 +180,7 @@
               <el-button
                 type="warning"
                 icon="el-icon-delete"
-                :disabled="loading"
+                :disabled="scope.row.labelStatus === 1"
                 size="medium"
                 @click="deleteLabel(scope.row)"
               >
@@ -216,13 +217,14 @@
             prop="gameLabelName"
             :rules="[
               { required: true, message: '请输入标签名称', trigger: 'blur' },
-              { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' },
+              { min: 1, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' },
             ]"
           >
             <el-input
               v-model="dialogForm.gameLabelName"
               :maxlength="10"
               autocomplete="off"
+              oninput="value=value.replace(/[^\w\.\/]/ig ,'')"
             ></el-input>
           </el-form-item>
           <el-form-item
@@ -326,11 +328,15 @@ export default {
     reset() {
       this.queryData = {}
       this.pageNum = 1
+      this.loadData()
     },
     switchClick(val) {
       const status = val.labelStatus === 0 ? 1 : 0
+      console.log(val)
       this.$confirm(
-        `<strong>是否对子游戏进行开启/维护/禁用操作?</strong></br><span style='font-size:12px;color:#c1c1c1'>一旦操作将会立即生效</span>`,
+        `<strong>是否对 ${val.gameLabelName} 进行${
+          val.labelStatus === 1 ? '启用' : '禁用'
+        }操作?</strong></br><span style='font-size:12px;color:#c1c1c1'>一旦操作将会立即生效</span>`,
         `确认提示`,
         {
           dangerouslyUseHTMLString: true,
@@ -391,6 +397,7 @@ export default {
             this.$api.addObGameLabel(data).then((res) => {
               if (res.code === 200) {
                 this.$message.success('创建成功')
+                this.pageNum = 1
                 this.loadData()
               }
             })
