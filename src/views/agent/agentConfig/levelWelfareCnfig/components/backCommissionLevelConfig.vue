@@ -46,6 +46,7 @@
           prop="createdAt"
           align="center"
           label="创建时间"
+          width="160px"
           sortable="custom"
         ></el-table-column>
         <el-table-column
@@ -56,6 +57,7 @@
         <el-table-column
           prop="updatedAt"
           align="center"
+          width="160px"
           label="最近操作时间"
           sortable="custom"
         ></el-table-column>
@@ -168,6 +170,7 @@ export default {
       this.edit = true
     },
     back() {
+      this.loadData()
       this.edit = false
     },
     // 删除

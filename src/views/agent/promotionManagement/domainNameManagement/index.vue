@@ -1,6 +1,6 @@
 <template>
   <div class="game-container report-container">
-    <div v-show="editDomeShow" class="view-container dealer-container">
+    <div v-if="editDomeShow" class="view-container dealer-container">
       <div class="params">
         <el-form ref="form" :inline="true" :model="queryData">
           <el-form-item label="创建时间:">
@@ -265,7 +265,7 @@
       </el-dialog>
     </div>
     <editDome
-      v-show="!editDomeShow"
+      v-else
       ref="editDome"
       :editData="editData"
       @change-type="onChangeType"
@@ -351,14 +351,23 @@ export default {
       this.editTime = [startTime, endTime]
     },
     domainLabel(val) {
-      if (val === '创建') {
-        this.$refs.editDome.control = true
-        this.editData = { status: '0' }
-      } else {
-        this.$refs.editDome.control = false
-        this.editData = val
-      }
       this.editDomeShow = false
+      const { id, description, displayOrder, domainName, remark, status } = {
+        ...val
+      }
+      console.log({ id, description, displayOrder, domainName, remark, status })
+      if (val === '创建') {
+        this.editData = { id, description, displayOrder, domainName, remark, status }
+        this.editData.status = '0'
+        this.$nextTick(() => {
+          this.$refs.editDome.control = false
+        })
+      } else {
+        this.editData = { id, description, displayOrder, domainName, remark, status }
+        this.$nextTick(() => {
+          this.$refs.editDome.control = true
+        })
+      }
     },
     onChangeType(type) {
       // type是子组件$emit传递的参数

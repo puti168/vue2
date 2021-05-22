@@ -85,7 +85,7 @@
             <span>数据更新时间：</span><span>{{ now }}</span>
           </p>
           <p style="line-height: 24px">
-            总登录次数：
+            总搜索次数：
             <span class="disableColor">{{ summary.count }}</span>
             次
           </p>

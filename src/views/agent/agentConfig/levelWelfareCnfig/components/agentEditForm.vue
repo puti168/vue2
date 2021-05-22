@@ -51,12 +51,13 @@
             ]"
           >
             <el-input-number
-              v-model="queryData.monthActiveNum"
+              v-model.number="queryData.monthActiveNum"
               size="medium"
               maxlength="7"
               placeholder="请输入数字"
               clearable
               style="width: 120px"
+              :precision="0"
               autocomplete="off"
             ></el-input-number>
           </el-form-item>
@@ -80,6 +81,7 @@
               placeholder="请输入数字"
               clearable
               style="width: 120px"
+              :precision="0"
               autocomplete="off"
             ></el-input-number>
           </el-form-item>
@@ -178,7 +180,6 @@ export default {
   methods: {
     back() {
       this.$emit('back')
-      this.$parent.loadData()
     },
     setProxyGradeInsert(val) {
       this.$api
@@ -187,6 +188,7 @@ export default {
           this.loading = false
           if (res.code === 200) {
             this.$message.success('创建成功')
+            this.pageNum = 1
             this.reset()
           }
         })
@@ -218,8 +220,8 @@ export default {
           if (params.id) {
             this.$confirm(`确定修改吗？`, {
               confirmButtonText: '确定',
-              type: 'warning',
-              showCancelButton: false
+              cancelButtonText: '取消',
+              type: 'warning'
             })
               .then(() => {
                 this.setProxyGradeUpdate(params)
@@ -228,8 +230,8 @@ export default {
           } else {
             this.$confirm(`确定创建吗？`, {
               confirmButtonText: '确定',
-              type: 'success',
-              showCancelButton: false
+              cancelButtonText: '取消',
+              type: 'success'
             })
               .then(() => {
                 this.setProxyGradeInsert(params)

@@ -289,7 +289,7 @@
           :header-cell-style="getRowClass"
           @sort-change="_changeTableSort"
         >
-          <el-table-column prop="id" align="center">
+          <el-table-column prop="id" align="center" width="240px">
             <template slot="header">
               注单号
               <br />
@@ -301,7 +301,7 @@
               {{ scope.row.thirdOrderId }}
             </template>
           </el-table-column>
-          <el-table-column prop="bankName" align="center">
+          <el-table-column prop="bankName" align="center" width="150px">
             <template slot="header">
               游戏平台
               <br />
@@ -315,7 +315,12 @@
               {{ scope.row.gameTypeName }}
             </template>
           </el-table-column>
-          <el-table-column prop="memberName" align="center" label="会员账号">
+          <el-table-column
+            prop="memberName"
+            align="center"
+            label="会员账号"
+            width="130px"
+          >
             <template slot-scope="scope">
               <Copy
                 v-if="!!scope.row.memberName"
@@ -327,12 +332,22 @@
               <span v-else>-</span>
             </template>
           </el-table-column>
-          <el-table-column prop="accountType" align="center" label="账号类型">
+          <el-table-column
+            prop="accountType"
+            align="center"
+            label="账号类型"
+            width="100px"
+          >
             <template slot-scope="scope">
               {{ typeFilter(scope.row.accountType, "accountType") }}
             </template>
           </el-table-column>
-          <el-table-column prop="parentProxyName" align="center" label="上级代理">
+          <el-table-column
+            prop="parentProxyName"
+            align="center"
+            label="上级代理"
+            width="150px"
+          >
             <template slot-scope="scope">
               <Copy
                 v-if="!!scope.row.parentProxyName"
@@ -344,7 +359,12 @@
               <span v-else>-</span>
             </template>
           </el-table-column>
-          <el-table-column prop="playerName" align="center" label="游戏账号">
+          <el-table-column
+            prop="playerName"
+            align="center"
+            label="游戏账号"
+            width="180px"
+          >
             <template slot-scope="scope">
               <Copy
                 v-if="!!scope.row.playerName"
@@ -356,7 +376,7 @@
               <span v-else>-</span>
             </template>
           </el-table-column>
-          <el-table-column prop="betStatus" align="center" label="注单状态">
+          <el-table-column prop="betStatus" align="center" label="注单状态" width="100px">
             <template slot-scope="scope">
               <span v-if="scope.row.betStatus === 1" class="normalRgba">已结算</span>
               <span v-else-if="scope.row.betStatus === 2" class="deleteRgba">未结算</span>
@@ -367,12 +387,14 @@
             prop="betAmount"
             align="center"
             label="投注金额"
+            width="120px"
             sortable="custom"
           ></el-table-column>
           <el-table-column
             prop="netAmount"
             align="center"
             label="会员输赢"
+            width="120px"
             sortable="custom"
           ></el-table-column>
           <el-table-column
@@ -380,15 +402,17 @@
             align="center"
             label="投注时间"
             sortable="custom"
+            width="160px"
           ></el-table-column>
           <el-table-column
             prop="netAt"
             align="center"
             label="结算时间"
             sortable="custom"
+            width="160px"
           ></el-table-column>
-          <el-table-column prop="loginIp" align="center" label="投注IP"></el-table-column>
-          <el-table-column prop="deviceType" align="center" label="投注终端">
+          <el-table-column prop="loginIp" align="center" label="投注IP" width="150px"></el-table-column>
+          <el-table-column prop="deviceType" align="center" label="投注终端" width="120px">
             <template slot-scope="scope">
               <span v-if="scope.row.deviceType === '其他'">{{
                 scope.row.deviceType
@@ -398,7 +422,7 @@
               </span>
             </template>
           </el-table-column>
-          <el-table-column prop="operation" align="center" label="操作">
+          <el-table-column prop="operation" align="center" label="操作" width="120px">
             <template slot-scope="scope">
               <el-button
                 type="primary"
@@ -581,10 +605,9 @@ export default {
             this.loading = false
           })
       } else {
+        this.loading = false
         this.$message.warning('请选择一个下注时间或者结算时间')
       }
-
-      console.log(params)
     },
     reset() {
       this.queryData = {}

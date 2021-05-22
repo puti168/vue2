@@ -35,7 +35,7 @@
         <el-table-column prop="monthNewNum" align="center" label="本月新增活跃人数">
           <template slot-scope="scope"> ≥ &nbsp;{{ scope.row.monthNewNum }} </template>
         </el-table-column>
-        <el-table-column align="center" label="等级福利">
+        <el-table-column align="center" label="等级福利" width="250px">
           <template slot-scope="scope">
             佣金加赠{{ scope.row.additionalCommission }}%, 最高{{
               scope.row.additionalCommissionLimit
@@ -50,6 +50,7 @@
           prop="createdAt"
           align="center"
           label="创建时间"
+          width="160px"
           sortable="custom"
         ></el-table-column>
         <el-table-column
@@ -60,6 +61,7 @@
         <el-table-column
           prop="updatedAt"
           align="center"
+          width="160px"
           label="最近操作时间"
           sortable="custom"
         ></el-table-column>
@@ -174,6 +176,7 @@ export default {
       this.edit = true
     },
     back() {
+      this.loadData()
       this.edit = false
     },
     // 删除

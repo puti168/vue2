@@ -151,7 +151,7 @@
             次
           </p>
           <p>
-            登录失败<span class="redColor">{{ summary.failCount }}</span>
+            登录失败：<span class="redColor">{{ summary.failCount }}</span>
             次
           </p>
         </div>
