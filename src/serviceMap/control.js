@@ -61,7 +61,7 @@ const control = [
 		title: 'IP风控信息变更'
 	},
 	{
-		id: '93',
+		id: '94',
 		parentId: '91',
 		path: '/control/riskControlMsgChange/terminalRiskControlChange',
 		title: '终端设备风控信息变更'
