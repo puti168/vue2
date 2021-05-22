@@ -8,7 +8,7 @@
 				:key="item.id"
 				class="navbar-title"
 				:class="{ active: activeId === item.id }"
-				@click="chooseItem(item, routes)"
+				@click="chooseItem(item.id, routes)"
 			>
 				{{ item.name }}
 			</div>
@@ -44,6 +44,15 @@ export default {
 			return process.env.NODE_ENV === 'development'
 		}
 	},
+	watch: {
+		$route: {
+			handler(val) {
+				const id = val && val.matched.length && val.matched[0].path.substr(1)
+				this.chooseItem(id)
+			},
+			immediate: true
+		}
+	},
 	created() {
 		const id = window.sessionStorage.getItem('activeId')
 		if (id) {
@@ -58,14 +67,10 @@ export default {
 		toggleSideBar() {
 			this.$store.dispatch('app/toggleSideBar')
 		},
-		async chooseItem(item, routes) {
-			await this.$store.dispatch('permission/setNowroute', item.id)
-			this.activeId = item.id
-			window.sessionStorage.setItem('activeId', item.id)
-			// routes.forEach((data) => {
-			// 	data.checked = false
-			// })
-			// item.checked = true
+		async chooseItem(id, routes) {
+			await this.$store.dispatch('permission/setNowroute', id)
+			this.activeId = id
+			window.sessionStorage.setItem('activeId', id)
 		},
 		async loginOut() {
 			await this.$store.dispatch('user/logout')
