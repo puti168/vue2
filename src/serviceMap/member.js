@@ -55,14 +55,14 @@ const member = [
 	{
 		id: '8',
 		parentId: '3',
-		path: '/member/bankAndVirtual/bankRecord',
+		path: '/member/memberManage/bankRecord',
 		title: '会员银行卡记录',
 		name: 'bankRecord'
 	},
 	{
 		id: '9',
 		parentId: '3',
-		path: '/member/bankAndVirtual/virtualRecord',
+		path: '/member/memberManage/virtualRecord',
 		title: '会员虚拟币账号记录',
 		name: 'virtualRecord'
 	},
