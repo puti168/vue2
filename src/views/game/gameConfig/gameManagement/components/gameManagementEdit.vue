@@ -217,7 +217,7 @@
 					<el-divider></el-divider>
 					<span class="img-title">客户端图片上传</span>
 					<el-form-item label="图片上传" prop="image">
-						<Upload @uploadSuccess="uploadSuccess"></Upload>
+						<Upload :nowImage="nowImage" @uploadSuccess="uploadSuccess"></Upload>
 						<p class="imgTip">
 							请上传图片！图片格式仅支持png,图片尺寸： ？？ 图片大小不超过？？
 						</p>
@@ -269,6 +269,7 @@ export default {
 				id: '',
 				gameIcon: '',
 				gamePlatform: '',
+				nowImage: '',
 				gameName: '',
 				supportTerminal: [],
 				relationOtherGameId: [],
@@ -369,13 +370,12 @@ export default {
 				let arr = {}
 				if (val) {
 					arr = JSON.parse(JSON.stringify(val))
-					console.log(val)
-					console.log('val2')
 					arr.supportTerminal = arr.supportTerminal.split(',')
 					arr.relationOtherGameId = arr.relationOtherGameId.split(',')
 					arr.relationGameModuleId = arr.relationGameModuleId.split(',')
 					arr.gameIcon = arr.gameIcon + ''
 				}
+				this.nowImage = arr.imageAddress
 				this.form = arr
 			},
 			immediate: true,
@@ -428,7 +428,6 @@ export default {
 							}
 						}
 					})
-					console.log(this.form)
 					const params = {
 						...this.form,
 						supportTerminal: this.form.supportTerminal.join(','),

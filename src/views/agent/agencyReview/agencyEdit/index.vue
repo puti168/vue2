@@ -134,7 +134,7 @@
 							clearable
 							size="medium"
 							:maxlength="19"
-							style="width: 180px"
+							style="width: 200px"
 							placeholder="请输入"
 							@keyup.enter.native="enterSearch"
 						></el-input>
@@ -213,6 +213,7 @@
 							prop="auditNum"
 							align="center"
 							label="审核单号"
+							width="180"
 						></el-table-column>
 						<el-table-column
 							prop="applyType"
@@ -249,7 +250,7 @@
 								</template>
 							</template>
 						</el-table-column>
-						<el-table-column align="center" width="200px">
+						<el-table-column align="center">
 							<template slot="header">
 								<span>
 									代理账号
@@ -282,6 +283,7 @@
 							prop="applyTime"
 							align="center"
 							sortable="custom"
+							width="170"
 							label="申请时间"
 						></el-table-column>
 						<el-table-column
@@ -305,7 +307,7 @@
 								</span>
 							</template>
 						</el-table-column>
-						<el-table-column align="center" sortable="custom" width="200px">
+						<el-table-column align="center" sortable="custom" width="170px">
 							<template slot="header">
 								<span>
 									一审审核人

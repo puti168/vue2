@@ -219,7 +219,7 @@
 								</span>
 							</template>
 						</el-table-column>
-						<el-table-column align="center" sortable="custom" width="200px">
+						<el-table-column align="center" sortable="custom" width="200px" prop="auditTime">
 							<template slot="header">
 								<span>
 									一审审核人

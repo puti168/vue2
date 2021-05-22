@@ -282,9 +282,12 @@ export default {
 		},
 		lockChange(item) {
 			let includes = false
-			this.leftList.forEach((data) => {
+			let indexLeft = -1
+			this.leftList.forEach((data, index) => {
 				if (data.id === item.id) {
 					includes = true
+					// 包含时所在下标
+					indexLeft = index
 				}
 			})
 			// 勾选并且左边不包含。插入一个
@@ -301,9 +304,8 @@ export default {
 				this.leftList.push(item)
 			} else {
 				// 否则删除一个
-				const index = this.leftList.indexOf(item)
-				if (index > -1) {
-					this.leftList.splice(index, 1)
+				if (indexLeft > -1) {
+					this.leftList.splice(indexLeft, 1)
 				}
 			}
 		},
