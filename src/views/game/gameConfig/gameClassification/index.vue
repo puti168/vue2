@@ -433,13 +433,9 @@ export default {
 					: undefined
 			params.supportTerminal =
 				params.supportTerminal && params.supportTerminal.length
-					? params.deviceType.join(',')
+					? params.supportTerminal.join(',')
 					: undefined
-			params.clientDisplay =
-				params.clientDisplay && params.clientDisplay.length
-					? params.clientDisplay.join(',')
-					: undefined
-
+			params.clientDisplay = params.clientDisplay && params.clientDisplay * 1 === 1
 			this.$api
 				.gameAssortListAPI(params)
 				.then((res) => {
