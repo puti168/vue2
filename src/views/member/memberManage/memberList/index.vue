@@ -643,10 +643,10 @@ export default {
 					type: 'warning',
 					message: `请选择注册时间, 最后登录时间,首存时间任意其中一个时间维度`
 				})
-                return false
+				return false
 			}
-            this.dataList = []
-            this.loading = true
+			this.dataList = []
+			this.loading = true
 			delete params.registerTime
 			delete params.lastLoginTime
 			delete params.firstSaveTime
@@ -910,38 +910,54 @@ export default {
 			this.$api
 				.exportExcelAPI(params)
 				.then((res) => {
-					const result = res.data
-					const disposition = res.headers['content-disposition']
-					if (disposition) {
-						const fileNames = disposition.split("''")
-						let fileName = fileNames[1]
-						fileName = decodeURIComponent(fileName)
-						const blob = new Blob([result], {
-							type: 'application/octet-stream'
-						})
-						if ('download' in document.createElement('a')) {
-							const downloadLink = document.createElement('a')
-							downloadLink.download = fileName || ''
-							downloadLink.style.display = 'none'
-							downloadLink.href = URL.createObjectURL(blob)
-							document.body.appendChild(downloadLink)
-							downloadLink.click()
-							URL.revokeObjectURL(downloadLink.href)
-							document.body.removeChild(downloadLink)
+					const { data, status } = res
+					if (res && status === 200) {
+						const { type } = data
+						if (type.includes('application/json')) {
+							const reader = new FileReader()
+							reader.onload = (evt) => {
+								if (evt.target.readyState === 2) {
+									const {
+										target: { result }
+									} = evt
+									const ret = JSON.parse(result)
+									if (ret.code !== 200) {
+										this.$message({
+											type: 'error',
+											message: ret.msg,
+											duration: 1500
+										})
+									}
+								}
+							}
+							reader.readAsText(data)
 						} else {
-							window.navigator.msSaveBlob(blob, fileName)
+							const result = res.data
+							const disposition = res.headers['content-disposition']
+							const fileNames = disposition && disposition.split("''")
+							let fileName = fileNames[1]
+							fileName = decodeURIComponent(fileName)
+							const blob = new Blob([result], {
+								type: 'application/octet-stream'
+							})
+							if ('download' in document.createElement('a')) {
+								const downloadLink = document.createElement('a')
+								downloadLink.download = fileName || ''
+								downloadLink.style.display = 'none'
+								downloadLink.href = URL.createObjectURL(blob)
+								document.body.appendChild(downloadLink)
+								downloadLink.click()
+								URL.revokeObjectURL(downloadLink.href)
+								document.body.removeChild(downloadLink)
+							} else {
+								window.navigator.msSaveBlob(blob, fileName)
+							}
+							this.$message({
+								type: 'success',
+								message: '导出成功',
+								duration: 1500
+							})
 						}
-						this.$message({
-							type: 'success',
-							message: '导出成功',
-							duration: 1500
-						})
-					} else {
-						this.$message({
-							type: 'error',
-							message: '每10分钟导一次，请稍后再试',
-							duration: 1500
-						})
 					}
 				})
 				.catch(() => {
