@@ -1,4 +1,4 @@
-import { login, getDics, logout } from '@/api/user'
+import { login, getDics, logout, merchantDictAPI } from '@/api/user'
 import { getUserPermissions } from '@/api/role'
 import Cookies from 'js-cookie'
 import {
@@ -36,11 +36,13 @@ const state = {
 	userInfo: getUserInfo(),
 	avatar: '',
 	globalDics: {},
-	datas: {}
+	datas: {},
+	vipDict: [], // 风控层级
+	userLabel: [] // 用户标签
 }
 
 const mutations = {
-	SET_AUDIT: (state, {value, type}) => {
+	SET_AUDIT: (state, { value, type }) => {
 		state[type] = value
 	},
 	SET_TOKEN: (state, token) => {
@@ -101,12 +103,13 @@ const mutations = {
 				}
 			})
 		}
-	}
+	},
+	SETRISKRANKINFO(state, data) {}
 }
 
 const actions = {
-	setAudit({ commit }, {value, type}) {
-		commit('SET_AUDIT', {value, type})
+	setAudit({ commit }, { value, type }) {
+		commit('SET_AUDIT', { value, type })
 	},
 	// user login
 	login({ commit }, userInfo) {
@@ -201,6 +204,12 @@ const actions = {
 		return new Promise((resolve) => {
 			commit('SET_DATA', null)
 			resolve()
+		})
+	},
+	//    会员的风控层级
+	userRiskRank({ commit }) {
+		return merchantDictAPI().then((res) => {
+			console.log(res)
 		})
 	}
 }

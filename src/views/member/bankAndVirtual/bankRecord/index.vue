@@ -86,6 +86,22 @@
 							@keyup.enter.native="enterSearch"
 						></el-input>
 					</el-form-item>
+<!--                    <el-form-item label="风控层级:">-->
+<!--                        <el-select-->
+<!--                            v-model="queryData.windControlId"-->
+<!--                            size="medium"-->
+<!--                            placeholder="全部"-->
+<!--                            clearable-->
+<!--                            style="width: 180px"-->
+<!--                        >-->
+<!--                            <el-option-->
+<!--                                v-for="item in vipDict"-->
+<!--                                :key="item.windControlId"-->
+<!--                                :label="item.windControlName"-->
+<!--                                :value="item.windControlId"-->
+<!--                            ></el-option>-->
+<!--                        </el-select>-->
+<!--                    </el-form-item>-->
 					<el-form-item label="上级代理:">
 						<el-input
 							v-model="queryData.parentProxyName"
