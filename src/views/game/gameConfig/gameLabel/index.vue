@@ -5,27 +5,27 @@
         <el-form ref="form" :inline="true" :model="queryData">
           <el-form-item label="游戏标签ID:">
             <el-input
-              v-model.number="queryData.gameLabelId"
-              :maxlength="3"
+              v-model="queryData.gameLabelId"
+              maxlength="3"
               clearable
               size="medium"
               style="width: 180px"
               placeholder="请输入"
               :disabled="loading"
-              oninput="value=value.replace(/[^\d]/g,'')"
+              oninput="value=value.replace(/[^\w\.\/]/ig ,'')"
               @keyup.enter.native="enterSearch"
+              @blur="checkValue($event)"
             ></el-input>
           </el-form-item>
           <el-form-item label="标签名称:">
             <el-input
-              v-model.number="queryData.gameLabelName"
+              v-model="queryData.gameLabelName"
               clearable
               :maxlength="10"
               size="medium"
               style="width: 180px; margin-right: 20px"
               placeholder="请输入"
               :disabled="loading"
-              oninput="value=value.replace(/[^\w\.\/]/ig ,'')"
               @keyup.enter.native="enterSearch"
             ></el-input>
           </el-form-item>
@@ -224,7 +224,6 @@
               v-model="dialogForm.gameLabelName"
               :maxlength="10"
               autocomplete="off"
-              oninput="value=value.replace(/[^\w\.\/]/ig ,'')"
             ></el-input>
           </el-form-item>
           <el-form-item
@@ -413,6 +412,11 @@ export default {
         }
       })
     },
+    checkValue(e) {
+      const { value } = e.target
+      this.queryData.gameLabelId = value
+      console.log(value)
+    },
     _changeTableSort({ column, prop, order }) {
       if (prop === 'gameLabelId') {
         prop = 1
@@ -463,6 +467,15 @@ export default {
     padding: 0 20px;
   }
 }
+/deep/.el-input-number__decrease,
+/deep/.el-input-number__increase {
+  display: none;
+}
+/deep/.el-input-number--medium .el-input__inner {
+  padding: 0 15px;
+  text-align: left;
+}
+
 .decoration {
   text-decoration: underline;
   cursor: pointer;

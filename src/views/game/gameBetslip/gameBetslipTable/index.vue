@@ -93,10 +93,9 @@
               clearable
               :maxlength="11"
               size="medium"
-              style="width: 180px"
+              style="width: 200px"
               placeholder="请输入"
               :disabled="loading"
-              oninput="value=value.replace(/[^\w\.\/]/ig ,'')"
               @keyup.enter.native="enterSearch"
             ></el-input>
           </el-form-item>
@@ -122,10 +121,9 @@
               clearable
               :maxlength="11"
               size="medium"
-              style="width: 180px"
+              style="width: 200px"
               placeholder="请输入"
               :disabled="loading"
-              oninput="value=value.replace(/[^\w\.\/]/ig ,'')"
               @keyup.enter.native="enterSearch"
             ></el-input>
           </el-form-item>
@@ -149,8 +147,8 @@
               placeholder="默认选择全部"
               :popper-append-to-body="false"
             >
-              <el-option label="已计算" value="1"></el-option>
-              <el-option label="未计算" value="2"></el-option>
+              <el-option label="已结算" value="1"></el-option>
+              <el-option label="未结算" value="2"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="投注金额:">

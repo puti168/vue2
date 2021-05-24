@@ -20,7 +20,6 @@
             placeholder="请输入"
             clearable
             style="width: 365px"
-            oninput="value=value.replace(/[^\w\.\/]/ig ,'')"
             @keyup.enter.native="enterSearch"
           ></el-input>
           <el-button
@@ -67,7 +66,6 @@
             maxlength="11"
             placeholder="请输入"
             clearable
-            oninput="value=value.replace(/[^\w\.\/]/ig ,'')"
             style="width: 365px"
           ></el-input>
         </el-form-item>
@@ -94,7 +92,6 @@
             maxlength="50"
             placeholder="请输入"
             clearable
-            oninput="value=value.replace(/[^\w\.\/]/ig ,'')"
             style="width: 365px"
           ></el-input>
         </el-form-item>
@@ -338,11 +335,15 @@ export default {
     },
     searchMemeber() {
       const { userName } = this.memberForm
-      this.$api.overflowMemberInfo({ userName: userName }).then((res) => {
-        if (res.code === 200 && res.data !== null) {
-          this.memberForm.accountType = res.data.accountType + ''
-          this.memberForm.currentProxyName = res.data.currentUserName
-          this.isSub = false
+      this.$refs['memberForm'].validate((valid) => {
+        if (valid) {
+          this.$api.overflowMemberInfo({ userName: userName }).then((res) => {
+            if (res.code === 200 && res.data !== null) {
+              this.memberForm.accountType = res.data.accountType + ''
+              this.memberForm.currentProxyName = res.data.currentUserName
+              this.isSub = false
+            }
+          })
         }
       })
     },

@@ -25,10 +25,9 @@
               clearable
               maxlength="11"
               size="medium"
-              style="width: 180px; margin-right: 20px"
+              style="width: 200px; margin-right: 20px"
               placeholder="请输入"
               :disabled="loading"
-              oninput="value=value.replace(/[^\w\.\/]/ig ,'')"
               @keyup.enter.native="enterSearch"
             ></el-input>
           </el-form-item>
@@ -73,7 +72,6 @@
               style="width: 180px"
               placeholder="请输入内容"
               :disabled="loading"
-              oninput="value=value.replace(/[^\w\.\/]/ig ,'')"
               @keyup.enter.native="enterSearch"
             ></el-input>
           </el-form-item>
@@ -114,7 +112,6 @@
               style="width: 180px"
               placeholder="请输入内容"
               :disabled="loading"
-              oninput="value=value.replace(/[^\w\.\/]/ig ,'')"
               @keyup.enter.native="enterSearch"
             ></el-input>
           </el-form-item>
