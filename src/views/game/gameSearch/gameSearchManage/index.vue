@@ -16,7 +16,7 @@
 					label-width="100px"
 					class="form-content"
 				>
-					<el-form-item label="历史游戏上限:">
+					<el-form-item label="历史游戏上限:" label-width="120px">
 						<el-input
 							v-model="queryData.historySearchGameLimit"
 							size="medium"
@@ -28,7 +28,7 @@
 							style="width: 180px"
 						></el-input>
 					</el-form-item>
-					<el-form-item label="热门搜索上限:">
+					<el-form-item label="热门搜索上限:" label-width="120px">
 						<el-input
 							v-model="queryData.hotSearchGameLimit"
 							size="medium"
@@ -301,15 +301,17 @@ export default {
 		reset() {
 			this.pageNum = 1
 			this.form = {
-                historySearchGameLimit: undefined,
-                hotSearchGameLimit: undefined
+				historySearchGameLimit: undefined,
+				hotSearchGameLimit: undefined
 			}
 		},
 		checkValue(val) {},
 		addRow() {
-			const lastRow = this.dataList[this.dataList.length - 1]
-			const new_row = lastRow.id + 1
-			const displayOrder = lastRow.displayOrder + 1
+			const lastRow = this.dataList.length
+				? this.dataList[this.dataList.length - 1]
+				: undefined
+			const new_row = lastRow ? lastRow.id + 1 : 1
+			const displayOrder = lastRow ? lastRow.displayOrder + 1 : 1
 			this.dataList.push({
 				id: new_row,
 				updatedBy: getUsername(),

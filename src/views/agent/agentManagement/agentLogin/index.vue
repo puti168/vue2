@@ -310,6 +310,7 @@ export default {
     reset() {
       this.queryData = {}
       this.pageNum = 1
+      this.loginTime = [startTime, endTime]
       this.loadData()
     },
     _changeTableSort({ column, prop, order }) {

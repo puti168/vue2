@@ -92,9 +92,7 @@
       <el-col
 :span="5"
 >离线天数：<i v-if="activeL" class="el-icon-loading"></i>
-        <span v-else>
-          {{ outlineInfoList.leaveLineTime }}天
-        </span>
+        <span v-else> {{ outlineInfoList.leaveLineTime }}天 </span>
       </el-col>
       <el-col
 :span="5"
@@ -108,6 +106,7 @@
 >注册IP：<i v-if="activeL" class="el-icon-loading"></i>
         <span v-else>
           {{ outlineInfoList.registerIp }}
+          <span class="redColor">(风控层级：1级)</span>
         </span>
       </el-col>
       <el-col

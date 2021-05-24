@@ -183,7 +183,7 @@ export default {
       },
       searchTime: [startTime, endTime],
       now: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
-      summary: {count: 0},
+      summary: { count: 0 },
       tableData: []
     }
   },
@@ -211,7 +211,7 @@ export default {
         .then((res) => {
           if (res.code === 200) {
             this.tableData = res.data.record
-            this.summary = res.data.summary === null ? {count: 0} : res.data.summary
+            this.summary = res.data.summary === null ? { count: 0 } : res.data.summary
             this.total = res.data.totalRecord
             this.now = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
             this.loading = false
@@ -226,6 +226,7 @@ export default {
     reset() {
       this.queryData = {}
       this.pageNum = 1
+      this.searchTime = [startTime, endTime]
       this.loadData()
     },
     _changeTableSort({ column, prop, order }) {
