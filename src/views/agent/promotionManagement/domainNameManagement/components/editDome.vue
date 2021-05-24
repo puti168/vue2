@@ -21,7 +21,11 @@
           label="域名:"
           prop="domainName"
           :rules="[
-            { required: true, message: '请输入域名地址', trigger: 'blur' },
+            {
+              required: true,
+              message: '请输入域名地址',
+              trigger: 'blur',
+            },
             { min: 0, max: 50, message: '长度在 0 到 50 个字符', trigger: 'blur' },
           ]"
         >
@@ -29,6 +33,8 @@
             v-model="formData.domainName"
             placeholder="请输入"
             :maxlength="50"
+            oninput="value=value.replace(/[^\w\.\/]/ig ,'')"
+            @blur="checkValue($event)"
           ></el-input>
         </el-form-item>
         <el-form-item
@@ -48,7 +54,10 @@
           ></el-input>
         </el-form-item>
         <el-form-item label="排序:" prop="displayOrder">
-          <el-input v-model.number="formData.displayOrder" :disabled="!control"></el-input>
+          <el-input
+            v-model.number="formData.displayOrder"
+            :disabled="!control"
+          ></el-input>
         </el-form-item>
         <el-form-item label="状态:">
           <el-select v-model="formData.status" placeholder="请选择" :disabled="!control">
@@ -95,9 +104,21 @@ export default {
     }
   },
   data() {
-    var checkAge = (rule, value, callback) => {
-      console.log(!!value)
-      setTimeout(() => {
+    return {
+      formData: this.editData,
+      control: true
+      // rules: {
+      //   displayOrder: [{ validator: checkAge, trigger: "blur" }],
+      // },
+    }
+  },
+  computed: {
+    domainStatusType() {
+      return this.globalDics.domainStatusType
+    },
+    rules() {
+      const checkAge = (rule, value, callback) => {
+        console.log(!!value)
         if (value && !Number.isInteger(value)) {
           callback(new Error('请输入数字值'))
         } else {
@@ -107,26 +128,20 @@ export default {
             callback()
           }
         }
-      }, 100)
-    }
-    return {
-      formData: this.editData,
-      control: true,
-      rules: {
-        displayOrder: [{ validator: checkAge, trigger: 'blur' }]
       }
-    }
-  },
-  computed: {
-    domainStatusType() {
-      return this.globalDics.domainStatusType
+      const displayOrder = [{ validator: checkAge, trigger: 'blur' }]
+      return { displayOrder }
     }
   },
   watch: {},
   created() {},
-  mounted() {
-  },
+  mounted() {},
   methods: {
+    checkValue(e) {
+      const { value } = e.target
+      this.formData.domainName = value
+      console.log(value)
+    },
     goBack(val) {
       console.log(val)
       this.$refs.form.resetFields()
@@ -136,7 +151,7 @@ export default {
       console.log(this.formData)
       this.$refs.form.validate((valid) => {
         if (valid) {
-          if (this.control) {
+          if (!this.control) {
             this.$confirm(`确定创建吗？`, {
               confirmButtonText: '确定',
               cancelButtonText: '取消',

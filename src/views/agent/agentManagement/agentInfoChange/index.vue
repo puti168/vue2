@@ -25,10 +25,9 @@
               clearable
               :maxlength="11"
               size="medium"
-              style="width: 180px; margin-right: 20px"
+              style="width: 200px; margin-right: 20px"
               placeholder="请输入"
               :disabled="loading"
-              oninput="value=value.replace(/[^\w\.\/]/ig ,'')"
               @keyup.enter.native="enterSearch"
             ></el-input>
           </el-form-item>
@@ -249,6 +248,7 @@ export default {
     reset() {
       this.pageNum = 1
       this.queryData = {}
+      this.searchTime = [startTime, endTime]
       this.loadData()
     },
     _changeTableSort({ column, prop, order }) {

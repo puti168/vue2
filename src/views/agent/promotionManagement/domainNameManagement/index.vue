@@ -25,7 +25,7 @@
               clearable
               :maxlength="50"
               size="medium"
-              style="width: 180px"
+              style="width: 200px"
               placeholder="请输入"
               :disabled="loading"
               @keyup.enter.native="enterSearch"
@@ -37,7 +37,7 @@
               clearable
               :maxlength="12"
               size="medium"
-              style="width: 180px"
+              style="width: 220px"
               placeholder="请输入"
               :disabled="loading"
               @keyup.enter.native="enterSearch"
@@ -49,7 +49,7 @@
               clearable
               :maxlength="12"
               size="medium"
-              style="width: 180px"
+              style="width: 220px"
               placeholder="请输入"
               :disabled="loading"
               @keyup.enter.native="enterSearch"
