@@ -212,12 +212,22 @@ icon="el-icon-refresh"
         style="margin: 10px 0 30px 0; z-index: 0"
         :header-cell-style="getRowClass"
       >
-        <el-table-column align="center" prop="gameName" label="平台"></el-table-column>
-        <el-table-column
-          prop="netAmount"
-          align="center"
-          label="会员输赢"
-        ></el-table-column>
+        <el-table-column align="center" prop="gameName" label="平台">
+          <template slot-scope="scope">
+            <span class="blueColor">{{ scope.row.gameName }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="netAmount" align="center" label="会员输赢">
+          <template slot-scope="scope">
+            <span v-if="scope.row.netAmount > 0" class="redColor">{{
+              scope.row.netAmount
+            }}</span>
+            <span v-else-if="scope.row.netAmount < 0" class="enableColor">{{
+              scope.row.netAmount
+            }}</span>
+            <span v-else>{{ scope.row.netAmount }}</span>
+          </template>
+        </el-table-column>
         <el-table-column prop="betAmount" align="center" label="投注"></el-table-column>
         <el-table-column
           prop="validBetAmount"

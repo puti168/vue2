@@ -55,6 +55,8 @@
             {{ typeFilter(scope.row.status, "bindType") }}
           </template>
         </el-table-column>
+        <el-table-column prop="status" align="center" label="银行卡风控层级">
+        </el-table-column>
       </el-table>
     </div>
     <div class="titelBox">虚拟币账号信息</div>
@@ -104,6 +106,8 @@
           <template slot-scope="scope">
             {{ typeFilter(scope.row.status, "bindType") }}
           </template>
+        </el-table-column>
+        <el-table-column prop="status" align="center" label="虚拟币账户风控层级">
         </el-table-column>
       </el-table>
     </div>

@@ -25,6 +25,7 @@ export default {
 	font-size: 20px;
 	color: #fff;
 	font-weight: 700;
+	font-size: 46px;
 	background: url('../assets/img/bg-login.jpg') no-repeat;
 	background-size: cover;
 }

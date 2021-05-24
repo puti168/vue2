@@ -39,12 +39,19 @@
             {{ typeFilter(scope.row.loginStatus, "loginStatusType") }}
           </template>
         </el-table-column>
-        <el-table-column
-          prop="loginIp"
-          width="120px"
-          align="center"
-          label="IP地址"
-        ></el-table-column>
+        <el-table-column prop="loginIp" width="120px" align="center" label="IP地址">
+          <template slot="header">
+            IP地址
+            <br />
+            风控层级
+          </template>
+          <template slot-scope="scope">
+            {{ scope.row.loginIp }}
+            <br />
+             <span class="redColor"></span>
+            <!-- {{ scope.row.thirdOrderId }} -->
+          </template>
+        </el-table-column>
         <el-table-column
           prop="ipAttribution"
           align="center"
@@ -60,7 +67,19 @@
             {{ typeFilter(scope.row.deviceType, "deviceType") }}
           </template>
         </el-table-column>
-        <el-table-column prop="deviceNo" align="center" label="设备号"></el-table-column>
+        <el-table-column prop="deviceNo" align="center" label="设备号">
+          <template slot="header">
+            设备号
+            <br />
+            风控层级
+          </template>
+          <template slot-scope="scope">
+            {{ scope.row.deviceNo }}
+            <br />
+            <span class="redColor"></span>
+            <!-- {{ scope.row.thirdOrderId }} -->
+          </template>
+        </el-table-column>
         <el-table-column
           prop="browseContent"
           align="center"
