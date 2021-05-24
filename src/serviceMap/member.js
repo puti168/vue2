@@ -61,18 +61,25 @@ const member = [
 		name: 'memberLogin'
 	},
 	{
+		id: '123',
+		parentId: '3',
+		path: '/member/memberManage/memberMsgChange',
+		title: '会员信息变更记录',
+		name: 'memberMsgChange'
+	},
+	{
 		id: '125',
 		parentId: '124',
 		path: '/member/bankAndVirtual/memberBankManagement',
 		title: '会员银行卡管理',
-		name: 'bankRecord'
+		name: 'memberBankManagement'
 	},
 	{
 		id: '126',
 		parentId: '124',
 		path: '/member/bankAndVirtual/memberVirtualManagement',
 		title: '会员虚拟币账号管理',
-		name: 'virtualRecord'
+		name: 'memberVirtualManagement'
 	},
 	{
 		id: '127',

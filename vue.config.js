@@ -58,7 +58,7 @@ module.exports = {
 			'@': resolve('src')
 		}
 		if (process.env.NODE_ENV === 'production') {
-			config.optimization.minimizer[0].options.terserOptions.compress.drop_console = true
+			config.optimization.minimizer[0].options.terserOptions.compress.drop_console = false
 
 			// 加入生成版本插件
 			config.plugins.push(new VersionPlugin({}))
