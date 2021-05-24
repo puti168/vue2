@@ -21,7 +21,7 @@ const control = [
 	{
 		id: '132',
 		parentId: '130',
-		path: '/control/riskManagement/createRiskControl',
+		path: '/control/riskManagement/createRiskRank',
 		title: '创建风控层级'
 	},
 	{

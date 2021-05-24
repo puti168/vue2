@@ -31,7 +31,8 @@ export const routerNames = {
 	agentTrans: 'agentTrans',
 	pictureManagement: 'pictureManagement',
 	domainCreateAndEidt: 'domainCreateAndEidt',
-	levelWelfareConfig: 'levelWelfareConfig'
+	levelWelfareConfig: 'levelWelfareConfig',
+	createRiskRank: 'createRiskRank'
 }
 const month = dayjs().month()
 const year = dayjs().year()
