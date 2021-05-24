@@ -195,8 +195,6 @@ export default {
 							console.log('push进入页面')
 							this.$router.push({ path: this.redirect || '/' })
 							this.loading = false
-							//    登录成功后获取风控层级与标签信息
-							this.$store.dispatch('user/userRiskRank')
 						})
 						.catch(() => {
 							this.timestamp = +new Date()

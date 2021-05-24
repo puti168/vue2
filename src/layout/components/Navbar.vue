@@ -61,6 +61,7 @@ export default {
 	},
 	mounted() {
 		this.name = getNickName()
+        this.$store.dispatch('user/userRiskRank')
 	},
 	methods: {
 		formatCurrency,
