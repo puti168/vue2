@@ -283,7 +283,7 @@
 				title="图片"
 				:visible.sync="dialogPictureVisible"
 				:destroy-on-close="true"
-				width="480px"
+				width="650px"
 				class="imgCenter"
 			>
 				<img :src="imageAddress" />
@@ -480,5 +480,10 @@ export default {
 	text-align: center;
 	color: #909399;
 	font-weight: 700;
+}
+.imgCenter {
+    img {
+        width: 100%;
+    }
 }
 </style>
