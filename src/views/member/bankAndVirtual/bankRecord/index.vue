@@ -86,22 +86,22 @@
 							@keyup.enter.native="enterSearch"
 						></el-input>
 					</el-form-item>
-<!--                    <el-form-item label="风控层级:">-->
-<!--                        <el-select-->
-<!--                            v-model="queryData.windControlId"-->
-<!--                            size="medium"-->
-<!--                            placeholder="全部"-->
-<!--                            clearable-->
-<!--                            style="width: 180px"-->
-<!--                        >-->
-<!--                            <el-option-->
-<!--                                v-for="item in vipDict"-->
-<!--                                :key="item.windControlId"-->
-<!--                                :label="item.windControlName"-->
-<!--                                :value="item.windControlId"-->
-<!--                            ></el-option>-->
-<!--                        </el-select>-->
-<!--                    </el-form-item>-->
+                    <el-form-item label="风控层级:">
+                        <el-select
+                            v-model="queryData.windControlId"
+                            size="medium"
+                            placeholder="全部"
+                            clearable
+                            style="width: 180px"
+                        >
+                            <el-option
+                                v-for="item in vipDict"
+                                :key="item.windControlId"
+                                :label="item.windControlName"
+                                :value="item.windControlId"
+                            ></el-option>
+                        </el-select>
+                    </el-form-item>
 					<el-form-item label="上级代理:">
 						<el-input
 							v-model="queryData.parentProxyName"
@@ -201,6 +201,18 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
+                    <el-table-column
+                        prop="windControlName"
+                        align="center"
+                        label="风控层级"
+                    >
+                        <template slot-scope="scope">
+							<span v-if="!!scope.row.windControlName">
+								{{ scope.row.windControlName }}
+							</span>
+                            <span v-else>-</span>
+                        </template>
+                    </el-table-column>
 					<el-table-column prop="cnName" align="center" label="持卡人">
 						<template slot-scope="scope">
 							<Copy
@@ -219,6 +231,22 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
+                    <el-table-column prop="operateType" align="center" label="备注信息">
+                        <template slot-scope="scope">
+							<span v-if="!!scope.row.remark">
+								{{ scope.row.remark }}
+							</span>
+                            <span v-else>-</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="updatedBy" align="center" label="操作人">
+                        <template slot-scope="scope">
+							<span v-if="!!scope.row.updatedBy">
+								{{ scope.row.updatedBy }}
+							</span>
+                            <span v-else>-</span>
+                        </template>
+                    </el-table-column>
 					<el-table-column
 						prop="createDt"
 						align="center"
@@ -255,6 +283,7 @@
 import list from '@/mixins/list'
 import dayjs from 'dayjs'
 import { routerNames } from '@/utils/consts'
+import { mapGetters } from 'vuex'
 // import { notSpecial2, isHaveEmoji } from '@/utils/validate'
 const start = dayjs()
 	.startOf('day')
@@ -263,19 +292,21 @@ const end = dayjs()
 	.endOf('day')
 	.valueOf()
 // import { UTable } from 'umy-ui'
+
 export default {
 	name: routerNames.bankRecord,
 	mixins: [list],
 	data() {
 		return {
 			queryData: {
-				operateType: '',
+				operateType: undefined,
 				createDt: [start, end],
-				userName: '',
-				cnName: '',
-				bankName: '',
-				cardNumber: '',
-				parentProxyName: '',
+				userName: undefined,
+				cnName: undefined,
+				bankName: undefined,
+				cardNumber: undefined,
+                windControlId: undefined,
+				parentProxyName: undefined,
 				orderType: undefined
 			},
 			dataList: [],
@@ -283,6 +314,7 @@ export default {
 		}
 	},
 	computed: {
+        ...mapGetters(['vipDict']),
 		bindType() {
 			return this.globalDics.bindType
 		}
