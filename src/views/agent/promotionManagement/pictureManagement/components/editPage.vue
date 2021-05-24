@@ -74,7 +74,7 @@
 					<el-form-item label="图片上传" prop="imageAddress">
 						<UploadItem
 							ref="imgUpload"
-							:upload-file-type="'image/jpeg'"
+							:upload-file-type="'image'"
 							:platform="'PC'"
 							:img-urls="queryData.imageAddress"
 							@upoladItemSucess="handleUploadSucess"

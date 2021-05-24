@@ -16,7 +16,7 @@
 					label-width="100px"
 					class="form-content"
 				>
-					<el-form-item label="历史游戏上限:">
+					<el-form-item label="历史游戏上限:" label-width="120px">
 						<el-input
 							v-model="queryData.historySearchGameLimit"
 							size="medium"
@@ -28,7 +28,7 @@
 							style="width: 180px"
 						></el-input>
 					</el-form-item>
-					<el-form-item label="热门搜索上限:">
+					<el-form-item label="热门搜索上限:" label-width="120px">
 						<el-input
 							v-model="queryData.hotSearchGameLimit"
 							size="medium"
