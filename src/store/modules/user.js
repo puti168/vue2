@@ -104,7 +104,11 @@ const mutations = {
 			})
 		}
 	},
-	SETRISKRANKINFO(state, data) {}
+	SETRISKRANKINFO(state, data) {
+		const { windControl, userLabel } = data
+		state.vipDict = windControl || []
+		state.userLabel = userLabel || []
+	}
 }
 
 const actions = {
@@ -209,7 +213,10 @@ const actions = {
 	//    会员的风控层级
 	userRiskRank({ commit }) {
 		return merchantDictAPI().then((res) => {
-			console.log(res)
+			const { code, data } = res
+			if (code === 200 && data) {
+				commit('SETRISKRANKINFO', data)
+			}
 		})
 	}
 }

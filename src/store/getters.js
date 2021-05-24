@@ -13,6 +13,8 @@ const getters = {
 	username: (state) => state.user.username,
 	userId: (state) => state.user.id,
 	userInfo: (state) => state.user.userInfo,
+	vipDict: (state) => state.user.vipDict,
+	userLabel: (state) => state.user.userLabel,
 	// 按钮权限
 	buttonPermissions: (state) => state.permission.userBtns
 }

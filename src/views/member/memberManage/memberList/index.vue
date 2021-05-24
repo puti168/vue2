@@ -542,6 +542,7 @@
 <script>
 import list from '@/mixins/list'
 import dayjs from 'dayjs'
+import { mapGetters } from 'vuex'
 // import { UTable } from 'umy-ui'
 import { routerNames } from '@/utils/consts'
 const start = dayjs()
@@ -550,6 +551,7 @@ const start = dayjs()
 const end = dayjs()
 	.endOf('day')
 	.valueOf()
+
 export default {
 	name: routerNames.memberList,
 	mixins: [list],
@@ -579,12 +581,11 @@ export default {
 				orderType: undefined
 			},
 			dataList: [],
-			total: 0,
-			vipDict: [],
-			userLabel: []
+			total: 0
 		}
 	},
 	computed: {
+        ...mapGetters(['vipDict', 'userLabel']),
 		accountStatusArr() {
 			return this.globalDics.accountStatusType
 		},
@@ -596,7 +597,7 @@ export default {
 		}
 	},
 	created() {
-		this.getMerchantDict()
+		// this.getMerchantDict()
 	},
 	mounted() {},
 	methods: {

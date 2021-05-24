@@ -29,7 +29,7 @@
 						name="username"
 						type="text"
 						tabindex="1"
-                        maxlength="11"
+						maxlength="11"
 						auto-complete="off"
 					/>
 				</el-form-item>
@@ -46,8 +46,8 @@
 						:placeholder="$t('login.password')"
 						name="password"
 						tabindex="2"
-                        maxlength="12"
-                        oninput="value=value.replace(/(^\s*)|(\s*$)/g ,'')"
+						maxlength="12"
+						oninput="value=value.replace(/(^\s*)|(\s*$)/g ,'')"
 						auto-complete="off"
 					/>
 					<span class="show-pwd" @click="showPwd">
@@ -195,6 +195,8 @@ export default {
 							console.log('push进入页面')
 							this.$router.push({ path: this.redirect || '/' })
 							this.loading = false
+							//    登录成功后获取风控层级与标签信息
+							this.$store.dispatch('user/userRiskRank')
 						})
 						.catch(() => {
 							this.timestamp = +new Date()
