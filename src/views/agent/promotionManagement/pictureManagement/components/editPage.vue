@@ -213,7 +213,15 @@ export default {
 					console.log('this.queryData', this.queryData)
 				} else {
 					this.updateStatus = false
-					this.reset()
+                    this.queryData = {
+                        imageName: undefined,
+                        imageSize: undefined,
+                        imageType: undefined,
+                        displayOrder: undefined,
+                        imageAddress: null,
+                        remark: undefined,
+                        id: undefined
+                    }
 				}
 			},
 			deep: true,
@@ -267,7 +275,7 @@ export default {
 		},
 		reset() {
 			this.$refs['form'].resetFields()
-			this.form = {
+			this.queryData = {
 				imageName: undefined,
 				imageSize: undefined,
 				imageType: undefined,
