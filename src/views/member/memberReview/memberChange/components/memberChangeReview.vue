@@ -66,7 +66,7 @@
 						>
 							<el-table-column align="center" label="修改前">
 								<template>
-									<template v-if="Number(applyInfo.applyType === 2)">
+									<template v-if="Number(applyInfo.applyType) === 2">
 										{{ typeFilter(applyInfo.beforeModify, 'genderType') }}
 									</template>
 									<template v-else-if="Number(applyInfo.applyType === 6)">
@@ -81,7 +81,7 @@
 							</el-table-column>
 							<el-table-column align="center" label="修改后">
 								<template>
-									<template v-if="Number(applyInfo.applyType === 2)">
+									<template v-if="Number(applyInfo.applyType) === 2">
 										{{ typeFilter(applyInfo.afterModify, 'genderType') }}
 									</template>
 									<template v-else-if="Number(applyInfo.applyType === 6)">
