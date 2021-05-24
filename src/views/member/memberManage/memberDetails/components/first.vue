@@ -92,9 +92,7 @@
       <el-col
 :span="5"
 >离线天数：<i v-if="activeL" class="el-icon-loading"></i>
-        <span v-else>
-          {{ outlineInfoList.leaveLineTime }}天
-        </span>
+        <span v-else> {{ outlineInfoList.leaveLineTime }}天 </span>
       </el-col>
       <el-col
 :span="5"
@@ -670,7 +668,7 @@ export default {
               const ele = res.data.auditList[i]
               for (let j = 0; j < this.editMsgList.length; j++) {
                 const val = this.editMsgList[j].code
-                if (ele.applyName === val) {
+                if (val === ele.applyName) {
                   this.editMsgList[j].applyStatus = ele.applyStatus
                 }
               }
@@ -688,6 +686,7 @@ export default {
               this.tableList = res.data.record
             }
           })
+          this.activeL = false
         }
       })
     },
@@ -750,18 +749,30 @@ export default {
     },
     refresh() {
       const val = this.parentData
-      this.getOutlineInfo(val)
+      this.activeL = true
+      for (let j = 0; j < this.editMsgList.length; j++) {
+        this.editMsgList[j].applyStatus = ''
+      }
+      this.$nextTick(() => {
+        this.getOutlineInfo(val)
+      })
     },
     editFn(val) {
       this.moduleBox = val
       switch (val) {
         case '账号状态':
           this.titel = '备注信息：'
-          this.editData.code = this.outlineInfoList.accountStatus
+          this.editData.code =
+            this.outlineInfoList.accountStatus === null
+              ? ''
+              : this.outlineInfoList.accountStatus
           break
         case '风控层级':
           this.titel = '备注信息：'
-          this.editData.windControlId = this.outlineInfoList.windControlId + ''
+          this.editData.windControlId =
+            this.outlineInfoList.windControlId === null
+              ? ''
+              : this.outlineInfoList.windControlId + ''
           for (let i = 0; i < this.riskLevelList.length; i++) {
             const ele = this.riskLevelList[i]
             if (val === ele.windControlId) {
@@ -770,7 +781,10 @@ export default {
           }
           break
         case '会员标签':
-          this.editData.labelId = this.outlineInfoList.labelId + ''
+          this.editData.labelId =
+            this.outlineInfoList.labelId === null
+              ? ''
+              : this.outlineInfoList.labelId + ''
           for (let i = 0; i < this.memberLabelList.length; i++) {
             const ele = this.memberLabelList[i]
             if (val === ele.labelId) {
