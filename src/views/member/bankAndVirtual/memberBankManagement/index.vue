@@ -1,121 +1,279 @@
 <template>
   <div class="game-container report-container">
     <div class="view-container dealer-container">
-      <h1>会员银行卡管理</h1>
       <div class="params">
         <el-form ref="form" :inline="true" :model="queryData">
-          <el-form-item label="登录时间:">
-            <el-date-picker
-              v-model="loginTime"
-              size="medium"
-              :picker-options="pickerOptions"
-              format="yyyy-MM-dd HH:mm:ss"
-              type="datetimerange"
-              range-separator="-"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-              align="right"
-              :clearable="false"
-              :default-time="defaultTime"
-              style="width: 375px"
-            ></el-date-picker>
-          </el-form-item>
-          <el-form-item label="代理账号:" prop="userName">
+          <el-form-item label="银行卡号:">
             <el-input
-              v-model="queryData.userName"
+              v-model="queryData.id"
               clearable
-              :maxlength="11"
+              :maxlength="25"
               size="medium"
-              style="width: 180px; margin-right: 20px"
+              style="width: 210px"
+              placeholder="请输入"
+              :disabled="loading"
+              oninput="value=value.replace(/[^\d]/g,'')"
+              @blur="checkValue($event)"
+              @keyup.enter.native="enterSearch"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="银行名称:">
+            <el-input
+              v-model="queryData.thirdOrderId"
+              clearable
+              :maxlength="10"
+              size="medium"
+              style="width: 210px"
               placeholder="请输入"
               :disabled="loading"
               @keyup.enter.native="enterSearch"
             ></el-input>
           </el-form-item>
-          <el-form-item label="代理类型:" class="tagheight" prop="accountType">
-            <el-select
-              v-model="queryData.accountType"
-              style="width: 280px"
-              multiple
-              placeholder="默认选择全部"
-              :popper-append-to-body="false"
-            >
-              <el-option
-                v-for="item in accountType"
-                :key="item.code"
-                :label="item.description"
-                :value="item.code"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="登录状态:" class="tagheight" prop="loginStatus">
-            <el-select
-              v-model="queryData.loginStatus"
-              style="width: 280px"
-              clearable
-              placeholder="默认选择全部"
-              :popper-append-to-body="false"
-            >
-              <el-option
-                v-for="item in loginStatusType"
-                :key="item.description"
-                :label="item.description"
-                :value="item.code"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="登录IP:" prop="loginIp">
+          <el-form-item label="银行支行:">
             <el-input
-              v-model="queryData.loginIp"
-              clearable
-              :maxlength="15"
-              size="medium"
-              style="width: 180px"
-              placeholder="请输入内容"
-              :disabled="loading"
-              @keyup.enter.native="enterSearch"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="IP归属地:" prop="ipAttribution">
-            <el-input
-              v-model="queryData.ipAttribution"
+              v-model="queryData.thirdOrderId"
               clearable
               :maxlength="10"
               size="medium"
-              style="width: 180px"
-              placeholder="请输入内容"
+              style="width: 210px"
+              placeholder="请输入"
               :disabled="loading"
               @keyup.enter.native="enterSearch"
             ></el-input>
           </el-form-item>
-          <el-form-item label="登录终端:" class="tagheight" prop="deviceType">
+          <el-form-item label="黑名单状态:">
             <el-select
               v-model="queryData.deviceType"
-              style="width: 280px"
-              multiple
+              style="width: 210px"
               placeholder="默认选择全部"
               :popper-append-to-body="false"
             >
               <el-option
-                v-for="item in loginDeviceType"
+                v-for="item in blackStatusType"
                 :key="item.code"
                 :label="item.description"
                 :value="item.code"
               ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="终端设备号:" prop="deviceNo">
+          <el-form-item label="绑定状态:">
+            <el-select
+              v-model="queryData.deviceType"
+              style="width: 210px"
+              placeholder="默认选择全部"
+              :popper-append-to-body="false"
+            >
+              <el-option
+                v-for="item in bindStatusType"
+                :key="item.code"
+                :label="item.description"
+                :value="item.code"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="最近操作人:">
             <el-input
-              v-model="queryData.deviceNo"
+              v-model="queryData.memberName"
               clearable
-              :maxlength="50"
+              :maxlength="20"
               size="medium"
-              style="width: 180px"
-              placeholder="请输入内容"
+              style="width: 200px"
+              placeholder="请输入"
               :disabled="loading"
               @keyup.enter.native="enterSearch"
             ></el-input>
           </el-form-item>
+          <el-form-item label="当前绑定会员账号:">
+            <el-input
+              v-model="queryData.memberName"
+              clearable
+              :maxlength="11"
+              size="medium"
+              style="width: 200px"
+              placeholder="请输入"
+              :disabled="loading"
+              @keyup.enter.native="enterSearch"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="会员姓名:">
+            <el-input
+              v-model="queryData.memberName"
+              clearable
+              :maxlength="6"
+              size="medium"
+              style="width: 200px"
+              placeholder="请输入"
+              :disabled="loading"
+              @keyup.enter.native="enterSearch"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="会员提款被拒次数:">
+            <el-input
+              v-model="queryData.betAmountMin"
+              size="medium"
+              placeholder="最小数值"
+              style="width: 100px"
+              :maxlength="10"
+              name="betAmountMin"
+              oninput="value=value.replace(/[^\d]/g,'')"
+              @blur="checkValue($event)"
+            ></el-input>
+            -
+            <el-input
+              v-model="queryData.betAmountMax"
+              size="medium"
+              placeholder="最大数值"
+              style="width: 100px"
+              :maxlength="10"
+              name="betAmountMax"
+              oninput="value=value.replace(/[^\d]/g,'')"
+              @blur="checkValue($event)"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="会员提款成功次数:">
+            <el-input
+              v-model="queryData.netAmountMin"
+              size="medium"
+              placeholder="最小数值"
+              style="width: 100px"
+              :maxlength="10"
+              name="netAmountMin"
+              oninput="value=value.replace(/[^\d]/g,'')"
+              @blur="checkValue($event)"
+            ></el-input>
+            -
+            <el-input
+              v-model="queryData.netAmountMax"
+              size="medium"
+              placeholder="最大数值"
+              style="width: 100px"
+              :maxlength="10"
+              name="netAmountMax"
+              oninput="value=value.replace(/[^\d]/g,'')"
+              @blur="checkValue($event)"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="会员提款总金额:">
+            <el-input
+              v-model="queryData.netAmountMin"
+              size="medium"
+              placeholder="最小数值"
+              style="width: 100px"
+              :maxlength="10"
+              name="netAmountMin"
+              oninput="value=value.replace(/[^\d]/g,'')"
+              @blur="checkValue($event)"
+            ></el-input>
+            -
+            <el-input
+              v-model="queryData.netAmountMax"
+              size="medium"
+              placeholder="最大数值"
+              style="width: 100px"
+              :maxlength="10"
+              name="netAmountMax"
+              oninput="value=value.replace(/[^\d]/g,'')"
+              @blur="checkValue($event)"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="风控层级:" class="tagheight">
+            <el-select
+              v-model="queryData.deviceType"
+              style="width: 210px"
+              multiple
+              placeholder="默认选择全部"
+              :popper-append-to-body="false"
+            >
+              <el-option
+                v-for="item in windLevelType"
+                :key="item.code"
+                :label="item.description"
+                :value="item.code"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="代理提款被拒次数:">
+            <el-input
+              v-model="queryData.netAmountMin"
+              size="medium"
+              placeholder="最小数值"
+              style="width: 100px"
+              :maxlength="10"
+              name="netAmountMin"
+              oninput="value=value.replace(/[^\d]/g,'')"
+              @blur="checkValue($event)"
+            ></el-input>
+            -
+            <el-input
+              v-model="queryData.netAmountMax"
+              size="medium"
+              placeholder="最大数值"
+              style="width: 100px"
+              :maxlength="10"
+              name="netAmountMax"
+              oninput="value=value.replace(/[^\d]/g,'')"
+              @blur="checkValue($event)"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="代理提款成功次数:">
+            <el-input
+              v-model="queryData.netAmountMin"
+              size="medium"
+              placeholder="最小数值"
+              style="width: 100px"
+              :maxlength="10"
+              name="netAmountMin"
+              oninput="value=value.replace(/[^\d]/g,'')"
+              @blur="checkValue($event)"
+            ></el-input>
+            -
+            <el-input
+              v-model="queryData.netAmountMax"
+              size="medium"
+              placeholder="最大数值"
+              style="width: 100px"
+              :maxlength="10"
+              name="netAmountMax"
+              oninput="value=value.replace(/[^\d]/g,'')"
+              @blur="checkValue($event)"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="代理提款总金额:">
+            <el-input
+              v-model="queryData.netAmountMin"
+              size="medium"
+              placeholder="最小数值"
+              style="width: 100px"
+              :maxlength="10"
+              name="netAmountMin"
+              oninput="value=value.replace(/[^\d]/g,'')"
+              @blur="checkValue($event)"
+            ></el-input>
+            -
+            <el-input
+              v-model="queryData.netAmountMax"
+              size="medium"
+              placeholder="最大数值"
+              style="width: 100px"
+              :maxlength="10"
+              name="netAmountMax"
+              oninput="value=value.replace(/[^\d]/g,'')"
+              @blur="checkValue($event)"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="绑定账号次数:">
+            <el-input
+              v-model="queryData.loginIp"
+              clearable
+              :maxlength="10"
+              size="medium"
+              style="width: 210px"
+              placeholder="请输入"
+              :disabled="loading"
+              @keyup.enter.native="enterSearch"
+            ></el-input>
+          </el-form-item>
+
           <el-form-item>
             <el-button
               type="primary"
@@ -148,61 +306,129 @@
           :header-cell-style="getRowClass"
           @sort-change="_changeTableSort"
         >
-          <el-table-column
-            prop="loginTime"
-            align="center"
-            label="登录时间"
-            sortable="custom"
-          ></el-table-column>
-          <el-table-column prop="loginStatus" align="center" label="登录状态">
+          <el-table-column prop="id" align="center" width="240px" label="银行卡号">
             <template slot-scope="scope">
-              {{ typeFilter(scope.row.loginStatus, "loginStatusType") }}
-            </template>
-          </el-table-column>
-          <el-table-column prop="userName" align="center" label="代理账号">
-            <template slot-scope="scope">
-              <Copy v-if="!!scope.row.userName" :title="scope.row.userName" :copy="copy">
-                {{ scope.row.userName }}
+              <Copy
+                v-if="!!scope.row.memberName"
+                :title="scope.row.memberName"
+                :copy="copy"
+              >
+                {{ scope.row.memberName }}
               </Copy>
               <span v-else>-</span>
             </template>
           </el-table-column>
-          <el-table-column prop="accountType" align="center" label="代理类型">
-            <template slot-scope="scope">
-              {{ typeFilter(scope.row.accountType, "accountType") }}
-            </template>
-          </el-table-column>
-          <el-table-column prop="loginIp" align="center" label="登录IP"></el-table-column>
-          <el-table-column
-            prop="ipAttribution"
-            align="center"
-            label="IP归属地"
-          ></el-table-column>
-          <el-table-column prop="deviceType" align="center" label="登录终端">
-            <template slot-scope="scope">
-              {{ typeFilter(scope.row.deviceType, "loginDeviceType") }}
+          <el-table-column prop="bankName" align="center" width="150px">
+            <template slot="header">
+              银行名称
+              <br />
+              银行支行
             </template>
           </el-table-column>
           <el-table-column
-            prop="deviceNo"
+            prop="memberName"
             align="center"
-            label="终端设备号"
+            label="黑名单状态"
+            width="130px"
+          >
+          </el-table-column>
+          <el-table-column
+            prop="accountType"
+            align="center"
+            label="绑定状态"
+            width="100px"
+          >
+          </el-table-column>
+          <el-table-column
+            prop="parentProxyName"
+            align="center"
+            label="风控层级"
+            width="150px"
+          >
+          </el-table-column>
+          <el-table-column
+            prop="playerName"
+            align="center"
+            label="绑定账号次数"
+            width="180px"
+          >
+          </el-table-column>
+          <el-table-column prop="betStatus" align="center" width="100px">
+            <template slot="header">
+              当前绑定会员账号
+              <br />
+              会员姓名
+            </template>
+          </el-table-column>
+          <el-table-column prop="betStatus" align="center" width="100px">
+            <template slot="header">
+              会员提款成功次数
+              <br />
+              会员提款被拒次数
+            </template>
+          </el-table-column>
+          <el-table-column
+            prop="betAmount"
+            align="center"
+            label="会员提款总金额"
+            width="120px"
+          ></el-table-column>
+          <el-table-column prop="betStatus" align="center" width="100px">
+            <template slot="header">
+              代理提款成功次数
+              <br />
+              代理提款被拒次数
+            </template>
+          </el-table-column>
+          <el-table-column
+            prop="createAt"
+            align="center"
+            label="代理提款总金额"
+            width="160px"
           ></el-table-column>
           <el-table-column
-            prop="loginReference"
+            prop="netAt"
             align="center"
-            label="登录地址"
+            label="银行卡新增时间"
+            sortable="custom"
+            width="160px"
           ></el-table-column>
           <el-table-column
-            prop="browseContent"
+            prop="loginIp"
             align="center"
-            label="设备版本"
+            label="最近提款时间"
+            width="150px"
+            sortable="custom"
           ></el-table-column>
           <el-table-column
-            prop="loginError"
+            prop="deviceType"
             align="center"
-            label="备注"
-          ></el-table-column>
+            label="最近操作人"
+            width="120px"
+          >
+          </el-table-column>
+          <el-table-column
+            prop="deviceType"
+            align="center"
+            label="最近操作时间"
+            width="120px"
+            sortable="custom"
+          >
+          </el-table-column>
+          <el-table-column prop="operation" align="center" label="操作" width="120px">
+            <template slot-scope="scope">
+                {{ scope.row.id }}
+              <el-button type="success" icon="el-icon-view" size="medium">
+                解绑
+              </el-button>
+              <el-button type="danger" icon="el-icon-view" size="medium">
+                解绑
+              </el-button>
+              <el-button type="warning" icon="el-icon-view" size="medium">
+                解绑
+              </el-button>
+            </template>
+          </el-table-column>
         </el-table>
         <!-- 分页 -->
         <el-pagination
@@ -223,10 +449,7 @@
 
 <script>
 import list from '@/mixins/list'
-import dayjs from 'dayjs'
 import { routerNames } from '@/utils/consts'
-const startTime = dayjs().startOf('day').valueOf()
-const endTime = dayjs().endOf('day').valueOf()
 
 export default {
   name: routerNames.memberBankManagement,
@@ -235,44 +458,37 @@ export default {
   data() {
     return {
       queryData: {},
-      loginTime: [startTime, endTime],
-      now: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
-      tableData: []
+      tableData: [],
+      dataList: {}
     }
   },
   computed: {
-    loginDeviceType() {
-      return this.globalDics.loginDeviceType
+    blackStatusType() {
+      return this.globalDics.blackStatusType
     },
-    loginStatusType() {
-      return this.globalDics.loginStatusType
+    bindStatusType() {
+      return this.globalDics.bindStatusType
     },
-    accountType() {
-      return this.globalDics.accountType
+    windLevelType() {
+      return this.globalDics.windLevelType
     }
   },
   mounted() {},
   methods: {
     loadData() {
       this.loading = true
-      const create = this.loginTime || []
-      const [startTime, endTime] = create
       let params = {
-        ...this.queryData,
-        loginStartTime: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : '',
-        loginEndTime: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
+        ...this.queryData
       }
       params = {
         ...this.getParams(params)
       }
       this.$api
-        .getProxyDetailProxyLoginLog(params)
+        .getGameRecordNotes(params)
         .then((res) => {
-          this.now = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
           if (res.code === 200) {
             this.tableData = res.data.record
             this.total = res.data.totalRecord
-            this.summary = res.data.summary !== null ? res.data.summary : {}
           }
           this.loading = false
         })
@@ -282,10 +498,21 @@ export default {
     },
     reset() {
       this.queryData = {}
+      this.pageNum = 1
+      this.loadData()
     },
     _changeTableSort({ column, prop, order }) {
-      if (prop === 'loginTime') {
+      if (prop === 'betAmount') {
         prop = 1
+      }
+      if (prop === 'netAmount') {
+        prop = 2
+      }
+      if (prop === 'createAt') {
+        prop = 3
+      }
+      if (prop === 'netAt') {
+        prop = 4
       }
       this.queryData.orderKey = prop
       if (order === 'ascending') {
@@ -295,6 +522,42 @@ export default {
         // 降序
         this.queryData.orderType = 'desc'
       }
+      this.loadData()
+    },
+    checkValue(e) {
+      const { name, value } = e.target
+      switch (name) {
+        case 'betAmountMax':
+          if (
+            !!this.queryData.betAmountMin &&
+            value &&
+            value * 1 <= this.queryData.betAmountMin * 1
+          ) {
+            this.$message({
+              type: 'warning',
+              message: `投注金额输入最大值不能小于最小值`
+            })
+          } else {
+            this.queryData.betAmountMax = value
+          }
+          break
+        case 'netAmountMax':
+          if (
+            !!this.queryData.netAmountMin &&
+            value &&
+            value * 1 < this.queryData.netAmountMin * 1
+          ) {
+            this.$message({
+              type: 'warning',
+              message: `会员输赢输入最大值不能小于最小值`
+            })
+          } else {
+            this.queryData.netAmountMax = value
+          }
+          break
+      }
+    },
+    enterSearch() {
       this.loadData()
     }
   }
@@ -306,5 +569,10 @@ export default {
   text-align: center;
   color: #909399;
   font-weight: 700;
+}
+/deep/ .tagheight .el-tag {
+  height: 24px;
+  line-height: 24px;
+  min-width: 60px;
 }
 </style>

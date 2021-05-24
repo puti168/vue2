@@ -201,6 +201,8 @@ export default {
     },
     reset() {
       this.queryData = {}
+      this.pageNum = 1
+      this.loadData()
     },
     _changeTableSort({ column, prop, order }) {
       if (prop === 'loginTime') {
