@@ -38,7 +38,7 @@
 							:clearable="false"
 							value-format="timestamp"
 							style="width: 382px"
-                            :default-time="defaultTime"
+							:default-time="defaultTime"
 						></el-date-picker>
 					</el-form-item>
 					<el-form-item label="会员账号:" prop="userName">
@@ -82,7 +82,7 @@
 							clearable
 							style="width: 180px"
 							maxlength="25"
-                            oninput="value=value.replace(/[^\d]/g,'')"
+							oninput="value=value.replace(/[^\d]/g,'')"
 							@keyup.enter.native="enterSearch"
 						></el-input>
 					</el-form-item>
@@ -221,9 +221,9 @@
 				<el-pagination
 					v-show="!!total"
 					:current-page.sync="pageNum"
-                    class="pageValue"
+					class="pageValue"
 					background
-        			layout="total, sizes,prev, pager, next, jumper"
+					layout="total, sizes,prev, pager, next, jumper"
 					:page-size="pageSize"
 					:page-sizes="$store.getters.pageSizes"
 					:total="total"
@@ -268,10 +268,7 @@ export default {
 	},
 	computed: {
 		bindType() {
-			return [
-				{ description: '全部', code: undefined },
-				...this.globalDics.bindType
-			]
+			return this.globalDics.bindType
 		}
 	},
 	mounted() {},
@@ -322,6 +319,7 @@ export default {
 			}, 1000)
 		},
 		reset() {
+		    this.pageNum = 1
 			this.$refs['form'].resetFields()
 			this.queryData = {
 				operateType: '',

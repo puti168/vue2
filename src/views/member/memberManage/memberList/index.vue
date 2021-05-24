@@ -523,7 +523,7 @@
 				</el-table>
 				<!-- 分页 -->
 				<el-pagination
-					v-show="!!dataList.length"
+					v-show="!!total"
 					class="pageValue"
 					:current-page.sync="pageNum"
 					background
@@ -660,8 +660,8 @@ export default {
 					} = res
 					if (code === 200) {
 						this.loading = false
-						this.dataList = record || []
-						this.total = totalRecord || 0
+						this.dataList = record
+						this.total = totalRecord
 					} else {
 						this.loading = false
 						this.$message({
