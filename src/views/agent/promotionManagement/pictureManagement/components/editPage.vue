@@ -205,6 +205,12 @@ export default {
 					this.queryData = {
 						...newData
 					}
+					if (this.queryData.imageAddress) {
+						this.$nextTick(() => {
+							this.$refs.imgUpload.state = 'image'
+							this.$refs.imgUpload.fileUrl = newData.imageAddress
+						})
+					}
 					this.updateStatus = true
 				} else {
 					this.updateStatus = false
@@ -250,7 +256,7 @@ export default {
 									showCancelButton: false
 								})
 								this.reset()
-                                this.$refs.imgUpload.clearFile()
+								this.$refs.imgUpload.clearFile()
 							} else {
 								this.$message({
 									message: msg,
