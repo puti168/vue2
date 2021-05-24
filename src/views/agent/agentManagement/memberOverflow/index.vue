@@ -311,6 +311,7 @@ export default {
       this.dialogVisible = true
     },
     uploadFile(file) {
+      this.isSub = true
       console.log('触发了change事件')
       const curFile = file.raw
       const formData = new FormData()
@@ -319,6 +320,7 @@ export default {
       this.$api
         .imageUpload(formData)
         .then((res) => {
+          this.isSub = false
           this.picList.push({ key: uid, value: res.data })
           this.$message({
             message: '上传成功!',
@@ -330,13 +332,16 @@ export default {
           //   this.$set(this.form, "imageAddress", res.data);
         })
         .catch(() => {
-          this.$refs.upload.clearFiles()
+          this.isSub = false
+          // this.$refs.upload.clearFiles()
+          const idx = this.$refs.upload.uploadFiles.findIndex((item) => item.uid === uid) // 关键作用代码，去除文件列表失败文件
+          this.$refs.upload.uploadFiles.splice(idx, 1) // 关键作用代码，去除文件列表失败文件
         })
     },
     searchMemeber() {
       const { userName } = this.memberForm
-      this.$refs['memberForm'].validate((valid) => {
-        if (valid) {
+      this.$refs['memberForm'].validateField('userName', (valid) => {
+        if (!valid) {
           this.$api.overflowMemberInfo({ userName: userName }).then((res) => {
             if (res.code === 200 && res.data !== null) {
               this.memberForm.accountType = res.data.accountType + ''
@@ -344,6 +349,8 @@ export default {
               this.isSub = false
             }
           })
+        } else {
+          this.$refs['memberForm'].validateField('uploauserNamedImage')
         }
       })
     },
