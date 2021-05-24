@@ -12,7 +12,7 @@ const member = [
 		title: '会员管理'
 	},
 	{
-		id: '3',
+		id: '124',
 		parentId: '2',
 		icon: 'bb_accountInfo',
 		title: '银行卡/虚拟币管理'
@@ -52,26 +52,41 @@ const member = [
 		title: '会员注册信息',
 		name: 'registerInfo'
 	},
-	{
-		id: '8',
-		parentId: '3',
-		path: '/member/memberManage/bankRecord',
-		title: '会员银行卡记录',
-		name: 'bankRecord'
-	},
-	{
-		id: '9',
-		parentId: '3',
-		path: '/member/memberManage/virtualRecord',
-		title: '会员虚拟币账号记录',
-		name: 'virtualRecord'
-	},
+
 	{
 		id: '10',
 		parentId: '3',
 		path: '/member/memberManage/memberLogin',
 		title: '会员登录日志',
 		name: 'memberLogin'
+	},
+	{
+		id: '125',
+		parentId: '124',
+		path: '/member/bankAndVirtual/memberBankManagement',
+		title: '会员银行卡管理',
+		name: 'bankRecord'
+	},
+	{
+		id: '126',
+		parentId: '124',
+		path: '/member/bankAndVirtual/memberVirtualManagement',
+		title: '会员虚拟币账号管理',
+		name: 'virtualRecord'
+	},
+	{
+		id: '127',
+		parentId: '124',
+		path: '/member/bankAndVirtual/bankRecord',
+		title: '会员银行卡记录',
+		name: 'bankRecord'
+	},
+	{
+		id: '128',
+		parentId: '124',
+		path: '/member/bankAndVirtual/virtualRecord',
+		title: '会员虚拟币账号记录',
+		name: 'virtualRecord'
 	},
 	{
 		id: '12',
