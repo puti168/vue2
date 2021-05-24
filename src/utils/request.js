@@ -38,6 +38,7 @@ service.interceptors.request.use(
 			// please modify it according to the actual situation
 			config.headers['X-Request-Token'] = getToken()
 			config.headers['X-Request-Sys'] = 1
+			config.headers['Content-Type'] = 'application/json;charset=UTF-8'
 		}
 		config.headers['X-Request-Browser'] = Finger.get()
 		config.headers['key_param'] =
@@ -61,12 +62,18 @@ service.interceptors.request.use(
 			const timestamp = new Date().getTime() + ''
 			const sign = md5(Finger.get() + nonce + timestamp)
 			// console.log('nonce, timestamp:', nonce, timestamp)
+			config.onUploadProgress = (progressEvent) => {
+				const complete =
+					((progressEvent.loaded / progressEvent.total) * 100) | 0
+				if (config.cb) {
+					config.cb(complete)
+				}
+			}
 			config.headers['ob-nonce'] = nonce
 			// 上传图片不处理
-			if (!config.url.includes('/gameManager/upload')) {
-				config.headers['Content-Type'] = 'application/json;charset=UTF-8'
-				config.data = JSON.stringify(config.data)
-			}
+			// if (!config.url.includes('/gameManager/upload')) {
+			// 	config.data = JSON.stringify(config.data)
+			// }
 			config.headers['ob-timestamp'] = timestamp
 			config.headers['ob-sign'] = sign
 			// config.headers['zr-encrypted'] = false

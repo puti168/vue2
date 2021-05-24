@@ -72,7 +72,7 @@
 						></el-input>
 					</el-form-item>
 					<el-form-item label="图片上传" prop="imgUrl">
-						<upload
+						<UploadItem
 							ref="imgUpload"
 							:upload-file-type="'image/jpeg'"
 							:platform="'PC'"
@@ -81,9 +81,13 @@
 							@startUpoladItem="handleStartUpload"
 							@deleteUpoladItem="handleDeleteUpload"
 							@upoladItemDefeat="handleUploadDefeat"
-						></upload>
+						></UploadItem>
+<!--                        <Upload-->
+<!--                            :nowImage="queryData.imageAddress"-->
+<!--                            @uploadSuccess="uploadSuccess"-->
+<!--                        ></Upload>-->
 						<p v-if="imgTip" class="imgTip">
-							请上传图片！图片格式仅支持png,图片尺寸： ？？ 图片大小不超过？？
+							请上传图片！图片格式仅支持png,jpg,图片大小不超过2MB
 						</p>
 					</el-form-item>
 					<el-form-item label="审核信息:">
@@ -106,13 +110,13 @@
 <script>
 import list from '@/mixins/list'
 import { isHaveEmoji, notSpecial2 } from '@/utils/validate'
-import Upload from './uploadItem'
+import UploadItem from './uploadItem'
 // import Sortable from 'sortablejs'
 // import Transfer from '@/components/transfer'
 
 export default {
 	name: 'EditPage',
-	components: { Upload },
+	components: { UploadItem },
 	mixins: [list],
 	props: {
 		editData: {
@@ -209,7 +213,15 @@ export default {
 					console.log('this.queryData', this.queryData)
 				} else {
 					this.updateStatus = false
-					this.reset()
+                    this.queryData = {
+                        imageName: undefined,
+                        imageSize: undefined,
+                        imageType: undefined,
+                        displayOrder: undefined,
+                        imageAddress: null,
+                        remark: undefined,
+                        id: undefined
+                    }
 				}
 			},
 			deep: true,
@@ -263,7 +275,7 @@ export default {
 		},
 		reset() {
 			this.$refs['form'].resetFields()
-			this.form = {
+			this.queryData = {
 				imageName: undefined,
 				imageSize: undefined,
 				imageType: undefined,
@@ -287,7 +299,11 @@ export default {
 		handleDeleteUpload() {
 			this.queryData.imageAddress = ''
 			this.$message.warning('图片已被移除')
-		}
+		},
+        uploadSuccess(data) {
+		    console.log('data', data)
+            this.$set(this.queryData, 'imageAddress', data)
+        }
 	}
 }
 </script>
