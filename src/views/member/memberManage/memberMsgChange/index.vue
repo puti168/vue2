@@ -1,310 +1,315 @@
 <template>
-  <div class="game-container report-container">
-    <div class="view-container dealer-container">
-        <h1>会员信息变更</h1>
-      <div class="params">
-        <el-form ref="form" :inline="true" :model="queryData">
-          <el-form-item label="登录时间:">
-            <el-date-picker
-              v-model="loginTime"
-              size="medium"
-              :picker-options="pickerOptions"
-              format="yyyy-MM-dd HH:mm:ss"
-              type="datetimerange"
-              range-separator="-"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-              align="right"
-              :clearable="false"
-              :default-time="defaultTime"
-              style="width: 375px"
-            ></el-date-picker>
-          </el-form-item>
-          <el-form-item label="代理账号:" prop="userName">
-            <el-input
-              v-model="queryData.userName"
-              clearable
-              :maxlength="11"
-              size="medium"
-              style="width: 180px; margin-right: 20px"
-              placeholder="请输入"
-              :disabled="loading"
-              @keyup.enter.native="enterSearch"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="代理类型:" class="tagheight" prop="accountType">
-            <el-select
-              v-model="queryData.accountType"
-              style="width: 280px"
-              multiple
-              placeholder="默认选择全部"
-              :popper-append-to-body="false"
-            >
-              <el-option
-                v-for="item in accountType"
-                :key="item.code"
-                :label="item.description"
-                :value="item.code"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="登录状态:" class="tagheight" prop="loginStatus">
-            <el-select
-              v-model="queryData.loginStatus"
-              style="width: 280px"
-              clearable
-              placeholder="默认选择全部"
-              :popper-append-to-body="false"
-            >
-              <el-option
-                v-for="item in loginStatusType"
-                :key="item.description"
-                :label="item.description"
-                :value="item.code"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="登录IP:" prop="loginIp">
-            <el-input
-              v-model="queryData.loginIp"
-              clearable
-              :maxlength="15"
-              size="medium"
-              style="width: 180px"
-              placeholder="请输入内容"
-              :disabled="loading"
-              @keyup.enter.native="enterSearch"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="IP归属地:" prop="ipAttribution">
-            <el-input
-              v-model="queryData.ipAttribution"
-              clearable
-              :maxlength="10"
-              size="medium"
-              style="width: 180px"
-              placeholder="请输入内容"
-              :disabled="loading"
-              @keyup.enter.native="enterSearch"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="登录终端:" class="tagheight" prop="deviceType">
-            <el-select
-              v-model="queryData.deviceType"
-              style="width: 280px"
-              multiple
-              placeholder="默认选择全部"
-              :popper-append-to-body="false"
-            >
-              <el-option
-                v-for="item in loginDeviceType"
-                :key="item.code"
-                :label="item.description"
-                :value="item.code"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="终端设备号:" prop="deviceNo">
-            <el-input
-              v-model="queryData.deviceNo"
-              clearable
-              :maxlength="50"
-              size="medium"
-              style="width: 180px"
-              placeholder="请输入内容"
-              :disabled="loading"
-              @keyup.enter.native="enterSearch"
-            ></el-input>
-          </el-form-item>
-          <el-form-item>
-            <el-button
-              type="primary"
-              icon="el-icon-search"
-              :disabled="loading"
-              size="medium"
-              @click="search"
-            >
-              查询
-            </el-button>
-            <el-button
-              icon="el-icon-refresh-left"
-              :disabled="loading"
-              size="medium"
-              @click="reset"
-            >
-              重置
-            </el-button>
-          </el-form-item>
-        </el-form>
-      </div>
-      <div class="content">
-        <el-table
-          v-loading="loading"
-          border
-          size="mini"
-          class="small-size-table"
-          :data="tableData"
-          style="width: 100%"
-          :header-cell-style="getRowClass"
-          @sort-change="_changeTableSort"
-        >
-          <el-table-column
-            prop="loginTime"
-            align="center"
-            label="登录时间"
-            sortable="custom"
-          ></el-table-column>
-          <el-table-column prop="loginStatus" align="center" label="登录状态">
-            <template slot-scope="scope">
-              {{ typeFilter(scope.row.loginStatus, "loginStatusType") }}
-            </template>
-          </el-table-column>
-          <el-table-column prop="userName" align="center" label="代理账号">
-            <template slot-scope="scope">
-              <Copy v-if="!!scope.row.userName" :title="scope.row.userName" :copy="copy">
-                {{ scope.row.userName }}
-              </Copy>
-              <span v-else>-</span>
-            </template>
-          </el-table-column>
-          <el-table-column prop="accountType" align="center" label="代理类型">
-            <template slot-scope="scope">
-              {{ typeFilter(scope.row.accountType, "accountType") }}
-            </template>
-          </el-table-column>
-          <el-table-column prop="loginIp" align="center" label="登录IP"></el-table-column>
-          <el-table-column
-            prop="ipAttribution"
-            align="center"
-            label="IP归属地"
-          ></el-table-column>
-          <el-table-column prop="deviceType" align="center" label="登录终端">
-            <template slot-scope="scope">
-              {{ typeFilter(scope.row.deviceType, "loginDeviceType") }}
-            </template>
-          </el-table-column>
-          <el-table-column
-            prop="deviceNo"
-            align="center"
-            label="终端设备号"
-          ></el-table-column>
-          <el-table-column
-            prop="loginReference"
-            align="center"
-            label="登录地址"
-          ></el-table-column>
-          <el-table-column
-            prop="browseContent"
-            align="center"
-            label="设备版本"
-          ></el-table-column>
-          <el-table-column
-            prop="loginError"
-            align="center"
-            label="备注"
-          ></el-table-column>
-        </el-table>
-        <!-- 分页 -->
-        <el-pagination
-          :current-page.sync="pageNum"
-          class="pageValue"
-          background
-          layout="total, sizes,prev, pager, next, jumper"
-          :page-size="pageSize"
-          :page-sizes="pageSizes"
-          :total="total"
-          @current-change="handleCurrentChange"
-          @size-change="handleSizeChange"
-        ></el-pagination>
-      </div>
-    </div>
-  </div>
+	<div class="game-container report-container">
+		<div class="params">
+			<el-form ref="form" :inline="true" :model="queryData">
+				<el-form-item label="操作时间:">
+					<el-date-picker
+						v-model="formTime.time"
+						size="medium"
+						:picker-options="pickerOptions"
+						format="yyyy-MM-dd HH:mm:ss"
+						type="datetimerange"
+						range-separator="-"
+						start-placeholder="开始日期"
+						end-placeholder="结束日期"
+						align="right"
+						:clearable="false"
+						:default-time="defaultTime"
+					></el-date-picker>
+				</el-form-item>
+				<el-form-item label="会员账号:">
+					<el-input
+						v-model="queryData.userName"
+						clearable
+						size="medium"
+						:maxlength="11"
+						style="width: 180px"
+						placeholder="请输入"
+						@keyup.enter.native="enterSearch"
+					></el-input>
+				</el-form-item>
+				<el-form-item label="账号类型:">
+					<el-select
+						v-model="queryData.accountType"
+						style="width: 300px"
+						multiple
+						placeholder="默认选择全部"
+						:popper-append-to-body="false"
+					>
+						<el-option
+							v-for="item in accountType"
+							:key="item.code"
+							:label="item.description"
+							:value="item.code"
+						></el-option>
+					</el-select>
+				</el-form-item>
+
+				<el-form-item label="变更类型:">
+					<el-select
+						v-model="queryData.operateType"
+						style="width: 180px"
+						:popper-append-to-body="false"
+					>
+						<el-option label="全部" value></el-option>
+						<el-option
+							v-for="item in bindType"
+							:key="item.code"
+							:label="item.description"
+							:value="item.code"
+						></el-option>
+					</el-select>
+				</el-form-item>
+				<el-form-item label="操作人:">
+					<el-input
+						v-model="queryData.parentProxyName"
+						clearable
+						size="medium"
+						:maxlength="11"
+						style="width: 180px"
+						placeholder="请输入"
+						@keyup.enter.native="enterSearch"
+					></el-input>
+				</el-form-item>
+				<el-form-item style="margin-left: 30px">
+					<el-button
+						type="primary"
+						icon="el-icon-search"
+						:disabled="loading"
+						size="medium"
+						@click="search"
+					>
+						查询
+					</el-button>
+					<el-button
+						icon="el-icon-refresh-left"
+						:disabled="loading"
+						size="medium"
+						@click="reset"
+					>
+						重置
+					</el-button>
+				</el-form-item>
+			</el-form>
+		</div>
+		<div class="view-container dealer-container">
+			<div class="content">
+				<el-table
+					v-loading="loading"
+					border
+					size="mini"
+					class="small-size-table"
+					:data="dataList"
+					style="width: 100%"
+					:header-cell-style="getRowClass"
+					@sort-change="changeTableSort"
+				>
+					<el-table-column
+						prop="createDt"
+						align="center"
+						label="操作时间"
+						sortable="custom"
+					></el-table-column>
+					<el-table-column
+						v-slot="scope"
+						prop="userName"
+						align="center"
+						label="会员账号"
+					>
+						<Copy :title="scope.row.userName" :copy="copy" />
+					</el-table-column>
+					<el-table-column align="center" label="账号类型">
+						<template slot-scope="scope">
+							<p>{{ typeFilter(scope.row.accountType, 'accountType') }}</p>
+						</template>
+					</el-table-column>
+					<el-table-column prop="operateType" align="center" label="账号类型">
+						<template slot-scope="scope">
+							<p>{{ typeFilter(scope.row.operateType, 'bindType') }}</p>
+						</template>
+					</el-table-column>
+					<el-table-column prop="operateType" align="center" label="变更类型">
+						<template slot-scope="scope">
+							<p>{{ typeFilter(scope.row.operateType, 'bindType') }}</p>
+						</template>
+					</el-table-column>
+					<el-table-column prop="operateType" align="center" label="变更前信息">
+						<template slot-scope="scope">
+							<p>{{ typeFilter(scope.row.operateType, 'bindType') }}</p>
+						</template>
+					</el-table-column>
+					<el-table-column prop="operateType" align="center" label="变更后信息">
+						<template slot-scope="scope">
+							<p>{{ typeFilter(scope.row.operateType, 'bindType') }}</p>
+						</template>
+					</el-table-column>
+					<el-table-column prop="operateType" align="center" label="提交信息">
+						<template slot-scope="scope">
+							<p>{{ typeFilter(scope.row.operateType, 'bindType') }}</p>
+						</template>
+					</el-table-column>
+					<el-table-column
+						prop="operateType"
+						align="center"
+						width="100"
+						label="操作人"
+					>
+						<template slot-scope="scope">
+							<p>{{ typeFilter(scope.row.operateType, 'bindType') }}</p>
+						</template>
+					</el-table-column>
+				</el-table>
+				<!-- 分页 -->
+				<el-pagination
+					:current-page.sync="pageNum"
+					class="pageValue"
+					background
+					layout="total, sizes,prev, pager, next, jumper"
+					:page-size="pageSize"
+					:page-sizes="pageSizes"
+					:total="total"
+					@current-change="handleCurrentChange"
+					@size-change="handleSizeChange"
+				></el-pagination>
+			</div>
+		</div>
+	</div>
 </template>
 
 <script>
 import list from '@/mixins/list'
 import dayjs from 'dayjs'
 import { routerNames } from '@/utils/consts'
-const startTime = dayjs().startOf('day').valueOf()
-const endTime = dayjs().endOf('day').valueOf()
-
+const end = dayjs()
+	.endOf('day')
+	.valueOf()
+const start = dayjs()
+	.startOf('day')
+	.valueOf()
 export default {
-  name: routerNames.memberMsgChange,
-  components: {},
-  mixins: [list],
-  data() {
-    return {
-      queryData: {},
-      loginTime: [startTime, endTime],
-      now: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
-      tableData: []
-    }
-  },
-  computed: {
-    loginDeviceType() {
-      return this.globalDics.loginDeviceType
-    },
-    loginStatusType() {
-      return this.globalDics.loginStatusType
-    },
-    accountType() {
-      return this.globalDics.accountType
-    }
-  },
-  mounted() {},
-  methods: {
-    loadData() {
-      this.loading = true
-      const create = this.loginTime || []
-      const [startTime, endTime] = create
-      let params = {
-        ...this.queryData,
-        loginStartTime: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : '',
-        loginEndTime: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
-      }
-      params = {
-        ...this.getParams(params)
-      }
-      this.$api
-        .getProxyDetailProxyLoginLog(params)
-        .then((res) => {
-          this.now = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
-          if (res.code === 200) {
-            this.tableData = res.data.record
-            this.total = res.data.totalRecord
-            this.summary = res.data.summary !== null ? res.data.summary : {}
-          }
-          this.loading = false
-        })
-        .catch(() => {
-          this.loading = false
-        })
-    },
-    reset() {
-      this.queryData = {}
-    },
-    _changeTableSort({ column, prop, order }) {
-      if (prop === 'loginTime') {
-        prop = 1
-      }
-      this.queryData.orderKey = prop
-      if (order === 'ascending') {
-        // 升序
-        this.queryData.orderType = 'asc'
-      } else if (column.order === 'descending') {
-        // 降序
-        this.queryData.orderType = 'desc'
-      }
-      this.loadData()
-    }
-  }
+	name: routerNames.virtualRecord,
+	components: {},
+	mixins: [list],
+	data() {
+		return {
+			queryData: {
+				accountType: '',
+				bankName: '',
+				dataType: 2,
+				operateType: '',
+				orderType: undefined,
+				parentProxyName: '',
+				userName: '',
+				virtualAddress: '',
+				virtualKind: [],
+				virtualProtocol: []
+			},
+			formTime: {
+				time: [start, end]
+			},
+			dataList: [],
+			title: ''
+		}
+	},
+	computed: {
+		accountType() {
+			return this.globalDics.accountType
+		},
+		virtualType() {
+			return this.globalDics.virtualType
+		},
+		virtualProtocolType() {
+			return this.globalDics.virtualProtocolType
+		},
+		bindType() {
+			return this.globalDics.bindType
+		}
+	},
+	mounted() {},
+	methods: {
+		loadData() {
+			const [startTime, endTime] = this.formTime.time || []
+			let params = {
+				...this.queryData,
+				createDtStart: startTime
+					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
+					: '',
+				createDtEnd: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
+			}
+			if (!params.createDtStart || !params.createDtEnd) {
+				this.$message({
+					message: '操作时间参数必传',
+					type: 'info'
+				})
+				return
+			}
+			params = {
+				...this.getParams(params)
+			}
+			this.loading = true
+
+			this.$api
+				.bankRecordListAPI(params)
+				.then((res) => {
+					if (res.code === 200) {
+						const response = res.data
+						this.loading = false
+						this.dataList = response.record
+						this.total = response.totalRecord
+					} else {
+						this.loading = false
+						this.$message({
+							message: res.msg,
+							type: 'error'
+						})
+					}
+				})
+				.catch(() => {
+					this.loading = false
+				})
+		},
+		changeTableSort({ column, prop, order }) {
+			this.pageNum = 1
+			const orderParams = this.checkOrderParams.get(prop)
+			if (orderParams) {
+				if (order === 'ascending') {
+					// 升序
+					this.queryData.orderType = 'asc'
+				} else if (column.order === 'descending') {
+					// 降序
+					this.queryData.orderType = 'desc'
+				}
+				this.loadData()
+			}
+		},
+		reset() {
+			this.queryData = {
+				accountType: [],
+				bankName: '',
+				dataType: 2,
+				operateType: '',
+				orderType: '',
+				parentProxyName: '',
+				userName: '',
+				virtualAddress: '',
+				virtualKind: [],
+				virtualProtocol: []
+			}
+			this.pageNum = 1
+			this.formTime.time = [start, end]
+			this.loadData()
+		},
+		handleCurrentChange() {
+			this.loadData()
+		}
+	}
 }
 </script>
 
 <style lang="scss" scoped>
 /deep/.el-dialog__header {
-  text-align: center;
-  color: #909399;
-  font-weight: 700;
+	text-align: center;
+	color: #909399;
+	font-weight: 700;
 }
 </style>
