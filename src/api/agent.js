@@ -254,14 +254,12 @@ export function agentPictureListUpdateAPI(data) {
 		data
 	})
 }
-export function agentImageUploadAPI(data) {
+export function agentImageUploadAPI(data, cb) {
 	return request({
 		url: '/materialImage/upload',
 		method: 'post',
 		data,
-		headers: {
-			'Content-Type': 'multipart/form-data'
-		}
+		cb
 	})
 }
 
