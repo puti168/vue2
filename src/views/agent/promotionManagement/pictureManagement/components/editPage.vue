@@ -71,7 +71,7 @@
 							style="width: 365px"
 						></el-input>
 					</el-form-item>
-					<el-form-item label="图片上传" prop="imgUrl">
+					<el-form-item label="图片上传" prop="imageAddress">
 						<UploadItem
 							ref="imgUpload"
 							:upload-file-type="'image/jpeg'"
@@ -82,10 +82,6 @@
 							@deleteUpoladItem="handleDeleteUpload"
 							@upoladItemDefeat="handleUploadDefeat"
 						></UploadItem>
-<!--                        <Upload-->
-<!--                            :nowImage="queryData.imageAddress"-->
-<!--                            @uploadSuccess="uploadSuccess"-->
-<!--                        ></Upload>-->
 						<p v-if="imgTip" class="imgTip">
 							请上传图片！图片格式仅支持png,jpg,图片大小不超过2MB
 						</p>
@@ -111,8 +107,6 @@
 import list from '@/mixins/list'
 import { isHaveEmoji, notSpecial2 } from '@/utils/validate'
 import UploadItem from './uploadItem'
-// import Sortable from 'sortablejs'
-// import Transfer from '@/components/transfer'
 
 export default {
 	name: 'EditPage',
@@ -210,18 +204,17 @@ export default {
 						...newData
 					}
 					this.updateStatus = true
-					console.log('this.queryData', this.queryData)
 				} else {
 					this.updateStatus = false
-                    this.queryData = {
-                        imageName: undefined,
-                        imageSize: undefined,
-                        imageType: undefined,
-                        displayOrder: undefined,
-                        imageAddress: null,
-                        remark: undefined,
-                        id: undefined
-                    }
+					this.queryData = {
+						imageName: undefined,
+						imageSize: undefined,
+						imageType: undefined,
+						displayOrder: undefined,
+						imageAddress: null,
+						remark: undefined,
+						id: undefined
+					}
 				}
 			},
 			deep: true,
@@ -243,30 +236,29 @@ export default {
 				? this.$api.agentPictureListUpdateAPI
 				: this.$api.agentPictureListCreateAPI
 			this.$refs['form'].validate((valid) => {
-				handle(params)
-					.then((res) => {
-						this.loading = false
-						const { code, msg } = res
-						if (code === 200) {
-							this.$confirm(`${this.updateStatus ? '更新' : '新增'}成功`, {
-								confirmButtonText: '确定',
-								type: 'success',
-								showCancelButton: false
-							})
-							this.reset()
-						} else {
-							this.$message({
-								message: msg,
-								type: 'error'
-							})
-						}
-					})
-					.catch(() => {
-						this.loading = false
-					})
-				console.log('valid', valid)
-				// if (valid) {
-				// }
+				if (valid && this.loading) {
+					handle(params)
+						.then((res) => {
+							this.loading = false
+							const { code, msg } = res
+							if (code === 200) {
+								this.$confirm(`${this.updateStatus ? '更新' : '新增'}成功`, {
+									confirmButtonText: '确定',
+									type: 'success',
+									showCancelButton: false
+								})
+								this.reset()
+							} else {
+								this.$message({
+									message: msg,
+									type: 'error'
+								})
+							}
+						})
+						.catch(() => {
+							this.loading = false
+						})
+				}
 			})
 
 			setTimeout(() => {
@@ -300,10 +292,10 @@ export default {
 			this.queryData.imageAddress = ''
 			this.$message.warning('图片已被移除')
 		},
-        uploadSuccess(data) {
-		    console.log('data', data)
-            this.$set(this.queryData, 'imageAddress', data)
-        }
+		uploadSuccess(data) {
+			console.log('data', data)
+			this.$set(this.queryData, 'imageAddress', data)
+		}
 	}
 }
 </script>
