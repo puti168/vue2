@@ -159,6 +159,8 @@ export default {
 					callback(new Error('不支持空格及特殊字符'))
 				} else if (isRmoji) {
 					callback(new Error('不支持表情'))
+				} else if (!value) {
+					callback(new Error('请输入图片名称'))
 				} else {
 					callback()
 				}
@@ -248,6 +250,7 @@ export default {
 									showCancelButton: false
 								})
 								this.reset()
+                                this.$refs.imgUpload.clearFile()
 							} else {
 								this.$message({
 									message: msg,
@@ -291,10 +294,6 @@ export default {
 		handleDeleteUpload() {
 			this.queryData.imageAddress = ''
 			this.$message.warning('图片已被移除')
-		},
-		uploadSuccess(data) {
-			console.log('data', data)
-			this.$set(this.queryData, 'imageAddress', data)
 		}
 	}
 }
