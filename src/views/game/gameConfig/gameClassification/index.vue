@@ -319,7 +319,7 @@
 								</el-button>
 								<el-button
 									type="warning"
-									icon="el-icon-edit"
+									icon="el-icon-delete"
 									size="medium"
 									@click="deleteRow(scope.row)"
 								>
