@@ -509,7 +509,7 @@ export default {
 			return this.globalDics.accountStatusType
 		},
 		accountTypeArr() {
-			return this.globalDics.proxyAccountType
+			return this.globalDics.accountType
 		},
 		entrAuthorityTypeArr() {
 			return this.globalDics.entrAuthorityType
