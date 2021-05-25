@@ -93,7 +93,7 @@ export default {
         return {
             loading: false,
             form: {
-                accountType: '2',
+                accountType: '4',
                 userName: '',
                 password: '',
                 applyInfo: ''
@@ -203,7 +203,7 @@ export default {
         reset() {
             this.$refs['form'].resetFields()
             this.form = {
-                accountType: '2',
+                accountType: '4',
                 userName: '',
                 password: '',
                 applyInfo: ''
