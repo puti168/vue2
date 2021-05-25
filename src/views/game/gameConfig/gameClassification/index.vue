@@ -191,7 +191,7 @@
 							width="150px"
 						>
 							<template slot-scope="scope">
-								<div v-if="scope.row.clientDisplay">
+								<div v-if="scope.row.clientDisplay" class="normalRgba">
 									显示
 								</div>
 								<div
