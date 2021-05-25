@@ -16,7 +16,7 @@
 				<p class="name">代理注册信息</p>
 				<div class="review-flex">
 					<div>注册时间: {{ list.createDt }}</div>
-					<div>代理类型: {{ typeFilter(list.accountType, 'proxyAccountType') }}</div>
+					<div>代理类型: {{ typeFilter(list.accountType, 'accountType') }}</div>
 					<div>上次登录时间: {{ list.lastLoginTime }}</div>
 					<div>注册端:  {{ typeFilter(list.deviceType, "deviceType") }}</div>
 				</div>

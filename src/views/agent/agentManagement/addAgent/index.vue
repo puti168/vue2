@@ -102,7 +102,7 @@ export default {
     },
     computed: {
         accountTypeArr() {
-            return this.globalDics.proxyAccountType
+            return this.globalDics.accountType
         },
         rules() {
             const reg1 = /^[A-Za-z]{1}(?=(.*[a-zA-Z]){1,})(?=(.*[0-9]){1,})[0-9A-Za-z]{3,10}$/

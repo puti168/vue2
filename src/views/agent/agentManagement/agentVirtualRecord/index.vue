@@ -246,7 +246,7 @@ export default {
 	},
 	computed: {
 		accountTypeArr() {
-			return this.globalDics.proxyAccountType
+			return this.globalDics.accountType
 		},
 		virtualProtocolTypeArr() {
 			return this.globalDics.virtualProtocolType
