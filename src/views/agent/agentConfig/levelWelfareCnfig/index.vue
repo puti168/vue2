@@ -4,7 +4,7 @@
       <el-tab-pane label="代理等级配置" name="agentLevelConfig">
         <agent-level-config />
       </el-tab-pane>
-      <el-tab-pane label="反佣等级配置" name="backCommissionLevelConfig">
+      <el-tab-pane label="返佣等级配置" name="backCommissionLevelConfig">
         <back-commission-level-config />
       </el-tab-pane>
     </el-tabs>
