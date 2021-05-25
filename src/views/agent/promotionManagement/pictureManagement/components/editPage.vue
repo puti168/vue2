@@ -68,6 +68,7 @@
 							clearable
 							oninput="value=value.replace(/[^\d]/g,'')"
 							maxlength="12"
+                            :disabled="!updateStatus"
 							style="width: 365px"
 						></el-input>
 					</el-form-item>
@@ -86,7 +87,7 @@
 							请上传图片！图片格式仅支持png,jpg,图片大小不超过2MB
 						</p>
 					</el-form-item>
-					<el-form-item label="审核信息:">
+					<el-form-item label="审核信息:" prop="remark">
 						<el-input
 							v-model="queryData.remark"
 							size="medium"
@@ -94,6 +95,7 @@
 							placeholder="请输入"
 							clearable
 							maxlength="50"
+                            show-word-limit
 							style="width: 365px"
 						></el-input>
 					</el-form-item>
@@ -115,10 +117,9 @@ export default {
 	props: {
 		editData: {
 			type: Object,
-			default: function() {
-				return {}
-			}
-		}
+			default: () => {}
+		},
+		lastSortId: [Number]
 	},
 	data() {
 		return {
@@ -189,7 +190,14 @@ export default {
 						message: '请输入排序',
 						trigger: 'blur'
 					}
-				]
+				],
+                remark: [
+                    {
+                        required: this.updateStatus,
+                        message: '请填入备注',
+                        trigger: 'blur'
+                    }
+                ]
 			}
 		}
 	},
@@ -229,7 +237,13 @@ export default {
 			immediate: true
 		}
 	},
-	mounted() {},
+	mounted() {
+		console.log('this.updateStatus', this.updateStatus)
+		console.log('this.updateStatus', this.lastSortId)
+		this.$nextTick(() => {
+			!this.updateStatus ? (this.queryData.displayOrder = this.lastSortId) : ''
+		})
+	},
 	updated() {},
 	methods: {
 		back() {

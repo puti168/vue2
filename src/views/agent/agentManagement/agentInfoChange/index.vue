@@ -34,7 +34,7 @@
           <el-form-item label="代理类型:" class="tagheight" prop="accountType">
             <el-select
               v-model="queryData.accountType"
-              style="width: 280px"
+              style="width: 300px"
               multiple
               placeholder="默认选择全部"
               :popper-append-to-body="false"
@@ -50,7 +50,7 @@
           <el-form-item label="变更类型:" class="tagheight">
             <el-select
               v-model="queryData.applyType"
-              style="width: 280px"
+              style="width: 300px"
               multiple
               placeholder="默认选择全部"
               :popper-append-to-body="false"

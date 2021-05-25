@@ -48,7 +48,7 @@
 									placeholder="请选择"
 									multiple
 									clearable
-									style="width: 365px"
+									style="width: 300px"
 								>
 									<el-option
 										v-for="item in terminalnType"
@@ -100,7 +100,7 @@
 									placeholder="请选择"
 									multiple
 									clearable
-									style="width: 365px"
+									style="width: 300px"
 								>
 									<el-option
 										v-for="item in gameManageList"
@@ -119,7 +119,7 @@
 									placeholder="请选择"
 									multiple
 									clearable
-									style="width: 365px"
+									style="width: 300px"
 								>
 									<el-option
 										v-for="item in gameModuleNameList"
@@ -391,7 +391,12 @@ export default {
 					arr.gameIcon = arr.gameIcon + ''
 				}
 				this.nowImage = arr.imageAddress
-				this.form = arr
+				if (!arr.gameRebateRate) {
+					delete arr.gameRebateRate
+				}
+				this.form = JSON.parse(JSON.stringify(arr))
+				console.log(this.form)
+				console.log(arr)
 			},
 			immediate: true,
 			deep: true

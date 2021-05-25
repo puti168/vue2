@@ -80,7 +80,7 @@
 								></el-option>
 							</el-select>
 						</el-form-item>
-						<el-form-item label="最近操作时间:">
+						<el-form-item label="最近操作时间:" label-width="120px">
 							<el-date-picker
 								v-model="queryData.updatedDt"
 								size="medium"
@@ -147,7 +147,7 @@
 						:data="dataList"
 						style="width: 100%"
 						:header-cell-style="getRowClass"
-						@sort-change="changeTableSort"
+                        @sort-change="_changeTableSort"
 					>
 						<el-table-column prop="displayOrder" align="center" label="排序">
 							<template slot-scope="scope">
@@ -289,7 +289,7 @@
 				<img :src="imageAddress" />
 			</el-dialog>
 		</div>
-		<editPage v-else :editData="editData" @back="back"></editPage>
+		<editPage v-else :editData="editData" :lastSortId="lastSortId" @back="back"></editPage>
 	</transition>
 </template>
 
@@ -327,7 +327,8 @@ export default {
 			dialogPictureVisible: false,
 			imageAddress: null,
 			editPage: false,
-			editData: {}
+			editData: {},
+			lastSortId: undefined
 		}
 	},
 	computed: {
@@ -379,6 +380,9 @@ export default {
 						this.loading = false
 						this.dataList = record || []
 						this.total = totalRecord || 0
+						//    计算最后排序
+						this.lastSortId =
+							record && record.length && record[record.length - 1].displayOrder
 					} else {
 						this.loading = false
 						this.$message({
@@ -414,7 +418,7 @@ export default {
 		},
 		back() {
 			this.editPage = false
-            this.editData = {}
+			this.editData = {}
 			this.loadData()
 		},
 		preViewPicture(val) {
@@ -422,6 +426,23 @@ export default {
 			this.imageAddress = imageAddress
 			this.dialogPictureVisible = true
 		},
+        _changeTableSort({ column, prop, order }) {
+            if (prop === 'createdAt') {
+                prop = 1
+            }
+            if (prop === 'updatedAt') {
+                prop = 2
+            }
+            this.queryData.orderKey = prop
+            if (order === 'ascending') {
+                // 升序
+                this.queryData.orderType = 'asc'
+            } else if (column.order === 'descending') {
+                // 降序
+                this.queryData.orderType = 'desc'
+            }
+            this.loadData()
+        },
 		deleteRow(val) {
 			const { id } = val
 			const loading = this.$loading({
@@ -482,8 +503,8 @@ export default {
 	font-weight: 700;
 }
 .imgCenter {
-    img {
-        width: 100%;
-    }
+	img {
+		width: 100%;
+	}
 }
 </style>

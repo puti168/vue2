@@ -129,9 +129,9 @@
           @sort-change="_changeTableSort"
         >
           <el-table-column
+            prop="displayOrder"
             align="center"
             label="排序"
-            type="index"
             width="50px"
           ></el-table-column>
           <el-table-column

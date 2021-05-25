@@ -81,33 +81,41 @@ img {
 	padding: 20px;
 }
 .imgCenter {
-	.el-dialog__body {
-		text-align: center;
+	position: fixed;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.2);
+	z-index: 9999;
+	text-align: center;
+	img {
+		margin: 100px auto;
 	}
 }
 .avatar-uploader .el-upload {
-    border: 1px dashed #d9d9d9;
-    border-radius: 6px;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-  }
-  .avatar-uploader .el-upload:hover {
-    border-color: #409EFF;
-  }
-  .avatar-uploader-icon {
-    font-size: 28px;
-    color: #8c939d;
-    width: 178px;
-    height: 178px;
-    line-height: 178px;
-    text-align: center;
-  }
-  .avatar {
-    width: 178px;
-    height: 178px;
-    display: block;
-  }
+	border: 1px dashed #d9d9d9;
+	border-radius: 6px;
+	cursor: pointer;
+	position: relative;
+	overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+	border-color: #409eff;
+}
+.avatar-uploader-icon {
+	font-size: 28px;
+	color: #8c939d;
+	width: 178px;
+	height: 178px;
+	line-height: 178px;
+	text-align: center;
+}
+.avatar {
+	width: 178px;
+	height: 178px;
+	display: block;
+}
 .game-container {
 	margin: 15px 15px 40px 15px;
 
@@ -207,5 +215,5 @@ img {
 	color: red;
 }
 #nprogress .bar {
-    background: #24DE72 !important; //颜色可修改
+	background: #24de72 !important; //颜色可修改
 }

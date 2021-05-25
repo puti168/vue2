@@ -39,7 +39,7 @@
 					<div>账号: {{ list.userName }}</div>
 					<div>账号状态: {{ typeFilter(list.memberAccountStatus, 'accountStatusType') }}</div>
 					<div>风控层级: {{ list.memberWindControlName }}</div>
-					<div>会员标签: {{ list.auditRemark }}</div>
+					<div>会员标签: {{ list.memberLabelName }}</div>
 				</div>
 				<div class="review-flex">
 					<div>VIP等级: {{ list.memberVipLevel }}</div>
@@ -65,7 +65,7 @@
 					<div>申请理由: {{ list.applyInfo }}</div>
 				</div>
 				<div class="review-flex">
-					<div>申请附图: <img v-for="item in list.list" :key="item.imageAddress" :src="item.imageAddress" class="detail-img"></div>
+					<div>申请附图: <img v-for="item in list.list" :key="item.imageAddress" :src="item.imageAddress" class="detail-img text-link" @click="lookGame(item.imageAddress)"></div>
 				</div>
 			</div>
 			<div class="review-content">
@@ -77,6 +77,9 @@
 				</div>
 			</div>
 		</div>
+			<div v-if="dialogGameVisible" class="imgCenter" @click="closeImage">
+				<img :src="bigImage" />
+			</div>
 		<el-dialog
 			title="提交确认"
 			center
@@ -139,6 +142,8 @@ export default {
 			form: {
 				remark: ''
 			},
+			bigImage: '',
+			dialogGameVisible: false,
 			visible: false,
 			action: false
 		}
@@ -160,10 +165,17 @@ export default {
 		closeFormDialog() {
 			this.visible = false
 		},
+		closeImage() {
+			this.dialogGameVisible = false
+		},
 		confirm(action) {
 			this.remark = ''
 			this.action = action
 			this.visible = true
+		},
+		lookGame(val) {
+			this.dialogGameVisible = true
+			this.bigImage = val
 		},
 		auditOne() {
 			if (this.action) {
@@ -275,6 +287,9 @@ export default {
 	width: 80px;
 	height: 80px;
 	display: inline-block;
+}
+.show-image {
+	max-width: 80%;
 }
 .review-content {
 	width: 100%;

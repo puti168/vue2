@@ -660,36 +660,41 @@ export default {
     },
     // 会员详情-基本信息-概要信息以及个人资料
     getOutlineInfo(val) {
-      this.$api.getOutlineInfo({ userName: val.userName }).then((res) => {
-        if (res.code === 200) {
-          this.outlineInfoList = res.data
-          if (res.data.auditList && res.data.auditList !== null) {
-            this.isshow = false
-            for (let i = 0; i < res.data.auditList.length; i++) {
-              const ele = res.data.auditList[i]
-              for (let j = 0; j < this.editMsgList.length; j++) {
-                const val = this.editMsgList[j].code
-                if (val === ele.applyName) {
-                  this.editMsgList[j].applyStatus = ele.applyStatus
+      this.$api
+        .getOutlineInfo({ userName: val.userName })
+        .then((res) => {
+          if (res.code === 200) {
+            this.outlineInfoList = res.data
+            if (res.data.auditList && res.data.auditList !== null) {
+              this.isshow = false
+              for (let i = 0; i < res.data.auditList.length; i++) {
+                const ele = res.data.auditList[i]
+                for (let j = 0; j < this.editMsgList.length; j++) {
+                  const val = this.editMsgList[j].code
+                  if (val === ele.applyName) {
+                    this.editMsgList[j].applyStatus = ele.applyStatus
+                  }
                 }
               }
+            } else {
+              for (let i = 0; i < this.editMsgList.length; i++) {
+                this.editMsgList[i].applyStatus = ''
+              }
+              this.isshow = false
             }
-          } else {
-            for (let i = 0; i < this.editMsgList.length; i++) {
-              this.editMsgList[i].applyStatus = ''
-            }
-            this.isshow = false
+            this.getVipInfo(res.data.id)
+            const params = { userId: val.userId, pageNum: 1, pageSize: 3 }
+            this.$api.getMemberRemarkList(params).then((res) => {
+              if (res.code === 200) {
+                this.tableList = res.data.record
+              }
+            })
           }
-          this.getVipInfo(res.data.id)
-          const params = { userId: val.userId, pageNum: 1, pageSize: 3 }
-          this.$api.getMemberRemarkList(params).then((res) => {
-            if (res.code === 200) {
-              this.tableList = res.data.record
-            }
-          })
           this.activeL = false
-        }
-      })
+        })
+        .catch(() => {
+          this.activeL = false
+        })
     },
     // vip信息
     getVipInfo(val) {
@@ -771,12 +776,12 @@ export default {
         case '风控层级':
           this.titel = '备注信息：'
           this.editData.windControlId =
-            this.outlineInfoList.windControlId === null
+            this.outlineInfoList.windControlId === '0'
               ? ''
               : this.outlineInfoList.windControlId + ''
           for (let i = 0; i < this.riskLevelList.length; i++) {
             const ele = this.riskLevelList[i]
-            if (val === ele.windControlId) {
+            if (this.editData.windControlId === ele.windControlId) {
               this.editData.windControlName = ele.windControlName
             }
           }
@@ -788,7 +793,7 @@ export default {
               : this.outlineInfoList.labelId + ''
           for (let i = 0; i < this.memberLabelList.length; i++) {
             const ele = this.memberLabelList[i]
-            if (val === ele.labelId) {
+            if (this.editData.labelId === ele.labelId) {
               this.editData.labelName = ele.labelName
             }
           }
