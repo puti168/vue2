@@ -33,7 +33,7 @@
 								<template slot-scope="scope">
 									<p
 										:class="
-											scope.row.status === 1 ? 'successState' : 'dangerState'
+											scope.row.status === 1 ? 'normalRgba' : 'disableRgba'
 										"
 									>
 										{{ scope.row.status === 1 ? '开启中' : '已禁用' }}
@@ -69,8 +69,8 @@
 										size="medium"
 										:class="
 											scope.row.status === 0
-												? 'successState noicon'
-												: 'dangerState noicon'
+												? 'normalRgba noicon'
+												: 'disableRgba noicon'
 										"
 										@click="disable(scope.row)"
 									>
@@ -132,8 +132,8 @@
 									<p
 										:class="
 											scope.row.moduleStatus === 1
-												? 'successState'
-												: 'dangerState'
+												? 'normalRgba'
+												: 'disableRgba'
 										"
 									>
 										{{ scope.row.moduleStatus === 1 ? '开启中' : '已禁用' }}
@@ -227,7 +227,7 @@
 								<template slot-scope="scope">
 									<p
 										:class="
-											scope.row.status === 1 ? 'successState' : 'dangerState'
+											scope.row.status === 1 ? 'normalRgba' : 'disableRgba'
 										"
 									>
 										{{ scope.row.status === 1 ? '开启中' : '已禁用' }}

@@ -114,10 +114,10 @@
 									class="right-span"
 									:class="
 										Number(item.gameStatus) === 1
-											? 'infoState'
+											? 'lockingRgba'
 											: Number(item.gameStatus) === 2
-											? 'successState'
-											: 'dangerState'
+											? 'normalRgba'
+											: 'disableRgba'
 									"
 								>
 									{{ typeFilter(item.gameStatus, 'gameStatusType') }}
@@ -161,10 +161,10 @@
 									class="right-span"
 									:class="
 										Number(item.gameStatus) === 1
-											? 'infoState'
+											? 'lockingRgba'
 											: Number(item.gameStatus) === 2
-											? 'successState'
-											: 'dangerState'
+											? 'normalRgba'
+											: 'disableRgba'
 									"
 								>
 									{{ typeFilter(item.gameStatus, 'gameStatusType') }}

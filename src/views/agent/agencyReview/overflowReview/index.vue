@@ -299,10 +299,10 @@
 									v-if="Number(auditStatus) !== 0"
 									:class="
 										Number(scope.row.auditStatus) === 1
-											? 'infoState'
+											? 'lockingRgba'
 											: Number(scope.row.auditStatus) === 2
-											? 'successState'
-											: 'dangerState'
+											? 'normalRgba'
+											: 'disableRgba'
 									"
 								>
 									{{ typeFilter(scope.row.auditStatus, 'auditStatusType') }}

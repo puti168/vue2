@@ -187,10 +187,10 @@
 							<span
 								:class="
 									Number(scope.row.gameStatus) === 0
-										? 'dangerState'
+										? 'disableRgba'
 										: Number(scope.row.gameStatus) === 1
-										? 'successState'
-										: 'warningState'
+										? 'normalRgba'
+										: 'deleteRgba'
 								"
 							>
 								{{ typeFilter(scope.row.gameStatus, 'gameStatusType') }}

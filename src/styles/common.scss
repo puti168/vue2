@@ -20,66 +20,7 @@
 }
 
 // 状态样式
-.infoState {
-    background-color: #ecf5ff;
-    display: inline-block;
-    height: 18px;
-    padding: 0 6px;
-    line-height: 18px;
-    font-size: 12px;
-    color: #409eff;
-    border: 1px solid #d9ecff;
-    border-radius: 4px;
-    box-sizing: border-box;
-    white-space: nowrap;
-}
-
-.successState {
-    background-color: #f0f9eb;
-    border-color: #e1f3d8;
-    color: #67c23a;
-    display: inline-block;
-    height: 18px;
-    padding: 0 6px;
-    line-height: 18px;
-    font-size: 12px;
-    border: 1px solid #e1f3d8;
-    border-radius: 4px;
-    box-sizing: border-box;
-    white-space: nowrap;
-}
-
-.disableState {
-    background-color: #f4f4f5;
-    border-color: #e9e9eb;
-    color: #909399;
-    display: inline-block;
-    height: 18px;
-    padding: 0 6px;
-    line-height: 18px;
-    font-size: 12px;
-    border: 1px solid #e9e9eb;
-    border-radius: 4px;
-    box-sizing: border-box;
-    white-space: nowrap;
-}
-
-.warningState {
-    background-color: #fdf6ec;
-    border-color: #faecd8;
-    color: #e6a23c;
-    display: inline-block;
-    height: 18px;
-    padding: 0 6px;
-    line-height: 18px;
-    font-size: 12px;
-    border: 1px solid #faecd8;
-    border-radius: 4px;
-    box-sizing: border-box;
-    white-space: nowrap;
-}
-
-.dangerState {
+.disableRgba {
     background-color: #fef0f0;
     border-color: #fde2e2;
     color: #f56c6c;
@@ -206,6 +147,7 @@
     border-radius: 5px;
     color: #67c23a;
     text-align: center;
+    font-size: 14px;
     background: rgba(0, 160, 0, 0.2);
 }
 
@@ -217,6 +159,7 @@
     display: inline-block;
     border-radius: 5px;
     color: #fb6260;
+    font-size: 14px;
     text-align: center;
     background: rgba(250, 89, 89, 0.3);
 }
@@ -230,6 +173,7 @@
     border-radius: 5px;
     color: #fec03d;
     text-align: center;
+    font-size: 14px;
     background: rgba(253, 168, 77, 0.3);
 }
 
@@ -240,6 +184,7 @@
     padding: 0 5px;
     display: inline-block;
     border-radius: 5px;
+    font-size: 14px;
     color: #58a3f7;
     text-align: center;
     background: rgba(88, 163, 247, 0.3);
