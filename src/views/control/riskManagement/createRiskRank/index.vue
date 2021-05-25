@@ -5,7 +5,7 @@
 				<el-form ref="form" :inline="true" :model="queryData">
 					<el-form-item label="风控种类:">
 						<el-select
-							v-model="queryData.operateType"
+							v-model="queryData.riskType"
 							size="medium"
 							placeholder="默认选择全部"
 							clearable
@@ -21,11 +21,11 @@
 					</el-form-item>
 					<el-form-item label="风控层级:">
 						<el-select
-							v-model="queryData.operateType"
+							v-model="queryData.riskRank"
 							size="medium"
 							placeholder="默认选择全部"
 							clearable
-                            multiple
+							multiple
 							style="width: 300px"
 						>
 							<el-option
@@ -98,9 +98,9 @@
 					@sort-change="_changeTableSort"
 				>
 					<el-table-column
-						prop="gameLabelId"
+						prop="riskType"
 						align="center"
-						label="游戏标签ID"
+						label="风控类型"
 						sortable="custom"
 						width="120px"
 					></el-table-column>
@@ -315,9 +315,12 @@ export default {
 	mixins: [list],
 	data() {
 		return {
-            createBy: undefined,
-            updateBy: undefined,
-			queryData: {},
+			queryData: {
+				riskType: undefined,
+				riskRank: undefined,
+				createBy: undefined,
+				updatedBy: undefined
+			},
 			tableData: [],
 			dialogFormVisible: false,
 			dialogForm: {},
@@ -341,9 +344,10 @@ export default {
 			this.$api
 				.getTabelData(params)
 				.then((res) => {
-					if (res.code === 200) {
-						this.tableData = res.data.record
-						this.total = res.data.totalRecord
+					const { code, data } = res
+					if (code === 200) {
+						this.tableData = data.record
+						this.total = res.totalRecord
 						this.loading = false
 					} else {
 						this.loading = false
@@ -352,6 +356,10 @@ export default {
 				.catch(() => {
 					this.loading = false
 				})
+
+			setTimeout(() => {
+				this.loading = false
+			}, 1000)
 		},
 		lookGame(val) {
 			this.labelName = val.gameLabelName
@@ -366,8 +374,14 @@ export default {
 			})
 		},
 		reset() {
-			this.queryData = {}
 			this.pageNum = 1
+            this.$refs['form'].resetFields()
+			this.queryData = {
+				riskType: undefined,
+				riskRank: undefined,
+				createBy: undefined,
+				updatedBy: undefined
+			}
 			this.loadData()
 		},
 		switchClick(val) {
