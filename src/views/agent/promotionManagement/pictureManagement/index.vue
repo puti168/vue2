@@ -147,7 +147,7 @@
 						:data="dataList"
 						style="width: 100%"
 						:header-cell-style="getRowClass"
-						@sort-change="changeTableSort"
+                        @sort-change="_changeTableSort"
 					>
 						<el-table-column prop="displayOrder" align="center" label="排序">
 							<template slot-scope="scope">
@@ -426,6 +426,23 @@ export default {
 			this.imageAddress = imageAddress
 			this.dialogPictureVisible = true
 		},
+        _changeTableSort({ column, prop, order }) {
+            if (prop === 'createdAt') {
+                prop = 1
+            }
+            if (prop === 'updatedAt') {
+                prop = 2
+            }
+            this.queryData.orderKey = prop
+            if (order === 'ascending') {
+                // 升序
+                this.queryData.orderType = 'asc'
+            } else if (column.order === 'descending') {
+                // 降序
+                this.queryData.orderType = 'desc'
+            }
+            this.loadData()
+        },
 		deleteRow(val) {
 			const { id } = val
 			const loading = this.$loading({
