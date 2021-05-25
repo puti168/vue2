@@ -480,13 +480,13 @@ export default {
   methods: {
     loadData() {
       // this.loading = true;
-      let params = {
-        ...this.queryData
-      }
-      params = {
-        ...this.getParams(params)
-      }
-      console.log(params)
+      // let params = {
+      //   ...this.queryData,
+      // };
+      // params = {
+      //   ...this.getParams(params),
+      // };
+      // console.log(params);
       // this.$api
       //   .getGameRecordNotes(params)
       //   .then((res) => {
