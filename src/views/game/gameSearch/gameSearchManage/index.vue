@@ -172,6 +172,7 @@ export default {
 				hotSearchGameLimit: undefined
 			},
 			dataList: [],
+			searchList: [],
 			idArray: [],
 			cloneArr: [],
 			createObSearchConfigReqList: []
@@ -204,13 +205,24 @@ export default {
 				.then((res) => {
 					const {
 						code,
-						data: { obSearchConfigList },
+						data: { obSearchConfigList, configlist },
 						msg
 					} = res
 					if (code === 200) {
 						this.loading = false
 						this.cloneArr = JSON.parse(JSON.stringify(obSearchConfigList))
 						this.dataList = obSearchConfigList || []
+						// this.searchList = configlist || []
+						configlist &&
+							configlist.length &&
+							configlist.forEach((item) => {
+								if (item.dataKey === 'hot_search_game_limit') {
+									this.queryData.hotSearchGameLimit = item.dataValue
+								}
+								if (item.dataKey === 'history_search_game_limit') {
+									this.queryData.historySearchGameLimit = item.dataValue
+								}
+							})
 						this.idArray =
 							obSearchConfigList &&
 							obSearchConfigList.length &&
