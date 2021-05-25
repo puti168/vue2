@@ -65,22 +65,22 @@
 							@keyup.enter.native="enterSearch"
 						></el-input>
 					</el-form-item>
-					<!--					<el-form-item label="风控层级:">-->
-					<!--						<el-select-->
-					<!--							v-model="queryData.windControlId"-->
-					<!--							size="medium"-->
-					<!--							placeholder="全部"-->
-					<!--							clearable-->
-					<!--							style="width: 180px"-->
-					<!--						>-->
-					<!--							<el-option-->
-					<!--								v-for="item in vipDict"-->
-					<!--								:key="item.windControlId"-->
-					<!--								:label="item.windControlName"-->
-					<!--								:value="item.windControlId"-->
-					<!--							></el-option>-->
-					<!--						</el-select>-->
-					<!--					</el-form-item>-->
+					<el-form-item label="风控层级:">
+						<el-select
+							v-model="queryData.windControlId"
+							size="medium"
+							placeholder="全部"
+							clearable
+							style="width: 180px"
+						>
+							<el-option
+								v-for="item in vipDict"
+								:key="item.windControlId"
+								:label="item.windControlName"
+								:value="item.windControlId"
+							></el-option>
+						</el-select>
+					</el-form-item>
 					<el-form-item label="银行名称:">
 						<el-input
 							v-model="queryData.bankName"
@@ -195,14 +195,14 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<!--					<el-table-column prop="operateType" align="center" label="风控层级">-->
-					<!--						<template slot-scope="scope">-->
-					<!--							<span v-if="!!scope.row.windControlName">-->
-					<!--								{{ scope.row.windControlName }}-->
-					<!--							</span>-->
-					<!--							<span v-else>-</span>-->
-					<!--						</template>-->
-					<!--					</el-table-column>-->
+					<el-table-column prop="operateType" align="center" label="风控层级">
+						<template slot-scope="scope">
+							<span v-if="!!scope.row.windControlName">
+								{{ scope.row.windControlName }}
+							</span>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="createDt"
 						align="center"
@@ -247,6 +247,7 @@ const end = dayjs()
 	.endOf('day')
 	.valueOf()
 // import { UTable } from 'umy-ui'
+
 export default {
 	name: routerNames.agentBankCard,
 	mixins: [list],
@@ -259,6 +260,7 @@ export default {
 				cardNumber: undefined,
 				bankName: undefined,
 				cnName: undefined,
+				windControlId: undefined,
 				orderType: undefined
 			},
 			dataList: [],
@@ -350,6 +352,7 @@ export default {
 				createDt: [start, end],
 				userName: undefined,
 				accountType: [],
+                windControlId: undefined,
 				cardNumber: undefined,
 				bankName: undefined,
 				cnName: undefined,

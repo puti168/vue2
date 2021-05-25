@@ -163,10 +163,20 @@
                             <span v-else>-</span>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="ipAttribution" align="center" label="IP归属地">
+                    <el-table-column prop="ipAttribution" align="center">
+                        <template slot="header">
+                            IP归属地
+                            <br />
+                            风控层级
+                        </template>
                         <template slot-scope="scope">
 							<span v-if="!!scope.row.ipAttribution">
 								{{ scope.row.ipAttribution }}
+							</span>
+                            <span v-else>-</span>
+                            <br />
+                            <span v-if="!!scope.row.windControlName">
+								{{ scope.row.windControlName }}
 							</span>
                             <span v-else>-</span>
                         </template>
@@ -179,7 +189,7 @@
                             <span v-else>-</span>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="deviceNo" align="center" label="终端设备号">
+                    <el-table-column prop="deviceNo" align="center">
                         <template slot="header">
                             终端设备号
                             <br />

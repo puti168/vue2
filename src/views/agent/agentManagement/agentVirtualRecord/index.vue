@@ -64,6 +64,22 @@
 							@keyup.enter.native="enterSearch"
 						></el-input>
 					</el-form-item>
+                    <el-form-item label="风控层级:">
+                        <el-select
+                            v-model="queryData.windControlId"
+                            size="medium"
+                            placeholder="全部"
+                            clearable
+                            style="width: 180px"
+                        >
+                            <el-option
+                                v-for="item in vipDict"
+                                :key="item.windControlId"
+                                :label="item.windControlName"
+                                :value="item.windControlId"
+                            ></el-option>
+                        </el-select>
+                    </el-form-item>
 					<el-form-item label="虚拟币类型:">
 						<el-select
 							v-model="queryData.virtualKind"
@@ -181,6 +197,14 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
+                    <el-table-column prop="operateType" align="center" label="风控层级">
+                        <template slot-scope="scope">
+							<span v-if="!!scope.row.windControlName">
+								{{ scope.row.windControlName }}
+							</span>
+                            <span v-else>-</span>
+                        </template>
+                    </el-table-column>
 					<el-table-column
 						prop="withdrawalTime"
 						align="center"
@@ -238,10 +262,13 @@ export default {
 				virtualAddress: undefined,
 				virtualKind: undefined,
 				virtualProtocol: undefined,
+                windControlId: undefined,
 				orderType: undefined
 			},
 			dataList: [],
-			total: 0
+			total: 0,
+            vipDict: [],
+            userLabel: []
 		}
 	},
 	computed: {
@@ -301,17 +328,37 @@ export default {
 				this.loading = false
 			}, 1000)
 		},
+        // 获取风控层级
+        getMerchantDict() {
+            this.$api.agentDictAPI().then((res) => {
+                const {
+                    code,
+                    data: { windControl, userLabel },
+                    msg
+                } = res
+                if (code === 200) {
+                    this.vipDict = windControl || []
+                    this.userLabel = userLabel || []
+                } else {
+                    this.$message({
+                        message: msg,
+                        type: 'error'
+                    })
+                }
+            })
+        },
 		reset() {
-		    this.pageNum = 1
+			this.pageNum = 1
 			this.$refs['form'].resetFields()
 			this.queryData = {
-                createDt: [start, end],
-                userName: undefined,
-                accountType: [],
-                virtualAddress: undefined,
-                virtualKind: undefined,
-                virtualProtocol: undefined,
-                orderType: undefined
+				createDt: [start, end],
+				userName: undefined,
+				accountType: [],
+				virtualAddress: undefined,
+				virtualKind: undefined,
+                windControlId: undefined,
+				virtualProtocol: undefined,
+				orderType: undefined
 			}
 			this.loadData()
 		}
