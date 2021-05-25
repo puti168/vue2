@@ -269,7 +269,7 @@ export default {
 	},
 	computed: {
 		accountTypeArr() {
-			return this.globalDics.proxyAccountType
+			return this.globalDics.accountType
 		}
 	},
 	created() {
