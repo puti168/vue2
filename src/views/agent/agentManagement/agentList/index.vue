@@ -260,6 +260,7 @@
 							type="warning"
 							icon="el-icon-folder-add"
 							size="medium"
+                            :disabled="loading"
 							@click="exportExcel"
 						>
 							导出
@@ -771,6 +772,7 @@ export default {
 			const [startTime, endTime] = create
 			const lastLogin = this.queryData.lastLoginTime || []
 			const [lastLoginTimeStart, lastLoginTimeEnd] = lastLogin
+            this.loading = true
 			let params = {
 				...this.queryData,
 				createDtStart: startTime
@@ -794,47 +796,69 @@ export default {
 			this.$api
 				.agentListExportAPI(params)
 				.then((res) => {
-					const result = res.data
-					const disposition = res.headers['content-disposition']
-					if (disposition) {
-						const fileNames = disposition.split("''")
-						let fileName = fileNames[1]
-						fileName = decodeURIComponent(fileName)
-						const blob = new Blob([result], {
-							type: 'application/octet-stream'
-						})
-						if ('download' in document.createElement('a')) {
-							const elink = document.createElement('a')
-							elink.download = fileName || ''
-							elink.style.display = 'none'
-							elink.href = URL.createObjectURL(blob)
-							document.body.appendChild(elink)
-							elink.click()
-							URL.revokeObjectURL(elink.href)
-							document.body.removeChild(elink)
-						} else {
-							window.navigator.msSaveBlob(blob, fileName)
-						}
-						this.$message({
-							type: 'success',
-							message: '导出成功',
-							duration: 1500
-						})
-					} else {
-						this.$message({
-							type: 'error',
-							message: '每10分钟导一次，请稍后再试',
-							duration: 1500
-						})
-					}
+                    this.loading = false
+                    const { data, status } = res
+                    if (res && status === 200) {
+                        const { type } = data
+                        if (type.includes('application/json')) {
+                            const reader = new FileReader()
+                            reader.onload = (evt) => {
+                                if (evt.target.readyState === 2) {
+                                    const {
+                                        target: { result }
+                                    } = evt
+                                    const ret = JSON.parse(result)
+                                    if (ret.code !== 200) {
+                                        this.$message({
+                                            type: 'error',
+                                            message: ret.msg,
+                                            duration: 1500
+                                        })
+                                    }
+                                }
+                            }
+                            reader.readAsText(data)
+                        } else {
+                            const result = res.data
+                            const disposition = res.headers['content-disposition']
+                            const fileNames = disposition && disposition.split("''")
+                            let fileName = fileNames[1]
+                            fileName = decodeURIComponent(fileName)
+                            const blob = new Blob([result], {
+                                type: 'application/octet-stream'
+                            })
+                            if ('download' in document.createElement('a')) {
+                                const downloadLink = document.createElement('a')
+                                downloadLink.download = fileName || ''
+                                downloadLink.style.display = 'none'
+                                downloadLink.href = URL.createObjectURL(blob)
+                                document.body.appendChild(downloadLink)
+                                downloadLink.click()
+                                URL.revokeObjectURL(downloadLink.href)
+                                document.body.removeChild(downloadLink)
+                            } else {
+                                window.navigator.msSaveBlob(blob, fileName)
+                            }
+                            this.$message({
+                                type: 'success',
+                                message: '导出成功',
+                                duration: 1500
+                            })
+                        }
+                    }
 				})
 				.catch(() => {
+                    this.loading = false
 					this.$message({
 						type: 'error',
 						message: '导出失败',
 						duration: 1500
 					})
 				})
+
+            setTimeout(() => {
+                this.loading = false
+            }, 1500)
 		}
 	}
 }
