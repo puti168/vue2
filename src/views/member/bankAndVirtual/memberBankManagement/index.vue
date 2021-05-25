@@ -5,13 +5,14 @@
         <el-form ref="form" :inline="true" :model="queryData">
           <el-form-item label="银行卡号:">
             <el-input
-              v-model="queryData.id"
+              v-model="queryData.cardnum"
               clearable
               :maxlength="25"
               size="medium"
               style="width: 210px"
               placeholder="请输入"
               :disabled="loading"
+              name="cardnum"
               oninput="value=value.replace(/[^\d]/g,'')"
               @blur="checkValue($event)"
               @keyup.enter.native="enterSearch"
@@ -19,7 +20,7 @@
           </el-form-item>
           <el-form-item label="银行名称:">
             <el-input
-              v-model="queryData.thirdOrderId"
+              v-model="queryData.bankName"
               clearable
               :maxlength="10"
               size="medium"
@@ -31,7 +32,7 @@
           </el-form-item>
           <el-form-item label="银行支行:">
             <el-input
-              v-model="queryData.thirdOrderId"
+              v-model="queryData.bankzh"
               clearable
               :maxlength="10"
               size="medium"
@@ -58,7 +59,7 @@
           </el-form-item>
           <el-form-item label="绑定状态:">
             <el-select
-              v-model="queryData.deviceType"
+              v-model="queryData.status"
               style="width: 210px"
               placeholder="默认选择全部"
               :popper-append-to-body="false"
@@ -179,7 +180,7 @@
           <el-form-item label="风控层级:" class="tagheight">
             <el-select
               v-model="queryData.deviceType1"
-              style="width: 210px"
+              style="width: 300px"
               multiple
               placeholder="默认选择全部"
               :popper-append-to-body="false"
@@ -478,25 +479,26 @@ export default {
   mounted() {},
   methods: {
     loadData() {
-      this.loading = true
+      // this.loading = true;
       let params = {
         ...this.queryData
       }
       params = {
         ...this.getParams(params)
       }
-      this.$api
-        .getGameRecordNotes(params)
-        .then((res) => {
-          if (res.code === 200) {
-            this.tableData = res.data.record
-            this.total = res.data.totalRecord
-          }
-          this.loading = false
-        })
-        .catch(() => {
-          this.loading = false
-        })
+      console.log(params)
+      // this.$api
+      //   .getGameRecordNotes(params)
+      //   .then((res) => {
+      //     if (res.code === 200) {
+      //       this.tableData = res.data.record;
+      //       this.total = res.data.totalRecord;
+      //     }
+      //     this.loading = false;
+      //   })
+      //   .catch(() => {
+      //     this.loading = false;
+      //   });
     },
     reset() {
       this.queryData = {}
@@ -529,19 +531,8 @@ export default {
     checkValue(e) {
       const { name, value } = e.target
       switch (name) {
-        case 'betAmountMax':
-          if (
-            !!this.queryData.betAmountMin &&
-            value &&
-            value * 1 <= this.queryData.betAmountMin * 1
-          ) {
-            this.$message({
-              type: 'warning',
-              message: `投注金额输入最大值不能小于最小值`
-            })
-          } else {
-            this.queryData.betAmountMax = value
-          }
+        case 'cardnum':
+          this.queryData.cardnum = value
           break
         case 'netAmountMax':
           if (
