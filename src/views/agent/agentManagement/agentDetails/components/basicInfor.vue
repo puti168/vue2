@@ -450,6 +450,7 @@ export default {
             }
           })
         }
+        this.activeL = false
       })
     },
     // 编辑信息
@@ -473,6 +474,10 @@ export default {
       })
     },
     refresh() {
+      this.activeL = true
+      for (let i = 0; i < this.editMsgList.length; i++) {
+        this.editMsgList[i].applyStatus = ''
+      }
       const val = this.parentData
       this.getProxyDetailQueryDetail(val)
     },
