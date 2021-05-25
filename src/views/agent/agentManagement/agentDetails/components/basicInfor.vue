@@ -458,7 +458,7 @@ export default {
       this.$api.setProxyDataInfoEdit(val).then((res) => {
         if (res.code === 200) {
           this.$message.success(res.msg)
-          this.getProxyDetailQueryDetail(this.parentData)
+          this.refresh()
           this.editData = { code: '', windControlId: '', labelId: '' }
         }
         this.editVisible = false
