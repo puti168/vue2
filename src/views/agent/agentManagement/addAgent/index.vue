@@ -93,7 +93,7 @@ export default {
         return {
             loading: false,
             form: {
-                accountType: '2',
+                accountType: '4',
                 userName: '',
                 password: '',
                 applyInfo: ''
@@ -102,7 +102,7 @@ export default {
     },
     computed: {
         accountTypeArr() {
-            return this.globalDics.proxyAccountType
+            return this.globalDics.accountType
         },
         rules() {
             const reg1 = /^[A-Za-z]{1}(?=(.*[a-zA-Z]){1,})(?=(.*[0-9]){1,})[0-9A-Za-z]{3,10}$/
@@ -203,7 +203,7 @@ export default {
         reset() {
             this.$refs['form'].resetFields()
             this.form = {
-                accountType: '2',
+                accountType: '4',
                 userName: '',
                 password: '',
                 applyInfo: ''

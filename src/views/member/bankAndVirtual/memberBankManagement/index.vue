@@ -178,7 +178,7 @@
           </el-form-item>
           <el-form-item label="风控层级:" class="tagheight">
             <el-select
-              v-model="queryData.deviceType"
+              v-model="queryData.deviceType1"
               style="width: 210px"
               multiple
               placeholder="默认选择全部"
@@ -270,6 +270,8 @@
               style="width: 210px"
               placeholder="请输入"
               :disabled="loading"
+              oninput="value=value.replace(/[^\d]/g,'')"
+              @blur="checkValue($event)"
               @keyup.enter.native="enterSearch"
             ></el-input>
           </el-form-item>
@@ -417,7 +419,7 @@
           </el-table-column>
           <el-table-column prop="operation" align="center" label="操作" width="120px">
             <template slot-scope="scope">
-                {{ scope.row.id }}
+              {{ scope.row.id }}
               <el-button type="success" icon="el-icon-view" size="medium">
                 解绑
               </el-button>

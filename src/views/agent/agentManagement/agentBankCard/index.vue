@@ -60,7 +60,7 @@
 							placeholder="请输入"
 							clearable
 							style="width: 180px"
-							maxlength="25"
+							maxlength="30"
 							onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
 							@keyup.enter.native="enterSearch"
 						></el-input>
@@ -88,7 +88,7 @@
 							placeholder="请输入"
 							clearable
 							style="width: 180px"
-							maxlength="10"
+							maxlength="20"
 							@keyup.enter.native="enterSearch"
 						></el-input>
 					</el-form-item>
@@ -99,7 +99,7 @@
 							placeholder="请输入"
 							clearable
 							style="width: 180px"
-							maxlength="6"
+							maxlength="15"
 							@keyup.enter.native="enterSearch"
 						></el-input>
 					</el-form-item>
@@ -269,7 +269,7 @@ export default {
 	},
 	computed: {
 		accountTypeArr() {
-			return this.globalDics.proxyAccountType
+			return this.globalDics.accountType
 		}
 	},
 	created() {

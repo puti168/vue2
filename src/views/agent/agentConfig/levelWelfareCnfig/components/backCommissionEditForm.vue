@@ -58,7 +58,7 @@
             ></el-input-number>
           </el-form-item>
           <el-form-item
-            label="本月活跃人数:"
+            label="本月活跃人数≥:"
             prop="monthActiveNum"
             :rules="[
               {

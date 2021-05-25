@@ -99,25 +99,32 @@
               <span v-else>-</span>
             </template>
           </el-table-column>
-          <el-table-column prop="accountType" align="center" label="变更前风控层级">
+          <el-table-column prop="blevel" align="center" label="变更前风控层级">
+            <template slot-scope="scope">
+              <el-tooltip content="该风控层级为刷流水" placement="top">
+                <p>{{ scope.row.blevel }}</p>
+              </el-tooltip>
+            </template>
           </el-table-column>
-          <el-table-column
-            prop="loginIp"
-            align="center"
-            label="变更前风控层级"
-          ></el-table-column>
+          <el-table-column prop="alevel" align="center" label="变更后风控层级">
+            <template slot-scope="scope">
+              <el-tooltip content="该风控层级为刷流水" placement="top">
+                <p>{{ scope.row.alevel }}</p>
+              </el-tooltip>
+            </template>
+          </el-table-column>
           <el-table-column
             prop="ipAttribution"
             align="center"
             label="风控原因"
           ></el-table-column>
           <el-table-column
-            prop="loginError"
+            prop="Operator"
             align="center"
             label="操作人"
           ></el-table-column>
           <el-table-column
-            prop="loginError"
+            prop="times"
             align="center"
             label="操作时间"
             sortable="custom"
@@ -142,20 +149,15 @@
 
 <script>
 import list from '@/mixins/list'
-import dayjs from 'dayjs'
 import { routerNames } from '@/utils/consts'
-const startTime = dayjs().startOf('day').valueOf()
-const endTime = dayjs().endOf('day').valueOf()
 
 export default {
-  name: routerNames.memberRiskControlChange,
+  name: routerNames.proxyRiskControlChange,
   components: {},
   mixins: [list],
   data() {
     return {
       queryData: {},
-      loginTime: [startTime, endTime],
-      now: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
       tableData: []
     }
   },
@@ -170,34 +172,39 @@ export default {
       return this.globalDics.accountType
     }
   },
-  mounted() {},
+  mounted() {
+    for (let i = 0; i < 10; i++) {
+      this.tableData[i] = {
+        userName: 'darcy',
+        blevel: '一级',
+        alevel: '二级',
+        ipAttribution: '无',
+        Operator: 'darcy',
+        times: '2021-05-25'
+      }
+    }
+  },
   methods: {
     loadData() {
-      this.loading = true
-      const create = this.loginTime || []
-      const [startTime, endTime] = create
-      let params = {
-        ...this.queryData,
-        loginStartTime: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : '',
-        loginEndTime: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
-      }
-      params = {
-        ...this.getParams(params)
-      }
-      this.$api
-        .getProxyDetailProxyLoginLog(params)
-        .then((res) => {
-          this.now = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
-          if (res.code === 200) {
-            this.tableData = res.data.record
-            this.total = res.data.totalRecord
-            this.summary = res.data.summary !== null ? res.data.summary : {}
-          }
-          this.loading = false
-        })
-        .catch(() => {
-          this.loading = false
-        })
+      // this.loading = true;
+      // let params = {
+      //   ...this.queryData
+      // }
+      // params = {
+      //   ...this.getParams(params)
+      // }
+      // this.$api
+      //   .getProxyDetailProxyLoginLog(params)
+      //   .then((res) => {
+      //     if (res.code === 200) {
+      //       this.tableData = res.data.record;
+      //       this.total = res.data.totalRecord;
+      //     }
+      //     this.loading = false;
+      //   })
+      //   .catch(() => {
+      //     this.loading = false;
+      //   });
     },
     reset() {
       this.queryData = {}

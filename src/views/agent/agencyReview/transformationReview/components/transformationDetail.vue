@@ -21,7 +21,7 @@
 				</div>
 				<div class="review-flex">
 					<div>当前上级代理: {{ list.parentProxyName }}</div>
-					<div>代理类型: {{ typeFilter(list.proxyType, 'proxyAccountType') }}</div>
+					<div>代理类型: {{ typeFilter(list.proxyType, 'accountType') }}</div>
 					<div>绑定时间: {{ list.bindingDt }}</div>
 				</div>
 			</div>
@@ -29,7 +29,7 @@
 				<p class="name">转入代理信息</p>
 				<div class="review-flex">
 					<div>代理账号: {{ list.transferProxyName }}</div>
-					<div>代理类型: {{ typeFilter(list.transferProxyType, 'proxyAccountType') }}</div>
+					<div>代理类型: {{ typeFilter(list.transferProxyType, 'accountType') }}</div>
 					<div>注册时间: {{ list.transferProxyRegisterDt }}</div>
 				</div>
 			</div>

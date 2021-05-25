@@ -16,7 +16,7 @@
 				<p class="name">代理注册信息</p>
 				<div class="review-flex">
 					<div>注册时间: {{ list.proxyRegistTime }}</div>
-					<div>代理类型: {{ typeFilter(list.accountType, 'proxyAccountType') }}</div>
+					<div>代理类型: {{ typeFilter(list.accountType, 'accountType') }}</div>
 					<div>上次登录时间: {{ list.proxyLastLoginTime }}</div>
 					<div>注册端: {{ list.deviceType }}</div>
 				</div>
@@ -25,7 +25,7 @@
 				<p class="name">代理账号信息</p>
 				<div class="review-flex">
 					<div>账号: {{ list.userName }}</div>
-					<div>账号状态: {{ typeFilter(list.proxyAccountStatus, 'proxyAccountStatusType') }}</div>
+					<div>账号状态: {{ typeFilter(list.proxyAccountStatus, 'accountStatusType') }}</div>
 					<div>风控层级: {{ list.proxyWindControlName }}</div>
 					<div>代理标签: {{ list.proxyLabelName }}</div>
 				</div>

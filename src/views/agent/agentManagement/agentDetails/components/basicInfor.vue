@@ -30,14 +30,14 @@
       <el-col :span="5">
         代理类型：<i v-if="activeL" class="el-icon-loading"></i>
         <span v-else>
-          {{ typeFilter(outlineInfoList.accountType, "proxyAccountType") }}
+          {{ typeFilter(outlineInfoList.accountType, "accountType") }}
         </span>
       </el-col>
       <el-col
 :span="5"
 >帐号状态：<i v-if="activeL" class="el-icon-loading"></i>
         <span v-else>
-          {{ typeFilter(outlineInfoList.accountStatus, "proxyAccountStatusType") }}
+          {{ typeFilter(outlineInfoList.accountStatus, "accountStatusType") }}
         </span>
       </el-col>
       <el-col
@@ -234,7 +234,7 @@
             @change="changeAccountStatus"
           >
             <el-option
-              v-for="item in proxyAccountStatusType"
+              v-for="item in accountStatusType"
               :key="item.description"
               :label="item.description"
               :value="item.code"
@@ -362,8 +362,8 @@ export default {
     }
   },
   computed: {
-    proxyAccountStatusType() {
-      return this.globalDics.proxyAccountStatusType
+    accountStatusType() {
+      return this.globalDics.accountStatusType
     },
     entrAuthorityType() {
       return this.globalDics.entrAuthorityType
@@ -450,6 +450,7 @@ export default {
             }
           })
         }
+        this.activeL = false
       })
     },
     // 编辑信息
@@ -473,6 +474,10 @@ export default {
       })
     },
     refresh() {
+      this.activeL = true
+      for (let i = 0; i < this.editMsgList.length; i++) {
+        this.editMsgList[i].applyStatus = ''
+      }
       const val = this.parentData
       this.getProxyDetailQueryDetail(val)
     },

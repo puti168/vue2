@@ -286,6 +286,7 @@
 							type="warning"
 							icon="el-icon-folder-add"
 							size="medium"
+                            :disabled="loading"
 							@click="exportExcel"
 						>
 							导出
@@ -878,6 +879,7 @@ export default {
 			const [startTime, endTime] = create
 			const [loginTimeStart, loginTimeEnd] = lastLoginTime
 			const [firstDepositTimeStart, firstDepositTimeEnd] = firstSaveTime
+            this.loading = true
 			let params = {
 				...this.queryData,
 				createDtStart: startTime
@@ -905,12 +907,22 @@ export default {
 			delete params.registerTime
 			delete params.lastLoginTime
 			delete params.firstSaveTime
-			delete params.accountStatus
-			delete params.deviceType
-			delete params.accountType
+			params.accountStatus =
+				params.accountStatus && params.accountStatus.length
+					? params.accountStatus
+					: undefined
+			params.deviceType =
+				params.deviceType && params.deviceType.length
+					? params.deviceType
+					: undefined
+			params.accountType =
+				params.accountType && params.accountType.length
+					? params.accountType
+					: undefined
 			this.$api
 				.exportExcelAPI(params)
 				.then((res) => {
+                    this.loading = false
 					const { data, status } = res
 					if (res && status === 200) {
 						const { type } = data
@@ -962,12 +974,17 @@ export default {
 					}
 				})
 				.catch(() => {
+                    this.loading = false
 					this.$message({
 						type: 'error',
 						message: '导出失败',
 						duration: 1500
 					})
 				})
+
+            setTimeout(() => {
+                this.loading = false
+            }, 1500)
 		}
 	}
 }

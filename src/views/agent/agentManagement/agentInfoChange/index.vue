@@ -40,7 +40,7 @@
               :popper-append-to-body="false"
             >
               <el-option
-                v-for="item in proxyAccountType"
+                v-for="item in accountType"
                 :key="item.code"
                 :label="item.description"
                 :value="item.code"
@@ -117,7 +117,7 @@
           </el-table-column>
           <el-table-column prop="applyType" align="center" label="代理类型">
             <template slot-scope="scope">
-              {{ typeFilter(scope.row.accountType, "proxyAccountType") }}
+              {{ typeFilter(scope.row.accountType, "accountType") }}
             </template>
           </el-table-column>
           <el-table-column prop="updateDt" align="center" label="变更类型">
@@ -128,7 +128,7 @@
           <el-table-column prop="beforeModify" align="center" label="变更前">
             <template slot-scope="scope">
               <span v-if="scope.row.applyType === '1'">
-                {{ typeFilter(scope.row.beforeModify, "proxyAccountStatusType") }}
+                {{ typeFilter(scope.row.beforeModify, "accountStatusType") }}
               </span>
               <span v-else-if="scope.row.applyType === '5'">
                 {{ typeFilter(scope.row.beforeModify, "entrAuthorityType") }}
@@ -141,7 +141,7 @@
           <el-table-column prop="afterModify" align="center" label="变更后">
             <template slot-scope="scope">
               <span v-if="scope.row.applyType === '1'">
-                {{ typeFilter(scope.row.afterModify, "proxyAccountStatusType") }}
+                {{ typeFilter(scope.row.afterModify, "accountStatusType") }}
               </span>
               <span v-else-if="scope.row.applyType === '5'">
                 {{ typeFilter(scope.row.afterModify, "entrAuthorityType") }}
@@ -209,8 +209,8 @@ export default {
     }
   },
   computed: {
-    proxyAccountType() {
-      return this.globalDics.proxyAccountType
+    accountType() {
+      return this.globalDics.accountType
     },
     porxyApplyType() {
       return this.globalDics.porxyApplyType

@@ -15,7 +15,7 @@
 			<div class="review-content">
 				<p class="name">新增代理信息</p>
 				<div class="review-flex">
-					<div>代理类型: {{ typeFilter(list.accountType, 'proxyAccountType') }}</div>
+					<div>代理类型: {{ typeFilter(list.accountType, 'accountType') }}</div>
 					<div>代理账号: {{ list.userName }}</div>
 					<div>登录密码: {{ list.password }}</div>
 				</div>
