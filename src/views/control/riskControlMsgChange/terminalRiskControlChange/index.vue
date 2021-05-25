@@ -1,41 +1,24 @@
 <template>
   <div class="game-container report-container">
     <div class="view-container dealer-container">
-        <h1>终端设备风控信息变更</h1>
       <div class="params">
         <el-form ref="form" :inline="true" :model="queryData">
-          <el-form-item label="登录时间:">
-            <el-date-picker
-              v-model="loginTime"
-              size="medium"
-              :picker-options="pickerOptions"
-              format="yyyy-MM-dd HH:mm:ss"
-              type="datetimerange"
-              range-separator="-"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-              align="right"
-              :clearable="false"
-              :default-time="defaultTime"
-              style="width: 375px"
-            ></el-date-picker>
-          </el-form-item>
-          <el-form-item label="代理账号:" prop="userName">
+          <el-form-item label="终端设备号:" prop="userName">
             <el-input
               v-model="queryData.userName"
               clearable
               :maxlength="11"
               size="medium"
-              style="width: 180px; margin-right: 20px"
+              style="width: 180px;"
               placeholder="请输入"
               :disabled="loading"
               @keyup.enter.native="enterSearch"
             ></el-input>
           </el-form-item>
-          <el-form-item label="代理类型:" class="tagheight" prop="accountType">
+          <el-form-item label="变更前风控等级:" class="tagheight" prop="accountType">
             <el-select
               v-model="queryData.accountType"
-              style="width: 280px"
+              style="width: 300px"
               multiple
               placeholder="默认选择全部"
               :popper-append-to-body="false"
@@ -48,7 +31,7 @@
               ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="登录状态:" class="tagheight" prop="loginStatus">
+          <el-form-item label="变更后风控等级:" class="tagheight" prop="loginStatus">
             <el-select
               v-model="queryData.loginStatus"
               style="width: 280px"
@@ -64,51 +47,11 @@
               ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="登录IP:" prop="loginIp">
+          <el-form-item label="操作人:" prop="loginIp">
             <el-input
               v-model="queryData.loginIp"
               clearable
               :maxlength="15"
-              size="medium"
-              style="width: 180px"
-              placeholder="请输入内容"
-              :disabled="loading"
-              @keyup.enter.native="enterSearch"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="IP归属地:" prop="ipAttribution">
-            <el-input
-              v-model="queryData.ipAttribution"
-              clearable
-              :maxlength="10"
-              size="medium"
-              style="width: 180px"
-              placeholder="请输入内容"
-              :disabled="loading"
-              @keyup.enter.native="enterSearch"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="登录终端:" class="tagheight" prop="deviceType">
-            <el-select
-              v-model="queryData.deviceType"
-              style="width: 280px"
-              multiple
-              placeholder="默认选择全部"
-              :popper-append-to-body="false"
-            >
-              <el-option
-                v-for="item in loginDeviceType"
-                :key="item.code"
-                :label="item.description"
-                :value="item.code"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="终端设备号:" prop="deviceNo">
-            <el-input
-              v-model="queryData.deviceNo"
-              clearable
-              :maxlength="50"
               size="medium"
               style="width: 180px"
               placeholder="请输入内容"
@@ -148,18 +91,7 @@
           :header-cell-style="getRowClass"
           @sort-change="_changeTableSort"
         >
-          <el-table-column
-            prop="loginTime"
-            align="center"
-            label="登录时间"
-            sortable="custom"
-          ></el-table-column>
-          <el-table-column prop="loginStatus" align="center" label="登录状态">
-            <template slot-scope="scope">
-              {{ typeFilter(scope.row.loginStatus, "loginStatusType") }}
-            </template>
-          </el-table-column>
-          <el-table-column prop="userName" align="center" label="代理账号">
+          <el-table-column prop="userName" align="center" label="终端设备号">
             <template slot-scope="scope">
               <Copy v-if="!!scope.row.userName" :title="scope.row.userName" :copy="copy">
                 {{ scope.row.userName }}
@@ -167,41 +99,35 @@
               <span v-else>-</span>
             </template>
           </el-table-column>
-          <el-table-column prop="accountType" align="center" label="代理类型">
+          <el-table-column prop="blevel" align="center" label="变更前风控层级">
             <template slot-scope="scope">
-              {{ typeFilter(scope.row.accountType, "accountType") }}
+              <el-tooltip content="该风控层级为刷流水" placement="top">
+                <p>{{ scope.row.blevel }}</p>
+              </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column prop="loginIp" align="center" label="登录IP"></el-table-column>
+          <el-table-column prop="alevel" align="center" label="变更后风控层级">
+            <template slot-scope="scope">
+              <el-tooltip content="该风控层级为刷流水" placement="top">
+                <p>{{ scope.row.alevel }}</p>
+              </el-tooltip>
+            </template>
+          </el-table-column>
           <el-table-column
             prop="ipAttribution"
             align="center"
-            label="IP归属地"
-          ></el-table-column>
-          <el-table-column prop="deviceType" align="center" label="登录终端">
-            <template slot-scope="scope">
-              {{ typeFilter(scope.row.deviceType, "loginDeviceType") }}
-            </template>
-          </el-table-column>
-          <el-table-column
-            prop="deviceNo"
-            align="center"
-            label="终端设备号"
+            label="风控原因"
           ></el-table-column>
           <el-table-column
-            prop="loginReference"
+            prop="Operator"
             align="center"
-            label="登录地址"
+            label="操作人"
           ></el-table-column>
           <el-table-column
-            prop="browseContent"
+            prop="times"
             align="center"
-            label="设备版本"
-          ></el-table-column>
-          <el-table-column
-            prop="loginError"
-            align="center"
-            label="备注"
+            label="操作时间"
+            sortable="custom"
           ></el-table-column>
         </el-table>
         <!-- 分页 -->
@@ -223,20 +149,15 @@
 
 <script>
 import list from '@/mixins/list'
-import dayjs from 'dayjs'
 import { routerNames } from '@/utils/consts'
-const startTime = dayjs().startOf('day').valueOf()
-const endTime = dayjs().endOf('day').valueOf()
 
 export default {
-  name: routerNames.terminalRiskControlChange,
+  name: routerNames.proxyRiskControlChange,
   components: {},
   mixins: [list],
   data() {
     return {
       queryData: {},
-      loginTime: [startTime, endTime],
-      now: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
       tableData: []
     }
   },
@@ -251,37 +172,44 @@ export default {
       return this.globalDics.accountType
     }
   },
-  mounted() {},
+  mounted() {
+    for (let i = 0; i < 10; i++) {
+      this.tableData[i] = {
+        userName: 'darcy',
+        blevel: '一级',
+        alevel: '二级',
+        ipAttribution: '无',
+        Operator: 'darcy',
+        times: '2021-05-25'
+      }
+    }
+  },
   methods: {
     loadData() {
-      this.loading = true
-      const create = this.loginTime || []
-      const [startTime, endTime] = create
-      let params = {
-        ...this.queryData,
-        loginStartTime: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : '',
-        loginEndTime: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
-      }
-      params = {
-        ...this.getParams(params)
-      }
-      this.$api
-        .getProxyDetailProxyLoginLog(params)
-        .then((res) => {
-          this.now = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
-          if (res.code === 200) {
-            this.tableData = res.data.record
-            this.total = res.data.totalRecord
-            this.summary = res.data.summary !== null ? res.data.summary : {}
-          }
-          this.loading = false
-        })
-        .catch(() => {
-          this.loading = false
-        })
+      // this.loading = true;
+      // let params = {
+      //   ...this.queryData
+      // }
+      // params = {
+      //   ...this.getParams(params)
+      // }
+      // this.$api
+      //   .getProxyDetailProxyLoginLog(params)
+      //   .then((res) => {
+      //     if (res.code === 200) {
+      //       this.tableData = res.data.record;
+      //       this.total = res.data.totalRecord;
+      //     }
+      //     this.loading = false;
+      //   })
+      //   .catch(() => {
+      //     this.loading = false;
+      //   });
     },
     reset() {
       this.queryData = {}
+      this.pageNum = 1
+      this.loadData()
     },
     _changeTableSort({ column, prop, order }) {
       if (prop === 'loginTime') {

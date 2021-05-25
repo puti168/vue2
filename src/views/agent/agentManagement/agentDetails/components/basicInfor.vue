@@ -354,7 +354,7 @@ export default {
       outlineInfoList: {}, // 基本信息
       tableList: [],
       moduleBox: '',
-      titel: '审核备注：',
+      titel: '备注备注：',
       editVisible: false,
       editData: { code: '', windControlId: '', labelId: '' },
       page: 1,
@@ -458,7 +458,7 @@ export default {
       this.$api.setProxyDataInfoEdit(val).then((res) => {
         if (res.code === 200) {
           this.$message.success(res.msg)
-          this.getProxyDetailQueryDetail(this.parentData)
+          this.refresh()
           this.editData = { code: '', windControlId: '', labelId: '' }
         }
         this.editVisible = false
@@ -486,27 +486,44 @@ export default {
       this.editData = { code: '', windControlId: '', labelId: '' }
       switch (val) {
         case '账号状态':
-          this.editData.code = this.outlineInfoList.accountStatus + ''
+          this.editData.code =
+            this.outlineInfoList.accountStatus === null
+              ? ''
+              : this.outlineInfoList.accountStatus
           break
-
         case '风控层级':
-          this.editData.windControlId = this.outlineInfoList.windControlId
-          this.editData.windControlName = this.outlineInfoList.windControlName
+          this.editData.windControlId =
+            this.outlineInfoList.windControlId === '0'
+              ? ''
+              : this.outlineInfoList.windControlId + ''
+          for (let i = 0; i < this.riskLevelList.length; i++) {
+            const ele = this.riskLevelList[i]
+            if (this.editData.windControlId === ele.windControlId) {
+              this.editData.windControlName = ele.windControlName
+            }
+          }
           break
-        case '代理标签':
-          this.editData.labelId = this.outlineInfoList.labelId
-          this.editData.labelName = this.outlineInfoList.labelName
-          break
-        case '账号备注':
-          this.titel = '备注信息：'
+        case '会员标签':
+          this.editData.labelId =
+            this.outlineInfoList.labelId === null
+              ? ''
+              : this.outlineInfoList.labelId + ''
+          for (let i = 0; i < this.memberLabelList.length; i++) {
+            const ele = this.memberLabelList[i]
+            if (this.editData.labelId === ele.labelId) {
+              this.editData.labelName = ele.labelName
+            }
+          }
           break
         case '入口权限':
-          this.titel = '备注信息：'
           this.editData.code = this.outlineInfoList.entryAuthority
+          break
+        case '支付密码重置':
+          this.titel = '审核备注'
           break
 
         default:
-          this.titel = '审核备注：'
+          this.titel = '备注信息：'
           break
       }
       this.editVisible = true

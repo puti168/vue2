@@ -34,7 +34,7 @@
           <el-form-item label="代理类型:" class="tagheight" prop="accountType">
             <el-select
               v-model="queryData.accountType"
-              style="width: 280px"
+              style="width: 300px"
               multiple
               placeholder="默认选择全部"
               :popper-append-to-body="false"
@@ -90,7 +90,7 @@
           <el-form-item label="登录终端:" class="tagheight" prop="deviceType">
             <el-select
               v-model="queryData.deviceType"
-              style="width: 280px"
+              style="width: 300px"
               multiple
               placeholder="默认选择全部"
               :popper-append-to-body="false"

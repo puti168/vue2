@@ -46,7 +46,7 @@
 					<el-form-item label="账号类型:" class="tagheight">
 						<el-select
 							v-model="queryData.accountType"
-							style="width: 180px"
+							style="width: 300px"
 							multiple
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
@@ -296,10 +296,10 @@
 									v-if="Number(auditStatus) !== 0"
 									:class="
 										Number(scope.row.auditStatus) === 1
-											? 'infoState'
+											? 'lockingRgba'
 											: Number(scope.row.auditStatus) === 2
-											? 'successState'
-											: 'dangerState'
+											? 'normalRgba'
+											: 'disableRgba'
 									"
 								>
 									{{ typeFilter(scope.row.auditStatus, 'auditStatusType') }}

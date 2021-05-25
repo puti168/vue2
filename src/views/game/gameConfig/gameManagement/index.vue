@@ -8,6 +8,7 @@
 							v-model="queryData.gameId"
 							clearable
 							:maxlength="5"
+							oninput="value=value.replace(/[^\d]/g,'')"
 							size="medium"
 							style="width: 180px"
 							placeholder="请输入"
@@ -28,7 +29,7 @@
 					<el-form-item label="显示状态:" class="tagheight">
 						<el-select
 							v-model="queryData.gameStatusList"
-							style="width: 180px"
+							style="width: 300px"
 							multiple
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
@@ -44,7 +45,7 @@
 					<el-form-item label="支持终端:" class="tagheight">
 						<el-select
 							v-model="queryData.supportTerminalList"
-							style="width: 180px"
+							style="width: 300px"
 							multiple
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
@@ -60,7 +61,7 @@
 					<el-form-item label="图标状态:" class="tagheight">
 						<el-select
 							v-model="queryData.gameIconList"
-							style="width: 180px"
+							style="width: 300px"
 							multiple
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
@@ -76,7 +77,7 @@
 					<el-form-item label="关联推荐游戏:" class="tagheight">
 						<el-select
 							v-model="queryData.relationOtherGameIdList"
-							style="width: 180px"
+							style="width: 300px"
 							multiple
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
@@ -92,7 +93,7 @@
 					<el-form-item label="游戏平台:" class="tagheight">
 						<el-select
 							v-model="queryData.gamePlatformList"
-							style="width: 180px"
+							style="width: 300px"
 							multiple
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
@@ -108,7 +109,7 @@
 					<el-form-item label="游戏标签:" class="tagheight">
 						<el-select
 							v-model="queryData.gameLabelIdList"
-							style="width: 180px"
+							style="width: 300px"
 							multiple
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
@@ -181,15 +182,15 @@
 						label="游戏名称"
 						width="120px"
 					></el-table-column>
-					<el-table-column align="center" label="显示状态" width="80px">
+					<el-table-column align="center" label="显示状态" width="90px">
 						<template slot-scope="scope">
 							<span
 								:class="
 									Number(scope.row.gameStatus) === 0
-										? 'dangerState'
+										? 'disableRgba'
 										: Number(scope.row.gameStatus) === 1
-										? 'successState'
-										: 'warningState'
+										? 'normalRgba'
+										: 'deleteRgba'
 								"
 							>
 								{{ typeFilter(scope.row.gameStatus, 'gameStatusType') }}
@@ -341,15 +342,9 @@
 					@size-change="handleSizeChange"
 				></el-pagination>
 			</div>
-			<el-dialog
-				title="图片"
-				:visible.sync="dialogGameVisible"
-				:destroy-on-close="true"
-				width="480px"
-				class="imgCenter"
-			>
+			<div v-if="dialogGameVisible" class="imgCenter" @click="closeImage">
 				<img :src="bigImage" />
-			</el-dialog>
+			</div>
 		</div>
 		<gameManagementEdit
 			v-else
@@ -389,10 +384,10 @@ export default {
 			},
 			rowData: {},
 			showDetail: false,
-			labelList: {},
-			gameModuleNameList: {},
-			gameManageList: {},
-			gamePlantList: {},
+			labelList: [],
+			gameModuleNameList: [],
+			gameManageList: [],
+			gamePlantList: [],
 			bigImage: '',
 			editType: '',
 			now: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
@@ -521,6 +516,21 @@ export default {
 			})
 			return name.slice(0, -1)
 		},
+		changeTableSort({ column, prop, order }) {
+			this.pageNum = 1
+			this.queryData.orderProperty = prop
+			const orderParams = this.checkOrderParams.get(prop)
+			if (orderParams) {
+				if (order === 'ascending') {
+					// 升序
+					this.queryData.orderType = 'asc'
+				} else if (column.order === 'descending') {
+					// 降序
+					this.queryData.orderType = 'desc'
+				}
+				this.loadData()
+			}
+		},
 		moduleFilter(val) {
 			if (!this.gameModuleNameList) return
 			const arr = val.split(',')
@@ -550,6 +560,9 @@ export default {
 		lookGame(val) {
 			this.dialogGameVisible = true
 			this.bigImage = val
+		},
+		closeImage() {
+			this.dialogGameVisible = false
 		},
 		openEdit(row) {
 			this.showDetail = true

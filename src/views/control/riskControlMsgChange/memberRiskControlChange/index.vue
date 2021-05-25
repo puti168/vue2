@@ -18,7 +18,7 @@
           <el-form-item label="变更前风控等级:" class="tagheight" prop="accountType">
             <el-select
               v-model="queryData.accountType"
-              style="width: 280px"
+              style="width: 300px"
               multiple
               placeholder="默认选择全部"
               :popper-append-to-body="false"
