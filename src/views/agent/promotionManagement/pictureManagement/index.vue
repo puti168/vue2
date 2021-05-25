@@ -80,7 +80,7 @@
 								></el-option>
 							</el-select>
 						</el-form-item>
-						<el-form-item label="最近操作时间:">
+						<el-form-item label="最近操作时间:" label-width="120px">
 							<el-date-picker
 								v-model="queryData.updatedDt"
 								size="medium"
