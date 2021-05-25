@@ -98,8 +98,9 @@
           ></el-table-column>
           <el-table-column prop="labelStatus" align="center" label="状态" width="100px">
             <template slot-scope="scope">
-              <div v-if="scope.row.labelStatus === 1" class="normalRgba">开启中</div>
-              <div v-else class="disableRgba">已禁用</div>
+              <div v-if="scope.row.labelStatus === 0" class="disableRgba">已禁用</div>
+              <div v-else-if="scope.row.labelStatus === 1" class="normalRgba">开启中</div>
+              <span v-else>-</span>
             </template>
           </el-table-column>
           <el-table-column
@@ -334,7 +335,7 @@ export default {
       console.log(val)
       this.$confirm(
         `<strong>是否对 ${val.gameLabelName} 进行${
-          val.labelStatus === 1 ? '启用' : '禁用'
+          val.labelStatus === 0 ? '启用' : '禁用'
         }操作?</strong></br><span style='font-size:12px;color:#c1c1c1'>一旦操作将会立即生效</span>`,
         `确认提示`,
         {
