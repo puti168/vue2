@@ -297,8 +297,8 @@ export default {
 		}
 	},
 	computed: {
-		proxyAccountType() {
-			return this.globalDics.proxyAccountType
+		accountType() {
+			return this.globalDics.accountType
 		},
 		auditStatus() {
 			return this.globalDics.auditStatusType

@@ -243,10 +243,10 @@
 								<span v-else>-</span>
 								<p>
 									{{
-										scope.row.tranferProxyAccountType
+										scope.row.tranferaccountType
 											? typeFilter(
-													scope.row.tranferProxyAccountType,
-													'proxyAccountType'
+													scope.row.tranferaccountType,
+													'accountType'
 											  )
 											: '-'
 									}}
@@ -386,10 +386,10 @@ export default {
 	},
 	computed: {
 		accountTypeArr() {
-			return this.globalDics.proxyAccountType
+			return this.globalDics.accountType
 		},
-		proxyAccountType() {
-			return this.globalDics.proxyAccountType
+		accountType() {
+			return this.globalDics.accountType
 		},
 		auditStatus() {
 			return this.globalDics.auditStatusType
