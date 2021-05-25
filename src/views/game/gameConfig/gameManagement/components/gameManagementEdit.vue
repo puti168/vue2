@@ -391,7 +391,12 @@ export default {
 					arr.gameIcon = arr.gameIcon + ''
 				}
 				this.nowImage = arr.imageAddress
-				this.form = arr
+				if (!arr.gameRebateRate) {
+					delete arr.gameRebateRate
+				}
+				this.form = JSON.parse(JSON.stringify(arr))
+				console.log(this.form)
+				console.log(arr)
 			},
 			immediate: true,
 			deep: true

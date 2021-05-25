@@ -182,7 +182,7 @@
 						label="游戏名称"
 						width="120px"
 					></el-table-column>
-					<el-table-column align="center" label="显示状态" width="80px">
+					<el-table-column align="center" label="显示状态" width="90px">
 						<template slot-scope="scope">
 							<span
 								:class="
@@ -342,15 +342,9 @@
 					@size-change="handleSizeChange"
 				></el-pagination>
 			</div>
-			<el-dialog
-				title="图片"
-				:visible.sync="dialogGameVisible"
-				:destroy-on-close="true"
-				width="480px"
-				class="imgCenter"
-			>
+			<div v-if="dialogGameVisible" class="imgCenter" @click="closeImage">
 				<img :src="bigImage" />
-			</el-dialog>
+			</div>
 		</div>
 		<gameManagementEdit
 			v-else
@@ -390,10 +384,10 @@ export default {
 			},
 			rowData: {},
 			showDetail: false,
-			labelList: {},
-			gameModuleNameList: {},
-			gameManageList: {},
-			gamePlantList: {},
+			labelList: [],
+			gameModuleNameList: [],
+			gameManageList: [],
+			gamePlantList: [],
 			bigImage: '',
 			editType: '',
 			now: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
@@ -566,6 +560,9 @@ export default {
 		lookGame(val) {
 			this.dialogGameVisible = true
 			this.bigImage = val
+		},
+		closeImage() {
+			this.dialogGameVisible = false
 		},
 		openEdit(row) {
 			this.showDetail = true

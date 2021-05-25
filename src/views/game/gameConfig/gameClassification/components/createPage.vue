@@ -573,9 +573,8 @@ export default {
 .left-page {
 	display: inline-block;
 	.right-span {
-		margin-left: 50px;
 		position: absolute;
-		right: 50px;
+		right: 40px;
 		top: 50%;
 		transform: translate(0, -50%);
 	}
@@ -585,7 +584,7 @@ export default {
 	}
 	.el-icon-close {
 		position: absolute;
-		right: 20px;
+		right: 10px;
 		top: 50%;
 		transform: translate(0, -50%);
 		cursor: pointer;
@@ -607,9 +606,8 @@ export default {
 		text-align: center;
 	}
 	.right-span {
-		margin-left: 50px;
 		position: absolute;
-		right: 50px;
+		right: 30px;
 		top: 50%;
 		transform: translate(0, -50%);
 	}
