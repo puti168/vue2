@@ -243,9 +243,9 @@
 								<span v-else>-</span>
 								<p>
 									{{
-										scope.row.tranferaccountType
+										scope.row.tranferProxyAccountType
 											? typeFilter(
-													scope.row.tranferaccountType,
+													scope.row.tranferProxyAccountType,
 													'accountType'
 											  )
 											: '-'
