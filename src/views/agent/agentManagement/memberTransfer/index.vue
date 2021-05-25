@@ -64,7 +64,7 @@
 						style="width: 365px"
 					></el-input>
 				</el-form-item>
-				<el-form-item label="审核信息:">
+				<el-form-item label="审核信息:" prop="applyInfo">
 					<el-input
 						v-model="form.applyInfo"
 						size="medium"
@@ -72,6 +72,7 @@
 						placeholder="请输入"
 						clearable
 						maxlength="50"
+                        show-word-limit
 						style="width: 365px"
 					></el-input>
 				</el-form-item>
@@ -143,6 +144,20 @@ export default {
 				}
 			}
 
+            const testApplyInfo = (rule, value, callback) => {
+                const isSpecial = !notSpecial2(String(value))
+                const isRmoji = isHaveEmoji(String(value))
+                if (isSpecial) {
+                    callback(new Error('不支持空格及特殊字符'))
+                } else if (isRmoji) {
+                    callback(new Error('不支持表情'))
+                } else if (!value) {
+                    callback(new Error('请输入审核信息'))
+                } else {
+                    callback()
+                }
+            }
+
 			return {
 				accountType: [
 					{ required: true, message: '请选择账号类型', trigger: 'change' }
@@ -160,18 +175,25 @@ export default {
 						validator: testUserName,
 						trigger: 'blur'
 					}
-				]
+				],
+                applyInfo: [
+                    {
+                        required: true,
+                        validator: testApplyInfo,
+                        trigger: 'blur'
+                    }
+                ]
 			}
 		}
 	},
 	mounted() {},
 	methods: {
 		getOutlineInfo() {
-			this.loading = true
 			let lock = true
 			const reg1 = /^[A-Za-z]{1}(?=(.*[a-zA-Z]){1,})(?=(.*[0-9]){1,})[0-9A-Za-z]{3,10}$/
 			const { userName } = this.form
 			if (lock && reg1.test(userName)) {
+                this.loading = true
 				this.$api
 					.getOutlineInfo({ userName })
 					.then((res) => {
