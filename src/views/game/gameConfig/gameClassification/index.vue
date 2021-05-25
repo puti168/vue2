@@ -72,7 +72,7 @@
 									v-for="item in terminalTypeArr"
 									:key="item.code"
 									:label="item.description"
-									:value="item.code"
+									:value="item.description"
 								></el-option>
 							</el-select>
 						</el-form-item>
@@ -211,7 +211,7 @@
 						>
 							<template slot-scope="scope">
 								<span v-if="!!scope.row.supportTerminal">
-									{{ typeFilter(scope.row.supportTerminal, 'terminalnType') }}
+                                    {{ scope.row.supportTerminal }}
 								</span>
 								<span v-else></span>
 							</template>
