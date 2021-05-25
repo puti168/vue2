@@ -3,7 +3,7 @@
 		<div class="view-container dealer-container">
 			<div class="params">
 				<el-form ref="form" :inline="true" :model="queryData">
-					<el-form-item label="风控种类:">
+					<el-form-item label="风控类型:">
 						<el-select
 							v-model="queryData.riskType"
 							size="medium"
@@ -182,66 +182,46 @@
 				title="新增/编辑"
 				:visible.sync="dialogFormVisible"
 				:destroy-on-close="true"
-				width="480px"
+				width="520px"
 				class="rempadding"
 				@close="clear"
 			>
 				<el-divider></el-divider>
-				<el-form ref="formSub" :model="dialogForm" label-width="90px">
-					<el-form-item
-						label="风控类型:"
-						prop="gameLabelName"
-						:rules="[
-							{ required: true, message: '请输入标签名称', trigger: 'blur' },
-							{
-								min: 1,
-								max: 10,
-								message: '长度在 2 到 10 个字符',
-								trigger: 'blur'
-							}
-						]"
-					>
+				<el-form
+					ref="formSub"
+					:model="dialogForm"
+                    label-width="120px"
+					:rules="rules"
+				>
+					<el-form-item label="风控类型:" prop="riskType">
+						<el-select
+							v-model="dialogForm.riskType"
+							size="medium"
+							placeholder="默认选择全部"
+							clearable
+							style="width: 330px"
+						>
+							<el-option
+								v-for="item in []"
+								:key="item.code"
+								:label="item.description"
+								:value="item.code"
+							></el-option>
+						</el-select>
+					</el-form-item>
+					<el-form-item label="风控层级:" prop="riskRank">
 						<el-input
-							v-model="dialogForm.gameLabelName"
+							v-model="dialogForm.riskRank"
 							:maxlength="10"
 							autocomplete="off"
+							style="width: 330px"
 						></el-input>
 					</el-form-item>
-					<el-form-item
-						label="标签名称:"
-						prop="gameLabelName"
-						:rules="[
-							{ required: true, message: '请输入标签名称', trigger: 'blur' },
-							{
-								min: 1,
-								max: 10,
-								message: '长度在 2 到 10 个字符',
-								trigger: 'blur'
-							}
-						]"
-					>
+					<el-form-item label="风控描述信息:" prop="info">
 						<el-input
-							v-model="dialogForm.gameLabelName"
-							:maxlength="10"
-							autocomplete="off"
-						></el-input>
-					</el-form-item>
-					<el-form-item
-						label="描述:"
-						prop="description"
-						:rules="[
-							{ required: true, message: '请输入描述内容', trigger: 'blur' },
-							{
-								min: 2,
-								max: 50,
-								message: '长度在 2 到 50 个字符',
-								trigger: 'blur'
-							}
-						]"
-					>
-						<el-input
-							v-model="dialogForm.description"
+							v-model="dialogForm.info"
 							type="textarea"
+							style="width: 330px"
 						></el-input>
 					</el-form-item>
 				</el-form>
@@ -251,26 +231,6 @@
 					<el-button type="primary" @click="subAddOrEidt">保存</el-button>
 				</div>
 			</el-dialog>
-			<el-dialog
-				title="标签游戏"
-				:visible.sync="dialogGameVisible"
-				:destroy-on-close="true"
-				width="480px"
-				class="rempadding"
-			>
-				<el-divider></el-divider>
-				<div class="contentBox disableColor">标签名称：{{ labelName }}</div>
-				<p class="headerBox">
-					<span>游戏名称</span>
-					<span>添加时间</span>
-				</p>
-				<div class="bodyBox">
-					<p v-for="item in gameList" :key="item.gameName">
-						<span>{{ item.gameName }}</span>
-						<span>{{ item.createdAt }}</span>
-					</p>
-				</div>
-			</el-dialog>
 		</div>
 	</div>
 </template>
@@ -278,6 +238,8 @@
 <script>
 import list from '@/mixins/list'
 import { routerNames } from '@/utils/consts'
+// import { isHaveEmoji, notSpecial2 } from '@/utils/validate'
+
 export default {
 	name: routerNames.createRiskRank,
 	components: {},
@@ -292,14 +254,41 @@ export default {
 			},
 			tableData: [],
 			dialogFormVisible: false,
-			dialogForm: {},
-			gameList: [],
-			dialogGameVisible: false,
-			title: '',
-			labelName: ''
+			dialogForm: {
+				riskType: undefined,
+				riskRank: undefined,
+				info: undefined
+			},
+			title: ''
 		}
 	},
-	computed: {},
+	computed: {
+		rules() {
+			// const testPicName = (rule, value, callback) => {
+			// 	const isSpecial = !notSpecial2(String(value))
+			// 	const isRmoji = isHaveEmoji(String(value))
+			// 	if (isSpecial) {
+			// 		callback(new Error('不支持空格及特殊字符'))
+			// 	} else if (isRmoji) {
+			// 		callback(new Error('不支持表情'))
+			// 	} else if (!value) {
+			// 		callback(new Error('请输入图片名称'))
+			// 	} else {
+			// 		callback()
+			// 	}
+			// }
+
+			return {
+				riskType: [
+					{ required: true, message: '请选择风控类型', trigger: 'change' }
+				],
+				riskRank: [
+					{ required: true, message: '请选择风控层级', trigger: 'blur' }
+				],
+				info: [{ required: true, message: '请上传图片', trigger: 'blur' }]
+			}
+		}
+	},
 	mounted() {},
 	methods: {
 		loadData() {

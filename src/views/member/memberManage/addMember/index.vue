@@ -55,7 +55,7 @@
 						clearable
 						maxlength="11"
 						style="width: 365px"
-                        onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
+						onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
 					></el-input>
 				</el-form-item>
 				<el-form-item label="上级代理:">
@@ -101,7 +101,7 @@
 						placeholder="请输入"
 						clearable
 						maxlength="32"
-                        oninput="value=value.replace(/(^\s*)|(\s*$)/g ,'')"
+						oninput="value=value.replace(/(^\s*)|(\s*$)/g ,'')"
 						style="width: 365px"
 					></el-input>
 				</el-form-item>
@@ -155,6 +155,8 @@ import { routerNames } from '@/utils/consts'
 import list from '@/mixins/list'
 import { notSpecial2, isHaveEmoji } from '@/utils/validate'
 import { MOBILE_PATTERN, EMAIL_PATTERN } from '@/utils/pattern'
+import md5 from 'js-md5'
+
 export default {
 	name: routerNames.addMember,
 	mixins: [list],
@@ -279,9 +281,11 @@ export default {
 				...this.form
 			}
 			let lock = true
+
 			this.$refs['form'].validate((valid) => {
 				if (valid && lock) {
 					lock = false
+                    params.password = md5(params.password)
 					this.$api
 						.addMemberAPI(params)
 						.then((res) => {
