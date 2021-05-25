@@ -46,7 +46,7 @@
 				<el-form-item label="账号类型:">
 					<el-select
 						v-model="queryData.accountType"
-						style="width: 180px"
+						style="width: 300px"
 						multiple
 						:popper-append-to-body="false"
 						placeholder="默认选择全部"
@@ -78,7 +78,7 @@
 				<el-form-item label="审核操作:">
 					<el-select
 						v-model="queryData.auditStep"
-						style="width: 180px"
+						style="width: 300px"
 						:popper-append-to-body="false"
 					>
 						<el-option label="全部" value=""></el-option>

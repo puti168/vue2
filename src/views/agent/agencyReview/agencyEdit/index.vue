@@ -46,7 +46,7 @@
 					<el-form-item label="账号类型:" class="tagheight">
 						<el-select
 							v-model="queryData.accountType"
-							style="width: 180px"
+							style="width: 300px"
 							multiple
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"

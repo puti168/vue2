@@ -48,7 +48,7 @@
 									placeholder="请选择"
 									multiple
 									clearable
-									style="width: 365px"
+									style="width: 300px"
 								>
 									<el-option
 										v-for="item in terminalnType"
@@ -100,7 +100,7 @@
 									placeholder="请选择"
 									multiple
 									clearable
-									style="width: 365px"
+									style="width: 300px"
 								>
 									<el-option
 										v-for="item in gameManageList"
@@ -119,7 +119,7 @@
 									placeholder="请选择"
 									multiple
 									clearable
-									style="width: 365px"
+									style="width: 300px"
 								>
 									<el-option
 										v-for="item in gameModuleNameList"

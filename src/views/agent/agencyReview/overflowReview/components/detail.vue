@@ -39,7 +39,7 @@
 					<div>账号: {{ list.userName }}</div>
 					<div>账号状态: {{ typeFilter(list.memberAccountStatus, 'accountStatusType') }}</div>
 					<div>风控层级: {{ list.memberWindControlName }}</div>
-					<div>会员标签: {{ list.auditRemark }}</div>
+					<div>会员标签: {{ list.memberLabelName }}</div>
 				</div>
 				<div class="review-flex">
 					<div>VIP等级: {{ list.memberVipLevel }}</div>

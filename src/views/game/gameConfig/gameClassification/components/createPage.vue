@@ -231,7 +231,7 @@ export default {
 				assortSort: [
 					{
 						required: true,
-						message: '请输入分类顺序',
+						message: '请输入分类顺序1',
 						trigger: 'blur'
 					}
 				],
