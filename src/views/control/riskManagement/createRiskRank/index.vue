@@ -43,7 +43,7 @@
 							placeholder="请输入"
 							clearable
 							style="width: 180px"
-							maxlength="11"
+							maxlength="15"
 						></el-input>
 					</el-form-item>
 					<el-form-item label="最近操作人:" prop="updatedBy">
@@ -53,7 +53,7 @@
 							placeholder="请输入"
 							clearable
 							style="width: 180px"
-							maxlength="11"
+							maxlength="15"
 						></el-input>
 					</el-form-item>
 					<el-form-item>
@@ -95,56 +95,27 @@
 					:data="tableData"
 					style="width: 100%"
 					:header-cell-style="getRowClass"
-					@sort-change="_changeTableSort"
+					@sort-change="changeTableSort"
 				>
 					<el-table-column
 						prop="riskType"
 						align="center"
 						label="风控类型"
-						sortable="custom"
-						width="120px"
 					></el-table-column>
 					<el-table-column
-						prop="gameLabelName"
+						prop="riskRank"
 						align="center"
-						label="标签名称"
-						width="170px"
+						label="风控层级"
 					></el-table-column>
 					<el-table-column
-						prop="labelStatus"
+						prop="miaoShu"
 						align="center"
-						label="状态"
-						width="100px"
-					>
-						<template slot-scope="scope">
-							<div v-if="scope.row.labelStatus === 1" class="normalRgba">
-								开启中
-							</div>
-							<div v-else class="disableRgba">已禁用</div>
-						</template>
-					</el-table-column>
-					<el-table-column
-						prop="description"
-						align="center"
-						label="标签描述"
+						label="风控层级描述"
 					></el-table-column>
-					<el-table-column
-						prop="gameLabelCount"
-						align="center"
-						label="已标签游戏"
-						width="120px"
-					>
-						<template slot-scope="scope">
-							<div class="blueColor decoration" @click="lookGame(scope.row)">
-								{{ scope.row.gameLabelCount }}
-							</div>
-						</template>
-					</el-table-column>
 					<el-table-column
 						prop="createdBy"
 						align="center"
 						label="创建人"
-						width="100px"
 					></el-table-column>
 					<el-table-column
 						prop="createdAt"
@@ -157,7 +128,6 @@
 						prop="updatedBy"
 						align="center"
 						label="最近操作人"
-						width="100px"
 					></el-table-column>
 					<el-table-column
 						prop="updatedAt"
@@ -174,29 +144,9 @@
 					>
 						<template slot-scope="scope">
 							<el-button
-								v-if="scope.row.labelStatus === 0"
-								:disabled="loading"
-								type="success"
-								size="medium"
-								class="noicon"
-								@click="switchClick(scope.row)"
-							>
-								开启
-							</el-button>
-							<el-button
-								v-else
-								:disabled="loading"
-								type="danger"
-								size="medium"
-								class="noicon"
-								@click="switchClick(scope.row)"
-							>
-								禁用
-							</el-button>
-							<el-button
 								type="primary"
 								icon="el-icon-edit"
-								:disabled="scope.row.labelStatus === 1"
+								:disabled="loading"
 								size="medium"
 								@click="edit(scope.row)"
 							>
@@ -204,9 +154,9 @@
 							</el-button>
 
 							<el-button
-								type="warning"
+								type="danger"
 								icon="el-icon-delete"
-								:disabled="scope.row.labelStatus === 1"
+								:disabled="loading"
 								size="medium"
 								@click="deleteLabel(scope.row)"
 							>
@@ -217,19 +167,19 @@
 				</el-table>
 				<!-- 分页 -->
 				<el-pagination
+					:total="total"
 					:current-page.sync="pageNum"
 					class="pageValue"
 					background
 					layout="total, sizes,prev, pager, next, jumper"
 					:page-size="pageSize"
 					:page-sizes="pageSizes"
-					:total="total"
 					@current-change="handleCurrentChange"
 					@size-change="handleSizeChange"
 				></el-pagination>
 			</div>
 			<el-dialog
-				title="创建/编辑"
+				title="新增/编辑"
 				:visible.sync="dialogFormVisible"
 				:destroy-on-close="true"
 				width="480px"
@@ -238,6 +188,25 @@
 			>
 				<el-divider></el-divider>
 				<el-form ref="formSub" :model="dialogForm" label-width="90px">
+					<el-form-item
+						label="风控类型:"
+						prop="gameLabelName"
+						:rules="[
+							{ required: true, message: '请输入标签名称', trigger: 'blur' },
+							{
+								min: 1,
+								max: 10,
+								message: '长度在 2 到 10 个字符',
+								trigger: 'blur'
+							}
+						]"
+					>
+						<el-input
+							v-model="dialogForm.gameLabelName"
+							:maxlength="10"
+							autocomplete="off"
+						></el-input>
+					</el-form-item>
 					<el-form-item
 						label="标签名称:"
 						prop="gameLabelName"
@@ -361,21 +330,9 @@ export default {
 				this.loading = false
 			}, 1000)
 		},
-		lookGame(val) {
-			this.labelName = val.gameLabelName
-			const data = {}
-			data.gameLabelId = val.gameLabelId
-			data.gameLabelName = val.gameLabelName
-			this.$api.getGameLabelRelation(data).then((res) => {
-				if (res.code === 200) {
-					this.gameList = res.data
-					this.dialogGameVisible = true
-				}
-			})
-		},
 		reset() {
 			this.pageNum = 1
-            this.$refs['form'].resetFields()
+			this.$refs['form'].resetFields()
 			this.queryData = {
 				riskType: undefined,
 				riskRank: undefined,
@@ -424,7 +381,7 @@ export default {
 			data.id = val.id
 			data.description = val.description
 			data.gameLabelName = val.gameLabelName
-			this.$confirm(`<strong>确定删除此条标签类型吗?</strong>`, `确认提示`, {
+			this.$confirm(`<strong>确定删除此条配置?</strong>`, `确认提示`, {
 				dangerouslyUseHTMLString: true,
 				confirmButtonText: '确定',
 				cancelButtonText: '取消',
@@ -432,7 +389,8 @@ export default {
 			})
 				.then(() => {
 					this.$api.setUpdateDelete(data).then((res) => {
-						if (res.code === 200) {
+						const { code } = res
+						if (code === 200) {
 							this.$message.success('删除成功')
 							this.loadData()
 						}
@@ -441,7 +399,6 @@ export default {
 				.catch(() => {})
 		},
 		subAddOrEidt() {
-			console.log(this.title)
 			const data = {}
 			data.id = this.dialogForm.id
 			data.description = this.dialogForm.description
@@ -496,9 +453,6 @@ export default {
 		},
 		clear() {
 			this.$refs.formSub.resetFields()
-		},
-		enterSubmit() {
-			this.loadData()
 		}
 	}
 }
