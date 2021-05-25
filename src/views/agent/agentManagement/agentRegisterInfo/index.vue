@@ -180,9 +180,19 @@
                         </template>
                     </el-table-column>
                     <el-table-column prop="deviceNo" align="center" label="终端设备号">
+                        <template slot="header">
+                            终端设备号
+                            <br />
+                            风控层级
+                        </template>
                         <template slot-scope="scope">
 							<span v-if="!!scope.row.deviceNo">
 								{{ scope.row.deviceNo }}
+							</span>
+                            <span v-else>-</span>
+                            <br />
+                            <span v-if="!!scope.row.windControlName">
+								{{ scope.row.windControlName }}
 							</span>
                             <span v-else>-</span>
                         </template>
