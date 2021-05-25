@@ -191,11 +191,11 @@
 							width="150px"
 						>
 							<template slot-scope="scope">
-								<div v-if="scope.row.clientDisplay * 1 === 0">
+								<div v-if="scope.row.clientDisplay">
 									显示
 								</div>
 								<div
-									v-else-if="scope.row.clientDisplay * 1 === 1"
+									v-else-if="scope.row.clientDisplay === false"
 									class="disableRgba"
 								>
 									不显示
