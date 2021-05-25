@@ -167,11 +167,11 @@ export default {
 	mounted() {},
 	methods: {
 		getOutlineInfo() {
-			this.loading = true
 			let lock = true
 			const reg1 = /^[A-Za-z]{1}(?=(.*[a-zA-Z]){1,})(?=(.*[0-9]){1,})[0-9A-Za-z]{3,10}$/
 			const { userName } = this.form
 			if (lock && reg1.test(userName)) {
+                this.loading = true
 				this.$api
 					.getOutlineInfo({ userName })
 					.then((res) => {
