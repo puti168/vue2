@@ -32,7 +32,8 @@ export const routerNames = {
 	pictureManagement: 'pictureManagement',
 	domainCreateAndEidt: 'domainCreateAndEidt',
 	levelWelfareConfig: 'levelWelfareConfig',
-	createRiskRank: 'createRiskRank'
+	createRiskRank: 'createRiskRank',
+	bankRiskChangeInfo: 'bankRiskChangeInfo'
 }
 const month = dayjs().month()
 const year = dayjs().year()
