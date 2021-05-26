@@ -411,7 +411,7 @@
 							<span v-if="!!scope.row.invitationCode">
 								{{ scope.row.invitationCode }}
 							</span>
-							<span v-else></span>
+							<span v-else>-</span>
 						</template>
 					</el-table-column>
 					<el-table-column
