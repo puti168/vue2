@@ -208,7 +208,7 @@
               </el-button>
 
               <el-button
-                :disabled="loading"
+                :disabled="scope.row.status === '1'"
                 type="danger"
                 size="medium"
                 class="noicon"

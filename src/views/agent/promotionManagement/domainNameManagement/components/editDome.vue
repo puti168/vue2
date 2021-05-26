@@ -53,11 +53,8 @@
             placeholder="请输入"
           ></el-input>
         </el-form-item>
-        <el-form-item label="排序:" prop="displayOrder">
-          <el-input
-            v-model.number="formData.displayOrder"
-            :disabled="!control"
-          ></el-input>
+        <el-form-item v-if="control" label="排序:" prop="displayOrder">
+          <el-input v-model.number="formData.displayOrder"></el-input>
         </el-form-item>
         <el-form-item label="状态:">
           <el-select v-model="formData.status" placeholder="请选择" :disabled="!control">
