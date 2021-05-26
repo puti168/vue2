@@ -5,15 +5,15 @@
         <el-form ref="form" :inline="true" :model="queryData">
           <el-form-item label="银行卡号:">
             <el-input
-              v-model="queryData.cardnum"
+              v-model="queryData.cardNumber"
               maxlength="25"
               size="medium"
               style="width: 210px"
               placeholder="请输入"
               :disabled="loading"
-              name="cardnum"
+              name="cardNumber"
               oninput="value=value.replace(/[^\d]/g,'')"
-              @blur="queryData.cardnum = $event.target.value"
+              @blur="queryData.cardNumber = $event.target.value"
               @keyup.enter.native="enterSearch"
             ></el-input>
           </el-form-item>
@@ -31,7 +31,7 @@
           </el-form-item>
           <el-form-item label="银行支行:">
             <el-input
-              v-model="queryData.bankzh"
+              v-model="queryData.bankRegion"
               clearable
               maxlength="10"
               size="medium"
@@ -43,7 +43,7 @@
           </el-form-item>
           <el-form-item label="黑名单状态:">
             <el-select
-              v-model="queryData.deviceType"
+              v-model="queryData.blackStatus"
               style="width: 210px"
               clearable
               placeholder="默认选择全部"
@@ -59,7 +59,7 @@
           </el-form-item>
           <el-form-item label="绑定状态:">
             <el-select
-              v-model="queryData.status"
+              v-model="queryData.bindStatus"
               clearable
               style="width: 210px"
               placeholder="默认选择全部"
@@ -75,7 +75,7 @@
           </el-form-item>
           <el-form-item label="最近操作人:">
             <el-input
-              v-model="queryData.operation"
+              v-model="queryData.lastOperator"
               clearable
               maxlength="20"
               size="medium"
@@ -87,7 +87,7 @@
           </el-form-item>
           <el-form-item label="当前绑定会员账号:">
             <el-input
-              v-model="queryData.bdzhanghao"
+              v-model="queryData.bindUserName"
               clearable
               maxlength="11"
               size="medium"
@@ -99,7 +99,7 @@
           </el-form-item>
           <el-form-item label="会员姓名:">
             <el-input
-              v-model="queryData.memberName"
+              v-model="queryData.userName"
               clearable
               maxlength="6"
               size="medium"
@@ -111,76 +111,76 @@
           </el-form-item>
           <el-form-item label="会员提款被拒次数:">
             <el-input
-              v-model="queryData.hytkbjcsmin"
+              v-model="queryData.userWithdrawRefuseMinCount"
               size="medium"
               placeholder="最小数值"
               style="width: 100px"
               maxlength="10"
-              name="hytkbjcsmin"
+              name="userWithdrawRefuseMinCount"
               oninput="value=value.replace(/[^\d]/g,'')"
               @blur="checkValue($event)"
             ></el-input>
             -
             <el-input
-              v-model="queryData.hytkbjcsmax"
+              v-model="queryData.userWithdrawRefuseMaxCount"
               size="medium"
               placeholder="最大数值"
               style="width: 100px"
               maxlength="10"
-              name="hytkbjcsmax"
+              name="userWithdrawRefuseMaxCount"
               oninput="value=value.replace(/[^\d]/g,'')"
               @blur="checkValue($event)"
             ></el-input>
           </el-form-item>
           <el-form-item label="会员提款成功次数:">
             <el-input
-              v-model="queryData.hytkcgcsmin"
+              v-model="queryData.userWithdrawSuccessMinCount"
               size="medium"
               placeholder="最小数值"
               style="width: 100px"
               maxlength="10"
-              name="hytkcgcsmin"
+              name="userWithdrawSuccessMinCount"
               oninput="value=value.replace(/[^\d]/g,'')"
               @blur="checkValue($event)"
             ></el-input>
             -
             <el-input
-              v-model="queryData.hytkcgcsmax"
+              v-model="queryData.userWithdrawSuccessMaxCount"
               size="medium"
               placeholder="最大数值"
               style="width: 100px"
               maxlength="10"
-              name="hytkcgcsmax"
+              name="userWithdrawSuccessMaxCount"
               oninput="value=value.replace(/[^\d]/g,'')"
               @blur="checkValue($event)"
             ></el-input>
           </el-form-item>
           <el-form-item label="会员提款总金额:">
             <el-input
-              v-model="queryData.hytkzemin"
+              v-model="queryData.userWithdrawMinAmount"
               size="medium"
               placeholder="最小数值"
               style="width: 100px"
               maxlength="10"
-              name="hytkzemin"
+              name="userWithdrawMinAmount"
               oninput="value=value.replace(/[^\d]/g,'')"
               @blur="checkValue($event)"
             ></el-input>
             -
             <el-input
-              v-model="queryData.hytkzemax"
+              v-model="queryData.userWithdrawMaxAmount"
               size="medium"
               placeholder="最大数值"
               style="width: 100px"
               maxlength="10"
-              name="hytkzemax"
+              name="userWithdrawMaxAmount"
               oninput="value=value.replace(/[^\d]/g,'')"
               @blur="checkValue($event)"
             ></el-input>
           </el-form-item>
           <el-form-item label="风控层级:" class="tagheight">
             <el-select
-              v-model="queryData.deviceType1"
+              v-model="queryData.windControlId"
               style="width: 300px"
               multiple
               placeholder="默认选择全部"
@@ -196,69 +196,69 @@
           </el-form-item>
           <el-form-item label="代理提款被拒次数:">
             <el-input
-              v-model="queryData.dltkbjcsmin"
+              v-model="queryData.proxyWithdrawRefuseMinCount"
               size="medium"
               placeholder="最小数值"
               style="width: 100px"
               maxlength="10"
-              name="dltkbjcsmin"
+              name="proxyWithdrawRefuseMinCount"
               oninput="value=value.replace(/[^\d]/g,'')"
               @blur="checkValue($event)"
             ></el-input>
             -
             <el-input
-              v-model="queryData.dltkbjcsmax"
+              v-model="queryData.proxyWithdrawRefuseMaxCount"
               size="medium"
               placeholder="最大数值"
               style="width: 100px"
               maxlength="10"
-              name="dltkbjcsmax"
+              name="proxyWithdrawRefuseMaxCount"
               oninput="value=value.replace(/[^\d]/g,'')"
               @blur="checkValue($event)"
             ></el-input>
           </el-form-item>
           <el-form-item label="代理提款成功次数:">
             <el-input
-              v-model="queryData.dltkcgcsmin"
+              v-model="queryData.proxyWithdrawSuccessMinCount"
               size="medium"
               placeholder="最小数值"
               style="width: 100px"
               maxlength="10"
-              name="dltkcgcsmin"
+              name="proxyWithdrawSuccessMinCount"
               oninput="value=value.replace(/[^\d]/g,'')"
               @blur="checkValue($event)"
             ></el-input>
             -
             <el-input
-              v-model="queryData.dltkcgcsmax"
+              v-model="queryData.proxyWithdrawSuccessMaxCount"
               size="medium"
               placeholder="最大数值"
               style="width: 100px"
               maxlength="10"
-              name="dltkcgcsmax"
+              name="proxyWithdrawSuccessMaxCount"
               oninput="value=value.replace(/[^\d]/g,'')"
               @blur="checkValue($event)"
             ></el-input>
           </el-form-item>
           <el-form-item label="代理提款总金额:">
             <el-input
-              v-model="queryData.dltkzemin"
+              v-model="queryData.proxyWithdrawMinAmount"
               size="medium"
               placeholder="最小数值"
               style="width: 100px"
               maxlength="10"
-              name="dltkzemin"
+              name="proxyWithdrawMinAmount"
               oninput="value=value.replace(/[^\d]/g,'')"
               @blur="checkValue($event)"
             ></el-input>
             -
             <el-input
-              v-model="queryData.dltkzemax"
+              v-model="queryData.proxyWithdrawMaxAmount"
               size="medium"
               placeholder="最大数值"
               style="width: 100px"
               maxlength="10"
-              name="dltkzemax"
+              name="proxyWithdrawMaxAmount"
               oninput="value=value.replace(/[^\d]/g,'')"
               @blur="checkValue($event)"
             ></el-input>
@@ -309,10 +309,19 @@
           :header-cell-style="getRowClass"
           @sort-change="_changeTableSort"
         >
-          <el-table-column prop="cardnum" align="center" width="240px" label="银行卡号">
+          <el-table-column
+            prop="cardNumber"
+            align="center"
+            width="240px"
+            label="银行卡号"
+          >
             <template slot-scope="scope">
-              <Copy v-if="!!scope.row.cardnum" :title="scope.row.cardnum" :copy="copy">
-                {{ scope.row.cardnum }}
+              <Copy
+                v-if="!!scope.row.cardNumber"
+                :title="scope.row.cardNumber"
+                :copy="copy"
+              >
+                {{ scope.row.cardNumber }}
               </Copy>
               <span v-else>-</span>
             </template>
@@ -323,51 +332,90 @@
               <br />
               银行支行
             </template>
+            <template slot="scope">
+              {{ scope.row.bankName }}
+              <br />
+              {{ scope.row.bankBranch }}
+            </template>
           </el-table-column>
           <el-table-column
-            prop="memberName"
+            prop="blacklistStatus"
             align="center"
             label="黑名单状态"
             width="130px"
           >
+            <template slot="scope">
+              <span v-if="scope.row.blacklistStatus === 0" class="disableRgba">
+                {{ typeFilter(scope.row.blacklistStatus, "blackStatusType") }}
+              </span>
+              <span v-else-if="scope.row.blacklistStatus === 1" class="normalRgba">
+                {{ typeFilter(scope.row.blacklistStatus, "blackStatusType") }}
+              </span>
+              <span v-else>-</span>
+            </template>
           </el-table-column>
           <el-table-column
-            prop="accountType"
+            prop="bindStatus"
             align="center"
             label="绑定状态"
             width="100px"
           >
+            <template slot="scope">
+              <span v-if="scope.row.bindStatus === 0" class="disableRgba">
+                {{ typeFilter(scope.row.bindStatus, "bindStatusType") }}
+              </span>
+              <span v-else-if="scope.row.bindStatus === 1" class="normalRgba">
+                {{ typeFilter(scope.row.bindStatus, "bindStatusType") }}
+              </span>
+              <span v-else>-</span>
+            </template>
           </el-table-column>
           <el-table-column
-            prop="parentProxyName"
+            prop="windControlId"
             align="center"
             label="风控层级"
             width="150px"
           >
+            <template slot="scope">
+              <span v-if="scope.row.windControlId !== null">
+                {{ typeFilter(scope.row.windControlId, "windLevelType") }}
+              </span>
+              <span v-else>-</span>
+            </template>
           </el-table-column>
           <el-table-column
-            prop="playerName"
+            prop="bindNum"
             align="center"
             label="绑定账号次数"
             width="180px"
           >
           </el-table-column>
-          <el-table-column prop="betStatus" align="center" width="100px">
+          <el-table-column prop="bindUserName" align="center" width="100px">
             <template slot="header">
               当前绑定会员账号
               <br />
               会员姓名
             </template>
+            <template slot="scope">
+              {{ scope.row.bindUserName }}
+              <br />
+              <!-- {{ scope.row.userName }} -->
+            </template>
           </el-table-column>
-          <el-table-column prop="betStatus" align="center" width="100px">
+          <el-table-column prop="withdrawalSuccessNum" align="center" width="100px">
             <template slot="header">
               会员提款成功次数
               <br />
               会员提款被拒次数
             </template>
+            <template slot="scope">
+              {{ scope.row.withdrawalSuccessNum }}
+              <br />
+              {{ scope.row.withdrawalFailNum }}
+            </template>
           </el-table-column>
           <el-table-column
-            prop="betAmount"
+            prop="withdrawalTotalAmount"
             align="center"
             label="会员提款总金额"
             width="120px"
@@ -380,34 +428,34 @@
             </template>
           </el-table-column>
           <el-table-column
-            prop="createAt"
+            prop="createAt1"
             align="center"
             label="代理提款总金额"
             width="160px"
           ></el-table-column>
           <el-table-column
-            prop="netAt"
+            prop="createdAt"
             align="center"
             label="银行卡新增时间"
             sortable="custom"
             width="160px"
           ></el-table-column>
           <el-table-column
-            prop="loginIp"
+            prop="withdrawalTime"
             align="center"
             label="最近提款时间"
             width="150px"
             sortable="custom"
           ></el-table-column>
           <el-table-column
-            prop="deviceType"
+            prop="updatedBy"
             align="center"
             label="最近操作人"
             width="120px"
           >
           </el-table-column>
           <el-table-column
-            prop="deviceType"
+            prop="updatedAt"
             align="center"
             label="最近操作时间"
             width="120px"
@@ -416,8 +464,8 @@
           </el-table-column>
           <el-table-column prop="operation" align="center" label="操作" width="120px">
             <template slot-scope="scope">
-              {{ scope.row.id }}
               <el-button
+                v-if="scope.row.blacklistStatus === 0"
                 type="success"
                 size="medium"
                 @click="eidtDialog('开启', scope.row)"
@@ -425,6 +473,7 @@
                 开启
               </el-button>
               <el-button
+                v-else
                 type="danger"
                 size="medium"
                 @click="eidtDialog('禁用', scope.row)"
@@ -455,20 +504,14 @@
         ></el-pagination>
       </div>
     </div>
-    <el-dialog
-      :title="moduleBox"
-      center
-      :visible.sync="editVisible"
-      :before-close="closeFormDialog"
-      width="520px"
-    >
+    <el-dialog :title="moduleBox" center :visible.sync="editVisible" width="520px">
       <el-form
         ref="editForm"
         :model="editData"
         label-width="105px"
         @submit.native.prevent="enterSearch"
       >
-        <el-form-item
+        <!-- <el-form-item
           v-if="moduleBox === '状态变更'"
           label="黑名单状态："
           prop="deviceType"
@@ -485,7 +528,7 @@
               :value="item.code"
             ></el-option>
           </el-select>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item
           label="备注信息："
           prop="remark"
@@ -504,7 +547,9 @@
           </el-input>
         </el-form-item>
         <el-form-item v-if="moduleBox === '解除绑定'">
-          <el-checkbox v-model="checked">将该银行卡变更为黑名单禁用状态</el-checkbox>
+          <el-checkbox
+v-model="editData.checked"
+>将该银行卡变更为黑名单禁用状态</el-checkbox>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -530,8 +575,8 @@ export default {
       dataList: {},
       moduleBox: '',
       editVisible: false,
-      editData: {},
-      checked: true
+      editData: {}
+      // checked: true
     }
   },
   computed: {
@@ -546,22 +591,23 @@ export default {
     }
   },
   mounted() {
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 3; i++) {
       this.tableData[i] = {
-        cardnum: '464544654'
+        cardNumber: '464544654'
       }
     }
   },
   methods: {
     loadData() {
       // this.loading = true;
-      let params = {
-        ...this.queryData
-      }
-      params = {
-        ...this.getParams(params)
-      }
-      console.log(params)
+      // let params = {
+      //   ...this.queryData,
+      //   dataType: 1
+      // }
+      // params = {
+      //   ...this.getParams(params)
+      // }
+      // console.log(params)
       // this.$api
       //   .getGameRecordNotes(params)
       //   .then((res) => {
@@ -594,30 +640,29 @@ export default {
     changeAccountStatus(val) {
       console.log(val)
     },
-    submitEdit() {},
-    cancel() {
-      // this.$refs.editForm.resetFields();
-      this.$nextTick(() => {
-        this.editVisible = false
-      })
+    submitEdit() {
+      console.log(this.editData)
+      // const params = {}
+      // this.$refs.editForm.validate((valid) => {
+      //   if (valid) {
+      //   }
+      // })
     },
-    closeFormDialog() {
-      console.log(11111)
-      this.editData.remark = ''
-      this.editVisible = false
+    cancel() {
+      // this.$refs.editForm.resetFields()
+      // this.$nextTick(() => {
+      //   this.editVisible = false
+      // })
     },
     _changeTableSort({ column, prop, order }) {
-      if (prop === 'betAmount') {
+      if (prop === 'createdAt') {
         prop = 1
       }
-      if (prop === 'netAmount') {
+      if (prop === 'withdrawalTime') {
         prop = 2
       }
-      if (prop === 'createAt') {
+      if (prop === 'withdrawalTime') {
         prop = 3
-      }
-      if (prop === 'netAt') {
-        prop = 4
       }
       this.queryData.orderKey = prop
       if (order === 'ascending') {
@@ -632,185 +677,185 @@ export default {
     checkValue(e) {
       const { name, value } = e.target
       switch (name) {
-        case 'hytkbjcsmin':
+        case 'userWithdrawRefuseMinCount':
           if (
-            !!this.queryData.hytkbjcsmax &&
+            !!this.queryData.userWithdrawRefuseMaxCount &&
             value &&
-            value * 1 > this.queryData.hytkbjcsmax * 1
+            value * 1 > this.queryData.userWithdrawRefuseMaxCount * 1
           ) {
             this.$message({
               type: 'warning',
               message: `会员提款被拒次数最小值不能大于最大值`
             })
-            this.queryData.hytkbjcsmin = ''
+            this.queryData.userWithdrawRefuseMinCount = ''
           } else {
-            this.queryData.hytkbjcsmin = value
+            this.queryData.userWithdrawRefuseMinCount = value
           }
           break
-        case 'hytkbjcsmax':
+        case 'userWithdrawRefuseMaxCount':
           if (
-            !!this.queryData.hytkbjcsmin &&
+            !!this.queryData.userWithdrawRefuseMinCount &&
             value &&
-            value * 1 < this.queryData.hytkbjcsmin * 1
+            value * 1 < this.queryData.userWithdrawRefuseMinCount * 1
           ) {
             this.$message({
               type: 'warning',
               message: `会员提款被拒次数最大值不能小于最小值`
             })
-            this.queryData.hytkbjcsmax = ''
+            this.queryData.userWithdrawRefuseMaxCount = ''
           } else {
-            this.queryData.hytkbjcsmax = value
+            this.queryData.userWithdrawRefuseMaxCount = value
           }
           break
-        case 'hytkcgcsmin':
+        case 'userWithdrawSuccessMinCount':
           if (
-            !!this.queryData.hytkcgcsmax &&
+            !!this.queryData.userWithdrawSuccessMaxCount &&
             value &&
-            value * 1 > this.queryData.hytkcgcsmax * 1
+            value * 1 > this.queryData.userWithdrawSuccessMaxCount * 1
           ) {
             this.$message({
               type: 'warning',
               message: `会员提款成功次数最小值不能大于最大值`
             })
-            this.queryData.hytkcgcsmin = ''
+            this.queryData.userWithdrawSuccessMinCount = ''
           } else {
-            this.queryData.hytkcgcsmin = value
+            this.queryData.userWithdrawSuccessMinCount = value
           }
           break
-        case 'hytkcgcsmax':
+        case 'userWithdrawSuccessMaxCount':
           if (
-            !!this.queryData.hytkcgcsmin &&
+            !!this.queryData.userWithdrawSuccessMinCount &&
             value &&
-            value * 1 < this.queryData.hytkcgcsmin * 1
+            value * 1 < this.queryData.userWithdrawSuccessMinCount * 1
           ) {
             this.$message({
               type: 'warning',
               message: `会员提款成功次数最大值不能小于最小值`
             })
-            this.queryData.hytkcgcsmax = ''
+            this.queryData.userWithdrawSuccessMaxCount = ''
           } else {
-            this.queryData.hytkcgcsmax = value
+            this.queryData.userWithdrawSuccessMaxCount = value
           }
           break
-        case 'hytkzemin':
+        case 'userWithdrawMinAmount':
           if (
-            !!this.queryData.hytkzemax &&
+            !!this.queryData.userWithdrawMaxAmount &&
             value &&
-            value * 1 > this.queryData.hytkzemax * 1
+            value * 1 > this.queryData.userWithdrawMaxAmount * 1
           ) {
             this.$message({
               type: 'warning',
               message: `会员提款总金额最小值不能大于最大值`
             })
-            this.queryData.hytkzemin = ''
+            this.queryData.userWithdrawMinAmount = ''
           } else {
-            this.queryData.hytkzemin = value
+            this.queryData.userWithdrawMinAmount = value
           }
           break
-        case 'hytkzemax':
+        case 'userWithdrawMaxAmount':
           if (
-            !!this.queryData.hytkzemin &&
+            !!this.queryData.userWithdrawMinAmount &&
             value &&
-            value * 1 < this.queryData.hytkzemin * 1
+            value * 1 < this.queryData.userWithdrawMinAmount * 1
           ) {
             this.$message({
               type: 'warning',
               message: `会员提款总金额最大值不能小于最小值`
             })
-            this.queryData.hytkzemax = ''
+            this.queryData.userWithdrawMaxAmount = ''
           } else {
-            this.queryData.hytkzemax = value
+            this.queryData.userWithdrawMaxAmount = value
           }
           break
 
-        case 'dltkbjcsmin':
+        case 'proxyWithdrawRefuseMinCount':
           if (
-            !!this.queryData.dltkbjcsmax &&
+            !!this.queryData.proxyWithdrawRefuseMaxCount &&
             value &&
-            value * 1 > this.queryData.dltkbjcsmax * 1
+            value * 1 > this.queryData.proxyWithdrawRefuseMaxCount * 1
           ) {
             this.$message({
               type: 'warning',
               message: `代理提款被拒次数最小值不能大于最大值`
             })
-            this.queryData.dltkbjcsmin = ''
+            this.queryData.proxyWithdrawRefuseMinCount = ''
           } else {
-            this.queryData.dltkbjcsmin = value
+            this.queryData.proxyWithdrawRefuseMinCount = value
           }
           break
-        case 'dltkbjcsmax':
+        case 'proxyWithdrawRefuseMaxCount':
           if (
-            !!this.queryData.dltkbjcsmin &&
+            !!this.queryData.proxyWithdrawRefuseMinCount &&
             value &&
-            value * 1 < this.queryData.dltkbjcsmin * 1
+            value * 1 < this.queryData.proxyWithdrawRefuseMinCount * 1
           ) {
             this.$message({
               type: 'warning',
               message: `代理提款被拒次数最大值不能小于最小值`
             })
-            this.queryData.dltkbjcsmax = ''
+            this.queryData.proxyWithdrawRefuseMaxCount = ''
           } else {
-            this.queryData.dltkbjcsmax = value
+            this.queryData.proxyWithdrawRefuseMaxCount = value
           }
           break
-        case 'dltkcgcsmin':
+        case 'proxyWithdrawSuccessMinCount':
           if (
-            !!this.queryData.dltkcgcsmax &&
+            !!this.queryData.proxyWithdrawSuccessMaxCount &&
             value &&
-            value * 1 > this.queryData.dltkcgcsmax * 1
+            value * 1 > this.queryData.proxyWithdrawSuccessMaxCount * 1
           ) {
             this.$message({
               type: 'warning',
               message: `代理提款成功次数最小值不能大于最大值`
             })
-            this.queryData.dltkcgcsmin = ''
+            this.queryData.proxyWithdrawSuccessMinCount = ''
           } else {
-            this.queryData.dltkcgcsmin = value
+            this.queryData.proxyWithdrawSuccessMinCount = value
           }
           break
-        case 'dltkcgcsmax':
+        case 'proxyWithdrawSuccessMaxCount':
           if (
-            !!this.queryData.dltkcgcsmin &&
+            !!this.queryData.proxyWithdrawSuccessMinCount &&
             value &&
-            value * 1 < this.queryData.dltkcgcsmin * 1
+            value * 1 < this.queryData.proxyWithdrawSuccessMinCount * 1
           ) {
             this.$message({
               type: 'warning',
               message: `代理提款成功次数最大值不能小于最小值`
             })
-            this.queryData.dltkcgcsmax = ''
+            this.queryData.proxyWithdrawSuccessMaxCount = ''
           } else {
-            this.queryData.dltkcgcsmax = value
+            this.queryData.proxyWithdrawSuccessMaxCount = value
           }
           break
-        case 'dltkzemin':
+        case 'proxyWithdrawMinAmount':
           if (
-            !!this.queryData.dltkzemax &&
+            !!this.queryData.proxyWithdrawMaxAmount &&
             value &&
-            value * 1 > this.queryData.dltkzemax * 1
+            value * 1 > this.queryData.proxyWithdrawMaxAmount * 1
           ) {
             this.$message({
               type: 'warning',
               message: `代理提款总金额最小值不能大于最大值`
             })
-            this.queryData.dltkzemin = ''
+            this.queryData.proxyWithdrawMinAmount = ''
           } else {
-            this.queryData.dltkzemin = value
+            this.queryData.proxyWithdrawMinAmount = value
           }
           break
-        case 'dltkzemax':
+        case 'proxyWithdrawMaxAmount':
           if (
-            !!this.queryData.dltkzemin &&
+            !!this.queryData.proxyWithdrawMinAmount &&
             value &&
-            value * 1 < this.queryData.dltkzemin * 1
+            value * 1 < this.queryData.proxyWithdrawMinAmount * 1
           ) {
             this.$message({
               type: 'warning',
               message: `代理提款总金额最大值不能小于最小值`
             })
-            this.queryData.dltkzemax = ''
+            this.queryData.proxyWithdrawMaxAmount = ''
           } else {
-            this.queryData.dltkzemax = value
+            this.queryData.proxyWithdrawMaxAmount = value
           }
           break
       }
