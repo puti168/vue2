@@ -87,7 +87,7 @@
 							请上传图片！图片格式仅支持png,jpg,图片大小不超过2MB
 						</p>
 					</el-form-item>
-					<el-form-item label="审核信息:" prop="remark">
+					<el-form-item label="备注:" prop="remark">
 						<el-input
 							v-model="queryData.remark"
 							size="medium"
