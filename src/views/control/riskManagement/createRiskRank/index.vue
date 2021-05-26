@@ -12,7 +12,7 @@
 							style="width: 180px"
 						>
 							<el-option
-								v-for="item in []"
+								v-for="item in windLevelTypeArr"
 								:key="item.code"
 								:label="item.description"
 								:value="item.code"
@@ -263,6 +263,9 @@ export default {
 		}
 	},
 	computed: {
+        windLevelTypeArr() {
+            return this.globalDics.windLevelType
+        },
 		rules() {
 			// const testPicName = (rule, value, callback) => {
 			// 	const isSpecial = !notSpecial2(String(value))
