@@ -45,6 +45,7 @@
             <el-select
               v-model="queryData.deviceType"
               style="width: 210px"
+              clearable
               placeholder="默认选择全部"
               :popper-append-to-body="false"
             >
@@ -59,6 +60,7 @@
           <el-form-item label="绑定状态:">
             <el-select
               v-model="queryData.status"
+              clearable
               style="width: 210px"
               placeholder="默认选择全部"
               :popper-append-to-body="false"
