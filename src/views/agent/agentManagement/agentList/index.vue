@@ -130,7 +130,7 @@
 							></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="人口权限:">
+					<el-form-item label="入口权限:">
 						<el-select
 							v-model="queryData.entryAuthority"
 							size="medium"
@@ -260,7 +260,7 @@
 							type="warning"
 							icon="el-icon-folder-add"
 							size="medium"
-                            :disabled="loading"
+							:disabled="loading"
 							@click="exportExcel"
 						>
 							导出
@@ -355,16 +355,45 @@
 					</el-table-column>
 					<el-table-column prop="accountStatus" align="center" label="账号状态">
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.accountStatus">
+							<span
+								v-if="
+									!!scope.row.accountStatus && scope.row.accountStatus * 1 === 1
+								"
+								class="normalRgba"
+							>
 								{{ typeFilter(scope.row.accountStatus, 'accountStatusType') }}
 							</span>
-							<span v-else></span>
+							<span
+								v-else-if="
+									!!scope.row.accountStatus && scope.row.accountStatus * 1 === 2
+								"
+								class="disableRgba"
+							>
+								{{ typeFilter(scope.row.accountStatus, 'accountStatusType') }}
+							</span>
+							<span
+								v-else-if="
+									!!scope.row.accountStatus && scope.row.accountStatus * 1 === 3
+								"
+								class="lockingRgba"
+							>
+								{{ typeFilter(scope.row.accountStatus, 'accountStatusType') }}
+							</span>
+							<span
+								v-else-if="
+									!!scope.row.accountStatus && scope.row.accountStatus * 1 === 4
+								"
+								class="deleteRgba"
+							>
+								{{ typeFilter(scope.row.accountStatus, 'accountStatusType') }}
+							</span>
+							<span v-else>-</span>
 						</template>
 					</el-table-column>
 					<el-table-column
 						prop="entryAuthority"
 						align="center"
-						label="人口权限"
+						label="入口权限"
 					>
 						<template slot-scope="scope">
 							<span v-if="!!scope.row.entryAuthority">
@@ -382,7 +411,7 @@
 							<span v-if="!!scope.row.invitationCode">
 								{{ scope.row.invitationCode }}
 							</span>
-							<span v-else></span>
+							<span v-else>-</span>
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -439,6 +468,22 @@
 						<template slot-scope="scope">
 							<span v-if="!!scope.row.lastLoginTime">
 								{{ scope.row.lastLoginTime }}
+							</span>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
+					<el-table-column
+						prop="offLineDays"
+						align="center"
+						label="离线天数"
+						width="150px"
+						sortable="custom"
+					>
+						<template slot-scope="scope">
+							<span
+								v-if="!!scope.row.offLineDays || scope.row.offLineDays === 0"
+							>
+								{{ scope.row.offLineDays }}
 							</span>
 							<span v-else>-</span>
 						</template>
@@ -544,20 +589,15 @@ export default {
 			params = {
 				...this.getParams(params)
 			}
-            if (
-                !startTime &&
-                !endTime &&
-                !lastLoginTimeStart &&
-                !lastLoginTimeEnd
-            ) {
-                this.$message({
-                    type: 'warning',
-                    message: `请选择注册时间, 最后登录时间,任意其中一个时间维度`
-                })
-                return false
-            }
-            this.dataList = []
-            this.loading = true
+			if (!startTime && !endTime && !lastLoginTimeStart && !lastLoginTimeEnd) {
+				this.$message({
+					type: 'warning',
+					message: `请选择注册时间, 最后登录时间,任意其中一个时间维度`
+				})
+				return false
+			}
+			this.dataList = []
+			this.loading = true
 			delete params.registerTime
 			delete params.lastLoginTime
 			this.$api
@@ -772,7 +812,7 @@ export default {
 			const [startTime, endTime] = create
 			const lastLogin = this.queryData.lastLoginTime || []
 			const [lastLoginTimeStart, lastLoginTimeEnd] = lastLogin
-            this.loading = true
+			this.loading = true
 			let params = {
 				...this.queryData,
 				createDtStart: startTime
@@ -796,59 +836,59 @@ export default {
 			this.$api
 				.agentListExportAPI(params)
 				.then((res) => {
-                    this.loading = false
-                    const { data, status } = res
-                    if (res && status === 200) {
-                        const { type } = data
-                        if (type.includes('application/json')) {
-                            const reader = new FileReader()
-                            reader.onload = (evt) => {
-                                if (evt.target.readyState === 2) {
-                                    const {
-                                        target: { result }
-                                    } = evt
-                                    const ret = JSON.parse(result)
-                                    if (ret.code !== 200) {
-                                        this.$message({
-                                            type: 'error',
-                                            message: ret.msg,
-                                            duration: 1500
-                                        })
-                                    }
-                                }
-                            }
-                            reader.readAsText(data)
-                        } else {
-                            const result = res.data
-                            const disposition = res.headers['content-disposition']
-                            const fileNames = disposition && disposition.split("''")
-                            let fileName = fileNames[1]
-                            fileName = decodeURIComponent(fileName)
-                            const blob = new Blob([result], {
-                                type: 'application/octet-stream'
-                            })
-                            if ('download' in document.createElement('a')) {
-                                const downloadLink = document.createElement('a')
-                                downloadLink.download = fileName || ''
-                                downloadLink.style.display = 'none'
-                                downloadLink.href = URL.createObjectURL(blob)
-                                document.body.appendChild(downloadLink)
-                                downloadLink.click()
-                                URL.revokeObjectURL(downloadLink.href)
-                                document.body.removeChild(downloadLink)
-                            } else {
-                                window.navigator.msSaveBlob(blob, fileName)
-                            }
-                            this.$message({
-                                type: 'success',
-                                message: '导出成功',
-                                duration: 1500
-                            })
-                        }
-                    }
+					this.loading = false
+					const { data, status } = res
+					if (res && status === 200) {
+						const { type } = data
+						if (type.includes('application/json')) {
+							const reader = new FileReader()
+							reader.onload = (evt) => {
+								if (evt.target.readyState === 2) {
+									const {
+										target: { result }
+									} = evt
+									const ret = JSON.parse(result)
+									if (ret.code !== 200) {
+										this.$message({
+											type: 'error',
+											message: ret.msg,
+											duration: 1500
+										})
+									}
+								}
+							}
+							reader.readAsText(data)
+						} else {
+							const result = res.data
+							const disposition = res.headers['content-disposition']
+							const fileNames = disposition && disposition.split("''")
+							let fileName = fileNames[1]
+							fileName = decodeURIComponent(fileName)
+							const blob = new Blob([result], {
+								type: 'application/octet-stream'
+							})
+							if ('download' in document.createElement('a')) {
+								const downloadLink = document.createElement('a')
+								downloadLink.download = fileName || ''
+								downloadLink.style.display = 'none'
+								downloadLink.href = URL.createObjectURL(blob)
+								document.body.appendChild(downloadLink)
+								downloadLink.click()
+								URL.revokeObjectURL(downloadLink.href)
+								document.body.removeChild(downloadLink)
+							} else {
+								window.navigator.msSaveBlob(blob, fileName)
+							}
+							this.$message({
+								type: 'success',
+								message: '导出成功',
+								duration: 1500
+							})
+						}
+					}
 				})
 				.catch(() => {
-                    this.loading = false
+					this.loading = false
 					this.$message({
 						type: 'error',
 						message: '导出失败',
@@ -856,9 +896,9 @@ export default {
 					})
 				})
 
-            setTimeout(() => {
-                this.loading = false
-            }, 1500)
+			setTimeout(() => {
+				this.loading = false
+			}, 1500)
 		}
 	}
 }

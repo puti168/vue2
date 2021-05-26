@@ -181,7 +181,8 @@ export default {
                         required: true,
                         validator: testApplyInfo,
                         trigger: 'blur'
-                    }
+                    },
+                    { min: 2, max: 50, message: '长度在 2 到 50 个字符', trigger: 'blur' }
                 ]
 			}
 		}

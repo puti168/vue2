@@ -64,7 +64,7 @@
 							@keyup.enter.native="enterSearch"
 						></el-input>
 					</el-form-item>
-					<el-form-item label="虚拟币类型:">
+					<el-form-item label="虚拟币种类:">
 						<el-select
 							v-model="queryData.virtualKind"
 							size="medium"
@@ -184,7 +184,7 @@
 					<el-table-column
 						prop="withdrawalTime"
 						align="center"
-						label="提取时间"
+						label="提款时间"
 						sortable="custom"
 					>
 						<template slot-scope="scope">
