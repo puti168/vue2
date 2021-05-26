@@ -267,7 +267,7 @@
 								<p>
 									{{
 										scope.row.accountType
-											? typeFilter(dataList.accountType, 'accountType')
+											? typeFilter(scope.row.accountType, 'accountType')
 											: '-'
 									}}
 								</p>

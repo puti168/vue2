@@ -206,7 +206,7 @@
 					<el-table-column
 						prop="createDt"
 						align="center"
-						label="操作时间"
+						label="提款时间"
 						sortable="custom"
 					>
 						<template slot-scope="scope">

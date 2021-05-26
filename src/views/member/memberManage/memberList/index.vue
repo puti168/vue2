@@ -286,7 +286,7 @@
 							type="warning"
 							icon="el-icon-folder-add"
 							size="medium"
-                            :disabled="loading"
+							:disabled="loading"
 							@click="exportExcel"
 						>
 							导出
@@ -397,12 +397,41 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="accountStatus" align="center" label="账号状态">
+					<el-table-column prop="accountStatus" align="center" label="账号状态" width="100px">
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.accountStatus">
+							<span
+								v-if="
+									!!scope.row.accountStatus && scope.row.accountStatus * 1 === 1
+								"
+								class="normalRgba"
+							>
 								{{ typeFilter(scope.row.accountStatus, 'accountStatusType') }}
 							</span>
-							<span v-else></span>
+                            <span
+                                v-else-if="
+									!!scope.row.accountStatus && scope.row.accountStatus * 1 === 2
+								"
+                                class="disableRgba"
+                            >
+								{{ typeFilter(scope.row.accountStatus, 'accountStatusType') }}
+							</span>
+                            <span
+                                v-else-if="
+									!!scope.row.accountStatus && scope.row.accountStatus * 1 === 3
+								"
+                                class="lockingRgba"
+                            >
+								{{ typeFilter(scope.row.accountStatus, 'accountStatusType') }}
+							</span>
+                            <span
+                                v-else-if="
+									!!scope.row.accountStatus && scope.row.accountStatus * 1 === 4
+								"
+                                class="deleteRgba"
+                            >
+								{{ typeFilter(scope.row.accountStatus, 'accountStatusType') }}
+							</span>
+							<span v-else>-</span>
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -879,7 +908,7 @@ export default {
 			const [startTime, endTime] = create
 			const [loginTimeStart, loginTimeEnd] = lastLoginTime
 			const [firstDepositTimeStart, firstDepositTimeEnd] = firstSaveTime
-            this.loading = true
+			this.loading = true
 			let params = {
 				...this.queryData,
 				createDtStart: startTime
@@ -922,7 +951,7 @@ export default {
 			this.$api
 				.exportExcelAPI(params)
 				.then((res) => {
-                    this.loading = false
+					this.loading = false
 					const { data, status } = res
 					if (res && status === 200) {
 						const { type } = data
@@ -974,7 +1003,7 @@ export default {
 					}
 				})
 				.catch(() => {
-                    this.loading = false
+					this.loading = false
 					this.$message({
 						type: 'error',
 						message: '导出失败',
@@ -982,9 +1011,9 @@ export default {
 					})
 				})
 
-            setTimeout(() => {
-                this.loading = false
-            }, 1500)
+			setTimeout(() => {
+				this.loading = false
+			}, 1500)
 		}
 	}
 }

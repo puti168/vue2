@@ -54,6 +54,7 @@
                         type="textarea"
                         placeholder="请输入"
                         clearable
+                        show-word-limit
                         maxlength="50"
                         style="width: 365px"
                     ></el-input>

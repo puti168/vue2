@@ -289,7 +289,7 @@
 				<img :src="imageAddress" />
 			</el-dialog>
 		</div>
-		<editPage v-else :editData="editData" :lastSortId="lastSortId" @back="back"></editPage>
+		<editPage v-else :editData="editData" @back="back"></editPage>
 	</transition>
 </template>
 
@@ -327,8 +327,7 @@ export default {
 			dialogPictureVisible: false,
 			imageAddress: null,
 			editPage: false,
-			editData: {},
-			lastSortId: undefined
+			editData: {}
 		}
 	},
 	computed: {
@@ -380,9 +379,6 @@ export default {
 						this.loading = false
 						this.dataList = record || []
 						this.total = totalRecord || 0
-						//    计算最后排序
-						this.lastSortId =
-							record && record.length && record[record.length - 1].displayOrder
 					} else {
 						this.loading = false
 						this.$message({
