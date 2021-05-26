@@ -32,10 +32,50 @@
 					:prop="riskType[queryData.windLevelType].prop"
 				>
 					<el-input
+						v-if="['1', '2'].includes(queryData.windLevelType)"
 						v-model="queryData.userName"
 						size="medium"
 						maxlength="11"
-						placeholder="4-11位，最少2个字母+数字组合，首位字母"
+						placeholder="请输入"
+						clearable
+						onkeyup="value=value.replace(/[^\w\.\/]/ig,'')"
+						style="width: 365px"
+					></el-input>
+					<el-input
+						v-else-if="['3'].includes(queryData.windLevelType)"
+						v-model="queryData.userName"
+						size="medium"
+						maxlength="25"
+						onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
+						placeholder="请输入"
+						clearable
+						style="width: 365px"
+					></el-input>
+					<el-input
+						v-else-if="['4'].includes(queryData.windLevelType)"
+						v-model="queryData.userName"
+						size="medium"
+						maxlength="50"
+						placeholder="请输入"
+						clearable
+						style="width: 365px"
+					></el-input>
+					<el-input
+						v-else-if="['5'].includes(queryData.windLevelType)"
+						v-model="queryData.userName"
+						size="medium"
+						maxlength="15"
+						placeholder="请输入"
+						clearable
+						onkeyup="value=value.replace(/[^\d.]/g,'')"
+						style="width: 365px"
+					></el-input>
+					<el-input
+						v-else
+						v-model="queryData.userName"
+						size="medium"
+						maxlength="50"
+						placeholder="请输入"
 						clearable
 						style="width: 365px"
 					></el-input>
@@ -108,9 +148,8 @@ export default {
 			queryData: {
 				windLevelType: '1',
 				windControlId: undefined,
-				userName: '',
-				password: '',
-				applyInfo: ''
+				userName: undefined,
+				applyInfo: undefined
 			},
 			vipDict: [],
 			userLabel: []
@@ -180,6 +219,41 @@ export default {
 						trigger: 'blur'
 					}
 				],
+				agentName: [
+					{
+						required: true,
+						validator: testUserName,
+						trigger: 'blur'
+					}
+				],
+				cardNumber: [
+					{
+						required: true,
+						message: '请输入银行卡号',
+						trigger: 'blur'
+					}
+				],
+				virtualAddress: [
+					{
+						required: true,
+						message: '请输入虚拟币地址',
+						trigger: 'blur'
+					}
+				],
+				IP: [
+					{
+						required: true,
+						message: '请输入IP',
+						trigger: 'blur'
+					}
+				],
+				deviceNo: [
+					{
+						required: true,
+						message: '请输入终端设备号',
+						trigger: 'blur'
+					}
+				],
 				applyInfo: [
 					{
 						required: true,
@@ -236,15 +310,17 @@ export default {
 		reset() {
 			this.$refs['form'].resetFields()
 			this.queryData = {
-				accountType: '4',
-				userName: '',
-				password: '',
-				applyInfo: ''
+                windLevelType: '1',
+                windControlId: undefined,
+                userName: undefined,
+                applyInfo: undefined
 			}
 		},
 		checkValue(val) {},
 		changeRiskType(evt) {
-			// console.log('evt', evt)
+			this.reset()
+			console.log('evt', evt)
+			// this.queryData.windLevelType = evt.code
 		},
 		// 获取风控层级
 		getMerchantDict() {
