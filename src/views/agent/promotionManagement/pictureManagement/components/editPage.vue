@@ -60,7 +60,7 @@
 							></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="排序:" prop="displayOrder">
+					<el-form-item v-if="updateStatus" label="排序:" prop="displayOrder">
 						<el-input
 							v-model="queryData.displayOrder"
 							size="medium"
@@ -68,7 +68,7 @@
 							clearable
 							oninput="value=value.replace(/[^\d]/g,'')"
 							maxlength="12"
-                            :disabled="!updateStatus"
+							:disabled="!updateStatus"
 							style="width: 365px"
 						></el-input>
 					</el-form-item>
@@ -95,7 +95,7 @@
 							placeholder="请输入"
 							clearable
 							maxlength="50"
-                            show-word-limit
+							show-word-limit
 							style="width: 365px"
 						></el-input>
 					</el-form-item>
@@ -118,8 +118,7 @@ export default {
 		editData: {
 			type: Object,
 			default: () => {}
-		},
-		lastSortId: [Number]
+		}
 	},
 	data() {
 		return {
@@ -191,13 +190,13 @@ export default {
 						trigger: 'blur'
 					}
 				],
-                remark: [
-                    {
-                        required: this.updateStatus,
-                        message: '请填入备注',
-                        trigger: 'blur'
-                    }
-                ]
+				remark: [
+					{
+						required: this.updateStatus,
+						message: '请填入备注',
+						trigger: 'blur'
+					}
+				]
 			}
 		}
 	},
@@ -238,11 +237,11 @@ export default {
 		}
 	},
 	mounted() {
-		console.log('this.updateStatus', this.updateStatus)
-		console.log('this.updateStatus', this.lastSortId)
-		this.$nextTick(() => {
-			!this.updateStatus ? (this.queryData.displayOrder = this.lastSortId) : ''
-		})
+		// this.$nextTick(() => {
+		// 	!this.updateStatus
+		// 		? (this.queryData.displayOrder = this.lastSortId + 1)
+		// 		: ''
+		// })
 	},
 	updated() {},
 	methods: {
@@ -304,7 +303,6 @@ export default {
 			this.$message.info('图片开始上传')
 		},
 		handleUploadSucess({ index, file, id }) {
-			console.log('this.queryData.imgUr', file.imgUrl)
 			this.queryData.imageAddress = file.imgUrl
 		},
 		handleUploadDefeat() {
