@@ -770,7 +770,7 @@ export default {
           this.editData.code =
             this.outlineInfoList.accountStatus === null
               ? ''
-              : this.outlineInfoList.accountStatus
+              : this.outlineInfoList.accountStatus + ''
           break
         case '风控层级':
           this.titel = '备注信息：'
