@@ -320,7 +320,7 @@
 							<el-button
 								type="primary"
 								icon="el-icon-edit"
-								:disabled="loading"
+								:disabled="loading || Number(scope.row.gameStatus) === 1"
 								size="medium"
 								@click="openEdit(scope.row)"
 							>

@@ -61,11 +61,11 @@
 					<div>推广链接: {{ list.promotionLink }}</div>
 				</div>
 				<div class="review-flex">
-					<div>推广设备: {{ list.promotionDevice }}</div>
+					<div>推广设备: {{ typeFilter(list.promotionDevice, 'betDeviceType') }}</div>
 					<div>申请理由: {{ list.applyInfo }}</div>
 				</div>
 				<div class="review-flex">
-					<div>申请附图: <img v-for="item in list.list" :key="item.imageAddress" :src="item.imageAddress" class="detail-img text-link" @click="lookGame(item.imageAddress)"></div>
+					<div class="img-div">申请附图: <img v-for="item in list.list" :key="item.imageAddress" :src="item.imageAddress" class="detail-img text-link" @click="lookGame(item.imageAddress)"></div>
 				</div>
 			</div>
 			<div class="review-content">
@@ -283,9 +283,14 @@ export default {
 	color: #909399;
 	font-weight: 700;
 }
+.img-div {
+	width: 100%!important;
+}
 .detail-img {
 	width: 80px;
 	height: 80px;
+	margin-left: 20px;
+	margin-right: 20px;
 	display: inline-block;
 }
 .show-image {
