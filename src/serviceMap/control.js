@@ -45,13 +45,13 @@ const control = [
 	{
 		id: '136',
 		parentId: '131',
-		path: '/control/riskControlMsgChange/bankRiskControlChange',
+		path: '/control/riskControlMsgChange/bankRiskChangeInfo',
 		title: '银行卡风控信息变更'
 	},
 	{
 		id: '137',
 		parentId: '131',
-		path: '/control/riskControlMsgChange/virtualRiskControlChange',
+		path: '/control/riskControlMsgChange/virtualRiskChangeInfo',
 		title: '虚拟币风控信息变更'
 	},
 	{
