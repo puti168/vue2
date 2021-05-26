@@ -318,7 +318,12 @@ export default {
 		},
 		checkValue(val) {},
 		changeRiskType(evt) {
-			this.reset()
+            this.$refs['form'].resetFields()
+            this.queryData = {
+                windControlId: undefined,
+                userName: undefined,
+                applyInfo: undefined
+            }
 			console.log('evt', evt)
 			// this.queryData.windLevelType = evt.code
 		},
