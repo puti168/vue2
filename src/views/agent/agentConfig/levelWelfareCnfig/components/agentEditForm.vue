@@ -141,7 +141,7 @@
                 required: true,
                 min: 0,
                 type: 'number',
-                message: '请输入大于0的数字',
+                message: '请输入大于等于0的数字',
                 trigger: ['blur'],
               },
             ]"

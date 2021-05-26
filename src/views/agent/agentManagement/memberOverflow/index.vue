@@ -241,6 +241,7 @@ export default {
         applyInfo: [
           {
             required: true,
+            min: 2,
             message: '请输入≥2个字符',
             trigger: 'blur'
           }
