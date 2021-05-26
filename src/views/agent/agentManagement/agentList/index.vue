@@ -130,7 +130,7 @@
 							></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="人口权限:">
+					<el-form-item label="入口权限:">
 						<el-select
 							v-model="queryData.entryAuthority"
 							size="medium"
@@ -364,7 +364,7 @@
 					<el-table-column
 						prop="entryAuthority"
 						align="center"
-						label="人口权限"
+						label="入口权限"
 					>
 						<template slot-scope="scope">
 							<span v-if="!!scope.row.entryAuthority">
@@ -443,6 +443,22 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
+                    <el-table-column
+                        prop="offLineDays"
+                        align="center"
+                        label="离线天数"
+                        width="150px"
+                        sortable="custom"
+                    >
+                        <template slot-scope="scope">
+							<span
+                                v-if="!!scope.row.offLineDays || scope.row.offLineDays === 0"
+                            >
+								{{ scope.row.offLineDays }}
+							</span>
+                            <span v-else>-</span>
+                        </template>
+                    </el-table-column>
 				</el-table>
 				<!-- 分页 -->
 				<el-pagination
