@@ -355,8 +355,9 @@ export default {
         .catch(() => {})
     },
     addLabel() {
+      this.title = '新增'
+      this.dialogForm = {}
       this.dialogFormVisible = true
-      // this.dialogForm = {};
     },
     edit(val) {
       this.title = '编辑'
@@ -392,7 +393,7 @@ export default {
       data.gameLabelName = this.dialogForm.gameLabelName
       this.$refs.formSub.validate((valid) => {
         if (valid) {
-          if (this.title !== '编辑') {
+          if (this.title === '新增') {
             console.log('新增')
             this.$api.addObGameLabel(data).then((res) => {
               if (res.code === 200) {

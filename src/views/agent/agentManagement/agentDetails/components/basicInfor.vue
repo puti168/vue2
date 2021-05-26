@@ -489,7 +489,7 @@ export default {
           this.editData.code =
             this.outlineInfoList.accountStatus === null
               ? ''
-              : this.outlineInfoList.accountStatus
+              : this.outlineInfoList.accountStatus + ''
           break
         case '风控层级':
           this.editData.windControlId =
