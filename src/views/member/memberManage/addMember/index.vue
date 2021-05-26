@@ -285,7 +285,7 @@ export default {
 			this.$refs['form'].validate((valid) => {
 				if (valid && lock) {
 					lock = false
-                    params.password = md5(params.password)
+                    params.password = md5(params.password).toUpperCase()
 					this.$api
 						.addMemberAPI(params)
 						.then((res) => {

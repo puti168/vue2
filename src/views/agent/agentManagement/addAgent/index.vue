@@ -87,6 +87,7 @@
 import { routerNames } from '@/utils/consts'
 import list from '@/mixins/list'
 import { notSpecial2, isHaveEmoji } from '@/utils/validate'
+import md5 from 'js-md5'
 export default {
     name: routerNames.addAgent,
     mixins: [list],
@@ -165,6 +166,7 @@ export default {
             const params = {
                 ...this.form
             }
+            params.password = md5(params.password).toUpperCase()
             let lock = true
             this.$refs['form'].validate((valid) => {
                 if (valid && lock) {
