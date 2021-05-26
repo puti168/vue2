@@ -18,8 +18,8 @@
           <el-form-item label="虚拟币种类:">
             <el-select
               v-model="queryData.virtualCoinKind"
-              style="width: 210px"
-              clearable
+              style="width: 300px"
+              multiple
               placeholder="默认选择全部"
               :popper-append-to-body="false"
             >
@@ -34,8 +34,8 @@
           <el-form-item label="虚拟币协议:">
             <el-select
               v-model="queryData.virtualAgreement"
-              style="width: 210px"
-              clearable
+              style="width: 300px"
+              multiple
               placeholder="默认选择全部"
               :popper-append-to-body="false"
             >
@@ -79,17 +79,21 @@
               ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="最近操作人:">
-            <el-input
-              v-model="queryData.lastOperator"
-              clearable
-              maxlength="20"
-              size="medium"
-              style="width: 200px"
-              placeholder="请输入"
-              :disabled="loading"
-              @keyup.enter.native="enterSearch"
-            ></el-input>
+          <el-form-item label="风控层级:" class="tagheight">
+            <el-select
+              v-model="queryData.windControlId"
+              style="width: 300px"
+              multiple
+              placeholder="默认选择全部"
+              :popper-append-to-body="false"
+            >
+              <el-option
+                v-for="item in windLevelType"
+                :key="item.code"
+                :label="item.description"
+                :value="item.code"
+              ></el-option>
+            </el-select>
           </el-form-item>
           <el-form-item label="当前绑定会员账号:">
             <el-input
@@ -184,22 +188,19 @@
               @blur="checkValue($event)"
             ></el-input>
           </el-form-item>
-          <el-form-item label="风控层级:" class="tagheight">
-            <el-select
-              v-model="queryData.windControlId"
-              style="width: 300px"
-              multiple
-              placeholder="默认选择全部"
-              :popper-append-to-body="false"
-            >
-              <el-option
-                v-for="item in windLevelType"
-                :key="item.code"
-                :label="item.description"
-                :value="item.code"
-              ></el-option>
-            </el-select>
+          <el-form-item label="操作人:">
+            <el-input
+              v-model="queryData.lastOperator"
+              clearable
+              maxlength="20"
+              size="medium"
+              style="width: 200px"
+              placeholder="请输入"
+              :disabled="loading"
+              @keyup.enter.native="enterSearch"
+            ></el-input>
           </el-form-item>
+
           <el-form-item label="代理提款被拒次数:">
             <el-input
               v-model="queryData.proxyWithdrawRefuseMinCount"
@@ -319,7 +320,7 @@
             prop="virtualAddress"
             align="center"
             width="240px"
-            label="银行卡号"
+            label="虚拟币账号地址"
           >
             <template slot-scope="scope">
               <Copy
@@ -332,16 +333,16 @@
               <span v-else>-</span>
             </template>
           </el-table-column>
-          <el-table-column prop="virtualCoinKind" align="center" width="150px">
+          <el-table-column prop="virtualKind" align="center" width="150px">
             <template slot="header">
-              银行名称
+              虚拟币种类
               <br />
-              银行支行
+              虚拟币协议
             </template>
-            <template slot="scope">
-              {{ scope.row.virtualCoinKind }}
+            <template slot-scope="scope">
+              {{ scope.row.virtualKind }}
               <br />
-              {{ scope.row.bankBranch }}
+              {{ scope.row.virtualProtocol }}
             </template>
           </el-table-column>
           <el-table-column
@@ -350,7 +351,7 @@
             label="黑名单状态"
             width="130px"
           >
-            <template slot="scope">
+            <template slot-scope="scope">
               <span v-if="scope.row.blacklistStatus === 0" class="disableRgba">
                 {{ typeFilter(scope.row.blacklistStatus, "blackStatusType") }}
               </span>
@@ -366,7 +367,7 @@
             label="绑定状态"
             width="100px"
           >
-            <template slot="scope">
+            <template slot-scope="scope">
               <span v-if="scope.row.bindStatus === 0" class="disableRgba">
                 {{ typeFilter(scope.row.bindStatus, "bindStatusType") }}
               </span>
@@ -382,7 +383,7 @@
             label="风控层级"
             width="150px"
           >
-            <template slot="scope">
+            <template slot-scope="scope">
               <span v-if="scope.row.windControlId !== null">
                 {{ typeFilter(scope.row.windControlId, "windLevelType") }}
               </span>
@@ -402,7 +403,7 @@
               <br />
               会员姓名
             </template>
-            <template slot="scope">
+            <template slot-scope="scope">
               {{ scope.row.bindUserName }}
               <br />
               <!-- {{ scope.row.userName }} -->
@@ -414,7 +415,7 @@
               <br />
               会员提款被拒次数
             </template>
-            <template slot="scope">
+            <template slot-scope="scope">
               {{ scope.row.withdrawalSuccessNum }}
               <br />
               {{ scope.row.withdrawalFailNum }}
@@ -555,7 +556,7 @@
         <el-form-item v-if="moduleBox === '解除绑定'">
           <el-checkbox
 v-model="editData.checked"
->将该银行卡变更为黑名单禁用状态</el-checkbox>
+>将该地址变更为黑名单禁用状态</el-checkbox>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">

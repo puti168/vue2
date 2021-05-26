@@ -332,7 +332,7 @@
               <br />
               银行支行
             </template>
-            <template slot="scope">
+            <template slot-scope="scope">
               {{ scope.row.bankName }}
               <br />
               {{ scope.row.bankBranch }}
@@ -344,7 +344,7 @@
             label="黑名单状态"
             width="130px"
           >
-            <template slot="scope">
+            <template slot-scope="scope">
               <span v-if="scope.row.blacklistStatus === 0" class="disableRgba">
                 {{ typeFilter(scope.row.blacklistStatus, "blackStatusType") }}
               </span>
@@ -360,7 +360,7 @@
             label="绑定状态"
             width="100px"
           >
-            <template slot="scope">
+            <template slot-scope="scope">
               <span v-if="scope.row.bindStatus === 0" class="disableRgba">
                 {{ typeFilter(scope.row.bindStatus, "bindStatusType") }}
               </span>
@@ -376,7 +376,7 @@
             label="风控层级"
             width="150px"
           >
-            <template slot="scope">
+            <template slot-scope="scope">
               <span v-if="scope.row.windControlId !== null">
                 {{ typeFilter(scope.row.windControlId, "windLevelType") }}
               </span>
@@ -396,7 +396,7 @@
               <br />
               会员姓名
             </template>
-            <template slot="scope">
+            <template slot-scope="scope">
               {{ scope.row.bindUserName }}
               <br />
               <!-- {{ scope.row.userName }} -->
@@ -408,7 +408,7 @@
               <br />
               会员提款被拒次数
             </template>
-            <template slot="scope">
+            <template slot-scope="scope">
               {{ scope.row.withdrawalSuccessNum }}
               <br />
               {{ scope.row.withdrawalFailNum }}
