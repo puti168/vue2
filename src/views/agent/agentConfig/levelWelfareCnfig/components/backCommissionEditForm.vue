@@ -44,6 +44,7 @@
               size="medium"
               placeholder="请输入数字"
               clearable
+              :max="9999999999"
               style="width: 164px"
             ></el-input-number>
           </el-form-item>
@@ -54,6 +55,7 @@
               size="medium"
               placeholder="请输入数字"
               clearable
+              :max="9999999999"
               style="width: 164px"
             ></el-input-number>
           </el-form-item>
@@ -73,7 +75,7 @@
             <el-input-number
               v-model="queryData.monthActiveNum"
               size="medium"
-              maxlength="7"
+              :max="9999999"
               placeholder="请输入数字"
               clearable
               style="width: 118px"
@@ -98,7 +100,7 @@
             <el-input-number
               v-model.number="queryData.commissionRate"
               size="medium"
-              maxlength="7"
+              :max="100"
               placeholder="请输入数字"
               clearable
               :precision="2"

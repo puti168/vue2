@@ -45,7 +45,7 @@
                 required: true,
                 min: 1,
                 type: 'number',
-                message: '请输入大于0的数字',
+                message: '请输入最多7位且大于0的数字',
                 trigger: ['blur'],
               },
             ]"
@@ -53,7 +53,7 @@
             <el-input-number
               v-model.number="queryData.monthActiveNum"
               size="medium"
-              maxlength="7"
+              :max="9999999"
               placeholder="请输入数字"
               clearable
               style="width: 120px"
@@ -77,7 +77,7 @@
             <el-input-number
               v-model="queryData.monthNewNum"
               size="medium"
-              maxlength="7"
+              :max="9999999"
               placeholder="请输入数字"
               clearable
               style="width: 120px"
@@ -102,7 +102,7 @@
             <el-input-number
               v-model.number="queryData.additionalCommission"
               size="medium"
-              maxlength="7"
+              :max="100"
               placeholder="请输入数字"
               clearable
               :precision="2"
@@ -126,7 +126,7 @@
             <el-input-number
               v-model="queryData.additionalCommissionLimit"
               size="medium"
-              maxlength="5"
+              :max="99999"
               placeholder="请输入数字"
               clearable
               style="width: 120px"
@@ -151,7 +151,7 @@
               size="medium"
               placeholder="请输入数字"
               clearable
-              maxlength="7"
+              :max="9999999"
               style="width: 405px"
               autocomplete="off"
             ></el-input-number>
