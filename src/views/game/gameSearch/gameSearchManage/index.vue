@@ -58,7 +58,7 @@
 						:header-cell-style="getRowClass"
 						row-key="id"
 						:row-style="{ height: '45px' }"
-						@sort-change="changeTableSort"
+						@sort-change="_changeTableSort"
 					>
 						<el-table-column
 							prop="userName"
@@ -434,7 +434,25 @@ export default {
 			// 		})
 			// 	}
 			// })
-		}
+		},
+
+        _changeTableSort({ column, prop, order }) {
+            if (prop === 'createdAt') {
+                prop = 1
+            }
+            if (prop === 'updatedAt') {
+                prop = 2
+            }
+            this.queryData.orderKey = prop
+            if (order === 'ascending') {
+                // 升序
+                this.queryData.orderType = 'asc'
+            } else if (column.order === 'descending') {
+                // 降序
+                this.queryData.orderType = 'desc'
+            }
+            this.loadData()
+        }
 	}
 }
 </script>
