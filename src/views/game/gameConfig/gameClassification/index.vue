@@ -313,6 +313,7 @@
 									type="primary"
 									icon="el-icon-edit"
 									size="medium"
+                                    :disabled="scope.row.assortStatus"
 									@click="openEdit(scope.row)"
 								>
 									编辑信息
@@ -321,6 +322,7 @@
 									type="warning"
 									icon="el-icon-delete"
 									size="medium"
+                                    :disabled="scope.row.assortStatus"
 									@click="deleteRow(scope.row)"
 								>
 									删除
