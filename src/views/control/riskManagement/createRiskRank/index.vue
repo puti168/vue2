@@ -34,7 +34,7 @@
 								v-for="item in vipDict"
 								:key="item.id"
 								:label="item.windControlLevelName"
-								:value="item.id"
+								:value="item.windControlLevelName"
 							></el-option>
 						</el-select>
 					</el-form-item>
@@ -259,9 +259,9 @@
 							clearable
 						></el-input>
 					</el-form-item>
-					<el-form-item label="风控描述信息:" prop="info">
+					<el-form-item label="风控描述信息:" prop="description">
 						<el-input
-							v-model="dialogForm.info"
+							v-model="dialogForm.description"
 							type="textarea"
 							style="width: 330px"
 							:maxlength="50"
@@ -301,8 +301,9 @@ export default {
 			dialogForm: {
 				windControlType: undefined,
 				windControlLevelName: undefined,
-				info: undefined
+                description: undefined
 			},
+            total: 0,
 			title: '',
 			vipDict: []
 		}
@@ -320,7 +321,7 @@ export default {
 					{ required: true, message: '请填入风控层级', trigger: 'blur' },
 					{ min: 2, max: 10, message: '请填入风控层级', trigger: 'blur' }
 				],
-				info: [
+                description: [
 					{ required: true, message: '请填入风控层级描述', trigger: 'blur' },
 					{ min: 2, max: 50, message: '请填入风控层级描述', trigger: 'blur' }
 				]
@@ -411,6 +412,7 @@ export default {
 		},
 		edit(val) {
 			this.title = '编辑'
+            val.windControlType = val.windControlType + ''
 			this.dialogForm = { ...val }
 			this.dialogFormVisible = true
 		},
@@ -470,11 +472,10 @@ export default {
 					handleClick(params).then((res) => {
 						const { code, msg } = res
 						if (code === 200) {
-							this.$confirm(`${this.updateStatus ? '更新' : '新增'}成功`, {
-								confirmButtonText: '确定',
-								type: 'success',
-								showCancelButton: false
-							})
+                            this.$message({
+                                message: `${this.title !== '编辑' ? '新增' : '更新'}成功`,
+                                type: 'success'
+                            })
 							this.reset()
 						} else {
 							this.$message({
