@@ -172,6 +172,13 @@ export function setUpdateUserBankAndVirtualStatus(data) {
 		data
 	})
 }
+export function memberDataInfoChangeRecord(data) {
+	return request({
+		url: '/memberData/infoChangeRecord',
+		method: 'post',
+		data
+	})
+}
 export default {
 	login,
 	logout,

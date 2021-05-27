@@ -48,7 +48,7 @@
 				<el-form-item label="变更类型:">
 					<el-select
 						v-model="queryData.operateType"
-						style="width: 180px"
+						style="width: 300px"
 						:popper-append-to-body="false"
 					>
 						<el-option label="全部" value></el-option>
@@ -62,10 +62,10 @@
 				</el-form-item>
 				<el-form-item label="操作人:">
 					<el-input
-						v-model="queryData.parentProxyName"
+						v-model="queryData.applyName"
 						clearable
 						size="medium"
-						:maxlength="11"
+						:maxlength="15"
 						style="width: 180px"
 						placeholder="请输入"
 						@keyup.enter.native="enterSearch"
@@ -105,7 +105,7 @@
 					@sort-change="changeTableSort"
 				>
 					<el-table-column
-						prop="createDt"
+						prop="applyTime"
 						align="center"
 						label="操作时间"
 						sortable="custom"
@@ -123,11 +123,6 @@
 							<p>{{ typeFilter(scope.row.accountType, 'accountType') }}</p>
 						</template>
 					</el-table-column>
-					<el-table-column prop="operateType" align="center" label="账号类型">
-						<template slot-scope="scope">
-							<p>{{ typeFilter(scope.row.operateType, 'bindType') }}</p>
-						</template>
-					</el-table-column>
 					<el-table-column prop="operateType" align="center" label="变更类型">
 						<template slot-scope="scope">
 							<p>{{ typeFilter(scope.row.operateType, 'bindType') }}</p>
@@ -135,27 +130,43 @@
 					</el-table-column>
 					<el-table-column prop="operateType" align="center" label="变更前信息">
 						<template slot-scope="scope">
-							<p>{{ typeFilter(scope.row.operateType, 'bindType') }}</p>
+							<template v-if="Number(scope.row.applyType === 2)">
+								{{ typeFilter(scope.row.beforeModify, 'genderType') }}
+							</template>
+							<template v-else-if="Number(scope.row.applyType === 6)">
+								{{ typeFilter(scope.row.beforeModify, 'accountStatusType') }}
+							</template>
+							<template v-else>
+								{{ scope.row.beforeModify ? scope.row.beforeModify : '-' }}
+							</template>
 						</template>
 					</el-table-column>
 					<el-table-column prop="operateType" align="center" label="变更后信息">
 						<template slot-scope="scope">
-							<p>{{ typeFilter(scope.row.operateType, 'bindType') }}</p>
+							<template v-if="Number(scope.row.applyType === 2)">
+								{{ typeFilter(scope.row.afterModify, 'genderType') }}
+							</template>
+							<template v-else-if="Number(scope.row.applyType === 6)">
+								{{ typeFilter(scope.row.afterModify, 'accountStatusType') }}
+							</template>
+							<template v-else>
+								{{ scope.row.afterModify ? scope.row.afterModify : '-' }}
+							</template>
 						</template>
 					</el-table-column>
 					<el-table-column prop="operateType" align="center" label="提交信息">
 						<template slot-scope="scope">
-							<p>{{ typeFilter(scope.row.operateType, 'bindType') }}</p>
+							<p>{{ scope.row.applyInfo }}</p>
 						</template>
 					</el-table-column>
 					<el-table-column
-						prop="operateType"
+						prop="applyName"
 						align="center"
 						width="100"
 						label="操作人"
 					>
 						<template slot-scope="scope">
-							<p>{{ typeFilter(scope.row.operateType, 'bindType') }}</p>
+							<p>{{ scope.row.applyName }}</p>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -179,7 +190,6 @@
 <script>
 import list from '@/mixins/list'
 import dayjs from 'dayjs'
-import { routerNames } from '@/utils/consts'
 const end = dayjs()
 	.endOf('day')
 	.valueOf()
@@ -187,22 +197,16 @@ const start = dayjs()
 	.startOf('day')
 	.valueOf()
 export default {
-	name: routerNames.virtualRecord,
+	name: 'MemberMsgChange',
 	components: {},
 	mixins: [list],
 	data() {
 		return {
 			queryData: {
-				accountType: '',
-				bankName: '',
-				dataType: 2,
-				operateType: '',
-				orderType: undefined,
-				parentProxyName: '',
 				userName: '',
-				virtualAddress: '',
-				virtualKind: [],
-				virtualProtocol: []
+				applyName: '',
+				accountType: [],
+				operateType: []
 			},
 			formTime: {
 				time: [start, end]
@@ -231,12 +235,14 @@ export default {
 			const [startTime, endTime] = this.formTime.time || []
 			let params = {
 				...this.queryData,
-				createDtStart: startTime
+				applyTimeStart: startTime
 					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
 					: '',
-				createDtEnd: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
+				applyTimeEnd: endTime
+					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
+					: ''
 			}
-			if (!params.createDtStart || !params.createDtEnd) {
+			if (!params.applyTimeStart || !params.applyTimeEnd) {
 				this.$message({
 					message: '操作时间参数必传',
 					type: 'info'
@@ -249,7 +255,7 @@ export default {
 			this.loading = true
 
 			this.$api
-				.bankRecordListAPI(params)
+				.memberDataInfoChangeRecord(params)
 				.then((res) => {
 					if (res.code === 200) {
 						const response = res.data
@@ -270,30 +276,22 @@ export default {
 		},
 		changeTableSort({ column, prop, order }) {
 			this.pageNum = 1
-			const orderParams = this.checkOrderParams.get(prop)
-			if (orderParams) {
-				if (order === 'ascending') {
-					// 升序
-					this.queryData.orderType = 'asc'
-				} else if (column.order === 'descending') {
-					// 降序
-					this.queryData.orderType = 'desc'
-				}
-				this.loadData()
+			console.log(prop)
+			if (order === 'ascending') {
+				// 升序
+				this.queryData.orderType = 'asc'
+			} else if (column.order === 'descending') {
+				// 降序
+				this.queryData.orderType = 'desc'
 			}
+			this.loadData()
 		},
 		reset() {
 			this.queryData = {
-				accountType: [],
-				bankName: '',
-				dataType: 2,
-				operateType: '',
-				orderType: '',
-				parentProxyName: '',
 				userName: '',
-				virtualAddress: '',
-				virtualKind: [],
-				virtualProtocol: []
+				applyName: '',
+				accountType: [],
+				operateType: []
 			}
 			this.pageNum = 1
 			this.formTime.time = [start, end]
