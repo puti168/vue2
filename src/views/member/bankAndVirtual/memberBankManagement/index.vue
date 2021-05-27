@@ -265,14 +265,14 @@
           </el-form-item>
           <el-form-item label="绑定账号次数:">
             <el-input
-              v-model="queryData.bdcs"
+              v-model="queryData.bindAccountCount"
               maxlength="10"
               size="medium"
               style="width: 210px"
               placeholder="请输入"
               :disabled="loading"
               oninput="value=value.replace(/[^\d]/g,'')"
-              @blur="queryData.bdcs = $event.target.value"
+              @blur="queryData.bindAccountCount = $event.target.value"
               @keyup.enter.native="enterSearch"
             ></el-input>
           </el-form-item>
@@ -599,27 +599,27 @@ export default {
   },
   methods: {
     loadData() {
-      // this.loading = true;
-      // let params = {
-      //   ...this.queryData,
-      //   dataType: 1
-      // }
-      // params = {
-      //   ...this.getParams(params)
-      // }
-      // console.log(params)
-      // this.$api
-      //   .getGameRecordNotes(params)
-      //   .then((res) => {
-      //     if (res.code === 200) {
-      //       this.tableData = res.data.record;
-      //       this.total = res.data.totalRecord;
-      //     }
-      //     this.loading = false;
-      //   })
-      //   .catch(() => {
-      //     this.loading = false;
-      //   });
+      this.loading = true
+      let params = {
+        ...this.queryData,
+        dataType: 1
+      }
+      params = {
+        ...this.getParams(params)
+      }
+      console.log(params)
+      this.$api
+        .getListUserBankAndVirtual(params)
+        .then((res) => {
+          if (res.code === 200) {
+            this.tableData = res.data.record
+            this.total = res.data.totalRecord
+          }
+          this.loading = false
+        })
+        .catch(() => {
+          this.loading = false
+        })
     },
     reset() {
       this.queryData = {}
