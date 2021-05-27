@@ -5,11 +5,12 @@
 				<el-form ref="form" :inline="true" :model="queryData">
 					<el-form-item label="风控类型:">
 						<el-select
-							v-model="queryData.riskType"
+							v-model="queryData.windControlType"
 							size="medium"
 							placeholder="默认选择全部"
 							clearable
 							style="width: 180px"
+							@change="getMerchantDict($event)"
 						>
 							<el-option
 								v-for="item in windLevelTypeArr"
@@ -21,18 +22,19 @@
 					</el-form-item>
 					<el-form-item label="风控层级:">
 						<el-select
-							v-model="queryData.riskRank"
+							v-model="queryData.windControlLevelName"
 							size="medium"
 							placeholder="默认选择全部"
 							clearable
 							multiple
+							:maxlength="10"
 							style="width: 300px"
 						>
 							<el-option
-								v-for="item in []"
-								:key="item.code"
-								:label="item.description"
-								:value="item.code"
+								v-for="item in vipDict"
+								:key="item.id"
+								:label="item.windControlLevelName"
+								:value="item.id"
 							></el-option>
 						</el-select>
 					</el-form-item>
@@ -98,44 +100,93 @@
 					@sort-change="changeTableSort"
 				>
 					<el-table-column
-						prop="riskType"
+						prop="windControlType"
 						align="center"
 						label="风控类型"
-					></el-table-column>
+					>
+                        <template slot-scope="scope">
+							<span v-if="!!scope.row.windControlType">
+								{{ typeFilter(scope.row.windControlType, 'windLevelType') }}
+							</span>
+                            <span v-else>-</span>
+                        </template>
+                    </el-table-column>
 					<el-table-column
-						prop="riskRank"
+						prop="windControlLevelName"
 						align="center"
 						label="风控层级"
-					></el-table-column>
+					>
+                        <template slot-scope="scope">
+							<span v-if="!!scope.row.windControlLevelName">
+								{{ scope.row.windControlLevelName }}
+							</span>
+                            <span v-else>-</span>
+                        </template>
+                    </el-table-column>
 					<el-table-column
 						prop="miaoShu"
 						align="center"
 						label="风控层级描述"
-					></el-table-column>
+					>
+                        <template slot-scope="scope">
+							<span v-if="!!scope.row.description">
+								{{ scope.row.description }}
+							</span>
+                            <span v-else>-</span>
+                        </template>
+                    </el-table-column>
 					<el-table-column
 						prop="createdBy"
 						align="center"
 						label="创建人"
-					></el-table-column>
+					>
+                        <template slot-scope="scope">
+							<span v-if="!!scope.row.createdBy">
+								{{ scope.row.createdBy }}
+							</span>
+                            <span v-else>-</span>
+                        </template>
+                    </el-table-column>
 					<el-table-column
 						prop="createdAt"
 						align="center"
 						label="创建时间"
 						sortable="custom"
 						width="160px"
-					></el-table-column>
+					>
+                        <template slot-scope="scope">
+							<span v-if="!!scope.row.createdAt">
+								{{ scope.row.createdAt }}
+							</span>
+                            <span v-else>-</span>
+                        </template>
+                    </el-table-column>
 					<el-table-column
 						prop="updatedBy"
 						align="center"
 						label="最近操作人"
-					></el-table-column>
+					>
+                        <template slot-scope="scope">
+							<span v-if="!!scope.row.updatedBy">
+								{{ scope.row.updatedBy }}
+							</span>
+                            <span v-else>-</span>
+                        </template>
+                    </el-table-column>
 					<el-table-column
 						prop="updatedAt"
 						align="center"
 						label="最近操作时间"
 						sortable="custom"
 						width="160px"
-					></el-table-column>
+					>
+                        <template slot-scope="scope">
+							<span v-if="!!scope.row.updatedAt">
+								{{ scope.row.updatedAt }}
+							</span>
+                            <span v-else>-</span>
+                        </template>
+                    </el-table-column>
 					<el-table-column
 						prop="operating"
 						align="center"
@@ -190,7 +241,7 @@
 				<el-form
 					ref="formSub"
 					:model="dialogForm"
-                    label-width="120px"
+					label-width="120px"
 					:rules="rules"
 				>
 					<el-form-item label="风控类型:" prop="riskType">
@@ -247,8 +298,8 @@ export default {
 	data() {
 		return {
 			queryData: {
-				riskType: undefined,
-				riskRank: undefined,
+				windControlType: undefined,
+				windControlLevelName: undefined,
 				createBy: undefined,
 				updatedBy: undefined
 			},
@@ -259,28 +310,20 @@ export default {
 				riskRank: undefined,
 				info: undefined
 			},
-			title: ''
+			title: '',
+			vipDict: [
+				{
+					windControlLevelName: '全部',
+					id: ''
+				}
+			]
 		}
 	},
 	computed: {
-        windLevelTypeArr() {
-            return this.globalDics.windLevelType
-        },
+		windLevelTypeArr() {
+			return this.globalDics.windLevelType
+		},
 		rules() {
-			// const testPicName = (rule, value, callback) => {
-			// 	const isSpecial = !notSpecial2(String(value))
-			// 	const isRmoji = isHaveEmoji(String(value))
-			// 	if (isSpecial) {
-			// 		callback(new Error('不支持空格及特殊字符'))
-			// 	} else if (isRmoji) {
-			// 		callback(new Error('不支持表情'))
-			// 	} else if (!value) {
-			// 		callback(new Error('请输入图片名称'))
-			// 	} else {
-			// 		callback()
-			// 	}
-			// }
-
 			return {
 				riskType: [
 					{ required: true, message: '请选择风控类型', trigger: 'change' }
@@ -303,7 +346,7 @@ export default {
 				...this.getParams(params)
 			}
 			this.$api
-				.getTabelData(params)
+				.riskRankListAPI(params)
 				.then((res) => {
 					const { code, data } = res
 					if (code === 200) {
@@ -371,8 +414,6 @@ export default {
 		deleteLabel(val) {
 			const data = {}
 			data.id = val.id
-			data.description = val.description
-			data.gameLabelName = val.gameLabelName
 			this.$confirm(`<strong>确定删除此条配置?</strong>`, `确认提示`, {
 				dangerouslyUseHTMLString: true,
 				confirmButtonText: '确定',
@@ -380,7 +421,7 @@ export default {
 				type: 'warning'
 			})
 				.then(() => {
-					this.$api.setUpdateDelete(data).then((res) => {
+					this.$api.deleteRiskRankAPI(data).then((res) => {
 						const { code } = res
 						if (code === 200) {
 							this.$message.success('删除成功')
@@ -445,6 +486,23 @@ export default {
 		},
 		clear() {
 			this.$refs.formSub.resetFields()
+		},
+		// 获取风控层级
+		getMerchantDict(val) {
+			this.queryData.windControlLevelName = undefined
+			this.$api
+				.getSelectWindControlLevel({ windControlType: val * 1 })
+				.then((res) => {
+					const { code, data, msg } = res
+					if (code === 200) {
+						this.vipDict = data || []
+					} else {
+						this.$message({
+							message: msg,
+							type: 'error'
+						})
+					}
+				})
 		}
 	}
 }
