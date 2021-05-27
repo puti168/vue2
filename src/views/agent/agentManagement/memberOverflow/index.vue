@@ -191,11 +191,7 @@ export default {
   computed: {
     // 设备列表
     promoteDeviceList() {
-      return [
-        { description: 'APP', code: '1' },
-        { description: 'WEB', code: '2' },
-        { description: 'H5', code: '3' }
-      ]
+      return this.globalDics.terminalnType
     },
     accountTypeArr() {
       return this.globalDics.accountType
