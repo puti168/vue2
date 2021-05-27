@@ -10,7 +10,7 @@
 							placeholder="默认选择全部"
 							clearable
 							style="width: 180px"
-							@change="getMerchantDict($event)"
+							@change="getMerchantDict($event, 'name1')"
 						>
 							<el-option
 								v-for="item in windLevelTypeArr"
@@ -40,7 +40,7 @@
 					</el-form-item>
 					<el-form-item label="创建人:" prop="createBy">
 						<el-input
-							v-model="queryData.createBy"
+							v-model="queryData.createdBy"
 							size="medium"
 							placeholder="请输入"
 							clearable
@@ -232,28 +232,31 @@
 					label-width="120px"
 					:rules="rules"
 				>
-					<el-form-item label="风控类型:" prop="riskType">
+					<el-form-item label="风控类型:" prop="windControlType">
 						<el-select
-							v-model="dialogForm.riskType"
+							v-model="dialogForm.windControlType"
 							size="medium"
 							placeholder="默认选择全部"
 							clearable
 							style="width: 330px"
+							@change="getMerchantDict($event, 'name2')"
 						>
 							<el-option
-								v-for="item in []"
+								v-for="item in windLevelTypeArr"
 								:key="item.code"
 								:label="item.description"
 								:value="item.code"
 							></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="风控层级:" prop="riskRank">
+					<el-form-item label="风控层级:" prop="windControlLevelName">
 						<el-input
-							v-model="dialogForm.riskRank"
+							v-model="dialogForm.windControlLevelName"
 							:maxlength="10"
 							autocomplete="off"
 							style="width: 330px"
+							placeholder="请输入"
+							clearable
 						></el-input>
 					</el-form-item>
 					<el-form-item label="风控描述信息:" prop="info">
@@ -261,6 +264,8 @@
 							v-model="dialogForm.info"
 							type="textarea"
 							style="width: 330px"
+							:maxlength="50"
+							show-word-limit
 						></el-input>
 					</el-form-item>
 				</el-form>
@@ -288,23 +293,18 @@ export default {
 			queryData: {
 				windControlType: undefined,
 				windControlLevelName: undefined,
-				createBy: undefined,
+				createdBy: undefined,
 				updatedBy: undefined
 			},
 			tableData: [],
 			dialogFormVisible: false,
 			dialogForm: {
-				riskType: undefined,
-				riskRank: undefined,
+				windControlType: undefined,
+				windControlLevelName: undefined,
 				info: undefined
 			},
 			title: '',
-			vipDict: [
-				{
-					windControlLevelName: '全部',
-					id: ''
-				}
-			]
+			vipDict: []
 		}
 	},
 	computed: {
@@ -313,13 +313,17 @@ export default {
 		},
 		rules() {
 			return {
-				riskType: [
+				windControlType: [
 					{ required: true, message: '请选择风控类型', trigger: 'change' }
 				],
-				riskRank: [
-					{ required: true, message: '请选择风控层级', trigger: 'blur' }
+				windControlLevelName: [
+					{ required: true, message: '请填入风控层级', trigger: 'blur' },
+					{ min: 2, max: 10, message: '请填入风控层级', trigger: 'blur' }
 				],
-				info: [{ required: true, message: '请上传图片', trigger: 'blur' }]
+				info: [
+					{ required: true, message: '请填入风控层级描述', trigger: 'blur' },
+					{ min: 2, max: 50, message: '请填入风控层级描述', trigger: 'blur' }
+				]
 			}
 		}
 	},
@@ -333,6 +337,12 @@ export default {
 			params = {
 				...this.getParams(params)
 			}
+			params.windControlLevelName =
+				params.windControlLevelName && params.windControlLevelName.length
+					? params.windControlLevelName
+					: undefined
+			params.createdBy = params.createdBy ? params.createdBy : undefined
+			params.updatedBy = params.updatedBy ? params.updatedBy : undefined
 			this.$api
 				.riskRankListAPI(params)
 				.then((res) => {
@@ -400,7 +410,14 @@ export default {
 			this.dialogFormVisible = true
 		},
 		deleteLabel(val) {
+			const loading = this.$loading({
+				lock: true,
+				text: 'Loading',
+				spinner: 'el-icon-loading',
+				background: 'rgba(0, 0, 0, 0.7)'
+			})
 			const { id } = val
+			console.log('val', val)
 			this.$confirm(`<strong>确定删除此条配置?</strong>`, `确认提示`, {
 				dangerouslyUseHTMLString: true,
 				confirmButtonText: '确定',
@@ -408,15 +425,34 @@ export default {
 				type: 'warning'
 			})
 				.then(() => {
-					this.$api.deleteRiskRankAPI({ id }).then((res) => {
-						const { code } = res
-						if (code === 200) {
-							this.$message.success('删除成功')
+					this.$api
+						.deleteRiskRankAPI({ id })
+						.then((res) => {
+							loading.close()
+							const { code } = res
+							if (code === 200) {
+								this.$message.success('删除成功')
+								this.loadData()
+							} else {
+								this.$message({
+									type: 'error',
+									message: '删除失败!'
+								})
+							}
+
 							this.loadData()
-						}
-					})
+						})
+						.catch(() => {
+							loading.close()
+						})
 				})
-				.catch(() => {})
+				.catch(() => {
+					loading.close()
+				})
+
+			setTimeout(() => {
+				loading.close()
+			}, 1000)
 		},
 		subAddOrEidt() {
 			const data = {}
@@ -475,8 +511,10 @@ export default {
 			this.$refs.formSub.resetFields()
 		},
 		// 获取风控层级
-		getMerchantDict(val) {
-			this.queryData.windControlLevelName = undefined
+		getMerchantDict(val, type) {
+			type === 'name1' ? (this.queryData.windControlLevelName = undefined) : ''
+			type === 'name2' ? (this.dialogForm.windControlLevelName = undefined) : ''
+
 			this.$api
 				.getSelectWindControlLevel({ windControlType: val * 1 })
 				.then((res) => {
