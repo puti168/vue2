@@ -3,11 +3,11 @@
 		<div class="view-container dealer-container">
 			<div class="params">
 				<el-form ref="form" :inline="true" :model="queryData">
-					<el-form-item label="终端设备号:">
+					<el-form-item label="IP地址:">
 						<el-input
-							v-model="queryData.deviceNo"
+							v-model="queryData.registerIp"
 							clearable
-							:maxlength="50"
+							:maxlength="15"
 							size="medium"
 							style="width: 180px;"
 							placeholder="请输入"
@@ -92,9 +92,9 @@
 					:header-cell-style="getRowClass"
 					@sort-change="_changeTableSort"
 				>
-					<el-table-column prop="deviceNo" align="center" label="IP地址">
+					<el-table-column prop="registerIp" align="center" label="IP地址">
 						<template slot-scope="scope">
-								{{ scope.row.deviceNo }}
+								{{ scope.row.registerIp }}
 						</template>
 					</el-table-column>
 					<el-table-column prop="beforeWindControlDd" align="center" label="变更前风控层级">
@@ -156,9 +156,8 @@ export default {
 	data() {
 		return {
 			queryData: {
-				deviceNo: '',
+				registerIp: '',
 				afterWindControlId: '',
-				orderType: '',
 				beforeWindControlId: '',
 				createdBy: '',
 				windType: 5
@@ -168,15 +167,6 @@ export default {
 		}
 	},
 	computed: {
-		loginDeviceType() {
-			return this.globalDics.loginDeviceType
-		},
-		loginStatusType() {
-			return this.globalDics.loginStatusType
-		},
-		accountType() {
-			return this.globalDics.accountType
-		}
 	},
 	mounted() {
 		this.getSelectWindControlLevel()
@@ -188,7 +178,7 @@ export default {
 		},
 		getSelectWindControlLevel() {
 			this.$api
-				.getSelectWindControlLevel({ windControlType: 6 })
+				.getSelectWindControlLevel({ windControlType: 5 })
 				.then((res) => {
 					if (res.code === 200) {
 						this.WindControlLevel = res.data
@@ -218,12 +208,11 @@ export default {
 		},
 		reset() {
 			this.queryData = {
-				deviceNo: '',
+				registerIp: '',
 				afterWindControlId: '',
 				beforeWindControlId: '',
-				orderType: '',
 				createdBy: '',
-				windType: 6
+				windType: 5
 			}
 			this.pageNum = 1
 			this.loadData()

@@ -3,11 +3,11 @@
 		<div class="view-container dealer-container">
 			<div class="params">
 				<el-form ref="form" :inline="true" :model="queryData">
-					<el-form-item label="IP地址:">
+					<el-form-item label="终端设备号:">
 						<el-input
-							v-model="queryData.registerIp"
+							v-model="queryData.deviceNo"
 							clearable
-							:maxlength="15"
+							:maxlength="50"
 							size="medium"
 							style="width: 180px;"
 							placeholder="请输入"
@@ -92,9 +92,9 @@
 					:header-cell-style="getRowClass"
 					@sort-change="_changeTableSort"
 				>
-					<el-table-column prop="registerIp" align="center" label="IP地址">
+					<el-table-column prop="deviceNo" align="center" label="终端设备号">
 						<template slot-scope="scope">
-								{{ scope.row.registerIp }}
+								{{ scope.row.deviceNo }}
 						</template>
 					</el-table-column>
 					<el-table-column prop="beforeWindControlDd" align="center" label="变更前风控层级">
@@ -150,32 +150,24 @@ import list from '@/mixins/list'
 import { routerNames } from '@/utils/consts'
 
 export default {
-	name: routerNames.ipRiskControlChange,
+	name: routerNames.terminalRiskControlChange,
 	components: {},
 	mixins: [list],
 	data() {
 		return {
 			queryData: {
-				registerIp: '',
+				deviceNo: '',
 				afterWindControlId: '',
+				orderType: '',
 				beforeWindControlId: '',
 				createdBy: '',
-				windType: 5
+				windType: 6
 			},
 			WindControlLevel: {},
 			tableData: []
 		}
 	},
 	computed: {
-		loginDeviceType() {
-			return this.globalDics.loginDeviceType
-		},
-		loginStatusType() {
-			return this.globalDics.loginStatusType
-		},
-		accountType() {
-			return this.globalDics.accountType
-		}
 	},
 	mounted() {
 		this.getSelectWindControlLevel()
@@ -187,7 +179,7 @@ export default {
 		},
 		getSelectWindControlLevel() {
 			this.$api
-				.getSelectWindControlLevel({ windControlType: 5 })
+				.getSelectWindControlLevel({ windControlType: 6 })
 				.then((res) => {
 					if (res.code === 200) {
 						this.WindControlLevel = res.data
@@ -217,20 +209,17 @@ export default {
 		},
 		reset() {
 			this.queryData = {
-				registerIp: '',
+				deviceNo: '',
 				afterWindControlId: '',
 				beforeWindControlId: '',
+				orderType: '',
 				createdBy: '',
-				windType: 5
+				windType: 6
 			}
 			this.pageNum = 1
 			this.loadData()
 		},
 		_changeTableSort({ column, prop, order }) {
-			if (prop === 'loginTime') {
-				prop = 1
-			}
-			this.queryData.orderKey = prop
 			if (order === 'ascending') {
 				// 升序
 				this.queryData.orderType = 'asc'

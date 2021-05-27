@@ -4,6 +4,7 @@ import dayjs from 'dayjs'
 export const routerNames = {
 	memberChange: 'memberChange',
 	ipRiskControlChange: 'ipRiskControlChange',
+	terminalRiskControlChange: 'terminalRiskControlChange',
 	addMember: 'addMember',
 	memberOverflow: 'memberOverflow',
 	bankRecord: 'bankRecord',
