@@ -3,6 +3,8 @@ import dayjs from 'dayjs'
 // 路由的名称  一定要和 组件的name对应，缓存才起作用
 export const routerNames = {
 	memberChange: 'memberChange',
+	ipRiskControlChange: 'ipRiskControlChange',
+	terminalRiskControlChange: 'terminalRiskControlChange',
 	addMember: 'addMember',
 	memberOverflow: 'memberOverflow',
 	bankRecord: 'bankRecord',
