@@ -187,10 +187,10 @@
               :popper-append-to-body="false"
             >
               <el-option
-                v-for="item in windLevelType"
-                :key="item.code"
-                :label="item.description"
-                :value="item.code"
+                v-for="item in WindControlLevel"
+                :key="item.id"
+                :label="item.windControlLevelName"
+                :value="item.id"
               ></el-option>
             </el-select>
           </el-form-item>
@@ -377,10 +377,10 @@
             width="150px"
           >
             <template slot-scope="scope">
-              <span v-if="scope.row.windControlId !== null">
-                {{ typeFilter(scope.row.windControlId, "windLevelType") }}
+              <span v-if="scope.row.windControlId !== 0"> - </span>
+              <span v-else>
+                {{ WindControlLevel[windControlId - 1].windControlLevelName }}
               </span>
-              <span v-else>-</span>
             </template>
           </el-table-column>
           <el-table-column
@@ -575,7 +575,8 @@ export default {
       dataList: {},
       moduleBox: '',
       editVisible: false,
-      editData: {}
+      editData: {},
+      WindControlLevel: []
       // checked: true
     }
   },
@@ -591,13 +592,16 @@ export default {
     }
   },
   mounted() {
-    for (let i = 0; i < 3; i++) {
-      this.tableData[i] = {
-        cardNumber: '464544654'
-      }
-    }
+    this.getSelectWindControlLevel()
   },
   methods: {
+    getSelectWindControlLevel() {
+      this.$api.getSelectWindControlLevel({ windControlType: 3 }).then((res) => {
+        if (res.code === 200) {
+          this.WindControlLevel = res.data
+        }
+      })
+    },
     loadData() {
       this.loading = true
       let params = {
