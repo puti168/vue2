@@ -93,16 +93,16 @@
 				<div class="content">
 					<div class="game-page left-page">
 						<p class="hotConfig">分类包含游戏</p>
-						<p class="left-word">已包含： {{ leftList.length }}</p>
+						<p class="left-word">已包含： {{ oldLeftList.length }}</p>
 						<p class="left-word" style="margin-top: 20px">
 							游戏名称
 							<el-input
-								v-model="queryData.assortName"
+								v-model="queryLeft"
 								size="medium"
-								maxlength="10"
 								placeholder="请输入"
 								clearable
 								style="width: 180px"
+								@input="changeLeft"
 							></el-input>
 						</p>
 						<el-button type="primary" class="clear-list" @click="deleteAll">
@@ -168,7 +168,7 @@
 								placeholder="请输入"
 								clearable
 								style="width: 180px"
-								@change="changeRight"
+								@input="changeRight"
 							></el-input>
 						</p>
 						<div class="page-main">
@@ -228,11 +228,10 @@ export default {
 			queryLeft: '',
 			queryRight: '',
 			// 原始数据
-			oldRightList: {},
-			oldLeftList: {},
+			oldRightList: [],
+			oldLeftList: [],
 			gameList: [],
 			leftList: [],
-			childGameNameList: [],
 			data: {},
 			oldValue: '',
 			gameCode: '',
@@ -277,7 +276,6 @@ export default {
 		if (this.rowAssortId) {
 			this.queryChildGame()
 		}
-		this.queryChildGameConfig()
 	},
 	mounted() {},
 	updated() {},
@@ -285,27 +283,62 @@ export default {
 		back() {
 			this.$emit('back')
 		},
+		sortLeft() {
+			// 顺序先改为由小到大
+			for (let i = 0; i < this.oldLeftList.length; i++) {
+				for (let j = 0; j < this.oldLeftList.length - 1 - i; j++) {
+					const temp = this.oldLeftList[j]
+					if (
+						this.oldLeftList[j].assortSort > this.oldLeftList[j + 1].assortSort
+					) {
+						this.oldLeftList[j] = this.oldLeftList[j + 1]
+						this.oldLeftList[j + 1] = temp
+					}
+				}
+			}
+			setTimeout(() => {
+				this.oldLeftList.forEach((item, index) => {
+					item.assortSort = index + 1
+					if (this.oldLeftList.length - 1 === index) {
+						this.changeLeft()
+					}
+				})
+			}, 100)
+		},
 		changeRight() {
-
+			this.gameList = this.oldRightList.filter((item) =>
+				item.gameName.includes(this.queryRight)
+			)
+		},
+		changeLeft() {
+			this.leftList = this.oldLeftList.filter((item) =>
+				item.gameName.includes(this.queryLeft)
+			)
 		},
 		changeInput(value) {
 			// 与旧值相同就互换
-			this.leftList.forEach((item, index) => {
+			this.oldLeftList.forEach((item, index) => {
 				if (item.assortSort === Number(value)) {
 					item.assortSort = this.oldValue
+				}
+				if (this.oldLeftList.length - 1 === index) {
+					this.sortLeft()
 				}
 			})
 		},
 		deleteItem(item) {
-			const index = this.leftList.indexOf(item)
+			const index = this.oldLeftList.indexOf(item)
 			if (index > -1) {
-				this.leftList.splice(index, 1)
+				this.oldLeftList.splice(index, 1)
+				this.changeLeft()
 			}
-			this.gameList.forEach((val) => {
+			this.oldRightList.forEach((val) => {
 				if (val.id === item.id) {
 					val.check = false
 				}
 			})
+			this.sortLeft()
+			this.changeRight()
 		},
 		getOld(oldValue) {
 			this.oldValue = oldValue
@@ -313,7 +346,7 @@ export default {
 		lockChange(item) {
 			let includes = false
 			let indexLeft = -1
-			this.leftList.forEach((data, index) => {
+			this.oldLeftList.forEach((data, index) => {
 				if (data.id === item.id) {
 					includes = true
 					// 包含时所在下标
@@ -322,22 +355,14 @@ export default {
 			})
 			// 勾选并且左边不包含。插入一个
 			if (item.check && !includes) {
-				if (this.leftList.length > 0) {
-					const arr = []
-					this.leftList.forEach((val) => {
-						arr.push(val.assortSort)
-					})
-					item.assortSort = Math.max(...arr) + 1
-				} else {
-					item.assortSort = 0
-				}
-				this.leftList.push(item)
+				this.oldLeftList.push(item)
 			} else {
 				// 否则删除一个
 				if (indexLeft > -1) {
-					this.leftList.splice(indexLeft, 1)
+					this.oldLeftList.splice(indexLeft, 1)
 				}
 			}
+			this.sortLeft()
 		},
 		// 游戏平台
 		getPlatform() {
@@ -360,7 +385,7 @@ export default {
 		},
 		changeSelect() {
 			// 更换后为check重新赋值
-			this.gameList = []
+			this.oldRightList = []
 			const params = {
 				gameCode: this.gameCode
 			}
@@ -372,15 +397,16 @@ export default {
 						item.assortSort = Number(index + 1)
 						item.gameCode = this.gameCode
 					})
-					this.gameList = data
+					this.oldRightList = data
 					// 判断右边是否勾选
-					this.gameList.forEach((item) => {
-						this.leftList.forEach((val) => {
+					this.oldRightList.forEach((item) => {
+						this.oldLeftList.forEach((val) => {
 							if (val.id === item.id) {
 								item.check = true
 							}
 						})
 					})
+					this.changeRight()
 				} else {
 					this.loading = false
 					this.$message({
@@ -392,7 +418,7 @@ export default {
 		},
 		// 游戏平台对应玩法查询
 		queryGame() {
-			this.gameList = []
+			this.oldRightList = []
 			const params = {
 				gameCode: this.gameCode
 			}
@@ -404,7 +430,8 @@ export default {
 						item.assortSort = Number(index + 1)
 						item.gameCode = this.gameCode
 					})
-					this.gameList = data
+					this.oldRightList = data
+					this.changeRight()
 				} else {
 					this.loading = false
 					this.$message({
@@ -417,23 +444,24 @@ export default {
 
 		// 子游戏查询
 		queryChildGame() {
-			this.leftList = []
-			console.log('this.rowAssortId', this.rowAssortId)
+			this.oldLeftList = []
 			const params = {
 				assortId: this.rowAssortId
 			}
 			this.$api.queryChildGameAPI(params).then((res) => {
 				const { code, data, msg } = res
 				if (code === 200) {
-					this.leftList = data
+					this.oldLeftList = data
 					// 判断右边是否勾选
-					this.gameList.forEach((item) => {
-						this.leftList.forEach((val) => {
+					this.oldRightList.forEach((item) => {
+						this.oldLeftList.forEach((val) => {
 							if (val.id === item.id) {
 								item.check = true
 							}
 						})
 					})
+					this.changeLeft()
+					this.changeRight()
 				} else {
 					this.loading = false
 					this.$message({
@@ -443,52 +471,12 @@ export default {
 				}
 			})
 		},
-		// 子游戏配置查询
-		queryChildGameConfig() {
-			this.childGameNameList = []
-			if (this.rowAssortId) {
-				const params = {
-					id: this.rowAssortId
-				}
-				this.$api.queryChildGameConfigAPI(params).then((res) => {
-					const { code, data, msg } = res
-					if (code === 200) {
-						const {
-							assortName,
-							assortSort,
-							remark,
-							clientDisplay,
-							supportTerminal
-						} = data
-						this.queryData.assortName = assortName
-						this.queryData.assortSort = assortSort
-						this.queryData.remark = remark
-
-						this.gameDisplayArr.forEach((item) => {
-							if (!!(item.code * 1) === clientDisplay) {
-								this.queryData.clientDisplay = item.code
-							}
-						})
-						this.terminalTypeArr.forEach((item) => {
-							if (item.description === supportTerminal) {
-								this.queryData.supportTerminal.push(item.description)
-							}
-						})
-					} else {
-						this.$message({
-							message: msg,
-							type: 'error'
-						})
-					}
-				})
-			}
-		},
 		// 保存
 		save() {
 			this.$refs.form.validate((valid) => {
 				if (valid) {
 					const arr = []
-					this.leftList.forEach((item) => {
+					this.oldLeftList.forEach((item) => {
 						arr.push({
 							assortSort: item.assortSort,
 							gameId: item.id,
@@ -527,10 +515,13 @@ export default {
 			})
 		},
 		deleteAll() {
-			this.leftList = []
-			this.gameList.forEach((val) => {
+			this.oldLeftList = []
+			this.oldRightList = []
+			this.oldRightList.forEach((val) => {
 				val.check = false
 			})
+			this.changeLeft()
+			this.changeRight()
 		},
 		reset() {
 			this.$refs['form'].resetFields()
