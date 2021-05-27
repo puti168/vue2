@@ -51,7 +51,7 @@
 							:popper-append-to-body="false"
 						>
 							<el-option
-								v-for="item in terminalnType"
+								v-for="item in betDeviceType"
 								:key="item.code"
 								:label="item.description"
 								:value="item.code"
@@ -199,7 +199,7 @@
 					</el-table-column>
 					<el-table-column align="center" label="支持终端">
 						<template slot-scope="scope">
-							{{ typeFilter(scope.row.supportTerminal, 'terminalnType') }}
+							{{ typeFilter(scope.row.supportTerminal, 'betDeviceType') }}
 						</template>
 					</el-table-column>
 					<el-table-column align="center" label="图标状态">
@@ -398,8 +398,8 @@ export default {
 		gameStatusType() {
 			return this.globalDics.gameStatusType
 		},
-		terminalnType() {
-			return this.globalDics.terminalnType
+		betDeviceType() {
+			return this.globalDics.betDeviceType
 		},
 		gameIconType() {
 			return this.globalDics.gameIconType
