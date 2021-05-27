@@ -376,7 +376,7 @@
             label="风控层级"
             width="150px"
           >
-            <template slot-scope="scope">
+            <template v-if="WindControlLevel.length > 0" slot-scope="scope">
               <span v-if="scope.row.windControlId !== 0"> - </span>
               <span v-else>
                 {{ WindControlLevel[windControlId - 1].windControlLevelName }}
@@ -399,7 +399,7 @@
             <template slot-scope="scope">
               {{ scope.row.bindUserName }}
               <br />
-              <!-- {{ scope.row.userName }} -->
+              {{ scope.row.realName }}
             </template>
           </el-table-column>
           <el-table-column prop="withdrawalSuccessNum" align="center" width="100px">
@@ -511,13 +511,9 @@
         label-width="105px"
         @submit.native.prevent="enterSearch"
       >
-        <!-- <el-form-item
-          v-if="moduleBox === '状态变更'"
-          label="黑名单状态："
-          prop="deviceType"
-        >
+        <el-form-item v-if="moduleBox === '状态变更'" label="黑名单状态：" prop="status">
           <el-select
-            v-model="editData.deviceType"
+            v-model="editData.status"
             placeholder="请选择"
             @change="changeAccountStatus"
           >
@@ -528,7 +524,7 @@
               :value="item.code"
             ></el-option>
           </el-select>
-        </el-form-item> -->
+        </el-form-item>
         <el-form-item
           label="备注信息："
           prop="remark"
@@ -547,9 +543,7 @@
           </el-input>
         </el-form-item>
         <el-form-item v-if="moduleBox === '解除绑定'">
-          <el-checkbox
-v-model="editData.checked"
->将该银行卡变更为黑名单禁用状态</el-checkbox>
+          <el-checkbox v-model="checked">将该银行卡变更为黑名单禁用状态</el-checkbox>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -575,9 +569,9 @@ export default {
       dataList: {},
       moduleBox: '',
       editVisible: false,
-      editData: {},
-      WindControlLevel: []
-      // checked: true
+      editData: { status: '', remark: '' },
+      WindControlLevel: [],
+      checked: false
     }
   },
   computed: {
@@ -633,8 +627,16 @@ export default {
     eidtDialog(text, val) {
       if (text === '开启' || text === '禁用') {
         this.moduleBox = '状态变更'
+        this.editData.dataType = 1
+        this.editData.id = val.id
+        this.editData.userId = val.userId
+        this.editData.status = val.blacklistStatus + ''
       } else {
         this.moduleBox = '解除绑定'
+        this.editData.dataType = 1
+        this.editData.id = val.id
+        this.editData.userId = val.userId
+        this.checked = val.bindStatus === 0
       }
       this.$nextTick(() => {
         this.editVisible = true
@@ -642,21 +644,43 @@ export default {
       console.log(text, val)
     },
     changeAccountStatus(val) {
+      // this.editData.status = val ;
       console.log(val)
     },
     submitEdit() {
       console.log(this.editData)
-      // const params = {}
-      // this.$refs.editForm.validate((valid) => {
-      //   if (valid) {
-      //   }
-      // })
+      this.$refs.editForm.validate((valid) => {
+        if (valid) {
+          if (this.moduleBox === '状态变更') {
+            this.editData.status = this.editData.status * 1
+            this.$api.setUpdateUserBankAndVirtualStatus(this.editData).then((res) => {
+              if (res.code) {
+                this.$message.success('修改成功')
+                this.editVisible = false
+                this.loadData()
+              }
+            })
+          } else {
+            delete this.editData.status
+            if (this.checked) {
+              this.editData.bindStatus = 1
+            } else {
+              this.editData.bindStatus = 0
+            }
+            this.$api.setUpdateUserBankAndVirtualBindStatus(this.editData).then((res) => {
+              if (res.code) {
+                this.$message.success('成功')
+                this.editVisible = false
+                this.loadData()
+              }
+            })
+          }
+        }
+      })
     },
     cancel() {
-      // this.$refs.editForm.resetFields()
-      // this.$nextTick(() => {
-      //   this.editVisible = false
-      // })
+      this.editData.remark = ''
+      this.editVisible = false
     },
     _changeTableSort({ column, prop, order }) {
       if (prop === 'createdAt') {

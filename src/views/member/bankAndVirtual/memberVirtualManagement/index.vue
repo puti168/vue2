@@ -88,7 +88,7 @@
               :popper-append-to-body="false"
             >
               <el-option
-                v-for="item in windLevelType"
+                v-for="item in WindControlLevel"
                 :key="item.code"
                 :label="item.description"
                 :value="item.code"
@@ -383,12 +383,12 @@
             label="风控层级"
             width="150px"
           >
-            <template slot-scope="scope">
+            <!-- <template slot-scope="scope">
               <span v-if="scope.row.windControlId !== null">
                 {{ typeFilter(scope.row.windControlId, "windLevelType") }}
               </span>
               <span v-else>-</span>
-            </template>
+            </template> -->
           </el-table-column>
           <el-table-column
             prop="bindNum"
@@ -518,7 +518,7 @@
         label-width="105px"
         @submit.native.prevent="enterSearch"
       >
-        <!-- <el-form-item
+        <el-form-item
           v-if="moduleBox === '状态变更'"
           label="黑名单状态："
           prop="deviceType"
@@ -535,7 +535,7 @@
               :value="item.code"
             ></el-option>
           </el-select>
-        </el-form-item> -->
+        </el-form-item>
         <el-form-item
           label="备注信息："
           prop="remark"
@@ -582,8 +582,9 @@ export default {
       dataList: {},
       moduleBox: '',
       editVisible: false,
-      editData: {}
-      // checked: true
+      editData: { status: '', remark: '' },
+      WindControlLevel: [],
+      checked: false
     }
   },
   computed: {
@@ -598,35 +599,38 @@ export default {
     }
   },
   mounted() {
-    for (let i = 0; i < 3; i++) {
-      this.tableData[i] = {
-        virtualAddress: '464544654'
-      }
-    }
+    this.getSelectWindControlLevel()
   },
   methods: {
+    getSelectWindControlLevel() {
+      this.$api.getSelectWindControlLevel({ windControlType: 3 }).then((res) => {
+        if (res.code === 200) {
+          this.WindControlLevel = res.data
+        }
+      })
+    },
     loadData() {
-      // this.loading = true;
-      // let params = {
-      //   ...this.queryData,
-      //   dataType: 1
-      // }
-      // params = {
-      //   ...this.getParams(params)
-      // }
-      // console.log(params)
-      // this.$api
-      //   .getGameRecordNotes(params)
-      //   .then((res) => {
-      //     if (res.code === 200) {
-      //       this.tableData = res.data.record;
-      //       this.total = res.data.totalRecord;
-      //     }
-      //     this.loading = false;
-      //   })
-      //   .catch(() => {
-      //     this.loading = false;
-      //   });
+      this.loading = true
+      let params = {
+        ...this.queryData,
+        dataType: 2
+      }
+      params = {
+        ...this.getParams(params)
+      }
+      console.log(params)
+      this.$api
+        .getListUserBankAndVirtual(params)
+        .then((res) => {
+          if (res.code === 200) {
+            this.tableData = res.data.record
+            this.total = res.data.totalRecord
+          }
+          this.loading = false
+        })
+        .catch(() => {
+          this.loading = false
+        })
     },
     reset() {
       this.queryData = {}
@@ -636,8 +640,16 @@ export default {
     eidtDialog(text, val) {
       if (text === '开启' || text === '禁用') {
         this.moduleBox = '状态变更'
+        this.editData.dataType = 2
+        this.editData.id = val.id
+        this.editData.userId = val.userId
+        this.editData.status = val.blacklistStatus + ''
       } else {
         this.moduleBox = '解除绑定'
+        this.editData.dataType = 2
+        this.editData.id = val.id
+        this.editData.userId = val.userId
+        this.checked = val.bindStatus === 0
       }
       this.$nextTick(() => {
         this.editVisible = true
@@ -645,21 +657,43 @@ export default {
       console.log(text, val)
     },
     changeAccountStatus(val) {
+      // this.editData.status = val ;
       console.log(val)
     },
     submitEdit() {
       console.log(this.editData)
-      // const params = {}
-      // this.$refs.editForm.validate((valid) => {
-      //   if (valid) {
-      //   }
-      // })
+      this.$refs.editForm.validate((valid) => {
+        if (valid) {
+          if (this.moduleBox === '状态变更') {
+            this.editData.status = this.editData.status * 1
+            this.$api.setUpdateUserBankAndVirtualStatus(this.editData).then((res) => {
+              if (res.code) {
+                this.$message.success('修改成功')
+                this.editVisible = false
+                this.loadData()
+              }
+            })
+          } else {
+            delete this.editData.status
+            if (this.checked) {
+              this.editData.bindStatus = 1
+            } else {
+              this.editData.bindStatus = 0
+            }
+            this.$api.setUpdateUserBankAndVirtualBindStatus(this.editData).then((res) => {
+              if (res.code) {
+                this.$message.success('成功')
+                this.editVisible = false
+                this.loadData()
+              }
+            })
+          }
+        }
+      })
     },
     cancel() {
-      // this.$refs.editForm.resetFields()
-      // this.$nextTick(() => {
-      //   this.editVisible = false
-      // })
+      this.editData.remark = ''
+      this.editVisible = false
     },
     _changeTableSort({ column, prop, order }) {
       if (prop === 'createdAt') {
@@ -667,6 +701,9 @@ export default {
       }
       if (prop === 'withdrawalTime') {
         prop = 2
+      }
+      if (prop === 'withdrawalTime') {
+        prop = 3
       }
       this.queryData.orderKey = prop
       if (order === 'ascending') {
