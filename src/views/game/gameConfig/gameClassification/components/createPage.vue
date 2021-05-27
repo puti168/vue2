@@ -94,6 +94,17 @@
 					<div class="game-page left-page">
 						<p class="hotConfig">分类包含游戏</p>
 						<p class="left-word">已包含： {{ leftList.length }}</p>
+						<p class="left-word" style="margin-top: 20px">
+							游戏名称
+							<el-input
+								v-model="queryData.assortName"
+								size="medium"
+								maxlength="10"
+								placeholder="请输入"
+								clearable
+								style="width: 180px"
+							></el-input>
+						</p>
 						<el-button type="primary" class="clear-list" @click="deleteAll">
 							列表清空
 						</el-button>
@@ -149,6 +160,17 @@
 								></el-option>
 							</el-select>
 						</div>
+						<p class="platform" style="margin-top: 20px">
+							游戏名称
+							<el-input
+								v-model="queryRight"
+								size="medium"
+								placeholder="请输入"
+								clearable
+								style="width: 180px"
+								@change="changeRight"
+							></el-input>
+						</p>
 						<div class="page-main">
 							<div v-for="item in gameList" :key="item.id" class="page-data">
 								<el-checkbox
@@ -203,6 +225,11 @@ export default {
 				clientDisplay: undefined
 			},
 			gamePlantList: [],
+			queryLeft: '',
+			queryRight: '',
+			// 原始数据
+			oldRightList: {},
+			oldLeftList: {},
 			gameList: [],
 			leftList: [],
 			childGameNameList: [],
@@ -257,6 +284,9 @@ export default {
 	methods: {
 		back() {
 			this.$emit('back')
+		},
+		changeRight() {
+
 		},
 		changeInput(value) {
 			// 与旧值相同就互换
@@ -476,24 +506,23 @@ export default {
 							? params.supportTerminal.join(',')
 							: undefined
 					// 后端说都用update const url = this.rowAssortId ? 'gameUpdateAPI' : 'gameCreateAPI'
-					this.$api.gameUpdateAPI(params)
-						.then((res) => {
-							const { code, msg } = res
-							console.log('res', res)
-							if (code === 200) {
-								this.$message({
-									message: '保存成功!',
-									type: 'success'
-								})
-								this.back()
-								this.reset()
-							} else {
-								this.$message({
-									message: msg,
-									type: 'error'
-								})
-							}
-						})
+					this.$api.gameUpdateAPI(params).then((res) => {
+						const { code, msg } = res
+						console.log('res', res)
+						if (code === 200) {
+							this.$message({
+								message: '保存成功!',
+								type: 'success'
+							})
+							this.back()
+							this.reset()
+						} else {
+							this.$message({
+								message: msg,
+								type: 'error'
+							})
+						}
+					})
 				}
 			})
 		},
