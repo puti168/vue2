@@ -7,6 +7,7 @@ import riskManage from './riskManage'
 import memberDetails from './memberDetails'
 import game from './game'
 import agent from './agent'
+import control from './control'
 
 export default {
 	...bankController,
@@ -17,5 +18,6 @@ export default {
 	...riskManage,
 	...memberDetails,
 	...game,
-	...agent
+	...agent,
+	...control
 }
