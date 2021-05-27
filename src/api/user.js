@@ -148,6 +148,30 @@ export function addUser(data) {
 		data
 	})
 }
+// 查询会员银行卡管理和会员虚拟币账号管理
+export function getListUserBankAndVirtual(data) {
+	return request({
+		url: '/management/listUserBankAndVirtual',
+		method: 'post',
+		data
+	})
+}
+// 修改会员银行卡管理和会员虚拟币账号管理 解绑状态
+export function setUpdateUserBankAndVirtualBindStatus(data) {
+	return request({
+		url: '/management/updateUserBankAndVirtualBindStatus',
+		method: 'post',
+		data
+	})
+}
+// 修改会员银行卡管理和会员虚拟币账号管理 开启/禁用状态
+export function setUpdateUserBankAndVirtualStatus(data) {
+	return request({
+		url: '/management/updateUserBankAndVirtualStatus',
+		method: 'post',
+		data
+	})
+}
 export default {
 	login,
 	logout,
@@ -165,5 +189,8 @@ export default {
 	exportExcelAPI,
 	addMemberAPI,
 	memberRegisterInfoListAPI,
-	bankRecordListAPI
+	bankRecordListAPI,
+	getListUserBankAndVirtual,
+	setUpdateUserBankAndVirtualBindStatus,
+	setUpdateUserBankAndVirtualStatus
 }
