@@ -47,7 +47,7 @@
 
 				<el-form-item label="变更类型:">
 					<el-select
-						v-model="queryData.operateType"
+						v-model="queryData.applyType"
 						style="width: 300px"
 						:popper-append-to-body="false"
 					>
@@ -123,12 +123,12 @@
 							<p>{{ typeFilter(scope.row.accountType, 'accountType') }}</p>
 						</template>
 					</el-table-column>
-					<el-table-column prop="operateType" align="center" label="变更类型">
+					<el-table-column prop="applyType" align="center" label="变更类型">
 						<template slot-scope="scope">
-							<p>{{ typeFilter(scope.row.operateType, 'bindType') }}</p>
+							<p>{{ typeFilter(scope.row.applyType, 'bindType') }}</p>
 						</template>
 					</el-table-column>
-					<el-table-column prop="operateType" align="center" label="变更前信息">
+					<el-table-column align="center" label="变更前信息">
 						<template slot-scope="scope">
 							<template v-if="Number(scope.row.applyType === 2)">
 								{{ typeFilter(scope.row.beforeModify, 'genderType') }}
@@ -141,7 +141,7 @@
 							</template>
 						</template>
 					</el-table-column>
-					<el-table-column prop="operateType" align="center" label="变更后信息">
+					<el-table-column align="center" label="变更后信息">
 						<template slot-scope="scope">
 							<template v-if="Number(scope.row.applyType === 2)">
 								{{ typeFilter(scope.row.afterModify, 'genderType') }}
@@ -154,7 +154,7 @@
 							</template>
 						</template>
 					</el-table-column>
-					<el-table-column prop="operateType" align="center" label="提交信息">
+					<el-table-column align="center" label="提交信息">
 						<template slot-scope="scope">
 							<p>{{ scope.row.applyInfo }}</p>
 						</template>

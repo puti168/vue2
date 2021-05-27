@@ -51,7 +51,7 @@
 									style="width: 300px"
 								>
 									<el-option
-										v-for="item in terminalnType"
+										v-for="item in betDeviceType"
 										:key="item.code"
 										:label="item.description"
 										:value="item.code"
@@ -308,8 +308,8 @@ export default {
 		gameIconType() {
 			return this.globalDics.gameIconType
 		},
-		terminalnType() {
-			return this.globalDics.terminalnType
+		betDeviceType() {
+			return this.globalDics.betDeviceType
 		},
 		rules() {
 			const valiIMG = (rule, value, callback) => {
