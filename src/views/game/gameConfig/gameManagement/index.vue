@@ -199,7 +199,7 @@
 					</el-table-column>
 					<el-table-column align="center" label="支持终端">
 						<template slot-scope="scope">
-							{{ typeFilter(scope.row.supportTerminal, 'betDeviceType') }}
+							{{ supportTerminalFilter(scope.row.supportTerminal) }}
 						</template>
 					</el-table-column>
 					<el-table-column align="center" label="图标状态">
@@ -401,6 +401,9 @@ export default {
 		betDeviceType() {
 			return this.globalDics.betDeviceType
 		},
+		terminalnType() {
+			return this.globalDics.terminalnType
+		},
 		gameIconType() {
 			return this.globalDics.gameIconType
 		}
@@ -511,6 +514,19 @@ export default {
 				arr.forEach((data) => {
 					if (item.gameId + '' === data + '') {
 						name = name + item.gameName + '/'
+					}
+				})
+			})
+			return name.slice(0, -1)
+		},
+		supportTerminalFilter(val) {
+			if (!this.terminalnType) return
+			const arr = val.split(',')
+			let name = ''
+			this.terminalnType.forEach((item) => {
+				arr.forEach((data) => {
+					if (item.code + '' === data + '') {
+						name = name + item.description + '/'
 					}
 				})
 			})
