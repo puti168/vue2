@@ -42,7 +42,7 @@
 					</div>
 				</div>
 				<div class="review-content">
-					<p class="name">审核信息信息</p>
+					<p class="name">审核信息</p>
 					<div class="review-flex">
 						<div>一审人: {{ list.auditName }}</div>
 						<div>一审时间: {{ list.auditTime }}</div>
@@ -65,7 +65,8 @@
 						v-model="form.remark"
 						clearable
 						type="textarea"
-						:max="50"
+						:maxlength="50"
+						show-word-limit
 						:autosize="{ minRows: 4, maxRows: 4 }"
 						style="width: 380px"
 						placeholder="请输入"
@@ -76,7 +77,8 @@
 						v-model="form.remark"
 						clearable
 						type="textarea"
-						:max="50"
+						show-word-limit
+						:maxlength="50"
 						:autosize="{ minRows: 4, maxRows: 4 }"
 						style="width: 380px"
 						placeholder="请输入"

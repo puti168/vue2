@@ -3,7 +3,7 @@
 		<div v-if="!showDetail" class="view-container dealer-container">
 			<div class="params">
 				<el-form ref="form" :inline="true" :model="queryData">
-					<el-form-item label="游戏标签ID:">
+					<el-form-item label="游戏ID:">
 						<el-input
 							v-model="queryData.gameId"
 							clearable

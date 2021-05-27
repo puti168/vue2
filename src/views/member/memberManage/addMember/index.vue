@@ -121,6 +121,7 @@
 						size="medium"
 						type="textarea"
 						placeholder="请输入"
+						show-word-limit
 						clearable
 						maxlength="50"
 						style="width: 365px"

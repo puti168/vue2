@@ -485,6 +485,7 @@ class="textC"
             v-model="editData.remark"
             :maxlength="50"
             type="textarea"
+            show-word-limit
             placeholder="最多可输入50个字符"
           >
           </el-input>

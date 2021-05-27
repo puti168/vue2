@@ -192,7 +192,8 @@
                                     v-model="form.contentInfor"
                                     clearable
                                     type="textarea"
-                                    :max="50"
+                                    show-word-limit
+                                    :maxlength="50"
                                     :autosize="{ minRows: 4, maxRows: 4 }"
                                     style="width: 90%"
                                 ></el-input>
