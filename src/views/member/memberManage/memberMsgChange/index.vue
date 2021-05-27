@@ -125,7 +125,7 @@
 					</el-table-column>
 					<el-table-column prop="applyType" align="center" label="变更类型">
 						<template slot-scope="scope">
-							<p>{{ typeFilter(scope.row.applyType, 'bindType') }}</p>
+							<p>{{ typeFilter(scope.row.applyType, 'applyType') }}</p>
 						</template>
 					</el-table-column>
 					<el-table-column align="center" label="变更前信息">

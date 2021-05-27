@@ -186,6 +186,7 @@ export default {
 	addUser,
 	editUser,
 	getUserRoles,
+	memberDataInfoChangeRecord,
 	getRoleList,
 	modifyPassword,
 	getSecurityDictList,
