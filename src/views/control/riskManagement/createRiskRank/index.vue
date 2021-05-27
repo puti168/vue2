@@ -104,49 +104,41 @@
 						align="center"
 						label="风控类型"
 					>
-                        <template slot-scope="scope">
+						<template slot-scope="scope">
 							<span v-if="!!scope.row.windControlType">
 								{{ typeFilter(scope.row.windControlType, 'windLevelType') }}
 							</span>
-                            <span v-else>-</span>
-                        </template>
-                    </el-table-column>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="windControlLevelName"
 						align="center"
 						label="风控层级"
 					>
-                        <template slot-scope="scope">
+						<template slot-scope="scope">
 							<span v-if="!!scope.row.windControlLevelName">
 								{{ scope.row.windControlLevelName }}
 							</span>
-                            <span v-else>-</span>
-                        </template>
-                    </el-table-column>
-					<el-table-column
-						prop="miaoShu"
-						align="center"
-						label="风控层级描述"
-					>
-                        <template slot-scope="scope">
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
+					<el-table-column prop="miaoShu" align="center" label="风控层级描述">
+						<template slot-scope="scope">
 							<span v-if="!!scope.row.description">
 								{{ scope.row.description }}
 							</span>
-                            <span v-else>-</span>
-                        </template>
-                    </el-table-column>
-					<el-table-column
-						prop="createdBy"
-						align="center"
-						label="创建人"
-					>
-                        <template slot-scope="scope">
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
+					<el-table-column prop="createdBy" align="center" label="创建人">
+						<template slot-scope="scope">
 							<span v-if="!!scope.row.createdBy">
 								{{ scope.row.createdBy }}
 							</span>
-                            <span v-else>-</span>
-                        </template>
-                    </el-table-column>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="createdAt"
 						align="center"
@@ -154,25 +146,21 @@
 						sortable="custom"
 						width="160px"
 					>
-                        <template slot-scope="scope">
+						<template slot-scope="scope">
 							<span v-if="!!scope.row.createdAt">
 								{{ scope.row.createdAt }}
 							</span>
-                            <span v-else>-</span>
-                        </template>
-                    </el-table-column>
-					<el-table-column
-						prop="updatedBy"
-						align="center"
-						label="最近操作人"
-					>
-                        <template slot-scope="scope">
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
+					<el-table-column prop="updatedBy" align="center" label="最近操作人">
+						<template slot-scope="scope">
 							<span v-if="!!scope.row.updatedBy">
 								{{ scope.row.updatedBy }}
 							</span>
-                            <span v-else>-</span>
-                        </template>
-                    </el-table-column>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="updatedAt"
 						align="center"
@@ -180,13 +168,13 @@
 						sortable="custom"
 						width="160px"
 					>
-                        <template slot-scope="scope">
+						<template slot-scope="scope">
 							<span v-if="!!scope.row.updatedAt">
 								{{ scope.row.updatedAt }}
 							</span>
-                            <span v-else>-</span>
-                        </template>
-                    </el-table-column>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="operating"
 						align="center"
@@ -412,8 +400,7 @@ export default {
 			this.dialogFormVisible = true
 		},
 		deleteLabel(val) {
-			const data = {}
-			data.id = val.id
+			const { id } = val
 			this.$confirm(`<strong>确定删除此条配置?</strong>`, `确认提示`, {
 				dangerouslyUseHTMLString: true,
 				confirmButtonText: '确定',
@@ -421,7 +408,7 @@ export default {
 				type: 'warning'
 			})
 				.then(() => {
-					this.$api.deleteRiskRankAPI(data).then((res) => {
+					this.$api.deleteRiskRankAPI({ id }).then((res) => {
 						const { code } = res
 						if (code === 200) {
 							this.$message.success('删除成功')
