@@ -10,7 +10,7 @@
 							placeholder="默认选择全部"
 							clearable
 							style="width: 180px"
-							@change="getMerchantDict($event, 'name1')"
+							@change="getMerchantDict($event)"
 						>
 							<el-option
 								v-for="item in windLevelTypeArr"
@@ -218,7 +218,7 @@
 				></el-pagination>
 			</div>
 			<el-dialog
-				title="新增/编辑"
+				:title="title"
 				:visible.sync="dialogFormVisible"
 				:destroy-on-close="true"
 				width="520px"
@@ -239,7 +239,7 @@
 							placeholder="默认选择全部"
 							clearable
 							style="width: 330px"
-							@change="getMerchantDict($event, 'name2')"
+							@change="getMerchantDict($event)"
 						>
 							<el-option
 								v-for="item in windLevelTypeArr"
@@ -272,7 +272,7 @@
 				<el-divider></el-divider>
 				<div slot="footer" class="dialog-footer">
 					<el-button @click="dialogFormVisible = false">取消</el-button>
-					<el-button type="primary" @click="subAddOrEidt">保存</el-button>
+					<el-button type="primary" @click="subAddOrEdit">保存</el-button>
 				</div>
 			</el-dialog>
 		</div>
@@ -367,9 +367,9 @@ export default {
 			this.pageNum = 1
 			this.$refs['form'].resetFields()
 			this.queryData = {
-				riskType: undefined,
-				riskRank: undefined,
-				createBy: undefined,
+				windControlType: undefined,
+				windControlLevelName: undefined,
+				createdBy: undefined,
 				updatedBy: undefined
 			}
 			this.loadData()
@@ -402,7 +402,12 @@ export default {
 		},
 		addLabel() {
 			this.dialogFormVisible = true
-			// this.dialogForm = {};
+			this.title = '新增'
+			this.dialogForm = {
+				windControlType: undefined,
+				windControlLevelName: undefined,
+				info: undefined
+			}
 		},
 		edit(val) {
 			this.title = '编辑'
@@ -417,7 +422,6 @@ export default {
 				background: 'rgba(0, 0, 0, 0.7)'
 			})
 			const { id } = val
-			console.log('val', val)
 			this.$confirm(`<strong>确定删除此条配置?</strong>`, `确认提示`, {
 				dangerouslyUseHTMLString: true,
 				confirmButtonText: '确定',
@@ -432,7 +436,6 @@ export default {
 							const { code } = res
 							if (code === 200) {
 								this.$message.success('删除成功')
-								this.loadData()
 							} else {
 								this.$message({
 									type: 'error',
@@ -454,30 +457,32 @@ export default {
 				loading.close()
 			}, 1000)
 		},
-		subAddOrEidt() {
-			const data = {}
-			data.id = this.dialogForm.id
-			data.description = this.dialogForm.description
-			data.gameLabelName = this.dialogForm.gameLabelName
+		subAddOrEdit() {
+			const params = {
+				...this.dialogForm
+			}
+			const handleClick =
+				this.title !== '编辑'
+					? this.$api.createRiskRankAPI
+					: this.$api.updateRiskRankAPI
 			this.$refs.formSub.validate((valid) => {
 				if (valid) {
-					if (this.title !== '编辑') {
-						console.log('新增')
-						this.$api.addObGameLabel(data).then((res) => {
-							if (res.code === 200) {
-								this.$message.success('创建成功')
-								this.pageNum = 1
-								this.loadData()
-							}
-						})
-					} else {
-						this.$api.setUpdateLabel(data).then((res) => {
-							if (res.code === 200) {
-								this.$message.success('修改成功')
-								this.loadData()
-							}
-						})
-					}
+					handleClick(params).then((res) => {
+						const { code, msg } = res
+						if (code === 200) {
+							this.$confirm(`${this.updateStatus ? '更新' : '新增'}成功`, {
+								confirmButtonText: '确定',
+								type: 'success',
+								showCancelButton: false
+							})
+							this.reset()
+						} else {
+							this.$message({
+								message: msg,
+								type: 'error'
+							})
+						}
+					})
 					this.dialogFormVisible = false
 				}
 			})
@@ -488,14 +493,11 @@ export default {
 			console.log(value)
 		},
 		_changeTableSort({ column, prop, order }) {
-			if (prop === 'gameLabelId') {
+			if (prop === 'createdAt') {
 				prop = 1
 			}
-			if (prop === 'createdAt') {
-				prop = 2
-			}
 			if (prop === 'updatedAt') {
-				prop = 3
+				prop = 2
 			}
 			this.queryData.orderKey = prop
 			if (order === 'ascending') {
@@ -511,9 +513,8 @@ export default {
 			this.$refs.formSub.resetFields()
 		},
 		// 获取风控层级
-		getMerchantDict(val, type) {
-			type === 'name1' ? (this.queryData.windControlLevelName = undefined) : ''
-			type === 'name2' ? (this.dialogForm.windControlLevelName = undefined) : ''
+		getMerchantDict(val) {
+			this.queryData.windControlLevelName = undefined
 
 			this.$api
 				.getSelectWindControlLevel({ windControlType: val * 1 })
