@@ -547,7 +547,7 @@
 							<span v-if="!!scope.row.deviceType">
 								{{ typeFilter(scope.row.deviceType, 'deviceType') }}
 							</span>
-							<span v-else></span>
+							<span v-else>-</span>
 						</template>
 					</el-table-column>
 				</el-table>
