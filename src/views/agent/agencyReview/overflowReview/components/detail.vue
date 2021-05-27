@@ -61,7 +61,7 @@
 					<div>推广链接: {{ list.promotionLink }}</div>
 				</div>
 				<div class="review-flex">
-					<div>推广设备: {{ typeFilter(list.promotionDevice, 'betDeviceType') }}</div>
+					<div>推广设备: {{ typeFilter(list.promotionDevice, 'terminalnType') }}</div>
 					<div>申请理由: {{ list.applyInfo }}</div>
 				</div>
 				<div class="review-flex">
