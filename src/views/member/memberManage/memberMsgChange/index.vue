@@ -49,11 +49,13 @@
 					<el-select
 						v-model="queryData.applyType"
 						style="width: 300px"
+						multiple
+						placeholder="默认选择全部"
 						:popper-append-to-body="false"
 					>
 						<el-option label="全部" value></el-option>
 						<el-option
-							v-for="item in bindType"
+							v-for="item in applyType"
 							:key="item.code"
 							:label="item.description"
 							:value="item.code"
@@ -206,7 +208,7 @@ export default {
 				userName: '',
 				applyName: '',
 				accountType: [],
-				operateType: []
+				applyType: []
 			},
 			formTime: {
 				time: [start, end]
@@ -225,8 +227,8 @@ export default {
 		virtualProtocolType() {
 			return this.globalDics.virtualProtocolType
 		},
-		bindType() {
-			return this.globalDics.bindType
+		applyType() {
+			return this.globalDics.applyType
 		}
 	},
 	mounted() {},
@@ -291,7 +293,7 @@ export default {
 				userName: '',
 				applyName: '',
 				accountType: [],
-				operateType: []
+				applyType: []
 			}
 			this.pageNum = 1
 			this.formTime.time = [start, end]
