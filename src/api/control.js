@@ -7,7 +7,15 @@ export function getSelectWindControlLevel(data) {
 		data
 	})
 }
+export function selectWindControlRecord(data) {
+	return request({
+		url: '/windControlRecord/selectWindControlRecord',
+		method: 'post',
+		data
+	})
+}
 
 export default {
-	getSelectWindControlLevel
+	getSelectWindControlLevel,
+	selectWindControlRecord
 }
