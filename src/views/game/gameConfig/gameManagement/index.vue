@@ -523,7 +523,7 @@ export default {
 			if (!this.terminalnType) return
 			const arr = val.split(',')
 			let name = ''
-			this.terminalnType.forEach((item) => {
+			this.betDeviceType.forEach((item) => {
 				arr.forEach((data) => {
 					if (item.code + '' === data + '') {
 						name = name + item.description + '/'

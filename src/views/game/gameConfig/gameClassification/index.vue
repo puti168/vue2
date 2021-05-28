@@ -370,7 +370,7 @@
 				</div>
 			</el-dialog>
 		</div>
-		<createPage v-else :rowAssortId="rowAssortId" @back="back"></createPage>
+		<createPage v-else :rowData="rowData" :rowAssortId="rowAssortId" @back="back"></createPage>
 	</transition>
 </template>
 
@@ -403,7 +403,8 @@ export default {
 			userLabel: [],
 			dialogGameVisible: false,
 			createPage: false,
-			rowAssortId: ''
+			rowAssortId: '',
+			rowData: {}
 		}
 	},
 	computed: {
@@ -532,6 +533,7 @@ export default {
 
 		openEdit(val) {
 			const { id } = val
+			this.rowData = val
 			this.rowAssortId = id
 			this.createPage = true
 		},

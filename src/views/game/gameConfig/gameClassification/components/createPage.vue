@@ -212,7 +212,8 @@ export default {
 		rowAssortId: {
 			type: String,
 			default: ''
-		}
+		},
+		rowData: { type: Object, default: () => ({}) }
 	},
 	data() {
 		return {
@@ -269,6 +270,23 @@ export default {
 					}
 				]
 			}
+		}
+	},
+	watch: {
+		rowData: {
+			handler(val) {
+				let arr = {}
+				arr = JSON.parse(JSON.stringify(val))
+				if (arr.assortName) {
+					this.queryData.assortName = arr.assortName
+					this.queryData.assortSort = arr.assortSort
+					this.queryData.remark = arr.remark
+					this.queryData.clientDisplay = arr.clientDisplay === false ? '0' : '1'
+					this.queryData.supportTerminal = arr.supportTerminal.split(',')
+				}
+			},
+			immediate: true,
+			deep: true
 		}
 	},
 	created() {
