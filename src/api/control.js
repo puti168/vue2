@@ -51,11 +51,21 @@ export function deleteRiskRankAPI(data) {
 	})
 }
 
+// 风控==> 编辑风控层级 ===> 列表
+export function riskDictAPI(params) {
+	return request({
+		url: '/windControllerLevel/dict',
+		method: 'get',
+		params
+	})
+}
+
 export default {
 	getSelectWindControlLevel,
-    selectWindControlRecord,
+	selectWindControlRecord,
 	riskRankListAPI,
 	createRiskRankAPI,
 	updateRiskRankAPI,
-	deleteRiskRankAPI
+	deleteRiskRankAPI,
+	riskDictAPI
 }

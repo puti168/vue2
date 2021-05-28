@@ -139,6 +139,7 @@
 import { routerNames } from '@/utils/consts'
 import list from '@/mixins/list'
 import { notSpecial2, isHaveEmoji } from '@/utils/validate'
+
 export default {
 	name: routerNames.addAgent,
 	mixins: [list],
@@ -329,7 +330,7 @@ export default {
 		},
 		// 获取风控层级
 		getMerchantDict() {
-			this.$api.agentDictAPI().then((res) => {
+			this.$api.riskDictAPI().then((res) => {
 				const {
 					code,
 					data: { windControl, userLabel },
