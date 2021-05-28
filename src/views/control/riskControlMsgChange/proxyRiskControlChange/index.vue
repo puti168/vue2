@@ -3,9 +3,9 @@
     <div class="view-container dealer-container">
       <div class="params">
         <el-form ref="form" :inline="true" :model="queryData">
-          <el-form-item label="代理账号:" prop="userName">
+          <el-form-item label="代理账号:" prop="username">
             <el-input
-              v-model="queryData.userName"
+              v-model="queryData.username"
               clearable
               :maxlength="11"
               size="medium"
@@ -15,41 +15,42 @@
               @keyup.enter.native="enterSearch"
             ></el-input>
           </el-form-item>
-          <el-form-item label="变更前风控等级:" class="tagheight" prop="accountType">
+          <el-form-item label="变更前风控等级:" class="tagheight">
             <el-select
-              v-model="queryData.accountType"
-              style="width: 300px"
-              multiple
+              v-model="queryData.beforeWindControlId"
+              style="width: 180px"
               placeholder="默认选择全部"
               :popper-append-to-body="false"
             >
+              <el-option label="全部" value=""></el-option>
               <el-option
-                v-for="item in accountType"
-                :key="item.code"
-                :label="item.description"
-                :value="item.code"
+                v-for="item in WindControlLevel"
+                :key="item.id"
+                :label="item.windControlLevelName"
+                :value="item.id"
               ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="变更后风控等级:" class="tagheight" prop="loginStatus">
+          <el-form-item label="变更后风控等级:" class="tagheight">
             <el-select
-              v-model="queryData.loginStatus"
-              style="width: 280px"
+              v-model="queryData.afterWindControlId"
+              style="width: 180px"
               clearable
               placeholder="默认选择全部"
               :popper-append-to-body="false"
             >
+              <el-option label="全部" value=""></el-option>
               <el-option
-                v-for="item in loginStatusType"
-                :key="item.description"
-                :label="item.description"
-                :value="item.code"
+                v-for="item in WindControlLevel"
+                :key="item.id"
+                :label="item.windControlLevelName"
+                :value="item.id"
               ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="操作人:" prop="loginIp">
+          <el-form-item label="操作人:" prop="createdBy">
             <el-input
-              v-model="queryData.loginIp"
+              v-model="queryData.createdBy"
               clearable
               :maxlength="15"
               size="medium"
@@ -91,40 +92,68 @@
           :header-cell-style="getRowClass"
           @sort-change="_changeTableSort"
         >
-          <el-table-column prop="userName" align="center" label="代理账号">
+          <el-table-column prop="username" align="center" label="代理账号">
             <template slot-scope="scope">
-              <Copy v-if="!!scope.row.userName" :title="scope.row.userName" :copy="copy">
-                {{ scope.row.userName }}
+              <Copy v-if="!!scope.row.username" :title="scope.row.username" :copy="copy">
+                {{ scope.row.username }}
               </Copy>
               <span v-else>-</span>
             </template>
           </el-table-column>
-          <el-table-column prop="blevel" align="center" label="变更前风控层级">
+          <el-table-column
+            prop="beforeWindControlName"
+            align="center"
+            label="变更前风控层级"
+          >
             <template slot-scope="scope">
-              <el-tooltip content="该风控层级为刷流水" placement="top">
-                <p>{{ scope.row.blevel }}</p>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column prop="alevel" align="center" label="变更后风控层级">
-            <template slot-scope="scope">
-              <el-tooltip content="该风控层级为刷流水" placement="top">
-                <p>{{ scope.row.alevel }}</p>
-              </el-tooltip>
+              <div
+                v-if="
+                  scope.row.beforeWindControlDepict !== null &&
+                  scope.row.beforeWindControlDepict !== ''
+                "
+              >
+                <el-tooltip :content="scope.row.beforeWindControlDepict" placement="top">
+                  <p>
+                    {{ scope.row.beforeWindControlName }}
+                  </p>
+                </el-tooltip>
+              </div>
+              <div v-else>{{ scope.row.beforeWindControlName }}</div>
             </template>
           </el-table-column>
           <el-table-column
-            prop="ipAttribution"
+            prop="afterWindControlName"
+            align="center"
+            label="变更后风控层级"
+          >
+            <template slot-scope="scope">
+              <div
+                v-if="
+                  scope.row.afterWindControlDepict !== null &&
+                  scope.row.afterWindControlDepict !== ''
+                "
+              >
+                <el-tooltip :content="scope.row.afterWindControlDepict" placement="top">
+                  <p>
+                    {{ scope.row.afterWindControlName }}
+                  </p>
+                </el-tooltip>
+              </div>
+              <div v-else>{{ scope.row.afterWindControlName }}</div>
+            </template>
+          </el-table-column>
+          <el-table-column
+            prop="windReason"
             align="center"
             label="风控原因"
           ></el-table-column>
           <el-table-column
-            prop="Operator"
+            prop="createdBy"
             align="center"
             label="操作人"
           ></el-table-column>
           <el-table-column
-            prop="times"
+            prop="createdAt"
             align="center"
             label="操作时间"
             sortable="custom"
@@ -158,53 +187,44 @@ export default {
   data() {
     return {
       queryData: {},
-      tableData: []
+      tableData: [],
+      WindControlLevel: []
     }
   },
-  computed: {
-    loginDeviceType() {
-      return this.globalDics.loginDeviceType
-    },
-    loginStatusType() {
-      return this.globalDics.loginStatusType
-    },
-    accountType() {
-      return this.globalDics.accountType
-    }
-  },
+  computed: {},
   mounted() {
-    for (let i = 0; i < 10; i++) {
-      this.tableData[i] = {
-        userName: 'darcy',
-        blevel: '一级',
-        alevel: '二级',
-        ipAttribution: '无',
-        Operator: 'darcy',
-        times: '2021-05-25'
-      }
-    }
+    this.getSelectWindControlLevel()
   },
   methods: {
+    getSelectWindControlLevel() {
+      this.$api.getSelectWindControlLevel({ windControlType: 2 }).then((res) => {
+        if (res.code === 200) {
+          this.WindControlLevel = res.data
+        }
+      })
+    },
     loadData() {
-      // this.loading = true;
-      // let params = {
-      //   ...this.queryData
-      // }
-      // params = {
-      //   ...this.getParams(params)
-      // }
-      // this.$api
-      //   .getProxyDetailProxyLoginLog(params)
-      //   .then((res) => {
-      //     if (res.code === 200) {
-      //       this.tableData = res.data.record;
-      //       this.total = res.data.totalRecord;
-      //     }
-      //     this.loading = false;
-      //   })
-      //   .catch(() => {
-      //     this.loading = false;
-      //   });
+      this.loading = true
+      let params = {
+        ...this.queryData,
+        windType: 2
+      }
+      params = {
+        ...this.getParams(params)
+      }
+      console.log(params)
+      this.$api
+        .selectWindControlRecord(params)
+        .then((res) => {
+          if (res.code === 200) {
+            this.tableData = res.data.record
+            this.total = res.data.totalRecord
+          }
+          this.loading = false
+        })
+        .catch(() => {
+          this.loading = false
+        })
     },
     reset() {
       this.queryData = {}
@@ -212,10 +232,6 @@ export default {
       this.loadData()
     },
     _changeTableSort({ column, prop, order }) {
-      if (prop === 'loginTime') {
-        prop = 1
-      }
-      this.queryData.orderKey = prop
       if (order === 'ascending') {
         // 升序
         this.queryData.orderType = 'asc'
