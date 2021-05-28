@@ -187,10 +187,10 @@
               :popper-append-to-body="false"
             >
               <el-option
-                v-for="item in WindControlLevel"
-                :key="item.id"
-                :label="item.windControlLevelName"
-                :value="item.id"
+                v-for="item in vipDict"
+                :key="item.windControlId"
+                :label="item.windControlName"
+                :value="item.windControlId"
               ></el-option>
             </el-select>
           </el-form-item>
@@ -376,12 +376,12 @@
             label="风控层级"
             width="150px"
           >
-            <template v-if="WindControlLevel.length > 0" slot-scope="scope">
+            <!-- <template v-if="vipDict.length > 0" slot-scope="scope">
               <span v-if="scope.row.windControlId !== 0"> - </span>
               <span v-else>
-                {{ WindControlLevel[windControlId - 1].windControlLevelName }}
+                {{ vipDict[windControlId - 1].windControlLevelName }}
               </span>
-            </template>
+            </template> -->
           </el-table-column>
           <el-table-column
             prop="bindNum"
@@ -481,6 +481,7 @@
                 禁用
               </el-button>
               <el-button
+                v-show="scope.row.bindStatus === 1"
                 type="warning"
                 size="medium"
                 @click="eidtDialog('解绑', scope.row)"
@@ -557,7 +558,6 @@
 <script>
 import list from '@/mixins/list'
 import { routerNames } from '@/utils/consts'
-
 export default {
   name: routerNames.memberBankManagement,
   components: {},
@@ -570,29 +570,27 @@ export default {
       moduleBox: '',
       editVisible: false,
       editData: { status: '', remark: '' },
-      WindControlLevel: [],
-      checked: false
+      checked: false,
+      vipDict: []
     }
   },
   computed: {
+    // ...mapGetters(["vipDict"]),
     blackStatusType() {
       return this.globalDics.blackStatusType
     },
     bindStatusType() {
       return this.globalDics.bindStatusType
-    },
-    windLevelType() {
-      return this.globalDics.windLevelType
     }
   },
   mounted() {
-    this.getSelectWindControlLevel()
+    this.getWindControllerLevelDict()
   },
   methods: {
-    getSelectWindControlLevel() {
-      this.$api.getSelectWindControlLevel({ windControlType: 3 }).then((res) => {
+    getWindControllerLevelDict() {
+      this.$api.getWindControllerLevelDict({ windControlType: 3 }).then((res) => {
         if (res.code === 200) {
-          this.WindControlLevel = res.data
+          this.vipDict = res.data
         }
       })
     },
@@ -625,6 +623,7 @@ export default {
       this.loadData()
     },
     eidtDialog(text, val) {
+      this.editData.remark = ''
       if (text === '开启' || text === '禁用') {
         this.moduleBox = '状态变更'
         this.editData.dataType = 1
@@ -636,7 +635,7 @@ export default {
         this.editData.dataType = 1
         this.editData.id = val.id
         this.editData.userId = val.userId
-        this.checked = val.bindStatus === 0
+        this.checked = val.bindStatus === 1
       }
       this.$nextTick(() => {
         this.editVisible = true
@@ -644,34 +643,39 @@ export default {
       console.log(text, val)
     },
     changeAccountStatus(val) {
-      // this.editData.status = val ;
+      this.editData.status = val + ''
       console.log(val)
     },
     submitEdit() {
       console.log(this.editData)
+      const params = { ...this.editData }
       this.$refs.editForm.validate((valid) => {
         if (valid) {
           if (this.moduleBox === '状态变更') {
-            this.editData.status = this.editData.status * 1
-            this.$api.setUpdateUserBankAndVirtualStatus(this.editData).then((res) => {
-              if (res.code) {
+            params.status = params.status * 1
+            this.$api.setUpdateUserBankAndVirtualStatus(params).then((res) => {
+              if (res.code === 200) {
                 this.$message.success('修改成功')
                 this.editVisible = false
-                this.loadData()
+                this.pageNum = 1
+                setTimeout(() => {
+                  this.loadData()
+                }, 500)
               }
             })
           } else {
-            delete this.editData.status
-            if (this.checked) {
-              this.editData.bindStatus = 1
-            } else {
-              this.editData.bindStatus = 0
+            delete params.status
+            if (!this.checked) {
+              params.bindStatus = 0
             }
-            this.$api.setUpdateUserBankAndVirtualBindStatus(this.editData).then((res) => {
-              if (res.code) {
-                this.$message.success('成功')
+            this.$api.setUpdateUserBankAndVirtualBindStatus(params).then((res) => {
+              if (res.code === 200) {
+                this.$message.success('解绑成功')
                 this.editVisible = false
-                this.loadData()
+                this.pageNum = 1
+                setTimeout(() => {
+                  this.loadData()
+                }, 500)
               }
             })
           }
@@ -679,7 +683,6 @@ export default {
       })
     },
     cancel() {
-      this.editData.remark = ''
       this.editVisible = false
     },
     _changeTableSort({ column, prop, order }) {
@@ -689,7 +692,7 @@ export default {
       if (prop === 'withdrawalTime') {
         prop = 2
       }
-      if (prop === 'withdrawalTime') {
+      if (prop === 'updatedAt') {
         prop = 3
       }
       this.queryData.orderKey = prop

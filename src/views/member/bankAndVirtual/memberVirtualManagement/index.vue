@@ -24,7 +24,7 @@
               :popper-append-to-body="false"
             >
               <el-option
-                v-for="item in blackStatusType"
+                v-for="item in virtualProtocolType"
                 :key="item.code"
                 :label="item.description"
                 :value="item.code"
@@ -40,7 +40,7 @@
               :popper-append-to-body="false"
             >
               <el-option
-                v-for="item in blackStatusType"
+                v-for="item in virtualType"
                 :key="item.code"
                 :label="item.description"
                 :value="item.code"
@@ -88,10 +88,10 @@
               :popper-append-to-body="false"
             >
               <el-option
-                v-for="item in WindControlLevel"
-                :key="item.code"
-                :label="item.description"
-                :value="item.code"
+                v-for="item in vipDict"
+                :key="item.windControlId"
+                :label="item.windControlName"
+                :value="item.windControlId"
               ></el-option>
             </el-select>
           </el-form-item>
@@ -272,14 +272,14 @@
           </el-form-item>
           <el-form-item label="绑定账号次数:">
             <el-input
-              v-model="queryData.bdcs"
+              v-model="queryData.bindAccountCount"
               maxlength="10"
               size="medium"
               style="width: 210px"
               placeholder="请输入"
               :disabled="loading"
               oninput="value=value.replace(/[^\d]/g,'')"
-              @blur="queryData.bdcs = $event.target.value"
+              @blur="queryData.bindAccountCount = $event.target.value"
               @keyup.enter.native="enterSearch"
             ></el-input>
           </el-form-item>
@@ -488,6 +488,7 @@
                 禁用
               </el-button>
               <el-button
+                v-show="scope.row.bindStatus === 1"
                 type="warning"
                 size="medium"
                 @click="eidtDialog('解绑', scope.row)"
@@ -524,7 +525,7 @@
           prop="deviceType"
         >
           <el-select
-            v-model="editData.deviceType"
+            v-model="editData.status"
             placeholder="请选择"
             @change="changeAccountStatus"
           >
@@ -554,9 +555,7 @@
           </el-input>
         </el-form-item>
         <el-form-item v-if="moduleBox === '解除绑定'">
-          <el-checkbox
-v-model="editData.checked"
->将该地址变更为黑名单禁用状态</el-checkbox>
+          <el-checkbox v-model="checked">将该地址变更为黑名单禁用状态</el-checkbox>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -570,7 +569,6 @@ v-model="editData.checked"
 <script>
 import list from '@/mixins/list'
 import { routerNames } from '@/utils/consts'
-
 export default {
   name: routerNames.memberBankManagement,
   components: {},
@@ -583,29 +581,32 @@ export default {
       moduleBox: '',
       editVisible: false,
       editData: { status: '', remark: '' },
-      WindControlLevel: [],
-      checked: false
+      checked: false,
+      vipDict: []
     }
   },
   computed: {
+    virtualProtocolType() {
+      return this.globalDics.virtualProtocolType
+    },
+    virtualType() {
+      return this.globalDics.virtualType
+    },
     blackStatusType() {
       return this.globalDics.blackStatusType
     },
     bindStatusType() {
       return this.globalDics.bindStatusType
-    },
-    windLevelType() {
-      return this.globalDics.windLevelType
     }
   },
   mounted() {
-    this.getSelectWindControlLevel()
+    this.getWindControllerLevelDict()
   },
   methods: {
-    getSelectWindControlLevel() {
-      this.$api.getSelectWindControlLevel({ windControlType: 3 }).then((res) => {
+    getWindControllerLevelDict() {
+      this.$api.getWindControllerLevelDict({ windControlType: 4 }).then((res) => {
         if (res.code === 200) {
-          this.WindControlLevel = res.data
+          this.vipDict = res.data
         }
       })
     },
@@ -638,6 +639,7 @@ export default {
       this.loadData()
     },
     eidtDialog(text, val) {
+      this.editData.remark = ''
       if (text === '开启' || text === '禁用') {
         this.moduleBox = '状态变更'
         this.editData.dataType = 2
@@ -649,7 +651,8 @@ export default {
         this.editData.dataType = 2
         this.editData.id = val.id
         this.editData.userId = val.userId
-        this.checked = val.bindStatus === 0
+        console.log(val.bindStatus === 1)
+        this.checked = val.bindStatus === 1
       }
       this.$nextTick(() => {
         this.editVisible = true
@@ -657,34 +660,39 @@ export default {
       console.log(text, val)
     },
     changeAccountStatus(val) {
-      // this.editData.status = val ;
+      this.editData.status = val + ''
       console.log(val)
     },
     submitEdit() {
       console.log(this.editData)
+      const params = { ...this.editData }
       this.$refs.editForm.validate((valid) => {
         if (valid) {
           if (this.moduleBox === '状态变更') {
-            this.editData.status = this.editData.status * 1
-            this.$api.setUpdateUserBankAndVirtualStatus(this.editData).then((res) => {
-              if (res.code) {
+            params.status = params.status * 1
+            this.$api.setUpdateUserBankAndVirtualStatus(params).then((res) => {
+              if (res.code === 200) {
                 this.$message.success('修改成功')
                 this.editVisible = false
-                this.loadData()
+                this.pageNum = 1
+                setTimeout(() => {
+                  this.loadData()
+                }, 500)
               }
             })
           } else {
-            delete this.editData.status
-            if (this.checked) {
-              this.editData.bindStatus = 1
-            } else {
-              this.editData.bindStatus = 0
+            delete params.status
+            if (!this.checked) {
+              params.bindStatus = 0
             }
-            this.$api.setUpdateUserBankAndVirtualBindStatus(this.editData).then((res) => {
-              if (res.code) {
-                this.$message.success('成功')
+            this.$api.setUpdateUserBankAndVirtualBindStatus(params).then((res) => {
+              if (res.code === 200) {
+                this.$message.success('解绑成功')
                 this.editVisible = false
-                this.loadData()
+                this.pageNum = 1
+                setTimeout(() => {
+                  this.loadData()
+                }, 500)
               }
             })
           }
@@ -702,7 +710,7 @@ export default {
       if (prop === 'withdrawalTime') {
         prop = 2
       }
-      if (prop === 'withdrawalTime') {
+      if (prop === 'updatedAt') {
         prop = 3
       }
       this.queryData.orderKey = prop

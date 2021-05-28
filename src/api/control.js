@@ -14,6 +14,13 @@ export function selectWindControlRecord(data) {
 		data
 	})
 }
+export function getWindControllerLevelDict(params) {
+	return request({
+		url: '/windControllerLevel/dict',
+		method: 'get',
+		params
+	})
+}
 
 // 风控==> 创建风控层级 ===> 列表
 export function riskRankListAPI(data) {
@@ -81,6 +88,7 @@ export function riskEditAddAPI(data) {
 export default {
 	getSelectWindControlLevel,
 	selectWindControlRecord,
+	getWindControllerLevelDict,
 	riskRankListAPI,
 	createRiskRankAPI,
 	updateRiskRankAPI,
