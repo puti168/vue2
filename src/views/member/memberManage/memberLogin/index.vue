@@ -193,6 +193,16 @@
 						</template>
 					</el-table-column>
 					<el-table-column
+						prop="ipWindControlLevelName"
+						align="center"
+						label="ip风控等级"
+					></el-table-column>
+					<el-table-column
+						prop="deviceNoControlName"
+						align="center"
+						label="终端设备号风控层级"
+					></el-table-column>
+					<el-table-column
 						prop="deviceNo"
 						align="center"
 						label="终端设备号"
