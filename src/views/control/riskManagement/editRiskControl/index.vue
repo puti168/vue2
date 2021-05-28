@@ -31,6 +31,7 @@
 					:label="riskType[queryData.windControlType].label"
 					:prop="riskType[queryData.windControlType].prop"
 				>
+					<!--                    会员代理-->
 					<el-input
 						v-if="['1', '2'].includes(queryData.windControlType)"
 						v-model="queryData.userName"
@@ -41,6 +42,7 @@
 						onkeyup="value=value.replace(/[^\w\.\/]/ig,'')"
 						style="width: 365px"
 					></el-input>
+					<!--                    银行卡-->
 					<el-input
 						v-else-if="['3'].includes(queryData.windControlType)"
 						v-model="queryData.userName"
@@ -51,15 +53,18 @@
 						clearable
 						style="width: 365px"
 					></el-input>
+					<!--             虚拟币    终端号   -->
 					<el-input
-						v-else-if="['4'].includes(queryData.windControlType)"
+						v-else-if="['4', '6'].includes(queryData.windControlType)"
 						v-model="queryData.userName"
 						size="medium"
 						maxlength="50"
 						placeholder="请输入"
 						clearable
+						onkeyup="value=value.replace(/[^\w\.\/]/ig,'')"
 						style="width: 365px"
 					></el-input>
+					<!--                    IP-->
 					<el-input
 						v-else-if="['5'].includes(queryData.windControlType)"
 						v-model="queryData.userName"
