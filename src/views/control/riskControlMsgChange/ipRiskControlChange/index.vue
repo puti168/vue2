@@ -97,17 +97,17 @@
 								{{ scope.row.registerIp }}
 						</template>
 					</el-table-column>
-					<el-table-column prop="beforeWindControlDd" align="center" label="变更前风控层级">
+					<el-table-column prop="beforeWindControlName" align="center" label="变更前风控层级">
 						<template slot-scope="scope">
 							<el-tooltip :content="scope.rowbeforeWindControlDepict" placement="top">
-								<p>{{ windControlLevelNameFilter(scope.row.beforeWindControlDd) }}</p>
+								<p>{{ beforeWindControlName }}</p>
 							</el-tooltip>
 						</template>
 					</el-table-column>
-					<el-table-column prop="afterWindControlId" align="center" label="变更后风控层级">
+					<el-table-column prop="afterWindControlName" align="center" label="变更后风控层级">
 						<template slot-scope="scope">
 							<el-tooltip :content="scope.row.afterWindControlDepict" placement="top">
-								<p>{{ windControlLevelNameFilter(scope.row.afterWindControlId) }}</p>
+								<p>{{ scope.row.afterWindControlName }}</p>
 							</el-tooltip>
 						</template>
 					</el-table-column>
@@ -162,7 +162,7 @@ export default {
 				createdBy: '',
 				windType: 5
 			},
-			WindControlLevel: {},
+			WindControlLevel: [],
 			tableData: []
 		}
 	},
@@ -172,10 +172,6 @@ export default {
 		this.getSelectWindControlLevel()
 	},
 	methods: {
-		windControlLevelNameFilter(val) {
-			const found = this.WindControlLevel.find(item => item.id === val)
-			return found.windControlLevelName
-		},
 		getSelectWindControlLevel() {
 			this.$api
 				.getSelectWindControlLevel({ windControlType: 5 })
