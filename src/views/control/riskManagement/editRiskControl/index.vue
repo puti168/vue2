@@ -143,25 +143,43 @@
 				<span>基本信息</span>
 			</div>
 			<div class="info-content">
-                <el-row>
-                    <el-col :span="6">
-                        <span>银行卡号：</span>
-                        <span>4512111111234</span>
-                    </el-col>
-                    <el-col :span="8">
-                        <span>银行名称：</span>
-                        <span>南京银行浦东区浦口支行</span>
-                    </el-col>
-                    <el-col :span="5">
-                        <span>黑名单状态：</span>
-                        <span>启用中</span>
-                    </el-col>
-                    <el-col :span="5">
-                        <span>绑定状态：</span>
-                        <span>绑定中</span>
-                    </el-col>
-                </el-row>
-            </div>
+				<el-row class="info-content-row">
+					<el-col :span="6">
+						<span>银行卡号：</span>
+						<span>4512111111234</span>
+					</el-col>
+					<el-col :span="8">
+						<span>银行名称：</span>
+						<span>南京银行浦东区浦口支行</span>
+					</el-col>
+					<el-col :span="5">
+						<span>黑名单状态：</span>
+						<span>启用中</span>
+					</el-col>
+					<el-col :span="5">
+						<span>绑定状态：</span>
+						<span>绑定中</span>
+					</el-col>
+				</el-row>
+				<el-row class="info-content-row">
+					<el-col :span="6">
+						<span>绑定账号次数：</span>
+						<span>5</span>
+					</el-col>
+					<el-col :span="8">
+						<span>提款总额：</span>
+						<span>500000</span>
+					</el-col>
+					<el-col :span="5">
+						<span>风控层级：</span>
+						<span>无</span>
+					</el-col>
+					<el-col :span="5">
+						<span>风控原因：</span>
+						<span>无</span>
+					</el-col>
+				</el-row>
+			</div>
 		</div>
 	</div>
 </template>
@@ -496,7 +514,12 @@ export default {
 			}
 		}
 		.info-content {
-            margin-top: 40px;
+			margin-top: 30px;
+			font-size: 14px;
+			.info-content-row {
+				padding-top: 20px;
+				padding-bottom: 20px;
+			}
 		}
 	}
 }
