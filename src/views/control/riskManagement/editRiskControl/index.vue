@@ -10,9 +10,9 @@
 				</span>
 			</div>
 			<el-form ref="form" :model="queryData" :rules="rules" label-width="100px">
-				<el-form-item label="风控类型:" prop="windLevelType">
+				<el-form-item label="风控类型:" prop="windControlType">
 					<el-select
-						v-model="queryData.windLevelType"
+						v-model="queryData.windControlType"
 						size="medium"
 						placeholder="全部"
 						clearable
@@ -28,11 +28,11 @@
 					</el-select>
 				</el-form-item>
 				<el-form-item
-					:label="riskType[queryData.windLevelType].label"
-					:prop="riskType[queryData.windLevelType].prop"
+					:label="riskType[queryData.windControlType].label"
+					:prop="riskType[queryData.windControlType].prop"
 				>
 					<el-input
-						v-if="['1', '2'].includes(queryData.windLevelType)"
+						v-if="['1', '2'].includes(queryData.windControlType)"
 						v-model="queryData.userName"
 						size="medium"
 						maxlength="11"
@@ -42,7 +42,7 @@
 						style="width: 365px"
 					></el-input>
 					<el-input
-						v-else-if="['3'].includes(queryData.windLevelType)"
+						v-else-if="['3'].includes(queryData.windControlType)"
 						v-model="queryData.userName"
 						size="medium"
 						maxlength="25"
@@ -52,7 +52,7 @@
 						style="width: 365px"
 					></el-input>
 					<el-input
-						v-else-if="['4'].includes(queryData.windLevelType)"
+						v-else-if="['4'].includes(queryData.windControlType)"
 						v-model="queryData.userName"
 						size="medium"
 						maxlength="50"
@@ -61,7 +61,7 @@
 						style="width: 365px"
 					></el-input>
 					<el-input
-						v-else-if="['5'].includes(queryData.windLevelType)"
+						v-else-if="['5'].includes(queryData.windControlType)"
 						v-model="queryData.userName"
 						size="medium"
 						maxlength="15"
@@ -79,24 +79,30 @@
 						clearable
 						style="width: 365px"
 					></el-input>
-					<el-button type="primary" style="margin-left: 20px">
+					<el-button
+						type="primary"
+						style="margin-left: 20px"
+						@click="searchInfo"
+					>
 						<i v-show="loading" class="el-icon-loading"></i>
 						查询
 					</el-button>
 				</el-form-item>
-				<el-form-item label="风控层级:" prop="windControlId">
+				<el-form-item label="风控层级:" prop="windControlLevelName">
 					<el-select
-						v-model="queryData.windControlId"
+						v-model="queryData.windControlLevelName"
 						size="medium"
-						placeholder="全部"
+						placeholder="默认选择全部"
 						clearable
+						multiple
+						:maxlength="10"
 						style="width: 365px"
 					>
 						<el-option
 							v-for="item in vipDict"
-							:key="item.windControlId"
-							:label="item.windControlName"
-							:value="item.windControlId"
+							:key="item.id"
+							:label="item.windControlLevelName"
+							:value="item.windControlLevelName"
 						></el-option>
 					</el-select>
 				</el-form-item>
@@ -132,6 +138,31 @@
 				</el-form-item>
 			</el-form>
 		</div>
+		<div class="info-show">
+			<div class="info-header">
+				<span>基本信息</span>
+			</div>
+			<div class="info-content">
+                <el-row>
+                    <el-col :span="6">
+                        <span>银行卡号：</span>
+                        <span>4512111111234</span>
+                    </el-col>
+                    <el-col :span="8">
+                        <span>银行名称：</span>
+                        <span>南京银行浦东区浦口支行</span>
+                    </el-col>
+                    <el-col :span="5">
+                        <span>黑名单状态：</span>
+                        <span>启用中</span>
+                    </el-col>
+                    <el-col :span="5">
+                        <span>绑定状态：</span>
+                        <span>绑定中</span>
+                    </el-col>
+                </el-row>
+            </div>
+		</div>
 	</div>
 </template>
 
@@ -147,13 +178,12 @@ export default {
 		return {
 			loading: false,
 			queryData: {
-				windLevelType: '1',
-				windControlId: undefined,
+				windControlType: '1',
+				windControlLevelName: undefined,
 				userName: undefined,
 				applyInfo: undefined
 			},
-			vipDict: [],
-			userLabel: []
+			vipDict: []
 		}
 	},
 	computed: {
@@ -207,10 +237,10 @@ export default {
 			}
 
 			return {
-				windLevelType: [
+				windControlType: [
 					{ required: true, message: '请选择风控类型', trigger: 'change' }
 				],
-				windControlId: [
+				windControlLevelName: [
 					{ required: true, message: '请选择风控类型', trigger: 'change' }
 				],
 				userName: [
@@ -265,7 +295,9 @@ export default {
 			}
 		}
 	},
-	mounted() {},
+	mounted() {
+		this.getMerchantDict('1')
+	},
 	methods: {
 		add() {
 			this.loading = true
@@ -311,7 +343,7 @@ export default {
 		reset() {
 			this.$refs['form'].resetFields()
 			this.queryData = {
-				windLevelType: '1',
+				windControlType: '1',
 				windControlId: undefined,
 				userName: undefined,
 				applyInfo: undefined
@@ -324,28 +356,66 @@ export default {
 				windControlId: undefined,
 				userName: undefined,
 				applyInfo: undefined,
-				windLevelType: evt
+				windControlType: evt
+			}
+			this.getMerchantDict(evt)
+		},
+		// 获取风控层级
+		getMerchantDict(val) {
+			this.queryData.windControlLevelName = undefined
+
+			this.$api
+				.getSelectWindControlLevel({ windControlType: val * 1 })
+				.then((res) => {
+					const { code, data, msg } = res
+					if (code === 200) {
+						this.vipDict = data || []
+					} else {
+						this.$message({
+							message: msg,
+							type: 'error'
+						})
+					}
+				})
+		},
+		searchInfo() {
+			let lock = true
+			const reg1 = /^[A-Za-z]{1}(?=(.*[a-zA-Z]){1,})(?=(.*[0-9]){1,})[0-9A-Za-z]{3,10}$/
+			const { userName, windControlType } = this.queryData
+			if (lock && reg1.test(userName)) {
+				this.loading = true
+				this.$api
+					.riskEditInfoAPI({ userName, windControlType })
+					.then((res) => {
+						lock = false
+						this.loading = false
+						const { code, data, msg } = res
+						if (code === 200) {
+							if (data) {
+								// this.tipsShow = null
+								// this.form.accountType = data.accountType + ''
+								// this.form.currentProxyName = data.parentProxyName
+								// this.form.userId = data.id
+								// this.form.currentProxyId = data.parentProxyId
+							} else {
+								this.tipsShow = msg
+							}
+						} else {
+							this.tipsShow = msg
+						}
+					})
+					.catch(() => {
+						this.loading = false
+						this.tipsShow = '会员账号不存在'
+						lock = false
+					})
+
+				setTimeout(() => {
+					this.loading = false
+					lock = true
+				}, 1000)
 			}
 		}
-		// // 获取风控层级
-		// getMerchantDict() {
-		// 	this.$api.riskDictAPI().then((res) => {
-		// 		const {
-		// 			code,
-		// 			data: { windControl, userLabel },
-		// 			msg
-		// 		} = res
-		// 		if (code === 200) {
-		// 			this.vipDict = windControl || []
-		// 			this.userLabel = userLabel || []
-		// 		} else {
-		// 			this.$message({
-		// 				message: msg,
-		// 				type: 'error'
-		// 			})
-		// 		}
-		// 	})
-		// }
 	}
 }
 </script>
@@ -401,6 +471,33 @@ export default {
 		width: 100%;
 		background-color: rgba(233, 233, 233, 1);
 		height: 1px;
+	}
+	.info-show {
+		width: 1000px;
+		justify-content: center;
+		align-items: center;
+		background-color: #fff;
+		margin: 0 auto;
+		position: relative;
+		min-height: 300px;
+		padding-left: 40px;
+		padding-right: 40px;
+		.info-header {
+			border-top: 1px rgba(233, 233, 233, 1) solid;
+			span {
+				margin-top: 45px;
+				display: inline-block;
+				width: 188px;
+				height: 40px;
+				line-height: 40px;
+				text-align: center;
+				background: #000;
+				color: rgb(255, 255, 255);
+			}
+		}
+		.info-content {
+            margin-top: 40px;
+		}
 	}
 }
 </style>
