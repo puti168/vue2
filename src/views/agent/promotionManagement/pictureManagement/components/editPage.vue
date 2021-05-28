@@ -196,7 +196,7 @@ export default {
 						message: '请填入备注',
 						trigger: 'blur'
 					},
-                    { min: 2, max: 12, message: '长度在 2 到 50 个字符', trigger: 'blur' }
+                    { min: 2, max: 50, message: '长度在 2 到 50 个字符', trigger: 'blur' }
 				]
 			}
 		}
