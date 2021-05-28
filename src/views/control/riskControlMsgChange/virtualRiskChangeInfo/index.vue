@@ -15,7 +15,7 @@
                         ></el-input>
                     </el-form-item>
                     <el-form-item
-                        label="变更前风控等级:"
+                        label="变更前风控层级:"
                         class="tagheight"
                         prop="accountType"
                     >
@@ -35,7 +35,7 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item
-                        label="变更后风控等级:"
+                        label="变更后风控层级:"
                         class="tagheight"
                         prop="loginStatus"
                     >

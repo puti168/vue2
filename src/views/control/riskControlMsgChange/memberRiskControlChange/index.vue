@@ -15,7 +15,7 @@
               @keyup.enter.native="enterSearch"
             ></el-input>
           </el-form-item>
-          <el-form-item label="变更前风控等级:" class="tagheight">
+          <el-form-item label="变更前风控层级:" class="tagheight">
             <el-select
               v-model="queryData.beforeWindControlId"
               style="width: 180px"
@@ -31,7 +31,7 @@
               ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="变更后风控等级:" class="tagheight">
+          <el-form-item label="变更后风控层级:" class="tagheight">
             <el-select
               v-model="queryData.afterWindControlId"
               style="width: 180px"
