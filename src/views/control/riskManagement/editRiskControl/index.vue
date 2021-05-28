@@ -160,7 +160,98 @@
 			<div class="info-header">
 				<span v-if="showInfoData">基本信息</span>
 			</div>
-			<div v-if="showInfoData" class="info-content">
+			<div
+				v-if="showInfoData && queryData.windControlType === '1'"
+				class="info-content"
+			>
+				<el-row class="info-content-row">
+					<el-col :span="6">
+						<span>风险账号：</span>
+						<span>
+							{{ showInfoData.username ? showInfoData.username : '-' }}
+						</span>
+					</el-col>
+					<el-col :span="8">
+						<span>账户类型：</span>
+						<span>
+                            {{ typeFilter(scope.row.accountType, 'accountType') }}
+							{{ showInfoData.cardNumber ? showInfoData.cardNumber : '-' }}
+						</span>
+					</el-col>
+					<el-col :span="5">
+						<span>会员姓名：</span>
+						<span
+							v-if="
+								showInfoData.blackStatus && showInfoData.blackStatus * 1 === 1
+							"
+							class="normalRgba"
+						>
+							启用中
+						</span>
+						<span
+							v-else-if="showInfoData.blackStatus + '' === '0'"
+							class="disableRgba"
+						>
+							禁用中
+						</span>
+						<span v-else>-</span>
+					</el-col>
+					<el-col :span="5">
+						<span>离线天数：</span>
+						<span
+							v-if="
+								showInfoData.bindStatus && showInfoData.bindStatus * 1 === 1
+							"
+							class="normalRgba"
+						>
+							绑定中
+						</span>
+						<span
+							v-else-if="showInfoData.bindStatus + '' === '0'"
+							class="disableRgba"
+						>
+							待绑定
+						</span>
+						<span v-else>-</span>
+					</el-col>
+				</el-row>
+				<el-row class="info-content-row">
+					<el-col :span="6">
+						<span>风控层级：</span>
+						<span>{{ showInfoData.bindNum ? showInfoData.bindNum : '-' }}</span>
+					</el-col>
+					<el-col :span="8">
+						<span>提款总额：</span>
+						<span>
+							{{
+								showInfoData.withdrawalTotalAmount
+									? showInfoData.withdrawalTotalAmount
+									: '-'
+							}}
+						</span>
+					</el-col>
+					<el-col :span="5">
+						<span>风控原因：</span>
+						<span>
+							{{
+								showInfoData.windControlName
+									? showInfoData.windControlName
+									: '-'
+							}}
+						</span>
+					</el-col>
+					<el-col :span="5">
+						<span>风控原因：</span>
+						<span>
+							{{ showInfoData.windReason ? showInfoData.windReason : '-' }}
+						</span>
+					</el-col>
+				</el-row>
+			</div>
+			<div
+				v-else-if="showInfoData && queryData.windControlType === '2'"
+				class="info-content"
+			>
 				<el-row class="info-content-row">
 					<el-col :span="6">
 						<span>银行卡号：</span>
