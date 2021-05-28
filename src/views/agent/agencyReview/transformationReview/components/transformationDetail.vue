@@ -18,6 +18,7 @@
 					<div>会员账号: {{ list.userName }}</div>
 					<div>账号类型: {{ typeFilter(list.accountType, 'accountType') }}</div>
 					<div>注册时间: {{ list.registerDt }}</div>
+					<div>风控层级: {{ list.windControlName }}</div>
 				</div>
 				<div class="review-flex">
 					<div>当前上级代理: {{ list.parentProxyName }}</div>
@@ -31,6 +32,7 @@
 					<div>代理账号: {{ list.transferProxyName }}</div>
 					<div>代理类型: {{ typeFilter(list.transferProxyType, 'accountType') }}</div>
 					<div>注册时间: {{ list.transferProxyRegisterDt }}</div>
+					<div>风控层级: {{ list.windControlName }}</div>
 				</div>
 			</div>
 			<div class="review-content" style="height: 200px">
