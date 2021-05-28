@@ -311,42 +311,41 @@ export default {
 		reset() {
 			this.$refs['form'].resetFields()
 			this.queryData = {
-                windLevelType: '1',
-                windControlId: undefined,
-                userName: undefined,
-                applyInfo: undefined
+				windLevelType: '1',
+				windControlId: undefined,
+				userName: undefined,
+				applyInfo: undefined
 			}
 		},
 		checkValue(val) {},
 		changeRiskType(evt) {
-            this.$refs['form'].resetFields()
-            this.queryData = {
-                windControlId: undefined,
-                userName: undefined,
-                applyInfo: undefined
-            }
-			console.log('evt', evt)
-			// this.queryData.windLevelType = evt.code
-		},
-		// 获取风控层级
-		getMerchantDict() {
-			this.$api.riskDictAPI().then((res) => {
-				const {
-					code,
-					data: { windControl, userLabel },
-					msg
-				} = res
-				if (code === 200) {
-					this.vipDict = windControl || []
-					this.userLabel = userLabel || []
-				} else {
-					this.$message({
-						message: msg,
-						type: 'error'
-					})
-				}
-			})
+			this.$refs['form'].resetFields()
+			this.queryData = {
+				windControlId: undefined,
+				userName: undefined,
+				applyInfo: undefined,
+				windLevelType: evt
+			}
 		}
+		// // 获取风控层级
+		// getMerchantDict() {
+		// 	this.$api.riskDictAPI().then((res) => {
+		// 		const {
+		// 			code,
+		// 			data: { windControl, userLabel },
+		// 			msg
+		// 		} = res
+		// 		if (code === 200) {
+		// 			this.vipDict = windControl || []
+		// 			this.userLabel = userLabel || []
+		// 		} else {
+		// 			this.$message({
+		// 				message: msg,
+		// 				type: 'error'
+		// 			})
+		// 		}
+		// 	})
+		// }
 	}
 }
 </script>

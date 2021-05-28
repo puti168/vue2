@@ -60,6 +60,24 @@ export function riskDictAPI(params) {
 	})
 }
 
+// 风控==> 编辑风控层级 ===> 信息列表
+export function riskEditInfoAPI(data) {
+	return request({
+		url: '/windControllerLevel/windControllerLevelInfo',
+		method: 'post',
+		data
+	})
+}
+
+// 风控==> 编辑风控层级 ===> 新增
+export function riskEditAddAPI(data) {
+	return request({
+		url: '/windControllerLevel/windControllerLevelInfo',
+		method: 'post',
+		data
+	})
+}
+
 export default {
 	getSelectWindControlLevel,
 	selectWindControlRecord,
@@ -67,5 +85,7 @@ export default {
 	createRiskRankAPI,
 	updateRiskRankAPI,
 	deleteRiskRankAPI,
-	riskDictAPI
+	riskDictAPI,
+	riskEditInfoAPI,
+	riskEditAddAPI
 }
