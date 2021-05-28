@@ -31,10 +31,21 @@
 					:label="riskType[queryData.windControlType].label"
 					:prop="riskType[queryData.windControlType].prop"
 				>
-					<!--                    会员代理-->
+					<!--                    会员-->
 					<el-input
-						v-if="['1', '2'].includes(queryData.windControlType)"
+						v-if="['1'].includes(queryData.windControlType)"
 						v-model="queryData.userName"
+						size="medium"
+						maxlength="11"
+						placeholder="请输入"
+						clearable
+						onkeyup="value=value.replace(/[^\w\.\/]/ig,'')"
+						style="width: 365px"
+					></el-input>
+					<!--                    代理-->
+					<el-input
+						v-if="['2'].includes(queryData.windControlType)"
+						v-model="queryData.agentName"
 						size="medium"
 						maxlength="11"
 						placeholder="请输入"
@@ -45,7 +56,7 @@
 					<!--                    银行卡-->
 					<el-input
 						v-else-if="['3'].includes(queryData.windControlType)"
-						v-model="queryData.userName"
+						v-model="queryData.cardNumber"
 						size="medium"
 						maxlength="25"
 						onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
@@ -53,10 +64,10 @@
 						clearable
 						style="width: 365px"
 					></el-input>
-					<!--             虚拟币    终端号   -->
+					<!--             虚拟币      -->
 					<el-input
-						v-else-if="['4', '6'].includes(queryData.windControlType)"
-						v-model="queryData.userName"
+						v-else-if="['4'].includes(queryData.windControlType)"
+						v-model="queryData.virtualAddress"
 						size="medium"
 						maxlength="50"
 						placeholder="请输入"
@@ -67,7 +78,7 @@
 					<!--                    IP-->
 					<el-input
 						v-else-if="['5'].includes(queryData.windControlType)"
-						v-model="queryData.userName"
+						v-model="queryData.registerIp"
 						size="medium"
 						maxlength="15"
 						placeholder="请输入"
@@ -75,13 +86,15 @@
 						onkeyup="value=value.replace(/[^\d.]/g,'')"
 						style="width: 365px"
 					></el-input>
+					<!--                    终端号-->
 					<el-input
-						v-else
-						v-model="queryData.userName"
+						v-else-if="['6'].includes(queryData.windControlType)"
+						v-model="queryData.deviceNo"
 						size="medium"
 						maxlength="50"
 						placeholder="请输入"
 						clearable
+						onkeyup="value=value.replace(/[^\w\.\/]/ig,'')"
 						style="width: 365px"
 					></el-input>
 					<el-button
@@ -145,43 +158,89 @@
 		</div>
 		<div class="info-show">
 			<div class="info-header">
-				<span>基本信息</span>
+				<span v-if="showInfoData">基本信息</span>
 			</div>
-			<div class="info-content">
+			<div v-if="showInfoData" class="info-content">
 				<el-row class="info-content-row">
 					<el-col :span="6">
 						<span>银行卡号：</span>
-						<span>4512111111234</span>
+						<span>
+							{{ showInfoData.cardNumber ? showInfoData.cardNumber : '-' }}
+						</span>
 					</el-col>
 					<el-col :span="8">
 						<span>银行名称：</span>
-						<span>南京银行浦东区浦口支行</span>
+						<span>
+							{{ showInfoData.cardNumber ? showInfoData.cardNumber : '-' }}
+						</span>
 					</el-col>
 					<el-col :span="5">
 						<span>黑名单状态：</span>
-						<span>启用中</span>
+						<span
+							v-if="
+								showInfoData.blackStatus && showInfoData.blackStatus * 1 === 1
+							"
+							class="normalRgba"
+						>
+							启用中
+						</span>
+						<span
+							v-else-if="showInfoData.blackStatus + '' === '0'"
+							class="disableRgba"
+						>
+							禁用中
+						</span>
+						<span v-else>-</span>
 					</el-col>
 					<el-col :span="5">
 						<span>绑定状态：</span>
-						<span>绑定中</span>
+						<span
+							v-if="
+								showInfoData.bindStatus && showInfoData.bindStatus * 1 === 1
+							"
+							class="normalRgba"
+						>
+							绑定中
+						</span>
+						<span
+							v-else-if="showInfoData.bindStatus + '' === '0'"
+							class="disableRgba"
+						>
+							待绑定
+						</span>
+						<span v-else>-</span>
 					</el-col>
 				</el-row>
 				<el-row class="info-content-row">
 					<el-col :span="6">
 						<span>绑定账号次数：</span>
-						<span>5</span>
+						<span>{{ showInfoData.bindNum ? showInfoData.bindNum : '-' }}</span>
 					</el-col>
 					<el-col :span="8">
 						<span>提款总额：</span>
-						<span>500000</span>
+						<span>
+							{{
+								showInfoData.withdrawalTotalAmount
+									? showInfoData.withdrawalTotalAmount
+									: '-'
+							}}
+						</span>
 					</el-col>
 					<el-col :span="5">
 						<span>风控层级：</span>
-						<span>无</span>
+						<span>
+							{{
+								showInfoData.windControlName
+									? showInfoData.windControlName
+									: '-'
+							}}
+						</span>
 					</el-col>
 					<el-col :span="5">
 						<span>风控原因：</span>
-						<span>无</span>
+						<span>
+							{{ showInfoData.windReason ? showInfoData.windReason : '-' }}
+						</span>
 					</el-col>
 				</el-row>
 			</div>
@@ -204,10 +263,15 @@ export default {
 				windControlType: '1',
 				windControlLevelName: undefined,
 				userName: undefined,
+				agentName: undefined,
+				cardNumber: undefined,
+				virtualAddress: undefined,
+				registerIp: undefined,
+				deviceNo: undefined,
 				applyInfo: undefined
 			},
 			vipDict: [],
-			showInfoData: {}
+			showInfoData: undefined
 		}
 	},
 	computed: {
@@ -368,17 +432,28 @@ export default {
 			this.$refs['form'].resetFields()
 			this.queryData = {
 				windControlType: '1',
-				windControlId: undefined,
+				windControlLevelName: undefined,
 				userName: undefined,
+				agentName: undefined,
+				cardNumber: undefined,
+				virtualAddress: undefined,
+				registerIp: undefined,
+				deviceNo: undefined,
 				applyInfo: undefined
 			}
 		},
 		checkValue(val) {},
 		changeRiskType(evt) {
 			this.$refs['form'].resetFields()
+			this.showInfoData = undefined
 			this.queryData = {
-				windControlId: undefined,
+				windControlLevelName: undefined,
 				userName: undefined,
+				agentName: undefined,
+				cardNumber: undefined,
+				virtualAddress: undefined,
+				registerIp: undefined,
+				deviceNo: undefined,
 				applyInfo: undefined,
 				windControlType: evt
 			}
@@ -387,7 +462,6 @@ export default {
 		// 获取风控层级
 		getMerchantDict(val) {
 			this.queryData.windControlLevelName = undefined
-
 			this.$api
 				.getSelectWindControlLevel({ windControlType: val * 1 })
 				.then((res) => {
@@ -403,21 +477,49 @@ export default {
 				})
 		},
 		searchInfo() {
-			const { userName, windControlType } = this.queryData
+			const { windControlType } = this.queryData
+			console.log('this.queryData', this.queryData)
 			const reg1 = /^[A-Za-z]{1}(?=(.*[a-zA-Z]){1,})(?=(.*[0-9]){1,})[0-9A-Za-z]{3,10}$/
 			switch (windControlType) {
-				case '1':
+				case '1': {
+					const { userName } = this.queryData
 					this.queryInfoData(reg1, userName, windControlType)
 					break
-				case '2':
+				}
+				case '2': {
+					const { agentName } = this.queryData
+					this.queryInfoData(reg1, agentName, windControlType)
+					break
+				}
+				case '3': {
+					const { cardNumber } = this.queryData
+					this.queryInfoData(reg1, cardNumber, windControlType)
+					break
+				}
+				case '4': {
+					const { virtualAddress } = this.queryData
+					this.queryInfoData(reg1, virtualAddress, windControlType)
+					break
+				}
+				case '5': {
+					const { registerIp } = this.queryData
+					this.queryInfoData(reg1, registerIp, windControlType)
+					break
+				}
+				case '6': {
+					const { deviceNo } = this.queryData
+					this.queryInfoData(reg1, deviceNo, windControlType)
+					break
+				}
 			}
 		},
-		queryInfoData(reg, userName, windControlType) {
+		queryInfoData(reg, value, windControlType) {
 			let lock = true
-			if (lock && reg.test(userName)) {
+			this.showInfoData = undefined
+			if (lock && reg.test(value)) {
 				this.loading = true
 				this.$api
-					.riskEditInfoAPI({ userName, windControlType })
+					.riskEditInfoAPI({ value, windControlType })
 					.then((res) => {
 						lock = false
 						this.loading = false
@@ -426,10 +528,10 @@ export default {
 							if (data) {
 								this.showInfoData = data
 							} else {
-								this.showInfoData = {}
+								this.showInfoData = undefined
 							}
 						} else {
-							this.showInfoData = {}
+							this.showInfoData = undefined
 						}
 					})
 					.catch(() => {
