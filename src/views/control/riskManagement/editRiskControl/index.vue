@@ -201,7 +201,8 @@ export default {
 				userName: undefined,
 				applyInfo: undefined
 			},
-			vipDict: []
+			vipDict: [],
+			showInfoData: {}
 		}
 	},
 	computed: {
@@ -211,27 +212,27 @@ export default {
 		riskType() {
 			const typeObj = {
 				'1': {
-					label: '会员账号',
+					label: '会员账号:',
 					prop: 'userName'
 				},
 				'2': {
-					label: '代理账号',
+					label: '代理账号:',
 					prop: 'agentName'
 				},
 				'3': {
-					label: '银行卡号',
+					label: '银行卡号:',
 					prop: 'cardNumber'
 				},
 				'4': {
-					label: '虚拟币地址',
+					label: '虚拟币地址:',
 					prop: 'virtualAddress'
 				},
 				'5': {
-					label: 'IP地址',
+					label: 'IP地址:',
 					prop: 'IP'
 				},
 				'6': {
-					label: '终端设备号',
+					label: '终端设备号:',
 					prop: 'deviceNo'
 				}
 			}
@@ -397,29 +398,33 @@ export default {
 				})
 		},
 		searchInfo() {
-			let lock = true
-			const reg1 = /^[A-Za-z]{1}(?=(.*[a-zA-Z]){1,})(?=(.*[0-9]){1,})[0-9A-Za-z]{3,10}$/
 			const { userName, windControlType } = this.queryData
-			if (lock && reg1.test(userName)) {
+			const reg1 = /^[A-Za-z]{1}(?=(.*[a-zA-Z]){1,})(?=(.*[0-9]){1,})[0-9A-Za-z]{3,10}$/
+			switch (windControlType) {
+				case '1':
+					this.queryInfoData(reg1, userName, windControlType)
+					break
+				case '2':
+			}
+		},
+		queryInfoData(reg, userName, windControlType) {
+			let lock = true
+			if (lock && reg.test(userName)) {
 				this.loading = true
 				this.$api
 					.riskEditInfoAPI({ userName, windControlType })
 					.then((res) => {
 						lock = false
 						this.loading = false
-						const { code, data, msg } = res
+						const { code, data } = res
 						if (code === 200) {
 							if (data) {
-								// this.tipsShow = null
-								// this.form.accountType = data.accountType + ''
-								// this.form.currentProxyName = data.parentProxyName
-								// this.form.userId = data.id
-								// this.form.currentProxyId = data.parentProxyId
+								this.showInfoData = data
 							} else {
-								this.tipsShow = msg
+								this.showInfoData = {}
 							}
 						} else {
-							this.tipsShow = msg
+							this.showInfoData = {}
 						}
 					})
 					.catch(() => {
