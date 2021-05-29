@@ -31,11 +31,11 @@
 						v-model="form.username"
 						size="medium"
 						maxlength="11"
-                        placeholder="4-11位，最少2个字母+数字组合，首位字母"
+                        oninput="value=value.replace(/[^\w\.\/]/ig,'')"
+						placeholder="4-11位，最少2个字母+数字组合，首位字母"
 						clearable
-						autocomplete="off"
-                        style="width: 365px"
-						@input="value=value.replace(/[^\w\.\/]/ig,'')"
+                        autocomplete="off"
+						style="width: 365px"
 					></el-input>
 				</el-form-item>
 				<el-form-item label="登录密码:" prop="password">
@@ -45,12 +45,12 @@
 						placeholder="8-12位，字母+数字组合"
 						clearable
                         autocomplete="off"
-                        maxlength="12"
+                        oninput="value=value.replace(/[^\w\.\/]/g,'')"
+						maxlength="12"
 						style="width: 365px"
-						@input="value=value.replace(/[^\w\.\/]/ig,'')"
 					></el-input>
 				</el-form-item>
-				<el-form-item label="手机号码:" prop="mobile">
+				<el-form-item label="手机号码:">
 					<el-input
 						v-model="form.mobile"
 						size="medium"
@@ -59,7 +59,7 @@
 						maxlength="11"
 						style="width: 365px"
                         autocomplete="off"
-						onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
+						oninput="value=value.replace(/^(0+)|[^\d]+/g,'')"
 					></el-input>
 				</el-form-item>
 				<el-form-item label="上级代理:">
@@ -69,8 +69,8 @@
 						placeholder="请输入"
 						clearable
 						maxlength="11"
-                        style="width: 365px"
-						@input="value=value.replace(/[^\w\.\/]/ig,'')"
+                        oninput="value=value.replace(/[^\w\.\/]/ig,'')"
+						style="width: 365px"
 					></el-input>
 				</el-form-item>
 				<el-form-item label="性别:">
