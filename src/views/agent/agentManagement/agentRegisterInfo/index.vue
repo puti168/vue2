@@ -175,8 +175,8 @@
 							</span>
                             <span v-else>-</span>
                             <br />
-                            <span v-if="!!scope.row.windControlName">
-								{{ scope.row.windControlName }}
+                            <span v-if="!!scope.row.ipControlName">
+								{{ scope.row.ipControlName }}
 							</span>
                             <span v-else>-</span>
                         </template>
@@ -201,8 +201,8 @@
 							</span>
                             <span v-else>-</span>
                             <br />
-                            <span v-if="!!scope.row.windControlName">
-								{{ scope.row.windControlName }}
+                            <span v-if="!!scope.row.deviceNoControlName">
+								{{ scope.row.deviceNoControlName }}
 							</span>
                             <span v-else>-</span>
                         </template>
