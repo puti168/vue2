@@ -97,7 +97,7 @@
 					:data="tableData"
 					style="width: 100%"
 					:header-cell-style="getRowClass"
-					@sort-change="changeTableSort"
+					@sort-change="_changeTableSort"
 				>
 					<el-table-column
 						prop="windControlType"
