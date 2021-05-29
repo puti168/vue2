@@ -106,9 +106,9 @@
 						查询
 					</el-button>
 				</el-form-item>
-				<el-form-item label="风控层级:" prop="windControlLevelName">
+				<el-form-item label="风控层级:" prop="windControlName">
 					<el-select
-						v-model="queryData.windControlLevelName"
+						v-model="queryData.windControlName"
 						size="medium"
 						placeholder="默认选择全部"
 						clearable
@@ -124,9 +124,9 @@
 						></el-option>
 					</el-select>
 				</el-form-item>
-				<el-form-item label="审核信息:" prop="applyInfo">
+				<el-form-item label="审核信息:" prop="description">
 					<el-input
-						v-model="queryData.applyInfo"
+						v-model="queryData.description"
 						size="medium"
 						type="textarea"
 						placeholder="请输入"
@@ -180,15 +180,15 @@
 					</el-col>
 					<el-col :span="6">
 						<span>会员姓名：</span>
-						<span v-if="showInfoData.bankName">
-							启用中
+						<span v-if="showInfoData.realName">
+							{{ showInfoData.realName }}
 						</span>
 						<span v-else>-</span>
 					</el-col>
 					<el-col :span="6">
 						<span>离线天数：</span>
 						<span v-if="showInfoData.leaveLineDays">
-							绑定中
+							{{ showInfoData.leaveLineDays }}
 						</span>
 						<span v-else>-</span>
 					</el-col>
@@ -527,14 +527,14 @@ export default {
 			loading: false,
 			queryData: {
 				windControlType: '1',
-				windControlLevelName: undefined,
+                windControlName: undefined,
 				userName: undefined,
 				proxyUserName: undefined,
 				cardNumber: undefined,
 				virtualAddress: undefined,
 				registerIp: undefined,
 				deviceNo: undefined,
-				applyInfo: undefined
+                description: undefined
 			},
 			vipDict: [],
 			showInfoData: undefined
@@ -594,7 +594,7 @@ export default {
 				windControlType: [
 					{ required: true, message: '请选择风控类型', trigger: 'change' }
 				],
-				windControlLevelName: [
+                windControlName: [
 					{ required: true, message: '请选择风控类型', trigger: 'change' }
 				],
 				// userName: [
@@ -639,7 +639,7 @@ export default {
 						trigger: 'blur'
 					}
 				],
-				applyInfo: [
+                description: [
 					{
 						required: true,
 						message: '请输入审核信息',
@@ -656,7 +656,7 @@ export default {
 		add() {
 			this.loading = true
 			const params = {
-				...this.form
+				...this.queryData
 			}
 			let lock = true
 			this.$refs['form'].validate((valid) => {
@@ -698,14 +698,14 @@ export default {
 			this.$refs['form'].resetFields()
 			this.queryData = {
 				windControlType: '1',
-				windControlLevelName: undefined,
+                windControlName: undefined,
 				userName: undefined,
 				proxyUserName: undefined,
 				cardNumber: undefined,
 				virtualAddress: undefined,
 				registerIp: undefined,
 				deviceNo: undefined,
-				applyInfo: undefined
+                description: undefined
 			}
 		},
 		checkValue(val) {},
@@ -713,21 +713,21 @@ export default {
 			this.$refs['form'].resetFields()
 			this.showInfoData = undefined
 			this.queryData = {
-				windControlLevelName: undefined,
+                windControlName: undefined,
 				userName: undefined,
 				proxyUserName: undefined,
 				cardNumber: undefined,
 				virtualAddress: undefined,
 				registerIp: undefined,
 				deviceNo: undefined,
-				applyInfo: undefined,
+                description: undefined,
 				windControlType: evt
 			}
 			this.getMerchantDict(evt)
 		},
 		// 获取风控层级
 		getMerchantDict(val) {
-			this.queryData.windControlLevelName = undefined
+			this.queryData.windControlName = undefined
 			this.$api
 				.getSelectWindControlLevel({ windControlType: val * 1 })
 				.then((res) => {

@@ -79,7 +79,7 @@ export function riskEditInfoAPI(data) {
 // 风控==> 编辑风控层级 ===> 新增
 export function riskEditAddAPI(data) {
 	return request({
-		url: '/windControllerLevel/windControllerLevelInfo',
+		url: '/windControllerLevel/windControlRecordSave',
 		method: 'post',
 		data
 	})
