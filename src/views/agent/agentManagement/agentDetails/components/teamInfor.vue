@@ -78,11 +78,11 @@ icon="el-icon-refresh"
       </el-col>
       <el-col :span="4">
         转入会员人数：<i v-if="activeL" class="el-icon-loading"></i>
-        <span v-else> {{ resOverviewList.transferInMemberCount }} </span>
+        <span v-else> {{ resOverviewList.transferInNum }} </span>
       </el-col>
       <el-col :span="4">
         转出会员人数：<i v-if="activeL" class="el-icon-loading"></i>
-        <span v-else> {{ resOverviewList.transferOutMemberCount }} </span>
+        <span v-else> {{ resOverviewList.transferOutNum }} </span>
       </el-col>
     </el-row>
     <el-divider></el-divider>
@@ -187,16 +187,22 @@ icon="el-icon-refresh"
         style="margin: 10px 0 30px 0; z-index: 0"
         :header-cell-style="getRowClass"
       >
-        <el-table-column
-          align="center"
-          prop="gameName"
-          label="平台"
-        ></el-table-column>
-        <el-table-column
-          prop="netAmount"
-          align="center"
-          label="会员输赢"
-        ></el-table-column>
+        <el-table-column align="center" prop="gameName" label="平台">
+          <template slot-scope="scope">
+            <span class="blueColor">{{ scope.row.gameName }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="netAmount" align="center" label="会员输赢">
+          <template slot-scope="scope">
+            <span v-if="scope.row.netAmount > 0" class="redColor">{{
+              scope.row.netAmount
+            }}</span>
+            <span v-else-if="scope.row.netAmount < 0" class="enableColor">{{
+              scope.row.netAmount
+            }}</span>
+            <span v-else>{{ scope.row.netAmount }}</span>
+          </template>
+        </el-table-column>
         <el-table-column prop="betAmount" align="center" label="投注"></el-table-column>
         <el-table-column
           prop="validBetAmount"
@@ -214,11 +220,11 @@ icon="el-icon-refresh"
         style="margin: 10px 0 30px 0; z-index: 0"
         :header-cell-style="getRowClass"
       >
-        <el-table-column
-          align="center"
-          prop="gameName"
-          label="平台"
-        ></el-table-column>
+        <el-table-column align="center" prop="gameName" label="平台">
+          <template slot-scope="scope">
+            <span class="blueColor">{{ scope.row.gameName }}</span>
+          </template>
+        </el-table-column>
         <el-table-column
           prop="betAmount"
           align="center"
@@ -229,11 +235,17 @@ icon="el-icon-refresh"
           align="center"
           label="有效投注"
         ></el-table-column>
-        <el-table-column
-          prop="netAmount"
-          align="center"
-          label="会员输赢"
-        ></el-table-column>
+        <el-table-column prop="netAmount" align="center" label="会员输赢">
+          <template slot-scope="scope">
+            <span v-if="scope.row.netAmount > 0" class="redColor">{{
+              scope.row.netAmount
+            }}</span>
+            <span v-else-if="scope.row.netAmount < 0" class="enableColor">{{
+              scope.row.netAmount
+            }}</span>
+            <span v-else>{{ scope.row.netAmount }}</span>
+          </template>
+        </el-table-column>
       </el-table>
     </div>
     <el-divider></el-divider>

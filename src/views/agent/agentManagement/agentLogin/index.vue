@@ -191,7 +191,27 @@
               {{ typeFilter(scope.row.accountType, "accountType") }}
             </template>
           </el-table-column>
-          <el-table-column prop="loginIp" align="center" label="登录IP"></el-table-column>
+          <el-table-column prop="loginIp" align="center" label="登录IP">
+            <template slot="header">
+              登录IP
+              <br />
+              风控层级
+            </template>
+            <template slot-scope="scope">
+              <span v-if="scope.row.loginIp !== null">
+                {{ scope.row.loginIp }}
+              </span>
+              <span v-else>-</span>
+              <br />
+              <span
+class="redColor"
+>风控层级：{{
+                  scope.row.ipWindControlLevelName === null
+                    ? "无"
+                    : scope.row.ipWindControlLevelName
+                }}</span>
+            </template>
+          </el-table-column>
           <el-table-column
             prop="ipAttribution"
             align="center"
@@ -202,11 +222,27 @@
               {{ typeFilter(scope.row.deviceType, "loginDeviceType") }}
             </template>
           </el-table-column>
-          <el-table-column
-            prop="deviceNo"
-            align="center"
-            label="终端设备号"
-          ></el-table-column>
+          <el-table-column prop="deviceNo" align="center" label="终端设备号">
+            <template slot="header">
+              终端设备号
+              <br />
+              风控层级
+            </template>
+            <template slot-scope="scope">
+              <span v-if="scope.row.loginIp !== null">
+                {{ scope.row.loginIp }}
+              </span>
+              <span v-else>-</span>
+              <br />
+              <span
+class="redColor"
+>风控层级：{{
+                  scope.row.deviceWindControlLevelName === null
+                    ? "无"
+                    : scope.row.deviceWindControlLevelName
+                }}</span>
+            </template>
+          </el-table-column>
           <el-table-column
             prop="loginReference"
             align="center"

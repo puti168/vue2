@@ -36,7 +36,12 @@
         ></el-table-column>
         <el-table-column prop="loginStatus" width="80px" align="center" label="状态">
           <template slot-scope="scope">
-            {{ typeFilter(scope.row.loginStatus, "loginStatusType") }}
+            <span v-if="scope.row.loginStatus === '1'">
+              {{ typeFilter(scope.row.loginStatus, "loginStatusType") }}
+            </span>
+            <span v-else class="redColor">
+              {{ typeFilter(scope.row.loginStatus, "loginStatusType") }}
+            </span>
           </template>
         </el-table-column>
         <el-table-column prop="loginIp" width="120px" align="center" label="IP地址">
@@ -46,22 +51,36 @@
             风控层级
           </template>
           <template slot-scope="scope">
-            {{ scope.row.loginIp }}
+            <span v-if="scope.row.loginIp !== null">
+              {{ scope.row.loginIp }}
+            </span>
+            <span v-else>-</span>
             <br />
-             <span class="redColor"></span>
-            <!-- {{ scope.row.thirdOrderId }} -->
+            <span
+class="redColor"
+>风控层级：{{
+                scope.row.ipWindControlLevelName === null
+                  ? "无"
+                  : scope.row.ipWindControlLevelName
+              }}</span>
           </template>
         </el-table-column>
-        <el-table-column
-          prop="ipAttribution"
-          align="center"
-          label="IP归属地"
-        ></el-table-column>
-        <el-table-column
-          prop="loginReference"
-          align="center"
-          label="登录网址"
-        ></el-table-column>
+        <el-table-column prop="ipAttribution" align="center" label="IP归属地">
+          <template slot-scope="scope">
+            <span v-if="scope.row.ipAttribution !== null">{{
+              scope.row.ipAttribution
+            }}</span>
+            <span v-else>-</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="loginReference" align="center" label="登录网址">
+          <template slot-scope="scope">
+            <span v-if="scope.row.loginReference !== null">{{
+              scope.row.loginReference
+            }}</span>
+            <span v-else>-</span>
+          </template>
+        </el-table-column>
         <el-table-column prop="deviceType" width="100px" align="center" label="登录终端">
           <template slot-scope="scope">
             {{ typeFilter(scope.row.deviceType, "deviceType") }}
@@ -74,10 +93,18 @@
             风控层级
           </template>
           <template slot-scope="scope">
-            {{ scope.row.deviceNo }}
+            <span v-if="scope.row.deviceNo !== null">
+              {{ scope.row.deviceNo }}
+            </span>
+            <span v-else>-</span>
             <br />
-            <span class="redColor"></span>
-            <!-- {{ scope.row.thirdOrderId }} -->
+            <span
+class="redColor"
+>风控层级：{{
+                scope.row.deviceWindControlLevelName === null
+                  ? "无"
+                  : scope.row.deviceWindControlLevelName
+              }}</span>
           </template>
         </el-table-column>
         <el-table-column
