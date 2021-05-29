@@ -31,6 +31,7 @@
 						v-model="form.username"
 						size="medium"
 						maxlength="11"
+                        onkeyup="value=value.replace(/[^\w\.\/]/ig,'')"
 						placeholder="4-11位，最少2个字母+数字组合，首位字母"
 						clearable
 						style="width: 365px"
@@ -42,7 +43,7 @@
 						size="medium"
 						placeholder="8-12位，字母+数字组合"
 						clearable
-						oninput="value=value.replace(/(^\s*)|(\s*$)/g ,'')"
+                        onkeyup="value=value.replace(/[^\w\.\/]/ig,'')"
 						maxlength="12"
 						style="width: 365px"
 					></el-input>
@@ -65,6 +66,7 @@
 						placeholder="请输入"
 						clearable
 						maxlength="11"
+                        onkeyup="value=value.replace(/[^\w\.\/]/ig,'')"
 						style="width: 365px"
 					></el-input>
 				</el-form-item>
@@ -101,7 +103,7 @@
 						placeholder="请输入"
 						clearable
 						maxlength="32"
-						oninput="value=value.replace(/(^\s*)|(\s*$)/g ,'')"
+						oninput="value=value.replace(/[\u4E00-\u9FA5]/g ,'')"
 						style="width: 365px"
 					></el-input>
 				</el-form-item>

@@ -61,6 +61,7 @@
 						maxlength="11"
 						placeholder="请输入"
 						clearable
+                        onkeyup="value=value.replace(/[^\w\.\/]/ig,'')"
 						style="width: 365px"
 					></el-input>
 				</el-form-item>
