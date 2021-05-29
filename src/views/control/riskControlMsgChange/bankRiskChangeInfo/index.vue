@@ -7,7 +7,7 @@
 						<el-input
 							v-model="queryData.username"
 							clearable
-							:maxlength="11"
+							:maxlength="25"
 							size="medium"
 							style="width: 180px; margin-right: 20px"
 							placeholder="请输入"
@@ -93,14 +93,14 @@
 					:header-cell-style="getRowClass"
 					@sort-change="_changeTableSort"
 				>
-					<el-table-column prop="username" align="center" label="银行卡号">
+					<el-table-column prop="cardNumber" align="center" label="银行卡号">
 						<template slot-scope="scope">
 							<Copy
-								v-if="!!scope.row.username"
-								:title="scope.row.username"
+								v-if="!!scope.row.cardNumber"
+								:title="scope.row.cardNumber"
 								:copy="copy"
 							>
-								{{ scope.row.username }}
+								{{ scope.row.cardNumber }}
 							</Copy>
 							<span v-else>-</span>
 						</template>
