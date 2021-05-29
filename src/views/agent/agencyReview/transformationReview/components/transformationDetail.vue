@@ -32,7 +32,7 @@
 					<div>代理账号: {{ list.transferProxyName }}</div>
 					<div>代理类型: {{ typeFilter(list.transferProxyType, 'accountType') }}</div>
 					<div>注册时间: {{ list.transferProxyRegisterDt }}</div>
-					<div>风控层级: {{ list.windControlName }}</div>
+					<div>风控层级: {{ list.transferWindControlName }}</div>
 				</div>
 			</div>
 			<div class="review-content" style="height: 200px">
