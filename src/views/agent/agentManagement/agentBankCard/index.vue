@@ -71,7 +71,8 @@
 							size="medium"
 							placeholder="全部"
 							clearable
-							style="width: 180px"
+                            multiple
+                            style="width: 300px"
 						>
 							<el-option
 								v-for="item in vipDict"
@@ -265,8 +266,7 @@ export default {
 			},
 			dataList: [],
 			total: 0,
-			vipDict: [],
-			userLabel: []
+			vipDict: []
 		}
 	},
 	computed: {
@@ -275,7 +275,7 @@ export default {
 		}
 	},
 	created() {
-		this.getMerchantDict()
+		this.getWindControllerLevelDict()
 	},
 	mounted() {},
 	methods: {
@@ -327,24 +327,15 @@ export default {
 			}, 1000)
 		},
 		// 获取风控层级
-		getMerchantDict() {
-			this.$api.agentDictAPI().then((res) => {
-				const {
-					code,
-					data: { windControl, userLabel },
-					msg
-				} = res
-				if (code === 200) {
-					this.vipDict = windControl || []
-					this.userLabel = userLabel || []
-				} else {
-					this.$message({
-						message: msg,
-						type: 'error'
-					})
-				}
-			})
-		},
+        getWindControllerLevelDict() {
+            this.$api
+                .getWindControllerLevelDict({ windControlType: 3 })
+                .then((res) => {
+                    if (res.code === 200) {
+                        this.vipDict = res.data
+                    }
+                })
+        },
 		reset() {
 			this.pageNum = 1
 			this.$refs['form'].resetFields()

@@ -70,7 +70,8 @@
                             size="medium"
                             placeholder="全部"
                             clearable
-                            style="width: 180px"
+                            multiple
+                            style="width: 300px"
                         >
                             <el-option
                                 v-for="item in vipDict"
@@ -282,7 +283,9 @@ export default {
 			return this.globalDics.virtualType
 		}
 	},
-	mounted() {},
+	mounted() {
+	    this.getWindControllerLevelDict()
+    },
 	methods: {
 		loadData() {
 			this.dataList = []
@@ -329,23 +332,15 @@ export default {
 			}, 1000)
 		},
         // 获取风控层级
-        getMerchantDict() {
-            this.$api.agentDictAPI().then((res) => {
-                const {
-                    code,
-                    data: { windControl, userLabel },
-                    msg
-                } = res
-                if (code === 200) {
-                    this.vipDict = windControl || []
-                    this.userLabel = userLabel || []
-                } else {
-                    this.$message({
-                        message: msg,
-                        type: 'error'
-                    })
-                }
-            })
+        // 获取风控层级
+        getWindControllerLevelDict() {
+            this.$api
+                .getWindControllerLevelDict({ windControlType: 4 })
+                .then((res) => {
+                    if (res.code === 200) {
+                        this.vipDict = res.data
+                    }
+                })
         },
 		reset() {
 			this.pageNum = 1
