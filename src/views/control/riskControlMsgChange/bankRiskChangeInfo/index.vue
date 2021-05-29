@@ -5,7 +5,7 @@
 				<el-form ref="form" :inline="true" :model="queryData">
 					<el-form-item label="银行卡号:">
 						<el-input
-							v-model="queryData.username"
+							v-model="queryData.cardNumber"
 							clearable
 							:maxlength="25"
 							size="medium"
