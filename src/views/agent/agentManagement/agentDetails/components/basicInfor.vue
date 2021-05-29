@@ -85,9 +85,22 @@
       <el-col
 :span="5"
 >注册IP：<i v-if="activeL" class="el-icon-loading"></i>
-        <span v-else>
+        <!-- <span v-else>
           {{ outlineInfoList.registerIp }}
-        </span>
+        </span> -->
+        <div v-else style="display: inline-block">
+          <span>
+            {{ outlineInfoList.registerIp }}
+          </span>
+          <span
+            v-if="
+              outlineInfoList.ipWindControlName !== '' &&
+              outlineInfoList.ipWindControlName !== null
+            "
+            class="redColor"
+            >(风控层级：{{ outlineInfoList.ipWindControlName }})</span>
+          <span v-else class="redColor">(风控层级：无)</span>
+        </div>
       </el-col>
       <el-col
 :span="5"
@@ -416,9 +429,14 @@ export default {
     initGetDics() {
       this.$api.agentDictAPI().then((res) => {
         if (res.code === 200) {
-          this.riskLevelList = res.data.windControl
+          // this.riskLevelList = res.data.windControl;
           this.memberLabelList = res.data.userLabel
           console.log('风控，标签', res)
+        }
+      })
+      this.$api.getWindControllerLevelDict({ windControlType: 1 }).then((res) => {
+        if (res.code === 200) {
+          this.riskLevelList = res.data
         }
       })
     },

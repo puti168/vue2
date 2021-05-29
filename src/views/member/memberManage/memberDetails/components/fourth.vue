@@ -55,7 +55,23 @@
             {{ typeFilter(scope.row.status, "bindType") }}
           </template>
         </el-table-column>
-        <el-table-column prop="status" align="center" label="银行卡风控层级">
+        <el-table-column
+          prop="cardNoWindControlLevelName"
+          align="center"
+          label="银行卡风控层级"
+        >
+          <template slot-scope="scope">
+            <span
+              v-if="
+                scope.row.cardNoWindControlLevelName !== '' &&
+                scope.row.cardNoWindControlLevelName !== null
+              "
+              class="redColor"
+            >
+              {{ scope.row.cardNoWindControlLevelName }}
+            </span>
+            <span v-else>-</span>
+          </template>
         </el-table-column>
       </el-table>
     </div>
@@ -107,7 +123,23 @@
             {{ typeFilter(scope.row.status, "bindType") }}
           </template>
         </el-table-column>
-        <el-table-column prop="status" align="center" label="虚拟币账户风控层级">
+        <el-table-column
+          prop="virturalAddressWindControlLevelName"
+          align="center"
+          label="虚拟币账户风控层级"
+        >
+          <template slot-scope="scope">
+            <span
+              v-if="
+                scope.row.virturalAddressWindControlLevelName !== '' &&
+                scope.row.virturalAddressWindControlLevelName !== null
+              "
+              class="redColor"
+            >
+              {{ scope.row.virturalAddressWindControlLevelName }}
+            </span>
+            <span v-else>-</span>
+          </template>
         </el-table-column>
       </el-table>
     </div>

@@ -36,15 +36,35 @@
         ></el-table-column>
         <el-table-column prop="loginStatus" width="80px" align="center" label="状态">
           <template slot-scope="scope">
-            {{ typeFilter(scope.row.loginStatus, "loginStatusType") }}
+            <span v-if="scope.row.loginStatus === '1'">
+              {{ typeFilter(scope.row.loginStatus, "loginStatusType") }}
+            </span>
+            <span v-else class="redColor">
+              {{ typeFilter(scope.row.loginStatus, "loginStatusType") }}
+            </span>
           </template>
         </el-table-column>
-        <el-table-column
-          prop="loginIp"
-          width="120px"
-          align="center"
-          label="IP地址"
-        ></el-table-column>
+        <el-table-column prop="loginIp" width="120px" align="center" label="IP地址">
+          <template slot="header">
+            IP地址
+            <br />
+            风控层级
+          </template>
+          <template slot-scope="scope">
+            <span v-if="scope.row.loginIp !== null">
+              {{ scope.row.loginIp }}
+            </span>
+            <span v-else>-</span>
+            <br />
+            <span
+class="redColor"
+>风控层级：{{
+                scope.row.ipWindControlLevelName === null
+                  ? "无"
+                  : scope.row.ipWindControlLevelName
+              }}</span>
+          </template>
+        </el-table-column>
         <el-table-column
           prop="ipAttribution"
           align="center"
@@ -60,7 +80,27 @@
             {{ typeFilter(scope.row.deviceType, "deviceType") }}
           </template>
         </el-table-column>
-        <el-table-column prop="deviceNo" align="center" label="设备号"></el-table-column>
+        <el-table-column prop="deviceNo" align="center" label="设备号">
+          <template slot="header">
+            设备号
+            <br />
+            风控层级
+          </template>
+          <template slot-scope="scope">
+            <span v-if="scope.row.deviceNo !== null">
+              {{ scope.row.deviceNo }}
+            </span>
+            <span v-else>-</span>
+            <br />
+            <span
+class="redColor"
+>风控层级：{{
+                scope.row.deviceWindControlLevelName === null
+                  ? "无"
+                  : scope.row.deviceWindControlLevelName
+              }}</span>
+          </template>
+        </el-table-column>
         <el-table-column
           prop="browseContent"
           align="center"

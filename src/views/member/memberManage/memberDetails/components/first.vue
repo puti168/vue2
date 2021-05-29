@@ -104,10 +104,19 @@
       <el-col
 :span="5"
 >注册IP：<i v-if="activeL" class="el-icon-loading"></i>
-        <span v-else>
-          {{ outlineInfoList.registerIp }}
-          <span class="redColor">(风控层级：1级)</span>
-        </span>
+        <div v-else style="display: inline-block">
+          <span>
+            {{ outlineInfoList.registerIp }}
+          </span>
+          <span
+            v-if="
+              outlineInfoList.windControlLevelName !== '' &&
+              outlineInfoList.windControlLevelName !== null
+            "
+            class="redColor"
+            >(风控层级：{{ outlineInfoList.windControlLevelName }})</span>
+          <span v-else class="redColor">(风控层级：无)</span>
+        </div>
       </el-col>
       <el-col
 :span="5"
@@ -653,8 +662,13 @@ export default {
       })
       this.$api.getMerchantDict().then((res) => {
         if (res.code === 200) {
-          this.riskLevelList = res.data.windControl
+          // this.riskLevelList = res.data.windControl;
           this.memberLabelList = res.data.userLabel
+        }
+      })
+      this.$api.getWindControllerLevelDict({ windControlType: 1 }).then((res) => {
+        if (res.code === 200) {
+          this.riskLevelList = res.data
         }
       })
     },
@@ -769,14 +783,16 @@ export default {
         case '账号状态':
           this.titel = '备注信息：'
           this.editData.code =
-            this.outlineInfoList.accountStatus === null
+            this.outlineInfoList.accountStatus === null ||
+            this.outlineInfoList.accountStatus === ''
               ? ''
               : this.outlineInfoList.accountStatus + ''
           break
         case '风控层级':
           this.titel = '备注信息：'
           this.editData.windControlId =
-            this.outlineInfoList.windControlId === '0'
+            this.outlineInfoList.windControlId === '0' ||
+            this.outlineInfoList.windControlId === null
               ? ''
               : this.outlineInfoList.windControlId + ''
           for (let i = 0; i < this.riskLevelList.length; i++) {
@@ -788,7 +804,7 @@ export default {
           break
         case '会员标签':
           this.editData.labelId =
-            this.outlineInfoList.labelId === null
+            this.outlineInfoList.labelId === null || this.outlineInfoList.labelId === ''
               ? ''
               : this.outlineInfoList.labelId + ''
           for (let i = 0; i < this.memberLabelList.length; i++) {

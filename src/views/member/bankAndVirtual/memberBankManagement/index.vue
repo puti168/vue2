@@ -12,6 +12,7 @@
               placeholder="请输入"
               :disabled="loading"
               name="cardNumber"
+              clearable
               oninput="value=value.replace(/[^\d]/g,'')"
               @blur="queryData.cardNumber = $event.target.value"
               @keyup.enter.native="enterSearch"
@@ -312,7 +313,7 @@
           <el-table-column
             prop="cardNumber"
             align="center"
-            width="240px"
+            width="200px"
             label="银行卡号"
           >
             <template slot-scope="scope">
@@ -371,17 +372,17 @@
             </template>
           </el-table-column>
           <el-table-column
-            prop="windControlId"
+            prop="windControlName"
             align="center"
             label="风控层级"
             width="150px"
           >
-            <!-- <template v-if="vipDict.length > 0" slot-scope="scope">
-              <span v-if="scope.row.windControlId !== 0"> - </span>
-              <span v-else>
-                {{ vipDict[windControlId - 1].windControlLevelName }}
+            <template slot-scope="scope">
+              <span v-if="scope.row.windControlName !== null">
+                {{ scope.row.windControlName }}
               </span>
-            </template> -->
+              <span v-else>-</span>
+            </template>
           </el-table-column>
           <el-table-column
             prop="bindNum"
@@ -390,28 +391,40 @@
             width="180px"
           >
           </el-table-column>
-          <el-table-column prop="bindUserName" align="center" width="100px">
+          <el-table-column prop="bindUserName" align="center" width="120px">
             <template slot="header">
               当前绑定会员账号
               <br />
               会员姓名
             </template>
             <template slot-scope="scope">
-              {{ scope.row.bindUserName }}
+              <span v-if="scope.row.bindUserName !== null">
+                {{ scope.row.bindUserName }}
+              </span>
+              <span v-else>-</span>
               <br />
-              {{ scope.row.realName }}
+              <span v-if="scope.row.realName !== null">
+                {{ scope.row.realName }}
+              </span>
+              <span v-else>-</span>
             </template>
           </el-table-column>
-          <el-table-column prop="withdrawalSuccessNum" align="center" width="100px">
+          <el-table-column prop="withdrawalSuccessNum" align="center" width="120px">
             <template slot="header">
               会员提款成功次数
               <br />
               会员提款被拒次数
             </template>
             <template slot-scope="scope">
-              {{ scope.row.withdrawalSuccessNum }}
+              <span v-if="scope.row.withdrawalSuccessNum !== null">
+                {{ scope.row.withdrawalSuccessNum }}
+              </span>
+              <span v-else>-</span>
               <br />
-              {{ scope.row.withdrawalFailNum }}
+              <span v-if="scope.row.withdrawalFailNum !== null">
+                {{ scope.row.withdrawalFailNum }}
+              </span>
+              <span v-else>-</span>
             </template>
           </el-table-column>
           <el-table-column
@@ -419,20 +432,45 @@
             align="center"
             label="会员提款总金额"
             width="120px"
-          ></el-table-column>
-          <el-table-column prop="betStatus" align="center" width="100px">
+          >
+            <template slot-scope="scope">
+              <span v-if="scope.row.withdrawalTotalAmount !== null">
+                {{ scope.row.withdrawalTotalAmount }}
+              </span>
+              <span v-else>-</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="proxyWithdrawalSuccessNum" align="center" width="120px">
             <template slot="header">
               代理提款成功次数
               <br />
               代理提款被拒次数
             </template>
+            <template slot-scope="scope">
+              <span v-if="scope.row.proxyWithdrawalSuccessNum !== null">
+                {{ scope.row.proxyWithdrawalSuccessNum }}
+              </span>
+              <span v-else>-</span>
+              <br />
+              <span v-if="scope.row.proxyWithdrawalFailNum !== null">
+                {{ scope.row.proxyWithdrawalFailNum }}
+              </span>
+              <span v-else>-</span>
+            </template>
           </el-table-column>
           <el-table-column
-            prop="createAt1"
+            prop="proxyWithdrawalTotalAmount"
             align="center"
             label="代理提款总金额"
-            width="160px"
-          ></el-table-column>
+            width="120px"
+          >
+            <template slot-scope="scope">
+              <span v-if="scope.row.proxyWithdrawalTotalAmount !== null">
+                {{ scope.row.proxyWithdrawalTotalAmount }}
+              </span>
+              <span v-else>-</span>
+            </template>
+          </el-table-column>
           <el-table-column
             prop="createdAt"
             align="center"
@@ -444,7 +482,7 @@
             prop="withdrawalTime"
             align="center"
             label="最近提款时间"
-            width="150px"
+            width="160px"
             sortable="custom"
           ></el-table-column>
           <el-table-column
@@ -458,11 +496,11 @@
             prop="updatedAt"
             align="center"
             label="最近操作时间"
-            width="120px"
+            width="160px"
             sortable="custom"
           >
           </el-table-column>
-          <el-table-column prop="operation" align="center" label="操作" width="120px">
+          <el-table-column prop="operation" align="center" label="操作" width="160px">
             <template slot-scope="scope">
               <el-button
                 v-if="scope.row.blacklistStatus === 0"
@@ -575,7 +613,6 @@ export default {
     }
   },
   computed: {
-    // ...mapGetters(["vipDict"]),
     blackStatusType() {
       return this.globalDics.blackStatusType
     },
