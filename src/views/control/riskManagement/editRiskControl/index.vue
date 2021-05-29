@@ -663,13 +663,13 @@ export default {
 				if (valid && lock) {
 					lock = false
 					this.$api
-						.addAgentAPI(params)
+						.riskEditAddAPI(params)
 						.then((res) => {
 							this.loading = false
 							lock = true
 							const { code, data, msg } = res
 							if (code === 200) {
-								this.$confirm(`代理${data}资料提交成功`, {
+								this.$confirm(`${data}提交成功`, {
 									confirmButtonText: '确定',
 									type: 'success',
 									showCancelButton: false
