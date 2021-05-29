@@ -189,13 +189,13 @@
 						</template>
 					</el-table-column>
                     <el-table-column
-                        prop="windControlName"
+                        prop="windControlLevelName"
                         align="center"
                         label="风控层级"
                     >
                         <template slot-scope="scope">
-							<span v-if="!!scope.row.windControlName">
-								{{ scope.row.windControlName }}
+							<span v-if="!!scope.row.windControlLevelName">
+								{{ scope.row.windControlLevelName }}
 							</span>
                             <span v-else>-</span>
                         </template>
@@ -210,7 +210,7 @@
 							<p>{{ typeFilter(scope.row.operateType, 'bindType') }}</p>
 						</template>
 					</el-table-column>
-                    <el-table-column prop="operateType" align="center" label="备注信息">
+                    <el-table-column prop="remark" align="center" label="备注信息">
                         <template slot-scope="scope">
 							<span v-if="!!scope.row.remark">
 								{{ scope.row.remark }}
