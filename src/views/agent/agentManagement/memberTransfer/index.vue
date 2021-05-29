@@ -61,8 +61,9 @@
 						maxlength="11"
 						placeholder="请输入"
 						clearable
-                        onkeyup="value=value.replace(/[^\w\.\/]/ig,'')"
-						style="width: 365px"
+                        autocomplete="off"
+                        style="width: 365px"
+						@input="value=value.replace(/[^\w\.\/]/ig,'')"
 					></el-input>
 				</el-form-item>
 				<el-form-item label="审核信息:" prop="applyInfo">
