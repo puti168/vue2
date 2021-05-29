@@ -283,7 +283,6 @@
 import list from '@/mixins/list'
 import dayjs from 'dayjs'
 import { routerNames } from '@/utils/consts'
-import { mapGetters } from 'vuex'
 // import { notSpecial2, isHaveEmoji } from '@/utils/validate'
 const start = dayjs()
 	.startOf('day')
@@ -310,16 +309,18 @@ export default {
 				orderType: undefined
 			},
 			dataList: [],
-			total: 0
+			total: 0,
+            vipDict: []
 		}
 	},
 	computed: {
-        ...mapGetters(['vipDict']),
 		bindType() {
 			return this.globalDics.bindType
 		}
 	},
-	mounted() {},
+	mounted() {
+	    this.getWindControllerLevelDict()
+    },
 	methods: {
 		loadData() {
 			this.dataList = []
@@ -379,7 +380,16 @@ export default {
 				parentProxyName: ''
 			}
 			this.loadData()
-		}
+		},
+        getWindControllerLevelDict() {
+            this.$api
+                .getWindControllerLevelDict({ windControlType: 3 })
+                .then((res) => {
+                    if (res.code === 200) {
+                        this.vipDict = res.data
+                    }
+                })
+        }
 	}
 }
 </script>
