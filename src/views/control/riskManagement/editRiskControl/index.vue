@@ -45,7 +45,7 @@
 					<!--                    代理-->
 					<el-input
 						v-if="['2'].includes(queryData.windControlType)"
-						v-model="queryData.agentName"
+						v-model="queryData.proxyUserName"
 						size="medium"
 						maxlength="11"
 						placeholder="请输入"
@@ -171,21 +171,21 @@
 							{{ showInfoData.username ? showInfoData.username : '-' }}
 						</span>
 					</el-col>
-					<el-col :span="8">
+					<el-col :span="6">
 						<span>账户类型：</span>
 						<span v-if="showInfoData.accountType">
 							{{ typeFilter(showInfoData.accountType, 'accountType') }}
 						</span>
 						<span v-else>-</span>
 					</el-col>
-					<el-col :span="5">
+					<el-col :span="6">
 						<span>会员姓名：</span>
 						<span v-if="showInfoData.bankName">
 							启用中
 						</span>
 						<span v-else>-</span>
 					</el-col>
-					<el-col :span="5">
+					<el-col :span="6">
 						<span>离线天数：</span>
 						<span v-if="showInfoData.leaveLineDays">
 							绑定中
@@ -196,7 +196,129 @@
 				<el-row class="info-content-row">
 					<el-col :span="6">
 						<span>风控层级：</span>
-						<span>{{ showInfoData.windControlName ? showInfoData.windControlName : '-' }}</span>
+						<span>
+							{{
+								showInfoData.windControlName
+									? showInfoData.windControlName
+									: '-'
+							}}
+						</span>
+					</el-col>
+					<el-col :span="8">
+						<span>风控原因：</span>
+						<span>
+							{{ showInfoData.windReason ? showInfoData.windReason : '-' }}
+						</span>
+					</el-col>
+					<el-col :span="6"></el-col>
+					<el-col :span="6"></el-col>
+				</el-row>
+			</div>
+			<div
+				v-if="showInfoData && queryData.windControlType === '2'"
+				class="info-content"
+			>
+				<el-row class="info-content-row">
+					<el-col :span="6">
+						<span>代理账号：</span>
+						<span>
+							{{
+								showInfoData.proxyUserName ? showInfoData.proxyUserName : '-'
+							}}
+						</span>
+					</el-col>
+					<el-col :span="6">
+						<span>账户类型：</span>
+						<span v-if="showInfoData.accountType">
+							{{ typeFilter(showInfoData.accountType, 'accountType') }}
+						</span>
+						<span v-else>-</span>
+					</el-col>
+					<el-col :span="6">
+						<span>被风控会员个数：</span>
+						<span v-if="showInfoData.windControllerProxyCount">
+							{{ show.windControllerProxyCount }}
+						</span>
+						<span v-else>-</span>
+					</el-col>
+					<el-col :span="6">
+						<span>离线天数：</span>
+						<span v-if="showInfoData.leaveLineDays">
+							绑定中
+						</span>
+						<span v-else>-</span>
+					</el-col>
+				</el-row>
+				<el-row class="info-content-row">
+					<el-col :span="6">
+						<span>风控原因：</span>
+						<span>
+							{{ showInfoData.windReason ? showInfoData.windReason : '-' }}
+						</span>
+					</el-col>
+					<el-col :span="6"></el-col>
+					<el-col :span="6"></el-col>
+					<el-col :span="6"></el-col>
+				</el-row>
+			</div>
+			<div
+				v-else-if="showInfoData && queryData.windControlType === '3'"
+				class="info-content"
+			>
+				<el-row class="info-content-row">
+					<el-col :span="6">
+						<span>银行卡号：</span>
+						<span>
+							{{ showInfoData.cardNumber ? showInfoData.cardNumber : '-' }}
+						</span>
+					</el-col>
+					<el-col :span="8">
+						<span>银行名称：</span>
+						<span>
+							{{ showInfoData.cardNumber ? showInfoData.cardNumber : '-' }}
+						</span>
+					</el-col>
+					<el-col :span="5">
+						<span>黑名单状态：</span>
+						<span
+							v-if="
+								showInfoData.blackStatus && showInfoData.blackStatus * 1 === 1
+							"
+							class="normalRgba"
+						>
+							启用中
+						</span>
+						<span
+							v-else-if="showInfoData.blackStatus + '' === '0'"
+							class="disableRgba"
+						>
+							禁用中
+						</span>
+						<span v-else>-</span>
+					</el-col>
+					<el-col :span="5">
+						<span>绑定状态：</span>
+						<span
+							v-if="
+								showInfoData.bindStatus && showInfoData.bindStatus * 1 === 1
+							"
+							class="normalRgba"
+						>
+							绑定中
+						</span>
+						<span
+							v-else-if="showInfoData.bindStatus + '' === '0'"
+							class="disableRgba"
+						>
+							待绑定
+						</span>
+						<span v-else>-</span>
+					</el-col>
+				</el-row>
+				<el-row class="info-content-row">
+					<el-col :span="6">
+						<span>绑定账号次数：</span>
+						<span>{{ showInfoData.bindNum ? showInfoData.bindNum : '-' }}</span>
 					</el-col>
 					<el-col :span="8">
 						<span>提款总额：</span>
@@ -209,7 +331,7 @@
 						</span>
 					</el-col>
 					<el-col :span="5">
-						<span>风控原因：</span>
+						<span>风控层级：</span>
 						<span>
 							{{
 								showInfoData.windControlName
@@ -226,93 +348,168 @@
 					</el-col>
 				</el-row>
 			</div>
-<!--			<div-->
-<!--				v-else-if="showInfoData && queryData.windControlType === '2'"-->
-<!--				class="info-content"-->
-<!--			>-->
-<!--				<el-row class="info-content-row">-->
-<!--					<el-col :span="6">-->
-<!--						<span>银行卡号：</span>-->
-<!--						<span>-->
-<!--							{{ showInfoData.cardNumber ? showInfoData.cardNumber : '-' }}-->
-<!--						</span>-->
-<!--					</el-col>-->
-<!--					<el-col :span="8">-->
-<!--						<span>银行名称：</span>-->
-<!--						<span>-->
-<!--							{{ showInfoData.cardNumber ? showInfoData.cardNumber : '-' }}-->
-<!--						</span>-->
-<!--					</el-col>-->
-<!--					<el-col :span="5">-->
-<!--						<span>黑名单状态：</span>-->
-<!--						<span-->
-<!--							v-if="-->
-<!--								showInfoData.blackStatus && showInfoData.blackStatus * 1 === 1-->
-<!--							"-->
-<!--							class="normalRgba"-->
-<!--						>-->
-<!--							启用中-->
-<!--						</span>-->
-<!--						<span-->
-<!--							v-else-if="showInfoData.blackStatus + '' === '0'"-->
-<!--							class="disableRgba"-->
-<!--						>-->
-<!--							禁用中-->
-<!--						</span>-->
-<!--						<span v-else>-</span>-->
-<!--					</el-col>-->
-<!--					<el-col :span="5">-->
-<!--						<span>绑定状态：</span>-->
-<!--						<span-->
-<!--							v-if="-->
-<!--								showInfoData.bindStatus && showInfoData.bindStatus * 1 === 1-->
-<!--							"-->
-<!--							class="normalRgba"-->
-<!--						>-->
-<!--							绑定中-->
-<!--						</span>-->
-<!--						<span-->
-<!--							v-else-if="showInfoData.bindStatus + '' === '0'"-->
-<!--							class="disableRgba"-->
-<!--						>-->
-<!--							待绑定-->
-<!--						</span>-->
-<!--						<span v-else>-</span>-->
-<!--					</el-col>-->
-<!--				</el-row>-->
-<!--				<el-row class="info-content-row">-->
-<!--					<el-col :span="6">-->
-<!--						<span>绑定账号次数：</span>-->
-<!--						<span>{{ showInfoData.bindNum ? showInfoData.bindNum : '-' }}</span>-->
-<!--					</el-col>-->
-<!--					<el-col :span="8">-->
-<!--						<span>提款总额：</span>-->
-<!--						<span>-->
-<!--							{{-->
-<!--								showInfoData.withdrawalTotalAmount-->
-<!--									? showInfoData.withdrawalTotalAmount-->
-<!--									: '-'-->
-<!--							}}-->
-<!--						</span>-->
-<!--					</el-col>-->
-<!--					<el-col :span="5">-->
-<!--						<span>风控层级：</span>-->
-<!--						<span>-->
-<!--							{{-->
-<!--								showInfoData.windControlName-->
-<!--									? showInfoData.windControlName-->
-<!--									: '-'-->
-<!--							}}-->
-<!--						</span>-->
-<!--					</el-col>-->
-<!--					<el-col :span="5">-->
-<!--						<span>风控原因：</span>-->
-<!--						<span>-->
-<!--							{{ showInfoData.windReason ? showInfoData.windReason : '-' }}-->
-<!--						</span>-->
-<!--					</el-col>-->
-<!--				</el-row>-->
-<!--			</div>-->
+			<div
+				v-else-if="showInfoData && queryData.windControlType === '4'"
+				class="info-content"
+			>
+				<el-row class="info-content-row">
+					<el-col :span="6">
+						<span>虚拟币地址：</span>
+						<span>
+							{{
+								showInfoData.virtualAddress ? showInfoData.virtualAddress : '-'
+							}}
+						</span>
+					</el-col>
+					<el-col :span="4">
+						<span>虚拟币种类：</span>
+						<span>
+							{{ showInfoData.virtualKind ? showInfoData.virtualKind : '-' }}
+						</span>
+					</el-col>
+					<el-col :span="4">
+						<span>协议类型：</span>
+						<span v-if="showInfoData.virtualProtocol">
+							{{ showInfoData.virtualProtocol }}
+						</span>
+						<span v-else>-</span>
+					</el-col>
+					<el-col :span="5">
+						<span>黑名单状态：</span>
+						<span
+							v-if="
+								showInfoData.bindStatus && showInfoData.bindStatus * 1 === 1
+							"
+							class="normalRgba"
+						>
+							绑定中
+						</span>
+						<span
+							v-else-if="showInfoData.bindStatus + '' === '0'"
+							class="disableRgba"
+						>
+							待绑定
+						</span>
+						<span v-else>-</span>
+					</el-col>
+					<el-col :span="5">
+						<span>黑名单状态：</span>
+						<span
+							v-if="
+								showInfoData.bindStatus && showInfoData.bindStatus * 1 === 1
+							"
+							class="normalRgba"
+						>
+							绑定中
+						</span>
+						<span
+							v-else-if="showInfoData.bindStatus + '' === '0'"
+							class="disableRgba"
+						>
+							待绑定
+						</span>
+						<span v-else>-</span>
+					</el-col>
+				</el-row>
+				<el-row class="info-content-row">
+					<el-col :span="6">
+						<span>绑定账号次数：</span>
+						<span>{{ showInfoData.bindNum ? showInfoData.bindNum : '-' }}</span>
+					</el-col>
+					<el-col :span="8">
+						<span>总提款总额：</span>
+						<span>
+							{{
+								showInfoData.withdrawalTotalAmount
+									? showInfoData.withdrawalTotalAmount
+									: '-'
+							}}
+						</span>
+					</el-col>
+					<el-col :span="5">
+						<span>风控层级：</span>
+						<span>
+							{{
+								showInfoData.windControlName
+									? showInfoData.windControlName
+									: '-'
+							}}
+						</span>
+					</el-col>
+					<el-col :span="5">
+						<span>风控原因：</span>
+						<span>
+							{{ showInfoData.windReason ? showInfoData.windReason : '-' }}
+						</span>
+					</el-col>
+				</el-row>
+			</div>
+			<div
+				v-else-if="showInfoData && queryData.windControlType === '5'"
+				class="info-content"
+			>
+				<el-row class="info-content-row">
+					<el-col :span="6">
+						<span>注册IP地址：</span>
+						<span>
+							{{ showInfoData.registerIp ? showInfoData.registerIp : '-' }}
+						</span>
+					</el-col>
+					<el-col :span="6">
+						<span>账户类型：</span>
+						<span v-if="showInfoData.accountType">
+							{{ typeFilter(showInfoData.accountType, 'accountType') }}
+						</span>
+						<span v-else>-</span>
+					</el-col>
+					<el-col :span="6">
+						<span>风控层级：</span>
+						<span>
+							{{
+								showInfoData.windControlName
+									? showInfoData.windControlName
+									: '-'
+							}}
+						</span>
+					</el-col>
+					<el-col :span="6">
+						<span>风控原因：</span>
+						<span>
+							{{ showInfoData.windReason ? showInfoData.windReason : '-' }}
+						</span>
+					</el-col>
+				</el-row>
+			</div>
+			<div
+				v-else-if="showInfoData && queryData.windControlType === '6'"
+				class="info-content"
+			>
+				<el-row class="info-content-row">
+					<el-col :span="6">
+						<span>终端设备号：</span>
+						<span>
+							{{ showInfoData.username ? showInfoData.username : '-' }}
+						</span>
+					</el-col>
+					<el-col :span="6">
+						<span>风控层级：</span>
+						<span>
+							{{
+								showInfoData.windControlName
+									? showInfoData.windControlName
+									: '-'
+							}}
+						</span>
+					</el-col>
+					<el-col :span="6">
+						<span>风控原因：</span>
+						<span>
+							{{ showInfoData.windReason ? showInfoData.windReason : '-' }}
+						</span>
+					</el-col>
+					<el-col :span="6"></el-col>
+				</el-row>
+			</div>
 		</div>
 	</div>
 </template>
@@ -332,7 +529,7 @@ export default {
 				windControlType: '1',
 				windControlLevelName: undefined,
 				userName: undefined,
-				agentName: undefined,
+				proxyUserName: undefined,
 				cardNumber: undefined,
 				virtualAddress: undefined,
 				registerIp: undefined,
@@ -355,7 +552,7 @@ export default {
 				},
 				'2': {
 					label: '代理账号:',
-					prop: 'agentName'
+					prop: 'proxyUserName'
 				},
 				'3': {
 					label: '银行卡号:',
@@ -407,7 +604,7 @@ export default {
 				// 		trigger: 'blur'
 				// 	}
 				// ],
-				agentName: [
+				proxyUserName: [
 					{
 						required: true,
 						validator: testUserName,
@@ -503,7 +700,7 @@ export default {
 				windControlType: '1',
 				windControlLevelName: undefined,
 				userName: undefined,
-				agentName: undefined,
+				proxyUserName: undefined,
 				cardNumber: undefined,
 				virtualAddress: undefined,
 				registerIp: undefined,
@@ -518,7 +715,7 @@ export default {
 			this.queryData = {
 				windControlLevelName: undefined,
 				userName: undefined,
-				agentName: undefined,
+				proxyUserName: undefined,
 				cardNumber: undefined,
 				virtualAddress: undefined,
 				registerIp: undefined,
@@ -552,32 +749,32 @@ export default {
 			switch (windControlType) {
 				case '1': {
 					const { userName } = this.queryData
-					this.queryInfoData(reg1, userName, windControlType)
+					this.queryInfoData(reg1, { userName }, windControlType)
 					break
 				}
 				case '2': {
-					const { agentName } = this.queryData
-					this.queryInfoData(reg1, agentName, windControlType)
+					const { proxyUserName } = this.queryData
+					this.queryInfoData(reg1, { proxyUserName }, windControlType)
 					break
 				}
 				case '3': {
 					const { cardNumber } = this.queryData
-					this.queryInfoData(reg1, cardNumber, windControlType)
+					this.queryInfoData(reg1, { cardNumber }, windControlType)
 					break
 				}
 				case '4': {
 					const { virtualAddress } = this.queryData
-					this.queryInfoData(reg1, virtualAddress, windControlType)
+					this.queryInfoData(reg1, { virtualAddress }, windControlType)
 					break
 				}
 				case '5': {
 					const { registerIp } = this.queryData
-					this.queryInfoData(reg1, registerIp, windControlType)
+					this.queryInfoData(reg1, { registerIp }, windControlType)
 					break
 				}
 				case '6': {
 					const { deviceNo } = this.queryData
-					this.queryInfoData(reg1, deviceNo, windControlType)
+					this.queryInfoData(reg1, { deviceNo }, windControlType)
 					break
 				}
 			}
@@ -588,7 +785,7 @@ export default {
 			if (lock) {
 				this.loading = true
 				this.$api
-					.riskEditInfoAPI({ userName: value, windControlType })
+					.riskEditInfoAPI({ ...value, windControlType })
 					.then((res) => {
 						lock = false
 						this.loading = false
