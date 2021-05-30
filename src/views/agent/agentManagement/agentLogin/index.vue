@@ -229,8 +229,8 @@ class="redColor"
               风控层级
             </template>
             <template slot-scope="scope">
-              <span v-if="scope.row.loginIp !== null">
-                {{ scope.row.loginIp }}
+              <span v-if="scope.row.deviceNo !== null">
+                {{ scope.row.deviceNo }}
               </span>
               <span v-else>-</span>
               <br />
