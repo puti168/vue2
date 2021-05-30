@@ -94,7 +94,6 @@
 						maxlength="50"
 						placeholder="请输入"
 						clearable
-                        oninput="value=value.replace(/[^\w\.\/]/ig,'')"
 						style="width: 365px"
 					></el-input>
 					<el-button
