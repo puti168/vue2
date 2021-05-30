@@ -112,21 +112,21 @@
 						size="medium"
 						placeholder="默认选择全部"
 						clearable
-						multiple
 						:maxlength="10"
 						style="width: 365px"
+						@change="checkRiskValue($event)"
 					>
 						<el-option
 							v-for="item in vipDict"
 							:key="item.id"
 							:label="item.windControlLevelName"
-							:value="item.windControlLevelName"
+							:value="item"
 						></el-option>
 					</el-select>
 				</el-form-item>
-				<el-form-item label="审核信息:" prop="description">
+				<el-form-item label="审核信息:" prop="windReason">
 					<el-input
-						v-model="queryData.description"
+						v-model="queryData.windReason"
 						size="medium"
 						type="textarea"
 						placeholder="请输入"
@@ -527,14 +527,14 @@ export default {
 			loading: false,
 			queryData: {
 				windControlType: '1',
-                windControlName: undefined,
+				windControlName: undefined,
 				userName: undefined,
 				proxyUserName: undefined,
 				cardNumber: undefined,
 				virtualAddress: undefined,
 				registerIp: undefined,
 				deviceNo: undefined,
-                description: undefined
+                windReason: undefined
 			},
 			vipDict: [],
 			showInfoData: undefined
@@ -594,7 +594,7 @@ export default {
 				windControlType: [
 					{ required: true, message: '请选择风控类型', trigger: 'change' }
 				],
-                windControlName: [
+				windControlName: [
 					{ required: true, message: '请选择风控类型', trigger: 'change' }
 				],
 				// userName: [
@@ -639,7 +639,7 @@ export default {
 						trigger: 'blur'
 					}
 				],
-                description: [
+                windReason: [
 					{
 						required: true,
 						message: '请输入审核信息',
@@ -659,6 +659,7 @@ export default {
 				...this.queryData
 			}
 			let lock = true
+			params.windControlType = params.windControlType * 1
 			this.$refs['form'].validate((valid) => {
 				if (valid && lock) {
 					lock = false
@@ -698,14 +699,14 @@ export default {
 			this.$refs['form'].resetFields()
 			this.queryData = {
 				windControlType: '1',
-                windControlName: undefined,
+				windControlName: undefined,
 				userName: undefined,
 				proxyUserName: undefined,
 				cardNumber: undefined,
 				virtualAddress: undefined,
 				registerIp: undefined,
 				deviceNo: undefined,
-                description: undefined
+                windReason: undefined
 			}
 		},
 		checkValue(val) {},
@@ -713,14 +714,14 @@ export default {
 			this.$refs['form'].resetFields()
 			this.showInfoData = undefined
 			this.queryData = {
-                windControlName: undefined,
+				windControlName: undefined,
 				userName: undefined,
 				proxyUserName: undefined,
 				cardNumber: undefined,
 				virtualAddress: undefined,
 				registerIp: undefined,
 				deviceNo: undefined,
-                description: undefined,
+                windReason: undefined,
 				windControlType: evt
 			}
 			this.getMerchantDict(evt)
@@ -811,6 +812,11 @@ export default {
 					lock = true
 				}, 1000)
 			}
+		},
+		checkRiskValue(val) {
+			console.log('val', val)
+			this.queryData.windControlName = val.windControlLevelName
+			this.queryData.windControlLevelId = val.id * 1
 		}
 	}
 }
