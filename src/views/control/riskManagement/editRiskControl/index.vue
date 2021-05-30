@@ -39,7 +39,7 @@
 						maxlength="11"
 						placeholder="请输入"
 						clearable
-						onkeyup="value=value.replace(/[^\w\.\/]/ig,'')"
+                        oninput="value=value.replace(/[^\w\.\/]/ig,'')"
 						style="width: 365px"
 					></el-input>
 					<!--                    代理-->
@@ -50,7 +50,7 @@
 						maxlength="11"
 						placeholder="请输入"
 						clearable
-						onkeyup="value=value.replace(/[^\w\.\/]/ig,'')"
+                        oninput="value=value.replace(/[^\w\.\/]/ig,'')"
 						style="width: 365px"
 					></el-input>
 					<!--                    银行卡-->
@@ -59,7 +59,7 @@
 						v-model="queryData.cardNumber"
 						size="medium"
 						maxlength="25"
-						onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
+                        oninput="value=value.replace(/^(0+)|[^\d]+/g,'')"
 						placeholder="请输入"
 						clearable
 						style="width: 365px"
@@ -72,7 +72,7 @@
 						maxlength="50"
 						placeholder="请输入"
 						clearable
-						onkeyup="value=value.replace(/[^\w\.\/]/ig,'')"
+                        oninput="value=value.replace(/[^\w\.\/]/ig,'')"
 						style="width: 365px"
 					></el-input>
 					<!--                    IP-->
@@ -83,7 +83,7 @@
 						maxlength="15"
 						placeholder="请输入"
 						clearable
-						onkeyup="value=value.replace(/[^\d.]/g,'')"
+                        oninput="value=value.replace(/[^\d.]/g,'')"
 						style="width: 365px"
 					></el-input>
 					<!--                    终端号-->
@@ -94,7 +94,7 @@
 						maxlength="50"
 						placeholder="请输入"
 						clearable
-						onkeyup="value=value.replace(/[^\w\.\/]/ig,'')"
+                        oninput="value=value.replace(/[^\w\.\/]/ig,'')"
 						style="width: 365px"
 					></el-input>
 					<el-button
@@ -534,7 +534,7 @@ export default {
 				virtualAddress: undefined,
 				registerIp: undefined,
 				deviceNo: undefined,
-                windReason: undefined
+				windReason: undefined
 			},
 			vipDict: [],
 			showInfoData: undefined
@@ -564,7 +564,7 @@ export default {
 				},
 				'5': {
 					label: 'IP地址:',
-					prop: 'IP'
+					prop: 'registerIp'
 				},
 				'6': {
 					label: '终端设备号:',
@@ -625,7 +625,7 @@ export default {
 						trigger: 'blur'
 					}
 				],
-				IP: [
+                registerIp: [
 					{
 						required: true,
 						message: '请输入IP',
@@ -639,7 +639,7 @@ export default {
 						trigger: 'blur'
 					}
 				],
-                windReason: [
+				windReason: [
 					{
 						required: true,
 						message: '请输入审核信息',
@@ -668,9 +668,9 @@ export default {
 						.then((res) => {
 							this.loading = false
 							lock = true
-							const { code, data, msg } = res
+							const { code, msg } = res
 							if (code === 200) {
-								this.$confirm(`${data}提交成功`, {
+								this.$confirm(`提交成功`, {
 									confirmButtonText: '确定',
 									type: 'success',
 									showCancelButton: false
@@ -706,7 +706,7 @@ export default {
 				virtualAddress: undefined,
 				registerIp: undefined,
 				deviceNo: undefined,
-                windReason: undefined
+				windReason: undefined
 			}
 		},
 		checkValue(val) {},
@@ -721,7 +721,7 @@ export default {
 				virtualAddress: undefined,
 				registerIp: undefined,
 				deviceNo: undefined,
-                windReason: undefined,
+				windReason: undefined,
 				windControlType: evt
 			}
 			this.getMerchantDict(evt)
@@ -755,7 +755,7 @@ export default {
 				}
 				case '2': {
 					const { proxyUserName } = this.queryData
-					this.queryInfoData(reg1, { proxyUserName }, windControlType)
+					this.queryInfoData(reg1, { 'userName': proxyUserName }, windControlType)
 					break
 				}
 				case '3': {
