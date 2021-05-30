@@ -8,21 +8,28 @@
 						{{ showInfoData.proxyName ? showInfoData.proxyName : '-' }}
 					</span>
 				</el-col>
-				<el-col :span="6">
+				<el-col :span="4">
 					<span>账户类型：</span>
 					<span v-if="showInfoData.accountType">
 						{{ typeFilter(showInfoData.accountType, 'accountType') }}
 					</span>
 					<span v-else>-</span>
 				</el-col>
-				<el-col :span="6">
+				<el-col :span="10">
 					<span>被风控会员个数：</span>
-					<span v-if="showInfoData.windControllerProxyCount">
-						{{ show.windControllerProxyCount }}
+					<span v-if="true">
+						<!--						{{ showInfoData.windControllerProxyCount }}-->
+						1000000
+						<span
+							class="blueColor decoration"
+							@click="lookAgent(showInfoData.levelList)"
+						>
+							点击查看会员风控层级分布
+						</span>
 					</span>
 					<span v-else>-</span>
 				</el-col>
-				<el-col :span="6">
+				<el-col :span="4">
 					<span>离线天数：</span>
 					<span v-if="showInfoData.leaveLineDays">
 						绑定中
@@ -42,6 +49,20 @@
 				<el-col :span="6"></el-col>
 			</el-row>
 		</div>
+		<el-dialog
+			title="查看"
+			:visible.sync="dialogVisible"
+			:destroy-on-close="true"
+			width="480px"
+			class="rempadding"
+		>
+			<div class="bodyBox">
+				<div v-for="(item, idx) in levelList" :key="'idx' + idx">
+					<p>风控会员个数:{{ item.count }}</p>
+					<p>风控层级名称:{{ item.windControlLevelName }}</p>
+				</div>
+			</div>
+		</el-dialog>
 	</div>
 </template>
 
@@ -52,6 +73,18 @@ export default {
 		showInfoData: {
 			type: Object,
 			default: () => {}
+		}
+	},
+	data() {
+		return {
+			dialogVisible: false,
+			levelList: []
+		}
+	},
+	methods: {
+		lookAgent(val) {
+			this.dialogVisible = true
+			this.levelList = val
 		}
 	}
 }
@@ -78,5 +111,8 @@ export default {
 		padding-top: 20px;
 		padding-bottom: 20px;
 	}
+}
+.blueColor {
+	cursor: pointer;
 }
 </style>
