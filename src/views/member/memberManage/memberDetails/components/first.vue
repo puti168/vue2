@@ -110,11 +110,11 @@
           </span>
           <span
             v-if="
-              outlineInfoList.windControlLevelName !== '' &&
-              outlineInfoList.windControlLevelName !== null
+              outlineInfoList.ipWindControlName !== '' &&
+              outlineInfoList.ipWindControlName !== null
             "
             class="redColor"
-            >(风控层级：{{ outlineInfoList.windControlLevelName }})</span>
+            >(风控层级：{{ outlineInfoList.ipWindControlName }})</span>
           <span v-else class="redColor">(风控层级：无)</span>
         </div>
       </el-col>
