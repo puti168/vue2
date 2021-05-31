@@ -411,16 +411,19 @@ export default {
 		confirm() {
 			if (this.form.relationOtherGameId.length !== 5) {
 				this.$message({
-									type: 'error',
-									message: '关联推荐游戏必须选择5个!'
-								})
+					type: 'error',
+					message: '关联推荐游戏必须选择5个!'
+				})
 				return
 			}
-			if (this.form.relationGameModuleId.length !== 1 && this.form.relationGameModuleId.length !== 1) {
+			if (
+				!this.form.relationGameModuleId.length &&
+				this.form.relationGameModuleId.length >= 2
+			) {
 				this.$message({
-									type: 'error',
-									message: '关联游戏模块只能选择1-2个!'
-								})
+					type: 'error',
+					message: '关联游戏模块只能选择1-2个!'
+				})
 				return
 			}
 			this.$refs.form.validate((valid) => {
