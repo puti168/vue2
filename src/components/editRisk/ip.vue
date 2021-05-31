@@ -9,9 +9,9 @@
 					</span>
 				</el-col>
 				<el-col :span="6">
-					<span>账户类型：</span>
-					<span v-if="showInfoData.accountType">
-						{{ typeFilter(showInfoData.accountType, 'accountType') }}
+					<span>ip归属地：</span>
+					<span v-if="showInfoData.ipAttribution">
+						{{ showInfoData.ipAttribution }}
 					</span>
 					<span v-else>-</span>
 				</el-col>
