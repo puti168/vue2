@@ -51,7 +51,7 @@
 
 					<el-form-item label="锁单状态:">
 						<el-select
-							v-model="queryData.lockOrder"
+							v-model="queryData.lockStatus"
 							style="width: 180px"
 							:popper-append-to-body="false"
 						>
@@ -279,7 +279,7 @@ export default {
 				orderProperties: '',
 				applyName: '',
 				auditName: '',
-				lockOrder: '',
+                lockStatus: '',
 				auditNum: '',
 				orderType: '',
 				orderKey: ''
@@ -386,7 +386,7 @@ export default {
 				auditStatus: [],
 				applyName: '',
 				auditName: '',
-				lockOrder: '',
+                lockStatus: '',
 				auditStep: '',
 				orderProperties: '',
 				auditNum: '',
