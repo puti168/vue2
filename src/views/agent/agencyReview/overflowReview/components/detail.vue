@@ -57,7 +57,7 @@
 				<p class="name">申请信息</p>
 				<div class="review-flex">
 					<div>溢出会员: {{ list.userName }}</div>
-					<div>上级代理: {{ list.transferProxyName }}</div>
+					<div>上级代理: {{ list.applyProxyName }}</div>
 					<div>推广链接: {{ list.promotionLink }}</div>
 				</div>
 				<div class="review-flex">
