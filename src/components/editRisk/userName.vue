@@ -35,14 +35,14 @@
 					<span>风控层级：</span>
 					<span>
 						{{
-							showInfoData.windControlName ? showInfoData.windControlName : '-'
+							showInfoData.windControlName ? showInfoData.windControlName : '无'
 						}}
 					</span>
 				</el-col>
 				<el-col :span="8">
 					<span>风控原因：</span>
 					<span>
-						{{ showInfoData.windReason ? showInfoData.windReason : '-' }}
+						{{ showInfoData.windReason ? showInfoData.windReason : '无' }}
 					</span>
 				</el-col>
 				<el-col :span="6"></el-col>

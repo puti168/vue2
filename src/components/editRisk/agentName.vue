@@ -29,18 +29,19 @@
 					<span v-else>-</span>
 				</el-col>
 				<el-col :span="4">
-					<span>离线天数：</span>
-					<span v-if="showInfoData.leaveLineDays">
-						绑定中
+					<span>风控层级：</span>
+                    <span>
+						{{
+                            showInfoData.windControlName ? showInfoData.windControlName : '无'
+                        }}
 					</span>
-					<span v-else>-</span>
 				</el-col>
 			</el-row>
 			<el-row class="info-content-row">
 				<el-col :span="6">
 					<span>风控原因：</span>
 					<span>
-						{{ showInfoData.windReason ? showInfoData.windReason : '-' }}
+						{{ showInfoData.windReason ? showInfoData.windReason : '无' }}
 					</span>
 				</el-col>
 				<el-col :span="6"></el-col>
