@@ -186,7 +186,10 @@ export default {
   mixins: [list],
   data() {
     return {
-      queryData: {},
+      queryData: {
+        afterWindControlId: '',
+        beforeWindControlId: ''
+      },
       tableData: [],
       WindControlLevel: []
     }
