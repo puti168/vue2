@@ -17,9 +17,8 @@
 				</el-col>
 				<el-col :span="10">
 					<span>被风控会员个数：</span>
-					<span v-if="true">
-						<!--						{{ showInfoData.windControllerProxyCount }}-->
-						1000000
+					<span v-if="showInfoData.windControllerProxyCount">
+						{{ showInfoData.windControllerProxyCount }}
 						<span
 							class="blueColor decoration"
 							@click="lookAgent(showInfoData.levelList)"
@@ -67,8 +66,10 @@
 </template>
 
 <script>
+import list from '@/mixins/list'
 export default {
 	name: 'AgentName',
+	mixins: [list],
 	props: {
 		showInfoData: {
 			type: Object,
