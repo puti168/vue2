@@ -207,9 +207,9 @@
               <span
 class="redColor"
 >风控层级：{{
-                  scope.row.ipWindControlLevelName === null
+                  scope.row.ipControlName === null
                     ? "无"
-                    : scope.row.ipWindControlLevelName
+                    : scope.row.ipControlName
                 }}</span>
             </template>
           </el-table-column>
@@ -238,9 +238,9 @@ class="redColor"
               <span
 class="redColor"
 >风控层级：{{
-                  scope.row.deviceWindControlLevelName === null
+                  scope.row.deviceNoControlName === null
                     ? "无"
-                    : scope.row.deviceWindControlLevelName
+                    : scope.row.deviceNoControlName
                 }}</span>
             </template>
           </el-table-column>
