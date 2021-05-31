@@ -322,6 +322,7 @@
           <el-input
             v-model="editData.remark"
             :maxlength="50"
+            show-word-limit
             type="textarea"
             placeholder="最多可输入50个字符"
           >

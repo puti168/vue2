@@ -729,14 +729,16 @@ export default {
       }
     },
     exportExcel() {
-      const create = this.queryData.registerTime || []
+      const create = this.searchTime || []
+      const net = this.netTime || []
       const [startTime, endTime] = create
+      const [netAtStart, netAtEnd] = net
       let params = {
         ...this.queryData,
-        createDtStart: startTime
-          ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
-          : undefined,
-        createDtEnd: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : undefined
+        createAtStart: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : '',
+        createAtEnd: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : '',
+        netAtStart: netAtStart ? dayjs(netAtStart).format('YYYY-MM-DD HH:mm:ss') : '',
+        netAtEnd: netAtEnd ? dayjs(netAtEnd).format('YYYY-MM-DD HH:mm:ss') : ''
       }
       params = {
         ...this.getParams(params)
@@ -747,51 +749,72 @@ export default {
       delete params.accountStatus
       delete params.deviceType
       delete params.accountType
-      this.$api
-        .getGameRecordDownload(params)
-        .then((res) => {
-          const result = res.data
-          const disposition = res.headers['content-disposition']
-          if (disposition) {
-            const fileNames = disposition.split("''")
-            let fileName = fileNames[1]
-            fileName = decodeURIComponent(fileName)
-            const blob = new Blob([result], {
-              type: 'application/octet-stream'
-            })
-            if ('download' in document.createElement('a')) {
-              const elink = document.createElement('a')
-              elink.download = fileName || ''
-              elink.style.display = 'none'
-              elink.href = URL.createObjectURL(blob)
-              document.body.appendChild(elink)
-              elink.click()
-              URL.revokeObjectURL(elink.href)
-              document.body.removeChild(elink)
-            } else {
-              console.log('进来', 111)
-              window.navigator.msSaveBlob(blob, fileName)
+      if (startTime || endTime || netAtStart || netAtEnd) {
+        this.$api
+          .getGameRecordDownload(params)
+          .then((res) => {
+            this.loading = false
+            const { data, status } = res
+            if (res && status === 200) {
+              const { type } = data
+              if (type.includes('application/json')) {
+                const reader = new FileReader()
+                reader.onload = (evt) => {
+                  if (evt.target.readyState === 2) {
+                    const {
+                      target: { result }
+                    } = evt
+                    const ret = JSON.parse(result)
+                    if (ret.code !== 200) {
+                      this.$message({
+                        type: 'error',
+                        message: ret.msg,
+                        duration: 1500
+                      })
+                    }
+                  }
+                }
+                reader.readAsText(data)
+              } else {
+                const result = res.data
+                const disposition = res.headers['content-disposition']
+                const fileNames = disposition && disposition.split("''")
+                let fileName = fileNames[1]
+                fileName = decodeURIComponent(fileName)
+                const blob = new Blob([result], {
+                  type: 'application/octet-stream'
+                })
+                if ('download' in document.createElement('a')) {
+                  const downloadLink = document.createElement('a')
+                  downloadLink.download = fileName || ''
+                  downloadLink.style.display = 'none'
+                  downloadLink.href = URL.createObjectURL(blob)
+                  document.body.appendChild(downloadLink)
+                  downloadLink.click()
+                  URL.revokeObjectURL(downloadLink.href)
+                  document.body.removeChild(downloadLink)
+                } else {
+                  window.navigator.msSaveBlob(blob, fileName)
+                }
+                this.$message({
+                  type: 'success',
+                  message: '导出成功',
+                  duration: 1500
+                })
+              }
             }
-            this.$message({
-              type: 'success',
-              message: '导出成功',
-              duration: 1500
-            })
-          } else {
+          })
+          .catch(() => {
+            this.loading = false
             this.$message({
               type: 'error',
-              message: '每10分钟导一次，请稍后再试',
+              message: '导出失败',
               duration: 1500
             })
-          }
-        })
-        .catch(() => {
-          this.$message({
-            type: 'error',
-            message: '导出失败',
-            duration: 1500
           })
-        })
+      } else {
+        this.$message.warning('请选择一个下注时间或者结算时间')
+      }
     },
     goBack() {
       this.gameType = 'init'

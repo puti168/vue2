@@ -833,6 +833,8 @@ export default {
 			}
 			delete params.registerTime
 			delete params.lastLoginTime
+            delete params.pageNum
+            delete params.pageSize
 			this.$api
 				.agentListExportAPI(params)
 				.then((res) => {

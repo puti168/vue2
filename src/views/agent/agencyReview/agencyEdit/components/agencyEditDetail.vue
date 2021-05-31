@@ -102,7 +102,8 @@
 						v-model="form.remark"
 						clearable
 						type="textarea"
-						:max="50"
+						:maxlength="50"
+						show-word-limit
 						:autosize="{ minRows: 4, maxRows: 4 }"
 						style="width: 380px"
 						placeholder="请输入"
@@ -113,7 +114,8 @@
 						v-model="form.remark"
 						clearable
 						type="textarea"
-						:max="50"
+						:maxlength="50"
+						show-word-limit
 						:autosize="{ minRows: 4, maxRows: 4 }"
 						style="width: 380px"
 						placeholder="请输入"

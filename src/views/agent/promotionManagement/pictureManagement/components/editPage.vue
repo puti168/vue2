@@ -196,7 +196,7 @@ export default {
 						message: '请填入备注',
 						trigger: 'blur'
 					},
-                    { min: 2, max: 12, message: '长度在 2 到 50 个字符', trigger: 'blur' }
+					{ min: 2, max: 50, message: '长度在 2 到 50 个字符', trigger: 'blur' }
 				]
 			}
 		}
@@ -264,13 +264,20 @@ export default {
 							this.loading = false
 							const { code, msg } = res
 							if (code === 200) {
-								this.$confirm(`${this.updateStatus ? '更新' : '新增'}成功`, {
-									confirmButtonText: '确定',
-									type: 'success',
-									showCancelButton: false
+								// this.$confirm(`${this.updateStatus ? '更新' : '新增'}成功`, {
+								// 	confirmButtonText: '确定',
+								// 	type: 'success',
+								// 	showCancelButton: false
+								// })
+								this.$message({
+									message: `${this.updateStatus ? '更新' : '新增'}成功`,
+									type: 'success'
 								})
 								this.reset()
 								this.$refs.imgUpload.clearFile()
+								setTimeout(() => {
+									this.back()
+								}, 1500)
 							} else {
 								this.$message({
 									message: msg,

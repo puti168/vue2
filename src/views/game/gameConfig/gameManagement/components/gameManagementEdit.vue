@@ -409,6 +409,20 @@ export default {
 			this.$set(this.form, 'imageAddress', data)
 		},
 		confirm() {
+			if (this.form.relationOtherGameId.length !== 5) {
+				this.$message({
+									type: 'error',
+									message: '关联推荐游戏必须选择5个!'
+								})
+				return
+			}
+			if (this.form.relationGameModuleId.length !== 1 && this.form.relationGameModuleId.length !== 1) {
+				this.$message({
+									type: 'error',
+									message: '关联游戏模块只能选择1-2个!'
+								})
+				return
+			}
 			this.$refs.form.validate((valid) => {
 				if (valid) {
 					const loading = this.$loading({
