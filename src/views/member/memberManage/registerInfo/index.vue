@@ -224,7 +224,7 @@
 							</span>
 							<span v-else>-</span>
                             <br />
-                            <span v-if="!!scope.row.ipWindControlLevelName">
+                            <span v-if="!!scope.row.ipWindControlLevelName" style="color: #e4393c">
 								{{ scope.row.ipWindControlLevelName }}
 							</span>
                             <span v-else>-</span>
@@ -250,7 +250,7 @@
 							</span>
 							<span v-else>-</span>
                             <br />
-                            <span v-if="!!scope.row.deviceWindControlLevelName">
+                            <span v-if="!!scope.row.deviceWindControlLevelName" style="color: #e4393c">
 								{{ scope.row.deviceWindControlLevelName }}
 							</span>
                             <span v-else>-</span>

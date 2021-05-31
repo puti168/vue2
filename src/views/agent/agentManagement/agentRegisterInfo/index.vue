@@ -175,7 +175,7 @@
 							</span>
                             <span v-else>-</span>
                             <br />
-                            <span v-if="!!scope.row.ipControlName">
+                            <span v-if="!!scope.row.ipControlName" style="color: #e4393c">
 								{{ scope.row.ipControlName }}
 							</span>
                             <span v-else>-</span>
@@ -201,7 +201,7 @@
 							</span>
                             <span v-else>-</span>
                             <br />
-                            <span v-if="!!scope.row.deviceNoControlName">
+                            <span v-if="!!scope.row.deviceNoControlName" style="color: #e4393c">
 								{{ scope.row.deviceNoControlName }}
 							</span>
                             <span v-else>-</span>
