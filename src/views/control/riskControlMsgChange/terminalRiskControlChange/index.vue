@@ -22,7 +22,7 @@
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
 						>
-						<el-option label="全部" value=""></el-option>
+							<el-option label="全部" value=""></el-option>
 							<el-option
 								v-for="item in WindControlLevel"
 								:key="item.id"
@@ -39,7 +39,7 @@
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
 						>
-						<el-option label="全部" value=""></el-option>
+							<el-option label="全部" value=""></el-option>
 							<el-option
 								v-for="item in WindControlLevel"
 								:key="item.id"
@@ -94,19 +94,33 @@
 				>
 					<el-table-column prop="deviceNo" align="center" label="终端设备号">
 						<template slot-scope="scope">
-								{{ scope.row.deviceNo }}
+							{{ scope.row.deviceNo }}
 						</template>
 					</el-table-column>
-					<el-table-column prop="beforeWindControlName" align="center" label="变更前风控层级">
+					<el-table-column
+						prop="beforeWindControlName"
+						align="center"
+						label="变更前风控层级"
+					>
 						<template slot-scope="scope">
-							<el-tooltip :content="scope.rowbeforeWindControlDepict" placement="top">
-								<p>{{ beforeWindControlName }}</p>
+							<el-tooltip
+								:content="scope.row.beforeWindControlDepict"
+								placement="top"
+							>
+								<p>{{ scope.row.beforeWindControlName }}</p>
 							</el-tooltip>
 						</template>
 					</el-table-column>
-					<el-table-column prop="afterWindControlName" align="center" label="变更后风控层级">
+					<el-table-column
+						prop="afterWindControlName"
+						align="center"
+						label="变更后风控层级"
+					>
 						<template slot-scope="scope">
-							<el-tooltip :content="scope.row.afterWindControlDepict" placement="top">
+							<el-tooltip
+								:content="scope.row.afterWindControlDepict"
+								placement="top"
+							>
 								<p>{{ scope.row.afterWindControlName }}</p>
 							</el-tooltip>
 						</template>
@@ -167,8 +181,7 @@ export default {
 			tableData: []
 		}
 	},
-	computed: {
-	},
+	computed: {},
 	mounted() {
 		this.getSelectWindControlLevel()
 	},
