@@ -230,7 +230,10 @@ export default {
         })
     },
     reset() {
-      this.queryData = {}
+      this.queryData = {
+        afterWindControlId: '',
+        beforeWindControlId: ''
+      }
       this.pageNum = 1
       this.loadData()
     },
