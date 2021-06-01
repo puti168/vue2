@@ -2,12 +2,11 @@
   <div class="game-container report-container">
     <div class="view-container dealer-container">
       <div class="params">
-        <h1>会员标签配置</h1>
         <el-form ref="form" :inline="true" :model="queryData">
-          <el-form-item label="游戏标签ID:">
+          <el-form-item label="标签名称:">
             <el-input
               v-model="queryData.gameLabelId"
-              maxlength="3"
+              maxlength="10"
               clearable
               size="medium"
               style="width: 180px"
@@ -18,11 +17,11 @@
               @blur="checkValue($event)"
             ></el-input>
           </el-form-item>
-          <el-form-item label="标签名称:">
+          <el-form-item label="创建人:">
             <el-input
               v-model="queryData.gameLabelName"
               clearable
-              :maxlength="10"
+              maxlength="10"
               size="medium"
               style="width: 180px; margin-right: 20px"
               placeholder="请输入"
@@ -30,19 +29,6 @@
               @keyup.enter.native="enterSearch"
             ></el-input>
           </el-form-item>
-          <el-form-item label="状态:" class="tagheight">
-            <el-select
-              v-model="queryData.status"
-              style="width: 180px"
-              clearable
-              placeholder="默认选择全部"
-              :popper-append-to-body="false"
-            >
-              <el-option label="禁用中" :value="0"></el-option>
-              <el-option label="开启中" :value="1"></el-option>
-            </el-select>
-          </el-form-item>
-
           <el-form-item>
             <el-button
               type="primary"
@@ -68,7 +54,7 @@
               size="medium"
               @click="addLabel"
             >
-              创建
+              新增
             </el-button>
           </el-form-item>
         </el-form>
@@ -87,34 +73,14 @@
           <el-table-column
             prop="gameLabelId"
             align="center"
-            label="游戏标签ID"
-            sortable="custom"
-            width="120px"
-          ></el-table-column>
-          <el-table-column
-            prop="gameLabelName"
-            align="center"
             label="标签名称"
-            width="170px"
           ></el-table-column>
-          <el-table-column prop="labelStatus" align="center" label="状态" width="100px">
-            <template slot-scope="scope">
-              <div v-if="scope.row.labelStatus === 0" class="disableRgba">已禁用</div>
-              <div v-else-if="scope.row.labelStatus === 1" class="normalRgba">开启中</div>
-              <span v-else>-</span>
-            </template>
-          </el-table-column>
           <el-table-column
             prop="description"
             align="center"
             label="标签描述"
           ></el-table-column>
-          <el-table-column
-            prop="gameLabelCount"
-            align="center"
-            label="已标签游戏"
-            width="120px"
-          >
+          <el-table-column prop="gameLabelCount" align="center" label="标签人数">
             <template slot-scope="scope">
               <div class="blueColor decoration" @click="lookGame(scope.row)">
                 {{ scope.row.gameLabelCount }}
@@ -125,54 +91,29 @@
             prop="createdBy"
             align="center"
             label="创建人"
-            width="100px"
           ></el-table-column>
           <el-table-column
             prop="createdAt"
             align="center"
             label="创建时间"
             sortable="custom"
-            width="160px"
           ></el-table-column>
           <el-table-column
             prop="updatedBy"
             align="center"
             label="最近操作人"
-            width="100px"
           ></el-table-column>
           <el-table-column
             prop="updatedAt"
             align="center"
             label="最近操作时间"
             sortable="custom"
-            width="160px"
           ></el-table-column>
-          <el-table-column prop="operating" align="center" label="操作" width="240px">
+          <el-table-column prop="operating" align="center" label="操作">
             <template slot-scope="scope">
-              <el-button
-                v-if="scope.row.labelStatus === 0"
-                :disabled="loading"
-                type="success"
-                size="medium"
-                class="noicon"
-                @click="switchClick(scope.row)"
-              >
-                开启
-              </el-button>
-              <el-button
-                v-else
-                :disabled="loading"
-                type="danger"
-                size="medium"
-                class="noicon"
-                @click="switchClick(scope.row)"
-              >
-                禁用
-              </el-button>
               <el-button
                 type="primary"
                 icon="el-icon-edit"
-                :disabled="scope.row.labelStatus === 1"
                 size="medium"
                 @click="edit(scope.row)"
               >
@@ -182,7 +123,6 @@
               <el-button
                 type="warning"
                 icon="el-icon-delete"
-                :disabled="scope.row.labelStatus === 1"
                 size="medium"
                 @click="deleteLabel(scope.row)"
               >
@@ -205,7 +145,7 @@
         ></el-pagination>
       </div>
       <el-dialog
-        title="创建/编辑"
+        title="新增/编辑"
         :visible.sync="dialogFormVisible"
         :destroy-on-close="true"
         width="480px"
@@ -218,35 +158,41 @@
             label="标签名称:"
             prop="gameLabelName"
             :rules="[
-              { required: true, message: '请输入标签名称', trigger: 'blur' },
-              { min: 1, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' },
+              { required: true, message: '请输入2-10个字符', trigger: 'blur' },
+              { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' },
             ]"
           >
             <el-input
               v-model="dialogForm.gameLabelName"
-              :maxlength="10"
+              placeholder="请输入2-10个字符"
+              maxlength="10"
               autocomplete="off"
             ></el-input>
           </el-form-item>
           <el-form-item
-            label="描述:"
+            label="标签描述:"
             prop="description"
             :rules="[
               { required: true, message: '请输入描述内容', trigger: 'blur' },
               { min: 2, max: 50, message: '长度在 2 到 50 个字符', trigger: 'blur' },
             ]"
           >
-            <el-input v-model="dialogForm.description" type="textarea"></el-input>
+            <el-input
+              v-model="dialogForm.description"
+              placeholder="请输入 提交时至少2个字符"
+              maxlength="50"
+              type="textarea"
+              show-word-limit
+            ></el-input>
           </el-form-item>
         </el-form>
-        <el-divider></el-divider>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取消</el-button>
           <el-button type="primary" @click="subAddOrEidt">保存</el-button>
         </div>
       </el-dialog>
       <el-dialog
-        title="标签游戏"
+        title="标签添加人数"
         :visible.sync="dialogGameVisible"
         :destroy-on-close="true"
         width="480px"
@@ -254,12 +200,18 @@
       >
         <el-divider></el-divider>
         <div class="contentBox disableColor">标签名称：{{ labelName }}</div>
-        <p class="headerBox">
-          <span>游戏名称</span>
+        <p class="headerBox flexBox">
+          <span>会员账号</span>
+          <span>账号类型</span>
           <span>添加时间</span>
         </p>
         <div class="bodyBox">
-          <p v-for="item in gameList" :key="item.gameName">
+          <p v-for="item in gameList" :key="item.gameName" class="flexBox">
+            <span>
+              <Copy v-if="!!item.gameName" :title="item.gameName" :copy="copy">
+                {{ item.gameName }}
+              </Copy>
+            </span>
             <span>{{ item.gameName }}</span>
             <span>{{ item.createdAt }}</span>
           </p>
@@ -331,30 +283,6 @@ export default {
       this.pageNum = 1
       this.loadData()
     },
-    switchClick(val) {
-      const status = val.labelStatus === 0 ? 1 : 0
-      console.log(val)
-      this.$confirm(
-        `<strong>是否对 ${val.gameLabelName} 进行${
-          val.labelStatus === 0 ? '启用' : '禁用'
-        }操作?</strong></br><span style='font-size:12px;color:#c1c1c1'>一旦操作将会立即生效</span>`,
-        `确认提示`,
-        {
-          dangerouslyUseHTMLString: true,
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }
-      )
-        .then(() => {
-          this.$api.setUpdateStatus({ id: val.id, status: status }).then((res) => {
-            if (res.code === 200) {
-              this.loadData()
-            }
-          })
-        })
-        .catch(() => {})
-    },
     addLabel() {
       this.title = '新增'
       this.dialogForm = {}
@@ -370,12 +298,17 @@ export default {
       data.id = val.id
       data.description = val.description
       data.gameLabelName = val.gameLabelName
-      this.$confirm(`<strong>确定删除此条标签类型吗?</strong>`, `确认提示`, {
-        dangerouslyUseHTMLString: true,
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      })
+      this.$confirm(
+        `<strong>是否删除该条配置?</strong>
+        </br><span style='font-size:12px;color:#c1c1c1'>请谨慎操作</span>`,
+        `确认提示`,
+        {
+          dangerouslyUseHTMLString: true,
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }
+      )
         .then(() => {
           this.$api.setUpdateDelete(data).then((res) => {
             if (res.code === 200) {
@@ -398,7 +331,7 @@ export default {
             console.log('新增')
             this.$api.addObGameLabel(data).then((res) => {
               if (res.code === 200) {
-                this.$message.success('创建成功')
+                this.$message.success('新增成功')
                 this.pageNum = 1
                 this.loadData()
               }
@@ -487,7 +420,7 @@ export default {
   max-height: 400px;
   overflow: auto;
 }
-p {
+.flexBox {
   display: flex;
   height: 40px;
   line-height: 40px;
@@ -497,6 +430,9 @@ p {
     display: inline-block;
     width: 50%;
     text-align: center;
+    i{
+      margin-left: 10px;
+    }
   }
 }
 .headerBox {
