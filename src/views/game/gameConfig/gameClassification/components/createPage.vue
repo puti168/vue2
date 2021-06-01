@@ -717,14 +717,15 @@ export default {
 		.content-part3 {
 			width: 100%;
 			padding: 25px 35px 20px;
+            overflow-x: scroll;
+            overflow-y: hidden;
 			.content {
 				position: relative;
 				margin: 0 auto;
-				width: 100%;
+				width: 1050px;
 				padding-left: 100px;
 				padding-bottom: 50px;
-				overflow-x: scroll;
-				//overflow-y: hidden;
+				overflow-y: hidden;
 				.hotConfig {
 					color: rgba(0, 0, 0, 0.847058823529412);
 					font-size: 14px;
