@@ -97,7 +97,7 @@
 								<el-select
 									v-model="form.relationOtherGameId"
 									size="medium"
-									placeholder="请选择"
+									placeholder="默认选择全部"
 									multiple
 									clearable
 									style="width: 300px"
