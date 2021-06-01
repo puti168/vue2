@@ -174,6 +174,9 @@ export default {
             this.$message.success('创建成功')
             this.pageNum = 1
             this.reset()
+            setTimeout(() => {
+              this.back()
+            }, 500)
           }
         })
         .catch(() => {
@@ -187,6 +190,9 @@ export default {
           this.loading = false
           if (res.code === 200) {
             this.$message.success('修改成功')
+            setTimeout(() => {
+              this.back()
+            }, 500)
           }
         })
         .catch(() => {
