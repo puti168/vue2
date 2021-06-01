@@ -395,6 +395,7 @@ export default {
 					delete arr.gameRebateRate
 				}
 				this.form = JSON.parse(JSON.stringify(arr))
+				this.gameLabelParam2 = arr.gameLabelName
 				console.log(this.form)
 				console.log(arr)
 			},
