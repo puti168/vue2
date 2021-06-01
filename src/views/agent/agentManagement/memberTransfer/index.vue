@@ -63,7 +63,7 @@
 						clearable
                         autocomplete="off"
                         style="width: 365px"
-                        oninput="value=value.replace(/[^\w\.\/]/ig,'')"
+                        oninput="value=value.replace(/[\u4E00-\u9FA5]/g ,'')"
 					></el-input>
 				</el-form-item>
 				<el-form-item label="审核信息:" prop="applyInfo">
