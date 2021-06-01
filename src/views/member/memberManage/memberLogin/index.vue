@@ -179,9 +179,7 @@
               <span
 class="redColor"
 >风控层级：{{
-                  scope.row.ipWindControlLevelName === null
-                    ? "无"
-                    : scope.row.ipWindControlLevelName
+                  scope.row.ipControlName === null ? "无" : scope.row.ipControlName
                 }}</span>
             </template>
           </el-table-column>
@@ -195,11 +193,6 @@ class="redColor"
               {{ typeFilter(scope.row.deviceType, "loginDeviceType") }}
             </template>
           </el-table-column>
-          <el-table-column
-            prop="ipWindControlLevelName"
-            align="center"
-            label="ip风控等级"
-          ></el-table-column>
           <el-table-column prop="deviceNo" align="center" label="终端设备号">
             <template slot="header">
               终端设备号
@@ -215,9 +208,9 @@ class="redColor"
               <span
 class="redColor"
 >风控层级：{{
-                  scope.row.deviceWindControlLevelName === null
+                  scope.row.deviceNoControlName === null
                     ? "无"
-                    : scope.row.deviceWindControlLevelName
+                    : scope.row.deviceNoControlName
                 }}</span>
             </template>
           </el-table-column>
@@ -330,11 +323,12 @@ export default {
             this.now = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
             const response = res.data
             this.loading = false
-            this.dataList = response.record
-            this.total = response.totalRecord
-            this.summary = response.summary
-              ? response.summary
-              : { count: 0, failCount: 0, successCount: 0 }
+            this.dataList = response !== null ? response.record : []
+            this.total = response !== null ? response.totalRecord : 0
+            this.summary =
+              response !== null
+                ? response.summary
+                : { count: 0, failCount: 0, successCount: 0 }
           } else {
             this.loading = false
             this.$message({
