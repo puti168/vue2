@@ -105,7 +105,7 @@
 							align="center"
 							label="创建时间"
 							width="180px"
-                            sortable="custom"
+							sortable="custom"
 							:formatter="dateFormat"
 						></el-table-column>
 						<el-table-column prop="updatedBy" align="center" label="最新操作人">
@@ -121,7 +121,7 @@
 							align="center"
 							label="最新操作时间"
 							width="180px"
-                            sortable="custom"
+							sortable="custom"
 							:formatter="dateFormat"
 						></el-table-column>
 						<el-table-column align="center" label="操作">
@@ -275,10 +275,11 @@ export default {
 				this.dataList.map((item) => {
 					return {
 						displayOrder: item.displayOrder,
-						searchInfo: item.searchInfo
+						searchInfo: item.searchInfo,
+						createdAt: item.item,
+						createdBy: item.createdBy
 					}
 				}) || []
-			console.log('createObSearchConfigReqList', createObSearchConfigReqList)
 			const { historySearchGameLimit, hotSearchGameLimit } = this.queryData
 			const params = {
 				createObSearchConfigReqList,
@@ -436,23 +437,23 @@ export default {
 			// })
 		},
 
-        _changeTableSort({ column, prop, order }) {
-            if (prop === 'createdAt') {
-                prop = 1
-            }
-            if (prop === 'updatedAt') {
-                prop = 2
-            }
-            this.queryData.orderKey = prop
-            if (order === 'ascending') {
-                // 升序
-                this.queryData.orderType = 'asc'
-            } else if (column.order === 'descending') {
-                // 降序
-                this.queryData.orderType = 'desc'
-            }
-            this.loadData()
-        }
+		_changeTableSort({ column, prop, order }) {
+			if (prop === 'createdAt') {
+				prop = 1
+			}
+			if (prop === 'updatedAt') {
+				prop = 2
+			}
+			this.queryData.orderKey = prop
+			if (order === 'ascending') {
+				// 升序
+				this.queryData.orderType = 'asc'
+			} else if (column.order === 'descending') {
+				// 降序
+				this.queryData.orderType = 'desc'
+			}
+			this.loadData()
+		}
 	}
 }
 </script>
