@@ -30,6 +30,7 @@
 							:maxlength="10"
 							style="width: 300px"
 						>
+							<el-option label="全部" value="all"></el-option>
 							<el-option
 								v-for="item in vipDict"
 								:key="item.id"
@@ -292,7 +293,7 @@ export default {
 		return {
 			queryData: {
 				windControlType: undefined,
-				windControlLevelName: undefined,
+				windControlLevelName: ['all'],
 				createdBy: undefined,
 				updatedBy: undefined
 			},
@@ -301,9 +302,9 @@ export default {
 			dialogForm: {
 				windControlType: undefined,
 				windControlLevelName: undefined,
-                description: undefined
+				description: undefined
 			},
-            total: 0,
+			total: 0,
 			title: '',
 			vipDict: []
 		}
@@ -321,10 +322,24 @@ export default {
 					{ required: true, message: '请填入风控层级', trigger: 'blur' },
 					{ min: 2, max: 10, message: '请填入风控层级', trigger: 'blur' }
 				],
-                description: [
+				description: [
 					{ required: true, message: '请填入风控层级描述', trigger: 'blur' },
 					{ min: 2, max: 50, message: '请填入风控层级描述', trigger: 'blur' }
 				]
+			}
+		},
+		windControlLevelName() {
+			return this.queryData.windControlLevelName
+		}
+	},
+	watch: {
+		windControlLevelName(newVal, oldVal) {
+			const newIdx = newVal.indexOf('all')
+			const oldIdx = oldVal.indexOf('all')
+			if (newIdx !== -1 && oldIdx === -1 && newVal.length > 1) {
+				this.queryData.windControlLevelName = ['all']
+			} else if (newIdx !== -1 && oldIdx !== -1 && newVal.length > 1) {
+				this.queryData.windControlLevelName.splice(newVal.indexOf('all'), 1)
 			}
 		}
 	},
@@ -338,8 +353,14 @@ export default {
 			params = {
 				...this.getParams(params)
 			}
+			// const idx = params.windControlLevelName.findIndex(
+			// 	(item) => item === 'all'
+			// )
+			// params.windControlLevelName.splice(idx, 1)
 			params.windControlLevelName =
-				params.windControlLevelName && params.windControlLevelName.length
+				params.windControlLevelName &&
+				params.windControlLevelName.length &&
+				params.windControlLevelName[0] !== 'all'
 					? params.windControlLevelName
 					: undefined
 			params.createdBy = params.createdBy ? params.createdBy : undefined
@@ -369,7 +390,7 @@ export default {
 			this.$refs['form'].resetFields()
 			this.queryData = {
 				windControlType: undefined,
-				windControlLevelName: undefined,
+				windControlLevelName: ['all'],
 				createdBy: undefined,
 				updatedBy: undefined
 			}
@@ -412,7 +433,7 @@ export default {
 		},
 		edit(val) {
 			this.title = '编辑'
-            val.windControlType = val.windControlType + ''
+			val.windControlType = val.windControlType + ''
 			this.dialogForm = { ...val }
 			this.dialogFormVisible = true
 		},
@@ -472,10 +493,10 @@ export default {
 					handleClick(params).then((res) => {
 						const { code, msg } = res
 						if (code === 200) {
-                            this.$message({
-                                message: `${this.title !== '编辑' ? '新增' : '更新'}成功`,
-                                type: 'success'
-                            })
+							this.$message({
+								message: `${this.title !== '编辑' ? '新增' : '更新'}成功`,
+								type: 'success'
+							})
 							this.reset()
 						} else {
 							this.$message({
@@ -515,7 +536,7 @@ export default {
 		},
 		// 获取风控层级
 		getMerchantDict(val) {
-			this.queryData.windControlLevelName = undefined
+			this.queryData.windControlLevelName = []
 
 			this.$api
 				.getSelectWindControlLevel({ windControlType: val * 1 })
