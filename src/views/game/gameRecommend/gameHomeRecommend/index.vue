@@ -479,6 +479,7 @@ export default {
 		changeTableSort({ column, prop, order }) {
 			this.pageNum = 1
 			const orderParams = this.checkOrderParams.get(prop)
+            this.queryData.orderProperty = prop
 			if (orderParams) {
 				if (order === 'ascending') {
 					// 升序
