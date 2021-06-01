@@ -371,7 +371,7 @@ export default {
 					const { code, data } = res
 					if (code === 200) {
 						this.tableData = data.record
-						this.total = res.totalRecord
+						this.total = data.totalRecord
 						this.loading = false
 					} else {
 						this.loading = false
