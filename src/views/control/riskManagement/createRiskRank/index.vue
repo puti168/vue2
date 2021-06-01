@@ -343,7 +343,9 @@ export default {
 			}
 		}
 	},
-	mounted() {},
+	mounted() {
+		// this.getMerchantDict('')
+	},
 	methods: {
 		loadData() {
 			this.loading = true
@@ -539,7 +541,9 @@ export default {
 			this.queryData.windControlLevelName = []
 
 			this.$api
-				.getSelectWindControlLevel({ windControlType: val * 1 })
+				.getSelectWindControlLevel({
+					windControlType: val * 1
+				})
 				.then((res) => {
 					const { code, data, msg } = res
 					if (code === 200) {
