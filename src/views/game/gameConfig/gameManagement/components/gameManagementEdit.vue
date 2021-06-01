@@ -412,17 +412,14 @@ export default {
 			if (this.form.relationOtherGameId.length !== 5) {
 				this.$message({
 					type: 'error',
-					message: '关联推荐游戏必须选择5个!'
+					message: '关联推荐游戏只能选择5个!'
 				})
 				return
 			}
-			if (
-				!this.form.relationGameModuleId.length &&
-				this.form.relationGameModuleId.length >= 2
-			) {
+			if (this.form.relationGameModuleId.length !== 2) {
 				this.$message({
 					type: 'error',
-					message: '关联游戏模块只能选择1-2个!'
+					message: '关联游戏模块只能选择2个!'
 				})
 				return
 			}
