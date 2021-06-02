@@ -52,7 +52,7 @@
 				</el-form-item>
 				<el-form-item label="手机号码:">
 					<el-input
-						v-model="form.mobile"
+                        v-model.number="form.mobile"
 						size="medium"
 						placeholder="请输入"
 						clearable
