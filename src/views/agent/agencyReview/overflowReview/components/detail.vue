@@ -24,7 +24,7 @@
 			<div class="review-content">
 				<p class="name">代理账号信息</p>
 				<div class="review-flex">
-					<div>账号: {{ list.userName }}</div>
+					<div>账号: {{ list.transferProxyName }}</div>
 					<div>
 						账号状态:
 						{{ typeFilter(list.proxyAccountStatus, 'accountStatusType') }}
