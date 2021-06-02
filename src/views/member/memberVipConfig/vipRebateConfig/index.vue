@@ -1,27 +1,36 @@
 <template>
   <div class="game-container report-container">
-    <div class="view-container dealer-container">
-        <h1>vip返水配置</h1>
-    </div>
+    <el-tabs v-model="activeName" @tab-click="handleClick">
+      <el-tab-pane label="OB真人" name="zr">
+        <editForm></editForm>
+      </el-tab-pane>
+      <el-tab-pane label="OB体育" name="ty"> </el-tab-pane>
+    </el-tabs>
   </div>
 </template>
 
 <script>
 import list from '@/mixins/list'
 import { routerNames } from '@/utils/consts'
-
+import editForm from './components/index'
 export default {
   name: routerNames.vipRebateConfig,
-  components: {},
+  components: { editForm },
   mixins: [list],
   data() {
     return {
-      queryData: {}
+      queryData: {},
+      activeName: 'zr'
     }
   },
   computed: {},
   mounted() {},
-  methods: {}
+  methods: {
+    handleClick(val) {
+      console.log(val)
+      this.activeName = val.name
+    }
+  }
 }
 </script>
 
@@ -29,6 +38,9 @@ export default {
 /deep/.el-dialog__header {
   text-align: center;
   color: #909399;
+  font-weight: 700;
+}
+/deep/.el-tabs__item {
   font-weight: 700;
 }
 </style>
