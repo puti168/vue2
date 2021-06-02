@@ -38,42 +38,43 @@
 					<el-table-column prop="dividends" align="center" label="红利比例">
 						<template slot-scope="scope">
 							<span>
-								<el-input
-									v-model="scope.row.dividends"
+								<el-input-number
+									v-model.number="scope.row.dividends"
 									size="medium"
 									maxlength="20"
 									placeholder="请输入"
 									clearable
 									style="width: 180px"
-								></el-input>
+								></el-input-number>
 							</span>
+                            <span>%</span>
 						</template>
 					</el-table-column>
 					<el-table-column prop="turnover" align="center" label="最高奖金">
 						<template slot-scope="scope">
 							<span>
-								<el-input
-									v-model="scope.row.dividends"
+								<el-input-number
+									v-model="scope.row.bonus"
 									size="medium"
 									maxlength="20"
 									placeholder="请输入"
 									clearable
 									style="width: 180px"
-								></el-input>
+								></el-input-number>
 							</span>
 						</template>
 					</el-table-column>
 					<el-table-column prop="turnover" align="center" label="流水倍数">
 						<template slot-scope="scope">
 							<span>
-								<el-input
+								<el-input-number
 									v-model="scope.row.turnover"
 									size="medium"
 									maxlength="20"
 									placeholder="请输入"
 									clearable
 									style="width: 180px"
-								></el-input>
+								></el-input-number>
 							</span>
 						</template>
 					</el-table-column>
@@ -110,6 +111,14 @@
 						</template>
 					</el-table-column>
 				</el-table>
+			</div>
+			<div class="btn_search">
+				<el-button type="primary" icon="el-icon-search" size="medium">
+					查询
+				</el-button>
+				<el-button icon="el-icon-refresh-left" size="medium">
+					重置
+				</el-button>
 			</div>
 		</div>
 	</div>
@@ -239,5 +248,10 @@ export default {
 	text-align: center;
 	color: #909399;
 	font-weight: 700;
+}
+
+/deep/.el-input-number__decrease,
+/deep/.el-input-number__increase {
+	display: none;
 }
 </style>
