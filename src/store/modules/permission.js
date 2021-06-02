@@ -60,6 +60,7 @@ const actions = {
 		return new Promise((resolve) => {
 			let asyncRouterMap = JSON.stringify(roles)
 			asyncRouterMap = filterAsyncRouter(JSON.parse(asyncRouterMap))
+			asyncRouterMap.sort((a, b) => a.orderNum * 1 - b.orderNum * 1)
 			const rootRoutes = []
 			if (asyncRouterMap.length) {
 				const rootRoute = asyncRouterMap[0]
