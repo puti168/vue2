@@ -24,7 +24,7 @@
 						>
 							<el-option label="全部" value=""></el-option>
 							<el-option
-								v-for="item in WindControlLevel"
+								v-for="item in beforeWindControlLevel"
 								:key="item.id"
 								:label="item.windControlLevelName"
 								:value="item.id"
@@ -41,7 +41,7 @@
 						>
 							<el-option label="全部" value=""></el-option>
 							<el-option
-								v-for="item in WindControlLevel"
+								v-for="item in afterWindControlLevel"
 								:key="item.id"
 								:label="item.windControlLevelName"
 								:value="item.id"
@@ -176,21 +176,28 @@ export default {
 				createdBy: '',
 				windType: 5
 			},
-			WindControlLevel: [],
+			beforeWindControlLevel: [],
+			afterWindControlLevel: [],
 			tableData: []
 		}
 	},
 	computed: {},
+	created() {
+		this.getSelectWindControlLevel(1)
+	},
 	mounted() {
-		this.getSelectWindControlLevel()
+		this.getSelectWindControlLevel(2)
 	},
 	methods: {
-		getSelectWindControlLevel() {
+		getSelectWindControlLevel(type) {
 			this.$api
-				.getSelectWindControlLevel({ windControlType: 5 })
+				.getSelectWindControlLevelId({ windControlType: 5, type })
 				.then((res) => {
-					if (res.code === 200) {
-						this.WindControlLevel = res.data
+					const { code } = res
+					if (code === 200) {
+						type === 1
+							? (this.beforeWindControlLevel = res.data)
+							: (this.afterWindControlLevel = res.data)
 					}
 				})
 		},

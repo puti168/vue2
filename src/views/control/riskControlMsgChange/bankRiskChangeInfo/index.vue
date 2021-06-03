@@ -27,7 +27,7 @@
 							<el-option
 								v-for="item in beforeWindControlLevel"
 								:key="item.id"
-                                :label="
+								:label="
 									item.windControlLevelName ? item.windControlLevelName : '无'
 								"
 								:value="item.id"
@@ -210,9 +210,10 @@ export default {
 	methods: {
 		getSelectWindControlLevel(type) {
 			this.$api
-				.getSelectWindControlLevel({ windControlType: 3, type })
+				.getSelectWindControlLevelId({ windControlType: 3, type })
 				.then((res) => {
-					if (res.code === 200) {
+					const { code } = res
+					if (code === 200) {
 						type === 1
 							? (this.beforeWindControlLevel = res.data)
 							: (this.afterWindControlLevel = res.data)

@@ -7,6 +7,14 @@ export function getSelectWindControlLevel(data) {
 		data
 	})
 }
+
+export function getSelectWindControlLevelId(data) {
+	return request({
+		url: '/windControlRecord/selectBeforeAfterWindControlLevelId',
+		method: 'post',
+		data
+	})
+}
 export function selectWindControlRecord(data) {
 	return request({
 		url: '/windControlRecord/selectWindControlRecord',
@@ -87,6 +95,7 @@ export function riskEditAddAPI(data) {
 
 export default {
 	getSelectWindControlLevel,
+	getSelectWindControlLevelId,
 	selectWindControlRecord,
 	getWindControllerLevelDict,
 	riskRankListAPI,
