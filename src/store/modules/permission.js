@@ -55,12 +55,22 @@ const mutations = {
 	}
 }
 
+const sortRoutes = (routes) => {
+	return routes.filter((route) => {
+		routes.sort((a, b) => a.orderNum * 1 - b.orderNum * 1)
+		if (route.children !== null && route.children && route.children.length) {
+			route.children = sortRoutes(route.children)
+		}
+		return true
+	})
+}
+
 const actions = {
 	generateRoutes({ commit }, roles) {
 		return new Promise((resolve) => {
 			let asyncRouterMap = JSON.stringify(roles)
 			asyncRouterMap = filterAsyncRouter(JSON.parse(asyncRouterMap))
-			asyncRouterMap.sort((a, b) => a.orderNum * 1 - b.orderNum * 1)
+			sortRoutes(asyncRouterMap)
 			const rootRoutes = []
 			if (asyncRouterMap.length) {
 				const rootRoute = asyncRouterMap[0]

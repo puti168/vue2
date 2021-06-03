@@ -97,7 +97,7 @@
 								<el-select
 									v-model="form.relationOtherGameId"
 									size="medium"
-									placeholder="请选择"
+									placeholder="默认选择全部"
 									multiple
 									clearable
 									style="width: 300px"
@@ -395,6 +395,7 @@ export default {
 					delete arr.gameRebateRate
 				}
 				this.form = JSON.parse(JSON.stringify(arr))
+				this.gameLabelParam2 = arr.gameLabelName
 				console.log(this.form)
 				console.log(arr)
 			},
@@ -412,17 +413,14 @@ export default {
 			if (this.form.relationOtherGameId.length !== 5) {
 				this.$message({
 					type: 'error',
-					message: '关联推荐游戏必须选择5个!'
+					message: '关联推荐游戏只能选择5个!'
 				})
 				return
 			}
-			if (
-				!this.form.relationGameModuleId.length &&
-				this.form.relationGameModuleId.length >= 2
-			) {
+			if (this.form.relationGameModuleId.length !== 2) {
 				this.$message({
 					type: 'error',
-					message: '关联游戏模块只能选择1-2个!'
+					message: '关联游戏模块只能选择2个!'
 				})
 				return
 			}

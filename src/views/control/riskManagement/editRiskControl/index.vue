@@ -39,7 +39,7 @@
 						maxlength="11"
 						placeholder="请输入"
 						clearable
-						oninput="value=value.replace(/[^\w\.\/]/ig,'')"
+                        oninput="value=value.replace(/[\u4E00-\u9FA5]/g ,'')"
 						style="width: 365px"
 					></el-input>
 					<!--                    代理-->
@@ -50,7 +50,7 @@
 						maxlength="11"
 						placeholder="请输入"
 						clearable
-						oninput="value=value.replace(/[^\w\.\/]/ig,'')"
+                        oninput="value=value.replace(/[\u4E00-\u9FA5]/g ,'')"
 						style="width: 365px"
 					></el-input>
 					<!--                    银行卡-->
@@ -72,7 +72,7 @@
 						maxlength="50"
 						placeholder="请输入"
 						clearable
-						oninput="value=value.replace(/[^\w\.\/]/ig,'')"
+                        oninput="value=value.replace(/[\u4E00-\u9FA5]/g ,'')"
 						style="width: 365px"
 					></el-input>
 					<!--                    IP-->
@@ -144,11 +144,7 @@
 					>
 						提交
 					</el-button>
-					<el-button
-						icon="el-icon-refresh-left"
-						size="medium"
-						@click="reset"
-					>
+					<el-button icon="el-icon-refresh-left" size="medium" @click="reset">
 						重置
 					</el-button>
 				</el-form-item>
@@ -544,7 +540,7 @@ export default {
 			queryData: {
 				windControlType: '1',
 				windControlName: undefined,
-				userName: undefined,
+                userName: undefined,
 				proxyUserName: undefined,
 				cardNumber: undefined,
 				virtualAddress: undefined,
@@ -726,15 +722,15 @@ export default {
 		reset() {
 			this.$refs['form'].resetFields()
 			this.queryData = {
-				windControlType: '1',
-				windControlName: undefined,
-				userName: undefined,
-				proxyUserName: undefined,
-				cardNumber: undefined,
-				virtualAddress: undefined,
-				registerIp: undefined,
-				deviceNo: undefined,
-				windReason: undefined
+                windControlType: '1',
+                windControlName: undefined,
+                userName: undefined,
+                proxyUserName: undefined,
+                cardNumber: undefined,
+                virtualAddress: undefined,
+                registerIp: undefined,
+                deviceNo: undefined,
+                windReason: undefined
 			}
 		},
 		checkValue(val) {},

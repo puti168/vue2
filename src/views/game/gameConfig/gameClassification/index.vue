@@ -224,7 +224,7 @@
 						>
 							<template slot-scope="scope">
 								<div class="blueColor decoration" @click="lookGame(scope.row)">
-									{{ scope.row.gameNumber }}
+									{{ scope.row.gameNumber }} 款
 								</div>
 							</template>
 						</el-table-column>
