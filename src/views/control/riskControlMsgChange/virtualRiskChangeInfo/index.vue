@@ -11,8 +11,8 @@
 							size="medium"
 							style="width: 180px; margin-right: 20px"
 							placeholder="请输入"
-                            oninput="value=value.replace(/[\u4E00-\u9FA5]/g ,'')"
-                            :disabled="loading"
+							oninput="value=value.replace(/[\u4E00-\u9FA5]/g ,'')"
+							:disabled="loading"
 							@keyup.enter.native="enterSearch"
 						></el-input>
 					</el-form-item>
@@ -25,9 +25,11 @@
 						>
 							<el-option label="全部" value=""></el-option>
 							<el-option
-								v-for="item in WindControlLevel"
+								v-for="item in beforeWindControlLevel"
 								:key="item.id"
-								:label="item.windControlLevelName"
+								:label="
+									item.windControlLevelName ? item.windControlLevelName : '无'
+								"
 								:value="item.id"
 							></el-option>
 						</el-select>
@@ -42,9 +44,11 @@
 						>
 							<el-option label="全部" value=""></el-option>
 							<el-option
-								v-for="item in WindControlLevel"
+								v-for="item in afterWindControlLevel"
 								:key="item.id"
-								:label="item.windControlLevelName"
+								:label="
+									item.windControlLevelName ? item.windControlLevelName : '无'
+								"
 								:value="item.id"
 							></el-option>
 						</el-select>
@@ -196,20 +200,26 @@ export default {
 				beforeWindControlId: ''
 			},
 			tableData: [],
-			WindControlLevel: []
+			beforeWindControlLevel: [],
+			afterWindControlLevel: []
 		}
 	},
 	computed: {},
+	created() {
+		this.getSelectWindControlLevel(1)
+	},
 	mounted() {
-		this.getSelectWindControlLevel()
+		this.getSelectWindControlLevel(2)
 	},
 	methods: {
-		getSelectWindControlLevel() {
+		getSelectWindControlLevel(type) {
 			this.$api
-				.getSelectWindControlLevel({ windControlType: 4 })
+				.getSelectWindControlLevel({ windControlType: 4, type })
 				.then((res) => {
 					if (res.code === 200) {
-						this.WindControlLevel = res.data
+                        type === 1
+                            ? (this.beforeWindControlLevel = res.data)
+                            : (this.afterWindControlLevel = res.data)
 					}
 				})
 		},
