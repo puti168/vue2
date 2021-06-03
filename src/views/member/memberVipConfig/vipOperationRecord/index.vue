@@ -1,7 +1,6 @@
 <template>
   <div class="game-container report-container">
     <div class="view-container dealer-container">
-      <h1>vip配置操作记录</h1>
       <div class="params">
         <el-form ref="form" :inline="true" :model="queryData">
           <el-form-item label="操作时间:">
@@ -20,24 +19,12 @@
               style="width: 375px"
             ></el-date-picker>
           </el-form-item>
-          <el-form-item label="代理账号:">
-            <el-input
-              v-model="queryData.userName"
-              clearable
-              :maxlength="11"
-              size="medium"
-              style="width: 200px; margin-right: 20px"
-              placeholder="请输入"
-              :disabled="loading"
-              @keyup.enter.native="enterSearch"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="代理类型:" class="tagheight" prop="accountType">
+          <el-form-item label="操作类型:" class="tagheight" prop="accountType">
             <el-select
               v-model="queryData.accountType"
               style="width: 300px"
               multiple
-              placeholder="默认选择全部"
+              placeholder="全部"
               :popper-append-to-body="false"
             >
               <el-option
@@ -48,12 +35,12 @@
               ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="变更类型:" class="tagheight">
+          <el-form-item label="操作项:" class="tagheight">
             <el-select
               v-model="queryData.applyType"
               style="width: 300px"
               multiple
-              placeholder="默认选择全部"
+              placeholder="全部"
               :popper-append-to-body="false"
             >
               <el-option
@@ -108,38 +95,21 @@
           :header-cell-style="getRowClass"
           @sort-change="_changeTableSort"
         >
-          <el-table-column prop="userName" align="center" label="代理账号">
-            <template slot-scope="scope">
-              <Copy v-if="!!scope.row.userName" :title="scope.row.userName" :copy="copy">
-                {{ scope.row.userName }}
-              </Copy>
-              <span v-else>-</span>
-            </template>
-          </el-table-column>
-          <el-table-column prop="applyType" align="center" label="代理类型">
-            <template slot-scope="scope">
-              {{ typeFilter(scope.row.accountType, "accountType") }}
-            </template>
-          </el-table-column>
-          <el-table-column prop="updateDt" align="center" label="变更类型">
+          <!-- 操作时间 -->
+          <el-table-column
+            prop="applyTime"
+            align="center"
+            label="操作时间"
+            sortable="custom"
+          ></el-table-column>
+          <!-- 操作类型 -->
+           <el-table-column prop="updateDt" align="center" label="操作类型">
             <template slot-scope="scope">
               {{ typeFilter(scope.row.applyType, "porxyApplyType") }}
             </template>
           </el-table-column>
-          <el-table-column prop="beforeModify" align="center" label="变更前">
-            <template slot-scope="scope">
-              <span v-if="scope.row.applyType === '1'">
-                {{ typeFilter(scope.row.beforeModify, "accountStatusType") }}
-              </span>
-              <span v-else-if="scope.row.applyType === '5'">
-                {{ typeFilter(scope.row.beforeModify, "entrAuthorityType") }}
-              </span>
-              <span v-else>
-                {{ scope.row.beforeModify }}
-              </span>
-            </template>
-          </el-table-column>
-          <el-table-column prop="afterModify" align="center" label="变更后">
+          <!-- 操作项 -->
+          <el-table-column prop="afterModify" align="center" label="操作项">
             <template slot-scope="scope">
               <span v-if="scope.row.applyType === '1'">
                 {{ typeFilter(scope.row.afterModify, "accountStatusType") }}
@@ -152,18 +122,26 @@
               </span>
             </template>
           </el-table-column>
-          <el-table-column
-            prop="applyName"
-            align="center"
-            label="操作人"
-          ></el-table-column>
-          <el-table-column prop="applyInfo" align="center" label="备注"></el-table-column>
-          <el-table-column
-            prop="applyTime"
-            align="center"
-            label="操作时间"
-            sortable="custom"
-          ></el-table-column>
+          <!-- 操作前 -->
+          <el-table-column prop="beforeModify" align="center" label="操作前">
+            <template slot-scope="scope">
+              <span v-if="scope.row.applyType === '1'">
+                {{ typeFilter(scope.row.beforeModify, "accountStatusType") }}
+              </span>
+              <span v-else-if="scope.row.applyType === '5'">
+                {{ typeFilter(scope.row.beforeModify, "entrAuthorityType") }}
+              </span>
+              <span v-else>
+                {{ scope.row.beforeModify }}
+              </span>
+            </template>
+          </el-table-column>
+          <!-- 操作后-->
+           <el-table-column prop="applyType" align="center" label="操作后">
+            <template slot-scope="scope">
+              {{ typeFilter(scope.row.accountType, "accountType") }}
+            </template>
+          </el-table-column>
         </el-table>
         <!-- 分页 -->
         <el-pagination
