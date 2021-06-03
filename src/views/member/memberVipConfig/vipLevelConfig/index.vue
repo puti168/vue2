@@ -17,7 +17,7 @@
                         prop="vipLevel"
                         width="120"
                     ></el-table-column>
-                    <el-table-column prop="minTransfer" align="center" label="日提款次数">
+                    <el-table-column prop="minTransfer" align="center" label="VIP等级名称">
                         <template slot-scope="scope">
 							<span>
 								<el-input-number
@@ -42,8 +42,12 @@
                     <el-table-column
                         prop="dividends"
                         align="center"
-                        label="每日累计提款额度"
                     >
+                        <template slot="header">
+                            升级条件1
+                            <br />
+                            累计存款(包含代充)≥
+                        </template>
                         <template slot-scope="scope">
 							<span>
 								<el-input-number
@@ -58,7 +62,12 @@
                             <span>%</span>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="turnover" align="center" label="升级礼金">
+                    <el-table-column prop="turnover" align="center">
+                        <template slot="header">
+                            升级条件2
+                            <br />
+                            累计有效流水≥
+                        </template>
                         <template slot-scope="scope">
 							<span>
 								<el-input-number
@@ -73,7 +82,7 @@
 							</span>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="turnover" align="center" label="生日礼金">
+                    <el-table-column prop="turnover" align="center" label="保级流水≥">
                         <template slot-scope="scope">
 							<span>
 								<el-input-number
@@ -87,21 +96,7 @@
 							</span>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="times" align="center" label="上半月红包">
-                        <template slot-scope="scope">
-							<span>
-								<el-input-number
-                                    v-model="scope.row.turnover"
-                                    size="medium"
-                                    maxlength="20"
-                                    placeholder="请输入"
-                                    clearable
-                                    style="width: 180px"
-                                ></el-input-number>
-							</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column align="center" label="下半月红包" width="300">
+                    <el-table-column prop="times" align="center" label="保级有效期（天）">
                         <template slot-scope="scope">
 							<span>
 								<el-input-number
