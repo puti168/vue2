@@ -2,6 +2,7 @@
   <div>
     <el-row type="flex" justify="space-around" class="herderBox fontsize">
       <el-col style="line-height: 44px; text-align: center">游戏类型</el-col>
+      <el-col>VIP0<br />返水比例</el-col>
       <el-col>VIP1<br />返水比例</el-col>
       <el-col>VIP2<br />返水比例</el-col>
       <el-col>VIP3<br />返水比例</el-col>
@@ -26,6 +27,7 @@
               v-model.number="formData.age"
               class="inputBox"
               :max="99999"
+              :precision="2"
             ></el-input-number>
             <span>%</span>
           </el-form-item>
@@ -36,6 +38,7 @@
               v-model.number="formData.age"
               class="inputBox"
               :max="99999"
+              :precision="2"
             ></el-input-number>
             <span>%</span>
           </el-form-item>
@@ -46,6 +49,7 @@
               v-model.number="formData.age"
               class="inputBox"
               :max="99999"
+              :precision="2"
             ></el-input-number>
             <span>%</span>
           </el-form-item>
@@ -56,6 +60,7 @@
               v-model.number="formData.age"
               class="inputBox"
               :max="99999"
+              :precision="2"
             ></el-input-number>
             <span>%</span>
           </el-form-item>
@@ -66,6 +71,7 @@
               v-model.number="formData.age"
               class="inputBox"
               :max="99999"
+              :precision="2"
             ></el-input-number>
             <span>%</span>
           </el-form-item>
@@ -76,6 +82,7 @@
               v-model.number="formData.age"
               class="inputBox"
               :max="99999"
+              :precision="2"
             ></el-input-number>
             <span>%</span>
           </el-form-item>
@@ -86,6 +93,7 @@
               v-model.number="formData.age"
               class="inputBox"
               :max="99999"
+              :precision="2"
             ></el-input-number>
             <span>%</span>
           </el-form-item>
@@ -96,6 +104,7 @@
               v-model.number="formData.age"
               class="inputBox"
               :max="99999"
+              :precision="2"
             ></el-input-number>
             <span>%</span>
           </el-form-item>
@@ -106,6 +115,7 @@
               v-model.number="formData.age"
               class="inputBox"
               :max="99999"
+              :precision="2"
             ></el-input-number>
             <span>%</span>
           </el-form-item>
@@ -116,10 +126,23 @@
               v-model.number="formData.age"
               class="inputBox"
               :max="99999"
+              :precision="2"
             ></el-input-number>
             <span>%</span>
           </el-form-item>
         </el-col>
+        <el-col>
+          <el-form-item prop="age">
+            <el-input-number
+              v-model.number="formData.age"
+              class="inputBox"
+              :max="99999"
+              :precision="2"
+            ></el-input-number>
+            <span>%</span>
+          </el-form-item>
+        </el-col>
+
       </el-row>
     </el-form>
     <div>

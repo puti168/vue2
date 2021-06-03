@@ -2,7 +2,7 @@
   <div class="game-container report-container">
     <el-tabs v-model="activeName" @tab-click="handleClick">
       <el-tab-pane label="OB真人" name="zr">
-        <editForm></editForm>
+        <editForm :listData="listData"></editForm>
       </el-tab-pane>
       <el-tab-pane label="OB体育" name="ty"> </el-tab-pane>
     </el-tabs>
@@ -19,7 +19,7 @@ export default {
   mixins: [list],
   data() {
     return {
-      queryData: {},
+      listData: {},
       activeName: 'zr'
     }
   },
@@ -29,6 +29,7 @@ export default {
     handleClick(val) {
       console.log(val)
       this.activeName = val.name
+      this.listData = {}
     }
   }
 }
