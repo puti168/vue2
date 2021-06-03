@@ -1,10 +1,9 @@
 <template>
   <div class="game-container report-container">
     <div class="view-container dealer-container">
-      <h1>vip变更记录</h1>
       <div class="params">
         <el-form ref="form" :inline="true" :model="queryData">
-          <el-form-item label="操作时间:">
+          <el-form-item label="变更时间:">
             <el-date-picker
               v-model="searchTime"
               size="medium"
@@ -20,7 +19,24 @@
               style="width: 375px"
             ></el-date-picker>
           </el-form-item>
-          <el-form-item label="代理账号:">
+          <el-form-item label="变更类型:" class="tagheight" prop="accountType">
+            <el-select
+              v-model="queryData.accountType"
+              style="width: 300px"
+              multiple
+              placeholder="全部"
+              :popper-append-to-body="false"
+            >
+              <el-option
+                v-for="item in accountType"
+                :key="item.code"
+                :label="item.description"
+                :value="item.code"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+
+          <el-form-item label="会员账号:">
             <el-input
               v-model="queryData.userName"
               clearable
@@ -32,38 +48,7 @@
               @keyup.enter.native="enterSearch"
             ></el-input>
           </el-form-item>
-          <el-form-item label="代理类型:" class="tagheight" prop="accountType">
-            <el-select
-              v-model="queryData.accountType"
-              style="width: 300px"
-              multiple
-              placeholder="默认选择全部"
-              :popper-append-to-body="false"
-            >
-              <el-option
-                v-for="item in accountType"
-                :key="item.code"
-                :label="item.description"
-                :value="item.code"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="变更类型:" class="tagheight">
-            <el-select
-              v-model="queryData.applyType"
-              style="width: 300px"
-              multiple
-              placeholder="默认选择全部"
-              :popper-append-to-body="false"
-            >
-              <el-option
-                v-for="item in porxyApplyType"
-                :key="item.code"
-                :label="item.description"
-                :value="item.code"
-              ></el-option>
-            </el-select>
-          </el-form-item>
+
           <el-form-item label="操作人:">
             <el-input
               v-model="queryData.applyName"
@@ -108,19 +93,13 @@
           :header-cell-style="getRowClass"
           @sort-change="_changeTableSort"
         >
-          <el-table-column prop="userName" align="center" label="代理账号">
-            <template slot-scope="scope">
-              <Copy v-if="!!scope.row.userName" :title="scope.row.userName" :copy="copy">
-                {{ scope.row.userName }}
-              </Copy>
-              <span v-else>-</span>
-            </template>
-          </el-table-column>
-          <el-table-column prop="applyType" align="center" label="代理类型">
-            <template slot-scope="scope">
-              {{ typeFilter(scope.row.accountType, "accountType") }}
-            </template>
-          </el-table-column>
+
+          <el-table-column
+            prop="applyTime"
+            align="center"
+            label="变更时间"
+            sortable="custom"
+          ></el-table-column>
           <el-table-column prop="updateDt" align="center" label="变更类型">
             <template slot-scope="scope">
               {{ typeFilter(scope.row.applyType, "porxyApplyType") }}
@@ -152,18 +131,43 @@
               </span>
             </template>
           </el-table-column>
-          <el-table-column
+
+           <el-table-column prop="userName" align="center" label="会员账号">
+            <template slot-scope="scope">
+              <Copy v-if="!!scope.row.userName" :title="scope.row.userName" :copy="copy">
+                {{ scope.row.userName }}
+              </Copy>
+              <span v-else>-</span>
+            </template>
+          </el-table-column>
+
+          <el-table-column prop="updateDt" align="center" label="账号类型">
+            <template slot-scope="scope">
+              {{ typeFilter(scope.row.applyType, "porxyApplyType") }}
+            </template>
+          </el-table-column>
+          <el-table-column prop="updateDt" align="center" label="会员标签">
+            <template slot-scope="scope">
+              {{ typeFilter(scope.row.applyType, "porxyApplyType") }}
+            </template>
+          </el-table-column>
+          <el-table-column prop="updateDt" align="center" label="风控层级">
+            <template slot-scope="scope">
+              {{ typeFilter(scope.row.applyType, "porxyApplyType") }}
+            </template>
+          </el-table-column>
+          <el-table-column prop="updateDt" align="center" label="账号状态">
+            <template slot-scope="scope">
+              {{ typeFilter(scope.row.applyType, "porxyApplyType") }}
+            </template>
+          </el-table-column>
+
+             <el-table-column
             prop="applyName"
             align="center"
             label="操作人"
           ></el-table-column>
-          <el-table-column prop="applyInfo" align="center" label="备注"></el-table-column>
-          <el-table-column
-            prop="applyTime"
-            align="center"
-            label="操作时间"
-            sortable="custom"
-          ></el-table-column>
+
         </el-table>
         <!-- 分页 -->
         <el-pagination
