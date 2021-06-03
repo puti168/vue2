@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function getSelectWindControlLevel(data) {
 	return request({
-		url: '/windControlRecord/selectBeforeAfterWindControlLevelId',
+		url: '/windControlRecord/selectWindControlLevel',
 		method: 'post',
 		data
 	})
