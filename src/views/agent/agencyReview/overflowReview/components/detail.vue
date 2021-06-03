@@ -18,14 +18,17 @@
 					<div>注册时间: {{ list.proxyRegistTime }}</div>
 					<div>代理类型: {{ typeFilter(list.accountType, 'accountType') }}</div>
 					<div>上次登录时间: {{ list.proxyLastLoginTime }}</div>
-					<div>注册端: {{ list.deviceType }}</div>
+					<div>注册端: {{ typeFilter(list.deviceType, 'deviceType') }}</div>
 				</div>
 			</div>
 			<div class="review-content">
 				<p class="name">代理账号信息</p>
 				<div class="review-flex">
-					<div>账号: {{ list.userName }}</div>
-					<div>账号状态: {{ typeFilter(list.proxyAccountStatus, 'accountStatusType') }}</div>
+					<div>账号: {{ list.transferProxyName }}</div>
+					<div>
+						账号状态:
+						{{ typeFilter(list.proxyAccountStatus, 'accountStatusType') }}
+					</div>
 					<div>风控层级: {{ list.proxyWindControlName }}</div>
 					<div>代理标签: {{ list.proxyLabelName }}</div>
 				</div>
@@ -37,7 +40,10 @@
 				<p class="name">溢出会员信息</p>
 				<div class="review-flex" style="margin-bottom: 20px">
 					<div>账号: {{ list.userName }}</div>
-					<div>账号状态: {{ typeFilter(list.memberAccountStatus, 'accountStatusType') }}</div>
+					<div>
+						账号状态:
+						{{ typeFilter(list.memberAccountStatus, 'accountStatusType') }}
+					</div>
 					<div>风控层级: {{ list.memberWindControlName }}</div>
 					<div>会员标签: {{ list.memberLabelName }}</div>
 				</div>
@@ -50,7 +56,7 @@
 				<div class="review-flex">
 					<div>注册时间: {{ list.memberRegistTime }}</div>
 					<div>上次登录时间: {{ list.memberLastLoginTime }}</div>
-					<div>注册端: {{ typeFilter(list.deviceType, "deviceType") }}</div>
+					<div>注册端: {{ typeFilter(list.deviceType, 'deviceType') }}</div>
 				</div>
 			</div>
 			<div class="review-content">
@@ -61,11 +67,22 @@
 					<div>推广链接: {{ list.promotionLink }}</div>
 				</div>
 				<div class="review-flex">
-					<div>推广设备: {{ typeFilter(list.promotionDevice, 'terminalnType') }}</div>
+					<div>
+						推广设备: {{ typeFilter(list.promotionDevice, 'terminalnType') }}
+					</div>
 					<div>申请理由: {{ list.applyInfo }}</div>
 				</div>
 				<div class="review-flex">
-					<div class="img-div">申请附图: <img v-for="item in list.list" :key="item.imageAddress" :src="item.imageAddress" class="detail-img text-link" @click="lookGame(item.imageAddress)"></div>
+					<div class="img-div">
+						申请附图:
+						<img
+							v-for="item in list.list"
+							:key="item.imageAddress"
+							:src="item.imageAddress"
+							class="detail-img text-link"
+							@click="lookGame(item.imageAddress)"
+						/>
+					</div>
 				</div>
 			</div>
 			<div class="review-content">
@@ -77,9 +94,9 @@
 				</div>
 			</div>
 		</div>
-			<div v-if="dialogGameVisible" class="imgCenter" @click="closeImage">
-				<img :src="bigImage" />
-			</div>
+		<div v-if="dialogGameVisible" class="imgCenter" @click="closeImage">
+			<img :src="bigImage" />
+		</div>
 		<el-dialog
 			title="提交确认"
 			center
@@ -286,7 +303,7 @@ export default {
 	font-weight: 700;
 }
 .img-div {
-	width: 100%!important;
+	width: 100% !important;
 }
 .detail-img {
 	width: 80px;

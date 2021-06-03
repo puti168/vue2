@@ -132,7 +132,7 @@
 					</el-table-column>
 					<el-table-column align="center" label="变更前信息">
 						<template slot-scope="scope">
-							<template v-if="Number(scope.row.applyType === 2)">
+							<template v-if="scope.row.applyType * 1 === 2">
 								{{ typeFilter(scope.row.beforeModify, 'genderType') }}
 							</template>
 							<template v-else-if="Number(scope.row.applyType === 6)">
@@ -145,7 +145,7 @@
 					</el-table-column>
 					<el-table-column align="center" label="变更后信息">
 						<template slot-scope="scope">
-							<template v-if="Number(scope.row.applyType === 2)">
+							<template v-if="scope.row.applyType * 1 === 2">
 								{{ typeFilter(scope.row.afterModify, 'genderType') }}
 							</template>
 							<template v-else-if="Number(scope.row.applyType === 6)">

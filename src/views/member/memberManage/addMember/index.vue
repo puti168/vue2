@@ -31,7 +31,7 @@
 						v-model="form.username"
 						size="medium"
 						maxlength="11"
-                        oninput="value=value.replace(/[^\w\.\/]/ig,'')"
+                        oninput="value=value.replace(/[\u4E00-\u9FA5]/g ,'')"
 						placeholder="4-11位，最少2个字母+数字组合，首位字母"
 						clearable
                         autocomplete="off"
@@ -45,14 +45,14 @@
 						placeholder="8-12位，字母+数字组合"
 						clearable
                         autocomplete="off"
-                        oninput="value=value.replace(/[^\w\.\/]/g,'')"
+                        oninput="value=value.replace(/[\u4E00-\u9FA5]/g ,'')"
 						maxlength="12"
 						style="width: 365px"
 					></el-input>
 				</el-form-item>
 				<el-form-item label="手机号码:">
 					<el-input
-						v-model="form.mobile"
+                        v-model.number="form.mobile"
 						size="medium"
 						placeholder="请输入"
 						clearable
@@ -69,7 +69,7 @@
 						placeholder="请输入"
 						clearable
 						maxlength="11"
-                        oninput="value=value.replace(/[^\w\.\/]/ig,'')"
+                        oninput="value=value.replace(/[\u4E00-\u9FA5]/g ,'')"
 						style="width: 365px"
 					></el-input>
 				</el-form-item>
@@ -198,7 +198,7 @@ export default {
 		},
 		rules() {
 			const reg1 = /^[A-Za-z]{1}(?=(.*[a-zA-Z]){1,})(?=(.*[0-9]){1,})[0-9A-Za-z]{3,10}$/
-			const reg2 = /(?=.*[a-zA-Z])(?=.*[0-9])[a-zA-Z0-9]{8,12}/
+			const reg2 = /^([a-zA-Z0-9]*[a-zA-Z]+[0-9]+[a-zA-Z0-9]*|[a-zA-Z0-9]*[0-9]+[a-zA-Z]+[a-zA-Z0-9]*)$/
 
 			const testUserName = (rule, value, callback) => {
 				const isSpecial = !notSpecial2(String(value))

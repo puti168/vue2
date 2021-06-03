@@ -35,7 +35,7 @@
                         clearable
                         autocomplete="off"
                         style="width: 365px"
-                        oninput="value=value.replace(/[^\w\.\/]/ig,'')"
+                        oninput="value=value.replace(/[\u4E00-\u9FA5]/g ,'')"
                     ></el-input>
                 </el-form-item>
                 <el-form-item label="登录密码:" prop="password">
@@ -47,7 +47,7 @@
                         autocomplete="off"
                         maxlength="12"
                         style="width: 365px"
-                        oninput="value=value.replace(/[^\w\.\/]/ig,'')"
+                        oninput="value=value.replace(/[\u4E00-\u9FA5]/g ,'')"
                     ></el-input>
                 </el-form-item>
                 <el-form-item label="审核信息:">
@@ -111,7 +111,7 @@ export default {
         },
         rules() {
             const reg1 = /^[A-Za-z]{1}(?=(.*[a-zA-Z]){1,})(?=(.*[0-9]){1,})[0-9A-Za-z]{3,10}$/
-            const reg2 = /(?=.*[a-zA-Z])(?=.*[0-9])[a-zA-Z0-9]{8,12}/
+            const reg2 = /^([a-zA-Z0-9]*[a-zA-Z]+[0-9]+[a-zA-Z0-9]*|[a-zA-Z0-9]*[0-9]+[a-zA-Z]+[a-zA-Z0-9]*)$/
 
             const testUserName = (rule, value, callback) => {
                 const isSpecial = !notSpecial2(String(value))
