@@ -67,6 +67,7 @@
 									maxlength="20"
 									placeholder="请输入"
 									clearable
+                                    :precision="0"
 									style="width: 180px"
 								></el-input-number>
 							</span>
