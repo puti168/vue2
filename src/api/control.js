@@ -2,6 +2,14 @@ import request from '@/utils/request'
 
 export function getSelectWindControlLevel(data) {
 	return request({
+		url: '/windControlRecord/selectWindControlLevel',
+		method: 'post',
+		data
+	})
+}
+
+export function getSelectWindControlLevelId(data) {
+	return request({
 		url: '/windControlRecord/selectBeforeAfterWindControlLevelId',
 		method: 'post',
 		data
@@ -87,6 +95,7 @@ export function riskEditAddAPI(data) {
 
 export default {
 	getSelectWindControlLevel,
+	getSelectWindControlLevelId,
 	selectWindControlRecord,
 	getWindControllerLevelDict,
 	riskRankListAPI,
