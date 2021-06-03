@@ -18,6 +18,7 @@
 						placeholder="请输入"
 						clearable
 						style="width: 365px"
+						@blur="checkValue"
 					></el-input>
 					<span v-show="tipsShow" class="tips">{{ tipsShow }}</span>
 					<el-button
@@ -25,7 +26,7 @@
 						style="margin-left: 20px"
 						@click="getOutlineInfo"
 					>
-						<i v-show="loading" class="el-icon-loading"></i>
+						<i v-show="loadingT" class="el-icon-loading"></i>
 						查询
 					</el-button>
 				</el-form-item>
@@ -61,9 +62,9 @@
 						maxlength="11"
 						placeholder="请输入"
 						clearable
-                        autocomplete="off"
-                        style="width: 365px"
-                        oninput="value=value.replace(/[\u4E00-\u9FA5]/g ,'')"
+						autocomplete="off"
+						style="width: 365px"
+						oninput="value=value.replace(/[\u4E00-\u9FA5]/g ,'')"
 					></el-input>
 				</el-form-item>
 				<el-form-item label="审核信息:" prop="applyInfo">
@@ -74,7 +75,7 @@
 						placeholder="请输入"
 						clearable
 						maxlength="50"
-                        show-word-limit
+						show-word-limit
 						style="width: 365px"
 					></el-input>
 				</el-form-item>
@@ -112,15 +113,16 @@ export default {
 	data() {
 		return {
 			loading: false,
+			loadingT: false,
 			form: {
 				userName: '',
 				accountType: '',
-                transferProxyName: '',
+				transferProxyName: '',
 				applyInfo: '',
-                userId: undefined,
-                transferProxyId: undefined,
-                currentProxyId: undefined,
-                currentProxyName: undefined
+				userId: undefined,
+				transferProxyId: undefined,
+				currentProxyId: undefined,
+				currentProxyName: undefined
 			},
 			tipsShow: null
 		}
@@ -146,19 +148,19 @@ export default {
 				}
 			}
 
-            const testApplyInfo = (rule, value, callback) => {
-                const isSpecial = !notSpecial2(String(value))
-                const isRmoji = isHaveEmoji(String(value))
-                if (isSpecial) {
-                    callback(new Error('不支持空格及特殊字符'))
-                } else if (isRmoji) {
-                    callback(new Error('不支持表情'))
-                } else if (!value) {
-                    callback(new Error('请输入审核信息'))
-                } else {
-                    callback()
-                }
-            }
+			const testApplyInfo = (rule, value, callback) => {
+				const isSpecial = !notSpecial2(String(value))
+				const isRmoji = isHaveEmoji(String(value))
+				if (isSpecial) {
+					callback(new Error('不支持空格及特殊字符'))
+				} else if (isRmoji) {
+					callback(new Error('不支持表情'))
+				} else if (!value) {
+					callback(new Error('请输入审核信息'))
+				} else {
+					callback()
+				}
+			}
 
 			return {
 				accountType: [
@@ -171,21 +173,21 @@ export default {
 						trigger: 'blur'
 					}
 				],
-                transferProxyName: [
+				transferProxyName: [
 					{
 						required: true,
 						validator: testUserName,
 						trigger: 'blur'
 					}
 				],
-                applyInfo: [
-                    {
-                        required: true,
-                        validator: testApplyInfo,
-                        trigger: 'blur'
-                    },
-                    { min: 2, max: 50, message: '长度在 2 到 50 个字符', trigger: 'blur' }
-                ]
+				applyInfo: [
+					{
+						required: true,
+						validator: testApplyInfo,
+						trigger: 'blur'
+					},
+					{ min: 2, max: 50, message: '长度在 2 到 50 个字符', trigger: 'blur' }
+				]
 			}
 		}
 	},
@@ -196,20 +198,20 @@ export default {
 			const reg1 = /^[A-Za-z]{1}(?=(.*[a-zA-Z]){1,})(?=(.*[0-9]){1,})[0-9A-Za-z]{3,10}$/
 			const { userName } = this.form
 			if (lock && reg1.test(userName)) {
-                this.loading = true
+				this.loadingT = true
 				this.$api
 					.getOutlineInfo({ userName })
 					.then((res) => {
 						lock = false
-						this.loading = false
+						this.loadingT = false
 						const { code, data, msg } = res
 						if (code === 200) {
 							if (data) {
-                                this.tipsShow = null
+								this.tipsShow = null
 								this.form.accountType = data.accountType + ''
 								this.form.currentProxyName = data.parentProxyName
-                                this.form.userId = data.id
-                                this.form.currentProxyId = data.parentProxyId
+								this.form.userId = data.id
+								this.form.currentProxyId = data.parentProxyId
 							} else {
 								this.tipsShow = msg
 							}
@@ -218,15 +220,15 @@ export default {
 						}
 					})
 					.catch(() => {
-						this.loading = false
-                        this.tipsShow = '会员账号不存在'
+						this.loadingT = false
+						this.tipsShow = '会员账号不存在'
 						lock = false
 					})
 
-                setTimeout(() => {
-                    this.loading = false
-                    lock = true
-                }, 1000)
+				setTimeout(() => {
+					this.loadingT = false
+					lock = true
+				}, 1000)
 			}
 		},
 		add() {
@@ -273,12 +275,15 @@ export default {
 		reset() {
 			this.$refs['form'].resetFields()
 			this.form = {
-                userName: '',
-                accountType: '',
-                parentProxyName: '',
-                agentName: '',
-                applyInfo: ''
+				userName: '',
+				accountType: '',
+				parentProxyName: '',
+				agentName: '',
+				applyInfo: ''
 			}
+		},
+		checkValue() {
+			this.tipsShow = null
 		}
 	}
 }

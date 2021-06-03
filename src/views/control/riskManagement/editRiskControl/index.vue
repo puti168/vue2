@@ -39,8 +39,9 @@
 						maxlength="11"
 						placeholder="请输入"
 						clearable
-                        oninput="value=value.replace(/[\u4E00-\u9FA5]/g ,'')"
+						oninput="value=value.replace(/[\u4E00-\u9FA5]/g ,'')"
 						style="width: 365px"
+                        @blur="checkValue"
 					></el-input>
 					<!--                    代理-->
 					<el-input
@@ -50,8 +51,9 @@
 						maxlength="11"
 						placeholder="请输入"
 						clearable
-                        oninput="value=value.replace(/[\u4E00-\u9FA5]/g ,'')"
+						oninput="value=value.replace(/[\u4E00-\u9FA5]/g ,'')"
 						style="width: 365px"
+                        @blur="checkValue"
 					></el-input>
 					<!--                    银行卡-->
 					<el-input
@@ -63,6 +65,7 @@
 						placeholder="请输入"
 						clearable
 						style="width: 365px"
+                        @blur="checkValue"
 					></el-input>
 					<!--             虚拟币      -->
 					<el-input
@@ -72,8 +75,9 @@
 						maxlength="50"
 						placeholder="请输入"
 						clearable
-                        oninput="value=value.replace(/[\u4E00-\u9FA5]/g ,'')"
+						oninput="value=value.replace(/[\u4E00-\u9FA5]/g ,'')"
 						style="width: 365px"
+                        @blur="checkValue"
 					></el-input>
 					<!--                    IP-->
 					<el-input
@@ -85,6 +89,7 @@
 						clearable
 						oninput="value=value.replace(/[^\d.]/g,'')"
 						style="width: 365px"
+                        @blur="checkValue"
 					></el-input>
 					<!--                    终端号-->
 					<el-input
@@ -95,7 +100,9 @@
 						placeholder="请输入"
 						clearable
 						style="width: 365px"
+                        @blur="checkValue"
 					></el-input>
+                    <span v-show="tipsShow" class="tips">{{ tipsShow }}</span>
 					<el-button
 						type="primary"
 						style="margin-left: 20px"
@@ -540,7 +547,7 @@ export default {
 			queryData: {
 				windControlType: '1',
 				windControlName: undefined,
-                userName: undefined,
+				userName: undefined,
 				proxyUserName: undefined,
 				cardNumber: undefined,
 				virtualAddress: undefined,
@@ -550,7 +557,8 @@ export default {
 			},
 			vipDict: [],
 			showInfoData: {},
-			current: ''
+			current: '',
+            tipsShow: null
 		}
 	},
 	computed: {
@@ -722,18 +730,17 @@ export default {
 		reset() {
 			this.$refs['form'].resetFields()
 			this.queryData = {
-                windControlType: '1',
-                windControlName: undefined,
-                userName: undefined,
-                proxyUserName: undefined,
-                cardNumber: undefined,
-                virtualAddress: undefined,
-                registerIp: undefined,
-                deviceNo: undefined,
-                windReason: undefined
+				windControlType: '1',
+				windControlName: undefined,
+				userName: undefined,
+				proxyUserName: undefined,
+				cardNumber: undefined,
+				virtualAddress: undefined,
+				registerIp: undefined,
+				deviceNo: undefined,
+				windReason: undefined
 			}
 		},
-		checkValue(val) {},
 		changeRiskType(evt) {
 			this.$refs['form'].resetFields()
 			this.showInfoData = {}
@@ -769,7 +776,7 @@ export default {
 		},
 		searchInfo() {
 			const { windControlType } = this.queryData
-			console.log('this.queryData', this.queryData)
+			// console.log('this.queryData', this.queryData)
 			switch (windControlType) {
 				case '1': {
 					const { userName } = this.queryData
@@ -777,8 +784,19 @@ export default {
 					if (userName) {
 						this.$refs.form.clearValidate('windControlName')
 						this.$refs.form.clearValidate('windReason')
-						this.queryInfoData({ userName }, windControlType)
-						this.current = 0
+						this.queryInfoData({ userName }, windControlType).then((res) => {
+							const { id } = res
+							if (!id) {
+                                this.tipsShow = '查询的风险会员不存在'
+								return this.$message({
+									message: '查询的风险会员不存在',
+									type: 'error'
+								})
+							} else {
+                                this.tipsShow = null
+								this.current = 0
+							}
+						})
 					}
 					break
 				}
@@ -788,8 +806,22 @@ export default {
 					if (proxyUserName) {
 						this.$refs.form.clearValidate('windControlName')
 						this.$refs.form.clearValidate('windReason')
-						this.queryInfoData({ userName: proxyUserName }, windControlType)
-						this.current = 1
+						this.queryInfoData(
+							{ userName: proxyUserName },
+							windControlType
+						).then((res) => {
+							const { id } = res
+                            this.tipsShow = '查询的风险代理不存在'
+							if (!id) {
+								return this.$message({
+									message: '查询的风险代理不存在',
+									type: 'error'
+								})
+							} else {
+                                this.tipsShow = null
+								this.current = 1
+							}
+						})
 					}
 					break
 				}
@@ -841,39 +873,44 @@ export default {
 			this.showInfoData = {}
 			if (lock) {
 				this.loading = true
-				this.$api
-					.riskEditInfoAPI({ ...value, windControlType })
-					.then((res) => {
-						lock = false
-						this.loading = false
-						const { code, data } = res
-						if (code === 200) {
-							if (data) {
-								this.showInfoData = data
+				return new Promise((resolve) => {
+					this.$api
+						.riskEditInfoAPI({ ...value, windControlType })
+						.then((res) => {
+							lock = false
+							this.loading = false
+							const { code, data } = res
+							if (code === 200) {
+								if (data) {
+									this.showInfoData = data.id ? data : {}
+									resolve(data)
+								} else {
+									this.showInfoData = {}
+								}
 							} else {
 								this.showInfoData = {}
 							}
-						} else {
-							this.showInfoData = {}
-						}
-					})
-					.catch(() => {
-						this.loading = false
-						this.tipsShow = '会员账号不存在'
-						lock = false
-					})
-
-				setTimeout(() => {
-					this.loading = false
-					lock = true
-				}, 1000)
+						})
+						.catch(() => {
+							this.loading = false
+							this.tipsShow = '会员账号不存在'
+							lock = false
+						})
+				})
 			}
+			setTimeout(() => {
+				this.loading = false
+				lock = true
+			}, 1500)
 		},
 		checkRiskValue(val) {
-			console.log('val', val)
+			// console.log('val', val)
 			this.queryData.windControlName = val.windControlLevelName
 			this.queryData.windControlLevelId = val.id
-		}
+		},
+        checkValue() {
+            this.tipsShow = null
+        }
 	}
 }
 </script>
@@ -962,5 +999,15 @@ export default {
 			}
 		}
 	}
+
+    .tips {
+        color: #f56c6c;
+        font-size: 12px;
+        line-height: 1;
+        padding-top: 4px;
+        position: absolute;
+        top: 100%;
+        left: 0;
+    }
 }
 </style>
