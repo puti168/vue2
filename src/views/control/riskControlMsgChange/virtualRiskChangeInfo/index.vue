@@ -214,12 +214,13 @@ export default {
 	methods: {
 		getSelectWindControlLevel(type) {
 			this.$api
-				.getSelectWindControlLevel({ windControlType: 4, type })
+				.getSelectWindControlLevelId({ windControlType: 4, type })
 				.then((res) => {
-					if (res.code === 200) {
-                        type === 1
-                            ? (this.beforeWindControlLevel = res.data)
-                            : (this.afterWindControlLevel = res.data)
+					const { code } = res
+					if (code === 200) {
+						type === 1
+							? (this.beforeWindControlLevel = res.data)
+							: (this.afterWindControlLevel = res.data)
 					}
 				})
 		},

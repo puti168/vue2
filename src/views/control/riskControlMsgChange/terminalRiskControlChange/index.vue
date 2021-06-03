@@ -177,27 +177,28 @@ export default {
 				createdBy: '',
 				windType: 6
 			},
-            beforeWindControlLevel: [],
-            afterWindControlLevel: [],
+			beforeWindControlLevel: [],
+			afterWindControlLevel: [],
 			tableData: []
 		}
 	},
 	computed: {},
-    created() {
-        this.getSelectWindControlLevel(1)
-    },
+	created() {
+		this.getSelectWindControlLevel(1)
+	},
 	mounted() {
 		this.getSelectWindControlLevel(2)
 	},
 	methods: {
 		getSelectWindControlLevel(type) {
 			this.$api
-				.getSelectWindControlLevel({ windControlType: 6, type })
+				.getSelectWindControlLevelId({ windControlType: 6, type })
 				.then((res) => {
-					if (res.code === 200) {
-                        type === 1
-                            ? (this.beforeWindControlLevel = res.data)
-                            : (this.afterWindControlLevel = res.data)
+					const { code } = res
+					if (code === 200) {
+						type === 1
+							? (this.beforeWindControlLevel = res.data)
+							: (this.afterWindControlLevel = res.data)
 					}
 				})
 		},
