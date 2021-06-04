@@ -452,21 +452,21 @@ export default {
 					})
 					this.labelList.forEach((item) => {
 						if (item.gameLabelId === this.gameLabelParam1) {
-							this.form.gameLabelParam1 = {
+							this.form.label1 = {
 								gameLabelId: item.gameLabelId,
 								gameLabelName: item.gameLabelName,
 								id: item.id
 							}
 						}
 						if (item.gameLabelId === this.gameLabelParam2) {
-							this.form.gameLabelParam2 = {
+							this.form.label2 = {
 								gameLabelId: item.gameLabelId,
 								gameLabelName: item.gameLabelName,
 								id: item.id
 							}
 						}
 						if (item.gameLabelId === this.gameLabelParam3) {
-							this.form.gameLabelParam3 = {
+							this.form.label3 = {
 								gameLabelId: item.gameLabelId,
 								gameLabelName: item.gameLabelName,
 								id: item.id
