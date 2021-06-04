@@ -427,10 +427,10 @@ export default {
 				})
 				return
 			}
-			if (this.form.relationGameModuleId.length !== 2) {
+			if (this.form.relationGameModuleId.length !== 2 && this.form.relationGameModuleId.length !== 1) {
 				this.$message({
 					type: 'error',
-					message: '关联游戏模块只能选择2个!'
+					message: '关联游戏模块只能选择1-2个!'
 				})
 				return
 			}
