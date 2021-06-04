@@ -1,7 +1,7 @@
 <template>
 	<div class="mix-container">
 		<div class="head">
-			<span class="title">体育模块</span>
+			<span class="title">{{ gameDetails.moduleName }}</span>
 			<div class="right-btn">
 				<el-button plain @click="back">取消</el-button>
 				<el-button type="success" @click="confirm(true)">保存</el-button>
@@ -12,34 +12,36 @@
 				<el-form ref="form" :model="formData" label-width="auto" :rules="rules">
 					<el-row>
 						<el-col :span="12">
-							<el-form-item label="主标题信息:" prop="gameName">
+							<el-form-item label="主标题信息:" prop="mainTitleInfo">
 								<el-input
 									v-model="formData.mainTitleInfo"
 									size="medium"
-									maxlength="20"
+									maxlength="10"
 									clearable
 									style="width: 365px"
 								></el-input>
 							</el-form-item>
 						</el-col>
 						<el-col :span="12">
-							<el-form-item label="副标题信息:" prop="gameName">
+							<el-form-item label="副标题信息:" prop="subTitleInfo">
 								<el-input
 									v-model="formData.subTitleInfo"
 									size="medium"
-									maxlength="20"
+									maxlength="10"
 									clearable
 									style="width: 365px"
 								></el-input>
 							</el-form-item>
 						</el-col>
 						<el-col :span="12">
-							<el-form-item label="模块描述:">
+							<el-form-item label="模块描述:" prop="description">
 								<el-input
 									v-model="formData.description"
+									type="textarea"
 									size="medium"
-									maxlength="20"
+									maxlength="100"
 									clearable
+									show-word-limit
 									style="width: 365px"
 								></el-input>
 							</el-form-item>
@@ -59,38 +61,51 @@ export default {
 	data() {
 		return {
 			formData: {
-				// mainTitleInfo: "",
-				// subTitleInfo: "",
-				// scrollingNum: 0,
-				// description: "",
+				mainTitleInfo: undefined,
+				subTitleInfo: undefined,
+				description: undefined
 			}
 		}
 	},
 	computed: {
 		rules() {
 			return {
-				icon: [{ required: true, message: '请选择支持终端', trigger: 'blur' }],
-				image: [
+				mainTitleInfo: [
 					{
 						required: true,
-						message: '请选择图片上传',
-						trigger: ['blur', 'change']
+						message: '请输入主标题信息',
+						trigger: 'blur'
+					},
+					{
+						min: 2,
+						max: 10,
+						message: '长度在 2 到 10 个字符',
+						trigger: 'blur'
 					}
 				],
-				gameName: [
+				subTitleInfo: [
 					{
 						required: true,
-						message: '请输入游戏名称',
+						message: '请输入副标题信息',
+						trigger: 'blur'
+					},
+					{
+						min: 2,
+						max: 10,
+						message: '长度在 2 到 10 个字符',
+						trigger: 'blur'
+					}
+				],
+				description: [
+					{
+						min: 2,
+						max: 100,
+						message: '长度在 2 到 100 个字符',
 						trigger: 'blur'
 					}
 				]
 			}
 		}
-		// addGameDetails() {
-		//   console.log(2222222, this.recommendDetails)
-		//   this.formData = this.recommendDetails
-		//   return this.recommendDetails
-		// }
 	},
 	watch: {
 		// addGameDetails: {
@@ -109,9 +124,24 @@ export default {
 			this.$emit('back')
 		},
 		confirm(action) {
-			this.remark = ''
-			this.action = action
-			this.visible = true
+			const { moduleId } = this.gameDetails
+			const params = {
+				...this.formData,
+				moduleId
+			}
+			this.$api.gameHomeRecommendDetailsEditAPI(params).then((res) => {
+				const { code, data, msg } = res
+				if (code === 200) {
+					this.loading = false
+					console.log('请求到值了', data)
+				} else {
+					this.loading = false
+					this.$message({
+						message: msg,
+						type: 'error'
+					})
+				}
+			})
 		}
 	}
 }
