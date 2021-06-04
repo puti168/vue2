@@ -32,7 +32,7 @@
 						<el-input
 							v-model="queryData.assortSort"
 							size="medium"
-							maxlength="11"
+							maxlength="5"
 							onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
 							placeholder="请输入"
 							clearable
@@ -60,7 +60,8 @@
 						<el-input
 							v-model="queryData.remark"
 							size="medium"
-							maxlength="11"
+							maxlength="50"
+							minlength="2"
 							oninput="value=value.replace(/(^\s*)|(\s*$)/g ,'')"
 							placeholder="请输入"
 							clearable

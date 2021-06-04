@@ -427,10 +427,10 @@ export default {
 				})
 				return
 			}
-			if (this.form.relationGameModuleId.length !== 2) {
+			if (this.form.relationGameModuleId.length !== 2 && this.form.relationGameModuleId.length !== 1) {
 				this.$message({
 					type: 'error',
-					message: '关联游戏模块只能选择2个!'
+					message: '关联游戏模块只能选择1-2个!'
 				})
 				return
 			}
@@ -450,22 +450,25 @@ export default {
 							}
 						})
 					})
+							this.form.label1 = {}
+							this.form.label2 = {}
+							this.form.label3 = {}
 					this.labelList.forEach((item) => {
-						if (item.gameLabelId === this.gameLabelParam1) {
+						if (item.gameLabelId === Number(this.gameLabelParam1)) {
 							this.form.label1 = {
 								gameLabelId: item.gameLabelId,
 								gameLabelName: item.gameLabelName,
 								id: item.id
 							}
 						}
-						if (item.gameLabelId === this.gameLabelParam2) {
+						if (item.gameLabelId === Number(this.gameLabelParam2)) {
 							this.form.label2 = {
 								gameLabelId: item.gameLabelId,
 								gameLabelName: item.gameLabelName,
 								id: item.id
 							}
 						}
-						if (item.gameLabelId === this.gameLabelParam3) {
+						if (item.gameLabelId === Number(this.gameLabelParam3)) {
 							this.form.label3 = {
 								gameLabelId: item.gameLabelId,
 								gameLabelName: item.gameLabelName,

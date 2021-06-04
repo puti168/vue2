@@ -54,7 +54,7 @@
 					<el-input
 						v-model.number="form.mobile"
 						size="medium"
-						oninput="value=value.replace(/^(0+)|[^\d]+/g, '')"
+                        onkeyup="value=value.replace(/^(0+)|[^\d]+/g, '')"
 						placeholder="请输入"
 						clearable
 						maxlength="11"
