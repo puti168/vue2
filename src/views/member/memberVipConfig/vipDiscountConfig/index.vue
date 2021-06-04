@@ -31,7 +31,14 @@
 									placeholder="请输入"
 									clearable
 									style="width: 180px"
-                                    @blur="checkTransferValue($event, scope.row.minTransfer, scope.$index, scope)"
+									@blur="
+										checkTransferValue(
+											$event,
+											scope.row.minTransfer,
+											scope.$index,
+											scope
+										)
+									"
 								></el-input-number>
 							</span>
 						</template>
@@ -119,7 +126,7 @@
 					icon="el-icon-search"
 					size="medium"
 					style="padding: 0 8px"
-                    @click="saveData()"
+					@click="saveData()"
 				>
 					保存
 				</el-button>
@@ -127,7 +134,7 @@
 					icon="el-icon-refresh-left"
 					size="medium"
 					style="padding: 0 8px"
-                    @click="resetData()"
+					@click="resetData()"
 				>
 					恢复上次配置
 				</el-button>
@@ -259,14 +266,14 @@ export default {
 				return ''
 			}
 		},
-        checkTransferValue(val, val1, index, scope) {
-		    console.log('val', val)
-		    console.log('val1', val1)
-		    console.log('index', index)
-		    console.log('scope', scope)
-        },
-        saveData() {},
-        resetData() {}
+		checkTransferValue(val, val1, index, scope) {
+			console.log('val', val)
+			console.log('val1', val1)
+			console.log('index', index)
+			console.log('scope', scope)
+		},
+		saveData() {},
+		resetData() {}
 	}
 }
 </script>
