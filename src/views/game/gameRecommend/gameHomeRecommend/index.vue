@@ -77,7 +77,6 @@
 										{{ scope.row.status === 0 ? '启用' : '禁用' }}
 									</el-button>
 									<el-button
-										v-if="false"
 										type="primary"
 										icon="el-icon-edit"
 										:disabled="loading"
@@ -300,16 +299,8 @@
 
 <script>
 import list from '@/mixins/list'
-// import dayjs from 'dayjs'
 import { routerNames } from '@/utils/consts'
 import gameHomeRecommendEdit from './editPage/index'
-
-// const end = dayjs()
-// 	.endOf('day')
-// 	.valueOf()
-// const start = dayjs()
-// 	.startOf('day')
-// 	.valueOf()
 
 export default {
 	name: routerNames.gameHomeRecommend,
@@ -352,20 +343,7 @@ export default {
 			activeName: 'first'
 		}
 	},
-	computed: {
-		accountType() {
-			return this.globalDics.accountType
-		},
-		virtualType() {
-			return this.globalDics.virtualType
-		},
-		virtualProtocolType() {
-			return this.globalDics.virtualProtocolType
-		},
-		bindType() {
-			return this.globalDics.bindType
-		}
-	},
+	computed: {},
 	mounted() {},
 	methods: {
 		openDetails(val) {
@@ -479,7 +457,7 @@ export default {
 		changeTableSort({ column, prop, order }) {
 			this.pageNum = 1
 			const orderParams = this.checkOrderParams.get(prop)
-            this.queryData.orderProperty = prop
+			this.queryData.orderProperty = prop
 			if (orderParams) {
 				if (order === 'ascending') {
 					// 升序
