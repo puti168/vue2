@@ -77,6 +77,7 @@
 										{{ scope.row.status === 0 ? '启用' : '禁用' }}
 									</el-button>
 									<el-button
+                                        v-if="false"
 										type="primary"
 										icon="el-icon-edit"
 										:disabled="loading"
