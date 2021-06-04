@@ -8,6 +8,7 @@ import memberDetails from './memberDetails'
 import game from './game'
 import agent from './agent'
 import control from './control'
+import vipConfig from './vipConfig'
 
 export default {
 	...bankController,
@@ -19,5 +20,6 @@ export default {
 	...memberDetails,
 	...game,
 	...agent,
-	...control
+	...control,
+	...vipConfig
 }
