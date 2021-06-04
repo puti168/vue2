@@ -67,7 +67,7 @@
 									maxlength="20"
 									placeholder="请输入"
 									clearable
-                                    :precision="0"
+									:precision="0"
 									style="width: 180px"
 								></el-input-number>
 							</span>
@@ -102,18 +102,18 @@
 						</template>
 					</el-table-column>
 					<el-table-column align="center" label="下半月红包" width="300">
-                        <template slot-scope="scope">
+						<template slot-scope="scope">
 							<span>
 								<el-input-number
-                                    v-model="scope.row.turnover"
-                                    size="medium"
-                                    maxlength="20"
-                                    placeholder="请输入"
-                                    clearable
-                                    style="width: 180px"
-                                ></el-input-number>
+									v-model="scope.row.turnover"
+									size="medium"
+									maxlength="20"
+									placeholder="请输入"
+									clearable
+									style="width: 180px"
+								></el-input-number>
 							</span>
-                        </template>
+						</template>
 					</el-table-column>
 				</el-table>
 			</div>
@@ -150,118 +150,32 @@ export default {
 	mixins: [list],
 	data() {
 		return {
-			dataList: [
-				{
-					vipLevel: 'VIP0',
-					minTransfer: '500',
-					dividends: '30%',
-					bonus: '500',
-					turnover: '500',
-					times: 1,
-					venue: []
-				},
-				{
-					vipLevel: 'VIP1',
-					minTransfer: '600',
-					dividends: '35%',
-					bonus: '600',
-					turnover: '600',
-					times: 2,
-					venue: []
-				},
-				{
-					vipLevel: 'VIP2',
-					minTransfer: '700',
-					dividends: '40%',
-					bonus: '700',
-					turnover: '700',
-					times: 3,
-					venue: []
-				},
-				{
-					vipLevel: 'VIP3',
-					minTransfer: '700',
-					dividends: '40%',
-					bonus: '700',
-					turnover: '700',
-					times: 3,
-					venue: []
-				},
-				{
-					vipLevel: 'VIP4',
-					minTransfer: '700',
-					dividends: '40%',
-					bonus: '700',
-					turnover: '700',
-					times: 3,
-					venue: []
-				},
-				{
-					vipLevel: 'VIP5',
-					minTransfer: '700',
-					dividends: '40%',
-					bonus: '700',
-					turnover: '700',
-					times: 3,
-					venue: []
-				},
-				{
-					vipLevel: 'VIP6',
-					minTransfer: '700',
-					dividends: '40%',
-					bonus: '700',
-					turnover: '700',
-					times: 3,
-					venue: []
-				},
-				{
-					vipLevel: 'VIP7',
-					minTransfer: '700',
-					dividends: '40%',
-					bonus: '700',
-					turnover: '700',
-					times: 3,
-					venue: []
-				},
-				{
-					vipLevel: 'VIP8',
-					minTransfer: '700',
-					dividends: '40%',
-					bonus: '700',
-					turnover: '700',
-					times: 3,
-					venue: []
-				},
-				{
-					vipLevel: 'VIP9',
-					minTransfer: '700',
-					dividends: '40%',
-					bonus: '700',
-					turnover: '700',
-					times: 3,
-					venue: []
-				},
-				{
-					vipLevel: 'VIP10',
-					minTransfer: '700',
-					dividends: '40%',
-					bonus: '700',
-					turnover: '700',
-					times: 3,
-					venue: []
-				}
-			]
+			dataList: []
 		}
 	},
 	computed: {},
 	mounted() {},
 	methods: {
-		_getRowClass({ row, column, rowIndex, columnIndex }) {
-			if (rowIndex === 0) {
-				return 'background:#EFEFEF; height: 50px; font-size: 14px; font-weight: 650; color: rgba(0, 0, 0, 0.847058823529412)'
-			} else {
-				return ''
-			}
+		loadData() {
+			this.loading = true
+			this.$api
+				.memberInComQuery()
+				.then((res) => {
+					if (res.code === 200) {
+						const response = res.data
+						this.loading = false
+						this.dataList = response.record
+					} else {
+						this.loading = false
+						this.$message({
+							message: res.msg,
+							type: 'error'
+						})
+					}
+				})
+				.catch(() => {
+					this.loading = false
+				})
 		},
 		checkTransferValue(val, val1, index, scope) {
 			console.log('val', val)
