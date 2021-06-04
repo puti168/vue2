@@ -28,10 +28,10 @@
               :popper-append-to-body="false"
             >
               <el-option
-                v-for="item in accountType"
-                :key="item.code"
+                v-for="item in gameTypeList"
+                :key="item.gameName"
                 :label="item.description"
-                :value="item.code"
+                :value="item.gameName"
               ></el-option>
             </el-select>
           </el-form-item>
@@ -44,7 +44,7 @@
               :popper-append-to-body="false"
             >
               <el-option
-                v-for="item in porxyApplyType"
+                v-for="item in gameTypeList"
                 :key="item.code"
                 :label="item.description"
                 :value="item.code"
@@ -60,7 +60,7 @@
               :popper-append-to-body="false"
             >
               <el-option
-                v-for="item in porxyApplyType"
+                v-for="item in memberVipOperateType"
                 :key="item.code"
                 :label="item.description"
                 :value="item.code"
@@ -100,6 +100,7 @@
           </el-form-item>
         </el-form>
       </div>
+
       <div class="content">
         <el-table
           v-loading="loading"
@@ -117,16 +118,16 @@
             label="操作时间"
             sortable="custom"
           ></el-table-column>
-              <el-table-column prop="afterModify" align="center" label="场馆名称">
+              <el-table-column prop="gameTypeList" align="center" label="场馆名称">
             <template slot-scope="scope">
               <span v-if="scope.row.applyType === '1'">
-                {{ typeFilter(scope.row.afterModify, "accountStatusType") }}
+                {{ typeFilter(scope.row.gameTypeList, "accountStatusType") }}
               </span>
               <span v-else-if="scope.row.applyType === '5'">
-                {{ typeFilter(scope.row.afterModify, "entrAuthorityType") }}
+                {{ typeFilter(scope.row.gameTypeList, "entrAuthorityType") }}
               </span>
               <span v-else>
-                {{ scope.row.afterModify }}
+                {{ scope.row.gameTypeList }}
               </span>
             </template>
           </el-table-column>
@@ -166,7 +167,6 @@
             align="center"
             label="操作人"
           ></el-table-column>
-
         </el-table>
         <!-- 分页 -->
         <el-pagination
@@ -201,7 +201,9 @@ export default {
       queryData: {
         accountType: [],
         applyType: []
+
       },
+       gameTypeList: [],
       searchTime: [startTime, endTime],
       now: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
       summary: {
@@ -216,12 +218,23 @@ export default {
     accountType() {
       return this.globalDics.accountType
     },
-    porxyApplyType() {
-      return this.globalDics.porxyApplyType
+    memberVipOperateType() {
+      return this.globalDics.memberVipOperateType
     }
+
+  },
+   created() {
+    this.getGameTypeList()
   },
   mounted() {},
   methods: {
+     getGameTypeList() {
+       this.$api.getMerchantGameGamePlant().then((res) => {
+         if (res.code === 200) {
+           this.gameTypeList = res.data
+         }
+       })
+     },
     loadData() {
       this.loading = true
       const create = this.searchTime || []

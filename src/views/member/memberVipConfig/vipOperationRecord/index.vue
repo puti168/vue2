@@ -28,7 +28,7 @@
               :popper-append-to-body="false"
             >
               <el-option
-                v-for="item in accountType"
+                v-for="item in memberVipOperateType"
                 :key="item.code"
                 :label="item.description"
                 :value="item.code"
@@ -44,7 +44,7 @@
               :popper-append-to-body="false"
             >
               <el-option
-                v-for="item in porxyApplyType"
+                v-for="item in memberVipOperateFieldType"
                 :key="item.code"
                 :label="item.description"
                 :value="item.code"
@@ -97,29 +97,21 @@
         >
           <!-- 操作时间 -->
           <el-table-column
-            prop="applyTime"
+            prop="createdAt"
             align="center"
             label="操作时间"
             sortable="custom"
           ></el-table-column>
           <!-- 操作类型 -->
-           <el-table-column prop="updateDt" align="center" label="操作类型">
+           <el-table-column prop="operateType" align="center" label="操作类型">
             <template slot-scope="scope">
-              {{ typeFilter(scope.row.applyType, "porxyApplyType") }}
+              {{ typeFilter(scope.row.operateType, "memberVipOperateType") }}
             </template>
           </el-table-column>
           <!-- 操作项 -->
-          <el-table-column prop="afterModify" align="center" label="操作项">
+          <el-table-column prop="operateField" align="center" label="操作项">
             <template slot-scope="scope">
-              <span v-if="scope.row.applyType === '1'">
-                {{ typeFilter(scope.row.afterModify, "accountStatusType") }}
-              </span>
-              <span v-else-if="scope.row.applyType === '5'">
-                {{ typeFilter(scope.row.afterModify, "entrAuthorityType") }}
-              </span>
-              <span v-else>
-                {{ scope.row.afterModify }}
-              </span>
+              {{ typeFilter(scope.row.operateType, "memberVipOperateFieldType") }}
             </template>
           </el-table-column>
           <!-- 操作前 -->
@@ -137,13 +129,13 @@
             </template>
           </el-table-column>
           <!-- 操作后-->
-           <el-table-column prop="applyType" align="center" label="操作后">
+           <el-table-column prop="afterModify" align="center" label="操作后">
             <template slot-scope="scope">
-              {{ typeFilter(scope.row.accountType, "accountType") }}
+              {{ typeFilter(scope.row.afterModify, "accountType") }}
             </template>
           </el-table-column>
            <el-table-column
-            prop="applyName"
+            prop="createdBy"
             align="center"
             label="操作人"
           ></el-table-column>
@@ -193,11 +185,11 @@ export default {
     }
   },
   computed: {
-    accountType() {
-      return this.globalDics.accountType
+    memberVipOperateFieldType() {
+      return this.globalDics.memberVipOperateFieldType
     },
-    porxyApplyType() {
-      return this.globalDics.porxyApplyType
+    memberVipOperateType() {
+      return this.globalDics.memberVipOperateType
     }
   },
   mounted() {},
