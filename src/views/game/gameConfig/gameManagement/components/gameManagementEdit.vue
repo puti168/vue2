@@ -388,14 +388,24 @@ export default {
 					arr.supportTerminal = arr.supportTerminal.split(',')
 					arr.relationOtherGameId = arr.relationOtherGameId.split(',')
 					arr.relationGameModuleId = arr.relationGameModuleId.split(',')
-					arr.gameIcon = arr.gameIcon + ''
+					if (arr.label1) {
+						this.gameLabelParam1 = arr.label1.gameLabelId
+					}
+					if (arr.label2) {
+						this.gameLabelParam2 = arr.label2.gameLabelId
+					}
+					if (arr.label3) {
+						this.gameLabelParam3 = arr.label3.gameLabelId
+					}
+					if (arr.gameIcon) {
+						arr.gameIcon = arr.gameIcon + ''
+					}
 				}
 				this.nowImage = arr.imageAddress
 				if (!arr.gameRebateRate) {
 					delete arr.gameRebateRate
 				}
 				this.form = JSON.parse(JSON.stringify(arr))
-				this.gameLabelParam2 = arr.gameLabelName
 				console.log(this.form)
 				console.log(arr)
 			},
