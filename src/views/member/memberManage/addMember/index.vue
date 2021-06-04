@@ -54,12 +54,12 @@
 					<el-input
                         v-model.number="form.mobile"
 						size="medium"
+                        oninput="value=value.replace(/^(0+)|[^\d]+/g,'')"
 						placeholder="请输入"
 						clearable
 						maxlength="11"
 						style="width: 365px"
                         autocomplete="off"
-						oninput="value=value.replace(/^(0+)|[^\d]+/g,'')"
 					></el-input>
 				</el-form-item>
 				<el-form-item label="上级代理:">
@@ -160,7 +160,7 @@
 import { routerNames } from '@/utils/consts'
 import list from '@/mixins/list'
 import { notSpecial2, isHaveEmoji } from '@/utils/validate'
-import { MOBILE_PATTERN, EMAIL_PATTERN } from '@/utils/pattern'
+import { EMAIL_PATTERN } from '@/utils/pattern'
 import md5 from 'js-md5'
 
 export default {
@@ -228,13 +228,13 @@ export default {
 				}
 			}
 
-			const testMobile = (rule, value, callback) => {
-				if (!!value && !MOBILE_PATTERN.test(value)) {
-					callback(new Error('请输入有效的手机号码'))
-				} else {
-					callback()
-				}
-			}
+			// const testMobile = (rule, value, callback) => {
+			// 	if (!!value && !MOBILE_PATTERN.test(value)) {
+			// 		callback(new Error('请输入有效的手机号码'))
+			// 	} else {
+			// 		callback()
+			// 	}
+			// }
 
 			const testEmail = (rule, value, callback) => {
 				if (!!value && !EMAIL_PATTERN.test(value)) {
@@ -260,15 +260,21 @@ export default {
 						required: true,
 						validator: testPassword,
 						trigger: 'blur'
-					}
+					},
+                    {
+                        min: 8,
+                        max: 12,
+                        message: '请输入8-12位，字母+数字组合',
+                        trigger: 'blur'
+                    }
 				],
-				mobile: [
-					{
-						required: false,
-						validator: testMobile,
-						trigger: 'blur'
-					}
-				],
+				// mobile: [
+				// 	{
+				// 		required: false,
+				// 		validator: testMobile,
+				// 		trigger: 'blur'
+				// 	}
+				// ],
 				email: [
 					{
 						required: false,
