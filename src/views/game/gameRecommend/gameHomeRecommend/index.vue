@@ -266,7 +266,7 @@
 										禁用
 									</el-button>
 									<el-button
-										v-if="false"
+										v-if="true"
 										type="primary"
 										icon="el-icon-edit"
 										:disabled="loading"
@@ -317,29 +317,6 @@ export default {
 			queryData: {
 				terminalType: 1
 			},
-			searchData: {
-				allGameNum: 0,
-				assortId: 0,
-				bodyTitle: '',
-				contentInfor: '',
-				currentUserName: '',
-				description: '',
-				gameId: 0,
-				iconAddress: '',
-				mainTitleInfo: '',
-				moduleCaption: '',
-				moduleId: 0,
-				moduleStatus: 0,
-				pageNum: 0,
-				pageSize: 0,
-				pictureHome: '',
-				pictureOne: '',
-				pictureTwo: '',
-				scrollingNum: 0,
-				subTitleInfo: '',
-				terminalType: 0,
-				videoSourceAddress: ''
-			},
 			activeName: 'first'
 		}
 	},
@@ -347,12 +324,8 @@ export default {
 	mounted() {},
 	methods: {
 		openDetails(val) {
-			this.recommendDetails = {
-				mainTitleInfo: '11111',
-				subTitleInfo: '111',
-				scrollingNum: 0,
-				description: '111'
-			}
+		    console.log('val', val)
+			this.recommendDetails = val
 			this.isEdit = true
 		},
 		back() {
@@ -396,7 +369,7 @@ export default {
 						})
 					}
 				})
-				.catch((res) => {
+				.catch(() => {
 					this.loading = false
 				})
 		},
@@ -474,9 +447,6 @@ export default {
 			this.queryData = {
 				terminalType: 1
 			}
-			this.loadData()
-		},
-		handleCurrentChange() {
 			this.loadData()
 		}
 	}

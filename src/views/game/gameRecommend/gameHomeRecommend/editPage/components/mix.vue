@@ -1,5 +1,5 @@
 <template>
-	<div class="review-content">
+	<div class="mix-container">
 		<div class="head">
 			<span class="title">体育模块</span>
 			<div class="right-btn">
@@ -10,79 +10,42 @@
 		<div class="main-content">
 			<div class="review-content">
 				<el-form ref="form" :model="formData" label-width="auto" :rules="rules">
-					<el-form-item label="主标题信息:" prop="gameName">
-						<el-input
-							v-model="formData.mainTitleInfo"
-							size="medium"
-							maxlength="20"
-							clearable
-							style="width: 365px"
-						></el-input>
-					</el-form-item>
-					<!-- <el-row>
-            <el-col :span="12">
-              <el-form-item label="主标题信息:" prop="gameName">
-                <el-input
-                  v-model="formData.mainTitleInfo"
-                  size="medium"
-                  maxlength="20"
-                  clearable
-                  style="width: 365px"
-                ></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item label="副标题信息:" prop="gameName">
-                <el-input
-                  v-model="formData.subTitleInfo"
-                  size="medium"
-                  maxlength="20"
-                  clearable
-                  style="width: 365px"
-                ></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item label="滚屏数量限制:" prop="gameName">
-                <el-input
-                  v-model="formData.scrollingNum"
-                  size="medium"
-                  maxlength="20"
-                  clearable
-                  style="width: 365px"
-                ></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item label="全部游戏数量:" prop="gameName">
-                <el-input
-                  v-model="formData.gameName"
-                  size="medium"
-                  maxlength="20"
-                  clearable
-                  style="width: 365px"
-                ></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item label="模块描述:">
-                <el-input
-                  v-model="formData.description"
-                  size="medium"
-                  maxlength="20"
-                  clearable
-                  style="width: 365px"
-                ></el-input>
-              </el-form-item>
-            </el-col>
-          </el-row> -->
+					<el-row>
+						<el-col :span="12">
+							<el-form-item label="主标题信息:" prop="gameName">
+								<el-input
+									v-model="formData.mainTitleInfo"
+									size="medium"
+									maxlength="20"
+									clearable
+									style="width: 365px"
+								></el-input>
+							</el-form-item>
+						</el-col>
+						<el-col :span="12">
+							<el-form-item label="副标题信息:" prop="gameName">
+								<el-input
+									v-model="formData.subTitleInfo"
+									size="medium"
+									maxlength="20"
+									clearable
+									style="width: 365px"
+								></el-input>
+							</el-form-item>
+						</el-col>
+						<el-col :span="12">
+							<el-form-item label="模块描述:">
+								<el-input
+									v-model="formData.description"
+									size="medium"
+									maxlength="20"
+									clearable
+									style="width: 365px"
+								></el-input>
+							</el-form-item>
+						</el-col>
+					</el-row>
 				</el-form>
-				<!-- 棋牌 -->
-				<template v-if="true">
-					<el-divider></el-divider>
-					<div class="img-title">客户端图片上传</div>
-					<img v-for="item in 40" :key="item" :src="imageUrl" class="avatar" />
-				</template>
 			</div>
 		</div>
 	</div>
@@ -91,9 +54,8 @@
 <script>
 import list from '@/mixins/list'
 export default {
-	components: {},
 	mixins: [list],
-	props: { recommendDetails: { type: Object, default: () => {} } },
+	props: { gameDetails: { type: Object, default: () => {} } },
 	data() {
 		return {
 			formData: {
@@ -101,8 +63,7 @@ export default {
 				// subTitleInfo: "",
 				// scrollingNum: 0,
 				// description: "",
-			},
-			imageUrl: ''
+			}
 		}
 	},
 	computed: {
@@ -142,9 +103,7 @@ export default {
 		// }
 	},
 	created() {},
-	mounted() {
-		// console.log(this.recommendDetails);
-	},
+	mounted() {},
 	methods: {
 		back() {
 			this.$emit('back')
@@ -159,8 +118,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.review-content {
+.mix-container {
 	width: 100%;
+	margin: 30px auto;
+	padding-left: 25px;
+	padding-right: 25px;
 	.head {
 		height: 70px;
 		line-height: 70px;
@@ -179,8 +141,9 @@ export default {
 	.main-content {
 		.review-content {
 			border: 1px solid rgba(192, 190, 190, 0.5);
-			border-top: 0px;
+			border-top: 0;
 			padding: 30px;
+			width: 100%;
 			.name {
 				font-weight: 600;
 			}
