@@ -26,6 +26,15 @@ export function getRebateRecordSelectRecords(data) {
 	})
 }
 
+// 会员等级
+export function getRebateRecordGetVipGrade(data) {
+	return request({
+		url: '/memberVip/rebateRecord/getVipGrade',
+		method: 'post',
+		data
+	})
+}
+
 // vIP配置操作记录
 export function getlistSelectMemberVipOperate(data) {
 	return request({
@@ -38,6 +47,7 @@ export function getlistSelectMemberVipOperate(data) {
 export default {
 	getMerchantGameGetMerchantGames,
 	getMemberVipRebateSelectAllInfo,
+	getRebateRecordSelectRecords,
 	getlistSelectMemberVipOperate,
-	getRebateRecordSelectRecords
+	getRebateRecordGetVipGrade
 }
