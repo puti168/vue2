@@ -19,9 +19,9 @@
               style="width: 375px"
             ></el-date-picker>
           </el-form-item>
-          <el-form-item label="操作类型:" class="tagheight" prop="accountType">
+          <el-form-item label="操作类型:" class="tagheight" prop="operateType">
             <el-select
-              v-model="queryData.accountType"
+              v-model="queryData.operateType"
               style="width: 300px"
               multiple
               placeholder="全部"
@@ -37,7 +37,7 @@
           </el-form-item>
           <el-form-item label="操作项:" class="tagheight">
             <el-select
-              v-model="queryData.applyType"
+              v-model="queryData.operateField"
               style="width: 300px"
               multiple
               placeholder="全部"
@@ -53,7 +53,7 @@
           </el-form-item>
           <el-form-item label="操作人:">
             <el-input
-              v-model="queryData.applyName"
+              v-model="queryData.createdBy"
               clearable
               :maxlength="12"
               size="medium"
@@ -171,8 +171,7 @@ export default {
   data() {
     return {
       queryData: {
-        accountType: [],
-        applyType: []
+
       },
       searchTime: [startTime, endTime],
       now: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
@@ -200,14 +199,14 @@ export default {
       const [startTime, endTime] = create
       let params = {
         ...this.queryData,
-        applyTimeStart: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : '',
-        applyTimeEnd: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
+        beginTime: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : '',
+        endTime: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
       }
       params = {
         ...this.getParams(params)
       }
       this.$api
-        .getProxyDataInfoChangeRecord(params)
+        .getlistSelectMemberVipOperate(params)
         .then((res) => {
           if (res.code === 200) {
             this.tableData = res.data.record
@@ -228,9 +227,6 @@ export default {
       this.loadData()
     },
     _changeTableSort({ column, prop, order }) {
-      if (prop === 'applyTime') {
-        prop = 1
-      }
       this.queryData.orderKey = prop
       if (order === 'ascending') {
         // 升序
