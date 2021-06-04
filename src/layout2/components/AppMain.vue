@@ -91,7 +91,7 @@ export default {
 			this.wss.send(this.encrypt(m))
 		},
 		ws() {
-			const wsurl = 'wss://client-push-websocket.dev.zhanggao223.com/?'
+			const wsurl = process.env.VUE_APP_WSS
 			const url =
 				wsurl +
 				'playerId=' +
