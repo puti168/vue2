@@ -185,7 +185,9 @@ export default {
 		},
 		saveData() {
 			this.$api
-				.memberInComSave(this.dataList)
+				.memberInComSave({
+					incomeList: this.dataList
+				})
 				.then((res) => {
 					if (res.code === 200) {
 						this.$message({
