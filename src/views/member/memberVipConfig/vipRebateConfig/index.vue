@@ -198,7 +198,7 @@
             </template>
           </el-table-column>
         </el-table>
-        <div v-show="!loading">
+        <div v-show="tableData.length > 0">
           <p class="subBox">
             <el-button type="primary" @click="submitData()"> 保存 </el-button>
             <el-button class="pad" @click="resetData()"> 恢复上次设置 </el-button>
@@ -262,7 +262,7 @@ export default {
       })
     },
     handleClick(val) {
-      console.log(val)
+      this.tableData = []
       this.activeName = val.name
       const params = {}
       params.venueId = this.gameTypeList[val.index].venueId
