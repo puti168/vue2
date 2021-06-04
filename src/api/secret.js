@@ -179,7 +179,7 @@ export function addBlackList(data) {
 }
 export function memberInComComback(data) {
 	return request({
-		url: '/memberInCom/comback',
+		url: '/memberInCom/comeback',
 		method: 'post',
 		data
 	})
