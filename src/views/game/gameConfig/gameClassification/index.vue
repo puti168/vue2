@@ -352,8 +352,6 @@
 				width="480px"
 				class="classify"
 			>
-				<el-divider></el-divider>
-				<div class="contentBox disableColor">分类名称：热门游戏（1）</div>
 				<p class="headerBox">
 					<span>游戏名称</span>
 					<span>添加时间</span>
