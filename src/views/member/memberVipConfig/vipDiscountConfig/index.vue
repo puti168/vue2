@@ -9,7 +9,7 @@
 					class="small-size-table"
 					:data="dataList"
 					style="width: 100%"
-					:header-cell-style="getRowClass"
+					:header-cell-style="_getRowClass"
 				>
 					<el-table-column
 						align="center"
@@ -24,56 +24,65 @@
 					>
 						<template slot-scope="scope">
 							<span>
-								<el-input
+								<el-input-number
 									v-model="scope.row.minTransfer"
 									size="medium"
 									maxlength="20"
 									placeholder="请输入"
 									clearable
 									style="width: 180px"
-								></el-input>
+									@blur="
+										checkTransferValue(
+											$event,
+											scope.row.minTransfer,
+											scope.$index,
+											scope
+										)
+									"
+								></el-input-number>
 							</span>
 						</template>
 					</el-table-column>
 					<el-table-column prop="dividends" align="center" label="红利比例">
 						<template slot-scope="scope">
 							<span>
-								<el-input
-									v-model="scope.row.dividends"
+								<el-input-number
+									v-model.number="scope.row.dividends"
 									size="medium"
 									maxlength="20"
 									placeholder="请输入"
 									clearable
 									style="width: 180px"
-								></el-input>
+								></el-input-number>
 							</span>
+							<span>%</span>
 						</template>
 					</el-table-column>
 					<el-table-column prop="turnover" align="center" label="最高奖金">
 						<template slot-scope="scope">
 							<span>
-								<el-input
-									v-model="scope.row.dividends"
+								<el-input-number
+									v-model="scope.row.bonus"
 									size="medium"
 									maxlength="20"
 									placeholder="请输入"
 									clearable
 									style="width: 180px"
-								></el-input>
+								></el-input-number>
 							</span>
 						</template>
 					</el-table-column>
 					<el-table-column prop="turnover" align="center" label="流水倍数">
 						<template slot-scope="scope">
 							<span>
-								<el-input
+								<el-input-number
 									v-model="scope.row.turnover"
 									size="medium"
 									maxlength="20"
 									placeholder="请输入"
 									clearable
 									style="width: 180px"
-								></el-input>
+								></el-input-number>
 							</span>
 						</template>
 					</el-table-column>
@@ -110,6 +119,25 @@
 						</template>
 					</el-table-column>
 				</el-table>
+			</div>
+			<div class="btn_footer">
+				<el-button
+					type="primary"
+					icon="el-icon-search"
+					size="medium"
+					style="padding: 0 8px"
+					@click="saveData()"
+				>
+					保存
+				</el-button>
+				<el-button
+					icon="el-icon-refresh-left"
+					size="medium"
+					style="padding: 0 8px"
+					@click="resetData()"
+				>
+					恢复上次配置
+				</el-button>
 			</div>
 		</div>
 	</div>
@@ -230,7 +258,23 @@ export default {
 	},
 	computed: {},
 	mounted() {},
-	methods: {}
+	methods: {
+		_getRowClass({ row, column, rowIndex, columnIndex }) {
+			if (rowIndex === 0) {
+				return 'background:#EFEFEF; height: 50px; font-size: 14px; font-weight: 650; color: rgba(0, 0, 0, 0.847058823529412)'
+			} else {
+				return ''
+			}
+		},
+		checkTransferValue(val, val1, index, scope) {
+			console.log('val', val)
+			console.log('val1', val1)
+			console.log('index', index)
+			console.log('scope', scope)
+		},
+		saveData() {},
+		resetData() {}
+	}
 }
 </script>
 
@@ -239,5 +283,14 @@ export default {
 	text-align: center;
 	color: #909399;
 	font-weight: 700;
+}
+
+/deep/.el-input-number__decrease,
+/deep/.el-input-number__increase {
+	display: none;
+}
+.btn_footer {
+	text-align: center;
+	margin-top: 50px;
 }
 </style>

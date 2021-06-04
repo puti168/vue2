@@ -80,8 +80,7 @@
             align="center"
             sortable="custom"
             label="变更时间"
-          >
-          </el-table-column>
+          ></el-table-column>
           <el-table-column prop="beforeModify" align="center" label="变更前">
             <template slot-scope="scope">
               <span v-if="scope.row.applyType === '1'">
@@ -188,7 +187,8 @@ export default {
   },
   computed: {
     accountType() {
-      return this.globalDics.accountType
+      // eslint-disable-next-line semi
+      return this.globalDics.accountType;
     },
     porxyApplyType() {
       return this.globalDics.porxyApplyType

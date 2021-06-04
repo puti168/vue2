@@ -5,7 +5,7 @@
 				<el-col :span="6">
 					<span>终端设备号：</span>
 					<span>
-						{{ showInfoData.username ? showInfoData.username : '-' }}
+						{{ showInfoData.deviceNo ? showInfoData.deviceNo : '-' }}
 					</span>
 				</el-col>
 				<el-col :span="6">

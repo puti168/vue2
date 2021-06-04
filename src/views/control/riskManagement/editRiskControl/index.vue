@@ -41,7 +41,7 @@
 						clearable
 						oninput="value=value.replace(/[\u4E00-\u9FA5]/g ,'')"
 						style="width: 365px"
-                        @blur="checkValue"
+						@blur="checkValue"
 					></el-input>
 					<!--                    代理-->
 					<el-input
@@ -53,7 +53,7 @@
 						clearable
 						oninput="value=value.replace(/[\u4E00-\u9FA5]/g ,'')"
 						style="width: 365px"
-                        @blur="checkValue"
+						@blur="checkValue"
 					></el-input>
 					<!--                    银行卡-->
 					<el-input
@@ -65,7 +65,7 @@
 						placeholder="请输入"
 						clearable
 						style="width: 365px"
-                        @blur="checkValue"
+						@blur="checkValue"
 					></el-input>
 					<!--             虚拟币      -->
 					<el-input
@@ -77,7 +77,7 @@
 						clearable
 						oninput="value=value.replace(/[\u4E00-\u9FA5]/g ,'')"
 						style="width: 365px"
-                        @blur="checkValue"
+						@blur="checkValue"
 					></el-input>
 					<!--                    IP-->
 					<el-input
@@ -89,7 +89,7 @@
 						clearable
 						oninput="value=value.replace(/[^\d.]/g,'')"
 						style="width: 365px"
-                        @blur="checkValue"
+						@blur="checkValue"
 					></el-input>
 					<!--                    终端号-->
 					<el-input
@@ -100,9 +100,9 @@
 						placeholder="请输入"
 						clearable
 						style="width: 365px"
-                        @blur="checkValue"
+						@blur="checkValue"
 					></el-input>
-                    <span v-show="tipsShow" class="tips">{{ tipsShow }}</span>
+					<!--                    <span v-show="tipsShow" class="tips">{{ tipsShow }}</span>-->
 					<el-button
 						type="primary"
 						style="margin-left: 20px"
@@ -558,7 +558,7 @@ export default {
 			vipDict: [],
 			showInfoData: {},
 			current: '',
-            tipsShow: null
+			tipsShow: null
 		}
 	},
 	computed: {
@@ -692,8 +692,9 @@ export default {
 			}
 			let lock = true
 			params.windControlType = params.windControlType * 1
+			params.proxyUserName ? (params.userName = params.proxyUserName) : null
 			this.$refs['form'].validate((valid) => {
-				if (valid && lock) {
+				if (valid && lock && !this.tipsShow) {
 					lock = false
 					this.$api
 						.riskEditAddAPI(params)
@@ -787,13 +788,13 @@ export default {
 						this.queryInfoData({ userName }, windControlType).then((res) => {
 							const { id } = res
 							if (!id) {
-                                this.tipsShow = '查询的风险会员不存在'
+								this.tipsShow = '查询的风险会员不存在'
 								return this.$message({
 									message: '查询的风险会员不存在',
 									type: 'error'
 								})
 							} else {
-                                this.tipsShow = null
+								this.tipsShow = null
 								this.current = 0
 							}
 						})
@@ -811,14 +812,14 @@ export default {
 							windControlType
 						).then((res) => {
 							const { id } = res
-                            this.tipsShow = '查询的风险代理不存在'
+							this.tipsShow = '查询的风险代理不存在'
 							if (!id) {
 								return this.$message({
 									message: '查询的风险代理不存在',
 									type: 'error'
 								})
 							} else {
-                                this.tipsShow = null
+								this.tipsShow = null
 								this.current = 1
 							}
 						})
@@ -831,8 +832,19 @@ export default {
 					if (cardNumber) {
 						this.$refs.form.clearValidate('windControlName')
 						this.$refs.form.clearValidate('windReason')
-						this.queryInfoData({ cardNumber }, windControlType)
-						this.current = 2
+						this.queryInfoData({ cardNumber }, windControlType).then((res) => {
+							const { id } = res
+							this.tipsShow = '查询的银行卡信息不存在'
+							if (!id) {
+								return this.$message({
+									message: '查询的银行卡信息不存在',
+									type: 'error'
+								})
+							} else {
+								this.tipsShow = null
+								this.current = 2
+							}
+						})
 					}
 					break
 				}
@@ -841,8 +853,21 @@ export default {
 					if (virtualAddress) {
 						this.$refs.form.clearValidate('windControlName')
 						this.$refs.form.clearValidate('windReason')
-						this.queryInfoData({ virtualAddress }, windControlType)
-						this.current = 3
+						this.queryInfoData({ virtualAddress }, windControlType).then(
+							(res) => {
+								const { id } = res
+								this.tipsShow = '查询的虚拟币账号不存在'
+								if (!id) {
+									return this.$message({
+										message: '查询的虚拟币账号不存在',
+										type: 'error'
+									})
+								} else {
+									this.tipsShow = null
+									this.current = 3
+								}
+							}
+						)
 					}
 					break
 				}
@@ -851,8 +876,19 @@ export default {
 					if (registerIp) {
 						this.$refs.form.clearValidate('windControlName')
 						this.$refs.form.clearValidate('windReason')
-						this.queryInfoData({ registerIp }, windControlType)
-						this.current = 4
+						this.queryInfoData({ registerIp }, windControlType).then((res) => {
+							const { id } = res
+							this.tipsShow = '查询的风险IP不存在'
+							if (!id) {
+								return this.$message({
+									message: '查询的风险IP不存在',
+									type: 'error'
+								})
+							} else {
+								this.tipsShow = null
+								this.current = 4
+							}
+						})
 					}
 					break
 				}
@@ -861,8 +897,19 @@ export default {
 					if (deviceNo) {
 						this.$refs.form.clearValidate('windControlName')
 						this.$refs.form.clearValidate('windReason')
-						this.queryInfoData({ deviceNo }, windControlType)
-						this.current = 5
+						this.queryInfoData({ deviceNo }, windControlType).then((res) => {
+							const { id } = res
+							this.tipsShow = '查询的风险终端号不存在'
+							if (!id) {
+								return this.$message({
+									message: '查询的风险终端号不存在',
+									type: 'error'
+								})
+							} else {
+								this.tipsShow = null
+								this.current = 5
+							}
+						})
 					}
 					break
 				}
@@ -908,9 +955,9 @@ export default {
 			this.queryData.windControlName = val.windControlLevelName
 			this.queryData.windControlLevelId = val.id
 		},
-        checkValue() {
-            this.tipsShow = null
-        }
+		checkValue() {
+			// this.tipsShow = null
+		}
 	}
 }
 </script>
@@ -1000,14 +1047,14 @@ export default {
 		}
 	}
 
-    .tips {
-        color: #f56c6c;
-        font-size: 12px;
-        line-height: 1;
-        padding-top: 4px;
-        position: absolute;
-        top: 100%;
-        left: 0;
-    }
+	.tips {
+		color: #f56c6c;
+		font-size: 12px;
+		line-height: 1;
+		padding-top: 4px;
+		position: absolute;
+		top: 100%;
+		left: 0;
+	}
 }
 </style>

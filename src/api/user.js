@@ -179,6 +179,7 @@ export function memberDataInfoChangeRecord(data) {
 		data
 	})
 }
+
 export default {
 	login,
 	logout,

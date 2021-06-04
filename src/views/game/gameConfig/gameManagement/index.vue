@@ -246,7 +246,9 @@
 						width="100px"
 					>
 						<template slot-scope="scope">
-							{{ scope.row.gameLabelName }}
+							{{ scope.row.label1 ? scope.row.label1.gameLabelName : '-' }}/
+							{{ scope.row.label2 ? scope.row.label2.gameLabelName : '-' }}/
+							{{ scope.row.label3 ? scope.row.label3.gameLabelName : '-' }}
 						</template>
 					</el-table-column>
 					<el-table-column

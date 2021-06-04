@@ -31,10 +31,10 @@
 						v-model="form.username"
 						size="medium"
 						maxlength="11"
-                        oninput="value=value.replace(/[\u4E00-\u9FA5]/g ,'')"
+						oninput="value=value.replace(/[\u4E00-\u9FA5]/g ,'')"
 						placeholder="4-11位，最少2个字母+数字组合，首位字母"
 						clearable
-                        autocomplete="off"
+						autocomplete="off"
 						style="width: 365px"
 					></el-input>
 				</el-form-item>
@@ -44,22 +44,22 @@
 						size="medium"
 						placeholder="8-12位，字母+数字组合"
 						clearable
-                        autocomplete="off"
-                        oninput="value=value.replace(/[\u4E00-\u9FA5]/g ,'')"
+						autocomplete="off"
+						oninput="value=value.replace(/[\u4E00-\u9FA5]/g ,'')"
 						maxlength="12"
 						style="width: 365px"
 					></el-input>
 				</el-form-item>
 				<el-form-item label="手机号码:">
 					<el-input
-                        v-model.number="form.mobile"
+						v-model.number="form.mobile"
 						size="medium"
+						oninput="value=value.replace(/^(0+)|[^\d]+/g, '')"
 						placeholder="请输入"
 						clearable
 						maxlength="11"
 						style="width: 365px"
-                        autocomplete="off"
-						oninput="value=value.replace(/^(0+)|[^\d]+/g,'')"
+						autocomplete="off"
 					></el-input>
 				</el-form-item>
 				<el-form-item label="上级代理:">
@@ -69,7 +69,7 @@
 						placeholder="请输入"
 						clearable
 						maxlength="11"
-                        oninput="value=value.replace(/[\u4E00-\u9FA5]/g ,'')"
+						oninput="value=value.replace(/[\u4E00-\u9FA5]/g ,'')"
 						style="width: 365px"
 					></el-input>
 				</el-form-item>
@@ -160,7 +160,7 @@
 import { routerNames } from '@/utils/consts'
 import list from '@/mixins/list'
 import { notSpecial2, isHaveEmoji } from '@/utils/validate'
-import { MOBILE_PATTERN, EMAIL_PATTERN } from '@/utils/pattern'
+import { EMAIL_PATTERN } from '@/utils/pattern'
 import md5 from 'js-md5'
 
 export default {
@@ -228,13 +228,13 @@ export default {
 				}
 			}
 
-			const testMobile = (rule, value, callback) => {
-				if (!!value && !MOBILE_PATTERN.test(value)) {
-					callback(new Error('请输入有效的手机号码'))
-				} else {
-					callback()
-				}
-			}
+			// const testMobile = (rule, value, callback) => {
+			// 	if (!!value && !MOBILE_PATTERN.test(value)) {
+			// 		callback(new Error('请输入有效的手机号码'))
+			// 	} else {
+			// 		callback()
+			// 	}
+			// }
 
 			const testEmail = (rule, value, callback) => {
 				if (!!value && !EMAIL_PATTERN.test(value)) {
@@ -260,15 +260,21 @@ export default {
 						required: true,
 						validator: testPassword,
 						trigger: 'blur'
-					}
-				],
-				mobile: [
+					},
 					{
-						required: false,
-						validator: testMobile,
+						min: 8,
+						max: 12,
+						message: '请输入8-12位，字母+数字组合',
 						trigger: 'blur'
 					}
 				],
+				// mobile: [
+				// 	{
+				// 		required: false,
+				// 		validator: testMobile,
+				// 		trigger: 'blur'
+				// 	}
+				// ],
 				email: [
 					{
 						required: false,
@@ -291,7 +297,7 @@ export default {
 			this.$refs['form'].validate((valid) => {
 				if (valid && lock) {
 					lock = false
-                    params.password = md5(params.password).toUpperCase()
+					params.password = md5(params.password).toUpperCase()
 					this.$api
 						.addMemberAPI(params)
 						.then((res) => {
@@ -395,5 +401,10 @@ export default {
 		background-color: rgba(233, 233, 233, 1);
 		height: 1px;
 	}
+
+	///deep/ input::-webkit-outer-spin-button,
+	///deep/ input::-webkit-inner-spin-button {
+	//	display: none;
+	//}
 }
 </style>

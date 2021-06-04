@@ -388,14 +388,24 @@ export default {
 					arr.supportTerminal = arr.supportTerminal.split(',')
 					arr.relationOtherGameId = arr.relationOtherGameId.split(',')
 					arr.relationGameModuleId = arr.relationGameModuleId.split(',')
-					arr.gameIcon = arr.gameIcon + ''
+					if (arr.label1) {
+						this.gameLabelParam1 = arr.label1.gameLabelId
+					}
+					if (arr.label2) {
+						this.gameLabelParam2 = arr.label2.gameLabelId
+					}
+					if (arr.label3) {
+						this.gameLabelParam3 = arr.label3.gameLabelId
+					}
+					if (arr.gameIcon) {
+						arr.gameIcon = arr.gameIcon + ''
+					}
 				}
 				this.nowImage = arr.imageAddress
 				if (!arr.gameRebateRate) {
 					delete arr.gameRebateRate
 				}
 				this.form = JSON.parse(JSON.stringify(arr))
-				this.gameLabelParam2 = arr.gameLabelName
 				console.log(this.form)
 				console.log(arr)
 			},
@@ -442,21 +452,21 @@ export default {
 					})
 					this.labelList.forEach((item) => {
 						if (item.gameLabelId === this.gameLabelParam1) {
-							this.form.gameLabelParam1 = {
+							this.form.label1 = {
 								gameLabelId: item.gameLabelId,
 								gameLabelName: item.gameLabelName,
 								id: item.id
 							}
 						}
 						if (item.gameLabelId === this.gameLabelParam2) {
-							this.form.gameLabelParam2 = {
+							this.form.label2 = {
 								gameLabelId: item.gameLabelId,
 								gameLabelName: item.gameLabelName,
 								id: item.id
 							}
 						}
 						if (item.gameLabelId === this.gameLabelParam3) {
-							this.form.gameLabelParam3 = {
+							this.form.label3 = {
 								gameLabelId: item.gameLabelId,
 								gameLabelName: item.gameLabelName,
 								id: item.id
