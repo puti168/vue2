@@ -9,28 +9,28 @@
 					class="small-size-table"
 					:data="dataList"
 					style="width: 100%"
-					:header-cell-style="_getRowClass"
+					:header-cell-style="getRowClass"
 				>
 					<el-table-column
 						align="center"
 						label="vip等级"
-						prop="vipLevel"
+						prop="vipSerialNum"
 						width="120"
 					></el-table-column>
-					<el-table-column prop="minTransfer" align="center" label="日提款次数">
+					<el-table-column prop="dayWithdrawalNum" align="center" label="日提款次数">
 						<template slot-scope="scope">
 							<span>
 								<el-input-number
-									v-model="scope.row.minTransfer"
+									v-model="scope.row.dayWithdrawalNum"
 									size="medium"
-									maxlength="20"
+									maxlength="10"
 									placeholder="请输入"
 									clearable
 									style="width: 180px"
 									@blur="
 										checkTransferValue(
 											$event,
-											scope.row.minTransfer,
+											scope.row.dayWithdrawalNum,
 											scope.$index,
 											scope
 										)
@@ -40,16 +40,16 @@
 						</template>
 					</el-table-column>
 					<el-table-column
-						prop="dividends"
+						prop="dayWithdrawalQuota"
 						align="center"
 						label="每日累计提款额度"
 					>
 						<template slot-scope="scope">
 							<span>
 								<el-input-number
-									v-model.number="scope.row.dividends"
+									v-model.number="scope.row.dayWithdrawalQuota"
 									size="medium"
-									maxlength="20"
+									maxlength="10"
 									placeholder="请输入"
 									clearable
 									style="width: 180px"
@@ -58,13 +58,13 @@
 							<span>%</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="turnover" align="center" label="升级礼金">
+					<el-table-column prop="upgradeBonus" align="center" label="升级礼金">
 						<template slot-scope="scope">
 							<span>
 								<el-input-number
-									v-model="scope.row.bonus"
+									v-model="scope.row.upgradeBonus"
 									size="medium"
-									maxlength="20"
+									maxlength="10"
 									placeholder="请输入"
 									clearable
 									:precision="0"
@@ -73,13 +73,13 @@
 							</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="turnover" align="center" label="生日礼金">
+					<el-table-column prop="birthdayBonus" align="center" label="生日礼金">
 						<template slot-scope="scope">
 							<span>
 								<el-input-number
-									v-model="scope.row.turnover"
+									v-model="scope.row.birthdayBonus"
 									size="medium"
-									maxlength="20"
+									maxlength="10"
 									placeholder="请输入"
 									clearable
 									style="width: 180px"
@@ -87,13 +87,13 @@
 							</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="times" align="center" label="上半月红包">
+					<el-table-column prop="aboveMonthRedEnvelope" align="center" label="上半月红包">
 						<template slot-scope="scope">
 							<span>
 								<el-input-number
-									v-model="scope.row.turnover"
+									v-model="scope.row.aboveMonthRedEnvelope"
 									size="medium"
-									maxlength="20"
+									maxlength="10"
 									placeholder="请输入"
 									clearable
 									style="width: 180px"
@@ -105,9 +105,9 @@
 						<template slot-scope="scope">
 							<span>
 								<el-input-number
-									v-model="scope.row.turnover"
+									v-model="scope.row.belowMonthRedEnvelope"
 									size="medium"
-									maxlength="20"
+									maxlength="10"
 									placeholder="请输入"
 									clearable
 									style="width: 180px"
@@ -164,7 +164,7 @@ export default {
 					if (res.code === 200) {
 						const response = res.data
 						this.loading = false
-						this.dataList = response.record
+						this.dataList = response
 					} else {
 						this.loading = false
 						this.$message({
@@ -183,8 +183,44 @@ export default {
 			console.log('index', index)
 			console.log('scope', scope)
 		},
-		saveData() {},
-		resetData() {}
+		saveData() {
+			this.$api
+				.memberInComSave(this.dataList)
+				.then((res) => {
+					if (res.code === 200) {
+						this.$message({
+							message: '保存成功',
+							type: 'success'
+						})
+					} else {
+						this.$message({
+							message: res.msg,
+							type: 'error'
+						})
+					}
+				})
+				.catch(() => {
+				})
+		},
+		resetData() {
+			this.$api
+				.memberInComComback()
+				.then((res) => {
+					if (res.code === 200) {
+						this.$message({
+							message: '重置成功',
+							type: 'success'
+						})
+					} else {
+						this.$message({
+							message: res.msg,
+							type: 'error'
+						})
+					}
+				})
+				.catch(() => {
+				})
+		}
 	}
 }
 </script>
