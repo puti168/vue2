@@ -19,9 +19,9 @@
               style="width: 375px"
             ></el-date-picker>
           </el-form-item>
-          <el-form-item label="场馆名称:" class="tagheight" prop="accountType">
+          <el-form-item label="场馆名称:" class="tagheight" prop="venueId">
             <el-select
-              v-model="queryData.accountType"
+              v-model="queryData.venueId"
               style="width: 300px"
               multiple
               placeholder="全部"
@@ -29,9 +29,9 @@
             >
               <el-option
                 v-for="item in gameTypeList"
-                :key="item.gameName"
-                :label="item.description"
-                :value="item.gameName"
+                :key="item.gameCode"
+                :label="item.gameName"
+                :value="item.gameCode"
               ></el-option>
             </el-select>
           </el-form-item>
@@ -53,7 +53,7 @@
           </el-form-item>
            <el-form-item label="VIP等级:" class="tagheight">
             <el-select
-              v-model="queryData.applyType"
+              v-model="queryData.vipSerialNum"
               style="width: 300px"
               multiple
               placeholder="全部"
@@ -241,14 +241,14 @@ export default {
       const [startTime, endTime] = create
       let params = {
         ...this.queryData,
-        applyTimeStart: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : '',
-        applyTimeEnd: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
+        startTime: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : '',
+        endTime: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
       }
       params = {
         ...this.getParams(params)
       }
       this.$api
-        .getProxyDataInfoChangeRecord(params)
+        .getRebateRecordSelectRecords(params)
         .then((res) => {
           if (res.code === 200) {
             this.tableData = res.data.record

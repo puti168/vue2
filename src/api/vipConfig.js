@@ -16,7 +16,28 @@ export function getMemberVipRebateSelectAllInfo(data) {
 		data
 	})
 }
+
+// 查询配置VIP记录
+export function getRebateRecordSelectRecords(data) {
+	return request({
+		url: '/memberVip/rebateRecord/selectRecords',
+		method: 'post',
+		data
+	})
+}
+
+// vIP配置操作记录
+export function getlistSelectMemberVipOperate(data) {
+	return request({
+		url: '/memberVipOperate/listSelectMemberVipOperate',
+		method: 'post',
+		data
+	})
+}
+
 export default {
 	getMerchantGameGetMerchantGames,
-	getMemberVipRebateSelectAllInfo
+	getMemberVipRebateSelectAllInfo,
+	getlistSelectMemberVipOperate,
+	getRebateRecordSelectRecords
 }
