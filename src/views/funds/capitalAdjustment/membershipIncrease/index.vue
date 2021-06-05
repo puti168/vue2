@@ -150,17 +150,42 @@
 						@blur="checkValue"
 					></el-input>
 				</el-form-item>
-				<el-form-item label="审核信息:" prop="windReason">
+                <el-form-item label="操作金额:" prop="operationMoney">
+                    <el-input
+                        v-model="queryData.operationMoney"
+                        size="medium"
+                        placeholder="请输入"
+                        clearable
+                        onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
+                        maxlength="11"
+                        style="width: 365px"
+                    ></el-input>
+                    <span>元</span>
+                </el-form-item>
+				<el-form-item label="审核原因:" prop="reason">
 					<el-input
-						v-model="queryData.windReason"
+						v-model="queryData.reason"
 						size="medium"
 						type="textarea"
 						placeholder="请输入"
 						clearable
+						show-word-limit
 						maxlength="50"
 						style="width: 365px"
 					></el-input>
 				</el-form-item>
+                <el-form-item label="上传附件:">
+                    <el-input
+                        v-model="queryData.fileUrl"
+                        size="medium"
+                        type="textarea"
+                        placeholder="请输入"
+                        clearable
+                        show-word-limit
+                        maxlength="50"
+                        style="width: 365px"
+                    ></el-input>
+                </el-form-item>
 				<el-form-item>
 					<el-button
 						type="primary"
@@ -181,11 +206,6 @@
 			<div class="info-header">
 				<span v-if="!!Object.keys(showInfoData).length">基本信息</span>
 			</div>
-			<component
-				:is="content"
-				v-if="!!Object.keys(showInfoData).length"
-				:showInfoData="showInfoData"
-			></component>
 		</div>
 	</div>
 </template>
@@ -194,16 +214,10 @@
 import { routerNames } from '@/utils/consts'
 import list from '@/mixins/list'
 // import { notSpecial2, isHaveEmoji } from '@/utils/validate'
-import UserName from '@/components/editRisk/userName'
-import AgentName from '@/components/editRisk/agentName'
-import BankCard from '@/components/editRisk/bankCard'
-import Virtual from '@/components/editRisk/virtual'
-import Ip from '@/components/editRisk/ip'
-import Device from '@/components/editRisk/device'
 
 export default {
 	name: routerNames.memberShipIncrease,
-	components: { UserName, AgentName, BankCard, Virtual, Ip, Device },
+	components: {},
 	mixins: [list],
 	data() {
 		return {
@@ -214,14 +228,16 @@ export default {
 				realName: undefined,
 				balance: undefined,
 				operationType: undefined,
+                operationMoney: undefined,
+				reason: undefined,
+                fileUrl: undefined,
 				windControlType: '1',
 				windControlName: undefined,
 				proxyUserName: undefined,
 				cardNumber: undefined,
 				virtualAddress: undefined,
 				registerIp: undefined,
-				deviceNo: undefined,
-				windReason: undefined
+				deviceNo: undefined
 			},
 			vipDict: [],
 			showInfoData: {},
@@ -338,7 +354,7 @@ export default {
 						trigger: 'blur'
 					}
 				],
-				windReason: [
+				reason: [
 					{
 						required: true,
 						message: '请输入审核信息',

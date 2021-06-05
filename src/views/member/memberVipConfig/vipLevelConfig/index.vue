@@ -142,6 +142,7 @@
 					icon="el-icon-search"
 					size="medium"
 					style="padding: 0 8px"
+					:disabled="loadingT"
 					@click="saveData()"
 				>
 					保存
@@ -165,11 +166,12 @@ import { routerNames } from '@/utils/consts'
 
 export default {
 	name: routerNames.vipDiscountConfig,
-	components: {},
 	mixins: [list],
 	data() {
 		return {
-			dataList: []
+			dataList: [],
+			loading: false,
+			loadingT: false
 		}
 	},
 	computed: {},
@@ -193,14 +195,12 @@ export default {
 			this.$api
 				.memberVipGradeSelectAPI()
 				.then((res) => {
+					this.loading = false
 					const { code, data, msg } = res
-					console.log('res', res)
 					if (code === 200) {
-						this.loading = false
 						this.dataList = data || []
 						this.dataList.reverse()
 					} else {
-						this.loading = false
 						this.$message({
 							message: msg,
 							type: 'error'
@@ -212,9 +212,23 @@ export default {
 				})
 		},
 		saveData() {
+			this.loadingT = true
+			const listUpdateMemberVipGradeReqDto =
+				this.dataList.map((item) => {
+					return {
+						id: item.id,
+						relegationValidPeriod: item.relegationValidPeriod,
+						relegationWater: item.relegationWater,
+						totalDeposit: item.totalDeposit,
+						vipGradeName: item.vipGradeName,
+						vipSerialNum: item.vipSerialNum,
+						tatalValidWater: item.tatalValidWater
+					}
+				}) || []
 			this.$api
-				.memberVipGradeUpDateAPI()
+				.memberVipGradeUpDateAPI({ listUpdateMemberVipGradeReqDto })
 				.then((res) => {
+					this.loadingT = false
 					const { code, msg } = res
 					if (code === 200) {
 						this.$message({
@@ -227,8 +241,12 @@ export default {
 							type: 'error'
 						})
 					}
+
+					this.loadData()
 				})
-				.catch(() => {})
+				.catch(() => {
+					this.loadingT = false
+				})
 		},
 		resetData() {}
 	}
