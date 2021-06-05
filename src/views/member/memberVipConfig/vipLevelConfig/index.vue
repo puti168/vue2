@@ -185,10 +185,10 @@ export default {
 			}
 		},
 		checkTransferValue(val, val1, index, scope) {
-			console.log('val', val)
-			console.log('val1', val1)
-			console.log('index', index)
-			console.log('scope', scope)
+			// console.log('val', val)
+			// console.log('val1', val1)
+			// console.log('index', index)
+			// console.log('scope', scope)
 		},
 		loadData() {
 			this.loading = true
