@@ -79,7 +79,7 @@
 							累计有效流水≥
 						</template>
 						<template slot-scope="scope">
-							<span>
+							<span v-if="scope.row.vipSerialNum * 1">
 								<el-input
 									v-model="scope.row.tatalValidWater"
 									size="medium"
@@ -91,6 +91,7 @@
 									style="width: 180px"
 								></el-input>
 							</span>
+							<span v-else>0</span>
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -99,7 +100,7 @@
 						label="保级流水≥"
 					>
 						<template slot-scope="scope">
-							<span>
+							<span v-if="scope.row.vipSerialNum * 1">
 								<el-input
 									v-model="scope.row.relegationWater"
 									size="medium"
@@ -110,11 +111,16 @@
 									style="width: 180px"
 								></el-input>
 							</span>
+							<span v-else>0</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="relegationValidPeriod" align="center" label="保级有效期（天）">
+					<el-table-column
+						prop="relegationValidPeriod"
+						align="center"
+						label="保级有效期（天）"
+					>
 						<template slot-scope="scope">
-							<span>
+							<span v-if="scope.row.vipSerialNum * 1">
 								<el-input
 									v-model="scope.row.relegationValidPeriod"
 									size="medium"
@@ -125,6 +131,7 @@
 									style="width: 180px"
 								></el-input>
 							</span>
+							<span v-else>0</span>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -204,7 +211,25 @@ export default {
 					this.loading = false
 				})
 		},
-		saveData() {},
+		saveData() {
+			this.$api
+				.memberVipGradeUpDateAPI()
+				.then((res) => {
+					const { code, msg } = res
+					if (code === 200) {
+						this.$message({
+							message: '保存成功',
+							type: 'success'
+						})
+					} else {
+						this.$message({
+							message: msg,
+							type: 'error'
+						})
+					}
+				})
+				.catch(() => {})
+		},
 		resetData() {}
 	}
 }
