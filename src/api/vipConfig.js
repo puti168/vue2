@@ -62,6 +62,24 @@ export function memberVipGradeUpDateAPI(data) {
 	})
 }
 
+// VIP晋级优惠配置 ==> 列表
+export function memberVipPromotionListAPI(data) {
+	return request({
+		url: '/memberVipPromotion/selectMemberVipPromotionList',
+		method: 'post',
+		data
+	})
+}
+
+// VIP晋级优惠配置 ==> 更新
+export function memberVipPromotionUpdateAPI(data) {
+	return request({
+		url: '/memberVipPromotion/updateMemberVipPromotionList',
+		method: 'post',
+		data
+	})
+}
+
 export default {
 	getMerchantGameGetMerchantGames,
 	getMemberVipRebateSelectAllInfo,
@@ -69,5 +87,7 @@ export default {
 	getlistSelectMemberVipOperate,
 	getRebateRecordGetVipGrade,
 	memberVipGradeSelectAPI,
-	memberVipGradeUpDateAPI
+	memberVipGradeUpDateAPI,
+	memberVipPromotionListAPI,
+	memberVipPromotionUpdateAPI
 }

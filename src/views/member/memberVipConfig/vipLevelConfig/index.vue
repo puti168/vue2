@@ -14,23 +14,50 @@
 					<el-table-column
 						align="center"
 						label="vip等级"
-						prop="vipLevel"
+						prop="vipSerialNum"
 						width="120"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							<span v-if="scope.row.vipSerialNum">
+								VIP{{ scope.row.vipSerialNum }}
+							</span>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
 					<el-table-column
-						prop="minTransfer"
+						prop="vipGradeName"
 						align="center"
 						label="VIP等级名称"
 					>
 						<template slot-scope="scope">
 							<span>
-								<el-input-number
-									v-model="scope.row.minTransfer"
+								<el-input
+									v-model="scope.row.vipGradeName"
 									size="medium"
-									maxlength="20"
 									placeholder="请输入"
 									clearable
-                                    onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
+									maxlength="10"
+									oninput="value=value.replace(/[\u4E00-\u9FA5]/g ,'')"
+									style="width: 180px"
+								></el-input>
+							</span>
+						</template>
+					</el-table-column>
+					<el-table-column prop="totalDeposit" align="center">
+						<template slot="header">
+							升级条件1
+							<br />
+							累计存款(包含代充)≥
+						</template>
+						<template slot-scope="scope">
+							<span>
+								<el-input
+									v-model.number="scope.row.totalDeposit"
+									size="medium"
+									onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
+									maxlength="10"
+									placeholder="请输入"
+									clearable
 									style="width: 180px"
 									@blur="
 										checkTransferValue(
@@ -40,32 +67,12 @@
 											scope
 										)
 									"
-								></el-input-number>
-							</span>
-						</template>
-					</el-table-column>
-					<el-table-column prop="dividends" align="center">
-						<template slot="header">
-							升级条件1
-							<br />
-							累计存款(包含代充)≥
-						</template>
-						<template slot-scope="scope">
-							<span>
-								<el-input-number
-									v-model.number="scope.row.dividends"
-									size="medium"
-                                    onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
-									maxlength="20"
-									placeholder="请输入"
-									clearable
-									style="width: 180px"
-								></el-input-number>
+								></el-input>
 							</span>
 							<span>%</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="turnover" align="center">
+					<el-table-column prop="tatalValidWater" align="center">
 						<template slot="header">
 							升级条件2
 							<br />
@@ -73,46 +80,50 @@
 						</template>
 						<template slot-scope="scope">
 							<span>
-								<el-input-number
-									v-model="scope.row.bonus"
+								<el-input
+									v-model="scope.row.tatalValidWater"
 									size="medium"
-									maxlength="20"
-                                    onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
+									maxlength="10"
+									onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
 									placeholder="请输入"
 									clearable
 									:precision="0"
 									style="width: 180px"
-								></el-input-number>
+								></el-input>
 							</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="turnover" align="center" label="保级流水≥">
+					<el-table-column
+						prop="relegationWater"
+						align="center"
+						label="保级流水≥"
+					>
 						<template slot-scope="scope">
 							<span>
-								<el-input-number
-									v-model="scope.row.turnover"
+								<el-input
+									v-model="scope.row.relegationWater"
 									size="medium"
-									maxlength="20"
-                                    onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
+									maxlength="10"
+									onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
 									placeholder="请输入"
 									clearable
 									style="width: 180px"
-								></el-input-number>
+								></el-input>
 							</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="times" align="center" label="保级有效期（天）">
+					<el-table-column prop="relegationValidPeriod" align="center" label="保级有效期（天）">
 						<template slot-scope="scope">
 							<span>
-								<el-input-number
-									v-model="scope.row.turnover"
+								<el-input
+									v-model="scope.row.relegationValidPeriod"
 									size="medium"
-									maxlength="20"
-                                    onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
+									maxlength="10"
+									onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
 									placeholder="请输入"
 									clearable
 									style="width: 180px"
-								></el-input-number>
+								></el-input>
 							</span>
 						</template>
 					</el-table-column>
@@ -269,6 +280,29 @@ export default {
 			console.log('val1', val1)
 			console.log('index', index)
 			console.log('scope', scope)
+		},
+		loadData() {
+			this.loading = true
+			this.$api
+				.memberVipGradeSelectAPI()
+				.then((res) => {
+					const { code, data, msg } = res
+					console.log('res', res)
+					if (code === 200) {
+						this.loading = false
+						this.dataList = data || []
+						this.dataList.reverse()
+					} else {
+						this.loading = false
+						this.$message({
+							message: msg,
+							type: 'error'
+						})
+					}
+				})
+				.catch(() => {
+					this.loading = false
+				})
 		},
 		saveData() {},
 		resetData() {}
