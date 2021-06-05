@@ -50,7 +50,7 @@
 							累计存款(包含代充)≥
 						</template>
 						<template slot-scope="scope">
-							<span>
+							<span v-if="scope.row.vipSerialNum * 1">
 								<el-input
 									v-model.number="scope.row.totalDeposit"
 									size="medium"
@@ -69,7 +69,7 @@
 									"
 								></el-input>
 							</span>
-							<span>%</span>
+							<span v-else>0</span>
 						</template>
 					</el-table-column>
 					<el-table-column prop="tatalValidWater" align="center">
@@ -162,107 +162,7 @@ export default {
 	mixins: [list],
 	data() {
 		return {
-			dataList: [
-				{
-					vipLevel: 'VIP0',
-					minTransfer: '500',
-					dividends: '30%',
-					bonus: '500',
-					turnover: '500',
-					times: 1,
-					venue: []
-				},
-				{
-					vipLevel: 'VIP1',
-					minTransfer: '600',
-					dividends: '35%',
-					bonus: '600',
-					turnover: '600',
-					times: 2,
-					venue: []
-				},
-				{
-					vipLevel: 'VIP2',
-					minTransfer: '700',
-					dividends: '40%',
-					bonus: '700',
-					turnover: '700',
-					times: 3,
-					venue: []
-				},
-				{
-					vipLevel: 'VIP3',
-					minTransfer: '700',
-					dividends: '40%',
-					bonus: '700',
-					turnover: '700',
-					times: 3,
-					venue: []
-				},
-				{
-					vipLevel: 'VIP4',
-					minTransfer: '700',
-					dividends: '40%',
-					bonus: '700',
-					turnover: '700',
-					times: 3,
-					venue: []
-				},
-				{
-					vipLevel: 'VIP5',
-					minTransfer: '700',
-					dividends: '40%',
-					bonus: '700',
-					turnover: '700',
-					times: 3,
-					venue: []
-				},
-				{
-					vipLevel: 'VIP6',
-					minTransfer: '700',
-					dividends: '40%',
-					bonus: '700',
-					turnover: '700',
-					times: 3,
-					venue: []
-				},
-				{
-					vipLevel: 'VIP7',
-					minTransfer: '700',
-					dividends: '40%',
-					bonus: '700',
-					turnover: '700',
-					times: 3,
-					venue: []
-				},
-				{
-					vipLevel: 'VIP8',
-					minTransfer: '700',
-					dividends: '40%',
-					bonus: '700',
-					turnover: '700',
-					times: 3,
-					venue: []
-				},
-				{
-					vipLevel: 'VIP9',
-					minTransfer: '700',
-					dividends: '40%',
-					bonus: '700',
-					turnover: '700',
-					times: 3,
-					venue: []
-				},
-				{
-					vipLevel: 'VIP10',
-					minTransfer: '700',
-					dividends: '40%',
-					bonus: '700',
-					turnover: '700',
-					times: 3,
-					venue: []
-				}
-			]
+			dataList: []
 		}
 	},
 	computed: {},
