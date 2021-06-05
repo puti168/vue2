@@ -44,13 +44,13 @@
 						onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
 						autocomplete="off"
 						style="width: 365px"
-						:disabled="loadingT"
+						disabled
 					></el-input>
 					<span>元</span>
 					<el-button
 						type="primary"
 						style="margin-left: 20px"
-						@click="searchBalace"
+						@click="searchBalance"
 					>
 						<i v-show="loadingT" class="el-icon-loading"></i>
 						查询
@@ -74,94 +74,42 @@
 						></el-option>
 					</el-select>
 				</el-form-item>
-				<el-form-item
-					label="操作类型"
-					:prop="riskType[queryData.windControlType].prop"
-				>
-					<!--                    会员-->
+				<el-form-item label="活动ID" prop="activeId">
 					<el-input
-						v-if="['1'].includes(queryData.windControlType)"
-						v-model="queryData.userName"
+						v-model="queryData.activeId"
 						size="medium"
 						maxlength="11"
 						placeholder="请输入"
 						clearable
-						oninput="value=value.replace(/[\u4E00-\u9FA5]/g ,'')"
-						style="width: 365px"
-						@blur="checkValue"
-					></el-input>
-					<!--                    代理-->
-					<el-input
-						v-if="['2'].includes(queryData.windControlType)"
-						v-model="queryData.proxyUserName"
-						size="medium"
-						maxlength="11"
-						placeholder="请输入"
-						clearable
-						oninput="value=value.replace(/[\u4E00-\u9FA5]/g ,'')"
-						style="width: 365px"
-						@blur="checkValue"
-					></el-input>
-					<!--                    银行卡-->
-					<el-input
-						v-else-if="['3'].includes(queryData.windControlType)"
-						v-model="queryData.cardNumber"
-						size="medium"
-						maxlength="25"
 						onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
-						placeholder="请输入"
-						clearable
-						style="width: 365px"
-						@blur="checkValue"
-					></el-input>
-					<!--             虚拟币      -->
-					<el-input
-						v-else-if="['4'].includes(queryData.windControlType)"
-						v-model="queryData.virtualAddress"
-						size="medium"
-						maxlength="50"
-						placeholder="请输入"
-						clearable
-						oninput="value=value.replace(/[\u4E00-\u9FA5]/g ,'')"
-						style="width: 365px"
-						@blur="checkValue"
-					></el-input>
-					<!--                    IP-->
-					<el-input
-						v-else-if="['5'].includes(queryData.windControlType)"
-						v-model="queryData.registerIp"
-						size="medium"
-						maxlength="15"
-						placeholder="请输入"
-						clearable
-						oninput="value=value.replace(/[^\d.]/g,'')"
-						style="width: 365px"
-						@blur="checkValue"
-					></el-input>
-					<!--                    终端号-->
-					<el-input
-						v-else-if="['6'].includes(queryData.windControlType)"
-						v-model="queryData.deviceNo"
-						size="medium"
-						maxlength="50"
-						placeholder="请输入"
-						clearable
 						style="width: 365px"
 						@blur="checkValue"
 					></el-input>
 				</el-form-item>
-                <el-form-item label="操作金额:" prop="operationMoney">
-                    <el-input
-                        v-model="queryData.operationMoney"
-                        size="medium"
-                        placeholder="请输入"
-                        clearable
-                        onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
-                        maxlength="11"
-                        style="width: 365px"
-                    ></el-input>
-                    <span>元</span>
-                </el-form-item>
+				<el-form-item label="需求流水倍数" prop="water" label-width="120px">
+					<el-input
+						v-model="queryData.water"
+						size="medium"
+						maxlength="6"
+						placeholder="请输入"
+						clearable
+						onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
+						style="width: 365px"
+						@blur="checkValue"
+					></el-input>
+				</el-form-item>
+				<el-form-item label="操作金额:" prop="operationMoney">
+					<el-input
+						v-model="queryData.operationMoney"
+						size="medium"
+						placeholder="请输入"
+						clearable
+						onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
+						maxlength="11"
+						style="width: 365px"
+					></el-input>
+					<span>元</span>
+				</el-form-item>
 				<el-form-item label="审核原因:" prop="reason">
 					<el-input
 						v-model="queryData.reason"
@@ -174,18 +122,18 @@
 						style="width: 365px"
 					></el-input>
 				</el-form-item>
-                <el-form-item label="上传附件:">
-                    <el-input
-                        v-model="queryData.fileUrl"
-                        size="medium"
-                        type="textarea"
-                        placeholder="请输入"
-                        clearable
-                        show-word-limit
-                        maxlength="50"
-                        style="width: 365px"
-                    ></el-input>
-                </el-form-item>
+				<el-form-item label="上传附件:">
+					<UploadItem
+						ref="imgUpload"
+						:upload-file-type="'image'"
+						:platform="'PC'"
+						:img-urls="queryData.imageAddress"
+						@upoladItemSucess="handleUploadSucess"
+						@startUpoladItem="handleStartUpload"
+						@deleteUpoladItem="handleDeleteUpload"
+						@upoladItemDefeat="handleUploadDefeat"
+					></UploadItem>
+				</el-form-item>
 				<el-form-item>
 					<el-button
 						type="primary"
@@ -207,17 +155,28 @@
 				<span v-if="!!Object.keys(showInfoData).length">基本信息</span>
 			</div>
 		</div>
+
+		<el-dialog
+			title="图片"
+			:visible.sync="dialogPictureVisible"
+			:destroy-on-close="true"
+			width="650px"
+			class="imgCenter"
+		>
+			<img :src="imageAddress" />
+		</el-dialog>
 	</div>
 </template>
 
 <script>
 import { routerNames } from '@/utils/consts'
 import list from '@/mixins/list'
+import UploadItem from '@/components/UploadItem'
 // import { notSpecial2, isHaveEmoji } from '@/utils/validate'
 
 export default {
 	name: routerNames.memberShipIncrease,
-	components: {},
+	components: { UploadItem },
 	mixins: [list],
 	data() {
 		return {
@@ -228,20 +187,13 @@ export default {
 				realName: undefined,
 				balance: undefined,
 				operationType: undefined,
-                operationMoney: undefined,
+				operationMoney: undefined,
 				reason: undefined,
-                fileUrl: undefined,
-				windControlType: '1',
-				windControlName: undefined,
-				proxyUserName: undefined,
-				cardNumber: undefined,
-				virtualAddress: undefined,
-				registerIp: undefined,
-				deviceNo: undefined
+				imageAddress: undefined,
+				activeId: undefined,
+				water: undefined
 			},
-			vipDict: [],
 			showInfoData: {},
-			current: '',
 			tipsShow: null
 		}
 	},
@@ -305,62 +257,42 @@ export default {
 			// 	}
 			// }
 
+			const userName = [
+				{ required: true, message: '请输入会员账号', trigger: 'blur' }
+			]
+
+			const realName = [
+				{ required: true, message: '请输入会员姓名', trigger: 'blur' }
+			]
+
+			const operationType = [
+				{ required: true, message: '请选择操作类型', trigger: 'change' }
+			]
+
+			const activeId = [
+				{ required: true, message: '请输入活动ID', trigger: 'blur' }
+			]
+
+			const operationMoney = [
+				{ required: true, message: '请输入操作金额', trigger: 'blur' }
+			]
+
+			const water = [
+				{ required: true, message: '请输入提款流水倍数', trigger: 'blur' }
+			]
+
+			const reason = [
+				{ required: true, message: '请输入申请原因', trigger: 'blur' }
+			]
+
 			return {
-				windControlType: [
-					{ required: true, message: '请选择风控类型', trigger: 'change' }
-				],
-				windControlName: [
-					{ required: true, message: '请选择风控层级', trigger: 'change' }
-				],
-				userName: [
-					{
-						required: true,
-						message: '请输入会员账号',
-						trigger: 'blur'
-					}
-				],
-				proxyUserName: [
-					{
-						required: true,
-						message: '请输入代理账号',
-						trigger: 'blur'
-					}
-				],
-				cardNumber: [
-					{
-						required: true,
-						message: '请输入银行卡号',
-						trigger: 'blur'
-					}
-				],
-				virtualAddress: [
-					{
-						required: true,
-						message: '请输入虚拟币地址',
-						trigger: 'blur'
-					}
-				],
-				registerIp: [
-					{
-						required: true,
-						message: '请输入IP',
-						trigger: 'blur'
-					}
-				],
-				deviceNo: [
-					{
-						required: true,
-						message: '请输入终端设备号',
-						trigger: 'blur'
-					}
-				],
-				reason: [
-					{
-						required: true,
-						message: '请输入审核信息',
-						trigger: 'blur'
-					}
-				]
+				userName,
+				realName,
+				operationType,
+				operationMoney,
+				activeId,
+				water,
+				reason
 			}
 		}
 	},
@@ -414,31 +346,21 @@ export default {
 		reset() {
 			this.$refs['form'].resetFields()
 			this.queryData = {
-				windControlType: '1',
-				windControlName: undefined,
 				userName: undefined,
-				proxyUserName: undefined,
-				cardNumber: undefined,
-				virtualAddress: undefined,
-				registerIp: undefined,
-				deviceNo: undefined,
-				windReason: undefined
+				realName: undefined,
+				balance: undefined,
+				operationType: undefined,
+				operationMoney: undefined,
+				reason: undefined,
+				imageAddress: undefined,
+				activeId: undefined,
+				water: undefined
 			}
 		},
 		changeRiskType(evt) {
 			this.$refs['form'].resetFields()
 			this.showInfoData = {}
-			this.queryData = {
-				windControlName: undefined,
-				userName: undefined,
-				proxyUserName: undefined,
-				cardNumber: undefined,
-				virtualAddress: undefined,
-				registerIp: undefined,
-				deviceNo: undefined,
-				windReason: undefined,
-				windControlType: evt
-			}
+			this.queryData = {}
 			this.getMerchantDict(evt)
 		},
 		// 获取风控层级
@@ -641,7 +563,21 @@ export default {
 		checkValue() {
 			// this.tipsShow = null
 		},
-		searchBalace() {}
+		searchBalance() {},
+		handleStartUpload() {
+			this.$message.info('图片开始上传')
+		},
+		handleUploadSucess({ index, file, id }) {
+			this.queryData.imageAddress = file.imgUrl
+		},
+		handleUploadDefeat() {
+			this.queryData.imageAddress = ''
+			this.$message.error('图片上传失败')
+		},
+		handleDeleteUpload() {
+			this.queryData.imageAddress = ''
+			this.$message.warning('图片已被移除')
+		}
 	}
 }
 </script>
