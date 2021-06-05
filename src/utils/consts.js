@@ -45,7 +45,8 @@ export const routerNames = {
 	vipRebateRecord: 'vipRebateRecord',
 	vipChangeRecord: 'vipChangeRecord',
 	memberLabelConfig: 'memberLabelConfig',
-	memberLabelChangeRecord: 'memberLabelChangeRecord'
+	memberLabelChangeRecord: 'memberLabelChangeRecord',
+	memberShipIncrease: 'memberShipIncrease'
 }
 const month = dayjs().month()
 const year = dayjs().year()

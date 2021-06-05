@@ -52,11 +52,52 @@ export function getqueryMemberVipChangeRecordPage(data) {
 	})
 }
 
+// VIP等级配置 ==> 列表
+export function memberVipGradeSelectAPI(data) {
+	return request({
+		url: '/memberVipGrade/select',
+		method: 'post',
+		data
+	})
+}
+
+// VIP等级配置 ==> 更新
+export function memberVipGradeUpDateAPI(data) {
+	return request({
+		url: '/memberVipGrade/update',
+		method: 'post',
+		data
+	})
+}
+
+// VIP晋级优惠配置 ==> 列表
+export function memberVipPromotionListAPI(data) {
+	return request({
+		url: '/memberVipPromotion/selectMemberVipPromotionList',
+		method: 'post',
+		data
+	})
+}
+
+// VIP晋级优惠配置 ==> 更新
+export function memberVipPromotionUpdateAPI(data) {
+	return request({
+		url: '/memberVipPromotion/updateMemberVipPromotionList',
+		method: 'post',
+		data
+	})
+}
+
 export default {
 	getMerchantGameGetMerchantGames,
 	getMemberVipRebateSelectAllInfo,
 	getRebateRecordSelectRecords,
 	getlistSelectMemberVipOperate,
 	getRebateRecordGetVipGrade,
-	getqueryMemberVipChangeRecordPage
+	getqueryMemberVipChangeRecordPage,
+	memberVipGradeSelectAPI,
+	memberVipGradeUpDateAPI,
+	memberVipPromotionListAPI,
+	memberVipPromotionUpdateAPI
 }
+

@@ -33,7 +33,7 @@
           </el-form-item>
           <el-form-item label="操作人:">
             <el-input
-              v-model="queryData.applyName"
+              v-model="queryData.createdBy"
               clearable
               :maxlength="12"
               size="medium"
@@ -76,7 +76,7 @@
           @sort-change="_changeTableSort"
         >
           <el-table-column
-            prop="updateDt"
+            prop="createdAt"
             align="center"
             sortable="custom"
             label="变更时间"
@@ -115,28 +115,23 @@
               <span v-else>-</span>
             </template>
           </el-table-column>
-          <el-table-column prop="applyType" align="center" label="账号类型">
+          <el-table-column prop="accountType" align="center" label="账号类型">
             <template slot-scope="scope">
               {{ typeFilter(scope.row.accountType, "accountType") }}
             </template>
           </el-table-column>
-          <el-table-column prop="applyType" align="center" label="会员标签">
-            <template slot-scope="scope">
+          <el-table-column prop="windControlName" align="center" label="风控层级">
+            <!-- <template slot-scope="scope">
               {{ typeFilter(scope.row.accountType, "accountType") }}
-            </template>
+            </template> -->
           </el-table-column>
-          <el-table-column prop="applyType" align="center" label="风控层级">
+          <el-table-column prop="accountStatus" align="center" label="账号状态">
             <template slot-scope="scope">
-              {{ typeFilter(scope.row.accountType, "accountType") }}
-            </template>
-          </el-table-column>
-          <el-table-column prop="applyType" align="center" label="账号状态">
-            <template slot-scope="scope">
-              {{ typeFilter(scope.row.accountType, "accountType") }}
+              {{ typeFilter(scope.row.accountStatus, "accountType") }}
             </template>
           </el-table-column>
           <el-table-column
-            prop="applyName"
+            prop="createdBy"
             align="center"
             label="操作人"
           ></el-table-column>
@@ -171,10 +166,7 @@ export default {
   mixins: [list],
   data() {
     return {
-      queryData: {
-        accountType: [],
-        applyType: []
-      },
+      queryData: {},
       searchTime: [startTime, endTime],
       now: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
       summary: {
@@ -202,14 +194,14 @@ export default {
       const [startTime, endTime] = create
       let params = {
         ...this.queryData,
-        applyTimeStart: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : '',
-        applyTimeEnd: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
+        createdAtStart: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : '',
+        createdAtEnd: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
       }
       params = {
         ...this.getParams(params)
       }
       this.$api
-        .getProxyDataInfoChangeRecord(params)
+        .getMemberLabelChangeRecordPage(params)
         .then((res) => {
           if (res.code === 200) {
             this.tableData = res.data.record
@@ -230,10 +222,7 @@ export default {
       this.loadData()
     },
     _changeTableSort({ column, prop, order }) {
-      if (prop === 'applyTime') {
-        prop = 1
-      }
-      this.queryData.orderKey = prop
+      // this.queryData.orderKey = prop;
       if (order === 'ascending') {
         // 升序
         this.queryData.orderType = 'asc'

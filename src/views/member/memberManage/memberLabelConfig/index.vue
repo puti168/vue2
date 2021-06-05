@@ -5,21 +5,19 @@
         <el-form ref="form" :inline="true" :model="queryData">
           <el-form-item label="标签名称:">
             <el-input
-              v-model="queryData.gameLabelId"
+              v-model="queryData.memberLabelName"
               maxlength="10"
               clearable
               size="medium"
               style="width: 180px"
               placeholder="请输入"
               :disabled="loading"
-              oninput="value=value.replace(/[^\w\.\/]/ig ,'')"
               @keyup.enter.native="enterSearch"
-              @blur="checkValue($event)"
             ></el-input>
           </el-form-item>
           <el-form-item label="创建人:">
             <el-input
-              v-model="queryData.gameLabelName"
+              v-model="queryData.createdBy"
               clearable
               maxlength="10"
               size="medium"
@@ -71,7 +69,7 @@
           @sort-change="_changeTableSort"
         >
           <el-table-column
-            prop="gameLabelId"
+            prop="memberLabelName"
             align="center"
             label="标签名称"
           ></el-table-column>
@@ -80,10 +78,10 @@
             align="center"
             label="标签描述"
           ></el-table-column>
-          <el-table-column prop="gameLabelCount" align="center" label="标签人数">
+          <el-table-column prop="peopleNum" align="center" label="标签人数">
             <template slot-scope="scope">
               <div class="blueColor decoration" @click="lookGame(scope.row)">
-                {{ scope.row.gameLabelCount }}
+                {{ scope.row.peopleNum }}
               </div>
             </template>
           </el-table-column>
@@ -149,6 +147,7 @@
         :visible.sync="dialogFormVisible"
         :destroy-on-close="true"
         width="480px"
+        center
         class="rempadding"
         @close="clear"
       >
@@ -156,14 +155,14 @@
         <el-form ref="formSub" :model="dialogForm" label-width="90px">
           <el-form-item
             label="标签名称:"
-            prop="gameLabelName"
+            prop="memberLabelName"
             :rules="[
               { required: true, message: '请输入2-10个字符', trigger: 'blur' },
               { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' },
             ]"
           >
             <el-input
-              v-model="dialogForm.gameLabelName"
+              v-model="dialogForm.memberLabelName"
               placeholder="请输入2-10个字符"
               maxlength="10"
               autocomplete="off"
@@ -200,22 +199,39 @@
       >
         <el-divider></el-divider>
         <div class="contentBox disableColor">标签名称：{{ labelName }}</div>
-        <p class="headerBox flexBox">
-          <span>会员账号</span>
-          <span>账号类型</span>
-          <span>添加时间</span>
-        </p>
-        <div class="bodyBox">
-          <p v-for="item in gameList" :key="item.gameName" class="flexBox">
-            <span>
-              <Copy v-if="!!item.gameName" :title="item.gameName" :copy="copy">
-                {{ item.gameName }}
+        <el-table
+          v-loading="loading"
+          size="mini"
+          class="small-size-table"
+          :data="gameList"
+          style="width: 100%; margin: 15px 0"
+          :header-cell-style="getRowClass"
+        >
+          <el-table-column prop="userName" align="center" label="会员账号">
+            <template slot-scope="scope">
+              <Copy v-if="!!scope.row.userName" :title="scope.row.userName" :copy="copy">
+                {{ scope.row.userName }}
               </Copy>
-            </span>
-            <span>{{ item.gameName }}</span>
-            <span>{{ item.createdAt }}</span>
-          </p>
-        </div>
+            </template>
+          </el-table-column>
+          <el-table-column
+            prop="accountTypeName"
+            align="center"
+            label="账号类型"
+          ></el-table-column>
+        </el-table>
+        <!-- 分页 -->
+        <el-pagination
+          :current-page.sync="page"
+          background
+          class="fenye"
+          layout="total, sizes,prev, pager, next, jumper"
+          :page-size="size"
+          :page-sizes="[5, 10, 15]"
+          :total="summary"
+          @current-change="handleCurrentChangeDialog"
+          @size-change="handleSizeChangeDialog"
+        ></el-pagination>
       </el-dialog>
     </div>
   </div>
@@ -237,7 +253,11 @@ export default {
       gameList: [],
       dialogGameVisible: false,
       title: '',
-      labelName: ''
+      labelName: '',
+      id: '',
+      page: 1,
+      size: 5,
+      summary: 0
     }
   },
   computed: {},
@@ -252,7 +272,7 @@ export default {
         ...this.getParams(params)
       }
       this.$api
-        .getTabelData(params)
+        .getMemberPageLabel(params)
         .then((res) => {
           if (res.code === 200) {
             this.tableData = res.data.record
@@ -266,17 +286,24 @@ export default {
           this.loading = false
         })
     },
-    lookGame(val) {
-      this.labelName = val.gameLabelName
-      const data = {}
-      data.gameLabelId = val.gameLabelId
-      data.gameLabelName = val.gameLabelName
-      this.$api.getGameLabelRelation(data).then((res) => {
+    // 弹框标签添加人数
+    getMemberMemberInfoByLabelId(val) {
+      const params = {}
+      params.id = val
+      params.pageNum = this.page
+      params.pageSize = this.size
+      this.$api.getMemberMemberInfoByLabelId(params).then((res) => {
         if (res.code === 200) {
-          this.gameList = res.data
+          this.gameList = res.data.record
           this.dialogGameVisible = true
         }
       })
+    },
+    lookGame(val) {
+      this.labelName = val.memberLabelName
+      this.summary = val.peopleNum * 1
+      this.id = val.id
+      this.getMemberMemberInfoByLabelId(val.id)
     },
     reset() {
       this.queryData = {}
@@ -294,10 +321,6 @@ export default {
       this.dialogFormVisible = true
     },
     deleteLabel(val) {
-      const data = {}
-      data.id = val.id
-      data.description = val.description
-      data.gameLabelName = val.gameLabelName
       this.$confirm(
         `<strong>是否删除该条配置?</strong>
         </br><span style='font-size:12px;color:#c1c1c1'>请谨慎操作</span>`,
@@ -310,7 +333,7 @@ export default {
         }
       )
         .then(() => {
-          this.$api.setUpdateDelete(data).then((res) => {
+          this.$api.setMemberDeleteLabel({ id: val.id }).then((res) => {
             if (res.code === 200) {
               this.$message.success('删除成功')
               this.loadData()
@@ -322,46 +345,40 @@ export default {
     subAddOrEidt() {
       console.log(this.title)
       const data = {}
-      data.id = this.dialogForm.id
       data.description = this.dialogForm.description
-      data.gameLabelName = this.dialogForm.gameLabelName
+      data.memberLabelName = this.dialogForm.memberLabelName
       this.$refs.formSub.validate((valid) => {
         if (valid) {
           if (this.title === '新增') {
             console.log('新增')
-            this.$api.addObGameLabel(data).then((res) => {
+
+            this.$api.setMemberAddOrEditMemberLabel(data).then((res) => {
               if (res.code === 200) {
                 this.$message.success('新增成功')
                 this.pageNum = 1
                 this.loadData()
               }
+              this.dialogFormVisible = false
             })
           } else {
-            this.$api.setUpdateLabel(data).then((res) => {
+            data.id = this.dialogForm.id
+            this.$api.setMemberAddOrEditMemberLabel(data).then((res) => {
               if (res.code === 200) {
                 this.$message.success('修改成功')
                 this.loadData()
               }
+              this.dialogFormVisible = false
             })
           }
-          this.dialogFormVisible = false
         }
       })
     },
-    checkValue(e) {
-      const { value } = e.target
-      this.queryData.gameLabelId = value
-      console.log(value)
-    },
     _changeTableSort({ column, prop, order }) {
-      if (prop === 'gameLabelId') {
+      if (prop === 'createdAt') {
         prop = 1
       }
-      if (prop === 'createdAt') {
-        prop = 2
-      }
       if (prop === 'updatedAt') {
-        prop = 3
+        prop = 2
       }
       this.queryData.orderKey = prop
       if (order === 'ascending') {
@@ -376,8 +393,15 @@ export default {
     clear() {
       this.$refs.formSub.resetFields()
     },
-    enterSubmit() {
-      this.loadData()
+    handleCurrentChangeDialog(val) {
+      console.log(111, val)
+      this.page = val
+      this.getMemberMemberInfoByLabelId(this.id)
+    },
+    handleSizeChangeDialog(val) {
+      console.log(222, val)
+      this.size = val
+      this.getMemberMemberInfoByLabelId(this.id)
     }
   }
 }
@@ -385,7 +409,6 @@ export default {
 
 <style lang="scss" scoped>
 /deep/.el-dialog__header {
-  text-align: center;
   color: #909399;
   font-weight: 700;
 }
@@ -416,31 +439,7 @@ export default {
   text-decoration: underline;
   cursor: pointer;
 }
-.bodyBox {
-  max-height: 400px;
-  overflow: auto;
-}
-.flexBox {
-  display: flex;
-  height: 40px;
-  line-height: 40px;
-  border-bottom: 1px solid #e8e8e8;
-  justify-content: space-around;
-  span {
-    display: inline-block;
-    width: 50%;
-    text-align: center;
-    i{
-      margin-left: 10px;
-    }
-  }
-}
-.headerBox {
-  color: #000000d8;
-  background: #fafafa;
-  font-family: "PingFang SC ", "PingFang SC", sans-serif;
-  font-weight: 650;
-  border-top: 1px solid #e8e8e8;
-  margin-top: 15px;
+.fenye {
+  text-align: center;
 }
 </style>

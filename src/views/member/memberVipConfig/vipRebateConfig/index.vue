@@ -301,7 +301,7 @@ export default {
   font-weight: 700;
 }
 .inputBox {
-  width: 65%;
+  width: 85%;
   margin: auto;
 }
 /deep/.el-input-number__decrease,
