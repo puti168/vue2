@@ -10,39 +10,29 @@
 				</span>
             </div>
             <el-form ref="form" :model="queryData" :rules="rules" label-width="100px">
-                <el-form-item label="会员账号:" prop="windControlType">
-                    <el-select
-                        v-model="queryData.windControlType"
+                <el-form-item label="会员账号:" prop="username">
+                    <el-input
+                        v-model="queryData.username"
                         size="medium"
-                        placeholder="请输入会员账号"
+                        maxlength="11"
+                        oninput="value=value.replace(/[\u4E00-\u9FA5]/g ,'')"
+                        placeholder="4-11位，最少2个字母+数字组合，首位字母"
                         clearable
+                        autocomplete="off"
                         style="width: 365px"
-                        @change="changeRiskType($event)"
-                    >
-                        <el-option
-                            v-for="item in windLevelTypeArr"
-                            :key="item.code"
-                            :label="item.description"
-                            :value="item.code"
-                        ></el-option>
-                    </el-select>
+                    ></el-input>
                 </el-form-item>
-                <el-form-item label="会员姓名:" prop="windControlType">
-                    <el-select
-                        v-model="queryData.windControlType"
+                <el-form-item label="会员姓名:" prop="realName">
+                    <el-input
+                        v-model="queryData.realName"
                         size="medium"
-                        placeholder="请输入会员姓名"
+                        maxlength="11"
+                        oninput="value=value.replace(/[\u4E00-\u9FA5]/g ,'')"
+                        placeholder="4-11位，最少2个字母+数字组合，首位字母"
                         clearable
+                        autocomplete="off"
                         style="width: 365px"
-                        @change="changeRiskType($event)"
-                    >
-                        <el-option
-                            v-for="item in windLevelTypeArr"
-                            :key="item.code"
-                            :label="item.description"
-                            :value="item.code"
-                        ></el-option>
-                    </el-select>
+                    ></el-input>
                 </el-form-item>
                 <el-form-item label="会员姓名:" prop="windControlType">
                     <el-select
@@ -216,7 +206,7 @@ import Ip from '@/components/editRisk/ip'
 import Device from '@/components/editRisk/device'
 
 export default {
-    name: routerNames.addAgent,
+    name: routerNames.memberShipIncrease,
     components: { UserName, AgentName, BankCard, Virtual, Ip, Device },
     mixins: [list],
     data() {
@@ -224,9 +214,10 @@ export default {
             loading: false,
             loadingT: false,
             queryData: {
+                userName: undefined,
+                realName: undefined,
                 windControlType: '1',
                 windControlName: undefined,
-                userName: undefined,
                 proxyUserName: undefined,
                 cardNumber: undefined,
                 virtualAddress: undefined,

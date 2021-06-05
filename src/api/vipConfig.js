@@ -44,10 +44,30 @@ export function getlistSelectMemberVipOperate(data) {
 	})
 }
 
+// VIP等级配置 ==> 列表
+export function memberVipGradeSelectAPI(data) {
+	return request({
+		url: '/memberVipGrade/select',
+		method: 'post',
+		data
+	})
+}
+
+// VIP等级配置 ==> 更新
+export function memberVipGradeUpDateAPI(data) {
+	return request({
+		url: '/memberVipGrade/update',
+		method: 'post',
+		data
+	})
+}
+
 export default {
 	getMerchantGameGetMerchantGames,
 	getMemberVipRebateSelectAllInfo,
 	getRebateRecordSelectRecords,
 	getlistSelectMemberVipOperate,
-	getRebateRecordGetVipGrade
+	getRebateRecordGetVipGrade,
+	memberVipGradeSelectAPI,
+	memberVipGradeUpDateAPI
 }
