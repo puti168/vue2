@@ -60,16 +60,16 @@
               :popper-append-to-body="false"
             >
               <el-option
-                v-for="item in memberVipOperateType"
-                :key="item.code"
-                :label="item.description"
-                :value="item.code"
+                v-for="item in VipGradeList"
+                :key="item.gradeNum"
+                :label="item.gradeName"
+                :value="item.gradeNum"
               ></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="操作人:">
             <el-input
-              v-model="queryData.applyName"
+              v-model="queryData.createdBy"
               clearable
               :maxlength="12"
               size="medium"
@@ -163,7 +163,7 @@
             </template>
           </el-table-column>
            <el-table-column
-            prop="applyName"
+            prop="createdBy"
             align="center"
             label="操作人"
           ></el-table-column>
@@ -199,10 +199,9 @@ export default {
   data() {
     return {
       queryData: {
-        accountType: [],
-        applyType: []
 
       },
+      VipGradeList: [],
        gameTypeList: [],
       searchTime: [startTime, endTime],
       now: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
@@ -225,9 +224,17 @@ export default {
   },
    created() {
     this.getGameTypeList()
+    this.geiVipGrade()
   },
   mounted() {},
   methods: {
+    geiVipGrade() {
+      this.$api.getRebateRecordGetVipGrade().then((res) => {
+         if (res.code === 200) {
+           this.VipGradeList = res.data
+         }
+       })
+    },
      getGameTypeList() {
        this.$api.getMerchantGameGamePlant().then((res) => {
          if (res.code === 200) {
