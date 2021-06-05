@@ -26,14 +26,10 @@
 									maxlength="10"
 									placeholder="请输入"
 									clearable
-									style="width: 180px"
+									style="width: 150px"
+									onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
 									@blur="
-										checkTransferValue(
-											$event,
-											scope.row.dayWithdrawalNum,
-											scope.$index,
-											scope
-										)
+										checkTransferValue(scope.row,'dayWithdrawalNum')
 									"
 								></el-input-number>
 							</span>
@@ -52,10 +48,13 @@
 									maxlength="10"
 									placeholder="请输入"
 									clearable
-									style="width: 180px"
+									onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
+									style="width: 150px"
+									@blur="
+										checkTransferValue(scope.row,'dayWithdrawalQuota')
+									"
 								></el-input-number>
 							</span>
-							<span>%</span>
 						</template>
 					</el-table-column>
 					<el-table-column prop="upgradeBonus" align="center" label="升级礼金">
@@ -68,7 +67,11 @@
 									placeholder="请输入"
 									clearable
 									:precision="0"
-									style="width: 180px"
+									onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
+									style="width: 150px"
+									@blur="
+										checkTransferValue(scope.row,'upgradeBonus')
+									"
 								></el-input-number>
 							</span>
 						</template>
@@ -81,8 +84,12 @@
 									size="medium"
 									maxlength="10"
 									placeholder="请输入"
+									onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
 									clearable
-									style="width: 180px"
+									style="width: 150px"
+									@blur="
+										checkTransferValue(scope.row,'birthdayBonus')
+									"
 								></el-input-number>
 							</span>
 						</template>
@@ -96,7 +103,11 @@
 									maxlength="10"
 									placeholder="请输入"
 									clearable
-									style="width: 180px"
+									onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
+									style="width: 150px"
+									@blur="
+										checkTransferValue(scope.row,'aboveMonthRedEnvelope')
+									"
 								></el-input-number>
 							</span>
 						</template>
@@ -109,8 +120,12 @@
 									size="medium"
 									maxlength="10"
 									placeholder="请输入"
+									onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
 									clearable
-									style="width: 180px"
+									style="width: 150px"
+									@blur="
+										checkTransferValue(scope.row,'belowMonthRedEnvelope')
+									"
 								></el-input-number>
 							</span>
 						</template>
@@ -177,11 +192,10 @@ export default {
 					this.loading = false
 				})
 		},
-		checkTransferValue(val, val1, index, scope) {
-			console.log('val', val)
-			console.log('val1', val1)
-			console.log('index', index)
-			console.log('scope', scope)
+		checkTransferValue(row, type) {
+			if (!row[type]) {
+				row[type] = 0
+			}
 		},
 		saveData() {
 			this.$api
