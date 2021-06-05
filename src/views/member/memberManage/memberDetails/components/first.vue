@@ -661,10 +661,10 @@ export default {
           this.genderTypeList = res.data.genderType
         }
       })
-      this.$api.getMerchantDict().then((res) => {
+      this.$api.getMemberLabelDict().then((res) => {
         if (res.code === 200) {
-          // this.riskLevelList = res.data.windControl;
-          this.memberLabelList = res.data.userLabel
+          console.log(res)
+          this.memberLabelList = res.data
         }
       })
       this.$api.getWindControllerLevelDict({ windControlType: 1 }).then((res) => {
@@ -783,17 +783,12 @@ export default {
       switch (val) {
         case '账号状态':
           this.titel = '备注信息：'
-          this.editData.code =
-            this.outlineInfoList.accountStatus === null ||
-            this.outlineInfoList.accountStatus === ''
-              ? ''
-              : this.outlineInfoList.accountStatus + ''
+          this.editData.code = this.outlineInfoList.accountStatus + ''
           break
         case '风控层级':
           this.titel = '备注信息：'
           this.editData.windControlId =
-            this.outlineInfoList.windControlId === '0' ||
-            this.outlineInfoList.windControlId === null
+            this.outlineInfoList.windControlId === '0'
               ? ''
               : this.outlineInfoList.windControlId + ''
           for (let i = 0; i < this.riskLevelList.length; i++) {
@@ -805,9 +800,7 @@ export default {
           break
         case '会员标签':
           this.editData.labelId =
-            this.outlineInfoList.labelId === null || this.outlineInfoList.labelId === ''
-              ? ''
-              : this.outlineInfoList.labelId + ''
+            this.outlineInfoList.labelId === '0' ? '' : this.outlineInfoList.labelId + ''
           for (let i = 0; i < this.memberLabelList.length; i++) {
             const ele = this.memberLabelList[i]
             if (this.editData.labelId === ele.labelId) {

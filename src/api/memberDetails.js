@@ -7,10 +7,18 @@ export function getOutlineInfo(params) {
 		params
 	})
 }
-// 风控层级，会员标签
+// 风控层级
 export function getMerchantDict(params) {
 	return request({
 		url: '/member/merchantDict',
+		method: 'get',
+		params
+	})
+}
+// 会员标签
+export function getMemberLabelDict(params) {
+	return request({
+		url: '/member/labelDict',
 		method: 'get',
 		params
 	})
@@ -130,6 +138,7 @@ export function getBankCardBank(data) {
 export default {
 	getOutlineInfo,
 	getMerchantDict,
+	getMemberLabelDict,
 	setMemberInfoEdit,
 	getVipInfo,
 	getMemberRemarkList,
