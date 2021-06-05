@@ -19,16 +19,16 @@
               style="width: 375px"
             ></el-date-picker>
           </el-form-item>
-          <el-form-item label="变更类型:" class="tagheight" prop="accountType">
+          <el-form-item label="变更类型:" class="tagheight" prop="vipChangeType">
             <el-select
-              v-model="queryData.accountType"
+              v-model="queryData.vipChangeType"
               style="width: 300px"
               multiple
               placeholder="全部"
               :popper-append-to-body="false"
             >
               <el-option
-                v-for="item in accountType"
+                v-for="item in vipChangeType"
                 :key="item.code"
                 :label="item.description"
                 :value="item.code"
@@ -200,7 +200,7 @@ export default {
   data() {
     return {
       queryData: {
-        accountType: [],
+
         applyType: []
       },
       searchTime: [startTime, endTime],
@@ -214,6 +214,9 @@ export default {
     }
   },
   computed: {
+     vipChangeType() {
+     return this.globalDics.vipChangeType
+     },
     accountType() {
       return this.globalDics.accountType
     },
@@ -229,14 +232,14 @@ export default {
       const [startTime, endTime] = create
       let params = {
         ...this.queryData,
-        applyTimeStart: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : '',
-        applyTimeEnd: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
+        startCreatedAt: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : '',
+        engCreatedA: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
       }
       params = {
         ...this.getParams(params)
       }
       this.$api
-        .getProxyDataInfoChangeRecord(params)
+        .getqueryMemberVipChangeRecordPage(params)
         .then((res) => {
           if (res.code === 200) {
             this.tableData = res.data.record

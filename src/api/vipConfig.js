@@ -43,11 +43,20 @@ export function getlistSelectMemberVipOperate(data) {
 		data
 	})
 }
+// vIP变更记录
+export function getqueryMemberVipChangeRecordPage(data) {
+	return request({
+		url: '/memberVipChangeRecord/queryMemberVipChangeRecordPage',
+		method: 'post',
+		data
+	})
+}
 
 export default {
 	getMerchantGameGetMerchantGames,
 	getMemberVipRebateSelectAllInfo,
 	getRebateRecordSelectRecords,
 	getlistSelectMemberVipOperate,
-	getRebateRecordGetVipGrade
+	getRebateRecordGetVipGrade,
+	getqueryMemberVipChangeRecordPage
 }
