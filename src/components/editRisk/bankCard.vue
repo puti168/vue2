@@ -11,7 +11,7 @@
 				<el-col :span="8">
 					<span>银行名称：</span>
 					<span>
-						{{ showInfoData.cardNumber ? showInfoData.cardNumber : '-' }}
+						{{ showInfoData.bankName ? showInfoData.bankName : '-' }}
 					</span>
 				</el-col>
 				<el-col :span="5">
