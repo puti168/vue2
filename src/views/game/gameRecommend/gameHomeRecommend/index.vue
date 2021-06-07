@@ -77,7 +77,7 @@
 										{{ scope.row.status === 0 ? '启用' : '禁用' }}
 									</el-button>
 									<el-button
-										v-if="false"
+                                        v-if="false"
 										type="primary"
 										icon="el-icon-edit"
 										:disabled="loading"
@@ -267,7 +267,7 @@
 										禁用
 									</el-button>
 									<el-button
-										v-if="false"
+										v-if="true"
 										type="primary"
 										icon="el-icon-edit"
 										:disabled="loading"
@@ -300,16 +300,8 @@
 
 <script>
 import list from '@/mixins/list'
-// import dayjs from 'dayjs'
 import { routerNames } from '@/utils/consts'
 import gameHomeRecommendEdit from './editPage/index'
-
-// const end = dayjs()
-// 	.endOf('day')
-// 	.valueOf()
-// const start = dayjs()
-// 	.startOf('day')
-// 	.valueOf()
 
 export default {
 	name: routerNames.gameHomeRecommend,
@@ -326,55 +318,15 @@ export default {
 			queryData: {
 				terminalType: 1
 			},
-			searchData: {
-				allGameNum: 0,
-				assortId: 0,
-				bodyTitle: '',
-				contentInfor: '',
-				currentUserName: '',
-				description: '',
-				gameId: 0,
-				iconAddress: '',
-				mainTitleInfo: '',
-				moduleCaption: '',
-				moduleId: 0,
-				moduleStatus: 0,
-				pageNum: 0,
-				pageSize: 0,
-				pictureHome: '',
-				pictureOne: '',
-				pictureTwo: '',
-				scrollingNum: 0,
-				subTitleInfo: '',
-				terminalType: 0,
-				videoSourceAddress: ''
-			},
 			activeName: 'first'
 		}
 	},
-	computed: {
-		accountType() {
-			return this.globalDics.accountType
-		},
-		virtualType() {
-			return this.globalDics.virtualType
-		},
-		virtualProtocolType() {
-			return this.globalDics.virtualProtocolType
-		},
-		bindType() {
-			return this.globalDics.bindType
-		}
-	},
+	computed: {},
 	mounted() {},
 	methods: {
 		openDetails(val) {
-			this.recommendDetails = {
-				mainTitleInfo: '11111',
-				subTitleInfo: '111',
-				scrollingNum: 0,
-				description: '111'
-			}
+		    console.log('val', val)
+			this.recommendDetails = val
 			this.isEdit = true
 		},
 		back() {
@@ -418,7 +370,7 @@ export default {
 						})
 					}
 				})
-				.catch((res) => {
+				.catch(() => {
 					this.loading = false
 				})
 		},
@@ -479,7 +431,7 @@ export default {
 		changeTableSort({ column, prop, order }) {
 			this.pageNum = 1
 			const orderParams = this.checkOrderParams.get(prop)
-            this.queryData.orderProperty = prop
+			this.queryData.orderProperty = prop
 			if (orderParams) {
 				if (order === 'ascending') {
 					// 升序
@@ -496,9 +448,6 @@ export default {
 			this.queryData = {
 				terminalType: 1
 			}
-			this.loadData()
-		},
-		handleCurrentChange() {
 			this.loadData()
 		}
 	}

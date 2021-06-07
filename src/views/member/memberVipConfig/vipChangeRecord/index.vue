@@ -141,9 +141,9 @@
             </template>
           </el-table-column>
 
-          <el-table-column prop="updateDt" align="center" label="账号类型">
+          <el-table-column prop="accountType" align="center" label="账号类型">
             <template slot-scope="scope">
-              {{ typeFilter(scope.row.applyType, "porxyApplyType") }}
+              {{ typeFilter(scope.row.applyType, "accountType") }}
             </template>
           </el-table-column>
           <el-table-column prop="updateDt" align="center" label="会员标签">
@@ -151,14 +151,14 @@
               {{ typeFilter(scope.row.applyType, "porxyApplyType") }}
             </template>
           </el-table-column>
-          <el-table-column prop="updateDt" align="center" label="风控层级">
-            <template slot-scope="scope">
+          <el-table-column prop="windControlName" align="center" label="风控层级">
+            <!-- <template slot-scope="scope">
               {{ typeFilter(scope.row.applyType, "porxyApplyType") }}
-            </template>
+            </template> -->
           </el-table-column>
-          <el-table-column prop="updateDt" align="center" label="账号状态">
+          <el-table-column prop="accountStatus" align="center" label="账号状态">
             <template slot-scope="scope">
-              {{ typeFilter(scope.row.applyType, "porxyApplyType") }}
+              {{ typeFilter(scope.row.accountStatus, "accountType") }}
             </template>
           </el-table-column>
 
