@@ -16,6 +16,14 @@ export function getMemberVipRebateSelectAllInfo(data) {
 		data
 	})
 }
+// 商户场馆=>获取游戏
+export function setMemberVipRebateUpdateRebateInfo(data) {
+	return request({
+		url: '/memberVip/rebate/updateRebateInfo',
+		method: 'post',
+		data
+	})
+}
 
 // 查询配置VIP记录
 export function getRebateRecordSelectRecords(data) {
@@ -91,6 +99,7 @@ export function memberVipPromotionUpdateAPI(data) {
 export default {
 	getMerchantGameGetMerchantGames,
 	getMemberVipRebateSelectAllInfo,
+	setMemberVipRebateUpdateRebateInfo,
 	getRebateRecordSelectRecords,
 	getlistSelectMemberVipOperate,
 	getRebateRecordGetVipGrade,
@@ -100,4 +109,3 @@ export default {
 	memberVipPromotionListAPI,
 	memberVipPromotionUpdateAPI
 }
-
