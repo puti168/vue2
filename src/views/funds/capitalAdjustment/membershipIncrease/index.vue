@@ -67,7 +67,7 @@
 						@change="checkRiskValue($event)"
 					>
 						<el-option
-							v-for="item in vipDict"
+							v-for="item in []"
 							:key="item.id"
 							:label="item.windControlLevelName"
 							:value="item"
@@ -150,21 +150,6 @@
 				</el-form-item>
 			</el-form>
 		</div>
-		<div class="info-show">
-			<div class="info-header">
-				<span v-if="!!Object.keys(showInfoData).length">基本信息</span>
-			</div>
-		</div>
-
-		<el-dialog
-			title="图片"
-			:visible.sync="dialogPictureVisible"
-			:destroy-on-close="true"
-			width="650px"
-			class="imgCenter"
-		>
-			<img :src="imageAddress" />
-		</el-dialog>
 	</div>
 </template>
 
@@ -193,54 +178,13 @@ export default {
 				activeId: undefined,
 				water: undefined
 			},
-			showInfoData: {},
 			tipsShow: null
 		}
 	},
 	computed: {
-		windLevelTypeArr() {
-			return this.globalDics.windLevelType
-		},
-		riskType() {
-			const typeObj = {
-				'1': {
-					label: '会员账号:',
-					prop: 'userName'
-				},
-				'2': {
-					label: '代理账号:',
-					prop: 'proxyUserName'
-				},
-				'3': {
-					label: '银行卡号:',
-					prop: 'cardNumber'
-				},
-				'4': {
-					label: '虚拟币地址:',
-					prop: 'virtualAddress'
-				},
-				'5': {
-					label: 'IP地址:',
-					prop: 'registerIp'
-				},
-				'6': {
-					label: '终端设备号:',
-					prop: 'deviceNo'
-				}
-			}
-			return typeObj
-		},
-		content() {
-			const obj = [
-				'UserName',
-				'AgentName',
-				'BankCard',
-				'Virtual',
-				'Ip',
-				'Device'
-			]
-			return obj[this.current]
-		},
+		// windLevelTypeArr() {
+		// 	return this.globalDics.windLevelType
+		// },
 		rules() {
 			// const reg1 = /^[A-Za-z]{1}(?=(.*[a-zA-Z]){1,})(?=(.*[0-9]){1,})[0-9A-Za-z]{3,10}$/
 			// const testUserName = (rule, value, callback) => {
@@ -296,9 +240,7 @@ export default {
 			}
 		}
 	},
-	mounted() {
-		this.getMerchantDict('1')
-	},
+	mounted() {},
 	methods: {
 		add() {
 			this.loadingT = true
@@ -361,25 +303,10 @@ export default {
 			this.$refs['form'].resetFields()
 			this.showInfoData = {}
 			this.queryData = {}
-			this.getMerchantDict(evt)
+			// this.getMerchantDict(evt)
 		},
 		// 获取风控层级
-		getMerchantDict(val) {
-			this.queryData.windControlName = undefined
-			this.$api
-				.getSelectWindControlLevel({ windControlType: val * 1 })
-				.then((res) => {
-					const { code, data, msg } = res
-					if (code === 200) {
-						this.vipDict = data || []
-					} else {
-						this.$message({
-							message: msg,
-							type: 'error'
-						})
-					}
-				})
-		},
+		getMerchantDict(val) {},
 		searchInfo() {
 			const { windControlType } = this.queryData
 			// console.log('this.queryData', this.queryData)
@@ -634,38 +561,6 @@ export default {
 		background-color: rgba(233, 233, 233, 1);
 		height: 1px;
 	}
-	.info-show {
-		width: 1000px;
-		justify-content: center;
-		align-items: center;
-		background-color: #fff;
-		margin: 0 auto;
-		position: relative;
-		padding-left: 40px;
-		padding-right: 40px;
-		.info-header {
-			border-top: 1px rgba(233, 233, 233, 1) solid;
-			span {
-				margin-top: 45px;
-				display: inline-block;
-				width: 188px;
-				height: 40px;
-				line-height: 40px;
-				text-align: center;
-				background: #000;
-				color: rgb(255, 255, 255);
-			}
-		}
-		.info-content {
-			margin-top: 30px;
-			font-size: 14px;
-			.info-content-row {
-				padding-top: 20px;
-				padding-bottom: 20px;
-			}
-		}
-	}
-
 	.tips {
 		color: #f56c6c;
 		font-size: 12px;
