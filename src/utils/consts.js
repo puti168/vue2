@@ -36,7 +36,17 @@ export const routerNames = {
 	levelWelfareConfig: 'levelWelfareConfig',
 	createRiskRank: 'createRiskRank',
 	bankRiskChangeInfo: 'bankRiskChangeInfo',
-	virtualRiskChangeInfo: 'virtualRiskChangeInfo'
+	virtualRiskChangeInfo: 'virtualRiskChangeInfo',
+	vipLevelConfig: 'vipLevelConfig',
+	vipRightConfig: 'vipRightConfig',
+	vipDiscountConfig: 'vipDiscountConfig',
+	vipRebateConfig: 'vipRebateConfig',
+	vipOperationRecord: 'vipOperationRecord',
+	vipRebateRecord: 'vipRebateRecord',
+	vipChangeRecord: 'vipChangeRecord',
+	memberLabelConfig: 'memberLabelConfig',
+	memberLabelChangeRecord: 'memberLabelChangeRecord',
+	memberShipIncrease: 'memberShipIncrease'
 }
 const month = dayjs().month()
 const year = dayjs().year()

@@ -23,6 +23,12 @@ const member = [
 		icon: 'bb_accounttransaction',
 		title: '会员审核'
 	},
+	{
+		id: '140',
+		parentId: '2',
+		icon: 'bb_accounttransaction',
+		title: '会员VIP管理'
+	},
 	// 第三级菜单
 	{
 		id: '4',
@@ -52,6 +58,13 @@ const member = [
 		title: '会员注册信息',
 		name: 'registerInfo'
 	},
+	{
+		id: '148',
+		parentId: '3',
+		path: '/member/memberManage/memberLabelConfig',
+		title: '会员标签配置',
+		name: 'memberLabelConfig'
+	},
 
 	{
 		id: '10',
@@ -66,6 +79,13 @@ const member = [
 		path: '/member/memberManage/memberMsgChange',
 		title: '会员信息变更记录',
 		name: 'memberMsgChange'
+	},
+	{
+		id: '149',
+		parentId: '3',
+		path: '/member/memberManage/memberLabelChangeRecord',
+		title: '会员标签变更记录',
+		name: 'memberLabelChangeRecord'
 	},
 	{
 		id: '125',
@@ -108,6 +128,55 @@ const member = [
 		path: '/member/memberReview/addMemberCheck',
 		title: '新增会员审核',
 		name: 'addMemberCheck'
+	},
+	{
+		id: '141',
+		parentId: '140',
+		path: '/member/memberVipConfig/vipLevelConfig',
+		title: 'VIP等级配置',
+		name: 'vipLevelConfig'
+	},
+	{
+		id: '142',
+		parentId: '140',
+		path: '/member/memberVipConfig/vipRightConfig',
+		title: 'VIP权益配置',
+		name: 'vipRightConfig'
+	},
+	{
+		id: '143',
+		parentId: '140',
+		path: '/member/memberVipConfig/vipDiscountConfig',
+		title: 'VIP晋级优惠配置',
+		name: 'vipDiscountConfig'
+	},
+	{
+		id: '144',
+		parentId: '140',
+		path: '/member/memberVipConfig/vipRebateConfig',
+		title: 'VIP返水配置',
+		name: 'vipRebateConfig'
+	},
+	{
+		id: '145',
+		parentId: '140',
+		path: '/member/memberVipConfig/vipOperationRecord',
+		title: 'VIP配置操作记录',
+		name: 'vipOperationRecord'
+	},
+	{
+		id: '146',
+		parentId: '140',
+		path: '/member/memberVipConfig/vipRebateRecord',
+		title: 'VIP返水配置记录',
+		name: 'vipRebateRecord'
+	},
+	{
+		id: '147',
+		parentId: '140',
+		path: '/member/memberVipConfig/vipChangeRecord',
+		title: '会员VIP变更记录',
+		name: 'vipChangeRecord'
 	}
 ]
 export default member

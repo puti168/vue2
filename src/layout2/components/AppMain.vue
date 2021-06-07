@@ -174,11 +174,12 @@ export default {
 			this.wss.onclose = function() {
 				window.clearInterval(thiss.timer)
 				this.canWs = true
-				setTimeout(() => {
-					if (this.canWs) {
-						thiss.ws()
-					}
-				}, 10000)
+				// TODO:暂时关闭重连机制
+				// setTimeout(() => {
+				// 	if (this.canWs) {
+				// 		thiss.ws()
+				// 	}
+				// }, 10000)
 			}
 			this.wss.onerror = function() {
 				// console.log(evt)

@@ -177,8 +177,32 @@ export function addBlackList(data) {
 		data
 	})
 }
+export function memberInComComback(data) {
+	return request({
+		url: '/memberInCom/comeback',
+		method: 'post',
+		data
+	})
+}
+export function memberInComQuery(data) {
+	return request({
+		url: '/memberInCom/query',
+		method: 'post',
+		data
+	})
+}
+export function memberInComSave(data) {
+	return request({
+		url: '/memberInCom/save',
+		method: 'post',
+		data
+	})
+}
 
 export default {
+	memberInComComback,
+	memberInComQuery,
+	memberInComSave,
 	memberTransferAudit,
 	memberTransferDetail,
 	memberTransferLockOrder,

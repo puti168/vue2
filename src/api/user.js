@@ -179,6 +179,47 @@ export function memberDataInfoChangeRecord(data) {
 		data
 	})
 }
+// 会员标签分页查询
+export function getMemberPageLabel(data) {
+	return request({
+		url: '/member/pageLabel',
+		method: 'post',
+		data
+	})
+}
+// 会员标签-新增（编辑）
+export function setMemberAddOrEditMemberLabel(data) {
+	return request({
+		url: '/member/addOrEditMemberLabel',
+		method: 'post',
+		data
+	})
+}
+// 会员标签-标签人数-会员信息
+export function getMemberMemberInfoByLabelId(data) {
+	return request({
+		url: '/member/memberInfoByLabelId',
+		method: 'post',
+		data
+	})
+}
+// 会员标签-删除
+export function setMemberDeleteLabel(params) {
+	return request({
+		url: '/member/deleteLabel',
+		method: 'get',
+		params
+	})
+}
+// 会员标签-变更记录分页查询
+export function getMemberLabelChangeRecordPage(data) {
+	return request({
+		url: '/member/getMemberLabelChangeRecordPage',
+		method: 'post',
+		data
+	})
+}
+
 export default {
 	login,
 	logout,
@@ -200,5 +241,10 @@ export default {
 	bankRecordListAPI,
 	getListUserBankAndVirtual,
 	setUpdateUserBankAndVirtualBindStatus,
-	setUpdateUserBankAndVirtualStatus
+	setUpdateUserBankAndVirtualStatus,
+	getMemberPageLabel,
+	setMemberAddOrEditMemberLabel,
+	getMemberMemberInfoByLabelId,
+	setMemberDeleteLabel,
+	getMemberLabelChangeRecordPage
 }
