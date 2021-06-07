@@ -411,14 +411,18 @@ export default {
 			this.sortable =
 				wrapperTr &&
 				Sortable.create(wrapperTr, {
-					animation: 180,
+					animation: 300,
 					delay: 0,
 					onEnd: ({ newIndex, oldIndex }) => {
 						console.log('newIndex', newIndex)
 						console.log('oldIndex', oldIndex)
 						const currRow = _this.dataList.splice(oldIndex, 1)[0]
 						_this.dataList.splice(newIndex, 0, currRow)
-						_this.dataList[newIndex].displayOrder = newIndex + 1
+						if (newIndex !== oldIndex) {
+							_this.dataList.forEach((item, idx) => {
+								item.displayOrder = idx + 1
+							})
+						}
 					}
 				})
 
