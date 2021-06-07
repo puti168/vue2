@@ -99,12 +99,12 @@
 					<el-table-column prop="times" align="center" label="参与次数">
 						<template slot-scope="scope">
 							<span>
-								<el-select v-model="scope.row.times" placeholder="请选择">
+								<el-select v-model="scope.row.participateNum" placeholder="请选择">
 									<el-option
-										v-for="item in []"
-										:key="item.value"
-										:label="item.label"
-										:value="item.value"
+										v-for="item in participateTypeArr"
+										:key="item.code"
+										:label="item.description"
+										:value="item.code * 1"
 									></el-option>
 								</el-select>
 							</span>
@@ -166,7 +166,11 @@ export default {
 			dataList: []
 		}
 	},
-	computed: {},
+	computed: {
+        participateTypeArr() {
+        	return this.globalDics.participateType
+        }
+    },
 	mounted() {},
 	methods: {
 		_getRowClass({ row, column, rowIndex, columnIndex }) {
