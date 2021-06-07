@@ -365,37 +365,25 @@ export default {
       console.log('保存', params, this.picList)
       this.$refs['memberForm'].validate((valid) => {
         if (valid) {
-          this.$confirm(`确定修改吗？`, {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-          })
-            .then(() => {
-              delete params.uploadImage
-              this.$api
-                .addOverflowMember(params)
-                .then((res) => {
-                  this.loading = false
-                  if (res.code === 200) {
-                    this.$message({
-                      message: '修改成功',
-                      type: 'success'
-                    })
-                    this.picList = []
-                    this.isSub = true
-                    this.reset()
-                  } else {
-                    this.$message({
-                      message: res.msg,
-                      type: 'error'
-                    })
-                  }
+          delete params.uploadImage
+          this.$api
+            .addOverflowMember(params)
+            .then((res) => {
+              this.loading = false
+              if (res.code === 200) {
+                this.$confirm(`溢出申请${res.data}资料提交成功！`, {
+                  confirmButtonText: '确定',
+                  type: 'success',
+                  showCancelButton: false
                 })
-                .catch(() => {
-                  this.loading = false
-                })
+                this.picList = []
+                this.isSub = true
+                this.reset()
+              }
             })
-            .catch(() => {})
+            .catch(() => {
+              this.loading = false
+            })
         }
       })
     },
