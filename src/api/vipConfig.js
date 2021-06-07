@@ -51,6 +51,7 @@ export function getlistSelectMemberVipOperate(data) {
 		data
 	})
 }
+
 // vIP变更记录
 export function getqueryMemberVipChangeRecordPage(data) {
 	return request({
@@ -96,6 +97,15 @@ export function memberVipPromotionUpdateAPI(data) {
 	})
 }
 
+// VIP晋级优惠配置 ==> 全部场馆
+export function memberVipMerchantGameAPI(data) {
+	return request({
+		url: '/merchantGame/gamePlant',
+		method: 'post',
+		data
+	})
+}
+
 export default {
 	getMerchantGameGetMerchantGames,
 	getMemberVipRebateSelectAllInfo,
@@ -107,5 +117,6 @@ export default {
 	memberVipGradeSelectAPI,
 	memberVipGradeUpDateAPI,
 	memberVipPromotionListAPI,
-	memberVipPromotionUpdateAPI
+	memberVipPromotionUpdateAPI,
+	memberVipMerchantGameAPI
 }
