@@ -1,7 +1,7 @@
 <template>
-	<div class="review-content">
+	<div class="mix-container">
 		<div class="head">
-			<span class="title">体育模块</span>
+			<span class="title">{{ gameDetails.moduleName }}</span>
 			<div class="right-btn">
 				<el-button plain @click="back">取消</el-button>
 				<el-button type="success" @click="confirm(true)">保存</el-button>
@@ -10,79 +10,44 @@
 		<div class="main-content">
 			<div class="review-content">
 				<el-form ref="form" :model="formData" label-width="auto" :rules="rules">
-					<el-form-item label="主标题信息:" prop="gameName">
-						<el-input
-							v-model="formData.mainTitleInfo"
-							size="medium"
-							maxlength="20"
-							clearable
-							style="width: 365px"
-						></el-input>
-					</el-form-item>
-					<!-- <el-row>
-            <el-col :span="12">
-              <el-form-item label="主标题信息:" prop="gameName">
-                <el-input
-                  v-model="formData.mainTitleInfo"
-                  size="medium"
-                  maxlength="20"
-                  clearable
-                  style="width: 365px"
-                ></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item label="副标题信息:" prop="gameName">
-                <el-input
-                  v-model="formData.subTitleInfo"
-                  size="medium"
-                  maxlength="20"
-                  clearable
-                  style="width: 365px"
-                ></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item label="滚屏数量限制:" prop="gameName">
-                <el-input
-                  v-model="formData.scrollingNum"
-                  size="medium"
-                  maxlength="20"
-                  clearable
-                  style="width: 365px"
-                ></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item label="全部游戏数量:" prop="gameName">
-                <el-input
-                  v-model="formData.gameName"
-                  size="medium"
-                  maxlength="20"
-                  clearable
-                  style="width: 365px"
-                ></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item label="模块描述:">
-                <el-input
-                  v-model="formData.description"
-                  size="medium"
-                  maxlength="20"
-                  clearable
-                  style="width: 365px"
-                ></el-input>
-              </el-form-item>
-            </el-col>
-          </el-row> -->
+					<el-row>
+						<el-col :span="12">
+							<el-form-item label="主标题信息:" prop="mainTitleInfo">
+								<el-input
+									v-model="formData.mainTitleInfo"
+									size="medium"
+									maxlength="10"
+									clearable
+									style="width: 365px"
+								></el-input>
+							</el-form-item>
+						</el-col>
+						<el-col :span="12">
+							<el-form-item label="副标题信息:" prop="subTitleInfo">
+								<el-input
+									v-model="formData.subTitleInfo"
+									size="medium"
+									maxlength="10"
+									clearable
+									style="width: 365px"
+								></el-input>
+							</el-form-item>
+						</el-col>
+						<el-col :span="12">
+							<el-form-item label="模块描述:" prop="description">
+								<el-input
+									v-model="formData.description"
+									type="textarea"
+									size="medium"
+									maxlength="100"
+									clearable
+									show-word-limit
+									style="width: 365px"
+								></el-input>
+							</el-form-item>
+						</el-col>
+					</el-row>
 				</el-form>
-				<!-- 棋牌 -->
-				<template v-if="true">
-					<el-divider></el-divider>
-					<div class="img-title">客户端图片上传</div>
-					<img v-for="item in 40" :key="item" :src="imageUrl" class="avatar" />
-				</template>
 			</div>
 		</div>
 	</div>
@@ -91,45 +56,56 @@
 <script>
 import list from '@/mixins/list'
 export default {
-	components: {},
 	mixins: [list],
-	props: { recommendDetails: { type: Object, default: () => {} } },
+	props: { gameDetails: { type: Object, default: () => {} } },
 	data() {
 		return {
 			formData: {
-				// mainTitleInfo: "",
-				// subTitleInfo: "",
-				// scrollingNum: 0,
-				// description: "",
-			},
-			imageUrl: ''
+				mainTitleInfo: undefined,
+				subTitleInfo: undefined,
+				description: undefined
+			}
 		}
 	},
 	computed: {
 		rules() {
 			return {
-				icon: [{ required: true, message: '请选择支持终端', trigger: 'blur' }],
-				image: [
+				mainTitleInfo: [
 					{
 						required: true,
-						message: '请选择图片上传',
-						trigger: ['blur', 'change']
+						message: '请输入主标题信息',
+						trigger: 'blur'
+					},
+					{
+						min: 2,
+						max: 10,
+						message: '长度在 2 到 10 个字符',
+						trigger: 'blur'
 					}
 				],
-				gameName: [
+				subTitleInfo: [
 					{
 						required: true,
-						message: '请输入游戏名称',
+						message: '请输入副标题信息',
+						trigger: 'blur'
+					},
+					{
+						min: 2,
+						max: 10,
+						message: '长度在 2 到 10 个字符',
+						trigger: 'blur'
+					}
+				],
+				description: [
+					{
+						min: 2,
+						max: 100,
+						message: '长度在 2 到 100 个字符',
 						trigger: 'blur'
 					}
 				]
 			}
 		}
-		// addGameDetails() {
-		//   console.log(2222222, this.recommendDetails)
-		//   this.formData = this.recommendDetails
-		//   return this.recommendDetails
-		// }
 	},
 	watch: {
 		// addGameDetails: {
@@ -142,25 +118,41 @@ export default {
 		// }
 	},
 	created() {},
-	mounted() {
-		// console.log(this.recommendDetails);
-	},
+	mounted() {},
 	methods: {
 		back() {
 			this.$emit('back')
 		},
 		confirm(action) {
-			this.remark = ''
-			this.action = action
-			this.visible = true
+			const { moduleId } = this.gameDetails
+			const params = {
+				...this.formData,
+				moduleId
+			}
+			this.$api.gameHomeRecommendDetailsEditAPI(params).then((res) => {
+				const { code, data, msg } = res
+				if (code === 200) {
+					this.loading = false
+					console.log('请求到值了', data)
+				} else {
+					this.loading = false
+					this.$message({
+						message: msg,
+						type: 'error'
+					})
+				}
+			})
 		}
 	}
 }
 </script>
 
 <style lang="scss" scoped>
-.review-content {
+.mix-container {
 	width: 100%;
+	margin: 30px auto;
+	padding-left: 25px;
+	padding-right: 25px;
 	.head {
 		height: 70px;
 		line-height: 70px;
@@ -179,8 +171,9 @@ export default {
 	.main-content {
 		.review-content {
 			border: 1px solid rgba(192, 190, 190, 0.5);
-			border-top: 0px;
+			border-top: 0;
 			padding: 30px;
+			width: 100%;
 			.name {
 				font-weight: 600;
 			}

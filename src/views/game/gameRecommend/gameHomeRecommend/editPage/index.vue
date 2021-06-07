@@ -1,39 +1,30 @@
 <template>
 	<div class="game-container report-container">
-		体育,真人荷官模块，电竞，彩票，棋牌，电子，派奖排行
-		<mix v-if="isSport" :recommendDetails="recommendDetails" @back="back"></mix>
-		<span>{{ recommendDetails }}</span>
-		<!-- 直播模块 -->
-		<live v-if="isLive" :gemeDetails="gameDetails" @back="back"></live>
-		<!-- 游戏专题模块 -->
-		<game v-if="isGame" :gemeDetails="gameDetails" @back="back"></game>
-		最新游戏
-		<newGame
-			v-if="isLastGame"
-			:gemeDetails="gameDetails"
+		<!--		&lt;!&ndash;        体育、真人荷官、电竞、彩票&ndash;&gt;-->
+		<!--		<mix v-if="isSport" :recommendDetails="recommendDetails" @back="back"></mix>-->
+		<!--		&lt;!&ndash; 派奖排行榜、电子、棋牌 &ndash;&gt;-->
+		<!--		<common v-if="isLive" :gemeDetails="gameDetails" @back="back"></common>-->
+		<!--		&lt;!&ndash; 直播 &ndash;&gt;-->
+		<!--		<live v-if="isGame" :gemeDetails="gameDetails" @back="back"></live>-->
+		<component
+			:is="content"
+			:gameDetails="gameDetails"
 			@back="back"
-		></newGame>
-		<!--		<component-->
-		<!--			:is="component"-->
-		<!--			@back="back"-->
-		<!--			:recommendDetails="recommendDetails"-->
-		<!--		></component>-->
+		></component>
 	</div>
 </template>
 
 <script>
 import list from '@/mixins/list'
-import live from './components/live'
-// import common from './components/common'
 import mix from './components/mix'
-import game from './components/game'
-import newGame from './components/newGame'
+import common from './components/common'
+import live from './components/live'
+
 export default {
 	components: {
-		live,
-		game,
-		newGame,
-		mix
+		mix,
+		common,
+		live
 	},
 	mixins: [list],
 	props: {
@@ -54,14 +45,30 @@ export default {
 			},
 			visible: false,
 			type: true,
-			isSport: true,
+			isSport: false,
 			isLive: false,
-			isGame: false,
+			isGame: true,
 			isLastGame: false,
 			component: mix
 		}
 	},
-	computed: {},
+	computed: {
+		moduleId() {
+			return this.recommendDetails.id
+		},
+		// eslint-disable-next-line vue/return-in-computed-property
+		content() {
+			const obj = ['mix', 'common', 'live']
+			const { id } = this.recommendDetails
+			if (['1', '2', '3', '5'].includes(id)) {
+				return obj[0]
+			} else if (['6', '7', '8'].includes(id)) {
+				return obj[1]
+			} else if (['4'].includes(id)) {
+				return obj[2]
+			}
+		}
+	},
 	watch: {
 		recommendDetails: {
 			handler(newV) {
@@ -80,36 +87,21 @@ export default {
 		back() {
 			this.$emit('back')
 		},
-		// 初始化详情
-		// initShowDetailsModule() {
-		//   const moduleName = this.recommendDetails.moduleName;
-		//   this.isSport =
-		//     moduleName.search("体育") !== -1 ||
-		//     moduleName.search("真人荷官") !== -1 ||
-		//     moduleName.search("电竞") !== -1 ||
-		//     moduleName.search("彩票") !== -1 ||
-		//     moduleName.search("棋牌") !== -1 ||
-		//     moduleName.search("电子") !== -1 ||
-		//     moduleName.search("派奖排行") !== -1;
-		//   this.isLive = moduleName.search("直播") !== -1;
-		//   this.isGame = moduleName.search("游戏") !== -1;
-		//   this.isLastGame = moduleName.search("最新游戏") !== -1;
-		// },
 		// 获取详情信息
 		getDetailsInfo() {
 			const params = {
-				...this.searchData
+				moduleId: this.moduleId
 			}
 			this.$api.gameHomeRecommendDetailsAPI(params).then((res) => {
-				if (res.code === 200) {
-					const response = res.data
+				const { code, data, msg } = res
+				if (code === 200) {
 					this.loading = false
-					console.log('请求到值了', response)
-					//   this.gameDetails = response;
+					console.log('请求到值了', data)
+					this.gameDetails = data
 				} else {
 					this.loading = false
 					this.$message({
-						message: res.msg,
+						message: msg,
 						type: 'error'
 					})
 				}

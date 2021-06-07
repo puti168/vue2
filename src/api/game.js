@@ -309,6 +309,15 @@ export function gameHomeRecommendDetailsAPI(data) {
 	})
 }
 
+// 游戏==> 首页推荐位 ==> 列表 ===> 子模块编辑
+export function gameHomeRecommendDetailsEditAPI(data) {
+	return request({
+		url: '/gameCommonModule/editModule',
+		method: 'post',
+		data
+	})
+}
+
 export default {
 	gameAssortListAPI,
 	gameList,
@@ -346,5 +355,6 @@ export default {
 	gameSearchDeleteAPI,
 	gameHomeRecommendListAPI,
 	recommendStatusChangeAPI,
-	gameHomeRecommendDetailsAPI
+	gameHomeRecommendDetailsAPI,
+	gameHomeRecommendDetailsEditAPI
 }
