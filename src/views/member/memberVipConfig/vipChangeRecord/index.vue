@@ -21,7 +21,7 @@
           </el-form-item>
           <el-form-item label="变更类型:" class="tagheight" prop="vipChangeType">
             <el-select
-              v-model="queryData.vipChangeType"
+              v-model="queryData.changeType"
               style="width: 300px"
               multiple
               placeholder="全部"
@@ -51,7 +51,7 @@
 
           <el-form-item label="操作人:">
             <el-input
-              v-model="queryData.applyName"
+              v-model="queryData.createdBy"
               clearable
               :maxlength="12"
               size="medium"
@@ -95,41 +95,19 @@
         >
 
           <el-table-column
-            prop="applyTime"
+            prop="createdAt"
             align="center"
             label="变更时间"
             sortable="custom"
           ></el-table-column>
-          <el-table-column prop="updateDt" align="center" label="变更类型">
+          <el-table-column prop="changeType" align="center" label="变更类型">
             <template slot-scope="scope">
-              {{ typeFilter(scope.row.applyType, "porxyApplyType") }}
+              {{ typeFilter(scope.row.changeType, "vipChangeType") }}
             </template>
           </el-table-column>
-          <el-table-column prop="beforeModify" align="center" label="变更前">
-            <template slot-scope="scope">
-              <span v-if="scope.row.applyType === '1'">
-                {{ typeFilter(scope.row.beforeModify, "accountStatusType") }}
-              </span>
-              <span v-else-if="scope.row.applyType === '5'">
-                {{ typeFilter(scope.row.beforeModify, "entrAuthorityType") }}
-              </span>
-              <span v-else>
-                {{ scope.row.beforeModify }}
-              </span>
-            </template>
+          <el-table-column prop="beforeGrade" align="center" label="变更前">
           </el-table-column>
-          <el-table-column prop="afterModify" align="center" label="变更后">
-            <template slot-scope="scope">
-              <span v-if="scope.row.applyType === '1'">
-                {{ typeFilter(scope.row.afterModify, "accountStatusType") }}
-              </span>
-              <span v-else-if="scope.row.applyType === '5'">
-                {{ typeFilter(scope.row.afterModify, "entrAuthorityType") }}
-              </span>
-              <span v-else>
-                {{ scope.row.afterModify }}
-              </span>
-            </template>
+          <el-table-column prop="afterGrade" align="center" label="变更后">
           </el-table-column>
 
            <el-table-column prop="userName" align="center" label="会员账号">
@@ -141,12 +119,12 @@
             </template>
           </el-table-column>
 
-          <el-table-column prop="accountType" align="center" label="账号类型">
+          <el-table-column prop="accountTypeZn" align="center" label="账号类型">
             <template slot-scope="scope">
               {{ typeFilter(scope.row.applyType, "accountType") }}
             </template>
           </el-table-column>
-          <el-table-column prop="updateDt" align="center" label="会员标签">
+          <el-table-column prop="labelName" align="center" label="会员标签">
             <template slot-scope="scope">
               {{ typeFilter(scope.row.applyType, "porxyApplyType") }}
             </template>
@@ -158,12 +136,17 @@
           </el-table-column>
           <el-table-column prop="accountStatus" align="center" label="账号状态">
             <template slot-scope="scope">
-              {{ typeFilter(scope.row.accountStatus, "accountType") }}
+              <span v-if="scope.row.accountStatus===1" class="normalRgba">{{ typeFilter(scope.row.accountStatus, "accountStatusType") }}</span>
+              <span v-if="scope.row.accountStatus===2" class="disableRgba">{{ typeFilter(scope.row.accountStatus, "accountStatusType") }}</span>
+              <span v-if="scope.row.accountStatus===3" class="lockingRgba">{{ typeFilter(scope.row.accountStatus, "accountStatusType") }}</span>
+              <span v-if="scope.row.accountStatus===4" class="deleteRgba">{{ typeFilter(scope.row.accountStatus, "accountStatusType") }}</span>
+              <span v-else>-</span>
+
             </template>
           </el-table-column>
 
              <el-table-column
-            prop="applyName"
+            prop="createdBy"
             align="center"
             label="操作人"
           ></el-table-column>
@@ -201,7 +184,6 @@ export default {
     return {
       queryData: {
 
-        applyType: []
       },
       searchTime: [startTime, endTime],
       now: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
@@ -233,11 +215,13 @@ export default {
       let params = {
         ...this.queryData,
         startCreatedAt: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : '',
-        engCreatedA: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
+        engCreatedAt: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
       }
       params = {
         ...this.getParams(params)
+
       }
+      console.log(params)
       this.$api
         .getqueryMemberVipChangeRecordPage(params)
         .then((res) => {
