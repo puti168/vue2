@@ -271,12 +271,13 @@ export default {
 			// 	}
 			// })
 
+			console.log('this.dataList', this.dataList)
 			const createObSearchConfigReqList =
 				this.dataList.map((item) => {
 					return {
 						displayOrder: item.displayOrder,
 						searchInfo: item.searchInfo,
-						createdAt: item.item,
+						createdAt: item.createdAt,
 						createdBy: item.createdBy
 					}
 				}) || []
@@ -325,14 +326,13 @@ export default {
 			const lastRow = this.dataList.length
 				? this.dataList[this.dataList.length - 1]
 				: undefined
-			const new_row = lastRow ? lastRow.id + 1 : 1
+			// const new_row = lastRow ? lastRow.id + 1 : 1
 			const displayOrder = lastRow ? lastRow.displayOrder + 1 : 1
 			this.dataList.push({
-				id: new_row,
 				updatedBy: getUsername(),
 				createdBy: getUsername(),
-				createdAt: new Date(),
-				updatedAt: new Date(),
+				createdAt: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
+				updatedAt: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
 				displayOrder,
 				searchInfo: ''
 			})
@@ -414,8 +414,11 @@ export default {
 					animation: 180,
 					delay: 0,
 					onEnd: ({ newIndex, oldIndex }) => {
+						console.log('newIndex', newIndex)
+						console.log('oldIndex', oldIndex)
 						const currRow = _this.dataList.splice(oldIndex, 1)[0]
 						_this.dataList.splice(newIndex, 0, currRow)
+						_this.dataList[newIndex].displayOrder = newIndex + 1
 					}
 				})
 
