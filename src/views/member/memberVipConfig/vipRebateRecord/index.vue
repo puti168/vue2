@@ -29,9 +29,9 @@
             >
               <el-option
                 v-for="item in gameTypeList"
-                :key="item.gameCode"
+                :key="item.id"
                 :label="item.gameName"
-                :value="item.gameCode"
+                :value="item.id"
               ></el-option>
             </el-select>
           </el-form-item>
@@ -113,13 +113,20 @@
           @sort-change="_changeTableSort"
         >
          <el-table-column
-            prop="applyTime"
+            prop="createdAt"
             align="center"
             label="操作时间"
             sortable="custom"
           ></el-table-column>
-              <el-table-column prop="gameTypeList" align="center" label="场馆名称">
-            <template slot-scope="scope">
+              <el-table-column prop="venueId" align="center" label="场馆名称">
+              <template slot-scope="scope">
+
+            <span
+v-for="item in gameTypeList"
+                  :key="item.gameName"
+            > {{ scope.row.venueId===item.id?item.gameName:'' }}</span>
+            </template>
+            <!-- <template slot-scope="scope">
               <span v-if="scope.row.applyType === '1'">
                 {{ typeFilter(scope.row.gameTypeList, "accountStatusType") }}
               </span>
@@ -129,7 +136,7 @@
               <span v-else>
                 {{ scope.row.gameTypeList }}
               </span>
-            </template>
+            </template> -->
           </el-table-column>
           <el-table-column prop="beforeModify" align="center" label="游戏类型">
             <template slot-scope="scope">
@@ -144,23 +151,25 @@
               </span>
             </template>
           </el-table-column>
-           <el-table-column prop="updateDt" align="center" label="VIP等级">
+           <el-table-column prop="vipId" align="center" label="VIP等级">
             <template slot-scope="scope">
-              {{ typeFilter(scope.row.applyType, "porxyApplyType") }}
+              <span
+v-for="item in VipGradeList"
+              :key="item.gradeName"
+              >{{ scope.row.vipId===item.gradeNum?item.gradeName:'' }}</span>
             </template>
           </el-table-column>
-           <el-table-column prop="applyType" align="center" label="操作前">
-            <template slot-scope="scope">
-              {{ typeFilter(scope.row.accountType, "accountType") }}
-            </template>
+           <el-table-column prop="beforeModify" align="center" label="操作前">
+             <template slot-scope="scope">
+               <span>{{ scope.row.beforeModify }}%</span>
+             </template>
+
           </el-table-column>
-          <el-table-column prop="userName" align="center" label="操作后">
-            <template slot-scope="scope">
-              <Copy v-if="!!scope.row.userName" :title="scope.row.userName" :copy="copy">
-                {{ scope.row.userName }}
-              </Copy>
-              <span v-else>-</span>
-            </template>
+          <el-table-column prop="afterModify" align="center" label="操作后">
+              <template slot-scope="scope">
+               <span>{{ scope.row.afterModify }}%</span>
+             </template>
+
           </el-table-column>
            <el-table-column
             prop="createdBy"
@@ -199,6 +208,8 @@ export default {
   data() {
     return {
       queryData: {
+        venueId: [],
+        vipSerialNum: []
 
       },
       VipGradeList: [],
