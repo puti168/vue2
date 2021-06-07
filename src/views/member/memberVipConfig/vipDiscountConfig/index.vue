@@ -14,22 +14,30 @@
 					<el-table-column
 						align="center"
 						label="vip等级"
-						prop="vipLevel"
+						prop="vipSerialNum"
 						width="120"
-					></el-table-column>
+					>
+                        <template slot-scope="scope">
+							<span v-if="scope.row.vipSerialNum">
+								VIP{{ scope.row.vipSerialNum }}
+							</span>
+                            <span v-else>-</span>
+                        </template>
+                    </el-table-column>
 					<el-table-column
-						prop="minTransfer"
+						prop="lowestTransferQuota"
 						align="center"
 						label="最低转账额度"
 					>
 						<template slot-scope="scope">
 							<span>
-								<el-input-number
-									v-model="scope.row.minTransfer"
+								<el-input
+									v-model="scope.row.lowestTransferQuota"
 									size="medium"
-									maxlength="20"
+									maxlength="10"
 									placeholder="请输入"
 									clearable
+									onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
 									style="width: 180px"
 									@blur="
 										checkTransferValue(
@@ -39,50 +47,52 @@
 											scope
 										)
 									"
-								></el-input-number>
+								></el-input>
 							</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="dividends" align="center" label="红利比例">
+					<el-table-column prop="bonusRatio" align="center" label="红利比例">
 						<template slot-scope="scope">
 							<span>
-								<el-input-number
-									v-model.number="scope.row.dividends"
+								<el-input
+									v-model.number="scope.row.bonusRatio"
 									size="medium"
-									maxlength="20"
+									maxlength="5"
 									placeholder="请输入"
 									clearable
+									onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
 									style="width: 180px"
-								></el-input-number>
+								></el-input>
 							</span>
 							<span>%</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="turnover" align="center" label="最高奖金">
+					<el-table-column prop="highestBonus" align="center" label="最高奖金">
 						<template slot-scope="scope">
 							<span>
-								<el-input-number
-									v-model="scope.row.bonus"
+								<el-input
+									v-model="scope.row.highestBonus"
 									size="medium"
-									maxlength="20"
+									maxlength="10"
 									placeholder="请输入"
 									clearable
+									onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
 									style="width: 180px"
-								></el-input-number>
+								></el-input>
 							</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="turnover" align="center" label="流水倍数">
+					<el-table-column prop="waterMultiple" align="center" label="流水倍数">
 						<template slot-scope="scope">
 							<span>
-								<el-input-number
-									v-model="scope.row.turnover"
+								<el-input
+									v-model="scope.row.waterMultiple"
 									size="medium"
-									maxlength="20"
+									maxlength="10"
 									placeholder="请输入"
 									clearable
 									style="width: 180px"
-								></el-input-number>
+								></el-input>
 							</span>
 						</template>
 					</el-table-column>
