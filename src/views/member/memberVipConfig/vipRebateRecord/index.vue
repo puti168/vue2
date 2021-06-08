@@ -44,7 +44,7 @@
 							:popper-append-to-body="false"
 						>
 							<el-option
-								v-for="item in backwaterGrade"
+								v-for="item in gameId"
 								:key="item.gameId"
 								:label="item.gameName"
 								:value="item.gameId"
@@ -124,21 +124,11 @@
 								{{ scope.row.venueId === item.id ? item.gameName : '' }}
 							</span>
 						</template>
-						<!-- <template slot-scope="scope">
-              <span v-if="scope.row.applyType === '1'">
-                {{ typeFilter(scope.row.gameTypeList, "accountStatusType") }}
-              </span>
-              <span v-else-if="scope.row.applyType === '5'">
-                {{ typeFilter(scope.row.gameTypeList, "entrAuthorityType") }}
-              </span>
-              <span v-else>
-                {{ scope.row.gameTypeList }}
-              </span>
-            </template> -->
+
 					</el-table-column>
 					<el-table-column prop="gameId" align="center" label="游戏类型">
 						<template slot-scope="scope">
-							<span v-for="item in backwaterGrade" :key="item.gameName">
+							<span v-for="item in gameId" :key="item.gameName">
 								{{ scope.row.gameId == item.gameId + '' ? item.gameName : '' }}
 							</span>
 						</template>
@@ -209,7 +199,7 @@ export default {
 			},
 			VipGradeList: [],
 			gameTypeList: [],
-			backwaterGrade: [],
+			backwaterType: [],
 
 			searchTime: [startTime, endTime],
 			now: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
@@ -239,7 +229,7 @@ export default {
 		geiVipBackwaterGrade() {
 			this.$api.getBackwaterGameType().then((res) => {
 				if (res.code === 200) {
-					this.backwaterGrade = res.data
+					this.gameId = res.data
 				}
 			})
 		},
