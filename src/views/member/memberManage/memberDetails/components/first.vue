@@ -702,6 +702,7 @@ export default {
             this.$api.getMemberRemarkList(params).then((res) => {
               if (res.code === 200) {
                 this.tableList = res.data.record
+                this.total = res.data.totalRecord
               }
             })
           }
