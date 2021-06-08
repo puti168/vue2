@@ -67,6 +67,16 @@
 			</div>
 			<div class="view-container dealer-container">
 				<div class="content">
+					<el-tabs v-model="activeName" @tab-click="handleClick">
+						<el-tab-pane label="待一审" name="one">
+						</el-tab-pane>
+						<el-tab-pane label="待二审" name="two">
+						</el-tab-pane>
+						<el-tab-pane label="待三审" name="three">
+						</el-tab-pane>
+						<el-tab-pane label="待出款" name="four">
+						</el-tab-pane>
+					</el-tabs>
 					<el-table
 						v-loading="loading"
 						border
@@ -174,12 +184,7 @@
 				</div>
 			</div>
 		</template>
-		<detail
-			v-else
-			:type="type"
-			:rowData="rowData"
-			@goBack="goBack"
-		></detail>
+		<detail v-else :type="type" :rowData="rowData" @goBack="goBack"></detail>
 	</div>
 </template>
 
@@ -219,6 +224,7 @@ export default {
 			rowData: {},
 			now: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
 			name: '',
+			activeName: '',
 			dataList: []
 		}
 	},
@@ -243,6 +249,9 @@ export default {
 		this.name = getUsername()
 	},
 	methods: {
+		handleClick() {
+
+		},
 		loadData() {
 			this.loading = true
 			const [startTime, endTime] = this.formTime.time || []

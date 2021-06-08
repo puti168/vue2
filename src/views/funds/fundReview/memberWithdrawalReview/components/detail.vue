@@ -105,22 +105,47 @@
 								{{ list.beforeModify ? list.beforeModify : '-' }}
 							</template>
 						</el-table-column>
-						<el-table-column align="center" label="	">
+						<el-table-column align="center" label="绑定银行卡数量">
 							<template>
 								{{ list.beforeModify ? list.beforeModify : '-' }}
 							</template>
 						</el-table-column>
-						<el-table-column align="center" label="账号类型">
+						<el-table-column align="center" label="虚拟币账号数量">
 							<template>
 								{{ list.beforeModify ? list.beforeModify : '-' }}
 							</template>
 						</el-table-column>
-						<el-table-column align="center" label="注册域名">
+					</el-table>
+				</div>
+				<div class="review-flex">
+					<el-table
+						border
+						size="mini"
+						:data="[1]"
+						style="width: 100%"
+						:header-cell-style="getRowClass"
+					>
+						<el-table-column align="center" label="总存款金额（万元）">
 							<template>
 								{{ list.beforeModify ? list.beforeModify : '-' }}
 							</template>
 						</el-table-column>
-						<el-table-column align="center" label="上级会员">
+						<el-table-column align="center" label="总存款次数">
+							<template>
+								{{ list.beforeModify ? list.beforeModify : '-' }}
+							</template>
+						</el-table-column>
+						<el-table-column align="center" label="总款金额（万元）">
+							<template>
+								{{ list.beforeModify ? list.beforeModify : '-' }}
+							</template>
+						</el-table-column>
+						<el-table-column align="center" label="总提款次数">
+							<template>
+								{{ list.beforeModify ? list.beforeModify : '-' }}
+							</template>
+						</el-table-column>
+						<el-table-column align="center" label="总存提款差额（万元）">
 							<template>
 								{{ list.beforeModify ? list.beforeModify : '-' }}
 							</template>
@@ -129,11 +154,138 @@
 				</div>
 			</div>
 			<div class="review-content">
-				<p class="name">审核信息</p>
+				<p class="name">账号风控层级</p>
 				<div class="review-flex">
-					<div>一审人: {{ list.auditName }}</div>
-					<div>一审时间: {{ list.auditTime }}</div>
-					<div>一审备注: {{ list.auditRemark }}</div>
+					<el-table
+						border
+						size="mini"
+						:data="[1]"
+						style="width: 100%"
+						:header-cell-style="getRowClass"
+					>
+						<el-table-column align="center" label="风险会员">
+							<template>
+								{{ list.beforeModify ? list.beforeModify : '-' }}
+							</template>
+						</el-table-column>
+						<el-table-column align="center" label="风险银行卡">
+							<template>
+								{{ list.beforeModify ? list.beforeModify : '-' }}
+							</template>
+						</el-table-column>
+						<el-table-column align="center" label="风险虚拟币">
+							<template>
+								{{ list.beforeModify ? list.beforeModify : '-' }}
+							</template>
+						</el-table-column>
+						<el-table-column align="center" label="风险IP">
+							<template>
+								{{ list.beforeModify ? list.beforeModify : '-' }}
+							</template>
+						</el-table-column>
+						<el-table-column align="center" label="风险终端设备号">
+							<template>
+								{{ list.beforeModify ? list.beforeModify : '-' }}
+							</template>
+						</el-table-column>
+					</el-table>
+				</div>
+			</div>
+			<div class="review-content">
+				<p class="name">近期存提款信息</p>
+				<div class="review-flex">
+					<el-table
+						border
+						size="mini"
+						:data="[1]"
+						style="width: 100%"
+						:header-cell-style="getRowClass"
+					>
+						<el-table-column align="center" label="上次提款时间">
+							<template>
+								{{ list.beforeModify ? list.beforeModify : '-' }}
+							</template>
+						</el-table-column>
+						<el-table-column align="center" label="上次提款金额">
+							<template>
+								{{ list.beforeModify ? list.beforeModify : '-' }}
+							</template>
+						</el-table-column>
+						<el-table-column
+							align="center"
+							label="上次提款至本次提款间存款金额"
+						>
+							<template>
+								{{ list.beforeModify ? list.beforeModify : '-' }}
+							</template>
+						</el-table-column>
+						<el-table-column align="center" label="上次提款方式">
+							<template>
+								{{ list.beforeModify ? list.beforeModify : '-' }}
+							</template>
+						</el-table-column>
+						<el-table-column align="center" label="上次是否为大额提款">
+							<template>
+								{{ list.beforeModify ? list.beforeModify : '-' }}
+							</template>
+						</el-table-column>
+					</el-table>
+				</div>
+			</div>
+			<div class="review-content">
+				<p class="name">本次提款信息</p>
+				<div class="review-flex">
+					<table>
+						<tbody>
+							<tr>
+								<td>订单号</td>
+								<td>33333333</td>
+								<td>订单来源</td>
+								<td>PC</td>
+								<td>提款IP</td>
+								<td>33333333333</td>
+								<td>是否为首提</td>
+								<td>否</td>
+								<td>是否为大额提款</td>
+								<td>否</td>
+							</tr>
+							<tr>
+								<td>今日提款次数</td>
+								<td>33333333</td>
+								<td>免费提款次数</td>
+								<td>PC</td>
+								<td>今日提款总额</td>
+								<td>33333333333</td>
+								<td>是否连续提款</td>
+								<td>否</td>
+								<td>提款方式</td>
+								<td>否</td>
+							</tr>
+							<tr>
+								<td>提款设备终端</td>
+								<td colspan="2">33333333</td>
+								<td>提款绑定域名</td>
+								<td colspan="5">PC</td>
+							</tr>
+							<tr>
+								<td>提款银行信息</td>
+								<td colspan="9">33333333</td>
+							</tr>
+							<tr>
+								<td rowspan="2">账目审核信息</td>
+								<td colspan="3">本次提款流水金额</td>
+								<td colspan="2">申请金额</td>
+								<td colspan="2">提款手续费</td>
+								<td colspan="2">实际打款</td>
+							</tr>
+							<tr>
+								<td colspan="3">1000.00</td>
+								<td colspan="2">1000.00</td>
+								<td colspan="2">1000.00</td>
+								<td colspan="2">1000.00</td>
+							</tr>
+						</tbody>
+					</table>
 				</div>
 			</div>
 		</div>
