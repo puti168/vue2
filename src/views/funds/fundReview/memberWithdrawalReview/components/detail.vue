@@ -125,27 +125,27 @@
 						style="width: 100%"
 						:header-cell-style="getRowClass"
 					>
-						<el-table-column align="center" label="总存款金额（万元）">
+						<el-table-column align="center" label="累计总存款金额（万元）">
 							<template>
 								{{ list.beforeModify ? list.beforeModify : '-' }}
 							</template>
 						</el-table-column>
-						<el-table-column align="center" label="总存款次数">
+						<el-table-column align="center" label="累计总存款次数">
 							<template>
 								{{ list.beforeModify ? list.beforeModify : '-' }}
 							</template>
 						</el-table-column>
-						<el-table-column align="center" label="总款金额（万元）">
+						<el-table-column align="center" label="累计总提款金额（万元）">
 							<template>
 								{{ list.beforeModify ? list.beforeModify : '-' }}
 							</template>
 						</el-table-column>
-						<el-table-column align="center" label="总提款次数">
+						<el-table-column align="center" label="累计总提款次数">
 							<template>
 								{{ list.beforeModify ? list.beforeModify : '-' }}
 							</template>
 						</el-table-column>
-						<el-table-column align="center" label="总存提款差额（万元）">
+						<el-table-column align="center" label="累计总存提款差额（万元）">
 							<template>
 								{{ list.beforeModify ? list.beforeModify : '-' }}
 							</template>
