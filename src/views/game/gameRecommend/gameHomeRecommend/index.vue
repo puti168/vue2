@@ -90,17 +90,17 @@
 							</el-table-column>
 						</el-table>
 						<!-- 分页 -->
-						<el-pagination
-							:current-page.sync="pageNum"
-							class="pageValue"
-							background
-							layout="total, sizes,prev, pager, next, jumper"
-							:page-size="pageSize"
-							:page-sizes="pageSizes"
-							:total="total"
-							@current-change="handleCurrentChange"
-							@size-change="handleSizeChange"
-						></el-pagination>
+<!--						<el-pagination-->
+<!--							:current-page.sync="pageNum"-->
+<!--							class="pageValue"-->
+<!--							background-->
+<!--							layout="total, sizes,prev, pager, next, jumper"-->
+<!--							:page-size="pageSize"-->
+<!--							:page-sizes="pageSizes"-->
+<!--							:total="total"-->
+<!--							@current-change="handleCurrentChange"-->
+<!--							@size-change="handleSizeChange"-->
+<!--						></el-pagination>-->
 					</div>
 				</div>
 			</el-tab-pane>
@@ -186,17 +186,17 @@
 							</el-table-column>
 						</el-table>
 						<!-- 分页 -->
-						<el-pagination
-							:current-page.sync="pageNum"
-							class="pageValue"
-							background
-							layout="total, sizes,prev, pager, next, jumper"
-							:page-size="pageSize"
-							:page-sizes="pageSizes"
-							:total="total"
-							@current-change="handleCurrentChange"
-							@size-change="handleSizeChange"
-						></el-pagination>
+<!--						<el-pagination-->
+<!--							:current-page.sync="pageNum"-->
+<!--							class="pageValue"-->
+<!--							background-->
+<!--							layout="total, sizes,prev, pager, next, jumper"-->
+<!--							:page-size="pageSize"-->
+<!--							:page-sizes="pageSizes"-->
+<!--							:total="total"-->
+<!--							@current-change="handleCurrentChange"-->
+<!--							@size-change="handleSizeChange"-->
+<!--						></el-pagination>-->
 					</div>
 				</div>
 			</el-tab-pane>
@@ -280,17 +280,17 @@
 							</el-table-column>
 						</el-table>
 						<!-- 分页 -->
-						<el-pagination
-							:current-page.sync="pageNum"
-							class="pageValue"
-							background
-							layout="total, sizes,prev, pager, next, jumper"
-							:page-size="pageSize"
-							:page-sizes="pageSizes"
-							:total="total"
-							@current-change="handleCurrentChange"
-							@size-change="handleSizeChange"
-						></el-pagination>
+<!--						<el-pagination-->
+<!--							:current-page.sync="pageNum"-->
+<!--							class="pageValue"-->
+<!--							background-->
+<!--							layout="total, sizes,prev, pager, next, jumper"-->
+<!--							:page-size="pageSize"-->
+<!--							:page-sizes="pageSizes"-->
+<!--							:total="total"-->
+<!--							@current-change="handleCurrentChange"-->
+<!--							@size-change="handleSizeChange"-->
+<!--						></el-pagination>-->
 					</div>
 				</div>
 			</el-tab-pane>
@@ -356,12 +356,12 @@ export default {
 			this.$api
 				.gameHomeRecommendListAPI(params)
 				.then((res) => {
-					const { code } = res
+					const { code, data } = res
 					if (code === 200) {
-						const response = res.data
+						// const response = res.data
 						this.loading = false
-						this.dataList = response.record
-						this.total = response.totalRecord
+						this.dataList = data
+						// this.total = response.totalRecord
 					} else {
 						this.loading = false
 						this.$message({
