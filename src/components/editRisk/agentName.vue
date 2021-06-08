@@ -17,7 +17,12 @@
 				</el-col>
 				<el-col :span="10">
 					<span>被风控会员个数：</span>
-					<span v-if="showInfoData.windControllerProxyCount">
+					<span
+						v-if="
+							showInfoData.windControllerProxyCount ||
+								showInfoData.windControllerProxyCount * 1 === 0
+						"
+					>
 						{{ showInfoData.windControllerProxyCount }}
 						<span
 							class="blueColor decoration"
@@ -30,10 +35,10 @@
 				</el-col>
 				<el-col :span="4">
 					<span>风控层级：</span>
-                    <span>
+					<span>
 						{{
-                            showInfoData.windControlName ? showInfoData.windControlName : '无'
-                        }}
+							showInfoData.windControlName ? showInfoData.windControlName : '无'
+						}}
 					</span>
 				</el-col>
 			</el-row>
