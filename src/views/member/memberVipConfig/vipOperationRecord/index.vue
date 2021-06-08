@@ -111,7 +111,7 @@
           <!-- 操作项 -->
           <el-table-column prop="operateField" align="center" label="操作项">
             <template slot-scope="scope">
-              {{ typeFilter(scope.row.operateType, "memberVipOperateFieldType") }}
+              {{ typeFilter(scope.row.operateField, "memberVipOperateFieldType") }}
             </template>
           </el-table-column>
           <!-- 操作前 -->

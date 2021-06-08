@@ -37,7 +37,7 @@
 					</el-form-item>
 					<el-form-item label="游戏类型:" class="tagheight">
 						<el-select
-							v-model="queryData.backwaterType"
+							v-model="queryData.gameId"
 							style="width: 300px"
 							multiple
 							placeholder="全部"
@@ -195,11 +195,11 @@ export default {
 			queryData: {
 				venueId: [],
 				vipSerialNum: [],
-				backwaterType: []
+				gameId: []
 			},
 			VipGradeList: [],
 			gameTypeList: [],
-			backwaterType: [],
+			gameId: [],
 
 			searchTime: [startTime, endTime],
 			now: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
