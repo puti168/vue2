@@ -3,13 +3,13 @@
 		<div class="line-member"></div>
 		<div class="addAgent-content">
 			<div class="form-header">
-				<span>会员人工添加额度申请</span>
+				<span>会员人工增加额度申请</span>
 				<span>
 					<code style="color:#FF3B30;">*</code>
 					为必填项
 				</span>
 			</div>
-			<el-form ref="form" :model="queryData" :rules="rules" label-width="100px">
+			<el-form ref="form" :model="queryData" :rules="rules" label-width="120px">
 				<el-form-item label="会员账号:" prop="userName">
 					<el-input
 						v-model="queryData.userName"

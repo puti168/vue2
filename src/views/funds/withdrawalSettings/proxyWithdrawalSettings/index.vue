@@ -14,25 +14,21 @@
 						:before-close="handleClose"
 					>
 						<h2>代理信息</h2>
-						<el-form
-							:rules="rules"
-							:inline="true"
-							:model="ruleForm"
->
+						<el-form :rules="rules" :inline="true" :model="ruleForm">
 							<el-form-item label-width="147px" prop="agent" label="代理账号：">
 								<el-input v-model="ruleForm.user"></el-input>
 							</el-form-item>
 							<el-form-item label-width="147px" label="代理姓名：">
-								<el-input v-model="ruleForm.user"></el-input>
+								<el-input></el-input>
 							</el-form-item>
 							<el-form-item label-width="147px" label="代理类型：">
-								<el-input v-model="ruleForm.user"></el-input>
+								<el-input></el-input>
 							</el-form-item>
 							<el-form-item label-width="147px" label="代理状态：">
-								<el-input v-model="ruleForm.user"></el-input>
+								<el-input></el-input>
 							</el-form-item>
-              <el-form-item label-width="147px" label="风控层级：">
-								<el-input v-model="ruleForm.user"></el-input>
+							<el-form-item label-width="147px" label="风控层级：">
+								<el-input></el-input>
 							</el-form-item>
 						</el-form>
 						<h2>提款配置</h2>
@@ -137,10 +133,10 @@
 						</el-form>
 
 						<span slot="footer" class="dialog-footer">
-							<el-button @click="dialogVisible = false">重置</el-button>
 							<el-button type="primary" @click="dialogVisible = false">
 								提交
 							</el-button>
+							<el-button @click="resetForm('ruleForm')">重置</el-button>
 						</span>
 					</el-dialog>
 				</template>
@@ -395,7 +391,8 @@ export default {
 				region: ''
 			},
 			ruleForm: {
-				minimum: ''
+				minimum: '',
+				agent: ''
 			}
 		}
 	},
@@ -414,7 +411,7 @@ export default {
 				}
 			}
 			const agent = [
-				{ required: true, trigger: 'blur' },
+				{ required: true, message: '请输入代理账号', trigger: 'blur' },
 				{ min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
 			]
 			const oneFree = [
@@ -458,32 +455,8 @@ export default {
 	created() {},
 	mounted() {},
 	methods: {
-		open() {
-			this.$confirm(
-				'您确定要初始化会员提款设置？请谨慎操作！！！',
-				'确认提示',
-				{
-					confirmButtonText: '确定',
-					cancelButtonText: '取消',
-					type: 'warning',
-					center: true
-				}
-			)
-				.then(() => {
-					this.$message({
-						type: 'success',
-						message: '初始化成功!'
-					})
-				})
-				.catch(() => {
-					this.$message({
-						type: 'info',
-						message: '操作取消'
-					})
-				})
-		},
 		handleClose(done) {
-			this.$confirm('您确认要执行新增提款设置的操作？')
+			this.$confirm('您确认要执行新增提款设置的操作？',)
 				.then((_) => {
 					done()
 				})
@@ -498,6 +471,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.dialog-footer{
+	text-align: center
+}
 .sun {
 	width: 95px;
 }
@@ -506,8 +482,7 @@ export default {
 }
 .line {
 	width: 300px;
-	.input {
-	}
+
 }
 /deep/.el-dialog__header {
 	text-align: center;

@@ -136,7 +136,7 @@ import UploadItem from '@/components/UploadItem'
 // import { notSpecial2, isHaveEmoji } from '@/utils/validate'
 
 export default {
-    name: routerNames.memberShipIncrease,
+    name: routerNames.memberDeduction,
     components: { UploadItem },
     mixins: [list],
     data() {
