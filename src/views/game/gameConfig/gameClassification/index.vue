@@ -659,7 +659,7 @@ export default {
 		},
 		handleChilldCurrentChange(value) {
 			this.pageNum = value
-			this.lookGame('',)
+			this.lookGame('', value)
 		}
 	}
 }
