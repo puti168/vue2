@@ -23,7 +23,7 @@
         :header-cell-style="getRowClass"
         @sort-change="changeTableSort"
       >
-        <el-table-column type="index" align="center" label="序号"></el-table-column>
+        <el-table-column align="center" label="序号" prop="displayOrder"></el-table-column>
         <el-table-column
           prop="rebateLevel"
           align="center"
