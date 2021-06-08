@@ -271,13 +271,12 @@ export default {
 			// 	}
 			// })
 
+			// console.log('this.dataList', this.dataList)
 			const createObSearchConfigReqList =
 				this.dataList.map((item) => {
 					return {
 						displayOrder: item.displayOrder,
-						searchInfo: item.searchInfo,
-						createdAt: item.item,
-						createdBy: item.createdBy
+						searchInfo: item.searchInfo
 					}
 				}) || []
 			const { historySearchGameLimit, hotSearchGameLimit } = this.queryData
@@ -325,14 +324,13 @@ export default {
 			const lastRow = this.dataList.length
 				? this.dataList[this.dataList.length - 1]
 				: undefined
-			const new_row = lastRow ? lastRow.id + 1 : 1
+			// const new_row = lastRow ? lastRow.id + 1 : 1
 			const displayOrder = lastRow ? lastRow.displayOrder + 1 : 1
 			this.dataList.push({
-				id: new_row,
 				updatedBy: getUsername(),
 				createdBy: getUsername(),
-				createdAt: new Date(),
-				updatedAt: new Date(),
+				createdAt: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
+				updatedAt: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
 				displayOrder,
 				searchInfo: ''
 			})
@@ -411,11 +409,18 @@ export default {
 			this.sortable =
 				wrapperTr &&
 				Sortable.create(wrapperTr, {
-					animation: 180,
+					animation: 300,
 					delay: 0,
 					onEnd: ({ newIndex, oldIndex }) => {
+						console.log('newIndex', newIndex)
+						console.log('oldIndex', oldIndex)
 						const currRow = _this.dataList.splice(oldIndex, 1)[0]
 						_this.dataList.splice(newIndex, 0, currRow)
+						if (newIndex !== oldIndex) {
+							_this.dataList.forEach((item, idx) => {
+								item.displayOrder = idx + 1
+							})
+						}
 					}
 				})
 

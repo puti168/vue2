@@ -30,11 +30,13 @@
                 class="inputBox"
                 :max="99999"
                 :precision="2"
-                @blur="
-                  checkTransferValue($event, scope.row.vip0, scope.$index + 1, scope)
-                "
+                @blur="checkTransferValue(scope.$index + 1, scope.row.vip0, scope)"
               ></el-input-number>
-              <span>%</span>
+              <span>%</span><br />
+              <span
+v-show="!(scope.row.vip0 >= 0)"
+style="color: red; font-size: 12px"
+>请输入值</span>
             </template>
           </el-table-column>
           <el-table-column prop="vip1" align="center" label="vip1">
@@ -220,7 +222,8 @@ export default {
     return {
       tableData: [],
       activeName: '',
-      gameTypeList: []
+      gameTypeList: [],
+      id: ''
     }
   },
   computed: {},
@@ -239,9 +242,9 @@ export default {
               obj.gameName = ele.gameName
               this.gameTypeList.push(obj)
             }
-            console.log(this.gameTypeList)
             this.activeName = this.gameTypeList[0].gameName
             const params = {}
+            this.id = this.gameTypeList[0].venueId
             params.venueId = this.gameTypeList[0].venueId
             params.gamePlatform = this.gameTypeList[0].gamePlatform
             this.getMemberVipRebateSelectAllInfo(params)
@@ -253,24 +256,49 @@ export default {
     },
     getMemberVipRebateSelectAllInfo(params) {
       this.loading = true
-      this.$api.getMemberVipRebateSelectAllInfo(params).then((res) => {
-        if (res.code === 200) {
-          console.log(res)
-          this.tableData = res.data
+      this.$api
+        .getMemberVipRebateSelectAllInfo(params)
+        .then((res) => {
+          if (res.code === 200) {
+            console.log(res)
+            this.tableData = res.data
+            this.loading = false
+          }
+        })
+        .catch(() => {
           this.loading = false
-        }
-      })
+        })
     },
     handleClick(val) {
       this.tableData = []
       this.activeName = val.name
       const params = {}
+      this.id = this.gameTypeList[val.index].venueId
       params.venueId = this.gameTypeList[val.index].venueId
       params.gamePlatform = this.gameTypeList[val.index].gamePlatform
       this.getMemberVipRebateSelectAllInfo(params)
     },
     submitData() {
-      console.log(this.tableData)
+      console.log(111111, this.id)
+      this.loading = true
+      const params = [...this.tableData]
+      for (let i = 0; i < params.length; i++) {
+        const ele = params[i]
+        console.log(ele)
+        ele.venueId = this.id
+        // delete ele.gameName;
+      }
+      this.$api
+        .setMemberVipRebateUpdateRebateInfo(params)
+        .then((res) => {
+          if (res.code === 200) {
+            this.loading = false
+            this.tableData = res.data
+          }
+        })
+        .catch(() => {
+          this.loading = false
+        })
     },
     resetData() {
       const params = {}
@@ -284,8 +312,8 @@ export default {
       console.log(params)
       this.getMemberVipRebateSelectAllInfo(params)
     },
-    checkTransferValue(eve, vip, val, scope) {
-      console.log(eve, vip, val, scope)
+    checkTransferValue(index, val, property) {
+      console.log(index, val, property)
     }
   }
 }

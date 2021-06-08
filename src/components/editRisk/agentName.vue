@@ -17,7 +17,12 @@
 				</el-col>
 				<el-col :span="10">
 					<span>被风控会员个数：</span>
-					<span v-if="showInfoData.windControllerProxyCount">
+					<span
+						v-if="
+							showInfoData.windControllerProxyCount ||
+								showInfoData.windControllerProxyCount * 1 === 0
+						"
+					>
 						{{ showInfoData.windControllerProxyCount }}
 						<span
 							class="blueColor decoration"
@@ -30,10 +35,10 @@
 				</el-col>
 				<el-col :span="4">
 					<span>风控层级：</span>
-                    <span>
+					<span>
 						{{
-                            showInfoData.windControlName ? showInfoData.windControlName : '无'
-                        }}
+							showInfoData.windControlName ? showInfoData.windControlName : '无'
+						}}
 					</span>
 				</el-col>
 			</el-row>
@@ -56,11 +61,14 @@
 			width="480px"
 			class="rempadding"
 		>
-			<div class="bodyBox">
+			<div v-if="levelList.length" class="bodyBox">
 				<div v-for="(item, idx) in levelList" :key="'idx' + idx">
 					<p>风控会员个数:{{ item.count }}</p>
 					<p>风控层级名称:{{ item.windControlLevelName }}</p>
 				</div>
+			</div>
+			<div v-else class="bodyBox">
+				<p>暂无数据</p>
 			</div>
 		</el-dialog>
 	</div>

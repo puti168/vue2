@@ -16,6 +16,14 @@ export function getMemberVipRebateSelectAllInfo(data) {
 		data
 	})
 }
+// 商户场馆=>获取游戏
+export function setMemberVipRebateUpdateRebateInfo(data) {
+	return request({
+		url: '/memberVip/rebate/updateRebateInfo',
+		method: 'post',
+		data
+	})
+}
 
 // 查询配置VIP记录
 export function getRebateRecordSelectRecords(data) {
@@ -43,6 +51,7 @@ export function getlistSelectMemberVipOperate(data) {
 		data
 	})
 }
+
 // vIP变更记录
 export function getqueryMemberVipChangeRecordPage(data) {
 	return request({
@@ -88,9 +97,19 @@ export function memberVipPromotionUpdateAPI(data) {
 	})
 }
 
+// VIP晋级优惠配置 ==> 全部场馆
+export function memberVipMerchantGameAPI(data) {
+	return request({
+		url: '/merchantGame/gamePlant',
+		method: 'post',
+		data
+	})
+}
+
 export default {
 	getMerchantGameGetMerchantGames,
 	getMemberVipRebateSelectAllInfo,
+	setMemberVipRebateUpdateRebateInfo,
 	getRebateRecordSelectRecords,
 	getlistSelectMemberVipOperate,
 	getRebateRecordGetVipGrade,
@@ -98,6 +117,6 @@ export default {
 	memberVipGradeSelectAPI,
 	memberVipGradeUpDateAPI,
 	memberVipPromotionListAPI,
-	memberVipPromotionUpdateAPI
+	memberVipPromotionUpdateAPI,
+	memberVipMerchantGameAPI
 }
-

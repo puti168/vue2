@@ -17,13 +17,13 @@
 						prop="vipSerialNum"
 						width="120"
 					>
-                        <template slot-scope="scope">
+						<template slot-scope="scope">
 							<span v-if="scope.row.vipSerialNum">
 								VIP{{ scope.row.vipSerialNum }}
 							</span>
-                            <span v-else>-</span>
-                        </template>
-                    </el-table-column>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="lowestTransferQuota"
 						align="center"
@@ -39,14 +39,7 @@
 									clearable
 									onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
 									style="width: 180px"
-									@blur="
-										checkTransferValue(
-											$event,
-											scope.row.minTransfer,
-											scope.$index,
-											scope
-										)
-									"
+									@blur="checkTransferValue($event)"
 								></el-input>
 							</span>
 						</template>
@@ -91,6 +84,7 @@
 									maxlength="10"
 									placeholder="请输入"
 									clearable
+									onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
 									style="width: 180px"
 								></el-input>
 							</span>
@@ -99,12 +93,15 @@
 					<el-table-column prop="times" align="center" label="参与次数">
 						<template slot-scope="scope">
 							<span>
-								<el-select v-model="scope.row.times" placeholder="请选择">
+								<el-select
+									v-model="scope.row.participateNum"
+									placeholder="请选择"
+								>
 									<el-option
-										v-for="item in []"
-										:key="item.value"
-										:label="item.label"
-										:value="item.value"
+										v-for="item in participateTypeArr"
+										:key="item.code"
+										:label="item.description"
+										:value="item.code * 1"
 									></el-option>
 								</el-select>
 							</span>
@@ -114,15 +111,16 @@
 						<template slot-scope="scope">
 							<span>
 								<el-select
-									v-model="scope.row.venue"
+									v-model="scope.row.participateVenue"
 									multiple
 									placeholder="请选择"
+									value-key="id"
 								>
 									<el-option
-										v-for="item in []"
-										:key="item.value"
-										:label="item.label"
-										:value="item.value"
+										v-for="item in gameVenueList"
+										:key="item.id"
+										:label="item.gameName"
+										:value="item.id"
 									></el-option>
 								</el-select>
 							</span>
@@ -135,6 +133,7 @@
 					type="primary"
 					icon="el-icon-search"
 					size="medium"
+					:disabled="loadingT"
 					style="padding: 0 8px"
 					@click="saveData()"
 				>
@@ -163,10 +162,19 @@ export default {
 	mixins: [list],
 	data() {
 		return {
-			dataList: []
+			dataList: [],
+			gameVenueList: [],
+			loadingT: false
 		}
 	},
-	computed: {},
+	computed: {
+		participateTypeArr() {
+			return this.globalDics.participateType
+		}
+	},
+	created() {
+		this.getMemberVipMerchantGame()
+	},
 	mounted() {},
 	methods: {
 		_getRowClass({ row, column, rowIndex, columnIndex }) {
@@ -177,10 +185,10 @@ export default {
 			}
 		},
 		checkTransferValue(val, val1, index, scope) {
-			console.log('val', val)
-			console.log('val1', val1)
-			console.log('index', index)
-			console.log('scope', scope)
+			// console.log('val', val)
+			// console.log('val1', val1)
+			// console.log('index', index)
+			// console.log('scope', scope)
 		},
 		loadData() {
 			this.loading = true
@@ -190,8 +198,18 @@ export default {
 					this.loading = false
 					const { code, data, msg } = res
 					if (code === 200) {
-						this.dataList = data || []
+						const arr =
+							data.length &&
+							data.map((item) => {
+								const num = {}
+								item.participateVenue
+									? (num.participateVenue = item.participateVenue.split(','))
+									: (num.participateVenue = [])
+								return Object.assign(item, num)
+							})
+						this.dataList = arr || []
 						this.dataList.reverse()
+						console.log('ww', arr)
 					} else {
 						this.$message({
 							message: msg,
@@ -203,7 +221,54 @@ export default {
 					this.loading = false
 				})
 		},
-		saveData() {},
+		// 获取商户场馆
+		getMemberVipMerchantGame() {
+			this.$api.memberVipMerchantGameAPI().then((res) => {
+				const { code, data } = res
+				if (code === 200) {
+					this.gameVenueList = data || []
+				}
+			})
+		},
+		saveData() {
+			this.loadingT = true
+			console.log('this.dataList', this.dataList)
+			const memberVipPromotionParams =
+				this.dataList.map((item) => {
+					return {
+						id: item.id,
+						bonusRatio: item.bonusRatio,
+						highestBonus: item.highestBonus,
+						lowestTransferQuota: item.lowestTransferQuota,
+						participateNum: item.participateNum,
+						participateVenue: item.participateVenue.join(','),
+						vipSerialNum: item.vipSerialNum,
+						waterMultiple: item.waterMultiple
+					}
+				}) || []
+			this.$api
+				.memberVipPromotionUpdateAPI(memberVipPromotionParams)
+				.then((res) => {
+					this.loadingT = false
+					const { code, msg } = res
+					if (code === 200) {
+						this.$message({
+							message: '保存成功',
+							type: 'success'
+						})
+					} else {
+						this.$message({
+							message: msg,
+							type: 'error'
+						})
+					}
+
+					this.loadData()
+				})
+				.catch(() => {
+					this.loadingT = false
+				})
+		},
 		resetData() {}
 	}
 }
