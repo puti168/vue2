@@ -350,7 +350,7 @@
 				title="分类游戏"
 				:visible.sync="dialogGameVisible"
 				:destroy-on-close="true"
-				width="600px"
+				width="650px"
                 class="classify"
 			>
 				<p class="headerBox">
@@ -372,7 +372,7 @@
 					:current-page.sync="pageChildNum"
 					background
 					class="pagePopValue"
-                    :pager-count="3"
+                    :pager-count="5"
 					layout="total, sizes,prev, pager, next, jumper"
 					:page-size="pageChildSize"
 					:page-sizes="[5, 10, 15]"
@@ -677,18 +677,19 @@ export default {
 			const params = {
 				assortId: this.currentGameId,
 				pageNum: this.pageChildNum,
-				pageSize: 10
+				pageSize: this.pageChildSize
 			}
 			this.fetchGameChildList(params)
 		},
 		// 改变列表条数
 		handleChildSizeChange(value) {
+		    console.log('value', value)
 			this.pageChildNum = 1
 			this.pageChildSize = value
 			const params = {
 				assortId: this.currentGameId,
 				pageNum: this.pageChildNum,
-				pageSize: value
+				pageSize: this.pageChildSize
 			}
 			this.fetchGameChildList(params)
 		}
