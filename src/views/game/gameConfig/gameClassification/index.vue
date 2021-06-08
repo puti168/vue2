@@ -211,7 +211,7 @@
 						>
 							<template slot-scope="scope">
 								<span v-if="!!scope.row.supportTerminal">
-                                    {{ scope.row.supportTerminal }}
+									{{ scope.row.supportTerminal }}
 								</span>
 								<span v-else></span>
 							</template>
@@ -313,7 +313,7 @@
 									type="primary"
 									icon="el-icon-edit"
 									size="medium"
-                                    :disabled="scope.row.assortStatus"
+									:disabled="scope.row.assortStatus"
 									@click="openEdit(scope.row)"
 								>
 									编辑信息
@@ -322,7 +322,7 @@
 									type="warning"
 									icon="el-icon-delete"
 									size="medium"
-                                    :disabled="scope.row.assortStatus"
+									:disabled="scope.row.assortStatus"
 									@click="deleteRow(scope.row)"
 								>
 									删除
@@ -366,9 +366,25 @@
 						<span>{{ item.createAt }}</span>
 					</p>
 				</div>
+				<el-pagination
+					v-show="childTotal"
+					:current-page.sync="pageNum"
+					background
+					layout="total, sizes,prev, pager, next, jumper"
+					:page-size="pageSize"
+					:page-sizes="$store.getters.pageSizes"
+					:total="childTotal"
+					@current-change="handleCurrentChange"
+					@size-change="handleSizeChange"
+				></el-pagination>
 			</el-dialog>
 		</div>
-		<createPage v-else :rowData="rowData" :rowAssortId="rowAssortId" @back="back"></createPage>
+		<createPage
+			v-else
+			:rowData="rowData"
+			:rowAssortId="rowAssortId"
+			@back="back"
+		></createPage>
 	</transition>
 </template>
 
@@ -436,7 +452,8 @@ export default {
 				params.supportTerminal && params.supportTerminal.length
 					? params.supportTerminal.join(',')
 					: undefined
-			params.clientDisplay = params.clientDisplay && params.clientDisplay * 1 === 1
+			params.clientDisplay =
+				params.clientDisplay && params.clientDisplay * 1 === 1
 			this.$api
 				.gameAssortListAPI(params)
 				.then((res) => {
@@ -574,12 +591,12 @@ export default {
 				})
 				.catch(() => {})
 		},
-		lookGame(val) {
+		lookGame(val, pageNum = 1) {
 			this.dialogGameVisible = true
 			const { id } = val
 			const params = {
 				assortId: id,
-				pageNum: 1,
+				pageNum: pageNum,
 				pageSize: 10
 			}
 			this.$api
@@ -639,6 +656,10 @@ export default {
 						})
 				})
 				.catch(() => {})
+		},
+		handleChilldCurrentChange(value) {
+			this.pageNum = value
+			this.lookGame('',)
 		}
 	}
 }
