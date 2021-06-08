@@ -119,9 +119,9 @@
             </template>
           </el-table-column>
 
-          <el-table-column prop="accountTypeZn" align="center" label="账号类型">
+          <el-table-column prop="accountType" align="center" label="账号类型">
             <template slot-scope="scope">
-              {{ typeFilter(scope.row.applyType, "accountType") }}
+              {{ typeFilter(scope.row.applyType+'', "accountType") }}
             </template>
           </el-table-column>
           <el-table-column prop="labelName" align="center" label="会员标签">

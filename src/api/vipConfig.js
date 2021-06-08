@@ -16,14 +16,6 @@ export function getMemberVipRebateSelectAllInfo(data) {
 		data
 	})
 }
-// 商户场馆=>获取游戏
-export function setMemberVipRebateUpdateRebateInfo(data) {
-	return request({
-		url: '/memberVip/rebate/updateRebateInfo',
-		method: 'post',
-		data
-	})
-}
 
 // 查询配置VIP记录
 export function getRebateRecordSelectRecords(data) {
@@ -106,10 +98,18 @@ export function memberVipMerchantGameAPI(data) {
 	})
 }
 
+// VIP返水配置记录 ==> 游戏类型
+export function getBackwaterGameType(data) {
+	return request({
+		url: '/merchantGame/getGameType',
+		method: 'post',
+		data
+	})
+}
+
 export default {
 	getMerchantGameGetMerchantGames,
 	getMemberVipRebateSelectAllInfo,
-	setMemberVipRebateUpdateRebateInfo,
 	getRebateRecordSelectRecords,
 	getlistSelectMemberVipOperate,
 	getRebateRecordGetVipGrade,
@@ -118,5 +118,6 @@ export default {
 	memberVipGradeUpDateAPI,
 	memberVipPromotionListAPI,
 	memberVipPromotionUpdateAPI,
-	memberVipMerchantGameAPI
+	memberVipMerchantGameAPI,
+	getBackwaterGameType
 }
