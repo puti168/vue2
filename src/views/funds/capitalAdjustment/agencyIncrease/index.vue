@@ -3,7 +3,7 @@
 		<div class="line-member"></div>
 		<div class="addAgent-content">
 			<div class="form-header">
-				<span>代理人工添加额度申请</span>
+				<span>代理人工增加额度申请</span>
 				<span>
 					<code style="color:#FF3B30;">*</code>
 					为必填项
