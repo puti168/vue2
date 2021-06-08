@@ -9,7 +9,7 @@
 					为必填项
 				</span>
 			</div>
-			<el-form ref="form" :model="queryData" :rules="rules" label-width="100px">
+			<el-form ref="form" :model="queryData" :rules="rules" label-width="120px">
 				<el-form-item label="会员账号:" prop="userName">
 					<el-input
 						v-model="queryData.userName"
