@@ -271,14 +271,12 @@ export default {
 			// 	}
 			// })
 
-			console.log('this.dataList', this.dataList)
+			// console.log('this.dataList', this.dataList)
 			const createObSearchConfigReqList =
 				this.dataList.map((item) => {
 					return {
 						displayOrder: item.displayOrder,
-						searchInfo: item.searchInfo,
-						createdAt: item.createdAt,
-						createdBy: item.createdBy
+						searchInfo: item.searchInfo
 					}
 				}) || []
 			const { historySearchGameLimit, hotSearchGameLimit } = this.queryData
