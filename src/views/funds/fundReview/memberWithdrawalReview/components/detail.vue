@@ -235,48 +235,48 @@
 			<div class="review-content">
 				<p class="name">本次提款信息</p>
 				<div class="review-flex">
-					<table>
+					<table class="review-table">
 						<tbody>
 							<tr>
-								<td>订单号</td>
+								<td class="td-title">订单号</td>
 								<td>33333333</td>
-								<td>订单来源</td>
+								<td class="td-title">订单来源</td>
 								<td>PC</td>
-								<td>提款IP</td>
+								<td class="td-title">提款IP</td>
 								<td>33333333333</td>
-								<td>是否为首提</td>
+								<td class="td-title">是否为首提</td>
 								<td>否</td>
-								<td>是否为大额提款</td>
+								<td class="td-title">是否为大额提款</td>
 								<td>否</td>
 							</tr>
 							<tr>
-								<td>今日提款次数</td>
+								<td class="td-title">今日提款次数</td>
 								<td>33333333</td>
-								<td>免费提款次数</td>
+								<td class="td-title">免费提款次数</td>
 								<td>PC</td>
-								<td>今日提款总额</td>
+								<td class="td-title">今日提款总额</td>
 								<td>33333333333</td>
-								<td>是否连续提款</td>
+								<td class="td-title">是否连续提款</td>
 								<td>否</td>
-								<td>提款方式</td>
+								<td class="td-title">提款方式</td>
 								<td>否</td>
 							</tr>
 							<tr>
-								<td>提款设备终端</td>
+								<td class="td-title">提款设备终端</td>
 								<td colspan="2">33333333</td>
-								<td>提款绑定域名</td>
-								<td colspan="5">PC</td>
+								<td class="td-title">提款绑定域名</td>
+								<td colspan="6">PC</td>
 							</tr>
 							<tr>
-								<td>提款银行信息</td>
+								<td class="td-title">提款银行信息</td>
 								<td colspan="9">33333333</td>
 							</tr>
 							<tr>
-								<td rowspan="2">账目审核信息</td>
-								<td colspan="3">本次提款流水金额</td>
-								<td colspan="2">申请金额</td>
-								<td colspan="2">提款手续费</td>
-								<td colspan="2">实际打款</td>
+								<td rowspan="2" class="td-title">账目审核信息</td>
+								<td colspan="3" class="td-title">本次提款流水金额</td>
+								<td colspan="2" class="td-title">申请金额</td>
+								<td colspan="2" class="td-title">提款手续费</td>
+								<td colspan="2" class="td-title">实际打款</td>
 							</tr>
 							<tr>
 								<td colspan="3">1000.00</td>
@@ -488,6 +488,23 @@ export default {
 }
 .review-content {
 	width: 100%;
+	color: #666666;
+	.review-table {
+		width: 100%;
+		text-align: center; /*文本居中*/
+		border-collapse: collapse; /*表格的边框合并，如果相邻，则共用一个边框*/
+		border-spacing: 0;
+		border: 1px solid #bcbec2;
+		td {
+			border-right: 1px solid #bcbec2;
+			border-bottom: 1px solid #bcbec2;
+			height: 36px;
+			line-height: 36px;
+		}
+		.td-title {
+			background: #dfe1e4;
+		}
+	}
 	.head {
 		height: 70px;
 		line-height: 70px;
