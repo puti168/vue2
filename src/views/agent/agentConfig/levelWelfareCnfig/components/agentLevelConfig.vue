@@ -23,7 +23,11 @@
         :header-cell-style="getRowClass"
         @sort-change="changeTableSort"
       >
-        <el-table-column align="center" type="index" label="序号"></el-table-column>
+        <el-table-column
+          align="center"
+          label="序号"
+          prop="displayOrder"
+        ></el-table-column>
         <el-table-column
           prop="proxyGradeName"
           align="center"
