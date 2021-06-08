@@ -24,13 +24,14 @@
 							:model="ruleForm"
 							class="demo-form-inline"
 						>
-							<el-form-item label-width="147px" label="VIP等级：">
-								<el-input v-model="ruleForm.user" placeholder=""></el-input>
+							<el-form-item prop="viplevel" label-width="147px" label="VIP等级：">
+								<el-input v-model="queryData.viplevel" placeholder=""></el-input>
 							</el-form-item>
 
 							<el-form-item label="单次提款最低额度：" prop="minimum">
 								<el-input
-									v-model="ruleForm.minimum"
+								    v-model="queryData.miniamount"
+									class="chief"
 									placeholder="请输入金额，为0不限制"
 								></el-input>
 								<span>元</span>
@@ -38,28 +39,32 @@
 
 							<el-form-item label="单次提款最高额度：" prop="maxmum">
 								<el-input
-									v-model="ruleForm.maxmum"
+								    v-model="queryData.maxamount"
+									class="chief"
 									placeholder="请输入金额，为0不限制"
 								></el-input>
 								<span>元</span>
 							</el-form-item>
 							<el-form-item label="单日免费提款次数：" prop="oneFree">
 								<el-input
-									v-model="ruleForm.oneFree"
+								    v-model="queryData.oneFree"
+									class="chief"
 									placeholder="请输入金额，为0不限制"
 								></el-input>
 								<span>次</span>
 							</el-form-item>
 							<el-form-item label="大额提款标记金额：" prop="signminimum">
 								<el-input
-									v-model="ruleForm.minimum"
+								    v-model="queryData.minimum"
+									class="chief"
 									placeholder="请输入金额，为0不限制"
 								></el-input>
 								<span style="w">元</span>
 							</el-form-item>
 							<el-form-item label="单日免费提款总额：" prop="onefreetotal">
 								<el-input
-									v-model="ruleForm.onefreetotal"
+								    v-model="queryData.onefreetotal"
+									class="chief"
 									placeholder="请输入金额，为0不限制"
 								></el-input>
 								<span>元</span>
@@ -67,7 +72,7 @@
 							<h2>提款手续费配置</h2>
 							<el-form-item label="超出单日免费次数：" prop="region">
 								<el-select
-									v-model="ruleForm.region"
+									v-model="queryData.region"
 									class="sun"
 									placeholder="请选择"
 								>
@@ -75,14 +80,14 @@
 									<el-option label="区域二" value="beijing"></el-option>
 								</el-select>
 								<el-input
-									v-model="ruleForm.onefreetotal"
+									v-model="queryData.onefreetotal"
 									class="sun"
 									placeholder="0"
 								></el-input>
 							</el-form-item>
-							<el-form-item label="超出单日免费次数：" prop="region">
+							<el-form-item label="超出单日免费次数总额：" prop="region">
 								<el-select
-									v-model="ruleForm.region"
+									v-model="queryData.exregion"
 									class="sun"
 									placeholder="请选择"
 								>
@@ -90,7 +95,7 @@
 									<el-option label="区域二" value="beijing"></el-option>
 								</el-select>
 								<el-input
-									v-model="ruleForm.onefreetotal"
+									v-model="queryData.exregions"
 									class="sun"
 									placeholder="0"
 								></el-input>
@@ -103,7 +108,7 @@
 								prop="beyondfrequency"
 							>
 								<el-input
-								   v-model="ruleForm.minimum"
+								   v-model="queryData.extips"
 									style="width:260px"
 									placeholder="游戏前端提示语，限制25字以内"
 								></el-input>
@@ -115,7 +120,7 @@
 								prop="beyondtotal"
 							>
 								<el-input
-								    v-model="ruleForm.minimum"
+								    v-model="queryData.extotaltips"
 									style="width:260px"
 									placeholder="游戏前端提示语，限制25字以内"
 								></el-input>
@@ -132,7 +137,7 @@
 							<el-button type="primary" @click="dialogVisible = false">
 								提交
 							</el-button>
-							<el-button @click="dialogVisible = false">重置</el-button>
+							 <el-button @click="reset">重置</el-button>
 
 						</span>
 					</el-dialog>
@@ -340,6 +345,7 @@ export default {
 			},
 			ruleForm: {
 				minimum: ''
+
 			}
 
 		}
@@ -428,13 +434,31 @@ export default {
 		},
 
 		reset() {
-			this.queryData = {}
+			this.queryData = {
+				viplevel: undefined,
+				miniamount: undefined,
+				maxamount: undefined,
+				oneFree: undefined,
+				minimum: undefined,
+				onefreetotal: undefined,
+				region: undefined,
+				exregion: undefined,
+				exregions: undefined,
+				extips: undefined,
+				extotaltips: undefined
+
+			}
+			this.$refs['form'].resetFields()
 		}
+
 	}
 }
 </script>
 
 <style lang="scss" scoped>
+.chief{
+	width: 180px;
+}
 .el-form-item{
 	line-height: 55px;
 }
