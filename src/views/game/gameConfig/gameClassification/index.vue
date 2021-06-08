@@ -346,11 +346,12 @@
 				</div>
 			</div>
 			<el-dialog
+				v-loading="loadingT"
 				title="分类游戏"
 				:visible.sync="dialogGameVisible"
 				:destroy-on-close="true"
-				width="480px"
-				class="classify"
+				width="550px"
+                class="classify"
 			>
 				<p class="headerBox">
 					<span>游戏名称</span>
@@ -368,14 +369,15 @@
 				</div>
 				<el-pagination
 					v-show="childTotal"
-					:current-page.sync="pageNum"
+					:current-page.sync="pageChildNum"
 					background
+					class="pagePopValue"
 					layout="total, sizes,prev, pager, next, jumper"
-					:page-size="pageSize"
-					:page-sizes="$store.getters.pageSizes"
+					:page-size="pageChildSize"
+					:page-sizes="[5, 10, 15]"
 					:total="childTotal"
-					@current-change="handleCurrentChange"
-					@size-change="handleSizeChange"
+					@current-change="handleChilldCurrentChange"
+					@size-change="handleChildSizeChange"
 				></el-pagination>
 			</el-dialog>
 		</div>
@@ -413,6 +415,10 @@ export default {
 			total: 0,
 			childDataList: [],
 			childTotal: 0,
+			pageChildNum: 0,
+			pageChildSize: 10,
+			currentGameId: undefined,
+			loadingT: false,
 			vipDict: [],
 			userLabel: [],
 			dialogGameVisible: false,
@@ -591,17 +597,23 @@ export default {
 				})
 				.catch(() => {})
 		},
-		lookGame(val, pageNum = 1) {
+		lookGame(val) {
 			this.dialogGameVisible = true
 			const { id } = val
+			this.currentGameId = id
 			const params = {
-				assortId: id,
-				pageNum: pageNum,
+				assortId: this.currentGameId,
+				pageNum: this.pageChildNum,
 				pageSize: 10
 			}
+			this.fetchGameChildList(params)
+		},
+		fetchGameChildList(params) {
+			this.loadingT = true
 			this.$api
 				.queryChildGamePageAPI(params)
 				.then((res) => {
+					this.loadingT = false
 					const {
 						code,
 						data: { record, totalRecord },
@@ -617,7 +629,9 @@ export default {
 						})
 					}
 				})
-				.catch(() => {})
+				.catch(() => {
+					this.loadingT = false
+				})
 		},
 		deleteRow(val) {
 			const { id } = val
@@ -658,8 +672,24 @@ export default {
 				.catch(() => {})
 		},
 		handleChilldCurrentChange(value) {
-			this.pageNum = value
-			this.lookGame('', value)
+			this.pageChildNum = value
+			const params = {
+				assortId: this.currentGameId,
+				pageNum: this.pageChildNum,
+				pageSize: 10
+			}
+			this.fetchGameChildList(params)
+		},
+		// 改变列表条数
+		handleChildSizeChange(value) {
+			this.pageChildNum = 1
+			this.pageChildSize = value
+			const params = {
+				assortId: this.currentGameId,
+				pageNum: this.pageChildNum,
+				pageSize: value
+			}
+			this.fetchGameChildList(params)
 		}
 	}
 }
