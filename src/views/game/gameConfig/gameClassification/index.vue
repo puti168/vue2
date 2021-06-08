@@ -211,7 +211,7 @@
 						>
 							<template slot-scope="scope">
 								<span v-if="!!scope.row.supportTerminal">
-                                    {{ scope.row.supportTerminal }}
+									{{ scope.row.supportTerminal }}
 								</span>
 								<span v-else></span>
 							</template>
@@ -313,7 +313,7 @@
 									type="primary"
 									icon="el-icon-edit"
 									size="medium"
-                                    :disabled="scope.row.assortStatus"
+									:disabled="scope.row.assortStatus"
 									@click="openEdit(scope.row)"
 								>
 									编辑信息
@@ -322,7 +322,7 @@
 									type="warning"
 									icon="el-icon-delete"
 									size="medium"
-                                    :disabled="scope.row.assortStatus"
+									:disabled="scope.row.assortStatus"
 									@click="deleteRow(scope.row)"
 								>
 									删除
@@ -346,11 +346,12 @@
 				</div>
 			</div>
 			<el-dialog
+				v-loading="loadingT"
 				title="分类游戏"
 				:visible.sync="dialogGameVisible"
 				:destroy-on-close="true"
-				width="480px"
-				class="classify"
+				width="550px"
+                class="classify"
 			>
 				<p class="headerBox">
 					<span>游戏名称</span>
@@ -366,9 +367,26 @@
 						<span>{{ item.createAt }}</span>
 					</p>
 				</div>
+				<el-pagination
+					v-show="childTotal"
+					:current-page.sync="pageChildNum"
+					background
+					class="pagePopValue"
+					layout="total, sizes,prev, pager, next, jumper"
+					:page-size="pageChildSize"
+					:page-sizes="[5, 10, 15]"
+					:total="childTotal"
+					@current-change="handleChilldCurrentChange"
+					@size-change="handleChildSizeChange"
+				></el-pagination>
 			</el-dialog>
 		</div>
-		<createPage v-else :rowData="rowData" :rowAssortId="rowAssortId" @back="back"></createPage>
+		<createPage
+			v-else
+			:rowData="rowData"
+			:rowAssortId="rowAssortId"
+			@back="back"
+		></createPage>
 	</transition>
 </template>
 
@@ -397,6 +415,10 @@ export default {
 			total: 0,
 			childDataList: [],
 			childTotal: 0,
+			pageChildNum: 0,
+			pageChildSize: 10,
+			currentGameId: undefined,
+			loadingT: false,
 			vipDict: [],
 			userLabel: [],
 			dialogGameVisible: false,
@@ -436,7 +458,8 @@ export default {
 				params.supportTerminal && params.supportTerminal.length
 					? params.supportTerminal.join(',')
 					: undefined
-			params.clientDisplay = params.clientDisplay && params.clientDisplay * 1 === 1
+			params.clientDisplay =
+				params.clientDisplay && params.clientDisplay * 1 === 1
 			this.$api
 				.gameAssortListAPI(params)
 				.then((res) => {
@@ -577,14 +600,20 @@ export default {
 		lookGame(val) {
 			this.dialogGameVisible = true
 			const { id } = val
+			this.currentGameId = id
 			const params = {
-				assortId: id,
-				pageNum: 1,
+				assortId: this.currentGameId,
+				pageNum: this.pageChildNum,
 				pageSize: 10
 			}
+			this.fetchGameChildList(params)
+		},
+		fetchGameChildList(params) {
+			this.loadingT = true
 			this.$api
 				.queryChildGamePageAPI(params)
 				.then((res) => {
+					this.loadingT = false
 					const {
 						code,
 						data: { record, totalRecord },
@@ -600,7 +629,9 @@ export default {
 						})
 					}
 				})
-				.catch(() => {})
+				.catch(() => {
+					this.loadingT = false
+				})
 		},
 		deleteRow(val) {
 			const { id } = val
@@ -639,6 +670,26 @@ export default {
 						})
 				})
 				.catch(() => {})
+		},
+		handleChilldCurrentChange(value) {
+			this.pageChildNum = value
+			const params = {
+				assortId: this.currentGameId,
+				pageNum: this.pageChildNum,
+				pageSize: 10
+			}
+			this.fetchGameChildList(params)
+		},
+		// 改变列表条数
+		handleChildSizeChange(value) {
+			this.pageChildNum = 1
+			this.pageChildSize = value
+			const params = {
+				assortId: this.currentGameId,
+				pageNum: this.pageChildNum,
+				pageSize: value
+			}
+			this.fetchGameChildList(params)
 		}
 	}
 }
