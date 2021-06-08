@@ -109,19 +109,21 @@
             </template>
           </el-table-column>
           <!-- 操作项 -->
-          <el-table-column prop="operateType" align="center" label="操作项">
+          <el-table-column prop="operateField" align="center" label="操作项">
             <template slot-scope="scope">
               {{ typeFilter(scope.row.operateType, "memberVipOperateFieldType") }}
             </template>
           </el-table-column>
           <!-- 操作前 -->
           <el-table-column prop="beforeModify" align="center" label="操作前">
-
+            <template slot-scope="scope">
+              <span>{{ scope.row.beforeModify }}</span>
+            </template>
           </el-table-column>
           <!-- 操作后-->
            <el-table-column prop="afterModify" align="center" label="操作后">
             <template slot-scope="scope">
-              {{ typeFilter(scope.row.afterModify, "accountType") }}
+              <span>{{ scope.row.afterModify }}</span>
             </template>
           </el-table-column>
            <el-table-column
