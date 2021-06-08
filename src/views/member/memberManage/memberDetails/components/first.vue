@@ -255,27 +255,21 @@
           <el-col :span="7" class="textR">
             <i v-if="activeL" class="el-icon-loading"></i>
             <span v-else>
-              {{ vipMsgList.bjValidBetsCurr }}/{{ vipMsgList.bjValidBetsTotal }}
+              {{ vipMsgList.validBetsCurr }}/{{ vipMsgList.bjValidBetsTotal }}
             </span>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="3" style="color: #fff">描述</el-col>
+          <el-col :span="7" class="textC">(升级)存款金额</el-col>
+          <el-col :span="7" class="textC">(升级)有效投注</el-col>
           <el-col
 :span="7"
 class="textC"
->({{ vipMsgList.depositAmountStatus === 0 ? "升级" : "保级："
-            }}{{ vipMsgList.depositAmountDate }} )存款金额</el-col>
-          <el-col
-:span="7"
-class="textC"
->({{ vipMsgList.validBetsStatus === 0 ? "升级" : "保级："
-            }}{{ vipMsgList.validBetsDate }})有效投注</el-col>
-          <el-col
-:span="7"
-class="textC"
->({{ vipMsgList.bjValidBetsStatus === 0 ? "升级" : "保级："
-            }}{{ vipMsgList.bjValidBetsDate }})有效投注</el-col>
+>(保级:
+            {{
+              vipMsgList.bjValidBetsDate === null ? "-" : vipMsgList.bjValidBetsDate
+            }})有效投注</el-col>
         </el-row>
       </el-col>
       <el-col :span="10" class="paddingBox">
@@ -625,8 +619,8 @@ export default {
             const p2 = (newV.validBetsCurr / newV.validBetsTotal) * 100
             p2 >= 100 ? (this.percentageb = 100) : (this.percentageb = p2)
           }
-          if (newV.bjValidBetsCurr > 0 && newV.bjValidBetsTotal > 0) {
-            const p3 = (newV.bjValidBetsCurr / newV.bjValidBetsTotal) * 100
+          if (newV.validBetsCurr > 0 && newV.bjValidBetsTotal > 0) {
+            const p3 = (newV.validBetsCurr / newV.bjValidBetsTotal) * 100
             p3 >= 100 ? (this.percentagec = 100) : (this.percentagec = p3)
           }
         } else {
@@ -639,11 +633,12 @@ export default {
     },
     remarksTableData: {
       handler(newV) {
-        if (newV.totalRecord) {
+        if (newV.totalRecord > 0) {
           this.total = newV.totalRecord
           this.tableList = newV.record
         } else {
           this.tableList = []
+          this.total = newV.totalRecord
         }
       },
       deep: true
@@ -701,7 +696,7 @@ export default {
             const params = { userId: val.userId, pageNum: 1, pageSize: 3 }
             this.$api.getMemberRemarkList(params).then((res) => {
               if (res.code === 200) {
-                this.tableList = res.data.record
+                this.tableList = res.data.record || []
                 this.total = res.data.totalRecord
               }
             })
@@ -726,8 +721,8 @@ export default {
               const p2 = (newV.validBetsCurr / newV.validBetsTotal) * 100
               p2 >= 100 ? (this.percentageb = 100) : (this.percentageb = p2)
             }
-            if (newV.bjValidBetsCurr > 0 && newV.bjValidBetsTotal > 0) {
-              const p3 = (newV.bjValidBetsCurr / newV.bjValidBetsTotal) * 100
+            if (newV.validBetsCurr > 0 && newV.bjValidBetsTotal > 0) {
+              const p3 = (newV.validBetsCurr / newV.bjValidBetsTotal) * 100
               p3 >= 100 ? (this.percentagec = 100) : (this.percentagec = p3)
             }
           }
@@ -766,6 +761,7 @@ export default {
       this.$api.getMemberRemarkList(params).then((res) => {
         if (res.code === 200) {
           this.tableList = res.data.record
+          this.total = res.data.totalRecord
         }
       })
     },

@@ -187,12 +187,14 @@ export default {
       this.$api.getBankCardBank(dataType1).then((res) => {
         if (res.code === 200) {
           this.resVirtualList = res.data
+          this.totalR = res.data.totalRecord
         }
       })
       const dataType2 = { userId: val, dataType: 1 }
       this.$api.getBankCardBank(dataType2).then((res) => {
         if (res.code === 200) {
           this.resBankList = res.data
+          this.total = res.data.totalRecord
         }
       })
     },

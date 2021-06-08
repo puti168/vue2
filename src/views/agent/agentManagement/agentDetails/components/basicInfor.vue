@@ -466,6 +466,7 @@ export default {
           this.$api.getProxyDetailRemark(params).then((res) => {
             if (res.code === 200) {
               this.tableList = res.data.record
+              this.total = res.data.totalRecord
             }
           })
         }
@@ -489,6 +490,7 @@ export default {
       this.$api.getProxyDetailRemark(params).then((res) => {
         if (res.code === 200) {
           this.tableList = res.data.record
+          this.total = res.data.totalRecord
         }
       })
     },

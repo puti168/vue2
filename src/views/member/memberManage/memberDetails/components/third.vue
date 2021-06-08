@@ -59,9 +59,7 @@
             <span
 class="redColor"
 >风控层级：{{
-                scope.row.ipControlName === null
-                  ? "无"
-                  : scope.row.ipControlName
+                scope.row.ipControlName === null ? "无" : scope.row.ipControlName
               }}</span>
           </template>
         </el-table-column>
@@ -157,7 +155,7 @@ export default {
   watch: {
     lonRecordData: {
       handler(newV) {
-        if (newV.totalRecord && newV.totalRecord > 0) {
+        if (newV !== null) {
           this.total = newV.totalRecord
           this.dataList = newV.record
         } else {
@@ -175,8 +173,12 @@ export default {
     getLogMemberLoginLog(val) {
       const params = { userId: val, pageNum: this.page, pageSize: this.size }
       this.$api.getLogMemberLoginLog(params).then((res) => {
-        if (res.code === 200) {
+        if (res.code === 200 && res.data !== null) {
           this.dataList = res.data.record
+          this.total = res.data.totalRecord
+        } else {
+          this.dataList = []
+          this.total = 0
         }
       })
     },

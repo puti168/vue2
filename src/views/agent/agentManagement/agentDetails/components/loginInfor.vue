@@ -59,9 +59,7 @@
             <span
 class="redColor"
 >风控层级：{{
-                scope.row.ipControlName === null
-                  ? "无"
-                  : scope.row.ipControlName
+                scope.row.ipControlName === null ? "无" : scope.row.ipControlName
               }}</span>
           </template>
         </el-table-column>
@@ -154,6 +152,9 @@ export default {
         if (newV.totalRecord) {
           this.total = newV.totalRecord
           this.dataList = newV.record
+        } else {
+          this.total = 0
+          this.dataList = []
         }
       },
       deep: true
@@ -166,8 +167,12 @@ export default {
     getProxyDetailProxyLoginLog(val) {
       const params = { userId: val, pageNum: this.page, pageSize: this.size }
       this.$api.getProxyDetailProxyLoginLog(params).then((res) => {
-        if (res.code === 200) {
+        if (res.code === 200 && res.data !== null) {
           this.dataList = res.data.record
+          this.total = res.data.totalRecord
+        } else {
+          this.total = 0
+          this.dataList = []
         }
       })
     },
