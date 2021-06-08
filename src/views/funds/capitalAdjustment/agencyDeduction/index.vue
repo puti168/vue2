@@ -54,7 +54,7 @@
                 </el-form-item>
                 <el-form-item label="钱包余额:" prop="balance">
                     <el-select
-                        v-model="queryData.operationType"
+                        v-model="queryData.balance"
                         size="medium"
                         placeholder="请选择"
                         clearable
@@ -205,16 +205,12 @@ export default {
                 { required: true, message: '请选择操作类型', trigger: 'change' }
             ]
 
-            const activeId = [
-                { required: true, message: '请输入活动ID', trigger: 'blur' }
-            ]
-
             const operationMoney = [
                 { required: true, message: '请输入操作金额', trigger: 'blur' }
             ]
 
-            const water = [
-                { required: true, message: '请输入提款流水倍数', trigger: 'blur' }
+            const balance = [
+                { required: true, message: '请选择钱包余额类型', trigger: 'change' }
             ]
 
             const reason = [
@@ -226,8 +222,7 @@ export default {
                 realName,
                 operationType,
                 operationMoney,
-                activeId,
-                water,
+                balance,
                 reason
             }
         }

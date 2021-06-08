@@ -1,7 +1,7 @@
 <template>
 	<div class="review-content">
 		<div class="head">
-			<span class="title">会员提现审核详情</span>
+			<span class="title">会员人工加额审核详情</span>
 			<div v-if="type" class="right-btn">
 				<el-button plain @click="goBack">取消</el-button>
 				<el-button type="success" @click="confirm(true)">一审通过</el-button>
@@ -62,7 +62,7 @@
 								{{ list.beforeModify ? list.beforeModify : '-' }}
 							</template>
 						</el-table-column>
-						<el-table-column align="center" label="上级会员">
+						<el-table-column align="center" label="上级代理">
 							<template>
 								{{ list.beforeModify ? list.beforeModify : '-' }}
 							</template>
@@ -111,41 +111,6 @@
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="虚拟币账号数量">
-							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
-							</template>
-						</el-table-column>
-					</el-table>
-				</div>
-				<div class="review-flex">
-					<el-table
-						border
-						size="mini"
-						:data="[1]"
-						style="width: 100%"
-						:header-cell-style="getRowClass"
-					>
-						<el-table-column align="center" label="累计总存款金额（万元）">
-							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
-							</template>
-						</el-table-column>
-						<el-table-column align="center" label="累计总存款次数">
-							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
-							</template>
-						</el-table-column>
-						<el-table-column align="center" label="累计总提款金额（万元）">
-							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
-							</template>
-						</el-table-column>
-						<el-table-column align="center" label="累计总提款次数">
-							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
-							</template>
-						</el-table-column>
-						<el-table-column align="center" label="累计总存提款差额（万元）">
 							<template>
 								{{ list.beforeModify ? list.beforeModify : '-' }}
 							</template>
@@ -238,51 +203,22 @@
 					<table class="review-table">
 						<tbody>
 							<tr>
-								<td class="td-title">订单号</td>
+								<td class="td-title">申请人</td>
 								<td>33333333</td>
-								<td class="td-title">订单来源</td>
+								<td class="td-title">申请时间</td>
 								<td>PC</td>
-								<td class="td-title">提款IP</td>
-								<td>33333333333</td>
-								<td class="td-title">是否为首提</td>
-								<td>否</td>
-								<td class="td-title">是否为大额提款</td>
-								<td>否</td>
+								<td class="td-title">申请原因</td>
+								<td colspan="3">33333333333</td>
 							</tr>
 							<tr>
-								<td class="td-title">今日提款次数</td>
+								<td class="td-title">调整类型</td>
 								<td>33333333</td>
-								<td class="td-title">免费提款次数</td>
+								<td class="td-title">活动ID</td>
 								<td>PC</td>
-								<td class="td-title">今日提款总额</td>
+								<td class="td-title">流水倍数</td>
 								<td>33333333333</td>
-								<td class="td-title">是否连续提款</td>
+								<td class="td-title">调整金额</td>
 								<td>否</td>
-								<td class="td-title">提款方式</td>
-								<td>否</td>
-							</tr>
-							<tr>
-								<td class="td-title">提款设备终端</td>
-								<td colspan="2">33333333</td>
-								<td class="td-title">提款绑定域名</td>
-								<td colspan="6">PC</td>
-							</tr>
-							<tr>
-								<td class="td-title">提款银行信息</td>
-								<td colspan="9">33333333</td>
-							</tr>
-							<tr>
-								<td rowspan="2" class="td-title">账目审核信息</td>
-								<td colspan="3" class="td-title">本次提款流水金额</td>
-								<td colspan="2" class="td-title">申请金额</td>
-								<td colspan="2" class="td-title">提款手续费</td>
-								<td colspan="2" class="td-title">实际打款</td>
-							</tr>
-							<tr>
-								<td colspan="3">1000.00</td>
-								<td colspan="2">1000.00</td>
-								<td colspan="2">1000.00</td>
-								<td colspan="2">1000.00</td>
 							</tr>
 						</tbody>
 					</table>
