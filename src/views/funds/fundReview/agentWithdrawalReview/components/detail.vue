@@ -1,7 +1,7 @@
 <template>
 	<div class="review-content">
 		<div class="head">
-			<span class="title">会员提现审核详情</span>
+			<span class="title">代理提现审核详情</span>
 			<div v-if="type" class="right-btn">
 				<el-button plain @click="goBack">取消</el-button>
 				<el-button type="success" @click="confirm(true)">一审通过</el-button>
@@ -13,7 +13,7 @@
 		</div>
 		<div class="main-content">
 			<div class="review-content">
-				<p class="name">会员注册信息</p>
+				<p class="name">代理注册信息</p>
 				<div class="review-flex">
 					<el-table
 						border
@@ -28,11 +28,6 @@
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="最后登录时间">
-							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
-							</template>
-						</el-table-column>
-						<el-table-column align="center" label="最后下注时间">
 							<template>
 								{{ list.beforeModify ? list.beforeModify : '-' }}
 							</template>
@@ -62,16 +57,11 @@
 								{{ list.beforeModify ? list.beforeModify : '-' }}
 							</template>
 						</el-table-column>
-						<el-table-column align="center" label="上级会员">
-							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
-							</template>
-						</el-table-column>
 					</el-table>
 				</div>
 			</div>
 			<div class="review-content">
-				<p class="name">会员账号信息</p>
+				<p class="name">代理账号信息</p>
 				<div class="review-flex">
 					<el-table
 						border
@@ -80,12 +70,12 @@
 						style="width: 100%"
 						:header-cell-style="getRowClass"
 					>
-						<el-table-column align="center" label="会员账号">
+						<el-table-column align="center" label="代理账号">
 							<template>
 								{{ list.beforeModify ? list.beforeModify : '-' }}
 							</template>
 						</el-table-column>
-						<el-table-column align="center" label="会员姓名">
+						<el-table-column align="center" label="代理姓名">
 							<template>
 								{{ list.beforeModify ? list.beforeModify : '-' }}
 							</template>
@@ -95,7 +85,7 @@
 								{{ list.beforeModify ? list.beforeModify : '-' }}
 							</template>
 						</el-table-column>
-						<el-table-column align="center" label="会员标签">
+						<el-table-column align="center" label="代理标签">
 							<template>
 								{{ list.beforeModify ? list.beforeModify : '-' }}
 							</template>
@@ -125,27 +115,27 @@
 						style="width: 100%"
 						:header-cell-style="getRowClass"
 					>
-						<el-table-column align="center" label="总存款金额（万元）">
+						<el-table-column align="center" label="累计总存款金额（万元）">
 							<template>
 								{{ list.beforeModify ? list.beforeModify : '-' }}
 							</template>
 						</el-table-column>
-						<el-table-column align="center" label="总存款次数">
+						<el-table-column align="center" label="累计总存款次数">
 							<template>
 								{{ list.beforeModify ? list.beforeModify : '-' }}
 							</template>
 						</el-table-column>
-						<el-table-column align="center" label="总款金额（万元）">
+						<el-table-column align="center" label="累计总提款金额（万元）">
 							<template>
 								{{ list.beforeModify ? list.beforeModify : '-' }}
 							</template>
 						</el-table-column>
-						<el-table-column align="center" label="总提款次数">
+						<el-table-column align="center" label="累计总提款次数">
 							<template>
 								{{ list.beforeModify ? list.beforeModify : '-' }}
 							</template>
 						</el-table-column>
-						<el-table-column align="center" label="总存提款差额（万元）">
+						<el-table-column align="center" label="累计总存提款差额（万元）">
 							<template>
 								{{ list.beforeModify ? list.beforeModify : '-' }}
 							</template>
@@ -163,7 +153,7 @@
 						style="width: 100%"
 						:header-cell-style="getRowClass"
 					>
-						<el-table-column align="center" label="风险会员">
+						<el-table-column align="center" label="风险代理">
 							<template>
 								{{ list.beforeModify ? list.beforeModify : '-' }}
 							</template>

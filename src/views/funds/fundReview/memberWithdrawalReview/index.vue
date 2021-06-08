@@ -68,14 +68,10 @@
 			<div class="view-container dealer-container">
 				<div class="content">
 					<el-tabs v-model="activeName" @tab-click="handleClick">
-						<el-tab-pane label="待一审" name="one">
-						</el-tab-pane>
-						<el-tab-pane label="待二审" name="two">
-						</el-tab-pane>
-						<el-tab-pane label="待三审" name="three">
-						</el-tab-pane>
-						<el-tab-pane label="待出款" name="four">
-						</el-tab-pane>
+						<el-tab-pane label="待一审" name="one"></el-tab-pane>
+						<el-tab-pane label="待二审" name="two"></el-tab-pane>
+						<el-tab-pane label="待三审" name="three"></el-tab-pane>
+						<el-tab-pane label="待出款" name="four"></el-tab-pane>
 					</el-tabs>
 					<el-table
 						v-loading="loading"
@@ -107,6 +103,7 @@
 						>
 							<template slot-scope="scope">
 								<el-button
+									v-if="activeName !== '3'"
 									:class="
 										Number(scope.row.auditStep) === 1 &&
 										scope.row.auditName !== name
@@ -121,6 +118,22 @@
 								>
 									{{ typeFilter(scope.row.auditStep, 'auditStepType') }}
 								</el-button>
+								<template v-else>
+									<el-button
+										type="success"
+										size="medium"
+										@click="confirm(scope.row, true)"
+									>
+										出款通过
+									</el-button>
+									<el-button
+										type="danger"
+										size="medium"
+										@click="confirm(scope.row, false)"
+									>
+										出款拒绝
+									</el-button>
+								</template>
 							</template>
 						</el-table-column>
 						<el-table-column
@@ -249,9 +262,7 @@ export default {
 		this.name = getUsername()
 	},
 	methods: {
-		handleClick() {
-
-		},
+		handleClick() {},
 		loadData() {
 			this.loading = true
 			const [startTime, endTime] = this.formTime.time || []
@@ -312,6 +323,17 @@ export default {
 		goBack() {
 			this.showDetail = false
 			this.loadData()
+		},
+		confirm(row, type) {
+			this.$confirm(`您确认要执行该操作？`, {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            })
+              .then(() => {
+                // this.setProxyGradeUpdate(params)
+              })
+              .catch(() => {})
 		},
 		reset() {
 			this.queryData = {
