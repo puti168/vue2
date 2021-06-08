@@ -33,7 +33,7 @@
 									v-model="ruleForm.minimum"
 									placeholder="请输入金额，为0不限制"
 								></el-input>
-								<span></span>
+								<span>元</span>
 							</el-form-item>
 
 							<el-form-item label="单次提款最高额度：" prop="maxmum">
@@ -41,24 +41,28 @@
 									v-model="ruleForm.maxmum"
 									placeholder="请输入金额，为0不限制"
 								></el-input>
+								<span>元</span>
 							</el-form-item>
 							<el-form-item label="单日免费提款次数：" prop="oneFree">
 								<el-input
 									v-model="ruleForm.oneFree"
 									placeholder="请输入金额，为0不限制"
 								></el-input>
+								<span>次</span>
 							</el-form-item>
 							<el-form-item label="大额提款标记金额：" prop="signminimum">
 								<el-input
 									v-model="ruleForm.minimum"
 									placeholder="请输入金额，为0不限制"
 								></el-input>
+								<span style="w">元</span>
 							</el-form-item>
 							<el-form-item label="单日免费提款总额：" prop="onefreetotal">
 								<el-input
 									v-model="ruleForm.onefreetotal"
 									placeholder="请输入金额，为0不限制"
 								></el-input>
+								<span>元</span>
 							</el-form-item>
 							<h2>提款手续费配置</h2>
 							<el-form-item label="超出单日免费次数：" prop="region">
@@ -96,10 +100,11 @@
 								label-width="200px"
 								class="line"
 								label="超出单日最高次数提示语："
-								prop="minimum"
+								prop="beyondfrequency"
 							>
 								<el-input
-									v-model="ruleForm.minimum"
+								   v-model="ruleForm.minimum"
+									style="width:260px"
 									placeholder="游戏前端提示语，限制25字以内"
 								></el-input>
 							</el-form-item>
@@ -107,10 +112,11 @@
 								label-width="220px"
 								class="line"
 								label="超出单日最高提款总额提示语："
-								prop="minimum"
+								prop="beyondtotal"
 							>
 								<el-input
-									v-model="ruleForm.minimum"
+								    v-model="ruleForm.minimum"
+									style="width:260px"
 									placeholder="游戏前端提示语，限制25字以内"
 								></el-input>
 							</el-form-item>
@@ -123,10 +129,11 @@
 						</el-form>
 
 						<span slot="footer" class="dialog-footer">
-							<el-button @click="dialogVisible = false">重置</el-button>
 							<el-button type="primary" @click="dialogVisible = false">
 								提交
 							</el-button>
+							<el-button @click="dialogVisible = false">重置</el-button>
+
 						</span>
 					</el-dialog>
 				</template>
@@ -356,15 +363,15 @@ export default {
 			]
 
 			 const minimum = [
-					{ required: true, message: '', trigger: 'blur' },
+					{ required: true, message: '请输入金额', trigger: 'blur' },
 					{ min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
 				]
 			const maxmum = [
-					{ required: true, message: '', trigger: 'blur' },
+					{ required: true, message: '请输入金额', trigger: 'blur' },
 					{ min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
 				]
 				const signminimum = [
-					{ required: true, message: '', trigger: 'blur' },
+					{ required: true, message: '请输入金额', trigger: 'blur' },
 					{ min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
 				]
 				const onefreetotal = [
@@ -376,7 +383,15 @@ export default {
 					{ min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
 				]
 				const	region = [{ required: true, message: '百分比（%）', trigger: 'change' }]
-			return { oneFree, minimum, maxmum, signminimum, onefreetotal, region}
+				const beyondfrequency = [
+					{ required: true, message: '请输入提示语', trigger: 'blur' },
+					{ min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+				]
+				const beyondtotal = [
+					{ required: true, message: '请输入提示语', trigger: 'blur' },
+					{ min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+				]
+			return { oneFree, minimum, maxmum, signminimum, onefreetotal, region, beyondfrequency, beyondtotal}
 		}
 	},
 	created() {},
@@ -385,12 +400,10 @@ export default {
 		open() {
 			this.$confirm(
 				'您确定要初始化会员提款设置？请谨慎操作！！！',
-				'确认提示',
 				{
 					confirmButtonText: '确定',
 					cancelButtonText: '取消',
-					type: 'warning',
-					center: true
+					type: 'warning'
 				}
 			)
 				.then(() => {
@@ -422,6 +435,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.el-form-item{
+	line-height: 55px;
+}
+.dialog-footer{
+	text-align: center
+}
 .sun {
 	width: 95px;
 }

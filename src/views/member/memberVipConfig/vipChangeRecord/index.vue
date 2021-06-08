@@ -119,10 +119,8 @@
             </template>
           </el-table-column>
 
-          <el-table-column prop="accountType" align="center" label="账号类型">
-            <template slot-scope="scope">
-              {{ typeFilter(scope.row.applyType+'', "accountType") }}
-            </template>
+          <el-table-column prop="accountTypeZn" align="center" label="账号类型">
+
           </el-table-column>
           <el-table-column prop="labelName" align="center" label="会员标签">
             <template slot-scope="scope">
@@ -137,9 +135,9 @@
           <el-table-column prop="accountStatus" align="center" label="账号状态">
             <template slot-scope="scope">
               <span v-if="scope.row.accountStatus===1" class="normalRgba">{{ typeFilter(scope.row.accountStatus, "accountStatusType") }}</span>
-              <span v-if="scope.row.accountStatus===2" class="disableRgba">{{ typeFilter(scope.row.accountStatus, "accountStatusType") }}</span>
-              <span v-if="scope.row.accountStatus===3" class="lockingRgba">{{ typeFilter(scope.row.accountStatus, "accountStatusType") }}</span>
-              <span v-if="scope.row.accountStatus===4" class="deleteRgba">{{ typeFilter(scope.row.accountStatus, "accountStatusType") }}</span>
+              <span v-else-if="scope.row.accountStatus===2" class="disableRgba">{{ typeFilter(scope.row.accountStatus, "accountStatusType") }}</span>
+              <span v-else-if="scope.row.accountStatus===3" class="lockingRgba">{{ typeFilter(scope.row.accountStatus, "accountStatusType") }}</span>
+              <span v-else-if="scope.row.accountStatus===4" class="deleteRgba">{{ typeFilter(scope.row.accountStatus, "accountStatusType") }}</span>
               <span v-else>-</span>
 
             </template>

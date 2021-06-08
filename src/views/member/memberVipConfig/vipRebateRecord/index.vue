@@ -138,20 +138,17 @@
 					</el-table-column>
 					<el-table-column prop="gameId" align="center" label="游戏类型">
 						<template slot-scope="scope">
-							<span
-v-for="item in backwaterGrade"
-              :key="item.gameName"
-              >
-              {{ scope.row.gameId == (item.gameId)+""?item.gameName : '' }}
-
-              </span>
-
+							<span v-for="item in backwaterGrade" :key="item.gameName">
+								{{ scope.row.gameId == item.gameId + '' ? item.gameName : '' }}
+							</span>
 						</template>
 					</el-table-column>
 					<el-table-column prop="vipSerialNum" align="center" label="VIP等级">
 						<template slot-scope="scope">
 							<span v-for="item in VipGradeList" :key="item.gradeName">
-								{{ scope.row.vipSerialNum === item.gradeNum ? item.gradeName : '' }}
+								{{
+									scope.row.vipSerialNum === item.gradeNum ? item.gradeName : ''
+								}}
 							</span>
 						</template>
 					</el-table-column>
@@ -208,7 +205,7 @@ export default {
 			queryData: {
 				venueId: [],
 				vipSerialNum: [],
-        backwaterType: []
+				backwaterType: []
 			},
 			VipGradeList: [],
 			gameTypeList: [],
