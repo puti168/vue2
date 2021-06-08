@@ -69,7 +69,17 @@
                             :value="item"
                         ></el-option>
                     </el-select>
-                    <span class=""></span>
+                    <el-input
+                        v-model="queryData.balance"
+                        size="medium"
+                        maxlength="11"
+                        placeholder="请输入"
+                        clearable
+                        onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
+                        autocomplete="off"
+                        style="width: 200px"
+                        disabled
+                    ></el-input>
                     <span>元</span>
                     <el-button
                         type="primary"
