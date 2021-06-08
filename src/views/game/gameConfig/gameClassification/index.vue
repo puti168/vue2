@@ -350,7 +350,7 @@
 				title="分类游戏"
 				:visible.sync="dialogGameVisible"
 				:destroy-on-close="true"
-				width="550px"
+				width="600px"
                 class="classify"
 			>
 				<p class="headerBox">
@@ -372,6 +372,7 @@
 					:current-page.sync="pageChildNum"
 					background
 					class="pagePopValue"
+                    :pager-count="3"
 					layout="total, sizes,prev, pager, next, jumper"
 					:page-size="pageChildSize"
 					:page-sizes="[5, 10, 15]"
