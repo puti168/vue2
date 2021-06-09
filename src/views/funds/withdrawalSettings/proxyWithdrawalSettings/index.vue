@@ -90,6 +90,38 @@
 								></el-input>
 								<span>次</span>
 							</el-form-item>
+							<el-form-item label="单日免费提款总额：" class="configure" prop="onefreetotal">
+								<el-input
+									v-model="queryData.onefreetotal"
+									class="chief"
+									placeholder="请输入金额，为0不限制"
+								></el-input>
+								<span>元</span>
+							</el-form-item>
+							<el-form-item
+								label="单日最高提款次数："
+								prop="signminimum"
+								class="configure"
+							>
+								<el-input
+									v-model="queryData.minimum"
+									class="chief"
+									placeholder="请输入金额，为0不限制"
+								></el-input>
+								<span>次</span>
+							</el-form-item>
+							<el-form-item
+								label="单日最高提款总额："
+								prop="signminimum"
+							>
+								<el-input
+									v-model="queryData.minimum"
+									class="chief"
+									placeholder="请输入金额，为0不限制"
+								></el-input>
+								<span>元</span>
+							</el-form-item>
+
 							<el-form-item
 								label="大额提款标记金额："
 								prop="signminimum"
@@ -99,16 +131,9 @@
 									class="chief"
 									placeholder="请输入金额，为0不限制"
 								></el-input>
-								<span style="w">元</span>
-							</el-form-item>
-							<el-form-item label="单日免费提款总额：" class="configure" prop="onefreetotal">
-								<el-input
-									v-model="queryData.onefreetotal"
-									class="chief"
-									placeholder="请输入金额，为0不限制"
-								></el-input>
 								<span>元</span>
 							</el-form-item>
+
 							<h2>提款手续费配置</h2>
 							<el-form-item
 								label="超出单日免费次数："
