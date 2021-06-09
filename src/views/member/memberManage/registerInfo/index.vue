@@ -295,11 +295,11 @@ export default {
 			queryData: {
 				registerTime: [start, end],
 				accountType: [],
-				userName: '',
-				parentProxyName: '',
-				registerPhone: '',
-				registerIp: '',
-				ipAttribution: '',
+				userName: undefined,
+				parentProxyName: undefined,
+				registerPhone: undefined,
+				registerIp: undefined,
+				ipAttribution: undefined,
 				deviceType: [],
 				orderType: undefined
 			},
@@ -372,14 +372,15 @@ export default {
 		reset() {
 			this.$refs['form'].resetFields()
 			this.queryData = {
-				registerTime: [start, end],
-				accountType: undefined,
-				userName: '',
-				parentProxyName: '',
-				registerPhone: '',
-				registerIp: '',
-				ipAttribution: '',
-				deviceType: undefined
+                registerTime: [start, end],
+                accountType: [],
+                userName: undefined,
+                parentProxyName: undefined,
+                registerPhone: undefined,
+                registerIp: undefined,
+                ipAttribution: undefined,
+                deviceType: [],
+                orderType: undefined
 			}
 			this.loadData()
 		}

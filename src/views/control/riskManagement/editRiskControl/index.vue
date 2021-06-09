@@ -159,7 +159,7 @@
 		</div>
 		<div class="info-show">
 			<div class="info-header">
-				<span v-if="!!Object.keys(showInfoData).length">基本信息</span>
+				<span v-if="!tipsShow">基本信息</span>
 			</div>
 			<component
 				:is="content"
@@ -167,361 +167,6 @@
 				:showInfoData="showInfoData"
 			></component>
 		</div>
-		<!--		<div class="info-show">-->
-		<!--			<div class="info-header">-->
-		<!--				<span v-if="showInfoData">基本信息</span>-->
-		<!--			</div>-->
-		<!--			<div-->
-		<!--				v-if="showInfoData && queryData.windControlType === '1'"-->
-		<!--				class="info-content"-->
-		<!--			>-->
-		<!--				<el-row class="info-content-row">-->
-		<!--					<el-col :span="6">-->
-		<!--						<span>会员账号：</span>-->
-		<!--						<span>-->
-		<!--							{{ showInfoData.username ? showInfoData.username : '-' }}-->
-		<!--						</span>-->
-		<!--					</el-col>-->
-		<!--					<el-col :span="6">-->
-		<!--						<span>账户类型：</span>-->
-		<!--						<span v-if="showInfoData.accountType">-->
-		<!--							{{ typeFilter(showInfoData.accountType, 'accountType') }}-->
-		<!--						</span>-->
-		<!--						<span v-else>-</span>-->
-		<!--					</el-col>-->
-		<!--					<el-col :span="6">-->
-		<!--						<span>会员姓名：</span>-->
-		<!--						<span v-if="showInfoData.realName">-->
-		<!--							{{ showInfoData.realName }}-->
-		<!--						</span>-->
-		<!--						<span v-else>-</span>-->
-		<!--					</el-col>-->
-		<!--					<el-col :span="6">-->
-		<!--						<span>离线天数：</span>-->
-		<!--						<span v-if="showInfoData.leaveLineDays">-->
-		<!--							{{ showInfoData.leaveLineDays }}-->
-		<!--						</span>-->
-		<!--						<span v-else>-</span>-->
-		<!--					</el-col>-->
-		<!--				</el-row>-->
-		<!--				<el-row class="info-content-row">-->
-		<!--					<el-col :span="6">-->
-		<!--						<span>风控层级：</span>-->
-		<!--						<span>-->
-		<!--							{{-->
-		<!--								showInfoData.windControlName-->
-		<!--									? showInfoData.windControlName-->
-		<!--									: '-'-->
-		<!--							}}-->
-		<!--						</span>-->
-		<!--					</el-col>-->
-		<!--					<el-col :span="8">-->
-		<!--						<span>风控原因：</span>-->
-		<!--						<span>-->
-		<!--							{{ showInfoData.windReason ? showInfoData.windReason : '-' }}-->
-		<!--						</span>-->
-		<!--					</el-col>-->
-		<!--					<el-col :span="6"></el-col>-->
-		<!--					<el-col :span="6"></el-col>-->
-		<!--				</el-row>-->
-		<!--			</div>-->
-		<!--			<div-->
-		<!--				v-if="showInfoData && queryData.windControlType === '2'"-->
-		<!--				class="info-content"-->
-		<!--			>-->
-		<!--				<el-row class="info-content-row">-->
-		<!--					<el-col :span="6">-->
-		<!--						<span>代理账号：</span>-->
-		<!--						<span>-->
-		<!--							{{-->
-		<!--								showInfoData.proxyUserName ? showInfoData.proxyUserName : '-'-->
-		<!--							}}-->
-		<!--						</span>-->
-		<!--					</el-col>-->
-		<!--					<el-col :span="6">-->
-		<!--						<span>账户类型：</span>-->
-		<!--						<span v-if="showInfoData.accountType">-->
-		<!--							{{ typeFilter(showInfoData.accountType, 'accountType') }}-->
-		<!--						</span>-->
-		<!--						<span v-else>-</span>-->
-		<!--					</el-col>-->
-		<!--					<el-col :span="6">-->
-		<!--						<span>被风控会员个数：</span>-->
-		<!--						<span v-if="showInfoData.windControllerProxyCount">-->
-		<!--							{{ show.windControllerProxyCount }}-->
-		<!--						</span>-->
-		<!--						<span v-else>-</span>-->
-		<!--					</el-col>-->
-		<!--					<el-col :span="6">-->
-		<!--						<span>离线天数：</span>-->
-		<!--						<span v-if="showInfoData.leaveLineDays">-->
-		<!--							绑定中-->
-		<!--						</span>-->
-		<!--						<span v-else>-</span>-->
-		<!--					</el-col>-->
-		<!--				</el-row>-->
-		<!--				<el-row class="info-content-row">-->
-		<!--					<el-col :span="6">-->
-		<!--						<span>风控原因：</span>-->
-		<!--						<span>-->
-		<!--							{{ showInfoData.windReason ? showInfoData.windReason : '-' }}-->
-		<!--						</span>-->
-		<!--					</el-col>-->
-		<!--					<el-col :span="6"></el-col>-->
-		<!--					<el-col :span="6"></el-col>-->
-		<!--					<el-col :span="6"></el-col>-->
-		<!--				</el-row>-->
-		<!--			</div>-->
-		<!--			<div-->
-		<!--				v-else-if="showInfoData && queryData.windControlType === '3'"-->
-		<!--				class="info-content"-->
-		<!--			>-->
-		<!--				<el-row class="info-content-row">-->
-		<!--					<el-col :span="6">-->
-		<!--						<span>银行卡号：</span>-->
-		<!--						<span>-->
-		<!--							{{ showInfoData.cardNumber ? showInfoData.cardNumber : '-' }}-->
-		<!--						</span>-->
-		<!--					</el-col>-->
-		<!--					<el-col :span="8">-->
-		<!--						<span>银行名称：</span>-->
-		<!--						<span>-->
-		<!--							{{ showInfoData.cardNumber ? showInfoData.cardNumber : '-' }}-->
-		<!--						</span>-->
-		<!--					</el-col>-->
-		<!--					<el-col :span="5">-->
-		<!--						<span>黑名单状态：</span>-->
-		<!--						<span-->
-		<!--							v-if="-->
-		<!--								showInfoData.blackStatus && showInfoData.blackStatus * 1 === 1-->
-		<!--							"-->
-		<!--							class="normalRgba"-->
-		<!--						>-->
-		<!--							启用中-->
-		<!--						</span>-->
-		<!--						<span-->
-		<!--							v-else-if="showInfoData.blackStatus + '' === '0'"-->
-		<!--							class="disableRgba"-->
-		<!--						>-->
-		<!--							禁用中-->
-		<!--						</span>-->
-		<!--						<span v-else>-</span>-->
-		<!--					</el-col>-->
-		<!--					<el-col :span="5">-->
-		<!--						<span>绑定状态：</span>-->
-		<!--						<span-->
-		<!--							v-if="-->
-		<!--								showInfoData.bindStatus && showInfoData.bindStatus * 1 === 1-->
-		<!--							"-->
-		<!--							class="normalRgba"-->
-		<!--						>-->
-		<!--							绑定中-->
-		<!--						</span>-->
-		<!--						<span-->
-		<!--							v-else-if="showInfoData.bindStatus + '' === '0'"-->
-		<!--							class="disableRgba"-->
-		<!--						>-->
-		<!--							待绑定-->
-		<!--						</span>-->
-		<!--						<span v-else>-</span>-->
-		<!--					</el-col>-->
-		<!--				</el-row>-->
-		<!--				<el-row class="info-content-row">-->
-		<!--					<el-col :span="6">-->
-		<!--						<span>绑定账号次数：</span>-->
-		<!--						<span>{{ showInfoData.bindNum ? showInfoData.bindNum : '-' }}</span>-->
-		<!--					</el-col>-->
-		<!--					<el-col :span="8">-->
-		<!--						<span>提款总额：</span>-->
-		<!--						<span>-->
-		<!--							{{-->
-		<!--								showInfoData.withdrawalTotalAmount-->
-		<!--									? showInfoData.withdrawalTotalAmount-->
-		<!--									: '-'-->
-		<!--							}}-->
-		<!--						</span>-->
-		<!--					</el-col>-->
-		<!--					<el-col :span="5">-->
-		<!--						<span>风控层级：</span>-->
-		<!--						<span>-->
-		<!--							{{-->
-		<!--								showInfoData.windControlName-->
-		<!--									? showInfoData.windControlName-->
-		<!--									: '-'-->
-		<!--							}}-->
-		<!--						</span>-->
-		<!--					</el-col>-->
-		<!--					<el-col :span="5">-->
-		<!--						<span>风控原因：</span>-->
-		<!--						<span>-->
-		<!--							{{ showInfoData.windReason ? showInfoData.windReason : '-' }}-->
-		<!--						</span>-->
-		<!--					</el-col>-->
-		<!--				</el-row>-->
-		<!--			</div>-->
-		<!--			<div-->
-		<!--				v-else-if="showInfoData && queryData.windControlType === '4'"-->
-		<!--				class="info-content"-->
-		<!--			>-->
-		<!--				<el-row class="info-content-row">-->
-		<!--					<el-col :span="6">-->
-		<!--						<span>虚拟币地址：</span>-->
-		<!--						<span>-->
-		<!--							{{-->
-		<!--								showInfoData.virtualAddress ? showInfoData.virtualAddress : '-'-->
-		<!--							}}-->
-		<!--						</span>-->
-		<!--					</el-col>-->
-		<!--					<el-col :span="4">-->
-		<!--						<span>虚拟币种类：</span>-->
-		<!--						<span>-->
-		<!--							{{ showInfoData.virtualKind ? showInfoData.virtualKind : '-' }}-->
-		<!--						</span>-->
-		<!--					</el-col>-->
-		<!--					<el-col :span="4">-->
-		<!--						<span>协议类型：</span>-->
-		<!--						<span v-if="showInfoData.virtualProtocol">-->
-		<!--							{{ showInfoData.virtualProtocol }}-->
-		<!--						</span>-->
-		<!--						<span v-else>-</span>-->
-		<!--					</el-col>-->
-		<!--					<el-col :span="5">-->
-		<!--						<span>黑名单状态：</span>-->
-		<!--						<span-->
-		<!--							v-if="-->
-		<!--								showInfoData.bindStatus && showInfoData.bindStatus * 1 === 1-->
-		<!--							"-->
-		<!--							class="normalRgba"-->
-		<!--						>-->
-		<!--							绑定中-->
-		<!--						</span>-->
-		<!--						<span-->
-		<!--							v-else-if="showInfoData.bindStatus + '' === '0'"-->
-		<!--							class="disableRgba"-->
-		<!--						>-->
-		<!--							待绑定-->
-		<!--						</span>-->
-		<!--						<span v-else>-</span>-->
-		<!--					</el-col>-->
-		<!--					<el-col :span="5">-->
-		<!--						<span>黑名单状态：</span>-->
-		<!--						<span-->
-		<!--							v-if="-->
-		<!--								showInfoData.bindStatus && showInfoData.bindStatus * 1 === 1-->
-		<!--							"-->
-		<!--							class="normalRgba"-->
-		<!--						>-->
-		<!--							绑定中-->
-		<!--						</span>-->
-		<!--						<span-->
-		<!--							v-else-if="showInfoData.bindStatus + '' === '0'"-->
-		<!--							class="disableRgba"-->
-		<!--						>-->
-		<!--							待绑定-->
-		<!--						</span>-->
-		<!--						<span v-else>-</span>-->
-		<!--					</el-col>-->
-		<!--				</el-row>-->
-		<!--				<el-row class="info-content-row">-->
-		<!--					<el-col :span="6">-->
-		<!--						<span>绑定账号次数：</span>-->
-		<!--						<span>{{ showInfoData.bindNum ? showInfoData.bindNum : '-' }}</span>-->
-		<!--					</el-col>-->
-		<!--					<el-col :span="8">-->
-		<!--						<span>总提款总额：</span>-->
-		<!--						<span>-->
-		<!--							{{-->
-		<!--								showInfoData.withdrawalTotalAmount-->
-		<!--									? showInfoData.withdrawalTotalAmount-->
-		<!--									: '-'-->
-		<!--							}}-->
-		<!--						</span>-->
-		<!--					</el-col>-->
-		<!--					<el-col :span="5">-->
-		<!--						<span>风控层级：</span>-->
-		<!--						<span>-->
-		<!--							{{-->
-		<!--								showInfoData.windControlName-->
-		<!--									? showInfoData.windControlName-->
-		<!--									: '-'-->
-		<!--							}}-->
-		<!--						</span>-->
-		<!--					</el-col>-->
-		<!--					<el-col :span="5">-->
-		<!--						<span>风控原因：</span>-->
-		<!--						<span>-->
-		<!--							{{ showInfoData.windReason ? showInfoData.windReason : '-' }}-->
-		<!--						</span>-->
-		<!--					</el-col>-->
-		<!--				</el-row>-->
-		<!--			</div>-->
-		<!--			<div-->
-		<!--				v-else-if="showInfoData && queryData.windControlType === '5'"-->
-		<!--				class="info-content"-->
-		<!--			>-->
-		<!--				<el-row class="info-content-row">-->
-		<!--					<el-col :span="6">-->
-		<!--						<span>注册IP地址：</span>-->
-		<!--						<span>-->
-		<!--							{{ showInfoData.registerIp ? showInfoData.registerIp : '-' }}-->
-		<!--						</span>-->
-		<!--					</el-col>-->
-		<!--					<el-col :span="6">-->
-		<!--						<span>账户类型：</span>-->
-		<!--						<span v-if="showInfoData.accountType">-->
-		<!--							{{ typeFilter(showInfoData.accountType, 'accountType') }}-->
-		<!--						</span>-->
-		<!--						<span v-else>-</span>-->
-		<!--					</el-col>-->
-		<!--					<el-col :span="6">-->
-		<!--						<span>风控层级：</span>-->
-		<!--						<span>-->
-		<!--							{{-->
-		<!--								showInfoData.windControlName-->
-		<!--									? showInfoData.windControlName-->
-		<!--									: '-'-->
-		<!--							}}-->
-		<!--						</span>-->
-		<!--					</el-col>-->
-		<!--					<el-col :span="6">-->
-		<!--						<span>风控原因：</span>-->
-		<!--						<span>-->
-		<!--							{{ showInfoData.windReason ? showInfoData.windReason : '-' }}-->
-		<!--						</span>-->
-		<!--					</el-col>-->
-		<!--				</el-row>-->
-		<!--			</div>-->
-		<!--			<div-->
-		<!--				v-else-if="showInfoData && queryData.windControlType === '6'"-->
-		<!--				class="info-content"-->
-		<!--			>-->
-		<!--				<el-row class="info-content-row">-->
-		<!--					<el-col :span="6">-->
-		<!--						<span>终端设备号：</span>-->
-		<!--						<span>-->
-		<!--							{{ showInfoData.username ? showInfoData.username : '-' }}-->
-		<!--						</span>-->
-		<!--					</el-col>-->
-		<!--					<el-col :span="6">-->
-		<!--						<span>风控层级：</span>-->
-		<!--						<span>-->
-		<!--							{{-->
-		<!--								showInfoData.windControlName-->
-		<!--									? showInfoData.windControlName-->
-		<!--									: '-'-->
-		<!--							}}-->
-		<!--						</span>-->
-		<!--					</el-col>-->
-		<!--					<el-col :span="6">-->
-		<!--						<span>风控原因：</span>-->
-		<!--						<span>-->
-		<!--							{{ showInfoData.windReason ? showInfoData.windReason : '-' }}-->
-		<!--						</span>-->
-		<!--					</el-col>-->
-		<!--					<el-col :span="6"></el-col>-->
-		<!--				</el-row>-->
-		<!--			</div>-->
-		<!--		</div>-->
 	</div>
 </template>
 
@@ -537,7 +182,7 @@ import Ip from '@/components/editRisk/ip'
 import Device from '@/components/editRisk/device'
 
 export default {
-	name: routerNames.addAgent,
+	name: routerNames.editRisk,
 	components: { UserName, AgentName, BankCard, Virtual, Ip, Device },
 	mixins: [list],
 	data() {
@@ -787,13 +432,13 @@ export default {
 						this.$refs.form.clearValidate('windReason')
 						this.queryInfoData({ userName }, windControlType).then((res) => {
 							const { id } = res
-							if (!id) {
-								this.tipsShow = '查询的风险会员不存在'
+							if (id || id * 1 === 0) {
 								return this.$message({
 									message: '查询的风险会员不存在',
 									type: 'error'
 								})
 							} else {
+                                this.tipsShow = '查询的风险会员不存在'
 								this.tipsShow = null
 								this.current = 0
 							}
@@ -812,15 +457,15 @@ export default {
 							windControlType
 						).then((res) => {
 							const { id } = res
-							this.tipsShow = '查询的风险代理不存在'
-							if (!id) {
+							if (id || id * 1 === 0) {
+								this.tipsShow = null
+								this.current = 1
+							} else {
+                                this.tipsShow = '查询的风险代理不存在'
 								return this.$message({
 									message: '查询的风险代理不存在',
 									type: 'error'
 								})
-							} else {
-								this.tipsShow = null
-								this.current = 1
 							}
 						})
 					}
@@ -834,15 +479,15 @@ export default {
 						this.$refs.form.clearValidate('windReason')
 						this.queryInfoData({ cardNumber }, windControlType).then((res) => {
 							const { id } = res
-							this.tipsShow = '查询的银行卡信息不存在'
-							if (!id) {
+							if (id || id * 1 === 0) {
+								this.tipsShow = null
+								this.current = 2
+							} else {
+                                this.tipsShow = '查询的银行卡信息不存在'
 								return this.$message({
 									message: '查询的银行卡信息不存在',
 									type: 'error'
 								})
-							} else {
-								this.tipsShow = null
-								this.current = 2
 							}
 						})
 					}
@@ -856,15 +501,15 @@ export default {
 						this.queryInfoData({ virtualAddress }, windControlType).then(
 							(res) => {
 								const { id } = res
-								this.tipsShow = '查询的虚拟币账号不存在'
-								if (!id) {
+								if (id || id * 1 === 0) {
+									this.tipsShow = null
+									this.current = 3
+								} else {
+                                    this.tipsShow = '查询的虚拟币账号不存在'
 									return this.$message({
 										message: '查询的虚拟币账号不存在',
 										type: 'error'
 									})
-								} else {
-									this.tipsShow = null
-									this.current = 3
 								}
 							}
 						)
@@ -878,15 +523,15 @@ export default {
 						this.$refs.form.clearValidate('windReason')
 						this.queryInfoData({ registerIp }, windControlType).then((res) => {
 							const { id } = res
-							this.tipsShow = '查询的风险IP不存在'
-							if (!id) {
+							if (id || id * 1 === 0) {
+								this.tipsShow = null
+								this.current = 4
+							} else {
+                                this.tipsShow = '查询的风险IP不存在'
 								return this.$message({
 									message: '查询的风险IP不存在',
 									type: 'error'
 								})
-							} else {
-								this.tipsShow = null
-								this.current = 4
 							}
 						})
 					}
@@ -899,15 +544,15 @@ export default {
 						this.$refs.form.clearValidate('windReason')
 						this.queryInfoData({ deviceNo }, windControlType).then((res) => {
 							const { id } = res
-							this.tipsShow = '查询的风险终端号不存在'
-							if (!id) {
+							if (id || id * 1 === 0) {
+								this.tipsShow = null
+								this.current = 5
+							} else {
+                                this.tipsShow = '查询的风险终端号不存在'
 								return this.$message({
 									message: '查询的风险终端号不存在',
 									type: 'error'
 								})
-							} else {
-								this.tipsShow = null
-								this.current = 5
 							}
 						})
 					}
@@ -929,7 +574,7 @@ export default {
 							const { code, data } = res
 							if (code === 200) {
 								if (data) {
-									this.showInfoData = data.id ? data : {}
+									this.showInfoData = data.id || data.id * 1 === 0 ? data : {}
 									resolve(data)
 								} else {
 									this.showInfoData = {}

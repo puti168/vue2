@@ -24,6 +24,7 @@ export const routerNames = {
 	gameClassification: 'GameClassification',
 	addReview: 'addReview',
 	agencyEdit: 'agencyEdit',
+	editRisk: 'editRisk',
 	transformationReview: 'transformationReview',
 	gameSearchManage: 'gameSearchManage',
 	gameBetslipDetails: 'gameBetslipDetails',
