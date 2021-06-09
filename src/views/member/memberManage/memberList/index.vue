@@ -611,7 +611,9 @@ export default {
 				orderType: undefined
 			},
 			dataList: [],
-			total: 0
+			total: 0,
+            vipDict: [],
+            userLabel: []
 		}
 	},
 	computed: {
