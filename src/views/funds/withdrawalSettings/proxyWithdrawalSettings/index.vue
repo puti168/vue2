@@ -61,19 +61,8 @@
 							:model="ruleForm"
 							class="demo-form-inline"
 						>
-							<el-form-item
-								prop="viplevel"
-								label-width="147px"
-								label="VIP等级："
-								class="configure"
-							>
-								<el-input
-									v-model="queryData.viplevel"
-									placeholder=""
-								></el-input>
-							</el-form-item>
 
-							<el-form-item label="单次提款最低额度：" prop="minimum">
+							<el-form-item label="单次提款最低额度：" class="configure" prop="minimum">
 								<el-input
 									v-model="queryData.miniamount"
 									class="chief"
@@ -84,7 +73,6 @@
 
 							<el-form-item
 								label="单次提款最高额度："
-								class="configure"
 								prop="maxmum"
 							>
 								<el-input
@@ -94,7 +82,7 @@
 								></el-input>
 								<span>元</span>
 							</el-form-item>
-							<el-form-item label="单日免费提款次数：" prop="oneFree">
+							<el-form-item label="单日免费提款次数：" class="configure" prop="oneFree">
 								<el-input
 									v-model="queryData.oneFree"
 									class="chief"
@@ -104,7 +92,6 @@
 							</el-form-item>
 							<el-form-item
 								label="大额提款标记金额："
-								class="configure"
 								prop="signminimum"
 							>
 								<el-input
@@ -114,7 +101,7 @@
 								></el-input>
 								<span style="w">元</span>
 							</el-form-item>
-							<el-form-item label="单日免费提款总额：" prop="onefreetotal">
+							<el-form-item label="单日免费提款总额：" class="configure" prop="onefreetotal">
 								<el-input
 									v-model="queryData.onefreetotal"
 									class="chief"
@@ -572,7 +559,7 @@ export default {
 
 <style lang="scss" scoped>
 .form-header {
-	width: 950px;
+	width: 930px;
 	left: 0px;
 	background-color: #d3d7df;
 	height: 45px;

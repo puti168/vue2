@@ -12,11 +12,17 @@
 						新增会员提款设置
 					</el-button>
 					<el-dialog
-						title="新增会员提款配置"
 						:visible.sync="dialogVisible"
-						width="780px"
+						width="970px"
 						:before-close="handleClose"
 					>
+						<div class="form-header">
+							<span>新增会员资料</span>
+							<span>
+								<code style="color:#FF3B30;">*</code>
+								为必填项
+							</span>
+						</div>
 						<h2>提款配置</h2>
 						<el-form
 							:rules="rules"
@@ -24,22 +30,34 @@
 							:model="ruleForm"
 							class="demo-form-inline"
 						>
-							<el-form-item prop="viplevel" label-width="147px" label="VIP等级：">
-								<el-input v-model="queryData.viplevel" placeholder=""></el-input>
+							<el-form-item
+								prop="viplevel"
+								label-width="147px"
+								label="VIP等级："
+								class="configure"
+							>
+								<el-input
+									v-model="queryData.viplevel"
+									placeholder=""
+								></el-input>
 							</el-form-item>
 
 							<el-form-item label="单次提款最低额度：" prop="minimum">
 								<el-input
-								    v-model="queryData.miniamount"
+									v-model="queryData.miniamount"
 									class="chief"
 									placeholder="请输入金额，为0不限制"
 								></el-input>
 								<span>元</span>
 							</el-form-item>
 
-							<el-form-item label="单次提款最高额度：" prop="maxmum">
+							<el-form-item
+								label="单次提款最高额度："
+								class="configure"
+								prop="maxmum"
+							>
 								<el-input
-								    v-model="queryData.maxamount"
+									v-model="queryData.maxamount"
 									class="chief"
 									placeholder="请输入金额，为0不限制"
 								></el-input>
@@ -47,15 +65,19 @@
 							</el-form-item>
 							<el-form-item label="单日免费提款次数：" prop="oneFree">
 								<el-input
-								    v-model="queryData.oneFree"
+									v-model="queryData.oneFree"
 									class="chief"
 									placeholder="请输入金额，为0不限制"
 								></el-input>
 								<span>次</span>
 							</el-form-item>
-							<el-form-item label="大额提款标记金额：" prop="signminimum">
+							<el-form-item
+								label="大额提款标记金额："
+								class="configure"
+								prop="signminimum"
+							>
 								<el-input
-								    v-model="queryData.minimum"
+									v-model="queryData.minimum"
 									class="chief"
 									placeholder="请输入金额，为0不限制"
 								></el-input>
@@ -63,14 +85,18 @@
 							</el-form-item>
 							<el-form-item label="单日免费提款总额：" prop="onefreetotal">
 								<el-input
-								    v-model="queryData.onefreetotal"
+									v-model="queryData.onefreetotal"
 									class="chief"
 									placeholder="请输入金额，为0不限制"
 								></el-input>
 								<span>元</span>
 							</el-form-item>
 							<h2>提款手续费配置</h2>
-							<el-form-item label="超出单日免费次数：" prop="region">
+							<el-form-item
+								label="超出单日免费次数："
+								class="configure"
+								prop="region"
+							>
 								<el-select
 									v-model="queryData.region"
 									class="sun"
@@ -102,25 +128,23 @@
 							</el-form-item>
 							<h2>提款提示语配置</h2>
 							<el-form-item
-								label-width="200px"
-								class="line"
+								class="configure"
 								label="超出单日最高次数提示语："
 								prop="beyondfrequency"
 							>
 								<el-input
-								   v-model="queryData.extips"
+									v-model="queryData.extips"
 									style="width:260px"
 									placeholder="游戏前端提示语，限制25字以内"
 								></el-input>
 							</el-form-item>
 							<el-form-item
-								label-width="220px"
-								class="line"
+								class="configure"
 								label="超出单日最高提款总额提示语："
 								prop="beyondtotal"
 							>
 								<el-input
-								    v-model="queryData.extotaltips"
+									v-model="queryData.extotaltips"
 									style="width:260px"
 									placeholder="游戏前端提示语，限制25字以内"
 								></el-input>
@@ -134,11 +158,16 @@
 						</el-form>
 
 						<span slot="footer" class="dialog-footer">
-							<el-button type="primary" @click="dialogVisible = false">
+							<el-button
+								type="primary"
+								icon="el-icon-search"
+								:disabled="loading"
+								size="medium"
+								@click="add"
+							>
 								提交
 							</el-button>
-							 <el-button @click="reset">重置</el-button>
-
+							<el-button @click="reset">重置</el-button>
 						</span>
 					</el-dialog>
 				</template>
@@ -345,9 +374,7 @@ export default {
 			},
 			ruleForm: {
 				minimum: ''
-
 			}
-
 		}
 	},
 	computed: {
@@ -368,50 +395,65 @@ export default {
 				{ required: true, validator: oneFreeRules, trigger: 'blur' }
 			]
 
-			 const minimum = [
-					{ required: true, message: '请输入金额', trigger: 'blur' },
-					{ min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
-				]
+			const minimum = [
+				{ required: true, message: '请输入金额', trigger: 'blur' },
+				{ min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+			]
 			const maxmum = [
-					{ required: true, message: '请输入金额', trigger: 'blur' },
-					{ min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
-				]
-				const signminimum = [
-					{ required: true, message: '请输入金额', trigger: 'blur' },
-					{ min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
-				]
-				const onefreetotal = [
-					{
-						required: true,
-						message: '输入大于单日最高提款次数，请重新输入',
-						trigger: 'blur'
-					},
-					{ min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
-				]
-				const	region = [{ required: true, message: '百分比（%）', trigger: 'change' }]
-				const beyondfrequency = [
-					{ required: true, message: '请输入提示语', trigger: 'blur' },
-					{ min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
-				]
-				const beyondtotal = [
-					{ required: true, message: '请输入提示语', trigger: 'blur' },
-					{ min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
-				]
-			return { oneFree, minimum, maxmum, signminimum, onefreetotal, region, beyondfrequency, beyondtotal}
+				{ required: true, message: '请输入金额', trigger: 'blur' },
+				{ min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+			]
+			const signminimum = [
+				{ required: true, message: '请输入金额', trigger: 'blur' },
+				{ min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+			]
+			const onefreetotal = [
+				{
+					required: true,
+					message: '输入大于单日最高提款次数，请重新输入',
+					trigger: 'blur'
+				},
+				{ min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+			]
+			const region = [
+				{ required: true, message: '百分比（%）', trigger: 'change' }
+			]
+			const beyondfrequency = [
+				{ required: true, message: '请输入提示语', trigger: 'blur' },
+				{ min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+			]
+			const beyondtotal = [
+				{ required: true, message: '请输入提示语', trigger: 'blur' },
+				{ min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+			]
+			return {
+				oneFree,
+				minimum,
+				maxmum,
+				signminimum,
+				onefreetotal,
+				region,
+				beyondfrequency,
+				beyondtotal
+			}
 		}
 	},
 	created() {},
 	mounted() {},
 	methods: {
+		add(done) {
+			this.$confirm('您确认要执行新增提款设置的操作？')
+				.then((_) => {
+					done()
+				})
+				.catch((_) => {})
+		},
 		open() {
-			this.$confirm(
-				'您确定要初始化会员提款设置？请谨慎操作！！！',
-				{
-					confirmButtonText: '确定',
-					cancelButtonText: '取消',
-					type: 'warning'
-				}
-			)
+			this.$confirm('您确定要初始化会员提款设置？请谨慎操作！！！', {
+				confirmButtonText: '确定',
+				cancelButtonText: '取消',
+				type: 'warning'
+			})
 				.then(() => {
 					this.$message({
 						type: 'success',
@@ -424,13 +466,6 @@ export default {
 						message: '操作取消'
 					})
 				})
-		},
-		handleClose(done) {
-			this.$confirm('您确认要执行新增提款设置的操作？')
-				.then((_) => {
-					done()
-				})
-				.catch((_) => {})
 		},
 
 		reset() {
@@ -446,24 +481,48 @@ export default {
 				exregions: undefined,
 				extips: undefined,
 				extotaltips: undefined
-
 			}
 			this.$refs['form'].resetFields()
 		}
-
 	}
 }
 </script>
 
 <style lang="scss" scoped>
-.chief{
+.configure {
+	width: 420px;
+}
+.form-header {
+	width: 930px;
+	left: 0px;
+	background-color: #d3d7df;
+	height: 45px;
+	line-height: 45px;
+	span:nth-child(1) {
+		position: absolute;
+		left: 30px;
+		top: 65px;
+		color: #666;
+		font-size: 27px;
+		font-weight: 700;
+	}
+	span:nth-child(2) {
+		position: absolute;
+		right: 30px;
+		color: #999;
+		font-weight: 400;
+		font-size: 18px;
+		top: 60px;
+	}
+}
+.chief {
 	width: 180px;
 }
-.el-form-item{
+.el-form-item {
 	line-height: 55px;
 }
-.dialog-footer{
-	text-align: center
+.dialog-footer {
+	text-align: center;
 }
 .sun {
 	width: 95px;
