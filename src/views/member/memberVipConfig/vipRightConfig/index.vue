@@ -146,6 +146,7 @@
 					icon="el-icon-refresh-left"
 					size="medium"
 					style="padding: 0 8px"
+					:disabled="!dataList[0].flag"
 					@click="resetData()"
 				>
 					恢复上次配置

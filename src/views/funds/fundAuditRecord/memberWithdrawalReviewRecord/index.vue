@@ -106,7 +106,7 @@
 						<el-table-column
 							prop="auditNum"
 							align="center"
-							label="审核订单号"
+							label="订单号"
 						></el-table-column>
 						<el-table-column
 							prop="applyName"
@@ -119,34 +119,59 @@
 							label="会员姓名"
 						></el-table-column>
 						<el-table-column
+							prop="status"
+							align="center"
+							label="订单状态"
+						></el-table-column>
+						<el-table-column
 							prop="applyTime"
 							align="center"
-							sortable="custom"
 							label="是否为大额提款"
 						></el-table-column>
 						<el-table-column
 							prop="applyTime"
 							align="center"
-							sortable="custom"
+							label="是否为首提"
+						></el-table-column>
+						<el-table-column
+							prop="applyTime"
+							align="center"
 							label="提款金额"
 						></el-table-column>
 						<el-table-column
 							prop="applyTime"
 							align="center"
-							sortable="custom"
 							label="提款手续费"
 						></el-table-column>
 						<el-table-column
 							prop="applyTime"
 							align="center"
-							sortable="custom"
 							label="申请时间"
 						></el-table-column>
 						<el-table-column
 							prop="applyTime"
 							align="center"
-							sortable="custom"
+							label="审核人"
+						></el-table-column>
+						<el-table-column
+							prop="applyTime"
+							align="center"
+							label="审核时间"
+						></el-table-column>
+						<el-table-column
+							prop="applyTime"
+							align="center"
+							label="审核用时"
+						></el-table-column>
+						<el-table-column
+							prop="applyTime"
+							align="center"
 							label="审核状态"
+						></el-table-column>
+						<el-table-column
+							prop="remark"
+							align="center"
+							label="备注"
 						></el-table-column>
 					</el-table>
 					<!-- 分页 -->
@@ -173,14 +198,16 @@ import list from '@/mixins/list'
 import detail from './components/detail'
 import dayjs from 'dayjs'
 import { getUsername } from '@/utils/auth'
+import { routerNames } from '@/utils/consts'
 const end = dayjs()
 	.endOf('day')
 	.valueOf()
 const start = dayjs()
 	.startOf('day')
 	.valueOf()
+
 export default {
-	name: 'MemberWithdrawalReview',
+	name: routerNames.memberWithdrawalReviewRecord,
 	components: { detail },
 	mixins: [list],
 	data() {
@@ -204,7 +231,6 @@ export default {
 			},
 			rowData: {},
 			name: '',
-			activeName: '',
 			dataList: []
 		}
 	},
@@ -229,7 +255,6 @@ export default {
 		this.name = getUsername()
 	},
 	methods: {
-		// handleClick() {},
 		loadData() {
 			this.loading = true
 			const [startTime, endTime] = this.formTime.time || []
@@ -259,15 +284,6 @@ export default {
 						const response = res.data
 						this.loading = false
 						this.dataList = response.record
-						if (this.dataList) {
-							this.dataList.forEach((item) => {
-								if (Number(item.lockOrder) === 1) {
-									item.lockStatus = true
-								} else {
-									item.lockStatus = false
-								}
-							})
-						}
 						this.total = response.totalRecord
 					} else {
 						this.loading = false
@@ -290,17 +306,6 @@ export default {
 			this.showDetail = false
 			this.loadData()
 		},
-		// confirm(row, type) {
-		// 	this.$confirm(`您确认要执行该操作？`, {
-		// 		confirmButtonText: '确定',
-		// 		cancelButtonText: '取消',
-		// 		type: 'warning'
-		// 	})
-		// 		.then(() => {
-		// 			// this.setProxyGradeUpdate(params)
-		// 		})
-		// 		.catch(() => {})
-		// },
 		reset() {
 			this.queryData = {
 				auditStatusList: [],
@@ -318,38 +323,6 @@ export default {
 			}
 			this.loadData()
 		}
-		// lockChange(val) {
-		// 	const loading = this.$loading({
-		// 		lock: true,
-		// 		text: 'Loading',
-		// 		spinner: 'el-icon-loading',
-		// 		background: 'rgba(0, 0, 0, 0.7)'
-		// 	})
-		// 	this.$api
-		// 		.lockProxyAuditRecord({
-		// 			id: val.id,
-		// 			lockFlag: Number(val.lockOrder) === 0 ? 0 : 1
-		// 		})
-		// 		.then((res) => {
-		// 			if (res.code === 200) {
-		// 				loading.close()
-		// 				this.$message({
-		// 					type: 'success',
-		// 					message: '操作成功!'
-		// 				})
-		// 				this.loadData()
-		// 			} else {
-		// 				loading.close()
-		// 				this.$message({
-		// 					message: res.msg,
-		// 					type: 'error'
-		// 				})
-		// 			}
-		// 		})
-		// 		.catch(() => {
-		// 			loading.close()
-		// 		})
-		// }
 	}
 }
 </script>
@@ -370,7 +343,8 @@ export default {
 	padding-bottom: 20px;
 }
 .look {
-    background-color: #00BFBF;
-    border-color: #00BFBF;
+	//background-color: #00BFBF;
+	//border-color: #00BFBF;
+	color: #00bfbf;
 }
 </style>

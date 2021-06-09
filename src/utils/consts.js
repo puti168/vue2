@@ -49,7 +49,10 @@ export const routerNames = {
 	memberShipIncrease: 'memberShipIncrease',
 	memberDeduction: 'memberDeduction',
 	agentShipIncrease: 'agentShipIncrease',
-	agentDeduction: 'agentDeduction'
+	agentDeduction: 'agentDeduction',
+	memberWithdrawalReviewRecord: 'MemberWithdrawalReviewRecord',
+	memberTopUpReviewRecord: 'memberTopUpReviewRecord',
+	agentWithdrawalReviewRecord: 'agentWithdrawalReviewRecord'
 }
 const month = dayjs().month()
 const year = dayjs().year()

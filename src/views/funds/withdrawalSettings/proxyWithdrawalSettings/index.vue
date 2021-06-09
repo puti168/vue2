@@ -7,12 +7,14 @@
 					<el-button type="primary" @click="dialogVisible = true">
 						新增会员提款设置
 					</el-button>
-					<el-dialog
-						title="新增会员提款配置"
-						:visible.sync="dialogVisible"
-						width="970px"
-						:before-close="handleClose"
-					>
+					<el-dialog :visible.sync="dialogVisible" width="970px">
+							<div class="form-header">
+							<span>新增会员资料</span>
+							<span>
+								<code style="color:#FF3B30;">*</code>
+								为必填项
+							</span>
+						</div>
 						<h2>代理信息</h2>
 						<el-form
 							:rules="rules"
@@ -59,19 +61,8 @@
 							:model="ruleForm"
 							class="demo-form-inline"
 						>
-							<el-form-item
-								prop="viplevel"
-								label-width="147px"
-								label="VIP等级："
-								class="configure"
-							>
-								<el-input
-									v-model="queryData.viplevel"
-									placeholder=""
-								></el-input>
-							</el-form-item>
 
-							<el-form-item label="单次提款最低额度：" prop="minimum">
+							<el-form-item label="单次提款最低额度：" class="configure" prop="minimum">
 								<el-input
 									v-model="queryData.miniamount"
 									class="chief"
@@ -82,7 +73,6 @@
 
 							<el-form-item
 								label="单次提款最高额度："
-								class="configure"
 								prop="maxmum"
 							>
 								<el-input
@@ -92,7 +82,7 @@
 								></el-input>
 								<span>元</span>
 							</el-form-item>
-							<el-form-item label="单日免费提款次数：" prop="oneFree">
+							<el-form-item label="单日免费提款次数：" class="configure" prop="oneFree">
 								<el-input
 									v-model="queryData.oneFree"
 									class="chief"
@@ -102,7 +92,6 @@
 							</el-form-item>
 							<el-form-item
 								label="大额提款标记金额："
-								class="configure"
 								prop="signminimum"
 							>
 								<el-input
@@ -112,7 +101,7 @@
 								></el-input>
 								<span style="w">元</span>
 							</el-form-item>
-							<el-form-item label="单日免费提款总额：" prop="onefreetotal">
+							<el-form-item label="单日免费提款总额：" class="configure" prop="onefreetotal">
 								<el-input
 									v-model="queryData.onefreetotal"
 									class="chief"
@@ -227,7 +216,24 @@
 						label="操作"
 						width="100px"
 					>
-						<template></template>
+						<template>
+							<el-button
+								type="primary"
+								icon="el-icon-edit"
+								size="medium"
+								@click="openmodify()"
+							>
+								修改
+							</el-button>
+							<el-button
+								type="warning"
+								icon="el-icon-delete"
+								size="medium"
+								@click="deleteRow()"
+							>
+								删除
+							</el-button>
+						</template>
 					</el-table-column>
 					<el-table-column
 						prop="realName"
@@ -518,8 +524,7 @@ export default {
 	created() {},
 	mounted() {},
 	methods: {
-
-		handleClose(done) {
+		add(done) {
 			this.$confirm('您确认要执行新增提款设置的操作？')
 				.then((_) => {
 					done()
@@ -553,6 +558,29 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.form-header {
+	width: 930px;
+	left: 0px;
+	background-color: #d3d7df;
+	height: 45px;
+	line-height: 45px;
+	span:nth-child(1) {
+		position: absolute;
+		left: 30px;
+		top: 65px;
+		color: #666;
+		font-size: 27px;
+		font-weight: 700;
+	}
+	span:nth-child(2) {
+		position: absolute;
+		right: 30px;
+		color: #999;
+		font-weight: 400;
+		font-size: 18px;
+		top: 60px;
+	}
+}
 .configure {
 	width: 420px;
 }
