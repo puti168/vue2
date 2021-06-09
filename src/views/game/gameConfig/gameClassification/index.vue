@@ -430,7 +430,7 @@ export default {
 	},
 	computed: {
 		assortStatusArr() {
-			return this.globalDics.gameDisplayType
+			return this.globalDics.gameStatusType
 		},
 		terminalTypeArr() {
 			return this.globalDics.terminalnType

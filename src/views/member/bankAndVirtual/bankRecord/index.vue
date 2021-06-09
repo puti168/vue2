@@ -144,7 +144,7 @@
 					:data="dataList"
 					style="width: 100%"
 					:header-cell-style="getRowClass"
-					@sort-change="changeTableSort"
+					@sort-change="_changeTableSort"
 				>
 					<el-table-column prop="userName" align="center" label="会员账号">
 						<template slot-scope="scope">
@@ -389,6 +389,16 @@ export default {
                         this.vipDict = res.data
                     }
                 })
+        },
+        _changeTableSort({ column, prop, order }) {
+            if (order === 'ascending') {
+                // 升序
+                this.queryData.orderType = 'asc'
+            } else if (column.order === 'descending') {
+                // 降序
+                this.queryData.orderType = 'desc'
+            }
+            this.loadData()
         }
 	}
 }
