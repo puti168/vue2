@@ -109,7 +109,6 @@
               clearable
               :maxlength="50"
               size="medium"
-              show-word-limit
               style="width: 180px"
               placeholder="请输入内容"
               :disabled="loading"

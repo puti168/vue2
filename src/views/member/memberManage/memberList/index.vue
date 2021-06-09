@@ -572,7 +572,7 @@
 <script>
 import list from '@/mixins/list'
 import dayjs from 'dayjs'
-import { mapGetters } from 'vuex'
+// import { mapGetters } from 'vuex'
 // import { UTable } from 'umy-ui'
 import { routerNames } from '@/utils/consts'
 const start = dayjs()
@@ -615,7 +615,7 @@ export default {
 		}
 	},
 	computed: {
-        ...mapGetters(['vipDict', 'userLabel']),
+        // ...mapGetters(['vipDict', 'userLabel']),
 		accountStatusArr() {
 			return this.globalDics.accountStatusType
 		},
@@ -629,7 +629,9 @@ export default {
 	created() {
 		// this.getMerchantDict()
 	},
-	mounted() {},
+	mounted() {
+        this.getWindControllerLevelDict()
+    },
 	methods: {
 		loadData() {
 			const create = this.queryData.registerTime || []
@@ -707,16 +709,15 @@ export default {
 				this.loading = false
 			}, 1000)
 		},
-		// 获取风控层级
+		// 获取会员标签
 		getMerchantDict() {
 			this.$api.merchantDictAPI().then((res) => {
 				const {
 					code,
-					data: { windControl, userLabel },
+					data: { userLabel },
 					msg
 				} = res
 				if (code === 200) {
-					this.vipDict = windControl || []
 					this.userLabel = userLabel || []
 				} else {
 					this.$message({
@@ -726,6 +727,16 @@ export default {
 				}
 			})
 		},
+        // 获取风控层级
+        getWindControllerLevelDict() {
+            this.$api
+                .getWindControllerLevelDict({ windControlType: 1 })
+                .then((res) => {
+                    if (res.code === 200) {
+                        this.vipDict = res.data
+                    }
+                })
+        },
 		reset() {
 			this.pageNum = 1
 			this.queryData = {

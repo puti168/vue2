@@ -155,28 +155,28 @@
                             <span v-else>-</span>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="registerIp" align="center" label="注册IP">
+                    <el-table-column prop="registerIp" align="center">
+                        <template slot="header">
+                            注册IP
+                            <br />
+                            风控层级
+                        </template>
                         <template slot-scope="scope">
 							<span v-if="!!scope.row.registerIp">
 								{{ scope.row.registerIp }}
 							</span>
                             <span v-else>-</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column prop="ipAttribution" align="center">
-                        <template slot="header">
-                            IP归属地
-                            <br />
-                            风控层级
-                        </template>
-                        <template slot-scope="scope">
-							<span v-if="!!scope.row.ipAttribution">
-								{{ scope.row.ipAttribution }}
-							</span>
-                            <span v-else>-</span>
                             <br />
                             <span v-if="!!scope.row.ipControlName" style="color: #e4393c">
 								{{ scope.row.ipControlName }}
+							</span>
+                            <span v-else>-</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="ipAttribution" align="center" label="IP归属地">
+                        <template slot-scope="scope">
+							<span v-if="!!scope.row.ipAttribution">
+								{{ scope.row.ipAttribution }}
 							</span>
                             <span v-else>-</span>
                         </template>
