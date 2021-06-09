@@ -564,7 +564,9 @@ export default {
 	created() {
 		this.getMerchantDict()
 	},
-	mounted() {},
+	mounted() {
+	    this.getWindControllerLevelDict()
+    },
 	methods: {
 		loadData() {
 			const create = this.queryData.registerTime || []
@@ -626,16 +628,15 @@ export default {
 				this.loading = false
 			}, 1000)
 		},
-		// 获取风控层级
+		// 获取代理标签
 		getMerchantDict() {
 			this.$api.agentDictAPI().then((res) => {
 				const {
 					code,
-					data: { windControl, userLabel },
+					data: { userLabel },
 					msg
 				} = res
 				if (code === 200) {
-					this.vipDict = windControl || []
 					this.userLabel = userLabel || []
 				} else {
 					this.$message({
@@ -807,6 +808,16 @@ export default {
 					break
 			}
 		},
+        // 获取风控层级
+        getWindControllerLevelDict() {
+            this.$api
+                .getWindControllerLevelDict({ windControlType: 2 })
+                .then((res) => {
+                    if (res.code === 200) {
+                        this.vipDict = res.data
+                    }
+                })
+        },
 		exportExcel() {
 			const create = this.queryData.registerTime || []
 			const [startTime, endTime] = create
