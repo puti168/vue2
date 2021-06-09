@@ -48,6 +48,7 @@
               v-model="queryData.accountType1"
               style="width: 300px"
               multiple
+              clearable
               placeholder="默认选择全部"
               :popper-append-to-body="false"
             >
@@ -63,6 +64,7 @@
             <el-select
               v-model="queryData.accountType"
               style="width: 300px"
+              clearable
               placeholder="默认选择全部"
               :popper-append-to-body="false"
             >
@@ -101,6 +103,7 @@
             <el-select
               v-model="queryData.accountType"
               style="width: 300px"
+              clearable
               placeholder="默认选择全部"
               :popper-append-to-body="false"
             >
@@ -116,6 +119,7 @@
             <el-select
               v-model="queryData.accountType"
               style="width: 300px"
+              clearable
               placeholder="默认选择全部"
               :popper-append-to-body="false"
             >
@@ -131,6 +135,7 @@
             <el-select
               v-model="queryData.accountType"
               style="width: 300px"
+              clearable
               placeholder="默认选择全部"
               :popper-append-to-body="false"
             >
@@ -146,6 +151,7 @@
             <el-select
               v-model="queryData.accountType"
               style="width: 300px"
+              clearable
               placeholder="默认选择全部"
               :popper-append-to-body="false"
             >
@@ -283,36 +289,9 @@
             </template>
           </el-table-column>
           <el-table-column
-            prop="accountType"
-            align="center"
-            label="账号类型"
-            width="100px"
-          >
-            <template slot-scope="scope">
-              {{ typeFilter(scope.row.accountType, "accountType") }}
-            </template>
-          </el-table-column>
-          <el-table-column
-            prop="parentProxyName"
-            align="center"
-            label="上级代理"
-            width="150px"
-          >
-            <template slot-scope="scope">
-              <Copy
-                v-if="!!scope.row.parentProxyName"
-                :title="scope.row.parentProxyName"
-                :copy="copy"
-              >
-                {{ scope.row.parentProxyName }}
-              </Copy>
-              <span v-else>-</span>
-            </template>
-          </el-table-column>
-          <el-table-column
             prop="playerName"
             align="center"
-            label="风控层级"
+            label="风控等级"
             width="180px"
           >
           </el-table-column>
@@ -669,60 +648,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-/deep/.el-dialog__header {
-  text-align: center;
-  color: #909399;
-  font-weight: 700;
-}
 /deep/ .tagheight .el-tag {
-  height: 24px;
-  line-height: 24px;
-  min-width: 60px;
-}
-.msgList {
-  font-size: 14px;
-  display: flex;
-  line-height: 24px;
-  text-align: center;
-  p {
-    margin-right: 20px;
-  }
-  &:last-child p {
-    margin-bottom: 15px;
-  }
-}
-.view-container {
-  border: 1px solid #dcdfe6;
-  font-size: 14px;
-}
-.review-content {
-  line-height: 30px;
-}
-.paddingLR {
-  padding: 0 30px;
-}
-.head {
-  height: 70px;
-  line-height: 70px;
-  width: 100%;
-  background: #000;
-  border-radius: 2px;
-  display: flex;
-  justify-content: space-between;
-  .title {
-    font-weight: 600;
-    font-size: 16px;
-    color: rgb(192, 190, 190);
-  }
-  .right-btn {
-    float: right;
-  }
-}
-.strong {
-  height: 70px;
-  line-height: 80px;
-}
-.paddingB {
-  padding-bottom: 30px;
+  // height: 24px;
+  // line-height: 24px;
+  // min-width: 60px;
 }
 </style>
