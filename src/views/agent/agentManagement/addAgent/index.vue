@@ -157,6 +157,12 @@ export default {
                         required: true,
                         validator: testPassword,
                         trigger: 'blur'
+                    },
+                    {
+                        min: 8,
+                        max: 12,
+                        message: '请输入8-12位，字母+数字组合',
+                        trigger: 'blur'
                     }
                 ]
             }
