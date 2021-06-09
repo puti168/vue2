@@ -17,7 +17,7 @@
 					</el-form-item>
 					<el-form-item label="变更前风控层级:" class="tagheight">
 						<el-select
-							v-model="queryData.afterWindControlId"
+							v-model="queryData.beforeWindControlId"
 							style="width: 180px"
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
@@ -33,7 +33,7 @@
 					</el-form-item>
 					<el-form-item label="变更后风控层级:" class="tagheight">
 						<el-select
-							v-model="queryData.beforeWindControlId"
+							v-model="queryData.afterWindControlId"
 							style="width: 180px"
 							clearable
 							placeholder="默认选择全部"
