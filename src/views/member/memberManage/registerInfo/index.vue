@@ -204,23 +204,15 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="registerIp" align="center" label="注册IP">
-						<template slot-scope="scope">
-							<span v-if="!!scope.row.registerIp">
-								{{ scope.row.registerIp }}
-							</span>
-							<span v-else>-</span>
-						</template>
-					</el-table-column>
-					<el-table-column prop="ipAttribution" align="center">
+					<el-table-column prop="registerIp" align="center">
                         <template slot="header">
-                            IP归属地
+                            注册IP
                             <br />
                             风控层级
                         </template>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.ipAttribution">
-								{{ scope.row.ipAttribution }}
+							<span v-if="!!scope.row.registerIp">
+								{{ scope.row.registerIp }}
 							</span>
 							<span v-else>-</span>
                             <br />
@@ -228,6 +220,14 @@
 								{{ scope.row.ipWindControlLevelName }}
 							</span>
                             <span v-else>-</span>
+						</template>
+					</el-table-column>
+					<el-table-column prop="ipAttribution" align="center" label="IP归属地">
+						<template slot-scope="scope">
+							<span v-if="!!scope.row.ipAttribution">
+								{{ scope.row.ipAttribution }}
+							</span>
+							<span v-else>-</span>
 						</template>
 					</el-table-column>
 					<el-table-column prop="deviceType" align="center" label="注册终端">
