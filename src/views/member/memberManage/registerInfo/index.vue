@@ -217,9 +217,9 @@
 							<span v-else>-</span>
                             <br />
                             <span v-if="!!scope.row.ipWindControlLevelName" style="color: #e4393c">
-								{{ scope.row.ipWindControlLevelName }}
+								风控层级：{{ scope.row.ipWindControlLevelName }}
 							</span>
-                            <span v-else>-</span>
+                            <span v-else>风控层级：无</span>
 						</template>
 					</el-table-column>
 					<el-table-column prop="ipAttribution" align="center" label="IP归属地">
@@ -251,9 +251,9 @@
 							<span v-else>-</span>
                             <br />
                             <span v-if="!!scope.row.deviceWindControlLevelName" style="color: #e4393c">
-								{{ scope.row.deviceWindControlLevelName }}
+								风控层级：{{ scope.row.deviceWindControlLevelName }}
 							</span>
-                            <span v-else>-</span>
+                            <span v-else>风控层级：无</span>
 						</template>
 					</el-table-column>
 				</el-table>
