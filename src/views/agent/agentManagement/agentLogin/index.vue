@@ -207,9 +207,7 @@
               <span
 class="redColor"
 >风控层级：{{
-                  scope.row.ipControlName === null
-                    ? "无"
-                    : scope.row.ipControlName
+                  scope.row.ipControlName === null ? "无" : scope.row.ipControlName
                 }}</span>
             </template>
           </el-table-column>
@@ -330,13 +328,17 @@ export default {
         .getProxyDetailProxyLoginLog(params)
         .then((res) => {
           this.now = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
-          if (res.code === 200) {
+          if (res.code === 200 && res.data !== null) {
             this.tableData = res.data.record
             this.total = res.data.totalRecord
             this.summary =
               res.data.summary !== null
                 ? res.data.summary
                 : { count: 0, failCount: 0, successCount: 0 }
+          } else {
+            this.tableData = []
+            this.total = 0
+            this.summary = { count: 0, failCount: 0, successCount: 0 }
           }
           this.loading = false
         })
