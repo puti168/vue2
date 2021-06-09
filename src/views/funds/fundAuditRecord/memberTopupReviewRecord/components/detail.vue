@@ -246,6 +246,11 @@
 					<div>一审时间: 222</div>
 					<div>一审备注: 3333</div>
 				</div>
+                <div class="review-flex">
+                    <div>二审人: 111</div>
+                    <div>二审时间: 222</div>
+                    <div>二审备注: 3333</div>
+                </div>
 			</div>
 		</div>
 		<el-dialog
