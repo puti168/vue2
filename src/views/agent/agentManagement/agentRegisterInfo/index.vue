@@ -168,9 +168,9 @@
                             <span v-else>-</span>
                             <br />
                             <span v-if="!!scope.row.ipControlName" style="color: #e4393c">
-								{{ scope.row.ipControlName }}
+								风控层级：{{ scope.row.ipControlName }}
 							</span>
-                            <span v-else>-</span>
+                            <span v-else>风控层级：无</span>
                         </template>
                     </el-table-column>
                     <el-table-column prop="ipAttribution" align="center" label="IP归属地">
@@ -202,9 +202,9 @@
                             <span v-else>-</span>
                             <br />
                             <span v-if="!!scope.row.deviceNoControlName" style="color: #e4393c">
-								{{ scope.row.deviceNoControlName }}
+								风控层级：{{ scope.row.deviceNoControlName }}
 							</span>
-                            <span v-else>-</span>
+                            <span v-else>风控层级：无</span>
                         </template>
                     </el-table-column>
                 </el-table>
