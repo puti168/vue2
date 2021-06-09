@@ -23,7 +23,7 @@
             <el-input
               v-model="queryData.ordernumber"
               clearable
-              :maxlength="11"
+              :maxlength="19"
               size="medium"
               style="width: 200px"
               placeholder="请输入"
@@ -59,7 +59,7 @@
             <el-select
               v-model="queryData.accountType1"
               style="width: 300px"
-              multiple
+              clearable
               placeholder="默认选择全部"
               :popper-append-to-body="false"
             >
@@ -75,6 +75,7 @@
             <el-select
               v-model="queryData.accountType"
               style="width: 300px"
+              clearable
               placeholder="默认选择全部"
               :popper-append-to-body="false"
             >
@@ -90,7 +91,7 @@
             <el-input
               v-model="queryData.memberName"
               clearable
-              :maxlength="6"
+              :maxlength="15"
               size="medium"
               style="width: 200px"
               placeholder="请输入"
@@ -102,6 +103,7 @@
             <el-select
               v-model="queryData.accountType"
               style="width: 300px"
+              clearable
               placeholder="默认选择全部"
               :popper-append-to-body="false"
             >
@@ -156,7 +158,7 @@
           :header-cell-style="getRowClass"
           @sort-change="_changeTableSort"
         >
-          <el-table-column prop="id" align="center" width="240px" label="订单号">
+          <el-table-column prop="id" align="center" label="订单号">
             <template slot-scope="scope">
               <Copy v-if="!!scope.row.id" :title="scope.row.id" :copy="copy">
                 {{ scope.row.memberName }}
@@ -164,12 +166,7 @@
               <span v-else>-</span>
             </template>
           </el-table-column>
-          <el-table-column
-            prop="memberName"
-            align="center"
-            label="会员账号"
-            width="130px"
-          >
+          <el-table-column prop="memberName" align="center" label="会员账号">
             <template slot-scope="scope">
               <Copy
                 v-if="!!scope.row.memberName"
@@ -181,12 +178,7 @@
               <span v-else>-</span>
             </template>
           </el-table-column>
-          <el-table-column
-            prop="memberName"
-            align="center"
-            label="会员姓名"
-            width="130px"
-          >
+          <el-table-column prop="memberName" align="center" label="会员姓名">
             <template slot-scope="scope">
               <Copy
                 v-if="!!scope.row.memberName"
@@ -198,100 +190,45 @@
               <span v-else>-</span>
             </template>
           </el-table-column>
-          <el-table-column
-            prop="memberName"
-            align="center"
-            label="订单来源"
-            width="130px"
-          >
-            <template slot-scope="scope">
-              <Copy
-                v-if="!!scope.row.memberName"
-                :title="scope.row.memberName"
-                :copy="copy"
-              >
-                {{ scope.row.memberName }}
-              </Copy>
-              <span v-else>-</span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            prop="accountType"
-            align="center"
-            label="订单状态"
-            width="100px"
-          >
+          <el-table-column prop="memberName" align="center" label="订单来源">
             <template slot-scope="scope">
               {{ typeFilter(scope.row.accountType, "accountType") }}
             </template>
           </el-table-column>
-          <el-table-column
-            prop="parentProxyName"
-            align="center"
-            label="存款IP风控层级"
-            width="150px"
-          >
+          <el-table-column prop="accountType" align="center" label="订单状态">
             <template slot-scope="scope">
-              <Copy
-                v-if="!!scope.row.parentProxyName"
-                :title="scope.row.parentProxyName"
-                :copy="copy"
-              >
-                {{ scope.row.parentProxyName }}
-              </Copy>
-              <span v-else>-</span>
+              {{ typeFilter(scope.row.accountType, "accountType") }}
             </template>
           </el-table-column>
-          <el-table-column
-            prop="playerName"
-            align="center"
-            label="风控层级"
-            width="180px"
-          >
-          </el-table-column>
-          <el-table-column
-            prop="parentProxyName"
-            align="center"
-            label="存款终端设备号"
-            width="150px"
-          >
+          <el-table-column prop="parentProxyName" align="center">
+            <template slot="header">
+              存款IP <br />
+              风控层级
+            </template>
             <template slot-scope="scope">
-              <span v-if="scope.row.parentProxyName">{{
-                scope.row.parentProxyName
-              }}</span>
-              <span v-else>-</span>
+              <span>{{ scope.row.parentProxyName }}</span>
             </template>
           </el-table-column>
+          <el-table-column prop="playerName" align="center">
+            <template slot="header">
+              存款终端设备号
+              <br />风控层级
+            </template>
+            <template slot-scope="scope">
+              <span>{{ scope.row.parentProxyName }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="parentProxyName" align="center" label="支付方式">
+          </el-table-column>
+          <el-table-column prop="parentProxyName" align="center" label="存款金额">
+          </el-table-column>
           <el-table-column
             prop="parentProxyName"
             align="center"
-            label="支付方式"
-            width="150px"
+            label="存款时间"
             sortable="custom"
           >
           </el-table-column>
-          <el-table-column
-            prop="parentProxyName"
-            align="center"
-            label="存款金额"
-            width="150px"
-          >
-          </el-table-column>
-          <el-table-column
-            prop="parentProxyName"
-            align="center"
-            label="存款金额"
-            width="150px"
-          >
-          </el-table-column>
-          <el-table-column
-            prop="parentProxyName"
-            align="center"
-            label="存款金额"
-            width="150px"
-          >
-          </el-table-column>
-
         </el-table>
         <!-- 分页 -->
         <el-pagination
@@ -573,60 +510,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-/deep/.el-dialog__header {
-  text-align: center;
-  color: #909399;
-  font-weight: 700;
-}
 /deep/ .tagheight .el-tag {
-  height: 24px;
-  line-height: 24px;
-  min-width: 60px;
-}
-.msgList {
-  font-size: 14px;
-  display: flex;
-  line-height: 24px;
-  text-align: center;
-  p {
-    margin-right: 20px;
-  }
-  &:last-child p {
-    margin-bottom: 15px;
-  }
-}
-.view-container {
-  border: 1px solid #dcdfe6;
-  font-size: 14px;
-}
-.review-content {
-  line-height: 30px;
-}
-.paddingLR {
-  padding: 0 30px;
-}
-.head {
-  height: 70px;
-  line-height: 70px;
-  width: 100%;
-  background: #000;
-  border-radius: 2px;
-  display: flex;
-  justify-content: space-between;
-  .title {
-    font-weight: 600;
-    font-size: 16px;
-    color: rgb(192, 190, 190);
-  }
-  .right-btn {
-    float: right;
-  }
-}
-.strong {
-  height: 70px;
-  line-height: 80px;
-}
-.paddingB {
-  padding-bottom: 30px;
+  // height: 24px;
+  // line-height: 24px;
+  // min-width: 60px;
 }
 </style>
