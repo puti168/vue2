@@ -239,6 +239,7 @@
 							size="medium"
 							placeholder="默认选择全部"
 							clearable
+							:disabled="title === '编辑'"
 							style="width: 330px"
 							@change="getMerchantDict($event)"
 						>
@@ -426,6 +427,7 @@ export default {
 		},
 		addLabel() {
 			this.dialogFormVisible = true
+            this.$refs['form'].resetFields()
 			this.title = '新增'
 			this.dialogForm = {
 				windControlType: undefined,
