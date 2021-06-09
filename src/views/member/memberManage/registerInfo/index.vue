@@ -64,13 +64,13 @@
 					</el-form-item>
 					<el-form-item label="注册手机号:">
 						<el-input
-							v-model="queryData.registerPhone"
+							v-model.number="queryData.registerPhone"
 							size="medium"
 							placeholder="请输入"
 							clearable
 							maxlength="11"
-                            onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
 							style="width: 180px"
+							@keyup.native="checkValue"
 						></el-input>
 					</el-form-item>
 					<el-form-item label="注册IP:">
@@ -205,21 +205,24 @@
 						</template>
 					</el-table-column>
 					<el-table-column prop="registerIp" align="center">
-                        <template slot="header">
-                            注册IP
-                            <br />
-                            风控层级
-                        </template>
+						<template slot="header">
+							注册IP
+							<br />
+							风控层级
+						</template>
 						<template slot-scope="scope">
 							<span v-if="!!scope.row.registerIp">
 								{{ scope.row.registerIp }}
 							</span>
 							<span v-else>-</span>
-                            <br />
-                            <span v-if="!!scope.row.ipWindControlLevelName" style="color: #e4393c">
+							<br />
+							<span
+								v-if="!!scope.row.ipWindControlLevelName"
+								style="color: #e4393c"
+							>
 								风控层级：{{ scope.row.ipWindControlLevelName }}
 							</span>
-                            <span v-else>风控层级：无</span>
+							<span v-else>风控层级：无</span>
 						</template>
 					</el-table-column>
 					<el-table-column prop="ipAttribution" align="center" label="IP归属地">
@@ -239,31 +242,34 @@
 						</template>
 					</el-table-column>
 					<el-table-column prop="deviceNo" align="center">
-                        <template slot="header">
-                            终端设备号
-                            <br />
-                            风控层级
-                        </template>
+						<template slot="header">
+							终端设备号
+							<br />
+							风控层级
+						</template>
 						<template slot-scope="scope">
 							<span v-if="!!scope.row.deviceNo">
 								{{ scope.row.deviceNo }}
 							</span>
 							<span v-else>-</span>
-                            <br />
-                            <span v-if="!!scope.row.deviceWindControlLevelName" style="color: #e4393c">
+							<br />
+							<span
+								v-if="!!scope.row.deviceWindControlLevelName"
+								style="color: #e4393c"
+							>
 								风控层级：{{ scope.row.deviceWindControlLevelName }}
 							</span>
-                            <span v-else>风控层级：无</span>
+							<span v-else>风控层级：无</span>
 						</template>
 					</el-table-column>
 				</el-table>
 				<!-- 分页 -->
 				<el-pagination
 					v-show="!!total"
-                    class="pageValue"
+					class="pageValue"
 					:current-page.sync="pageNum"
 					background
-        			layout="total, sizes,prev, pager, next, jumper"
+					layout="total, sizes,prev, pager, next, jumper"
 					:page-size="pageSize"
 					:page-sizes="$store.getters.pageSizes"
 					:total="total"
@@ -372,17 +378,23 @@ export default {
 		reset() {
 			this.$refs['form'].resetFields()
 			this.queryData = {
-                registerTime: [start, end],
-                accountType: [],
-                userName: undefined,
-                parentProxyName: undefined,
-                registerPhone: undefined,
-                registerIp: undefined,
-                ipAttribution: undefined,
-                deviceType: [],
-                orderType: undefined
+				registerTime: [start, end],
+				accountType: [],
+				userName: undefined,
+				parentProxyName: undefined,
+				registerPhone: undefined,
+				registerIp: undefined,
+				ipAttribution: undefined,
+				deviceType: [],
+				orderType: undefined
 			}
 			this.loadData()
+		},
+		checkValue() {
+			this.queryData.registerPhone = this.queryData.registerPhone.replace(
+				/^(0+)|[^\d]+/g,
+				''
+			)
 		}
 	}
 }
