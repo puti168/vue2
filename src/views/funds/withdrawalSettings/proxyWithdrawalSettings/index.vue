@@ -10,7 +10,7 @@
 					<el-dialog
 						title="新增会员提款配置"
 						:visible.sync="dialogVisible"
-						width="780px"
+						width="970px"
 						:before-close="handleClose"
 					>
 						<h2>代理信息</h2>
@@ -20,20 +20,35 @@
 							:model="ruleForm"
 							class="demo-form-inline"
 						>
-							<el-form-item label-width="147px" prop="agent" label="代理账号：">
-								<el-input v-model="ruleForm.user"></el-input>
+							<el-form-item prop="agent" label="代理账号：">
+								<el-input
+									v-model="queryData.agentnum"
+									class="information"
+								></el-input>
 							</el-form-item>
 							<el-form-item label-width="147px" label="代理姓名：">
-								<el-input></el-input>
+								<el-input
+									v-model="queryData.agentname"
+									class="information"
+								></el-input>
 							</el-form-item>
 							<el-form-item label-width="147px" label="代理类型：">
-								<el-input></el-input>
+								<el-input
+									v-model="queryData.agenttype"
+									class="information"
+								></el-input>
 							</el-form-item>
-							<el-form-item label-width="147px" label="代理状态：">
-								<el-input></el-input>
+							<el-form-item label="代理状态：">
+								<el-input
+									v-model="queryData.agentstate"
+									class="information"
+								></el-input>
 							</el-form-item>
 							<el-form-item label-width="147px" label="风控层级：">
-								<el-input></el-input>
+								<el-input
+									v-model="queryData.risk"
+									class="information"
+								></el-input>
 							</el-form-item>
 						</el-form>
 
@@ -48,6 +63,7 @@
 								prop="viplevel"
 								label-width="147px"
 								label="VIP等级："
+								class="configure"
 							>
 								<el-input
 									v-model="queryData.viplevel"
@@ -64,7 +80,11 @@
 								<span>元</span>
 							</el-form-item>
 
-							<el-form-item label="单次提款最高额度：" prop="maxmum">
+							<el-form-item
+								label="单次提款最高额度："
+								class="configure"
+								prop="maxmum"
+							>
 								<el-input
 									v-model="queryData.maxamount"
 									class="chief"
@@ -80,7 +100,11 @@
 								></el-input>
 								<span>次</span>
 							</el-form-item>
-							<el-form-item label="大额提款标记金额：" prop="signminimum">
+							<el-form-item
+								label="大额提款标记金额："
+								class="configure"
+								prop="signminimum"
+							>
 								<el-input
 									v-model="queryData.minimum"
 									class="chief"
@@ -97,7 +121,11 @@
 								<span>元</span>
 							</el-form-item>
 							<h2>提款手续费配置</h2>
-							<el-form-item label="超出单日免费次数：" prop="region">
+							<el-form-item
+								label="超出单日免费次数："
+								class="configure"
+								prop="region"
+							>
 								<el-select
 									v-model="queryData.region"
 									class="sun"
@@ -129,8 +157,7 @@
 							</el-form-item>
 							<h2>提款提示语配置</h2>
 							<el-form-item
-								label-width="200px"
-								class="line"
+								class="configure"
 								label="超出单日最高次数提示语："
 								prop="beyondfrequency"
 							>
@@ -161,7 +188,13 @@
 						</el-form>
 
 						<span slot="footer" class="dialog-footer">
-							<el-button type="primary" @click="dialogVisible = false">
+							<el-button
+								type="primary"
+								icon="el-icon-search"
+								:disabled="loading"
+								size="medium"
+								@click="add"
+							>
 								提交
 							</el-button>
 							<el-button @click="reset">重置</el-button>
@@ -485,6 +518,7 @@ export default {
 	created() {},
 	mounted() {},
 	methods: {
+
 		handleClose(done) {
 			this.$confirm('您确认要执行新增提款设置的操作？')
 				.then((_) => {
@@ -505,7 +539,12 @@ export default {
 				exregion: undefined,
 				exregions: undefined,
 				extips: undefined,
-				extotaltips: undefined
+				extotaltips: undefined,
+				agentnum: undefined,
+				agentname: undefined,
+				agenttype: undefined,
+				agentstate: undefined,
+				risk: undefined
 			}
 			this.$refs['form'].resetFields()
 		}
@@ -514,6 +553,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.configure {
+	width: 420px;
+}
+.information {
+	width: 150px;
+}
 .chief {
 	width: 180px;
 }
@@ -530,9 +575,7 @@ export default {
 	width: 148px;
 }
 .line {
-	width: 300px;
-	.input {
-	}
+	width: 400px;
 }
 /deep/.el-dialog__header {
 	text-align: center;
