@@ -63,6 +63,23 @@
 							@keyup.enter.native="enterSearch"
 						></el-input>
 					</el-form-item>
+					<el-form-item label="账号类型:">
+						<el-select
+							v-model="queryData.accountType"
+							size="medium"
+							placeholder="默认选择全部"
+							clearable
+							multiple
+							style="width: 300px"
+						>
+							<el-option
+								v-for="item in accountTypeArr"
+								:key="item.code"
+								:label="item.description"
+								:value="item.code"
+							></el-option>
+						</el-select>
+					</el-form-item>
 					<el-form-item label="银行名称:">
 						<el-input
 							v-model="queryData.bankName"
@@ -86,22 +103,22 @@
 							@keyup.enter.native="enterSearch"
 						></el-input>
 					</el-form-item>
-                    <el-form-item label="风控层级:">
-                        <el-select
-                            v-model="queryData.windControlId"
-                            size="medium"
-                            placeholder="全部"
-                            clearable
-                            style="width: 180px"
-                        >
-                            <el-option
-                                v-for="item in vipDict"
-                                :key="item.windControlId"
-                                :label="item.windControlName"
-                                :value="item.windControlId"
-                            ></el-option>
-                        </el-select>
-                    </el-form-item>
+					<el-form-item label="风控层级:">
+						<el-select
+							v-model="queryData.windControlId"
+							size="medium"
+							placeholder="全部"
+							clearable
+							style="width: 180px"
+						>
+							<el-option
+								v-for="item in vipDict"
+								:key="item.windControlId"
+								:label="item.windControlName"
+								:value="item.windControlId"
+							></el-option>
+						</el-select>
+					</el-form-item>
 					<el-form-item label="上级代理:">
 						<el-input
 							v-model="queryData.parentProxyName"
@@ -201,18 +218,18 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-                    <el-table-column
-                        prop="windControlName"
-                        align="center"
-                        label="风控层级"
-                    >
-                        <template slot-scope="scope">
+					<el-table-column
+						prop="windControlName"
+						align="center"
+						label="风控层级"
+					>
+						<template slot-scope="scope">
 							<span v-if="!!scope.row.windControlName">
 								{{ scope.row.windControlName }}
 							</span>
-                            <span v-else>-</span>
-                        </template>
-                    </el-table-column>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
 					<el-table-column prop="cnName" align="center" label="持卡人">
 						<template slot-scope="scope">
 							<Copy
@@ -231,22 +248,22 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-                    <el-table-column prop="operateType" align="center" label="备注信息">
-                        <template slot-scope="scope">
+					<el-table-column prop="operateType" align="center" label="备注信息">
+						<template slot-scope="scope">
 							<span v-if="!!scope.row.remark">
 								{{ scope.row.remark }}
 							</span>
-                            <span v-else>-</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column prop="updatedBy" align="center" label="操作人">
-                        <template slot-scope="scope">
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
+					<el-table-column prop="updatedBy" align="center" label="操作人">
+						<template slot-scope="scope">
 							<span v-if="!!scope.row.updatedBy">
 								{{ scope.row.updatedBy }}
 							</span>
-                            <span v-else>-</span>
-                        </template>
-                    </el-table-column>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="createDt"
 						align="center"
@@ -303,24 +320,28 @@ export default {
 				userName: undefined,
 				cnName: undefined,
 				bankName: undefined,
+				accountType: [],
 				cardNumber: undefined,
-                windControlId: undefined,
+				windControlId: undefined,
 				parentProxyName: undefined,
 				orderType: undefined
 			},
 			dataList: [],
 			total: 0,
-            vipDict: []
+			vipDict: []
 		}
 	},
 	computed: {
 		bindType() {
 			return this.globalDics.bindType
+		},
+		accountTypeArr() {
+			return this.globalDics.accountType
 		}
 	},
 	mounted() {
-	    this.getWindControllerLevelDict()
-    },
+		this.getWindControllerLevelDict()
+	},
 	methods: {
 		loadData() {
 			this.dataList = []
@@ -368,7 +389,7 @@ export default {
 			}, 1000)
 		},
 		reset() {
-		    this.pageNum = 1
+			this.pageNum = 1
 			this.$refs['form'].resetFields()
 			this.queryData = {
 				operateType: '',
@@ -377,29 +398,30 @@ export default {
 				cnName: '',
 				bankName: '',
 				cardNumber: '',
-				parentProxyName: ''
+				parentProxyName: '',
+				accountType: undefined
 			}
 			this.loadData()
 		},
-        getWindControllerLevelDict() {
-            this.$api
-                .getWindControllerLevelDict({ windControlType: 3 })
-                .then((res) => {
-                    if (res.code === 200) {
-                        this.vipDict = res.data
-                    }
-                })
-        },
-        _changeTableSort({ column, prop, order }) {
-            if (order === 'ascending') {
-                // 升序
-                this.queryData.orderType = 'asc'
-            } else if (column.order === 'descending') {
-                // 降序
-                this.queryData.orderType = 'desc'
-            }
-            this.loadData()
-        }
+		getWindControllerLevelDict() {
+			this.$api
+				.getWindControllerLevelDict({ windControlType: 3 })
+				.then((res) => {
+					if (res.code === 200) {
+						this.vipDict = res.data
+					}
+				})
+		},
+		_changeTableSort({ column, prop, order }) {
+			if (order === 'ascending') {
+				// 升序
+				this.queryData.orderType = 'asc'
+			} else if (column.order === 'descending') {
+				// 降序
+				this.queryData.orderType = 'desc'
+			}
+			this.loadData()
+		}
 	}
 }
 </script>
