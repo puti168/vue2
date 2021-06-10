@@ -1,154 +1,100 @@
 const operation = [
 	// 第一级菜单
 	{
-		id: '65',
+		id: '58',
 		title: '运营'
 	},
 	// 第二级菜单
 	{
-		id: '66',
-		parentId: '65',
-		icon: 'bb_report',
-		title: '广告位管理'
+		id: '59',
+		parentId: '58',
+		icon: 'bb_handlelog',
+		title: '客户端配置管理'
 	},
 	{
-		id: '70',
-		parentId: '65',
-		icon: 'bb_report',
-		title: '消息管理'
+		id: '60',
+		parentId: '58',
+		icon: 'bb_homelist',
+		title: '场馆配置管理'
 	},
 	{
-		id: '74',
-		parentId: '65',
-		icon: 'bb_report',
-		title: '活动管理'
-	},
-	{
-		id: '78',
-		parentId: '65',
-		icon: 'bb_report',
-		title: '客户端配置'
-	},
-	{
-		id: '82',
-		parentId: '65',
-		icon: 'bb_report',
-		title: '会员体系管理'
-	},
-	{
-		id: '85',
-		parentId: '65',
-		icon: 'bb_report',
-		title: '客服管理'
+		id: '61',
+		parentId: '58',
+		icon: 'bb_limitManage',
+		title: '信息配置管理'
 	},
 	// 第三级菜单
 	{
-		id: '89',
-		parentId: '85',
-		path: '/operation/customerService/ticketQuery',
-		title: '工单查询'
+		id: '63',
+		parentId: '59',
+		path: '/operation/clientConfig/clientBanner',
+		title: '首页banner配置'
 	},
 	{
-		id: '88',
-		parentId: '85',
-		path: '/operation/customerService/ticketRate',
-		title: '工单评分查看'
+		id: '64',
+		parentId: '59',
+		path: '/operation/clientConfig/clientCommon',
+		title: '公共资源配置'
 	},
 	{
-		id: '87',
-		parentId: '85',
-		path: '/operation/customerService/defaultProblem',
-		title: '工单默认问题配置'
-	},
-	{
-		id: '86',
-		parentId: '85',
-		path: '/operation/customerService/customerServiceConfig',
-		title: '客服配置'
-	},
-	{
-		id: '84',
-		parentId: '82',
-		path: '/operation/memberSystem/memberTag',
-		title: '会员标签管理'
-	},
-	{
-		id: '83',
-		parentId: '82',
-		path: '/operation/memberSystem/vipConfig',
-		title: 'VIP配置'
-	},
-	{
-		id: '81',
-		parentId: '78',
-		path: '/operation/clientConfig/startConfig',
+		id: '65',
+		parentId: '59',
+		path: '/operation/clientConfig/clientStart',
 		title: '启动页配置'
 	},
 	{
-		id: '80',
-		parentId: '78',
-		path: '/operation/clientConfig/loginloading',
-		title: '登录loading配置'
-	},
-	{
-		id: '79',
-		parentId: '78',
-		path: '/operation/clientConfig/loginCartoon',
-		title: '登录动画配置'
-	},
-	{
-		id: '77',
-		parentId: '74',
-		path: '/operation/activity/bannerConfig',
-		title: 'banner配置'
-	},
-	{
-		id: '76',
-		parentId: '74',
-		path: '/operation/activity/activityConfig',
-		title: '活动配置'
-	},
-	{
-		id: '75',
-		parentId: '74',
-		path: '/operation/activity/centerConfig',
-		title: '优惠中心配置'
-	},
-	{
-		id: '72',
-		parentId: '70',
-		path: '/operation/messageManagement/push',
-		title: '极光推送'
-	},
-	{
-		id: '73',
-		parentId: '70',
-		path: '/operation/messageManagement/messageCenter',
-		title: '消息中心'
-	},
-	{
-		id: '71',
-		parentId: '70',
-		path: '/operation/messageManagement/systemNotification',
-		title: '系统公告'
-	},
-	{
-		id: '69',
-		parentId: '66',
-		path: '/operation/advertisingSpace/floatManagement',
-		title: '浮窗管理'
-	},
-	{
-		id: '68',
-		parentId: '66',
-		path: '/operation/advertisingSpace/popupManagement',
-		title: '弹窗管理'
+		id: '66',
+		parentId: '59',
+		path: '/operation/clientConfig/clientLoading',
+		title: 'loading配置'
 	},
 	{
 		id: '67',
-		parentId: '66',
-		path: '/operation/advertisingSpace/banner',
-		title: 'banner管理'
+		parentId: '59',
+		path: '/operation/clientConfig/clientLog',
+		title: '操作记录'
+	},
+	{
+		id: '68',
+		parentId: '60',
+		path: '/operation/platform/platformRate',
+		title: '场馆费率配置'
+	},
+	{
+		id: '69',
+		parentId: '60',
+		path: '/operation/platform/platformLog',
+		title: '操作记录'
+	},
+	{
+		id: '70',
+		parentId: '61',
+		path: '/operation/infoConfig/announcement',
+		title: '公告配置'
+	},
+	{
+		id: '71',
+		parentId: '61',
+		path: '/operation/infoConfig/activity',
+		title: '活动消息配置'
+	},
+	{
+		id: '72',
+		parentId: '61',
+		path: '/operation/infoConfig/notice',
+		title: '通知配置'
+	},
+	{
+		id: '73',
+		parentId: '61',
+		path: '/operation/infoConfig/feedBack',
+		title: '会员意见反馈'
+	},
+	{
+		id: '74',
+		parentId: '61',
+		path: '/operation/infoConfig/infoLog',
+		title: '操作记录'
 	}
 ]
 export default operation

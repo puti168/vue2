@@ -54,6 +54,7 @@ module.exports = {
 		// provide the app's title in webpack's name field, so that
 		// it can be accessed in index.html to inject the correct title.
 		config.name = name
+		
 		config.resolve.alias = {
 			'@': resolve('src')
 		}
@@ -65,6 +66,7 @@ module.exports = {
 		}
 	},
 	chainWebpack(config) {
+		config.cache(true)
 		config.plugins.delete('preload') // TODO: need test
 		config.plugins.delete('prefetch') // TODO: need test
 
