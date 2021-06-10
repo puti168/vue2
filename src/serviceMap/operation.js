@@ -14,7 +14,7 @@ const operation = [
 	{
 		id: '60',
 		parentId: '58',
-		icon: 'bb_operationManage',
+		icon: 'bb_reportDaily',
 		title: '场馆配置管理'
 	},
 	{
@@ -26,7 +26,7 @@ const operation = [
 	{
 		id: '62',
 		parentId: '58',
-		icon: 'bb_systemmanagement',
+		icon: 'bb_report',
 		title: '活动配置管理'
 	},
 	// 第三级菜单
