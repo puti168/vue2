@@ -166,10 +166,13 @@
 						<Copy :title="scope.row.parentProxyName" :copy="copy" />
 					</el-table-column>
 					<el-table-column
+						v-slot="scope"
 						prop="virtualAddress"
 						align="center"
 						label="虚拟币账户地址"
-					></el-table-column>
+					>
+						<Copy :title="scope.row.virtualAddress" :copy="copy" />
+					</el-table-column>
 					<el-table-column prop="virtualKind" align="center" label="虚拟币种类">
 						<template slot-scope="scope">
 							<p>{{ typeFilter(scope.row.virtualKind, 'virtualType') }}</p>
@@ -188,18 +191,18 @@
 							</p>
 						</template>
 					</el-table-column>
-                    <el-table-column
-                        prop="windControlLevelName"
-                        align="center"
-                        label="风控层级"
-                    >
-                        <template slot-scope="scope">
+					<el-table-column
+						prop="windControlLevelName"
+						align="center"
+						label="风控层级"
+					>
+						<template slot-scope="scope">
 							<span v-if="!!scope.row.windControlLevelName">
 								{{ scope.row.windControlLevelName }}
 							</span>
-                            <span v-else>-</span>
-                        </template>
-                    </el-table-column>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="operateType"
 						align="center"
@@ -210,14 +213,14 @@
 							<p>{{ typeFilter(scope.row.operateType, 'bindType') }}</p>
 						</template>
 					</el-table-column>
-                    <el-table-column prop="remark" align="center" label="备注信息">
-                        <template slot-scope="scope">
+					<el-table-column prop="remark" align="center" label="备注信息">
+						<template slot-scope="scope">
 							<span v-if="!!scope.row.remark">
 								{{ scope.row.remark }}
 							</span>
-                            <span v-else>-</span>
-                        </template>
-                    </el-table-column>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="createDt"
 						align="center"
