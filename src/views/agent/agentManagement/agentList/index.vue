@@ -432,7 +432,6 @@
 						prop="totalRebate"
 						align="center"
 						label="返佣"
-						sortable="custom"
 						width="100px"
 					>
 						<template slot-scope="scope">
@@ -449,7 +448,6 @@
 						align="center"
 						label="余额"
 						width="100px"
-						sortable="custom"
 					>
 						<template slot-scope="scope">
 							<span v-if="!!scope.row.balance || scope.row.balance === 0">
@@ -688,12 +686,12 @@ export default {
 			if (prop === 'offLineDays') {
 				prop = 5
 			}
-            if (prop === 'totalRebate') {
-                prop = 6
-            }
-            if (prop === 'balance') {
-                prop = 7
-            }
+            // if (prop === 'totalRebate') {
+            //     prop = 6
+            // }
+            // if (prop === 'balance') {
+            //     // prop = 7
+            // }
 			this.queryData.orderKey = prop
 			if (order === 'ascending') {
 				// 升序
