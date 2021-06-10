@@ -688,6 +688,12 @@ export default {
 			if (prop === 'offLineDays') {
 				prop = 5
 			}
+            if (prop === 'totalRebate') {
+                prop = 6
+            }
+            if (prop === 'balance') {
+                prop = 7
+            }
 			this.queryData.orderKey = prop
 			if (order === 'ascending') {
 				// 升序
