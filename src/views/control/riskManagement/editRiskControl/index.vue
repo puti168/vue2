@@ -159,7 +159,7 @@
 		</div>
 		<div class="info-show">
 			<div class="info-header">
-				<span v-if="!tipsShow">基本信息</span>
+				<span v-if="!!Object.keys(showInfoData).length">基本信息</span>
 			</div>
 			<component
 				:is="content"
