@@ -224,7 +224,7 @@ export default {
 				assortSort: undefined,
 				supportTerminal: undefined,
 				remark: undefined,
-				clientDisplay: undefined
+				clientDisplay: '1'
 			},
 			gamePlantList: [],
 			queryLeft: '',
@@ -549,7 +549,7 @@ export default {
 				assortSort: undefined,
 				supportTerminal: undefined,
 				remark: undefined,
-				clientDisplay: undefined
+				clientDisplay: '1'
 			}
 		}
 	}
