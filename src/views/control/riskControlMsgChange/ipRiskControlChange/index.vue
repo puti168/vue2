@@ -5,7 +5,7 @@
 				<el-form ref="form" :inline="true" :model="queryData">
 					<el-form-item label="IP地址:">
 						<el-input
-							v-model="queryData.registerIp"
+							v-model="queryData.objectInfo"
 							clearable
 							:maxlength="15"
 							size="medium"
@@ -92,9 +92,12 @@
 					:header-cell-style="getRowClass"
 					@sort-change="_changeTableSort"
 				>
-					<el-table-column prop="registerIp" align="center" label="IP地址">
+					<el-table-column prop="objectInfo" align="center" label="IP地址">
 						<template slot-scope="scope">
-							{{ scope.row.registerIp }}
+								<span v-if="!!scope.row.objectInfo">
+								{{ scope.row.objectInfo }}
+							</span>
+                            <span v-else>-</span>
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -170,10 +173,10 @@ export default {
 	data() {
 		return {
 			queryData: {
-				registerIp: '',
+                objectInfo: undefined,
 				afterWindControlId: '',
 				beforeWindControlId: '',
-				createdBy: '',
+				createdBy: undefined,
 				windType: 5
 			},
 			beforeWindControlLevel: [],
@@ -224,11 +227,11 @@ export default {
 		},
 		reset() {
 			this.queryData = {
-				registerIp: '',
-				afterWindControlId: '',
-				beforeWindControlId: '',
-				createdBy: '',
-				windType: 5
+                objectInfo: undefined,
+                afterWindControlId: '',
+                beforeWindControlId: '',
+                createdBy: undefined,
+                windType: 5
 			}
 			this.pageNum = 1
 			this.loadData()

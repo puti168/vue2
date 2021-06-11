@@ -33,13 +33,13 @@ const control = [
 	{
 		id: '134',
 		parentId: '131',
-		path: '/control/riskControlMsgChange/memberRiskControlChange',
+		path: '/control/riskControlMsgChange/memberRiskChangeInfo',
 		title: '会员风控信息变更'
 	},
 	{
 		id: '135',
 		parentId: '131',
-		path: '/control/riskControlMsgChange/proxyRiskControlChange',
+		path: '/control/riskControlMsgChange/proxyRiskChangeInfo',
 		title: '代理风控信息变更'
 	},
 	{
@@ -63,7 +63,7 @@ const control = [
 	{
 		id: '139',
 		parentId: '131',
-		path: '/control/riskControlMsgChange/terminalRiskControlChange',
+		path: '/control/riskControlMsgChange/terminalRiskChangeInfo',
 		title: '终端设备风控信息变更'
 	}
 ]

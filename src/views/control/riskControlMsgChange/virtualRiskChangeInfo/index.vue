@@ -5,7 +5,7 @@
 				<el-form ref="form" :inline="true" :model="queryData">
 					<el-form-item label="虚拟币账户地址:">
 						<el-input
-							v-model="queryData.virtualAddress"
+							v-model="queryData.objectInfo"
 							clearable
 							:maxlength="25"
 							size="medium"
@@ -98,17 +98,17 @@
 					@sort-change="_changeTableSort"
 				>
 					<el-table-column
-						prop="cardNumber"
+						prop="objectInfo"
 						align="center"
 						label="虚拟币账户地址"
 					>
 						<template slot-scope="scope">
 							<Copy
-								v-if="!!scope.row.virtualAddress"
-								:title="scope.row.virtualAddress"
+								v-if="!!scope.row.objectInfo"
+								:title="scope.row.objectInfo"
 								:copy="copy"
 							>
-								{{ scope.row.virtualAddress }}
+								{{ scope.row.objectInfo }}
 							</Copy>
 							<span v-else>-</span>
 						</template>
@@ -196,6 +196,7 @@ export default {
 	data() {
 		return {
 			queryData: {
+				objectInfo: undefined,
 				afterWindControlId: '',
 				beforeWindControlId: ''
 			},
@@ -248,6 +249,7 @@ export default {
 		},
 		reset() {
 			this.queryData = {
+				objectInfo: undefined,
 				afterWindControlId: '',
 				beforeWindControlId: ''
 			}
