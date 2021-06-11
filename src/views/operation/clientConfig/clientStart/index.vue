@@ -1,705 +1,683 @@
 <template>
-	<div class="game-container report-container">
-		<div v-if="!showDetail" class="view-container dealer-container">
-			<div class="params">
-				<el-form ref="form" :inline="true" :model="queryData">
-					<el-form-item label="游戏ID:">
-						<el-input
-							v-model="queryData.gameId"
-							clearable
-							:maxlength="5"
-							oninput="value=value.replace(/[^\d]/g,'')"
-							size="medium"
-							style="width: 180px"
-							placeholder="请输入"
-							@keyup.enter.native="enterSearch"
-						></el-input>
-					</el-form-item>
-					<el-form-item label="游戏名称:">
-						<el-input
-							v-model="queryData.gameName"
-							clearable
-							:maxlength="6"
-							size="medium"
-							style="width: 180px; margin-right: 20px"
-							placeholder="请输入"
-							@keyup.enter.native="enterSearch"
-						></el-input>
-					</el-form-item>
-					<el-form-item label="显示状态:" class="tagheight">
-						<el-select
-							v-model="queryData.gameStatusList"
-							style="width: 300px"
-							multiple
-							placeholder="默认选择全部"
-							:popper-append-to-body="false"
-						>
-							<el-option
-								v-for="item in gameStatusType"
-								:key="item.code"
-								:label="item.description"
-								:value="item.code"
-							></el-option>
-						</el-select>
-					</el-form-item>
-					<el-form-item label="支持终端:" class="tagheight">
-						<el-select
-							v-model="queryData.supportTerminalList"
-							style="width: 300px"
-							multiple
-							placeholder="默认选择全部"
-							:popper-append-to-body="false"
-						>
-							<el-option
-								v-for="item in betDeviceType"
-								:key="item.code"
-								:label="item.description"
-								:value="item.code"
-							></el-option>
-						</el-select>
-					</el-form-item>
-					<el-form-item label="图标状态:" class="tagheight">
-						<el-select
-							v-model="queryData.gameIconList"
-							style="width: 300px"
-							multiple
-							placeholder="默认选择全部"
-							:popper-append-to-body="false"
-						>
-							<el-option
-								v-for="item in gameIconType"
-								:key="item.code"
-								:label="item.description"
-								:value="item.code"
-							></el-option>
-						</el-select>
-					</el-form-item>
-					<el-form-item label="关联推荐游戏:" class="tagheight">
-						<el-select
-							v-model="queryData.relationOtherGameIdList"
-							style="width: 300px"
-							multiple
-							placeholder="默认选择全部"
-							:popper-append-to-body="false"
-						>
-							<el-option
-								v-for="item in gameManageList"
-								:key="item.gameId"
-								:label="item.gameName"
-								:value="item.gameId"
-							></el-option>
-						</el-select>
-					</el-form-item>
-					<el-form-item label="游戏平台:" class="tagheight">
-						<el-select
-							v-model="queryData.gamePlatformList"
-							style="width: 300px"
-							multiple
-							placeholder="默认选择全部"
-							:popper-append-to-body="false"
-						>
-							<el-option
-								v-for="item in gamePlantList"
-								:key="item.gameCode"
-								:label="item.gameName"
-								:value="item.gameCode"
-							></el-option>
-						</el-select>
-					</el-form-item>
-					<el-form-item label="游戏标签:" class="tagheight">
-						<el-select
-							v-model="queryData.gameLabelIdList"
-							style="width: 300px"
-							multiple
-							placeholder="默认选择全部"
-							:popper-append-to-body="false"
-						>
-							<el-option
-								v-for="item in labelList"
-								:key="item.gameLabelId"
-								:label="item.gameLabelName"
-								:value="item.gameLabelId"
-							></el-option>
-						</el-select>
-					</el-form-item>
-
-					<el-form-item>
-						<el-button
-							type="primary"
-							icon="el-icon-search"
-							:disabled="loading"
-							size="medium"
-							@click="search"
-						>
-							查询
-						</el-button>
-						<el-button
-							icon="el-icon-refresh-left"
-							:disabled="loading"
-							size="medium"
-							@click="reset"
-						>
-							重置
-						</el-button>
-						<el-button
-							type="warning"
-							icon="el-icon-folder"
-							:disabled="loading"
-							size="medium"
-							@click="openEdit()"
-						>
-							创建
-						</el-button>
-					</el-form-item>
-				</el-form>
-			</div>
-			<div class="content">
-				<el-table
-					v-loading="loading"
-					border
-					size="mini"
-					class="small-size-table"
-					:data="list"
-					style="width: 100%"
-					:header-cell-style="getRowClass"
-					@sort-change="changeTableSort"
-				>
-					<el-table-column
-						prop="gameId"
-						align="center"
-						label="游戏ID"
-						sortable="custom"
-						width="100px"
-					></el-table-column>
-					<el-table-column align="center" label="游戏平台" width="120px">
-						<template slot-scope="scope">
-							{{ gamePlantFilter(scope.row.gamePlatform) }}
-						</template>
-					</el-table-column>
-					<el-table-column
-						prop="gameName"
-						align="center"
-						label="游戏名称"
-						width="120px"
-					></el-table-column>
-					<el-table-column align="center" label="显示状态" width="90px">
-						<template slot-scope="scope">
-							<span
-								:class="
-									Number(scope.row.gameStatus) === 0
-										? 'disableRgba'
-										: Number(scope.row.gameStatus) === 1
-										? 'normalRgba'
-										: 'deleteRgba'
-								"
-							>
-								{{ typeFilter(scope.row.gameStatus, 'gameStatusType') }}
+    <div class="game-container report-container">
+        <div class="view-container dealer-container">
+            <div class="params">
+                <el-form ref="form" :inline="true" :model="queryData">
+                    <el-form-item label="显示终端:">
+                        <el-select
+                            v-model="queryData.supportTerminal"
+                            size="medium"
+                            placeholder="默认选择全部"
+                            clearable
+                            style="width: 180px"
+                        >
+                            <el-option
+                                v-for="item in terminalTypeArr"
+                                :key="item.code"
+                                :label="item.description"
+                                :value="item.code"
+                            ></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="启动页名称:">
+                        <el-input
+                            v-model="queryData.start"
+                            size="medium"
+                            placeholder="请输入"
+                            clearable
+                            style="width: 200px"
+                            maxlength="20"
+                            oninput="value=value.replace(/[\u4E00-\u9FA5]/g ,'')"
+                        ></el-input>
+                    </el-form-item>
+                    <el-form-item label="是否预加载:">
+                        <el-select
+                            v-model="queryData.supportTerminal"
+                            size="medium"
+                            placeholder="默认选择全部"
+                            clearable
+                            style="width: 180px"
+                        >
+                            <el-option
+                                v-for="item in []"
+                                :key="item.code"
+                                :label="item.description"
+                                :value="item.code"
+                            ></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="状态:">
+                        <el-select
+                            v-model="queryData.supportTerminal"
+                            size="medium"
+                            placeholder="默认选择全部"
+                            clearable
+                            style="width: 180px"
+                        >
+                            <el-option
+                                v-for="item in []"
+                                :key="item.code"
+                                :label="item.description"
+                                :value="item.code"
+                            ></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="创建人:">
+                        <el-input
+                            v-model="queryData.createBy"
+                            size="medium"
+                            placeholder="请输入"
+                            clearable
+                            style="width: 180px"
+                            maxlength="15"
+                        ></el-input>
+                    </el-form-item>
+                    <el-form-item label="最近操作人:">
+                        <el-input
+                            v-model="queryData.updatedBy"
+                            size="medium"
+                            placeholder="请输入"
+                            clearable
+                            style="width: 180px"
+                            maxlength="15"
+                        ></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button
+                            type="primary"
+                            icon="el-icon-search"
+                            :disabled="loading"
+                            size="medium"
+                            @click="search"
+                        >
+                            查询
+                        </el-button>
+                        <el-button
+                            icon="el-icon-refresh-left"
+                            :disabled="loading"
+                            size="medium"
+                            @click="reset"
+                        >
+                            重置
+                        </el-button>
+                        <el-button
+                            type="warning"
+                            icon="el-icon-folder"
+                            :disabled="loading"
+                            size="medium"
+                            @click="addLabel"
+                        >
+                            新增
+                        </el-button>
+                    </el-form-item>
+                </el-form>
+            </div>
+            <div class="content">
+                <el-table
+                    v-loading="loading"
+                    border
+                    size="mini"
+                    class="small-size-table"
+                    :data="tableData"
+                    style="width: 100%"
+                    :header-cell-style="getRowClass"
+                    @sort-change="_changeTableSort"
+                >
+                    <el-table-column
+                        prop="supportTerminal"
+                        align="center"
+                        label="显示终端"
+                    >
+                        <template slot-scope="scope">
+								<span v-if="!!scope.row.supportTerminal">
+									{{ scope.row.supportTerminal }}
+								</span>
+                            <span v-else></span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                        prop="windControlLevelName"
+                        align="center"
+                        label="启动页名称"
+                    >
+                        <template slot-scope="scope">
+							<span v-if="!!scope.row.windControlLevelName">
+								{{ scope.row.windControlLevelName }}
 							</span>
-						</template>
-					</el-table-column>
-					<el-table-column align="center" label="支持终端">
-						<template slot-scope="scope">
-							{{ supportTerminalFilter(scope.row.supportTerminal) }}
-						</template>
-					</el-table-column>
-					<el-table-column align="center" label="图标状态">
-						<template slot-scope="scope">
-							{{ typeFilter(scope.row.gameIcon, 'gameIconType') }}
-						</template>
-					</el-table-column>
-					<el-table-column align="center" label="游戏图片" width="80px">
-						<template slot-scope="scope">
-							<span class="text-link" @click="lookGame(scope.row.imageAddress)">
-								点击预览
+                            <span v-else>-</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="miaoShu" align="center" label="是否预加载">
+                        <template slot-scope="scope">
+							<span v-if="!!scope.row.description">
+								{{ scope.row.description }}
 							</span>
-						</template>
-					</el-table-column>
-					<el-table-column
-						prop="description"
-						align="center"
-						label="游戏描述"
-					></el-table-column>
-					<el-table-column
-						prop="relationOtherGameId"
-						align="center"
-						label="关联推荐游戏"
-						width="160px"
-					>
-						<template slot-scope="scope">
-							{{ gameManageListFilter(scope.row.relationOtherGameId) }}
-						</template>
-					</el-table-column>
-					<el-table-column
-						prop="relationGameModuleId"
-						align="center"
-						label="关联游戏模块"
-						width="160px"
-					>
-						<template slot-scope="scope">
-							{{ moduleFilter(scope.row.relationGameModuleId) }}
-						</template>
-					</el-table-column>
-					<el-table-column
-						prop="gameLabelName"
-						align="center"
-						label="游戏标签"
-						width="100px"
-					>
-						<template slot-scope="scope">
-							{{ scope.row.label1 ? scope.row.label1.gameLabelName : '-' }}/
-							{{ scope.row.label2 ? scope.row.label2.gameLabelName : '-' }}/
-							{{ scope.row.label3 ? scope.row.label3.gameLabelName : '-' }}
-						</template>
-					</el-table-column>
-					<el-table-column
-						prop="remark"
-						align="center"
-						label="备注信息"
-						width="160px"
-					></el-table-column>
-					<el-table-column
-						prop="createdBy"
-						align="center"
-						label="创建人"
-					></el-table-column>
-					<el-table-column
-						prop="createdAt"
-						align="center"
-						label="创建时间"
-						sortable="custom"
-						width="160px"
-					></el-table-column>
-					<el-table-column
-						prop="updatedBy"
-						align="center"
-						label="最近操作人"
-						width="120px"
-					></el-table-column>
-					<el-table-column
-						prop="updatedAt"
-						align="center"
-						label="最近操作时间"
-						sortable="custom"
-						width="160px"
-					></el-table-column>
-					<el-table-column
-						prop="operating"
-						align="center"
-						label="操作"
-						width="240px"
-					>
-						<template slot-scope="scope">
-							<el-button
-								v-if="Number(scope.row.gameStatus) !== 0"
-								:disabled="loading"
-								type="danger"
-								size="medium"
-								class="noicon"
-								@click="changeStatus(scope.row.id, 0)"
-							>
-								禁用
-							</el-button>
-							<el-button
-								v-if="Number(scope.row.gameStatus) !== 1"
-								:disabled="loading"
-								type="success"
-								size="medium"
-								class="noicon"
-								@click="changeStatus(scope.row.id, 1)"
-							>
-								开启
-							</el-button>
-							<el-button
-								v-if="Number(scope.row.gameStatus) !== 2"
-								:disabled="loading"
-								type="warning"
-								size="medium"
-								class="noicon"
-								@click="changeStatus(scope.row.id, 2)"
-							>
-								维护
-							</el-button>
-							<el-button
-								type="primary"
-								icon="el-icon-edit"
-								:disabled="loading || Number(scope.row.gameStatus) === 1"
-								size="medium"
-								@click="openEdit(scope.row)"
-							>
-								编辑信息
-							</el-button>
-						</template>
-					</el-table-column>
-				</el-table>
-				<!-- 分页 -->
-				<el-pagination
-					:current-page.sync="pageNum"
-					class="pageValue"
-					background
-					layout="total, sizes,prev, pager, next, jumper"
-					:page-size="pageSize"
-					:page-sizes="pageSizes"
-					:total="total"
-					@current-change="handleCurrentChange"
-					@size-change="handleSizeChange"
-				></el-pagination>
-			</div>
-			<div v-if="dialogGameVisible" class="imgCenter" @click="closeImage">
-				<img :src="bigImage" />
-			</div>
-		</div>
-		<gameManagementEdit
-			v-else
-			:rowData="rowData"
-			:editType="editType"
-			:labelList="labelList"
-			:gameModuleNameList="gameModuleNameList"
-			:gameManageList="gameManageList"
-			:gamePlantList="gamePlantList"
-			@closeEdit="closeEdit"
-			@refresh="search"
-		></gameManagementEdit>
-	</div>
+                            <span v-else>-</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="miaoShu" align="center" label="备注">
+                        <template slot-scope="scope">
+							<span v-if="!!scope.row.description">
+								{{ scope.row.description }}
+							</span>
+                            <span v-else>-</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="miaoShu" align="center" label="状态">
+                        <template slot-scope="scope">
+							<span v-if="!!scope.row.description">
+								{{ scope.row.description }}
+							</span>
+                            <span v-else>-</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="miaoShu" align="center" label="图片">
+                        <template slot-scope="scope">
+							<span v-if="!!scope.row.description">
+								{{ scope.row.description }}
+							</span>
+                            <span v-else>-</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="createdBy" align="center" label="创建人">
+                        <template slot-scope="scope">
+							<span v-if="!!scope.row.createdBy">
+								{{ scope.row.createdBy }}
+							</span>
+                            <span v-else>-</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                        prop="createdAt"
+                        align="center"
+                        label="创建时间"
+                        sortable="custom"
+                        width="160px"
+                    >
+                        <template slot-scope="scope">
+							<span v-if="!!scope.row.createdAt">
+								{{ scope.row.createdAt }}
+							</span>
+                            <span v-else>-</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="updatedBy" align="center" label="最近操作人">
+                        <template slot-scope="scope">
+							<span v-if="!!scope.row.updatedBy">
+								{{ scope.row.updatedBy }}
+							</span>
+                            <span v-else>-</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                        prop="updatedAt"
+                        align="center"
+                        label="最近操作时间"
+                        sortable="custom"
+                        width="160px"
+                    >
+                        <template slot-scope="scope">
+							<span v-if="!!scope.row.updatedAt">
+								{{ scope.row.updatedAt }}
+							</span>
+                            <span v-else>-</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                        prop="operating"
+                        align="center"
+                        label="操作"
+                        width="300px"
+                    >
+                        <template slot-scope="scope">
+                            <el-button
+                                :type="scope.row.assortStatus ? 'danger' : 'success'"
+                                size="medium"
+                                @click="recycle(scope.row)"
+                            >
+                                <div v-if="scope.row.assortStatus">
+                                    禁用
+                                </div>
+                                <div v-else>
+                                    开启
+                                </div>
+                            </el-button>
+                            <el-button
+                                type="primary"
+                                icon="el-icon-edit"
+                                :disabled="loading"
+                                size="medium"
+                                @click="edit(scope.row)"
+                            >
+                                编辑信息
+                            </el-button>
+                            <el-button
+                                type="danger"
+                                icon="el-icon-delete"
+                                :disabled="loading"
+                                size="medium"
+                                @click="deleteLabel(scope.row)"
+                            >
+                                删除
+                            </el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+                <!-- 分页 -->
+                <el-pagination
+                    :total="total"
+                    :current-page.sync="pageNum"
+                    class="pageValue"
+                    background
+                    layout="total, sizes,prev, pager, next, jumper"
+                    :page-size="pageSize"
+                    :page-sizes="pageSizes"
+                    @current-change="handleCurrentChange"
+                    @size-change="handleSizeChange"
+                ></el-pagination>
+            </div>
+            <el-dialog
+                :title="title"
+                :visible.sync="dialogFormVisible"
+                :destroy-on-close="true"
+                width="520px"
+                class="rempadding"
+                @close="clear"
+            >
+                <el-divider></el-divider>
+                <el-form
+                    ref="formSub"
+                    :model="dialogForm"
+                    label-width="120px"
+                    :rules="rules"
+                >
+                    <el-form-item label="风控类型:" prop="windControlType">
+                        <el-select
+                            v-model="dialogForm.windControlType"
+                            size="medium"
+                            placeholder="默认选择全部"
+                            clearable
+                            :disabled="title === '编辑'"
+                            style="width: 330px"
+                            @change="getMerchantDict($event)"
+                        >
+                            <el-option
+                                v-for="item in windLevelTypeArr"
+                                :key="item.code"
+                                :label="item.description"
+                                :value="item.code"
+                            ></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="风控层级:" prop="windControlLevelName">
+                        <el-input
+                            v-model="dialogForm.windControlLevelName"
+                            :maxlength="10"
+                            autocomplete="off"
+                            style="width: 330px"
+                            placeholder="请输入"
+                            clearable
+                        ></el-input>
+                    </el-form-item>
+                    <el-form-item label="风控描述信息:" prop="description">
+                        <el-input
+                            v-model="dialogForm.description"
+                            type="textarea"
+                            style="width: 330px"
+                            :maxlength="50"
+                            show-word-limit
+                        ></el-input>
+                    </el-form-item>
+                </el-form>
+                <el-divider></el-divider>
+                <div slot="footer" class="dialog-footer">
+                    <el-button @click="dialogFormVisible = false">取消</el-button>
+                    <el-button type="primary" @click="subAddOrEdit">保存</el-button>
+                </div>
+            </el-dialog>
+        </div>
+    </div>
 </template>
 
 <script>
 import list from '@/mixins/list'
-import gameManagementEdit from './components/gameManagementEdit'
-import dayjs from 'dayjs'
 import { routerNames } from '@/utils/consts'
-export default {
-	name: routerNames.gameManagement,
-	components: { gameManagementEdit },
-	mixins: [list],
-	data() {
-		return {
-			queryData: {
-				gameId: '',
-				gameName: '',
-				accountType: [],
-				gameLabelIdList: [],
-				gamePlatformList: [],
-				gameIconList: [],
-				relationOtherGameIdList: [],
-				supportTerminalList: [],
-				gameStatusList: []
-			},
-			rowData: {},
-			showDetail: false,
-			labelList: [],
-			gameModuleNameList: [],
-			gameManageList: [],
-			gamePlantList: [],
-			bigImage: '',
-			editType: '',
-			now: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
-			dialogGameVisible: false
-		}
-	},
-	computed: {
-		gameStatusType() {
-			return this.globalDics.gameStatusType
-		},
-		betDeviceType() {
-			return this.globalDics.betDeviceType
-		},
-		terminalnType() {
-			return this.globalDics.terminalnType
-		},
-		gameIconType() {
-			return this.globalDics.gameIconType
-		}
-	},
-	created() {
-		this.getList()
-	},
-	methods: {
-		loadData() {
-			const params = {
-				...this.getParams(this.queryData)
-			}
-			this.loading = true
+// import { isHaveEmoji, notSpecial2 } from '@/utils/validate'
 
-			this.$api
-				.gameList(params)
-				.then((res) => {
-					if (res.code === 200) {
-						const response = res.data
-						this.loading = false
-						this.list = response.record
-						this.total = response.totalRecord
-					} else {
-						this.loading = false
-						this.$message({
-							message: res.msg,
-							type: 'error'
-						})
-					}
-				})
-				.catch(() => {
-					this.loading = false
-				})
-		},
-		getList() {
-			// 游戏标签
-			this.$api
-				.gameLabelList()
-				.then((res) => {
-					if (res.code === 200) {
-						this.labelList = res.data
-					} else {
-						this.$message({
-							message: res.msg,
-							type: 'error'
-						})
-					}
-				})
-				.catch(() => {})
-			// 关联游戏模块
-			this.$api
-				.gameModuleNameList()
-				.then((res) => {
-					if (res.code === 200) {
-						this.gameModuleNameList = res.data
-					} else {
-						this.$message({
-							message: res.msg,
-							type: 'error'
-						})
-					}
-				})
-				.catch(() => {})
-			// 游戏平台
-			this.$api
-				.gamePlant()
-				.then((res) => {
-					if (res.code === 200) {
-						this.gamePlantList = res.data
-					} else {
-						this.$message({
-							message: res.msg,
-							type: 'error'
-						})
-					}
-				})
-				.catch(() => {})
-			// 关联推荐游戏
-			this.$api
-				.gameManageList()
-				.then((res) => {
-					if (res.code === 200) {
-						this.gameManageList = res.data
-					} else {
-						this.$message({
-							message: res.msg,
-							type: 'error'
-						})
-					}
-				})
-				.catch(() => {})
-		},
-		gamePlantFilter(val) {
-			if (!this.gamePlantList) return
-			let name = ''
-			this.gamePlantList.forEach((item) => {
-				if (item.gameCode === val) {
-					name = item.gameName
-				}
-			})
-			return name
-		},
-		gameManageListFilter(val) {
-			if (!this.gameManageList) return
-			const arr = val.split(',')
-			let name = ''
-			this.gameManageList.forEach((item) => {
-				arr.forEach((data) => {
-					if (item.gameId + '' === data + '') {
-						name = name + item.gameName + '/'
-					}
-				})
-			})
-			return name.slice(0, -1)
-		},
-		supportTerminalFilter(val) {
-			if (!this.terminalnType) return
-			const arr = val.split(',')
-			let name = ''
-			this.betDeviceType.forEach((item) => {
-				arr.forEach((data) => {
-					if (item.code + '' === data + '') {
-						name = name + item.description + '/'
-					}
-				})
-			})
-			return name.slice(0, -1)
-		},
-		changeTableSort({ column, prop, order }) {
-			this.pageNum = 1
-			this.queryData.orderProperty = prop
-			const orderParams = this.checkOrderParams.get(prop)
-			if (orderParams) {
-				if (order === 'ascending') {
-					// 升序
-					this.queryData.orderType = 'asc'
-				} else if (column.order === 'descending') {
-					// 降序
-					this.queryData.orderType = 'desc'
-				}
-				this.loadData()
-			}
-		},
-		moduleFilter(val) {
-			if (!this.gameModuleNameList) return
-			const arr = val.split(',')
-			let name = ''
-			this.gameModuleNameList.forEach((item) => {
-				arr.forEach((data) => {
-					if (item.moduleId + '' === data + '') {
-						name = name + item.moduleName + '/'
-					}
-				})
-			})
-			return name.slice(0, -1)
-		},
-		labelListFilter(val) {
-			if (!this.labelList) return
-			const arr = val.split(',')
-			let name = ''
-			this.labelList.forEach((item) => {
-				arr.forEach((data) => {
-					if (item.gameLabelId + '' === data + '') {
-						name = name + item.gameLabelName + '/'
-					}
-				})
-			})
-			return name.slice(0, -1)
-		},
-		lookGame(val) {
-			this.dialogGameVisible = true
-			this.bigImage = val
-		},
-		closeImage() {
-			this.dialogGameVisible = false
-		},
-		openEdit(row) {
-			this.showDetail = true
-			if (row) {
-				this.rowData = JSON.parse(JSON.stringify(row))
-				this.editType = 'edit'
-			} else {
-				this.rowData = {}
-				this.editType = 'add'
-			}
-		},
-		closeEdit() {
-			this.showDetail = false
-		},
-		changeStatus(id, type) {
-			this.$confirm(
-				`<strong>是否对子游戏进行${
-					Number(type) === 0 ? '禁用' : Number(type) === 1 ? '开启' : '维护'
-				}操作?</strong></br><span style='font-size:12px;color:#c1c1c1'>一旦操作将会立即生效</span>`,
-				'确认提示',
-				{
-					dangerouslyUseHTMLString: true,
-					confirmButtonText: '确定',
-					cancelButtonText: '取消',
-					type: 'warning'
-				}
-			)
-				.then(() => {
-					this.$api
-						.editGameStatus({
-							id: id,
-							gameStatus: type
-						})
-						.then((res) => {
-							if (res.code === 200) {
-								this.$message({
-									message: '操作成功！',
-									type: 'success'
-								})
-								this.loadData()
-							} else {
-								this.$message({
-									message: res.msg,
-									type: 'error'
-								})
-							}
-						})
-						.catch(() => {})
-				})
-				.catch(() => {})
-		},
-		reset() {
-			this.queryData = {
-				gameId: '',
-				gameName: '',
-				accountType: [],
-				gameLabelIdList: [],
-				gamePlatformList: [],
-				gameIconList: [],
-				relationOtherGameIdList: [],
-				supportTerminalList: [],
-				gameStatusList: []
-			}
-			this.pageNum = 1
-			this.loadData()
-		},
-		enterSubmit() {
-			this.loadData()
-		}
-	}
+export default {
+    name: routerNames.createRiskRank,
+    components: {},
+    mixins: [list],
+    data() {
+        return {
+            queryData: {
+                windControlType: undefined,
+                windControlLevelName: ['all'],
+                createdBy: undefined,
+                updatedBy: undefined
+            },
+            tableData: [],
+            dialogFormVisible: false,
+            dialogForm: {
+                windControlType: undefined,
+                windControlLevelName: undefined,
+                description: undefined
+            },
+            total: 0,
+            title: '',
+            vipDict: []
+        }
+    },
+    computed: {
+        windLevelTypeArr() {
+            return this.globalDics.windLevelType
+        },
+        terminalTypeArr() {
+            return this.globalDics.terminalnType
+        },
+        rules() {
+            return {
+                windControlType: [
+                    { required: true, message: '请选择风控类型', trigger: 'change' }
+                ],
+                windControlLevelName: [
+                    { required: true, message: '请填入风控层级', trigger: 'blur' },
+                    { min: 2, max: 10, message: '请填入风控层级', trigger: 'blur' }
+                ],
+                description: [
+                    { required: true, message: '请填入风控层级描述', trigger: 'blur' },
+                    { min: 2, max: 50, message: '请填入风控层级描述', trigger: 'blur' }
+                ]
+            }
+        },
+        windControlLevelName() {
+            return this.queryData.windControlLevelName
+        }
+    },
+    watch: {
+        windControlLevelName(newVal, oldVal) {
+            const newIdx = newVal.indexOf('all')
+            const oldIdx = oldVal.indexOf('all')
+            if (newIdx !== -1 && oldIdx === -1 && newVal.length > 1) {
+                this.queryData.windControlLevelName = ['all']
+            } else if (newIdx !== -1 && oldIdx !== -1 && newVal.length > 1) {
+                this.queryData.windControlLevelName.splice(newVal.indexOf('all'), 1)
+            }
+        }
+    },
+    mounted() {
+        // this.getMerchantDict('')
+    },
+    methods: {
+        loadData() {
+            this.loading = true
+            let params = {
+                ...this.queryData
+            }
+            params = {
+                ...this.getParams(params)
+            }
+            // const idx = params.windControlLevelName.findIndex(
+            // 	(item) => item === 'all'
+            // )
+            // params.windControlLevelName.splice(idx, 1)
+            params.windControlLevelName =
+                params.windControlLevelName &&
+                params.windControlLevelName.length &&
+                params.windControlLevelName[0] !== 'all'
+                    ? params.windControlLevelName
+                    : undefined
+            params.createdBy = params.createdBy ? params.createdBy : undefined
+            params.updatedBy = params.updatedBy ? params.updatedBy : undefined
+            this.$api
+                .riskRankListAPI(params)
+                .then((res) => {
+                    const { code, data } = res
+                    if (code === 200) {
+                        this.tableData = data.record
+                        this.total = data.totalRecord
+                        this.loading = false
+                    } else {
+                        this.loading = false
+                    }
+                })
+                .catch(() => {
+                    this.loading = false
+                })
+
+            setTimeout(() => {
+                this.loading = false
+            }, 1000)
+        },
+        reset() {
+            this.pageNum = 1
+            this.$refs['form'].resetFields()
+            this.queryData = {
+                windControlType: undefined,
+                windControlLevelName: ['all'],
+                createdBy: undefined,
+                updatedBy: undefined
+            }
+            this.loadData()
+        },
+        switchClick(val) {
+            const status = val.labelStatus === 0 ? 1 : 0
+            console.log(val)
+            this.$confirm(
+                `<strong>是否对 ${val.gameLabelName} 进行${
+                    val.labelStatus === 1 ? '启用' : '禁用'
+                }操作?</strong></br><span style='font-size:12px;color:#c1c1c1'>一旦操作将会立即生效</span>`,
+                `确认提示`,
+                {
+                    dangerouslyUseHTMLString: true,
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }
+            )
+                .then(() => {
+                    this.$api
+                        .setUpdateStatus({ id: val.id, status: status })
+                        .then((res) => {
+                            if (res.code === 200) {
+                                this.loadData()
+                            }
+                        })
+                })
+                .catch(() => {})
+        },
+        addLabel() {
+            this.dialogFormVisible = true
+            this.$refs['form'].resetFields()
+            this.title = '新增'
+            this.dialogForm = {
+                windControlType: undefined,
+                windControlLevelName: undefined,
+                info: undefined
+            }
+        },
+        edit(val) {
+            this.title = '编辑'
+            val.windControlType = val.windControlType + ''
+            this.dialogForm = { ...val }
+            this.dialogFormVisible = true
+        },
+        deleteLabel(val) {
+            const loading = this.$loading({
+                lock: true,
+                text: 'Loading',
+                spinner: 'el-icon-loading',
+                background: 'rgba(0, 0, 0, 0.7)'
+            })
+            const { id } = val
+            this.$confirm(`<strong>确定删除此条配置?</strong>`, `确认提示`, {
+                dangerouslyUseHTMLString: true,
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            })
+                .then(() => {
+                    this.$api
+                        .deleteRiskRankAPI({ id })
+                        .then((res) => {
+                            loading.close()
+                            const { code } = res
+                            if (code === 200) {
+                                this.$message.success('删除成功')
+                            } else {
+                                this.$message({
+                                    type: 'error',
+                                    message: '删除失败!'
+                                })
+                            }
+
+                            this.loadData()
+                        })
+                        .catch(() => {
+                            loading.close()
+                        })
+                })
+                .catch(() => {
+                    loading.close()
+                })
+
+            setTimeout(() => {
+                loading.close()
+            }, 1000)
+        },
+        subAddOrEdit() {
+            const params = {
+                ...this.dialogForm
+            }
+            const handleClick =
+                this.title !== '编辑'
+                    ? this.$api.createRiskRankAPI
+                    : this.$api.updateRiskRankAPI
+            this.$refs.formSub.validate((valid) => {
+                if (valid) {
+                    handleClick(params).then((res) => {
+                        const { code, msg } = res
+                        if (code === 200) {
+                            this.$message({
+                                message: `${this.title !== '编辑' ? '新增' : '更新'}成功`,
+                                type: 'success'
+                            })
+                            this.reset()
+                        } else {
+                            this.$message({
+                                message: msg,
+                                type: 'error'
+                            })
+                        }
+                    })
+                    this.dialogFormVisible = false
+                }
+            })
+        },
+        checkValue(e) {
+            const { value } = e.target
+            this.queryData.gameLabelId = value
+            console.log(value)
+        },
+        _changeTableSort({ column, prop, order }) {
+            if (prop === 'createdAt') {
+                prop = 1
+            }
+            if (prop === 'updatedAt') {
+                prop = 2
+            }
+            this.queryData.orderKey = prop
+            if (order === 'ascending') {
+                // 升序
+                this.queryData.orderType = 'asc'
+            } else if (column.order === 'descending') {
+                // 降序
+                this.queryData.orderType = 'desc'
+            }
+            this.loadData()
+        },
+        clear() {
+            this.$refs.formSub.resetFields()
+        },
+        // 获取风控层级
+        getMerchantDict(val) {
+            this.queryData.windControlLevelName = []
+
+            this.$api
+                .getSelectWindControlLevel({
+                    windControlType: val * 1
+                })
+                .then((res) => {
+                    const { code, data, msg } = res
+                    if (code === 200) {
+                        this.vipDict = data || []
+                    } else {
+                        this.$message({
+                            message: msg,
+                            type: 'error'
+                        })
+                    }
+                })
+        }
+    }
 }
 </script>
 
 <style lang="scss" scoped>
 /deep/.el-dialog__header {
-	text-align: center;
-	color: #909399;
-	font-weight: 700;
+    text-align: center;
+    color: #909399;
+    font-weight: 700;
 }
 /deep/ .tagheight .el-tag {
-	height: 24px;
-	line-height: 24px;
-	min-width: 60px;
+    height: 24px;
+    line-height: 24px;
+    min-width: 60px;
 }
 /deep/ .rempadding .el-dialog__body {
-	padding: 0;
-	padding-bottom: 30px;
+    padding: 0;
+    padding-bottom: 30px;
 
-	.contentBox,
-	form {
-		padding: 0 20px;
-	}
+    .contentBox,
+    form {
+        padding: 0 20px;
+    }
 }
+/deep/.el-input-number__decrease,
+/deep/.el-input-number__increase {
+    display: none;
+}
+/deep/.el-input-number--medium .el-input__inner {
+    padding: 0 15px;
+    text-align: left;
+}
+
 .decoration {
-	text-decoration: underline;
-	cursor: pointer;
+    text-decoration: underline;
+    cursor: pointer;
 }
 .bodyBox {
-	max-height: 400px;
-	overflow: auto;
+    max-height: 400px;
+    overflow: auto;
 }
 p {
-	display: flex;
-	height: 40px;
-	line-height: 40px;
-	border-bottom: 1px solid #e8e8e8;
-	justify-content: space-around;
-	span {
-		display: inline-block;
-		width: 50%;
-		text-align: center;
-	}
+    display: flex;
+    height: 40px;
+    line-height: 40px;
+    border-bottom: 1px solid #e8e8e8;
+    justify-content: space-around;
+    span {
+        display: inline-block;
+        width: 50%;
+        text-align: center;
+    }
 }
 .headerBox {
-	color: #000000d8;
-	background: #fafafa;
-	font-family: 'PingFang SC ', 'PingFang SC', sans-serif;
-	font-weight: 650;
-	border-top: 1px solid #e8e8e8;
-	margin-top: 15px;
+    color: #000000d8;
+    background: #fafafa;
+    font-family: 'PingFang SC ', 'PingFang SC', sans-serif;
+    font-weight: 650;
+    border-top: 1px solid #e8e8e8;
+    margin-top: 15px;
 }
 </style>
