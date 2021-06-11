@@ -28,8 +28,9 @@
 					</el-select>
 				</el-form-item>
 				<el-form-item
-					:label="riskType[queryData.windControlType].label"
-					:prop="riskType[queryData.windControlType].prop"
+					v-if="['1'].includes(queryData.windControlType)"
+					label="会员账号"
+					prop="userName"
 				>
 					<!--                    会员-->
 					<el-input
@@ -43,9 +44,23 @@
 						style="width: 365px"
 						@blur="checkValue"
 					></el-input>
+					<!--                    <span v-show="tipsShow" class="tips">{{ tipsShow }}</span>-->
+					<el-button
+						type="primary"
+						style="margin-left: 20px"
+						@click="searchInfo('userName')"
+					>
+						<i v-show="loading" class="el-icon-loading"></i>
+						查询
+					</el-button>
+				</el-form-item>
+				<el-form-item
+					v-else-if="['2'].includes(queryData.windControlType)"
+					label="代理账号"
+					prop="proxyUserName"
+				>
 					<!--                    代理-->
 					<el-input
-						v-if="['2'].includes(queryData.windControlType)"
 						v-model="queryData.proxyUserName"
 						size="medium"
 						maxlength="11"
@@ -55,9 +70,23 @@
 						style="width: 365px"
 						@blur="checkValue"
 					></el-input>
+					<!--                    <span v-show="tipsShow" class="tips">{{ tipsShow }}</span>-->
+					<el-button
+						type="primary"
+						style="margin-left: 20px"
+						@click="searchInfo('proxyUserName')"
+					>
+						<i v-show="loading" class="el-icon-loading"></i>
+						查询
+					</el-button>
+				</el-form-item>
+				<el-form-item
+					v-else-if="['3'].includes(queryData.windControlType)"
+					label="银行卡号"
+					prop="cardNumber"
+				>
 					<!--                    银行卡-->
 					<el-input
-						v-else-if="['3'].includes(queryData.windControlType)"
 						v-model="queryData.cardNumber"
 						size="medium"
 						maxlength="25"
@@ -67,9 +96,23 @@
 						style="width: 365px"
 						@blur="checkValue"
 					></el-input>
+					<!--                    <span v-show="tipsShow" class="tips">{{ tipsShow }}</span>-->
+					<el-button
+						type="primary"
+						style="margin-left: 20px"
+						@click="searchInfo('cardNumber')"
+					>
+						<i v-show="loading" class="el-icon-loading"></i>
+						查询
+					</el-button>
+				</el-form-item>
+				<el-form-item
+					v-else-if="['4'].includes(queryData.windControlType)"
+					label="虚拟币地址"
+					prop="virtualAddress"
+				>
 					<!--             虚拟币      -->
 					<el-input
-						v-else-if="['4'].includes(queryData.windControlType)"
 						v-model="queryData.virtualAddress"
 						size="medium"
 						maxlength="50"
@@ -79,9 +122,23 @@
 						style="width: 365px"
 						@blur="checkValue"
 					></el-input>
+					<!--                    <span v-show="tipsShow" class="tips">{{ tipsShow }}</span>-->
+					<el-button
+						type="primary"
+						style="margin-left: 20px"
+						@click="searchInfo('virtualAddress')"
+					>
+						<i v-show="loading" class="el-icon-loading"></i>
+						查询
+					</el-button>
+				</el-form-item>
+				<el-form-item
+					v-else-if="['5'].includes(queryData.windControlType)"
+					label="IP地址"
+					prop="registerIp"
+				>
 					<!--                    IP-->
 					<el-input
-						v-else-if="['5'].includes(queryData.windControlType)"
 						v-model="queryData.registerIp"
 						size="medium"
 						maxlength="15"
@@ -91,9 +148,23 @@
 						style="width: 365px"
 						@blur="checkValue"
 					></el-input>
+					<!--                    <span v-show="tipsShow" class="tips">{{ tipsShow }}</span>-->
+					<el-button
+						type="primary"
+						style="margin-left: 20px"
+						@click="searchInfo('registerIp')"
+					>
+						<i v-show="loading" class="el-icon-loading"></i>
+						查询
+					</el-button>
+				</el-form-item>
+				<el-form-item
+					v-else-if="['6'].includes(queryData.windControlType)"
+					label="终端设备号"
+					prop="deviceNo"
+				>
 					<!--                    终端号-->
 					<el-input
-						v-else-if="['6'].includes(queryData.windControlType)"
 						v-model="queryData.deviceNo"
 						size="medium"
 						maxlength="50"
@@ -106,7 +177,7 @@
 					<el-button
 						type="primary"
 						style="margin-left: 20px"
-						@click="searchInfo"
+						@click="searchInfo('deviceNo')"
 					>
 						<i v-show="loading" class="el-icon-loading"></i>
 						查询
@@ -159,11 +230,11 @@
 		</div>
 		<div class="info-show">
 			<div class="info-header">
-				<span v-if="!!Object.keys(showInfoData).length">基本信息</span>
+				<span v-if="!!showInfoData">基本信息</span>
 			</div>
 			<component
 				:is="content"
-				v-if="!!Object.keys(showInfoData).length"
+				v-if="!!showInfoData"
 				:showInfoData="showInfoData"
 			></component>
 		</div>
@@ -201,7 +272,7 @@ export default {
 				windReason: undefined
 			},
 			vipDict: [],
-			showInfoData: {},
+			showInfoData: undefined,
 			current: '',
 			tipsShow: null
 		}
@@ -209,35 +280,6 @@ export default {
 	computed: {
 		windLevelTypeArr() {
 			return this.globalDics.windLevelType
-		},
-		riskType() {
-			const typeObj = {
-				'1': {
-					label: '会员账号:',
-					prop: 'userName'
-				},
-				'2': {
-					label: '代理账号:',
-					prop: 'proxyUserName'
-				},
-				'3': {
-					label: '银行卡号:',
-					prop: 'cardNumber'
-				},
-				'4': {
-					label: '虚拟币地址:',
-					prop: 'virtualAddress'
-				},
-				'5': {
-					label: 'IP地址:',
-					prop: 'registerIp'
-				},
-				'6': {
-					label: '终端设备号:',
-					prop: 'deviceNo'
-				}
-			}
-			return typeObj
 		},
 		content() {
 			const obj = [
@@ -251,78 +293,43 @@ export default {
 			return obj[this.current]
 		},
 		rules() {
-			// const reg1 = /^[A-Za-z]{1}(?=(.*[a-zA-Z]){1,})(?=(.*[0-9]){1,})[0-9A-Za-z]{3,10}$/
-			//
-			// const testUserName = (rule, value, callback) => {
-			// 	const isSpecial = !notSpecial2(String(value))
-			// 	const isRmoji = isHaveEmoji(String(value))
-			// 	if (isSpecial) {
-			// 		callback(new Error('不支持空格及特殊字符'))
-			// 	} else if (isRmoji) {
-			// 		callback(new Error('不支持表情'))
-			// 	} else if (!reg1.test(value)) {
-			// 		callback(new Error('请输入4-11位，最少2个字母+数字组合，首位字母'))
-			// 	} else {
-			// 		callback()
-			// 	}
-			// }
-
+			const windControlType = [
+				{ required: true, message: '请选择风控类型', trigger: 'change' }
+			]
+			const windControlName = [
+				{ required: true, message: '请选择风控层级', trigger: 'change' }
+			]
+			const userName = [
+				{ required: true, message: '请输入会员账号', trigger: 'blur' }
+			]
+			const proxyUserName = [
+				{ required: true, message: '请输入代理账号', trigger: 'blur' }
+			]
+			const cardNumber = [
+				{ required: true, message: '请输入银行卡号', trigger: 'blur' }
+			]
+			const virtualAddress = [
+				{ required: true, message: '请输入虚拟币地址', trigger: 'blur' }
+			]
+			const registerIp = [
+				{ required: true, message: '请输入IP', trigger: 'blur' }
+			]
+			const deviceNo = [
+				{ required: true, message: '请输入终端设备号', trigger: 'blur' }
+			]
+			const windReason = [
+				{ required: true, message: '请输入审核信息', trigger: 'blur' }
+			]
 			return {
-				windControlType: [
-					{ required: true, message: '请选择风控类型', trigger: 'change' }
-				],
-				windControlName: [
-					{ required: true, message: '请选择风控层级', trigger: 'change' }
-				],
-				userName: [
-					{
-						required: true,
-						message: '请输入会员账号',
-						trigger: 'blur'
-					}
-				],
-				proxyUserName: [
-					{
-						required: true,
-						message: '请输入代理账号',
-						trigger: 'blur'
-					}
-				],
-				cardNumber: [
-					{
-						required: true,
-						message: '请输入银行卡号',
-						trigger: 'blur'
-					}
-				],
-				virtualAddress: [
-					{
-						required: true,
-						message: '请输入虚拟币地址',
-						trigger: 'blur'
-					}
-				],
-				registerIp: [
-					{
-						required: true,
-						message: '请输入IP',
-						trigger: 'blur'
-					}
-				],
-				deviceNo: [
-					{
-						required: true,
-						message: '请输入终端设备号',
-						trigger: 'blur'
-					}
-				],
-				windReason: [
-					{
-						required: true,
-						message: '请输入审核信息',
-						trigger: 'blur'
-					}
-				]
+				windControlType,
+				windControlName,
+				userName,
+				proxyUserName,
+				cardNumber,
+				virtualAddress,
+				registerIp,
+				deviceNo,
+				windReason
 			}
 		}
 	},
@@ -389,7 +396,7 @@ export default {
 		},
 		changeRiskType(evt) {
 			this.$refs['form'].resetFields()
-			this.showInfoData = {}
+			this.showInfoData = undefined
 			this.queryData = {
 				windControlName: undefined,
 				userName: undefined,
@@ -420,48 +427,50 @@ export default {
 					}
 				})
 		},
-		searchInfo() {
+		searchInfo(type) {
 			const { windControlType } = this.queryData
 			// console.log('this.queryData', this.queryData)
-			switch (windControlType) {
-				case '1': {
+			switch (type) {
+				case 'userName': {
 					const { userName } = this.queryData
 					this.$refs.form.validateField('userName')
 					if (userName) {
 						this.$refs.form.clearValidate('windControlName')
 						this.$refs.form.clearValidate('windReason')
-						this.queryInfoData({ userName }, windControlType).then((res) => {
-							const { id } = res
-							if (id || id * 1 === 0) {
-								return this.$message({
-									message: '查询的风险会员不存在',
-									type: 'error'
-								})
-							} else {
-                                this.tipsShow = '查询的风险会员不存在'
-								this.tipsShow = null
-								this.current = 0
+						this.queryInfoData({ objectInfo: userName }, windControlType).then(
+							(res) => {
+								const { id } = res
+								if (id || id + '' === '0') {
+                                    this.tipsShow = null
+                                    this.current = 0
+								} else {
+                                    this.tipsShow = '查询的风险会员不存在'
+                                    return this.$message({
+                                        message: '查询的风险会员不存在',
+                                        type: 'error'
+                                    })
+								}
 							}
-						})
+						)
 					}
 					break
 				}
-				case '2': {
+				case 'proxyUserName': {
 					const { proxyUserName } = this.queryData
 					this.$refs.form.validateField('proxyUserName')
 					if (proxyUserName) {
 						this.$refs.form.clearValidate('windControlName')
 						this.$refs.form.clearValidate('windReason')
 						this.queryInfoData(
-							{ userName: proxyUserName },
+							{ objectInfo: proxyUserName },
 							windControlType
 						).then((res) => {
 							const { id } = res
-							if (id || id * 1 === 0) {
+							if (id || id + '' === '0') {
 								this.tipsShow = null
 								this.current = 1
 							} else {
-                                this.tipsShow = '查询的风险代理不存在'
+								this.tipsShow = '查询的风险代理不存在'
 								return this.$message({
 									message: '查询的风险代理不存在',
 									type: 'error'
@@ -471,19 +480,19 @@ export default {
 					}
 					break
 				}
-				case '3': {
+				case 'cardNumber': {
 					const { cardNumber } = this.queryData
 					this.$refs.form.validateField('cardNumber')
 					if (cardNumber) {
 						this.$refs.form.clearValidate('windControlName')
 						this.$refs.form.clearValidate('windReason')
-						this.queryInfoData({ cardNumber }, windControlType).then((res) => {
+						this.queryInfoData({ objectInfo: cardNumber }, windControlType).then((res) => {
 							const { id } = res
-							if (id || id * 1 === 0) {
+							if (id || id + '' === '0') {
 								this.tipsShow = null
 								this.current = 2
 							} else {
-                                this.tipsShow = '查询的银行卡信息不存在'
+								this.tipsShow = '查询的银行卡信息不存在'
 								return this.$message({
 									message: '查询的银行卡信息不存在',
 									type: 'error'
@@ -493,19 +502,20 @@ export default {
 					}
 					break
 				}
-				case '4': {
+				case 'virtualAddress': {
 					const { virtualAddress } = this.queryData
+					this.$refs.form.validateField('virtualAddress')
 					if (virtualAddress) {
 						this.$refs.form.clearValidate('windControlName')
 						this.$refs.form.clearValidate('windReason')
-						this.queryInfoData({ virtualAddress }, windControlType).then(
+						this.queryInfoData({ objectInfo: virtualAddress }, windControlType).then(
 							(res) => {
 								const { id } = res
-								if (id || id * 1 === 0) {
+								if (id || id + '' === '0') {
 									this.tipsShow = null
 									this.current = 3
 								} else {
-                                    this.tipsShow = '查询的虚拟币账号不存在'
+									this.tipsShow = '查询的虚拟币账号不存在'
 									return this.$message({
 										message: '查询的虚拟币账号不存在',
 										type: 'error'
@@ -516,18 +526,18 @@ export default {
 					}
 					break
 				}
-				case '5': {
+				case 'registerIp': {
 					const { registerIp } = this.queryData
+					this.$refs.form.validateField('registerIp')
 					if (registerIp) {
 						this.$refs.form.clearValidate('windControlName')
 						this.$refs.form.clearValidate('windReason')
-						this.queryInfoData({ registerIp }, windControlType).then((res) => {
+						this.queryInfoData({ objectInfo: registerIp }, windControlType).then((res) => {
 							const { id } = res
-							if (id || id * 1 === 0) {
-								this.tipsShow = null
+                            this.tipsShow = null
+							if (id || id + '' === '0') {
 								this.current = 4
 							} else {
-                                this.tipsShow = '查询的风险IP不存在'
 								return this.$message({
 									message: '查询的风险IP不存在',
 									type: 'error'
@@ -537,18 +547,18 @@ export default {
 					}
 					break
 				}
-				case '6': {
+				case 'deviceNo': {
 					const { deviceNo } = this.queryData
+					this.$refs.form.validateField('deviceNo')
 					if (deviceNo) {
 						this.$refs.form.clearValidate('windControlName')
 						this.$refs.form.clearValidate('windReason')
-						this.queryInfoData({ deviceNo }, windControlType).then((res) => {
+						this.queryInfoData({ objectInfo: deviceNo }, windControlType).then((res) => {
 							const { id } = res
-							if (id || id * 1 === 0) {
-								this.tipsShow = null
+                            this.tipsShow = null
+							if (id || id + '' === '0') {
 								this.current = 5
 							} else {
-                                this.tipsShow = '查询的风险终端号不存在'
 								return this.$message({
 									message: '查询的风险终端号不存在',
 									type: 'error'
@@ -561,38 +571,38 @@ export default {
 			}
 		},
 		queryInfoData(value, windControlType) {
-			let lock = true
-			this.showInfoData = {}
-			if (lock) {
-				this.loading = true
+			// let lock = true
+            this.loading = true
+			this.showInfoData = undefined
+			if (this.loading) {
 				return new Promise((resolve) => {
 					this.$api
 						.riskEditInfoAPI({ ...value, windControlType })
 						.then((res) => {
-							lock = false
+							// lock = false
 							this.loading = false
 							const { code, data } = res
 							if (code === 200) {
 								if (data) {
-									this.showInfoData = data.id || data.id * 1 === 0 ? data : {}
+									this.showInfoData =
+										!!data.id || data.id + '' === '0' ? data : undefined
 									resolve(data)
 								} else {
-									this.showInfoData = {}
+									this.showInfoData = undefined
 								}
 							} else {
-								this.showInfoData = {}
+								this.showInfoData = undefined
 							}
 						})
 						.catch(() => {
 							this.loading = false
-							this.tipsShow = '会员账号不存在'
-							lock = false
+							// lock = false
 						})
 				})
 			}
 			setTimeout(() => {
 				this.loading = false
-				lock = true
+				// lock = true
 			}, 1500)
 		},
 		checkRiskValue(val) {
