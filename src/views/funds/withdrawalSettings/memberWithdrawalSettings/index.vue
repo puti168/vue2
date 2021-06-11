@@ -1,7 +1,6 @@
 <template>
 	<div class="game-container report-container">
 		<div class="view-container dealer-container">
-			<h2 class="h2-line">会员提现设置</h2>
 			<div class="head flex-h-end">
 				<template>
 					<el-button type="primary" @click="open">
