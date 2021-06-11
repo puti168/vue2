@@ -344,7 +344,18 @@ export default {
 			}
 			let lock = true
 			params.windControlType = params.windControlType * 1
-			params.proxyUserName ? (params.userName = params.proxyUserName) : null
+            params.userName ? (params.objectInfo = params.userName) : null
+			params.proxyUserName ? (params.objectInfo = params.proxyUserName) : null
+            params.cardNumber ? (params.objectInfo = params.cardNumber) : null
+            params.virtualAddress ? (params.objectInfo = params.virtualAddress) : null
+            params.registerIp ? (params.objectInfo = params.registerIp) : null
+            params.deviceNo ? (params.objectInfo = params.deviceNo) : null
+            delete params.userName
+            delete params.proxyUserName
+            delete params.cardNumber
+            delete params.virtualAddress
+            delete params.registerIp
+            delete params.deviceNo
 			this.$refs['form'].validate((valid) => {
 				if (valid && lock && !this.tipsShow) {
 					lock = false
