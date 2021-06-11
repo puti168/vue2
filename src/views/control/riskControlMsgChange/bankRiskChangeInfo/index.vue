@@ -5,7 +5,7 @@
 				<el-form ref="form" :inline="true" :model="queryData">
 					<el-form-item label="银行卡号:">
 						<el-input
-							v-model="queryData.cardNumber"
+							v-model="queryData.objectInfo"
 							clearable
 							:maxlength="25"
 							size="medium"
@@ -97,14 +97,14 @@
 					:header-cell-style="getRowClass"
 					@sort-change="_changeTableSort"
 				>
-					<el-table-column prop="cardNumber" align="center" label="银行卡号">
+					<el-table-column prop="objectInfo" align="center" label="银行卡号">
 						<template slot-scope="scope">
 							<Copy
-								v-if="!!scope.row.cardNumber"
-								:title="scope.row.cardNumber"
+								v-if="!!scope.row.objectInfo"
+								:title="scope.row.objectInfo"
 								:copy="copy"
 							>
-								{{ scope.row.cardNumber }}
+								{{ scope.row.objectInfo }}
 							</Copy>
 							<span v-else>-</span>
 						</template>
@@ -192,6 +192,7 @@ export default {
 	data() {
 		return {
 			queryData: {
+                objectInfo: undefined,
 				afterWindControlId: '',
 				beforeWindControlId: ''
 			},
@@ -244,6 +245,7 @@ export default {
 		},
 		reset() {
 			this.queryData = {
+                objectInfo: undefined,
 				afterWindControlId: '',
 				beforeWindControlId: ''
 			}

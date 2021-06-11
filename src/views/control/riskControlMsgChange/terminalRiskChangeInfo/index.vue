@@ -3,13 +3,13 @@
 		<div class="view-container dealer-container">
 			<div class="params">
 				<el-form ref="form" :inline="true" :model="queryData">
-					<el-form-item label="代理账号:" prop="username">
+					<el-form-item label="终端设备号:">
 						<el-input
-							v-model="queryData.username"
+							v-model="queryData.objectInfo"
 							clearable
-							:maxlength="11"
+							:maxlength="50"
 							size="medium"
-							style="width: 180px; margin-right: 20px"
+							style="width: 180px;"
 							placeholder="请输入"
 							:disabled="loading"
 							@keyup.enter.native="enterSearch"
@@ -48,7 +48,7 @@
 							></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="操作人:" prop="createdBy">
+					<el-form-item label="操作人:">
 						<el-input
 							v-model="queryData.createdBy"
 							clearable
@@ -92,15 +92,11 @@
 					:header-cell-style="getRowClass"
 					@sort-change="_changeTableSort"
 				>
-					<el-table-column prop="username" align="center" label="代理账号">
+					<el-table-column prop="objectInfo" align="center" label="终端设备号">
 						<template slot-scope="scope">
-							<Copy
-								v-if="!!scope.row.username"
-								:title="scope.row.username"
-								:copy="copy"
-							>
-								{{ scope.row.username }}
-							</Copy>
+							<span v-if="!!scope.row.objectInfo">
+								{{ scope.row.objectInfo }}
+							</span>
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
@@ -110,22 +106,12 @@
 						label="变更前风控层级"
 					>
 						<template slot-scope="scope">
-							<div
-								v-if="
-									scope.row.beforeWindControlDepict !== null &&
-										scope.row.beforeWindControlDepict !== ''
-								"
+							<el-tooltip
+								:content="scope.row.beforeWindControlDepict"
+								placement="top"
 							>
-								<el-tooltip
-									:content="scope.row.beforeWindControlDepict"
-									placement="top"
-								>
-									<p>
-										{{ scope.row.beforeWindControlName }}
-									</p>
-								</el-tooltip>
-							</div>
-							<div v-else>{{ scope.row.beforeWindControlName }}</div>
+								<p>{{ scope.row.beforeWindControlName }}</p>
+							</el-tooltip>
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -134,22 +120,12 @@
 						label="变更后风控层级"
 					>
 						<template slot-scope="scope">
-							<div
-								v-if="
-									scope.row.afterWindControlDepict !== null &&
-										scope.row.afterWindControlDepict !== ''
-								"
+							<el-tooltip
+								:content="scope.row.afterWindControlDepict"
+								placement="top"
 							>
-								<el-tooltip
-									:content="scope.row.afterWindControlDepict"
-									placement="top"
-								>
-									<p>
-										{{ scope.row.afterWindControlName }}
-									</p>
-								</el-tooltip>
-							</div>
-							<div v-else>{{ scope.row.afterWindControlName }}</div>
+								<p>{{ scope.row.afterWindControlName }}</p>
+							</el-tooltip>
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -191,18 +167,22 @@ import list from '@/mixins/list'
 import { routerNames } from '@/utils/consts'
 
 export default {
-	name: routerNames.proxyRiskControlChange,
+	name: routerNames.terminalRiskControlChange,
 	components: {},
 	mixins: [list],
 	data() {
 		return {
 			queryData: {
+				objectInfo: undefined,
 				afterWindControlId: '',
-				beforeWindControlId: ''
+				orderType: '',
+				beforeWindControlId: '',
+				createdBy: undefined,
+				windType: 6
 			},
-			tableData: [],
 			beforeWindControlLevel: [],
-			afterWindControlLevel: []
+			afterWindControlLevel: [],
+			tableData: []
 		}
 	},
 	computed: {},
@@ -215,7 +195,7 @@ export default {
 	methods: {
 		getSelectWindControlLevel(type) {
 			this.$api
-				.getSelectWindControlLevelId({ windControlType: 2, type })
+				.getSelectWindControlLevelId({ windControlType: 6, type })
 				.then((res) => {
 					const { code } = res
 					if (code === 200) {
@@ -228,13 +208,11 @@ export default {
 		loadData() {
 			this.loading = true
 			let params = {
-				...this.queryData,
-				windType: 2
+				...this.queryData
 			}
 			params = {
 				...this.getParams(params)
 			}
-			console.log(params)
 			this.$api
 				.selectWindControlRecord(params)
 				.then((res) => {
@@ -250,8 +228,12 @@ export default {
 		},
 		reset() {
 			this.queryData = {
+				objectInfo: undefined,
 				afterWindControlId: '',
-				beforeWindControlId: ''
+				orderType: '',
+				beforeWindControlId: '',
+				createdBy: undefined,
+				windType: 6
 			}
 			this.pageNum = 1
 			this.loadData()

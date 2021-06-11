@@ -3,9 +3,9 @@
 		<div class="view-container dealer-container">
 			<div class="params">
 				<el-form ref="form" :inline="true" :model="queryData">
-					<el-form-item label="会员账号:" prop="username">
+					<el-form-item label="代理账号:">
 						<el-input
-							v-model="queryData.username"
+							v-model="queryData.objectInfo"
 							clearable
 							:maxlength="11"
 							size="medium"
@@ -92,14 +92,14 @@
 					:header-cell-style="getRowClass"
 					@sort-change="_changeTableSort"
 				>
-					<el-table-column prop="username" align="center" label="会员账号">
+					<el-table-column prop="username" align="center" label="代理账号">
 						<template slot-scope="scope">
 							<Copy
-								v-if="!!scope.row.username"
-								:title="scope.row.username"
+								v-if="!!scope.row.objectInfo"
+								:title="scope.row.objectInfo"
 								:copy="copy"
 							>
-								{{ scope.row.username }}
+								{{ scope.row.objectInfo }}
 							</Copy>
 							<span v-else>-</span>
 						</template>
@@ -197,6 +197,7 @@ export default {
 	data() {
 		return {
 			queryData: {
+                objectInfo: undefined,
 				afterWindControlId: '',
 				beforeWindControlId: ''
 			},
@@ -215,7 +216,7 @@ export default {
 	methods: {
 		getSelectWindControlLevel(type) {
 			this.$api
-				.getSelectWindControlLevelId({ windControlType: 1, type })
+				.getSelectWindControlLevelId({ windControlType: 2, type })
 				.then((res) => {
 					const { code } = res
 					if (code === 200) {
@@ -229,11 +230,12 @@ export default {
 			this.loading = true
 			let params = {
 				...this.queryData,
-				windType: 1
+				windType: 2
 			}
 			params = {
 				...this.getParams(params)
 			}
+			console.log(params)
 			this.$api
 				.selectWindControlRecord(params)
 				.then((res) => {
@@ -249,6 +251,7 @@ export default {
 		},
 		reset() {
 			this.queryData = {
+                objectInfo: undefined,
 				afterWindControlId: '',
 				beforeWindControlId: ''
 			}
