@@ -19,7 +19,7 @@
 					>
 						<template slot-scope="scope">
 							<span v-if="scope.row.vipSerialNum">
-								VIP{{ scope.row.vipSerialNum }}
+								{{ scope.row.vipSerialNum }}
 							</span>
 							<span v-else>-</span>
 						</template>
@@ -37,7 +37,7 @@
 									maxlength="10"
 									placeholder="请输入"
 									clearable
-									onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
+                                    onkeyup="value=value.replace(/[^\d]/g,'')"
 									style="width: 180px"
 									@blur="checkTransferValue($event)"
 								></el-input>
@@ -53,7 +53,7 @@
 									maxlength="5"
 									placeholder="请输入"
 									clearable
-									onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
+                                    onkeyup="value=value.replace(/[^\d]/g,'')"
 									style="width: 180px"
 								></el-input>
 							</span>
@@ -69,7 +69,7 @@
 									maxlength="10"
 									placeholder="请输入"
 									clearable
-									onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
+                                    onkeyup="value=value.replace(/[^\d]/g,'')"
 									style="width: 180px"
 								></el-input>
 							</span>
@@ -84,7 +84,7 @@
 									maxlength="10"
 									placeholder="请输入"
 									clearable
-									onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
+                                    onkeyup="value=value.replace(/[^\d]/g,'')"
 									style="width: 180px"
 								></el-input>
 							</span>
