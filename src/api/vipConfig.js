@@ -106,7 +106,14 @@ export function getBackwaterGameType(data) {
 		data
 	})
 }
-
+// 更新vip配置
+export function setMemberVipRebateUpdateRebateInfo(data) {
+	return request({
+		url: '/memberVip/rebate/updateRebateInfo',
+		method: 'post',
+		data
+	})
+}
 export default {
 	getMerchantGameGetMerchantGames,
 	getMemberVipRebateSelectAllInfo,
@@ -119,5 +126,6 @@ export default {
 	memberVipPromotionListAPI,
 	memberVipPromotionUpdateAPI,
 	memberVipMerchantGameAPI,
-	getBackwaterGameType
+	getBackwaterGameType,
+	setMemberVipRebateUpdateRebateInfo
 }
