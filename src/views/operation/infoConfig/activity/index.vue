@@ -80,13 +80,25 @@
             align="center"
             label="活动消息标题"
           ></el-table-column>
-          <el-table-column align="center" label="活动消息内容"> </el-table-column>
+          <el-table-column align="center" label="活动消息内容" prop="description">
+            <template slot-scope="scope">
+              <el-tooltip :content="scope.row.description" placement="top">
+                <p>{{ scope.row.description }}</p>
+              </el-tooltip>
+            </template>
+          </el-table-column>
           <el-table-column
             prop="gameName"
             align="center"
             label="发送对象"
           ></el-table-column>
-          <el-table-column align="center" label="发送对象详情"> </el-table-column>
+          <el-table-column align="center" label="发送对象详情" prop="description">
+            <template slot-scope="scope">
+              <div class="decoration" @click="lookGame(scope.row)">
+                {{ scope.row.description }}
+              </div>
+            </template>
+          </el-table-column>
           <el-table-column prop="relationOtherGameId" align="center" label="创建人">
           </el-table-column>
           <el-table-column
@@ -177,17 +189,16 @@
               v-model="dialogForm.logo"
               placeholder="默认选择全部"
               :popper-append-to-body="false"
-              @change="memberOrterminal"
+              @change="sendObj"
             >
               <el-option label="会员" value="0"></el-option>
               <el-option label="终端" value="1"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item
-            v-if="dialogForm.logo === '0'"
+            v-show="dialogForm.logo === '0'"
             label="会员账号:"
             class="tagheight"
-            prop="timeTab"
             :rules="[
               {
                 required: true,
@@ -203,9 +214,18 @@
               <el-option label="特定会员" value="1"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item v-else label="发送终端:" class="tagheight">
+          <el-form-item
+            v-show="dialogForm.logo === '1'"
+            label="发送终端:"
+            class="tagheight"
+            :rules="[
+              {
+                required: true,
+                message: '',
+              },
+            ]"
+          >
             <el-select
-              v-if="isshow"
               v-model="dialogForm.deviceType"
               placeholder="默认选择全部"
               multiple
@@ -243,6 +263,41 @@
           <el-button type="primary" @click="subAddOrEidt">保存</el-button>
         </div>
       </el-dialog>
+      <el-dialog
+        title="查看"
+        :visible.sync="lookVisible"
+        :destroy-on-close="true"
+        width="480px"
+        class="rempadding"
+      >
+        <el-table
+          v-loading="loading"
+          size="mini"
+          class="small-size-table"
+          :data="userList"
+          style="width: 100%; margin: 15px 0"
+          :header-cell-style="getRowClass"
+        >
+          <el-table-column type="index" align="center" label="序号"> </el-table-column>
+          <el-table-column
+            prop="accountTypeName"
+            align="center"
+            label="发送会员账号"
+          ></el-table-column>
+        </el-table>
+        <!-- 分页 -->
+        <el-pagination
+          :current-page.sync="page"
+          background
+          class="fenye"
+          layout="total, sizes,prev, pager, next, jumper"
+          :page-size="size"
+          :page-sizes="[5, 10, 15]"
+          :total="summary"
+          @current-change="handleCurrentChangeDialog"
+          @size-change="handleSizeChangeDialog"
+        ></el-pagination>
+      </el-dialog>
     </div>
   </div>
 </template>
@@ -256,8 +311,12 @@ export default {
     return {
       queryData: { obj: [] },
       dialogFormVisible: false,
-      dialogForm: { logo: '0', timeTab: '0' },
-      isshow: false
+      dialogForm: { logo: '0', deviceType: [], timeTab: '0' },
+      lookVisible: false,
+      userList: [],
+      page: 1,
+      size: 5,
+      summary: 0
     }
   },
   computed: {
@@ -301,8 +360,13 @@ export default {
       this.pageNum = 1
       this.loadData()
     },
-    withdraw(row) {
-      this.dialogFormVisible = true
+    sendObj(val) {
+      if (val === '1') {
+        this.dialogForm = { logo: '1', deviceType: [], timeTab: '0' }
+      } else {
+        this.dialogForm = { logo: '0', deviceType: [], timeTab: '0' }
+      }
+      console.log(val)
     },
     subAddOrEidt() {
       this.$refs.formSub.validate((valid) => {
@@ -311,13 +375,50 @@ export default {
         }
       })
     },
-    memberOrterminal(val) {
-      console.log(val)
-      this.isshow = true
-      this.dialogForm.deviceType = []
+    withdraw(row) {
+      this.$confirm(
+        `<strong>是否对未读用户撤回该条消息?</strong></br><span style='font-size:12px;color:#c1c1c1'>请谨慎操作</span>`,
+        '确认提示',
+        {
+          dangerouslyUseHTMLString: true,
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }
+      )
+        .then(() => {})
+        .catch(() => {})
     },
     clear() {
       this.dialogForm = { logo: '0', deviceType: [], timeTab: '0' }
+    },
+    // 弹框标签添加人数
+    getMemberMemberInfoByLabelId(val) {
+      const params = {}
+      params.id = val
+      params.pageNum = this.page
+      params.pageSize = this.size
+      this.$api.getMemberMemberInfoByLabelId(params).then((res) => {
+        if (res.code === 200) {
+          this.gameList = res.data.record
+          this.lookVisible = true
+        }
+      })
+    },
+    lookGame(val) {
+      this.id = val.id
+      this.lookVisible = true
+      // this.getMemberMemberInfoByLabelId(val.id)
+    },
+    handleCurrentChangeDialog(val) {
+      console.log(111, val)
+      this.page = val
+      // this.getMemberMemberInfoByLabelId(this.id)
+    },
+    handleSizeChangeDialog(val) {
+      console.log(222, val)
+      this.size = val
+      // this.getMemberMemberInfoByLabelId(this.id)
     },
     changeTableSort({ column, prop, order }) {
       this.pageNum = 1
@@ -353,6 +454,11 @@ export default {
   .el-select {
     width: 480px;
   }
+}
+.decoration {
+  // text-decoration: underline;
+  cursor: pointer;
+  color: #4b7902;
 }
 // /deep/ .rempadding .el-dialog__body {
 //   padding: 0;
