@@ -3,11 +3,11 @@
 		<div v-if="!showDetail" class="view-container dealer-container">
 			<div class="params">
 				<el-form ref="form" :inline="true" :model="queryData">
-					<el-form-item label="游戏ID:">
+					<el-form-item label="活动ID:">
 						<el-input
 							v-model="queryData.gameId"
 							clearable
-							:maxlength="5"
+							:maxlength="10"
 							oninput="value=value.replace(/[^\d]/g,'')"
 							size="medium"
 							style="width: 180px"
@@ -15,18 +15,18 @@
 							@keyup.enter.native="enterSearch"
 						></el-input>
 					</el-form-item>
-					<el-form-item label="游戏名称:">
+					<el-form-item label="活动名称:">
 						<el-input
 							v-model="queryData.gameName"
 							clearable
-							:maxlength="6"
+							:maxlength="20"
 							size="medium"
 							style="width: 180px; margin-right: 20px"
 							placeholder="请输入"
 							@keyup.enter.native="enterSearch"
 						></el-input>
 					</el-form-item>
-					<el-form-item label="显示状态:" class="tagheight">
+					<el-form-item label="活动页签:" class="tagheight">
 						<el-select
 							v-model="queryData.gameStatusList"
 							style="width: 300px"
@@ -42,7 +42,45 @@
 							></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="支持终端:" class="tagheight">
+					<el-form-item label="活动:" class="tagheight">
+						<el-select
+							v-model="queryData.gameStatusList"
+							style="width: 300px"
+							multiple
+							placeholder="默认选择全部"
+							:popper-append-to-body="false"
+						>
+							<el-option
+								v-for="item in gameStatusType"
+								:key="item.code"
+								:label="item.description"
+								:value="item.code"
+							></el-option>
+						</el-select>
+					</el-form-item>
+					<el-form-item label="活动主标题:">
+						<el-input
+							v-model="queryData.gameId"
+							clearable
+							:maxlength="5"
+							size="medium"
+							style="width: 180px"
+							placeholder="请输入"
+							@keyup.enter.native="enterSearch"
+						></el-input>
+					</el-form-item>
+					<el-form-item label="洗码倍率:">
+						<el-input
+							v-model="queryData.gameId"
+							clearable
+							:maxlength="4"
+							size="medium"
+							style="width: 180px"
+							placeholder="请输入"
+							@keyup.enter.native="enterSearch"
+						></el-input>
+					</el-form-item>
+					<el-form-item label="活动支持终端:" class="tagheight">
 						<el-select
 							v-model="queryData.supportTerminalList"
 							style="width: 300px"
@@ -58,71 +96,17 @@
 							></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="图标状态:" class="tagheight">
-						<el-select
-							v-model="queryData.gameIconList"
-							style="width: 300px"
-							multiple
-							placeholder="默认选择全部"
-							:popper-append-to-body="false"
-						>
-							<el-option
-								v-for="item in gameIconType"
-								:key="item.code"
-								:label="item.description"
-								:value="item.code"
-							></el-option>
-						</el-select>
+					<el-form-item label="最近操作人:">
+						<el-input
+							v-model="queryData.gameId"
+							clearable
+							:maxlength="15"
+							size="medium"
+							style="width: 180px"
+							placeholder="请输入"
+							@keyup.enter.native="enterSearch"
+						></el-input>
 					</el-form-item>
-					<el-form-item label="关联推荐游戏:" class="tagheight">
-						<el-select
-							v-model="queryData.relationOtherGameIdList"
-							style="width: 300px"
-							multiple
-							placeholder="默认选择全部"
-							:popper-append-to-body="false"
-						>
-							<el-option
-								v-for="item in gameManageList"
-								:key="item.gameId"
-								:label="item.gameName"
-								:value="item.gameId"
-							></el-option>
-						</el-select>
-					</el-form-item>
-					<el-form-item label="游戏平台:" class="tagheight">
-						<el-select
-							v-model="queryData.gamePlatformList"
-							style="width: 300px"
-							multiple
-							placeholder="默认选择全部"
-							:popper-append-to-body="false"
-						>
-							<el-option
-								v-for="item in gamePlantList"
-								:key="item.gameCode"
-								:label="item.gameName"
-								:value="item.gameCode"
-							></el-option>
-						</el-select>
-					</el-form-item>
-					<el-form-item label="游戏标签:" class="tagheight">
-						<el-select
-							v-model="queryData.gameLabelIdList"
-							style="width: 300px"
-							multiple
-							placeholder="默认选择全部"
-							:popper-append-to-body="false"
-						>
-							<el-option
-								v-for="item in labelList"
-								:key="item.gameLabelId"
-								:label="item.gameLabelName"
-								:value="item.gameLabelId"
-							></el-option>
-						</el-select>
-					</el-form-item>
-
 					<el-form-item>
 						<el-button
 							type="primary"
@@ -148,7 +132,16 @@
 							size="medium"
 							@click="openEdit()"
 						>
-							创建
+							新增
+						</el-button>
+						<el-button
+							type="warning"
+							icon="el-icon-sort"
+							:disabled="loading"
+							size="medium"
+							@click="sortLabel = true"
+						>
+							排序
 						</el-button>
 					</el-form-item>
 				</el-form>
@@ -167,7 +160,7 @@
 					<el-table-column
 						prop="gameId"
 						align="center"
-						label="游戏ID"
+						label="活动ID"
 						sortable="custom"
 						width="100px"
 					></el-table-column>
@@ -179,10 +172,10 @@
 					<el-table-column
 						prop="gameName"
 						align="center"
-						label="游戏名称"
+						label="活动名称"
 						width="120px"
 					></el-table-column>
-					<el-table-column align="center" label="显示状态" width="90px">
+					<el-table-column align="center" label="活动页签" width="90px">
 						<template slot-scope="scope">
 							<span
 								:class="
@@ -197,17 +190,17 @@
 							</span>
 						</template>
 					</el-table-column>
-					<el-table-column align="center" label="支持终端">
+					<el-table-column align="center" label="活动">
 						<template slot-scope="scope">
 							{{ supportTerminalFilter(scope.row.supportTerminal) }}
 						</template>
 					</el-table-column>
-					<el-table-column align="center" label="图标状态">
+					<el-table-column align="center" label="活动主标题">
 						<template slot-scope="scope">
 							{{ typeFilter(scope.row.gameIcon, 'gameIconType') }}
 						</template>
 					</el-table-column>
-					<el-table-column align="center" label="游戏图片" width="80px">
+					<el-table-column align="center" label="洗码倍率" width="80px">
 						<template slot-scope="scope">
 							<span class="text-link" @click="lookGame(scope.row.imageAddress)">
 								点击预览
@@ -217,12 +210,12 @@
 					<el-table-column
 						prop="description"
 						align="center"
-						label="游戏描述"
+						label="活动支持终端"
 					></el-table-column>
 					<el-table-column
 						prop="relationOtherGameId"
 						align="center"
-						label="关联推荐游戏"
+						label="活动支持账号类型"
 						width="160px"
 					>
 						<template slot-scope="scope">
@@ -232,7 +225,7 @@
 					<el-table-column
 						prop="relationGameModuleId"
 						align="center"
-						label="关联游戏模块"
+						label="活动时效"
 						width="160px"
 					>
 						<template slot-scope="scope">
@@ -242,7 +235,7 @@
 					<el-table-column
 						prop="gameLabelName"
 						align="center"
-						label="游戏标签"
+						label="活动图时间"
 						width="100px"
 					>
 						<template slot-scope="scope">
@@ -254,26 +247,47 @@
 					<el-table-column
 						prop="remark"
 						align="center"
-						label="备注信息"
+						label="活动时间"
 						width="160px"
 					></el-table-column>
 					<el-table-column
 						prop="createdBy"
 						align="center"
-						label="创建人"
+						label="状态"
 					></el-table-column>
 					<el-table-column
 						prop="createdAt"
 						align="center"
-						label="创建时间"
+						label="入口图"
 						sortable="custom"
 						width="160px"
 					></el-table-column>
 					<el-table-column
 						prop="updatedBy"
 						align="center"
-						label="最近操作人"
+						label="分享图"
 						width="120px"
+					></el-table-column>
+					<el-table-column
+						prop="updatedAt"
+						align="center"
+						label="创建人"
+						sortable="custom"
+						width="160px"
+					></el-table-column>
+					<el-table-column
+						prop="updatedAt"
+						align="center"
+						label="创建时间"
+						sortable="custom"
+						width="160px"
+					></el-table-column>
+					<el-table-column
+						prop="updatedAt"
+						align="center"
+						label="最近操作人"
+						sortable="custom"
+						width="160px"
 					></el-table-column>
 					<el-table-column
 						prop="updatedAt"
@@ -290,7 +304,6 @@
 					>
 						<template slot-scope="scope">
 							<el-button
-								v-if="Number(scope.row.gameStatus) !== 0"
 								:disabled="loading"
 								type="danger"
 								size="medium"
@@ -300,26 +313,6 @@
 								禁用
 							</el-button>
 							<el-button
-								v-if="Number(scope.row.gameStatus) !== 1"
-								:disabled="loading"
-								type="success"
-								size="medium"
-								class="noicon"
-								@click="changeStatus(scope.row.id, 1)"
-							>
-								开启
-							</el-button>
-							<el-button
-								v-if="Number(scope.row.gameStatus) !== 2"
-								:disabled="loading"
-								type="warning"
-								size="medium"
-								class="noicon"
-								@click="changeStatus(scope.row.id, 2)"
-							>
-								维护
-							</el-button>
-							<el-button
 								type="primary"
 								icon="el-icon-edit"
 								:disabled="loading || Number(scope.row.gameStatus) === 1"
@@ -327,6 +320,15 @@
 								@click="openEdit(scope.row)"
 							>
 								编辑信息
+							</el-button>
+							<el-button
+								:disabled="loading"
+								type="danger"
+								size="medium"
+								class="noicon"
+								@click="changeStatus(scope.row.id, 1)"
+							>
+								删除
 							</el-button>
 						</template>
 					</el-table-column>
@@ -347,7 +349,24 @@
 			<div v-if="dialogGameVisible" class="imgCenter" @click="closeImage">
 				<img :src="bigImage" />
 			</div>
+			<el-dialog
+				title="轮播图区域排序"
+				:visible.sync="sortLabel"
+				width="970px"
+				:destroy-on-close="true"
+			>
+				<draggable v-model="options" @start="onStart" @end="onEnd">
+					<transition-group>
+						<div v-for="tiem in options" :key="tiem.value" class="reach">
+							{{ tiem.label }}
+						</div>
+					</transition-group>
+				</draggable>
+				<el-button @click="sortLabel = false">取消</el-button>
+				<el-button type="primary" @click="subAddOrEidt">确定</el-button>
+			</el-dialog>
 		</div>
+
 		<gameManagementEdit
 			v-else
 			:rowData="rowData"
@@ -367,9 +386,10 @@ import list from '@/mixins/list'
 import gameManagementEdit from './components/gameManagementEdit'
 import dayjs from 'dayjs'
 import { routerNames } from '@/utils/consts'
+import draggable from 'vuedraggable'
 export default {
 	name: routerNames.gameManagement,
-	components: { gameManagementEdit },
+	components: { gameManagementEdit, draggable},
 	mixins: [list],
 	data() {
 		return {
@@ -384,6 +404,19 @@ export default {
 				supportTerminalList: [],
 				gameStatusList: []
 			},
+			options: [
+				{ value: '1', label: '1区' },
+				{ value: '2', label: '2区' },
+				{ value: '3', label: '3区' },
+				{ value: '4', label: '4区' },
+				{ value: '5', label: '5区' },
+				{ value: '6', label: '6区' },
+				{ value: '7', label: '7区' },
+				{ value: '8', label: '8区' },
+				{ value: '9', label: '9区' },
+				{ value: '10', label: '10区' }
+			],
+			sortLabel: false,
 			rowData: {},
 			showDetail: false,
 			labelList: [],
@@ -414,6 +447,47 @@ export default {
 		this.getList()
 	},
 	methods: {
+		// 开始拖拽事件
+		onStart() {
+			this.drag = true
+		},
+		// 拖拽结束事件
+		onEnd() {
+			this.drag = false
+		},
+		subAddOrEidt() {
+			console.log(this.title)
+			const data = {}
+			data.description = this.dialogForm.description
+			data.memberLabelName = this.dialogForm.memberLabelName
+			data.mregionAging = this.dialogForm.mregionAging
+
+			this.$refs.formSub.validate((valid) => {
+				if (valid) {
+					if (this.title === '新增') {
+						console.log('新增')
+
+						this.$api.setMemberAddOrEditMemberLabel(data).then((res) => {
+							if (res.code === 200) {
+								this.$message.success('新增成功')
+								this.pageNum = 1
+								this.loadData()
+							}
+							this.dialogFormVisible = false
+						})
+					} else {
+						data.id = this.dialogForm.id
+						this.$api.setMemberAddOrEditMemberLabel(data).then((res) => {
+							if (res.code === 200) {
+								this.$message.success('修改成功')
+								this.loadData()
+							}
+							this.dialogFormVisible = false
+						})
+					}
+				}
+			})
+		},
 		loadData() {
 			const params = {
 				...this.getParams(this.queryData)
@@ -655,6 +729,17 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.reach {
+	padding: 6px;
+	background-color: #1abc9c;
+	border: solid 1px #eee;
+	margin-bottom: 10px;
+	cursor: move;
+	line-height: 40px;
+	width: 110px;
+	display: inline-block;
+	text-align: center;
+}
 /deep/.el-dialog__header {
 	text-align: center;
 	color: #909399;
