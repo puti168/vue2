@@ -37,7 +37,6 @@
 									placeholder="请输入"
 									clearable
 									maxlength="10"
-									oninput="value=value.replace(/[\u4E00-\u9FA5]/g ,'')"
 									style="width: 180px"
 								></el-input>
 							</span>
