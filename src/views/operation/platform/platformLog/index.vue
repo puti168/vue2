@@ -18,7 +18,7 @@
 					></el-date-picker>
 				</el-form-item>
 
-				<el-form-item label="操作页面:">
+				<el-form-item label="场馆名称:">
 					<el-select
 						v-model="queryData.accountType"
 						style="width: 300px"
@@ -35,34 +35,6 @@
 					</el-select>
 				</el-form-item>
 
-				<el-form-item label="显示终端:">
-					<el-select
-						v-model="queryData.applyType"
-						style="width: 300px"
-						multiple
-						placeholder="默认选择全部"
-						:popper-append-to-body="false"
-					>
-						<el-option label="全部" value></el-option>
-						<el-option
-							v-for="item in applyType"
-							:key="item.code"
-							:label="item.description"
-							:value="item.code"
-						></el-option>
-					</el-select>
-				</el-form-item>
-					<el-form-item label="名称:">
-					<el-input
-						v-model="queryData.userName"
-						clearable
-						size="medium"
-						:maxlength="20"
-						style="width: 180px"
-						placeholder="请输入"
-						@keyup.enter.native="enterSearch"
-					></el-input>
-				</el-form-item>
 				<el-form-item label="变更类型:">
 					<el-select
 						v-model="queryData.applyType"
@@ -125,17 +97,7 @@
 					@sort-change="changeTableSort"
 				>
 
-				<el-table-column prop="applyType" align="center" label="操作页面">
-						<template slot-scope="scope">
-							<p>{{ typeFilter(scope.row.applyType, 'applyType') }}</p>
-						</template>
-					</el-table-column>
-					<el-table-column prop="applyType" align="center" label="显示终端">
-						<template slot-scope="scope">
-							<p>{{ typeFilter(scope.row.applyType, 'applyType') }}</p>
-						</template>
-					</el-table-column>
-					<el-table-column prop="applyType" align="center" label="名称">
+				<el-table-column prop="applyType" align="center" label="场馆名称">
 						<template slot-scope="scope">
 							<p>{{ typeFilter(scope.row.applyType, 'applyType') }}</p>
 						</template>

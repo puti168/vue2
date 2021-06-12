@@ -83,28 +83,18 @@
           ></el-table-column>
           <el-table-column prop="beforeModify" align="center" label="变更前">
             <template slot-scope="scope">
-              <span v-if="scope.row.applyType === '1'">
-                {{ typeFilter(scope.row.beforeModify, "accountStatusType") }}
-              </span>
-              <span v-else-if="scope.row.applyType === '5'">
-                {{ typeFilter(scope.row.beforeModify, "entrAuthorityType") }}
-              </span>
-              <span v-else>
-                {{ scope.row.beforeModify }}
-              </span>
+              <span v-if="scope.row.beforeModify !== null">{{
+                scope.row.beforeModify
+              }}</span>
+              <span v-else>-</span>
             </template>
           </el-table-column>
           <el-table-column prop="afterModify" align="center" label="变更后">
             <template slot-scope="scope">
-              <span v-if="scope.row.applyType === '1'">
-                {{ typeFilter(scope.row.afterModify, "accountStatusType") }}
-              </span>
-              <span v-else-if="scope.row.applyType === '5'">
-                {{ typeFilter(scope.row.afterModify, "entrAuthorityType") }}
-              </span>
-              <span v-else>
-                {{ scope.row.afterModify }}
-              </span>
+              <span v-if="scope.row.afterModify !== null">{{
+                scope.row.afterModify
+              }}</span>
+              <span v-else>-</span>
             </template>
           </el-table-column>
           <el-table-column prop="userName" align="center" label="会员账号">
@@ -121,13 +111,28 @@
             </template>
           </el-table-column>
           <el-table-column prop="windControlName" align="center" label="风控层级">
-            <!-- <template slot-scope="scope">
-              {{ typeFilter(scope.row.accountType, "accountType") }}
-            </template> -->
+            <template slot-scope="scope">
+              <span v-if="scope.row.windControlName !== null">{{
+                scope.row.windControlName
+              }}</span>
+              <span v-else>-</span>
+            </template>
           </el-table-column>
           <el-table-column prop="accountStatus" align="center" label="账号状态">
             <template slot-scope="scope">
-              {{ typeFilter(scope.row.accountStatus, "accountType") }}
+              <span v-if="scope.row.accountStatus === 1" class="normalRgba">{{
+                typeFilter(scope.row.accountStatus, "accountStatusType")
+              }}</span>
+              <span v-else-if="scope.row.accountStatus === 2" class="disableRgba">{{
+                typeFilter(scope.row.accountStatus, "accountStatusType")
+              }}</span>
+              <span v-else-if="scope.row.accountStatus === 3" class="lockingRgba">{{
+                typeFilter(scope.row.accountStatus, "accountStatusType")
+              }}</span>
+              <span v-else-if="scope.row.accountStatus === 4" class="deleteRgba">{{
+                typeFilter(scope.row.accountStatus, "accountStatusType")
+              }}</span>
+              <span v-else>-</span>
             </template>
           </el-table-column>
           <el-table-column
@@ -156,12 +161,10 @@
 <script>
 import list from '@/mixins/list'
 import dayjs from 'dayjs'
-import { routerNames } from '@/utils/consts'
 const startTime = dayjs().startOf('day').valueOf()
 const endTime = dayjs().endOf('day').valueOf()
 
 export default {
-  name: routerNames.memberLabelChangeRecord,
   components: {},
   mixins: [list],
   data() {

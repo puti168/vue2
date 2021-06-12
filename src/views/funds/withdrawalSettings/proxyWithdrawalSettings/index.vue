@@ -3,7 +3,7 @@
 		<div class="view-container dealer-container">
 			<div class="head flex-h-end">
 				<template>
-					<el-button type="primary" @click="dialogVisible = true">
+					<el-button type="primary" class="pattern" @click="dialogVisible = true">
 						新增会员提款设置
 					</el-button>
 					<el-dialog :visible.sync="dialogVisible" width="970px">
@@ -604,6 +604,10 @@ export default {
 		font-size: 18px;
 		top: 60px;
 	}
+}
+.pattern{
+	padding-left: 8px;
+	padding-right: 8px;
 }
 .configure {
 	width: 420px;

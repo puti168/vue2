@@ -73,14 +73,16 @@
             align="center"
             label="标签名称"
           ></el-table-column>
-          <el-table-column
-            prop="description"
-            align="center"
-            label="标签描述"
-          ></el-table-column>
+          <el-table-column prop="description" align="center" label="标签描述">
+            <template slot-scope="scope">
+              <span v-if="scope.row.description !== ''">{{ scope.row.description }}</span>
+              <span v-else>-</span>
+            </template>
+          </el-table-column>
           <el-table-column prop="peopleNum" align="center" label="标签人数">
             <template slot-scope="scope">
-              <div class="blueColor decoration" @click="lookGame(scope.row)">
+              <span v-if="scope.row.peopleNum === null">-</span>
+              <div v-else class="blueColor decoration" @click="lookGame(scope.row)">
                 {{ scope.row.peopleNum }}
               </div>
             </template>
