@@ -416,7 +416,7 @@ export default {
 			total: 0,
 			childDataList: [],
 			childTotal: 0,
-			pageChildNum: 0,
+			pageChildNum: 1,
 			pageChildSize: 10,
 			currentGameId: undefined,
 			loadingT: false,
