@@ -397,8 +397,6 @@ export default {
 				status: '1',
 				createdBy: undefined,
 				updatedBy: undefined
-				// windControlType: undefined,
-				// windControlLevelName: ['all'],
 			},
 			tableData: [],
 			dialogFormVisible: false,
@@ -411,7 +409,6 @@ export default {
 			},
 			total: 0,
 			title: '',
-			vipDict: [],
 			imageAddress: null,
 			dialogPictureVisible: false
 		}
@@ -433,9 +430,6 @@ export default {
 				{ description: '已开启', code: '2' },
 				{ description: '禁用', code: '3' }
 			]
-		},
-		windLevelTypeArr() {
-			return this.globalDics.windLevelType
 		},
 		rules() {
 			const startPageName = [
@@ -478,14 +472,6 @@ export default {
 			// 	(item) => item === 'all'
 			// )
 			// params.windControlLevelName.splice(idx, 1)
-			params.windControlLevelName =
-				params.windControlLevelName &&
-				params.windControlLevelName.length &&
-				params.windControlLevelName[0] !== 'all'
-					? params.windControlLevelName
-					: undefined
-			params.createdBy = params.createdBy ? params.createdBy : undefined
-			params.updatedBy = params.updatedBy ? params.updatedBy : undefined
 			this.$api
 				.riskRankListAPI(params)
 				.then((res) => {
@@ -550,14 +536,15 @@ export default {
 			this.$refs['form'].resetFields()
 			this.title = '新增'
 			this.dialogForm = {
-				windControlType: undefined,
-				windControlLevelName: undefined,
-				info: undefined
+                supportTerminal: undefined,
+                startPageName: undefined,
+                preLoad: undefined,
+                imageAddress: null,
+                description: undefined
 			}
 		},
 		edit(val) {
 			this.title = '编辑'
-			val.windControlType = val.windControlType + ''
 			this.dialogForm = { ...val }
 			this.dialogFormVisible = true
 		},
@@ -634,9 +621,7 @@ export default {
 			})
 		},
 		checkValue(e) {
-			const { value } = e.target
-			this.queryData.gameLabelId = value
-			console.log(value)
+			// const { value } = e.target
 		},
 		_changeTableSort({ column, prop, order }) {
 			if (prop === 'createdAt') {
