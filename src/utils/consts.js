@@ -55,7 +55,9 @@ export const routerNames = {
 	agentDeduction: 'agentDeduction',
 	memberWithdrawalReviewRecord: 'MemberWithdrawalReviewRecord',
 	memberTopUpReviewRecord: 'memberTopUpReviewRecord',
-	agentWithdrawalReviewRecord: 'agentWithdrawalReviewRecord'
+	agentWithdrawalReviewRecord: 'agentWithdrawalReviewRecord',
+	clientCommon: 'clientCommon',
+	platformRate: 'platformRate'
 }
 const month = dayjs().month()
 const year = dayjs().year()

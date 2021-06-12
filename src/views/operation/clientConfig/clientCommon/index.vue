@@ -256,11 +256,6 @@
 					</el-col>
 				</el-row>
 			</div>
-			<!--			<component-->
-			<!--				:is="content"-->
-			<!--				v-if="!!Object.keys(showInfoData).length"-->
-			<!--				:showInfoData="showInfoData"-->
-			<!--			></component>-->
 		</div>
 	</div>
 </template>
@@ -271,7 +266,7 @@ import list from '@/mixins/list'
 // import { notSpecial2, isHaveEmoji } from '@/utils/validate'
 
 export default {
-	name: routerNames.editRisk,
+	name: routerNames.clientCommon,
 	mixins: [list],
 	data() {
 		return {
@@ -289,7 +284,6 @@ export default {
 				IdAddress: undefined,
 				remark: undefined
 			},
-			vipDict: [],
 			showInfoData: {},
 			current: '',
 			tipsShow: null
