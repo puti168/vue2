@@ -73,32 +73,32 @@
 				<el-row class="info-content-row">
 					<el-col :span="6">
 						<p>
-							<span>会员客服地址：</span>
+							<span>场馆：</span>
 							<span>
 								{{ showInfoData.deviceNo ? showInfoData.deviceNo : '-' }}
 							</span>
 						</p>
 					</el-col>
 					<el-col :span="6">
-						<span>备注：</span>
+						<span>费率：</span>
 						<span>
 							{{ showInfoData.remark ? showInfoData.remark : '-' }}
 						</span>
 					</el-col>
 					<el-col :span="6">
-						<span>最近操作人：</span>
+						<span>备注：</span>
 						<span>
 							{{ showInfoData.updateBy ? showInfoData.updateBy : '-' }}
 						</span>
 					</el-col>
 					<el-col :span="6">
-						<span>最近操作时间：</span>
+						<span>最近操作人：</span>
 						<span>
 							{{ showInfoData.updateAt ? showInfoData.updateAt : '-' }}
 						</span>
 					</el-col>
 				</el-row>
-                <el-row>
+                <el-row class="info-content-row">
                     <el-col :span="8">最近操作时间：</el-col>
                     <el-col :span="5" />
                     <el-col :span="5" />
