@@ -1,9 +1,9 @@
 <template>
 	<div class="review-content">
 		<div class="head">
-			<span class="title">{{ editType === 'edit' ? '编辑' : '创建' }}</span>
+			<span class="title">新增/编辑</span>
 			<div class="right-btn">
-				<el-button plain @click="goBack">取消</el-button>
+				<el-button plain @click="goBack">返回</el-button>
 				<el-button type="success" @click="confirm()">保存</el-button>
 			</div>
 		</div>
@@ -12,18 +12,83 @@
 				<el-form ref="form" :model="form" label-width="auto" :rules="rules">
 					<el-row>
 						<el-col :span="12">
-							<el-form-item label="游戏名称:" prop="gameName">
+							<el-form-item label="活动名称:" prop="gameName">
 								<el-input
 									v-model="form.gameName"
 									size="medium"
-									:maxlength="6"
+									:maxlength="20"
 									clearable
 									style="width: 365px"
 								></el-input>
 							</el-form-item>
 						</el-col>
 						<el-col :span="12">
-							<el-form-item label="图标状态:">
+							<el-form-item label="活动页签:" class="tagheight">
+								<el-select
+									v-model="form.supportTerminalList"
+									style="width: 300px"
+									multiple
+									placeholder="默认选择全部"
+									:popper-append-to-body="false"
+								>
+									<el-option
+										v-for="item in betDeviceType"
+										:key="item.code"
+										:label="item.description"
+										:value="item.code"
+									></el-option>
+								</el-select>
+							</el-form-item>
+						</el-col>
+						<el-col :span="12">
+							<el-form-item label="活动主标题:" prop="accessInfo">
+								<el-input
+									v-model="form.accessInfo"
+									size="medium"
+									:maxlength="20"
+									clearable
+									style="width: 365px"
+								></el-input>
+							</el-form-item>
+						</el-col>
+						<el-col :span="12">
+							<el-form-item label="活动支持终端:" class="tagheight">
+								<el-select
+									v-model="form.supportTerminalList"
+									style="width: 300px"
+									multiple
+									placeholder="默认选择全部"
+									:popper-append-to-body="false"
+								>
+									<el-option
+										v-for="item in betDeviceType"
+										:key="item.code"
+										:label="item.description"
+										:value="item.code"
+									></el-option>
+								</el-select>
+							</el-form-item>
+						</el-col>
+						<el-col :span="12">
+							<el-form-item label="活动生效的账户类型:" class="tagheight">
+								<el-select
+									v-model="form.supportTerminalList"
+									style="width: 300px"
+									multiple
+									placeholder="默认选择全部"
+									:popper-append-to-body="false"
+								>
+									<el-option
+										v-for="item in betDeviceType"
+										:key="item.code"
+										:label="item.description"
+										:value="item.code"
+									></el-option>
+								</el-select>
+							</el-form-item>
+						</el-col>
+						<el-col :span="12">
+							<el-form-item label="活动时效:">
 								<el-select
 									v-model="form.gameIcon"
 									size="medium"
@@ -41,17 +106,140 @@
 							</el-form-item>
 						</el-col>
 						<el-col :span="12">
-							<el-form-item label="支持终端:" prop="supportTerminal">
+							<el-form-item label="活动图上架时间:">
+								<el-date-picker
+									v-model="time"
+									size="medium"
+									:picker-options="pickerOptions"
+									format="yyyy-MM-dd HH:mm:ss"
+									type="datetimerange"
+									range-separator="-"
+									start-placeholder="开始日期"
+									end-placeholder="结束日期"
+									align="right"
+									:default-time="defaultTime"
+								></el-date-picker>
+							</el-form-item>
+						</el-col>
+						<el-col :span="12">
+							<el-form-item label="活动图下架时间:">
+								<el-date-picker
+									v-model="time"
+									size="medium"
+									:picker-options="pickerOptions"
+									format="yyyy-MM-dd HH:mm:ss"
+									type="datetimerange"
+									range-separator="-"
+									start-placeholder="开始日期"
+									end-placeholder="结束日期"
+									align="right"
+									:default-time="defaultTime"
+								></el-date-picker>
+							</el-form-item>
+						</el-col>
+						<el-col :span="12">
+							<el-form-item label="活动开始时间:">
+								<el-date-picker
+									v-model="time"
+									size="medium"
+									:picker-options="pickerOptions"
+									format="yyyy-MM-dd HH:mm:ss"
+									type="datetimerange"
+									range-separator="-"
+									start-placeholder="开始日期"
+									end-placeholder="结束日期"
+									align="right"
+									:default-time="defaultTime"
+								></el-date-picker>
+							</el-form-item>
+						</el-col>
+						<el-col :span="12">
+							<el-form-item label="活动结束时间:">
+								<el-date-picker
+									v-model="time"
+									size="medium"
+									:picker-options="pickerOptions"
+									format="yyyy-MM-dd HH:mm:ss"
+									type="datetimerange"
+									range-separator="-"
+									start-placeholder="开始日期"
+									end-placeholder="结束日期"
+									align="right"
+									:default-time="defaultTime"
+								></el-date-picker>
+							</el-form-item>
+						</el-col>
+						<el-col :span="12">
+							<el-form-item label="活动详情跳转地址:">
+								<el-input
+									v-model="form.description"
+									size="medium"
+									:maxlength="2038"
+									clearable
+									style="width: 365px"
+								></el-input>
+							</el-form-item>
+						</el-col>
+						<el-col :span="12">
+							<el-form-item label="分享链接:">
+								<el-input
+									v-model="form.description"
+									size="medium"
+									:maxlength="2038"
+									clearable
+									style="width: 365px"
+								></el-input>
+							</el-form-item>
+						</el-col>
+						<el-col :span="24">
+							<el-form-item label="活动洗码倍率:">
+								<el-input
+									v-model="form.description"
+									size="medium"
+									:maxlength="4"
+									clearable
+									style="width: 365px"
+								></el-input>
+							</el-form-item>
+						</el-col>
+						<el-col :span="12">
+							<el-form-item label="入口图片上传" prop="image">
+								<Upload
+									:nowImage="nowImage"
+									@uploadSuccess="uploadSuccess"
+								></Upload>
+								<p class="imgTip">
+									请上传图片！图片格式仅支持png,图片尺寸： ？？
+									图片大小不超过？？
+								</p>
+							</el-form-item>
+						</el-col>
+						<el-col :span="12">
+							<el-form-item label="分享图片上传" prop="image">
+								<Upload
+									:nowImage="nowImage"
+									@uploadSuccess="uploadSuccess"
+								></Upload>
+								<p class="imgTip">
+									请上传图片！图片格式仅支持png,图片尺寸： ？？
+									图片大小不超过？？
+								</p>
+							</el-form-item>
+						</el-col>
+						<el-col :span="24">
+						<el-divider></el-divider>
+						</el-col>
+						<el-col :span="12">
+							<el-form-item label="场馆名称:">
 								<el-select
-									v-model="form.supportTerminal"
+									v-model="form.gameIcon"
 									size="medium"
 									placeholder="请选择"
-									multiple
 									clearable
-									style="width: 300px"
+									style="width: 365px"
 								>
 									<el-option
-										v-for="item in betDeviceType"
+										v-for="item in gameIconType"
 										:key="item.code"
 										:label="item.description"
 										:value="item.code"
@@ -60,174 +248,55 @@
 							</el-form-item>
 						</el-col>
 						<el-col :span="12">
-							<el-form-item label="备注信息:">
-								<el-input
-									v-model="form.remark"
-									size="medium"
-									:maxlength="50"
-									clearable
-									style="width: 365px"
-								></el-input>
-							</el-form-item>
-						</el-col>
-						<el-col :span="12">
-							<el-form-item label="接入参数:" prop="accessInfo">
+							<el-form-item label="充值金额大于等于:" prop="accessInfo">
 								<el-input
 									v-model="form.accessInfo"
 									size="medium"
-									:maxlength="100"
+									:maxlength="10"
 									clearable
 									style="width: 365px"
 								></el-input>
 							</el-form-item>
 						</el-col>
 						<el-col :span="12">
-							<el-form-item label="游戏描述:">
+							<el-form-item label="优惠方式:">
+								<el-select
+									v-model="form.gameIcon"
+									size="medium"
+									placeholder="请选择"
+									clearable
+									style="width: 365px"
+								>
+									<el-option
+										v-for="item in gameIconType"
+										:key="item.code"
+										:label="item.description"
+										:value="item.code"
+									></el-option>
+								</el-select>
+							</el-form-item>
+						</el-col>
+						<el-col :span="12">
+							<el-form-item label="优惠百分比:" prop="accessInfo">
 								<el-input
-									v-model="form.description"
+									v-model="form.accessInfo"
 									size="medium"
-									:maxlength="100"
+									:maxlength="10"
 									clearable
 									style="width: 365px"
 								></el-input>
 							</el-form-item>
-						</el-col>
-						<el-col :span="12">
-							<el-form-item label="关联推荐游戏:" prop="relationOtherGameId">
-								<el-select
-									v-model="form.relationOtherGameId"
+							<el-form-item label="赠送金额:" prop="accessInfo">
+								<el-input
+									v-model="form.accessInfo"
 									size="medium"
-									placeholder="默认选择全部"
-									multiple
-									clearable
-									style="width: 300px"
-								>
-									<el-option
-										v-for="item in gameManageList"
-										:key="item.gameId"
-										:label="item.gameName"
-										:value="change(item.gameId)"
-									></el-option>
-								</el-select>
-							</el-form-item>
-						</el-col>
-						<el-col :span="12">
-							<el-form-item label="关联游戏模块:" prop="relationGameModuleId">
-								<el-select
-									v-model="form.relationGameModuleId"
-									size="medium"
-									placeholder="请选择"
-									multiple
-									clearable
-									style="width: 300px"
-								>
-									<el-option
-										v-for="item in gameModuleNameList"
-										:key="item.moduleId"
-										:label="item.moduleName"
-										:value="change(item.moduleId)"
-									></el-option>
-								</el-select>
-							</el-form-item>
-						</el-col>
-						<el-col :span="12">
-							<el-form-item label="游戏返奖率:" prop="gameRebateRate">
-								<el-input-number
-									v-model.number="form.gameRebateRate"
-									size="medium"
-									maxlength="5"
+									:maxlength="10"
 									clearable
 									style="width: 365px"
-									placeholder="支持小数点后1位，最大为99.9，最小为1"
-									:precision="1"
-									autocomplete="off"
-								></el-input-number>
-							</el-form-item>
-						</el-col>
-						<el-col :span="12">
-							<el-form-item label="游戏平台:" prop="gamePlatform">
-								<el-select
-									v-model="form.gamePlatform"
-									size="medium"
-									placeholder="请选择"
-									clearable
-									style="width: 365px"
-								>
-									<el-option
-										v-for="item in gamePlantList"
-										:key="item.gameCode"
-										:label="item.gameName"
-										:value="item.gameCode"
-									></el-option>
-								</el-select>
-							</el-form-item>
-						</el-col>
-						<el-col :span="12">
-							<el-form-item label="1级标签:">
-								<el-select
-									v-model="gameLabelParam1"
-									size="medium"
-									placeholder="请选择"
-									clearable
-									style="width: 365px"
-								>
-									<el-option
-										v-for="item in labelList"
-										:key="item.gameLabelId"
-										:label="item.gameLabelName"
-										:value="item.gameLabelId"
-									></el-option>
-								</el-select>
-							</el-form-item>
-						</el-col>
-						<el-col :span="12">
-							<el-form-item label="2级标签:">
-								<el-select
-									v-model="gameLabelParam2"
-									size="medium"
-									placeholder="请选择"
-									clearable
-									style="width: 365px"
-								>
-									<el-option
-										v-for="item in labelList"
-										:key="item.gameLabelId"
-										:label="item.gameLabelName"
-										:value="item.gameLabelId"
-									></el-option>
-								</el-select>
-							</el-form-item>
-						</el-col>
-						<el-col :span="12">
-							<el-form-item label="3级标签:">
-								<el-select
-									v-model="gameLabelParam3"
-									size="medium"
-									placeholder="请选择"
-									clearable
-									style="width: 365px"
-								>
-									<el-option
-										v-for="item in labelList"
-										:key="item.gameLabelId"
-										:label="item.gameLabelName"
-										:value="item.gameLabelId"
-									></el-option>
-								</el-select>
+								></el-input>
 							</el-form-item>
 						</el-col>
 					</el-row>
-					<el-divider></el-divider>
-					<span class="img-title">客户端图片上传</span>
-					<el-form-item label="图片上传" prop="image">
-						<Upload
-							:nowImage="nowImage"
-							@uploadSuccess="uploadSuccess"
-						></Upload>
-						<p class="imgTip">
-							请上传图片！图片格式仅支持png,图片尺寸： ？？ 图片大小不超过？？
-						</p>
-					</el-form-item>
 				</el-form>
 			</div>
 		</div>
@@ -237,8 +306,15 @@
 <script>
 import list from '@/mixins/list'
 import { routerNames } from '@/utils/consts'
+import dayjs from 'dayjs'
 import Upload from '@/components/Upload'
 import { getToken } from '@/utils/auth'
+const end = dayjs()
+	.endOf('day')
+	.valueOf()
+const start = dayjs()
+	.startOf('day')
+	.valueOf()
 export default {
 	name: routerNames.gameManagementEdit,
 	components: { Upload },
@@ -287,6 +363,7 @@ export default {
 				description: '',
 				remark: ''
 			},
+			time: [start, end],
 			datalist: {},
 			nowImage: '',
 			uploadUrl: process.env.VUE_APP_BASE_API + '/gameManager/imageUpload',
@@ -427,7 +504,10 @@ export default {
 				})
 				return
 			}
-			if (this.form.relationGameModuleId.length !== 2 && this.form.relationGameModuleId.length !== 1) {
+			if (
+				this.form.relationGameModuleId.length !== 2 &&
+				this.form.relationGameModuleId.length !== 1
+			) {
 				this.$message({
 					type: 'error',
 					message: '关联游戏模块只能选择1-2个!'
@@ -450,9 +530,9 @@ export default {
 							}
 						})
 					})
-							this.form.label1 = {}
-							this.form.label2 = {}
-							this.form.label3 = {}
+					this.form.label1 = {}
+					this.form.label2 = {}
+					this.form.label3 = {}
 					this.labelList.forEach((item) => {
 						if (item.gameLabelId === Number(this.gameLabelParam1)) {
 							this.form.label1 = {
