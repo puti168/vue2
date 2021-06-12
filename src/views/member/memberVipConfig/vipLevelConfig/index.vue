@@ -37,7 +37,6 @@
 									placeholder="请输入"
 									clearable
 									maxlength="10"
-									oninput="value=value.replace(/[\u4E00-\u9FA5]/g ,'')"
 									style="width: 180px"
 								></el-input>
 							</span>
@@ -54,7 +53,7 @@
 								<el-input
 									v-model.number="scope.row.totalDeposit"
 									size="medium"
-									onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
+									onkeyup="value=value.replace(/[^\d]/g,'')"
 									maxlength="10"
 									placeholder="请输入"
 									clearable
@@ -84,7 +83,7 @@
 									v-model="scope.row.tatalValidWater"
 									size="medium"
 									maxlength="10"
-									onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
+									onkeyup="value=value.replace(/[^\d]/g,'')"
 									placeholder="请输入"
 									clearable
 									:precision="0"
@@ -105,7 +104,7 @@
 									v-model="scope.row.relegationWater"
 									size="medium"
 									maxlength="10"
-									onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
+									onkeyup="value=value.replace(/[^\d]/g,'')"
 									placeholder="请输入"
 									clearable
 									style="width: 180px"
@@ -125,7 +124,7 @@
 									v-model="scope.row.relegationValidPeriod"
 									size="medium"
 									maxlength="10"
-									onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
+									onkeyup="value=value.replace(/[^\d]/g,'')"
 									placeholder="请输入"
 									clearable
 									style="width: 180px"

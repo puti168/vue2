@@ -152,12 +152,11 @@
 <script>
 import list from '@/mixins/list'
 import dayjs from 'dayjs'
-import { routerNames } from '@/utils/consts'
 const startTime = dayjs().startOf('day').valueOf()
 const endTime = dayjs().endOf('day').valueOf()
 
 export default {
-  name: routerNames.vipOperationRecord,
+
   components: {},
   mixins: [list],
   data() {
