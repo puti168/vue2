@@ -367,7 +367,7 @@
 			</el-dialog>
 		</div>
 
-		<gameManagementEdit
+		<detail
 			v-else
 			:rowData="rowData"
 			:editType="editType"
@@ -377,19 +377,19 @@
 			:gamePlantList="gamePlantList"
 			@closeEdit="closeEdit"
 			@refresh="search"
-		></gameManagementEdit>
+		></detail>
 	</div>
 </template>
 
 <script>
 import list from '@/mixins/list'
-import gameManagementEdit from './components/gameManagementEdit'
+import detail from './components/detail'
 import dayjs from 'dayjs'
 import { routerNames } from '@/utils/consts'
 import draggable from 'vuedraggable'
 export default {
 	name: routerNames.gameManagement,
-	components: { gameManagementEdit, draggable},
+	components: { detail, draggable},
 	mixins: [list],
 	data() {
 		return {

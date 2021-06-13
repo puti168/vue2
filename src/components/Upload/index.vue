@@ -25,6 +25,15 @@ export default {
 		nowImage: {
 			type: String,
 			default: ''
+		},
+		imageType: {
+			type: String,
+			default: ''
+		},
+		// MB
+		size: {
+			type: String,
+			default: ''
 		}
 	},
 	data() {
@@ -64,10 +73,20 @@ export default {
 			this.curFile = ''
 		},
 		beforeAvatarUpload(file, row) {
-			// const isPNG = file.type === 'image/png'
-			// if (!isPNG) {
-			// 	this.$message.error('您选择的图片不符合要求，请重新选择！')
-			// }
+			const isPNG = file.type === 'image/png'
+			const isJPG = file.type === 'image/jpg'
+			if (
+				(!isPNG && this.imageType.includes('png')) ||
+				(!isJPG && this.imageType.includes('jpg'))
+			) {
+				this.$message.error('您选择的图片不符合要求，请重新选择！')
+				return
+			}
+			const isLt2M = file.size / 1024 / 1024 < this.size
+			if (!isLt2M) {
+				alert('上传文件大小不能超过 2MB')
+				return
+			}
 			// const isSize = new Promise(function(resolve, reject) {
 			// 	const _URL = window.URL || window.webkitURL
 			// 	const image = new Image()
@@ -93,8 +112,7 @@ export default {
 			// 	textType: 4,
 			// 	agentId: row.agentId.split('_')[1]
 			// }
-			// return isPNG && isSize
-			return true
+			return isPNG && isLt2M
 		},
 		handleAvatarSuccess() {
 			this.uploadFile()

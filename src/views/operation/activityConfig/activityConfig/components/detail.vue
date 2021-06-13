@@ -17,13 +17,14 @@
 									v-model="form.gameName"
 									size="medium"
 									:maxlength="20"
+									placeholder="请输入"
 									clearable
 									style="width: 365px"
 								></el-input>
 							</el-form-item>
 						</el-col>
 						<el-col :span="12">
-							<el-form-item label="活动页签:" class="tagheight">
+							<el-form-item label="活动页签:" class="tagheight" prop="supportTerminalList">
 								<el-select
 									v-model="form.supportTerminalList"
 									style="width: 300px"
@@ -46,15 +47,16 @@
 									v-model="form.accessInfo"
 									size="medium"
 									:maxlength="20"
+									placeholder="请输入"
 									clearable
 									style="width: 365px"
 								></el-input>
 							</el-form-item>
 						</el-col>
 						<el-col :span="12">
-							<el-form-item label="活动支持终端:" class="tagheight">
+							<el-form-item label="活动支持终端:" class="tagheight" prop="supportTerminalList2">
 								<el-select
-									v-model="form.supportTerminalList"
+									v-model="form.supportTerminalList2"
 									style="width: 300px"
 									multiple
 									placeholder="默认选择全部"
@@ -70,9 +72,9 @@
 							</el-form-item>
 						</el-col>
 						<el-col :span="12">
-							<el-form-item label="活动生效的账户类型:" class="tagheight">
+							<el-form-item label="活动生效的账户类型:" class="tagheight" prop="supportTerminalList3">
 								<el-select
-									v-model="form.supportTerminalList"
+									v-model="form.supportTerminalList3"
 									style="width: 300px"
 									multiple
 									placeholder="默认选择全部"
@@ -88,7 +90,7 @@
 							</el-form-item>
 						</el-col>
 						<el-col :span="12">
-							<el-form-item label="活动时效:">
+							<el-form-item label="活动时效:" prop="gameIcon">
 								<el-select
 									v-model="form.gameIcon"
 									size="medium"
@@ -106,9 +108,9 @@
 							</el-form-item>
 						</el-col>
 						<el-col :span="12">
-							<el-form-item label="活动图上架时间:">
+							<el-form-item label="活动图上架时间:" prop="time1">
 								<el-date-picker
-									v-model="time"
+									v-model="form.time1"
 									size="medium"
 									:picker-options="pickerOptions"
 									format="yyyy-MM-dd HH:mm:ss"
@@ -122,9 +124,9 @@
 							</el-form-item>
 						</el-col>
 						<el-col :span="12">
-							<el-form-item label="活动图下架时间:">
+							<el-form-item label="活动图下架时间:" prop="time2">
 								<el-date-picker
-									v-model="time"
+									v-model="form.time2"
 									size="medium"
 									:picker-options="pickerOptions"
 									format="yyyy-MM-dd HH:mm:ss"
@@ -138,9 +140,9 @@
 							</el-form-item>
 						</el-col>
 						<el-col :span="12">
-							<el-form-item label="活动开始时间:">
+							<el-form-item label="活动开始时间:" prop="time3">
 								<el-date-picker
-									v-model="time"
+									v-model="form.time3"
 									size="medium"
 									:picker-options="pickerOptions"
 									format="yyyy-MM-dd HH:mm:ss"
@@ -154,9 +156,9 @@
 							</el-form-item>
 						</el-col>
 						<el-col :span="12">
-							<el-form-item label="活动结束时间:">
+							<el-form-item label="活动结束时间:" prop="time4">
 								<el-date-picker
-									v-model="time"
+									v-model="form.time4"
 									size="medium"
 									:picker-options="pickerOptions"
 									format="yyyy-MM-dd HH:mm:ss"
@@ -170,59 +172,68 @@
 							</el-form-item>
 						</el-col>
 						<el-col :span="12">
-							<el-form-item label="活动详情跳转地址:">
+							<el-form-item label="活动详情跳转地址:" prop="description">
 								<el-input
 									v-model="form.description"
 									size="medium"
 									:maxlength="2038"
 									clearable
+									placeholder="请输入"
 									style="width: 365px"
 								></el-input>
 							</el-form-item>
 						</el-col>
 						<el-col :span="12">
-							<el-form-item label="分享链接:">
+							<el-form-item label="分享链接:" prop="description2">
 								<el-input
-									v-model="form.description"
+									v-model="form.description2"
 									size="medium"
 									:maxlength="2038"
 									clearable
+									placeholder="请输入"
 									style="width: 365px"
 								></el-input>
 							</el-form-item>
 						</el-col>
 						<el-col :span="24">
-							<el-form-item label="活动洗码倍率:">
-								<el-input
-									v-model="form.description"
+							<el-form-item label="活动洗码倍率:" prop="gameRebateRate">
+								<el-input-number
+									v-model.number="form.gameRebateRate"
 									size="medium"
-									:maxlength="4"
+									maxlength="4"
 									clearable
 									style="width: 365px"
-								></el-input>
+									placeholder="请输入"
+									:precision="2"
+									autocomplete="off"
+								></el-input-number>
 							</el-form-item>
 						</el-col>
 						<el-col :span="12">
 							<el-form-item label="入口图片上传" prop="image">
 								<Upload
 									:nowImage="nowImage"
-									@uploadSuccess="uploadSuccess"
+									:imageType="jpgpng"
+									:size="2"
+									@uploadSuccess="uploadSuccess()"
 								></Upload>
 								<p class="imgTip">
-									请上传图片！图片格式仅支持png,图片尺寸： ？？
-									图片大小不超过？？
+									请上传图片！图片格式仅支持png,jpg
+									图片大小不超过2MB
 								</p>
 							</el-form-item>
 						</el-col>
 						<el-col :span="12">
 							<el-form-item label="分享图片上传" prop="image">
 								<Upload
-									:nowImage="nowImage"
-									@uploadSuccess="uploadSuccess"
+									:nowImage="nowImage2"
+									:imageType="jpgpng"
+									:size="2"
+									@uploadSuccess="uploadSuccess2"
 								></Upload>
 								<p class="imgTip">
-									请上传图片！图片格式仅支持png,图片尺寸： ？？
-									图片大小不超过？？
+									请上传图片！图片格式仅支持png,jpg
+									图片大小不超过2MB
 								</p>
 							</el-form-item>
 						</el-col>
@@ -230,9 +241,9 @@
 						<el-divider></el-divider>
 						</el-col>
 						<el-col :span="12">
-							<el-form-item label="场馆名称:">
+							<el-form-item label="场馆名称:" prop="gameIcon2">
 								<el-select
-									v-model="form.gameIcon"
+									v-model="form.gameIcon2"
 									size="medium"
 									placeholder="请选择"
 									clearable
@@ -248,20 +259,22 @@
 							</el-form-item>
 						</el-col>
 						<el-col :span="12">
-							<el-form-item label="充值金额大于等于:" prop="accessInfo">
-								<el-input
-									v-model="form.accessInfo"
+							<el-form-item label="充值金额大于等于:" prop="gameRebateRate2">
+								<el-input-number
+									v-model.number="form.gameRebateRate2"
 									size="medium"
-									:maxlength="10"
+									maxlength="10"
 									clearable
 									style="width: 365px"
-								></el-input>
+									placeholder="请输入"
+									autocomplete="off"
+								></el-input-number>
 							</el-form-item>
 						</el-col>
 						<el-col :span="12">
-							<el-form-item label="优惠方式:">
+							<el-form-item label="优惠方式:" prop="gameIcon3">
 								<el-select
-									v-model="form.gameIcon"
+									v-model="form.gameIcon3"
 									size="medium"
 									placeholder="请选择"
 									clearable
@@ -277,23 +290,27 @@
 							</el-form-item>
 						</el-col>
 						<el-col :span="12">
-							<el-form-item label="优惠百分比:" prop="accessInfo">
-								<el-input
-									v-model="form.accessInfo"
+							<el-form-item label="优惠百分比:" prop="gameRebateRate3">
+								<el-input-number
+									v-model.number="form.gameRebateRate3"
 									size="medium"
-									:maxlength="10"
 									clearable
 									style="width: 365px"
-								></el-input>
+									placeholder="请输入"
+									:precision="2"
+									autocomplete="off"
+								></el-input-number>
 							</el-form-item>
-							<el-form-item label="赠送金额:" prop="accessInfo">
-								<el-input
-									v-model="form.accessInfo"
+							<el-form-item label="赠送金额:" prop="gameRebateRate4">
+									<el-input-number
+									v-model.number="form.gameRebateRate4"
 									size="medium"
-									:maxlength="10"
+									maxlength="10"
 									clearable
 									style="width: 365px"
-								></el-input>
+									placeholder="请输入"
+									autocomplete="off"
+								></el-input-number>
 							</el-form-item>
 						</el-col>
 					</el-row>
@@ -349,23 +366,30 @@ export default {
 		return {
 			form: {
 				id: '',
-				gameIcon: '',
-				gamePlatform: '',
 				gameName: '',
-				supportTerminal: [],
-				relationOtherGameId: [],
-				relationGameModuleId: [],
-				imageAddress: '',
-				gameLabelParam1: {},
-				gameLabelParam2: {},
-				gameLabelParam3: {},
 				accessInfo: '',
+				gameIcon: '',
+				gameIcon2: '',
+				gameIcon3: '',
 				description: '',
-				remark: ''
+				description2: '',
+				gameRebateRate: '',
+				gameRebateRate2: '',
+				gameRebateRate3: '',
+				gameRebateRate4: '',
+				imageAddress: '',
+				imageAddress2: '',
+				time1: [start, end],
+				time2: [start, end],
+				time3: [start, end],
+				time4: [start, end],
+				supportTerminalList: [],
+				supportTerminalList2: [],
+				supportTerminalList3: []
 			},
-			time: [start, end],
 			datalist: {},
 			nowImage: '',
+			nowImage2: '',
 			uploadUrl: process.env.VUE_APP_BASE_API + '/gameManager/imageUpload',
 			gameLabelParam1: '',
 			gameLabelParam2: '',
@@ -394,48 +418,124 @@ export default {
 				callback()
 			}
 			return {
-				gameRebateRate: [
-					{
-						required: false,
-						min: 1,
-						max: 99.9,
-						type: 'number',
-						message: '请输入1-99.9的数字',
-						trigger: ['blur']
-					}
-				],
+
 				supportTerminal: [
 					{
 						required: true,
-						message: '请选择支持终端',
+						message: '请选择活动页签',
 						trigger: 'blur',
 						type: 'array'
 					}
 				],
-				gamePlatform: [
+				supportTerminal2: [
 					{
 						required: true,
-						message: '请选择游戏平台',
+						message: '请选择活动支持终端',
+						trigger: 'blur',
+						type: 'array'
+					}
+				],
+				supportTerminalList3: [
+					{
+						required: true,
+						message: '请选择活动生效的账户类型',
+						trigger: 'blur',
+						type: 'array'
+					}
+				],
+				gameIcon: [
+					{
+						required: true,
+						message: '请选择活动时效',
+						trigger: 'blur',
+						type: 'array'
+					}
+				],
+				gameIcon2: [
+					{
+						required: true,
+						message: '请选择场馆名称',
+						trigger: 'blur',
+						type: 'array'
+					}
+				],
+				gameIcon3: [
+					{
+						required: true,
+						message: '请选择优惠方式',
+						trigger: 'blur',
+						type: 'array'
+					}
+				],
+
+				accessInfo: [
+					{ required: true, message: '请输入活动主标题', trigger: 'blur' }
+				],
+				gameName: [
+					{
+						required: true,
+						message: '请输入活动名称',
 						trigger: 'blur'
 					}
 				],
-				accessInfo: [
-					{ required: true, message: '请输入接入参数', trigger: 'blur' }
-				],
-				relationOtherGameId: [
+				description: [
 					{
 						required: true,
-						message: '请输入关联推荐游戏',
-						trigger: 'blur',
-						type: 'array'
+						message: '请输入活动详情跳转地址',
+						trigger: 'blur'
 					}
 				],
-				relationGameModuleId: [
+				description2: [
 					{
 						required: true,
-						message: '请输入关联游戏模块',
-						trigger: 'blur',
-						type: 'array'
+						message: '请输入分享链接',
+						trigger: 'blur'
+					}
+				],
+				time1: [
+					{
+						required: true,
+						message: '请输入活动图上架时间',
+						trigger: 'blur'
+					}
+				],
+				time2: [
+					{
+						required: true,
+						message: '请输入活动图下架时间',
+						trigger: 'blur'
+					}
+				],
+				gameRebateRate: [
+					{
+						required: false,
+						type: 'number',
+						message: '请输入数字',
+						trigger: ['blur']
+					}
+				],
+				gameRebateRate2: [
+					{
+						required: false,
+						type: 'number',
+						message: '请输入数字',
+						trigger: ['blur']
+					}
+				],
+				gameRebateRate3: [
+					{
+						required: false,
+						type: 'number',
+						message: '请输入数字',
+						trigger: ['blur']
+					}
+				],
+				gameRebateRate4: [
+					{
+						required: false,
+						type: 'number',
+						message: '请输入数字',
+						trigger: ['blur']
 					}
 				],
 				image: [
@@ -445,14 +545,8 @@ export default {
 						message: '请选择图片上传',
 						trigger: ['blur', 'change']
 					}
-				],
-				gameName: [
-					{
-						required: true,
-						message: '请输入游戏名称',
-						trigger: 'blur'
-					}
 				]
+
 			}
 		}
 	},
@@ -495,6 +589,9 @@ export default {
 	methods: {
 		uploadSuccess(data) {
 			this.$set(this.form, 'imageAddress', data)
+		},
+		uploadSuccess2(data) {
+			this.$set(this.form, 'imageAddress2', data)
 		},
 		confirm() {
 			if (this.form.relationOtherGameId.length !== 5) {
