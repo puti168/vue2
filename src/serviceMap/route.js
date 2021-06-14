@@ -4,13 +4,13 @@ import agent from './agent'
 import control from './control'
 import funds from './funds'
 import operation from './operation'
-// import report from './report'
+import report from './report'
 import system from './system'
 export default [
 	...control,
 	...funds,
 	...operation,
-	// ...report,
+	...report,
 	...system,
 	...member,
 	...game,

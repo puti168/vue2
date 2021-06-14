@@ -8,7 +8,7 @@ const funds = [
 	{
 		id: '151',
 		parentId: '150',
-		icon: 'bb_report',
+		icon: 'bb_noticeList',
 		title: '提款设置'
 	},
 	{
@@ -20,25 +20,25 @@ const funds = [
 	{
 		id: '153',
 		parentId: '150',
-		icon: 'bb_report',
+		icon: 'bb_list',
 		title: '代理资金记录'
 	},
 	{
 		id: '154',
 		parentId: '150',
-		icon: 'bb_report',
+		icon: 'bb_merchantInfo',
 		title: '资金调整'
 	},
 	{
 		id: '155',
 		parentId: '150',
-		icon: 'bb_report',
+		icon: 'bb_rateaccount',
 		title: '资金审核'
 	},
 	{
 		id: '156',
 		parentId: '150',
-		icon: 'bb_report',
+		icon: 'bb_currency',
 		title: '资金审核记录'
 	},
 	// 第三级菜单

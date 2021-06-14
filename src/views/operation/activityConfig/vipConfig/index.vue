@@ -143,7 +143,7 @@
               :disabled="loading"
               size="medium"
               style="padding: 0 10px"
-              @click="dialogFormVisible = true"
+              @click="sortVisible = true"
             >
               赞助活动排序
             </el-button>
@@ -271,12 +271,12 @@
         ></el-pagination>
       </div>
     </div>
-    <div v-else class="game-container report-container editPicturePage-container">
+    <div v-else class="game-container report-container editPicturePage">
       <div class="editPicturePage-content">
         <div class="form-header">
           <span>创建/编辑</span>
           <span>
-            <el-button type="info" @click="dialogFormVisible = false">取消</el-button>
+            <el-button type="info" @click="clear">取消</el-button>
             <el-button type="success" @click="subAddOrEidt">保存</el-button>
           </span>
         </div>
@@ -294,7 +294,7 @@
               :rules="[{ required: true }]"
             >
               <el-select
-                v-model="queryData.memberLabelName"
+                v-model="dialogForm.memberLabelName"
                 clearable
                 placeholder="默认选择全部"
                 :popper-append-to-body="false"
@@ -309,13 +309,13 @@
               prop="description"
               :rules="[
                 { required: true, message: '请输入活动名称', trigger: 'blur' },
-                { min: 1, max: 50, message: '长度在 1 到 50 个字符', trigger: 'blur' },
+                { min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' },
               ]"
             >
               <el-input
                 v-model="dialogForm.description"
                 placeholder="请输入"
-                maxlength="50"
+                maxlength="20"
                 clearable
               ></el-input>
             </el-form-item>
@@ -325,29 +325,31 @@
               prop="description"
               :rules="[
                 { required: true, message: '请输入活动主标题', trigger: 'blur' },
-                { min: 1, max: 50, message: '长度在 1 到 50 个字符', trigger: 'blur' },
+                { min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' },
               ]"
             >
               <el-input
                 v-model="dialogForm.description"
                 placeholder="请输入"
-                maxlength="50"
+                maxlength="20"
                 clearable
               ></el-input>
             </el-form-item>
             <el-form-item
               label="活动支持终端:"
               class="tagheight"
-              prop="loginDeviceType"
               :rules="[
                 {
                   required: true,
+                  message: '请选择活动支持终端',
+                  trigger: 'change',
                 },
               ]"
             >
               <el-select
                 v-model="dialogForm.loginDeviceType"
                 placeholder="默认选择全部"
+                multiple
                 :popper-append-to-body="false"
               >
                 <el-option
@@ -364,12 +366,15 @@
               :rules="[
                 {
                   required: true,
+                  message: '请选择活动生效的账户类型',
+                  trigger: 'change',
                 },
               ]"
             >
               <el-select
                 v-model="dialogForm.accountType"
                 placeholder="默认选择全部"
+                multiple
                 :popper-append-to-body="false"
               >
                 <el-option
@@ -383,7 +388,6 @@
             <el-form-item
               label="活动时效:"
               class="tagheight"
-              prop="timeTab"
               :rules="[
                 {
                   required: true,
@@ -412,7 +416,7 @@
                 v-model="onlineTime"
                 size="medium"
                 format="yyyy-MM-dd HH:mm:ss"
-                :picker-options="dateNow"
+                :picker-sortLabel="dateNow"
                 type="datetime"
                 align="right"
                 :clearable="false"
@@ -432,7 +436,7 @@
                 v-model="offlineTime"
                 size="medium"
                 format="yyyy-MM-dd HH:mm:ss"
-                :picker-options="dateEnd"
+                :picker-sortLabel="dateEnd"
                 type="datetime"
                 align="right"
                 :clearable="false"
@@ -443,19 +447,19 @@
             </el-form-item>
             <el-form-item
               label="入口图片上传:"
-              prop="imageAddress"
-              style="width:400px"
+              prop="enterImg"
+              style="width: 400px"
               :rules="[{ required: true, message: '请上传图片', trigger: 'change' }]"
             >
               <UploadItem
                 ref="imgUpload"
                 :upload-file-type="'image'"
                 :platform="'PC'"
-                :img-urls="dialogForm.imageAddress"
-                @upoladItemSucess="handleUploadSucess"
-                @startUpoladItem="handleStartUpload"
-                @deleteUpoladItem="handleDeleteUpload"
-                @upoladItemDefeat="handleUploadDefeat"
+                :img-urls="dialogForm.enterImg"
+                @upoladItemSucess="handleUploadSucessEnter"
+                @startUpoladItem="handleStartUploadEnter"
+                @deleteUpoladItem="handleDeleteUploadEnter"
+                @upoladItemDefeat="handleUploadDefeatEnter"
               ></UploadItem>
               <div class="remakeBox">
                 <span class="danger">*</span>图片格式仅支持png，jpg <br />
@@ -468,30 +472,35 @@
               prop="description"
               :rules="[
                 { required: true, message: '请输入活动详情跳转地址', trigger: 'blur' },
-                { min: 1, max: 50, message: '长度在 1 到 50 个字符', trigger: 'blur' },
+                {
+                  min: 1,
+                  max: 2038,
+                  message: '长度在 1 到 2038 个字符',
+                  trigger: 'blur',
+                },
               ]"
             >
               <el-input
                 v-model="dialogForm.description"
                 placeholder="请输入 "
-                maxlength="50"
+                maxlength="2038"
                 clearable
               ></el-input>
             </el-form-item>
             <el-form-item
               label="分享图片上传:"
-              prop="imageAddress"
+              prop="shareImg"
               :rules="[{ required: true, message: '请上传图片', trigger: 'change' }]"
             >
               <UploadItem
                 ref="imgUpload"
                 :upload-file-type="'image'"
                 :platform="'PC'"
-                :img-urls="dialogForm.imageAddress"
-                @upoladItemSucess="handleUploadSucess"
-                @startUpoladItem="handleStartUpload"
-                @deleteUpoladItem="handleDeleteUpload"
-                @upoladItemDefeat="handleUploadDefeat"
+                :img-urls="dialogForm.shareImg"
+                @upoladItemSucess="handleUploadSucessShare"
+                @startUpoladItem="handleStartUploadShare"
+                @deleteUpoladItem="handleDeleteUploadShare"
+                @upoladItemDefeat="handleUploadDefeatShare"
               ></UploadItem>
               <div class="remakeBox">
                 <span class="danger">*</span>图片格式仅支持png，jpg <br />
@@ -504,13 +513,18 @@
               prop="description"
               :rules="[
                 { required: true, message: '请输入活动详情跳转地址', trigger: 'blur' },
-                { min: 1, max: 50, message: '长度在 1 到 50 个字符', trigger: 'blur' },
+                {
+                  min: 1,
+                  max: 2038,
+                  message: '长度在 1 到 2038 个字符',
+                  trigger: 'blur',
+                },
               ]"
             >
               <el-input
                 v-model="dialogForm.description"
                 placeholder="请输入 "
-                maxlength="50"
+                maxlength="2038"
                 clearable
               ></el-input>
             </el-form-item>
@@ -521,6 +535,49 @@
     <div v-if="imgVisible" class="imgCenter" @click="closeImage">
       <img :src="bigImage" />
     </div>
+    <el-dialog
+      title="设置排序"
+      :visible.sync="sortVisible"
+      :destroy-on-close="true"
+      center
+      class="rempadding"
+    >
+      <el-table
+        v-loading="loading"
+        border
+        size="mini"
+        class="small-size-table"
+        :data="sortList"
+        :header-cell-style="getRowClass"
+        @sort-change="changeTableSort"
+      >
+        <el-table-column align="center" prop="remake" width="90px"></el-table-column>
+        <el-table-column align="center" prop="sortLabel" label="赞助活动区域排序">
+          <template slot-scope="scope">
+            <draggable
+              v-model="scope.row.sortLabel"
+              @start="startChange"
+              @end="endChange"
+            >
+              <transition-group class="sortCss">
+                <div
+                  v-for="itme in scope.row.sortLabel"
+                  :key="itme.value"
+                  :class="{ open: itme.status === '1', close: itme.status === '2' }"
+                >
+                  {{ itme.label }}{{ itme.status === "1" ? "(启用中)" : "(已禁用)" }}
+                </div>
+              </transition-group>
+            </draggable>
+          </template>
+        </el-table-column>
+      </el-table>
+
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="sortVisible = false">取消</el-button>
+        <el-button type="primary" @click="subSort">保存</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -528,16 +585,24 @@
 import list from '@/mixins/list'
 import dayjs from 'dayjs'
 import UploadItem from '@/components/UploadItem'
+import draggable from 'vuedraggable'
 const startTime = dayjs().startOf('day').valueOf()
 const endTime = dayjs().endOf('day').valueOf()
 export default {
-  components: { UploadItem },
+  components: { UploadItem, draggable },
   mixins: [list],
   data() {
     return {
       queryData: { aaaaa: [], bbbbb: [] },
       dialogFormVisible: false,
-      dialogForm: { logo: '0', loginDeviceType: '2', timeTab: '0', imageAddress: null },
+      dialogForm: {
+        memberLabelName: '0',
+        loginDeviceType: '2',
+        timeTab: '0',
+        enterImg: null,
+        shareImg: null,
+        accountType: []
+      },
       onlineTime: Date.now(),
       offlineTime: endTime,
       dateNow: {
@@ -548,7 +613,25 @@ export default {
       dateEnd: {},
       errTime: false,
       bigImage: '',
-      imgVisible: false
+      imgVisible: false,
+      sortVisible: false,
+      sortList: [
+        {
+          remake: '赞助活动',
+          sortLabel: [
+            { value: '1', status: '1', label: '获取新增的赞助活动一' },
+            { value: '2', status: '1', label: '获取新增的赞助活动二' },
+            { value: '3', status: '1', label: '获取新增的赞助活动三' },
+            { value: '4', status: '2', label: '获取新增的赞助活动四' },
+            { value: '5', status: '2', label: '获取新增的赞助活动五' },
+            { value: '6', status: '2', label: '获取新增的赞助活动六' },
+            { value: '7', status: '2', label: '获取新增的赞助活动七' },
+            { value: '8', status: '2', label: '获取新增的赞助活动八' },
+            { value: '9', status: '2', label: '获取新增的赞助活动九' },
+            { value: '10', status: '2', label: '获取新增的赞助活动十' }
+          ]
+        }
+      ]
     }
   },
   computed: {
@@ -625,21 +708,16 @@ export default {
       this.$refs.formSub.resetFields()
       this.onlineTime = Date.now()
       this.offlineTime = endTime
+      this.dialogFormVisible = false
     },
-    changeTableSort({ column, prop, order }) {
-      this.pageNum = 1
-      this.queryData.orderProperty = prop
-      const orderParams = this.checkOrderParams.get(prop)
-      if (orderParams) {
-        if (order === 'ascending') {
-          // 升序
-          this.queryData.orderType = 'asc'
-        } else if (column.order === 'descending') {
-          // 降序
-          this.queryData.orderType = 'desc'
-        }
-        this.loadData()
-      }
+    subSort() {
+      console.log(this.sortList)
+    },
+    startChange() {
+      this.drag = true
+    },
+    endChange() {
+      this.drag = false
     },
     openEdit(row) {
       this.dialogFormVisible = true
@@ -707,21 +785,52 @@ export default {
     closeImage() {
       this.imgVisible = false
     },
-    handleStartUpload() {
+    handleStartUploadEnter() {
       this.$message.info('图片开始上传')
     },
-    handleUploadSucess({ index, file, id }) {
-      this.dialogForm.imageAddress = file.imgUrl
+    handleUploadSucessEnter({ index, file, id }) {
+      this.dialogForm.enterImg = file.imgUrl
+      this.$refs['formSub'].validateField('enterImg')
     },
-    handleUploadDefeat() {
-      this.dialogForm.imageAddress = ''
+    handleUploadDefeatEnter() {
+      this.dialogForm.enterImg = ''
       this.$message.error('图片上传失败')
     },
-    handleDeleteUpload() {
-      this.dialogForm.imageAddress = ''
+    handleDeleteUploadEnter() {
+      this.dialogForm.enterImg = ''
       this.$message.warning('图片已被移除')
     },
-    enterSubmit() {
+    handleStartUploadShare() {
+      this.$message.info('图片开始上传')
+    },
+    handleUploadSucessShare({ index, file, id }) {
+      this.dialogForm.shareImg = file.imgUrl
+      this.$refs['formSub'].validateField('shareImg')
+    },
+    handleUploadDefeatShare() {
+      this.dialogForm.shareImg = ''
+      this.$message.error('图片上传失败')
+    },
+    handleDeleteUploadShare() {
+      this.dialogForm.shareImg = ''
+      this.$message.warning('图片已被移除')
+    },
+    changeTableSort({ column, prop, order }) {
+      this.pageNum = 1
+      this.queryData.orderProperty = prop
+      const orderParams = this.checkOrderParams.get(prop)
+      if (orderParams) {
+        if (order === 'ascending') {
+          // 升序
+          this.queryData.orderType = 'asc'
+        } else if (column.order === 'descending') {
+          // 降序
+          this.queryData.orderType = 'desc'
+        }
+        this.loadData()
+      }
+    },
+    enterSearch() {
       this.loadData()
     }
   }
@@ -740,24 +849,15 @@ export default {
     width: 480px;
   }
 }
-// /deep/ .rempadding .el-dialog__body {
-//   padding: 0;
-//   padding-bottom: 30px;
-//   .contentBox,
-//   form {
-//     padding: 0 20px;
-//   }
-// }
-.editPicturePage-container {
+.editPicturePage {
   background-color: #f5f5f5;
   margin: 0;
-  min-height: calc(90vh - 120px);
+  padding: 15px 0 20px;
   .editPicturePage-content {
     width: 800px;
     margin: 0 auto;
     background-color: #fff;
     position: relative;
-    padding-bottom: 30px;
     .form-header {
       height: 55px;
       line-height: 55px;
@@ -803,6 +903,24 @@ export default {
         }
       }
     }
+  }
+}
+.sortCss {
+  cursor: pointer;
+  div {
+    color: #ffffff;
+    height: 32px;
+    line-height: 32px;
+    padding: 0 15px;
+    margin: 5px;
+    border: solid 1px #eee;
+    display: inline-block;
+  }
+  .open {
+    background-color: #1abc9c;
+  }
+  .close {
+    background-color: #d9001b;
   }
 }
 </style>

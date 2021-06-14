@@ -8,13 +8,13 @@ const control = [
 	{
 		id: '130',
 		parentId: '129',
-		icon: 'bb_report',
+		icon: 'bb_apilog',
 		title: '风控管理'
 	},
 	{
 		id: '131',
 		parentId: '129',
-		icon: 'bb_report',
+		icon: 'bb_list',
 		title: '风控信息变更记录'
 	},
 	// 第三级菜单
