@@ -20,12 +20,20 @@
 						@change="changeRiskType($event)"
 					>
 						<el-option
-							v-for="item in gameVenueList"
-							:key="item.id"
-							:label="item.gameName"
-							:value="item.id"
+							v-for="item in activityTypeArr"
+							:key="item.code"
+							:label="item.description"
+							:value="item.code"
 						></el-option>
 					</el-select>
+					<el-button
+						type="warning"
+						style="margin-left: 20px;padding: 0 5px"
+						icon="el-icon-sort"
+						@click="activityTypeSort"
+					>
+						活动优惠排序
+					</el-button>
 				</el-form-item>
 				<el-form-item label="优惠类型名称" prop="activityTypeName">
 					<el-input
@@ -73,12 +81,12 @@
 							{{ showInfoData.remark ? showInfoData.remark : '-' }}
 						</span>
 					</el-col>
-                    <el-col :span="6">
-                        <span>最近操作人：</span>
-                        <span>
+					<el-col :span="6">
+						<span>最近操作人：</span>
+						<span>
 							{{ showInfoData.updateBy ? showInfoData.updateBy : '-' }}
 						</span>
-                    </el-col>
+					</el-col>
 					<el-col :span="6">
 						<span>最近操作时间：</span>
 						<span>
@@ -87,6 +95,22 @@
 					</el-col>
 				</el-row>
 			</div>
+			<el-dialog
+				title="活动类型区域排序"
+				:visible.sync="sortLabel"
+				width="650px"
+				:destroy-on-close="true"
+			>
+				<draggable v-model="activityTypeArr" @start="onStart" @end="onEnd">
+					<transition-group>
+						<div v-for="item in activityTypeArr" :key="item.code" class="reach">
+							{{ item.description }}
+						</div>
+					</transition-group>
+				</draggable>
+				<el-button @click="sortLabel = false">取消</el-button>
+				<el-button type="primary" @click="handleClickSort">确定</el-button>
+			</el-dialog>
 		</div>
 	</div>
 </template>
@@ -94,10 +118,12 @@
 <script>
 import { routerNames } from '@/utils/consts'
 import list from '@/mixins/list'
+import draggable from 'vuedraggable'
 // import { notSpecial2, isHaveEmoji } from '@/utils/validate'
 
 export default {
 	name: routerNames.platformRate,
+	components: { draggable },
 	mixins: [list],
 	data() {
 		return {
@@ -108,10 +134,22 @@ export default {
 			},
 			showInfoData: {},
 			tipsShow: null,
-			gameVenueList: []
+			sortLabel: false,
+			activityTypeArr: [
+				{ description: '优惠', code: '1' },
+				{ description: 'vip', code: '2' },
+				{ description: '赞助', code: '3' }
+			]
 		}
 	},
 	computed: {
+		// activityTypeArr() {
+		// 	return [
+		// 		{ description: '优惠', code: '1' },
+		// 		{ description: 'vip', code: '2' },
+		// 		{ description: '赞助', code: '3' }
+		// 	]
+		// },
 		rules() {
 			const activityType = [
 				{ required: true, message: '请选择活动类型', trigger: 'change' }
@@ -125,9 +163,7 @@ export default {
 			}
 		}
 	},
-	mounted() {
-		this.getMemberVipMerchantGame()
-	},
+	mounted() {},
 	methods: {
 		add() {
 			this.loadingT = true
@@ -175,9 +211,8 @@ export default {
 		reset() {
 			this.$refs['form'] && this.$refs['form'].resetFields()
 			this.queryData = {
-				pateVenue: '',
-				rebate: undefined,
-				remark: undefined
+				activityType: '',
+				activityTypeName: undefined
 			}
 		},
 		changeRiskType(evt) {
@@ -186,15 +221,18 @@ export default {
 		checkRiskValue(val) {
 			// console.log('val', val)
 		},
-		// 获取商户场馆
-		getMemberVipMerchantGame() {
-			this.$api.memberVipMerchantGameAPI().then((res) => {
-				const { code, data } = res
-				if (code === 200) {
-					this.gameVenueList = data || []
-				}
-			})
-		}
+		activityTypeSort() {
+			this.sortLabel = true
+		},
+		// 开始拖拽事件
+		onStart() {
+			this.drag = true
+		},
+		// 拖拽结束事件
+		onEnd() {
+			this.drag = false
+		},
+		handleClickSort() {}
 	}
 }
 </script>
@@ -204,6 +242,17 @@ export default {
 	text-align: center;
 	color: #909399;
 	font-weight: 700;
+}
+.reach {
+	padding: 6px;
+	background-color: #1abc9c;
+	border: solid 1px #eee;
+	margin-bottom: 10px;
+	cursor: move;
+	line-height: 40px;
+	width: 110px;
+	display: inline-block;
+	text-align: center;
 }
 .addAgent-container {
 	background-color: #f5f5f5;
