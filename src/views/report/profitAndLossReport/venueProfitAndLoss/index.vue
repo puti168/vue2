@@ -77,10 +77,9 @@
       </div>
       <div class="content">
         <el-table
-          ref="table"
+          ref="tables"
           v-loading="loading"
           border
-          show-summary
           size="mini"
           class="small-size-table"
           :data="tableData"
@@ -88,11 +87,7 @@
           :header-cell-style="getRowClass"
           @sort-change="_changeTableSort"
         >
-          <el-table-column
-            prop="gameName"
-            align="center"
-            label="场馆"
-          >
+          <el-table-column prop="gameName" align="center" label="场馆">
             <template slot-scope="scope">
               <el-button
                 class="lightBlueColor"
@@ -145,14 +140,23 @@
           >
           </el-table-column>
           <div slot="append">
+            <div ref="sum_xiaoji" class="sum_footer">
+              <div class="sum_footer_unit">小计</div>
+              <div class="sum_footer_unit"></div>
+              <div class="sum_footer_unit">{{ getXiaoji("gameRebateRate") }}</div>
+              <div class="sum_footer_unit">{{ getXiaoji("gameIcon") }}</div>
+              <div class="sum_footer_unit">{{ getXiaoji("gameId") }}</div>
+              <div class="sum_footer_unit">{{ getXiaoji("gameStatus") }}</div>
+              <div class="sum_footer_unit">{{ getXiaoji("gameStatus") }}</div>
+            </div>
             <div ref="sum_heji" class="sum_footer">
               <div class="sum_footer_unit">合计</div>
-              <div class="sum_footer_unit">50000000</div>
-              <div class="sum_footer_unit">100</div>
+              <div class="sum_footer_unit"></div>
               <div class="sum_footer_unit">200</div>
-              <div class="sum_footer_unit">300</div>
-              <div class="sum_footer_unit">400</div>
-              <div class="sum_footer_unit">50000000</div>
+              <div class="sum_footer_unit">200</div>
+              <div class="sum_footer_unit">200</div>
+              <div class="sum_footer_unit">200</div>
+              <div class="sum_footer_unit">20000000</div>
             </div>
           </div>
         </el-table>
@@ -283,8 +287,8 @@ export default {
       visible: false,
       tableVisible: false,
       settingList: {
-        '项目': true,
-        '投注人数': true
+        项目: true,
+        投注人数: true
       },
       newList: []
     }
@@ -294,6 +298,8 @@ export default {
     if (localStorage.getItem('venueProfitAndLoss')) {
       this.settingList = JSON.parse(localStorage.getItem('venueProfitAndLoss'))
     }
+    this.adjustWidth()
+    window.addEventListener('resize', this.adjustWidth.bind(this))
   },
 
   methods: {
@@ -497,6 +503,28 @@ export default {
       Object.keys(this.newList).forEach((item) => {
         this.newList[item] = true
       })
+    },
+    adjustWidth() {
+      this.$nextTick(() => {
+        console.log(this.$refs.sum_xiaoji.children)
+        console.log(this.$refs.tables.$refs.headerWrapper)
+        Array.from(this.$refs.tables.$refs.headerWrapper.querySelectorAll('col')).forEach(
+          (n, i) => {
+            console.log(11111, n)
+            this.$refs.sum_xiaoji.children[i].style =
+              'width:' + n.getAttribute('width') + 'px'
+            this.$refs.sum_heji.children[i].style =
+              'width:' + n.getAttribute('width') + 'px'
+          }
+        )
+      })
+    },
+    getXiaoji(name) {
+      var sum = 0
+      this.tableData.forEach((n, i) => {
+        sum += parseFloat(n[name] * 1)
+      })
+      return sum
     }
   }
 }
@@ -506,15 +534,19 @@ export default {
 .sum_footer {
   display: flex;
   display: -webkit-flex;
+  justify-content: space-around;
   line-height: 45px;
   background: #f5f7fa;
   text-align: center;
   width: 100%;
-  flex-direction: row;
+  // flex-direction: row;
+  border-bottom: 1px solid #ebeef5;
+  border-left: 1px solid #ebeef5;
 }
 .sum_footer_unit {
   flex-grow: 1;
   -webkit-flex-grow: 1;
+  box-sizing: border-box;
   border-right: 1px solid #ebeef5;
 }
 /deep/.el-dialog__header {
