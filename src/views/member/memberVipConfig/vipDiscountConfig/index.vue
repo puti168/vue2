@@ -31,31 +31,39 @@
 					>
 						<template slot-scope="scope">
 							<span>
-								<el-input
+								<el-input-number
 									v-model="scope.row.lowestTransferQuota"
 									size="medium"
-									maxlength="10"
+                                    :max="9999999999"
 									placeholder="请输入"
-									clearable
-                                    onkeyup="value=value.replace(/[^\d]/g,'')"
 									style="width: 180px"
-									@blur="checkTransferValue($event)"
-								></el-input>
+									@blur="checkTransferValue(scope.row, 'lowestTransferQuota')"
+								></el-input-number>
 							</span>
 						</template>
 					</el-table-column>
 					<el-table-column prop="bonusRatio" align="center" label="红利比例">
+                        <template slot="header" slot-scope="scope">
+                            <el-popover placement="top-start" title="提示" width="280" trigger="hover">
+                                <div v-if="!scope.row">
+                                    <div>转账额度*红利比例=最终红利金额</div>
+                                </div>
+                                <div slot="reference" class="el-icon-question">
+                                    <span class="other-class">红利比例</span>
+                                </div>
+                            </el-popover>
+                        </template>
 						<template slot-scope="scope">
 							<span>
-								<el-input
+								<el-input-number
 									v-model.number="scope.row.bonusRatio"
 									size="medium"
 									maxlength="5"
+                                    :max="99999"
 									placeholder="请输入"
-									clearable
-                                    onkeyup="value=value.replace(/[^\d]/g,'')"
 									style="width: 180px"
-								></el-input>
+                                    @blur="checkTransferValue(scope.row, 'bonusRatio')"
+								></el-input-number>
 							</span>
 							<span>%</span>
 						</template>
@@ -63,39 +71,38 @@
 					<el-table-column prop="highestBonus" align="center" label="最高奖金">
 						<template slot-scope="scope">
 							<span>
-								<el-input
+								<el-input-number
 									v-model="scope.row.highestBonus"
 									size="medium"
-									maxlength="10"
+                                    :max="9999999999"
 									placeholder="请输入"
-									clearable
-                                    onkeyup="value=value.replace(/[^\d]/g,'')"
 									style="width: 180px"
-								></el-input>
+                                    @blur="checkTransferValue(scope.row, 'highestBonus')"
+								></el-input-number>
 							</span>
 						</template>
 					</el-table-column>
 					<el-table-column prop="waterMultiple" align="center" label="流水倍数">
 						<template slot-scope="scope">
 							<span>
-								<el-input
+								<el-input-number
 									v-model="scope.row.waterMultiple"
 									size="medium"
-									maxlength="10"
+                                    :max="9999999999"
 									placeholder="请输入"
-									clearable
-                                    onkeyup="value=value.replace(/[^\d]/g,'')"
 									style="width: 180px"
-								></el-input>
+                                    @blur="checkTransferValue(scope.row, 'waterMultiple')"
+								></el-input-number>
 							</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="times" align="center" label="参与次数">
+					<el-table-column prop="participateNum" align="center" label="参与次数">
 						<template slot-scope="scope">
 							<span>
 								<el-select
 									v-model="scope.row.participateNum"
 									placeholder="请选择"
+                                    style="width: 200px"
 								>
 									<el-option
 										v-for="item in participateTypeArr"
@@ -184,12 +191,11 @@ export default {
 				return ''
 			}
 		},
-		checkTransferValue(val, val1, index, scope) {
-			// console.log('val', val)
-			// console.log('val1', val1)
-			// console.log('index', index)
-			// console.log('scope', scope)
-		},
+        checkTransferValue(row, type) {
+            if (!row[type]) {
+                row[type] = 0
+            }
+        },
 		loadData() {
 			this.loading = true
 			this.$api
@@ -232,7 +238,6 @@ export default {
 		},
 		saveData() {
 			this.loadingT = true
-			console.log('this.dataList', this.dataList)
 			const memberVipPromotionParams =
 				this.dataList.map((item) => {
 					return {
@@ -288,5 +293,16 @@ export default {
 .btn_footer {
 	text-align: center;
 	margin-top: 50px;
+}
+.other-class {
+    color: rgba(0, 0, 0, 0.847058823529412);
+    font-weight: 700;
+}
+/deep/ .el-icon-question:after {
+    content: '\E7A4';
+    font-size: 25px;
+}
+/deep/ .el-icon-question::before {
+    content: '';
 }
 </style>

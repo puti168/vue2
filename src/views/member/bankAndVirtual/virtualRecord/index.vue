@@ -204,6 +204,12 @@
 						</template>
 					</el-table-column>
 					<el-table-column
+						prop="operator"
+						align="center"
+						label="操作人"
+					>
+					</el-table-column>
+					<el-table-column
 						prop="operateType"
 						align="center"
 						width="100"

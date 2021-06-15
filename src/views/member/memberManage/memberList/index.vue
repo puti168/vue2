@@ -397,7 +397,12 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="accountStatus" align="center" label="账号状态" width="100px">
+					<el-table-column
+						prop="accountStatus"
+						align="center"
+						label="账号状态"
+						width="100px"
+					>
 						<template slot-scope="scope">
 							<span
 								v-if="
@@ -407,28 +412,28 @@
 							>
 								{{ typeFilter(scope.row.accountStatus, 'accountStatusType') }}
 							</span>
-                            <span
-                                v-else-if="
+							<span
+								v-else-if="
 									!!scope.row.accountStatus && scope.row.accountStatus * 1 === 2
 								"
-                                class="disableRgba"
-                            >
+								class="disableRgba"
+							>
 								{{ typeFilter(scope.row.accountStatus, 'accountStatusType') }}
 							</span>
-                            <span
-                                v-else-if="
+							<span
+								v-else-if="
 									!!scope.row.accountStatus && scope.row.accountStatus * 1 === 3
 								"
-                                class="lockingRgba"
-                            >
+								class="lockingRgba"
+							>
 								{{ typeFilter(scope.row.accountStatus, 'accountStatusType') }}
 							</span>
-                            <span
-                                v-else-if="
+							<span
+								v-else-if="
 									!!scope.row.accountStatus && scope.row.accountStatus * 1 === 4
 								"
-                                class="deleteRgba"
-                            >
+								class="deleteRgba"
+							>
 								{{ typeFilter(scope.row.accountStatus, 'accountStatusType') }}
 							</span>
 							<span v-else>-</span>
@@ -612,12 +617,12 @@ export default {
 			},
 			dataList: [],
 			total: 0,
-            vipDict: [],
-            userLabel: []
+			vipDict: [],
+			userLabel: []
 		}
 	},
 	computed: {
-        // ...mapGetters(['vipDict', 'userLabel']),
+		// ...mapGetters(['vipDict', 'userLabel']),
 		accountStatusArr() {
 			return this.globalDics.accountStatusType
 		},
@@ -629,11 +634,11 @@ export default {
 		}
 	},
 	created() {
-		// this.getMerchantDict()
+		this.getMemberLabelDict()
 	},
 	mounted() {
-        this.getWindControllerLevelDict()
-    },
+		this.getWindControllerLevelDict()
+	},
 	methods: {
 		loadData() {
 			const create = this.queryData.registerTime || []
@@ -712,15 +717,15 @@ export default {
 			}, 1000)
 		},
 		// 获取会员标签
-		getMerchantDict() {
-			this.$api.merchantDictAPI().then((res) => {
+        getMemberLabelDict() {
+			this.$api.getMemberLabelDict().then((res) => {
 				const {
 					code,
-					data: { userLabel },
+					data,
 					msg
 				} = res
 				if (code === 200) {
-					this.userLabel = userLabel || []
+					this.userLabel = data || []
 				} else {
 					this.$message({
 						message: msg,
@@ -729,16 +734,16 @@ export default {
 				}
 			})
 		},
-        // 获取风控层级
-        getWindControllerLevelDict() {
-            this.$api
-                .getWindControllerLevelDict({ windControlType: 1 })
-                .then((res) => {
-                    if (res.code === 200) {
-                        this.vipDict = res.data
-                    }
-                })
-        },
+		// 获取风控层级
+		getWindControllerLevelDict() {
+			this.$api
+				.getWindControllerLevelDict({ windControlType: 1 })
+				.then((res) => {
+					if (res.code === 200) {
+						this.vipDict = res.data
+					}
+				})
+		},
 		reset() {
 			this.pageNum = 1
 			this.queryData = {

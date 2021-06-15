@@ -2,138 +2,132 @@
 	<div class="game-container report-container">
 		<div class="view-container dealer-container">
 			<div class="content">
-				<el-table
-					v-loading="loading"
-					border
-					size="mini"
-					class="small-size-table"
-					:data="dataList"
-					style="width: 100%"
-					:header-cell-style="_getRowClass"
-				>
-					<el-table-column
-						align="center"
-						label="vip等级"
-						prop="vipSerialNum"
-						width="120"
+				<el-form>
+					<el-table
+						v-loading="loading"
+						border
+						size="mini"
+						class="small-size-table"
+						:data="dataList"
+						style="width: 100%"
+						:header-cell-style="_getRowClass"
 					>
-						<template slot-scope="scope">
-							<span v-if="scope.row.vipSerialNum">
-								VIP{{ scope.row.vipSerialNum }}
-							</span>
-							<span v-else>-</span>
-						</template>
-					</el-table-column>
-					<el-table-column
-						prop="vipGradeName"
-						align="center"
-						label="VIP等级名称"
-					>
-						<template slot-scope="scope">
-							<span>
-								<el-input
-									v-model="scope.row.vipGradeName"
-									size="medium"
-									placeholder="请输入"
-									clearable
-									maxlength="10"
-									style="width: 180px"
-								></el-input>
-							</span>
-						</template>
-					</el-table-column>
-					<el-table-column prop="totalDeposit" align="center">
-						<template slot="header">
-							升级条件1
-							<br />
-							累计存款(包含代充)≥
-						</template>
-						<template slot-scope="scope">
-							<span v-if="scope.row.vipSerialNum * 1">
-								<el-input
-									v-model.number="scope.row.totalDeposit"
-									size="medium"
-									onkeyup="value=value.replace(/[^\d]/g,'')"
-									maxlength="10"
-									placeholder="请输入"
-									clearable
-									style="width: 180px"
-									@blur="
-										checkTransferValue(
-											$event,
-											scope.row.minTransfer,
-											scope.$index,
-											scope
-										)
-									"
-								></el-input>
-							</span>
-							<span v-else>0</span>
-						</template>
-					</el-table-column>
-					<el-table-column prop="tatalValidWater" align="center">
-						<template slot="header">
-							升级条件2
-							<br />
-							累计有效流水≥
-						</template>
-						<template slot-scope="scope">
-							<span v-if="scope.row.vipSerialNum * 1">
-								<el-input
-									v-model="scope.row.tatalValidWater"
-									size="medium"
-									maxlength="10"
-									onkeyup="value=value.replace(/[^\d]/g,'')"
-									placeholder="请输入"
-									clearable
-									:precision="0"
-									style="width: 180px"
-								></el-input>
-							</span>
-							<span v-else>0</span>
-						</template>
-					</el-table-column>
-					<el-table-column
-						prop="relegationWater"
-						align="center"
-						label="保级流水≥"
-					>
-						<template slot-scope="scope">
-							<span v-if="scope.row.vipSerialNum * 1">
-								<el-input
-									v-model="scope.row.relegationWater"
-									size="medium"
-									maxlength="10"
-									onkeyup="value=value.replace(/[^\d]/g,'')"
-									placeholder="请输入"
-									clearable
-									style="width: 180px"
-								></el-input>
-							</span>
-							<span v-else>0</span>
-						</template>
-					</el-table-column>
-					<el-table-column
-						prop="relegationValidPeriod"
-						align="center"
-						label="保级有效期（天）"
-					>
-						<template slot-scope="scope">
-							<span v-if="scope.row.vipSerialNum * 1">
-								<el-input
-									v-model="scope.row.relegationValidPeriod"
-									size="medium"
-									maxlength="10"
-									onkeyup="value=value.replace(/[^\d]/g,'')"
-									placeholder="请输入"
-									clearable
-									style="width: 180px"
-								></el-input>
-							</span>
-							<span v-else>0</span>
-						</template>
-					</el-table-column>
-				</el-table>
+						<el-table-column
+							align="center"
+							label="vip等级"
+							prop="vipSerialNum"
+							width="120"
+						>
+							<template slot-scope="scope">
+								<span v-if="scope.row.vipSerialNum">
+									VIP{{ scope.row.vipSerialNum }}
+								</span>
+								<span v-else>-</span>
+							</template>
+						</el-table-column>
+						<el-table-column
+							prop="vipGradeName"
+							align="center"
+							label="VIP等级名称"
+						>
+							<template slot-scope="scope">
+								<span class="span-row-style">
+									<el-form-item :error="scope.row.error">
+										<el-input
+											v-model="scope.row.vipGradeName"
+											size="medium"
+											placeholder="请输入"
+											maxlength="10"
+											clearable
+											style="width: 180px"
+											@input="tableVipGradeNameChange(scope.row)"
+										></el-input>
+									</el-form-item>
+								</span>
+							</template>
+						</el-table-column>
+						<el-table-column prop="totalDeposit" align="center">
+							<template slot="header">
+								升级条件1
+								<br />
+								累计存款(包含代充)≥
+							</template>
+							<template slot-scope="scope">
+								<span v-if="scope.row.vipSerialNum * 1">
+									<el-input-number
+										v-model.number="scope.row.totalDeposit"
+										size="medium"
+										:max="9999999999"
+										placeholder="请输入"
+										style="width: 180px"
+										@blur="checkTransferValue(scope.row, 'totalDeposit')"
+									></el-input-number>
+								</span>
+								<span v-else>0</span>
+							</template>
+						</el-table-column>
+						<el-table-column prop="tatalValidWater" align="center">
+							<template slot="header">
+								升级条件2
+								<br />
+								累计有效流水≥
+							</template>
+							<template slot-scope="scope">
+								<span v-if="scope.row.vipSerialNum * 1">
+									<el-input-number
+										v-model="scope.row.tatalValidWater"
+										size="medium"
+										:max="9999999999"
+										placeholder="请输入"
+										style="width: 180px"
+										@blur="checkTransferValue(scope.row, 'tatalValidWater')"
+									></el-input-number>
+								</span>
+								<span v-else>0</span>
+							</template>
+						</el-table-column>
+						<el-table-column
+							prop="relegationWater"
+							align="center"
+							label="保级流水≥"
+						>
+							<template slot-scope="scope">
+								<span v-if="scope.row.vipSerialNum * 1">
+									<el-input-number
+										v-model="scope.row.relegationWater"
+										size="medium"
+										:max="9999999999"
+										placeholder="请输入"
+										style="width: 180px"
+										@blur="checkTransferValue(scope.row, 'relegationWater')"
+									></el-input-number>
+								</span>
+								<span v-else>0</span>
+							</template>
+						</el-table-column>
+						<el-table-column
+							prop="relegationValidPeriod"
+							align="center"
+							label="保级有效期（天）"
+						>
+							<template slot-scope="scope">
+								<span v-if="scope.row.vipSerialNum * 1">
+									<el-input-number
+										v-model="scope.row.relegationValidPeriod"
+										size="medium"
+										:max="9999999999"
+										placeholder="请输入"
+										style="width: 180px"
+										@blur="
+											checkTransferValue(scope.row, 'relegationValidPeriod')
+										"
+									></el-input-number>
+								</span>
+								<span v-else>0</span>
+							</template>
+						</el-table-column>
+					</el-table>
+				</el-form>
 			</div>
 			<div class="btn_footer">
 				<el-button
@@ -164,13 +158,14 @@ import list from '@/mixins/list'
 import { routerNames } from '@/utils/consts'
 
 export default {
-	name: routerNames.vipDiscountConfig,
+	name: routerNames.vipLevelConfig,
 	mixins: [list],
 	data() {
 		return {
 			dataList: [],
 			loading: false,
-			loadingT: false
+			loadingT: false,
+			status: undefined
 		}
 	},
 	computed: {},
@@ -183,11 +178,10 @@ export default {
 				return ''
 			}
 		},
-		checkTransferValue(val, val1, index, scope) {
-			// console.log('val', val)
-			// console.log('val1', val1)
-			// console.log('index', index)
-			// console.log('scope', scope)
+		checkTransferValue(row, type) {
+			if (!row[type]) {
+				row[type] = 0
+			}
 		},
 		loadData() {
 			this.loading = true
@@ -212,8 +206,10 @@ export default {
 		},
 		saveData() {
 			this.loadingT = true
+			const errorArr = []
 			const listUpdateMemberVipGradeReqDto =
 				this.dataList.map((item) => {
+					item.error ? errorArr.push(item.error) : null
 					return {
 						id: item.id,
 						relegationValidPeriod: item.relegationValidPeriod,
@@ -224,30 +220,51 @@ export default {
 						tatalValidWater: item.tatalValidWater
 					}
 				}) || []
-			this.$api
-				.memberVipGradeUpDateAPI({ listUpdateMemberVipGradeReqDto })
-				.then((res) => {
-					this.loadingT = false
-					const { code, msg } = res
-					if (code === 200) {
-						this.$message({
-							message: '保存成功',
-							type: 'success'
-						})
-					} else {
-						this.$message({
-							message: msg,
-							type: 'error'
-						})
-					}
+			console.log('errorArr', errorArr, errorArr.length)
+			if (!errorArr.length) {
+				this.$api
+					.memberVipGradeUpDateAPI({ listUpdateMemberVipGradeReqDto })
+					.then((res) => {
+						this.loadingT = false
+						const { code, msg } = res
+						if (code === 200) {
+							this.$message({
+								message: '保存成功',
+								type: 'success'
+							})
+						} else {
+							this.$message({
+								message: msg,
+								type: 'error'
+							})
+						}
 
-					this.loadData()
-				})
-				.catch(() => {
-					this.loadingT = false
-				})
+						this.loadData()
+					})
+					.catch(() => {
+						this.loadingT = false
+					})
+			}
+			setTimeout(() => {
+				this.loadingT = false
+			}, 1500)
 		},
-		resetData() {}
+		resetData() {},
+		checkVipName(e, scope) {
+			const val = e.target.value
+			if (!val) {
+				this.$message({
+					message: `请输入vip${scope}等级名称`,
+					type: 'warning'
+				})
+				this.status = false
+			} else {
+				this.status = true
+			}
+		},
+		tableVipGradeNameChange(row) {
+			row.vipGradeName === '' ? (row.error = '不能为空') : (row.error = '')
+		}
 	}
 }
 </script>
@@ -266,5 +283,9 @@ export default {
 .btn_footer {
 	text-align: center;
 	margin-top: 50px;
+}
+.span-row-style {
+	display: inline-block;
+	margin-top: 10px;
 }
 </style>

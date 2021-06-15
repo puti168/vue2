@@ -1,5 +1,5 @@
 <template>
-	<div class="game-container report-container">
+	<div class="game-container report-container vipRightConfig">
 		<div class="view-container dealer-container">
 			<div class="content">
 				<el-table
@@ -20,14 +20,14 @@
 					<el-table-column prop="dayWithdrawalNum" align="center" label="日提款次数">
 						<template slot-scope="scope">
 							<span>
+
 								<el-input-number
 									v-model="scope.row.dayWithdrawalNum"
 									size="medium"
-									maxlength="10"
+									:max="999999999"
 									placeholder="请输入"
 									clearable
 									style="width: 150px"
-									onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
 									@blur="
 										checkTransferValue(scope.row,'dayWithdrawalNum')
 									"
@@ -45,10 +45,9 @@
 								<el-input-number
 									v-model.number="scope.row.dayWithdrawalQuota"
 									size="medium"
-									maxlength="10"
+									:max="999999999"
 									placeholder="请输入"
 									clearable
-									onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
 									style="width: 150px"
 									@blur="
 										checkTransferValue(scope.row,'dayWithdrawalQuota')
@@ -63,11 +62,10 @@
 								<el-input-number
 									v-model="scope.row.upgradeBonus"
 									size="medium"
-									maxlength="10"
+									:max="999999999"
 									placeholder="请输入"
 									clearable
 									:precision="0"
-									onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
 									style="width: 150px"
 									@blur="
 										checkTransferValue(scope.row,'upgradeBonus')
@@ -82,9 +80,8 @@
 								<el-input-number
 									v-model="scope.row.birthdayBonus"
 									size="medium"
-									maxlength="10"
+									:max="999999999"
 									placeholder="请输入"
-									onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
 									clearable
 									style="width: 150px"
 									@blur="
@@ -100,10 +97,9 @@
 								<el-input-number
 									v-model="scope.row.aboveMonthRedEnvelope"
 									size="medium"
-									maxlength="10"
+									:max="999999999"
 									placeholder="请输入"
 									clearable
-									onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
 									style="width: 150px"
 									@blur="
 										checkTransferValue(scope.row,'aboveMonthRedEnvelope')
@@ -118,9 +114,8 @@
 								<el-input-number
 									v-model="scope.row.belowMonthRedEnvelope"
 									size="medium"
-									maxlength="10"
+									:max="999999999"
 									placeholder="请输入"
-									onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
 									clearable
 									style="width: 150px"
 									@blur="
@@ -140,13 +135,12 @@
 					style="padding: 0 8px"
 					@click="saveData()"
 				>
-					保存
+					保存merchantDict
 				</el-button>
 				<el-button
 					icon="el-icon-refresh-left"
 					size="medium"
 					style="padding: 0 8px"
-					:disabled="!dataList[0].flag"
 					@click="resetData()"
 				>
 					恢复上次配置
