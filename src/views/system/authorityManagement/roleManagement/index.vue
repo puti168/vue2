@@ -1,35 +1,5 @@
 <template>
 	<div class="game-container report-container">
-		<div class="header flex-h flex-bc">
-			<h2 class="h2-line">角色管理</h2>
-			<div class="head flex-h-end">
-				<el-button
-					type="primary"
-					icon="el-icon-search"
-					:disabled="loading"
-					size="medium"
-					@click="query"
-				>
-					查询
-				</el-button>
-				<el-button
-					icon="el-icon-refresh-left"
-					:disabled="loading"
-					size="medium"
-					@click="reset"
-				>
-					重置
-				</el-button>
-				<el-button
-					type="primary"
-					icon="el-icon-folder-add"
-					size="medium"
-					@click="add"
-				>
-					新增
-				</el-button>
-			</div>
-		</div>
 		<div class="view-container dealer-container">
 			<div class="params">
 				<el-form
@@ -38,43 +8,45 @@
 					:model="queryData"
 					label-width="100px"
 				>
-					<el-form-item label="银行卡号">
+					<el-form-item label="角色名称：">
 						<el-input
-							v-model="queryData.bankCode"
+							v-model="queryData.roleName"
 							clearable
 							size="medium"
-							style="width: 280px"
-							placeholder="请输入银行卡号"
+							style="width: 180px"
+							placeholder="请输入"
 							:disabled="loading"
 							@keyup.enter.native="enterSearch"
 						></el-input>
 					</el-form-item>
-					<el-form-item label="银行名称">
-						<el-input
-							v-model="queryData.bankName"
-							clearable
-							size="medium"
-							style="width: 280px"
-							placeholder="请输入银行名称"
+					<el-form-item>
+						<el-button
+							type="primary"
+							icon="el-icon-search"
 							:disabled="loading"
-							@keyup.enter.native="enterSearch"
-						></el-input>
-					</el-form-item>
-					<el-form-item label="时间">
-						<el-date-picker
-							v-model="formTime.time"
 							size="medium"
-							:picker-options="pickerOptions"
-							format="yyyy-MM-dd HH:mm:ss"
-							type="datetimerange"
-							range-separator="-"
-							start-placeholder="开始日期"
-							end-placeholder="结束日期"
-							align="right"
-							clearable
-							value-format="timestamp"
-							style="width: 280px"
-						></el-date-picker>
+							@click="search"
+						>
+							查询
+						</el-button>
+						<el-button
+							icon="el-icon-refresh-left"
+							:disabled="loading"
+							size="medium"
+							@click="reset"
+						>
+							重置
+						</el-button>
+						<el-button
+							type="warning"
+							icon="el-icon-folder"
+							:disabled="loading"
+							size="medium"
+                            style="padding: 0 5px"
+							@click="createRole()"
+						>
+							添加角色
+						</el-button>
 					</el-form-item>
 				</el-form>
 			</div>
@@ -91,26 +63,38 @@
 					<el-table-column
 						prop="bankCode"
 						align="center"
-						label="银行卡号"
+						label="序号"
 					></el-table-column>
 					<el-table-column
 						prop="bankName"
 						align="center"
-						label="银行名称"
+						label="角色名称"
 					></el-table-column>
 					<el-table-column
 						prop="createDt"
 						align="center"
-						label="创建时间"
+						label="角色描述"
 					></el-table-column>
 					<el-table-column
 						prop="updateDt"
 						align="center"
-						label="更新时间"
+						label="调加时间"
 					></el-table-column>
-
+                    <el-table-column
+                        prop="updateDt"
+                        align="center"
+                        label="创建人"
+                    ></el-table-column>
 					<el-table-column align="center" label="操作">
 						<template slot-scope="scope">
+                            <el-button
+                                type="warning"
+                                icon="el-icon-edit"
+                                size="medium"
+                                @click.stop="editUp(scope.row)"
+                            >
+                                编辑
+                            </el-button>
 							<el-button
 								type="danger"
 								icon="el-icon-delete"
@@ -118,14 +102,6 @@
 								@click="deleteUp(scope.row)"
 							>
 								删除
-							</el-button>
-							<el-button
-								type="warning"
-								icon="el-icon-edit"
-								size="medium"
-								@click.stop="editUp(scope.row)"
-							>
-								修改
 							</el-button>
 						</template>
 					</el-table-column>
@@ -142,27 +118,6 @@
 					@current-change="handleCurrentChange"
 					@size-change="handleSizeChange"
 				></el-pagination>
-				<el-dialog
-					:title="moduleBox"
-					center
-					:visible.sync="editVisible"
-					:before-close="closeFormDialog"
-					width="410px"
-				>
-					<div slot="footer" class="dialog-footer">
-						<el-button @click="editVisible = false">取 消</el-button>
-						<el-button
-							v-if="moduleBox == '新增银行信息'"
-							type="primary"
-							@click="submitAdd"
-						>
-							确 定
-						</el-button>
-						<el-button v-else type="primary" @click="submitEdit">
-							确 定
-						</el-button>
-					</div>
-				</el-dialog>
 			</div>
 		</div>
 	</div>
@@ -170,18 +125,18 @@
 
 <script>
 import list from '@/mixins/list'
+import { routerNames } from '@/utils/consts'
+
 export default {
-	name: '',
+	name: routerNames.roleManage,
 	components: {},
 	mixins: [list],
 	data() {
 		return {
-			queryData: {},
-			formTime: {
-				time: []
-			},
+			queryData: {
+                roleName: undefined
+            },
 			dataList: [],
-			moduleBox: '',
 			showForm: '',
 			editVisible: false,
 			editFormData: {}
@@ -287,7 +242,8 @@ export default {
 		},
 		enterSubmit() {
 			this.query()
-		}
+		},
+        createRole() {}
 	}
 }
 </script>
