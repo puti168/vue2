@@ -119,7 +119,6 @@ export default {
 				accountType: '',
 				transferProxyName: '',
 				applyInfo: '',
-				userId: undefined,
 				transferProxyId: undefined,
 				currentProxyId: undefined,
 				currentProxyName: undefined
@@ -210,7 +209,6 @@ export default {
 								this.tipsShow = null
 								this.form.accountType = data.accountType + ''
 								this.form.currentProxyName = data.parentProxyName
-								this.form.userId = data.id
 								this.form.currentProxyId = data.parentProxyId
 							} else {
 								this.tipsShow = msg

@@ -75,6 +75,17 @@
 						</template>
 					</el-table-column>
 					<el-table-column prop="birthdayBonus" align="center" label="生日礼金">
+						<template slot="header" slot-scope="scope">
+                            <el-popover placement="top-start" title="提示" width="280" trigger="hover">
+                                <div v-if="!scope.row">
+                                    <p>会员生日时，系统根据当前的vip等级在24点触发日那天发出生日礼金。 </p>
+                                    <p>账号注册时间和会员生日时间一定要相差3个月，小于时系统将不派发生日礼金 </p>
+                                </div>
+                                <div slot="reference" class="el-icon-question">
+                                    <span class="other-class">生日礼金</span>
+                                </div>
+                            </el-popover>
+                        </template>
 						<template slot-scope="scope">
 							<span>
 								<el-input-number
@@ -92,6 +103,16 @@
 						</template>
 					</el-table-column>
 					<el-table-column prop="aboveMonthRedEnvelope" align="center" label="上半月红包">
+						<template slot="header" slot-scope="scope">
+                            <el-popover placement="top-start" title="提示" width="280" trigger="hover">
+                                <div v-if="!scope.row">
+                                    <p>每月1号，固定发放的奖励金额</p>
+                                </div>
+                                <div slot="reference" class="el-icon-question">
+                                    <span class="other-class">上半月红包</span>
+                                </div>
+                            </el-popover>
+                        </template>
 						<template slot-scope="scope">
 							<span>
 								<el-input-number
@@ -109,6 +130,16 @@
 						</template>
 					</el-table-column>
 					<el-table-column align="center" label="下半月红包" width="300">
+						<template slot="header" slot-scope="scope">
+                            <el-popover placement="top-start" title="提示" width="280" trigger="hover">
+                                <div v-if="!scope.row">
+                                    <p>每月15号，固定发放的奖励金额</p>
+                                </div>
+                                <div slot="reference" class="el-icon-question">
+                                    <span class="other-class">下半月红包</span>
+                                </div>
+                            </el-popover>
+                        </template>
 						<template slot-scope="scope">
 							<span>
 								<el-input-number
@@ -135,7 +166,7 @@
 					style="padding: 0 8px"
 					@click="saveData()"
 				>
-					保存merchantDict
+					保存
 				</el-button>
 				<el-button
 					icon="el-icon-refresh-left"
