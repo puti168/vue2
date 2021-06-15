@@ -1,4 +1,4 @@
-import { login, getDics, logout, merchantDictAPI } from '@/api/user'
+import { login, getDics, logout } from '@/api/user'
 import { getUserPermissions } from '@/api/role'
 import Cookies from 'js-cookie'
 import {
@@ -103,12 +103,12 @@ const mutations = {
 				}
 			})
 		}
-	},
-	SETRISKRANKINFO(state, data) {
-		const { windControl, userLabel } = data
-		state.vipDict = windControl || []
-		state.userLabel = userLabel || []
 	}
+	// SETRISKRANKINFO(state, data) {
+	// 	const { windControl, userLabel } = data
+	// 	state.vipDict = windControl || []
+	// 	state.userLabel = userLabel || []
+	// }
 }
 
 const actions = {
@@ -209,16 +209,16 @@ const actions = {
 			commit('SET_DATA', null)
 			resolve()
 		})
-	},
-	//    会员的风控层级
-	userRiskRank({ commit }) {
-		return merchantDictAPI().then((res) => {
-			const { code, data } = res
-			if (code === 200 && data) {
-				commit('SETRISKRANKINFO', data)
-			}
-		})
 	}
+	//    会员的风控层级
+	// userRiskRank({ commit }) {
+	// 	return merchantDictAPI().then((res) => {
+	// 		const { code, data } = res
+	// 		if (code === 200 && data) {
+	// 			commit('SETRISKRANKINFO', data)
+	// 		}
+	// 	})
+	// }
 }
 
 function loop(data, result) {
