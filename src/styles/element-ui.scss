@@ -22,7 +22,13 @@
 	position: relative;
 	margin: 0 auto;
 }
-
+.el-icon-question:after {
+    content: '\E7A4';
+    font-size: 25px;
+}
+.el-icon-question::before {
+    content: '';
+}
 // refine element ui upload
 .upload-container {
 	.el-upload {
@@ -34,7 +40,6 @@
 		}
 	}
 }
-
 .avatar-uploader {
 	.avatar {
 		width: 178px;
@@ -195,5 +200,13 @@
 .audit-confirm {
 	.el-form-item__error {
 		left: 100px;
+	}
+}
+.col-setting {
+	.el-dialog__body {
+		text-align: left;
+		.setting-div {
+			margin-top: 10px;
+		}
 	}
 }
