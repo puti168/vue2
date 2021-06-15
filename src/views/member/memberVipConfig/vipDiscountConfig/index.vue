@@ -48,7 +48,9 @@
                                 <div v-if="!scope.row">
                                     <div>转账额度*红利比例=最终红利金额</div>
                                 </div>
-                                <div slot="reference" class="el-icon-question">红利比例</div>
+                                <div slot="reference" class="el-icon-question">
+                                    <span class="other-class">红利比例</span>
+                                </div>
                             </el-popover>
                         </template>
 						<template slot-scope="scope">
@@ -291,6 +293,10 @@ export default {
 .btn_footer {
 	text-align: center;
 	margin-top: 50px;
+}
+.other-class {
+    color: rgba(0, 0, 0, 0.847058823529412);
+    font-weight: 700;
 }
 /deep/ .el-icon-question:after {
     content: '\E7A4';
