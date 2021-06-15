@@ -1,287 +1,338 @@
 <template>
-  <div class="game-container report-container">
-    <div class="header flex-h flex-bc">
-      <h2 class="h2-line">账户设置</h2>
-      <div class="head flex-h-end">
-        <el-button
-          type="primary"
-          icon="el-icon-search"
-          :disabled="loading"
-          size="medium"
-          @click="query"
-        >
-          查询
-        </el-button>
-        <el-button
-          icon="el-icon-refresh-left"
-          :disabled="loading"
-          size="medium"
-          @click="reset"
-        >
-          重置
-        </el-button>
-        <el-button type="primary" icon="el-icon-folder-add" size="medium" @click="add">
-          新增
-        </el-button>
-      </div>
-    </div>
-    <div class="view-container dealer-container">
-      <div class="params">
-        <el-form ref="form" :inline="true" :model="queryData" label-width="100px">
-          <el-form-item label="银行卡号">
-            <el-input
-              v-model="queryData.bankCode"
-              clearable
-              size="medium"
-              style="width: 280px"
-              placeholder="请输入银行卡号"
-              :disabled="loading"
-              @keyup.enter.native="enterSearch"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="银行名称">
-            <el-input
-              v-model="queryData.bankName"
-              clearable
-              size="medium"
-              style="width: 280px"
-              placeholder="请输入银行名称"
-              :disabled="loading"
-              @keyup.enter.native="enterSearch"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="时间">
-            <el-date-picker
-              v-model="formTime.time"
-              size="medium"
-              :picker-options="pickerOptions"
-              format="yyyy-MM-dd HH:mm:ss"
-              type="datetimerange"
-              range-separator="-"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-              align="right"
-              clearable
-              value-format="timestamp"
-              style="width: 280px"
-            ></el-date-picker>
-          </el-form-item>
-        </el-form>
-      </div>
-      <div class="content">
-        <el-table
-          v-loading="loading"
-          border
-          size="mini"
-          class="small-size-table"
-          :data="dataList"
-          style="width: 100%"
-          :header-cell-style="getRowClass"
-        >
-          <el-table-column
-            prop="bankCode"
-            align="center"
-            label="银行卡号"
-          ></el-table-column>
-          <el-table-column
-            prop="bankName"
-            align="center"
-            label="银行名称"
-          ></el-table-column>
-          <el-table-column
-            prop="createDt"
-            align="center"
-            label="创建时间"
-          ></el-table-column>
-          <el-table-column
-            prop="updateDt"
-            align="center"
-            label="更新时间"
-          ></el-table-column>
+	<div class="game-container report-container addMember-container">
+		<div class="line-member"></div>
+		<div class="addMember-content">
+			<div class="form-header">
+				<span>账户设置</span>
+			</div>
+			<el-form ref="form" :model="form" :rules="rules" label-width="124px">
+				<div class="ctbox">
+					<el-avatar
+						shape="square"
+						:size="150"
+						class="fit"
+						:src="url"
+					></el-avatar>
+				</div>
 
-          <el-table-column align="center" label="操作">
-            <template slot-scope="scope">
-              <el-button
-                type="danger"
-                icon="el-icon-delete"
-                size="medium"
-                @click="deleteUp(scope.row)"
-              >
-                删除
-              </el-button>
-              <el-button
-                type="warning"
-                icon="el-icon-edit"
-                size="medium"
-                @click.stop="editUp(scope.row)"
-              >
-                修改
-              </el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-        <!-- 分页 -->
-        <el-pagination
-          v-show="dataList.length > 0"
-          :current-page.sync="pageNum"
-          background
-          layout="total, sizes,prev, pager, next, jumper"
-          :page-size="pageSize"
-          :page-sizes="$store.getters.pageSizes"
-          :total="15"
-          @current-change="handleCurrentChange"
-          @size-change="handleSizeChange"
-        ></el-pagination>
-        <el-dialog
-          :title="moduleBox"
-          center
-          :visible.sync="editVisible"
-          :before-close="closeFormDialog"
-          width="410px"
-        >
-          <div slot="footer" class="dialog-footer">
-            <el-button @click="editVisible = false">取 消</el-button>
-            <el-button
-              v-if="moduleBox == '新增银行信息'"
-              type="primary"
-              @click="submitAdd"
-              >确 定</el-button>
-            <el-button v-else type="primary" @click="submitEdit">确 定</el-button>
-          </div>
-        </el-dialog>
-      </div>
-    </div>
-  </div>
+				<el-form-item label="角色名称：">
+					<el-input
+						v-model="form.realName"
+						readonly
+						unselectable="on"
+						size="medium"
+						clearable
+						maxlength="6"
+						style="width: 365px"
+					></el-input>
+				</el-form-item>
+				<el-form-item label="用户名称：">
+					<el-input
+						v-model="form.realName"
+            readonly
+						unselectable="on"
+						size="medium"
+						placeholder="请输入"
+						clearable
+						maxlength="6"
+						style="width: 365px"
+					></el-input>
+				</el-form-item>
+				<el-form-item label="联系电话：">
+					<el-input
+						v-model="form.realName"
+						size="medium"
+						placeholder="请输入联系电话"
+						clearable
+						maxlength="6"
+						style="width: 365px"
+					></el-input>
+				</el-form-item>
+				<el-form-item label="旧登录密码：">
+					<el-input
+						v-model="form.realpassword"
+						:type="passwordType"
+						name="password"
+						size="medium"
+						placeholder="请输入原登录密码"
+						clearable
+						maxlength="6"
+						style="width: 365px"
+					></el-input>
+					<span class="show-pwd" @click="showPwd">
+						<svg-icon
+							:icon-class="passwordType === 'password' ? 'eye' : 'eye-open'"
+						/>
+					</span>
+				</el-form-item>
+				<el-form-item label="新登录密码：">
+					<el-input
+						v-model="form.realName"
+						:type="passwordType"
+						name="password"
+						size="medium"
+						placeholder="请输入原登录密码"
+						clearable
+						maxlength="6"
+						style="width: 365px"
+					></el-input>
+          <span class="show-pwd" @click="showPwd">
+						<svg-icon
+							:icon-class="passwordType === 'password' ? 'eye' : 'eye-open'"
+						/>
+					</span>
+				</el-form-item>
+				<el-form-item label="确认新登录密码：">
+					<el-input
+						v-model="form.realName"
+						:type="passwordType"
+						name="password"
+						size="medium"
+						placeholder="请确认新登录密码"
+						clearable
+						maxlength="6"
+						style="width: 365px"
+					></el-input>
+          <span class="show-pwd" @click="showPwd">
+						<svg-icon
+							:icon-class="passwordType === 'password' ? 'eye' : 'eye-open'"
+						/>
+					</span>
+				</el-form-item>
+
+				<el-form-item>
+					<el-button
+						type="primary"
+            class="dut"
+						:disabled="loading"
+						size="medium"
+						@click="onUpdateUser"
+					>
+						确认修改
+					</el-button>
+				</el-form-item>
+			</el-form>
+		</div>
+	</div>
 </template>
 
 <script>
+import { routerNames } from '@/utils/consts'
 import list from '@/mixins/list'
-export default {
-  name: '',
-  components: {},
-  mixins: [list],
-  data() {
-    return {
-      queryData: {},
-      formTime: {
-        time: []
-      },
-      dataList: [],
-      moduleBox: '',
-      showForm: '',
-      editVisible: false,
-      editFormData: {}
-    }
-  },
-  computed: {},
-  mounted() {
-    for (let i = 0; i < 10; i++) {
-      this.dataList[i] = {
-        bankCode: '165416416464654',
-        bankName: '中国银行',
-        createDt: '2021-02-13 20:28:54',
-        updateDt: '2021-02-13 20:28:54'
-      }
-    }
-  },
-  methods: {
-    // loadData(params) {
-    //   params = {
-    //     ...this.getParams(params)
-    //   }
-    //   getQueryBank(params).then((res) => {
-    //     console.log('res:', res)
-    //     if (res.code === 200) {
-    //       this.loading = false
-    //       this.dataList = res.data
-    //     } else {
-    //       this.loading = false
-    //       this.$message({
-    //         message: res.msg,
-    //         type: 'error'
-    //       })
-    //     }
-    //   })
-    // },
-    query() {
-      this.loading = true
-      const create = this.formTime.time || []
-      const [startTime, endTime] = create
-      const params = {
-        ...this.queryData,
-        pageNum: 1,
-        startTime: startTime && startTime + '',
-        endTime: endTime && endTime + ''
-      }
-      console.log(params)
-      this.loadData(params)
-    },
-    reset() {
-      this.queryData = {}
-      this.formTime.time = []
-      // this.loadData()
-    },
+import { notSpecial2, isHaveEmoji } from '@/utils/validate'
+import { EMAIL_PATTERN } from '@/utils/pattern'
 
-    add() {
-      this.moduleBox = '新增银行信息'
-      this.editVisible = true
-    },
-    submitAdd() {
-      console.log(this.$refs.addForm)
-      //   setAddBank(this.queryData).then((res) => {
-      //     console.log(res);
-      //   });
-    },
-    deleteUp(val) {
-      console.log(val)
-      this.$confirm('确定删除此银行卡号吗?', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      })
-        .then(() => {
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-          })
-          // setDeleteBank(val).then((res) => {
-          //   console.log(res);
-          // });
-        })
-        .catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          })
-        })
-    },
-    editUp(val) {
-      this.moduleBox = '修改银行信息'
-      this.editVisible = true
-      this.editFormData = val
-    },
-    submitEdit() {
-      // setEidteBank().then((res) => {
-      //   console.log(res);
-      // });
-    },
-    handleCurrentChange() {
-      this.loadData()
-    },
-    closeFormDialog() {
-      this.editVisible = false
-    },
-    enterSubmit() {
-      this.query()
-    }
-  }
+export default {
+	name: routerNames.addMember,
+	mixins: [list],
+	data() {
+		return {
+			passwordType: 'password',
+			loading: false,
+			form: {
+				accountType: '4',
+				username: '',
+				password: '',
+				mobile: '',
+				parentProxyName: '',
+				gender: '1',
+				vipExperenceValue: '',
+				email: '',
+				realName: '',
+				applyInfo: ''
+			}
+		}
+	},
+	computed: {
+		accountTypeArr() {
+			return this.globalDics.accountType
+		},
+		genderType() {
+			const arr = []
+			if (this.globalDics.genderType && this.globalDics.genderType.length) {
+				this.globalDics.genderType.forEach((item) => {
+					arr.unshift(item)
+				})
+			}
+			return arr
+		},
+		rules() {
+			const reg2 = /^([a-zA-Z0-9]*[a-zA-Z]+[0-9]+[a-zA-Z0-9]*|[a-zA-Z0-9]*[0-9]+[a-zA-Z]+[a-zA-Z0-9]*)$/
+
+			const testPassword = (rule, value, callback) => {
+				const isSpecial = !notSpecial2(String(value))
+				const isRmoji = isHaveEmoji(String(value))
+				if (isSpecial) {
+					callback(new Error('不支持空格及特殊字符'))
+				} else if (isRmoji) {
+					callback(new Error('不支持表情'))
+				} else if (!reg2.test(value)) {
+					callback(new Error('请输入8-12位，字母+数字组合'))
+				} else {
+					callback()
+				}
+			}
+
+			// const testMobile = (rule, value, callback) => {
+			// 	if (!!value && !MOBILE_PATTERN.test(value)) {
+			// 		callback(new Error('请输入有效的手机号码'))
+			// 	} else {
+			// 		callback()
+			// 	}
+			// }
+
+			const testEmail = (rule, value, callback) => {
+				if (!!value && !EMAIL_PATTERN.test(value)) {
+					callback(new Error('请输入正确的邮箱'))
+				} else {
+					callback()
+				}
+			}
+
+			return {
+				accountType: [
+					{ required: true, message: '请选择账号类型', trigger: 'change' }
+				],
+				password: [
+					{
+						required: true,
+						validator: testPassword,
+						trigger: 'blur'
+					},
+					{
+						min: 8,
+						max: 12,
+						message: '请输入8-12位，字母+数字组合',
+						trigger: 'blur'
+					}
+				],
+				// mobile: [
+				// 	{
+				// 		required: false,
+				// 		validator: testMobile,
+				// 		trigger: 'blur'
+				// 	}
+				// ],
+				email: [
+					{
+						required: false,
+						validator: testEmail,
+						trigger: 'blur'
+					}
+				]
+			}
+		}
+	},
+	mounted() {},
+	methods: {
+	showPwd() {
+			if (this.passwordType === 'password') {
+				this.passwordType = ''
+			} else {
+				this.passwordType = 'password'
+			}
+			this.$nextTick(() => {
+				this.fixInput(this.$refs.password)
+			})
+      },
+		onUpdateUser() {
+		console.log('submit!')
+		},
+		reset() {
+			this.$refs['form'].resetFields()
+			this.form = {
+				accountType: '4',
+				username: '',
+				password: '',
+				mobile: '',
+				parentProxyName: '',
+				gender: '1',
+				vipExperenceValue: '',
+				email: '',
+				realName: '',
+				applyInfo: ''
+			}
+		},
+		checkValue(val) {}
+	}
 }
 </script>
 
 <style lang="scss" scoped>
+$dark_gray: #889aa4;
+.dut{
+  margin-left: 165px;
+}
+.show-pwd {
+		position: absolute;
+		right: 10px;
+		top: 4px;
+		font-size: 16px;
+		color: $dark_gray;
+		cursor: pointer;
+		user-select: none;
+	}
+.ctbox {
+	width: 300px;
+	margin: 0 auto;
+}
+.fit {
+	margin-left: 110px;
+}
 /deep/.el-dialog__header {
-  text-align: center;
-  color: #909399;
-  font-weight: 700;
+	text-align: center;
+	color: #909399;
+	font-weight: 700;
+}
+.addMember-container {
+	background-color: #f5f5f5;
+	margin: 0;
+	min-height: calc(100vh - 105px);
+	.line-member {
+		height: 50px;
+	}
+	.addMember-content {
+		width: 1000px;
+		margin: 0 auto;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		background-color: #fff;
+		position: relative;
+		padding-top: 65px;
+		.form-header {
+			height: 45px;
+			line-height: 45px;
+			span:nth-child(1) {
+				position: absolute;
+				left: 30px;
+				top: 0;
+				color: #666;
+				font-size: 14px;
+				font-weight: 700;
+			}
+			span:nth-child(2) {
+				position: absolute;
+				right: 30px;
+				color: #999;
+				font-weight: 400;
+				font-size: 14px;
+				top: 0;
+			}
+		}
+	}
+	.addMember-content::after {
+		position: absolute;
+		top: 45px;
+		content: '';
+		width: 100%;
+		background-color: rgba(233, 233, 233, 1);
+		height: 1px;
+	}
+
+	///deep/ input::-webkit-outer-spin-button,
+	///deep/ input::-webkit-inner-spin-button {
+	//	display: none;
+	//}
 }
 </style>
