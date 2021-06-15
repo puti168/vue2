@@ -42,7 +42,7 @@
 							icon="el-icon-folder"
 							:disabled="loading"
 							size="medium"
-                            style="padding: 0 5px"
+							style="padding: 0 5px"
 							@click="createRole()"
 						>
 							添加角色
@@ -60,16 +60,21 @@
 					style="width: 100%"
 					:header-cell-style="getRowClass"
 				>
-					<el-table-column
-						prop="bankCode"
-						align="center"
-						label="序号"
-					></el-table-column>
-					<el-table-column
-						prop="bankName"
-						align="center"
-						label="角色名称"
-					></el-table-column>
+					<el-table-column prop="index" align="center" label="序号" width="100">
+						<template slot-scope="scope">
+							<span>
+								{{ scope.row.index + 1 }}
+							</span>
+						</template>
+					</el-table-column>
+					<el-table-column prop="roleName" align="center" label="角色名称">
+						<template slot-scope="scope">
+							<span v-if="!!scope.row.roleName">
+								{{ scope.row.roleName }}
+							</span>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="createDt"
 						align="center"
@@ -80,21 +85,21 @@
 						align="center"
 						label="调加时间"
 					></el-table-column>
-                    <el-table-column
-                        prop="updateDt"
-                        align="center"
-                        label="创建人"
-                    ></el-table-column>
+					<el-table-column
+						prop="updateDt"
+						align="center"
+						label="创建人"
+					></el-table-column>
 					<el-table-column align="center" label="操作">
 						<template slot-scope="scope">
-                            <el-button
-                                type="warning"
-                                icon="el-icon-edit"
-                                size="medium"
-                                @click.stop="editUp(scope.row)"
-                            >
-                                编辑
-                            </el-button>
+							<el-button
+								type="warning"
+								icon="el-icon-edit"
+								size="medium"
+								@click.stop="editUp(scope.row)"
+							>
+								编辑
+							</el-button>
 							<el-button
 								type="danger"
 								icon="el-icon-delete"
@@ -108,13 +113,13 @@
 				</el-table>
 				<!-- 分页 -->
 				<el-pagination
-					v-show="dataList.length > 0"
+					v-show="!!total"
 					:current-page.sync="pageNum"
 					background
 					layout="total, sizes,prev, pager, next, jumper"
 					:page-size="pageSize"
 					:page-sizes="$store.getters.pageSizes"
-					:total="15"
+					:total="total"
 					@current-change="handleCurrentChange"
 					@size-change="handleSizeChange"
 				></el-pagination>
@@ -134,9 +139,10 @@ export default {
 	data() {
 		return {
 			queryData: {
-                roleName: undefined
-            },
+				roleName: undefined
+			},
 			dataList: [],
+			total: 0,
 			showForm: '',
 			editVisible: false,
 			editFormData: {}
@@ -146,7 +152,8 @@ export default {
 	mounted() {
 		for (let i = 0; i < 10; i++) {
 			this.dataList[i] = {
-				bankCode: '165416416464654',
+                index: i,
+                roleName: '165416416464654',
 				bankName: '中国银行',
 				createDt: '2021-02-13 20:28:54',
 				updateDt: '2021-02-13 20:28:54'
@@ -154,41 +161,30 @@ export default {
 		}
 	},
 	methods: {
-		// loadData(params) {
-		//   params = {
-		//     ...this.getParams(params)
-		//   }
-		//   getQueryBank(params).then((res) => {
-		//     console.log('res:', res)
-		//     if (res.code === 200) {
-		//       this.loading = false
-		//       this.dataList = res.data
-		//     } else {
-		//       this.loading = false
-		//       this.$message({
-		//         message: res.msg,
-		//         type: 'error'
-		//       })
-		//     }
-		//   })
-		// },
-		query() {
-			this.loading = true
-			const create = this.formTime.time || []
-			const [startTime, endTime] = create
-			const params = {
-				...this.queryData,
-				pageNum: 1,
-				startTime: startTime && startTime + '',
-				endTime: endTime && endTime + ''
-			}
-			console.log(params)
-			this.loadData(params)
+		loadData(params) {
+		  params = {
+		    ...this.getParams(params)
+		  }
+		  // getQueryBank(params).then((res) => {
+		  //   console.log('res:', res)
+		  //   if (res.code === 200) {
+		  //     this.loading = false
+		  //     this.dataList = res.data
+		  //   } else {
+		  //     this.loading = false
+		  //     this.$message({
+		  //       message: res.msg,
+		  //       type: 'error'
+		  //     })
+		  //   }
+		  // })
 		},
 		reset() {
-			this.queryData = {}
-			this.formTime.time = []
-			// this.loadData()
+            this.$refs['form'].resetFields()
+			this.queryData = {
+                roleName: undefined
+            }
+			this.loadData()
 		},
 
 		add() {
@@ -234,16 +230,10 @@ export default {
 			//   console.log(res);
 			// });
 		},
-		handleCurrentChange() {
-			this.loadData()
-		},
 		closeFormDialog() {
 			this.editVisible = false
 		},
-		enterSubmit() {
-			this.query()
-		},
-        createRole() {}
+		createRole() {}
 	}
 }
 </script>
