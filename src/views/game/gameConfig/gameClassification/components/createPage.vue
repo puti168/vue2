@@ -242,7 +242,7 @@ export default {
 	},
 	computed: {
 		terminalTypeArr() {
-			return this.globalDics.terminalnType
+            return this.globalDics.betDeviceType
 		},
 		gameDisplayArr() {
 			return this.globalDics.gameDisplayType

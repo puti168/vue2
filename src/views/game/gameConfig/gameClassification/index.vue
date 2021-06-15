@@ -433,7 +433,7 @@ export default {
 			return this.globalDics.gameStatusType
 		},
 		terminalTypeArr() {
-			return this.globalDics.terminalnType
+            return this.globalDics.betDeviceType
 		},
 		gameDisplayArr() {
 			return this.globalDics.gameDisplayType
