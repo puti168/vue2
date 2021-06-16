@@ -206,7 +206,7 @@ export default {
 				spinner: 'el-icon-loading',
 				background: 'rgba(0, 0, 0, 0.7)'
 			})
-			this.$confirm('确定删除此银行卡号吗?', {
+			this.$confirm('确定删除此角色吗?', {
 				confirmButtonText: '确定',
 				cancelButtonText: '取消',
 				type: 'warning'
@@ -222,10 +222,6 @@ export default {
 				})
 				.catch(() => {
 					loading.close()
-					this.$message({
-						type: 'info',
-						message: '已取消删除'
-					})
 				})
 			setTimeout(() => {
 				loading.close()

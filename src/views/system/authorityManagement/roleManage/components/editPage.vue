@@ -1,5 +1,5 @@
 <template>
-	<div class="game-container report-container editPicturePage-container">
+	<div class="game-container report-container editRolePage-container">
 		<div class="roleEdit-content">
 			<div class="form-header">
 				<span>创建/编辑</span>
@@ -33,16 +33,28 @@
 							type="textarea"
 							placeholder="请输入"
 							clearable
-							maxlength="50"
+							maxlength="300"
 							show-word-limit
 							style="width: 365px"
 						></el-input>
 					</el-form-item>
 				</el-form>
 			</div>
-            <div class="content-part3">
-                <p class="part-title">角色权限</p>
-            </div>
+			<div class="content-part3">
+				<p class="part-title">角色权限</p>
+				<div class="role-container">
+					<el-row class="btn-control">
+						<el-button
+							v-for="item in dataList"
+							:key="item.id"
+							type="info"
+							class="btn-style-role"
+						>
+							{{ item.permissionName }}
+						</el-button>
+					</el-row>
+				</div>
+			</div>
 		</div>
 	</div>
 </template>
@@ -67,7 +79,8 @@ export default {
 				roleName: undefined,
 				remark: undefined,
 				id: undefined
-			}
+			},
+			dataList: []
 		}
 	},
 	computed: {
@@ -107,31 +120,32 @@ export default {
 		}
 	},
 	watch: {
-		editData: {
-			handler(newData) {
-				if (Object.keys(newData).length) {
-					this.queryData = {
-						...newData
-					}
-					if (this.queryData.imageAddress) {
-						this.$nextTick(() => {
-							this.$refs.imgUpload.state = 'image'
-							this.$refs.imgUpload.fileUrl = newData.imageAddress
-						})
-					}
-				} else {
-					this.queryData = {
-                        roleName: undefined,
-                        remark: undefined,
-                        id: undefined
-					}
-				}
-			},
-			deep: true,
-			immediate: true
-		}
+		// editData: {
+		// 	handler(newData) {
+		// 		if (Object.keys(newData).length) {
+		// 			this.queryData = {
+		// 				...newData
+		// 			}
+		// 			if (this.queryData.imageAddress) {
+		// 				this.$nextTick(() => {
+		// 					this.$refs.imgUpload.state = 'image'
+		// 					this.$refs.imgUpload.fileUrl = newData.imageAddress
+		// 				})
+		// 			}
+		// 		} else {
+		// 			this.queryData = {
+		// 				roleName: undefined,
+		// 				remark: undefined,
+		// 				id: undefined
+		// 			}
+		// 		}
+		// 	},
+		// 	deep: true,
+		// 	immediate: true
+		// }
 	},
 	mounted() {
+		this.getRoleList()
 		// this.$nextTick(() => {
 		// 	!this.updateStatus
 		// 		? (this.queryData.displayOrder = this.lastSortId + 1)
@@ -142,6 +156,24 @@ export default {
 	methods: {
 		back() {
 			this.$emit('back')
+		},
+		async getRoleList() {
+			const obj = {}
+			const { code, data } = await this.$api.getRolePermissions()
+			console.log('data', data)
+			if (code === 200) {
+				this.dataList = data
+				data &&
+					data.length &&
+					data.forEach((item) => {
+						data &&
+							data.length &&
+							data.forEach((item) => {
+								obj[item.permissionName] = item
+							})
+					})
+			}
+			console.log('obj', obj)
 		},
 		save() {
 			this.loading = true
@@ -192,9 +224,9 @@ export default {
 		reset() {
 			this.$refs['form'].resetFields()
 			this.queryData = {
-                roleName: undefined,
-                remark: undefined,
-                id: undefined
+				roleName: undefined,
+				remark: undefined,
+				id: undefined
 			}
 		}
 	}
@@ -208,13 +240,19 @@ export default {
 	font-weight: 700;
 }
 /deep/ .el-button--info {
-	background-color: #fff;
-	color: rgba(0, 0, 0, 0.64);
+	background-color: rgba(26, 188, 156, 1);
+	color: #fff;
+	border-color: rgb(28, 195, 162);
 }
 /deep/ .el-button--info:hover {
-	background-color: #eeeded;
+	background-color: #1b9f89;
 }
-.editPicturePage-container {
+/deep/ .el-button + .el-button {
+	margin-left: 0;
+	margin-right: 15px;
+	margin-bottom: 15px;
+}
+.editRolePage-container {
 	background-color: #f5f5f5;
 	margin: 0;
 	min-height: calc(100vh - 105px);
@@ -266,18 +304,35 @@ export default {
 				overflow: hidden;
 			}
 		}
-        .content-part3 {
-            width: 100%;
-            padding: 25px 35px 20px;
-            margin-top: 45px;
-        }
+		.content-part3 {
+			width: 100%;
+			padding: 25px 35px 20px;
+			margin-top: 45px;
+			.role-container {
+				.btn-style-role {
+					width: 120px;
+					height: 30px;
+					color: #fff;
+					border-radius: 0;
+				}
+                .btn-style-role:nth-child(1) {
+                    margin-right: 15px;
+                }
+			}
+			.btn-control {
+				padding-left: 15px;
+				padding-right: 15px;
+			}
+		}
 	}
 
-    .part-title {
-        color: rgba(0, 0, 0, 0.847058823529412);
-        font-size: 14px;
-        font-weight: 650;
-        height: 45px;
-    }
+	.part-title {
+		color: rgba(0, 0, 0, 0.847058823529412);
+		font-size: 14px;
+		font-weight: 650;
+		height: 45px;
+        line-height: 45px;
+        //background-color: #F3F3F3;
+	}
 }
 </style>
