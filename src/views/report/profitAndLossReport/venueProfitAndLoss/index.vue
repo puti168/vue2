@@ -138,6 +138,13 @@
             sortable="custom"
             label="投注盈亏"
           >
+            <template slot="header">
+              <span>投注盈亏</span>
+              <el-tooltip class="item" effect="dark">
+                <i class="el-icon-question" style="position: absolute; right: 10px"></i>
+                <div slot="content">盈亏金额指游戏输赢金额<br />负数表示会员输</div>
+              </el-tooltip>
+            </template>
           </el-table-column>
           <div slot="append">
             <div ref="sum_xiaoji" class="sum_footer">
@@ -253,12 +260,10 @@
 <script>
 import list from '@/mixins/list'
 import dayjs from 'dayjs'
-import { routerNames } from '@/utils/consts'
 const startTime = dayjs().startOf('day').valueOf()
 const endTime = dayjs().endOf('day').valueOf()
 
 export default {
-  name: routerNames.gameBetslipTable,
   components: {},
   mixins: [list],
   data() {
@@ -539,7 +544,10 @@ export default {
   background: #f5f7fa;
   text-align: center;
   width: 100%;
+  font-size: 14px;
   // flex-direction: row;
+  color: #5c5c5c;
+  font-weight: 700;
   border-bottom: 1px solid #ebeef5;
   border-left: 1px solid #ebeef5;
 }
