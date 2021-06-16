@@ -53,6 +53,53 @@
 							{{ item.permissionName }}
 						</el-button>
 					</el-row>
+					<el-row class="role-content">
+						<el-col :span="4">
+							<div class="name">模块</div>
+							<div class="btn-group first">
+								<el-checkbox v-model="checkAllModule">
+									{{ defaultList.permissionName }}
+								</el-checkbox>
+							</div>
+						</el-col>
+						<el-col :span="5">
+							<div class="name">页面</div>
+							<div class="btn-group">
+								<div
+									v-for="(item, idx) in defaultList.children"
+									:key="item.id"
+									class="div-cell"
+								>
+									<el-checkbox
+										v-model="checkedList[idx]"
+										:indeterminate="isIndeterminate"
+									>
+										<span style="font-weight: bold;">
+											{{ item.permissionName }}
+										</span>
+									</el-checkbox>
+									<el-checkbox-group
+										v-model="checkedList[idx]"
+										class="cell-group"
+										@change="handleCheckedCitiesChange11(idx, checkedList[idx])"
+									>
+										<el-checkbox
+											v-for="item in item.children"
+											:key="item.id"
+											class="child-cell"
+											:label="item.permissionName"
+										>
+											{{ item.permissionName }}
+										</el-checkbox>
+									</el-checkbox-group>
+								</div>
+							</div>
+						</el-col>
+						<el-col :span="15">
+							<div class="name">权限配置规则</div>
+							<div class="btn-group"></div>
+						</el-col>
+					</el-row>
 				</div>
 			</div>
 		</div>
@@ -80,7 +127,16 @@ export default {
 				remark: undefined,
 				id: undefined
 			},
-			dataList: []
+			dataList: [],
+			otherArr: [],
+			id: '',
+			defaultList: [],
+			systemOptions1: [],
+			checkedList: [], // 选中的列表
+			checkedAll: [], // 列表类全选
+			systemOptionsList: [], // 所有可选项
+			checkAllModule: false, // 全选
+			isIndeterminate: false // 全选
 		}
 	},
 	computed: {
@@ -158,22 +214,56 @@ export default {
 			this.$emit('back')
 		},
 		async getRoleList() {
-			const obj = {}
+			// const obj = {}
 			const { code, data } = await this.$api.getRolePermissions()
 			console.log('data', data)
 			if (code === 200) {
-				this.dataList = data
-				data &&
-					data.length &&
-					data.forEach((item) => {
-						data &&
-							data.length &&
-							data.forEach((item) => {
-								obj[item.permissionName] = item
-							})
-					})
+				// data &&
+				// 	data.length &&
+				// 	data.forEach((item) => {
+				// 		data &&
+				// 			data.length &&
+				// 			data.forEach((item) => {
+				// 				obj[item.permissionName] = item
+				// 			})
+				// 	})
+				this.filterData(data)
 			}
-			console.log('obj', obj)
+			// console.log('obj', obj)
+		},
+
+		filterData(data) {
+			const arr = []
+			let copyItem = {}
+			const copyData = JSON.parse(JSON.stringify(data))
+			copyData.forEach((route) => {
+				copyItem = JSON.parse(JSON.stringify(route))
+				route.level === 1 ? (copyItem.children = []) : null
+				arr.push(copyItem)
+				if (route.children && route.children.length) {
+					route.children.forEach((item) => {
+						if (item.level === 2) {
+							arr.forEach((val) => {
+								if (val.id === item.parentId) {
+									val.children = [...item.children, ...val.children]
+								}
+							})
+						}
+					})
+				}
+			})
+            this.dataList = arr
+            this.defaultList = arr[0]
+            this.systemOptions1 = arr[0]
+            for (const item in arr) {
+                const strArr = []
+                this.checkedList.push(strArr) // 创建选中数据数组
+                this.systemOptionsList.push(arr[item].children) // 创建所有可选项数组
+                this.checkedAll.push(false) // 所有列表类初始为false
+            }
+            console.log('t', arr)
+            console.log('otherArr', this.otherArr)
+            console.log('defaultList', this.defaultList)
 		},
 		save() {
 			this.loading = true
@@ -309,19 +399,49 @@ export default {
 			padding: 25px 35px 20px;
 			margin-top: 45px;
 			.role-container {
+				padding-left: 15px;
+				padding-right: 15px;
 				.btn-style-role {
 					width: 120px;
 					height: 30px;
 					color: #fff;
 					border-radius: 0;
 				}
-                .btn-style-role:nth-child(1) {
-                    margin-right: 15px;
-                }
+				.btn-style-role:nth-child(1) {
+					margin-right: 15px;
+				}
 			}
 			.btn-control {
-				padding-left: 15px;
-				padding-right: 15px;
+			}
+			.role-content {
+				border: 1px solid #8a90a5;
+				margin-top: 10px;
+				.name {
+					height: 65px;
+					line-height: 65px;
+					text-align: center;
+					color: #666666;
+				}
+				.el-col:nth-child(2) {
+					border-right: 1px solid #8a90a5;
+					border-left: 1px solid #8a90a5;
+				}
+				.btn-group {
+					border-top: 1px solid #8a90a5;
+					.div-cell {
+						height: 48px;
+						line-height: 48px;
+						padding-left: 15px;
+						border-bottom: 1px solid #8a90a5;
+					}
+					.div-cell:last-child {
+						border-bottom: 0;
+					}
+				}
+				.btn-group.first {
+					margin: 0 auto;
+					text-align: center;
+				}
 			}
 		}
 	}
@@ -331,8 +451,17 @@ export default {
 		font-size: 14px;
 		font-weight: 650;
 		height: 45px;
-        line-height: 45px;
-        //background-color: #F3F3F3;
+		line-height: 45px;
+		//background-color: #F3F3F3;
+	}
+	.cell-group {
+		position: absolute;
+		display: flex;
+		width: 200px;
+		height: 1000px;
+	}
+	.child-cell {
+		margin: 5px 0 0 20px;
 	}
 }
 </style>
