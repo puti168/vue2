@@ -135,11 +135,7 @@
 				</div>
 			</div>
 		</div>
-        <editPage
-            v-else
-            :rowData="rowData"
-            @back="back"
-        ></editPage>
+		<editPage v-else :rowData="rowData" @back="back"></editPage>
 	</transition>
 </template>
 
@@ -159,7 +155,7 @@ export default {
 			},
 			dataList: [],
 			total: 0,
-            editPage: false
+			editPage: false
 		}
 	},
 	computed: {},
@@ -204,7 +200,12 @@ export default {
 			this.loadData()
 		},
 		deleteUp(val) {
-			console.log(val)
+			const loading = this.$loading({
+				lock: true,
+				text: 'Loading',
+				spinner: 'el-icon-loading',
+				background: 'rgba(0, 0, 0, 0.7)'
+			})
 			this.$confirm('确定删除此银行卡号吗?', {
 				confirmButtonText: '确定',
 				cancelButtonText: '取消',
@@ -220,22 +221,26 @@ export default {
 					// });
 				})
 				.catch(() => {
+					loading.close()
 					this.$message({
 						type: 'info',
 						message: '已取消删除'
 					})
 				})
+			setTimeout(() => {
+				loading.close()
+			}, 1000)
 		},
-        openEdit(val) {
-            // const { id } = val
-            this.rowData = val
-            // this.rowAssortId = id
-            this.editPage = true
-        },
-        back() {
-            this.editPage = false
-            this.loadData()
-        }
+		openEdit(val) {
+			// const { id } = val
+			this.rowData = val
+			// this.rowAssortId = id
+			this.editPage = true
+		},
+		back() {
+			this.editPage = false
+			this.loadData()
+		}
 	}
 }
 </script>

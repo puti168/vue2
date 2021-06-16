@@ -110,11 +110,6 @@ export default {
 		editData: {
 			handler(newData) {
 				if (Object.keys(newData).length) {
-					delete newData.createdAt
-					delete newData.createdBy
-					delete newData.updatedAt
-					delete newData.updatedBy
-					newData.imageType = newData.imageType + ''
 					this.queryData = {
 						...newData
 					}
@@ -124,9 +119,7 @@ export default {
 							this.$refs.imgUpload.fileUrl = newData.imageAddress
 						})
 					}
-					this.updateStatus = true
 				} else {
-					this.updateStatus = false
 					this.queryData = {
                         roleName: undefined,
                         remark: undefined,
@@ -150,7 +143,7 @@ export default {
 		back() {
 			this.$emit('back')
 		},
-		add() {
+		save() {
 			this.loading = true
 			const params = {
 				...this.queryData
