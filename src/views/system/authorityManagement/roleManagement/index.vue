@@ -60,13 +60,12 @@
 					style="width: 100%"
 					:header-cell-style="getRowClass"
 				>
-					<el-table-column prop="index" align="center" label="序号" width="100">
-						<template slot-scope="scope">
-							<span>
-								{{ scope.row.index + 1 }}
-							</span>
-						</template>
-					</el-table-column>
+					<el-table-column
+						type="index"
+						align="center"
+						label="序号"
+						width="100"
+					></el-table-column>
 					<el-table-column prop="roleName" align="center" label="角色名称">
 						<template slot-scope="scope">
 							<span v-if="!!scope.row.roleName">
@@ -75,21 +74,30 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column
-						prop="createDt"
-						align="center"
-						label="角色描述"
-					></el-table-column>
-					<el-table-column
-						prop="updateDt"
-						align="center"
-						label="调加时间"
-					></el-table-column>
-					<el-table-column
-						prop="updateDt"
-						align="center"
-						label="创建人"
-					></el-table-column>
+					<el-table-column prop="remark" align="center" label="角色描述">
+						<template slot-scope="scope">
+							<span v-if="!!scope.row.remark">
+								{{ scope.row.remark }}
+							</span>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
+					<el-table-column prop="createdAt" align="center" label="添加时间">
+						<template slot-scope="scope">
+							<span v-if="!!scope.row.createdAt">
+								{{ scope.row.createdAt }}
+							</span>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
+					<el-table-column prop="createBy" align="center" label="创建人">
+						<template slot-scope="scope">
+							<span v-if="!!scope.row.createBy">
+								{{ scope.row.createBy }}
+							</span>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
 					<el-table-column align="center" label="操作">
 						<template slot-scope="scope">
 							<el-button
@@ -149,41 +157,44 @@ export default {
 		}
 	},
 	computed: {},
-	mounted() {
-		for (let i = 0; i < 10; i++) {
-			this.dataList[i] = {
-                index: i,
-                roleName: '165416416464654',
-				bankName: '中国银行',
-				createDt: '2021-02-13 20:28:54',
-				updateDt: '2021-02-13 20:28:54'
-			}
-		}
-	},
+	mounted() {},
 	methods: {
 		loadData(params) {
-		  params = {
-		    ...this.getParams(params)
-		  }
-		  // getQueryBank(params).then((res) => {
-		  //   console.log('res:', res)
-		  //   if (res.code === 200) {
-		  //     this.loading = false
-		  //     this.dataList = res.data
-		  //   } else {
-		  //     this.loading = false
-		  //     this.$message({
-		  //       message: res.msg,
-		  //       type: 'error'
-		  //     })
-		  //   }
-		  // })
+			params = {
+				...this.getParams(params)
+			}
+			this.loading = true
+			this.$api
+				.getRoleListPage(params)
+				.then((res) => {
+					const {
+						code,
+						data: { records, total },
+						msg
+					} = res
+					if (code === 200) {
+						this.loading = false
+						this.dataList = records || []
+						this.total = total || 0
+					} else {
+						this.loading = false
+						this.$message({
+							message: msg,
+							type: 'error'
+						})
+					}
+				})
+				.catch(() => (this.loading = false))
+
+			setTimeout(() => {
+				this.loading = false
+			}, 1000)
 		},
 		reset() {
-            this.$refs['form'].resetFields()
+			this.$refs['form'].resetFields()
 			this.queryData = {
-                roleName: undefined
-            }
+				roleName: undefined
+			}
 			this.loadData()
 		},
 
