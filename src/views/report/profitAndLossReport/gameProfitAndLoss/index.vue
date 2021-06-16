@@ -91,7 +91,7 @@
           :header-cell-style="getRowClass"
           @sort-change="_changeTableSort"
         >
-          <el-table-column prop="gameName" align="center" label="场馆">
+          <el-table-column prop="gameName" align="center" label="游戏">
             <template slot-scope="scope">
               <el-button
                 class="lightBlueColor"
@@ -101,10 +101,10 @@
             </template>
           </el-table-column>
           <el-table-column
-            v-if="settingList['项目']"
+            v-if="settingList['场馆']"
             prop="gameName"
             align="center"
-            label="项目"
+            label="场馆"
           >
           </el-table-column>
           <el-table-column
@@ -152,7 +152,7 @@
           </el-table-column>
           <div slot="append">
             <div ref="sum_xiaoji" class="sum_footer">
-              <div class="sum_footer_unit">小计</div>
+              <div class="sum_footer_unit">本页合计</div>
               <div class="sum_footer_unit"></div>
               <div class="sum_footer_unit">{{ getXiaoji("gameRebateRate") }}</div>
               <div class="sum_footer_unit">{{ getXiaoji("gameIcon") }}</div>
@@ -161,7 +161,7 @@
               <div class="sum_footer_unit">{{ getXiaoji("gameStatus") }}</div>
             </div>
             <div ref="sum_heji" class="sum_footer">
-              <div class="sum_footer_unit">合计</div>
+              <div class="sum_footer_unit">全部合计</div>
               <div class="sum_footer_unit"></div>
               <div class="sum_footer_unit">200</div>
               <div class="sum_footer_unit">200</div>
@@ -224,13 +224,13 @@
         </el-row>
         <div slot="footer" class="dialog-footer" style="text-align: center">
           <el-button @click="gameVisible = false">关闭</el-button>
-          <el-button type="primary" @click="gameVisible = false">确定</el-button>
+          <el-button type="primary" @click="gameCheckSub">查询</el-button>
         </div>
       </el-dialog>
       <el-dialog :visible.sync="tableVisible" :destroy-on-close="true">
         <div slot="title" class="dialog-title">
-          <span class="title-text" style="margin-right: 15px">场馆名称:{{ title }}</span>
-          <span class="title-text">项目名称:{{ title1 }}</span>
+          <span class="title-text" style="margin-right: 15px">游戏名称:{{ title }}</span>
+          <span class="title-text">所属场馆:{{ title1 }}</span>
         </div>
         <el-table
           v-loading="loading"
@@ -352,7 +352,7 @@ export default {
       visible: false,
       tableVisible: false,
       settingList: {
-        项目: true,
+        场馆: true,
         投注人数: true
       },
       newList: []
@@ -436,18 +436,14 @@ export default {
       this.venueCheckAll = val
       this.checkedVenue = val ? venue : []
       this.venueIsIndeterminate = false
-      if (this.venueCheckAll && this.gameCheckAll) {
-        console.log(11111111)
-        this.checkAll = true
-        this.isIndeterminate = false
-      } else if (!this.venueIsIndeterminate && !this.gameIsIndeterminate) {
-        console.log(22222222)
-        this.checkAll = false
-        this.isIndeterminate = true
-      } else {
-        console.log(3333333)
-        this.isIndeterminate = true
-      }
+      const vLength = this.venueCheckList.length
+      const gLength = this.gameCheckList.length
+      const venueCheckLength = this.checkedVenue.length
+      const gameCheckLength = this.checkedGame.length
+      this.checkAll = venueCheckLength + gameCheckLength === vLength + gLength
+      this.isIndeterminate =
+        venueCheckLength + gameCheckLength > 0 &&
+        venueCheckLength + gameCheckLength < vLength + gLength
     },
     gameHandleCheckAllChange(val) {
       console.log(val)
@@ -459,19 +455,14 @@ export default {
       this.gameCheckAll = val
       this.checkedGame = val ? game : []
       this.gameIsIndeterminate = false
-      console.log(111, this.venueCheckAll, this.gameCheckAll)
-      if (this.venueCheckAll && this.gameCheckAll) {
-        console.log(11111111)
-        this.checkAll = true
-        this.isIndeterminate = false
-      } else if (!this.venueIsIndeterminate && !this.gameIsIndeterminate) {
-        console.log(22222222)
-        this.checkAll = false
-        this.isIndeterminate = true
-      } else {
-        console.log(3333333)
-        this.isIndeterminate = true
-      }
+      const vLength = this.venueCheckList.length
+      const gLength = this.gameCheckList.length
+      const venueCheckLength = this.checkedVenue.length
+      const gameCheckLength = this.checkedGame.length
+      this.checkAll = venueCheckLength + gameCheckLength === vLength + gLength
+      this.isIndeterminate =
+        venueCheckLength + gameCheckLength > 0 &&
+        venueCheckLength + gameCheckLength < vLength + gLength
     },
     handleCheckedVenueChange(val) {
       console.log(val)
@@ -479,22 +470,36 @@ export default {
       this.venueCheckAll = checkedCount === this.venueCheckList.length
       this.venueIsIndeterminate =
         checkedCount > 0 && checkedCount < this.venueCheckList.length
-      if (this.venueCheckAll && this.gameCheckAll) {
-        console.log(11111111)
-        this.checkAll = true
-        this.isIndeterminate = false
-      } else if (!this.venueIsIndeterminate && !this.gameIsIndeterminate) {
-        console.log(22222222)
-        this.checkAll = false
-        this.isIndeterminate = true
-      } else {
-        console.log(3333333)
-        this.isIndeterminate = true
-      }
+      const vLength = this.venueCheckList.length
+      const gLength = this.gameCheckList.length
+      const venueCheckLength = this.checkedVenue.length
+      const gameCheckLength = this.checkedGame.length
+      this.checkAll = venueCheckLength + gameCheckLength === vLength + gLength
+      this.isIndeterminate =
+        venueCheckLength + gameCheckLength > 0 &&
+        venueCheckLength + gameCheckLength < vLength + gLength
     },
-    handleCheckedGameChange(val) {},
+    handleCheckedGameChange(val) {
+      console.log(val)
+      const checkedCount = val.length
+      this.gameCheckAll = checkedCount === this.gameCheckList.length
+      this.gameIsIndeterminate =
+        checkedCount > 0 && checkedCount < this.gameCheckList.length
+      const vLength = this.venueCheckList.length
+      const gLength = this.gameCheckList.length
+      const venueCheckLength = this.checkedVenue.length
+      const gameCheckLength = this.checkedGame.length
+      this.checkAll = venueCheckLength + gameCheckLength === vLength + gLength
+      this.isIndeterminate =
+        venueCheckLength + gameCheckLength > 0 &&
+        venueCheckLength + gameCheckLength < vLength + gLength
+    },
     gameOfChoice() {
       this.gameVisible = true
+    },
+    gameCheckSub() {
+      this.loadData()
+      this.gameVisible = false
     },
     reset() {
       this.queryData = {}
@@ -647,15 +652,15 @@ export default {
     },
     adjustWidth() {
       this.$nextTick(() => {
-        console.log(this.$refs.sum_xiaoji.children)
-        console.log(this.$refs.tables.$refs.headerWrapper)
+        const len = this.$refs.sum_xiaoji.children.length
         Array.from(this.$refs.tables.$refs.headerWrapper.querySelectorAll('col')).forEach(
           (n, i) => {
-            console.log(11111, n)
-            this.$refs.sum_xiaoji.children[i].style =
-              'width:' + n.getAttribute('width') + 'px'
-            this.$refs.sum_heji.children[i].style =
-              'width:' + n.getAttribute('width') + 'px'
+            if (i < len) {
+              this.$refs.sum_xiaoji.children[i].style =
+                'width:' + n.getAttribute('width') + 'px'
+              this.$refs.sum_heji.children[i].style =
+                'width:' + n.getAttribute('width') + 'px'
+            }
           }
         )
       })
