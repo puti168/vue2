@@ -45,10 +45,11 @@
 				<div class="role-container">
 					<el-row class="btn-control">
 						<el-button
-							v-for="item in dataList"
+							v-for="(item, idx) in dataList"
 							:key="item.id"
 							type="info"
 							class="btn-style-role"
+							@click="handleChangeModule(idx)"
 						>
 							{{ item.permissionName }}
 						</el-button>
@@ -125,12 +126,12 @@
 					</el-checkbox>
 				</div>
 			</div>
-            <div class="save-container">
-                <div class="save-btn" @click.prevent="save">
-                    <i v-show="loading" class="el-icon-loading"></i>
-                    保存
-                </div>
-            </div>
+			<div class="save-container">
+				<div class="save-btn" @click.prevent="save">
+					<i v-show="loading" class="el-icon-loading"></i>
+					保存
+				</div>
+			</div>
 		</div>
 	</div>
 </template>
@@ -301,6 +302,16 @@ export default {
 			console.log('arr', arr)
 			console.log('systemOptionsList', this.systemOptionsList)
 			console.log('defaultList', this.defaultList)
+		},
+		handleChangeModule(type) {
+			this.defaultList = this.dataList[type]
+			this.systemOptions1 = this.dataList[type]
+			for (let i = 0; i < this.dataList[type].children.length; i++) {
+				const strArr = []
+				this.checkedList.push(strArr)
+				this.systemOptionsList.push(i)
+				this.checkedAll.push(false)
+			}
 		},
 		save() {
 			this.loading = true
@@ -541,19 +552,19 @@ export default {
 		text-align: center;
 		margin-top: 15px;
 	}
-    .save-container {
-        .save-btn {
-            text-align: center;
-            margin: 0 auto;
-            background-color: rgba(26, 188, 156, 1);
-            height: 40px;
-            line-height: 40px;
-            cursor: pointer;
-            width: 245px;
-            border-radius: 5px;
-            font-size: 16px;
-            color: #fff;
-        }
-    }
+	.save-container {
+		.save-btn {
+			text-align: center;
+			margin: 0 auto;
+			background-color: rgba(26, 188, 156, 1);
+			height: 40px;
+			line-height: 40px;
+			cursor: pointer;
+			width: 245px;
+			border-radius: 5px;
+			font-size: 16px;
+			color: #fff;
+		}
+	}
 }
 </style>
