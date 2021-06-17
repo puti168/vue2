@@ -93,7 +93,7 @@
         >
           <el-table-column prop="gameName" align="center" label="游戏">
             <template slot-scope="scope">
-            <el-link
+              <el-link
                 class="lightBlueColor"
                 type="primary"
                 @click="dialogData(scope.row)"
@@ -364,7 +364,6 @@ export default {
       this.settingList = JSON.parse(localStorage.getItem('venueProfitAndLoss'))
     }
     this.adjustWidth()
-    window.addEventListener('resize', this.adjustWidth.bind(this))
   },
 
   methods: {
@@ -652,9 +651,9 @@ export default {
     },
     adjustWidth() {
       this.$nextTick(() => {
-        const len = this.$refs.sum_xiaoji.children.length
         Array.from(this.$refs.tables.$refs.headerWrapper.querySelectorAll('col')).forEach(
           (n, i) => {
+            const len = this.$refs.sum_xiaoji.children.length
             if (i < len) {
               this.$refs.sum_xiaoji.children[i].style =
                 'width:' + n.getAttribute('width') + 'px'
@@ -729,7 +728,6 @@ export default {
   color: #5c5c5c;
   font-weight: 700;
   border-bottom: 1px solid #ebeef5;
-  border-left: 1px solid #ebeef5;
 }
 .sum_footer_unit {
   flex-grow: 1;

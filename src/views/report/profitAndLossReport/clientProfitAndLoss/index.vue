@@ -267,7 +267,6 @@ export default {
       this.settingList = JSON.parse(localStorage.getItem('venueProfitAndLoss'))
     }
     this.adjustWidth()
-    window.addEventListener('resize', this.adjustWidth.bind(this))
   },
 
   methods: {
@@ -485,7 +484,6 @@ export default {
   color: #5c5c5c;
   font-weight: 700;
   border-bottom: 1px solid #ebeef5;
-  border-left: 1px solid #ebeef5;
 }
 .sum_footer_unit {
   flex-grow: 1;
