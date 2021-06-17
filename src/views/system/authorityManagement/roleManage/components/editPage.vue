@@ -53,53 +53,73 @@
 							{{ item.permissionName }}
 						</el-button>
 					</el-row>
-					<el-row class="role-content">
-						<el-col :span="4">
-							<div class="name">模块</div>
-							<div class="btn-group first">
-								<el-checkbox v-model="checkAllModule">
-									{{ defaultList.permissionName }}
-								</el-checkbox>
-							</div>
-						</el-col>
-						<el-col :span="5">
-							<div class="name">页面</div>
-							<div class="btn-group">
-								<div
-									v-for="(item, idx) in defaultList.children"
-									:key="item.id"
-									class="div-cell"
-								>
+					<div class="role-content">
+						<el-row>
+							<el-col :span="4">
+								<div class="name">模块</div>
+							</el-col>
+							<el-col :span="20">
+								<el-row>
+									<el-col :span="6">
+										<div class="name">页面</div>
+									</el-col>
+									<el-col :span="18">
+										<div class="name">权限配置规则</div>
+									</el-col>
+								</el-row>
+							</el-col>
+						</el-row>
+						<el-row>
+							<el-col :span="4">
+								<div class="btn-group first">
 									<el-checkbox
-										v-model="checkedList[idx]"
-										:indeterminate="isIndeterminate"
+										v-model="checkAllModule"
+										@change="handleCheckAllChange11"
 									>
-										<span style="font-weight: bold;">
-											{{ item.permissionName }}
-										</span>
+										{{ defaultList.permissionName }}
 									</el-checkbox>
-									<el-checkbox-group
-										v-model="checkedList[idx]"
-										class="cell-group"
-										@change="handleCheckedCitiesChange11(idx, checkedList[idx])"
-									>
-										<el-checkbox
-											v-for="item in item.children"
-											:key="item.id"
-											class="child-cell"
-											:label="item.permissionName"
-										>
-											{{ item.permissionName }}
-										</el-checkbox>
-									</el-checkbox-group>
 								</div>
-							</div>
-						</el-col>
-						<el-col :span="15">
-							<div class="name">权限配置规则</div>
-							<div class="btn-group"></div>
-						</el-col>
-					</el-row>
+							</el-col>
+							<el-col :span="20">
+								<div class="btn-group">
+									<el-row
+										v-for="(item, idx) in defaultList.children"
+										:key="item.id"
+										class="div-cell"
+									>
+										<el-col :span="6">
+											<el-checkbox
+												v-model="checkedAll[idx]"
+												@change="handleCheckAllChange111(idx, checkedAll[idx])"
+											>
+												<span style="font-weight: bold;">
+													{{ item.permissionName }}
+												</span>
+											</el-checkbox>
+										</el-col>
+										<el-col :span="18">
+											<el-checkbox-group
+												v-model="checkedList[idx]"
+												class="cell-group"
+												@change="
+													handleCheckedCitiesChange11(idx, checkedList[idx])
+												"
+											>
+												<el-checkbox
+													v-for="lis in item.children"
+													:key="lis.id"
+													class="child-cell"
+													:label="lis.permissionName"
+												>
+													{{ lis.permissionName }}
+												</el-checkbox>
+											</el-checkbox-group>
+										</el-col>
+									</el-row>
+								</div>
+							</el-col>
+						</el-row>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -129,7 +149,6 @@ export default {
 			},
 			dataList: [],
 			otherArr: [],
-			id: '',
 			defaultList: [],
 			systemOptions1: [],
 			checkedList: [], // 选中的列表
@@ -248,22 +267,30 @@ export default {
 									val.children = [...item.children, ...val.children]
 								}
 							})
+							//    测试假数组
+							item.children.forEach((lis, idx) => {
+								lis.children = []
+								lis.children = [].concat([
+									{ permissionName: '导出', id: idx + '1' },
+									{ permissionName: '查看', id: idx + '2' }
+								])
+							})
 						}
 					})
 				}
 			})
-            this.dataList = arr
-            this.defaultList = arr[0]
-            this.systemOptions1 = arr[0]
-            for (const item in arr) {
-                const strArr = []
-                this.checkedList.push(strArr) // 创建选中数据数组
-                this.systemOptionsList.push(arr[item].children) // 创建所有可选项数组
-                this.checkedAll.push(false) // 所有列表类初始为false
-            }
-            console.log('t', arr)
-            console.log('otherArr', this.otherArr)
-            console.log('defaultList', this.defaultList)
+			this.dataList = arr
+			this.defaultList = arr[6]
+			this.systemOptions1 = arr[0]
+			for (const item in arr) {
+				const strArr = []
+				this.checkedList.push(strArr) // 创建选中数据数组
+				this.systemOptionsList.push(arr[item].children) // 创建所有可选项数组
+				this.checkedAll.push(false) // 所有列表类初始为false
+			}
+			console.log('arr', arr)
+			console.log('systemOptionsList', this.systemOptionsList)
+			console.log('defaultList', this.defaultList)
 		},
 		save() {
 			this.loading = true
@@ -280,11 +307,6 @@ export default {
 							this.loading = false
 							const { code, msg } = res
 							if (code === 200) {
-								// this.$confirm(`${this.updateStatus ? '更新' : '新增'}成功`, {
-								// 	confirmButtonText: '确定',
-								// 	type: 'success',
-								// 	showCancelButton: false
-								// })
 								this.$message({
 									message: `${this.updateStatus ? '更新' : '新增'}成功`,
 									type: 'success'
@@ -317,6 +339,50 @@ export default {
 				roleName: undefined,
 				remark: undefined,
 				id: undefined
+			}
+		},
+		handleCheckAllChange11(val) {
+			// 全选
+			const Arrlist = []
+			for (let i = 0; i < this.systemOptions1.length; i++) {
+				const arr = []
+				Arrlist.push(arr)
+			}
+			for (const index in this.systemOptions1) {
+				for (const index1 in this.systemOptions1[index].children) {
+					Arrlist[index].push(this.systemOptions1[index].children[index1].id)
+				}
+				this.checkedList[index] = val ? Arrlist[index] : []
+			}
+			for (const index in this.checkedAll) {
+				this.checkedAll[index] = val
+			}
+		},
+		handleCheckAllChange111(index, val) {
+			// 列表类全选
+			const arr = []
+			for (const item in this.systemOptionsList[index]) {
+				arr.push(this.systemOptionsList[index][item].id)
+			}
+			this.checkedList[index] = val ? arr : []
+			const [...arrFlag] = new Set(this.checkedAll)
+			if (arrFlag.length === 1 && arrFlag[0] === true) {
+				this.checkAllModule = true
+			} else {
+				this.checkAllModule = false
+			}
+		},
+		handleCheckedCitiesChange11(index, value) {
+			// 子选项联动
+			this.$forceUpdate() // ！！！实时改变数据
+			const b = value.length === this.systemOptionsList[index].length
+			this.checkedAll[index] = b
+			// 判断列表类是否全选来改变总的全选状态
+			const [...arrFlag] = new Set(this.checkedAll)
+			if (arrFlag.length === 1 && arrFlag[0] === true) {
+				this.checkAllModule = true
+			} else {
+				this.checkAllModule = false
 			}
 		}
 	}
@@ -423,15 +489,12 @@ export default {
 					color: #666666;
 				}
 				.el-col:nth-child(2) {
-					border-right: 1px solid #8a90a5;
 					border-left: 1px solid #8a90a5;
 				}
 				.btn-group {
 					border-top: 1px solid #8a90a5;
 					.div-cell {
-						height: 48px;
 						line-height: 48px;
-						padding-left: 15px;
 						border-bottom: 1px solid #8a90a5;
 					}
 					.div-cell:last-child {
@@ -455,13 +518,13 @@ export default {
 		//background-color: #F3F3F3;
 	}
 	.cell-group {
-		position: absolute;
-		display: flex;
-		width: 200px;
-		height: 1000px;
+		//position: absolute;
+		//display: flex;
+		//width: 200px;
+		//height: 1000px;
 	}
 	.child-cell {
-		margin: 5px 0 0 20px;
+		//margin: 5px 0 0 20px;
 	}
 }
 </style>
