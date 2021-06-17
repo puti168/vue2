@@ -263,8 +263,8 @@ export default {
     }
   },
   mounted() {
-    if (localStorage.getItem('venueProfitAndLoss')) {
-      this.settingList = JSON.parse(localStorage.getItem('venueProfitAndLoss'))
+    if (localStorage.getItem('clientProfitAndLoss')) {
+      this.settingList = JSON.parse(localStorage.getItem('clientProfitAndLoss'))
     }
     this.adjustWidth()
   },
@@ -447,7 +447,7 @@ export default {
       this.newList = JSON.parse(JSON.stringify(this.settingList))
     },
     confirm() {
-      localStorage.setItem('venueProfitAndLoss', JSON.stringify(this.newList))
+      localStorage.setItem('clientProfitAndLoss', JSON.stringify(this.newList))
       this.settingList = this.newList
       this.visible = false
     },
@@ -495,10 +495,6 @@ export default {
   color: #5c5c5c;
   font-weight: 700;
 }
-.params {
-  padding-bottom: 15px;
-}
-
 .fenye {
   text-align: center;
 }

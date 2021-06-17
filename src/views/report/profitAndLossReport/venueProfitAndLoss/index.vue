@@ -7,7 +7,7 @@
             <el-date-picker
               v-model="searchTime"
               size="medium"
-              :picker-options="pickerOptions"
+              :picker-options="pickerOptions1"
               format="yyyy-MM-dd"
               type="daterange"
               range-separator="-"
@@ -273,7 +273,27 @@ export default {
       queryData: {},
       searchTime: [startTime, endTime],
       queryText: '查询',
-      t: 10,
+      pickerMinDate: null,
+      pickerMaxDate: null,
+      day31: 31 * 24 * 3600 * 1000,
+      pickerOptions1: {
+        onPick: ({ maxDate, minDate }) => {
+          if (minDate && this.pickerMinDate) {
+            this.pickerMinDate = null
+          } else if (minDate) {
+            this.pickerMinDate = minDate.getTime()
+          }
+        },
+        disabledDate: (time) => {
+          if (this.pickerMinDate) {
+            return (
+              // time.getTime() > this.pickerMinDate + this.day31 ||
+              time.getTime() < this.pickerMinDate - this.day31
+            )
+          }
+          return false
+        }
+      },
       tableData: [],
       dataList: {},
       checkAll: false,
@@ -546,7 +566,7 @@ export default {
   text-align: center;
   width: 100%;
   font-size: 14px;
-  // flex-direction: row;
+  flex-direction: row;
   color: #5c5c5c;
   font-weight: 700;
   border-bottom: 1px solid #ebeef5;
@@ -554,7 +574,6 @@ export default {
 .sum_footer_unit {
   flex-grow: 1;
   -webkit-flex-grow: 1;
-  box-sizing: border-box;
   border-right: 1px solid #ebeef5;
 }
 /deep/.el-dialog__header {

@@ -116,28 +116,28 @@
           >
           </el-table-column>
           <el-table-column
-            prop="gameRebateRate"
+            prop="gameIcon"
             align="center"
             sortable="custom"
             label="注单量"
           >
           </el-table-column>
           <el-table-column
-            prop="gameRebateRate"
+            prop="gameId"
             align="center"
             sortable="custom"
             label="投注金额"
           >
           </el-table-column>
           <el-table-column
-            prop="gameRebateRate"
+            prop="gameStatus"
             align="center"
             sortable="custom"
             label="有效投注 "
           >
           </el-table-column>
           <el-table-column
-            prop="gameRebateRate"
+            prop="gameStatus"
             align="center"
             sortable="custom"
             label="投注盈亏"
@@ -360,8 +360,8 @@ export default {
   },
   computed: {},
   mounted() {
-    if (localStorage.getItem('venueProfitAndLoss')) {
-      this.settingList = JSON.parse(localStorage.getItem('venueProfitAndLoss'))
+    if (localStorage.getItem('gameProfitAndLoss')) {
+      this.settingList = JSON.parse(localStorage.getItem('gameProfitAndLoss'))
     }
     this.adjustWidth()
   },
@@ -640,7 +640,7 @@ export default {
       this.newList = JSON.parse(JSON.stringify(this.settingList))
     },
     confirm() {
-      localStorage.setItem('venueProfitAndLoss', JSON.stringify(this.newList))
+      localStorage.setItem('gameProfitAndLoss', JSON.stringify(this.newList))
       this.settingList = this.newList
       this.visible = false
     },
