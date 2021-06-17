@@ -133,7 +133,6 @@
 							<div class="sum_footer_unit">{{ getXiaoji('gameIcon') }}</div>
 							<div class="sum_footer_unit">{{ getXiaoji('gameIcon') }}</div>
 							<div class="sum_footer_unit">{{ getXiaoji('gameIcon') }}</div>
-							<div class="sum_footer_unit">{{ getXiaoji('gameIcon') }}</div>
 							<div class="sum_footer_unit">{{ getXiaoji('gameId') }}</div>
 							<div class="sum_footer_unit">{{ getXiaoji('gameStatus') }}</div>
 							<div class="sum_footer_unit">{{ getXiaoji('gameStatus') }}</div>

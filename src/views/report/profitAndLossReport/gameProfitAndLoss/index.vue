@@ -318,7 +318,6 @@ export default {
       queryData: {},
       searchTime: [startTime, endTime],
       queryText: '查询',
-      t: 10,
       tableData: [],
       dataList: {},
       checkAll: true,

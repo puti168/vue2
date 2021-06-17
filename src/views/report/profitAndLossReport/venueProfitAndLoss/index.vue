@@ -7,7 +7,6 @@
             <el-date-picker
               v-model="searchTime"
               size="medium"
-              :picker-options="pickerOptions1"
               format="yyyy-MM-dd"
               type="daterange"
               range-separator="-"
@@ -273,27 +272,6 @@ export default {
       queryData: {},
       searchTime: [startTime, endTime],
       queryText: '查询',
-      pickerMinDate: null,
-      pickerMaxDate: null,
-      day31: 31 * 24 * 3600 * 1000,
-      pickerOptions1: {
-        onPick: ({ maxDate, minDate }) => {
-          if (minDate && this.pickerMinDate) {
-            this.pickerMinDate = null
-          } else if (minDate) {
-            this.pickerMinDate = minDate.getTime()
-          }
-        },
-        disabledDate: (time) => {
-          if (this.pickerMinDate) {
-            return (
-              // time.getTime() > this.pickerMinDate + this.day31 ||
-              time.getTime() < this.pickerMinDate - this.day31
-            )
-          }
-          return false
-        }
-      },
       tableData: [],
       dataList: {},
       checkAll: false,
@@ -535,6 +513,7 @@ export default {
         const len = this.$refs.sum_xiaoji.children.length
         Array.from(this.$refs.tables.$refs.headerWrapper.querySelectorAll('col')).forEach(
           (n, i) => {
+            console.log(n, i, n.width)
             if (i < len) {
               this.$refs.sum_xiaoji.children[i].style =
                 'width:' + n.getAttribute('width') + 'px'
