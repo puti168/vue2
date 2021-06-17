@@ -141,11 +141,11 @@
 
 <script>
 import list from '@/mixins/list'
-import { routerNames } from '@/utils/consts'
+// import { routerNames } from '@/utils/consts'
 import editPage from './components/editPage'
 
 export default {
-	name: routerNames.roleManage,
+	name: 'RoleManage',
 	components: { editPage },
 	mixins: [list],
 	data() {
