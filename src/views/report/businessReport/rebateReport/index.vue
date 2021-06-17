@@ -66,7 +66,10 @@
 					size="mini"
 					class="small-size-table"
 					:data="tableData"
+          stripe
+          show-summary
 					style="width: 100%"
+          :summary-method="getSummaries"
 					:header-cell-style="getRowClass"
 					@sort-change="_changeTableSort"
 				>
@@ -109,7 +112,7 @@
 						label="AG电子返水 "
 					></el-table-column>
 
-					<div slot="append">
+					<!-- <div slot="append">
 						<div ref="sum_xiaoji" class="sum_footer">
 							<div class="sum_footer_unit">本页合计</div>
 							<div class="sum_footer_unit">
@@ -123,7 +126,6 @@
 						</div>
 						<div ref="sum_heji" class="sum_footer">
 							<div class="sum_footer_unit">全部合计</div>
-
 							<div class="sum_footer_unit">200</div>
 							<div class="sum_footer_unit">200</div>
 							<div class="sum_footer_unit">200</div>
@@ -131,7 +133,7 @@
 							<div class="sum_footer_unit">200</div>
 							<div class="sum_footer_unit">20000000</div>
 						</div>
-					</div>
+					</div> -->
 				</el-table>
 				<!-- 分页 -->
 				<el-pagination
@@ -410,21 +412,54 @@ export default {
 				this.newList[item] = true
 			})
 		},
-	  adjustWidth() {
-      this.$nextTick(() => {
-        const len = this.$refs.sum_xiaoji.children.length
-        Array.from(this.$refs.tables.$refs.headerWrapper.querySelectorAll('col')).forEach(
-          (n, i) => {
-            if (i < len) {
-              this.$refs.sum_xiaoji.children[i].style =
-                'width:' + n.getAttribute('width') + 'px'
-              this.$refs.sum_heji.children[i].style =
-                'width:' + n.getAttribute('width') + 'px'
-            }
-          }
-        )
-      })
-    },
+    // 合计总计
+	  // adjustWidth() {
+    //   this.$nextTick(() => {
+    //     const len = this.$refs.sum_xiaoji.children.length
+    //     Array.from(this.$refs.tables.$refs.headerWrapper.querySelectorAll('col')).forEach(
+    //       (n, i) => {
+    //         if (i < len) {
+    //           this.$refs.sum_xiaoji.children[i].style =
+    //             'width:' + n.getAttribute('width') + 'px'
+    //           this.$refs.sum_heji.children[i].style =
+    //             'width:' + n.getAttribute('width') + 'px'
+    //         }
+    //       }
+    //     )
+    //   })
+    // },
+     getSummaries(param) { // 上面自定义 内容
+                        const { columns, data } = param
+                        console.log(param)
+                        const sums = []
+                        const total = []
+                        columns.forEach((column, index) => {
+                        if (index === 0) {
+                            sums[index] = '本页单价 '
+                            total[index] = '全部合计'
+                            return
+                        }
+                        const values = data.map(item => Number(item[column.property]))
+                        console.log(values)
+
+                        if (!values.every(value => isNaN(value))) {
+                            sums[index] = values.reduce((prev, curr) => {
+                            const value = Number(curr)
+                            if (!isNaN(value)) {
+                                return prev + curr
+                            } else {
+                                return prev
+                            }
+                            }, 0)
+                            sums[index] += ' 元'
+                        } else {
+                            sums[index] = 'N/A'// 当不是number数字是返回的内容
+                        }
+                        })
+                        console.log(sums) // 先看输出格式，看最终要返回什么数据
+                        return sums
+                    },
+
 		getXiaoji(name) {
 			var sum = 0
 			this.tableData.forEach((n, i) => {
