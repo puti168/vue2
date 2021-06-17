@@ -111,7 +111,6 @@
 						prop="createdAt"
 						align="center"
 						label="创建时间"
-						sortable="custom"
 					></el-table-column>
 					<el-table-column
 						prop="updatedBy"
@@ -122,7 +121,6 @@
 						prop="updatedAt"
 						align="center"
 						label="最近修改时间"
-						sortable="custom"
 					></el-table-column>
 					<el-table-column prop="description" align="center" label="时效性">
 						<template slot-scope="scope">
