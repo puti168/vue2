@@ -86,11 +86,11 @@
         >
           <el-table-column prop="gameName" align="center" label="客户端">
             <template slot-scope="scope">
-              <el-button
+              <el-link
                 class="lightBlueColor"
-                style="border: none"
+                type="primary"
                 @click="dialogData(scope.row)"
-                >{{ scope.row.gameName }}</el-button>
+                >{{ scope.row.gameName }}</el-link>
             </template>
           </el-table-column>
           <el-table-column

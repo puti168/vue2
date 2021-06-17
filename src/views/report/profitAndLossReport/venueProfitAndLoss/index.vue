@@ -91,11 +91,11 @@
         >
           <el-table-column prop="gameName" align="center" label="场馆">
             <template slot-scope="scope">
-              <el-button
+              <el-link
                 class="lightBlueColor"
-                style="border: none"
+                type="primary"
                 @click="dialogData(scope.row)"
-                >{{ scope.row.gameName }}</el-button>
+                >{{ scope.row.gameName }}</el-link>
             </template>
           </el-table-column>
           <el-table-column
