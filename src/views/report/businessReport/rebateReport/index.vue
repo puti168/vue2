@@ -116,6 +116,7 @@
 								{{ getXiaoji('gameRebateRate') }}
 							</div>
 							<div class="sum_footer_unit">{{ getXiaoji('gameIcon') }}</div>
+							<div class="sum_footer_unit">{{ getXiaoji('gameIcon') }}</div>
 							<div class="sum_footer_unit">{{ getXiaoji('gameId') }}</div>
 							<div class="sum_footer_unit">{{ getXiaoji('gameStatus') }}</div>
 							<div class="sum_footer_unit">{{ getXiaoji('gameStatus') }}</div>
@@ -123,6 +124,7 @@
 						<div ref="sum_heji" class="sum_footer">
 							<div class="sum_footer_unit">全部合计</div>
 
+							<div class="sum_footer_unit">200</div>
 							<div class="sum_footer_unit">200</div>
 							<div class="sum_footer_unit">200</div>
 							<div class="sum_footer_unit">200</div>
@@ -435,6 +437,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+body .el-table th.gutter {
+display: table-cell !important
+}
 .sum_footer {
 	display: flex;
 	display: -webkit-flex;

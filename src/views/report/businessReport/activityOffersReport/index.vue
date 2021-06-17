@@ -126,10 +126,13 @@
 					<div slot="append">
 						<div ref="sum_xiaoji" class="sum_footer">
 							<div class="sum_footer_unit">本页合计</div>
-							<div class="sum_footer_unit"></div>
 							<div class="sum_footer_unit">
 								{{ getXiaoji('gameRebateRate') }}
 							</div>
+							<div class="sum_footer_unit">{{ getXiaoji('gameIcon') }}</div>
+							<div class="sum_footer_unit">{{ getXiaoji('gameIcon') }}</div>
+							<div class="sum_footer_unit">{{ getXiaoji('gameIcon') }}</div>
+							<div class="sum_footer_unit">{{ getXiaoji('gameIcon') }}</div>
 							<div class="sum_footer_unit">{{ getXiaoji('gameIcon') }}</div>
 							<div class="sum_footer_unit">{{ getXiaoji('gameId') }}</div>
 							<div class="sum_footer_unit">{{ getXiaoji('gameStatus') }}</div>
@@ -137,7 +140,9 @@
 						</div>
 						<div ref="sum_heji" class="sum_footer">
 							<div class="sum_footer_unit">全部合计</div>
-							<div class="sum_footer_unit"></div>
+							<div class="sum_footer_unit">200</div>
+							<div class="sum_footer_unit">200</div>
+							<div class="sum_footer_unit">200</div>
 							<div class="sum_footer_unit">200</div>
 							<div class="sum_footer_unit">200</div>
 							<div class="sum_footer_unit">200</div>
@@ -415,20 +420,20 @@ export default {
 			})
 		},
 		adjustWidth() {
-			this.$nextTick(() => {
-				const len = this.$refs.sum_xiaoji.children.length
-				Array.from(
-					this.$refs.tables.$refs.headerWrapper.querySelectorAll('col')
-				).forEach((n, i) => {
-					if (i < len) {
-						this.$refs.sum_xiaoji.children[i].style =
-							'width:' + n.getAttribute('width') + 'px'
-						this.$refs.sum_heji.children[i].style =
-							'width:' + n.getAttribute('width') + 'px'
-					}
-				})
-			})
-		},
+      this.$nextTick(() => {
+        const len = this.$refs.sum_xiaoji.children.length
+        Array.from(this.$refs.tables.$refs.headerWrapper.querySelectorAll('col')).forEach(
+          (n, i) => {
+            if (i < len) {
+              this.$refs.sum_xiaoji.children[i].style =
+                'width:' + n.getAttribute('width') + 'px'
+              this.$refs.sum_heji.children[i].style =
+                'width:' + n.getAttribute('width') + 'px'
+            }
+          }
+        )
+      })
+    },
 		getXiaoji(name) {
 			var sum = 0
 			this.tableData.forEach((n, i) => {
