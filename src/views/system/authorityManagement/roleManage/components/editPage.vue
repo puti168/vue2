@@ -40,6 +40,24 @@
 					</el-form-item>
 				</el-form>
 			</div>
+			<template>
+				<el-checkbox
+					v-model="checkAll"
+					:indeterminate="isIndeterminate"
+					@change="handleCheckAllChange"
+				>
+					全选
+				</el-checkbox>
+				<div style="margin: 15px 0;"></div>
+				<el-checkbox-group
+					v-model="checkedCities"
+					@change="handleCheckedCitiesChange"
+				>
+					<el-checkbox v-for="city in cities" :key="city" :label="city">
+						{{ city }}
+					</el-checkbox>
+				</el-checkbox-group>
+			</template>
 			<div class="content-part3">
 				<p class="part-title">角色权限</p>
 				<div class="role-container">
@@ -75,7 +93,7 @@
 								<div class="btn-group first">
 									<el-checkbox
 										v-model="checkAllModule"
-										@change="handleCheckAllChange11"
+										@change="handleCheckAllChangeModule"
 									>
 										{{ defaultList.permissionName }}
 									</el-checkbox>
@@ -91,7 +109,7 @@
 										<el-col :span="6">
 											<el-checkbox
 												v-model="checkedAll[idx]"
-												@change="handleCheckAllChange111(idx, checkedAll[idx])"
+												@change="handleCheckAllChangePage(idx, checkedAll[idx])"
 											>
 												<span style="font-weight: bold;">
 													{{ item.permissionName }}
@@ -103,14 +121,14 @@
 												v-model="checkedList[idx]"
 												class="cell-group"
 												@change="
-													handleCheckedCitiesChange11(idx, checkedList[idx])
+													handleCheckedCitiesChangeBtn(idx, checkedList[idx])
 												"
 											>
 												<el-checkbox
 													v-for="lis in item.children"
 													:key="lis.id"
 													class="child-cell"
-													:label="lis.permissionName"
+													:label="lis.id"
 												>
 													{{ lis.permissionName }}
 												</el-checkbox>
@@ -139,6 +157,7 @@
 <script>
 import list from '@/mixins/list'
 import { isHaveEmoji, notSpecial2 } from '@/utils/validate'
+const cityOptions = ['上海', '北京', '广州', '深圳']
 
 export default {
 	name: 'EditPage',
@@ -160,13 +179,16 @@ export default {
 			chooseAll: false,
 			dataList: [],
 			otherArr: [],
+			checkAll: false,
+			checkedCities: ['上海', '北京'],
+			cities: cityOptions,
+			isIndeterminate: true,
 			defaultList: [],
 			systemOptions1: [],
 			checkedList: [], // 选中的列表
 			checkedAll: [], // 列表类全选
 			systemOptionsList: [], // 所有可选项
-			checkAllModule: false, // 全选
-			isIndeterminate: false // 全选
+			checkAllModule: false // 全选
 		}
 	},
 	computed: {
@@ -240,6 +262,17 @@ export default {
 	},
 	updated() {},
 	methods: {
+		handleCheckAllChange(val) {
+			console.log('val', val)
+			this.checkedCities = val ? cityOptions : []
+			this.isIndeterminate = false
+		},
+		handleCheckedCitiesChange(value) {
+			const checkedCount = value.length
+			this.checkAll = checkedCount === this.cities.length
+			this.isIndeterminate =
+				checkedCount > 0 && checkedCount < this.cities.length
+		},
 		back() {
 			this.$emit('back')
 		},
@@ -290,26 +323,26 @@ export default {
 					})
 				}
 			})
+			console.log('arr', arr)
 			this.dataList = arr
 			this.defaultList = arr[0]
-			this.systemOptions1 = arr[0]
-			for (let i = 0; i < arr[0].children.length; i++) {
+			this.systemOptions1 = arr[0].children
+			for (const item in arr[0].children) {
+				this.checkedAll.push(false)
 				const strArr = []
-				this.checkedList.push(strArr) // 创建选中数据数组
-				this.systemOptionsList.push(i) // 创建所有可选项数组
-				this.checkedAll.push(false) // 所有列表类初始为false
+				this.checkedList.push(strArr)
+				this.systemOptionsList.push(arr[0].children[item].children)
 			}
-			console.log('arr', arr)
-			console.log('systemOptionsList', this.systemOptionsList)
-			console.log('defaultList', this.defaultList)
+			console.log('checkedAll', this.checkedAll)
+			console.log('this.checkedList', this.checkedList)
 		},
 		handleChangeModule(type) {
 			this.defaultList = this.dataList[type]
-			this.systemOptions1 = this.dataList[type]
-			for (let i = 0; i < this.dataList[type].children.length; i++) {
+			this.systemOptions1 = this.dataList[type].children
+			for (const item in this.dataList[type].children) {
 				const strArr = []
 				this.checkedList.push(strArr)
-				this.systemOptionsList.push(i)
+				this.systemOptionsList.push(this.dataList[type].children[item].children)
 				this.checkedAll.push(false)
 			}
 		},
@@ -362,7 +395,7 @@ export default {
 				id: undefined
 			}
 		},
-		handleCheckAllChange11(val) {
+		handleCheckAllChangeModule(val) {
 			// 全选
 			const Arrlist = []
 			for (let i = 0; i < this.systemOptions1.length; i++) {
@@ -379,12 +412,17 @@ export default {
 				this.checkedAll[index] = val
 			}
 		},
-		handleCheckAllChange111(index, val) {
+		handleCheckAllChangePage(index, val) {
 			// 列表类全选
 			const arr = []
+			// console.log('systemOptionsList', this.systemOptionsList)
+			// console.log('index', index)
+			// console.log('val', val)
 			for (const item in this.systemOptionsList[index]) {
 				arr.push(this.systemOptionsList[index][item].id)
 			}
+			// console.log('arr', arr)
+			// console.log('this.checkedList', this.checkedList)
 			this.checkedList[index] = val ? arr : []
 			const [...arrFlag] = new Set(this.checkedAll)
 			if (arrFlag.length === 1 && arrFlag[0] === true) {
@@ -393,7 +431,7 @@ export default {
 				this.checkAllModule = false
 			}
 		},
-		handleCheckedCitiesChange11(index, value) {
+		handleCheckedCitiesChangeBtn(index, value) {
 			// 子选项联动
 			this.$forceUpdate() // ！！！实时改变数据
 			const b = value.length === this.systemOptionsList[index].length
