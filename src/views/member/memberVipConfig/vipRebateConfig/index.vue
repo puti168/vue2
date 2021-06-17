@@ -237,7 +237,7 @@ export default {
               const obj = {}
               const ele = res.data[i]
               obj.venueId = ele.id
-              obj.gamePlatform = ele.gameType
+              obj.gamePlatform = ele.gameCode
               obj.gameName = ele.gameName
               this.gameTypeList.push(obj)
             }
