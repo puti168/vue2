@@ -40,24 +40,24 @@
 					</el-form-item>
 				</el-form>
 			</div>
-			<template>
-				<el-checkbox
-					v-model="checkAll"
-					:indeterminate="isIndeterminate"
-					@change="handleCheckAllChange"
-				>
-					全选
-				</el-checkbox>
-				<div style="margin: 15px 0;"></div>
-				<el-checkbox-group
-					v-model="checkedCities"
-					@change="handleCheckedCitiesChange"
-				>
-					<el-checkbox v-for="city in cities" :key="city" :label="city">
-						{{ city }}
-					</el-checkbox>
-				</el-checkbox-group>
-			</template>
+<!--			<template>-->
+<!--				<el-checkbox-->
+<!--					v-model="checkAll"-->
+<!--					:indeterminate="isIndeterminate"-->
+<!--					@change="handleCheckAllChange"-->
+<!--				>-->
+<!--					全选-->
+<!--				</el-checkbox>-->
+<!--				<div style="margin: 15px 0;"></div>-->
+<!--				<el-checkbox-group-->
+<!--					v-model="checkedCities"-->
+<!--					@change="handleCheckedCitiesChange"-->
+<!--				>-->
+<!--					<el-checkbox v-for="city in cities" :key="city" :label="city">-->
+<!--						{{ city }}-->
+<!--					</el-checkbox>-->
+<!--				</el-checkbox-group>-->
+<!--			</template>-->
 			<div class="content-part3">
 				<p class="part-title">角色权限</p>
 				<div class="role-container">
@@ -139,7 +139,10 @@
 							</el-col>
 						</el-row>
 					</div>
-					<el-checkbox v-model="chooseAll" class="chooseAll">
+					<el-checkbox
+						v-model="chooseAll"
+						class="chooseAll"
+					>
 						选择全部
 					</el-checkbox>
 				</div>
@@ -397,16 +400,16 @@ export default {
 		},
 		handleCheckAllChangeModule(val) {
 			// 全选
-			const Arrlist = []
+			const arrList = []
 			for (let i = 0; i < this.systemOptions1.length; i++) {
 				const arr = []
-				Arrlist.push(arr)
+				arrList.push(arr)
 			}
 			for (const index in this.systemOptions1) {
 				for (const index1 in this.systemOptions1[index].children) {
-					Arrlist[index].push(this.systemOptions1[index].children[index1].id)
+					arrList[index].push(this.systemOptions1[index].children[index1].id)
 				}
-				this.checkedList[index] = val ? Arrlist[index] : []
+				this.checkedList[index] = val ? arrList[index] : []
 			}
 			for (const index in this.checkedAll) {
 				this.checkedAll[index] = val
@@ -443,6 +446,9 @@ export default {
 			} else {
 				this.checkAllModule = false
 			}
+		},
+		handleCheckAll(val) {
+			this.handleCheckAllChangeModule(val)
 		}
 	}
 }
@@ -563,6 +569,7 @@ export default {
 				.btn-group.first {
 					margin: 0 auto;
 					text-align: center;
+                    padding-top: 50%;
 				}
 			}
 		}
