@@ -63,8 +63,7 @@
 		>
 			<div v-if="levelList.length" class="bodyBox">
 				<div v-for="(item, idx) in levelList" :key="'idx' + idx">
-					<p>风控会员个数:{{ item.count }}</p>
-					<p>风控层级名称:{{ item.windControlLevelName }}</p>
+					<p class="windItem">风控层级{{ item.windControlLevelName }}: {{ item.count }}</p>
 				</div>
 			</div>
 			<div v-else class="bodyBox">
@@ -124,5 +123,9 @@ export default {
 }
 .blueColor {
 	cursor: pointer;
+}
+.windItem {
+    padding-top: 5px;
+    padding-bottom: 5px;
 }
 </style>

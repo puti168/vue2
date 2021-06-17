@@ -291,6 +291,7 @@ export default {
         .setMemberVipRebateUpdateRebateInfo(params)
         .then((res) => {
           if (res.code === 200) {
+            this.$message.success('保存成功')
             this.loading = false
             this.tableData = res.data
           }
