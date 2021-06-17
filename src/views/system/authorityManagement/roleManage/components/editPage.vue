@@ -120,8 +120,17 @@
 							</el-col>
 						</el-row>
 					</div>
+					<el-checkbox v-model="chooseAll" class="chooseAll">
+						选择全部
+					</el-checkbox>
 				</div>
 			</div>
+            <div class="save-container">
+                <div class="save-btn" @click.prevent="save">
+                    <i v-show="loading" class="el-icon-loading"></i>
+                    保存
+                </div>
+            </div>
 		</div>
 	</div>
 </template>
@@ -147,6 +156,7 @@ export default {
 				remark: undefined,
 				id: undefined
 			},
+			chooseAll: false,
 			dataList: [],
 			otherArr: [],
 			defaultList: [],
@@ -526,5 +536,24 @@ export default {
 	.child-cell {
 		//margin: 5px 0 0 20px;
 	}
+	.chooseAll {
+		width: 100%;
+		text-align: center;
+		margin-top: 15px;
+	}
+    .save-container {
+        .save-btn {
+            text-align: center;
+            margin: 0 auto;
+            background-color: rgba(26, 188, 156, 1);
+            height: 40px;
+            line-height: 40px;
+            cursor: pointer;
+            width: 245px;
+            border-radius: 5px;
+            font-size: 16px;
+            color: #fff;
+        }
+    }
 }
 </style>
