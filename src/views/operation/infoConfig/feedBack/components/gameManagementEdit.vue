@@ -11,17 +11,17 @@
 				<el-form ref="form" :model="form" label-width="auto">
 					<strong>反馈会员信息</strong>
 					<el-row>
-						<el-col class="space" :span="7">会员账号：{{}}</el-col>
-						<el-col class="space" :span="7">账号类型：{{}}</el-col>
-						<el-col class="space" :span="6">会员标签：{{}}</el-col>
-						<el-col class="space" :span="6">VIP等级：{{}}</el-col>
+						<el-col class="space" :span="7">会员账号：{{ }}</el-col>
+						<el-col class="space" :span="7">账号类型：{{ }}</el-col>
+						<el-col class="space" :span="6">会员标签：{{ }}</el-col>
+						<el-col class="space" :span="6">VIP等级：{{ }}</el-col>
 					</el-row>
 					<el-divider></el-divider>
 					<strong>反馈内容</strong>
 					<el-row>
-						<el-col class="space" :span="12">反馈类型：{{}}</el-col>
-						<el-col class="space" :span="12">反馈时间：{{}}</el-col>
-						<el-col class="space" :span="6">反馈内容：{{}}</el-col>
+						<el-col class="space" :span="12">反馈类型：{{ }}</el-col>
+						<el-col class="space" :span="12">反馈时间：{{ }}</el-col>
+						<el-col class="space" :span="6">反馈内容：{{ }}</el-col>
 					</el-row>
 					<el-divider></el-divider>
 					<div class="review-flex">

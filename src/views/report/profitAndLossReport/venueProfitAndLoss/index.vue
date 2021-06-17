@@ -58,21 +58,23 @@
           </el-form-item>
         </el-form>
         <div class="checkBox">
+          <h5>场馆：</h5>
           <div class="all">
-            <h5>场馆：</h5>
-            <el-checkbox
-              v-model="checkAll"
-              :indeterminate="isIndeterminate"
-              @change="handleCheckAllChange"
-              >全选</el-checkbox>
+            <div style="margin-right: 30px">
+              <el-checkbox
+                v-model="checkAll"
+                :indeterminate="isIndeterminate"
+                @change="handleCheckAllChange"
+                >全选</el-checkbox>
+            </div>
+            <el-checkbox-group v-model="checkedVenue" @change="handleCheckedCitiesChange">
+              <el-checkbox
+                v-for="itme in venueList"
+                :key="itme.value"
+                :label="itme.value"
+                >{{ itme.label }}</el-checkbox>
+            </el-checkbox-group>
           </div>
-          <el-checkbox-group v-model="checkedVenue" @change="handleCheckedCitiesChange">
-            <el-checkbox
-              v-for="itme in venueList"
-              :key="itme.value"
-              :label="itme.value"
-              >{{ itme.label }}</el-checkbox>
-          </el-checkbox-group>
         </div>
       </div>
       <div class="content">
@@ -138,10 +140,17 @@
             sortable="custom"
             label="投注盈亏"
           >
+            <template slot="header">
+              <span>投注盈亏</span>
+              <el-tooltip class="item" effect="dark">
+                <i class="el-icon-question" style="position: absolute; right: 10px"></i>
+                <div slot="content">盈亏金额指游戏输赢金额<br />负数表示会员输</div>
+              </el-tooltip>
+            </template>
           </el-table-column>
           <div slot="append">
             <div ref="sum_xiaoji" class="sum_footer">
-              <div class="sum_footer_unit">小计</div>
+              <div class="sum_footer_unit">本页合计</div>
               <div class="sum_footer_unit"></div>
               <div class="sum_footer_unit">{{ getXiaoji("gameRebateRate") }}</div>
               <div class="sum_footer_unit">{{ getXiaoji("gameIcon") }}</div>
@@ -150,7 +159,7 @@
               <div class="sum_footer_unit">{{ getXiaoji("gameStatus") }}</div>
             </div>
             <div ref="sum_heji" class="sum_footer">
-              <div class="sum_footer_unit">合计</div>
+              <div class="sum_footer_unit">全部合计</div>
               <div class="sum_footer_unit"></div>
               <div class="sum_footer_unit">200</div>
               <div class="sum_footer_unit">200</div>
@@ -253,12 +262,10 @@
 <script>
 import list from '@/mixins/list'
 import dayjs from 'dayjs'
-import { routerNames } from '@/utils/consts'
 const startTime = dayjs().startOf('day').valueOf()
 const endTime = dayjs().endOf('day').valueOf()
 
 export default {
-  name: routerNames.gameBetslipTable,
   components: {},
   mixins: [list],
   data() {
@@ -506,15 +513,15 @@ export default {
     },
     adjustWidth() {
       this.$nextTick(() => {
-        console.log(this.$refs.sum_xiaoji.children)
-        console.log(this.$refs.tables.$refs.headerWrapper)
+        const len = this.$refs.sum_xiaoji.children.length
         Array.from(this.$refs.tables.$refs.headerWrapper.querySelectorAll('col')).forEach(
           (n, i) => {
-            console.log(11111, n)
-            this.$refs.sum_xiaoji.children[i].style =
-              'width:' + n.getAttribute('width') + 'px'
-            this.$refs.sum_heji.children[i].style =
-              'width:' + n.getAttribute('width') + 'px'
+            if (i < len) {
+              this.$refs.sum_xiaoji.children[i].style =
+                'width:' + n.getAttribute('width') + 'px'
+              this.$refs.sum_heji.children[i].style =
+                'width:' + n.getAttribute('width') + 'px'
+            }
           }
         )
       })
@@ -539,7 +546,10 @@ export default {
   background: #f5f7fa;
   text-align: center;
   width: 100%;
+  font-size: 14px;
   // flex-direction: row;
+  color: #5c5c5c;
+  font-weight: 700;
   border-bottom: 1px solid #ebeef5;
   border-left: 1px solid #ebeef5;
 }
@@ -556,20 +566,18 @@ export default {
 .params {
   padding-bottom: 15px;
 }
+
 .checkBox {
   display: flex;
-  padding: 10px;
-  width: 70%;
-  border: 1px solid #cccccc;
-
+  h5 {
+    width: 40px;
+    color: #606266;
+  }
   .all {
     display: flex;
-    margin-right: 30px;
-    h5 {
-      width: 40px;
-      color: #606266;
-      margin-top: 2px;
-    }
+    padding: 10px;
+    width: 70%;
+    border: 1px solid #cccccc;
   }
 }
 .fenye {
