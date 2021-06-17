@@ -200,32 +200,29 @@ export default {
 			this.loadData()
 		},
 		deleteUp(val) {
-			const loading = this.$loading({
-				lock: true,
-				text: 'Loading',
-				spinner: 'el-icon-loading',
-				background: 'rgba(0, 0, 0, 0.7)'
-			})
 			this.$confirm('确定删除此角色吗?', {
 				confirmButtonText: '确定',
 				cancelButtonText: '取消',
 				type: 'warning'
 			})
 				.then(() => {
+                    const loading = this.$loading({
+                        lock: true,
+                        text: 'Loading',
+                        spinner: 'el-icon-loading',
+                        background: 'rgba(0, 0, 0, 0.7)'
+                    })
 					this.$message({
 						type: 'success',
 						message: '删除成功!'
 					})
+                    loading.close()
 					// setDeleteBank(val).then((res) => {
 					//   console.log(res);
 					// });
 				})
 				.catch(() => {
-					loading.close()
 				})
-			setTimeout(() => {
-				loading.close()
-			}, 1000)
 		},
 		openEdit(val) {
 			// const { id } = val
