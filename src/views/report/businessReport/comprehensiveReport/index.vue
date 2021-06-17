@@ -69,127 +69,110 @@
           :header-cell-style="getRowClass"
           @sort-change="_changeTableSort"
         >
-          <el-table-column prop="gameName" align="center" label="客户端">
-            <template slot-scope="scope">
-              <el-link
-                class="lightBlueColor"
-                type="primary"
-                @click="dialogData(scope.row)"
-                >{{ scope.row.gameName }}</el-link>
-            </template>
-          </el-table-column>
+          <el-table-column prop="gameName" align="center" label="日期"> </el-table-column>
           <el-table-column
-            v-if="settingList['投注人数']"
+            v-if="settingList['会员注册人数']"
             prop="gameRebateRate"
             align="center"
-            sortable="custom"
-            label="投注人数"
+            label="会员注册人数"
           >
           </el-table-column>
-          <el-table-column
-            prop="gameRebateRate"
-            align="center"
-            sortable="custom"
-            label="注单量"
-          >
+          <el-table-column prop="gameRebateRate" align="center" label="会员登录人数">
           </el-table-column>
-          <el-table-column
-            prop="gameRebateRate"
-            align="center"
-            sortable="custom"
-            label="投注金额"
-          >
+          <el-table-column prop="gameRebateRate" align="center" label="会员总存款">
           </el-table-column>
-          <el-table-column
-            prop="gameRebateRate"
-            align="center"
-            sortable="custom"
-            label="有效投注 "
-          >
+          <el-table-column prop="gameRebateRate" align="center" label="会员总取款 ">
           </el-table-column>
-          <el-table-column
-            prop="gameRebateRate"
-            align="center"
-            sortable="custom"
-            label="投注盈亏"
-          >
-            <template slot="header">
-              <span>投注盈亏</span>
-              <el-tooltip class="item" effect="dark">
-                <i class="el-icon-question" style="position: absolute; right: 10px"></i>
-                <div slot="content">盈亏金额指游戏输赢金额<br />负数表示会员输</div>
-              </el-tooltip>
-            </template>
+          <el-table-column prop="gameRebateRate" align="center" label="会员存取差">
+          </el-table-column>
+          <el-table-column prop="gameRebateRate" align="center" label="上级转入">
+          </el-table-column>
+          <el-table-column prop="gameRebateRate" align="center" label="会员首存">
+          </el-table-column>
+          <el-table-column prop="gameRebateRate" align="center" label="会员有效投注">
+          </el-table-column>
+          <el-table-column prop="gameRebateRate" align="center" label="会员投注盈亏">
+          </el-table-column>
+          <el-table-column prop="gameRebateRate" align="center" label="会员总优惠">
+          </el-table-column>
+          <el-table-column prop="gameRebateRate" align="center" label="会员总返水">
+          </el-table-column>
+          <el-table-column prop="gameRebateRate" align="center" label="会员调整">
+          </el-table-column>
+          <el-table-column prop="gameRebateRate" align="center" label="代理注册人数">
+          </el-table-column>
+          <el-table-column prop="gameRebateRate" align="center" label="代理总存款">
+          </el-table-column>
+          <el-table-column prop="gameRebateRate" align="center" label="代理总取款">
+          </el-table-column>
+          <el-table-column prop="gameRebateRate" align="center" label="代理存取差">
+          </el-table-column>
+          <el-table-column prop="gameRebateRate" align="center" label="转给下级">
+          </el-table-column>
+          <el-table-column prop="gameRebateRate" align="center" label="代理总优惠">
+          </el-table-column>
+          <el-table-column prop="gameRebateRate" align="center" label="代理调整">
           </el-table-column>
           <div slot="append">
+            <div ref="sum_xiaoji" class="sum_footer">
+              <div class="sum_footer_unit">本页合计</div>
+              <div class="sum_footer_unit">{{ getXiaoji("gameRebateRate") }}</div>
+              <div class="sum_footer_unit">{{ getXiaoji("gameIcon") }}</div>
+              <div class="sum_footer_unit">{{ getXiaoji("gameId") }}</div>
+              <div class="sum_footer_unit">{{ getXiaoji("gameStatus") }}</div>
+              <div class="sum_footer_unit">{{ getXiaoji("gameStatus") }}</div>
+              <div class="sum_footer_unit">{{ getXiaoji("gameRebateRate") }}</div>
+              <div class="sum_footer_unit">{{ getXiaoji("gameIcon") }}</div>
+              <div class="sum_footer_unit">{{ getXiaoji("gameId") }}</div>
+              <div class="sum_footer_unit">{{ getXiaoji("gameStatus") }}</div>
+              <div class="sum_footer_unit">{{ getXiaoji("gameStatus") }}</div>
+              <div class="sum_footer_unit">{{ getXiaoji("gameRebateRate") }}</div>
+              <div class="sum_footer_unit">{{ getXiaoji("gameIcon") }}</div>
+              <div class="sum_footer_unit">{{ getXiaoji("gameId") }}</div>
+              <div class="sum_footer_unit">{{ getXiaoji("gameStatus") }}</div>
+              <div class="sum_footer_unit">{{ getXiaoji("gameStatus") }}</div>
+              <div class="sum_footer_unit">{{ getXiaoji("gameRebateRate") }}</div>
+              <div class="sum_footer_unit">{{ getXiaoji("gameIcon") }}</div>
+              <div class="sum_footer_unit">{{ getXiaoji("gameId") }}</div>
+              <div class="sum_footer_unit">{{ getXiaoji("gameStatus") }}</div>
+            </div>
             <div ref="sum_heji" class="sum_footer">
               <div class="sum_footer_unit">全部合计</div>
-              <div class="sum_footer_unit"></div>
               <div class="sum_footer_unit">200</div>
               <div class="sum_footer_unit">200</div>
               <div class="sum_footer_unit">200</div>
               <div class="sum_footer_unit">200</div>
               <div class="sum_footer_unit">20000000</div>
+              <div class="sum_footer_unit">200</div>
+              <div class="sum_footer_unit">200</div>
+              <div class="sum_footer_unit">200</div>
+              <div class="sum_footer_unit">200</div>
+              <div class="sum_footer_unit">20000000</div>
+              <div class="sum_footer_unit">200</div>
+              <div class="sum_footer_unit">200</div>
+              <div class="sum_footer_unit">200</div>
+              <div class="sum_footer_unit">200</div>
+              <div class="sum_footer_unit">20000000</div>
+              <div class="sum_footer_unit">200</div>
+              <div class="sum_footer_unit">200</div>
+              <div class="sum_footer_unit">200</div>
+              <div class="sum_footer_unit">200</div>
             </div>
           </div>
         </el-table>
-      </div>
-      <el-dialog :visible.sync="tableVisible" :destroy-on-close="true" class="rempadding">
-        <div slot="title" class="dialog-title">
-          <span class="title-text">客户端:{{ title }}</span>
-        </div>
-        <el-table
-          v-loading="loading"
-          size="mini"
-          border
-          class="small-size-table"
-          :data="gameList"
-          style="margin-bottom: 15px"
-          :header-cell-style="getRowClass"
-        >
-          <el-table-column prop="userName" align="center" label="日期"> </el-table-column>
-          <el-table-column
-            prop="accountTypeName"
-            align="center"
-            label="投注人数"
-          ></el-table-column>
-          <el-table-column
-            prop="accountTypeName"
-            align="center"
-            label="注单量"
-          ></el-table-column>
-          <el-table-column
-            prop="accountTypeName"
-            align="center"
-            label="投注金额"
-          ></el-table-column>
-          <el-table-column
-            prop="accountTypeName"
-            align="center"
-            label="有效投注"
-          ></el-table-column>
-          <el-table-column
-            prop="accountTypeName"
-            align="center"
-            label="投注盈亏"
-          ></el-table-column>
-        </el-table>
         <!-- 分页 -->
         <el-pagination
-          :current-page.sync="page"
+          :current-page.sync="pageNum"
+          class="pageValue"
           background
-          class="fenye"
           layout="total, sizes,prev, pager, next, jumper"
-          :page-size="size"
-          :page-sizes="[10, 20, 50]"
-          :total="summary"
-          @current-change="handleCurrentChangeDialog"
-          @size-change="handleSizeChangeDialog"
+          :page-size="pageSize"
+          :page-sizes="pageSizes"
+          :total="total"
+          @current-change="handleCurrentChange"
+          @size-change="handleSizeChange"
         ></el-pagination>
-        <div slot="footer" class="dialog-footer" style="text-align: center">
-          <el-button @click="tableVisible = false">关闭</el-button>
-        </div>
-      </el-dialog>
+      </div>
       <el-dialog
         title="列设置"
         center
@@ -224,20 +207,10 @@ export default {
       queryData: {},
       searchTime: [startTime, endTime],
       queryText: '查询',
-      t: 10,
       tableData: [],
-      dataList: {},
-
-      gameList: [],
-      page: 1,
-      size: 10,
-      summary: 0,
-      title: 'OB体育',
-      title1: '游戏',
       visible: false,
-      tableVisible: false,
       settingList: {
-        投注人数: true
+        会员注册人数: true
       },
       newList: []
     }
@@ -293,9 +266,6 @@ export default {
       this.searchTime = [startTime, endTime]
       this.pageNum = 1
       this.loadData()
-    },
-    dialogData(val) {
-      this.tableVisible = true
     },
     exportExcel() {
       const create = this.searchTime || []
@@ -412,16 +382,6 @@ export default {
       }
       this.loadData()
     },
-    handleCurrentChangeDialog(val) {
-      console.log(111, val)
-      this.page = val
-      // this.getMemberMemberInfoByLabelId(this.id)
-    },
-    handleSizeChangeDialog(val) {
-      console.log(222, val)
-      this.size = val
-      // this.getMemberMemberInfoByLabelId(this.id)
-    },
     // 列设置
     openSetting() {
       this.visible = true
@@ -439,13 +399,25 @@ export default {
     },
     adjustWidth() {
       this.$nextTick(() => {
+        const len = this.$refs.sum_xiaoji.children.length
         Array.from(this.$refs.tables.$refs.headerWrapper.querySelectorAll('col')).forEach(
           (n, i) => {
-            this.$refs.sum_heji.children[i].style =
-              'width:' + n.getAttribute('width') + 'px'
+            if (i < len) {
+              this.$refs.sum_xiaoji.children[i].style =
+                'width:' + n.getAttribute('width') + 'px'
+              this.$refs.sum_heji.children[i].style =
+                'width:' + n.getAttribute('width') + 'px'
+            }
           }
         )
       })
+    },
+    getXiaoji(name) {
+      var sum = 0
+      this.tableData.forEach((n, i) => {
+        sum += parseFloat(n[name] * 1)
+      })
+      return sum
     }
   }
 }
@@ -470,7 +442,7 @@ export default {
   flex-grow: 1;
   -webkit-flex-grow: 1;
   box-sizing: border-box;
-  border-right: 1px solid #ebeef5;
+  // border-right: 1px solid #ebeef5;
 }
 /deep/.el-dialog__header {
   color: #5c5c5c;
