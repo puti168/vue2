@@ -64,6 +64,7 @@
 					size="mini"
 					class="small-size-table"
 					:data="tableData"
+					style="width: 100%"
 					:header-cell-style="getRowClass"
 					@sort-change="_changeTableSort"
 				>
@@ -131,7 +132,7 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="operating" align="center" label="操作">
+					<el-table-column prop="operating" align="center" width="240px" label="操作">
 						<template slot-scope="scope">
 							<el-button
 								type="primary"
