@@ -280,12 +280,12 @@ export default {
 				}
 			})
 			this.dataList = arr
-			this.defaultList = arr[6]
+			this.defaultList = arr[0]
 			this.systemOptions1 = arr[0]
-			for (const item in arr) {
+			for (let i = 0; i < arr[0].children.length; i++) {
 				const strArr = []
 				this.checkedList.push(strArr) // 创建选中数据数组
-				this.systemOptionsList.push(arr[item].children) // 创建所有可选项数组
+				this.systemOptionsList.push(i) // 创建所有可选项数组
 				this.checkedAll.push(false) // 所有列表类初始为false
 			}
 			console.log('arr', arr)
