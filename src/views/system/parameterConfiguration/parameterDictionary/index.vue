@@ -49,7 +49,7 @@
 				</el-form>
 				<el-button
 					type="primary"
-          class="addstyle"
+					class="addstyle"
 					:disabled="loading"
 					size="medium"
 					@click="addLabel"
@@ -64,7 +64,6 @@
 					size="mini"
 					class="small-size-table"
 					:data="tableData"
-					style="width: 100%"
 					:header-cell-style="getRowClass"
 					@sort-change="_changeTableSort"
 				>
@@ -233,26 +232,34 @@
 			>
 				<el-form ref="form" :model="form" :inline="true" label-width="80px">
 					<el-form-item label="修改时间:">
-            <el-date-picker
-              v-model="searchTime"
-              size="medium"
-              :picker-options="pickerOptions"
-              format="yyyy-MM-dd HH:mm:ss"
-              type="datetimerange"
-              range-separator="-"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-              align="right"
-              :clearable="false"
-              :default-time="defaultTime"
-              style="width: 375px"
-            ></el-date-picker>
-          </el-form-item>
-          <el-form-item label="操作账号">
-						<el-input v-model="form.name" placeholder="请输入账号" style="width:200px"></el-input>
+						<el-date-picker
+							v-model="searchTime"
+							size="medium"
+							:picker-options="pickerOptions"
+							format="yyyy-MM-dd HH:mm:ss"
+							type="datetimerange"
+							range-separator="-"
+							start-placeholder="开始日期"
+							end-placeholder="结束日期"
+							align="right"
+							:clearable="false"
+							:default-time="defaultTime"
+							style="width: 375px"
+						></el-date-picker>
 					</el-form-item>
-          <el-form-item label="IP">
-						<el-input v-model="form.name" placeholder="请输入IP" style="width:200px"></el-input>
+					<el-form-item label="操作账号">
+						<el-input
+							v-model="form.name"
+							placeholder="请输入账号"
+							style="width:200px"
+						></el-input>
+					</el-form-item>
+					<el-form-item label="IP">
+						<el-input
+							v-model="form.name"
+							placeholder="请输入IP"
+							style="width:200px"
+						></el-input>
 					</el-form-item>
 				</el-form>
 				<el-table
@@ -335,7 +342,14 @@
 
 <script>
 import list from '@/mixins/list'
+import dayjs from 'dayjs'
 import { routerNames } from '@/utils/consts'
+const startTime = dayjs()
+	.startOf('day')
+	.valueOf()
+const endTime = dayjs()
+	.endOf('day')
+	.valueOf()
 export default {
 	name: routerNames.memberLabelConfig,
 	components: {},
@@ -345,6 +359,7 @@ export default {
 			form: {
 				name: ''
 			},
+			searchTime: [startTime, endTime],
 			queryData: {},
 			tableData: [],
 			dialogFormVisible: false,
@@ -485,7 +500,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.addstyle{}
+.params {
+	padding: 15px 10px 20px 10px;
+}
 /deep/.el-dialog__header {
 	color: #909399;
 	font-weight: 700;
