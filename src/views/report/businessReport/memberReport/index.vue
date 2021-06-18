@@ -8,22 +8,22 @@
 					:model="queryData"
 					label-width="85px"
 				>
-                    <el-form-item label="注册时间:" prop="registerTime">
-                        <el-date-picker
-                            v-model="queryData.registerTime"
-                            size="medium"
-                            :picker-options="pickerOptions"
-                            format="yyyy-MM-dd"
-                            type="datetimerange"
-                            range-separator="-"
-                            start-placeholder="开始日期"
-                            end-placeholder="结束日期"
-                            align="right"
-                            :clearable="true"
-                            value-format="timestamp"
-                            style="width: 300px"
-                        ></el-date-picker>
-                    </el-form-item>
+					<el-form-item label="注册时间:" prop="registerTime">
+						<el-date-picker
+							v-model="queryData.registerTime"
+							size="medium"
+							:picker-options="pickerOptions"
+							format="yyyy-MM-dd"
+							type="datetimerange"
+							range-separator="-"
+							start-placeholder="开始日期"
+							end-placeholder="结束日期"
+							align="right"
+							:clearable="true"
+							value-format="timestamp"
+							style="width: 300px"
+						></el-date-picker>
+					</el-form-item>
 					<el-form-item label="会员账号:">
 						<el-input
 							v-model="queryData.userName"
@@ -125,7 +125,7 @@
 							v-model="queryData.vipSerialNumMin"
 							size="medium"
 							placeholder="最小数值"
-                            style="width: 135px"
+							style="width: 135px"
 							maxlength="3"
 							name="vipSerialNumMin"
 							oninput="value=value.replace(/[^\d]/g,'')"
@@ -136,7 +136,7 @@
 							v-model="queryData.vipSerialNumMax"
 							size="medium"
 							placeholder="最大数值"
-                            style="width: 135px"
+							style="width: 135px"
 							maxlength="10"
 							oninput="value=value.replace(/[^\d]/g,'')"
 							name="vipSerialNumMax"
@@ -148,7 +148,7 @@
 							v-model="queryData.betNumMin"
 							size="medium"
 							placeholder="最小数值"
-                            style="width: 135px"
+							style="width: 135px"
 							maxlength="10"
 							name="betNumMin"
 							oninput="value=value.replace(/[^\d]/g,'')"
@@ -182,7 +182,7 @@
 							v-model="queryData.depositAmountMax"
 							size="medium"
 							placeholder="最大数值"
-                            style="width: 135px"
+							style="width: 135px"
 							maxlength="15"
 							oninput="value=value.replace(/[^\d]/g,'')"
 							name="depositAmountMax"
@@ -194,7 +194,7 @@
 							v-model="queryData.depositAmountValidMin"
 							size="medium"
 							placeholder="最小数值"
-                            style="width: 135px"
+							style="width: 135px"
 							maxlength="15"
 							name="depositAmountValidMin"
 							oninput="value=value.replace(/[^\d]/g,'')"
@@ -205,7 +205,7 @@
 							v-model="queryData.depositAmountValidMax"
 							size="medium"
 							placeholder="最大数值"
-                            style="width: 135px"
+							style="width: 135px"
 							maxlength="15"
 							name="depositAmountValidMax"
 							oninput="value=value.replace(/[^\d]/g,'')"
@@ -217,7 +217,7 @@
 							v-model="queryData.profitMin"
 							size="medium"
 							placeholder="最小数值"
-                            style="width: 135px"
+							style="width: 135px"
 							maxlength="15"
 							oninput="value=value.replace(/[^\d]/g,'')"
 							name="profitMin"
@@ -228,7 +228,7 @@
 							v-model="queryData.profitMax"
 							size="medium"
 							placeholder="最大数值"
-                            style="width: 135px"
+							style="width: 135px"
 							maxlength="15"
 							oninput="value=value.replace(/[^\d]/g,'')"
 							name="profitMax"
@@ -240,7 +240,7 @@
 							v-model="queryData.totalDepositMin"
 							size="medium"
 							placeholder="最小数值"
-                            style="width: 135px"
+							style="width: 135px"
 							maxlength="10"
 							oninput="value=value.replace(/[^\d]/g,'')"
 							name="totalDepositMin"
@@ -251,7 +251,7 @@
 							v-model="queryData.totalDepositMax"
 							size="medium"
 							placeholder="最大数值"
-                            style="width: 135px"
+							style="width: 135px"
 							maxlength="10"
 							oninput="value=value.replace(/[^\d]/g,'')"
 							name="totalDepositMax"
@@ -263,7 +263,7 @@
 							v-model="queryData.withdrawalMin"
 							size="medium"
 							placeholder="最小数值"
-                            style="width: 135px"
+							style="width: 135px"
 							maxlength="15"
 							oninput="value=value.replace(/[^\d]/g,'')"
 							name="withdrawalMin"
@@ -274,7 +274,7 @@
 							v-model="queryData.withdrawalMax"
 							size="medium"
 							placeholder="最大数值"
-                            style="width: 135px"
+							style="width: 135px"
 							maxlength="15"
 							oninput="value=value.replace(/[^\d]/g,'')"
 							name="withdrawalMax"
@@ -331,7 +331,9 @@
 					:data="dataList"
 					style="width: 100%"
 					:header-cell-style="getRowClass"
-					@sort-change="_changeTableSort"
+					:summary-method="getSummaries"
+                    show-summary
+                    @sort-change="_changeTableSort"
 				>
 					<el-table-column
 						v-if="settingList['会员账号']"
@@ -339,6 +341,7 @@
 						align="center"
 						label="会员账号"
 						width="150px"
+						fixed
 					>
 						<template slot-scope="scope">
 							<Copy
@@ -356,7 +359,6 @@
 						prop="realName"
 						align="center"
 						label="姓名"
-						fixed
 						width="150px"
 					>
 						<template slot-scope="scope">
@@ -599,6 +601,7 @@
 						</template>
 					</el-table-column>
 				</el-table>
+<!--                <el-table-footer :data="footerData" ref="tableFooter"></el-table-footer>-->
 				<!-- 分页 -->
 				<el-pagination
 					v-show="!!total"
@@ -658,25 +661,25 @@ export default {
 				registerTime: [start, end],
 				userName: undefined,
 				realName: undefined,
-                parentProxyName: undefined,
-                accountType: [],
+				parentProxyName: undefined,
+				accountType: [],
 				accountStatus: [],
 				windControlId: undefined,
-                labelId: undefined,
-                vipSerialNumMax: undefined,
-                vipSerialNumMin: undefined,
-                betNumMin: undefined,
-                betNumMax: undefined,
-                depositAmountMin: undefined,
-                depositAmountMax: undefined,
-                depositAmountValidMin: undefined,
-                depositAmountValidMax: undefined,
-                profitMin: undefined,
-                profitMax: undefined,
-                totalDepositMin: undefined,
-                totalDepositMax: undefined,
-                withdrawalMin: undefined,
-                withdrawalMax: undefined,
+				labelId: undefined,
+				vipSerialNumMax: undefined,
+				vipSerialNumMin: undefined,
+				betNumMin: undefined,
+				betNumMax: undefined,
+				depositAmountMin: undefined,
+				depositAmountMax: undefined,
+				depositAmountValidMin: undefined,
+				depositAmountValidMax: undefined,
+				profitMin: undefined,
+				profitMax: undefined,
+				totalDepositMin: undefined,
+				totalDepositMax: undefined,
+				withdrawalMin: undefined,
+				withdrawalMax: undefined,
 				orderKey: undefined,
 				orderType: undefined
 			},
@@ -695,7 +698,8 @@ export default {
 				账号状态: true,
 				会员标签: true
 			},
-			newList: []
+			newList: [],
+			totalLoading: false
 		}
 	},
 	computed: {
@@ -714,7 +718,6 @@ export default {
 		if (localStorage.getItem('memberReport')) {
 			this.settingList = JSON.parse(localStorage.getItem('memberReport'))
 		}
-		// this.adjustWidth()
 	},
 	methods: {
 		_search() {
@@ -734,21 +737,6 @@ export default {
 			this.visible = true
 			this.newList = JSON.parse(JSON.stringify(this.settingList))
 		},
-		adjustWidth() {
-			this.$nextTick(() => {
-				Array.from(
-					this.$refs.tables.$refs.headerWrapper.querySelectorAll('col')
-				).forEach((n, i) => {
-					const len = this.$refs.sum_xiaoji.children.length
-					if (i < len) {
-						this.$refs.sum_xiaoji.children[i].style =
-							'width:' + n.getAttribute('width') + 'px'
-						this.$refs.sum_heji.children[i].style =
-							'width:' + n.getAttribute('width') + 'px'
-					}
-				})
-			})
-		},
 		setAll() {
 			Object.keys(this.newList).forEach((item) => {
 				this.newList[item] = true
@@ -758,6 +746,131 @@ export default {
 			localStorage.setItem('memberReport', JSON.stringify(this.newList))
 			this.settingList = this.newList
 			this.visible = false
+		},
+		// 总计
+		getSummaries(param) {
+			const { columns } = param
+			const sums = []
+			columns.forEach((column, index) => {
+				if (index === 0) {
+					const el = (
+						<div class='count_row'>
+							<p>本页合计</p>
+							<p>全部合计</p>
+						</div>
+					)
+					sums[index] = el
+					return
+				}
+				if (column.property === 'distinctPeopleNumber') {
+					if (!this.modalListStatus) {
+						sums[index] = <i class='el-icon-loading' />
+					} else {
+						if (!this.summary['totalBetPlayerCount']) {
+							this.summary['totalBetPlayerCount'] === 0
+								? (sums[index] = 0)
+								: (sums[index] = '-')
+						} else {
+							sums[index] = this.formatValue1(
+								this.summary['totalBetPlayerCount']
+							)
+						}
+					}
+				}
+				if (column.property === 'betNumber') {
+					if (!this.modalListStatus) {
+						sums[index] = <i class='el-icon-loading' />
+					} else {
+						if (!this.summary['totalBetNum']) {
+							this.summary['totalBetNum'] === 0
+								? (sums[index] = 0)
+								: (sums[index] = '-')
+						} else {
+							sums[index] = this.formatValue1(this.summary['totalBetNum'])
+						}
+					}
+				}
+				if (column.property === 'betAmount') {
+					if (!this.modalListStatus) {
+						sums[index] = <i class='el-icon-loading' />
+					} else {
+						if (!this.summary['totalBetAmount']) {
+							this.summary['totalBetAmount'] === 0
+								? (sums[index] = 0)
+								: (sums[index] = '-')
+						} else {
+							sums[index] = this.formatMoney(this.summary['totalBetAmount'])
+						}
+					}
+				}
+				if (column.property === 'validBetAmount') {
+					if (!this.modalListStatus) {
+						sums[index] = <i class='el-icon-loading' />
+					} else {
+						if (!this.summary['totalValidBetAmount']) {
+							this.summary['totalValidBetAmount'] === 0
+								? (sums[index] = 0)
+								: (sums[index] = '-')
+						} else {
+							sums[index] = this.formatMoney(
+								this.summary['totalValidBetAmount']
+							)
+						}
+					}
+				}
+				if (column.property === 'killCount') {
+					if (!this.modalListStatus) {
+						sums[index] = <i class='el-icon-loading' />
+					} else {
+						if (!this.summary['totalKillCount']) {
+							this.summary['totalKillCount'] === 0
+								? (sums[index] = <span style='color:red'>0%</span>)
+								: (sums[index] = '-')
+						} else {
+							sums[index] = this.filterValue(
+								this.summary['totalKillCount'] * 100
+							)
+							// 后面再抽离优化了
+							this.$nextTick(() => {
+								// 改变合计行样式
+								const s_table = document.getElementsByClassName(column.id)
+								const el_foter_cell = s_table[s_table.length - 1]
+								if (Number(this.summary['totalKillCount']) > 0) {
+									el_foter_cell.setAttribute('style', 'color: #1A936F')
+								} else {
+									el_foter_cell.setAttribute('style', 'color: red')
+								}
+							})
+						}
+					}
+				}
+				if (column.property === 'netAmount') {
+					if (!this.modalListStatus) {
+						sums[index] = <i class='el-icon-loading' />
+					} else {
+						if (!this.summary['totalNetAmount']) {
+							this.summary['totalNetAmount'] === 0
+								? (sums[index] = <span style='color:red'>0</span>)
+								: (sums[index] = '-')
+						} else {
+							sums[index] = this.formatMoney(this.summary['totalNetAmount'])
+							this.$nextTick(() => {
+								// 改变合计行样式
+								const s_table = document.getElementsByClassName(column.id)
+								const el_foter_cell = s_table[s_table.length - 1]
+								el_foter_cell.setAttribute('style', 'color: #1A936F')
+								if (Number(this.summary['totalNetAmount']) > 0) {
+									el_foter_cell.setAttribute('style', 'color: #1A936F')
+								} else {
+									el_foter_cell.setAttribute('style', 'color: red')
+								}
+							})
+						}
+					}
+				}
+			})
+
+			return sums
 		},
 		loadData() {
 			const create = this.queryData.registerTime || []
@@ -774,10 +887,7 @@ export default {
 			params = {
 				...this.getParams(params)
 			}
-			if (
-				!startTime &&
-				!endTime
-			) {
+			if (!startTime && !endTime) {
 				this.$message({
 					type: 'warning',
 					message: `请选择注册时间`
@@ -926,34 +1036,34 @@ export default {
 						this.queryData.vipSerialNumMax = value
 					}
 					break
-                case 'betNumMin':
-                    if (
-                        !!this.queryData.betNumMax &&
-                        value &&
-                        value * 1 > this.queryData.betNumMax * 1
-                    ) {
-                        this.$message({
-                            type: 'warning',
-                            message: `请输入小于${this.queryData.betNumMax}注单量`
-                        })
-                    } else {
-                        this.queryData.betNumMin = value
-                    }
-                    break
-                case 'betNumMax':
-                    if (
-                        !!this.queryData.betNumMin &&
-                        value &&
-                        value * 1 < this.queryData.betNumMin * 1
-                    ) {
-                        this.$message({
-                            type: 'warning',
-                            message: `请输入大于${this.queryData.betNumMin}注单量`
-                        })
-                    } else {
-                        this.queryData.betNumMax = value
-                    }
-                    break
+				case 'betNumMin':
+					if (
+						!!this.queryData.betNumMax &&
+						value &&
+						value * 1 > this.queryData.betNumMax * 1
+					) {
+						this.$message({
+							type: 'warning',
+							message: `请输入小于${this.queryData.betNumMax}注单量`
+						})
+					} else {
+						this.queryData.betNumMin = value
+					}
+					break
+				case 'betNumMax':
+					if (
+						!!this.queryData.betNumMin &&
+						value &&
+						value * 1 < this.queryData.betNumMin * 1
+					) {
+						this.$message({
+							type: 'warning',
+							message: `请输入大于${this.queryData.betNumMin}注单量`
+						})
+					} else {
+						this.queryData.betNumMax = value
+					}
+					break
 				case 'depositAmountMin':
 					if (
 						!!this.queryData.depositAmountMax &&
@@ -982,34 +1092,34 @@ export default {
 						this.queryData.depositAmountMax = value
 					}
 					break
-                case 'depositAmountValidMin':
-                    if (
-                        !!this.queryData.depositAmountValidMax &&
-                        value &&
-                        value * 1 > this.queryData.depositAmountValidMax * 1
-                    ) {
-                        this.$message({
-                            type: 'warning',
-                            message: `请输入小于${this.queryData.depositAmountValidMax}金额`
-                        })
-                    } else {
-                        this.queryData.depositAmountValidMin = value
-                    }
-                    break
-                case 'depositAmountValidMax':
-                    if (
-                        !!this.queryData.depositAmountValidMin &&
-                        value &&
-                        value * 1 < this.queryData.depositAmountValidMin * 1
-                    ) {
-                        this.$message({
-                            type: 'warning',
-                            message: `请输入大于${this.queryData.depositAmountValidMin}金额`
-                        })
-                    } else {
-                        this.queryData.depositAmountValidMax = value
-                    }
-                    break
+				case 'depositAmountValidMin':
+					if (
+						!!this.queryData.depositAmountValidMax &&
+						value &&
+						value * 1 > this.queryData.depositAmountValidMax * 1
+					) {
+						this.$message({
+							type: 'warning',
+							message: `请输入小于${this.queryData.depositAmountValidMax}金额`
+						})
+					} else {
+						this.queryData.depositAmountValidMin = value
+					}
+					break
+				case 'depositAmountValidMax':
+					if (
+						!!this.queryData.depositAmountValidMin &&
+						value &&
+						value * 1 < this.queryData.depositAmountValidMin * 1
+					) {
+						this.$message({
+							type: 'warning',
+							message: `请输入大于${this.queryData.depositAmountValidMin}金额`
+						})
+					} else {
+						this.queryData.depositAmountValidMax = value
+					}
+					break
 				case 'profitMin':
 					if (
 						!!this.queryData.profitMax &&
@@ -1038,62 +1148,62 @@ export default {
 						this.queryData.profitMax = value
 					}
 					break
-                case 'totalDepositMin':
-                    if (
-                        !!this.queryData.totalDepositMax &&
-                        value &&
-                        value * 1 > this.queryData.totalDepositMax * 1
-                    ) {
-                        this.$message({
-                            type: 'warning',
-                            message: `请输入小于${this.queryData.totalDepositMax}金额`
-                        })
-                    } else {
-                        this.queryData.totalDepositMin = value
-                    }
-                    break
-                case 'totalDepositMax':
-                    if (
-                        !!this.queryData.totalDepositMin &&
-                        value &&
-                        value * 1 < this.queryData.totalDepositMin * 1
-                    ) {
-                        this.$message({
-                            type: 'warning',
-                            message: `请输入大于${this.queryData.totalDepositMin}金额`
-                        })
-                    } else {
-                        this.queryData.totalDepositMax = value
-                    }
-                    break
-                case 'withdrawalMin':
-                    if (
-                        !!this.queryData.withdrawalMax &&
-                        value &&
-                        value * 1 > this.queryData.withdrawalMax * 1
-                    ) {
-                        this.$message({
-                            type: 'warning',
-                            message: `请输入小于${this.queryData.withdrawalMax}金额`
-                        })
-                    } else {
-                        this.queryData.withdrawalMin = value
-                    }
-                    break
-                case 'withdrawalMax':
-                    if (
-                        !!this.queryData.withdrawalMin &&
-                        value &&
-                        value * 1 < this.queryData.withdrawalMin * 1
-                    ) {
-                        this.$message({
-                            type: 'warning',
-                            message: `请输入大于${this.queryData.withdrawalMin}金额`
-                        })
-                    } else {
-                        this.queryData.withdrawalMax = value
-                    }
-                    break
+				case 'totalDepositMin':
+					if (
+						!!this.queryData.totalDepositMax &&
+						value &&
+						value * 1 > this.queryData.totalDepositMax * 1
+					) {
+						this.$message({
+							type: 'warning',
+							message: `请输入小于${this.queryData.totalDepositMax}金额`
+						})
+					} else {
+						this.queryData.totalDepositMin = value
+					}
+					break
+				case 'totalDepositMax':
+					if (
+						!!this.queryData.totalDepositMin &&
+						value &&
+						value * 1 < this.queryData.totalDepositMin * 1
+					) {
+						this.$message({
+							type: 'warning',
+							message: `请输入大于${this.queryData.totalDepositMin}金额`
+						})
+					} else {
+						this.queryData.totalDepositMax = value
+					}
+					break
+				case 'withdrawalMin':
+					if (
+						!!this.queryData.withdrawalMax &&
+						value &&
+						value * 1 > this.queryData.withdrawalMax * 1
+					) {
+						this.$message({
+							type: 'warning',
+							message: `请输入小于${this.queryData.withdrawalMax}金额`
+						})
+					} else {
+						this.queryData.withdrawalMin = value
+					}
+					break
+				case 'withdrawalMax':
+					if (
+						!!this.queryData.withdrawalMin &&
+						value &&
+						value * 1 < this.queryData.withdrawalMin * 1
+					) {
+						this.$message({
+							type: 'warning',
+							message: `请输入大于${this.queryData.withdrawalMin}金额`
+						})
+					} else {
+						this.queryData.withdrawalMax = value
+					}
+					break
 			}
 		},
 		exportExcel() {
@@ -1201,5 +1311,50 @@ export default {
 	text-align: center;
 	color: #909399;
 	font-weight: 700;
+}
+///deep/ .el-table {
+//    overflow: auto;
+//}
+//
+/deep/ .el-table__body-wrapper::-webkit-scrollbar {
+    height: 0;
+}
+
+/deep/ .el-table::after{
+    position:relative !important;
+}
+
+/deep/ .el-table__footer-wrapper::after {
+	//border: 1px solid #ebeef5;
+	//content: '';
+	//position: absolute;
+	//bottom: 41px;
+	//left: 0;
+	//width: 100%;
+}
+
+/deep/ .el-table__footer-wrapper .cell::after {
+    border: 1px solid #ebeef5;
+    content: '';
+    position: absolute;
+    top: 41px;
+    left: 0;
+    width: 100%;
+}
+
+/deep/ .el-table__fixed-footer-wrapper tr::after {
+    border: 1px solid #ebeef5;
+    content: '';
+    position: absolute;
+    top: 41px;
+    left: 0;
+    width: 100%;
+}
+.count_row {
+	height: 80px;
+	p {
+		height: 40px;
+		line-height: 40px;
+	}
 }
 </style>
