@@ -1000,12 +1000,23 @@ export default {
 						switch (column.property) {
 							case 'vipSerialNum':
 								// eslint-disable-next-line no-case-declarations
-								const vipTotal = (
-									<div class='count_row'>
-										<p>{sums[index]}</p>
-										<p>200</p>
-									</div>
-								)
+								let vipTotal
+								if (!this.totalLoading) {
+									vipTotal = (
+										<div class='count_row'>
+											<p>{sums[index]}</p>
+											<p>
+											</p>
+										</div>
+									)
+								} else {
+									vipTotal = (
+										<div class='count_row'>
+											<p>{sums[index]}</p>
+											<p>200</p>
+										</div>
+									)
+								}
 								return (sums[index] = vipTotal)
 							case 'depositAmount':
 								// eslint-disable-next-line no-case-declarations
