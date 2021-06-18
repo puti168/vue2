@@ -286,11 +286,11 @@
                         <el-button
                             type="primary"
                             icon="el-icon-search"
-                            :disabled="loading"
                             size="medium"
-                            @click="search"
+                            :disabled="queryText !== '查询'"
+                            @click="_search"
                         >
-                            查询
+                            {{ queryText }}
                         </el-button>
                         <el-button
                             icon="el-icon-refresh-left"
@@ -308,6 +308,15 @@
                             @click="exportExcel"
                         >
                             导出
+                        </el-button>
+                        <el-button
+                            type="success"
+                            icon="el-icon-setting"
+                            :disabled="loading"
+                            size="medium"
+                            @click="openSetting"
+                        >
+                            列设置
                         </el-button>
                     </el-form-item>
                 </el-form>
@@ -638,7 +647,9 @@ export default {
             dataList: [],
             total: 0,
             vipDict: [],
-            userLabel: []
+            userLabel: [],
+            queryText: '查询',
+            visible: false
         }
     },
     computed: {
@@ -660,6 +671,23 @@ export default {
         this.getWindControllerLevelDict()
     },
     methods: {
+        _search() {
+            let t = 10
+            const timeCount = setInterval(() => {
+                t--
+                this.queryText = t + 's'
+                if (t < 0) {
+                    clearInterval(timeCount)
+                    this.queryText = '查询'
+                }
+            }, 1000)
+            this.loadData()
+        },
+        // 列设置
+        openSetting() {
+            this.visible = true
+            this.newList = JSON.parse(JSON.stringify(this.settingList))
+        },
         loadData() {
             const create = this.queryData.registerTime || []
             const lastLoginTime = this.queryData.lastLoginTime || []
