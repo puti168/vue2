@@ -58,7 +58,8 @@ export const routerNames = {
 	agentWithdrawalReviewRecord: 'agentWithdrawalReviewRecord',
 	clientCommon: 'clientCommon',
 	platformRate: 'platformRate',
-	roleManage: 'roleManage'
+	roleManage: 'roleManage',
+	memberReport: 'memberReport'
 }
 const month = dayjs().month()
 const year = dayjs().year()
