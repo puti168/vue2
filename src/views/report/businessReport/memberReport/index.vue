@@ -933,6 +933,10 @@ export default {
 		if (localStorage.getItem('memberReport')) {
 			this.settingList = JSON.parse(localStorage.getItem('memberReport'))
 		}
+
+		setTimeout(() => {
+			this.totalLoading = true
+		}, 2000)
 	},
 	methods: {
 		_search() {
@@ -1006,6 +1010,7 @@ export default {
 										<div class='count_row'>
 											<p>{sums[index]}</p>
 											<p>
+												<el-button icon='el-icon-loading' />
 											</p>
 										</div>
 									)
@@ -1013,7 +1018,7 @@ export default {
 									vipTotal = (
 										<div class='count_row'>
 											<p>{sums[index]}</p>
-											<p>200</p>
+											<p>10000</p>
 										</div>
 									)
 								}
@@ -1549,11 +1554,25 @@ export default {
 	p {
 		height: 40px;
 		line-height: 40px;
+		span {
+			display: inline-block;
+			width: 20px;
+			height: 20px;
+		}
 	}
 }
 /deep/ .caret-wrapper {
 	position: absolute;
 	top: 50%;
 	transform: translateY(-50%);
+}
+/deep/ .count_row p .el-button {
+	min-width: 0;
+	border: 0;
+	padding: 0;
+	width: 20px;
+}
+/deep/ .count_row p .el-button:hover {
+	background-color: unset;
 }
 </style>
