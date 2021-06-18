@@ -174,7 +174,7 @@
           </span>
         </div>
         <h2>代理信息</h2>
-        <el-form :rules="rules" :inline="true" :model="ruleForm" class="demo-form-inline">
+        <el-form :rules="rules" :inline="true" class="demo-form-inline">
           <el-form-item prop="agent" label="代理账号：">
             <el-input v-model="queryData.agentnum" class="information"></el-input>
           </el-form-item>
@@ -194,6 +194,7 @@
         <h2>提款配置</h2>
         <el-form
           ref="formSub"
+          :rules="rules"
           :inline="true"
           class="demo-form-inline"
           :model="dialogForm"
@@ -293,7 +294,11 @@
             ></el-input>
           </el-form-item>
           <el-form-item label="状态">
-            <el-select>
+            <el-select
+            v-model="queryData.status"
+            clearable
+            :popper-append-to-body="false"
+            >
               <el-option label="关闭" value="shanghai"></el-option>
               <el-option label="开启" value="beijing"></el-option>
             </el-select>

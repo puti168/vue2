@@ -142,7 +142,7 @@
         <h2>提款配置</h2>
         <el-form
           ref="formSub"
-          rules="rules"
+          :rules="rules"
           :inline="true"
           class="demo-form-inline"
           :model="dialogForm"
@@ -240,13 +240,17 @@
             ></el-input>
           </el-form-item>
           <el-form-item label="状态">
-            <el-select>
+            <el-select
+            v-model="queryData.status"
+            clearable
+            :popper-append-to-body="false"
+            >
               <el-option label="关闭" value="shanghai"></el-option>
               <el-option label="开启" value="beijing"></el-option>
             </el-select>
           </el-form-item>
 
-          <el-form-item
+          <!-- <el-form-item
             label="标签名称:"
             prop="gameLabelName"
             :rules="[
@@ -279,7 +283,7 @@
             ]"
           >
             <el-input v-model="dialogForm.description" type="textarea"></el-input>
-          </el-form-item>
+          </el-form-item> -->
         </el-form>
         <el-divider></el-divider>
         <span slot="footer" class="dialog-footer">
