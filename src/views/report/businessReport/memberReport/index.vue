@@ -8,23 +8,22 @@
 					:model="queryData"
 					label-width="85px"
 				>
-					<el-form-item label="注册时间:" prop="registerTime">
-						<el-date-picker
-							v-model="queryData.registerTime"
-							size="medium"
-							:picker-options="pickerOptions"
-							format="yyyy-MM-dd HH:mm:ss"
-							type="datetimerange"
-							range-separator="-"
-							start-placeholder="开始日期"
-							end-placeholder="结束日期"
-							align="right"
-							:clearable="true"
-							value-format="timestamp"
-							style="width: 388px"
-							:default-time="defaultTime"
-						></el-date-picker>
-					</el-form-item>
+                    <el-form-item label="注册时间:" prop="registerTime">
+                        <el-date-picker
+                            v-model="queryData.registerTime"
+                            size="medium"
+                            :picker-options="pickerOptions"
+                            format="yyyy-MM-dd"
+                            type="datetimerange"
+                            range-separator="-"
+                            start-placeholder="开始日期"
+                            end-placeholder="结束日期"
+                            align="right"
+                            :clearable="true"
+                            value-format="timestamp"
+                            style="width: 300px"
+                        ></el-date-picker>
+                    </el-form-item>
 					<el-form-item label="会员账号:">
 						<el-input
 							v-model="queryData.userName"
@@ -151,7 +150,7 @@
 							placeholder="最小数值"
 							style="width: 100px"
 							maxlength="10"
-							name="vipSerialNumMin"
+							name="betNumMin"
 							oninput="value=value.replace(/[^\d]/g,'')"
 							@blur="checkValue($event)"
 						></el-input>
@@ -163,122 +162,122 @@
 							style="width: 100px"
 							maxlength="10"
 							oninput="value=value.replace(/[^\d]/g,'')"
-							name="vipSerialNumMax"
+							name="betNumMax"
 							@blur="checkValue($event)"
 						></el-input>
 					</el-form-item>
 					<el-form-item label="投注金额:">
 						<el-input
-							v-model="queryData.firstDepositAmountMin"
+							v-model="queryData.depositAmountMin"
 							size="medium"
 							placeholder="最小数值"
 							style="width: 100px"
-							maxlength="10"
+							maxlength="15"
 							oninput="value=value.replace(/[^\d]/g,'')"
-							name="firstDepositAmountMin"
+							name="depositAmountMin"
 							@blur="checkValue($event)"
 						></el-input>
 						-
 						<el-input
-							v-model="queryData.firstDepositAmountMax"
+							v-model="queryData.depositAmountMax"
 							size="medium"
 							placeholder="最大数值"
 							style="width: 100px"
-							maxlength="10"
+							maxlength="15"
 							oninput="value=value.replace(/[^\d]/g,'')"
-							name="firstDepositAmountMax"
+							name="depositAmountMax"
 							@blur="checkValue($event)"
 						></el-input>
 					</el-form-item>
 					<el-form-item label="有效投注:">
 						<el-input
-							v-model="queryData.offLineDaysStart"
+							v-model="queryData.depositAmountValidMin"
 							size="medium"
 							placeholder="最小数值"
 							style="width: 100px"
-							maxlength="5"
-							name="offLineDaysStart"
+							maxlength="15"
+							name="depositAmountValidMin"
 							oninput="value=value.replace(/[^\d]/g,'')"
 							@blur="checkValue($event)"
 						></el-input>
 						-
 						<el-input
-							v-model="queryData.offLineDaysEnd"
+							v-model="queryData.depositAmountValidMax"
 							size="medium"
 							placeholder="最大数值"
 							style="width: 100px"
-							maxlength="5"
-							name="offLineDaysEnd"
+							maxlength="15"
+							name="depositAmountValidMax"
 							oninput="value=value.replace(/[^\d]/g,'')"
 							@blur="checkValue($event)"
 						></el-input>
 					</el-form-item>
 					<el-form-item label="投注盈亏:">
 						<el-input
-							v-model="queryData.transforNumMin"
+							v-model="queryData.profitMin"
 							size="medium"
 							placeholder="最小数值"
 							style="width: 100px"
-							maxlength="10"
+							maxlength="15"
 							oninput="value=value.replace(/[^\d]/g,'')"
-							name="transforNumMin"
+							name="profitMin"
 							@blur="checkValue($event)"
 						></el-input>
 						-
 						<el-input
-							v-model="queryData.transforNumMax"
+							v-model="queryData.profitMax"
 							size="medium"
 							placeholder="最大数值"
 							style="width: 100px"
-							maxlength="10"
+							maxlength="15"
 							oninput="value=value.replace(/[^\d]/g,'')"
-							name="transforNumMax"
+							name="profitMax"
 							@blur="checkValue($event)"
 						></el-input>
 					</el-form-item>
 					<el-form-item label="总存款:">
 						<el-input
-							v-model="queryData.transforNumMin"
+							v-model="queryData.totalDepositMin"
 							size="medium"
 							placeholder="最小数值"
 							style="width: 100px"
 							maxlength="10"
 							oninput="value=value.replace(/[^\d]/g,'')"
-							name="transforNumMin"
+							name="totalDepositMin"
 							@blur="checkValue($event)"
 						></el-input>
 						-
 						<el-input
-							v-model="queryData.transforNumMax"
+							v-model="queryData.totalDepositMax"
 							size="medium"
 							placeholder="最大数值"
 							style="width: 100px"
 							maxlength="10"
 							oninput="value=value.replace(/[^\d]/g,'')"
-							name="transforNumMax"
+							name="totalDepositMax"
 							@blur="checkValue($event)"
 						></el-input>
 					</el-form-item>
 					<el-form-item label="总取款:">
 						<el-input
-							v-model="queryData.transforNumMin"
+							v-model="queryData.withdrawalMin"
 							size="medium"
 							placeholder="最小数值"
 							style="width: 100px"
-							maxlength="10"
+							maxlength="15"
 							oninput="value=value.replace(/[^\d]/g,'')"
-							name="transforNumMin"
+							name="withdrawalMin"
 							@blur="checkValue($event)"
 						></el-input>
 						-
 						<el-input
-							v-model="queryData.transforNumMax"
+							v-model="queryData.withdrawalMax"
 							size="medium"
 							placeholder="最大数值"
 							style="width: 100px"
-							maxlength="10"
+							maxlength="15"
 							oninput="value=value.replace(/[^\d]/g,'')"
-							name="transforNumMax"
+							name="withdrawalMax"
 							@blur="checkValue($event)"
 						></el-input>
 					</el-form-item>
@@ -659,24 +658,25 @@ export default {
 				registerTime: [start, end],
 				userName: undefined,
 				realName: undefined,
+                parentProxyName: undefined,
+                accountType: [],
 				accountStatus: [],
 				windControlId: undefined,
-				offLineDaysStart: undefined,
-				offLineDaysEnd: undefined,
-				lastLoginTime: [],
-				vipSerialNumMax: undefined,
-				vipSerialNumMin: undefined,
-				betNumMin: undefined,
-				betNumMax: undefined,
-				transforNumMin: undefined,
-				transforNumMax: undefined,
-				accountType: [],
-				deviceType: [],
-				firstDepositAmountMin: undefined,
-				firstDepositAmountMax: undefined,
-				firstSaveTime: [],
-				labelId: undefined,
-				parentProxyName: undefined,
+                labelId: undefined,
+                vipSerialNumMax: undefined,
+                vipSerialNumMin: undefined,
+                betNumMin: undefined,
+                betNumMax: undefined,
+                depositAmountMin: undefined,
+                depositAmountMax: undefined,
+                depositAmountValidMin: undefined,
+                depositAmountValidMax: undefined,
+                profitMin: undefined,
+                profitMax: undefined,
+                totalDepositMin: undefined,
+                totalDepositMax: undefined,
+                withdrawalMin: undefined,
+                withdrawalMax: undefined,
 				orderKey: undefined,
 				orderType: undefined
 			},
@@ -704,9 +704,6 @@ export default {
 		},
 		accountTypeArr() {
 			return this.globalDics.accountType
-		},
-		deviceTypeArr() {
-			return this.globalDics.deviceType
 		}
 	},
 	created() {
@@ -764,11 +761,7 @@ export default {
 		},
 		loadData() {
 			const create = this.queryData.registerTime || []
-			const lastLoginTime = this.queryData.lastLoginTime || []
-			const firstSaveTime = this.queryData.firstSaveTime || []
 			const [startTime, endTime] = create
-			const [loginTimeStart, loginTimeEnd] = lastLoginTime
-			const [firstDepositTimeStart, firstDepositTimeEnd] = firstSaveTime
 			let params = {
 				...this.queryData,
 				createDtStart: startTime
@@ -776,18 +769,6 @@ export default {
 					: undefined,
 				createDtEnd: endTime
 					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
-					: undefined,
-				lastLoginTimeStart: loginTimeStart
-					? dayjs(loginTimeStart).format('YYYY-MM-DD HH:mm:ss')
-					: undefined,
-				lastLoginTimeEnd: loginTimeEnd
-					? dayjs(loginTimeEnd).format('YYYY-MM-DD HH:mm:ss')
-					: undefined,
-				firstDepositTimeStart: firstDepositTimeStart
-					? dayjs(firstDepositTimeStart).format('YYYY-MM-DD HH:mm:ss')
-					: undefined,
-				firstDepositTimeEnd: firstDepositTimeEnd
-					? dayjs(firstDepositTimeEnd).format('YYYY-MM-DD HH:mm:ss')
 					: undefined
 			}
 			params = {
@@ -795,23 +776,17 @@ export default {
 			}
 			if (
 				!startTime &&
-				!endTime &&
-				!loginTimeStart &&
-				!loginTimeEnd &&
-				!firstDepositTimeStart &&
-				!firstDepositTimeEnd
+				!endTime
 			) {
 				this.$message({
 					type: 'warning',
-					message: `请选择注册时间, 最后登录时间,首存时间任意其中一个时间维度`
+					message: `请选择注册时间`
 				})
 				return false
 			}
 			this.dataList = []
 			this.loading = true
 			delete params.registerTime
-			delete params.lastLoginTime
-			delete params.firstSaveTime
 			this.$api
 				.memberListAPI(params)
 				.then((res) => {
@@ -923,34 +898,6 @@ export default {
 		checkValue(e) {
 			const { name, value } = e.target
 			switch (name) {
-				case 'offLineDaysStart':
-					if (
-						!!this.queryData.offLineDaysEnd &&
-						value &&
-						value * 1 > this.queryData.offLineDaysEnd * 1
-					) {
-						this.$message({
-							type: 'warning',
-							message: `请输入小于${this.queryData.offLineDaysEnd}天数`
-						})
-					} else {
-						this.queryData.offLineDaysStart = value
-					}
-					break
-				case 'offLineDaysEnd':
-					if (
-						!!this.queryData.offLineDaysStart &&
-						value &&
-						value * 1 < this.queryData.offLineDaysStart * 1
-					) {
-						this.$message({
-							type: 'warning',
-							message: `请输入大于${this.queryData.offLineDaysStart}天数`
-						})
-					} else {
-						this.queryData.offLineDaysEnd = value
-					}
-					break
 				case 'vipSerialNumMin':
 					if (
 						!!this.queryData.vipSerialNumMax &&
@@ -979,71 +926,179 @@ export default {
 						this.queryData.vipSerialNumMax = value
 					}
 					break
-				case 'firstDepositAmountMin':
+                case 'betNumMin':
+                    if (
+                        !!this.queryData.betNumMax &&
+                        value &&
+                        value * 1 > this.queryData.betNumMax * 1
+                    ) {
+                        this.$message({
+                            type: 'warning',
+                            message: `请输入小于${this.queryData.betNumMax}注单量`
+                        })
+                    } else {
+                        this.queryData.betNumMin = value
+                    }
+                    break
+                case 'betNumMax':
+                    if (
+                        !!this.queryData.betNumMin &&
+                        value &&
+                        value * 1 < this.queryData.betNumMin * 1
+                    ) {
+                        this.$message({
+                            type: 'warning',
+                            message: `请输入大于${this.queryData.betNumMin}注单量`
+                        })
+                    } else {
+                        this.queryData.betNumMax = value
+                    }
+                    break
+				case 'depositAmountMin':
 					if (
-						!!this.queryData.firstDepositAmountMax &&
+						!!this.queryData.depositAmountMax &&
 						value &&
-						value * 1 > this.queryData.firstDepositAmountMax * 1
+						value * 1 > this.queryData.depositAmountMax * 1
 					) {
 						this.$message({
 							type: 'warning',
-							message: `请输入小于${this.queryData.firstDepositAmountMax}金额`
+							message: `请输入小于${this.queryData.depositAmountMax}金额`
 						})
 					} else {
-						this.queryData.firstDepositAmountMin = value
+						this.queryData.depositAmountMin = value
 					}
 					break
-				case 'firstDepositAmountMax':
+				case 'depositAmountMax':
 					if (
-						!!this.queryData.firstDepositAmountMin &&
+						!!this.queryData.depositAmountMin &&
 						value &&
-						value * 1 < this.queryData.firstDepositAmountMin * 1
+						value * 1 < this.queryData.depositAmountMin * 1
 					) {
 						this.$message({
 							type: 'warning',
-							message: `请输入大于${this.queryData.firstDepositAmountMin}金额`
+							message: `请输入大于${this.queryData.depositAmountMin}金额`
 						})
 					} else {
-						this.queryData.firstDepositAmountMax = value
+						this.queryData.depositAmountMax = value
 					}
 					break
-				case 'transforNumMin':
+                case 'depositAmountValidMin':
+                    if (
+                        !!this.queryData.depositAmountValidMax &&
+                        value &&
+                        value * 1 > this.queryData.depositAmountValidMax * 1
+                    ) {
+                        this.$message({
+                            type: 'warning',
+                            message: `请输入小于${this.queryData.depositAmountValidMax}金额`
+                        })
+                    } else {
+                        this.queryData.depositAmountValidMin = value
+                    }
+                    break
+                case 'depositAmountValidMax':
+                    if (
+                        !!this.queryData.depositAmountValidMin &&
+                        value &&
+                        value * 1 < this.queryData.depositAmountValidMin * 1
+                    ) {
+                        this.$message({
+                            type: 'warning',
+                            message: `请输入大于${this.queryData.depositAmountValidMin}金额`
+                        })
+                    } else {
+                        this.queryData.depositAmountValidMax = value
+                    }
+                    break
+				case 'profitMin':
 					if (
-						!!this.queryData.transforNumMax &&
+						!!this.queryData.profitMax &&
 						value &&
-						value * 1 > this.queryData.transforNumMax * 1
+						value * 1 > this.queryData.profitMax * 1
 					) {
 						this.$message({
 							type: 'warning',
-							message: `请输入小于${this.queryData.transforNumMax}次数`
+							message: `请输入小于${this.queryData.profitMax}金额`
 						})
 					} else {
-						this.queryData.transforNumMin = value
+						this.queryData.profitMin = value
 					}
 					break
-				case 'transforNumMax':
+				case 'profitMax':
 					if (
-						!!this.queryData.transforNumMin &&
+						!!this.queryData.profitMin &&
 						value &&
-						value * 1 < this.queryData.transforNumMin * 1
+						value * 1 < this.queryData.profitMin * 1
 					) {
 						this.$message({
 							type: 'warning',
-							message: `请输入大于${this.queryData.transforNumMin}次数`
+							message: `请输入大于${this.queryData.profitMin}金额`
 						})
 					} else {
-						this.queryData.transforNumMin = value
+						this.queryData.profitMax = value
 					}
 					break
+                case 'totalDepositMin':
+                    if (
+                        !!this.queryData.totalDepositMax &&
+                        value &&
+                        value * 1 > this.queryData.totalDepositMax * 1
+                    ) {
+                        this.$message({
+                            type: 'warning',
+                            message: `请输入小于${this.queryData.totalDepositMax}金额`
+                        })
+                    } else {
+                        this.queryData.totalDepositMin = value
+                    }
+                    break
+                case 'totalDepositMax':
+                    if (
+                        !!this.queryData.totalDepositMin &&
+                        value &&
+                        value * 1 < this.queryData.totalDepositMin * 1
+                    ) {
+                        this.$message({
+                            type: 'warning',
+                            message: `请输入大于${this.queryData.totalDepositMin}金额`
+                        })
+                    } else {
+                        this.queryData.totalDepositMax = value
+                    }
+                    break
+                case 'withdrawalMin':
+                    if (
+                        !!this.queryData.withdrawalMax &&
+                        value &&
+                        value * 1 > this.queryData.withdrawalMax * 1
+                    ) {
+                        this.$message({
+                            type: 'warning',
+                            message: `请输入小于${this.queryData.withdrawalMax}金额`
+                        })
+                    } else {
+                        this.queryData.withdrawalMin = value
+                    }
+                    break
+                case 'withdrawalMax':
+                    if (
+                        !!this.queryData.withdrawalMin &&
+                        value &&
+                        value * 1 < this.queryData.withdrawalMin * 1
+                    ) {
+                        this.$message({
+                            type: 'warning',
+                            message: `请输入大于${this.queryData.withdrawalMin}金额`
+                        })
+                    } else {
+                        this.queryData.withdrawalMax = value
+                    }
+                    break
 			}
 		},
 		exportExcel() {
 			const create = this.queryData.registerTime || []
-			const lastLoginTime = this.queryData.lastLoginTime || []
-			const firstSaveTime = this.queryData.firstSaveTime || []
 			const [startTime, endTime] = create
-			const [loginTimeStart, loginTimeEnd] = lastLoginTime
-			const [firstDepositTimeStart, firstDepositTimeEnd] = firstSaveTime
 			this.loading = true
 			let params = {
 				...this.queryData,
@@ -1052,26 +1107,12 @@ export default {
 					: undefined,
 				createDtEnd: endTime
 					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
-					: undefined,
-				lastLoginTimeStart: loginTimeStart
-					? dayjs(loginTimeStart).format('YYYY-MM-DD HH:mm:ss')
-					: undefined,
-				lastLoginTimeEnd: loginTimeEnd
-					? dayjs(loginTimeEnd).format('YYYY-MM-DD HH:mm:ss')
-					: undefined,
-				firstDepositTimeStart: firstDepositTimeStart
-					? dayjs(firstDepositTimeStart).format('YYYY-MM-DD HH:mm:ss')
-					: undefined,
-				firstDepositTimeEnd: firstDepositTimeEnd
-					? dayjs(firstDepositTimeEnd).format('YYYY-MM-DD HH:mm:ss')
 					: undefined
 			}
 			params = {
 				...this.getParams(params)
 			}
 			delete params.registerTime
-			delete params.lastLoginTime
-			delete params.firstSaveTime
 			params.accountStatus =
 				params.accountStatus && params.accountStatus.length
 					? params.accountStatus
