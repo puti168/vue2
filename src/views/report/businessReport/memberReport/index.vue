@@ -161,71 +161,13 @@
                             size="medium"
                             placeholder="最大数值"
                             style="width: 100px"
-                            maxlength="3"
+                            maxlength="10"
                             oninput="value=value.replace(/[^\d]/g,'')"
                             name="vipSerialNumMax"
                             @blur="checkValue($event)"
                         ></el-input>
                     </el-form-item>
-                    <el-form-item label="离线天数:">
-                        <el-input
-                            v-model="queryData.offLineDaysStart"
-                            size="medium"
-                            placeholder="最小数值"
-                            style="width: 100px"
-                            maxlength="5"
-                            name="offLineDaysStart"
-                            oninput="value=value.replace(/[^\d]/g,'')"
-                            @blur="checkValue($event)"
-                        ></el-input>
-                        -
-                        <el-input
-                            v-model="queryData.offLineDaysEnd"
-                            size="medium"
-                            placeholder="最大数值"
-                            style="width: 100px"
-                            maxlength="5"
-                            name="offLineDaysEnd"
-                            oninput="value=value.replace(/[^\d]/g,'')"
-                            @blur="checkValue($event)"
-                        ></el-input>
-                    </el-form-item>
-                    <el-form-item label="最后登录时间:" label-width="110px">
-                        <el-date-picker
-                            v-model="queryData.lastLoginTime"
-                            prop="lastLoginTime"
-                            size="medium"
-                            :picker-options="pickerOptions"
-                            format="yyyy-MM-dd HH:mm:ss"
-                            type="datetimerange"
-                            range-separator="-"
-                            start-placeholder="开始日期"
-                            end-placeholder="结束日期"
-                            align="right"
-                            clearable
-                            value-format="timestamp"
-                            style="width: 382px"
-                            :default-time="defaultTime"
-                        ></el-date-picker>
-                    </el-form-item>
-                    <el-form-item label="注册终端:">
-                        <el-select
-                            v-model="queryData.deviceType"
-                            size="medium"
-                            placeholder="默认选择全部"
-                            clearable
-                            multiple
-                            style="width: 300px"
-                        >
-                            <el-option
-                                v-for="item in deviceTypeArr"
-                                :key="item.code"
-                                :label="item.description"
-                                :value="item.code"
-                            ></el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="首存金额:">
+                    <el-form-item label="投注金额:">
                         <el-input
                             v-model="queryData.firstDepositAmountMin"
                             size="medium"
@@ -248,7 +190,30 @@
                             @blur="checkValue($event)"
                         ></el-input>
                     </el-form-item>
-                    <el-form-item label="转代次数:">
+                    <el-form-item label="有效投注:">
+                        <el-input
+                            v-model="queryData.offLineDaysStart"
+                            size="medium"
+                            placeholder="最小数值"
+                            style="width: 100px"
+                            maxlength="5"
+                            name="offLineDaysStart"
+                            oninput="value=value.replace(/[^\d]/g,'')"
+                            @blur="checkValue($event)"
+                        ></el-input>
+                        -
+                        <el-input
+                            v-model="queryData.offLineDaysEnd"
+                            size="medium"
+                            placeholder="最大数值"
+                            style="width: 100px"
+                            maxlength="5"
+                            name="offLineDaysEnd"
+                            oninput="value=value.replace(/[^\d]/g,'')"
+                            @blur="checkValue($event)"
+                        ></el-input>
+                    </el-form-item>
+                    <el-form-item label="投注盈亏:">
                         <el-input
                             v-model="queryData.transforNumMin"
                             size="medium"
@@ -271,21 +236,51 @@
                             @blur="checkValue($event)"
                         ></el-input>
                     </el-form-item>
-                    <el-form-item label="首存时间:" label-width="100px">
-                        <el-date-picker
-                            v-model="queryData.firstSaveTime"
+                    <el-form-item label="总存款:">
+                        <el-input
+                            v-model="queryData.transforNumMin"
                             size="medium"
-                            :picker-options="pickerOptions"
-                            format="yyyy-MM-dd HH:mm:ss"
-                            type="datetimerange"
-                            range-separator="-"
-                            start-placeholder="开始日期"
-                            end-placeholder="结束日期"
-                            align="right"
-                            clearable
-                            value-format="timestamp"
-                            style="width: 382px"
-                        ></el-date-picker>
+                            placeholder="最小数值"
+                            style="width: 100px"
+                            maxlength="10"
+                            oninput="value=value.replace(/[^\d]/g,'')"
+                            name="transforNumMin"
+                            @blur="checkValue($event)"
+                        ></el-input>
+                        -
+                        <el-input
+                            v-model="queryData.transforNumMax"
+                            size="medium"
+                            placeholder="最大数值"
+                            style="width: 100px"
+                            maxlength="10"
+                            oninput="value=value.replace(/[^\d]/g,'')"
+                            name="transforNumMax"
+                            @blur="checkValue($event)"
+                        ></el-input>
+                    </el-form-item>
+                    <el-form-item label="总取款:">
+                        <el-input
+                            v-model="queryData.transforNumMin"
+                            size="medium"
+                            placeholder="最小数值"
+                            style="width: 100px"
+                            maxlength="10"
+                            oninput="value=value.replace(/[^\d]/g,'')"
+                            name="transforNumMin"
+                            @blur="checkValue($event)"
+                        ></el-input>
+                        -
+                        <el-input
+                            v-model="queryData.transforNumMax"
+                            size="medium"
+                            placeholder="最大数值"
+                            style="width: 100px"
+                            maxlength="10"
+                            oninput="value=value.replace(/[^\d]/g,'')"
+                            name="transforNumMax"
+                            @blur="checkValue($event)"
+                        ></el-input>
                     </el-form-item>
                     <el-form-item>
                         <el-button
