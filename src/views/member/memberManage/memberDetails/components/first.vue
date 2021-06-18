@@ -212,7 +212,9 @@
           <el-col :span="7" class="textR">
             <i v-if="activeL" class="el-icon-loading"></i>
             <span v-else>
-              {{ vipMsgList.depositAmountLave }}
+              {{
+                vipMsgList.depositAmountLave === null ? "" : vipMsgList.depositAmountLave
+              }}
             </span>
           </el-col>
           <el-col :span="7" class="textR">
@@ -229,7 +231,7 @@
           </el-col>
         </el-row>
         <el-row style="height: 14px">
-          <el-col :span="3" style="color: #fff; height: 14px">进度条 </el-col>
+          <el-col :span="3" style="color: #fff; height: 14px">&nbsp;</el-col>
           <el-col :span="7" class="">
             <el-progress :percentage="percentagea" :stroke-width="12" :show-text="false">
             </el-progress></el-col>
@@ -262,7 +264,7 @@
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="3" style="color: #fff">描述</el-col>
+          <el-col :span="3" style="color: #fff">&nbsp;</el-col>
           <el-col :span="7" class="textC">(升级)存款金额</el-col>
           <el-col :span="7" class="textC">(升级)有效投注</el-col>
           <el-col
@@ -610,23 +612,36 @@ export default {
       deep: true
     },
     vipMsg: {
-      handler(newV) {
-        this.vipMsgList = newV
-        if (JSON.stringify(newV) !== '{}') {
-          if (newV.depositAmountCurr > 0 && newV.depositAmountTotal > 0) {
+      handler(newV, oldV) {
+        this.vipMsgList = {}
+        if (newV !== oldV) {
+          this.vipMsgList = newV
+          if (newV.depositAmountCurr >= 0 && newV.depositAmountTotal >= 0) {
             const p1 = (newV.depositAmountCurr / newV.depositAmountTotal) * 100
-            p1 >= 100 ? (this.percentagea = 100) : (this.percentagea = p1)
+            p1 >= 100
+              ? (this.percentagea = 100)
+              : p1 > 0
+              ? (this.percentagea = p1)
+              : (this.percentagea = 100)
           }
-          if (newV.validBetsCurr > 0 && newV.validBetsTotal > 0) {
+          if (newV.validBetsCurr >= 0 && newV.validBetsTotal >= 0) {
             const p2 = (newV.validBetsCurr / newV.validBetsTotal) * 100
-            p2 >= 100 ? (this.percentageb = 100) : (this.percentageb = p2)
+            p2 >= 100
+              ? (this.percentageb = 100)
+              : p2 > 0
+              ? (this.percentageb = p2)
+              : (this.percentageb = 0)
           }
-          if (newV.validBetsCurr > 0 && newV.bjValidBetsTotal > 0) {
+          if (newV.validBetsCurr >= 0 && newV.bjValidBetsTotal >= 0) {
             const p3 = (newV.validBetsCurr / newV.bjValidBetsTotal) * 100
-            p3 >= 100 ? (this.percentagec = 100) : (this.percentagec = p3)
+            p3 >= 100
+              ? (this.percentagec = 100)
+              : p3 > 0
+              ? (this.percentagec = p3)
+              : (this.percentagec = 0)
           }
         } else {
-          this.percentagea = 0
+          this.percentagea = 100
           this.percentageb = 0
           this.percentagec = 0
         }
@@ -714,19 +729,30 @@ export default {
       this.$api.getVipInfo({ userId: val }).then((res) => {
         if (res.code === 200) {
           const newV = res.data
-          if (JSON.stringify(newV) !== '{}') {
-            if (newV.depositAmountCurr > 0 && newV.depositAmountTotal > 0) {
-              const p1 = (newV.depositAmountCurr / newV.depositAmountTotal) * 100
-              p1 >= 100 ? (this.percentagea = 100) : (this.percentagea = p1)
-            }
-            if (newV.validBetsCurr > 0 && newV.validBetsTotal > 0) {
-              const p2 = (newV.validBetsCurr / newV.validBetsTotal) * 100
-              p2 >= 100 ? (this.percentageb = 100) : (this.percentageb = p2)
-            }
-            if (newV.validBetsCurr > 0 && newV.bjValidBetsTotal > 0) {
-              const p3 = (newV.validBetsCurr / newV.bjValidBetsTotal) * 100
-              p3 >= 100 ? (this.percentagec = 100) : (this.percentagec = p3)
-            }
+          this.vipMsgList = newV
+          if (newV.depositAmountCurr >= 0 && newV.depositAmountTotal >= 0) {
+            const p1 = (newV.depositAmountCurr / newV.depositAmountTotal) * 100
+            p1 >= 100
+              ? (this.percentagea = 100)
+              : p1 > 0
+              ? (this.percentagea = p1)
+              : (this.percentagea = 100)
+          }
+          if (newV.validBetsCurr >= 0 && newV.validBetsTotal >= 0) {
+            const p2 = (newV.validBetsCurr / newV.validBetsTotal) * 100
+            p2 >= 100
+              ? (this.percentageb = 100)
+              : p2 > 0
+              ? (this.percentageb = p2)
+              : (this.percentageb = 0)
+          }
+          if (newV.validBetsCurr >= 0 && newV.bjValidBetsTotal >= 0) {
+            const p3 = (newV.validBetsCurr / newV.bjValidBetsTotal) * 100
+            p3 >= 100
+              ? (this.percentagec = 100)
+              : p3 > 0
+              ? (this.percentagec = p3)
+              : (this.percentagec = 0)
           }
         }
       })
@@ -1010,6 +1036,9 @@ export default {
 }
 .textR {
   text-align: right;
+  span {
+    display: inline-block;
+  }
 }
 .paddingBox {
   padding: 0 30px;

@@ -168,14 +168,14 @@
 				>
 					保存
 				</el-button>
-				<el-button
+				<!-- <el-button
 					icon="el-icon-refresh-left"
 					size="medium"
 					style="padding: 0 8px"
 					@click="resetData()"
 				>
 					恢复上次配置
-				</el-button>
+				</el-button> -->
 			</div>
 		</div>
 	</div>

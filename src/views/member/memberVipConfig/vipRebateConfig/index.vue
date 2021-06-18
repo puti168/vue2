@@ -31,13 +31,9 @@
             class="inputBox"
             :max="99999"
             :precision="2"
-            @blur="checkTransferValue(scope.$index + 1, scope.row.vip0, scope)"
+            @blur="checkTransferValue(scope.row, 'vip0')"
           ></el-input-number>
           <span>%</span><br />
-          <span
-v-show="!(scope.row.vip0 >= 0)"
-style="color: red; font-size: 12px"
->请输入值</span>
         </template>
       </el-table-column>
       <el-table-column prop="vip1" align="center" label="vip1">
@@ -52,6 +48,7 @@ style="color: red; font-size: 12px"
             class="inputBox"
             :max="99999"
             :precision="2"
+            @blur="checkTransferValue(scope.row, 'vip1')"
           ></el-input-number>
           <span>%</span>
         </template>
@@ -68,6 +65,7 @@ style="color: red; font-size: 12px"
             class="inputBox"
             :max="99999"
             :precision="2"
+            @blur="checkTransferValue(scope.row, 'vip2')"
           ></el-input-number>
           <span>%</span>
         </template>
@@ -84,6 +82,7 @@ style="color: red; font-size: 12px"
             class="inputBox"
             :max="99999"
             :precision="2"
+            @blur="checkTransferValue(scope.row, 'vip3')"
           ></el-input-number>
           <span>%</span>
         </template>
@@ -100,6 +99,7 @@ style="color: red; font-size: 12px"
             class="inputBox"
             :max="99999"
             :precision="2"
+            @blur="checkTransferValue(scope.row, 'vip4')"
           ></el-input-number>
           <span>%</span>
         </template>
@@ -116,6 +116,7 @@ style="color: red; font-size: 12px"
             class="inputBox"
             :max="99999"
             :precision="2"
+            @blur="checkTransferValue(scope.row, 'vip5')"
           ></el-input-number>
           <span>%</span>
         </template>
@@ -132,6 +133,7 @@ style="color: red; font-size: 12px"
             class="inputBox"
             :max="99999"
             :precision="2"
+            @blur="checkTransferValue(scope.row, 'vip6')"
           ></el-input-number>
           <span>%</span>
         </template>
@@ -148,6 +150,7 @@ style="color: red; font-size: 12px"
             class="inputBox"
             :max="99999"
             :precision="2"
+            @blur="checkTransferValue(scope.row, 'vip7')"
           ></el-input-number>
           <span>%</span>
         </template>
@@ -164,6 +167,7 @@ style="color: red; font-size: 12px"
             class="inputBox"
             :max="99999"
             :precision="2"
+            @blur="checkTransferValue(scope.row, 'vip8')"
           ></el-input-number>
           <span>%</span>
         </template>
@@ -180,6 +184,7 @@ style="color: red; font-size: 12px"
             class="inputBox"
             :max="99999"
             :precision="2"
+            @blur="checkTransferValue(scope.row, 'vip9')"
           ></el-input-number>
           <span>%</span>
         </template>
@@ -196,6 +201,7 @@ style="color: red; font-size: 12px"
             class="inputBox"
             :max="99999"
             :precision="2"
+            @blur="checkTransferValue(scope.row, 'vip10')"
           ></el-input-number>
           <span>%</span>
         </template>
@@ -203,7 +209,7 @@ style="color: red; font-size: 12px"
     </el-table>
     <div v-show="tableData.length > 0">
       <p class="subBox">
-        <el-button type="primary" @click="submitData()"> 保存 </el-button>
+        <el-button type="primary" @click="submitData()"> 保存</el-button>
         <el-button class="pad" @click="resetData()"> 恢复上次设置 </el-button>
       </p>
     </div>
@@ -212,9 +218,7 @@ style="color: red; font-size: 12px"
 
 <script>
 import list from '@/mixins/list'
-import { routerNames } from '@/utils/consts'
 export default {
-  name: routerNames.vipRebateConfig,
   components: {},
   mixins: [list],
   data() {
@@ -294,6 +298,8 @@ export default {
             this.$message.success('保存成功')
             this.loading = false
             this.tableData = res.data
+          } else {
+            this.$message.error(res.mgs)
           }
         })
         .catch(() => {
@@ -312,8 +318,10 @@ export default {
       console.log(params)
       this.getMemberVipRebateSelectAllInfo(params)
     },
-    checkTransferValue(index, val, property) {
-      console.log(index, val, property)
+    checkTransferValue(row, val) {
+      if (!row[val]) {
+        row[val] = 0
+      }
     }
   }
 }
