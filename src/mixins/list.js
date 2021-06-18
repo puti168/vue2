@@ -3,6 +3,7 @@ import { shortcuts, shortcutsNoToday, shortcutsM } from '@/utils/consts'
 import { formatCurrency } from '@/utils'
 import Copy from '@/components/Copy/copy'
 import { mapGetters } from 'vuex'
+
 export default {
 	components: { Copy },
 	data() {

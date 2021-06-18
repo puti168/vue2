@@ -8,7 +8,7 @@
  * @param {string} cFormat
  * @returns {string}
  */
- export function parseTime(time, cFormat) {
+export function parseTime(time, cFormat) {
 	if (arguments.length === 0) {
 		return null
 	}

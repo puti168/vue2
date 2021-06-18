@@ -332,15 +332,15 @@
 					style="width: 100%"
 					:header-cell-style="getRowClass"
 					:summary-method="getSummaries"
-                    show-summary
-                    @sort-change="_changeTableSort"
+					show-summary
+					@sort-change="_changeTableSort"
 				>
 					<el-table-column
 						v-if="settingList['会员账号']"
 						prop="userName"
 						align="center"
 						label="会员账号"
-						width="150px"
+						width="150"
 						fixed
 					>
 						<template slot-scope="scope">
@@ -359,7 +359,7 @@
 						prop="realName"
 						align="center"
 						label="姓名"
-						width="150px"
+						width="150"
 					>
 						<template slot-scope="scope">
 							<Copy
@@ -373,11 +373,25 @@
 						</template>
 					</el-table-column>
 					<el-table-column
+						v-if="settingList['账号类型']"
+						prop="accountType"
+						align="center"
+						label="账号类型"
+						width="120"
+					>
+						<template slot-scope="scope">
+							<span v-if="!!scope.row.accountType">
+								{{ typeFilter(scope.row.accountType, 'accountType') }}
+							</span>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
+					<el-table-column
 						v-if="settingList['上级代理']"
 						prop="parentProxyName"
 						align="center"
 						label="上级代理"
-						width="150px"
+						width="150"
 					>
 						<template slot-scope="scope">
 							<Copy
@@ -391,51 +405,18 @@
 						</template>
 					</el-table-column>
 					<el-table-column
-						v-if="settingList['账号类型']"
-						prop="accountType"
+						v-if="settingList['VIP等级']"
+						prop="vipSerialNum"
 						align="center"
-						label="账号类型"
+						label="VIP等级"
+						width="100"
+						sortable="custom"
 					>
-						<template slot-scope="scope">
-							<span v-if="!!scope.row.accountType">
-								{{ typeFilter(scope.row.accountType, 'accountType') }}
-							</span>
-							<span v-else>-</span>
-						</template>
-					</el-table-column>
-					<el-table-column
-						v-if="settingList['会员标签']"
-						prop="labelName"
-						align="center"
-						label="会员标签"
-					>
-						<template slot-scope="scope">
-							<span v-if="!!scope.row.labelName">
-								{{ scope.row.labelName }}
-							</span>
-							<span v-else>-</span>
-						</template>
-					</el-table-column>
-					<el-table-column
-						prop="windControlName"
-						align="center"
-						label="风控层级"
-					>
-						<template slot-scope="scope">
-							<span v-if="!!scope.row.windControlName">
-								{{ scope.row.windControlName }}
-							</span>
-							<span v-else>-</span>
-						</template>
-					</el-table-column>
-					<el-table-column prop="transforNum" align="center" label="转代次数">
 						<template slot-scope="scope">
 							<span
-								v-if="
-									!!scope.row.transforNum || scope.row.transforNum * 1 === 0
-								"
+								v-if="!!scope.row.vipSerialNum || scope.row.vipSerialNum === 0"
 							>
-								{{ scope.row.transforNum }}
+								{{ scope.row.vipSerialNum }}
 							</span>
 							<span v-else>-</span>
 						</template>
@@ -445,7 +426,7 @@
 						prop="accountStatus"
 						align="center"
 						label="账号状态"
-						width="100px"
+						width="120"
 					>
 						<template slot-scope="scope">
 							<span
@@ -484,18 +465,28 @@
 						</template>
 					</el-table-column>
 					<el-table-column
-						v-if="settingList['VIP等级']"
-						prop="vipSerialNum"
+						v-if="settingList['会员标签']"
+						prop="labelName"
 						align="center"
-						label="VIP等级"
-						width="100px"
-						sortable="custom"
+						label="会员标签"
+						width="120"
 					>
 						<template slot-scope="scope">
-							<span
-								v-if="!!scope.row.vipSerialNum || scope.row.vipSerialNum === 0"
-							>
-								{{ scope.row.vipSerialNum }}
+							<span v-if="!!scope.row.labelName">
+								{{ scope.row.labelName }}
+							</span>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
+					<el-table-column
+						prop="windControlName"
+						align="center"
+						label="风控层级"
+						width="100"
+					>
+						<template slot-scope="scope">
+							<span v-if="!!scope.row.windControlName">
+								{{ scope.row.windControlName }}
 							</span>
 							<span v-else>-</span>
 						</template>
@@ -504,7 +495,7 @@
 						prop="createDt"
 						align="center"
 						label="注册时间"
-						width="180px"
+						width="180"
 						sortable="custom"
 					>
 						<template slot-scope="scope">
@@ -515,25 +506,11 @@
 						</template>
 					</el-table-column>
 					<el-table-column
-						prop="firstDepositTime"
-						align="center"
-						width="180px"
-						label="首存时间"
-						sortable="custom"
-					>
-						<template slot-scope="scope">
-							<span v-if="!!scope.row.firstDepositTime">
-								{{ scope.row.firstDepositTime }}
-							</span>
-							<span v-else>-</span>
-						</template>
-					</el-table-column>
-					<el-table-column
 						prop="firstDepositAmount"
 						align="center"
 						label="首存金额"
 						sortable="custom"
-						width="100px"
+						width="120"
 					>
 						<template slot-scope="scope">
 							<span
@@ -548,10 +525,271 @@
 						</template>
 					</el-table-column>
 					<el-table-column
+						prop="depositAmount"
+						align="center"
+						label="总存款"
+						sortable="custom"
+						width="120"
+					>
+						<template slot-scope="scope">
+							<span
+								v-if="
+									!!scope.row.depositAmount || scope.row.depositAmount === 0
+								"
+							>
+								{{ scope.row.depositAmount }}
+							</span>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
+					<el-table-column
+						prop="depositAmount"
+						align="center"
+						label="存款次数"
+						sortable="custom"
+						width="100"
+					>
+						<template slot-scope="scope">
+							<span
+								v-if="
+									!!scope.row.depositAmount || scope.row.depositAmount === 0
+								"
+							>
+								{{ scope.row.firstDepositAmount }}
+							</span>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
+					<el-table-column
+						prop="depositAmount"
+						align="center"
+						label="上级转入"
+						sortable="custom"
+						width="120"
+					>
+						<template slot-scope="scope">
+							<span
+								v-if="
+									!!scope.row.depositAmount || scope.row.depositAmount === 0
+								"
+							>
+								{{ scope.row.firstDepositAmount }}
+							</span>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
+					<el-table-column
+						prop="depositAmount"
+						align="center"
+						label="总取数"
+						sortable="custom"
+						width="100"
+					>
+						<template slot-scope="scope">
+							<span
+								v-if="
+									!!scope.row.depositAmount || scope.row.depositAmount === 0
+								"
+							>
+								{{ scope.row.firstDepositAmount }}
+							</span>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
+					<el-table-column
+						prop="depositAmount"
+						align="center"
+						label="取款次数"
+						sortable="custom"
+						width="100"
+					>
+						<template slot-scope="scope">
+							<span
+								v-if="
+									!!scope.row.depositAmount || scope.row.depositAmount === 0
+								"
+							>
+								{{ scope.row.firstDepositAmount }}
+							</span>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
+					<el-table-column
+						prop="depositAmount"
+						align="center"
+						label="大额取款次数"
+						sortable="custom"
+						width="120"
+					>
+						<template slot-scope="scope">
+							<span
+								v-if="
+									!!scope.row.depositAmount || scope.row.depositAmount === 0
+								"
+							>
+								{{ scope.row.firstDepositAmount }}
+							</span>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
+					<el-table-column
+						prop="depositAmount"
+						align="center"
+						label="取款差"
+						sortable="custom"
+						width="120"
+					>
+						<template slot-scope="scope">
+							<span
+								v-if="
+									!!scope.row.depositAmount || scope.row.depositAmount === 0
+								"
+							>
+								{{ scope.row.firstDepositAmount }}
+							</span>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
+					<el-table-column
+						prop="depositAmount"
+						align="center"
+						label="总反水"
+						sortable="custom"
+						width="120"
+					>
+						<template slot-scope="scope">
+							<span
+								v-if="
+									!!scope.row.depositAmount || scope.row.depositAmount === 0
+								"
+							>
+								{{ scope.row.firstDepositAmount }}
+							</span>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
+					<el-table-column
+						prop="depositAmount"
+						align="center"
+						label="其他调整"
+						sortable="custom"
+						width="110"
+					>
+						<template slot-scope="scope">
+							<span
+								v-if="
+									!!scope.row.depositAmount || scope.row.depositAmount === 0
+								"
+							>
+								{{ scope.row.firstDepositAmount }}
+							</span>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
+					<el-table-column
+						prop="depositAmount"
+						align="center"
+						label="注单量"
+						sortable="custom"
+						width="120"
+					>
+						<template slot-scope="scope">
+							<span
+								v-if="
+									!!scope.row.depositAmount || scope.row.depositAmount === 0
+								"
+							>
+								{{ scope.row.firstDepositAmount }}
+							</span>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
+					<el-table-column
+						prop="depositAmount"
+						align="center"
+						label="投注金额"
+						sortable="custom"
+						width="120"
+					>
+						<template slot-scope="scope">
+							<span
+								v-if="
+									!!scope.row.depositAmount || scope.row.depositAmount === 0
+								"
+							>
+								{{ scope.row.firstDepositAmount }}
+							</span>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
+					<el-table-column
+						prop="depositAmount"
+						align="center"
+						label="有效投注"
+						sortable="custom"
+						width="120"
+					>
+						<template slot-scope="scope">
+							<span
+								v-if="
+									!!scope.row.depositAmount || scope.row.depositAmount === 0
+								"
+							>
+								{{ scope.row.firstDepositAmount }}
+							</span>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
+					<el-table-column
+						prop="depositAmount"
+						align="center"
+						label="投注盈亏"
+						sortable="custom"
+						width="150"
+					>
+						<template slot="header" slot-scope="scope">
+							<el-popover
+								placement="top-start"
+								title="提示"
+								width="280"
+								trigger="hover"
+							>
+								<div v-if="!scope.row">
+									<div>汇总会员搜索时间内的总输赢</div>
+								</div>
+								<div slot="reference" class="el-icon-question">
+									<span class="other-class">投注盈亏</span>
+								</div>
+							</el-popover>
+						</template>
+						<template slot-scope="scope">
+							<span
+								v-if="
+									!!scope.row.depositAmount || scope.row.depositAmount === 0
+								"
+							>
+								{{ scope.row.firstDepositAmount }}
+							</span>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
+					<el-table-column prop="transforNum" align="center" label="转代次数">
+						<template slot-scope="scope">
+							<span
+								v-if="
+									!!scope.row.transforNum || scope.row.transforNum * 1 === 0
+								"
+							>
+								{{ scope.row.transforNum }}
+							</span>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
+					<el-table-column
 						prop="userBalance"
 						align="center"
-						label="中心钱包"
-						width="100px"
+						label="中心钱包余额"
+						width="120"
 					>
 						<template slot-scope="scope">
 							<span
@@ -563,45 +801,21 @@
 						</template>
 					</el-table-column>
 					<el-table-column
-						prop="lastLoginTime"
+						prop="userBalance"
 						align="center"
-						label="最后登录时间"
-						width="180px"
-						sortable="custom"
-					>
-						<template slot-scope="scope">
-							<span v-if="!!scope.row.lastLoginTime">
-								{{ scope.row.lastLoginTime }}
-							</span>
-							<span v-else>-</span>
-						</template>
-					</el-table-column>
-					<el-table-column
-						prop="offLineDays"
-						align="center"
-						label="离线天数"
-						width="150px"
-						sortable="custom"
+						label="钱包总余额"
+						width="120"
 					>
 						<template slot-scope="scope">
 							<span
-								v-if="!!scope.row.offLineDays || scope.row.offLineDays === 0"
+								v-if="!!scope.row.userBalance || scope.row.userBalance === 0"
 							>
-								{{ scope.row.offLineDays }}
-							</span>
-							<span v-else>-</span>
-						</template>
-					</el-table-column>
-					<el-table-column prop="deviceType" align="center" label="注册终端">
-						<template slot-scope="scope">
-							<span v-if="!!scope.row.deviceType">
-								{{ typeFilter(scope.row.deviceType, 'deviceType') }}
+								{{ scope.row.userBalance }}
 							</span>
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
 				</el-table>
-<!--                <el-table-footer :data="footerData" ref="tableFooter"></el-table-footer>-->
 				<!-- 分页 -->
 				<el-pagination
 					v-show="!!total"
@@ -699,7 +913,8 @@ export default {
 				会员标签: true
 			},
 			newList: [],
-			totalLoading: false
+			totalLoading: false,
+			summary: undefined // 总计
 		}
 	},
 	computed: {
@@ -749,7 +964,7 @@ export default {
 		},
 		// 总计
 		getSummaries(param) {
-			const { columns } = param
+			const { columns, data } = param
 			const sums = []
 			columns.forEach((column, index) => {
 				if (index === 0) {
@@ -762,110 +977,75 @@ export default {
 					sums[index] = el
 					return
 				}
-				if (column.property === 'distinctPeopleNumber') {
-					if (!this.modalListStatus) {
-						sums[index] = <i class='el-icon-loading' />
-					} else {
-						if (!this.summary['totalBetPlayerCount']) {
-							this.summary['totalBetPlayerCount'] === 0
-								? (sums[index] = 0)
-								: (sums[index] = '-')
-						} else {
-							sums[index] = this.formatValue1(
-								this.summary['totalBetPlayerCount']
-							)
+				const includeArr = new Map([
+					['vipSerialNum', 'vipSerialNum'],
+					['depositAmount', 'depositAmount'],
+					['depositTotal', 'depositTotal'],
+					['firstDepositAmount', 'firstDepositAmount'],
+					['transforNum', 'transforNum'],
+					['userBalance', 'userBalance']
+				])
+
+				if (includeArr.get(column.property)) {
+					const values = data.map((item) => Number(item[column.property]))
+					if (!values.every((value) => isNaN(value))) {
+						sums[index] = values.reduce((prev, curr) => {
+							const value = Number(curr)
+							if (!isNaN(value)) {
+								return prev + curr
+							} else {
+								return prev
+							}
+						}, 0)
+						switch (column.property) {
+							case 'vipSerialNum':
+								// eslint-disable-next-line no-case-declarations
+								const vipTotal = (
+									<div class='count_row'>
+										<p>{sums[index]}</p>
+										<p>200</p>
+									</div>
+								)
+								return (sums[index] = vipTotal)
+							case 'depositAmount':
+								// eslint-disable-next-line no-case-declarations
+								const depositTotal = (
+									<div class='count_row'>
+										<p>{sums[index]}</p>
+										<p>200</p>
+									</div>
+								)
+								return (sums[index] = depositTotal)
+							case 'firstDepositAmount':
+								// eslint-disable-next-line no-case-declarations
+								const firstDepositTotal = (
+									<div class='count_row'>
+										<p>{sums[index]}</p>
+										<p>200</p>
+									</div>
+								)
+								return (sums[index] = firstDepositTotal)
+							case 'transforNum':
+								// eslint-disable-next-line no-case-declarations
+								const transforTotal = (
+									<div class='count_row'>
+										<p>{sums[index]}</p>
+										<p>200</p>
+									</div>
+								)
+								return (sums[index] = transforTotal)
+							case 'userBalance':
+								// eslint-disable-next-line no-case-declarations
+								const userBalanceTotal = (
+									<div class='count_row'>
+										<p>{sums[index]}</p>
+										<p>200</p>
+									</div>
+								)
+								return (sums[index] = userBalanceTotal)
 						}
-					}
-				}
-				if (column.property === 'betNumber') {
-					if (!this.modalListStatus) {
-						sums[index] = <i class='el-icon-loading' />
 					} else {
-						if (!this.summary['totalBetNum']) {
-							this.summary['totalBetNum'] === 0
-								? (sums[index] = 0)
-								: (sums[index] = '-')
-						} else {
-							sums[index] = this.formatValue1(this.summary['totalBetNum'])
-						}
-					}
-				}
-				if (column.property === 'betAmount') {
-					if (!this.modalListStatus) {
-						sums[index] = <i class='el-icon-loading' />
-					} else {
-						if (!this.summary['totalBetAmount']) {
-							this.summary['totalBetAmount'] === 0
-								? (sums[index] = 0)
-								: (sums[index] = '-')
-						} else {
-							sums[index] = this.formatMoney(this.summary['totalBetAmount'])
-						}
-					}
-				}
-				if (column.property === 'validBetAmount') {
-					if (!this.modalListStatus) {
-						sums[index] = <i class='el-icon-loading' />
-					} else {
-						if (!this.summary['totalValidBetAmount']) {
-							this.summary['totalValidBetAmount'] === 0
-								? (sums[index] = 0)
-								: (sums[index] = '-')
-						} else {
-							sums[index] = this.formatMoney(
-								this.summary['totalValidBetAmount']
-							)
-						}
-					}
-				}
-				if (column.property === 'killCount') {
-					if (!this.modalListStatus) {
-						sums[index] = <i class='el-icon-loading' />
-					} else {
-						if (!this.summary['totalKillCount']) {
-							this.summary['totalKillCount'] === 0
-								? (sums[index] = <span style='color:red'>0%</span>)
-								: (sums[index] = '-')
-						} else {
-							sums[index] = this.filterValue(
-								this.summary['totalKillCount'] * 100
-							)
-							// 后面再抽离优化了
-							this.$nextTick(() => {
-								// 改变合计行样式
-								const s_table = document.getElementsByClassName(column.id)
-								const el_foter_cell = s_table[s_table.length - 1]
-								if (Number(this.summary['totalKillCount']) > 0) {
-									el_foter_cell.setAttribute('style', 'color: #1A936F')
-								} else {
-									el_foter_cell.setAttribute('style', 'color: red')
-								}
-							})
-						}
-					}
-				}
-				if (column.property === 'netAmount') {
-					if (!this.modalListStatus) {
-						sums[index] = <i class='el-icon-loading' />
-					} else {
-						if (!this.summary['totalNetAmount']) {
-							this.summary['totalNetAmount'] === 0
-								? (sums[index] = <span style='color:red'>0</span>)
-								: (sums[index] = '-')
-						} else {
-							sums[index] = this.formatMoney(this.summary['totalNetAmount'])
-							this.$nextTick(() => {
-								// 改变合计行样式
-								const s_table = document.getElementsByClassName(column.id)
-								const el_foter_cell = s_table[s_table.length - 1]
-								el_foter_cell.setAttribute('style', 'color: #1A936F')
-								if (Number(this.summary['totalNetAmount']) > 0) {
-									el_foter_cell.setAttribute('style', 'color: #1A936F')
-								} else {
-									el_foter_cell.setAttribute('style', 'color: red')
-								}
-							})
-						}
+						sums[index] = ''
 					}
 				}
 			})
@@ -953,22 +1133,25 @@ export default {
 				registerTime: [start, end],
 				userName: undefined,
 				realName: undefined,
-				accountStatus: undefined,
+				parentProxyName: undefined,
+				accountType: [],
+				accountStatus: [],
 				windControlId: undefined,
-				offLineDaysStart: undefined,
-				offLineDaysEnd: undefined,
-				lastLoginTime: [],
+				labelId: undefined,
 				vipSerialNumMax: undefined,
 				vipSerialNumMin: undefined,
-				transforNumMin: undefined,
-				transforNumMax: undefined,
-				accountType: undefined,
-				deviceType: undefined,
-				firstDepositAmountMin: undefined,
-				firstDepositAmountMax: undefined,
-				firstSaveTime: [],
-				labelId: undefined,
-				parentProxyName: undefined,
+				betNumMin: undefined,
+				betNumMax: undefined,
+				depositAmountMin: undefined,
+				depositAmountMax: undefined,
+				depositAmountValidMin: undefined,
+				depositAmountValidMax: undefined,
+				profitMin: undefined,
+				profitMax: undefined,
+				totalDepositMin: undefined,
+				totalDepositMax: undefined,
+				withdrawalMin: undefined,
+				withdrawalMax: undefined,
 				orderKey: undefined,
 				orderType: undefined
 			}
@@ -1317,11 +1500,11 @@ export default {
 //}
 //
 /deep/ .el-table__body-wrapper::-webkit-scrollbar {
-    height: 0;
+	height: 0;
 }
 
-/deep/ .el-table::after{
-    position:relative !important;
+/deep/ .el-table::after {
+	position: relative !important;
 }
 
 /deep/ .el-table__footer-wrapper::after {
@@ -1334,21 +1517,21 @@ export default {
 }
 
 /deep/ .el-table__footer-wrapper .cell::after {
-    border: 1px solid #ebeef5;
-    content: '';
-    position: absolute;
-    top: 41px;
-    left: 0;
-    width: 100%;
+	border: 1px solid #ebeef5;
+	content: '';
+	position: absolute;
+	top: 41px;
+	left: 0;
+	width: 100%;
 }
 
 /deep/ .el-table__fixed-footer-wrapper tr::after {
-    border: 1px solid #ebeef5;
-    content: '';
-    position: absolute;
-    top: 41px;
-    left: 0;
-    width: 100%;
+	border: 1px solid #ebeef5;
+	content: '';
+	position: absolute;
+	top: 41px;
+	left: 0;
+	width: 100%;
 }
 .count_row {
 	height: 80px;
@@ -1356,5 +1539,10 @@ export default {
 		height: 40px;
 		line-height: 40px;
 	}
+}
+/deep/ .caret-wrapper {
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
 }
 </style>
