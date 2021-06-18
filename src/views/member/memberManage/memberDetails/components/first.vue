@@ -208,11 +208,13 @@
     <el-row class="msgList" style="min-height: 90px">
       <el-col :span="12" class="paddingBox">
         <el-row>
-          <el-col :span="3">剩余1111</el-col>
+          <el-col :span="3">剩余</el-col>
           <el-col :span="7" class="textR">
             <i v-if="activeL" class="el-icon-loading"></i>
             <span v-else>
-              {{ vipMsgList.depositAmountLave===null?'':vipMsgList.depositAmountLave }}
+              {{
+                vipMsgList.depositAmountLave === null ? "" : vipMsgList.depositAmountLave
+              }}
             </span>
           </el-col>
           <el-col :span="7" class="textR">
@@ -1010,7 +1012,7 @@ export default {
 }
 .textR {
   text-align: right;
-  span{
+  span {
     display: inline-block;
   }
 }
