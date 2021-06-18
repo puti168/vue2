@@ -78,6 +78,8 @@
           v-loading="loading"
           border
           size="mini"
+          show-summary
+          sum-text="全部合计"
           class="small-size-table"
           :data="tableData"
           style="width: 100%"
@@ -136,17 +138,6 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <div slot="append">
-            <div ref="sum_heji" class="sum_footer">
-              <div class="sum_footer_unit">全部合计</div>
-              <div class="sum_footer_unit"></div>
-              <div class="sum_footer_unit">200</div>
-              <div class="sum_footer_unit">200</div>
-              <div class="sum_footer_unit">200</div>
-              <div class="sum_footer_unit">200</div>
-              <div class="sum_footer_unit">20000000</div>
-            </div>
-          </div>
         </el-table>
       </div>
       <el-dialog :visible.sync="tableVisible" :destroy-on-close="true" class="rempadding">
@@ -266,7 +257,6 @@ export default {
     if (localStorage.getItem('clientProfitAndLoss')) {
       this.settingList = JSON.parse(localStorage.getItem('clientProfitAndLoss'))
     }
-    this.adjustWidth()
   },
 
   methods: {
@@ -455,42 +445,12 @@ export default {
       Object.keys(this.newList).forEach((item) => {
         this.newList[item] = true
       })
-    },
-    adjustWidth() {
-      this.$nextTick(() => {
-        Array.from(this.$refs.tables.$refs.headerWrapper.querySelectorAll('col')).forEach(
-          (n, i) => {
-            this.$refs.sum_heji.children[i].style =
-              'width:' + n.getAttribute('width') + 'px'
-          }
-        )
-      })
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.sum_footer {
-  display: flex;
-  display: -webkit-flex;
-  justify-content: space-around;
-  line-height: 45px;
-  background: #f5f7fa;
-  text-align: center;
-  width: 100%;
-  font-size: 14px;
-  // flex-direction: row;
-  color: #5c5c5c;
-  font-weight: 700;
-  border-bottom: 1px solid #ebeef5;
-}
-.sum_footer_unit {
-  flex-grow: 1;
-  -webkit-flex-grow: 1;
-  box-sizing: border-box;
-  border-right: 1px solid #ebeef5;
-}
 /deep/.el-dialog__header {
   color: #5c5c5c;
   font-weight: 700;
