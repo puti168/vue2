@@ -2,40 +2,12 @@
   <div class="game-container account">
     <div class="params flex-h flex-bc">
       <el-form ref="form" :inline="true" :model="listQuery">
-        <el-form-item :label="$t('system_component_account_260') + ':'">
-          <el-date-picker
-            v-model="listQuery.time"
-            size="medium"
-            format="yyyy-MM-dd"
-            :picker-options="pickerOptions"
-            :default-time="defaultTime"
-            type="daterange"
-            :range-separator="$t('dealer_index_212')"
-            :start-placeholder="$t('dealer_index_213')"
-            :end-placeholder="$t('dealer_index_214')"
-            align="right"
-            value-format="timestamp"
-          ></el-date-picker>
-        </el-form-item>
-        <el-form-item :label="$t('system_component_account_264') + ':'">
-          <el-select
-            v-model="listQuery.status"
-            size="medium"
-            :placeholder="$t('system_component_account_265')"
-            clearable
-            style="width: 280px"
-          >
-            <el-option :label="$t('system_component_account_265')" value="-1"></el-option>
-            <el-option :label="$t('system_component_account_266')" :value="1"></el-option>
-            <el-option :label="$t('system_component_account_267')" :value="0"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item :label="$t('system_component_account_271') + ':'">
+        <el-form-item label="用户名称：">
           <el-input
             v-model="listQuery.userName"
             size="medium"
             style="width: 280px"
-            :placeholder="$t('system_component_account_272')"
+            placeholder="请输入"
             clearable
           ></el-input>
         </el-form-item>
@@ -84,12 +56,17 @@
         <el-table-column
           align="center"
           prop="userName"
-          :label="$t('system_component_account_271')"
+          label="用户名称"
         ></el-table-column>
         <el-table-column
           align="center"
-          prop="nickName"
-          :label="$t('system_component_account_276')"
+          prop="userName"
+          label="姓名"
+        ></el-table-column>
+        <el-table-column
+          align="center"
+          prop="userName"
+          label="性别"
         ></el-table-column>
         <el-table-column
           align="center"
@@ -100,13 +77,13 @@
         <el-table-column
           align="center"
           prop="googleAuthCode"
-          :label="$t('login_index_260')"
+          label="谷歌验证秘钥"
           width="200"
         ></el-table-column>
         <el-table-column
           align="center"
           prop="createAt"
-          :label="$t('system_component_account_260')"
+          label="添加时间"
           width="160"
         ></el-table-column>
         <el-table-column
@@ -114,14 +91,14 @@
           prop="createBy"
           :label="$t('system_component_account_278')"
         ></el-table-column>
-        <el-table-column prop="status" :label="$t('system_component_account_264')">
+       <el-table-column
+          align="center"
+          prop="lastLoginTime"
+          :label="$t('system_component_account_279')"
+          width="160"
+        ></el-table-column>
+        <el-table-column prop="status" label="状态">
           <template slot-scope="scope">
-            <span v-show="scope.row.status === '1'" class="blueColor">{{
-              $t("system_component_account_266")
-            }}</span>
-            <span v-show="scope.row.status === '0'" class="redColor">{{
-              $t("system_component_account_267")
-            }}</span>
             <el-switch
               :disabled="scope.row.userName === username"
               :value="scope.row.status === '1'"
@@ -131,12 +108,7 @@
             ></el-switch>
           </template>
         </el-table-column>
-        <el-table-column
-          align="center"
-          prop="lastLoginTime"
-          :label="$t('system_component_account_279')"
-          width="160"
-        ></el-table-column>
+
         <!-- 操作，编辑 -->
         <el-table-column
           align="center"
@@ -159,15 +131,8 @@
               size="medium"
               @click.stop="editRow(scope.row, list)"
             >
-              账号编辑
+              编辑
             </el-button>
-            <!-- <el-button
-							type="text"
-							size="small"
-							@click.native.prevent="setRange(scope.row)"
-						>
-							{{ $t('tableColumn.setRanges') }}
-						</el-button> -->
           </template>
         </el-table-column>
       </el-table>
@@ -189,13 +154,6 @@
       :drawer.sync="drawer"
       :deal-data.sync="dealData"
       :is-created.sync="isCreated"
-    />
-    <!-- 设置范围 -->
-    <SetRanges
-      v-if="showRanges"
-      :id="id"
-      :drawer.sync="showRanges"
-      @close="closeRangesDialog"
     />
     <AccountUpdatePass :dialog.sync="dialog" :agentid="agentid" />
     <el-dialog
@@ -246,7 +204,6 @@
 
 <script>
 import EditAccount from './EditAccount'
-import SetRanges from './SetRanges'
 import AccountUpdatePass from '@/components/Dialog/UpdatePass'
 import list from '@/mixins/list'
 import { message } from '@/utils/message'
@@ -256,7 +213,7 @@ import md5 from 'js-md5'
 
 export default {
   name: 'Account',
-  components: { EditAccount, AccountUpdatePass, SetRanges },
+  components: { EditAccount, AccountUpdatePass },
   mixins: [list],
   data() {
     return {
@@ -281,7 +238,6 @@ export default {
         newPwd: '',
         rePwd: ''
       },
-      showRanges: false,
       id: ''
     }
   },
@@ -360,16 +316,6 @@ export default {
             }
           }
         })
-    },
-    // 设置范围
-    setRange(row) {
-      console.log('设置范围', row)
-      this.id = row.id
-      this.showRanges = true
-    },
-    closeRangesDialog() {
-      this.showRanges = false
-      this.id = ''
     },
     editRow(data) {
       this.dealData = data
