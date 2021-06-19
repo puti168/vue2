@@ -7,7 +7,6 @@
             <el-date-picker
               v-model="searchTime"
               size="medium"
-              :picker-options="pickerOptions"
               format="yyyy-MM-dd"
               type="daterange"
               range-separator="-"

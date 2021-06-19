@@ -7,7 +7,6 @@
             <el-date-picker
               v-model="searchTime"
               size="medium"
-              :picker-options="pickerOptions"
               format="yyyy-MM-dd"
               type="daterange"
               range-separator="-"
@@ -88,6 +87,8 @@
           class="small-size-table"
           :data="tableData"
           style="width: 100%"
+          show-summary
+          :summary-method="getSummaries"
           :header-cell-style="getRowClass"
           @sort-change="_changeTableSort"
         >
@@ -150,26 +151,6 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <div slot="append">
-            <div ref="sum_xiaoji" class="sum_footer">
-              <div class="sum_footer_unit">本页合计</div>
-              <div class="sum_footer_unit"></div>
-              <div class="sum_footer_unit">{{ getXiaoji("gameRebateRate") }}</div>
-              <div class="sum_footer_unit">{{ getXiaoji("gameIcon") }}</div>
-              <div class="sum_footer_unit">{{ getXiaoji("gameId") }}</div>
-              <div class="sum_footer_unit">{{ getXiaoji("gameStatus") }}</div>
-              <div class="sum_footer_unit">{{ getXiaoji("gameStatus") }}</div>
-            </div>
-            <div ref="sum_heji" class="sum_footer">
-              <div class="sum_footer_unit">全部合计</div>
-              <div class="sum_footer_unit"></div>
-              <div class="sum_footer_unit">200</div>
-              <div class="sum_footer_unit">200</div>
-              <div class="sum_footer_unit">200</div>
-              <div class="sum_footer_unit">200</div>
-              <div class="sum_footer_unit">20000000</div>
-            </div>
-          </div>
         </el-table>
         <!-- 分页 -->
         <el-pagination
@@ -193,9 +174,9 @@
         <el-row type="flex">
           <el-col class="gameConten mar">
             <el-checkbox
-              v-model="venueCheckAll"
-              :indeterminate="venueIsIndeterminate"
-              @change="venueHandleCheckAllChange"
+              v-model="checkAll"
+              :indeterminate="isIndeterminate"
+              @change="handleCheckAllChange"
               >场馆全选</el-checkbox>
             <el-divider></el-divider>
             <el-checkbox-group v-model="checkedVenue" @change="handleCheckedVenueChange">
@@ -208,9 +189,9 @@
           </el-col>
           <el-col class="gameConten">
             <el-checkbox
-              v-model="gameCheckAll"
-              :indeterminate="gameIsIndeterminate"
-              @change="gameHandleCheckAllChange"
+              v-model="checkAll"
+              :indeterminate="isIndeterminate"
+              @change="handleCheckAllChange"
               >游戏全选</el-checkbox>
             <el-divider></el-divider>
             <el-checkbox-group v-model="checkedGame" @change="handleCheckedGameChange">
@@ -362,7 +343,6 @@ export default {
     if (localStorage.getItem('gameProfitAndLoss')) {
       this.settingList = JSON.parse(localStorage.getItem('gameProfitAndLoss'))
     }
-    this.adjustWidth()
   },
 
   methods: {
@@ -648,27 +628,42 @@ export default {
         this.newList[item] = true
       })
     },
-    adjustWidth() {
-      this.$nextTick(() => {
-        Array.from(this.$refs.tables.$refs.headerWrapper.querySelectorAll('col')).forEach(
-          (n, i) => {
-            const len = this.$refs.sum_xiaoji.children.length
-            if (i < len) {
-              this.$refs.sum_xiaoji.children[i].style =
-                'width:' + n.getAttribute('width') + 'px'
-              this.$refs.sum_heji.children[i].style =
-                'width:' + n.getAttribute('width') + 'px'
+    getSummaries(param) {
+      const { columns, data } = param
+      const sums = []
+      columns.forEach((column, index) => {
+        if (index === 0) {
+          const el = (
+            <div class='count_row'>
+              <p>本页合计</p>
+              <p>全部合计</p>
+            </div>
+          )
+          sums[index] = el
+          return
+        }
+        const values = data.map((item) => Number(item[column.property]))
+        if (!values.every((value) => isNaN(value))) {
+          sums[index] = values.reduce((prev, curr) => {
+            const value = Number(curr)
+            if (!isNaN(value)) {
+              return prev + curr
+            } else {
+              return prev
             }
-          }
-        )
+          }, 0)
+          sums[index] = (
+            <div class='count_row'>
+              <p>{sums[index]}</p>
+              <p>2000</p>
+            </div>
+          )
+        } else {
+          sums[index] = ''
+        }
       })
-    },
-    getXiaoji(name) {
-      var sum = 0
-      this.tableData.forEach((n, i) => {
-        sum += parseFloat(n[name] * 1)
-      })
-      return sum
+
+      return sums
     }
   }
 }
@@ -711,27 +706,36 @@ export default {
     text-decoration: underline;
   }
 }
+/deep/ .el-table__footer-wrapper .cell::after {
+  border: 1px solid #ebeef5;
+  content: "";
+  position: absolute;
+  top: 41px;
+  left: 0;
+  width: 100%;
+}
+
+/deep/ .el-table__fixed-footer-wrapper tr::after {
+  border: 1px solid #ebeef5;
+  content: "";
+  position: absolute;
+  top: 41px;
+  left: 0;
+  width: 100%;
+}
+.count_row {
+  height: 80px;
+  p {
+    height: 40px;
+    line-height: 40px;
+    span {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+    }
+  }
+}
 .fenye {
   text-align: center;
-}
-.sum_footer {
-  display: flex;
-  display: -webkit-flex;
-  justify-content: space-around;
-  line-height: 45px;
-  background: #f5f7fa;
-  text-align: center;
-  width: 100%;
-  font-size: 14px;
-  // flex-direction: row;
-  color: #5c5c5c;
-  font-weight: 700;
-  border-bottom: 1px solid #ebeef5;
-}
-.sum_footer_unit {
-  flex-grow: 1;
-  -webkit-flex-grow: 1;
-  box-sizing: border-box;
-  border-right: 1px solid #ebeef5;
 }
 </style>

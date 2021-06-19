@@ -82,6 +82,8 @@
           v-loading="loading"
           border
           size="mini"
+          show-summary
+          :summary-method="getSummaries"
           class="small-size-table"
           :data="tableData"
           style="width: 100%"
@@ -147,26 +149,6 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <div slot="append">
-            <div ref="sum_xiaoji" class="sum_footer">
-              <div class="sum_footer_unit">本页合计</div>
-              <div class="sum_footer_unit"></div>
-              <div class="sum_footer_unit">{{ getXiaoji("gameRebateRate") }}</div>
-              <div class="sum_footer_unit">{{ getXiaoji("gameIcon") }}</div>
-              <div class="sum_footer_unit">{{ getXiaoji("gameId") }}</div>
-              <div class="sum_footer_unit">{{ getXiaoji("gameStatus") }}</div>
-              <div class="sum_footer_unit">{{ getXiaoji("gameStatus") }}</div>
-            </div>
-            <div ref="sum_heji" class="sum_footer">
-              <div class="sum_footer_unit">全部合计</div>
-              <div class="sum_footer_unit"></div>
-              <div class="sum_footer_unit">200</div>
-              <div class="sum_footer_unit">200</div>
-              <div class="sum_footer_unit">200</div>
-              <div class="sum_footer_unit">200</div>
-              <div class="sum_footer_unit">20000000</div>
-            </div>
-          </div>
         </el-table>
         <!-- 分页 -->
         <el-pagination
@@ -303,7 +285,6 @@ export default {
     if (localStorage.getItem('venueProfitAndLoss')) {
       this.settingList = JSON.parse(localStorage.getItem('venueProfitAndLoss'))
     }
-    this.adjustWidth()
   },
 
   methods: {
@@ -508,53 +489,48 @@ export default {
         this.newList[item] = true
       })
     },
-    adjustWidth() {
-      this.$nextTick(() => {
-        const len = this.$refs.sum_xiaoji.children.length
-        Array.from(this.$refs.tables.$refs.headerWrapper.querySelectorAll('col')).forEach(
-          (n, i) => {
-            console.log(n, i, n.width)
-            if (i < len) {
-              this.$refs.sum_xiaoji.children[i].style =
-                'width:' + n.getAttribute('width') + 'px'
-              this.$refs.sum_heji.children[i].style =
-                'width:' + n.getAttribute('width') + 'px'
+    getSummaries(param) {
+      const { columns, data } = param
+      const sums = []
+      columns.forEach((column, index) => {
+        if (index === 0) {
+          const el = (
+            <div class='count_row'>
+              <p>本页合计</p>
+              <p>全部合计</p>
+            </div>
+          )
+          sums[index] = el
+          return
+        }
+        const values = data.map((item) => Number(item[column.property]))
+        if (!values.every((value) => isNaN(value))) {
+          sums[index] = values.reduce((prev, curr) => {
+            const value = Number(curr)
+            if (!isNaN(value)) {
+              return prev + curr
+            } else {
+              return prev
             }
-          }
-        )
+          }, 0)
+          sums[index] = (
+            <div class='count_row'>
+              <p>{sums[index]}</p>
+              <p>2000</p>
+            </div>
+          )
+        } else {
+          sums[index] = ''
+        }
       })
-    },
-    getXiaoji(name) {
-      var sum = 0
-      this.tableData.forEach((n, i) => {
-        sum += parseFloat(n[name] * 1)
-      })
-      return sum
+
+      return sums
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.sum_footer {
-  display: flex;
-  display: -webkit-flex;
-  justify-content: space-around;
-  line-height: 45px;
-  background: #f5f7fa;
-  text-align: center;
-  width: 100%;
-  font-size: 14px;
-  flex-direction: row;
-  color: #5c5c5c;
-  font-weight: 700;
-  border-bottom: 1px solid #ebeef5;
-}
-.sum_footer_unit {
-  flex-grow: 1;
-  -webkit-flex-grow: 1;
-  border-right: 1px solid #ebeef5;
-}
 /deep/.el-dialog__header {
   color: #5c5c5c;
   font-weight: 700;
@@ -574,6 +550,35 @@ export default {
     padding: 10px;
     width: 70%;
     border: 1px solid #cccccc;
+  }
+}
+/deep/ .el-table__footer-wrapper .cell::after {
+  border: 1px solid #ebeef5;
+  content: "";
+  position: absolute;
+  top: 41px;
+  left: 0;
+  width: 100%;
+}
+
+/deep/ .el-table__fixed-footer-wrapper tr::after {
+  border: 1px solid #ebeef5;
+  content: "";
+  position: absolute;
+  top: 41px;
+  left: 0;
+  width: 100%;
+}
+.count_row {
+  height: 80px;
+  p {
+    height: 40px;
+    line-height: 40px;
+    span {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+    }
   }
 }
 .fenye {
