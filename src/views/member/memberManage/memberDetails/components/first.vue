@@ -616,7 +616,9 @@ export default {
         this.vipMsgList = {}
         if (newV !== oldV) {
           this.vipMsgList = newV
-          if (newV.depositAmountCurr >= 0 && newV.depositAmountTotal >= 0) {
+          if (newV.depositAmountCurr === 0 && newV.depositAmountTotal === 0) {
+            this.percentagea = 100
+          } else {
             const p1 = (newV.depositAmountCurr / newV.depositAmountTotal) * 100
             p1 >= 100
               ? (this.percentagea = 100)
@@ -624,7 +626,9 @@ export default {
               ? (this.percentagea = p1)
               : (this.percentagea = 100)
           }
-          if (newV.validBetsCurr >= 0 && newV.validBetsTotal >= 0) {
+          if (newV.validBetsCurr === 0 && newV.validBetsTotal === 0) {
+            this.percentageb = 0
+          } else {
             const p2 = (newV.validBetsCurr / newV.validBetsTotal) * 100
             p2 >= 100
               ? (this.percentageb = 100)
@@ -632,7 +636,9 @@ export default {
               ? (this.percentageb = p2)
               : (this.percentageb = 0)
           }
-          if (newV.validBetsCurr >= 0 && newV.bjValidBetsTotal >= 0) {
+          if (newV.validBetsCurr === 0 && newV.bjValidBetsTotal === 0) {
+            this.percentagec = 0
+          } else {
             const p3 = (newV.validBetsCurr / newV.bjValidBetsTotal) * 100
             p3 >= 100
               ? (this.percentagec = 100)
@@ -730,7 +736,9 @@ export default {
         if (res.code === 200) {
           const newV = res.data
           this.vipMsgList = newV
-          if (newV.depositAmountCurr >= 0 && newV.depositAmountTotal >= 0) {
+          if (newV.depositAmountCurr === 0 && newV.depositAmountTotal === 0) {
+            this.percentagea = 100
+          } else {
             const p1 = (newV.depositAmountCurr / newV.depositAmountTotal) * 100
             p1 >= 100
               ? (this.percentagea = 100)
@@ -738,7 +746,9 @@ export default {
               ? (this.percentagea = p1)
               : (this.percentagea = 100)
           }
-          if (newV.validBetsCurr >= 0 && newV.validBetsTotal >= 0) {
+          if (newV.validBetsCurr === 0 && newV.validBetsTotal === 0) {
+            this.percentageb = 0
+          } else {
             const p2 = (newV.validBetsCurr / newV.validBetsTotal) * 100
             p2 >= 100
               ? (this.percentageb = 100)
@@ -746,7 +756,9 @@ export default {
               ? (this.percentageb = p2)
               : (this.percentageb = 0)
           }
-          if (newV.validBetsCurr >= 0 && newV.bjValidBetsTotal >= 0) {
+          if (newV.validBetsCurr === 0 && newV.bjValidBetsTotal === 0) {
+            this.percentagec = 0
+          } else {
             const p3 = (newV.validBetsCurr / newV.bjValidBetsTotal) * 100
             p3 >= 100
               ? (this.percentagec = 100)
