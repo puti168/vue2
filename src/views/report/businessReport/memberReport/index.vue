@@ -939,6 +939,8 @@ export default {
 		}, 3000)
 
 		this.$nextTick(() => {
+		    console.log('sss', this.$refs.tables.bodyWrapper)
+			this.$refs.tables.bodyWrapper.scrollTop = 1000
 			this.$refs.tables.doLayout()
 		})
 	},
@@ -1096,6 +1098,7 @@ export default {
 			}
 			this.dataList = []
 			this.loading = true
+            this.totalLoading = false
 			delete params.registerTime
 			this.$api
 				.memberListAPI(params)
@@ -1122,6 +1125,10 @@ export default {
 			setTimeout(() => {
 				this.loading = false
 			}, 1000)
+
+            setTimeout(() => {
+                this.totalLoading = true
+            }, 1000)
 		},
 		// 获取会员标签
 		getMemberLabelDict() {
@@ -1523,10 +1530,10 @@ export default {
 //	}
 //}
 
-/deep/ .el-table__header-wrapper,
-/deep/ .el-table__footer-wrapper {
-	overflow: visible;
-}
+///deep/ .el-table__header-wrapper,
+///deep/ .el-table__footer-wrapper {
+//	overflow: visible;
+//}
 
 /deep/ .el-table__body-wrapper {
 	z-index: 2;
