@@ -156,6 +156,7 @@
 <script>
 import list from '@/mixins/list'
 import { routerNames } from '@/utils/consts'
+// import { notSpecial2, isHaveEmoji } from '@/utils/validate'
 
 export default {
 	name: routerNames.vipLevelConfig,
@@ -263,8 +264,23 @@ export default {
 			}
 		},
 		tableVipGradeNameChange(row) {
-			row.vipGradeName === '' ? (row.error = '不能为空') : (row.error = '')
+			const reg = /^[A-Za-z0-9\u4e00-\u9fa5]+$/
+			if (row.vipGradeName) {
+				console.log('看一下', reg.test(row.vipGradeName))
+				if (!reg.test(row.vipGradeName)) {
+					row.error = '不支持空格及特殊字符'
+				} else {
+					row.error = ''
+				}
+			} else {
+				row.error = '不能为空'
+			}
 		}
+		// checkValue(val) {
+		//     const obj = val.target
+		//     console.log('value', obj)
+		//     obj.value = obj.value.replace(/[^\u4E00-\u9FA5]/g, '')
+		// }
 	}
 }
 </script>
