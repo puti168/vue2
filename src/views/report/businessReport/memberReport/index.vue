@@ -936,7 +936,13 @@ export default {
 
 		setTimeout(() => {
 			this.totalLoading = true
-		}, 2000)
+		}, 3000)
+
+		this.$nextTick(() => {
+		    console.log('sss', this.$refs.tables.bodyWrapper)
+			this.$refs.tables.bodyWrapper.scrollTop = 1000
+			this.$refs.tables.doLayout()
+		})
 	},
 	methods: {
 		_search() {
@@ -1092,6 +1098,7 @@ export default {
 			}
 			this.dataList = []
 			this.loading = true
+            this.totalLoading = false
 			delete params.registerTime
 			this.$api
 				.memberListAPI(params)
@@ -1118,6 +1125,10 @@ export default {
 			setTimeout(() => {
 				this.loading = false
 			}, 1000)
+
+            setTimeout(() => {
+                this.totalLoading = true
+            }, 1000)
 		},
 		// 获取会员标签
 		getMemberLabelDict() {
@@ -1512,28 +1523,40 @@ export default {
 	font-weight: 700;
 }
 ///deep/ .el-table {
-//    overflow: auto;
+//	overflow: auto;
+//	.el-table__fixed {
+//        height:auto !important;
+//		bottom: 17px;
+//	}
 //}
-//
-/deep/ .el-table__body-wrapper::-webkit-scrollbar {
-	height: 0;
-}
 
-/deep/ .el-table::after {
-	position: relative !important;
-}
+///deep/ .el-table__header-wrapper,
+///deep/ .el-table__footer-wrapper {
+//	overflow: visible;
+//}
 
-/deep/ .el-table__footer-wrapper::after {
-	//border: 1px solid #ebeef5;
-	//content: '';
-	//position: absolute;
-	//bottom: 41px;
-	//left: 0;
-	//width: 100%;
+/deep/ .el-table__body-wrapper {
+	z-index: 2;
 }
+///deep/ .el-table__body-wrapper::-webkit-scrollbar {
+//	height: 5px;
+//}
+
+///deep/ .el-table::after {
+//	position: relative !important;
+//}
+
+///deep/ .el-table__footer-wrapper::after {
+//	border: 1px solid #ebeef5;
+//	content: '';
+//	position: absolute;
+//	bottom: 41px;
+//	left: 0;
+//	width: 100%;
+//}
 
 /deep/ .el-table__footer-wrapper .cell::after {
-	border: 1px solid #ebeef5;
+	border: 0.5px solid #ebeef5;
 	content: '';
 	position: absolute;
 	top: 41px;
@@ -1542,7 +1565,7 @@ export default {
 }
 
 /deep/ .el-table__fixed-footer-wrapper tr::after {
-	border: 1px solid #ebeef5;
+	border: 0.5px solid #ebeef5;
 	content: '';
 	position: absolute;
 	top: 41px;
