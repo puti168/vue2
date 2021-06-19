@@ -6,7 +6,6 @@
 					ref="form"
 					:inline="true"
 					:model="queryData"
-					label-width="85px"
 				>
 					<el-form-item label="时间:" prop="registerTime">
 						<el-date-picker
@@ -25,10 +24,7 @@
 							:default-time="defaultTime"
 						></el-date-picker>
 					</el-form-item>
-					<el-form-item
-						label="会员账号:"
-						prop="userName"
-					>
+					<el-form-item label="会员账号:" prop="userName">
 						<el-input
 							v-model="queryData.userName"
 							size="medium"
@@ -38,10 +34,7 @@
 							maxlength="11"
 						></el-input>
 					</el-form-item>
-					<el-form-item
-						label="姓名:"
-						prop="realName"
-					>
+					<el-form-item label="姓名:" prop="realName">
 						<el-input
 							v-model="queryData.realName"
 							size="medium"
@@ -250,7 +243,7 @@
 						v-if="settingList['会员账号']"
 						prop="userName"
 						align="center"
-            label="会员账号"
+						label="会员账号"
 						width="150px"
 					>
 						<template slot-scope="scope">
@@ -259,7 +252,13 @@
 								:title="scope.row.userName"
 								:copy="copy"
 							>
-								{{ scope.row.userName }}
+								<el-link
+									class="lightBlueColor"
+									type="primary"
+									@click="dialogData(scope.row)"
+								>
+									{{ scope.row.userName }}
+								</el-link>
 							</Copy>
 							<span v-else>-</span>
 						</template>
@@ -268,7 +267,7 @@
 						v-if="settingList['姓名']"
 						prop="realName"
 						align="center"
-            label="姓名"
+						label="姓名"
 						width="150px"
 					>
 						<template slot-scope="scope">
@@ -506,6 +505,57 @@
 				></el-pagination>
 			</div>
 		</div>
+		 <el-dialog :visible.sync="tableVisible" :destroy-on-close="true" class="rempadding">
+        <div slot="title" class="dialog-title">
+          <span class="title-text" style="margin-right: 15px">会员账号:{{ userName }}</span>
+        </div>
+        <el-table
+          v-loading="loading"
+          size="mini"
+          border
+          class="small-size-table"
+          :data="gameList"
+          style="margin-bottom: 15px"
+          :header-cell-style="getRowClass"
+        >
+          <el-table-column prop="userName" align="center" label="日期"> </el-table-column>
+          <el-table-column
+            prop="accountTypeName"
+            align="center"
+            label="注单量"
+          ></el-table-column>
+          <el-table-column
+            prop="accountTypeName"
+            align="center"
+            label="投注金额"
+          ></el-table-column>
+          <el-table-column
+            prop="accountTypeName"
+            align="center"
+            label="有效投注"
+          ></el-table-column>
+          <el-table-column
+            prop="accountTypeName"
+            align="center"
+            label="投注盈亏"
+          ></el-table-column>
+        </el-table>
+        <!-- 分页 -->
+        <el-pagination
+          :current-page.sync="page"
+          background
+          class="fenye"
+          layout="total, sizes,prev, pager, next, jumper"
+          :page-size="size"
+          :page-sizes="[10, 20, 50]"
+          :total="summary"
+          @current-change="handleCurrentChangeDialog"
+          @size-change="handleSizeChangeDialog"
+        ></el-pagination>
+        <div slot="footer" class="dialog-footer" style="text-align: center">
+          <el-button @click="tableVisible = false">关闭</el-button>
+        </div>
+      </el-dialog>
 		<el-dialog
 			title="列设置"
 			center
@@ -514,7 +564,7 @@
 			class="col-setting"
 		>
 			<el-button type="primary" @click="setAll">复原缺省</el-button>
-			<div v-for="(value,name) in settingList" :key="name" class="setting-div">
+			<div v-for="(value, name) in settingList" :key="name" class="setting-div">
 				<el-checkbox v-model="newList[name]">{{ name }}</el-checkbox>
 			</div>
 			<div slot="footer" class="dialog-footer">
@@ -569,11 +619,13 @@ export default {
 				orderType: undefined
 			},
 			settingList: {
-        '会员账号': true,
-        '姓名': true
-      },
+				会员账号: true,
+				姓名: true
+			},
+			tableVisible: false,
 			newList: [],
 			visible: false,
+			userName: '',
 			dataList: [],
 			total: 0,
 			vipDict: [],
@@ -602,6 +654,9 @@ export default {
 		this.getWindControllerLevelDict()
 	},
 	methods: {
+		dialogData(val) {
+      this.tableVisible = true
+    },
 		// 列设置
 		openSetting() {
 			this.visible = true
@@ -610,12 +665,12 @@ export default {
 		confirm() {
 			localStorage.setItem('memberProfitAndLoss', JSON.stringify(this.newList))
 			this.settingList = this.newList
-      this.visible = false
+			this.visible = false
 		},
 		setAll() {
-      Object.keys(this.newList).forEach(item => {
-        this.newList[item] = true
-      })
+			Object.keys(this.newList).forEach((item) => {
+				this.newList[item] = true
+			})
 		},
 		loadData() {
 			const create = this.queryData.registerTime || []
