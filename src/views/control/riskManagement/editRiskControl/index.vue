@@ -201,7 +201,7 @@
 						></el-option>
 					</el-select>
 				</el-form-item>
-				<el-form-item label="审核信息:" prop="windReason">
+				<el-form-item label="风控原因:" prop="windReason">
 					<el-input
 						v-model="queryData.windReason"
 						size="medium"
