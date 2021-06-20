@@ -1075,13 +1075,13 @@ export default {
 			params = {
 				...this.getParams(params)
 			}
-			if (!startTime && !endTime && !timeStart && !timeEnd) {
-				this.$message({
-					type: 'warning',
-					message: `请选择统计时间, 注册时间,任意其中一个时间维度`
-				})
-				return false
-			}
+			// if (!startTime && !endTime && !timeStart && !timeEnd) {
+			// 	this.$message({
+			// 		type: 'warning',
+			// 		message: `请选择统计时间, 注册时间,任意其中一个时间维度`
+			// 	})
+			// 	return false
+			// }
 			this.dataList = []
 			this.loading = true
 			delete params.registerTime
