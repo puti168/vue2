@@ -42,15 +42,17 @@
 			</div>
 			<div class="content-part3">
 				<p class="part-title">角色权限</p>
-				<el-tree
-					ref="tree"
-					:data="dataList"
-					default-expand-all
-					node-key="id"
-					show-checkbox
-					:props="defaultProps"
-					:check-on-click-node="false"
-				></el-tree>
+                <div class="role-container">
+                    <el-tree
+                        ref="tree"
+                        :data="dataList"
+                        default-expand-all
+                        node-key="id"
+                        show-checkbox
+                        :props="defaultProps"
+                        :check-on-click-node="false"
+                    ></el-tree>
+                </div>
 				<!--				<div class="role-container">-->
 				<!--					<el-row class="btn-control">-->
 				<!--						<el-button-->
@@ -138,7 +140,6 @@
 				<!--					</el-checkbox>-->
 				<!--				</div>-->
 			</div>
-<!--			<Test />-->
 			<div class="save-container">
 				<div class="save-btn" @click.prevent="save">
 					<i v-show="loading" class="el-icon-loading"></i>
@@ -152,13 +153,11 @@
 <script>
 import list from '@/mixins/list'
 import { isHaveEmoji, notSpecial2 } from '@/utils/validate'
-// import Test from './test'
 const cityOptions = ['上海', '北京', '广州', '深圳']
 
 export default {
 	name: 'EditPage',
 	mixins: [list],
-	// components: { Test },
 	props: {
 		editData: {
 			type: Object,

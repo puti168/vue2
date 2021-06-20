@@ -26,6 +26,7 @@ export const routerNames = {
 	gameSearchManage: 'gameSearchManage',
 	gameBetslipDetails: 'gameBetslipDetails',
 	agentList: 'agentList',
+	addAgent: 'addAgent',
 	agentBankCard: 'agentBankCard',
 	agentVirtualRecord: 'agentVirtualRecord',
 	agentTrans: 'agentTrans',
