@@ -40,113 +40,105 @@
 					</el-form-item>
 				</el-form>
 			</div>
-<!--			<template>-->
-<!--				<el-checkbox-->
-<!--					v-model="checkAll"-->
-<!--					:indeterminate="isIndeterminate"-->
-<!--					@change="handleCheckAllChange"-->
-<!--				>-->
-<!--					全选-->
-<!--				</el-checkbox>-->
-<!--				<div style="margin: 15px 0;"></div>-->
-<!--				<el-checkbox-group-->
-<!--					v-model="checkedCities"-->
-<!--					@change="handleCheckedCitiesChange"-->
-<!--				>-->
-<!--					<el-checkbox v-for="city in cities" :key="city" :label="city">-->
-<!--						{{ city }}-->
-<!--					</el-checkbox>-->
-<!--				</el-checkbox-group>-->
-<!--			</template>-->
 			<div class="content-part3">
 				<p class="part-title">角色权限</p>
-				<div class="role-container">
-					<el-row class="btn-control">
-						<el-button
-							v-for="(item, idx) in dataList"
-							:key="item.id"
-							type="info"
-							class="btn-style-role"
-							@click="handleChangeModule(idx)"
-						>
-							{{ item.permissionName }}
-						</el-button>
-					</el-row>
-					<div class="role-content">
-						<el-row>
-							<el-col :span="4">
-								<div class="name">模块</div>
-							</el-col>
-							<el-col :span="20">
-								<el-row>
-									<el-col :span="6">
-										<div class="name">页面</div>
-									</el-col>
-									<el-col :span="18">
-										<div class="name">权限配置规则</div>
-									</el-col>
-								</el-row>
-							</el-col>
-						</el-row>
-						<el-row>
-							<el-col :span="4">
-								<div class="btn-group first">
-									<el-checkbox
-										v-model="checkAllModule"
-										@change="handleCheckAllChangeModule"
-									>
-										{{ defaultList.permissionName }}
-									</el-checkbox>
-								</div>
-							</el-col>
-							<el-col :span="20">
-								<div class="btn-group">
-									<el-row
-										v-for="(item, idx) in defaultList.children"
-										:key="item.id"
-										class="div-cell"
-									>
-										<el-col :span="6">
-											<el-checkbox
-												v-model="checkedAll[idx]"
-												@change="handleCheckAllChangePage(idx, checkedAll[idx])"
-											>
-												<span style="font-weight: bold;">
-													{{ item.permissionName }}
-												</span>
-											</el-checkbox>
-										</el-col>
-										<el-col :span="18">
-											<el-checkbox-group
-												v-model="checkedList[idx]"
-												class="cell-group"
-												@change="
-													handleCheckedCitiesChangeBtn(idx, checkedList[idx])
-												"
-											>
-												<el-checkbox
-													v-for="lis in item.children"
-													:key="lis.id"
-													class="child-cell"
-													:label="lis.id"
-												>
-													{{ lis.permissionName }}
-												</el-checkbox>
-											</el-checkbox-group>
-										</el-col>
-									</el-row>
-								</div>
-							</el-col>
-						</el-row>
-					</div>
-					<el-checkbox
-						v-model="chooseAll"
-						class="chooseAll"
-					>
-						选择全部
-					</el-checkbox>
-				</div>
+				<el-tree
+					ref="tree"
+					:data="dataList"
+					default-expand-all
+					node-key="id"
+					show-checkbox
+					:props="defaultProps"
+					:check-on-click-node="false"
+				></el-tree>
+				<!--				<div class="role-container">-->
+				<!--					<el-row class="btn-control">-->
+				<!--						<el-button-->
+				<!--							v-for="(item, idx) in dataList"-->
+				<!--							:key="item.id"-->
+				<!--							type="info"-->
+				<!--							class="btn-style-role"-->
+				<!--							@click="handleChangeModule(idx)"-->
+				<!--						>-->
+				<!--							{{ item.permissionName }}-->
+				<!--						</el-button>-->
+				<!--					</el-row>-->
+				<!--					<div class="role-content">-->
+				<!--						<el-row>-->
+				<!--							<el-col :span="4">-->
+				<!--								<div class="name">模块</div>-->
+				<!--							</el-col>-->
+				<!--							<el-col :span="20">-->
+				<!--								<el-row>-->
+				<!--									<el-col :span="6">-->
+				<!--										<div class="name">页面</div>-->
+				<!--									</el-col>-->
+				<!--									<el-col :span="18">-->
+				<!--										<div class="name">权限配置规则</div>-->
+				<!--									</el-col>-->
+				<!--								</el-row>-->
+				<!--							</el-col>-->
+				<!--						</el-row>-->
+				<!--						<el-row>-->
+				<!--							<el-col :span="4">-->
+				<!--								<div class="btn-group first">-->
+				<!--									<el-checkbox-->
+				<!--										v-model="checkAllModule"-->
+				<!--										@change="handleCheckAllChangeModule"-->
+				<!--									>-->
+				<!--										{{ defaultList.permissionName }}-->
+				<!--									</el-checkbox>-->
+				<!--								</div>-->
+				<!--							</el-col>-->
+				<!--							<el-col :span="20">-->
+				<!--								<div class="btn-group">-->
+				<!--									<el-row-->
+				<!--										v-for="(item, idx) in defaultList.children"-->
+				<!--										:key="item.id"-->
+				<!--										class="div-cell"-->
+				<!--									>-->
+				<!--										<el-col :span="6">-->
+				<!--											<el-checkbox-->
+				<!--												v-model="checkedAll[idx]"-->
+				<!--												@change="handleCheckAllChangePage(idx, checkedAll[idx])"-->
+				<!--											>-->
+				<!--												<span style="font-weight: bold;">-->
+				<!--													{{ item.permissionName }}-->
+				<!--												</span>-->
+				<!--											</el-checkbox>-->
+				<!--										</el-col>-->
+				<!--										<el-col :span="18">-->
+				<!--											<el-checkbox-group-->
+				<!--												v-model="checkedList[idx]"-->
+				<!--												class="cell-group"-->
+				<!--												@change="-->
+				<!--													handleCheckedCitiesChangeBtn(idx, checkedList[idx])-->
+				<!--												"-->
+				<!--											>-->
+				<!--												<el-checkbox-->
+				<!--													v-for="lis in item.children"-->
+				<!--													:key="lis.id"-->
+				<!--													class="child-cell"-->
+				<!--													:label="lis.id"-->
+				<!--												>-->
+				<!--													{{ lis.permissionName }}-->
+				<!--												</el-checkbox>-->
+				<!--											</el-checkbox-group>-->
+				<!--										</el-col>-->
+				<!--									</el-row>-->
+				<!--								</div>-->
+				<!--							</el-col>-->
+				<!--						</el-row>-->
+				<!--					</div>-->
+				<!--					<el-checkbox-->
+				<!--						v-model="chooseAll"-->
+				<!--						class="chooseAll"-->
+				<!--					>-->
+				<!--						选择全部-->
+				<!--					</el-checkbox>-->
+				<!--				</div>-->
 			</div>
+<!--			<Test />-->
 			<div class="save-container">
 				<div class="save-btn" @click.prevent="save">
 					<i v-show="loading" class="el-icon-loading"></i>
@@ -160,11 +152,13 @@
 <script>
 import list from '@/mixins/list'
 import { isHaveEmoji, notSpecial2 } from '@/utils/validate'
+// import Test from './test'
 const cityOptions = ['上海', '北京', '广州', '深圳']
 
 export default {
 	name: 'EditPage',
 	mixins: [list],
+	// components: { Test },
 	props: {
 		editData: {
 			type: Object,
@@ -178,6 +172,10 @@ export default {
 				roleName: undefined,
 				remark: undefined,
 				id: undefined
+			},
+			defaultProps: {
+				children: 'children',
+				label: 'permissionName'
 			},
 			chooseAll: false,
 			dataList: [],
@@ -284,6 +282,7 @@ export default {
 			const { code, data } = await this.$api.getRolePermissions()
 			console.log('data', data)
 			if (code === 200) {
+				this.dataList = data
 				// data &&
 				// 	data.length &&
 				// 	data.forEach((item) => {
@@ -327,7 +326,6 @@ export default {
 				}
 			})
 			console.log('arr', arr)
-			this.dataList = arr
 			this.defaultList = arr[0]
 			this.systemOptions1 = arr[0].children
 			for (const item in arr[0].children) {
@@ -569,7 +567,7 @@ export default {
 				.btn-group.first {
 					margin: 0 auto;
 					text-align: center;
-                    padding-top: 50%;
+					padding-top: 50%;
 				}
 			}
 		}
