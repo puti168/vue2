@@ -105,7 +105,7 @@
             width="170px"
           ></el-table-column>
           <el-table-column
-            prop="gameLabelName"
+            prop="dateFreeNum"
             align="center"
             label="单日免费提现次数"
             width="170px"
@@ -117,19 +117,19 @@
             width="170px"
           ></el-table-column>
           <el-table-column
-            prop="description"
+            prop="dateFreeAmount"
             align="center"
             width="170px"
             label="单日免费提款总额限制"
           ></el-table-column>
           <el-table-column
-            prop="description"
+            prop="dateMaxAmount"
             width="170px"
             align="center"
             label="单日最高提款总额度"
           ></el-table-column>
           <el-table-column
-            prop="description"
+            prop="bigAmount"
             align="center"
             width="170px"
             label="大额提现标记金额"
@@ -175,11 +175,11 @@
         </div>
         <h2>代理信息</h2>
         <el-form :rules="rules" :inline="true" class="demo-form-inline">
-          <el-form-item prop="agent" label="代理账号：">
-            <el-input v-model="queryData.agentnum" class="information"></el-input>
+          <el-form-item prop="proxyAccount" label="代理账号：">
+            <el-input v-model="queryData.proxyAccount" class="information"></el-input>
           </el-form-item>
           <el-form-item label-width="147px" label="代理姓名：">
-            <el-input v-model="queryData.agentname" class="information"></el-input>
+            <el-input v-model="queryData.proxyName" class="information"></el-input>
           </el-form-item>
           <el-form-item label-width="147px" label="代理类型：">
             <el-input v-model="queryData.agenttype" class="information"></el-input>
@@ -207,33 +207,33 @@
           >
             <el-input v-model="queryData.viplevel" placeholder=""></el-input>
           </el-form-item>
-          <el-form-item label="单次提款最低额度：" prop="minimum">
+          <el-form-item label="单次提款最低额度：" prop="singleMinAmount">
             <el-input
-              v-model="queryData.miniamount"
+              v-model="queryData.singleMinAmount"
               class="chief"
               placeholder="请输入金额，为0不限制"
             ></el-input>
             <span>元</span>
           </el-form-item>
-          <el-form-item label="单次提款最高额度：" class="configure" prop="maxmum">
+          <el-form-item label="单次提款最高额度：" class="configure" prop="singleMaxAmount">
             <el-input
-              v-model="queryData.maxamount"
+              v-model="queryData.singleMaxAmount"
               class="chief"
               placeholder="请输入金额，为0不限制"
             ></el-input>
             <span>元</span>
           </el-form-item>
-          <el-form-item label="单日免费提款次数：" prop="oneFree">
+          <el-form-item label="单日免费提款次数：" prop="dateFreeNum">
             <el-input
-              v-model="queryData.oneFree"
+              v-model="queryData.dateFreeNum"
               class="chief"
               placeholder="请输入金额，为0不限制"
             ></el-input>
             <span>次</span>
           </el-form-item>
-          <el-form-item label="大额提款标记金额：" class="configure" prop="signminimum">
+          <el-form-item label="大额提款标记金额：" class="configure" prop="bigAmount">
             <el-input
-              v-model="queryData.minimum"
+              v-model="queryData.bigAmount"
               class="chief"
               placeholder="请输入金额，为0不限制"
             ></el-input>
@@ -248,8 +248,8 @@
             <span>元</span>
           </el-form-item>
           <h2>提款手续费配置</h2>
-          <el-form-item label="超出单日免费次数：" class="configure" prop="region">
-            <el-select v-model="queryData.region" class="sun" placeholder="请选择">
+          <el-form-item label="超出单日免费次数：" class="configure" prop="rateDateFree">
+            <el-select v-model="queryData.rateDateFree" class="sun" placeholder="请选择">
               <el-option label="区域一" value="shanghai"></el-option>
               <el-option label="区域二" value="beijing"></el-option>
             </el-select>
@@ -259,8 +259,8 @@
               placeholder="0"
             ></el-input>
           </el-form-item>
-          <el-form-item label="超出单日免费次数总额：" prop="region">
-            <el-select v-model="queryData.exregion" class="sun" placeholder="请选择">
+          <el-form-item label="超出单日免费次数总额：" prop="rateDateTotal">
+            <el-select v-model="queryData.rateDateTotal" class="sun" placeholder="请选择">
               <el-option label="区域一" value="shanghai"></el-option>
               <el-option label="区域二" value="beijing"></el-option>
             </el-select>
@@ -274,10 +274,10 @@
           <el-form-item
             class="configure"
             label="超出单日最高次数提示语："
-            prop="beyondfrequency"
+            prop="dateTotalNumRemark"
           >
             <el-input
-              v-model="queryData.extips"
+              v-model="queryData.dateTotalNumRemark"
               style="width: 260px"
               placeholder="游戏前端提示语，限制25字以内"
             ></el-input>
@@ -285,10 +285,10 @@
           <el-form-item
             class="configure"
             label="超出单日最高提款总额提示语："
-            prop="beyondtotal"
+            prop="dateMaxAmountRemark"
           >
             <el-input
-              v-model="queryData.extotaltips"
+              v-model="queryData.dateMaxAmountRemark"
               style="width: 260px"
               placeholder="游戏前端提示语，限制25字以内"
             ></el-input>
@@ -304,40 +304,6 @@
             </el-select>
           </el-form-item>
 
-          <el-form-item
-            label="标签名称:"
-            prop="gameLabelName"
-            :rules="[
-              { required: true, message: '请输入标签名称', trigger: 'blur' },
-              {
-                min: 1,
-                max: 10,
-                message: '长度在 2 到 10 个字符',
-                trigger: 'blur',
-              },
-            ]"
-          >
-            <el-input
-              v-model="dialogForm.gameLabelName"
-              :maxlength="10"
-              autocomplete="off"
-            ></el-input>
-          </el-form-item>
-          <el-form-item
-            label="描述:"
-            prop="description"
-            :rules="[
-              { required: true, message: '请输入描述内容', trigger: 'blur' },
-              {
-                min: 2,
-                max: 50,
-                message: '长度在 2 到 50 个字符',
-                trigger: 'blur',
-              },
-            ]"
-          >
-            <el-input v-model="dialogForm.description" type="textarea"></el-input>
-          </el-form-item>
         </el-form>
         <el-divider></el-divider>
         <span slot="footer" class="dialog-footer">
@@ -490,8 +456,9 @@ export default {
       params = {
         ...this.getParams(params)
       }
+
       this.$api
-        .getTabelData(params)
+        .getWithdrawSettingProxySelectPage(params)
         .then((res) => {
           if (res.code === 200) {
             this.tableData = res.data.record
@@ -507,6 +474,7 @@ export default {
     },
 
     addLabel() {
+      console.log(11111)
       this.title = '新增'
       this.dialogForm = {}
       this.dialogFormVisible = true
