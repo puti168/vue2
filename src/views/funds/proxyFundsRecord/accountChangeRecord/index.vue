@@ -21,7 +21,7 @@
           </el-form-item>
            <el-form-item label="代理账号:">
             <el-input
-              v-model="queryData.realName"
+              v-model="queryData.userName"
               clearable
               :maxlength="11"
               size="medium"
@@ -45,7 +45,7 @@
           </el-form-item>
           <el-form-item label="账号状态:" class="tagheight">
             <el-select
-              v-model="queryData.accountStatusType"
+              v-model="queryData.accountStatus"
               style="width: 300px"
               multiple
               placeholder="默认选择全部"
@@ -67,7 +67,7 @@
               :popper-append-to-body="false"
             >
               <el-option
-                v-for="item in vipDict"
+                v-for="item in windControlLevelList"
                 :key="item.windControlId"
                 :label="item.windControlName"
                 :value="item.windControlId"
@@ -76,7 +76,8 @@
           </el-form-item>
           <el-form-item label="业务类型:" class="tagheight">
             <el-select
-              v-model="queryData.memberAccountBizType"
+              v-model="queryData.bizType"
+               clearable
               style="width: 300px"
               placeholder="默认选择全部"
               :popper-append-to-body="false"
@@ -91,7 +92,8 @@
           </el-form-item>
           <el-form-item label="账变类型:" class="tagheight">
             <el-select
-              v-model="queryData.proxyAccountChangeType"
+              v-model="queryData.type"
+              clearable
               style="width: 300px"
               placeholder="默认选择全部"
               :popper-append-to-body="false"
@@ -106,8 +108,9 @@
           </el-form-item>
           <el-form-item label="收支类型:" class="tagheight">
             <el-select
-              v-model="queryData.accountBizType"
+              v-model="queryData.transType"
               style="width: 300px"
+              clearable
               placeholder="默认选择全部"
               :popper-append-to-body="false"
             >
@@ -367,7 +370,7 @@ export default {
       searchTime: [startTime, endTime],
       tableData: [],
       dataList: {},
-      vipDict: [],
+      windControlLevelList: [],
       summary: {},
       visible: false,
       tableVisible: false
@@ -415,6 +418,7 @@ export default {
           if (res.code === 200) {
             this.tableData = res.data.record
             this.total = res.data.totalRecord
+            this.summary = res.data.summary
           }
           this.loading = false
         })
@@ -428,7 +432,7 @@ export default {
                 .getWindControllerLevelDict({ windControlType: 3 })
                 .then((res) => {
                     if (res.code === 200) {
-                        this.vipDict = res.data
+                        this.windControlLevelList = res.data
                     }
                 })
         },
@@ -552,7 +556,7 @@ export default {
           )
           sums[index] = el
           return
-        } else if (index === 10) {
+        } else if (index === 8 && this.summary !== null) {
           const el = (
             <div class='count_row'>
               <p>{this.summary.subtotal}</p>

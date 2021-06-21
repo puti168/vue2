@@ -45,7 +45,7 @@
           </el-form-item>
           <el-form-item label="订单状态：" class="tagheight">
             <el-select
-              v-model="queryData.accessStatusType"
+              v-model="queryData.orderStatus"
               style="width: 300px"
               clearable
               placeholder="默认选择全部"
@@ -87,11 +87,10 @@
             <el-button
               type="primary"
               icon="el-icon-search"
-              :disabled="queryText !== '查询'"
               size="medium"
               @click="search"
             >
-              {{ queryText }}
+              查询
             </el-button>
             <el-button
               icon="el-icon-refresh-left"
@@ -118,6 +117,8 @@
           ref="tables"
           v-loading="loading"
           border
+          show-summary
+          :summary-method="getSummaries"
           size="mini"
           class="small-size-table"
           :data="tableData"
@@ -221,7 +222,7 @@ export default {
       gameList: [],
       page: 1,
       size: 10,
-      summary: 0,
+      summary: {},
       visible: false,
       tableVisible: false
 
@@ -253,24 +254,13 @@ export default {
           if (res.code === 200) {
             this.tableData = res.data.record
             this.total = res.data.totalRecord
+            this.summary = res.data.summary
           }
           this.loading = false
         })
         .catch(() => {
           this.loading = false
         })
-    },
-    search() {
-      let t = 10
-      const timecount = setInterval(() => {
-        t--
-        this.queryText = t + 's'
-        if (t < 0) {
-          clearInterval(timecount)
-          this.queryText = '查询'
-        }
-      }, 1000)
-      this.loadData()
     },
 
     reset() {
@@ -372,6 +362,40 @@ export default {
         })
         .catch(() => {})
     },
+     getSummaries(param) {
+      const { columns } = param
+      const sums = []
+      columns.forEach((column, index) => {
+        if (index === 0) {
+          const el = (
+            <div class='count_row'>
+              <p>本页合计</p>
+              <p>全部合计</p>
+            </div>
+          )
+          sums[index] = el
+          return
+        } else if (index === 5 && this.summary !== null) {
+          const el = (
+            <div class='count_row'>
+              <p>{this.summary.subtotal}</p>
+              <p>{this.summary.total}</p>
+            </div>
+          )
+          sums[index] = el
+          return
+        } else {
+          sums[index] = (
+            <div class='count_row'>
+              <p>-</p>
+              <p>-</p>
+            </div>
+          )
+        }
+      })
+
+      return sums
+    },
     _changeTableSort({ column, prop, order }) {
       if (prop === 'createdTime') {
         prop = 1
@@ -406,7 +430,18 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+.count_row {
+  height: 80px;
+  p {
+    height: 40px;
+    line-height: 40px;
+    span {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+    }
+  }
+}
 .sum_footer {
   display: flex;
   display: -webkit-flex;

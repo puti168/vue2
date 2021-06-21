@@ -49,9 +49,9 @@ export function getProxyFundsRecordsDeposit(data) {
 }
 
 // 代理资金记录-存款记录导出
-export function getProxyFundsRecordsTransferDownload(data) {
+export function getProxyFundsRecordsDepositDownload(data) {
 	return request({
-		url: '/proxyFundsRecords/transfer/download',
+		url: '/proxyFundsRecords/deposit/download',
 		method: 'post',
 		data
 	})
@@ -80,6 +80,14 @@ export function getProxyFundsRecordsTransfer(data) {
 		data
 	})
 }
+// 代理资金记录-转账记录导出
+export function getProxyFundsRecordsTransferDownload(data) {
+	return request({
+		url: '/proxyFundsRecords/transfer/download',
+		method: 'post',
+		data
+	})
+}
 export default {
     getWithdrawSettingProxyAdd,
     getWithdrawSettingProxySelectPage,
@@ -87,8 +95,9 @@ export default {
 	getDictgetAllDictList,
 	getProxyFundsRecordsAssistDepositDownload,
 	getProxyFundsRecordsDeposit,
-	getProxyFundsRecordsTransferDownload,
+	getProxyFundsRecordsDepositDownload,
 	getproxyFundsRecordsWithdraw,
 	getProxyFundsRecordsWithdrawDownload,
-	getProxyFundsRecordsTransfer
+	getProxyFundsRecordsTransfer,
+	getProxyFundsRecordsTransferDownload
 }

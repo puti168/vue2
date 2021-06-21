@@ -3,7 +3,7 @@
     <div class="view-container dealer-container">
       <div class="params">
         <el-form ref="form" :inline="true" :model="queryData">
-        <el-form-item label="存款时间:">
+          <el-form-item label="存款时间:">
             <el-date-picker
               v-model="searchTime"
               size="medium"
@@ -21,7 +21,7 @@
           </el-form-item>
           <el-form-item label="订单号:">
             <el-input
-              v-model="queryData.memberName"
+              v-model="queryData.id"
               clearable
               :maxlength="19"
               size="medium"
@@ -31,9 +31,9 @@
               @keyup.enter.native="enterSearch"
             ></el-input>
           </el-form-item>
-           <el-form-item label="代理账号:">
+          <el-form-item label="代理账号:">
             <el-input
-              v-model="queryData.memberName"
+              v-model="queryData.userName"
               clearable
               :maxlength="11"
               size="medium"
@@ -45,7 +45,7 @@
           </el-form-item>
           <el-form-item label="代理姓名:">
             <el-input
-              v-model="queryData.memberName"
+              v-model="queryData.realName"
               clearable
               :maxlength="6"
               size="medium"
@@ -55,9 +55,9 @@
               @keyup.enter.native="enterSearch"
             ></el-input>
           </el-form-item>
-           <el-form-item label="订单来源:" class="tagheight">
+          <el-form-item label="订单来源:" class="tagheight">
             <el-select
-              v-model="queryData.loginDeviceType"
+              v-model="queryData.deviceType"
               style="width: 300px"
               placeholder="默认选择全部"
               :popper-append-to-body="false"
@@ -72,7 +72,7 @@
           </el-form-item>
           <el-form-item label="订单状态:" class="tagheight">
             <el-select
-              v-model="queryData.depositStatus"
+              v-model="queryData.orderStatus"
               style="width: 300px"
               placeholder="默认选择全部"
               :popper-append-to-body="false"
@@ -102,12 +102,7 @@
           </el-form-item>
 
           <el-form-item>
-            <el-button
-              type="primary"
-              icon="el-icon-search"
-              size="medium"
-              @click="search"
-            >
+            <el-button type="primary" icon="el-icon-search" size="medium" @click="search">
               查询
             </el-button>
             <el-button
@@ -136,6 +131,8 @@
           v-loading="loading"
           border
           size="mini"
+          show-summary
+          :summary-method="getSummaries"
           class="small-size-table"
           :data="tableData"
           style="width: 100%"
@@ -181,27 +178,22 @@
             </template>
           </el-table-column>
           <el-table-column
-            prop="accountType"
+            prop="orderStatus"
             align="center"
             label="订单状态"
             width="100px"
           >
             <template slot-scope="scope">
-              {{ typeFilter(scope.row.accountType, "accountType") }}
-            </template>
+              {{ typeFilter(scope.row.orderStatus, "depositStatus") }}
+              </template>
           </el-table-column>
-          <el-table-column
-            prop="customerIp"
-            align="center"
-            label="存款IP"
-            width="150px"
-          >
-          <template slot="header">
+          <el-table-column prop="customerIp" align="center" label="存款IP" width="150px">
+            <template slot="header">
               登录IP
               <br />
               风控层级
             </template>
-           <template slot-scope="scope">
+            <template slot-scope="scope">
               <span v-if="scope.row.customerIp !== null">
                 {{ scope.row.customerIp }}
               </span>
@@ -220,7 +212,7 @@ class="redColor"
             label="存款设备终端"
             width="180px"
           >
-          <template slot="header">
+            <template slot="header">
               存款设备终端
               <br />
               风控层级
@@ -234,16 +226,13 @@ class="redColor"
               <span
 class="redColor"
 >风控层级：{{
-                  scope.row.deviceNoControlName === null ? "无" : scope.row.deviceNoControlName
+                  scope.row.deviceNoControlName === null
+                    ? "无"
+                    : scope.row.deviceNoControlName
                 }}</span>
             </template>
           </el-table-column>
-          <el-table-column
-            prop="payType"
-            align="center"
-            label="支付方式"
-            width="150px"
-          >
+          <el-table-column prop="payType" align="center" label="支付方式" width="150px">
             <template slot-scope="scope">
               {{
                 scope.row.payType === 0
@@ -257,7 +246,7 @@ class="redColor"
             align="center"
             label="存放金额"
           ></el-table-column>
-         <el-table-column
+          <el-table-column
             prop="createdAt"
             align="center"
             label="存款时间"
@@ -279,7 +268,6 @@ class="redColor"
           @size-change="handleSizeChange"
         ></el-pagination>
       </div>
-
     </div>
   </div>
 </template>
@@ -303,11 +291,7 @@ export default {
       gameList: [],
       page: 1,
       size: 10,
-      summary: 0,
-      visible: false,
-      tableVisible: false,
-
-      newList: []
+      summary: {}
     }
   },
   computed: {
@@ -321,7 +305,7 @@ export default {
       return this.globalDics.payType
     }
   },
-  mounted() { },
+  mounted() {},
 
   methods: {
     loadData() {
@@ -342,6 +326,7 @@ export default {
           if (res.code === 200) {
             this.tableData = res.data.record
             this.total = res.data.totalRecord
+            this.summary = res.data.summary
           }
           this.loading = false
         })
@@ -368,25 +353,9 @@ export default {
       params = {
         ...this.getParams(params)
       }
-      delete params.registerTime
-      delete params.lastLoginTime
-      delete params.firstSaveTime
-      delete params.accountStatus
-      delete params.deviceType
-      this.$confirm(
-        `<strong>是否导出?</strong></br><span style='font-size:12px;color:#c1c1c1'>数据过大时，请耐心等待</span>`,
-        '确认提示',
-        {
-          dangerouslyUseHTMLString: true,
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }
-      )
-        .then(() => {
-          this.$api
-            .getProxyFundsRecordsTransferDownload(params)
-            .then((res) => {
+      this.$api
+        .getProxyFundsRecordsDepositDownload(params)
+        .then((res) => {
               this.loading = false
               const { data, status } = res
               if (res && status === 200) {
@@ -438,16 +407,48 @@ export default {
                 }
               }
             })
-            .catch(() => {
+        .catch(() => {
               this.loading = false
-              this.$message({
-                type: 'error',
-                message: '导出失败',
-                duration: 1500
-              })
+              // this.$message({
+              //   type: "error",
+              //   message: "导出失败",
+              //   duration: 1500,
+              // });
             })
-        })
-        .catch(() => {})
+    },
+    getSummaries(param) {
+      const { columns } = param
+      const sums = []
+      columns.forEach((column, index) => {
+        if (index === 0) {
+          const el = (
+            <div class='count_row'>
+              <p>本页合计</p>
+              <p>全部合计</p>
+            </div>
+          )
+          sums[index] = el
+          return
+        } else if (index === 8 && this.summary !== null) {
+          const el = (
+            <div class='count_row'>
+              <p>{this.summary.subtotal}</p>
+              <p>{this.summary.total}</p>
+            </div>
+          )
+          sums[index] = el
+          return
+        } else {
+          sums[index] = (
+            <div class='count_row'>
+              <p>-</p>
+              <p>-</p>
+            </div>
+          )
+        }
+      })
+
+      return sums
     },
     _changeTableSort({ column, prop, order }) {
       if (prop === 'createdAt') {
@@ -464,13 +465,23 @@ export default {
       }
       this.loadData()
     }
-
   }
 }
 </script>
 
 <style lang="scss" scoped>
-
+.count_row {
+  height: 80px;
+  p {
+    height: 40px;
+    line-height: 40px;
+    span {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+    }
+  }
+}
 .sum_footer {
   display: flex;
   display: -webkit-flex;
