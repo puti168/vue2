@@ -58,7 +58,6 @@
           <el-form-item label="转出钱包：" class="tagheight">
             <el-select
               v-model="queryData.accountType1"
-              style="width: 300px"
               clearable
               placeholder="默认选择全部"
               :popper-append-to-body="false"
@@ -74,7 +73,6 @@
           <el-form-item label="转入钱包：" class="tagheight">
             <el-select
               v-model="queryData.accountType"
-              style="width: 300px"
               clearable
               placeholder="默认选择全部"
               :popper-append-to-body="false"
@@ -90,7 +88,6 @@
           <el-form-item label="订单状态：" class="tagheight">
             <el-select
               v-model="queryData.accountType"
-              style="width: 300px"
               clearable
               placeholder="默认选择全部"
               :popper-append-to-body="false"

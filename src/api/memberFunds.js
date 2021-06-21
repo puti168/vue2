@@ -43,12 +43,21 @@ export function getMemberFundsRecordsDepositDownload(data) {
 		data
 	})
 }
-
-// 风控==> 删除黑名单IP
-export function ipBlackDelete(id) {
+// 会员提款记录
+export function getMemberFundsRecordsWithdraw(data) {
 	return request({
-		url: `/ipBlack/del/${id}`,
-		method: 'post'
+		url: '/memberFundsRecords/withdraw',
+		method: 'post',
+		data
+	})
+}
+
+// 会员提款记录-导出
+export function getMemberFundsRecordsWithdrawDownload(data) {
+	return request({
+		url: '/memberFundsRecords/withdraw/download',
+		method: 'post',
+		data
 	})
 }
 
@@ -58,5 +67,6 @@ export default {
 	getMemberFundsRecordsAccountChangeDownload,
 	getMemberFundsRecordsDeposit,
 	getMemberFundsRecordsDepositDownload,
-	ipBlackDelete
+	getMemberFundsRecordsWithdraw,
+	getMemberFundsRecordsWithdrawDownload
 }
