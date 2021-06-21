@@ -9,10 +9,19 @@ export function memberIncreaseQuotaAPI(data) {
 	})
 }
 
+// 资金 ===> 会员人工增加额度 ==> 查询余额
+export function memberIncreaseSearchAPI(data) {
+	return request({
+		url: '/artificialPatch/getMemberBalance',
+		method: 'post',
+		data
+	})
+}
+
 // 资金 ===> 资金调整 ==> 会员人工扣除额度
 export function memberDeductQuotaAPI(data) {
 	return request({
-		url: '/user/queryMember',
+		url: '/artificialPatch/member/lessMoney',
 		method: 'post',
 		data
 	})
@@ -30,7 +39,7 @@ export function agentIncreaseQuotaAPI(data) {
 // 资金 ===> 资金调整 ==> 代理人工扣除额度
 export function agentDeductQuotaAPI(data) {
 	return request({
-		url: '/user/queryMember',
+		url: '/artificialPatch/proxy/proxyLessMoney',
 		method: 'post',
 		data
 	})
