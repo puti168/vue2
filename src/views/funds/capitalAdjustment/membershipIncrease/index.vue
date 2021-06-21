@@ -67,10 +67,10 @@
 						@change="checkRiskValue($event)"
 					>
 						<el-option
-							v-for="item in []"
-							:key="item.id"
-							:label="item.windControlLevelName"
-							:value="item"
+							v-for="item in memberPatchAddAdjustTypeArr"
+							:key="item.code"
+							:label="item.description"
+							:value="item.code"
 						></el-option>
 					</el-select>
 				</el-form-item>
@@ -182,9 +182,9 @@ export default {
 		}
 	},
 	computed: {
-		// windLevelTypeArr() {
-		// 	return this.globalDics.windLevelType
-		// },
+		memberPatchAddAdjustTypeArr() {
+			return this.globalDics.memberPatchAddAdjustType
+		},
 		rules() {
 			// const reg1 = /^[A-Za-z]{1}(?=(.*[a-zA-Z]){1,})(?=(.*[0-9]){1,})[0-9A-Za-z]{3,10}$/
 			// const testUserName = (rule, value, callback) => {
@@ -240,8 +240,15 @@ export default {
 			}
 		}
 	},
-	mounted() {},
+	mounted() {
+	    this.getRelationId()
+    },
 	methods: {
+		getRelationId() {
+			this.$api.getImageIdAPI().then((res) => {
+				console.log('res', res)
+			})
+		},
 		add() {
 			this.loadingT = true
 			const params = {

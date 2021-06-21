@@ -3,7 +3,7 @@ import request from '@/utils/request'
 // 资金 ===> 资金调整 ==> 会员人工增加额度
 export function memberIncreaseQuotaAPI(data) {
 	return request({
-		url: '/user/queryMember',
+		url: '/memberArtificialPatchAccountAdd/apply',
 		method: 'post',
 		data
 	})
@@ -15,6 +15,15 @@ export function memberIncreaseSearchAPI(data) {
 		url: '/artificialPatch/getMemberBalance',
 		method: 'post',
 		data
+	})
+}
+
+// 图片id
+export function getImageIdAPI(params) {
+	return request({
+		url: '/imageManagement/getRelationId',
+		method: 'GET',
+		params
 	})
 }
 
@@ -109,5 +118,6 @@ export default {
 	memberIncreaseQuotaRecordAPI,
 	memberIncreaseQuotaDetailsAPI,
 	agentWithdrawRecordAPI,
-	agentWithdrawDetailsAPI
+	agentWithdrawDetailsAPI,
+	getImageIdAPI
 }
