@@ -57,7 +57,7 @@ export function agentDeductQuotaAPI(data) {
 // 资金 ===> 资金审核记录 ==> 会员提款审核记录
 export function memberWithdrawRecordAPI(data) {
 	return request({
-		url: '/user/queryMember',
+		url: '/FundsAuthRecords/memberWithDraw',
 		method: 'post',
 		data
 	})
@@ -75,7 +75,7 @@ export function memberWithdrawDetailsAPI(data) {
 // 资金 ===> 资金审核记录 ==> 会员人工增加额度记录
 export function memberIncreaseQuotaRecordAPI(data) {
 	return request({
-		url: '/user/queryMember',
+		url: '/FundsAuthRecords/memberAddAudit',
 		method: 'post',
 		data
 	})
@@ -93,7 +93,7 @@ export function memberIncreaseQuotaDetailsAPI(data) {
 // 资金 ===> 资金审核记录 ==> 代理提款审核记录
 export function agentWithdrawRecordAPI(data) {
 	return request({
-		url: '/user/queryMember',
+		url: '/FundsAuthRecords/proxyWithDraw',
 		method: 'post',
 		data
 	})

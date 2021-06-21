@@ -108,7 +108,6 @@
 					></el-input>
 				</el-form-item>
 				<el-form-item
-					v-if="queryData.adjustType === '1'"
 					label="操作金额:"
 					prop="amount"
 				>
@@ -190,6 +189,7 @@ export default {
                 remark: undefined,
 				imageAddress: undefined,
 				imageAnnexId: undefined,
+                userType: '1',
 				activeId: undefined,
 				water: undefined
 			},
