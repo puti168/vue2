@@ -17,11 +17,19 @@ export function getMerchantGameWalletDic(data) {
 		data
 	})
 }
-
-// 风控==> 添加黑名单IP
-export function ipBlackAdd(data) {
+// 会员账变记录-导出
+export function getMemberFundsRecordsAccountChangeDownload(data) {
 	return request({
-		url: '/ipBlack/add',
+		url: '/memberFundsRecords/accountChange/download',
+		method: 'post',
+		data
+	})
+}
+
+// 会员存款记录
+export function getMemberFundsRecordsDeposit(data) {
+	return request({
+		url: '/memberFundsRecords/deposit',
 		method: 'post',
 		data
 	})
@@ -47,7 +55,8 @@ export function ipBlackDelete(id) {
 export default {
 	getMemberFundsRecordsAccountChange,
 	getMerchantGameWalletDic,
-	ipBlackAdd,
+	getMemberFundsRecordsAccountChangeDownload,
+	getMemberFundsRecordsDeposit,
 	ipBlackEdit,
 	ipBlackDelete
 }

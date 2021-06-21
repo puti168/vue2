@@ -230,13 +230,7 @@
           :header-cell-style="getRowClass"
           @sort-change="_changeTableSort"
         >
-          <el-table-column
-            prop="eventId"
-            align="center"
-            width="240px"
-            fixed
-            label="关联订单号"
-          >
+          <el-table-column prop="eventId" align="center" width="240px" label="关联订单号">
             <template slot-scope="scope">
               <Copy v-if="!!scope.row.eventId" :title="scope.row.eventId" :copy="copy">
                 {{ scope.row.eventId }}
@@ -359,7 +353,7 @@
             prop="occurDt"
             align="center"
             label="账变时间"
-            width="150px"
+            width="155px"
             sortable="custom"
           >
           </el-table-column>
@@ -468,17 +462,14 @@ export default {
       this.loadData()
     },
     _changeTableSort({ column, prop, order }) {
-      if (prop === 'betAmount') {
+      if (prop === 'vipIdName') {
         prop = 1
       }
-      if (prop === 'netAmount') {
+      if (prop === 'amount') {
         prop = 2
       }
-      if (prop === 'createAt') {
+      if (prop === 'occurDt') {
         prop = 3
-      }
-      if (prop === 'netAt') {
-        prop = 4
       }
       this.queryData.orderKey = prop
       if (order === 'ascending') {
@@ -552,24 +543,19 @@ export default {
       }
     },
     exportExcel() {
+      this.loading = true
       const create = this.searchTime || []
       const [startTime, endTime] = create
       let params = {
         ...this.queryData,
-        createAtStart: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : '',
-        createAtEnd: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
+        occurDtStart: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : '',
+        occurDtEnd: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
       }
       params = {
         ...this.getParams(params)
       }
-      delete params.registerTime
-      delete params.lastLoginTime
-      delete params.firstSaveTime
-      delete params.accountStatus
-      delete params.deviceType
-      delete params.accountType
       this.$api
-        .getGameRecordDownload(params)
+        .getMemberFundsRecordsAccountChangeDownload(params)
         .then((res) => {
           this.loading = false
           const { data, status } = res
@@ -624,17 +610,17 @@ export default {
         })
         .catch(() => {
           this.loading = false
-          this.$message({
-            type: 'error',
-            message: '导出失败',
-            duration: 1500
-          })
+          // this.$message({
+          //   type: "error",
+          //   message: "导出失败",
+          //   duration: 1500,
+          // });
         })
     },
     getSummaries(param) {
       const { columns } = param
       const sums = []
-      columns.forEach((index) => {
+      columns.forEach((column, index) => {
         if (index === 0) {
           const el = (
             <div class='count_row'>
@@ -708,7 +694,7 @@ export default {
 /deep/.el-table__body-wrapper,
 /deep/.el-table__header-wrapper,
 /deep/.el-table__footer-wrapper {
-  // overflow: visible;
+  overflow: visible;
 }
 /deep/.el-table::after {
   position: relative !important;
