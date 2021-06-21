@@ -47,6 +47,7 @@
 							style="width: 180px"
 							:popper-append-to-body="false"
 						>
+							<el-option label="全部" value=""></el-option>
 							<el-option
 								v-for="item in orderTypeArr"
 								:key="item.code"
@@ -263,35 +264,36 @@
 							</template>
 						</el-table-column>
 						<el-table-column
-                            prop="details"
+							prop="details"
 							align="center"
 							label="审核用时"
-                            width="130"
+							width="130"
 						>
-                            <template slot-scope="scope">
-                                <div v-if="!!scope.row.details && scope.row.details.length">
-                                    <p v-if="scope.row.details[0]">
-                                        {{ scope.row.details[0].costTime }}
-                                    </p>
-                                    <p v-if="scope.row.details[1]">
-                                        {{ scope.row.details[1].costTime }}
-                                    </p>
-                                </div>
-                                <span v-else>-</span>
-                            </template>
-                        </el-table-column>
+							<template slot-scope="scope">
+								<div v-if="!!scope.row.details && scope.row.details.length">
+									<p v-if="scope.row.details[0]">
+										{{ scope.row.details[0].costTime }}
+									</p>
+									<p v-if="scope.row.details[1]">
+										{{ scope.row.details[1].costTime }}
+									</p>
+								</div>
+								<span v-else>-</span>
+							</template>
+						</el-table-column>
 						<el-table-column
 							prop="remark"
 							align="center"
 							label="备注"
+							width="120"
 						>
-                            <template slot-scope="scope">
+							<template slot-scope="scope">
 								<span v-if="!!scope.row.remark">
 									{{ scope.row.remark }}
 								</span>
-                                <span v-else>-</span>
-                            </template>
-                        </el-table-column>
+								<span v-else>-</span>
+							</template>
+						</el-table-column>
 					</el-table>
 					<!-- 分页 -->
 					<el-pagination
@@ -335,7 +337,7 @@ export default {
 				time: [start, end],
 				id: undefined,
 				userName: undefined,
-				orderStatus: undefined
+				orderStatus: ''
 			},
 			type: true,
 			showDetail: false,
@@ -407,14 +409,10 @@ export default {
 		},
 		reset() {
 			this.queryData = {
-				auditStatusList: [],
-				auditStep: '',
-				orderStatus: '',
-				applyName: '',
-				auditName: '',
-				auditNum: '',
-				orderProperties: '',
-				orderType: ''
+				time: [start, end],
+				id: undefined,
+				userName: undefined,
+				orderStatus: ''
 			}
 			this.loadData()
 		}

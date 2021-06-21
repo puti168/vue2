@@ -80,7 +80,7 @@
 					prop="activeId"
 				>
 					<el-input
-						v-model="queryData.activeId"
+						v-model="queryData.activityId"
 						size="medium"
 						maxlength="11"
 						placeholder="请输入"
@@ -97,7 +97,7 @@
 					label-width="120px"
 				>
 					<el-input
-						v-model="queryData.water"
+						v-model="queryData.validmultiple"
 						size="medium"
 						maxlength="6"
 						placeholder="请输入"
@@ -190,8 +190,9 @@ export default {
 				imageAddress: undefined,
 				imageAnnexId: undefined,
                 userType: '1',
-				activeId: undefined,
-				water: undefined
+                userId: undefined,
+				activityId: undefined,
+				validmultiple: undefined
 			},
 			tipsShow: null
 		}
@@ -303,15 +304,19 @@ export default {
 		reset() {
 			this.$refs['form'].resetFields()
 			this.queryData = {
-				userName: undefined,
-				realName: undefined,
-				accountBalance: undefined,
-				adjustType: undefined,
-				amount: undefined,
+                userName: undefined,
+                realName: undefined,
+                accountType: undefined,
+                accountBalance: undefined,
+                adjustType: undefined,
+                amount: undefined,
                 remark: undefined,
-				imageAddress: undefined,
-				activeId: undefined,
-				water: undefined
+                imageAddress: undefined,
+                imageAnnexId: undefined,
+                userType: '1',
+                userId: undefined,
+                activityId: undefined,
+                validmultiple: undefined
 			}
 		},
 		checkRiskValue(val) {
@@ -328,9 +333,10 @@ export default {
 				this.$api.memberIncreaseSearchAPI({ userName }).then((res) => {
 					const { code, data } = res
 					if (code === 200) {
-						const { realName, accountType } = data
+						const { realName, accountType, userId } = data
 						this.queryData.realName = realName
 						this.queryData.accountType = accountType
+						this.queryData.userId = userId
 					}
 				})
 			}
