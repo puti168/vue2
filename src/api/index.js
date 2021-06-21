@@ -12,6 +12,7 @@ import vipConfig from './vipConfig'
 import memberFunds from './memberFunds'
 import funds from './funds'
 import operation from './operation'
+import agencyfunds from './agencyfunds'
 
 export default {
 	...bankController,
@@ -27,5 +28,6 @@ export default {
 	...vipConfig,
 	...memberFunds,
 	...funds,
-	...operation
+	...operation,
+	...agencyfunds
 }
