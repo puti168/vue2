@@ -58,7 +58,6 @@
           <el-form-item label="订单来源：" class="tagheight">
             <el-select
               v-model="queryData.deviceType"
-              style="width: 300px"
               clearable
               placeholder="默认选择全部"
               :popper-append-to-body="false"
@@ -74,7 +73,6 @@
           <el-form-item label="订单状态：" class="tagheight">
             <el-select
               v-model="queryData.orderStatus"
-              style="width: 300px"
               clearable
               placeholder="默认选择全部"
               :popper-append-to-body="false"
@@ -102,7 +100,6 @@
           <el-form-item label="支付方式：" class="tagheight">
             <el-select
               v-model="queryData.payType"
-              style="width: 300px"
               clearable
               placeholder="默认选择全部"
               :popper-append-to-body="false"
@@ -151,6 +148,7 @@
           v-loading="loading"
           border
           show-summary
+          :summary-method="getSummaries"
           size="mini"
           class="small-size-table"
           :data="tableData"
@@ -158,72 +156,84 @@
           :header-cell-style="getRowClass"
           @sort-change="_changeTableSort"
         >
-          <el-table-column prop="id" align="center" label="订单号">
+          <el-table-column prop="id" align="center" width="240px" label="订单号">
             <template slot-scope="scope">
               <Copy v-if="!!scope.row.id" :title="scope.row.id" :copy="copy">
-                {{ scope.row.memberName }}
+                {{ scope.row.id }}
               </Copy>
               <span v-else>-</span>
             </template>
           </el-table-column>
-          <el-table-column prop="memberName" align="center" label="会员账号">
+          <el-table-column prop="userName" align="center" label="会员账号">
             <template slot-scope="scope">
-              <Copy
-                v-if="!!scope.row.memberName"
-                :title="scope.row.memberName"
-                :copy="copy"
-              >
-                {{ scope.row.memberName }}
+              <Copy v-if="!!scope.row.userName" :title="scope.row.userName" :copy="copy">
+                {{ scope.row.userName }}
               </Copy>
               <span v-else>-</span>
             </template>
           </el-table-column>
-          <el-table-column prop="memberName" align="center" label="会员姓名">
+          <el-table-column prop="realName" align="center" label="会员姓名">
             <template slot-scope="scope">
-              <Copy
-                v-if="!!scope.row.memberName"
-                :title="scope.row.memberName"
-                :copy="copy"
-              >
-                {{ scope.row.memberName }}
+              <Copy v-if="!!scope.row.realName" :title="scope.row.realName" :copy="copy">
+                {{ scope.row.realName }}
               </Copy>
               <span v-else>-</span>
             </template>
           </el-table-column>
-          <el-table-column prop="memberName" align="center" label="订单来源">
+          <el-table-column prop="deviceType" align="center" label="订单来源">
             <template slot-scope="scope">
-              {{ typeFilter(scope.row.accountType, "accountType") }}
+              {{ typeFilter(scope.row.deviceType, "loginDeviceType") }}
             </template>
           </el-table-column>
-          <el-table-column prop="accountType" align="center" label="订单状态">
+          <el-table-column prop="orderStatus" align="center" label="订单状态">
             <template slot-scope="scope">
-              {{ typeFilter(scope.row.accountType, "accountType") }}
+              {{ typeFilter(scope.row.orderStatus, "depositStatus") }}
             </template>
           </el-table-column>
-          <el-table-column prop="parentProxyName" align="center">
+          <el-table-column prop="customerIp" align="center">
             <template slot="header">
               存款IP <br />
               风控层级
             </template>
             <template slot-scope="scope">
-              <span>{{ scope.row.parentProxyName }}</span>
+              <span>{{ scope.row.customerIp }}</span><br />
+              <span
+class="redColor"
+>风控层级：{{
+                  scope.row.ipControlName !== "" ? scope.row.ipControlName : "-"
+                }}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="playerName" align="center">
+          <el-table-column prop="deviceNo" align="center">
             <template slot="header">
               存款终端设备号
               <br />风控层级
             </template>
             <template slot-scope="scope">
-              <span>{{ scope.row.parentProxyName }}</span>
+              <span>{{ scope.row.deviceNo }}</span><br />
+              <span
+class="redColor"
+>风控层级：{{
+                  scope.row.deviceNoControlName !== null
+                    ? scope.row.deviceNoControlName
+                    : "-"
+                }}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="parentProxyName" align="center" label="支付方式">
-          </el-table-column>
-          <el-table-column prop="parentProxyName" align="center" label="存款金额">
+          <el-table-column prop="payType" align="center" label="支付方式">
+            <template slot-scope="scope">
+              {{ typeFilter(scope.row.payType, "payType") }}
+            </template>
           </el-table-column>
           <el-table-column
-            prop="parentProxyName"
+            prop="orderAmount"
+            align="center"
+            sortable="custom"
+            label="存款金额"
+          >
+          </el-table-column>
+          <el-table-column
+            prop="createdAt"
             align="center"
             label="存款时间"
             sortable="custom"
@@ -310,14 +320,8 @@ export default {
       this.loadData()
     },
     _changeTableSort({ column, prop, order }) {
-      if (prop === 'vipIdName') {
+      if (prop === 'orderAmount') {
         prop = 1
-      }
-      if (prop === 'amount') {
-        prop = 2
-      }
-      if (prop === 'occurDt') {
-        prop = 3
       }
       this.queryData.orderKey = prop
       if (order === 'ascending') {
@@ -328,67 +332,6 @@ export default {
         this.queryData.orderType = 'desc'
       }
       this.loadData()
-    },
-    checkValue(e) {
-      const { name, value } = e.target
-      switch (name) {
-        case 'vipSerialNumMax':
-          if (
-            !!this.queryData.vipSerialNumMin &&
-            value &&
-            value * 1 < this.queryData.vipSerialNumMin * 1
-          ) {
-            this.$message({
-              type: 'warning',
-              message: `投注金额输入最大值不能小于最小值`
-            })
-          } else {
-            this.queryData.vipSerialNumMax = value
-          }
-          break
-        case 'vipSerialNumMin':
-          if (
-            !!this.queryData.vipSerialNumMax &&
-            value &&
-            value * 1 > this.queryData.vipSerialNumMax * 1
-          ) {
-            this.$message({
-              type: 'warning',
-              message: `会员输赢输入最小值不能大于最大值`
-            })
-          } else {
-            this.queryData.vipSerialNumMin = value
-          }
-          break
-        case 'amountMax':
-          if (
-            !!this.queryData.amountMin &&
-            value &&
-            value * 1 < this.queryData.amountMin * 1
-          ) {
-            this.$message({
-              type: 'warning',
-              message: `投注金额输入最大值不能小于最小值`
-            })
-          } else {
-            this.queryData.amountMax = value
-          }
-          break
-        case 'amountMin':
-          if (
-            !!this.queryData.amountMax &&
-            value &&
-            value * 1 > this.queryData.amountMax * 1
-          ) {
-            this.$message({
-              type: 'warning',
-              message: `会员输赢输入最小值不能大于最大值`
-            })
-          } else {
-            this.queryData.amountMin = value
-          }
-          break
-      }
     },
     exportExcel() {
       this.loading = true
@@ -403,7 +346,7 @@ export default {
         ...this.getParams(params)
       }
       this.$api
-        .getMemberFundsRecordsAccountChangeDownload(params)
+        .getMemberFundsRecordsDepositDownload(params)
         .then((res) => {
           this.loading = false
           const { data, status } = res
@@ -478,7 +421,7 @@ export default {
           )
           sums[index] = el
           return
-        } else if (index === 10) {
+        } else if (index === 8 && this.summary !== null) {
           const el = (
             <div class='count_row'>
               <p>{this.summary.subtotal}</p>
