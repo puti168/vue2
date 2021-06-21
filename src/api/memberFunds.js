@@ -35,10 +35,10 @@ export function getMemberFundsRecordsDeposit(data) {
 	})
 }
 
-// 风控==> 编辑黑名单IP
-export function ipBlackEdit(data) {
+// 会员存款记录-导出
+export function getMemberFundsRecordsDepositDownload(data) {
 	return request({
-		url: '/ipBlack/edit',
+		url: '/memberFundsRecords/deposit/download',
 		method: 'post',
 		data
 	})
@@ -57,6 +57,6 @@ export default {
 	getMerchantGameWalletDic,
 	getMemberFundsRecordsAccountChangeDownload,
 	getMemberFundsRecordsDeposit,
-	ipBlackEdit,
+	getMemberFundsRecordsDepositDownload,
 	ipBlackDelete
 }
