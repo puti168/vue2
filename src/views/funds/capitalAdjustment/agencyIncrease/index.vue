@@ -46,10 +46,10 @@
 						@change="checkRiskValue($event)"
 					>
 						<el-option
-							v-for="item in []"
-							:key="item.id"
-							:label="item.windControlLevelName"
-							:value="item"
+							v-for="item in proxyPatchSubAdjustTypeArr"
+                            :key="item.code"
+                            :label="item.description"
+                            :value="item.code"
 						></el-option>
 					</el-select>
 				</el-form-item>
@@ -86,7 +86,7 @@
 						style="margin-left: 20px; background-color: #00807F"
 						@click="searchBalance"
 					>
-						<i v-show="loadingT" class="el-icon-loading"></i>
+						<i v-show="loading" class="el-icon-loading"></i>
 						查询
 					</el-button>
 				</el-form-item>
@@ -102,9 +102,9 @@
 					></el-input>
 					<span>元</span>
 				</el-form-item>
-				<el-form-item label="审核原因:" prop="reason">
+				<el-form-item label="审核原因:" prop="remark">
 					<el-input
-						v-model="queryData.reason"
+						v-model="queryData.remark"
 						size="medium"
 						type="textarea"
 						placeholder="请输入"
@@ -165,7 +165,7 @@ export default {
 				balance: undefined,
 				operationType: undefined,
 				operationMoney: undefined,
-				reason: undefined,
+                remark: undefined,
                 imageAnnexId: undefined,
 				imageAddress: undefined,
 				activeId: undefined,
@@ -175,9 +175,9 @@ export default {
 		}
 	},
 	computed: {
-		// windLevelTypeArr() {
-		// 	return this.globalDics.windLevelType
-		// },
+        proxyPatchSubAdjustTypeArr() {
+			return this.globalDics.proxyPatchSubAdjustType
+		},
 		rules() {
 			// const reg1 = /^[A-Za-z]{1}(?=(.*[a-zA-Z]){1,})(?=(.*[0-9]){1,})[0-9A-Za-z]{3,10}$/
 			// const testUserName = (rule, value, callback) => {
@@ -210,7 +210,7 @@ export default {
 				{ required: true, message: '请选择钱包余额类型', trigger: 'change' }
 			]
 
-			const reason = [
+			const remark = [
 				{ required: true, message: '请输入申请原因', trigger: 'blur' }
 			]
 
@@ -219,7 +219,7 @@ export default {
 				operationType,
 				operationMoney,
                 balance,
-				reason
+                remark
 			}
 		}
 	},
