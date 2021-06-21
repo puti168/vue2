@@ -5,7 +5,7 @@
 				<el-form ref="form" :inline="true" :model="queryData">
 					<el-form-item label="提款时间:">
 						<el-date-picker
-							v-model="formTime.time"
+							v-model="queryData.time"
 							size="medium"
 							:picker-options="pickerOptions"
 							format="yyyy-MM-dd HH:mm:ss"
@@ -19,7 +19,7 @@
 					</el-form-item>
 					<el-form-item label="订单号:">
 						<el-input
-							v-model="queryData.auditNum"
+							v-model="queryData.id"
 							clearable
 							size="medium"
 							:maxlength="19"
@@ -52,7 +52,7 @@
 					</el-form-item>
 					<el-form-item label="订单状态:">
 						<el-select
-							v-model="queryData.lockOrder"
+							v-model="queryData.orderStatus"
 							style="width: 180px"
 							:popper-append-to-body="false"
 						>
@@ -268,13 +268,16 @@ export default {
 			queryData: {
 				auditStatusList: [],
 				auditStep: '',
-				userName: '',
 				lockOrder: '',
 				applyName: '',
 				auditName: '',
 				auditNum: '',
 				orderProperties: '',
-				orderType: ''
+				orderType: '',
+                time: [start, end],
+                id: undefined,
+                userName: undefined,
+                orderStatus: ''
 			},
 			type: true,
 			showDetail: false,

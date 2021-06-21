@@ -85,8 +85,8 @@
 						maxlength="11"
 						placeholder="请输入"
 						clearable
-                        oninput="value=value.replace(/[\u4E00-\u9FA5]/g ,'')"
-                        style="width: 365px"
+						oninput="value=value.replace(/[\u4E00-\u9FA5]/g ,'')"
+						style="width: 365px"
 						@blur="checkValue"
 					></el-input>
 				</el-form-item>
@@ -107,10 +107,7 @@
 						@blur="checkValue"
 					></el-input>
 				</el-form-item>
-				<el-form-item
-					label="操作金额:"
-					prop="amount"
-				>
+				<el-form-item label="操作金额:" prop="amount">
 					<el-input
 						v-model="queryData.amount"
 						size="medium"
@@ -186,11 +183,11 @@ export default {
 				accountBalance: undefined,
 				adjustType: undefined,
 				amount: undefined,
-                remark: undefined,
+				remark: undefined,
 				imageAddress: undefined,
 				imageAnnexId: undefined,
-                userType: '1',
-                userId: undefined,
+				userType: 1,
+				userId: undefined,
 				activityId: undefined,
 				validmultiple: undefined
 			},
@@ -247,7 +244,7 @@ export default {
 				amount,
 				activeId,
 				water,
-                remark
+				remark
 			}
 		}
 	},
@@ -265,6 +262,7 @@ export default {
 			const params = {
 				...this.queryData
 			}
+			params.adjustType = params.adjustType * 1
 			let lock = true
 			this.$refs['form'].validate((valid) => {
 				if (valid && lock) {
@@ -304,19 +302,19 @@ export default {
 		reset() {
 			this.$refs['form'].resetFields()
 			this.queryData = {
-                userName: undefined,
-                realName: undefined,
-                accountType: undefined,
-                accountBalance: undefined,
-                adjustType: undefined,
-                amount: undefined,
-                remark: undefined,
-                imageAddress: undefined,
-                imageAnnexId: undefined,
-                userType: '1',
-                userId: undefined,
-                activityId: undefined,
-                validmultiple: undefined
+				userName: undefined,
+				realName: undefined,
+				accountType: undefined,
+				accountBalance: undefined,
+				adjustType: undefined,
+				amount: undefined,
+				remark: undefined,
+				imageAddress: undefined,
+				imageAnnexId: undefined,
+				userType: '1',
+				userId: undefined,
+				activityId: undefined,
+				validmultiple: undefined
 			}
 		},
 		checkRiskValue(val) {

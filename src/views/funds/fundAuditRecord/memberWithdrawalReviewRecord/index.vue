@@ -349,9 +349,6 @@ export default {
 	computed: {
 		orderTypeArr() {
 			return this.globalDics.withdrawStatus
-		},
-		accountType() {
-			return this.globalDics.accountType
 		}
 	},
 	mounted() {
