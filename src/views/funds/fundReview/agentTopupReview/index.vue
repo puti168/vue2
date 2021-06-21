@@ -20,7 +20,7 @@
 
 					<el-form-item label="订单号:">
 						<el-input
-							v-model="queryData.auditNum"
+							v-model="queryData.orderNo"
 							clearable
 							size="medium"
 							:maxlength="19"
@@ -31,7 +31,7 @@
 					</el-form-item>
 					<el-form-item label="代理账号:">
 						<el-input
-							v-model="queryData.auditNum"
+							v-model="queryData.orderNo"
 							clearable
 							size="medium"
 							:maxlength="11"
@@ -109,7 +109,7 @@
 							</template>
 						</el-table-column>
 						<el-table-column
-							prop="auditNum"
+							prop="orderNo"
 							align="center"
 							label="订单号"
 						></el-table-column>
@@ -209,13 +209,7 @@ export default {
 	data() {
 		return {
 			queryData: {
-				auditStatusList: [],
-				auditStep: '',
-				lockOrder: '',
-				applyName: '',
-				auditName: '',
-				auditNum: '',
-				orderProperties: '',
+				orderNo: '',
 				orderType: ''
 			},
 			type: true,
@@ -319,7 +313,7 @@ export default {
 				lockOrder: '',
 				applyName: '',
 				auditName: '',
-				auditNum: '',
+				orderNo: '',
 				orderProperties: '',
 				orderType: ''
 			}

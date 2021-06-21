@@ -99,7 +99,24 @@ export function agentWithdrawDetailsAPI(data) {
 	})
 }
 
+// 审核相关
+export function firstAuditAddAudit(data) {
+	return request({
+		url: '/memberArtificialPatchAccountAddAudit/firstAudit/page',
+		method: 'post',
+		data
+	})
+}
+export function secondAddAudit(data) {
+	return request({
+		url: '/memberArtificialPatchAccountAddAudit/second/page',
+		method: 'post',
+		data
+	})
+}
 export default {
+	secondAddAudit,
+	firstAuditAddAudit,
 	memberIncreaseQuotaAPI,
 	memberDeductQuotaAPI,
 	agentIncreaseQuotaAPI,
