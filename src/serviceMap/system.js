@@ -39,13 +39,13 @@ const system = [
 	{
 		id: '112',
 		parentId: '108',
-		path: '/system/authorityManagement/roleManage',
+		path: '/system/authorityManage/roleManage',
 		title: '角色管理'
 	},
 	{
 		id: '113',
 		parentId: '108',
-		path: '/system/authorityManagement/staffManagement',
+		path: '/system/authorityManage/staffManage',
 		title: '职员管理'
 	},
 	{

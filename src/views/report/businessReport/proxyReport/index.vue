@@ -10,7 +10,7 @@
 				>
 					<el-form-item label="统计日期:" prop="registerTime">
 						<el-date-picker
-							v-model="queryData.registerTime"
+							v-model="queryData.countTime"
 							size="medium"
 							:picker-options="pickerOptions"
 							format="yyyy-MM-dd"
@@ -162,7 +162,7 @@
 							icon="el-icon-folder-add"
 							size="medium"
 							:disabled="loading"
-							@click="exportExcel"
+							@click="exportExcelPop = true"
 						>
 							导出
 						</el-button>
@@ -189,8 +189,8 @@
 					style="width: 100%"
 					:header-cell-style="getRowClass"
 					:summary-method="getSummaries"
-                    show-summary
-                    @sort-change="_changeTableSort"
+					show-summary
+					@sort-change="_changeTableSort"
 				>
 					<el-table-column
 						v-if="settingList['代理账号']"
@@ -247,7 +247,7 @@
 						v-if="settingList['账号状态']"
 						prop="accountStatus"
 						align="center"
-                        label="账号状态"
+						label="账号状态"
 						width="120"
 					>
 						<template slot-scope="scope">
@@ -814,6 +814,41 @@
 					<el-button type="primary" @click="confirm">提交</el-button>
 				</div>
 			</el-dialog>
+			<el-dialog
+				title="导出"
+				center
+				:visible.sync="exportExcelPop"
+				width="610px"
+				class="col-setting"
+			>
+				<el-form
+					ref="form"
+					:inline="true"
+					:model="exportForm"
+					label-width="85px"
+				>
+					<el-form-item label="选择日期:">
+						<el-date-picker
+							v-model="exportForm.time"
+							size="medium"
+							:picker-options="pickerOptions"
+							format="yyyy-MM-dd"
+							type="datetimerange"
+							range-separator="-"
+							start-placeholder="开始日期"
+							end-placeholder="结束日期"
+							align="right"
+							clearable
+							value-format="timestamp"
+							style="width: 300px"
+						></el-date-picker>
+					</el-form-item>
+				</el-form>
+				<div slot="footer" class="dialog-footer">
+					<el-button @click="exportExcelPop = false">取 消</el-button>
+					<el-button type="primary" @click="exportExcel">导出</el-button>
+				</div>
+			</el-dialog>
 		</div>
 	</div>
 </template>
@@ -823,28 +858,26 @@ import list from '@/mixins/list'
 import dayjs from 'dayjs'
 // import { UTable } from 'umy-ui'
 import { routerNames } from '@/utils/consts'
-const start = dayjs()
-	.startOf('day')
-	.valueOf()
-const end = dayjs()
-	.endOf('day')
-	.valueOf()
+// const start = dayjs()
+// 	.startOf('day')
+// 	.valueOf()
+// const end = dayjs()
+// 	.endOf('day')
+// 	.valueOf()
+
 export default {
 	name: routerNames.agentReport,
 	mixins: [list],
 	data() {
 		return {
 			queryData: {
-				registerTime: [start, end],
+                countTime: [],
+				registerTime: [],
 				userName: undefined,
 				accountType: [],
 				accountStatus: [],
 				windControlId: undefined,
 				labelId: undefined,
-				subNumMin: undefined,
-				subNumMax: undefined,
-				validSubNumMin: undefined,
-				validSubNumMax: undefined,
 				totalRebateMin: undefined,
 				totalRebateMax: undefined,
 				orderKey: undefined,
@@ -856,6 +889,10 @@ export default {
 			vipDict: [],
 			userLabel: [],
 			visible: false,
+			exportExcelPop: false,
+			exportForm: {
+				time: undefined
+			},
 			settingList: {
 				代理账号: true,
 				姓名: true,
@@ -913,113 +950,113 @@ export default {
 			this.settingList = this.newList
 			this.visible = false
 		},
-        // 总计
-        getSummaries(param) {
-            const { columns, data } = param
-            const sums = []
-            columns.forEach((column, index) => {
-                if (index === 0) {
-                    const el = (
-                        <div class='count_row'>
-                            <p>本页合计</p>
-                            <p>全部合计</p>
-                        </div>
-                    )
-                    sums[index] = el
-                    return
-                }
-                const includeArr = new Map([
-                    ['vipSerialNum', 'vipSerialNum'],
-                    ['depositAmount', 'depositAmount'],
-                    ['depositTotal', 'depositTotal'],
-                    ['firstDepositAmount', 'firstDepositAmount'],
-                    ['transforNum', 'transforNum'],
-                    ['userBalance', 'userBalance']
-                ])
+		// 总计
+		getSummaries(param) {
+			const { columns, data } = param
+			const sums = []
+			columns.forEach((column, index) => {
+				if (index === 0) {
+					const el = (
+						<div class='count_row'>
+							<p>本页合计</p>
+							<p>全部合计</p>
+						</div>
+					)
+					sums[index] = el
+					return
+				}
+				const includeArr = new Map([
+					['vipSerialNum', 'vipSerialNum'],
+					['depositAmount', 'depositAmount'],
+					['depositTotal', 'depositTotal'],
+					['firstDepositAmount', 'firstDepositAmount'],
+					['transforNum', 'transforNum'],
+					['userBalance', 'userBalance']
+				])
 
-                if (includeArr.get(column.property)) {
-                    const values = data.map((item) => Number(item[column.property]))
-                    if (!values.every((value) => isNaN(value))) {
-                        sums[index] = values.reduce((prev, curr) => {
-                            const value = Number(curr)
-                            if (!isNaN(value)) {
-                                return prev + curr
-                            } else {
-                                return prev
-                            }
-                        }, 0)
-                        switch (column.property) {
-                            case 'vipSerialNum':
-                                // eslint-disable-next-line no-case-declarations
-                                let vipTotal
-                                if (!this.totalLoading) {
-                                    vipTotal = (
-                                        <div class='count_row'>
-                                            <p>{sums[index]}</p>
-                                            <p>
-                                                <el-button icon='el-icon-loading' />
-                                            </p>
-                                        </div>
-                                    )
-                                } else {
-                                    vipTotal = (
-                                        <div class='count_row'>
-                                            <p>{sums[index]}</p>
-                                            <p>10000</p>
-                                        </div>
-                                    )
-                                }
-                                return (sums[index] = vipTotal)
-                            case 'depositAmount':
-                                // eslint-disable-next-line no-case-declarations
-                                const depositTotal = (
-                                    <div class='count_row'>
-                                        <p>{sums[index]}</p>
-                                        <p>200</p>
-                                    </div>
-                                )
-                                return (sums[index] = depositTotal)
-                            case 'firstDepositAmount':
-                                // eslint-disable-next-line no-case-declarations
-                                const firstDepositTotal = (
-                                    <div class='count_row'>
-                                        <p>{sums[index]}</p>
-                                        <p>200</p>
-                                    </div>
-                                )
-                                return (sums[index] = firstDepositTotal)
-                            case 'transforNum':
-                                // eslint-disable-next-line no-case-declarations
-                                const transforTotal = (
-                                    <div class='count_row'>
-                                        <p>{sums[index]}</p>
-                                        <p>200</p>
-                                    </div>
-                                )
-                                return (sums[index] = transforTotal)
-                            case 'userBalance':
-                                // eslint-disable-next-line no-case-declarations
-                                const userBalanceTotal = (
-                                    <div class='count_row'>
-                                        <p>{sums[index]}</p>
-                                        <p>200</p>
-                                    </div>
-                                )
-                                return (sums[index] = userBalanceTotal)
-                        }
-                    } else {
-                        sums[index] = ''
-                    }
-                }
-            })
+				if (includeArr.get(column.property)) {
+					const values = data.map((item) => Number(item[column.property]))
+					if (!values.every((value) => isNaN(value))) {
+						sums[index] = values.reduce((prev, curr) => {
+							const value = Number(curr)
+							if (!isNaN(value)) {
+								return prev + curr
+							} else {
+								return prev
+							}
+						}, 0)
+						switch (column.property) {
+							case 'vipSerialNum':
+								// eslint-disable-next-line no-case-declarations
+								let vipTotal
+								if (!this.totalLoading) {
+									vipTotal = (
+										<div class='count_row'>
+											<p>{sums[index]}</p>
+											<p>
+												<el-button icon='el-icon-loading' />
+											</p>
+										</div>
+									)
+								} else {
+									vipTotal = (
+										<div class='count_row'>
+											<p>{sums[index]}</p>
+											<p>10000</p>
+										</div>
+									)
+								}
+								return (sums[index] = vipTotal)
+							case 'depositAmount':
+								// eslint-disable-next-line no-case-declarations
+								const depositTotal = (
+									<div class='count_row'>
+										<p>{sums[index]}</p>
+										<p>200</p>
+									</div>
+								)
+								return (sums[index] = depositTotal)
+							case 'firstDepositAmount':
+								// eslint-disable-next-line no-case-declarations
+								const firstDepositTotal = (
+									<div class='count_row'>
+										<p>{sums[index]}</p>
+										<p>200</p>
+									</div>
+								)
+								return (sums[index] = firstDepositTotal)
+							case 'transforNum':
+								// eslint-disable-next-line no-case-declarations
+								const transforTotal = (
+									<div class='count_row'>
+										<p>{sums[index]}</p>
+										<p>200</p>
+									</div>
+								)
+								return (sums[index] = transforTotal)
+							case 'userBalance':
+								// eslint-disable-next-line no-case-declarations
+								const userBalanceTotal = (
+									<div class='count_row'>
+										<p>{sums[index]}</p>
+										<p>200</p>
+									</div>
+								)
+								return (sums[index] = userBalanceTotal)
+						}
+					} else {
+						sums[index] = ''
+					}
+				}
+			})
 
-            return sums
-        },
+			return sums
+		},
 		loadData() {
 			const create = this.queryData.registerTime || []
-			const lastLogin = this.queryData.lastLoginTime || []
+			const countTime = this.queryData.countTime || []
 			const [startTime, endTime] = create
-			const [lastLoginTimeStart, lastLoginTimeEnd] = lastLogin
+			const [timeStart, timeEnd] = countTime
 			let params = {
 				...this.queryData,
 				createDtStart: startTime
@@ -1028,27 +1065,27 @@ export default {
 				createDtEnd: endTime
 					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
 					: undefined,
-				lastLoginTimeStart: lastLoginTimeStart
-					? dayjs(lastLoginTimeStart).format('YYYY-MM-DD HH:mm:ss')
+				lastLoginTimeStart: timeStart
+					? dayjs(timeStart).format('YYYY-MM-DD HH:mm:ss')
 					: undefined,
-				lastLoginTimeEnd: lastLoginTimeEnd
-					? dayjs(lastLoginTimeEnd).format('YYYY-MM-DD HH:mm:ss')
+				lastLoginTimeEnd: timeEnd
+					? dayjs(timeEnd).format('YYYY-MM-DD HH:mm:ss')
 					: undefined
 			}
 			params = {
 				...this.getParams(params)
 			}
-			if (!startTime && !endTime && !lastLoginTimeStart && !lastLoginTimeEnd) {
-				this.$message({
-					type: 'warning',
-					message: `请选择注册时间, 最后登录时间,任意其中一个时间维度`
-				})
-				return false
-			}
+			// if (!startTime && !endTime && !timeStart && !timeEnd) {
+			// 	this.$message({
+			// 		type: 'warning',
+			// 		message: `请选择统计时间, 注册时间,任意其中一个时间维度`
+			// 	})
+			// 	return false
+			// }
 			this.dataList = []
 			this.loading = true
 			delete params.registerTime
-			delete params.lastLoginTime
+			delete params.countTime
 			this.$api
 				.AgentListAPI(params)
 				.then((res) => {
@@ -1096,25 +1133,17 @@ export default {
 		reset() {
 			this.pageNum = 1
 			this.queryData = {
-				registerTime: [start, end],
-				userName: undefined,
-				invitationCode: undefined,
-				accountType: [],
-				accountStatus: [],
-				windControlId: undefined,
-				lastLoginTime: [],
-				labelId: undefined,
-				entryAuthority: undefined,
-				subNumMin: undefined,
-				subNumMax: undefined,
-				validSubNumMin: undefined,
-				validSubNumMax: undefined,
-				offLineDaysStart: undefined,
-				offLineDaysEnd: undefined,
-				totalRebateMin: undefined,
-				totalRebateMax: undefined,
-				orderKey: undefined,
-				orderType: undefined
+                countTime: [],
+                registerTime: [],
+                userName: undefined,
+                accountType: [],
+                accountStatus: [],
+                windControlId: undefined,
+                labelId: undefined,
+                totalRebateMin: undefined,
+                totalRebateMax: undefined,
+                orderKey: undefined,
+                orderType: undefined
 			}
 			this.$refs['form'].resetFields()
 			this.loadData()
@@ -1155,84 +1184,6 @@ export default {
 		checkValue(e) {
 			const { name, value } = e.target
 			switch (name) {
-				case 'offLineDaysStart':
-					if (
-						!!this.queryData.offLineDaysEnd &&
-						(value && value * 1 > this.queryData.offLineDaysEnd * 1)
-					) {
-						this.$message({
-							type: 'warning',
-							message: `请输入小于${this.queryData.offLineDaysEnd}天数`
-						})
-					} else {
-						this.queryData.offLineDaysStart = value
-					}
-					break
-				case 'offLineDaysEnd':
-					if (
-						!!this.queryData.offLineDaysStart &&
-						(value && value * 1 < this.queryData.offLineDaysStart * 1)
-					) {
-						this.$message({
-							type: 'warning',
-							message: `请输入大于${this.queryData.offLineDaysStart}天数`
-						})
-					} else {
-						this.queryData.offLineDaysEnd = value
-					}
-					break
-				case 'subNumMin':
-					if (
-						!!this.queryData.subNumMax &&
-						(value && value * 1 > this.queryData.subNumMax * 1)
-					) {
-						this.$message({
-							type: 'warning',
-							message: `请输入小于${this.queryData.subNumMax}人数`
-						})
-					} else {
-						this.queryData.subNumMin = value
-					}
-					break
-				case 'subNumMax':
-					if (
-						!!this.queryData.subNumMin &&
-						(value && value * 1 < this.queryData.subNumMin * 1)
-					) {
-						this.$message({
-							type: 'warning',
-							message: `请输入大于${this.queryData.subNumMin}人数`
-						})
-					} else {
-						this.queryData.subNumMax = value
-					}
-					break
-				case 'validSubNumMin':
-					if (
-						!!this.queryData.validSubNumMax &&
-						(value && value * 1 > this.queryData.validSubNumMax * 1)
-					) {
-						this.$message({
-							type: 'warning',
-							message: `请输入小于${this.queryData.validSubNumMax}人数`
-						})
-					} else {
-						this.queryData.validSubNumMin = value
-					}
-					break
-				case 'validSubNumMax':
-					if (
-						!!this.queryData.validSubNumMin &&
-						(value && value * 1 < this.queryData.validSubNumMin * 1)
-					) {
-						this.$message({
-							type: 'warning',
-							message: `请输入大于${this.queryData.validSubNumMin}人数`
-						})
-					} else {
-						this.queryData.validSubNumMax = value
-					}
-					break
 				case 'totalRebateMin':
 					if (
 						!!this.queryData.totalRebateMax &&
@@ -1272,31 +1223,31 @@ export default {
 				})
 		},
 		exportExcel() {
-			const create = this.queryData.registerTime || []
-			const [startTime, endTime] = create
-			const lastLogin = this.queryData.lastLoginTime || []
-			const [lastLoginTimeStart, lastLoginTimeEnd] = lastLogin
+            const create = this.queryData.registerTime || []
+            const countTime = this.queryData.countTime || []
+            const [startTime, endTime] = create
+            const [timeStart, timeEnd] = countTime
+            let params = {
+                ...this.queryData,
+                createDtStart: startTime
+                    ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
+                    : undefined,
+                createDtEnd: endTime
+                    ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
+                    : undefined,
+                lastLoginTimeStart: timeStart
+                    ? dayjs(timeStart).format('YYYY-MM-DD HH:mm:ss')
+                    : undefined,
+                lastLoginTimeEnd: timeEnd
+                    ? dayjs(timeEnd).format('YYYY-MM-DD HH:mm:ss')
+                    : undefined
+            }
 			this.loading = true
-			let params = {
-				...this.queryData,
-				createDtStart: startTime
-					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
-					: undefined,
-				createDtEnd: endTime
-					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
-					: undefined,
-				lastLoginTimeStart: lastLoginTimeStart
-					? dayjs(lastLoginTimeStart).format('YYYY-MM-DD HH:mm:ss')
-					: undefined,
-				lastLoginTimeEnd: lastLoginTimeEnd
-					? dayjs(lastLoginTimeEnd).format('YYYY-MM-DD HH:mm:ss')
-					: undefined
-			}
 			params = {
 				...this.getParams(params)
 			}
 			delete params.registerTime
-			delete params.lastLoginTime
+			delete params.countTime
 			delete params.pageNum
 			delete params.pageSize
 			this.$api
@@ -1377,34 +1328,34 @@ export default {
 	font-weight: 700;
 }
 /deep/ .el-table__body-wrapper {
-    z-index: 2;
+	z-index: 2;
 }
 /deep/ .el-table__footer-wrapper .cell::after {
-    border: 0.5px solid #ebeef5;
-    content: '';
-    position: absolute;
-    top: 41px;
-    left: 0;
-    width: 100%;
+	border: 0.5px solid #ebeef5;
+	content: '';
+	position: absolute;
+	top: 41px;
+	left: 0;
+	width: 100%;
 }
 /deep/ .el-table__fixed-footer-wrapper tr::after {
-    border: 0.5px solid #ebeef5;
-    content: '';
-    position: absolute;
-    top: 41px;
-    left: 0;
-    width: 100%;
+	border: 0.5px solid #ebeef5;
+	content: '';
+	position: absolute;
+	top: 41px;
+	left: 0;
+	width: 100%;
 }
 .count_row {
-    height: 80px;
-    p {
-        height: 40px;
-        line-height: 40px;
-        span {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-        }
-    }
+	height: 80px;
+	p {
+		height: 40px;
+		line-height: 40px;
+		span {
+			display: inline-block;
+			width: 20px;
+			height: 20px;
+		}
+	}
 }
 </style>

@@ -54,7 +54,7 @@
 					<el-input
 						v-model.number="form.mobile"
 						size="medium"
-                        onkeyup="value=value.replace(/^(0+)|[^\d]+/g, '')"
+						onkeyup="value=value.replace(/^(0+)|[^\d]+/g, '')"
 						placeholder="请输入"
 						clearable
 						maxlength="11"
@@ -161,6 +161,7 @@ import { routerNames } from '@/utils/consts'
 import list from '@/mixins/list'
 import { notSpecial2, isHaveEmoji } from '@/utils/validate'
 import { EMAIL_PATTERN } from '@/utils/pattern'
+import Finger from '@/utils/fingerprintjs2'
 import md5 from 'js-md5'
 
 export default {
@@ -171,15 +172,16 @@ export default {
 			loading: false,
 			form: {
 				accountType: '4',
-				username: '',
-				password: '',
-				mobile: '',
-				parentProxyName: '',
+				username: undefined,
+				password: undefined,
+				mobile: undefined,
+				parentProxyName: undefined,
 				gender: '1',
-				vipExperenceValue: '',
-				email: '',
-				realName: '',
-				applyInfo: ''
+				vipExperenceValue: undefined,
+				email: undefined,
+				realName: undefined,
+				applyInfo: undefined,
+				deviceNo: Finger.get()
 			}
 		}
 	},
@@ -285,6 +287,7 @@ export default {
 			}
 		}
 	},
+	async created() {},
 	mounted() {},
 	methods: {
 		add() {
@@ -333,16 +336,17 @@ export default {
 		reset() {
 			this.$refs['form'].resetFields()
 			this.form = {
-				accountType: '4',
-				username: '',
-				password: '',
-				mobile: '',
-				parentProxyName: '',
-				gender: '1',
-				vipExperenceValue: '',
-				email: '',
-				realName: '',
-				applyInfo: ''
+                accountType: '4',
+                username: undefined,
+                password: undefined,
+                mobile: undefined,
+                parentProxyName: undefined,
+                gender: '1',
+                vipExperenceValue: undefined,
+                email: undefined,
+                realName: undefined,
+                applyInfo: undefined,
+                deviceNo: Finger.get()
 			}
 		},
 		checkValue(val) {}

@@ -39,8 +39,8 @@
 								重置
 							</el-button>
 							<el-button
-								type="warning"
-								icon="el-icon-folder"
+								type="success"
+								icon="el-icon-folder-add"
 								:disabled="loading"
 								size="medium"
 								style="padding: 0 5px"
