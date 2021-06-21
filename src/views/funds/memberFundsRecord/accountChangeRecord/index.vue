@@ -21,7 +21,7 @@
           </el-form-item>
           <el-form-item label="会员账号:">
             <el-input
-              v-model="queryData.memberName"
+              v-model="queryData.userName"
               clearable
               :maxlength="11"
               size="medium"
@@ -33,7 +33,7 @@
           </el-form-item>
           <el-form-item label="会员姓名:">
             <el-input
-              v-model="queryData.memberName"
+              v-model="queryData.realName"
               clearable
               :maxlength="6"
               size="medium"
@@ -43,9 +43,9 @@
               @keyup.enter.native="enterSearch"
             ></el-input>
           </el-form-item>
-          <el-form-item label="账号类型:" class="tagheight">
+          <el-form-item label="账号状态:" class="tagheight">
             <el-select
-              v-model="queryData.accountType1"
+              v-model="queryData.accountStatus"
               style="width: 300px"
               multiple
               clearable
@@ -53,7 +53,7 @@
               :popper-append-to-body="false"
             >
               <el-option
-                v-for="item in accountType"
+                v-for="item in accountStatusType"
                 :key="item.code"
                 :label="item.description"
                 :value="item.code"
@@ -62,69 +62,69 @@
           </el-form-item>
           <el-form-item label="风控层级:" class="tagheight">
             <el-select
-              v-model="queryData.accountType"
+              v-model="queryData.windControlId"
               style="width: 300px"
               clearable
               placeholder="默认选择全部"
               :popper-append-to-body="false"
             >
               <el-option
-                v-for="item in accountType"
-                :key="item.code"
-                :label="item.description"
-                :value="item.code"
+                v-for="item in windControlLevelList"
+                :key="item.windControlId"
+                :label="item.windControlName"
+                :value="item.windControlId"
               ></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="VIP等级:">
             <el-input
-              v-model="queryData.betAmountMin"
+              v-model="queryData.vipSerialNumMin"
               size="medium"
               placeholder="最小数值"
               style="width: 100px"
               :maxlength="3"
-              name="betAmountMin"
+              name="vipSerialNumMin"
               oninput="value=value.replace(/[^\d]/g,'')"
               @blur="checkValue($event)"
             ></el-input>
             -
             <el-input
-              v-model="queryData.betAmountMax"
+              v-model="queryData.vipSerialNumMax"
               size="medium"
               placeholder="最大数值"
               style="width: 100px"
               :maxlength="3"
-              name="betAmountMax"
+              name="vipSerialNumMax"
               oninput="value=value.replace(/[^\d]/g,'')"
               @blur="checkValue($event)"
             ></el-input>
           </el-form-item>
-          <el-form-item label="钱包类型:" class="tagheight">
+          <!-- <el-form-item label="钱包类型:" class="tagheight">
             <el-select
-              v-model="queryData.accountType"
+              v-model="queryData.walletType"
               style="width: 300px"
               clearable
               placeholder="默认选择全部"
               :popper-append-to-body="false"
             >
               <el-option
-                v-for="item in accountType"
-                :key="item.code"
-                :label="item.description"
-                :value="item.code"
+                v-for="item in walletTypeList"
+                :key="item.gameId"
+                :label="item.gameName"
+                :value="item.gameId"
               ></el-option>
             </el-select>
-          </el-form-item>
+          </el-form-item> -->
           <el-form-item label="业务类型:" class="tagheight">
             <el-select
-              v-model="queryData.accountType"
+              v-model="queryData.bizType"
               style="width: 300px"
               clearable
               placeholder="默认选择全部"
               :popper-append-to-body="false"
             >
               <el-option
-                v-for="item in accountType"
+                v-for="item in memberAccountBizType"
                 :key="item.code"
                 :label="item.description"
                 :value="item.code"
@@ -133,14 +133,14 @@
           </el-form-item>
           <el-form-item label="账变类型:" class="tagheight">
             <el-select
-              v-model="queryData.accountType"
+              v-model="queryData.type"
               style="width: 300px"
               clearable
               placeholder="默认选择全部"
               :popper-append-to-body="false"
             >
               <el-option
-                v-for="item in accountType"
+                v-for="item in memberAccountChangeType"
                 :key="item.code"
                 :label="item.description"
                 :value="item.code"
@@ -149,14 +149,14 @@
           </el-form-item>
           <el-form-item label="收支类型:" class="tagheight">
             <el-select
-              v-model="queryData.accountType"
+              v-model="queryData.transType"
               style="width: 300px"
               clearable
               placeholder="默认选择全部"
               :popper-append-to-body="false"
             >
               <el-option
-                v-for="item in accountType"
+                v-for="item in accountBizType"
                 :key="item.code"
                 :label="item.description"
                 :value="item.code"
@@ -165,23 +165,23 @@
           </el-form-item>
           <el-form-item label="账变金额 :">
             <el-input
-              v-model="queryData.netAmountMin"
+              v-model="queryData.amountMin"
               size="medium"
               placeholder="最小数值"
               style="width: 100px"
               :maxlength="10"
-              name="netAmountMin"
+              name="amountMin"
               oninput="value=value.replace(/[^\d]/g,'')"
               @blur="checkValue($event)"
             ></el-input>
             -
             <el-input
-              v-model="queryData.netAmountMax"
+              v-model="queryData.amountMax"
               size="medium"
               placeholder="最大数值"
               style="width: 100px"
               :maxlength="10"
-              name="netAmountMax"
+              name="amountMax"
               oninput="value=value.replace(/[^\d]/g,'')"
               @blur="checkValue($event)"
             ></el-input>
@@ -222,6 +222,7 @@
           v-loading="loading"
           border
           show-summary
+          :summary-method="getSummaries"
           size="mini"
           class="small-size-table"
           :data="tableData"
@@ -229,123 +230,125 @@
           :header-cell-style="getRowClass"
           @sort-change="_changeTableSort"
         >
-          <el-table-column prop="id" align="center" width="240px" label="关联订单号">
-            <template slot-scope="scope">
-              <Copy v-if="!!scope.row.id" :title="scope.row.id" :copy="copy">
-                {{ scope.row.memberName }}
-              </Copy>
-              <span v-else>-</span>
-            </template>
-          </el-table-column>
           <el-table-column
-            prop="memberName"
+            prop="eventId"
             align="center"
-            label="会员账号"
-            width="130px"
+            width="240px"
+            fixed
+            label="关联订单号"
           >
             <template slot-scope="scope">
-              <Copy
-                v-if="!!scope.row.memberName"
-                :title="scope.row.memberName"
-                :copy="copy"
-              >
-                {{ scope.row.memberName }}
+              <Copy v-if="!!scope.row.eventId" :title="scope.row.eventId" :copy="copy">
+                {{ scope.row.eventId }}
               </Copy>
               <span v-else>-</span>
             </template>
           </el-table-column>
-          <el-table-column
-            prop="memberName"
-            align="center"
-            label="会员姓名"
-            width="130px"
-          >
+          <el-table-column prop="userName" align="center" label="会员账号" width="130px">
             <template slot-scope="scope">
-              <Copy
-                v-if="!!scope.row.memberName"
-                :title="scope.row.memberName"
-                :copy="copy"
-              >
-                {{ scope.row.memberName }}
+              <Copy v-if="!!scope.row.userName" :title="scope.row.userName" :copy="copy">
+                {{ scope.row.userName }}
+              </Copy>
+              <span v-else>-</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="realName" align="center" label="会员姓名" width="130px">
+            <template slot-scope="scope">
+              <Copy v-if="!!scope.row.realName" :title="scope.row.realName" :copy="copy">
+                {{ scope.row.realName }}
               </Copy>
               <span v-else>-</span>
             </template>
           </el-table-column>
           <el-table-column
-            prop="memberName"
+            prop="parentProxyName"
             align="center"
             label="上级代理"
             width="130px"
           >
             <template slot-scope="scope">
               <Copy
-                v-if="!!scope.row.memberName"
-                :title="scope.row.memberName"
+                v-if="!!scope.row.parentProxyName"
+                :title="scope.row.parentProxyName"
                 :copy="copy"
               >
-                {{ scope.row.memberName }}
+                {{ scope.row.parentProxyName }}
               </Copy>
               <span v-else>-</span>
             </template>
           </el-table-column>
           <el-table-column
-            prop="playerName"
+            prop="windControlName"
             align="center"
             label="风控等级"
             width="180px"
           >
+            <template slot-scope="scope">
+              {{ scope.row.windControlName !== null ? scope.row.windControlName : "-" }}
+            </template>
           </el-table-column>
           <el-table-column
-            prop="parentProxyName"
+            prop="accountStatus"
             align="center"
             label="账号状态"
             width="150px"
           >
             <template slot-scope="scope">
-              <span v-if="scope.row.parentProxyName">{{
-                scope.row.parentProxyName
-              }}</span>
+              <span v-if="scope.row.accountStatus === 1" class="normalRgba">
+                {{ typeFilter(scope.row.accountStatus, "accountStatusType") }}
+              </span>
+              <span v-else-if="scope.row.accountStatus === 2" class="disableRgba">
+                {{ typeFilter(scope.row.accountStatus, "accountStatusType") }}
+              </span>
+              <span v-else-if="scope.row.accountStatus === 3" class="lockingRgba">
+                {{ typeFilter(scope.row.accountStatus, "accountStatusType") }}
+              </span>
+              <span v-else-if="scope.row.accountStatus === 4" class="deleteRgba">
+                {{ typeFilter(scope.row.accountStatus, "accountStatusType") }}
+              </span>
               <span v-else>-</span>
             </template>
           </el-table-column>
           <el-table-column
-            prop="parentProxyName"
+            prop="vipIdName"
             align="center"
             label="VIP等级"
             width="150px"
             sortable="custom"
           >
           </el-table-column>
-          <el-table-column
+          <!-- <el-table-column
             prop="parentProxyName"
             align="center"
             label="钱包类型"
             width="150px"
           >
+          </el-table-column> -->
+          <el-table-column prop="bizType" align="center" label="业务类型" width="150px">
+            <template slot-scope="scope">
+              {{
+                scope.row.bizType === 0
+                  ? "-"
+                  : typeFilter(scope.row.bizType, "memberAccountBizType")
+              }}
+            </template>
+          </el-table-column>
+          <el-table-column prop="type" align="center" label="账变类型" width="150px">
+            <template slot-scope="scope">
+              {{ typeFilter(scope.row.type, "memberAccountChangeType") }}
+            </template>
+          </el-table-column>
+          <el-table-column prop="transType" align="center" label="收支类型" width="150px">
+            <template slot-scope="scope">
+              {{
+                scope.row.transType === 0
+                  ? "-"
+                  : typeFilter(scope.row.transType, "accountBizType")
+              }}
+            </template>
           </el-table-column>
           <el-table-column
-            prop="parentProxyName"
-            align="center"
-            label="业务类型"
-            width="150px"
-          >
-          </el-table-column>
-          <el-table-column
-            prop="parentProxyName"
-            align="center"
-            label="账变类型"
-            width="150px"
-          >
-          </el-table-column>
-          <el-table-column
-            prop="parentProxyName"
-            align="center"
-            label="收支类型"
-            width="150px"
-          >
-          </el-table-column>
-          <el-table-column
-            prop="parentProxyName"
+            prop="amount"
             align="center"
             label="账变金额"
             width="150px"
@@ -353,19 +356,17 @@
           >
           </el-table-column>
           <el-table-column
-            prop="parentProxyName"
+            prop="occurDt"
             align="center"
             label="账变时间"
             width="150px"
             sortable="custom"
           >
           </el-table-column>
-          <el-table-column
-            prop="parentProxyName"
-            align="center"
-            label="备注"
-            width="150px"
-          >
+          <el-table-column prop="remark" align="center" label="备注" width="150px">
+            <template slot-scope="scope">
+              {{ scope.row.remark !== null ? scope.row.remark : "-" }}
+            </template>
           </el-table-column>
         </el-table>
         <!-- 分页 -->
@@ -388,113 +389,83 @@
 <script>
 import list from '@/mixins/list'
 import dayjs from 'dayjs'
-import { routerNames } from '@/utils/consts'
 const startTime = dayjs().startOf('day').valueOf()
 const endTime = dayjs().endOf('day').valueOf()
 
 export default {
-  name: routerNames.gameBetslipTable,
   components: {},
   mixins: [list],
   data() {
     return {
       queryData: {},
-      gameTypeList: [],
       searchTime: [startTime, endTime],
-      netTime: [startTime, endTime],
-      now: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
+      windControlLevelList: [],
+      walletTypeList: [],
       tableData: [],
-      dataList: {}
+      summary: {}
     }
   },
   computed: {
-    accountType() {
-      return this.globalDics.accountType
+    accountStatusType() {
+      return this.globalDics.accountStatusType
     },
-    betDeviceType() {
-      return this.globalDics.betDeviceType
+    memberAccountBizType() {
+      return this.globalDics.memberAccountBizType
+    },
+    memberAccountChangeType() {
+      return this.globalDics.memberAccountChangeType
+    },
+    accountBizType() {
+      return this.globalDics.accountBizType
     }
   },
-  mounted() {
-    this.getGameTypeList()
+  created() {
+    this.getWindControllerLevelDict()
   },
   methods: {
-    getGameTypeList() {
-      this.$api.getMerchantGameGamePlant().then((res) => {
+    getWindControllerLevelDict() {
+      this.$api.getWindControllerLevelDict({ windControlType: 3 }).then((res) => {
         if (res.code === 200) {
-          this.gameTypeList = res.data
+          this.windControlLevelList = res.data
+        }
+      })
+      this.$api.getMerchantGameWalletDic({ windControlType: 3 }).then((res) => {
+        if (res.code === 200) {
+          this.walletTypeList = res.data
         }
       })
     },
     loadData() {
       this.loading = true
       const create = this.searchTime || []
-      const net = this.netTime || []
       const [startTime, endTime] = create
-      const [netAtStart, netAtEnd] = net
       let params = {
         ...this.queryData,
-        createAtStart: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : '',
-        createAtEnd: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : '',
-        netAtStart: netAtStart ? dayjs(netAtStart).format('YYYY-MM-DD HH:mm:ss') : '',
-        netAtEnd: netAtEnd ? dayjs(netAtEnd).format('YYYY-MM-DD HH:mm:ss') : ''
+        occurDtStart: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : '',
+        occurDtEnd: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
       }
       params = {
         ...this.getParams(params)
       }
-      console.log(startTime, endTime, netAtStart, netAtEnd)
-      if (startTime || endTime || netAtStart || netAtEnd) {
-        this.$api
-          .getGameRecordNotes(params)
-          .then((res) => {
-            if (res.code === 200) {
-              this.tableData = res.data.record
-              this.total = res.data.totalRecord
-            }
-            this.loading = false
-          })
-          .catch(() => {
-            this.loading = false
-          })
-      } else {
-        this.loading = false
-        this.$message.warning('请选择一个下注时间或者结算时间')
-      }
+      this.$api
+        .getMemberFundsRecordsAccountChange(params)
+        .then((res) => {
+          if (res.code === 200) {
+            this.tableData = res.data.record
+            this.total = res.data.totalRecord
+            this.summary = res.data.summary
+          }
+          this.loading = false
+        })
+        .catch(() => {
+          this.loading = false
+        })
     },
     reset() {
       this.queryData = {}
       this.searchTime = [startTime, endTime]
-      this.netTime = [startTime, endTime]
       this.pageNum = 1
       this.loadData()
-    },
-    lookMsg(val) {
-      console.log(val)
-      const data = {}
-      data.createAt = val.createAt
-      data.gameCode = val.gameCode
-      data.thirdOrderId = val.thirdOrderId
-      const loading = this.$loading({
-        lock: true,
-        text: 'Loading',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
-      })
-      this.$api
-        .getGameRecordDetail(data)
-        .then((res) => {
-          if (res.code === 200 && res.data.record.length > 0) {
-            this.dataList = res.data.record[0]
-            loading.close()
-          } else {
-            this.dataList = {}
-            loading.close()
-          }
-          console.log(res)
-        })
-        .catch(() => {
-          loading.close()
-        })
     },
     _changeTableSort({ column, prop, order }) {
       if (prop === 'betAmount') {
@@ -522,47 +493,71 @@ export default {
     checkValue(e) {
       const { name, value } = e.target
       switch (name) {
-        case 'betAmountMax':
+        case 'vipSerialNumMax':
           if (
-            !!this.queryData.betAmountMin &&
+            !!this.queryData.vipSerialNumMin &&
             value &&
-            value * 1 <= this.queryData.betAmountMin * 1
+            value * 1 < this.queryData.vipSerialNumMin * 1
           ) {
             this.$message({
               type: 'warning',
               message: `投注金额输入最大值不能小于最小值`
             })
           } else {
-            this.queryData.betAmountMax = value
+            this.queryData.vipSerialNumMax = value
           }
           break
-        case 'netAmountMax':
+        case 'vipSerialNumMin':
           if (
-            !!this.queryData.netAmountMin &&
+            !!this.queryData.vipSerialNumMax &&
             value &&
-            value * 1 < this.queryData.netAmountMin * 1
+            value * 1 > this.queryData.vipSerialNumMax * 1
           ) {
             this.$message({
               type: 'warning',
-              message: `会员输赢输入最大值不能小于最小值`
+              message: `会员输赢输入最小值不能大于最大值`
             })
           } else {
-            this.queryData.netAmountMax = value
+            this.queryData.vipSerialNumMin = value
+          }
+          break
+        case 'amountMax':
+          if (
+            !!this.queryData.amountMin &&
+            value &&
+            value * 1 < this.queryData.amountMin * 1
+          ) {
+            this.$message({
+              type: 'warning',
+              message: `投注金额输入最大值不能小于最小值`
+            })
+          } else {
+            this.queryData.amountMax = value
+          }
+          break
+        case 'amountMin':
+          if (
+            !!this.queryData.amountMax &&
+            value &&
+            value * 1 > this.queryData.amountMax * 1
+          ) {
+            this.$message({
+              type: 'warning',
+              message: `会员输赢输入最小值不能大于最大值`
+            })
+          } else {
+            this.queryData.amountMin = value
           }
           break
       }
     },
     exportExcel() {
       const create = this.searchTime || []
-      const net = this.netTime || []
       const [startTime, endTime] = create
-      const [netAtStart, netAtEnd] = net
       let params = {
         ...this.queryData,
         createAtStart: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : '',
-        createAtEnd: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : '',
-        netAtStart: netAtStart ? dayjs(netAtStart).format('YYYY-MM-DD HH:mm:ss') : '',
-        netAtEnd: netAtEnd ? dayjs(netAtEnd).format('YYYY-MM-DD HH:mm:ss') : ''
+        createAtEnd: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
       }
       params = {
         ...this.getParams(params)
@@ -573,74 +568,104 @@ export default {
       delete params.accountStatus
       delete params.deviceType
       delete params.accountType
-      if (startTime || endTime || netAtStart || netAtEnd) {
-        this.$api
-          .getGameRecordDownload(params)
-          .then((res) => {
-            this.loading = false
-            const { data, status } = res
-            if (res && status === 200) {
-              const { type } = data
-              if (type.includes('application/json')) {
-                const reader = new FileReader()
-                reader.onload = (evt) => {
-                  if (evt.target.readyState === 2) {
-                    const {
-                      target: { result }
-                    } = evt
-                    const ret = JSON.parse(result)
-                    if (ret.code !== 200) {
-                      this.$message({
-                        type: 'error',
-                        message: ret.msg,
-                        duration: 1500
-                      })
-                    }
+      this.$api
+        .getGameRecordDownload(params)
+        .then((res) => {
+          this.loading = false
+          const { data, status } = res
+          if (res && status === 200) {
+            const { type } = data
+            if (type.includes('application/json')) {
+              const reader = new FileReader()
+              reader.onload = (evt) => {
+                if (evt.target.readyState === 2) {
+                  const {
+                    target: { result }
+                  } = evt
+                  const ret = JSON.parse(result)
+                  if (ret.code !== 200) {
+                    this.$message({
+                      type: 'error',
+                      message: ret.msg,
+                      duration: 1500
+                    })
                   }
                 }
-                reader.readAsText(data)
-              } else {
-                const result = res.data
-                const disposition = res.headers['content-disposition']
-                const fileNames = disposition && disposition.split("''")
-                let fileName = fileNames[1]
-                fileName = decodeURIComponent(fileName)
-                const blob = new Blob([result], {
-                  type: 'application/octet-stream'
-                })
-                if ('download' in document.createElement('a')) {
-                  const downloadLink = document.createElement('a')
-                  downloadLink.download = fileName || ''
-                  downloadLink.style.display = 'none'
-                  downloadLink.href = URL.createObjectURL(blob)
-                  document.body.appendChild(downloadLink)
-                  downloadLink.click()
-                  URL.revokeObjectURL(downloadLink.href)
-                  document.body.removeChild(downloadLink)
-                } else {
-                  window.navigator.msSaveBlob(blob, fileName)
-                }
-                this.$message({
-                  type: 'success',
-                  message: '导出成功',
-                  duration: 1500
-                })
               }
+              reader.readAsText(data)
+            } else {
+              const result = res.data
+              const disposition = res.headers['content-disposition']
+              const fileNames = disposition && disposition.split("''")
+              let fileName = fileNames[1]
+              fileName = decodeURIComponent(fileName)
+              const blob = new Blob([result], {
+                type: 'application/octet-stream'
+              })
+              if ('download' in document.createElement('a')) {
+                const downloadLink = document.createElement('a')
+                downloadLink.download = fileName || ''
+                downloadLink.style.display = 'none'
+                downloadLink.href = URL.createObjectURL(blob)
+                document.body.appendChild(downloadLink)
+                downloadLink.click()
+                URL.revokeObjectURL(downloadLink.href)
+                document.body.removeChild(downloadLink)
+              } else {
+                window.navigator.msSaveBlob(blob, fileName)
+              }
+              this.$message({
+                type: 'success',
+                message: '导出成功',
+                duration: 1500
+              })
             }
+          }
+        })
+        .catch(() => {
+          this.loading = false
+          this.$message({
+            type: 'error',
+            message: '导出失败',
+            duration: 1500
           })
-          .catch(() => {
-            this.loading = false
-            this.$message({
-              type: 'error',
-              message: '导出失败',
-              duration: 1500
-            })
-          })
-      } else {
-        this.$message.warning('请选择一个下注时间或者结算时间')
-      }
+        })
     },
-    enterSubmit() {
+    getSummaries(param) {
+      const { columns } = param
+      const sums = []
+      columns.forEach((index) => {
+        if (index === 0) {
+          const el = (
+            <div class='count_row'>
+              <p>本页合计</p>
+              <p>全部合计</p>
+            </div>
+          )
+          sums[index] = el
+          return
+        } else if (index === 10) {
+          const el = (
+            <div class='count_row'>
+              <p>{this.summary.subtotal}</p>
+              <p>{this.summary.total}</p>
+            </div>
+          )
+          sums[index] = el
+          return
+        } else {
+          sums[index] = (
+            <div class='count_row'>
+              <p>-</p>
+              <p>-</p>
+            </div>
+          )
+        }
+      })
+
+      return sums
+    },
+    enterSearch() {
       this.loadData()
     }
   }
@@ -648,9 +673,44 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-/deep/ .tagheight .el-tag {
-  // height: 24px;
-  // line-height: 24px;
-  // min-width: 60px;
+/deep/ .el-table__footer-wrapper .cell::after {
+  border: 1px solid #ebeef5;
+  content: "";
+  position: absolute;
+  top: 41px;
+  left: 0;
+  width: 100%;
+}
+
+/deep/ .el-table__fixed-footer-wrapper tr::after {
+  border: 1px solid #ebeef5;
+  content: "";
+  position: absolute;
+  top: 41px;
+  left: 0;
+  width: 100%;
+}
+.count_row {
+  height: 80px;
+  p {
+    height: 40px;
+    line-height: 40px;
+    span {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+    }
+  }
+}
+/deep/.el-table {
+  overflow: auto;
+}
+/deep/.el-table__body-wrapper,
+/deep/.el-table__header-wrapper,
+/deep/.el-table__footer-wrapper {
+  // overflow: visible;
+}
+/deep/.el-table::after {
+  position: relative !important;
 }
 </style>

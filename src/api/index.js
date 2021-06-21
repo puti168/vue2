@@ -9,6 +9,7 @@ import game from './game'
 import agent from './agent'
 import control from './control'
 import vipConfig from './vipConfig'
+import memberFunds from './memberFunds'
 
 export default {
 	...bankController,
@@ -21,5 +22,6 @@ export default {
 	...game,
 	...agent,
 	...control,
-	...vipConfig
+	...vipConfig,
+	...memberFunds
 }
