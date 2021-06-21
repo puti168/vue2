@@ -119,5 +119,6 @@ export default {
 	memberIncreaseQuotaDetailsAPI,
 	agentWithdrawRecordAPI,
 	agentWithdrawDetailsAPI,
+	memberIncreaseSearchAPI,
 	getImageIdAPI
 }

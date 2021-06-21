@@ -20,28 +20,28 @@
 						clearable
 						autocomplete="off"
 						style="width: 365px"
+						@blur="searchRealName"
 					></el-input>
 				</el-form-item>
-				<el-form-item label="会员姓名:" prop="realName">
+				<el-form-item label="会员姓名:">
 					<el-input
 						v-model="queryData.realName"
 						size="medium"
 						maxlength="6"
-						oninput="value=value.replace(/[\u4E00-\u9FA5]/g ,'')"
 						placeholder="请输入会员姓名"
 						clearable
+						disabled
 						autocomplete="off"
 						style="width: 365px"
 					></el-input>
 				</el-form-item>
-				<el-form-item label="账户余额:" prop="balance">
+				<el-form-item label="账户余额:">
 					<el-input
-						v-model="queryData.balance"
+						v-model="queryData.accountBalance"
 						size="medium"
 						maxlength="11"
 						placeholder="请输入"
 						clearable
-						onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
 						autocomplete="off"
 						style="width: 365px"
 						disabled
@@ -49,16 +49,16 @@
 					<span>元</span>
 					<el-button
 						type="primary"
-						style="margin-left: 20px"
+						style="margin-left: 20px;"
 						@click="searchBalance"
 					>
-						<i v-show="loadingT" class="el-icon-loading"></i>
+						<i v-show="loading" class="el-icon-loading"></i>
 						查询
 					</el-button>
 				</el-form-item>
-				<el-form-item label="操作类型:" prop="operationType">
+				<el-form-item label="操作类型:" prop="adjustType">
 					<el-select
-						v-model="queryData.operationType"
+						v-model="queryData.adjustType"
 						size="medium"
 						placeholder="请选择"
 						clearable
@@ -74,19 +74,28 @@
 						></el-option>
 					</el-select>
 				</el-form-item>
-				<el-form-item label="活动ID" prop="activeId">
+				<el-form-item
+					v-if="queryData.adjustType === '1'"
+					label="活动ID"
+					prop="activeId"
+				>
 					<el-input
 						v-model="queryData.activeId"
 						size="medium"
 						maxlength="11"
 						placeholder="请输入"
 						clearable
-						onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
-						style="width: 365px"
+                        oninput="value=value.replace(/[\u4E00-\u9FA5]/g ,'')"
+                        style="width: 365px"
 						@blur="checkValue"
 					></el-input>
 				</el-form-item>
-				<el-form-item label="需求流水倍数" prop="water" label-width="120px">
+				<el-form-item
+					v-if="queryData.adjustType === '1'"
+					label="需求流水倍数"
+					prop="water"
+					label-width="120px"
+				>
 					<el-input
 						v-model="queryData.water"
 						size="medium"
@@ -98,9 +107,13 @@
 						@blur="checkValue"
 					></el-input>
 				</el-form-item>
-				<el-form-item label="操作金额:" prop="operationMoney">
+				<el-form-item
+					v-if="queryData.adjustType === '1'"
+					label="操作金额:"
+					prop="amount"
+				>
 					<el-input
-						v-model="queryData.operationMoney"
+						v-model="queryData.amount"
 						size="medium"
 						placeholder="请输入"
 						clearable
@@ -110,9 +123,9 @@
 					></el-input>
 					<span>元</span>
 				</el-form-item>
-				<el-form-item label="审核原因:" prop="reason">
+				<el-form-item label="审核原因:" prop="remark">
 					<el-input
-						v-model="queryData.reason"
+						v-model="queryData.remark"
 						size="medium"
 						type="textarea"
 						placeholder="请输入"
@@ -170,11 +183,13 @@ export default {
 			queryData: {
 				userName: undefined,
 				realName: undefined,
-				balance: undefined,
-				operationType: undefined,
-				operationMoney: undefined,
-				reason: undefined,
+				accountType: undefined,
+				accountBalance: undefined,
+				adjustType: undefined,
+				amount: undefined,
+                remark: undefined,
 				imageAddress: undefined,
+				imageAnnexId: undefined,
 				activeId: undefined,
 				water: undefined
 			},
@@ -209,7 +224,7 @@ export default {
 				{ required: true, message: '请输入会员姓名', trigger: 'blur' }
 			]
 
-			const operationType = [
+			const adjustType = [
 				{ required: true, message: '请选择操作类型', trigger: 'change' }
 			]
 
@@ -217,7 +232,7 @@ export default {
 				{ required: true, message: '请输入活动ID', trigger: 'blur' }
 			]
 
-			const operationMoney = [
+			const amount = [
 				{ required: true, message: '请输入操作金额', trigger: 'blur' }
 			]
 
@@ -225,28 +240,28 @@ export default {
 				{ required: true, message: '请输入提款流水倍数', trigger: 'blur' }
 			]
 
-			const reason = [
+			const remark = [
 				{ required: true, message: '请输入申请原因', trigger: 'blur' }
 			]
 
 			return {
 				userName,
 				realName,
-				operationType,
-				operationMoney,
+				adjustType,
+				amount,
 				activeId,
 				water,
-				reason
+                remark
 			}
 		}
 	},
 	mounted() {
-	    this.getRelationId()
-    },
+		this.getRelationId()
+	},
 	methods: {
 		getRelationId() {
 			this.$api.getImageIdAPI().then((res) => {
-				console.log('res', res)
+				this.queryData.imageAnnexId = res.data
 			})
 		},
 		add() {
@@ -255,13 +270,11 @@ export default {
 				...this.queryData
 			}
 			let lock = true
-			params.windControlType = params.windControlType * 1
-			params.proxyUserName ? (params.userName = params.proxyUserName) : null
 			this.$refs['form'].validate((valid) => {
-				if (valid && lock && !this.tipsShow) {
+				if (valid && lock) {
 					lock = false
 					this.$api
-						.riskEditAddAPI(params)
+						.memberIncreaseQuotaAPI(params)
 						.then((res) => {
 							this.loadingT = false
 							lock = true
@@ -297,207 +310,59 @@ export default {
 			this.queryData = {
 				userName: undefined,
 				realName: undefined,
-				balance: undefined,
-				operationType: undefined,
-				operationMoney: undefined,
-				reason: undefined,
+				accountBalance: undefined,
+				adjustType: undefined,
+				amount: undefined,
+                remark: undefined,
 				imageAddress: undefined,
 				activeId: undefined,
 				water: undefined
 			}
 		},
-		changeRiskType(evt) {
-			this.$refs['form'].resetFields()
-			this.showInfoData = {}
-			this.queryData = {}
-			// this.getMerchantDict(evt)
-		},
-		// 获取风控层级
-		getMerchantDict(val) {},
-		searchInfo() {
-			const { windControlType } = this.queryData
-			// console.log('this.queryData', this.queryData)
-			switch (windControlType) {
-				case '1': {
-					const { userName } = this.queryData
-					this.$refs.form.validateField('userName')
-					if (userName) {
-						this.$refs.form.clearValidate('windControlName')
-						this.$refs.form.clearValidate('windReason')
-						this.queryInfoData({ userName }, windControlType).then((res) => {
-							const { id } = res
-							if (!id) {
-								this.tipsShow = '查询的风险会员不存在'
-								return this.$message({
-									message: '查询的风险会员不存在',
-									type: 'error'
-								})
-							} else {
-								this.tipsShow = null
-								this.current = 0
-							}
-						})
-					}
-					break
-				}
-				case '2': {
-					const { proxyUserName } = this.queryData
-					this.$refs.form.validateField('proxyUserName')
-					if (proxyUserName) {
-						this.$refs.form.clearValidate('windControlName')
-						this.$refs.form.clearValidate('windReason')
-						this.queryInfoData(
-							{ userName: proxyUserName },
-							windControlType
-						).then((res) => {
-							const { id } = res
-							this.tipsShow = '查询的风险代理不存在'
-							if (!id) {
-								return this.$message({
-									message: '查询的风险代理不存在',
-									type: 'error'
-								})
-							} else {
-								this.tipsShow = null
-								this.current = 1
-							}
-						})
-					}
-					break
-				}
-				case '3': {
-					const { cardNumber } = this.queryData
-					this.$refs.form.validateField('cardNumber')
-					if (cardNumber) {
-						this.$refs.form.clearValidate('windControlName')
-						this.$refs.form.clearValidate('windReason')
-						this.queryInfoData({ cardNumber }, windControlType).then((res) => {
-							const { id } = res
-							this.tipsShow = '查询的银行卡信息不存在'
-							if (!id) {
-								return this.$message({
-									message: '查询的银行卡信息不存在',
-									type: 'error'
-								})
-							} else {
-								this.tipsShow = null
-								this.current = 2
-							}
-						})
-					}
-					break
-				}
-				case '4': {
-					const { virtualAddress } = this.queryData
-					if (virtualAddress) {
-						this.$refs.form.clearValidate('windControlName')
-						this.$refs.form.clearValidate('windReason')
-						this.queryInfoData({ virtualAddress }, windControlType).then(
-							(res) => {
-								const { id } = res
-								this.tipsShow = '查询的虚拟币账号不存在'
-								if (!id) {
-									return this.$message({
-										message: '查询的虚拟币账号不存在',
-										type: 'error'
-									})
-								} else {
-									this.tipsShow = null
-									this.current = 3
-								}
-							}
-						)
-					}
-					break
-				}
-				case '5': {
-					const { registerIp } = this.queryData
-					if (registerIp) {
-						this.$refs.form.clearValidate('windControlName')
-						this.$refs.form.clearValidate('windReason')
-						this.queryInfoData({ registerIp }, windControlType).then((res) => {
-							const { id } = res
-							this.tipsShow = '查询的风险IP不存在'
-							if (!id) {
-								return this.$message({
-									message: '查询的风险IP不存在',
-									type: 'error'
-								})
-							} else {
-								this.tipsShow = null
-								this.current = 4
-							}
-						})
-					}
-					break
-				}
-				case '6': {
-					const { deviceNo } = this.queryData
-					if (deviceNo) {
-						this.$refs.form.clearValidate('windControlName')
-						this.$refs.form.clearValidate('windReason')
-						this.queryInfoData({ deviceNo }, windControlType).then((res) => {
-							const { id } = res
-							this.tipsShow = '查询的风险终端号不存在'
-							if (!id) {
-								return this.$message({
-									message: '查询的风险终端号不存在',
-									type: 'error'
-								})
-							} else {
-								this.tipsShow = null
-								this.current = 5
-							}
-						})
-					}
-					break
-				}
-			}
-		},
-		queryInfoData(value, windControlType) {
-			let lock = true
-			this.showInfoData = {}
-			if (lock) {
-				this.loading = true
-				return new Promise((resolve) => {
-					this.$api
-						.riskEditInfoAPI({ ...value, windControlType })
-						.then((res) => {
-							lock = false
-							this.loading = false
-							const { code, data } = res
-							if (code === 200) {
-								if (data) {
-									this.showInfoData = data.id ? data : {}
-									resolve(data)
-								} else {
-									this.showInfoData = {}
-								}
-							} else {
-								this.showInfoData = {}
-							}
-						})
-						.catch(() => {
-							this.loading = false
-							this.tipsShow = '会员账号不存在'
-							lock = false
-						})
-				})
-			}
-			setTimeout(() => {
-				this.loading = false
-				lock = true
-			}, 1500)
-		},
 		checkRiskValue(val) {
 			// console.log('val', val)
-			this.queryData.windControlName = val.windControlLevelName
-			this.queryData.windControlLevelId = val.id
+			// this.queryData.windControlName = val.windControlLevelName
+			// this.queryData.windControlLevelId = val.id
 		},
 		checkValue() {
 			// this.tipsShow = null
 		},
-		searchBalance() {},
+		searchRealName() {
+			const { userName } = this.queryData
+			if (userName) {
+				this.$api.memberIncreaseSearchAPI({ userName }).then((res) => {
+					const { code, data } = res
+					if (code === 200) {
+						const { realName, accountType } = data
+						this.queryData.realName = realName
+						this.queryData.accountType = accountType
+					}
+				})
+			}
+		},
+		searchBalance() {
+			const { userName } = this.queryData
+			if (userName) {
+				this.loading = true
+				this.$api
+					.memberIncreaseSearchAPI({ userName })
+					.then((res) => {
+						this.loading = false
+						const { code, data } = res
+						if (code === 200) {
+							const { balance } = data
+							this.queryData.accountBalance = balance + ''
+						}
+					})
+					.catch(() => {
+						this.loading = false
+					})
+
+				setTimeout(() => {
+					this.loading = false
+				}, 1000)
+			}
+		},
 		handleStartUpload() {
 			this.$message.info('图片开始上传')
 		},
