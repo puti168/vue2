@@ -111,13 +111,6 @@
 							</template>
 						</el-table-column>
 						<el-table-column
-							v-if="activeName === '0'"
-							prop="orderNo"
-							align="center"
-							label="订单号"
-						></el-table-column>
-						<el-table-column
-							v-else
 							prop="orderNo"
 							align="center"
 							label="审核订单号"
@@ -125,12 +118,12 @@
 						<el-table-column
 							prop="userName"
 							align="center"
-							label="会员账号"
+							label="代理账号"
 						></el-table-column>
 						<el-table-column
 							prop="realName"
 							align="center"
-							label="会员姓名"
+							label="代理姓名"
 						></el-table-column>
 						<el-table-column
 							prop="applyTime"
