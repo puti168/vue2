@@ -9,6 +9,7 @@ import game from './game'
 import agent from './agent'
 import control from './control'
 import vipConfig from './vipConfig'
+import memberFunds from './memberFunds'
 import funds from './funds'
 import operation from './operation'
 
@@ -24,6 +25,7 @@ export default {
 	...agent,
 	...control,
 	...vipConfig,
+	...memberFunds,
 	...funds,
 	...operation
 }
