@@ -64,6 +64,8 @@
           v-loading="loading"
           border
           size="mini"
+          show-summary
+          :summary-method="getSummaries"
           class="small-size-table"
           :data="tableData"
           style="width: 100%"
@@ -157,34 +159,7 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <div slot="append">
-            <div ref="sum_xiaoji" class="sum_footer">
-              <div class="sum_footer_unit">本页合计</div>
-              <div class="sum_footer_unit">
-                {{ getXiaoji("gameRebateRate") }}
-              </div>
-              <div class="sum_footer_unit">{{ getXiaoji("gameIcon") }}</div>
-              <div class="sum_footer_unit">{{ getXiaoji("gameIcon") }}</div>
-              <div class="sum_footer_unit">{{ getXiaoji("gameIcon") }}</div>
-              <div class="sum_footer_unit">{{ getXiaoji("gameIcon") }}</div>
-              <div class="sum_footer_unit">{{ getXiaoji("gameIcon") }}</div>
-              <div class="sum_footer_unit">{{ getXiaoji("gameId") }}</div>
-              <div class="sum_footer_unit">{{ getXiaoji("gameStatus") }}</div>
-              <div class="sum_footer_unit">{{ getXiaoji("gameStatus") }}</div>
-            </div>
-            <div ref="sum_heji" class="sum_footer">
-              <div class="sum_footer_unit">全部合计</div>
-              <div class="sum_footer_unit">200</div>
-              <div class="sum_footer_unit">200</div>
-              <div class="sum_footer_unit">200</div>
-              <div class="sum_footer_unit">200</div>
-              <div class="sum_footer_unit">200</div>
-              <div class="sum_footer_unit">200</div>
-              <div class="sum_footer_unit">200</div>
-              <div class="sum_footer_unit">200</div>
-              <div class="sum_footer_unit">20000000</div>
-            </div>
-          </div>
+
         </el-table>
         <!-- 分页 -->
         <el-pagination
@@ -233,17 +208,8 @@ export default {
       queryData: {},
       searchTime: [startTime, endTime],
       queryText: '查询',
-      t: 10,
       tableData: [],
       dataList: {},
-      checkAll: false,
-      checkedVenue: ['1', '2'],
-      venueList: [
-        { value: '1', label: '上海' },
-        { value: '2', label: '北京' },
-        { value: '3', label: '广州' },
-        { value: '4', label: '深圳' }
-      ],
       isIndeterminate: true,
       gameList: [],
       page: 1,
@@ -263,7 +229,6 @@ export default {
     if (localStorage.getItem('venueProfitAndLoss')) {
       this.settingList = JSON.parse(localStorage.getItem('venueProfitAndLoss'))
     }
-    this.adjustWidth()
   },
 
   methods: {
@@ -304,7 +269,6 @@ export default {
       }, 1000)
       this.loadData()
     },
-
     reset() {
       this.queryData = {}
       this.searchTime = [startTime, endTime]
@@ -452,33 +416,61 @@ export default {
         this.newList[item] = true
       })
     },
-    adjustWidth() {
-      this.$nextTick(() => {
-        const len = this.$refs.sum_xiaoji.children.length
-        Array.from(this.$refs.tables.$refs.headerWrapper.querySelectorAll('col')).forEach(
-          (n, i) => {
-            if (i < len) {
-              this.$refs.sum_xiaoji.children[i].style =
-                'width:' + n.getAttribute('width') + '1px'
-              this.$refs.sum_heji.children[i].style =
-                'width:' + n.getAttribute('width') + '1px'
+     getSummaries(param) {
+      const { columns, data } = param
+      const sums = []
+      columns.forEach((column, index) => {
+        if (index === 0) {
+          const el = (
+            <div class='count_row'>
+              <p>本页合计</p>
+              <p>全部合计</p>
+            </div>
+          )
+          sums[index] = el
+          return
+        }
+        const values = data.map((item) => Number(item[column.property]))
+        if (!values.every((value) => isNaN(value))) {
+          sums[index] = values.reduce((prev, curr) => {
+            const value = Number(curr)
+            if (!isNaN(value)) {
+              return prev + curr
+            } else {
+              return prev
             }
-          }
-        )
+          }, 0)
+          sums[index] = (
+            <div class='count_row'>
+              <p>{sums[index]}</p>
+              <p>2000</p>
+            </div>
+          )
+        } else {
+          sums[index] = ''
+        }
       })
-    },
-    getXiaoji(name) {
-      var sum = 0
-      this.tableData.forEach((n, i) => {
-        sum += parseFloat(n[name] * 1)
-      })
-      return sum
+
+      return sums
     }
+
   }
 }
 </script>
 
 <style lang="scss" scoped>
+.count_row {
+  height: 80px;
+  p {
+    height: 40px;
+    line-height: 40px;
+    span {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+    }
+  }
+}
 .sum_footer {
   display: flex;
   display: -webkit-flex;

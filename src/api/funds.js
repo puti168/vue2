@@ -3,7 +3,7 @@ import request from '@/utils/request'
 // 资金 ===> 资金调整 ==> 会员人工增加额度
 export function memberIncreaseQuotaAPI(data) {
 	return request({
-		url: '/user/queryMember',
+		url: '/memberArtificialPatchAccountAdd/apply',
 		method: 'post',
 		data
 	})
@@ -15,6 +15,15 @@ export function memberIncreaseSearchAPI(data) {
 		url: '/artificialPatch/getMemberBalance',
 		method: 'post',
 		data
+	})
+}
+
+// 图片id
+export function getImageIdAPI(params) {
+	return request({
+		url: '/imageManagement/getRelationId',
+		method: 'GET',
+		params
 	})
 }
 
@@ -48,7 +57,7 @@ export function agentDeductQuotaAPI(data) {
 // 资金 ===> 资金审核记录 ==> 会员提款审核记录
 export function memberWithdrawRecordAPI(data) {
 	return request({
-		url: '/user/queryMember',
+		url: '/FundsAuthRecords/memberWithDraw',
 		method: 'post',
 		data
 	})
@@ -66,7 +75,7 @@ export function memberWithdrawDetailsAPI(data) {
 // 资金 ===> 资金审核记录 ==> 会员人工增加额度记录
 export function memberIncreaseQuotaRecordAPI(data) {
 	return request({
-		url: '/user/queryMember',
+		url: '/FundsAuthRecords/memberAddAudit',
 		method: 'post',
 		data
 	})
@@ -84,7 +93,7 @@ export function memberIncreaseQuotaDetailsAPI(data) {
 // 资金 ===> 资金审核记录 ==> 代理提款审核记录
 export function agentWithdrawRecordAPI(data) {
 	return request({
-		url: '/user/queryMember',
+		url: '/FundsAuthRecords/proxyWithDraw',
 		method: 'post',
 		data
 	})
@@ -182,5 +191,7 @@ export default {
 	memberIncreaseQuotaRecordAPI,
 	memberIncreaseQuotaDetailsAPI,
 	agentWithdrawRecordAPI,
-	agentWithdrawDetailsAPI
+	agentWithdrawDetailsAPI,
+	memberIncreaseSearchAPI,
+	getImageIdAPI
 }
