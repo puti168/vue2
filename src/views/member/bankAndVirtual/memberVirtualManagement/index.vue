@@ -719,7 +719,7 @@ export default {
             })
           } else {
             delete params.status
-            if (!this.checked) {
+            if (this.checked) {
               params.bindStatus = 0
             }
             this.$api.setUpdateUserBankAndVirtualBindStatus(params).then((res) => {

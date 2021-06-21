@@ -108,7 +108,80 @@ export function agentWithdrawDetailsAPI(data) {
 	})
 }
 
+// 审核相关
+export function selectMemberWithdrawUser(data) {
+	return request({
+		url: '/memberWithDraw/selectMemberWithdrawUser',
+		method: 'post',
+		data
+	})
+}
+export function selectMemberWithDrawAuthEsPageOne(data) {
+	return request({
+		url: '/memberWithDrawUserOne/selectMemberWithDrawAuthEsPageOne',
+		method: 'post',
+		data
+	})
+}
+export function updateWithdrawLock(data) {
+	return request({
+		url: '/memberWithDraw/updateWithdrawLock',
+		method: 'post',
+		data
+	})
+}
+export function firstAuditAddAudit(data) {
+	return request({
+		url: '/memberArtificialPatchAccountAddAudit/firstAudit/page',
+		method: 'post',
+		data
+	})
+}
+export function secondAddAudit(data) {
+	return request({
+		url: '/memberArtificialPatchAccountAddAudit/second/page',
+		method: 'post',
+		data
+	})
+}
+export function updateWithDrawAuthOne(data) {
+	return request({
+		url: '/memberWithDrawUserOne/updateWithDrawAuthOne',
+		method: 'post',
+		data
+	})
+}
+export function selectMemberWithDrawAuthEsPageThree(data) {
+	return request({
+		url: '/memberWithDrawUserThree/selectMemberWithDrawAuthEsPageThree',
+		method: 'post',
+		data
+	})
+}
+export function selectMemberWithDrawAuthEsPageTwo(data) {
+	return request({
+		url: '/memberWithDrawUserTwo/selectMemberWithDrawAuthEsPageTwo',
+		method: 'post',
+		data
+	})
+}
+export function selectMemberWithDrawAuthEsPagePay(data) {
+	return request({
+		url: '/memberWithDrawUserPay/selectMemberWithDrawAuthEsPagePay',
+		method: 'post',
+		data
+	})
+}
 export default {
+	selectMemberWithDrawAuthEsPagePay,
+	selectMemberWithDrawAuthEsPageThree,
+	selectMemberWithDrawAuthEsPageTwo,
+	selectMemberWithdrawUser,
+	updateWithdrawLock,
+	updateWithDrawAuthOne,
+	selectMemberWithDrawAuthEsPageOne,
+	secondAddAudit,
+	firstAuditAddAudit,
 	memberIncreaseQuotaAPI,
 	memberDeductQuotaAPI,
 	agentIncreaseQuotaAPI,
