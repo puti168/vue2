@@ -19,7 +19,7 @@
 					</el-form-item>
 					<el-form-item label="锁单状态:">
 						<el-select
-							v-model="queryData.lockStatus"
+							v-model="queryData.lockOrder"
 							style="width: 180px"
 							:popper-append-to-body="false"
 						>
@@ -86,7 +86,7 @@
 									v-if="
 										scope.row.lockAccount === name || !scope.row.lockAccount
 									"
-									v-model="scope.row.lockStatus"
+									v-model="scope.row.lockOrder"
 									@change="lockChange(scope.row)"
 								></el-checkbox>
 							</template>
@@ -100,13 +100,11 @@
 							<template slot-scope="scope">
 								<el-button
 									:class="scope.row.lockAccount !== name ? 'dis' : ''"
-									:type="
-										Number(scope.row.auditStep) === 0 ? 'success' : 'primary'
-									"
+									type="primary"
 									size="medium"
 									@click="goDetail(scope.row)"
 								>
-									{{ typeFilter(scope.row.auditStep, 'auditStepType') }}
+									{{ activeName === '0' ? '一审审核' : '二审审核' }}
 								</el-button>
 							</template>
 						</el-table-column>
@@ -147,11 +145,11 @@
 							align="center"
 							label="申请时间"
 						></el-table-column>
-						<el-table-column
-							prop="applyTime"
-							align="center"
-							label="审核状态"
-						></el-table-column>
+						<el-table-column align="center" label="审核状态">
+							<template slot-scope="scope">
+								{{ typeFilter(scope.row.orderStatus, 'patchAdjustStatus') }}
+							</template>
+						</el-table-column>
 					</el-table>
 					<!-- 分页 -->
 					<el-pagination
@@ -190,7 +188,7 @@ export default {
 	data() {
 		return {
 			queryData: {
-				lockStatus: '',
+				lockOrder: '',
 				orderNo: ''
 			},
 			type: true,
@@ -243,10 +241,10 @@ export default {
 						this.dataList = response.record
 						if (this.dataList) {
 							this.dataList.forEach((item) => {
-								if (Number(item.lockOrder) === 1) {
-									item.lockStatus = true
+								if (Number(item.lockStatus) === 1) {
+									item.lockOrder = true
 								} else {
-									item.lockStatus = false
+									item.lockOrder = false
 								}
 							})
 						}
@@ -274,7 +272,7 @@ export default {
 		},
 		reset() {
 			this.queryData = {
-				lockStatus: '',
+				lockOrder: '',
 				orderNo: ''
 			}
 			this.formTime = {
@@ -292,7 +290,7 @@ export default {
 			this.$api
 				.lockProxyAuditRecord({
 					id: val.id,
-					lockFlag: Number(val.lockOrder) === 0 ? 0 : 1
+					lockFlag: Number(val.lockStatus) === 0 ? 0 : 1
 				})
 				.then((res) => {
 					if (res.code === 200) {

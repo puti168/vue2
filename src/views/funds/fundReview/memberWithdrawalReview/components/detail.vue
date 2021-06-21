@@ -4,8 +4,8 @@
 			<span class="title">会员提现审核详情</span>
 			<div v-if="type" class="right-btn">
 				<el-button plain @click="goBack">取消</el-button>
-				<el-button type="success" @click="confirm(true)">一审通过</el-button>
-				<el-button type="danger" @click="confirm(false)">一审拒绝</el-button>
+				<el-button type="success" @click="confirm(true)">{{ activeName === '0' ? '一审通过' : activeName === '1' ? '二审通过' : '三审通过' }}</el-button>
+				<el-button type="danger" @click="confirm(false)">{{ activeName === '0' ? '一审拒绝' : activeName === '1' ? '二审拒绝' : '三审拒绝' }}</el-button>
 			</div>
 			<div v-else class="right-btn">
 				<el-button plain @click="goBack">返回</el-button>
@@ -350,6 +350,10 @@ export default {
 	props: {
 		// 审核 true 仅返回 false
 		type: Boolean,
+		activeName: {
+			type: String,
+			default: ''
+		},
 		rowData: {
 			type: Object,
 			default: () => {}
@@ -398,8 +402,10 @@ export default {
 				const params = {
 					id: this.rowData.id,
 					userId: this.rowData.userId,
-					auditRemark: this.form.remark,
-					auditStatus: this.action ? 2 : 3
+					userType: 1,
+					transType: 2,
+					auditDesc: this.form.remark,
+					auditResult: this.action ? 1 : 2
 				}
 
 				this.$api
@@ -434,8 +440,10 @@ export default {
 						})
 						const params = {
 							id: this.rowData.id,
-							auditRemark: this.form.remark,
-							auditStatus: this.action ? 2 : 3
+							auditDesc: this.form.remark,
+							userType: 1,
+							transType: 2,
+							auditResult: this.action ? 1 : 2
 						}
 
 						this.$api
@@ -470,7 +478,7 @@ export default {
 			const params = {
 				id: this.rowData.id
 			}
-			this.$api.proxyDetail(params).then((res) => {
+			this.$api.selectMemberWithdrawUser(params).then((res) => {
 				if (res.code === 200) {
 					const response = res.data
 					this.loading = false
