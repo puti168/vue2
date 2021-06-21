@@ -220,10 +220,6 @@ export default {
 				{ required: true, message: '请输入会员账号', trigger: 'blur' }
 			]
 
-			const realName = [
-				{ required: true, message: '请输入会员姓名', trigger: 'blur' }
-			]
-
 			const adjustType = [
 				{ required: true, message: '请选择操作类型', trigger: 'change' }
 			]
@@ -246,7 +242,6 @@ export default {
 
 			return {
 				userName,
-				realName,
 				adjustType,
 				amount,
 				activeId,
