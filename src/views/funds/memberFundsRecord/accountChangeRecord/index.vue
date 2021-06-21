@@ -63,7 +63,6 @@
           <el-form-item label="风控层级:" class="tagheight">
             <el-select
               v-model="queryData.windControlId"
-              style="width: 300px"
               clearable
               placeholder="默认选择全部"
               :popper-append-to-body="false"
@@ -118,7 +117,6 @@
           <el-form-item label="业务类型:" class="tagheight">
             <el-select
               v-model="queryData.bizType"
-              style="width: 300px"
               clearable
               placeholder="默认选择全部"
               :popper-append-to-body="false"
@@ -134,7 +132,6 @@
           <el-form-item label="账变类型:" class="tagheight">
             <el-select
               v-model="queryData.type"
-              style="width: 300px"
               clearable
               placeholder="默认选择全部"
               :popper-append-to-body="false"
@@ -150,7 +147,6 @@
           <el-form-item label="收支类型:" class="tagheight">
             <el-select
               v-model="queryData.transType"
-              style="width: 300px"
               clearable
               placeholder="默认选择全部"
               :popper-append-to-body="false"
@@ -630,7 +626,7 @@ export default {
           )
           sums[index] = el
           return
-        } else if (index === 10) {
+        } else if (index === 10 && this.summary !== null) {
           const el = (
             <div class='count_row'>
               <p>{this.summary.subtotal}</p>
