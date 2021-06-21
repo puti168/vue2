@@ -36,9 +36,39 @@ export function agentDeductQuotaAPI(data) {
 	})
 }
 
+// 资金 ===> 资金审核记录 ==> 会员提款审核记录
+export function memberWithdrawRecordAPI(data) {
+	return request({
+		url: '/user/queryMember',
+		method: 'post',
+		data
+	})
+}
+
+// 资金 ===> 资金审核记录 ==> 会员人工增加额度记录
+export function memberIncreaseQuotaRecordAPI(data) {
+	return request({
+		url: '/user/queryMember',
+		method: 'post',
+		data
+	})
+}
+
+// 资金 ===> 资金审核记录 ==> 代理提款审核记录
+export function agentWithdrawRecordAPI(data) {
+	return request({
+		url: '/user/queryMember',
+		method: 'post',
+		data
+	})
+}
+
 export default {
 	memberIncreaseQuotaAPI,
 	memberDeductQuotaAPI,
 	agentIncreaseQuotaAPI,
-	agentDeductQuotaAPI
+	agentDeductQuotaAPI,
+	memberWithdrawRecordAPI,
+	memberIncreaseQuotaRecordAPI,
+	agentWithdrawRecordAPI
 }
