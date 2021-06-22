@@ -19,7 +19,7 @@
 					</el-form-item>
 					<el-form-item label="锁单状态:">
 						<el-select
-							v-model="queryData.lockOrder"
+							v-model="queryData.lockStatus"
 							style="width: 180px"
 							:popper-append-to-body="false"
 						>
@@ -34,7 +34,7 @@
 					</el-form-item>
 					<el-form-item label="订单号:">
 						<el-input
-							v-model="queryData.auditNum"
+							v-model="queryData.id"
 							clearable
 							size="medium"
 							:maxlength="19"
@@ -68,10 +68,10 @@
 			<div class="view-container dealer-container">
 				<div class="content">
 					<el-tabs v-model="activeName" @tab-click="handleClick">
-						<el-tab-pane label="待一审" name="one"></el-tab-pane>
-						<el-tab-pane label="待二审" name="two"></el-tab-pane>
-						<el-tab-pane label="待三审" name="three"></el-tab-pane>
-						<el-tab-pane label="待出款" name="four"></el-tab-pane>
+						<el-tab-pane label="待一审" name="0"></el-tab-pane>
+						<el-tab-pane label="待二审" name="1"></el-tab-pane>
+						<el-tab-pane label="待三审" name="2"></el-tab-pane>
+						<el-tab-pane label="待出款" name="3"></el-tab-pane>
 					</el-tabs>
 					<el-table
 						v-loading="loading"
@@ -86,11 +86,8 @@
 						<el-table-column align="center" label="锁单" width="60">
 							<template slot-scope="scope">
 								<el-checkbox
-									v-if="
-										Number(scope.row.auditStep) === 1 &&
-											(scope.row.auditName === name || !scope.row.auditName)
-									"
-									v-model="scope.row.lockStatus"
+									v-if="scope.row.auditName === name || !scope.row.auditName"
+									v-model="scope.row.lockOrder"
 									@change="lockChange(scope.row)"
 								></el-checkbox>
 							</template>
@@ -104,19 +101,12 @@
 							<template slot-scope="scope">
 								<el-button
 									v-if="activeName !== '3'"
-									:class="
-										Number(scope.row.auditStep) === 1 &&
-										scope.row.auditName !== name
-											? 'dis'
-											: ''
-									"
-									:type="
-										Number(scope.row.auditStep) === 0 ? 'success' : 'primary'
-									"
+									:class="scope.row.lockAccount !== name ? 'dis' : ''"
+									type="primary"
 									size="medium"
 									@click="goDetail(scope.row)"
 								>
-									{{ typeFilter(scope.row.auditStep, 'auditStepType') }}
+									{{ activeName === '0' ? '一审审核' : activeName === '1' ? '二审审核' : '三审审核' }}
 								</el-button>
 								<template v-else>
 									<el-button
@@ -137,50 +127,51 @@
 							</template>
 						</el-table-column>
 						<el-table-column
-							prop="auditNum"
+							prop="id"
 							align="center"
 							label="审核订单号"
 						></el-table-column>
 						<el-table-column
-							prop="applyName"
+							prop="userName"
 							align="center"
 							label="会员账号"
 						></el-table-column>
 						<el-table-column
-							prop="applyName"
+							prop="realName"
 							align="center"
 							label="会员姓名"
 						></el-table-column>
 						<el-table-column
-							prop="applyTime"
+							prop="isBig"
 							align="center"
 							sortable="custom"
 							label="是否为大额提款"
-						></el-table-column>
+						><template slot-scope="scope">
+							{{ Number(scope.row.isBig) === 1 ? '是' : '否' }}
+							</template></el-table-column>
 						<el-table-column
-							prop="applyTime"
+							prop="orderAmount"
 							align="center"
 							sortable="custom"
 							label="提款金额"
 						></el-table-column>
 						<el-table-column
-							prop="applyTime"
+							prop="orderRateAmount"
 							align="center"
 							sortable="custom"
 							label="提款手续费"
 						></el-table-column>
 						<el-table-column
-							prop="applyTime"
+							prop="createdAt"
 							align="center"
 							sortable="custom"
 							label="申请时间"
 						></el-table-column>
-						<el-table-column
-							prop="applyTime"
-							align="center"
-							sortable="custom"
-							label="审核状态"
-						></el-table-column>
+						<el-table-column align="center" label="审核状态">
+							<template slot-scope="scope">
+								{{ typeFilter(scope.row.orderStatus, 'patchAdjustStatus') }}
+							</template>
+						</el-table-column>
 					</el-table>
 					<!-- 分页 -->
 					<el-pagination
@@ -197,7 +188,7 @@
 				</div>
 			</div>
 		</template>
-		<detail v-else :type="type" :rowData="rowData" @goBack="goBack"></detail>
+		<detail v-else :type="type" :rowData="rowData" :activeName="activeName" @goBack="goBack"></detail>
 	</div>
 </template>
 
@@ -219,20 +210,13 @@ export default {
 	data() {
 		return {
 			queryData: {
-				auditStatusList: [],
-				auditStep: '',
-				lockOrder: '',
-				applyName: '',
-				auditName: '',
-				auditNum: '',
-				orderProperties: '',
+				id: '',
 				orderType: ''
 			},
 			type: true,
 			showDetail: false,
 			formTime: {
-				time: [start, end],
-				time2: []
+				time: [start, end]
 			},
 			rowData: {},
 			now: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
@@ -242,51 +226,41 @@ export default {
 		}
 	},
 	computed: {
-		accountType() {
-			return this.globalDics.accountType
-		},
-		auditStatus() {
-			return this.globalDics.auditStatusType
-		},
-		auditStepType() {
-			return this.globalDics.auditStepType
-		},
 		lockOrderType() {
 			return this.globalDics.lockOrderType
-		},
-		applyType() {
-			return this.globalDics.applyType
 		}
 	},
 	mounted() {
 		this.name = getUsername()
 	},
 	methods: {
-		handleClick() {},
+		handleClick() {
+			this.loadData()
+		},
 		loadData() {
 			this.loading = true
 			const [startTime, endTime] = this.formTime.time || []
-			const [startTime2, endTime2] = this.formTime.time2 || []
 			let params = {
 				...this.queryData,
-				applyTimeStart: startTime
+				createdAtStart: startTime
 					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
 					: '',
-				applyTimeEnd: endTime
+				createdAtEnd: endTime
 					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
-					: '',
-				auditTimeStart: startTime2
-					? dayjs(startTime2).format('YYYY-MM-DD HH:mm:ss')
-					: '',
-				auditTimeEnd: endTime2
-					? dayjs(endTime2).format('YYYY-MM-DD HH:mm:ss')
 					: ''
 			}
 			params = {
 				...this.getParams(params)
 			}
-			this.$api
-				.proxyList(params)
+			let type =
+				this.activeName === '0' ? 'selectMemberWithDrawAuthEsPageOne' : 'selectMemberWithDrawAuthEsPageTwo'
+			if (this.activeName === '2') {
+				type = 'selectMemberWithDrawAuthEsPageThree'
+			}
+			if (this.activeName === '3') {
+				type = 'selectMemberWithDrawAuthEsPagePay'
+			}
+			this.$api[type](params)
 				.then((res) => {
 					if (res.code === 200) {
 						this.now = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
@@ -295,10 +269,10 @@ export default {
 						this.dataList = response.record
 						if (this.dataList) {
 							this.dataList.forEach((item) => {
-								if (Number(item.lockOrder) === 1) {
-									item.lockStatus = true
+								if (Number(item.lockStatus) === 1) {
+									item.lockOrder = true
 								} else {
-									item.lockStatus = false
+									item.lockOrder = false
 								}
 							})
 						}
@@ -316,7 +290,7 @@ export default {
 				})
 		},
 		goDetail(row) {
-			this.type = Number(row.auditStep) === 1 && row.auditName === this.name
+			this.type = row.auditName === this.name
 			this.rowData = row
 			this.showDetail = true
 		},
@@ -337,18 +311,11 @@ export default {
 		},
 		reset() {
 			this.queryData = {
-				auditStatusList: [],
-				auditStep: '',
-				lockOrder: '',
-				applyName: '',
-				auditName: '',
-				auditNum: '',
-				orderProperties: '',
+				id: '',
 				orderType: ''
 			}
 			this.formTime = {
-				time: [start, end],
-				time2: []
+				time: [start, end]
 			}
 			this.loadData()
 		},
@@ -360,9 +327,9 @@ export default {
 				background: 'rgba(0, 0, 0, 0.7)'
 			})
 			this.$api
-				.lockProxyAuditRecord({
+				.updateWithdrawLockProxy({
 					id: val.id,
-					lockFlag: Number(val.lockOrder) === 0 ? 0 : 1
+					lockFlag: Number(val.lockStatus) === 0 ? 0 : 1
 				})
 				.then((res) => {
 					if (res.code === 200) {

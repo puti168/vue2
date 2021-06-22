@@ -172,7 +172,46 @@ export function selectMemberWithDrawAuthEsPagePay(data) {
 		data
 	})
 }
+export function selectMemberWithDrawAuthEsPageOneProxy(data) {
+	return request({
+		url: '/memberWithDrawProxyOne/selectMemberWithDrawAuthEsPageOne',
+		method: 'post',
+		data
+	})
+}
+export function updateWithDrawAuthOneProxy(data) {
+	return request({
+		url: '/memberWithDrawProxyOne/updateWithDrawAuthOne',
+		method: 'post',
+		data
+	})
+}
+export function selectMemberWithDrawAuthEsPageThreeProxy(data) {
+	return request({
+		url: '/memberWithDrawProxyThree/selectMemberWithDrawAuthEsPageThree',
+		method: 'post',
+		data
+	})
+}
+export function selectMemberWithDrawAuthEsPagePayProxy(data) {
+	return request({
+		url: '/memberWithDrawProxyPay/selectMemberWithDrawAuthEsPagePay',
+		method: 'post',
+		data
+	})
+}
+export function selectMemberWithDrawAuthEsPageTwoProxy(data) {
+	return request({
+		url: '/memberWithDrawProxyTwo/selectMemberWithDrawAuthEsPageTwo',
+		method: 'post',
+		data
+	})
+}
 export default {
+	selectMemberWithDrawAuthEsPagePayProxy,
+	selectMemberWithDrawAuthEsPageThreeProxy,
+	updateWithDrawAuthOneProxy,
+	selectMemberWithDrawAuthEsPageOneProxy,
 	selectMemberWithDrawAuthEsPagePay,
 	selectMemberWithDrawAuthEsPageThree,
 	selectMemberWithDrawAuthEsPageTwo,
