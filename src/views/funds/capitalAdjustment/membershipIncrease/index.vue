@@ -163,13 +163,13 @@
 </template>
 
 <script>
-import { routerNames } from '@/utils/consts'
+// import { routerNames } from '@/utils/consts'
 import list from '@/mixins/list'
 import UploadItem from '@/components/UploadItem'
 // import { notSpecial2, isHaveEmoji } from '@/utils/validate'
 
 export default {
-	name: routerNames.memberShipIncrease,
+	name: 'MemberShipIncrease',
 	components: { UploadItem },
 	mixins: [list],
 	data() {
@@ -265,7 +265,7 @@ export default {
 			}
 			params.adjustType = params.adjustType * 1
 			params.amount = params.amount * 1
-            delete params.balanceType
+			delete params.balanceType
 			let lock = true
 			this.$refs['form'].validate((valid) => {
 				if (valid && lock) {

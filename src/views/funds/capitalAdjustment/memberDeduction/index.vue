@@ -130,13 +130,13 @@
 </template>
 
 <script>
-import { routerNames } from '@/utils/consts'
+// import { routerNames } from '@/utils/consts'
 import list from '@/mixins/list'
 import UploadItem from '@/components/UploadItem'
 // import { notSpecial2, isHaveEmoji } from '@/utils/validate'
 
 export default {
-	name: routerNames.memberDeduction,
+	name: 'MemberDeduction',
 	components: { UploadItem },
 	mixins: [list],
 	data() {
@@ -147,14 +147,14 @@ export default {
 				userName: undefined,
 				realName: undefined,
 				accountType: undefined,
-                balance: undefined,
+				balance: undefined,
 				balanceType: '1',
 				adjustType: undefined,
-                lessMoney: undefined,
+				lessMoney: undefined,
 				remark: undefined,
 				userType: 1,
 				userId: undefined,
-                relationId: undefined,
+				relationId: undefined,
 				imageAddress: undefined
 			},
 			tipsShow: null
@@ -199,7 +199,7 @@ export default {
 			return {
 				userName,
 				adjustType,
-                lessMoney,
+				lessMoney,
 				remark
 			}
 		}
@@ -260,7 +260,7 @@ export default {
 			let lock = true
 			params.adjustType = params.adjustType * 1
 			params.lessMoney = params.lessMoney * 1
-            delete params.balanceType
+			delete params.balanceType
 			this.$refs['form'].validate((valid) => {
 				if (valid && lock) {
 					lock = false
@@ -302,13 +302,13 @@ export default {
 				userName: undefined,
 				realName: undefined,
 				accountType: undefined,
-                balance: undefined,
+				balance: undefined,
 				adjustType: undefined,
-                lessMoney: undefined,
+				lessMoney: undefined,
 				remark: undefined,
 				userType: 1,
 				userId: undefined,
-                relationId: undefined,
+				relationId: undefined,
 				imageAddress: undefined
 			}
 		},

@@ -35,6 +35,43 @@
 						style="width: 365px"
 					></el-input>
 				</el-form-item>
+                <el-form-item label="钱包余额:" prop="balance">
+                    <el-select
+                        v-model="queryData.balanceType"
+                        size="medium"
+                        placeholder="请选择"
+                        clearable
+                        :maxlength="10"
+                        style="width: 165px"
+                        @change="checkRiskValue($event)"
+                    >
+                        <el-option
+                            v-for="item in accountTypeArr"
+                            :key="item.code"
+                            :label="item.description"
+                            :value="item.code"
+                        ></el-option>
+                    </el-select>
+                    <el-input
+                        v-model="queryData.balance"
+                        size="medium"
+                        maxlength="11"
+                        placeholder="请输入"
+                        clearable
+                        autocomplete="off"
+                        style="width: 200px"
+                        disabled
+                    ></el-input>
+                    <span>元</span>
+                    <el-button
+                        type="primary"
+                        style="margin-left: 20px; background-color: #00807F"
+                        @click="searchBalance"
+                    >
+                        <i v-show="loading" class="el-icon-loading"></i>
+                        查询
+                    </el-button>
+                </el-form-item>
 				<el-form-item label="操作类型:" prop="adjustType">
 					<el-select
 						v-model="queryData.adjustType"
@@ -52,43 +89,6 @@
 							:value="item.code"
 						></el-option>
 					</el-select>
-				</el-form-item>
-				<el-form-item label="钱包余额:" prop="balance">
-					<el-select
-						v-model="queryData.balanceType"
-						size="medium"
-						placeholder="请选择"
-						clearable
-						:maxlength="10"
-						style="width: 165px"
-						@change="checkRiskValue($event)"
-					>
-						<el-option
-							v-for="item in accountTypeArr"
-							:key="item.code"
-							:label="item.description"
-							:value="item.code"
-						></el-option>
-					</el-select>
-					<el-input
-						v-model="queryData.balance"
-						size="medium"
-						maxlength="11"
-						placeholder="请输入"
-						clearable
-						autocomplete="off"
-						style="width: 200px"
-						disabled
-					></el-input>
-					<span>元</span>
-					<el-button
-						type="primary"
-						style="margin-left: 20px; background-color: #00807F"
-						@click="searchBalance"
-					>
-						<i v-show="loading" class="el-icon-loading"></i>
-						查询
-					</el-button>
 				</el-form-item>
 				<el-form-item label="操作金额:" prop="lessMoney">
 					<el-input
@@ -146,13 +146,13 @@
 </template>
 
 <script>
-import { routerNames } from '@/utils/consts'
+// import { routerNames } from '@/utils/consts'
 import list from '@/mixins/list'
 import UploadItem from '@/components/UploadItem'
 // import { notSpecial2, isHaveEmoji } from '@/utils/validate'
 
 export default {
-	name: routerNames.agentShipIncrease,
+	name: 'AgentShipIncrease',
 	components: { UploadItem },
 	mixins: [list],
 	data() {
@@ -163,12 +163,12 @@ export default {
 				userName: undefined,
 				realName: undefined,
 				accountType: undefined,
-				balanceType: '6',
+				balanceType: '7',
 				balance: undefined,
 				adjustType: undefined,
 				lessMoney: undefined,
 				userId: undefined,
-                userType: 2,
+				userType: 2,
 				remark: undefined,
 				imageAnnexId: undefined,
 				imageAddress: undefined
@@ -182,8 +182,8 @@ export default {
 		},
 		accountTypeArr() {
 			return [
-				{ description: '额度钱包', code: '6' },
-				{ description: '佣金钱包', code: '7' }
+                { description: '额度钱包', code: '7' },
+				{ description: '佣金钱包', code: '6' }
 			]
 		},
 		rules() {
@@ -323,17 +323,17 @@ export default {
 		reset() {
 			this.$refs['form'].resetFields()
 			this.queryData = {
-                userName: undefined,
-                realName: undefined,
-                accountType: undefined,
-                balanceType: '6',
-                balance: undefined,
-                adjustType: undefined,
-                lessMoney: undefined,
-                userId: undefined,
-                remark: undefined,
-                imageAnnexId: undefined,
-                imageAddress: undefined
+				userName: undefined,
+				realName: undefined,
+				accountType: undefined,
+				balanceType: '7',
+				balance: undefined,
+				adjustType: undefined,
+				lessMoney: undefined,
+				userId: undefined,
+				remark: undefined,
+				imageAnnexId: undefined,
+				imageAddress: undefined
 			}
 		},
 		checkRiskValue(val) {
