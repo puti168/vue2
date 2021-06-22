@@ -59,6 +59,7 @@
             <el-select
               v-model="queryData.loginDeviceType"
               style="width: 300px"
+              clearable
               multiple
               placeholder="默认选择全部"
               :popper-append-to-body="false"
@@ -74,6 +75,7 @@
           <el-form-item label="订单状态:" class="tagheight">
             <el-select
               v-model="queryData.withdrawStatus"
+              clearable
               style="width: 300px"
               placeholder="默认选择全部"
               :popper-append-to-body="false"
@@ -89,6 +91,7 @@
           <el-form-item label="提款方式:" class="tagheight">
             <el-select
               v-model="queryData.payDataType"
+              clearable
               style="width: 300px"
               placeholder="默认选择全部"
               :popper-append-to-body="false"
@@ -106,6 +109,7 @@
               v-model="queryData.withdrawBiggerType"
               style="width: 300px"
               placeholder="默认选择全部"
+              clearable
               :popper-append-to-body="false"
             >
               <el-option
@@ -119,6 +123,7 @@
           <el-form-item label="是否为首提:" class="tagheight">
             <el-select
               v-model="queryData.firstWithdrawType"
+              clearable
               style="width: 300px"
               placeholder="默认选择全部"
               :popper-append-to-body="false"
@@ -166,6 +171,8 @@
           ref="tables"
           v-loading="loading"
           border
+          show-summary
+          :summary-method="getSummaries"
           size="mini"
           class="small-size-table"
           :data="tableData"
@@ -203,7 +210,13 @@
             label="订单来源"
             width="130px"
           >
-
+          <template slot-scope="scope">
+              {{
+                scope.row.deviceType === 0
+                  ? "-"
+                  : typeFilter(scope.row.deviceType, "deviceType")
+              }}
+            </template>
           </el-table-column>
           <el-table-column
             prop="orderStatus"
@@ -211,16 +224,19 @@
             label="订单状态"
             width="100px"
           >
-
-          </el-table-column>
+          <template slot-scope="scope">
+              {{ typeFilter(scope.row.orderStatus, "depositStatus") }}
+            </template>
+            </el-table-column>
           <el-table-column
             prop="clientStatus"
             align="center"
             label="客户端状态"
             width="150px"
           >
-          >
-
+          <template slot-scope="scope">
+              {{ typeFilter(scope.row.clientStatus, "clientStatus") }}
+            </template>
           </el-table-column>
           <el-table-column
             prop="customerIp"
@@ -364,6 +380,7 @@ export default {
           if (res.code === 200) {
             this.tableData = res.data.record
             this.total = res.data.totalRecord
+            this.summary = res.data.summary
           }
           this.loading = false
         })
@@ -390,22 +407,6 @@ export default {
       params = {
         ...this.getParams(params)
       }
-      delete params.registerTime
-      delete params.lastLoginTime
-      delete params.firstSaveTime
-      delete params.accountStatus
-      delete params.createdAtEnd
-      this.$confirm(
-        `<strong>是否导出?</strong></br><span style='font-size:12px;color:#c1c1c1'>数据过大时，请耐心等待</span>`,
-        '确认提示',
-        {
-          dangerouslyUseHTMLString: true,
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }
-      )
-        .then(() => {
           this.$api
             .getProxyFundsRecordsWithdrawDownload(params)
             .then((res) => {
@@ -468,7 +469,6 @@ export default {
               //   duration: 1500
               // })
             })
-        })
     },
     getSummaries(param) {
       const { columns } = param
@@ -477,8 +477,8 @@ export default {
         if (index === 0) {
           const el = (
             <div class='count_row'>
-              <p>本页合计</p>
-              <p>全部合计</p>
+              <p>小计</p>
+              <p>总计</p>
             </div>
           )
           sums[index] = el
@@ -531,7 +531,18 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+.count_row {
+  height: 80px;
+  p {
+    height: 40px;
+    line-height: 40px;
+    span {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+    }
+  }
+}
 .sum_footer {
   display: flex;
   display: -webkit-flex;

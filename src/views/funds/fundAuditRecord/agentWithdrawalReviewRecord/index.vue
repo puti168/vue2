@@ -58,10 +58,10 @@
 						>
 							<el-option label="全部" value=""></el-option>
 							<el-option
-								v-for="item in lockOrderType"
+								v-for="item in orderTypeArr"
 								:key="item.code"
 								:label="item.description"
-								:value="Number(item.code)"
+								:value="item.code"
 							></el-option>
 						</el-select>
 					</el-form-item>
@@ -96,13 +96,12 @@
 						:data="dataList"
 						style="width: 100%"
 						:header-cell-style="getRowClass"
-						@sort-change="changeTableSort"
 					>
 						<el-table-column
 							prop="auditStep"
 							align="center"
 							label="操作"
-							width="100"
+							width="120"
 						>
 							<template slot-scope="scope">
 								<el-button
@@ -114,15 +113,15 @@
 								</el-button>
 							</template>
 						</el-table-column>
-						<el-table-column prop="auditNum" align="center" label="订单号">
+						<el-table-column prop="auditNum" align="center" label="订单号" width="180">
 							<template slot-scope="scope">
-								<span v-if="!!scope.row.auditNum || scope.row.auditNum === 0">
-									{{ scope.row.auditNum }}
+								<span v-if="!!scope.row.id">
+									{{ scope.row.id }}
 								</span>
 								<span v-else>-</span>
 							</template>
 						</el-table-column>
-						<el-table-column prop="userName" align="center" label="代理账号">
+						<el-table-column prop="userName" align="center" label="代理账号" width="125">
 							<template slot-scope="scope">
 								<span v-if="!!scope.row.userName">
 									{{ scope.row.userName }}
@@ -130,7 +129,7 @@
 								<span v-else>-</span>
 							</template>
 						</el-table-column>
-						<el-table-column prop="realName" align="center" label="代理姓名">
+						<el-table-column prop="realName" align="center" label="代理姓名" width="125">
 							<template slot-scope="scope">
 								<span v-if="!!scope.row.realName">
 									{{ scope.row.realName }}
@@ -138,94 +137,133 @@
 								<span v-else>-</span>
 							</template>
 						</el-table-column>
-						<el-table-column prop="orderStatus" align="center" label="订单状态">
-							<template slot-scope="scope">
+						<el-table-column prop="orderStatus" align="center" label="订单状态" width="120">
+                            <template slot-scope="scope">
 								<span v-if="!!scope.row.orderStatus">
-									{{ scope.row.orderStatus }}
+									{{ typeFilter(scope.row.orderStatus, 'withdrawStatus') }}
+								</span>
+                                <span v-else>-</span>
+                            </template>
+						</el-table-column>
+						<el-table-column prop="isBig" align="center" label="是否为大额提款" width="150">
+							<template slot-scope="scope">
+								<span v-if="!!scope.row.isBig">
+									{{ scope.row.isBig }}
 								</span>
 								<span v-else>-</span>
 							</template>
 						</el-table-column>
-						<el-table-column prop="big" align="center" label="是否为大额提款">
-							<template slot-scope="scope">
-								<span v-if="!!scope.row.big">
-									{{ scope.row.big }}
+                        <el-table-column
+                            prop="orderAmount"
+                            align="center"
+                            label="提款金额"
+                            width="120"
+                        >
+                            <template slot-scope="scope">
+								<span v-if="!!scope.row.orderAmount">
+									{{ scope.row.orderAmount.toFixed(2) }}
 								</span>
-								<span v-else>-</span>
-							</template>
-						</el-table-column>
-						<el-table-column
-							prop="withdrawalMoney"
-							align="center"
-							label="提款金额"
-						>
-							<template slot-scope="scope">
+                                <span v-else>-</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                            prop="orderRateAmount"
+                            align="center"
+                            label="提款手续费"
+                            width="120"
+                        >
+                            <template slot-scope="scope">
 								<span
-									v-if="
-										!!scope.row.withdrawalMoney ||
-											scope.row.withdrawalMoney === 0
+                                    v-if="
+										!!scope.row.orderRateAmount ||
+											scope.row.orderRateAmount + '' === '0'
 									"
-								>
-									{{ scope.row.withdrawalMoney }}
+                                >
+									{{ scope.row.orderRateAmount.toFixed(2) }}
 								</span>
-								<span v-else>-</span>
-							</template>
-						</el-table-column>
-						<el-table-column prop="sxf" align="center" label="提款手续费">
-							<template slot-scope="scope">
-								<span v-if="!!scope.row.sxf || scope.row.sxf === 0">
-									{{ scope.row.sxf }}
+                                <span v-else>-</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                            prop="createdAt"
+                            align="center"
+                            label="申请时间"
+                            width="180"
+                        >
+                            <template slot-scope="scope">
+								<span v-if="!!scope.row.createdAt">
+									{{ scope.row.createdAt }}
 								</span>
-								<span v-else>-</span>
-							</template>
-						</el-table-column>
-						<el-table-column prop="applyTime" align="center" label="申请时间">
-							<template slot-scope="scope">
-								<span v-if="!!scope.row.applyTime">
-									{{ scope.row.applyTime }}
+                                <span v-else>-</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                            prop="details"
+                            align="center"
+                            label="审核人"
+                            width="180"
+                        >
+                            <template slot-scope="scope">
+                                <div v-if="!!scope.row.details && scope.row.details.length">
+                                    <p v-if="scope.row.details[0]">
+                                        {{ scope.row.details[0].authOperator }}
+                                    </p>
+                                    <p v-if="scope.row.details[1]">
+                                        {{ scope.row.details[1].authOperator }}
+                                    </p>
+                                </div>
+                                <span v-else>-</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                            prop="details"
+                            align="center"
+                            label="审核时间"
+                            width="210"
+                        >
+                            <template slot-scope="scope">
+                                <div v-if="!!scope.row.details && scope.row.details.length">
+                                    <p v-if="scope.row.details[0]">
+                                        {{ scope.row.details[0].auditTime }}
+                                    </p>
+                                    <p v-if="scope.row.details[1]">
+                                        {{ scope.row.details[1].auditTime }}
+                                    </p>
+                                </div>
+                                <span v-else>-</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                            prop="details"
+                            align="center"
+                            label="审核用时"
+                            width="130"
+                        >
+                            <template slot-scope="scope">
+                                <div v-if="!!scope.row.details && scope.row.details.length">
+                                    <p v-if="scope.row.details[0]">
+                                        {{ scope.row.details[0].costTime }}
+                                    </p>
+                                    <p v-if="scope.row.details[1]">
+                                        {{ scope.row.details[1].costTime }}
+                                    </p>
+                                </div>
+                                <span v-else>-</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                            prop="remark"
+                            align="center"
+                            label="备注"
+                            width="120"
+                        >
+                            <template slot-scope="scope">
+								<span v-if="!!scope.row.remark">
+									{{ scope.row.remark }}
 								</span>
-								<span v-else>-</span>
-							</template>
-						</el-table-column>
-						<el-table-column prop="applyName" align="center" label="审核人">
-							<template slot-scope="scope">
-								<span v-if="!!scope.row.applyName">
-									一审：{{ scope.row.applyName }}
-								</span>
-								<span v-else>-</span>
-								<br />
-								<span v-if="!!scope.row.applyName">
-									二审：{{ scope.row.applyName }}
-								</span>
-								<span v-else>-</span>
-							</template>
-						</el-table-column>
-						<el-table-column prop="applyTime" align="center" label="审核时间">
-							<template slot-scope="scope">
-								<span v-if="!!scope.row.applyTime">
-									{{ scope.row.applyTime }}
-								</span>
-								<span v-else>-</span>
-							</template>
-						</el-table-column>
-						<el-table-column prop="applyTime" align="center" label="审核用时">
-							<template slot-scope="scope">
-								<span v-if="!!scope.row.applyName">
-									一审：{{ scope.row.applyName }}
-								</span>
-								<span v-else>-</span>
-								<br />
-								<span v-if="!!scope.row.applyName">
-									二审：{{ scope.row.applyName }}
-								</span>
-								<span v-else>-</span>
-							</template>
-						</el-table-column>
-						<el-table-column
-							prop="remark"
-							align="center"
-							label="备注"
-						></el-table-column>
+                                <span v-else>-</span>
+                            </template>
+                        </el-table-column>
 					</el-table>
 					<!-- 分页 -->
 					<el-pagination
@@ -266,45 +304,22 @@ export default {
 	data() {
 		return {
 			queryData: {
-				auditStatusList: [],
-				auditStep: '',
-				lockOrder: '',
-				applyName: '',
-				auditName: '',
-				auditNum: '',
-				orderProperties: '',
-				orderType: '',
-                time: [start, end],
-                id: undefined,
-                userName: undefined,
-                orderStatus: ''
+				time: [start, end],
+				id: undefined,
+				userName: undefined,
+				realName: undefined,
+				orderStatus: ''
 			},
 			type: true,
 			showDetail: false,
-			formTime: {
-				time: [start, end],
-				time2: []
-			},
 			rowData: {},
 			name: '',
 			dataList: []
 		}
 	},
 	computed: {
-		accountType() {
-			return this.globalDics.accountType
-		},
-		auditStatus() {
-			return this.globalDics.auditStatusType
-		},
-		auditStepType() {
-			return this.globalDics.auditStepType
-		},
-		lockOrderType() {
-			return this.globalDics.lockOrderType
-		},
-		applyType() {
-			return this.globalDics.applyType
+		orderTypeArr() {
+			return this.globalDics.withdrawStatus
 		}
 	},
 	mounted() {
@@ -313,38 +328,34 @@ export default {
 	methods: {
 		loadData() {
 			this.loading = true
-			const [startTime, endTime] = this.formTime.time || []
-			const [startTime2, endTime2] = this.formTime.time2 || []
+			const [createdAtStart, createdAtEnd] = this.queryData.time || []
 			let params = {
 				...this.queryData,
-				applyTimeStart: startTime
-					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
-					: '',
-				applyTimeEnd: endTime
-					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
-					: '',
-				auditTimeStart: startTime2
-					? dayjs(startTime2).format('YYYY-MM-DD HH:mm:ss')
-					: '',
-				auditTimeEnd: endTime2
-					? dayjs(endTime2).format('YYYY-MM-DD HH:mm:ss')
-					: ''
+				createdAtStart: createdAtStart
+					? dayjs(createdAtStart).format('YYYY-MM-DD HH:mm:ss')
+					: undefined,
+				createdAtEnd: createdAtEnd
+					? dayjs(createdAtEnd).format('YYYY-MM-DD HH:mm:ss')
+					: undefined
 			}
 			params = {
 				...this.getParams(params)
 			}
 			this.$api
-				.proxyList(params)
+				.agentWithdrawRecordAPI(params)
 				.then((res) => {
-					if (res.code === 200) {
-						const response = res.data
-						this.loading = false
-						this.dataList = response.record
-						this.total = response.totalRecord
+					this.loading = false
+					const {
+						code,
+						data: { record, totalRecord },
+						msg
+					} = res
+					if (code === 200) {
+						this.dataList = record || []
+						this.total = totalRecord || 0
 					} else {
-						this.loading = false
 						this.$message({
-							message: res.msg,
+							message: msg,
 							type: 'error'
 						})
 					}
@@ -364,18 +375,11 @@ export default {
 		},
 		reset() {
 			this.queryData = {
-				auditStatusList: [],
-				auditStep: '',
-				lockOrder: '',
-				applyName: '',
-				auditName: '',
-				auditNum: '',
-				orderProperties: '',
-				orderType: ''
-			}
-			this.formTime = {
-				time: [start, end],
-				time2: []
+                time: [start, end],
+                id: undefined,
+                userName: undefined,
+                realName: undefined,
+                orderStatus: ''
 			}
 			this.loadData()
 		}

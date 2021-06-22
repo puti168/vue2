@@ -77,7 +77,7 @@
 				<el-form-item
 					v-if="queryData.adjustType === '1'"
 					label="活动ID"
-					prop="activeId"
+					prop="activityId"
 				>
 					<el-input
 						v-model="queryData.activityId"
@@ -93,7 +93,7 @@
 				<el-form-item
 					v-if="queryData.adjustType === '1'"
 					label="需求流水倍数"
-					prop="water"
+					prop="validmultiple"
 					label-width="120px"
 				>
 					<el-input
@@ -222,7 +222,7 @@ export default {
 				{ required: true, message: '请选择操作类型', trigger: 'change' }
 			]
 
-			const activeId = [
+			const activityId = [
 				{ required: true, message: '请输入活动ID', trigger: 'blur' }
 			]
 
@@ -230,7 +230,7 @@ export default {
 				{ required: true, message: '请输入操作金额', trigger: 'blur' }
 			]
 
-			const water = [
+			const validmultiple = [
 				{ required: true, message: '请输入提款流水倍数', trigger: 'blur' }
 			]
 
@@ -242,8 +242,8 @@ export default {
 				userName,
 				adjustType,
 				amount,
-				activeId,
-				water,
+                activityId,
+                validmultiple,
 				remark
 			}
 		}
@@ -263,6 +263,7 @@ export default {
 				...this.queryData
 			}
 			params.adjustType = params.adjustType * 1
+			params.amount = params.amount * 1
 			let lock = true
 			this.$refs['form'].validate((valid) => {
 				if (valid && lock) {
@@ -302,25 +303,23 @@ export default {
 		reset() {
 			this.$refs['form'].resetFields()
 			this.queryData = {
-				userName: undefined,
-				realName: undefined,
-				accountType: undefined,
-				accountBalance: undefined,
-				adjustType: undefined,
-				amount: undefined,
-				remark: undefined,
-				imageAddress: undefined,
-				imageAnnexId: undefined,
-				userType: '1',
-				userId: undefined,
-				activityId: undefined,
-				validmultiple: undefined
+                userName: undefined,
+                realName: undefined,
+                accountType: undefined,
+                accountBalance: undefined,
+                adjustType: undefined,
+                amount: undefined,
+                remark: undefined,
+                imageAddress: undefined,
+                imageAnnexId: undefined,
+                userType: 1,
+                userId: undefined,
+                activityId: undefined,
+                validmultiple: undefined
 			}
 		},
 		checkRiskValue(val) {
 			// console.log('val', val)
-			// this.queryData.windControlName = val.windControlLevelName
-			// this.queryData.windControlLevelId = val.id
 		},
 		checkValue() {
 			// this.tipsShow = null
@@ -350,7 +349,7 @@ export default {
 						const { code, data } = res
 						if (code === 200) {
 							const { balance } = data
-							this.queryData.accountBalance = balance + ''
+							this.queryData.accountBalance = balance
 						}
 					})
 					.catch(() => {
