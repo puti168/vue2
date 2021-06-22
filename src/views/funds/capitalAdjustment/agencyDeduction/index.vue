@@ -35,9 +35,9 @@
                         style="width: 365px"
                     ></el-input>
                 </el-form-item>
-                <el-form-item label="操作类型:" prop="operationType">
+                <el-form-item label="操作类型:" prop="adjustType">
                     <el-select
-                        v-model="queryData.operationType"
+                        v-model="queryData.adjustType"
                         size="medium"
                         placeholder="请选择"
                         clearable
@@ -55,7 +55,7 @@
                 </el-form-item>
                 <el-form-item label="钱包余额:" prop="balance">
                     <el-select
-                        v-model="queryData.balance"
+                        v-model="queryData.balanceType"
                         size="medium"
                         placeholder="请选择"
                         clearable
@@ -64,10 +64,10 @@
                         @change="checkRiskValue($event)"
                     >
                         <el-option
-                            v-for="item in []"
-                            :key="item.id"
-                            :label="item.windControlLevelName"
-                            :value="item"
+                            v-for="item in accountTypeArr"
+                            :key="item.code"
+                            :label="item.description"
+                            :value="item.code"
                         ></el-option>
                     </el-select>
                     <el-input
@@ -90,9 +90,9 @@
                         查询
                     </el-button>
                 </el-form-item>
-                <el-form-item label="操作金额:" prop="operationMoney">
+                <el-form-item label="操作金额:" prop="lessMoney">
                     <el-input
-                        v-model="queryData.operationMoney"
+                        v-model="queryData.lessMoney"
                         size="medium"
                         placeholder="请输入"
                         clearable
@@ -102,9 +102,9 @@
                     ></el-input>
                     <span>元</span>
                 </el-form-item>
-                <el-form-item label="审核原因:" prop="reason">
+                <el-form-item label="审核原因:" prop="remark">
                     <el-input
-                        v-model="queryData.reason"
+                        v-model="queryData.remark"
                         size="medium"
                         type="textarea"
                         placeholder="请输入"
@@ -162,13 +162,15 @@ export default {
             queryData: {
                 userName: undefined,
                 realName: undefined,
+                accountType: undefined,
+                balanceType: '6',
                 balance: undefined,
-                operationType: undefined,
-                operationMoney: undefined,
-                reason: undefined,
-                imageAddress: undefined,
-                activeId: undefined,
-                water: undefined
+                adjustType: undefined,
+                lessMoney: undefined,
+                userId: undefined,
+                remark: undefined,
+                imageAnnexId: undefined,
+                imageAddress: undefined
             },
             tipsShow: null
         }
@@ -176,6 +178,12 @@ export default {
     computed: {
         proxyPatchSubAdjustTypeArr() {
             return this.globalDics.proxyPatchSubAdjustType
+        },
+        accountTypeArr() {
+            return [
+                { description: '额度钱包', code: '6' },
+                { description: '佣金钱包', code: '7' }
+            ]
         },
         rules() {
             // const reg1 = /^[A-Za-z]{1}(?=(.*[a-zA-Z]){1,})(?=(.*[0-9]){1,})[0-9A-Za-z]{3,10}$/
@@ -197,33 +205,28 @@ export default {
                 { required: true, message: '请输入会员账号', trigger: 'blur' }
             ]
 
-            const realName = [
-                { required: true, message: '请输入会员姓名', trigger: 'blur' }
-            ]
-
-            const operationType = [
+            const adjustType = [
                 { required: true, message: '请选择操作类型', trigger: 'change' }
             ]
 
-            const operationMoney = [
+            const lessMoney = [
                 { required: true, message: '请输入操作金额', trigger: 'blur' }
             ]
 
             const balance = [
-                { required: true, message: '请选择钱包余额类型', trigger: 'change' }
+                { required: true, message: '请输入钱包余额', trigger: 'blur' }
             ]
 
-            const reason = [
+            const remark = [
                 { required: true, message: '请输入申请原因', trigger: 'blur' }
             ]
 
             return {
                 userName,
-                realName,
-                operationType,
-                operationMoney,
+                adjustType,
+                lessMoney,
                 balance,
-                reason
+                remark
             }
         }
     },
@@ -242,9 +245,10 @@ export default {
                 this.$api.memberIncreaseSearchAPI({ userName }).then((res) => {
                     const { code, data } = res
                     if (code === 200) {
-                        const { realName, accountType } = data
+                        const { realName, accountType, userId } = data
                         this.queryData.realName = realName
                         this.queryData.accountType = accountType
+                        this.queryData.userId = userId
                     }
                 })
             }
@@ -260,7 +264,7 @@ export default {
                         const { code, data } = res
                         if (code === 200) {
                             const { balance } = data
-                            this.queryData.accountBalance = balance + ''
+                            this.queryData.balance = balance
                         }
                     })
                     .catch(() => {
@@ -278,10 +282,8 @@ export default {
                 ...this.queryData
             }
             let lock = true
-            params.windControlType = params.windControlType * 1
-            params.proxyUserName ? (params.userName = params.proxyUserName) : null
             this.$refs['form'].validate((valid) => {
-                if (valid && lock && !this.tipsShow) {
+                if (valid && lock) {
                     lock = false
                     this.$api
                         .riskEditAddAPI(params)
@@ -320,13 +322,15 @@ export default {
             this.queryData = {
                 userName: undefined,
                 realName: undefined,
+                accountType: undefined,
+                balanceType: '6',
                 balance: undefined,
-                operationType: undefined,
-                operationMoney: undefined,
-                reason: undefined,
-                imageAddress: undefined,
-                activeId: undefined,
-                water: undefined
+                adjustType: undefined,
+                lessMoney: undefined,
+                userId: undefined,
+                remark: undefined,
+                imageAnnexId: undefined,
+                imageAddress: undefined
             }
         },
         changeRiskType(evt) {
