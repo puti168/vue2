@@ -1,8 +1,24 @@
 import request from '@/utils/request'
-// 代理提款设置-新增代理提款设置
-export function getWithdrawSettingProxyAdd(data) {
+// 代理提款设置-所有会员提款设置
+export function getWithdrawSettingMemberSelectAll(params) {
 	return request({
-		url: '/withdrawSettingProxy/add',
+		url: '/withdrawSettingMember/selectAll',
+		method: 'get',
+		params
+	})
+}
+// 代理提款设置-新增会员理提款设置
+export function getWithdrawSettingMemberAdd(data) {
+	return request({
+		url: '/withdrawSettingMember/add',
+		method: 'post',
+		data
+	})
+}
+// 代理提款设置-修改员理提款设置
+export function getWithdrawSettingMemberUpdate(data) {
+	return request({
+		url: '/withdrawSettingMember/update',
 		method: 'post',
 		data
 	})
@@ -32,9 +48,9 @@ export function getDictgetAllDictList(params) {
 }
 
 // 代理资金记录-导出
-export function getProxyFundsRecordsAssistDepositDownload(data) {
+export function getProxyFundsRecordsAccountChangeDownload(data) {
 	return request({
-		url: 'proxyFundsRecords/assistDeposit/download',
+		url: '/proxyFundsRecords/accountChange/download',
 		method: 'post',
 		data
 	})
@@ -88,16 +104,72 @@ export function getProxyFundsRecordsTransferDownload(data) {
 		data
 	})
 }
+// 代理资金记录-代理转账记录
+export function getProxyFundsRecordsAssistDeposit(data) {
+	return request({
+		url: '/proxyFundsRecords/assistDeposit',
+		method: 'post',
+		data
+	})
+}
+// 代理资金记录-代存记录导出
+export function getProxyFundsRecordsAssistDepositDownload(data) {
+	return request({
+		url: '/proxyFundsRecords/assistDeposit/download',
+		method: 'post',
+		data
+	})
+}
+// 代理资金记录-人工加额申请记录
+export function getProxyFundsRecordsArtificialAccountAdd(data) {
+	return request({
+		url: '/proxyFundsRecords/artificialAccountAdd',
+		method: 'post',
+		data
+	})
+}
+// 代理资金记录-人工加额申请记录导出
+export function getProxyFundsRecordsArtificialAccountAddDownload(data) {
+	return request({
+		url: '/proxyFundsRecords/artificialAccountAdd/download',
+		method: 'post',
+		data
+	})
+}
+// 代理资金记录-人工扣除额度申请记录
+export function getProxyFundsRecordsArtificialAccountSub(data) {
+	return request({
+		url: '/proxyFundsRecords/artificialAccountSub',
+		method: 'post',
+		data
+	})
+}
+// 代理资金记录-佣金记录
+export function getProxyCommissionRecordSelect(data) {
+	return request({
+		url: '/proxyCommissionRecord/select',
+		method: 'post',
+		data
+	})
+}
 export default {
-    getWithdrawSettingProxyAdd,
     getWithdrawSettingProxySelectPage,
 	getProxyFundsRecordsAccountChange,
 	getDictgetAllDictList,
-	getProxyFundsRecordsAssistDepositDownload,
+	getProxyFundsRecordsAccountChangeDownload,
 	getProxyFundsRecordsDeposit,
 	getProxyFundsRecordsDepositDownload,
 	getproxyFundsRecordsWithdraw,
 	getProxyFundsRecordsWithdrawDownload,
 	getProxyFundsRecordsTransfer,
-	getProxyFundsRecordsTransferDownload
+	getProxyFundsRecordsTransferDownload,
+	getProxyFundsRecordsAssistDeposit,
+	getProxyFundsRecordsAssistDepositDownload,
+	getProxyFundsRecordsArtificialAccountAdd,
+	getProxyFundsRecordsArtificialAccountAddDownload,
+	getProxyFundsRecordsArtificialAccountSub,
+	getProxyCommissionRecordSelect,
+	getWithdrawSettingMemberSelectAll,
+	getWithdrawSettingMemberAdd,
+	getWithdrawSettingMemberUpdate
 }
