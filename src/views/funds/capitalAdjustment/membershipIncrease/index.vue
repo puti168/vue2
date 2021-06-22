@@ -119,7 +119,7 @@
 					></el-input>
 					<span>元</span>
 				</el-form-item>
-				<el-form-item label="审核原因:" prop="remark">
+				<el-form-item label="申请原因:" prop="remark">
 					<el-input
 						v-model="queryData.remark"
 						size="medium"
@@ -163,13 +163,13 @@
 </template>
 
 <script>
-import { routerNames } from '@/utils/consts'
+// import { routerNames } from '@/utils/consts'
 import list from '@/mixins/list'
 import UploadItem from '@/components/UploadItem'
 // import { notSpecial2, isHaveEmoji } from '@/utils/validate'
 
 export default {
-	name: routerNames.memberShipIncrease,
+	name: 'MemberShipIncrease',
 	components: { UploadItem },
 	mixins: [list],
 	data() {
@@ -181,6 +181,7 @@ export default {
 				realName: undefined,
 				accountType: undefined,
 				accountBalance: undefined,
+				balanceType: '1',
 				adjustType: undefined,
 				amount: undefined,
 				remark: undefined,
@@ -242,8 +243,8 @@ export default {
 				userName,
 				adjustType,
 				amount,
-                activityId,
-                validmultiple,
+				activityId,
+				validmultiple,
 				remark
 			}
 		}
@@ -264,6 +265,7 @@ export default {
 			}
 			params.adjustType = params.adjustType * 1
 			params.amount = params.amount * 1
+			delete params.balanceType
 			let lock = true
 			this.$refs['form'].validate((valid) => {
 				if (valid && lock) {
@@ -307,6 +309,7 @@ export default {
                 realName: undefined,
                 accountType: undefined,
                 accountBalance: undefined,
+                balanceType: '1',
                 adjustType: undefined,
                 amount: undefined,
                 remark: undefined,
@@ -325,25 +328,27 @@ export default {
 			// this.tipsShow = null
 		},
 		searchRealName() {
-			const { userName } = this.queryData
+			const { userName, balanceType } = this.queryData
 			if (userName) {
-				this.$api.memberIncreaseSearchAPI({ userName }).then((res) => {
-					const { code, data } = res
-					if (code === 200) {
-						const { realName, accountType, userId } = data
-						this.queryData.realName = realName
-						this.queryData.accountType = accountType
-						this.queryData.userId = userId
-					}
-				})
+				this.$api
+					.memberIncreaseSearchAPI({ userName, accountType: balanceType })
+					.then((res) => {
+						const { code, data } = res
+						if (code === 200) {
+							const { realName, accountType, userId } = data
+							this.queryData.realName = realName
+							this.queryData.accountType = accountType
+							this.queryData.userId = userId
+						}
+					})
 			}
 		},
 		searchBalance() {
-			const { userName } = this.queryData
+			const { userName, balanceType } = this.queryData
 			if (userName) {
 				this.loading = true
 				this.$api
-					.memberIncreaseSearchAPI({ userName })
+					.memberIncreaseSearchAPI({ userName, accountType: balanceType })
 					.then((res) => {
 						this.loading = false
 						const { code, data } = res
