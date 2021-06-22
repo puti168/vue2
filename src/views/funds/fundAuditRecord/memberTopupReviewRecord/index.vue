@@ -5,7 +5,7 @@
 				<el-form ref="form" :inline="true" :model="queryData">
 					<el-form-item label="申请时间:">
 						<el-date-picker
-							v-model="formTime.time"
+							v-model="queryData.time"
 							size="medium"
 							:picker-options="pickerOptions"
 							format="yyyy-MM-dd HH:mm:ss"
@@ -92,7 +92,7 @@
 							prop="auditStep"
 							align="center"
 							label="操作"
-							width="100"
+							width="120"
 						>
 							<template slot-scope="scope">
 								<el-button
@@ -104,61 +104,160 @@
 								</el-button>
 							</template>
 						</el-table-column>
+						<el-table-column prop="id" align="center" label="订单号">
+							<template slot-scope="scope">
+								<span v-if="!!scope.row.id">
+									{{ scope.row.id }}
+								</span>
+								<span v-else>-</span>
+							</template>
+						</el-table-column>
 						<el-table-column
-							prop="auditNum"
-							align="center"
-							label="订单号"
-						></el-table-column>
-						<el-table-column
-							prop="applyName"
+							prop="userName"
 							align="center"
 							label="会员账号"
-						></el-table-column>
+							width="120"
+						>
+							<template slot-scope="scope">
+								<span v-if="!!scope.row.userName">
+									{{ scope.row.userName }}
+								</span>
+								<span v-else>-</span>
+							</template>
+						</el-table-column>
 						<el-table-column
-							prop="applyName"
+							prop="realName"
 							align="center"
 							label="会员姓名"
-						></el-table-column>
+							width="120"
+						>
+							<template slot-scope="scope">
+								<span v-if="!!scope.row.realName">
+									{{ scope.row.realName }}
+								</span>
+								<span v-else>-</span>
+							</template>
+						</el-table-column>
 						<el-table-column
-							prop="status"
+							prop="orderStatus"
 							align="center"
 							label="订单状态"
-						></el-table-column>
+							width="120"
+						>
+							<template slot-scope="scope">
+								<span v-if="!!scope.row.orderStatus">
+									{{ typeFilter(scope.row.orderStatus, 'withdrawStatus') }}
+								</span>
+								<span v-else>-</span>
+							</template>
+						</el-table-column>
 						<el-table-column
-							prop="status"
+							prop="adjustType"
 							align="center"
 							label="申请类型"
-						></el-table-column>
+							width="120"
+						>
+							<template slot-scope="scope">
+								<span v-if="!!scope.row.adjustType">
+									{{
+										typeFilter(scope.row.adjustType, 'memberPatchAddAdjustType')
+									}}
+								</span>
+								<span v-else>-</span>
+							</template>
+						</el-table-column>
 						<el-table-column
-							prop="status"
+							prop="adjustAmount"
 							align="center"
 							label="增加金额"
-						></el-table-column>
+						>
+							<template slot-scope="scope">
+								<span v-if="!!scope.row.adjustAmount">
+									{{ scope.row.adjustAmount.toFixed(2) }}
+								</span>
+								<span v-else>-</span>
+							</template>
+						</el-table-column>
 						<el-table-column
-							prop="applyTime"
+							prop="operatorTime"
 							align="center"
 							label="申请时间"
-						></el-table-column>
+							width="180"
+						>
+							<template slot-scope="scope">
+								<span v-if="!!scope.row.operatorTime">
+									{{ scope.row.operatorTime }}
+								</span>
+								<span v-else>-</span>
+							</template>
+						</el-table-column>
 						<el-table-column
-							prop="applyTime"
+							prop="details"
 							align="center"
 							label="审核人"
-						></el-table-column>
+							width="180"
+						>
+							<template slot-scope="scope">
+								<div v-if="!!scope.row.details && scope.row.details.length">
+									<p v-if="scope.row.details[0]">
+										{{ scope.row.details[0].authOperator }}
+									</p>
+									<p v-if="scope.row.details[1]">
+										{{ scope.row.details[1].authOperator }}
+									</p>
+								</div>
+								<span v-else>-</span>
+							</template>
+						</el-table-column>
 						<el-table-column
-							prop="applyTime"
+							prop="details"
 							align="center"
 							label="审核时间"
-						></el-table-column>
+							width="210"
+						>
+							<template slot-scope="scope">
+								<div v-if="!!scope.row.details && scope.row.details.length">
+									<p v-if="scope.row.details[0]">
+										{{ scope.row.details[0].auditTime }}
+									</p>
+									<p v-if="scope.row.details[1]">
+										{{ scope.row.details[1].auditTime }}
+									</p>
+								</div>
+								<span v-else>-</span>
+							</template>
+						</el-table-column>
 						<el-table-column
-							prop="applyTime"
+							prop="details"
 							align="center"
 							label="审核用时"
-						></el-table-column>
+							width="130"
+						>
+							<template slot-scope="scope">
+								<div v-if="!!scope.row.details && scope.row.details.length">
+									<p v-if="scope.row.details[0]">
+										{{ scope.row.details[0].costTime }}
+									</p>
+									<p v-if="scope.row.details[1]">
+										{{ scope.row.details[1].costTime }}
+									</p>
+								</div>
+								<span v-else>-</span>
+							</template>
+						</el-table-column>
 						<el-table-column
 							prop="remark"
 							align="center"
 							label="备注"
-						></el-table-column>
+							width="120"
+						>
+							<template slot-scope="scope">
+								<span v-if="!!scope.row.remark">
+									{{ scope.row.remark }}
+								</span>
+								<span v-else>-</span>
+							</template>
+						</el-table-column>
 					</el-table>
 					<!-- 分页 -->
 					<el-pagination
@@ -235,6 +334,7 @@ export default {
 			params = {
 				...this.getParams(params)
 			}
+			delete params.time
 			this.$api
 				.memberIncreaseQuotaRecordAPI(params)
 				.then((res) => {
@@ -270,10 +370,10 @@ export default {
 		},
 		reset() {
 			this.queryData = {
-                time: [start, end],
-                id: undefined,
-                userName: undefined,
-                orderStatus: ''
+				time: [start, end],
+				id: undefined,
+				userName: undefined,
+				orderStatus: ''
 			}
 			this.loadData()
 		}
