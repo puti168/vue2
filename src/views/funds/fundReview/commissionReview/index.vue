@@ -131,12 +131,12 @@
 								<p v-if="scope.row">佣金</p>
 							</template></el-table-column>
 						<el-table-column
-							prop="adjustAmount"
+							prop="commissionAmount"
 							align="center"
-							label="增加金额"
+							label="佣金金额"
 						></el-table-column>
 						<el-table-column
-							prop="operatorTime"
+							prop="createdTime"
 							align="center"
 							label="申请时间"
 						></el-table-column>

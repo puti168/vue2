@@ -32,14 +32,14 @@ export function updateXPSStatus(data) {
 }
 export function modifyPassword(data) {
 	return request({
-		url: '/user/updatePassword',
+		url: '/userInfo/updatePassword',
 		method: 'post',
 		data
 	})
 }
 export function getUsers(data) {
 	return request({
-		url: '/user/listPage',
+		url: '/userInfo/listPage',
 		method: 'post',
 		data
 	})
@@ -135,7 +135,7 @@ export function bankRecordListAPI(data) {
 // 编辑用户
 export function editUser(data) {
 	return request({
-		url: '/user/updateUserInfo',
+		url: '/userInfo/updateUserInfo',
 		method: 'post',
 		data
 	})
@@ -143,7 +143,7 @@ export function editUser(data) {
 // 新增用户
 export function addUser(data) {
 	return request({
-		url: '/user/add',
+		url: '/userInfo/add',
 		method: 'post',
 		data
 	})

@@ -42,7 +42,7 @@
 <script>
 import { testStringLength, testSpecial, testPassword310 } from '@/utils/test'
 import PasswordWithEye from '@/components/PasswordWithEye'
-
+import md5 from 'js-md5'
 export default {
 	name: 'UpdatePass',
 	components: {
@@ -50,6 +50,10 @@ export default {
 	},
 	props: {
 		dialog: Boolean,
+		userName: {
+			type: String,
+			default: ''
+		},
 		agentid: {
 			type: [Number, String],
 			default: 0
@@ -122,7 +126,8 @@ export default {
 					this.$parent
 						.updatePassword({
 							id: this.agentid,
-							...this.passDialogForm
+							pwd: md5(this.passDialogForm.password + this.userName),
+							rePwd: md5(this.passDialogForm.passwordAgain + this.userName)
 						})
 						.then((_) => {
 							this.handleClose()
