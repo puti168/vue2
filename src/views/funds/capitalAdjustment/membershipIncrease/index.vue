@@ -181,6 +181,7 @@ export default {
 				realName: undefined,
 				accountType: undefined,
 				accountBalance: undefined,
+				balanceType: '1',
 				adjustType: undefined,
 				amount: undefined,
 				remark: undefined,
@@ -242,8 +243,8 @@ export default {
 				userName,
 				adjustType,
 				amount,
-                activityId,
-                validmultiple,
+				activityId,
+				validmultiple,
 				remark
 			}
 		}
@@ -264,6 +265,7 @@ export default {
 			}
 			params.adjustType = params.adjustType * 1
 			params.amount = params.amount * 1
+            delete params.balanceType
 			let lock = true
 			this.$refs['form'].validate((valid) => {
 				if (valid && lock) {
@@ -303,19 +305,19 @@ export default {
 		reset() {
 			this.$refs['form'].resetFields()
 			this.queryData = {
-                userName: undefined,
-                realName: undefined,
-                accountType: undefined,
-                accountBalance: undefined,
-                adjustType: undefined,
-                amount: undefined,
-                remark: undefined,
-                imageAddress: undefined,
-                imageAnnexId: undefined,
-                userType: 1,
-                userId: undefined,
-                activityId: undefined,
-                validmultiple: undefined
+				userName: undefined,
+				realName: undefined,
+				accountType: undefined,
+				accountBalance: undefined,
+				adjustType: undefined,
+				amount: undefined,
+				remark: undefined,
+				imageAddress: undefined,
+				imageAnnexId: undefined,
+				userType: 1,
+				userId: undefined,
+				activityId: undefined,
+				validmultiple: undefined
 			}
 		},
 		checkRiskValue(val) {
@@ -325,25 +327,27 @@ export default {
 			// this.tipsShow = null
 		},
 		searchRealName() {
-			const { userName } = this.queryData
+			const { userName, balanceType } = this.queryData
 			if (userName) {
-				this.$api.memberIncreaseSearchAPI({ userName }).then((res) => {
-					const { code, data } = res
-					if (code === 200) {
-						const { realName, accountType, userId } = data
-						this.queryData.realName = realName
-						this.queryData.accountType = accountType
-						this.queryData.userId = userId
-					}
-				})
+				this.$api
+					.memberIncreaseSearchAPI({ userName, accountType: balanceType })
+					.then((res) => {
+						const { code, data } = res
+						if (code === 200) {
+							const { realName, accountType, userId } = data
+							this.queryData.realName = realName
+							this.queryData.accountType = accountType
+							this.queryData.userId = userId
+						}
+					})
 			}
 		},
 		searchBalance() {
-			const { userName } = this.queryData
+			const { userName, balanceType } = this.queryData
 			if (userName) {
 				this.loading = true
 				this.$api
-					.memberIncreaseSearchAPI({ userName })
+					.memberIncreaseSearchAPI({ userName, accountType: balanceType })
 					.then((res) => {
 						this.loading = false
 						const { code, data } = res

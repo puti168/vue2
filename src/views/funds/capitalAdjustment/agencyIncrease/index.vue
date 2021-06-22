@@ -168,6 +168,7 @@ export default {
 				adjustType: undefined,
 				lessMoney: undefined,
 				userId: undefined,
+                userType: 2,
 				remark: undefined,
 				imageAnnexId: undefined,
 				imageAddress: undefined
@@ -243,7 +244,7 @@ export default {
 			const { userName, balanceType } = this.queryData
 			if (userName) {
 				this.$api
-					.memberIncreaseSearchAPI({ userName, balanceType })
+					.memberIncreaseSearchAPI({ userName, accountType: balanceType })
 					.then((res) => {
 						const { code, data } = res
 						if (code === 200) {
@@ -260,7 +261,7 @@ export default {
 			if (userName) {
 				this.loading = true
 				this.$api
-					.memberIncreaseSearchAPI({ userName, balanceType })
+					.memberIncreaseSearchAPI({ userName, accountType: balanceType })
 					.then((res) => {
 						this.loading = false
 						const { code, data } = res
@@ -288,7 +289,7 @@ export default {
 				if (valid && lock) {
 					lock = false
 					this.$api
-						.riskEditAddAPI(params)
+						.memberDeductQuotaAPI(params)
 						.then((res) => {
 							this.loadingT = false
 							lock = true

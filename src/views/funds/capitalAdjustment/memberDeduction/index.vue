@@ -37,7 +37,7 @@
 				</el-form-item>
 				<el-form-item label="账户余额:">
 					<el-input
-						v-model="queryData.accountBalance"
+						v-model="queryData.balance"
 						size="medium"
 						maxlength="11"
 						placeholder="请输入"
@@ -74,9 +74,9 @@
 						></el-option>
 					</el-select>
 				</el-form-item>
-				<el-form-item label="操作金额:" prop="amount">
+				<el-form-item label="操作金额:" prop="lessMoney">
 					<el-input
-						v-model="queryData.amount"
+						v-model="queryData.lessMoney"
 						size="medium"
 						placeholder="请输入"
 						clearable
@@ -143,17 +143,18 @@ export default {
 		return {
 			loading: false,
 			loadingT: false,
-            queryData: {
+			queryData: {
 				userName: undefined,
 				realName: undefined,
 				accountType: undefined,
-				accountBalance: undefined,
+                balance: undefined,
+				balanceType: '1',
 				adjustType: undefined,
-				amount: undefined,
+                lessMoney: undefined,
 				remark: undefined,
-                userType: 1,
-                userId: undefined,
-				imageAnnexId: undefined,
+				userType: 1,
+				userId: undefined,
+                relationId: undefined,
 				imageAddress: undefined
 			},
 			tipsShow: null
@@ -187,7 +188,7 @@ export default {
 				{ required: true, message: '请选择操作类型', trigger: 'change' }
 			]
 
-			const amount = [
+			const lessMoney = [
 				{ required: true, message: '请输入操作金额', trigger: 'blur' }
 			]
 
@@ -198,8 +199,8 @@ export default {
 			return {
 				userName,
 				adjustType,
-				amount,
-                remark
+                lessMoney,
+				remark
 			}
 		}
 	},
@@ -209,35 +210,37 @@ export default {
 	methods: {
 		getRelationId() {
 			this.$api.getImageIdAPI().then((res) => {
-				this.queryData.imageAnnexId = res.data
+				this.queryData.relationId = res.data
 			})
 		},
 		searchRealName() {
-			const { userName } = this.queryData
-            if (userName) {
-                this.$api.memberIncreaseSearchAPI({ userName }).then((res) => {
-                    const { code, data } = res
-                    if (code === 200) {
-                        const { realName, accountType, userId } = data
-                        this.queryData.realName = realName
-                        this.queryData.accountType = accountType
-                        this.queryData.userId = userId
-                    }
-                })
-            }
+			const { userName, balanceType } = this.queryData
+			if (userName) {
+				this.$api
+					.memberIncreaseSearchAPI({ userName, accountType: balanceType })
+					.then((res) => {
+						const { code, data } = res
+						if (code === 200) {
+							const { realName, accountType, userId } = data
+							this.queryData.realName = realName
+							this.queryData.accountType = accountType
+							this.queryData.userId = userId
+						}
+					})
+			}
 		},
 		searchBalance() {
-			const { userName } = this.queryData
+			const { userName, balanceType } = this.queryData
 			if (userName) {
 				this.loading = true
 				this.$api
-					.memberIncreaseSearchAPI({ userName })
+					.memberIncreaseSearchAPI({ userName, accountType: balanceType })
 					.then((res) => {
 						this.loading = false
 						const { code, data } = res
 						if (code === 200) {
 							const { balance } = data
-							this.queryData.accountBalance = balance + ''
+							this.queryData.balance = balance
 						}
 					})
 					.catch(() => {
@@ -255,8 +258,9 @@ export default {
 				...this.queryData
 			}
 			let lock = true
-            params.adjustType = params.adjustType * 1
-            params.amount = params.amount * 1
+			params.adjustType = params.adjustType * 1
+			params.lessMoney = params.lessMoney * 1
+            delete params.balanceType
 			this.$refs['form'].validate((valid) => {
 				if (valid && lock) {
 					lock = false
@@ -295,17 +299,17 @@ export default {
 		reset() {
 			this.$refs['form'].resetFields()
 			this.queryData = {
-                userName: undefined,
-                realName: undefined,
-                accountType: undefined,
-                accountBalance: undefined,
-                adjustType: undefined,
-                amount: undefined,
-                remark: undefined,
-                userType: 1,
-                userId: undefined,
-                imageAnnexId: undefined,
-                imageAddress: undefined
+				userName: undefined,
+				realName: undefined,
+				accountType: undefined,
+                balance: undefined,
+				adjustType: undefined,
+                lessMoney: undefined,
+				remark: undefined,
+				userType: 1,
+				userId: undefined,
+                relationId: undefined,
+				imageAddress: undefined
 			}
 		},
 		checkRiskValue(val) {
