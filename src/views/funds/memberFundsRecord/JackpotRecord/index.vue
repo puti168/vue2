@@ -21,7 +21,7 @@
           </el-form-item>
           <el-form-item label="订单号:">
             <el-input
-              v-model="queryData.ordernumber"
+              v-model="queryData.id"
               clearable
               :maxlength="19"
               size="medium"
@@ -33,7 +33,7 @@
           </el-form-item>
           <el-form-item label="会员账号:">
             <el-input
-              v-model="queryData.memberName"
+              v-model="queryData.userName"
               clearable
               :maxlength="11"
               size="medium"
@@ -45,7 +45,7 @@
           </el-form-item>
           <el-form-item label="会员姓名:">
             <el-input
-              v-model="queryData.memberName"
+              v-model="queryData.realName"
               clearable
               :maxlength="6"
               size="medium"
@@ -55,17 +55,15 @@
               @keyup.enter.native="enterSearch"
             ></el-input>
           </el-form-item>
-          <el-form-item label="订单状态:" class="tagheight">
+          <el-form-item label="订单状态：" class="tagheight">
             <el-select
-              v-model="queryData.accountType1"
-              style="width: 300px"
-              multiple
+              v-model="queryData.auditStatus"
               clearable
               placeholder="默认选择全部"
               :popper-append-to-body="false"
             >
               <el-option
-                v-for="item in accountType"
+                v-for="item in activityPayoutStatus"
                 :key="item.code"
                 :label="item.description"
                 :value="item.code"
@@ -74,7 +72,7 @@
           </el-form-item>
           <el-form-item label="活动ID:">
             <el-input
-              v-model="queryData.memberName"
+              v-model="queryData.activityId"
               clearable
               :maxlength="11"
               size="medium"
@@ -86,15 +84,13 @@
           </el-form-item>
           <el-form-item label="派彩方式:" class="tagheight">
             <el-select
-              v-model="queryData.accountType1"
-              style="width: 300px"
-              multiple
+              v-model="queryData.approveType"
               clearable
               placeholder="默认选择全部"
               :popper-append-to-body="false"
             >
               <el-option
-                v-for="item in accountType"
+                v-for="item in activityApproveType"
                 :key="item.code"
                 :label="item.description"
                 :value="item.code"
@@ -136,6 +132,7 @@
           v-loading="loading"
           border
           show-summary
+          :summary-method="getSummaries"
           size="mini"
           class="small-size-table"
           :data="tableData"
@@ -143,55 +140,56 @@
           :header-cell-style="getRowClass"
           @sort-change="_changeTableSort"
         >
-          <el-table-column prop="id" align="center" label="订单号">
+          <el-table-column prop="id" align="center" label="订单号" width="240px">
             <template slot-scope="scope">
               <Copy v-if="!!scope.row.id" :title="scope.row.id" :copy="copy">
-                {{ scope.row.memberName }}
+                {{ scope.row.id }}
               </Copy>
               <span v-else>-</span>
             </template>
           </el-table-column>
-          <el-table-column prop="memberName" align="center" label="会员账号">
+          <el-table-column prop="userName" align="center" label="会员账号">
             <template slot-scope="scope">
-              <Copy
-                v-if="!!scope.row.memberName"
-                :title="scope.row.memberName"
-                :copy="copy"
-              >
-                {{ scope.row.memberName }}
+              <Copy v-if="!!scope.row.userName" :title="scope.row.userName" :copy="copy">
+                {{ scope.row.userName }}
               </Copy>
               <span v-else>-</span>
             </template>
           </el-table-column>
-          <el-table-column prop="memberName" align="center" label="会员姓名">
+          <el-table-column prop="realName" align="center" label="会员姓名">
             <template slot-scope="scope">
-              <Copy
-                v-if="!!scope.row.memberName"
-                :title="scope.row.memberName"
-                :copy="copy"
-              >
-                {{ scope.row.memberName }}
+              <Copy v-if="!!scope.row.realName" :title="scope.row.realName" :copy="copy">
+                {{ scope.row.realName }}
               </Copy>
               <span v-else>-</span>
             </template>
           </el-table-column>
-          <el-table-column prop="parentProxyName" align="center" label="订单状态">
+          <el-table-column prop="auditStatus" align="center" label="订单状态">
+            <template slot-scope="scope">
+              {{ typeFilter(scope.row.auditStatus, "activityPayoutStatus") }}
+            </template>
           </el-table-column>
-          <el-table-column prop="playerName" align="center" label="活动类型">
+          <el-table-column prop="type" align="center" label="活动类型">
+            <template slot-scope="scope">
+              {{ typeFilter(scope.row.type, "activityType") }}
+            </template>
           </el-table-column>
-          <el-table-column prop="parentProxyName" align="center" label="活动ID ">
+          <el-table-column prop="activityId" align="center" label="活动ID ">
           </el-table-column>
-          <el-table-column prop="parentProxyName" align="center" label="派彩方式">
+          <el-table-column prop="approveType" align="center" label="派彩方式">
+            <template slot-scope="scope">
+              {{ typeFilter(scope.row.approveType, "activityApproveType") }}
+            </template>
           </el-table-column>
           <el-table-column
-            prop="parentProxyName"
+            prop="amount"
             align="center"
             label="彩金金额"
             sortable="custom"
           >
           </el-table-column>
           <el-table-column
-            prop="parentProxyName"
+            prop="createdAt"
             align="center"
             label="派彩时间"
             sortable="custom"
@@ -218,126 +216,68 @@
 <script>
 import list from '@/mixins/list'
 import dayjs from 'dayjs'
-import { routerNames } from '@/utils/consts'
 const startTime = dayjs().startOf('day').valueOf()
 const endTime = dayjs().endOf('day').valueOf()
 
 export default {
-  name: routerNames.gameBetslipTable,
   components: {},
   mixins: [list],
   data() {
     return {
       queryData: {},
-      gameTypeList: [],
       searchTime: [startTime, endTime],
-      netTime: [startTime, endTime],
-      now: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
       tableData: [],
-      dataList: {}
+      summary: {}
     }
   },
   computed: {
-    accountType() {
-      return this.globalDics.accountType
+    activityPayoutStatus() {
+      return this.globalDics.activityPayoutStatus
     },
-    betDeviceType() {
-      return this.globalDics.betDeviceType
+    activityApproveType() {
+      return this.globalDics.activityApproveType
     }
   },
-  mounted() {
-    this.getGameTypeList()
-  },
+  created() {},
   methods: {
-    getGameTypeList() {
-      this.$api.getMerchantGameGamePlant().then((res) => {
-        if (res.code === 200) {
-          this.gameTypeList = res.data
-        }
-      })
-    },
     loadData() {
       this.loading = true
       const create = this.searchTime || []
-      const net = this.netTime || []
       const [startTime, endTime] = create
-      const [netAtStart, netAtEnd] = net
       let params = {
         ...this.queryData,
-        createAtStart: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : '',
-        createAtEnd: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : '',
-        netAtStart: netAtStart ? dayjs(netAtStart).format('YYYY-MM-DD HH:mm:ss') : '',
-        netAtEnd: netAtEnd ? dayjs(netAtEnd).format('YYYY-MM-DD HH:mm:ss') : ''
+        createdAtStart: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : '',
+        createdAtEnd: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
       }
       params = {
         ...this.getParams(params)
       }
-      console.log(startTime, endTime, netAtStart, netAtEnd)
-      if (startTime || endTime || netAtStart || netAtEnd) {
-        this.$api
-          .getGameRecordNotes(params)
-          .then((res) => {
-            if (res.code === 200) {
-              this.tableData = res.data.record
-              this.total = res.data.totalRecord
-            }
-            this.loading = false
-          })
-          .catch(() => {
-            this.loading = false
-          })
-      } else {
-        this.loading = false
-        this.$message.warning('请选择一个下注时间或者结算时间')
-      }
+      this.$api
+        .getMemberFundsRecordsDiscount(params)
+        .then((res) => {
+          if (res.code === 200) {
+            this.tableData = res.data.record
+            this.total = res.data.totalRecord
+            this.summary = res.data.summary
+          }
+          this.loading = false
+        })
+        .catch(() => {
+          this.loading = false
+        })
     },
     reset() {
       this.queryData = {}
       this.searchTime = [startTime, endTime]
-      this.netTime = [startTime, endTime]
       this.pageNum = 1
       this.loadData()
     },
-    lookMsg(val) {
-      console.log(val)
-      const data = {}
-      data.createAt = val.createAt
-      data.gameCode = val.gameCode
-      data.thirdOrderId = val.thirdOrderId
-      const loading = this.$loading({
-        lock: true,
-        text: 'Loading',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
-      })
-      this.$api
-        .getGameRecordDetail(data)
-        .then((res) => {
-          if (res.code === 200 && res.data.record.length > 0) {
-            this.dataList = res.data.record[0]
-            loading.close()
-          } else {
-            this.dataList = {}
-            loading.close()
-          }
-          console.log(res)
-        })
-        .catch(() => {
-          loading.close()
-        })
-    },
     _changeTableSort({ column, prop, order }) {
-      if (prop === 'betAmount') {
+      if (prop === 'amount') {
         prop = 1
       }
-      if (prop === 'netAmount') {
+      if (prop === 'createdAt') {
         prop = 2
-      }
-      if (prop === 'createAt') {
-        prop = 3
-      }
-      if (prop === 'netAt') {
-        prop = 4
       }
       this.queryData.orderKey = prop
       if (order === 'ascending') {
@@ -349,128 +289,116 @@ export default {
       }
       this.loadData()
     },
-    checkValue(e) {
-      const { name, value } = e.target
-      switch (name) {
-        case 'betAmountMax':
-          if (
-            !!this.queryData.betAmountMin &&
-            value &&
-            value * 1 <= this.queryData.betAmountMin * 1
-          ) {
-            this.$message({
-              type: 'warning',
-              message: `投注金额输入最大值不能小于最小值`
-            })
-          } else {
-            this.queryData.betAmountMax = value
-          }
-          break
-        case 'netAmountMax':
-          if (
-            !!this.queryData.netAmountMin &&
-            value &&
-            value * 1 < this.queryData.netAmountMin * 1
-          ) {
-            this.$message({
-              type: 'warning',
-              message: `会员输赢输入最大值不能小于最小值`
-            })
-          } else {
-            this.queryData.netAmountMax = value
-          }
-          break
-      }
-    },
     exportExcel() {
+      this.loading = true
       const create = this.searchTime || []
-      const net = this.netTime || []
       const [startTime, endTime] = create
-      const [netAtStart, netAtEnd] = net
       let params = {
         ...this.queryData,
-        createAtStart: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : '',
-        createAtEnd: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : '',
-        netAtStart: netAtStart ? dayjs(netAtStart).format('YYYY-MM-DD HH:mm:ss') : '',
-        netAtEnd: netAtEnd ? dayjs(netAtEnd).format('YYYY-MM-DD HH:mm:ss') : ''
+        createdAtStart: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : '',
+        createdAtEnd: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
       }
       params = {
         ...this.getParams(params)
       }
-      delete params.registerTime
-      delete params.lastLoginTime
-      delete params.firstSaveTime
-      delete params.accountStatus
-      delete params.deviceType
-      delete params.accountType
-      if (startTime || endTime || netAtStart || netAtEnd) {
-        this.$api
-          .getGameRecordDownload(params)
-          .then((res) => {
-            this.loading = false
-            const { data, status } = res
-            if (res && status === 200) {
-              const { type } = data
-              if (type.includes('application/json')) {
-                const reader = new FileReader()
-                reader.onload = (evt) => {
-                  if (evt.target.readyState === 2) {
-                    const {
-                      target: { result }
-                    } = evt
-                    const ret = JSON.parse(result)
-                    if (ret.code !== 200) {
-                      this.$message({
-                        type: 'error',
-                        message: ret.msg,
-                        duration: 1500
-                      })
-                    }
+      this.$api
+        .getMemberFundsRecordsDiscountDownload(params)
+        .then((res) => {
+          this.loading = false
+          const { data, status } = res
+          if (res && status === 200) {
+            const { type } = data
+            if (type.includes('application/json')) {
+              const reader = new FileReader()
+              reader.onload = (evt) => {
+                if (evt.target.readyState === 2) {
+                  const {
+                    target: { result }
+                  } = evt
+                  const ret = JSON.parse(result)
+                  if (ret.code !== 200) {
+                    this.$message({
+                      type: 'error',
+                      message: ret.msg,
+                      duration: 1500
+                    })
                   }
                 }
-                reader.readAsText(data)
-              } else {
-                const result = res.data
-                const disposition = res.headers['content-disposition']
-                const fileNames = disposition && disposition.split("''")
-                let fileName = fileNames[1]
-                fileName = decodeURIComponent(fileName)
-                const blob = new Blob([result], {
-                  type: 'application/octet-stream'
-                })
-                if ('download' in document.createElement('a')) {
-                  const downloadLink = document.createElement('a')
-                  downloadLink.download = fileName || ''
-                  downloadLink.style.display = 'none'
-                  downloadLink.href = URL.createObjectURL(blob)
-                  document.body.appendChild(downloadLink)
-                  downloadLink.click()
-                  URL.revokeObjectURL(downloadLink.href)
-                  document.body.removeChild(downloadLink)
-                } else {
-                  window.navigator.msSaveBlob(blob, fileName)
-                }
-                this.$message({
-                  type: 'success',
-                  message: '导出成功',
-                  duration: 1500
-                })
               }
+              reader.readAsText(data)
+            } else {
+              const result = res.data
+              const disposition = res.headers['content-disposition']
+              const fileNames = disposition && disposition.split("''")
+              let fileName = fileNames[1]
+              fileName = decodeURIComponent(fileName)
+              const blob = new Blob([result], {
+                type: 'application/octet-stream'
+              })
+              if ('download' in document.createElement('a')) {
+                const downloadLink = document.createElement('a')
+                downloadLink.download = fileName || ''
+                downloadLink.style.display = 'none'
+                downloadLink.href = URL.createObjectURL(blob)
+                document.body.appendChild(downloadLink)
+                downloadLink.click()
+                URL.revokeObjectURL(downloadLink.href)
+                document.body.removeChild(downloadLink)
+              } else {
+                window.navigator.msSaveBlob(blob, fileName)
+              }
+              this.$message({
+                type: 'success',
+                message: '导出成功',
+                duration: 1500
+              })
             }
-          })
-          .catch(() => {
-            this.loading = false
-            this.$message({
-              type: 'error',
-              message: '导出失败',
-              duration: 1500
-            })
-          })
-      } else {
-        this.$message.warning('请选择一个下注时间或者结算时间')
-      }
+          }
+        })
+        .catch(() => {
+          this.loading = false
+          // this.$message({
+          //   type: "error",
+          //   message: "导出失败",
+          //   duration: 1500,
+          // });
+        })
     },
-    enterSubmit() {
+    getSummaries(param) {
+      const { columns } = param
+      const sums = []
+      columns.forEach((column, index) => {
+        if (index === 0) {
+          const el = (
+            <div class='count_row'>
+              <p>小计</p>
+              <p>合计</p>
+            </div>
+          )
+          sums[index] = el
+          return
+        } else if (index === 7 && this.summary !== null) {
+          const el = (
+            <div class='count_row'>
+              <p>{this.summary.subtotal}</p>
+              <p>{this.summary.total}</p>
+            </div>
+          )
+          sums[index] = el
+          return
+        } else {
+          sums[index] = (
+            <div class='count_row'>
+              <p>-</p>
+              <p>-</p>
+            </div>
+          )
+        }
+      })
+
+      return sums
+    },
+    enterSearch() {
       this.loadData()
     }
   }
@@ -478,9 +406,46 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-/deep/ .tagheight .el-tag {
-  // height: 24px;
-  // line-height: 24px;
-  // min-width: 60px;
+/deep/ .el-table__footer-wrapper .cell::after {
+  border: 1px solid #ebeef5;
+  content: "";
+  position: absolute;
+  top: 41px;
+  left: 0;
+  width: 100%;
+}
+
+/deep/ .el-table__fixed-footer-wrapper tr::after {
+  border: 1px solid #ebeef5;
+  content: "";
+  position: absolute;
+  top: 41px;
+  left: 0;
+  width: 100%;
+}
+.count_row {
+  height: 80px;
+  p {
+    height: 40px;
+    line-height: 40px;
+    color: #5c5c5c;
+    font-weight: 700;
+    span {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+    }
+  }
+}
+/deep/.el-table {
+  overflow: auto;
+}
+/deep/.el-table__body-wrapper,
+/deep/.el-table__header-wrapper,
+/deep/.el-table__footer-wrapper {
+  overflow: visible;
+}
+/deep/.el-table::after {
+  position: relative !important;
 }
 </style>

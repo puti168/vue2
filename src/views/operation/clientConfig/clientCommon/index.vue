@@ -21,14 +21,14 @@
 					>
 						<el-option
 							v-for="item in windLevelTypeArr"
-							:key="item.code"
-							:label="item.description"
-							:value="item.code"
+							:key="item.type"
+							:label="item.value"
+							:value="item.type"
 						></el-option>
 					</el-select>
 				</el-form-item>
 				<el-form-item
-					v-if="['1'].includes(queryData.operateType)"
+					v-if="['0'].includes(queryData.operateType)"
 					label="会员客服地址"
 					prop="userAddress"
 				>
@@ -44,7 +44,7 @@
 					></el-input>
 				</el-form-item>
 				<el-form-item
-					v-else-if="['2'].includes(queryData.operateType)"
+					v-else-if="['1'].includes(queryData.operateType)"
 					label="代理客服地址"
 					prop="agentAddress"
 				>
@@ -60,7 +60,7 @@
 					></el-input>
 				</el-form-item>
 				<el-form-item
-					v-else-if="['3'].includes(queryData.operateType)"
+					v-else-if="['2'].includes(queryData.operateType)"
 					label="IOS下载地址"
 					prop="iosAddress"
 				>
@@ -76,7 +76,7 @@
 					></el-input>
 				</el-form-item>
 				<el-form-item
-					v-else-if="['4'].includes(queryData.operateType)"
+					v-else-if="['3'].includes(queryData.operateType)"
 					label="安卓下载地址"
 					prop="androidAddress"
 				>
@@ -92,7 +92,7 @@
 					></el-input>
 				</el-form-item>
 				<el-form-item
-					v-else-if="['5'].includes(queryData.operateType)"
+					v-else-if="['4'].includes(queryData.operateType)"
 					label="桌面端下载地址"
 					prop="pcAddress"
 				>
@@ -108,7 +108,7 @@
 					></el-input>
 				</el-form-item>
 				<el-form-item
-					v-else-if="['6'].includes(queryData.operateType)"
+					v-else-if="['5'].includes(queryData.operateType)"
 					label="投诉建议邮箱"
 					prop="complainAddress"
 				>
@@ -123,7 +123,7 @@
 					></el-input>
 				</el-form-item>
 				<el-form-item
-					v-else-if="['7'].includes(queryData.operateType)"
+					v-else-if="['6'].includes(queryData.operateType)"
 					label="客户邮箱"
 					prop="serviceAddress"
 				>
@@ -138,7 +138,7 @@
 					></el-input>
 				</el-form-item>
 				<el-form-item
-					v-else-if="['8'].includes(queryData.operateType)"
+					v-else-if="['7'].includes(queryData.operateType)"
 					label="合营部ID"
 					prop="IdAddress"
 				>
@@ -273,7 +273,7 @@ export default {
 			loading: false,
 			loadingT: false,
 			queryData: {
-				operateType: '1',
+				operateType: '',
 				userAddress: undefined,
 				agentAddress: undefined,
 				iosAddress: undefined,
@@ -286,22 +286,11 @@ export default {
 			},
 			showInfoData: {},
 			current: '',
-			tipsShow: null
+			tipsShow: null,
+			windLevelTypeArr: []
 		}
 	},
 	computed: {
-		windLevelTypeArr() {
-			return [
-				{ description: '会员客服地址', code: '1' },
-				{ description: '代理客服地址', code: '2' },
-				{ description: 'ios下载地址', code: '3' },
-				{ description: '安卓下载地址', code: '4' },
-				{ description: '桌面端下载地址', code: '5' },
-				{ description: '投诉建议邮箱', code: '6' },
-				{ description: '客服邮箱', code: '7' },
-				{ description: '合营ID', code: '8' }
-			]
-		},
 		rules() {
 			const operateType = [
 				{ required: true, message: '请选择类型', trigger: 'change' }
@@ -347,8 +336,21 @@ export default {
 			}
 		}
 	},
-	mounted() {},
+	mounted() {
+		this.queryPublicResources()
+	},
 	methods: {
+		// 查询类型
+		queryPublicResources() {
+			this.$api.clientCommonQueryPublicResourcesAPI().then((res) => {
+				const { code, data } = res
+				if (code === 200) {
+					this.windLevelTypeArr = data || []
+				} else {
+					this.windLevelTypeArr = []
+				}
+			})
+		},
 		add() {
 			this.loadingT = true
 			const params = {
@@ -409,6 +411,7 @@ export default {
 		},
 		changeRiskType(evt) {
 			this.showInfoData = {}
+            evt = evt + ''
 			this.queryData = {
 				userAddress: undefined,
 				agentAddress: undefined,

@@ -571,9 +571,12 @@ export default {
 }
 .count_row {
   height: 80px;
+
   p {
     height: 40px;
     line-height: 40px;
+    color: #5c5c5c;
+    font-weight: 700;
     span {
       display: inline-block;
       width: 20px;

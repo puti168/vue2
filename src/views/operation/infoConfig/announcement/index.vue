@@ -5,7 +5,7 @@
         <el-form ref="form" :inline="true" :model="queryData">
           <el-form-item label="公告标题:">
             <el-input
-              v-model="queryData.gameId"
+              v-model="queryData.announcementTitle"
               clearable
               :maxlength="20"
               size="medium"
@@ -15,7 +15,7 @@
           </el-form-item>
           <el-form-item label="标识:">
             <el-select
-              v-model="queryData.gameStatusList"
+              v-model="queryData.tag"
               clearable
               placeholder="默认选择全部"
               :popper-append-to-body="false"
@@ -26,7 +26,7 @@
           </el-form-item>
           <el-form-item label="发送终端:">
             <el-select
-              v-model="queryData.aaaaa"
+              v-model="queryData.terminal"
               style="width: 300px"
               multiple
               placeholder="默认选择全部"
@@ -42,7 +42,7 @@
           </el-form-item>
           <el-form-item label="公告时效:">
             <el-select
-              v-model="queryData.gameStatusList"
+              v-model="queryData.announcementAging"
               clearable
               placeholder="默认选择全部"
               :popper-append-to-body="false"
@@ -68,7 +68,7 @@
           </el-form-item>
           <el-form-item label="创建人:">
             <el-input
-              v-model="queryData.gameName"
+              v-model="queryData.createdBy"
               clearable
               :maxlength="15"
               size="medium"
@@ -78,7 +78,7 @@
           </el-form-item>
           <el-form-item label="最近操作人:">
             <el-input
-              v-model="queryData.gameName"
+              v-model="queryData.updateBy"
               clearable
               :maxlength="15"
               size="medium"
@@ -129,27 +129,36 @@
           @sort-change="changeTableSort"
         >
           <el-table-column
-            prop="gameId"
+            prop="announcementTitle"
             align="center"
             label="公告标题"
           ></el-table-column>
-          <el-table-column align="center" label="公告内容"> </el-table-column>
-          <el-table-column prop="gameName" align="center" label="标识"></el-table-column>
-          <el-table-column align="center" label="发送终端"> </el-table-column>
-          <el-table-column align="center" label="公告时效"> </el-table-column>
-          <el-table-column align="center" label="公告上架时间" sortable="custom">
+          <el-table-column align="center" label="公告内容" prop="announcementContent">
           </el-table-column>
-          <el-table-column align="center" label="公告下架时间" sortable="custom">
+          <el-table-column prop="tag" align="center" label="标识"></el-table-column>
+          <el-table-column align="center" label="发送终端" prop="terminal">
+          </el-table-column>
+          <el-table-column align="center" label="公告时效" prop="announcementAging">
           </el-table-column>
           <el-table-column
-            prop="description"
             align="center"
-            label="状态"
-          ></el-table-column>
-          <el-table-column prop="relationOtherGameId" align="center" label="创建人">
+            label="公告上架时间"
+            prop="upTime"
+            sortable="custom"
+          >
           </el-table-column>
           <el-table-column
-            prop="relationGameModuleId"
+            align="center"
+            label="公告下架时间"
+            prop="downTime"
+            sortable="custom"
+          >
+          </el-table-column>
+          <el-table-column prop="status" align="center" label="状态"></el-table-column>
+          <el-table-column prop="createdBy" align="center" label="创建人">
+          </el-table-column>
+          <el-table-column
+            prop="createdAt"
             align="center"
             label="创建时间"
             sortable="custom"

@@ -279,7 +279,7 @@ export default {
 			this.loading = true
 
 			this.$api
-				.memberDataInfoChangeRecord(params)
+				.getOperateConfigClientRecordQueryRecordList(params)
 				.then((res) => {
 					if (res.code === 200) {
 						const response = res.data

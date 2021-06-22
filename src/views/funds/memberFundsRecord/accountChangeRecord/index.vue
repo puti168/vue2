@@ -419,11 +419,11 @@ export default {
           this.windControlLevelList = res.data
         }
       })
-      this.$api.getMerchantGameWalletDic({ windControlType: 3 }).then((res) => {
-        if (res.code === 200) {
-          this.walletTypeList = res.data
-        }
-      })
+      // this.$api.getMerchantGameWalletDic({ windControlType: 3 }).then((res) => {
+      //   if (res.code === 200) {
+      //     this.walletTypeList = res.data
+      //   }
+      // })
     },
     loadData() {
       this.loading = true
@@ -488,7 +488,7 @@ export default {
           ) {
             this.$message({
               type: 'warning',
-              message: `投注金额输入最大值不能小于最小值`
+              message: `VIP等级输入最大值不能小于最小值`
             })
           } else {
             this.queryData.vipSerialNumMax = value
@@ -502,7 +502,7 @@ export default {
           ) {
             this.$message({
               type: 'warning',
-              message: `会员输赢输入最小值不能大于最大值`
+              message: `VIP等级输入最小值不能大于最大值`
             })
           } else {
             this.queryData.vipSerialNumMin = value
@@ -516,7 +516,7 @@ export default {
           ) {
             this.$message({
               type: 'warning',
-              message: `投注金额输入最大值不能小于最小值`
+              message: `账变金额输入最大值不能小于最小值`
             })
           } else {
             this.queryData.amountMax = value
@@ -530,7 +530,7 @@ export default {
           ) {
             this.$message({
               type: 'warning',
-              message: `会员输赢输入最小值不能大于最大值`
+              message: `账变金额输入最小值不能大于最大值`
             })
           } else {
             this.queryData.amountMin = value
@@ -620,8 +620,8 @@ export default {
         if (index === 0) {
           const el = (
             <div class='count_row'>
-              <p>本页合计</p>
-              <p>全部合计</p>
+              <p>小计</p>
+              <p>合计</p>
             </div>
           )
           sums[index] = el
@@ -677,6 +677,8 @@ export default {
   p {
     height: 40px;
     line-height: 40px;
+    color: #5c5c5c;
+    font-weight: 700;
     span {
       display: inline-block;
       width: 20px;

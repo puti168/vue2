@@ -412,8 +412,8 @@ export default {
         if (index === 0) {
           const el = (
             <div class='count_row'>
-              <p>本页合计</p>
-              <p>全部合计</p>
+              <p>小计</p>
+              <p>合计</p>
             </div>
           )
           sums[index] = el
@@ -469,6 +469,8 @@ export default {
   p {
     height: 40px;
     line-height: 40px;
+    color: #5c5c5c;
+    font-weight: 700;
     span {
       display: inline-block;
       width: 20px;

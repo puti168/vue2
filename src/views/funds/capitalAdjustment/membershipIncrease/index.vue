@@ -188,6 +188,7 @@ export default {
 				imageAddress: undefined,
 				imageAnnexId: undefined,
 				userType: 1,
+                bizType: 1,
 				userId: undefined,
 				activityId: undefined,
 				validmultiple: undefined
@@ -316,6 +317,7 @@ export default {
                 imageAddress: undefined,
                 imageAnnexId: undefined,
                 userType: 1,
+                bizType: 1,
                 userId: undefined,
                 activityId: undefined,
                 validmultiple: undefined

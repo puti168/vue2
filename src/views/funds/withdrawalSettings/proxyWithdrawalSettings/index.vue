@@ -63,13 +63,13 @@
             </template>
           </el-table-column>
 		  <el-table-column
-            prop="description"
+            prop="proxyAccount"
             align="center"
             width="170px"
             label="代理账号"
           ></el-table-column>
 		  <el-table-column
-            prop="description"
+            prop="proxyName"
             align="center"
             width="170px"
             label="代理姓名"
@@ -81,7 +81,7 @@
             label="代理类型"
           ></el-table-column>
 		  <el-table-column
-            prop="description"
+            prop="status"
             align="center"
             width="170px"
             label="代理状态"
@@ -93,13 +93,13 @@
             label="风控层级"
           ></el-table-column>
           <el-table-column
-            prop="gameLabelName"
+            prop="singleMinAmount"
             align="center"
             label="单次提现最低限额"
             width="170px"
           ></el-table-column>
           <el-table-column
-            prop="gameLabelName"
+            prop="singleMaxAmount"
             align="center"
             label="单次提现最高限额"
             width="170px"
@@ -111,7 +111,7 @@
             width="170px"
           ></el-table-column>
           <el-table-column
-            prop="gameLabelName"
+            prop="dateTotalNum"
             align="center"
             label="单日最高提款次数"
             width="170px"
@@ -135,13 +135,13 @@
             label="大额提现标记金额"
           ></el-table-column>
           <el-table-column
-            prop="description"
+            prop="rateDateFree"
             align="center"
             width="175px"
             label="超出单日免费次数手续费"
           ></el-table-column>
           <el-table-column
-            prop="description"
+            prop="rateDateTotal"
             align="center"
             width="175px"
             label="超出单日提款总额手续费"
