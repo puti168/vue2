@@ -48,7 +48,7 @@
 						>
 							<el-option label="全部" value=""></el-option>
 							<el-option
-								v-for="item in lockOrderType"
+								v-for="item in patchAdjustStatusFinish"
 								:key="item.code"
 								:label="item.description"
 								:value="Number(item.code)"
@@ -122,7 +122,9 @@
 							prop="orderStatus"
 							align="center"
 							label="订单状态"
-						></el-table-column>
+						><template slot-scope="scope">
+								{{ typeFilter(scope.row.orderStatus, 'patchAdjustStatusFinish') }}
+							</template></el-table-column>
 						<el-table-column
 							prop="applyTime"
 							align="center"
@@ -198,7 +200,7 @@ const start = dayjs()
 	.startOf('day')
 	.valueOf()
 export default {
-	name: 'MemberWithdrawalReview',
+	name: 'AgentTopupReviewRecord',
 	components: { detail },
 	mixins: [list],
 	data() {
@@ -220,6 +222,9 @@ export default {
 		}
 	},
 	computed: {
+		patchAdjustStatusFinish() {
+			return this.globalDics.patchAdjustStatusFinish
+		}
 	},
 	mounted() {
 		this.name = getUsername()
@@ -270,7 +275,6 @@ export default {
 				})
 		},
 		goDetail(row) {
-			this.type = Number(row.auditStep) === 1 && row.auditName === this.name
 			this.rowData = row
 			this.showDetail = true
 		},

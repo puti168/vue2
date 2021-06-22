@@ -118,7 +118,7 @@ export function selectMemberWithdrawUser(data) {
 }
 export function selectMemberWithDrawAuthEsPageOne(data) {
 	return request({
-		url: '/memberWithDrawUserOne/selectMemberWithDrawAuthEsPageOne',
+		url: '/memberWithDrawUser/selectMemberWithDrawAuthEsPageOne',
 		method: 'post',
 		data
 	})
@@ -146,28 +146,28 @@ export function secondAddAudit(data) {
 }
 export function updateWithDrawAuthOne(data) {
 	return request({
-		url: '/memberWithDrawUserOne/updateWithDrawAuthOne',
+		url: '/memberWithDrawUser/updateWithDrawAuthOne',
 		method: 'post',
 		data
 	})
 }
 export function selectMemberWithDrawAuthEsPageThree(data) {
 	return request({
-		url: '/memberWithDrawUserThree/selectMemberWithDrawAuthEsPageThree',
+		url: '/memberWithDrawUser/selectMemberWithDrawAuthEsPageThree',
 		method: 'post',
 		data
 	})
 }
 export function selectMemberWithDrawAuthEsPageTwo(data) {
 	return request({
-		url: '/memberWithDrawUserTwo/selectMemberWithDrawAuthEsPageTwo',
+		url: '/memberWithDrawUser/selectMemberWithDrawAuthEsPageTwo',
 		method: 'post',
 		data
 	})
 }
 export function selectMemberWithDrawAuthEsPagePay(data) {
 	return request({
-		url: '/memberWithDrawUserPay/selectMemberWithDrawAuthEsPagePay',
+		url: '/memberWithDrawUser/selectMemberWithDrawAuthEsPagePay',
 		method: 'post',
 		data
 	})
@@ -235,7 +235,15 @@ export function proxyCommissionRecordFirstInstancePage(data) {
 		data
 	})
 }
+export function lastInstancePage(data) {
+	return request({
+		url: '/proxyCommissionRecord/lastInstancePage',
+		method: 'post',
+		data
+	})
+}
 export default {
+	lastInstancePage,
 	proxyCommissionRecordFirstInstancePage,
 	proxyCommissionRecordQueryDetail,
 	proxyCommissionRecordSelectCommission,

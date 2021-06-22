@@ -16,89 +16,85 @@
 			@close="handleClose"
 		>
 			<el-card class="card">
-				<el-form ref="form" :inline="true" :model="form" :rules="rules" label-width="auto">
+				<el-form
+					ref="form"
+					:inline="true"
+					:model="form"
+					:rules="rules"
+					label-width="auto"
+				>
 					<el-row>
 						<el-col>
 							<el-row>
-								<el-form-item :label="$t('system_component_component_editaccount_407')" prop="type">
-									<span>{{ $t('system_component_component_editaccount_408') }}</span>
-								</el-form-item>
-							</el-row>
-							<el-row>
 								<el-form-item
 									:required="!isEditing"
-									:label="$t('system_component_component_editaccount_409')"
+									label="用户名称："
 									prop="userName"
 								>
 									<el-input
 										v-model="form.userName"
 										:disabled="!isCreated"
-										maxlength="12"
+										maxlength="10"
 										style="width:300px;"
-										minlength="3"
-										:placeholder="
-											$t('system_component_component_editaccount_410')
-										"
+										placeholder="请输入"
 									></el-input>
 								</el-form-item>
 							</el-row>
 							<el-row>
-								<el-form-item :label="$t('system_component_component_editaccount_411')" prop="nickName">
+								<el-form-item label="姓名：" prop="nickName">
 									<el-input
 										v-model="form.nickName"
 										maxlength="10"
 										style="width:300px;"
-										:placeholder="
-											$t('system_component_component_editaccount_412')
-										"
+										placeholder="请输入"
 									></el-input>
 								</el-form-item>
 							</el-row>
 							<template v-if="!isEditing">
 								<el-row>
 									<PasswordWithEye
-										:label="$t('system_component_component_editaccount_413')"
+										label="登录密码："
 										prop="pwd"
 										:form="form"
-										:placeholder="$t('message.validNumberEn310')"
+										placeholder="请输入"
 										@handleInput="form.pwd = $event"
 									></PasswordWithEye>
 								</el-row>
 								<el-row>
 									<PasswordWithEye
-										:label="$t('system_component_component_editaccount_414')"
+										label="确认登录密码："
 										prop="rePwd"
 										:form="form"
-										:placeholder="$t('message.validNumberEn310')"
+										placeholder="请输入"
 										@handleInput="form.rePwd = $event"
 									></PasswordWithEye>
 								</el-row>
 							</template>
 							<el-row>
-								<el-form-item :label="$t('login_index_260')" prop="googleAuthCodeHide">
+								<el-form-item
+									label="谷歌验证秘钥"
+									prop="googleAuthCodeHide"
+								>
 									<el-input
 										v-model="form.googleAuthCode"
 										disabled
 										style="width:300px;"
 										:placeholder="$t('login_index_258')"
 									></el-input>
-									<!-- <el-button
-										type="primary"
-										style="width:120px;"
-										:disabled="loading"
-										@click="createGoogleAuth"
-									>{{ isEditing?$t("system_component_account_274"):$t("login_index_259") }}</el-button> -->
-								</el-form-item>
+									</el-form-item>
 							</el-row>
 						</el-col>
 					</el-row>
+						<el-form-item
+									label="分配角色："
+								>
 					<el-transfer
 						ref="transfer"
 						v-model="tranferVal"
 						class="transfer"
 						:titles="[
-							$t('system_component_component_editaccount_415'),
-							$t('system_component_component_editaccount_416')
+							'可选角色',
+							'已选角色'
 						]"
 						:data="ps"
 						:props="{ key: 'id', label: 'roleName' }"
@@ -110,15 +106,20 @@
 							class="item"
 							style="padding: 0"
 							@click.native="handleClose"
-						>{{ $t('system_component_component_editaccount_417') }}</el-button>
+						>
+							{{ $t('system_component_component_editaccount_417') }}
+						</el-button>
 						<el-button
 							round
 							type="primary"
 							class="item"
 							style="padding: 0"
 							@click.native="handleSure"
-						>{{ $t('system_component_component_editaccount_418') }}</el-button>
+						>
+							{{ $t('system_component_component_editaccount_418') }}
+						</el-button>
 					</div>
+						</el-form-item>
 				</el-form>
 			</el-card>
 		</el-dialog>
@@ -231,19 +232,19 @@ export default {
 			val && (this.ps = this.accountRoles)
 
 			if (val && this.isCreated) {
-				this.$api.getRoleList(
-					{
+				this.$api
+					.getRoleList({
 						pageNum: 1,
 						pageSize: 99999
-					}
-				).then((res) => {
-					this.listLoading = false
-					this.ps = res.data.records || []
-					this.accountRoles = res.data.records || []
-					if (!res.data.records) {
-						this.$parent.notHasRoles = true
-					}
-				})
+					})
+					.then((res) => {
+						this.listLoading = false
+						this.ps = res.data.records || []
+						this.accountRoles = res.data.records || []
+						if (!res.data.records) {
+							this.$parent.notHasRoles = true
+						}
+					})
 			}
 		},
 		isCreated(val) {
@@ -257,25 +258,27 @@ export default {
 				this.form.nickName = val.nickName
 				this.form.googleAuthCode = val.googleAuthCode
 				if (this.isEditing && !isEmptyObj(val)) {
-					this.$api.getUserRoles({
-						id: val.id
-					}).then((res) => {
-						this.form = {
-							...val,
-							...this.form
-						}
+					this.$api
+						.getUserRoles({
+							id: val.id
+						})
+						.then((res) => {
+							this.form = {
+								...val,
+								...this.form
+							}
 
-						this.tranferVal =
-							(res.data.allowUserRole &&
-								res.data.allowUserRole
-									.filter((element) => {
-										return element.isExist === '1'
-									})
-									.map((item) => item.id)) ||
-							[]
+							this.tranferVal =
+								(res.data.allowUserRole &&
+									res.data.allowUserRole
+										.filter((element) => {
+											return element.isExist === '1'
+										})
+										.map((item) => item.id)) ||
+								[]
 
-						this.ps = res.data.allowUserRole || []
-					})
+							this.ps = res.data.allowUserRole || []
+						})
 				}
 			},
 			deep: true

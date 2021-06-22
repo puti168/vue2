@@ -60,19 +60,13 @@
         ></el-table-column>
         <el-table-column
           align="center"
-          prop="userName"
+          prop="nickName"
           label="姓名"
         ></el-table-column>
         <el-table-column
           align="center"
           prop="userName"
           label="性别"
-        ></el-table-column>
-        <el-table-column
-          align="center"
-          prop="roleName"
-          :label="$t('system_component_account_277')"
-          width="200"
         ></el-table-column>
         <el-table-column
           align="center"
@@ -89,15 +83,15 @@
         <el-table-column
           align="center"
           prop="createBy"
-          :label="$t('system_component_account_278')"
+          label="创建人"
         ></el-table-column>
        <el-table-column
           align="center"
           prop="lastLoginTime"
-          :label="$t('system_component_account_279')"
+          label="最后登录"
           width="160"
         ></el-table-column>
-        <el-table-column prop="status" label="状态">
+        <el-table-column label="状态">
           <template slot-scope="scope">
             <el-switch
               :disabled="scope.row.userName === username"
@@ -114,12 +108,11 @@
           align="center"
           fixed="right"
           :label="$t('system_component_account_280')"
-          min-width="200"
+          min-width="250"
         >
           <template slot-scope="scope">
             <el-button
               type="primary"
-              icon="el-icon-edit"
               size="medium"
               @click.native.prevent="popupPwdDialog(scope.row)"
             >
@@ -133,6 +126,15 @@
             >
               编辑
             </el-button>
+              <el-button
+                                type="danger"
+                                icon="el-icon-delete"
+                                :disabled="loading"
+                                size="medium"
+                                @click="deleteUser(scope.row)"
+                            >
+                                删除
+                            </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -155,7 +157,7 @@
       :deal-data.sync="dealData"
       :is-created.sync="isCreated"
     />
-    <AccountUpdatePass :dialog.sync="dialog" :agentid="agentid" />
+    <AccountUpdatePass :dialog.sync="dialog" :agentid="agentid" :userName="userName" />
     <el-dialog
       width="500px"
       :close-on-click-modal="false"
@@ -206,10 +208,7 @@
 import EditAccount from './EditAccount'
 import AccountUpdatePass from '@/components/Dialog/UpdatePass'
 import list from '@/mixins/list'
-import { message } from '@/utils/message'
 import { getUsername } from '@/utils/auth' // get token from cookie
-import { sleep } from '@/utils/sleep'
-import md5 from 'js-md5'
 
 export default {
   name: 'Account',
@@ -219,6 +218,7 @@ export default {
     return {
       curUsername: '',
       username: getUsername(),
+      userName: '',
       userType: '',
       loading: true,
       dialogVisible: false,
@@ -232,7 +232,9 @@ export default {
       isCreated: false,
       dealData: {},
       list: [],
-      listQuery: {},
+      listQuery: {
+        userName: ''
+      },
       form: {
         originPwd: '',
         newPwd: '',
@@ -260,6 +262,49 @@ export default {
         this.total = response.data.total
       })
     },
+    deleteUser(val) {
+            const loading = this.$loading({
+                lock: true,
+                text: 'Loading',
+                spinner: 'el-icon-loading',
+                background: 'rgba(0, 0, 0, 0.7)'
+            })
+            const { id } = val
+            this.$confirm(`<strong>确定删除该账号吗?</strong>`, `确认提示`, {
+                dangerouslyUseHTMLString: true,
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            })
+                .then(() => {
+                    this.$api
+                        .deleteUser({ id })
+                        .then((res) => {
+                            loading.close()
+                            const { code } = res
+                            if (code === 200) {
+                                this.$message.success('删除成功')
+                            } else {
+                                this.$message({
+                                    type: 'error',
+                                    message: '删除失败!'
+                                })
+                            }
+
+                            this.loadData()
+                        })
+                        .catch(() => {
+                            loading.close()
+                        })
+                })
+                .catch(() => {
+                    loading.close()
+                })
+
+            setTimeout(() => {
+                loading.close()
+            }, 1000)
+        },
     closeDialog() {
       this.$refs.dialogForm.resetFields()
     },
@@ -285,37 +330,6 @@ export default {
             })
         }
       })
-    },
-    updatePassword(form) {
-      return this.$api
-        .modifyPassword({
-          pwd: md5(form.password + this.userName),
-          rePwd: md5(form.passwordAgain + this.userName),
-          id: form.id,
-          userName: this.userName
-        })
-        .then((_) => {
-          if (_.code === 200) {
-            message({
-              message: this.$t('system_component_account_289'),
-              type: 'success'
-            })
-
-            if (this.curUsername === this.username) {
-              sleep(1000).then(() => {
-                this.$store
-                  .dispatch('user/logout')
-                  .then((_) => {
-                    location.reload()
-                  })
-                  .catch((err) => {
-                    message({ message: err.message, type: 'error' })
-                    this.$router.go('/')
-                  })
-              })
-            }
-          }
-        })
     },
     editRow(data) {
       this.dealData = data
@@ -344,9 +358,7 @@ export default {
     },
     handleReset() {
       this.listQuery = {
-        time: undefined,
-        cardColourId: undefined, // 纸牌牌色:1、红牌，2、蓝牌
-        createdBy: undefined
+        userName: ''
       }
       this.loadData()
     }

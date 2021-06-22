@@ -65,6 +65,13 @@ export function deleteRiskRankAPI(data) {
 		data
 	})
 }
+export function deleteUser(data) {
+	return request({
+		url: '/userInfo/deleteUser',
+		method: 'post',
+		data
+	})
+}
 
 // 风控==> 编辑风控层级 ===> 列表
 export function riskDictAPI(params) {
@@ -102,6 +109,7 @@ export default {
 	createRiskRankAPI,
 	updateRiskRankAPI,
 	deleteRiskRankAPI,
+	deleteUser,
 	riskDictAPI,
 	riskEditInfoAPI,
 	riskEditAddAPI

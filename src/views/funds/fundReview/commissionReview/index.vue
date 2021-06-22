@@ -86,7 +86,7 @@
 									v-if="
 										scope.row.lockAccount === name || !scope.row.lockAccount
 									"
-									v-model="scope.row.lockOrder"
+									v-model="scope.row.lockStatus"
 									@change="lockChange(scope.row)"
 								></el-checkbox>
 							</template>
@@ -109,47 +109,55 @@
 							</template>
 						</el-table-column>
 						<el-table-column
-							v-if="activeName === '0'"
-							prop="orderNo"
-							align="center"
-							label="订单号"
-						></el-table-column>
-						<el-table-column
-							v-else
 							prop="orderNo"
 							align="center"
 							label="审核订单号"
 						></el-table-column>
 						<el-table-column
-							prop="userName"
+							prop="proxyAccount"
 							align="center"
-							label="会员账号"
+							label="代理账号"
 						></el-table-column>
 						<el-table-column
-							prop="realName"
+							prop="proxyName"
 							align="center"
-							label="会员姓名"
+							label="代理姓名"
 						></el-table-column>
+
 						<el-table-column
-							prop="applyTime"
 							align="center"
 							label="申请类型"
-						></el-table-column>
+						><template slot-scope="scope">
+								<p v-if="scope.row">佣金</p>
+							</template></el-table-column>
 						<el-table-column
-							prop="adjustAmount"
+							prop="commissionAmount"
 							align="center"
-							label="增加金额"
+							label="佣金金额"
 						></el-table-column>
 						<el-table-column
-							prop="operatorTime"
+							prop="createdTime"
 							align="center"
 							label="申请时间"
 						></el-table-column>
-						<el-table-column align="center" label="审核状态">
-							<template slot-scope="scope">
+						<el-table-column
+							prop="orderStatus"
+							align="center"
+							label="订单状态"
+						>
+						<template slot-scope="scope">
+							<span
+								:class="
+									Number(scope.row.orderStatus) === 7
+										? 'normalRgba'
+										: '24'.includes(Number(scope.row.orderStatus))
+										? 'lockingRgba'
+										: 'disableRgba'
+								"
+							>
 								{{ typeFilter(scope.row.orderStatus, 'patchAdjustStatus') }}
-							</template>
-						</el-table-column>
+							</span>
+							</template></el-table-column>
 					</el-table>
 					<!-- 分页 -->
 					<el-pagination
@@ -220,10 +228,10 @@ export default {
 			const [startTime, endTime] = this.formTime.time || []
 			let params = {
 				...this.queryData,
-				operatorTimeStart: startTime
+				createdTimeStart: startTime
 					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
 					: '',
-				operatorTimeEnd: endTime
+				createdTimeEnd: endTime
 					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
 					: ''
 			}
@@ -231,14 +239,14 @@ export default {
 				...this.getParams(params)
 			}
 			const type =
-				this.activeName === '0' ? 'firstAuditAddAudit' : 'secondAddAudit'
+				this.activeName === '0' ? 'proxyCommissionRecordFirstInstancePage' : 'lastInstancePage'
 			this.$api[type](params)
 				.then((res) => {
 					if (res.code === 200) {
 						this.now = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
 						const response = res.data
 						this.loading = false
-						this.dataList = response.record
+						this.dataList = response.records
 						if (this.dataList) {
 							this.dataList.forEach((item) => {
 								if (Number(item.lockStatus) === 1) {
