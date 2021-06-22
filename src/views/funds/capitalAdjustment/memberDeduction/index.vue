@@ -143,7 +143,7 @@ export default {
 		return {
 			loading: false,
 			loadingT: false,
-			queryData: {
+            queryData: {
 				userName: undefined,
 				realName: undefined,
 				accountType: undefined,
@@ -151,6 +151,8 @@ export default {
 				adjustType: undefined,
 				amount: undefined,
 				remark: undefined,
+                userType: 1,
+                userId: undefined,
 				imageAnnexId: undefined,
 				imageAddress: undefined
 			},
@@ -212,16 +214,17 @@ export default {
 		},
 		searchRealName() {
 			const { userName } = this.queryData
-			if (userName) {
-				this.$api.memberIncreaseSearchAPI({ userName }).then((res) => {
-					const { code, data } = res
-					if (code === 200) {
-						const { realName, accountType } = data
-						this.queryData.realName = realName
-						this.queryData.accountType = accountType
-					}
-				})
-			}
+            if (userName) {
+                this.$api.memberIncreaseSearchAPI({ userName }).then((res) => {
+                    const { code, data } = res
+                    if (code === 200) {
+                        const { realName, accountType, userId } = data
+                        this.queryData.realName = realName
+                        this.queryData.accountType = accountType
+                        this.queryData.userId = userId
+                    }
+                })
+            }
 		},
 		searchBalance() {
 			const { userName } = this.queryData
@@ -252,6 +255,8 @@ export default {
 				...this.queryData
 			}
 			let lock = true
+            params.adjustType = params.adjustType * 1
+            params.amount = params.amount * 1
 			this.$refs['form'].validate((valid) => {
 				if (valid && lock) {
 					lock = false
@@ -290,13 +295,17 @@ export default {
 		reset() {
 			this.$refs['form'].resetFields()
 			this.queryData = {
-				userName: undefined,
-				realName: undefined,
-				balance: undefined,
-				adjustType: undefined,
-				operationMoney: undefined,
-				reason: undefined,
-				imageAddress: undefined
+                userName: undefined,
+                realName: undefined,
+                accountType: undefined,
+                accountBalance: undefined,
+                adjustType: undefined,
+                amount: undefined,
+                remark: undefined,
+                userType: 1,
+                userId: undefined,
+                imageAnnexId: undefined,
+                imageAddress: undefined
 			}
 		},
 		checkRiskValue(val) {

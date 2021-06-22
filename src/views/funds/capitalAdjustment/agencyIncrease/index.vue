@@ -178,6 +178,12 @@ export default {
         proxyPatchSubAdjustTypeArr() {
 			return this.globalDics.proxyPatchSubAdjustType
 		},
+        accountTypeArr() {
+            return [
+                { description: '额度钱包', code: '6' },
+                { description: '佣金钱包', code: '7' }
+            ]
+        },
 		rules() {
 			// const reg1 = /^[A-Za-z]{1}(?=(.*[a-zA-Z]){1,})(?=(.*[0-9]){1,})[0-9A-Za-z]{3,10}$/
 			// const testUserName = (rule, value, callback) => {
