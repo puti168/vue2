@@ -78,7 +78,7 @@
               :popper-append-to-body="false"
             >
               <el-option
-                v-for="item in depositStatus"
+                v-for="item in withdrawStatus"
                 :key="item.code"
                 :label="item.description"
                 :value="item.code"
@@ -201,7 +201,7 @@
           <el-table-column prop="id" align="center" width="240px" label="订单号">
             <template slot-scope="scope">
               <Copy v-if="!!scope.row.id" :title="scope.row.id" :copy="copy">
-                {{ scope.row.memberName }}
+                {{ scope.row.id }}
               </Copy>
               <span v-else>-</span>
             </template>
@@ -229,7 +229,7 @@
           </el-table-column>
           <el-table-column prop="orderStatus" align="center" label="订单状态">
             <template slot-scope="scope">
-              {{ typeFilter(scope.row.orderStatus, "depositStatus") }}
+              {{ typeFilter(scope.row.orderStatus, "withdrawStatus") }}
             </template>
           </el-table-column>
           <el-table-column prop="clientStatus" align="center" label="客户端状态">
@@ -251,7 +251,7 @@ class="redColor"
                 }}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="playerName" align="center">
+          <el-table-column prop="playerName" align="center" width="120px">
             <template slot="header">
               提款终端设备号
               <br />风控层级
@@ -272,7 +272,12 @@ class="redColor"
               {{ typeFilter(scope.row.withdrawType, "payDataType") }}
             </template>
           </el-table-column>
-          <el-table-column prop="isBig" align="center" label="是否为大额提款">
+          <el-table-column
+            prop="isBig"
+            align="center"
+            label="是否为大额提款"
+            width="120px"
+          >
           </el-table-column>
           <el-table-column prop="isFirst" align="center" label="是否为首提">
           </el-table-column>
@@ -330,8 +335,8 @@ export default {
     loginDeviceType() {
       return this.globalDics.loginDeviceType
     },
-    depositStatus() {
-      return this.globalDics.depositStatus
+    withdrawStatus() {
+      return this.globalDics.withdrawStatus
     },
     payDataType() {
       return this.globalDics.payDataType
@@ -476,8 +481,8 @@ export default {
         if (index === 0) {
           const el = (
             <div class='count_row'>
-              <p>本页合计</p>
-              <p>全部合计</p>
+              <p>小计</p>
+              <p>合计</p>
             </div>
           )
           sums[index] = el
@@ -533,6 +538,8 @@ export default {
   p {
     height: 40px;
     line-height: 40px;
+    color: #5c5c5c;
+    font-weight: 700;
     span {
       display: inline-block;
       width: 20px;
