@@ -35,43 +35,6 @@
 						style="width: 365px"
 					></el-input>
 				</el-form-item>
-                <el-form-item label="钱包余额:" prop="balance">
-                    <el-select
-                        v-model="queryData.balanceType"
-                        size="medium"
-                        placeholder="请选择"
-                        clearable
-                        :maxlength="10"
-                        style="width: 165px"
-                        @change="checkRiskValue($event)"
-                    >
-                        <el-option
-                            v-for="item in accountTypeArr"
-                            :key="item.code"
-                            :label="item.description"
-                            :value="item.code"
-                        ></el-option>
-                    </el-select>
-                    <el-input
-                        v-model="queryData.balance"
-                        size="medium"
-                        maxlength="11"
-                        placeholder="请输入"
-                        clearable
-                        autocomplete="off"
-                        style="width: 200px"
-                        disabled
-                    ></el-input>
-                    <span>元</span>
-                    <el-button
-                        type="primary"
-                        style="margin-left: 20px; background-color: #00807F"
-                        @click="searchBalance"
-                    >
-                        <i v-show="loading" class="el-icon-loading"></i>
-                        查询
-                    </el-button>
-                </el-form-item>
 				<el-form-item label="操作类型:" prop="adjustType">
 					<el-select
 						v-model="queryData.adjustType"
@@ -90,9 +53,46 @@
 						></el-option>
 					</el-select>
 				</el-form-item>
-				<el-form-item label="操作金额:" prop="lessMoney">
+				<el-form-item label="钱包余额:" prop="accountBalance">
+					<el-select
+						v-model="queryData.userType"
+						size="medium"
+						placeholder="请选择"
+						clearable
+						disabled
+						:maxlength="10"
+						style="width: 165px"
+					>
+						<el-option
+							v-for="item in accountTypeArr"
+							:key="item.code"
+							:label="item.description"
+							:value="item.code"
+						></el-option>
+					</el-select>
 					<el-input
-						v-model="queryData.lessMoney"
+						v-model="queryData.accountBalance"
+						size="medium"
+						maxlength="11"
+						placeholder="请输入"
+						clearable
+						autocomplete="off"
+						style="width: 200px"
+						disabled
+					></el-input>
+					<span>元</span>
+					<el-button
+						type="primary"
+						style="margin-left: 20px; background-color: #00807F"
+						@click="searchBalance"
+					>
+						<i v-show="loading" class="el-icon-loading"></i>
+						查询
+					</el-button>
+				</el-form-item>
+				<el-form-item label="操作金额:" prop="amount">
+					<el-input
+						v-model="queryData.amount"
 						size="medium"
 						placeholder="请输入"
 						clearable
@@ -102,7 +102,7 @@
 					></el-input>
 					<span>元</span>
 				</el-form-item>
-				<el-form-item label="审核原因:" prop="remark">
+				<el-form-item label="申请原因:" prop="remark">
 					<el-input
 						v-model="queryData.remark"
 						size="medium"
@@ -163,12 +163,12 @@ export default {
 				userName: undefined,
 				realName: undefined,
 				accountType: undefined,
-				balanceType: '7',
-				balance: undefined,
+				accountBalance: undefined,
 				adjustType: undefined,
-				lessMoney: undefined,
+				amount: undefined,
+				parentProxyId: undefined,
 				userId: undefined,
-				userType: 2,
+				userType: '7',
 				remark: undefined,
 				imageAnnexId: undefined,
 				imageAddress: undefined
@@ -182,7 +182,7 @@ export default {
 		},
 		accountTypeArr() {
 			return [
-                { description: '额度钱包', code: '7' },
+				{ description: '额度钱包', code: '7' },
 				{ description: '佣金钱包', code: '6' }
 			]
 		},
@@ -210,11 +210,11 @@ export default {
 				{ required: true, message: '请选择操作类型', trigger: 'change' }
 			]
 
-			const lessMoney = [
+			const amount = [
 				{ required: true, message: '请输入操作金额', trigger: 'blur' }
 			]
 
-			const balance = [
+			const accountBalance = [
 				{ required: true, message: '请输入钱包余额', trigger: 'blur' }
 			]
 
@@ -225,8 +225,8 @@ export default {
 			return {
 				userName,
 				adjustType,
-				lessMoney,
-				balance,
+				amount,
+				accountBalance,
 				remark
 			}
 		}
@@ -241,33 +241,34 @@ export default {
 			})
 		},
 		searchRealName() {
-			const { userName, balanceType } = this.queryData
+			const { userName, userType } = this.queryData
 			if (userName) {
 				this.$api
-					.memberIncreaseSearchAPI({ userName, accountType: balanceType })
+					.memberIncreaseSearchAPI({ userName, accountType: userType })
 					.then((res) => {
 						const { code, data } = res
 						if (code === 200) {
-							const { realName, accountType, userId } = data
+							const { realName, accountType, userId, parentProxyId } = data
 							this.queryData.realName = realName
 							this.queryData.accountType = accountType
 							this.queryData.userId = userId
+							this.queryData.parentProxyId = parentProxyId
 						}
 					})
 			}
 		},
 		searchBalance() {
-			const { userName, balanceType } = this.queryData
+			const { userName, userType } = this.queryData
 			if (userName) {
 				this.loading = true
 				this.$api
-					.memberIncreaseSearchAPI({ userName, accountType: balanceType })
+					.memberIncreaseSearchAPI({ userName, accountType: userType })
 					.then((res) => {
 						this.loading = false
 						const { code, data } = res
 						if (code === 200) {
 							const { balance } = data
-							this.queryData.balance = balance
+							this.queryData.accountBalance = balance
 						}
 					})
 					.catch(() => {
@@ -285,11 +286,13 @@ export default {
 				...this.queryData
 			}
 			let lock = true
+			params.adjustType = params.adjustType * 1
+			params.amount = params.amount * 1
 			this.$refs['form'].validate((valid) => {
 				if (valid && lock) {
 					lock = false
 					this.$api
-						.memberDeductQuotaAPI(params)
+						.memberIncreaseQuotaAPI(params)
 						.then((res) => {
 							this.loadingT = false
 							lock = true
@@ -326,21 +329,21 @@ export default {
 				userName: undefined,
 				realName: undefined,
 				accountType: undefined,
-				balanceType: '7',
-				balance: undefined,
+				accountBalance: undefined,
 				adjustType: undefined,
-				lessMoney: undefined,
+				amount: undefined,
 				userId: undefined,
+				userType: '7',
 				remark: undefined,
 				imageAnnexId: undefined,
 				imageAddress: undefined
 			}
 		},
 		checkRiskValue(val) {
-			// console.log('val', val)
-		},
-		changeRiskType(evt) {
-			this.$refs['form'].resetFields()
+			console.log('val', val)
+			val === '2'
+				? (this.queryData.userType = '6')
+				: (this.queryData.userType = '7')
 		},
 		checkValue() {
 			// this.tipsShow = null

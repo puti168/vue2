@@ -119,7 +119,7 @@
 					></el-input>
 					<span>元</span>
 				</el-form-item>
-				<el-form-item label="审核原因:" prop="remark">
+				<el-form-item label="申请原因:" prop="remark">
 					<el-input
 						v-model="queryData.remark"
 						size="medium"
@@ -305,19 +305,20 @@ export default {
 		reset() {
 			this.$refs['form'].resetFields()
 			this.queryData = {
-				userName: undefined,
-				realName: undefined,
-				accountType: undefined,
-				accountBalance: undefined,
-				adjustType: undefined,
-				amount: undefined,
-				remark: undefined,
-				imageAddress: undefined,
-				imageAnnexId: undefined,
-				userType: 1,
-				userId: undefined,
-				activityId: undefined,
-				validmultiple: undefined
+                userName: undefined,
+                realName: undefined,
+                accountType: undefined,
+                accountBalance: undefined,
+                balanceType: '1',
+                adjustType: undefined,
+                amount: undefined,
+                remark: undefined,
+                imageAddress: undefined,
+                imageAnnexId: undefined,
+                userType: 1,
+                userId: undefined,
+                activityId: undefined,
+                validmultiple: undefined
 			}
 		},
 		checkRiskValue(val) {
