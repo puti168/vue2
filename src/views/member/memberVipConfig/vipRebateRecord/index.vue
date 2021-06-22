@@ -126,9 +126,11 @@
 						</template>
 
 					</el-table-column>
-					<el-table-column prop="gameName" align="center" label="游戏类型">
+					<el-table-column prop="gameId" align="center" label="游戏类型">
 						<template slot-scope="scope">
-							<span>{{ scope.row.gameName }}</span>
+							<span v-for="item in gameId" :key="item.gameName">
+								{{ scope.row.gameId == item.gameId + '' ? item.gameName : '' }}
+							</span>
 						</template>
 					</el-table-column>
 					<el-table-column prop="vipSerialNum" align="center" label="VIP等级">
