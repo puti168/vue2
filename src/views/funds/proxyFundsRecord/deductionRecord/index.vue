@@ -99,11 +99,10 @@
             <el-button
               type="primary"
               icon="el-icon-search"
-              :disabled="queryText !== '查询'"
               size="medium"
               @click="search"
             >
-              {{ queryText }}
+            查询
             </el-button>
             <el-button
               icon="el-icon-refresh-left"
@@ -130,6 +129,8 @@
           ref="tables"
           v-loading="loading"
           border
+          show-summary
+          :summary-method="getSummaries"
           size="mini"
           class="small-size-table"
           :data="tableData"
@@ -137,32 +138,32 @@
           :header-cell-style="getRowClass"
           @sort-change="_changeTableSort"
         >
-          <el-table-column prop="gameName" align="center" label="订单号">
+          <el-table-column prop="id	" align="center" label="订单号">
             <template slot-scope="scope">
               <Copy v-if="!!scope.row.id" :title="scope.row.id" :copy="copy">
-                {{ scope.row.memberName }}
+                {{ scope.row.id }}
               </Copy>
               <span v-else>-</span>
             </template>
           </el-table-column>
-          <el-table-column prop="gameName" align="center" label="代理账号">
+          <el-table-column prop="userName" align="center" label="代理账号">
             <template slot-scope="scope">
-              <Copy v-if="!!scope.row.id" :title="scope.row.id" :copy="copy">
-                {{ scope.row.memberName }}
+              <Copy v-if="!!scope.row.userName" :title="scope.row.userName" :copy="copy">
+                {{ scope.row.userName }}
               </Copy>
               <span v-else>-</span>
             </template>
           </el-table-column>
-          <el-table-column prop="gameName" align="center" label="代理姓名">
+          <el-table-column prop="realName" align="center" label="代理姓名">
             <template slot-scope="scope">
-              <Copy v-if="!!scope.row.id" :title="scope.row.id" :copy="copy">
-                {{ scope.row.memberName }}
+              <Copy v-if="!!scope.row.realName" :title="scope.row.realName" :copy="copy">
+                {{ scope.row.realName }}
               </Copy>
               <span v-else>-</span>
             </template>
           </el-table-column>
           <el-table-column
-            prop="memberName"
+            prop="adjustStyle"
             align="center"
             label="调整方式"
             width="130px"
@@ -179,20 +180,20 @@
             </template>
           </el-table-column>
           <el-table-column
-            prop="parentProxyName"
+            prop="adjustType"
             align="center"
             label="调整类型"
             width="150px"
           >
           </el-table-column>
           <el-table-column
-            prop="gameRebateRate"
+            prop="adjustAmount"
             align="center"
             sortable="custom"
             label="调整金额"
           ></el-table-column>
 		  <el-table-column
-            prop="parentProxyName"
+            prop="operator"
             align="center"
             label="操作人"
             width="150px"
@@ -205,7 +206,7 @@
             </template>
           </el-table-column>
           <el-table-column
-            prop="parentProxyName"
+            prop="operatorTime"
             align="center"
             label="操作时间"
             width="150px"
@@ -213,7 +214,7 @@
           >
           </el-table-column>
 		  <el-table-column
-            prop="parentProxyName"
+            prop="remark"
             align="center"
             label="备注"
             width="150px"
@@ -226,34 +227,6 @@
             </template>
           </el-table-column>
 
-          <div slot="append">
-            <div ref="sum_xiaoji" class="sum_footer">
-              <div class="sum_footer_unit">小计</div>
-              <div class="sum_footer_unit"></div>
-              <div class="sum_footer_unit"></div>
-              <div class="sum_footer_unit"></div>
-              <div class="sum_footer_unit"></div>
-              <div class="sum_footer_unit"></div>
-              <div class="sum_footer_unit">
-                {{ getXiaoji("gameRebateRate") }}
-              </div>
-              <div class="sum_footer_unit"></div>
-              <div class="sum_footer_unit"></div>
-              <div class="sum_footer_unit"></div>
-            </div>
-            <div ref="sum_heji" class="sum_footer">
-              <div class="sum_footer_unit">总计</div>
-              <div class="sum_footer_unit"></div>
-              <div class="sum_footer_unit"></div>
-              <div class="sum_footer_unit"></div>
-              <div class="sum_footer_unit"></div>
-              <div class="sum_footer_unit"></div>
-              <div class="sum_footer_unit"></div>
-              <div class="sum_footer_unit"></div>
-              <div class="sum_footer_unit"></div>
-              <div class="sum_footer_unit"></div>
-            </div>
-          </div>
         </el-table>
         <!-- 分页 -->
         <el-pagination
@@ -269,22 +242,6 @@
         ></el-pagination>
       </div>
 
-      <el-dialog
-        title="列设置"
-        center
-        :visible.sync="visible"
-        width="610px"
-        class="col-setting"
-      >
-        <el-button type="primary" @click="setAll">复原缺省</el-button>
-        <div v-for="(value, name) in settingList" :key="name" class="setting-div">
-          <el-checkbox v-model="newList[name]">{{ name }}</el-checkbox>
-        </div>
-        <div slot="footer" class="dialog-footer">
-          <el-button @click="visible = false">取 消</el-button>
-          <el-button type="primary" @click="confirm">提交</el-button>
-        </div>
-      </el-dialog>
     </div>
   </div>
 </template>
@@ -302,30 +259,15 @@ export default {
     return {
       queryData: {},
       searchTime: [startTime, endTime],
-      queryText: '查询',
-      t: 10,
       tableData: [],
       dataList: {},
-      checkAll: false,
-      checkedVenue: ['1', '2'],
-      venueList: [
-        { value: '1', label: '上海' },
-        { value: '2', label: '北京' },
-        { value: '3', label: '广州' },
-        { value: '4', label: '深圳' }
-      ],
       isIndeterminate: true,
       gameList: [],
       page: 1,
       size: 10,
       summary: 0,
       visible: false,
-      tableVisible: false,
-      settingList: {
-        项目: true,
-        投注人数: true
-      },
-      newList: []
+      tableVisible: false
     }
   },
   computed: {
@@ -333,12 +275,7 @@ export default {
       return this.globalDics.accountType
     }
   },
-  mounted() {
-    if (localStorage.getItem('venueProfitAndLoss')) {
-      this.settingList = JSON.parse(localStorage.getItem('venueProfitAndLoss'))
-    }
-    this.adjustWidth()
-  },
+  mounted() { },
 
   methods: {
     loadData() {
@@ -347,36 +284,25 @@ export default {
       const [startTime, endTime] = create
       let params = {
         ...this.queryData,
-        createAtStart: startTime ? dayjs(startTime).format('YYYY-MM-DD') : '',
-        createAtEnd: endTime ? dayjs(endTime).format('YYYY-MM-DD') : ''
+        operatorTimeStart: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : '',
+        operatorTimeEnd: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
       }
       params = {
         ...this.getParams(params)
       }
       this.$api
-        .gameList(params)
+        .getProxyFundsRecordsArtificialAccountSub(params)
         .then((res) => {
           if (res.code === 200) {
             this.tableData = res.data.record
             this.total = res.data.totalRecord
+            this.summary = res.data.summary
           }
           this.loading = false
         })
         .catch(() => {
           this.loading = false
         })
-    },
-    search() {
-      let t = 10
-      const timecount = setInterval(() => {
-        t--
-        this.queryText = t + 's'
-        if (t < 0) {
-          clearInterval(timecount)
-          this.queryText = '查询'
-        }
-      }, 1000)
-      this.loadData()
     },
 
     reset() {
@@ -391,8 +317,8 @@ export default {
       const [startTime, endTime] = create
       let params = {
         ...this.queryData,
-        createAtStart: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : '',
-        createAtEnd: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
+        operatorTimeStart: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : '',
+        operatorTimeEnd: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
       }
       params = {
         ...this.getParams(params)
@@ -402,17 +328,6 @@ export default {
       delete params.firstSaveTime
       delete params.accountStatus
       delete params.deviceType
-      this.$confirm(
-        `<strong>是否导出?</strong></br><span style='font-size:12px;color:#c1c1c1'>数据过大时，请耐心等待</span>`,
-        '确认提示',
-        {
-          dangerouslyUseHTMLString: true,
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }
-      )
-        .then(() => {
           this.$api
             .getGameRecordDownload(params)
             .then((res) => {
@@ -475,8 +390,40 @@ export default {
                 duration: 1500
               })
             })
-        })
-        .catch(() => {})
+    },
+     getSummaries(param) {
+      const { columns } = param
+      const sums = []
+      columns.forEach((column, index) => {
+        if (index === 0) {
+          const el = (
+            <div class='count_row'>
+              <p>本页合计</p>
+              <p>全部合计</p>
+            </div>
+          )
+          sums[index] = el
+          return
+        } else if (index === 6 && this.summary !== null) {
+          const el = (
+            <div class='count_row'>
+              <p>{this.summary.subtotal}</p>
+              <p>{this.summary.total}</p>
+            </div>
+          )
+          sums[index] = el
+          return
+        } else {
+          sums[index] = (
+            <div class='count_row'>
+              <p>-</p>
+              <p>-</p>
+            </div>
+          )
+        }
+      })
+
+      return sums
     },
     _changeTableSort({ column, prop, order }) {
       if (prop === 'betAmount') {
@@ -510,46 +457,24 @@ export default {
       console.log(222, val)
       this.size = val
       // this.getMemberMemberInfoByLabelId(this.id)
-    },
-    confirm() {
-      localStorage.setItem('venueProfitAndLoss', JSON.stringify(this.newList))
-      this.settingList = this.newList
-      this.visible = false
-    },
-    setAll() {
-      Object.keys(this.newList).forEach((item) => {
-        this.newList[item] = true
-      })
-    },
-    adjustWidth() {
-      this.$nextTick(() => {
-        const len = this.$refs.sum_xiaoji.children.length
-        Array.from(this.$refs.tables.$refs.headerWrapper.querySelectorAll('col')).forEach(
-          (n, i) => {
-            if (i < len) {
-              this.$refs.sum_xiaoji.children[i].style =
-                'width:' + n.getAttribute('width') + 'px'
-              this.$refs.sum_heji.children[i].style =
-                'width:' + n.getAttribute('width') + 'px'
-            }
-          }
-        )
-      })
-    },
-    getXiaoji(name) {
-      var sum = 0
-      this.tableData.forEach((n, i) => {
-        sum += parseFloat(n[name] * 1)
-      })
-      return sum
     }
+
   }
 }
 </script>
 
 <style lang="scss" scoped>
-body .el-table th.gutter {
-  display: table-cell !important;
+.count_row {
+  height: 80px;
+  p {
+    height: 40px;
+    line-height: 40px;
+    span {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+    }
+  }
 }
 .sum_footer {
   display: flex;

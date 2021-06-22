@@ -480,7 +480,7 @@ export default {
       )
         .then(() => {
           this.$api
-            .getProxyFundsRecordsAssistDepositDownload(params)
+            .getProxyFundsRecordsAccountChangeDownload(params)
             .then((res) => {
               this.loading = false
               const { data, status } = res

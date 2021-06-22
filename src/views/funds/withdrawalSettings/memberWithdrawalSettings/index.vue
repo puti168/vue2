@@ -160,11 +160,11 @@
             label="VIP等级："
             class="configure"
           >
-            <el-input v-model="queryData.vipNum" placeholder=""></el-input>
+            <el-input v-model="dialogForm.vipNum" placeholder=""></el-input>
           </el-form-item>
           <el-form-item label="单次提款最低额度：" prop="singleMinAmount">
             <el-input
-              v-model="queryData.singleMinAmount"
+              v-model="dialogForm.singleMinAmount"
               class="chief"
               placeholder="请输入金额，为0不限制"
             ></el-input>
@@ -172,7 +172,7 @@
           </el-form-item>
           <el-form-item label="单次提款最高额度：" class="configure" prop="singleMaxAmount">
             <el-input
-              v-model="queryData.singleMaxAmount"
+              v-model="dialogForm.singleMaxAmount"
               class="chief"
               placeholder="请输入金额，为0不限制"
             ></el-input>
@@ -180,7 +180,7 @@
           </el-form-item>
           <el-form-item label="单日免费提款次数：" prop="dateFreeNum">
             <el-input
-              v-model="queryData.dateFreeNum"
+              v-model="dialogForm.dateFreeNum"
               class="chief"
               placeholder="请输入金额，为0不限制"
             ></el-input>
@@ -188,7 +188,7 @@
           </el-form-item>
           <el-form-item label="大额提款标记金额：" class="configure" prop="bigAmount">
             <el-input
-              v-model="queryData.bigAmount"
+              v-model="dialogForm.bigAmount"
               class="chief"
               placeholder="请输入金额，为0不限制"
             ></el-input>
@@ -196,7 +196,7 @@
           </el-form-item>
           <el-form-item label="单日免费提款总额：" prop="dateFreeAmount">
             <el-input
-              v-model="queryData.dateFreeAmount"
+              v-model="dialogForm.dateFreeAmount"
               class="chief"
               placeholder="请输入金额，为0不限制"
             ></el-input>
@@ -204,7 +204,7 @@
           </el-form-item>
           <h2>提款手续费配置</h2>
           <el-form-item label="超出单日免费次数：" class="configure" prop="rateDateFreeType">
-            <el-select v-model="queryData.rateDateFreeType" class="sun" placeholder="请选择">
+            <el-select v-model="dialogForm.rateDateFreeType" class="sun" placeholder="请选择">
               <el-option label="区域一" value="shanghai"></el-option>
               <el-option label="区域二" value="beijing"></el-option>
             </el-select>
@@ -214,7 +214,7 @@
             ></el-input>
           </el-form-item>
           <el-form-item label="超出单日免费次数总额：" prop="rateDateTotalType">
-            <el-select v-model="queryData.rateDateTotalType" class="sun" placeholder="请选择">
+            <el-select v-model="dialogForm.rateDateTotalType" class="sun" placeholder="请选择">
               <el-option label="区域一" value="shanghai"></el-option>
               <el-option label="区域二" value="beijing"></el-option>
             </el-select>
@@ -225,7 +225,7 @@
           </el-form-item>
           <el-form-item label="状态">
             <el-select
-            v-model="queryData.status"
+            v-model="dialogForm.status"
             clearable
             :popper-append-to-body="false"
             >
@@ -353,11 +353,11 @@ export default {
       ]
       const singleMaxAmount = [
         { required: true, message: '请输入金额', trigger: 'blur' },
-        { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+        { min: 1, message: '不能为空', trigger: 'blur' }
       ]
       const bigAmount = [
         { required: true, message: '请输入金额', trigger: 'blur' },
-        { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+        { min: 1, message: '不能为空', trigger: 'blur' }
       ]
       const dateFreeAmount = [
         {

@@ -3,7 +3,7 @@
     <div class="view-container dealer-container">
       <div class="params">
         <el-form ref="form" :inline="true" :model="queryData">
-        <el-form-item label="提款时间:">
+          <el-form-item label="提款时间:">
             <el-date-picker
               v-model="searchTime"
               size="medium"
@@ -31,7 +31,7 @@
               @keyup.enter.native="enterSearch"
             ></el-input>
           </el-form-item>
-           <el-form-item label="代理账号:">
+          <el-form-item label="代理账号:">
             <el-input
               v-model="queryData.userName"
               clearable
@@ -55,12 +55,10 @@
               @keyup.enter.native="enterSearch"
             ></el-input>
           </el-form-item>
-          <el-form-item label="订单来源:" class="tagheight">
+         <el-form-item label="订单来源：" class="tagheight">
             <el-select
-              v-model="queryData.loginDeviceType"
-              style="width: 300px"
+              v-model="queryData.deviceType"
               clearable
-              multiple
               placeholder="默认选择全部"
               :popper-append-to-body="false"
             >
@@ -74,7 +72,7 @@
           </el-form-item>
           <el-form-item label="订单状态:" class="tagheight">
             <el-select
-              v-model="queryData.withdrawStatus"
+              v-model="queryData.orderStatus"
               clearable
               style="width: 300px"
               placeholder="默认选择全部"
@@ -90,7 +88,7 @@
           </el-form-item>
           <el-form-item label="提款方式:" class="tagheight">
             <el-select
-              v-model="queryData.payDataType"
+              v-model="queryData.withdrawType"
               clearable
               style="width: 300px"
               placeholder="默认选择全部"
@@ -106,7 +104,7 @@
           </el-form-item>
           <el-form-item label="是否为大额提款:" class="tagheight">
             <el-select
-              v-model="queryData.withdrawBiggerType"
+              v-model="queryData.isBig"
               style="width: 300px"
               placeholder="默认选择全部"
               clearable
@@ -122,7 +120,7 @@
           </el-form-item>
           <el-form-item label="是否为首提:" class="tagheight">
             <el-select
-              v-model="queryData.firstWithdrawType"
+              v-model="queryData.isFirst"
               clearable
               style="width: 300px"
               placeholder="默认选择全部"
@@ -138,12 +136,7 @@
           </el-form-item>
 
           <el-form-item>
-            <el-button
-              type="primary"
-              icon="el-icon-search"
-              size="medium"
-              @click="search"
-            >
+            <el-button type="primary" icon="el-icon-search" size="medium" @click="search">
               查询
             </el-button>
             <el-button
@@ -210,12 +203,8 @@
             label="订单来源"
             width="130px"
           >
-          <template slot-scope="scope">
-              {{
-                scope.row.deviceType === 0
-                  ? "-"
-                  : typeFilter(scope.row.deviceType, "deviceType")
-              }}
+            <template slot-scope="scope">
+              {{ typeFilter(scope.row.deviceType, "loginDeviceType") }}
             </template>
           </el-table-column>
           <el-table-column
@@ -224,26 +213,29 @@
             label="订单状态"
             width="100px"
           >
-          <template slot-scope="scope">
+            <template slot-scope="scope">
               {{ typeFilter(scope.row.orderStatus, "depositStatus") }}
             </template>
-            </el-table-column>
+          </el-table-column>
           <el-table-column
             prop="clientStatus"
             align="center"
             label="客户端状态"
             width="150px"
           >
-          <template slot-scope="scope">
-              {{ typeFilter(scope.row.clientStatus, "clientStatus") }}
+            <template slot-scope="scope">
+              {{ typeFilter(scope.row.clientStatus, "accessStatusType") }}
             </template>
           </el-table-column>
-          <el-table-column
-            prop="customerIp"
-            align="center"
-            label="提款IP"
-            width="180px"
-          >
+          <el-table-column prop="customerIp" align="center" label="提款IP" width="180px">
+            <template slot-scope="scope">
+              <span>{{ scope.row.customerIp }}</span><br />
+              <span
+class="redColor"
+>风控层级：{{
+                  scope.row.ipControlName !== null ? scope.row.ipControlName : "-"
+                }}</span>
+            </template>
           </el-table-column>
           <el-table-column
             prop="deviceNo"
@@ -252,19 +244,25 @@
             width="150px"
           >
             <template slot-scope="scope">
-              <span v-if="scope.row.deviceNo">{{
-                scope.row.deviceNo
-              }}</span>
-              <span v-else>-</span>
+              <span>{{ scope.row.deviceNo }}</span><br />
+              <span
+class="redColor"
+>风控层级：{{
+                  scope.row.deviceNoControlName !== null
+                    ? scope.row.deviceNoControlName
+                    : "-"
+                }}</span>
             </template>
           </el-table-column>
-           <el-table-column
+          <el-table-column
             prop="withdrawType"
             align="center"
             label="提款方式"
             width="150px"
           >
-
+          <template slot-scope="scope">
+              {{ typeFilter(scope.row.withdrawType, "payDataType") }}
+            </template>
           </el-table-column>
           <el-table-column
             prop="isBig"
@@ -272,15 +270,8 @@
             label="是否为大额提款"
             width="150px"
           >
-
           </el-table-column>
-          <el-table-column
-            prop="isFirst"
-            align="center"
-            label="是否为首提"
-            width="150px"
-          >
-
+          <el-table-column prop="isFirst" align="center" label="是否为首提" width="150px">
           </el-table-column>
           <el-table-column
             prop="orderAmount"
@@ -289,7 +280,7 @@
             sortable="custom"
             label="提款金额"
           ></el-table-column>
-         <el-table-column
+          <el-table-column
             prop="createdAt"
             align="center"
             label="提款时间"
@@ -297,7 +288,6 @@
             sortable="custom"
           >
           </el-table-column>
-
         </el-table>
         <!-- 分页 -->
         <el-pagination
@@ -312,7 +302,6 @@
           @size-change="handleSizeChange"
         ></el-pagination>
       </div>
-
     </div>
   </div>
 </template>
@@ -335,20 +324,19 @@ export default {
       summary: {},
       visible: false,
       tableVisible: false
-
     }
   },
   computed: {
     withdrawStatus() {
       return this.globalDics.withdrawStatus
     },
-      loginDeviceType() {
+    loginDeviceType() {
       return this.globalDics.loginDeviceType
     },
-     accountType() {
+    accountType() {
       return this.globalDics.accountType
     },
-     payDataType() {
+    payDataType() {
       return this.globalDics.payDataType
     },
     firstWithdrawType() {
@@ -407,68 +395,68 @@ export default {
       params = {
         ...this.getParams(params)
       }
-          this.$api
-            .getProxyFundsRecordsWithdrawDownload(params)
-            .then((res) => {
-              this.loading = false
-              const { data, status } = res
-              if (res && status === 200) {
-                const { type } = data
-                if (type.includes('application/json')) {
-                  const reader = new FileReader()
-                  reader.onload = (evt) => {
-                    if (evt.target.readyState === 2) {
-                      const {
-                        target: { result }
-                      } = evt
-                      const ret = JSON.parse(result)
-                      if (ret.code !== 200) {
-                        this.$message({
-                          type: 'error',
-                          message: ret.msg,
-                          duration: 1500
-                        })
-                      }
-                    }
+      this.$api
+        .getProxyFundsRecordsWithdrawDownload(params)
+        .then((res) => {
+          this.loading = false
+          const { data, status } = res
+          if (res && status === 200) {
+            const { type } = data
+            if (type.includes('application/json')) {
+              const reader = new FileReader()
+              reader.onload = (evt) => {
+                if (evt.target.readyState === 2) {
+                  const {
+                    target: { result }
+                  } = evt
+                  const ret = JSON.parse(result)
+                  if (ret.code !== 200) {
+                    this.$message({
+                      type: 'error',
+                      message: ret.msg,
+                      duration: 1500
+                    })
                   }
-                  reader.readAsText(data)
-                } else {
-                  const result = res.data
-                  const disposition = res.headers['content-disposition']
-                  const fileNames = disposition && disposition.split("''")
-                  let fileName = fileNames[1]
-                  fileName = decodeURIComponent(fileName)
-                  const blob = new Blob([result], {
-                    type: 'application/octet-stream'
-                  })
-                  if ('download' in document.createElement('a')) {
-                    const downloadLink = document.createElement('a')
-                    downloadLink.download = fileName || ''
-                    downloadLink.style.display = 'none'
-                    downloadLink.href = URL.createObjectURL(blob)
-                    document.body.appendChild(downloadLink)
-                    downloadLink.click()
-                    URL.revokeObjectURL(downloadLink.href)
-                    document.body.removeChild(downloadLink)
-                  } else {
-                    window.navigator.msSaveBlob(blob, fileName)
-                  }
-                  this.$message({
-                    type: 'success',
-                    message: '导出成功',
-                    duration: 1500
-                  })
                 }
               }
-            })
-            .catch(() => {
-              this.loading = false
-              // this.$message({
-              //   type: 'error',
-              //   message: '导出失败',
-              //   duration: 1500
-              // })
-            })
+              reader.readAsText(data)
+            } else {
+              const result = res.data
+              const disposition = res.headers['content-disposition']
+              const fileNames = disposition && disposition.split("''")
+              let fileName = fileNames[1]
+              fileName = decodeURIComponent(fileName)
+              const blob = new Blob([result], {
+                type: 'application/octet-stream'
+              })
+              if ('download' in document.createElement('a')) {
+                const downloadLink = document.createElement('a')
+                downloadLink.download = fileName || ''
+                downloadLink.style.display = 'none'
+                downloadLink.href = URL.createObjectURL(blob)
+                document.body.appendChild(downloadLink)
+                downloadLink.click()
+                URL.revokeObjectURL(downloadLink.href)
+                document.body.removeChild(downloadLink)
+              } else {
+                window.navigator.msSaveBlob(blob, fileName)
+              }
+              this.$message({
+                type: 'success',
+                message: '导出成功',
+                duration: 1500
+              })
+            }
+          }
+        })
+        .catch(() => {
+          this.loading = false
+          // this.$message({
+          //   type: 'error',
+          //   message: '导出失败',
+          //   duration: 1500
+          // })
+        })
     },
     getSummaries(param) {
       const { columns } = param
@@ -483,7 +471,7 @@ export default {
           )
           sums[index] = el
           return
-        } else if (index === 10) {
+        } else if (index === 11 && this.summary !== null) {
           const el = (
             <div class='count_row'>
               <p>{this.summary.subtotal}</p>
@@ -524,9 +512,9 @@ export default {
     }
   },
 
-    enterSearch() {
-      this.loadData()
-    }
+  enterSearch() {
+    this.loadData()
+  }
 }
 </script>
 
