@@ -55,13 +55,13 @@
 				</el-form-item>
 				<el-form-item label="钱包余额:" prop="balance">
 					<el-select
-						v-model="queryData.balanceType"
+						v-model="queryData.userType"
 						size="medium"
 						placeholder="请选择"
 						clearable
+						disabled
 						:maxlength="10"
 						style="width: 165px"
-						@change="checkRiskValue($event)"
 					>
 						<el-option
 							v-for="item in accountTypeArr"
@@ -163,13 +163,15 @@ export default {
 				userName: undefined,
 				realName: undefined,
 				accountType: undefined,
-				balanceType: '6',
 				balance: undefined,
 				adjustType: undefined,
+				parentProxyId: undefined,
 				lessMoney: undefined,
+				userType: '7',
+				bizType: 2,
 				userId: undefined,
 				remark: undefined,
-				imageAnnexId: undefined,
+				relationId: undefined,
 				imageAddress: undefined
 			},
 			tipsShow: null
@@ -181,8 +183,8 @@ export default {
 		},
 		accountTypeArr() {
 			return [
-				{ description: '额度钱包', code: '6' },
-				{ description: '佣金钱包', code: '7' }
+				{ description: '额度钱包', code: '7' },
+				{ description: '佣金钱包', code: '6' }
 			]
 		},
 		rules() {
@@ -236,29 +238,32 @@ export default {
 	methods: {
 		getRelationId() {
 			this.$api.getImageIdAPI().then((res) => {
-				this.queryData.imageAnnexId = res.data
+				this.queryData.relationId = res.data
 			})
 		},
 		searchRealName() {
-			const { userName } = this.queryData
+			const { userName, userType } = this.queryData
 			if (userName) {
-				this.$api.memberIncreaseSearchAPI({ userName }).then((res) => {
-					const { code, data } = res
-					if (code === 200) {
-						const { realName, accountType, userId } = data
-						this.queryData.realName = realName
-						this.queryData.accountType = accountType
-						this.queryData.userId = userId
-					}
-				})
+				this.$api
+					.memberIncreaseSearchAPI({ userName, accountType: userType })
+					.then((res) => {
+						const { code, data } = res
+						if (code === 200) {
+							const { realName, accountType, userId, parentProxyId } = data
+							this.queryData.realName = realName
+							this.queryData.accountType = accountType
+							this.queryData.userId = userId
+							this.queryData.parentProxyId = parentProxyId
+						}
+					})
 			}
 		},
 		searchBalance() {
-			const { userName } = this.queryData
+			const { userName, userType } = this.queryData
 			if (userName) {
 				this.loading = true
 				this.$api
-					.memberIncreaseSearchAPI({ userName })
+					.memberIncreaseSearchAPI({ userName, accountType: userType })
 					.then((res) => {
 						this.loading = false
 						const { code, data } = res
@@ -286,7 +291,7 @@ export default {
 				if (valid && lock) {
 					lock = false
 					this.$api
-						.riskEditAddAPI(params)
+						.agentDeductQuotaAPI(params)
 						.then((res) => {
 							this.loadingT = false
 							lock = true
@@ -320,21 +325,20 @@ export default {
 		reset() {
 			this.$refs['form'].resetFields()
 			this.queryData = {
-				userName: undefined,
-				realName: undefined,
-				accountType: undefined,
-				balanceType: '6',
-				balance: undefined,
-				adjustType: undefined,
-				lessMoney: undefined,
-				userId: undefined,
-				remark: undefined,
-				imageAnnexId: undefined,
-				imageAddress: undefined
+                userName: undefined,
+                realName: undefined,
+                accountType: undefined,
+                balance: undefined,
+                adjustType: undefined,
+                parentProxyId: undefined,
+                lessMoney: undefined,
+                userType: '7',
+                bizType: 2,
+                userId: undefined,
+                remark: undefined,
+                relationId: undefined,
+                imageAddress: undefined
 			}
-		},
-		changeRiskType(evt) {
-			this.$refs['form'].resetFields()
 		},
 		checkRiskValue(val) {
 			// console.log('val', val)
