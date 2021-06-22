@@ -126,10 +126,13 @@
 								{{ typeFilter(scope.row.orderStatus, 'patchAdjustStatusFinish') }}
 							</template></el-table-column>
 						<el-table-column
-							prop="applyTime"
 							align="center"
-							label="申请类型"
-						></el-table-column>
+							label="调整类型"
+						>
+						<template slot-scope="scope">
+								{{ typeFilter(scope.row.adjustType, 'proxyPatchAddAdjustType') }}
+							</template>
+						</el-table-column>
 						<el-table-column
 							prop="adjustAmount"
 							align="center"

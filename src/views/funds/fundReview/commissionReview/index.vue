@@ -126,7 +126,7 @@
 
 						<el-table-column
 							align="center"
-							label="申请类型"
+							label="调整类型"
 						><template slot-scope="scope">
 								<p v-if="scope.row">佣金</p>
 							</template></el-table-column>
@@ -174,7 +174,7 @@
 				</div>
 			</div>
 		</template>
-		<detail v-else :type="type" :rowData="rowData" @goBack="goBack"></detail>
+		<detail v-else :type="type" :rowData="rowData" :activeName="activeName" @goBack="goBack"></detail>
 	</div>
 </template>
 
@@ -190,7 +190,7 @@ const start = dayjs()
 	.startOf('day')
 	.valueOf()
 export default {
-	name: 'MemberWithdrawalReview',
+	name: 'CommissionReview',
 	components: { detail },
 	mixins: [list],
 	data() {
@@ -296,9 +296,9 @@ export default {
 				background: 'rgba(0, 0, 0, 0.7)'
 			})
 			this.$api
-				.lockProxyAuditRecord({
+				.proxyCommissionRecordLock({
 					id: val.id,
-					lockFlag: Number(val.lockStatus) === 0 ? 0 : 1
+					lockStatus: Number(val.lockStatus) === 0 ? 0 : 1
 				})
 				.then((res) => {
 					if (res.code === 200) {

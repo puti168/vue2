@@ -310,7 +310,18 @@ export default {
               type: 'warning'
             })
               .then(() => {
-                // this.setProxyGradeUpdate(params)
+				  const params = {
+
+				  }
+				  this.$api.selectMemberWithDrawAuthEsPagePay(params)
+				.then((res) => {
+					if (res.code === 200) {
+						this.$message({
+							message: '操作成功',
+							type: 'success'
+						})
+					}
+				})
               })
               .catch(() => {})
 		},

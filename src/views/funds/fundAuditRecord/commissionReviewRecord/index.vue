@@ -141,7 +141,7 @@
 							</template></el-table-column>
 						<el-table-column
 							align="center"
-							label="申请类型"
+							label="调整类型"
 						><template slot-scope="scope">
 								<p v-if="scope.row">佣金</p>
 							</template></el-table-column>
@@ -175,8 +175,8 @@
 							align="center"
 							label="审核用时"
 						><template slot-scope="scope">
-								<p>一审：{{ scope.row.audit1Cost ? scope.row.audit1Cost : '-' }}min</p>
-								<p>二审：{{ scope.row.audit2Cost ? scope.row.audit2Cost : '-' }}min</p>
+								<p>一审：{{ scope.row.audit1Cost ? scope.row.audit1Cost : '-' }}m</p>
+								<p>二审：{{ scope.row.audit2Cost ? scope.row.audit2Cost : '-' }}m</p>
 							</template></el-table-column>
 						<el-table-column
 							prop="remark"

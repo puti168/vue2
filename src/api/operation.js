@@ -17,8 +17,48 @@ export function clientStartListAPI(data) {
 		data
 	})
 }
+export function configDiscountTagQueryList(data) {
+	return request({
+		url: '/operate/configDiscountTag/queryList',
+		method: 'post',
+		data
+	})
+}
+export function configDiscountTagUse(data) {
+	return request({
+		url: '/operate/configDiscountTag/use',
+		method: 'post',
+		data
+	})
+}
+export function configDiscountTagDelete(data) {
+	return request({
+		url: '/operate/configDiscountTag/delete',
+		method: 'post',
+		data
+	})
+}
+export function configDiscountTagAdd(data) {
+	return request({
+		url: '/operate/configDiscountTag/add',
+		method: 'post',
+		data
+	})
+}
+export function configDiscountTagEdit(data) {
+	return request({
+		url: '/operate/configDiscountTag/update',
+		method: 'post',
+		data
+	})
+}
 
 export default {
+	configDiscountTagEdit,
+	configDiscountTagAdd,
+	configDiscountTagQueryList,
+	configDiscountTagDelete,
+	configDiscountTagUse,
 	clientCommonAPI,
 	clientStartListAPI
 }

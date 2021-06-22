@@ -154,7 +154,7 @@
 						<el-table-column
 							prop="adjustType"
 							align="center"
-							label="申请类型"
+							label="调整类型"
 							width="120"
 						>
 							<template slot-scope="scope">

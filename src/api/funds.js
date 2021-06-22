@@ -242,7 +242,15 @@ export function lastInstancePage(data) {
 		data
 	})
 }
+export function proxyCommissionRecordLock(data) {
+	return request({
+		url: '/proxyCommissionRecord/lock',
+		method: 'post',
+		data
+	})
+}
 export default {
+	proxyCommissionRecordLock,
 	lastInstancePage,
 	proxyCommissionRecordFirstInstancePage,
 	proxyCommissionRecordQueryDetail,

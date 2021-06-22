@@ -23,13 +23,14 @@
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
 						>
-							<el-option label="禁用中" :value="0"></el-option>
+							<el-option label="全部" value=""></el-option>
+							<el-option label="已禁用" :value="0"></el-option>
 							<el-option label="开启中" :value="1"></el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item label="创建人:">
 						<el-input
-							v-model="queryData.gameLabelName"
+							v-model="queryData.createdBy"
 							clearable
 							:maxlength="15"
 							size="medium"
@@ -41,7 +42,7 @@
 					</el-form-item>
 					<el-form-item label="最近操作人:">
 						<el-input
-							v-model="queryData.gameLabelName"
+							v-model="queryData.updatedBy"
 							clearable
 							:maxlength="15"
 							size="medium"
@@ -103,22 +104,21 @@
 					@sort-change="_changeTableSort"
 				>
 					<el-table-column
-						prop="gameLabelId"
+						prop="activityTagName"
 						align="center"
 						label="活动页签"
-						sortable="custom"
 					></el-table-column>
 					<el-table-column
-						prop="gameLabelName"
+						prop="activityTagRemark"
 						align="center"
 						label="备注"
 					></el-table-column>
-					<el-table-column prop="labelStatus" align="center" label="状态">
+					<el-table-column prop="status" align="center" label="状态">
 						<template slot-scope="scope">
-							<div v-if="scope.row.labelStatus === 0" class="disableRgba">
+							<div v-if="scope.row.status === 0" class="disableRgba">
 								已禁用
 							</div>
-							<div v-else-if="scope.row.labelStatus === 1" class="normalRgba">
+							<div v-else-if="scope.row.status === 1" class="normalRgba">
 								开启中
 							</div>
 							<span v-else>-</span>
@@ -154,7 +154,7 @@
 					>
 						<template slot-scope="scope">
 							<el-button
-								v-if="scope.row.labelStatus === 0"
+								v-if="scope.row.status === 0"
 								:disabled="loading"
 								type="success"
 								size="medium"
@@ -176,7 +176,7 @@
 							<el-button
 								type="primary"
 								icon="el-icon-edit"
-								:disabled="scope.row.labelStatus === 1"
+								:disabled="scope.row.status === 1"
 								size="medium"
 								@click="edit(scope.row)"
 							>
@@ -186,7 +186,7 @@
 							<el-button
 								type="warning"
 								icon="el-icon-delete"
-								:disabled="scope.row.labelStatus === 1"
+								:disabled="scope.row.status === 1"
 								size="medium"
 								@click="deleteLabel(scope.row)"
 							>
@@ -220,7 +220,7 @@
 				<el-form ref="formSub" :model="dialogForm" label-width="90px">
 					<el-form-item
 						label="活动页签:"
-						prop="gameLabelName"
+						prop="activityTagName"
 						:rules="[
 							{ required: true, message: '请输入活动页签', trigger: 'blur' },
 							{
@@ -232,14 +232,14 @@
 						]"
 					>
 						<el-input
-							v-model="dialogForm.gameLabelName"
+							v-model="dialogForm.activityTagName"
 							:maxlength="10"
 							autocomplete="off"
 						></el-input>
 					</el-form-item>
 					<el-form-item
 						label="备注:"
-						prop="description"
+						prop="activityTagRemark"
 						:rules="[
 							{ required: true, message: '请输入备注内容', trigger: 'blur' },
 							{
@@ -251,7 +251,7 @@
 						]"
 					>
 						<el-input
-							v-model="dialogForm.description"
+							v-model="dialogForm.activityTagRemark"
 							type="textarea"
 						></el-input>
 					</el-form-item>
@@ -292,7 +292,11 @@ export default {
 	mixins: [list],
 	data() {
 		return {
-			queryData: {},
+			queryData: {
+				status: '',
+				createdBy: '',
+				updatedBy: ''
+			},
 			sortLabel: false,
 			tableData: [],
 			options: [
@@ -326,7 +330,7 @@ export default {
 		changeSort() {
 			console.log(this.title)
 			const data = {}
-			data.description = this.dialogForm.description
+			data.activityTagRemark = this.dialogForm.activityTagRemark
 			data.memberLabelName = this.dialogForm.memberLabelName
 			data.mregionAging = this.dialogForm.mregionAging
 
@@ -365,10 +369,10 @@ export default {
 				...this.getParams(params)
 			}
 			this.$api
-				.getTabelData(params)
+				.configDiscountTagQueryList(params)
 				.then((res) => {
 					if (res.code === 200) {
-						this.tableData = res.data.record
+						this.tableData = res.data.records
 						this.total = res.data.totalRecord
 						this.loading = false
 					} else {
@@ -380,16 +384,16 @@ export default {
 				})
 		},
 		reset() {
-			this.queryData = {}
+			this.queryData = { status: '', createdBy: '', updatedBy: '' }
 			this.pageNum = 1
 			this.loadData()
 		},
 		switchClick(val) {
-			const status = val.labelStatus === 0 ? 1 : 0
+			const status = val.status === 0 ? 1 : 0
 			console.log(val)
 			this.$confirm(
-				`<strong>是否对 ${val.gameLabelName} 进行${
-					val.labelStatus === 0 ? '启用' : '禁用'
+				`<strong>是否对 ${val.activityTagName} 进行${
+					val.status === 0 ? '启用' : '禁用'
 				}操作?</strong></br><span style='font-size:12px;color:#c1c1c1'>一旦操作将会立即生效</span>`,
 				`确认提示`,
 				{
@@ -401,7 +405,7 @@ export default {
 			)
 				.then(() => {
 					this.$api
-						.setUpdateStatus({ id: val.id, status: status })
+						.configDiscountTagUse({ id: val.id, status: status })
 						.then((res) => {
 							if (res.code === 200) {
 								this.loadData()
@@ -423,8 +427,6 @@ export default {
 		deleteLabel(val) {
 			const data = {}
 			data.id = val.id
-			data.description = val.description
-			data.gameLabelName = val.gameLabelName
 			this.$confirm(`<strong>确定删除此条标签类型吗?</strong>`, `确认提示`, {
 				dangerouslyUseHTMLString: true,
 				confirmButtonText: '确定',
@@ -432,7 +434,7 @@ export default {
 				type: 'warning'
 			})
 				.then(() => {
-					this.$api.setUpdateDelete(data).then((res) => {
+					this.$api.configDiscountTagDelete(data).then((res) => {
 						if (res.code === 200) {
 							this.$message.success('删除成功')
 							this.loadData()
@@ -445,13 +447,13 @@ export default {
 			console.log(this.title)
 			const data = {}
 			data.id = this.dialogForm.id
-			data.description = this.dialogForm.description
-			data.gameLabelName = this.dialogForm.gameLabelName
+			data.activityTagRemark = this.dialogForm.activityTagRemark
+			data.activityTagName = this.dialogForm.activityTagName
 			this.$refs.formSub.validate((valid) => {
 				if (valid) {
 					if (this.title === '新增') {
 						console.log('新增')
-						this.$api.addObGameLabel(data).then((res) => {
+						this.$api.configDiscountTagAdd(data).then((res) => {
 							if (res.code === 200) {
 								this.$message.success('创建成功')
 								this.pageNum = 1
@@ -459,7 +461,7 @@ export default {
 							}
 						})
 					} else {
-						this.$api.setUpdateLabel(data).then((res) => {
+						this.$api.configDiscountTagEdit(data).then((res) => {
 							if (res.code === 200) {
 								this.$message.success('修改成功')
 								this.loadData()
