@@ -146,7 +146,7 @@
 						>
 							<template slot-scope="scope">
 								<span v-if="!!scope.row.orderStatus">
-									{{ typeFilter(scope.row.orderStatus, 'withdrawStatus') }}
+									{{ typeFilter(scope.row.orderStatus, 'patchAdjustStatusFinish') }}
 								</span>
 								<span v-else>-</span>
 							</template>
@@ -312,7 +312,7 @@ export default {
 	},
 	computed: {
 		orderTypeArr() {
-			return this.globalDics.withdrawStatus
+			return this.globalDics.patchAdjustStatusFinish
 		}
 	},
 	mounted() {
