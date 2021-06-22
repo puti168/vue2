@@ -37,14 +37,14 @@
 					</el-form-item>
 					<el-form-item label="游戏类型:" class="tagheight">
 						<el-select
-							v-model="queryData.gameId"
+							v-model="queryData.gameName"
 							style="width: 300px"
 							multiple
 							placeholder="全部"
 							:popper-append-to-body="false"
 						>
 							<el-option
-								v-for="item in gameId"
+								v-for="item in gameName"
 								:key="item.gameId"
 								:label="item.gameName"
 								:value="item.gameId"
@@ -126,11 +126,9 @@
 						</template>
 
 					</el-table-column>
-					<el-table-column prop="gameId" align="center" label="游戏类型">
+					<el-table-column prop="gameName" align="center" label="游戏类型">
 						<template slot-scope="scope">
-							<span v-for="item in gameId" :key="item.gameName">
-								{{ scope.row.gameId == item.gameId + '' ? item.gameName : '' }}
-							</span>
+							<span>{{ scope.row.gameName }}</span>
 						</template>
 					</el-table-column>
 					<el-table-column prop="vipSerialNum" align="center" label="VIP等级">
