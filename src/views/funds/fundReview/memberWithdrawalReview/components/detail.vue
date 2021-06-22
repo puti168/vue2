@@ -476,7 +476,10 @@ export default {
 		},
 		getInfo() {
 			const params = {
-				id: this.rowData.id
+				id: this.rowData.id,
+				transType: 2,
+				userId: this.rowData.userId,
+				userType: 1
 			}
 			this.$api.selectMemberWithdrawUser(params).then((res) => {
 				if (res.code === 200) {

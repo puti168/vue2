@@ -127,7 +127,17 @@
 							label="订单状态"
 						>
 						<template slot-scope="scope">
+								<span
+								:class="
+									Number(scope.row.orderStatus) === 7
+										? 'normalRgba'
+										: '24'.includes(Number(scope.row.orderStatus))
+										? 'lockingRgba'
+										: 'disableRgba'
+								"
+							>
 								{{ typeFilter(scope.row.orderStatus, 'patchAdjustStatus') }}
+							</span>
 							</template></el-table-column>
 						<el-table-column
 							align="center"

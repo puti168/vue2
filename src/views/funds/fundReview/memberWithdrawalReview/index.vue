@@ -81,12 +81,11 @@
 						:data="dataList"
 						style="width: 100%"
 						:header-cell-style="getRowClass"
-						@sort-change="changeTableSort"
 					>
 						<el-table-column align="center" label="锁单" width="60">
 							<template slot-scope="scope">
 								<el-checkbox
-									v-if="scope.row.auditName === name || !scope.row.auditName"
+									v-if="scope.row.lockAccount === name || !scope.row.lockAccount"
 									v-model="scope.row.lockOrder"
 									@change="lockChange(scope.row)"
 								></el-checkbox>
@@ -96,7 +95,7 @@
 							prop="auditStep"
 							align="center"
 							label="操作"
-							width="100"
+							width="180"
 						>
 							<template slot-scope="scope">
 								<el-button
@@ -144,7 +143,6 @@
 						<el-table-column
 							prop="isBig"
 							align="center"
-							sortable="custom"
 							label="是否为大额提款"
 						><template slot-scope="scope">
 							{{ Number(scope.row.isBig) === 1 ? '是' : '否' }}
@@ -152,24 +150,31 @@
 						<el-table-column
 							prop="orderAmount"
 							align="center"
-							sortable="custom"
 							label="提款金额"
 						></el-table-column>
 						<el-table-column
 							prop="orderRateAmount"
 							align="center"
-							sortable="custom"
 							label="提款手续费"
 						></el-table-column>
 						<el-table-column
 							prop="createdAt"
 							align="center"
-							sortable="custom"
 							label="申请时间"
 						></el-table-column>
 						<el-table-column align="center" label="审核状态">
 							<template slot-scope="scope">
-								{{ typeFilter(scope.row.orderStatus, 'patchAdjustStatus') }}
+								<span
+								:class="
+									Number(scope.row.orderStatus) === 11
+										? 'normalRgba'
+										: '4267'.includes(Number(scope.row.orderStatus))
+										? 'lockingRgba'
+										: 'disableRgba'
+								"
+							>
+								{{ typeFilter(scope.row.orderStatus, 'withdrawStatus') }}
+								</span>
 							</template>
 						</el-table-column>
 					</el-table>
@@ -290,7 +295,7 @@ export default {
 				})
 		},
 		goDetail(row) {
-			this.type = row.auditName === this.name
+			this.type = row.lockAccount === this.name
 			this.rowData = row
 			this.showDetail = true
 		},
