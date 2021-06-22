@@ -37,14 +37,14 @@
 					</el-form-item>
 					<el-form-item label="游戏类型:" class="tagheight">
 						<el-select
-							v-model="queryData.gameName"
+							v-model="queryData.gameId"
 							style="width: 300px"
 							multiple
 							placeholder="全部"
 							:popper-append-to-body="false"
 						>
 							<el-option
-								v-for="item in gameName"
+								v-for="item in gameId"
 								:key="item.gameId"
 								:label="item.gameName"
 								:value="item.gameId"
