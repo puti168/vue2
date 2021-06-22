@@ -1,11 +1,29 @@
 import request from '@/utils/request'
 
-// 运营 ===> 公共资源配置
-export function clientCommonAPI(data) {
+// 运营 ===> 公共资源配置 ==> 提交
+export function clientCommonUpdateAPI(data) {
 	return request({
-		url: '/user/queryMember',
+		url: '/operate/publicResources/update',
 		method: 'post',
 		data
+	})
+}
+
+// 运营 ===> 公共资源配置 ==> 切换查询详情信息
+export function clientCommonQueryByTypeAPI(params) {
+	return request({
+		url: '/operate/publicResources/queryByType',
+		method: 'get',
+		params
+	})
+}
+
+// 运营 ===> 公共资源配置 ==> 切换查询详情信息
+export function clientCommonQueryPublicResourcesAPI(params) {
+	return request({
+		url: '/operate/publicResources/queryPublicResources',
+		method: 'get',
+		params
 	})
 }
 
@@ -19,6 +37,8 @@ export function clientStartListAPI(data) {
 }
 
 export default {
-	clientCommonAPI,
+	clientCommonUpdateAPI,
+	clientCommonQueryByTypeAPI,
+	clientCommonQueryPublicResourcesAPI,
 	clientStartListAPI
 }

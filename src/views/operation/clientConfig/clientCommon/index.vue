@@ -21,9 +21,9 @@
 					>
 						<el-option
 							v-for="item in windLevelTypeArr"
-							:key="item.code"
-							:label="item.description"
-							:value="item.code"
+							:key="item.type"
+							:label="item.value"
+							:value="item.value"
 						></el-option>
 					</el-select>
 				</el-form-item>
@@ -286,22 +286,11 @@ export default {
 			},
 			showInfoData: {},
 			current: '',
-			tipsShow: null
+			tipsShow: null,
+			windLevelTypeArr: []
 		}
 	},
 	computed: {
-		windLevelTypeArr() {
-			return [
-				{ description: '会员客服地址', code: '1' },
-				{ description: '代理客服地址', code: '2' },
-				{ description: 'ios下载地址', code: '3' },
-				{ description: '安卓下载地址', code: '4' },
-				{ description: '桌面端下载地址', code: '5' },
-				{ description: '投诉建议邮箱', code: '6' },
-				{ description: '客服邮箱', code: '7' },
-				{ description: '合营ID', code: '8' }
-			]
-		},
 		rules() {
 			const operateType = [
 				{ required: true, message: '请选择类型', trigger: 'change' }
@@ -347,8 +336,21 @@ export default {
 			}
 		}
 	},
-	mounted() {},
+	mounted() {
+		this.queryPublicResources()
+	},
 	methods: {
+		// 查询类型
+		queryPublicResources() {
+			this.$api.clientCommonQueryPublicResourcesAPI().then((res) => {
+				const { code, data } = res
+				if (code === 200) {
+					this.windLevelTypeArr = data || []
+				} else {
+					this.windLevelTypeArr = []
+				}
+			})
+		},
 		add() {
 			this.loadingT = true
 			const params = {
