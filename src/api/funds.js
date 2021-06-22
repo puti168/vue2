@@ -207,7 +207,39 @@ export function selectMemberWithDrawAuthEsPageTwoProxy(data) {
 		data
 	})
 }
+export function fundsAuthRecordsProxyAddAudit(data) {
+	return request({
+		url: '/FundsAuthRecords/proxyAddAudit',
+		method: 'post',
+		data
+	})
+}
+export function proxyCommissionRecordSelectCommission(data) {
+	return request({
+		url: '/proxyCommissionRecord/selectCommission',
+		method: 'post',
+		data
+	})
+}
+export function proxyCommissionRecordQueryDetail(data) {
+	return request({
+		url: '/proxyCommissionRecord/queryDetail',
+		method: 'post',
+		data
+	})
+}
+export function proxyCommissionRecordFirstInstancePage(data) {
+	return request({
+		url: '/proxyCommissionRecord/firstInstancePage',
+		method: 'post',
+		data
+	})
+}
 export default {
+	proxyCommissionRecordFirstInstancePage,
+	proxyCommissionRecordQueryDetail,
+	proxyCommissionRecordSelectCommission,
+	fundsAuthRecordsProxyAddAudit,
 	selectMemberWithDrawAuthEsPagePayProxy,
 	selectMemberWithDrawAuthEsPageThreeProxy,
 	updateWithDrawAuthOneProxy,

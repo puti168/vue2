@@ -288,6 +288,10 @@ export default {
 			form: {
 				remark: ''
 			},
+			accountsVo: {},
+			commissionRecordVo: {},
+			proxyCommissionDetaiVoList: {},
+			registerVo: {},
 			visible: false,
 			action: false
 		}
@@ -395,13 +399,18 @@ export default {
 		},
 		getInfo() {
 			const params = {
-				id: this.rowData.id
+				id: this.rowData.id,
+				proxyAccount: this.rowData.proxyAccount,
+				userId: this.rowData.proxyId
 			}
-			this.$api.proxyDetail(params).then((res) => {
+			this.$api.proxyCommissionRecordQueryDetail(params).then((res) => {
 				if (res.code === 200) {
 					const response = res.data
 					this.loading = false
-					this.list = response
+					this.accountsVo = response.accountsVo
+					this.commissionRecordVo = response.commissionRecordVo
+					this.proxyCommissionDetaiVoList = response.proxyCommissionDetaiVoList
+					this.registerVo = response.registerVo
 				} else {
 					this.loading = false
 					this.$message({

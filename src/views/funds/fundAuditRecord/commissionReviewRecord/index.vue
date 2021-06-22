@@ -19,7 +19,7 @@
 					</el-form-item>
           <el-form-item label="订单号:">
 						<el-input
-							v-model="queryData.auditNum"
+							v-model="queryData.orderNo"
 							clearable
 							size="medium"
 							:maxlength="19"
@@ -28,15 +28,26 @@
 							@keyup.enter.native="enterSearch"
 						></el-input>
 					</el-form-item>
-					<el-form-item label="锁单状态:">
+          <el-form-item label="代理账号:">
+						<el-input
+							v-model="queryData.proxyAccount"
+							clearable
+							size="medium"
+							:maxlength="11"
+							style="width: 180px"
+							placeholder="请输入"
+							@keyup.enter.native="enterSearch"
+						></el-input>
+					</el-form-item>
+					<el-form-item label="订单状态:">
 						<el-select
-							v-model="queryData.lockOrder"
+							v-model="queryData.orderStatus"
 							style="width: 180px"
 							:popper-append-to-body="false"
 						>
 							<el-option label="全部" value=""></el-option>
 							<el-option
-								v-for="item in lockOrderType"
+								v-for="item in patchAdjustStatus"
 								:key="item.code"
 								:label="item.description"
 								:value="Number(item.code)"
@@ -62,17 +73,10 @@
 							重置
 						</el-button>
 					</el-form-item>
-					<p class="danger data-refresh">数据更新时间： {{ now }}</p>
 				</el-form>
 			</div>
 			<div class="view-container dealer-container">
 				<div class="content">
-					<el-tabs v-model="activeName" @tab-click="handleClick">
-						<el-tab-pane label="待一审" name="one">
-						</el-tab-pane>
-						<el-tab-pane label="待二审" name="two">
-						</el-tab-pane>
-					</el-tabs>
 					<el-table
 						v-loading="loading"
 						border
@@ -81,88 +85,97 @@
 						:data="dataList"
 						style="width: 100%"
 						:header-cell-style="getRowClass"
-						@sort-change="changeTableSort"
 					>
-						<el-table-column align="center" label="锁单" width="60">
-							<template slot-scope="scope">
-								<el-checkbox
-									v-if="
-										Number(scope.row.auditStep) === 1 &&
-											(scope.row.auditName === name || !scope.row.auditName)
-									"
-									v-model="scope.row.lockStatus"
-									@change="lockChange(scope.row)"
-								></el-checkbox>
-							</template>
-						</el-table-column>
 						<el-table-column
-							prop="auditStep"
 							align="center"
 							label="操作"
 							width="100"
 						>
 							<template slot-scope="scope">
 								<el-button
-									:class="
-										Number(scope.row.auditStep) === 1 &&
-										scope.row.auditName !== name
-											? 'dis'
-											: ''
-									"
-									:type="
-										Number(scope.row.auditStep) === 0 ? 'success' : 'primary'
-									"
+									type="primary"
 									size="medium"
 									@click="goDetail(scope.row)"
 								>
-									{{ typeFilter(scope.row.auditStep, 'auditStepType') }}
+									查看
 								</el-button>
 							</template>
 						</el-table-column>
 						<el-table-column
-							prop="auditNum"
+							prop="orderNo"
 							align="center"
-							label="审核订单号"
+							label="订单号"
 						></el-table-column>
 						<el-table-column
-							prop="applyName"
+							prop="createdTime"
 							align="center"
 							label="日期"
 						></el-table-column>
 						<el-table-column
-							prop="applyName"
+							prop="proxyAccount"
 							align="center"
 							label="代理账号"
 						></el-table-column>
 						<el-table-column
-							prop="applyName"
+							prop="proxyName"
 							align="center"
 							label="代理姓名"
 						></el-table-column>
 						<el-table-column
-							prop="applyTime"
+							prop="orderStatus"
 							align="center"
-							sortable="custom"
-							label="申请类型"
-						></el-table-column>
+							label="订单状态"
+						>
+						<template slot-scope="scope">
+								{{ typeFilter(scope.row.orderStatus, 'patchAdjustStatus') }}
+							</template></el-table-column>
 						<el-table-column
-							prop="applyTime"
 							align="center"
-							sortable="custom"
+							label="申请类型"
+						><template slot-scope="scope">
+								<p v-if="scope.row">佣金</p>
+							</template></el-table-column>
+						<el-table-column
+							prop="commissionAmount"
+							align="center"
 							label="佣金金额"
 						></el-table-column>
 						<el-table-column
-							prop="applyTime"
+							prop="createdTime"
 							align="center"
-							sortable="custom"
 							label="申请时间"
 						></el-table-column>
 						<el-table-column
-							prop="applyTime"
 							align="center"
-							sortable="custom"
-							label="审核状态"
-						></el-table-column>
+							label="审核人"
+						>
+						<template slot-scope="scope">
+								<p>一审：{{ scope.row.audit1Operator ? scope.row.audit1Operator : '-' }}</p>
+								<p>二审：{{ scope.row.audit2Operator ? scope.row.audit2Operator : '-' }}</p>
+							</template>
+						</el-table-column>
+						<el-table-column
+							align="center"
+							label="审核时间"
+						><template slot-scope="scope">
+								<p>一审：{{ scope.row.audit1Time ? scope.row.audit1Time : '-' }}</p>
+								<p>二审：{{ scope.row.audit2Time ? scope.row.audit2Time : '-' }}</p>
+							</template></el-table-column>
+						<el-table-column
+							align="center"
+							label="审核用时"
+						><template slot-scope="scope">
+								<p>一审：{{ scope.row.audit1Cost ? scope.row.audit1Cost : '-' }}min</p>
+								<p>二审：{{ scope.row.audit2Cost ? scope.row.audit2Cost : '-' }}min</p>
+							</template></el-table-column>
+						<el-table-column
+							prop="remark"
+							align="center"
+							label="备注"
+						><template slot-scope="scope">
+								<p>{{ scope.row.audit1Desc }}</p>
+								<p>{{ scope.row.audit2Desc }}</p>
+							</template></el-table-column>
 					</el-table>
 					<!-- 分页 -->
 					<el-pagination
@@ -195,97 +208,57 @@ const start = dayjs()
 	.startOf('day')
 	.valueOf()
 export default {
-	name: 'MemberWithdrawalReview',
+	name: 'CommissionReviewRecord',
 	components: { detail },
 	mixins: [list],
 	data() {
 		return {
 			queryData: {
-				auditStatusList: [],
-				auditStep: '',
-				lockOrder: '',
-				applyName: '',
-				auditName: '',
-				auditNum: '',
-				orderProperties: '',
-				orderType: ''
+				orderNo: '',
+				proxyAccount: '',
+				orderStatus: ''
 			},
 			type: true,
 			showDetail: false,
 			formTime: {
-				time: [start, end],
-				time2: []
+				time: [start, end]
 			},
 			rowData: {},
-			now: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
 			name: '',
-			activeName: '',
 			dataList: []
 		}
 	},
 	computed: {
-		accountType() {
-			return this.globalDics.accountType
-		},
-		auditStatus() {
-			return this.globalDics.auditStatusType
-		},
-		auditStepType() {
-			return this.globalDics.auditStepType
-		},
-		lockOrderType() {
-			return this.globalDics.lockOrderType
-		},
-		applyType() {
-			return this.globalDics.applyType
+		patchAdjustStatus() {
+			return this.globalDics.patchAdjustStatus
 		}
 	},
 	mounted() {
 		this.name = getUsername()
 	},
 	methods: {
-		handleClick() {
-
-		},
 		loadData() {
 			this.loading = true
 			const [startTime, endTime] = this.formTime.time || []
-			const [startTime2, endTime2] = this.formTime.time2 || []
 			let params = {
 				...this.queryData,
-				applyTimeStart: startTime
+				beginTime: startTime
 					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
 					: '',
-				applyTimeEnd: endTime
+				endTime: endTime
 					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
-					: '',
-				auditTimeStart: startTime2
-					? dayjs(startTime2).format('YYYY-MM-DD HH:mm:ss')
-					: '',
-				auditTimeEnd: endTime2
-					? dayjs(endTime2).format('YYYY-MM-DD HH:mm:ss')
 					: ''
 			}
 			params = {
 				...this.getParams(params)
 			}
 			this.$api
-				.proxyList(params)
+				.proxyCommissionRecordSelectCommission(params)
 				.then((res) => {
 					if (res.code === 200) {
-						this.now = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
 						const response = res.data
 						this.loading = false
 						this.dataList = response.record
-						if (this.dataList) {
-							this.dataList.forEach((item) => {
-								if (Number(item.lockOrder) === 1) {
-									item.lockStatus = true
-								} else {
-									item.lockStatus = false
-								}
-							})
-						}
 						this.total = response.totalRecord
 					} else {
 						this.loading = false
@@ -310,52 +283,14 @@ export default {
 		},
 		reset() {
 			this.queryData = {
-				auditStatusList: [],
-				auditStep: '',
-				lockOrder: '',
-				applyName: '',
-				auditName: '',
-				auditNum: '',
-				orderProperties: '',
-				orderType: ''
+				orderNo: '',
+				proxyAccount: '',
+				orderStatus: ''
 			}
 			this.formTime = {
-				time: [start, end],
-				time2: []
+				time: [start, end]
 			}
 			this.loadData()
-		},
-		lockChange(val) {
-			const loading = this.$loading({
-				lock: true,
-				text: 'Loading',
-				spinner: 'el-icon-loading',
-				background: 'rgba(0, 0, 0, 0.7)'
-			})
-			this.$api
-				.lockProxyAuditRecord({
-					id: val.id,
-					lockFlag: Number(val.lockOrder) === 0 ? 0 : 1
-				})
-				.then((res) => {
-					if (res.code === 200) {
-						loading.close()
-						this.$message({
-							type: 'success',
-							message: '操作成功!'
-						})
-						this.loadData()
-					} else {
-						loading.close()
-						this.$message({
-							message: res.msg,
-							type: 'error'
-						})
-					}
-				})
-				.catch(() => {
-					loading.close()
-				})
 		}
 	}
 }

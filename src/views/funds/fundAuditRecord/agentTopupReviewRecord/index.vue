@@ -20,7 +20,7 @@
 
 					<el-form-item label="订单号:">
 						<el-input
-							v-model="queryData.auditNum"
+							v-model="queryData.id"
 							clearable
 							size="medium"
 							:maxlength="19"
@@ -31,7 +31,7 @@
 					</el-form-item>
 					<el-form-item label="代理账号:">
 						<el-input
-							v-model="queryData.auditNum"
+							v-model="queryData.userName"
 							clearable
 							size="medium"
 							:maxlength="11"
@@ -42,7 +42,7 @@
 					</el-form-item>
 					<el-form-item label="订单状态:">
 						<el-select
-							v-model="queryData.lockOrder"
+							v-model="queryData.orderStatus"
 							style="width: 180px"
 							:popper-append-to-body="false"
 						>
@@ -86,7 +86,6 @@
 						:data="dataList"
 						style="width: 100%"
 						:header-cell-style="getRowClass"
-						@sort-change="changeTableSort"
 					>
 						<el-table-column
 							prop="auditStep"
@@ -105,66 +104,66 @@
 							</template>
 						</el-table-column>
 						<el-table-column
-							prop="auditNum"
+							prop="id"
 							align="center"
 							label="订单号"
 						></el-table-column>
 						<el-table-column
-							prop="applyName"
+							prop="userName"
 							align="center"
 							label="代理账号"
 						></el-table-column>
 						<el-table-column
-							prop="applyName"
+							prop="realName"
 							align="center"
 							label="代理姓名"
 						></el-table-column>
 						<el-table-column
-							prop="applyTime"
+							prop="orderStatus"
 							align="center"
-							sortable="custom"
 							label="订单状态"
 						></el-table-column>
 						<el-table-column
 							prop="applyTime"
 							align="center"
-							sortable="custom"
 							label="申请类型"
 						></el-table-column>
 						<el-table-column
-							prop="applyTime"
+							prop="adjustAmount"
 							align="center"
-							sortable="custom"
 							label="增加金额"
 						></el-table-column>
 						<el-table-column
-							prop="applyTime"
+							prop="operatorTime"
 							align="center"
-							sortable="custom"
 							label="申请时间"
 						></el-table-column>
 						<el-table-column
-							prop="applyTime"
 							align="center"
-							sortable="custom"
 							label="审核人"
-						></el-table-column>
+						>
+						<template slot-scope="scope">
+								<p>{{ scope.row.details[0].authOperator }}</p>
+								<p>{{ scope.row.details[1].authOperator }}</p>
+							</template>
+						</el-table-column>
 						<el-table-column
-							prop="applyTime"
 							align="center"
-							sortable="custom"
 							label="审核时间"
-						></el-table-column>
+						><template slot-scope="scope">
+								<p>{{ scope.row.details[0].auditTime }}</p>
+								<p>{{ scope.row.details[1].auditTime }}</p>
+							</template></el-table-column>
 						<el-table-column
-							prop="applyTime"
 							align="center"
-							sortable="custom"
 							label="审核用时"
-						></el-table-column>
+						><template slot-scope="scope">
+								<p>{{ scope.row.details[0].costTime }}</p>
+								<p>{{ scope.row.details[1].costTime }}</p>
+							</template></el-table-column>
 						<el-table-column
-							prop="applyTime"
+							prop="remark"
 							align="center"
-							sortable="custom"
 							label="备注"
 						></el-table-column>
 					</el-table>
@@ -205,20 +204,14 @@ export default {
 	data() {
 		return {
 			queryData: {
-				auditStatusList: [],
-				auditStep: '',
-				lockOrder: '',
-				applyName: '',
-				auditName: '',
-				auditNum: '',
-				orderProperties: '',
-				orderType: ''
+				id: '',
+				userName: '',
+				orderStatus: ''
 			},
 			type: true,
 			showDetail: false,
 			formTime: {
-				time: [start, end],
-				time2: []
+				time: [start, end]
 			},
 			rowData: {},
 			name: '',
@@ -227,51 +220,28 @@ export default {
 		}
 	},
 	computed: {
-		accountType() {
-			return this.globalDics.accountType
-		},
-		auditStatus() {
-			return this.globalDics.auditStatusType
-		},
-		auditStepType() {
-			return this.globalDics.auditStepType
-		},
-		lockOrderType() {
-			return this.globalDics.lockOrderType
-		},
-		applyType() {
-			return this.globalDics.applyType
-		}
 	},
 	mounted() {
 		this.name = getUsername()
 	},
 	methods: {
-		handleClick() {},
 		loadData() {
 			this.loading = true
 			const [startTime, endTime] = this.formTime.time || []
-			const [startTime2, endTime2] = this.formTime.time2 || []
 			let params = {
 				...this.queryData,
-				applyTimeStart: startTime
+				operatorTimeStart: startTime
 					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
 					: '',
-				applyTimeEnd: endTime
+				operatorTimeEnd: endTime
 					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
-					: '',
-				auditTimeStart: startTime2
-					? dayjs(startTime2).format('YYYY-MM-DD HH:mm:ss')
-					: '',
-				auditTimeEnd: endTime2
-					? dayjs(endTime2).format('YYYY-MM-DD HH:mm:ss')
 					: ''
 			}
 			params = {
 				...this.getParams(params)
 			}
 			this.$api
-				.proxyList(params)
+				.fundsAuthRecordsProxyAddAudit(params)
 				.then((res) => {
 					if (res.code === 200) {
 						const response = res.data
@@ -310,52 +280,14 @@ export default {
 		},
 		reset() {
 			this.queryData = {
-				auditStatusList: [],
-				auditStep: '',
-				lockOrder: '',
-				applyName: '',
-				auditName: '',
-				auditNum: '',
-				orderProperties: '',
-				orderType: ''
+				id: '',
+				userName: '',
+				orderStatus: ''
 			}
 			this.formTime = {
-				time: [start, end],
-				time2: []
+				time: [start, end]
 			}
 			this.loadData()
-		},
-		lockChange(val) {
-			const loading = this.$loading({
-				lock: true,
-				text: 'Loading',
-				spinner: 'el-icon-loading',
-				background: 'rgba(0, 0, 0, 0.7)'
-			})
-			this.$api
-				.lockProxyAuditRecord({
-					id: val.id,
-					lockFlag: Number(val.lockOrder) === 0 ? 0 : 1
-				})
-				.then((res) => {
-					if (res.code === 200) {
-						loading.close()
-						this.$message({
-							type: 'success',
-							message: '操作成功!'
-						})
-						this.loadData()
-					} else {
-						loading.close()
-						this.$message({
-							message: res.msg,
-							type: 'error'
-						})
-					}
-				})
-				.catch(() => {
-					loading.close()
-				})
 		}
 	}
 }
