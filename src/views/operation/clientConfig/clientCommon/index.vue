@@ -23,12 +23,12 @@
 							v-for="item in windLevelTypeArr"
 							:key="item.type"
 							:label="item.value"
-							:value="item.value"
+							:value="item.type"
 						></el-option>
 					</el-select>
 				</el-form-item>
 				<el-form-item
-					v-if="['1'].includes(queryData.operateType)"
+					v-if="['0'].includes(queryData.operateType)"
 					label="会员客服地址"
 					prop="userAddress"
 				>
@@ -44,7 +44,7 @@
 					></el-input>
 				</el-form-item>
 				<el-form-item
-					v-else-if="['2'].includes(queryData.operateType)"
+					v-else-if="['1'].includes(queryData.operateType)"
 					label="代理客服地址"
 					prop="agentAddress"
 				>
@@ -60,7 +60,7 @@
 					></el-input>
 				</el-form-item>
 				<el-form-item
-					v-else-if="['3'].includes(queryData.operateType)"
+					v-else-if="['2'].includes(queryData.operateType)"
 					label="IOS下载地址"
 					prop="iosAddress"
 				>
@@ -76,7 +76,7 @@
 					></el-input>
 				</el-form-item>
 				<el-form-item
-					v-else-if="['4'].includes(queryData.operateType)"
+					v-else-if="['3'].includes(queryData.operateType)"
 					label="安卓下载地址"
 					prop="androidAddress"
 				>
@@ -92,7 +92,7 @@
 					></el-input>
 				</el-form-item>
 				<el-form-item
-					v-else-if="['5'].includes(queryData.operateType)"
+					v-else-if="['4'].includes(queryData.operateType)"
 					label="桌面端下载地址"
 					prop="pcAddress"
 				>
@@ -108,7 +108,7 @@
 					></el-input>
 				</el-form-item>
 				<el-form-item
-					v-else-if="['6'].includes(queryData.operateType)"
+					v-else-if="['5'].includes(queryData.operateType)"
 					label="投诉建议邮箱"
 					prop="complainAddress"
 				>
@@ -123,7 +123,7 @@
 					></el-input>
 				</el-form-item>
 				<el-form-item
-					v-else-if="['7'].includes(queryData.operateType)"
+					v-else-if="['6'].includes(queryData.operateType)"
 					label="客户邮箱"
 					prop="serviceAddress"
 				>
@@ -138,7 +138,7 @@
 					></el-input>
 				</el-form-item>
 				<el-form-item
-					v-else-if="['8'].includes(queryData.operateType)"
+					v-else-if="['7'].includes(queryData.operateType)"
 					label="合营部ID"
 					prop="IdAddress"
 				>
@@ -273,7 +273,7 @@ export default {
 			loading: false,
 			loadingT: false,
 			queryData: {
-				operateType: '1',
+				operateType: '',
 				userAddress: undefined,
 				agentAddress: undefined,
 				iosAddress: undefined,
@@ -411,6 +411,7 @@ export default {
 		},
 		changeRiskType(evt) {
 			this.showInfoData = {}
+            evt = evt + ''
 			this.queryData = {
 				userAddress: undefined,
 				agentAddress: undefined,

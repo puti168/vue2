@@ -153,6 +153,7 @@ export default {
 				lessMoney: undefined,
 				remark: undefined,
 				userType: 1,
+                bizType: 1,
 				userId: undefined,
 				relationId: undefined,
 				imageAddress: undefined
@@ -308,6 +309,7 @@ export default {
                 lessMoney: undefined,
                 remark: undefined,
                 userType: 1,
+                bizType: 1,
                 userId: undefined,
                 relationId: undefined,
                 imageAddress: undefined
