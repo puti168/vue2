@@ -308,8 +308,8 @@ export default {
 									...this.form,
 									roleIds: this.tranferVal,
 									googleAuthCode: this.form.googleAuthCode,
-									pwd: md5(this.form.pwd + this.form.userName),
-									rePwd: md5(this.form.rePwd + this.form.userName)
+									pwd: md5(this.form.userName.trim() + this.form.pwd.trim()),
+									rePwd: md5(this.form.userName.trim() + this.form.rePwd.trim())
 									// eslint-disable-next-line
 							  }
 							: {

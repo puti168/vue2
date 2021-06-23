@@ -30,11 +30,48 @@ export function clientCommonQueryPublicResourcesAPI(params) {
 // 运营 ===> 启动页配置 ==> 列表
 export function clientStartListAPI(data) {
 	return request({
-		url: '/user/queryMember',
+		url: '/operate/startPage/queryList',
 		method: 'post',
 		data
 	})
 }
+
+// 运营 ===> 启动页配置 ==> 新增
+export function clientStartAddAPI(data) {
+	return request({
+		url: '/operate/startPage/queryList',
+		method: 'post',
+		data
+	})
+}
+
+// 运营 ===> 启动页配置 ==> 修改
+export function clientStartUpdateAPI(data) {
+	return request({
+		url: '/operate/startPage/queryList',
+		method: 'post',
+		data
+	})
+}
+
+// 运营 ===> 启动页配置 ==> 删除
+export function clientStartDeleteAPI(data) {
+	return request({
+		url: '/operate/startPage/queryList',
+		method: 'post',
+		data
+	})
+}
+
+// 运营 ===> 启动页配置 ==> 启用禁用
+export function clientStartUseAPI(data) {
+	return request({
+		url: '/operate/startPage/queryList',
+		method: 'post',
+		data
+	})
+}
+
 export function configDiscountTagQueryList(data) {
 	return request({
 		url: '/operate/configDiscountTag/queryList',
@@ -143,7 +180,47 @@ export function getOperateConfigNoticeRetract(data) {
 	})
 }
 
+export function configDiscountTagQueryNames(params) {
+	return request({
+		url: '/operate/configDiscountTag/queryNames',
+		method: 'get',
+		params
+	})
+}
+export function queryActivityTypeList(data) {
+	return request({
+		url: '/operate/ActivityConfigRecord/queryActivityTypeList',
+		method: 'post',
+		data
+	})
+}
+export function queryDiscountActivityList(data) {
+	return request({
+		url: '/operate/ActivityConfigRecord/queryDiscountActivityList',
+		method: 'post',
+		data
+	})
+}
+export function queryDiscountTagList(data) {
+	return request({
+		url: '/operate/ActivityConfigRecord/queryDiscountTagList',
+		method: 'post',
+		data
+	})
+}
+export function queryVipActivityList(data) {
+	return request({
+		url: '/operate/ActivityConfigRecord/queryVipActivityList',
+		method: 'post',
+		data
+	})
+}
 export default {
+	queryDiscountTagList,
+	queryVipActivityList,
+	queryDiscountActivityList,
+	queryActivityTypeList,
+	configDiscountTagQueryNames,
 	configDiscountTagEdit,
 	configDiscountTagAdd,
 	configDiscountTagQueryList,
@@ -161,5 +238,9 @@ export default {
 	getOperateConfigNoticeSelectAll,
 	getOperateConfigNoticeSelect,
 	getOperateConfigNoticeSave,
-	getOperateConfigNoticeRetract
+	getOperateConfigNoticeRetract,
+	clientStartAddAPI,
+	clientStartUpdateAPI,
+	clientStartDeleteAPI,
+	clientStartUseAPI
 }

@@ -5,14 +5,19 @@
 				<el-form ref="form" :inline="true" :model="queryData">
 					<el-form-item label="活动页签:" class="tagheight">
 						<el-select
-							v-model="queryData.status"
+							v-model="queryData.ids"
 							style="width: 180px"
+							multiple
 							clearable
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
 						>
-							<el-option label="禁用中" :value="0"></el-option>
-							<el-option label="开启中" :value="1"></el-option>
+							<el-option
+								v-for="item in gameList"
+								:key="item.id"
+								:label="item.activityName"
+								:value="item.id"
+							></el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item label="状态:" class="tagheight">
@@ -184,7 +189,7 @@
 							</el-button>
 
 							<el-button
-								type="warning"
+								type="danger"
 								icon="el-icon-delete"
 								:disabled="scope.row.status === 1"
 								size="medium"
@@ -293,12 +298,16 @@ export default {
 	data() {
 		return {
 			queryData: {
+				ids: [],
 				status: '',
 				createdBy: '',
+				orderAsc: '',
+				orderDesc: '',
 				updatedBy: ''
 			},
 			sortLabel: false,
 			tableData: [],
+			gameList: [],
 			options: [
 				{ value: '1', label: '1区' },
 				{ value: '2', label: '2区' },
@@ -317,7 +326,9 @@ export default {
 		}
 	},
 	computed: {},
-	mounted() {},
+	mounted() {
+		this.loadGame()
+	},
 	methods: {
 		// 开始拖拽事件
 		onStart() {
@@ -360,6 +371,18 @@ export default {
 				}
 			})
 		},
+		loadGame() {
+			this.$api
+				.configDiscountTagQueryNames()
+				.then((res) => {
+					if (res.code === 200) {
+						this.gameList = res.data
+					}
+				})
+				.catch(() => {
+					this.loading = false
+				})
+		},
 		loadData() {
 			this.loading = true
 			let params = {
@@ -384,7 +407,14 @@ export default {
 				})
 		},
 		reset() {
-			this.queryData = { status: '', createdBy: '', updatedBy: '' }
+			this.queryData = {
+				ids: [],
+				status: '',
+				createdBy: '',
+				updatedBy: '',
+				orderAsc: '',
+				orderDesc: ''
+			}
 			this.pageNum = 1
 			this.loadData()
 		},
@@ -472,28 +502,20 @@ export default {
 				}
 			})
 		},
-		checkValue(e) {
-			const { value } = e.target
-			this.queryData.gameLabelId = value
-			console.log(value)
-		},
 		_changeTableSort({ column, prop, order }) {
-			if (prop === 'gameLabelId') {
-				prop = 1
-			}
-			if (prop === 'createdAt') {
-				prop = 2
-			}
-			if (prop === 'updatedAt') {
-				prop = 3
-			}
-			this.queryData.orderKey = prop
-			if (order === 'ascending') {
-				// 升序
-				this.queryData.orderType = 'asc'
-			} else if (column.order === 'descending') {
-				// 降序
-				this.queryData.orderType = 'desc'
+			this.pageNum = 1
+			if (prop === 'createdAt' && order === 'ascending') {
+				this.queryData.orderAsc = 'created_at'
+				this.queryData.orderDesc = ''
+			} else if (prop === 'createdAt' && order === 'descending') {
+				this.queryData.orderDesc = 'created_at'
+				this.queryData.orderAsc = ''
+			} else if (prop === 'updatedAt' && order === 'ascending') {
+				this.queryData.orderAsc = 'updated_at'
+				this.queryData.orderDesc = ''
+			} else {
+				this.queryData.orderAsc = ''
+				this.queryData.orderDesc = 'updated_at'
 			}
 			this.loadData()
 		},

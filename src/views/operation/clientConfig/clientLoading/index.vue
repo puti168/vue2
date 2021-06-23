@@ -353,9 +353,10 @@ export default {
             queryData: {
                 supportTerminal: undefined,
                 startPageName: undefined,
-                status: '1',
+                status: undefined,
                 createdBy: undefined,
-                updatedBy: undefined
+                updatedBy: undefined,
+                configType: 1
             },
             tableData: [],
             dialogFormVisible: false,
@@ -420,7 +421,7 @@ export default {
             // )
             // params.windControlLevelName.splice(idx, 1)
             this.$api
-                .riskRankListAPI(params)
+                .clientStartListAPI(params)
                 .then((res) => {
                     const { code, data } = res
                     if (code === 200) {

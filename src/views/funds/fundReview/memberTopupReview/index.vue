@@ -99,7 +99,7 @@
 						>
 							<template slot-scope="scope">
 								<el-button
-									:class="scope.row.lockAccount !== name ? 'dis' : ''"
+									:class="scope.row.lockAccount !== name && scope.row.lockAccount ? 'dis' : ''"
 									type="primary"
 									size="medium"
 									@click="goDetail(scope.row)"
@@ -283,9 +283,9 @@ export default {
 				background: 'rgba(0, 0, 0, 0.7)'
 			})
 			this.$api
-				.lockProxyAuditRecord({
+				.memberArtificialPatchAccountAddAuditLockRecord({
 					id: val.id,
-					lockFlag: Number(val.lockStatus) === 0 ? 0 : 1
+					lockStatus: Number(val.lockStatus) === 0 ? 0 : 1
 				})
 				.then((res) => {
 					if (res.code === 200) {

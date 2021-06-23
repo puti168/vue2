@@ -86,7 +86,7 @@
 									v-if="
 										scope.row.lockAccount === name || !scope.row.lockAccount
 									"
-									v-model="scope.row.lockStatus"
+									v-model="scope.row.lockOrder"
 									@change="lockChange(scope.row)"
 								></el-checkbox>
 							</template>
@@ -99,7 +99,7 @@
 						>
 							<template slot-scope="scope">
 								<el-button
-									:class="scope.row.lockAccount !== name ? 'dis' : ''"
+									:class="scope.row.lockAccount !== name && scope.row.lockAccount ? 'dis' : ''"
 									type="primary"
 									size="medium"
 									@click="goDetail(scope.row)"
@@ -298,7 +298,7 @@ export default {
 			this.$api
 				.proxyCommissionRecordLock({
 					id: val.id,
-					lockStatus: Number(val.lockStatus) === 0 ? 0 : 1
+					lockStatus: Number(val.lockStatus) === 1 ? 0 : 1
 				})
 				.then((res) => {
 					if (res.code === 200) {
