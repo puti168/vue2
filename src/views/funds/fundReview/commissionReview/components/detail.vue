@@ -154,27 +154,27 @@
 					>
 						<el-table-column align="center" label="风险代理">
 							<template>
-								{{ registerVo.beforeModify ? registerVo.beforeModify : '-' }}
+								{{ proxyRiskControlLevelVo.riskAgent ? proxyRiskControlLevelVo.riskAgent : '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="风险银行卡">
 							<template>
-								{{ registerVo.beforeModify ? registerVo.beforeModify : '-' }}
+								{{ proxyRiskControlLevelVo.riskyBankCard ? proxyRiskControlLevelVo.riskyBankCard : '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="风险虚拟币">
 							<template>
-								{{ registerVo.beforeModify ? registerVo.beforeModify : '-' }}
+								{{ proxyRiskControlLevelVo.riskyVirtualCurrency ? proxyRiskControlLevelVo.riskyVirtualCurrency : '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="风险IP">
 							<template>
-								{{ registerVo.beforeModify ? registerVo.beforeModify : '-' }}
+								{{ proxyRiskControlLevelVo.riskyIP ? proxyRiskControlLevelVo.riskyIP : '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="风险终端设备号">
 							<template>
-								{{ registerVo.beforeModify ? registerVo.beforeModify : '-' }}
+								{{ proxyRiskControlLevelVo.riskTerminalDeviceNumber ? proxyRiskControlLevelVo.riskTerminalDeviceNumber : '-' }}
 							</template>
 						</el-table-column>
 					</el-table>
@@ -398,6 +398,7 @@ export default {
 			userLabel: [],
 			accountsVo: {},
 			commissionRecordVo: {},
+			proxyRiskControlLevelVo: {},
 			proxyCommissionDetaiVoList: {},
 			registerVo: {},
 			visible: false,
@@ -545,6 +546,7 @@ export default {
 					console.log(response)
 					this.accountsVo = response.accountsVo
 					this.commissionRecordVo = response.commissionRecordVo
+					this.proxyRiskControlLevelVo = response.proxyRiskControlLevelVo
 					this.proxyCommissionDetaiVoList = response.proxyCommissionDetaiVoList
 					this.registerVo = response.registerVo
 				} else {

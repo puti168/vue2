@@ -1,22 +1,10 @@
 <template>
 	<div class="game-container report-container">
 		<el-tabs v-model="activeName" @tab-click="handleClick">
-			<el-tab-pane
-				label="活动类型名称配置"
-				name="0"
-			></el-tab-pane>
-			<el-tab-pane
-				label="创建优惠类型页签"
-				name="1"
-			></el-tab-pane>
-			<el-tab-pane
-				label="优惠活动配置"
-				name="2"
-			></el-tab-pane>
-			<el-tab-pane
-				label="赞助/vip活动配置"
-				name="3"
-			></el-tab-pane>
+			<el-tab-pane label="活动类型名称配置" name="0"></el-tab-pane>
+			<el-tab-pane label="创建优惠类型页签" name="1"></el-tab-pane>
+			<el-tab-pane label="优惠活动配置" name="2"></el-tab-pane>
+			<el-tab-pane label="赞助/vip活动配置" name="3"></el-tab-pane>
 		</el-tabs>
 		<div class="params">
 			<el-form ref="form" :inline="true" :model="queryData">
@@ -45,30 +33,33 @@
 						:popper-append-to-body="false"
 					>
 						<el-option
-								v-for="item in gameList"
-								:key="item.id"
-								:label="item.activityName"
-								:value="item.id"
-							></el-option>
+							v-for="item in gameList"
+							:key="item.id"
+							:label="item.activityName"
+							:value="item.id"
+						></el-option>
 					</el-select>
 				</el-form-item>
 				<el-form-item v-if="activeName === '3'" label="活动类型:">
 					<el-select
-						v-model="queryData.accountType"
+						v-model="queryData.activityType"
 						style="width: 300px"
 						multiple
 						placeholder="默认选择全部"
 						:popper-append-to-body="false"
 					>
 						<el-option
-							v-for="item in accountType"
+							v-for="item in operateActivityType"
 							:key="item.code"
 							:label="item.description"
 							:value="item.code"
 						></el-option>
 					</el-select>
 				</el-form-item>
-				<el-form-item v-if="activeName === '2' || activeName === '3'" label="活动ID:">
+				<el-form-item
+					v-if="activeName === '2' || activeName === '3'"
+					label="活动ID:"
+				>
 					<el-input
 						v-model="queryData.applyName"
 						clearable
@@ -81,14 +72,60 @@
 				</el-form-item>
 				<el-form-item label="变更类型:">
 					<el-select
-						v-model="queryData.accountType"
+						v-if="activeName === '0'"
+						v-model="queryData.changeType"
 						style="width: 300px"
 						multiple
 						placeholder="默认选择全部"
 						:popper-append-to-body="false"
 					>
 						<el-option
-							v-for="item in accountType"
+							v-for="item in operateChangeTypeName"
+							:key="item.code"
+							:label="item.description"
+							:value="item.code"
+						></el-option>
+					</el-select>
+					<el-select
+						v-else-if="activeName === '1'"
+						v-model="queryData.changeType"
+						style="width: 300px"
+						multiple
+						placeholder="默认选择全部"
+						:popper-append-to-body="false"
+					>
+						<el-option
+							v-for="item in operateChangeTypeTag"
+							:key="item.code"
+							:label="item.description"
+							:value="item.code"
+						></el-option>
+					</el-select>
+					<el-select
+						v-else-if="activeName === '2'"
+						v-model="queryData.changeType"
+						style="width: 300px"
+						multiple
+						placeholder="默认选择全部"
+						:popper-append-to-body="false"
+					>
+						<el-option
+							v-for="item in operateChangeTypeDis"
+							:key="item.code"
+							:label="item.description"
+							:value="item.code"
+						></el-option>
+					</el-select>
+					<el-select
+						v-else
+						v-model="queryData.changeType"
+						style="width: 300px"
+						multiple
+						placeholder="默认选择全部"
+						:popper-append-to-body="false"
+					>
+						<el-option
+							v-for="item in operateChangeTypeVip"
 							:key="item.code"
 							:label="item.description"
 							:value="item.code"
@@ -139,19 +176,37 @@
 					:header-cell-style="getRowClass"
 					@sort-change="changeTableSort"
 				>
-					<el-table-column prop="operationPage" align="center" label="操作页面">
-					</el-table-column>
-					<el-table-column v-if="activeName === '1'" prop="applyType" align="center" label="活动页签名称">
+					<el-table-column
+						prop="operationPage"
+						align="center"
+						label="操作页面"
+					></el-table-column>
+					<el-table-column
+						v-if="activeName === '1'"
+						prop="applyType"
+						align="center"
+						label="活动页签名称"
+					>
 						<template slot-scope="scope">
 							<p>{{ typeFilter(scope.row.applyType, 'applyType') }}</p>
 						</template>
 					</el-table-column>
-					<el-table-column v-if="activeName === '2'" prop="applyType" align="center" label="活动类型">
+					<el-table-column
+						v-if="activeName === '2'"
+						prop="applyType"
+						align="center"
+						label="活动类型"
+					>
 						<template slot-scope="scope">
 							<p>{{ typeFilter(scope.row.applyType, 'applyType') }}</p>
 						</template>
 					</el-table-column>
-					<el-table-column v-if="activeName === '2'" prop="applyType" align="center" label="活动ID">
+					<el-table-column
+						v-if="activeName === '2'"
+						prop="applyType"
+						align="center"
+						label="活动ID"
+					>
 						<template slot-scope="scope">
 							<p>{{ typeFilter(scope.row.applyType, 'applyType') }}</p>
 						</template>
@@ -161,24 +216,29 @@
 							<p>{{ typeFilter(scope.row.changeType, 'changeType') }}</p>
 						</template>
 					</el-table-column>
-					<el-table-column prop="changeFront" align="center" label="变更前">
-					</el-table-column>
-					<el-table-column prop="changeAfter" align="center" label="变更后">
-					</el-table-column>
+					<el-table-column
+						prop="changeFront"
+						align="center"
+						label="变更前"
+					></el-table-column>
+					<el-table-column
+						prop="changeAfter"
+						align="center"
+						label="变更后"
+					></el-table-column>
 					<el-table-column
 						prop="operatorBy"
 						align="center"
 						width="100"
 						label="操作人"
-					>
-					</el-table-column>
+					></el-table-column>
 					<el-table-column
 						prop="operatorAt"
 						align="center"
 						width="100"
+						sortable="custom"
 						label="操作时间"
-					>
-					</el-table-column>
+					></el-table-column>
 				</el-table>
 				<!-- 分页 -->
 				<el-pagination
@@ -213,9 +273,9 @@ export default {
 	data() {
 		return {
 			queryData: {
-				userName: '',
 				operatorBy: '',
-				applyType: []
+				changeType: [],
+				activityType: []
 			},
 			formTime: {
 				time: [start, end]
@@ -227,17 +287,20 @@ export default {
 		}
 	},
 	computed: {
-		accountType() {
-			return this.globalDics.accountType
+		operateChangeTypeName() {
+			return this.globalDics.operateChangeTypeName
 		},
-		virtualType() {
-			return this.globalDics.virtualType
+		operateChangeTypeTag() {
+			return this.globalDics.operateChangeTypeTag
 		},
-		virtualProtocolType() {
-			return this.globalDics.virtualProtocolType
+		operateChangeTypeDis() {
+			return this.globalDics.operateChangeTypeDis
 		},
-		applyType() {
-			return this.globalDics.applyType
+		operateChangeTypeVip() {
+			return this.globalDics.operateChangeTypeVip
+		},
+		operateActivityType() {
+			return this.globalDics.operateActivityType
 		}
 	},
 	mounted() {},
@@ -259,31 +322,56 @@ export default {
 		},
 		loadData() {
 			const [startTime, endTime] = this.formTime.time || []
-			let params = {
-				...this.queryData,
-				applyTimeStart: startTime
-					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
-					: '',
-				applyTimeEnd: endTime
-					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
-					: ''
-			}
-			if (!params.applyTimeStart || !params.applyTimeEnd) {
-				this.$message({
-					message: '操作时间参数必传',
-					type: 'info'
-				})
-				return
+			let params = {}
+			this.loading = true
+			let type =
+				this.activeName === '0'
+					? 'queryActivityTypeList'
+					: 'queryDiscountActivityList'
+			if (this.activeName === '0') {
+				type = 'queryActivityTypeList'
+				params = {
+					changeType: this.queryData.changeType,
+					operatorBy: this.queryData.operatorBy,
+					startAt: startTime
+						? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
+						: '',
+					endAt: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
+				}
+			} else if (this.activeName === '1') {
+				type = 'queryDiscountActivityList'
+				params = {
+					changeType: this.queryData.changeType,
+					operatorBy: this.queryData.operatorBy,
+					startAt: startTime
+						? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
+						: '',
+					endAt: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
+				}
+			} else if (this.activeName === '2') {
+				type = 'queryDiscountTagList'
+				params = {
+					changeType: this.queryData.changeType,
+					operatorBy: this.queryData.operatorBy,
+					startAt: startTime
+						? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
+						: '',
+					endAt: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
+				}
+			} else if (this.activeName === '3') {
+				type = 'queryVipActivityList'
+				params = {
+					activityType: this.queryData.activityType,
+					changeType: this.queryData.changeType,
+					operatorBy: this.queryData.operatorBy,
+					startAt: startTime
+						? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
+						: '',
+					endAt: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
+				}
 			}
 			params = {
 				...this.getParams(params)
-			}
-			this.loading = true
-			let type = this.activeName === '0' ? 'queryActivityTypeList' : 'queryDiscountActivityList'
-			if (this.activeName === '1') {
-				type = 'queryDiscountTagList'
-			} else if (this.activeName === '2') {
-				type = 'queryVipActivityList'
 			}
 			this.$api[type](params)
 				.then((res) => {

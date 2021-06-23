@@ -109,13 +109,6 @@
 							</template>
 						</el-table-column>
 						<el-table-column
-							v-if="activeName === '0'"
-							prop="orderNo"
-							align="center"
-							label="订单号"
-						></el-table-column>
-						<el-table-column
-							v-else
 							prop="orderNo"
 							align="center"
 							label="审核订单号"
@@ -123,18 +116,19 @@
 						<el-table-column
 							prop="userName"
 							align="center"
-							label="会员账号"
+							label="代理账号"
 						></el-table-column>
 						<el-table-column
 							prop="realName"
 							align="center"
-							label="会员姓名"
+							label="代理姓名"
 						></el-table-column>
 						<el-table-column
+							prop="applyTime"
 							align="center"
 							label="调整类型"
 						><template slot-scope="scope">
-								{{ typeFilter(scope.row.adjustType, 'proxyPatchAddAdjustType') }}
+								{{ typeFilter(scope.row.adjustType, 'memberPatchAddAdjustType') }}
 							</template></el-table-column>
 						<el-table-column
 							prop="adjustAmount"
@@ -167,7 +161,7 @@
 				</div>
 			</div>
 		</template>
-		<detail v-else :type="type" :rowData="rowData" @goBack="goBack"></detail>
+		<detail v-else :type="type" :rowData="rowData" :activeName="activeName" @goBack="goBack"></detail>
 	</div>
 </template>
 
@@ -289,9 +283,9 @@ export default {
 				background: 'rgba(0, 0, 0, 0.7)'
 			})
 			this.$api
-				.lockProxyAuditRecord({
+				.memberArtificialPatchAccountAddAuditLockRecord({
 					id: val.id,
-					lockFlag: Number(val.lockStatus) === 0 ? 0 : 1
+					lockStatus: Number(val.lockStatus) === 1 ? 0 : 1
 				})
 				.then((res) => {
 					if (res.code === 200) {
