@@ -139,7 +139,7 @@ export function firstAuditAddAudit(data) {
 }
 export function secondAddAudit(data) {
 	return request({
-		url: '/memberArtificialPatchAccountAddAudit/second/page',
+		url: '/memberArtificialPatchAccountAddAudit/secondAudit/page',
 		method: 'post',
 		data
 	})
@@ -263,7 +263,15 @@ export function memberArtificialPatchAccountAddAuditLockRecord(data) {
 		data
 	})
 }
+export function memberArtificialPatchAccountAddAuditauditRecord(data) {
+	return request({
+		url: '/memberArtificialPatchAccountAddAudit/auditRecord',
+		method: 'post',
+		data
+	})
+}
 export default {
+	memberArtificialPatchAccountAddAuditauditRecord,
 	memberArtificialPatchAccountAddAuditLockRecord,
 	memberArtificialPatchAccountAddAuditAuditDetail,
 	proxyCommissionRecordLock,
