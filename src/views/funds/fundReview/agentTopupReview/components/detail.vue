@@ -139,29 +139,37 @@
 						style="width: 100%"
 						:header-cell-style="getRowClass"
 					>
-						<el-table-column align="center" label="风险代理">
+						<el-table-column align="center" label="风险会员">
 							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
+								{{ list.windControlName ? list.windControlName : '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="风险银行卡">
 							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
+								{{ list.cardWindControlName ? list.cardWindControlName : '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="风险虚拟币">
 							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
+								{{
+									list.virtualWindControlName
+										? list.virtualWindControlName
+										: '-'
+								}}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="风险IP">
 							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
+								{{ list.ipWindControlName ? list.ipWindControlName : '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="风险终端设备号">
 							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
+								{{
+									list.deviceNoWindControlName
+										? list.deviceNoWindControlName
+										: '-'
+								}}
 							</template>
 						</el-table-column>
 					</el-table>
@@ -191,16 +199,17 @@
 						<el-table-column align="center" label="调整类型">
 							<template>
 								{{
-										list.adjustType
-											? typeFilter(list.adjustType, 'memberPatchAddAdjustType')
-											: '-'
-									}}
+									list.adjustType
+										? typeFilter(list.adjustType, 'memberPatchAddAdjustType')
+										: '-'
+								}}
 							</template>
 						</el-table-column>
-						<td class="td-title">调整金额</td>
-								<td>
-									{{ list.adjustAmount ? list.adjustAmount : '-' }}
-								</td>
+						<el-table-column align="center" label="调整金额">
+							<template>
+								{{ list.adjustAmount ? list.adjustAmount : '-' }}
+							</template>
+						</el-table-column>
 						<el-table-column align="center" label="申请原因">
 							<template>
 								{{ list.operatorRemark ? list.operatorRemark : '-' }}
@@ -214,7 +223,12 @@
 				<div class="review-flex">
 					<div>一审人: {{ list.audit1Operator }}</div>
 					<div>一审时间: {{ list.audit1Time }}</div>
-					<div>一审备注: {{ list.audit1Operator }}</div>
+					<div>一审备注: {{ list.audit1Desc }}</div>
+				</div>
+				<div v-if="activeName === '1'" class="review-flex">
+					<div>二审人: {{ list.audit2Operator }}</div>
+					<div>二审时间: {{ list.audit2Time }}</div>
+					<div>二审备注: {{ list.audit2Desc }}</div>
 				</div>
 			</div>
 		</div>
@@ -301,39 +315,43 @@ export default {
 			this.visible = true
 		},
 		auditOne() {
-			const loading = this.$loading({
-				lock: true,
-				text: 'Loading',
-				spinner: 'el-icon-loading',
-				background: 'rgba(0, 0, 0, 0.7)'
-			})
-			const params = {
-				id: this.rowData.id,
-				remark: this.form.remark,
-				auditStatus: this.action ? 2 : 3
-			}
-
-			this.$api
-				.memberArtificialPatchAccountAddAuditauditRecord(params)
-				.then((res) => {
-					loading.close()
-					if (res.code === 200) {
-						this.$message({
-							type: 'success',
-							message: '操作成功!'
-						})
-						this.visible = false
-						this.goBack()
-					} else {
-						this.$message({
-							message: res.msg,
-							type: 'error'
-						})
+			this.$refs.form.validate((valid) => {
+				if (valid) {
+					const loading = this.$loading({
+						lock: true,
+						text: 'Loading',
+						spinner: 'el-icon-loading',
+						background: 'rgba(0, 0, 0, 0.7)'
+					})
+					const params = {
+						id: this.rowData.id,
+						remark: this.form.remark,
+						auditStatus: this.action ? 2 : 3
 					}
-				})
-				.catch(() => {
-					loading.close()
-				})
+
+					this.$api
+						.memberArtificialPatchAccountAddAuditauditRecord(params)
+						.then((res) => {
+							loading.close()
+							if (res.code === 200) {
+								this.$message({
+									type: 'success',
+									message: '操作成功!'
+								})
+								this.visible = false
+								this.goBack()
+							} else {
+								this.$message({
+									message: res.msg,
+									type: 'error'
+								})
+							}
+						})
+						.catch(() => {
+							loading.close()
+						})
+				}
+			})
 		},
 		goBack() {
 			this.$emit('goBack')
@@ -344,7 +362,7 @@ export default {
 				bizType: 1
 			}
 			this.$api
-				.memberArtificialPatchAccountAddAuditAuditDetail(params)
+				.proxyArtificialPatchAccountAddAuditauditDetail(params)
 				.then((res) => {
 					if (res.code === 200) {
 						const response = res.data

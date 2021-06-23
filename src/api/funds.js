@@ -111,7 +111,7 @@ export function agentWithdrawDetailsAPI(data) {
 // 审核相关
 export function selectMemberWithdrawUser(data) {
 	return request({
-		url: '/memberWithDraw/selectMemberWithdrawUser',
+		url: '/memberWithDrawUser/selectMemberWithdrawUser',
 		method: 'post',
 		data
 	})
@@ -270,7 +270,63 @@ export function memberArtificialPatchAccountAddAuditauditRecord(data) {
 		data
 	})
 }
+export function memberWithDrawUserupdateWithdrawLock(data) {
+	return request({
+		url: '/memberWithDrawUser/updateWithdrawLock',
+		method: 'post',
+		data
+	})
+}
+export function memberWithDrawUserupdateWithdraw(data) {
+	return request({
+		url: '/memberWithDrawUser/updateWithdraw',
+		method: 'post',
+		data
+	})
+}
+export function firstAuditAddAuditProxy(data) {
+	return request({
+		url: '/proxyArtificialPatchAccountAddAudit/firstAudit/page',
+		method: 'post',
+		data
+	})
+}
+export function secondAddAuditProxy(data) {
+	return request({
+		url: '/proxyArtificialPatchAccountAddAudit/second/page',
+		method: 'post',
+		data
+	})
+}
+export function proxyArtificialPatchAccountAddAuditlockRecord(data) {
+	return request({
+		url: '/proxyArtificialPatchAccountAddAudit/lockRecord',
+		method: 'post',
+		data
+	})
+}
+export function proxyArtificialPatchAccountAddAuditauditDetail(data) {
+	return request({
+		url: '/proxyArtificialPatchAccountAddAudit/auditDetail',
+		method: 'post',
+		data
+	})
+}
+export function proxyArtificialPatchAccountAddAuditauditRecord(data) {
+	return request({
+		url: '/proxyArtificialPatchAccountAddAudit/auditRecord',
+		method: 'post',
+		data
+	})
+}
 export default {
+	proxyArtificialPatchAccountAddAuditauditRecord,
+	proxyArtificialPatchAccountAddAuditauditDetail,
+	proxyArtificialPatchAccountAddAuditlockRecord,
+	firstAuditAddAuditProxy,
+	secondAddAuditProxy,
+	memberWithDrawUserupdateWithdraw,
+	memberWithDrawUserupdateWithdrawLock,
 	memberArtificialPatchAccountAddAuditauditRecord,
 	memberArtificialPatchAccountAddAuditLockRecord,
 	memberArtificialPatchAccountAddAuditAuditDetail,

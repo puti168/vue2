@@ -113,7 +113,7 @@
 						</el-table-column>
 						<el-table-column align="center" label="会员标签">
 							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
+								{{ list.labelName ? list.labelName : '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="备注">
@@ -146,27 +146,35 @@
 					>
 						<el-table-column align="center" label="风险会员">
 							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
+								{{ list.windControlName ? list.windControlName : '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="风险银行卡">
 							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
+								{{ list.cardWindControlName ? list.cardWindControlName : '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="风险虚拟币">
 							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
+								{{
+									list.virtualWindControlName
+										? list.virtualWindControlName
+										: '-'
+								}}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="风险IP">
 							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
+								{{ list.ipWindControlName ? list.ipWindControlName : '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="风险终端设备号">
 							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
+								{{
+									list.deviceNoWindControlName
+										? list.deviceNoWindControlName
+										: '-'
+								}}
 							</template>
 						</el-table-column>
 					</el-table>
@@ -200,17 +208,35 @@
 											: '-'
 									}}
 								</td>
-								<td class="td-title">活动ID</td>
+								<td class="td-title">活动类型</td>
 								<td>
-									{{ list.operatorTime ? list.operatorTime : '-' }}
+									{{ list.activityId ? list.activityId : '-' }}
+								</td>
+								<td class="td-title">活动名称</td>
+								<td>
+									{{ list.activityId ? list.activityId : '-' }}
 								</td>
 								<td class="td-title">流水倍数</td>
 								<td style="width: 80px">
 									{{ list.validMultiple ? list.validMultiple : '-' }}
 								</td>
-								<td class="td-title">调整金额</td>
+							</tr>
+							<tr>
+								<td class="td-title">增加金额</td>
 								<td>
-									{{ list.adjustAmount ? list.adjustAmount : '-' }}
+									{{ list.adjustType ? list.adjustAmount : '-' }}
+								</td>
+								<td class="td-title">增加前余额</td>
+								<td>
+									{{ list.changeBefore ? list.changeBefore : '-' }}
+								</td>
+								<td class="td-title">增加后余额</td>
+								<td style="width: 80px">
+									{{ list.changeAfter ? list.changeAfter : '-' }}
+								</td>
+								<td class="td-title">实际到账金额</td>
+								<td>
+									{{ list.validAmount ? list.validAmount : '-' }}
 								</td>
 							</tr>
 						</tbody>
@@ -222,7 +248,12 @@
 				<div class="review-flex">
 					<div>一审人: {{ list.audit1Operator }}</div>
 					<div>一审时间: {{ list.audit1Time }}</div>
-					<div>一审备注: {{ list.audit1Operator }}</div>
+					<div>一审备注: {{ list.audit1Desc }}</div>
+				</div>
+				<div v-if="activeName === '1'" class="review-flex">
+					<div>二审人: {{ list.audit2Operator }}</div>
+					<div>二审时间: {{ list.audit2Time }}</div>
+					<div>二审备注: {{ list.audit2Desc }}</div>
 				</div>
 			</div>
 		</div>
@@ -309,39 +340,43 @@ export default {
 			this.visible = true
 		},
 		auditOne() {
-			const loading = this.$loading({
-				lock: true,
-				text: 'Loading',
-				spinner: 'el-icon-loading',
-				background: 'rgba(0, 0, 0, 0.7)'
-			})
-			const params = {
-				id: this.rowData.id,
-				remark: this.form.remark,
-				auditStatus: this.action ? 2 : 3
-			}
-
-			this.$api
-				.memberArtificialPatchAccountAddAuditauditRecord(params)
-				.then((res) => {
-					loading.close()
-					if (res.code === 200) {
-						this.$message({
-							type: 'success',
-							message: '操作成功!'
-						})
-						this.visible = false
-						this.goBack()
-					} else {
-						this.$message({
-							message: res.msg,
-							type: 'error'
-						})
+			this.$refs.form.validate((valid) => {
+				if (valid) {
+					const loading = this.$loading({
+						lock: true,
+						text: 'Loading',
+						spinner: 'el-icon-loading',
+						background: 'rgba(0, 0, 0, 0.7)'
+					})
+					const params = {
+						id: this.rowData.id,
+						remark: this.form.remark,
+						auditStatus: this.action ? 2 : 3
 					}
-				})
-				.catch(() => {
-					loading.close()
-				})
+
+					this.$api
+						.memberArtificialPatchAccountAddAuditauditRecord(params)
+						.then((res) => {
+							loading.close()
+							if (res.code === 200) {
+								this.$message({
+									type: 'success',
+									message: '操作成功!'
+								})
+								this.visible = false
+								this.goBack()
+							} else {
+								this.$message({
+									message: res.msg,
+									type: 'error'
+								})
+							}
+						})
+						.catch(() => {
+							loading.close()
+						})
+				}
+			})
 		},
 		goBack() {
 			this.$emit('goBack')
