@@ -55,10 +55,10 @@
               </el-button>
             </template>
           </el-table-column>
-          <el-table-column prop="labelStatus" align="center" label="状态" width="100px">
+          <el-table-column prop="status" align="center" label="状态" width="100px">
             <template slot-scope="scope">
-              <div v-if="scope.row.labelStatus === 0" class="disableRgba">关闭</div>
-              <div v-else-if="scope.row.labelStatus === 1" class="normalRgba">开启</div>
+              <div v-if="scope.row.status === 0" class="disableRgba">关闭</div>
+              <div v-else-if="scope.row.status === 1" class="normalRgba">开启</div>
               <span v-else>-</span>
             </template>
           </el-table-column>

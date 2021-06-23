@@ -52,6 +52,7 @@ export function getProxyFundsRecordsAccountChangeDownload(data) {
 	return request({
 		url: '/proxyFundsRecords/accountChange/download',
 		method: 'post',
+		responseType: 'blob',
 		data
 	})
 }
@@ -69,6 +70,7 @@ export function getProxyFundsRecordsDepositDownload(data) {
 	return request({
 		url: '/proxyFundsRecords/deposit/download',
 		method: 'post',
+		responseType: 'blob',
 		data
 	})
 }

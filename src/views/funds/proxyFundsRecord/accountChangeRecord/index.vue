@@ -62,6 +62,7 @@
           <el-form-item label="风控层级:" class="tagheight">
             <el-select
               v-model="queryData.windControlId"
+              clearable
               style="width: 300px"
               placeholder="默认选择全部"
               :popper-append-to-body="false"
@@ -463,22 +464,6 @@ export default {
       params = {
         ...this.getParams(params)
       }
-      delete params.registerTime
-      delete params.lastLoginTime
-      delete params.firstSaveTime
-      delete params.accountStatus
-      delete params.deviceType
-      this.$confirm(
-        `<strong>是否导出?</strong></br><span style='font-size:12px;color:#c1c1c1'>数据过大时，请耐心等待</span>`,
-        '确认提示',
-        {
-          dangerouslyUseHTMLString: true,
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }
-      )
-        .then(() => {
           this.$api
             .getProxyFundsRecordsAccountChangeDownload(params)
             .then((res) => {
@@ -541,7 +526,6 @@ export default {
               //   duration: 1500
               // })
             })
-        })
     },
     getSummaries(param) {
       const { columns } = param
@@ -595,6 +579,39 @@ export default {
       }
       this.loadData()
     }
+  },
+  checkValue(e) {
+    const { name, value } = e.target
+   switch (name) {
+        case 'netAmountMax':
+          if (
+            !!this.queryData.netAmountMin &&
+            value &&
+            value * 1 < this.queryData.netAmountMin * 1
+          ) {
+            this.$message({
+              type: 'warning',
+              message: `账变金额输入最大值不能小于最小值`
+            })
+          } else {
+            this.queryData.netAmountMax = value
+          }
+          break
+        case 'netAmountMin':
+          if (
+            !!this.queryData.netAmountMax &&
+            value &&
+            value * 1 > this.queryData.netAmountMax * 1
+          ) {
+            this.$message({
+              type: 'warning',
+              message: `账变金额输入最小值不能大于最大值`
+            })
+          } else {
+            this.queryData.netAmountMin = value
+          }
+          break
+      }
   },
 
     enterSearch() {

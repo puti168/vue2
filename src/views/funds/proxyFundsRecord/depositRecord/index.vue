@@ -58,6 +58,7 @@
           <el-form-item label="订单来源:" class="tagheight">
             <el-select
               v-model="queryData.deviceType"
+              clearable
               style="width: 300px"
               placeholder="默认选择全部"
               :popper-append-to-body="false"
@@ -73,6 +74,7 @@
           <el-form-item label="订单状态:" class="tagheight">
             <el-select
               v-model="queryData.orderStatus"
+              clearable
               style="width: 300px"
               placeholder="默认选择全部"
               :popper-append-to-body="false"
@@ -88,6 +90,7 @@
           <el-form-item label="支付方式:" class="tagheight">
             <el-select
               v-model="queryData.payType"
+              clearable
               style="width: 300px"
               placeholder="默认选择全部"
               :popper-append-to-body="false"
