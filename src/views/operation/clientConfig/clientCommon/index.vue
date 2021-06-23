@@ -28,7 +28,7 @@
 					</el-select>
 				</el-form-item>
 				<el-form-item
-					v-if="['0'].includes(queryData.operateType)"
+					v-if="[0].includes(queryData.operateType)"
 					label="会员客服地址"
 					prop="userAddress"
 				>
@@ -44,7 +44,7 @@
 					></el-input>
 				</el-form-item>
 				<el-form-item
-					v-else-if="['1'].includes(queryData.operateType)"
+					v-else-if="[1].includes(queryData.operateType)"
 					label="代理客服地址"
 					prop="agentAddress"
 				>
@@ -60,7 +60,7 @@
 					></el-input>
 				</el-form-item>
 				<el-form-item
-					v-else-if="['2'].includes(queryData.operateType)"
+					v-else-if="[2].includes(queryData.operateType)"
 					label="IOS下载地址"
 					prop="iosAddress"
 				>
@@ -76,7 +76,7 @@
 					></el-input>
 				</el-form-item>
 				<el-form-item
-					v-else-if="['3'].includes(queryData.operateType)"
+					v-else-if="[3].includes(queryData.operateType)"
 					label="安卓下载地址"
 					prop="androidAddress"
 				>
@@ -92,7 +92,7 @@
 					></el-input>
 				</el-form-item>
 				<el-form-item
-					v-else-if="['4'].includes(queryData.operateType)"
+					v-else-if="[4].includes(queryData.operateType)"
 					label="桌面端下载地址"
 					prop="pcAddress"
 				>
@@ -108,7 +108,7 @@
 					></el-input>
 				</el-form-item>
 				<el-form-item
-					v-else-if="['5'].includes(queryData.operateType)"
+					v-else-if="[5].includes(queryData.operateType)"
 					label="投诉建议邮箱"
 					prop="complainAddress"
 				>
@@ -123,7 +123,7 @@
 					></el-input>
 				</el-form-item>
 				<el-form-item
-					v-else-if="['6'].includes(queryData.operateType)"
+					v-else-if="[6].includes(queryData.operateType)"
 					label="客户邮箱"
 					prop="serviceAddress"
 				>
@@ -138,7 +138,7 @@
 					></el-input>
 				</el-form-item>
 				<el-form-item
-					v-else-if="['7'].includes(queryData.operateType)"
+					v-else-if="[7].includes(queryData.operateType)"
 					label="合营部ID"
 					prop="IdAddress"
 				>
@@ -187,71 +187,109 @@
 			<div class="info-content">
 				<el-row class="info-content-row">
 					<el-col :span="6">
-						<p v-if="['1'].includes(queryData.operateType)">
+						<p v-if="[0].includes(queryData.operateType)">
 							<span>会员客服地址：</span>
 							<span>
-								{{ showInfoData.deviceNo ? showInfoData.deviceNo : '-' }}
+								{{
+									showInfoData && showInfoData.resourcesUrl
+										? showInfoData.resourcesUrl
+										: '-'
+								}}
 							</span>
 						</p>
-						<p v-else-if="['2'].includes(queryData.operateType)">
+						<p v-else-if="[1].includes(queryData.operateType)">
 							<span>代理客服地址：</span>
 							<span>
-								{{ showInfoData.deviceNo ? showInfoData.deviceNo : '-' }}
+								{{
+									showInfoData && showInfoData.resourcesUrl
+										? showInfoData.resourcesUrl
+										: '-'
+								}}
 							</span>
 						</p>
-						<p v-else-if="['3'].includes(queryData.operateType)">
+						<p v-else-if="[2].includes(queryData.operateType)">
 							<span>ios下载地址：</span>
 							<span>
-								{{ showInfoData.deviceNo ? showInfoData.deviceNo : '-' }}
+								{{
+									showInfoData && showInfoData.resourcesUrl
+										? showInfoData.resourcesUrl
+										: '-'
+								}}
 							</span>
 						</p>
-						<p v-else-if="['4'].includes(queryData.operateType)">
+						<p v-else-if="[3].includes(queryData.operateType)">
 							<span>安卓下载地址：</span>
 							<span>
-								{{ showInfoData.deviceNo ? showInfoData.deviceNo : '-' }}
+								{{
+									showInfoData && showInfoData.resourcesUrl
+										? showInfoData.resourcesUrl
+										: '-'
+								}}
 							</span>
 						</p>
-						<p v-else-if="['5'].includes(queryData.operateType)">
+						<p v-else-if="[4].includes(queryData.operateType)">
 							<span>桌面端下载地址：</span>
 							<span>
-								{{ showInfoData.deviceNo ? showInfoData.deviceNo : '-' }}
+								{{
+									showInfoData && showInfoData.resourcesUrl
+										? showInfoData.resourcesUrl
+										: '-'
+								}}
 							</span>
 						</p>
-						<p v-else-if="['6'].includes(queryData.operateType)">
+						<p v-else-if="[5].includes(queryData.operateType)">
 							<span>投诉建议邮箱：</span>
 							<span>
-								{{ showInfoData.deviceNo ? showInfoData.deviceNo : '-' }}
+								{{
+									showInfoData && showInfoData.resourcesUrl
+										? showInfoData.resourcesUrl
+										: '-'
+								}}
 							</span>
 						</p>
-						<p v-else-if="['7'].includes(queryData.operateType)">
+						<p v-else-if="[6].includes(queryData.operateType)">
 							<span>客服邮箱：</span>
 							<span>
-								{{ showInfoData.deviceNo ? showInfoData.deviceNo : '-' }}
+								{{
+									showInfoData && showInfoData.resourcesUrl
+										? showInfoData.resourcesUrl
+										: '-'
+								}}
 							</span>
 						</p>
-						<p v-else-if="['8'].includes(queryData.operateType)">
+						<p v-else-if="[7].includes(queryData.operateType)">
 							<span>合营ID：</span>
 							<span>
-								{{ showInfoData.deviceNo ? showInfoData.deviceNo : '-' }}
+								{{
+									showInfoData && showInfoData.resourcesUrl
+										? showInfoData.resourcesUrl
+										: '-'
+								}}
 							</span>
 						</p>
 					</el-col>
 					<el-col :span="6">
 						<span>备注：</span>
 						<span>
-							{{ showInfoData.remark ? showInfoData.remark : '-' }}
+							{{
+								showInfoData && showInfoData.remark ? showInfoData.remark : '-'
+							}}
 						</span>
 					</el-col>
-					<el-col :span="6">
+					<el-col :span="5">
 						<span>最近操作人：</span>
 						<span>
-							{{ showInfoData.updateBy ? showInfoData.updateBy : '-' }}
+							{{
+								showInfoData && showInfoData.updatedBy
+									? showInfoData.updatedBy
+									: '-'
+							}}
 						</span>
 					</el-col>
-					<el-col :span="6">
+					<el-col :span="7">
 						<span>最近操作时间：</span>
 						<span>
-							{{ showInfoData.updateAt ? showInfoData.updateAt : '-' }}
+							{{ updateTime }}
 						</span>
 					</el-col>
 				</el-row>
@@ -263,6 +301,7 @@
 <script>
 import { routerNames } from '@/utils/consts'
 import list from '@/mixins/list'
+import dayjs from 'dayjs'
 // import { notSpecial2, isHaveEmoji } from '@/utils/validate'
 
 export default {
@@ -273,7 +312,7 @@ export default {
 			loading: false,
 			loadingT: false,
 			queryData: {
-				operateType: '',
+				operateType: 0,
 				userAddress: undefined,
 				agentAddress: undefined,
 				iosAddress: undefined,
@@ -284,13 +323,17 @@ export default {
 				IdAddress: undefined,
 				remark: undefined
 			},
-			showInfoData: {},
-			current: '',
+			showInfoData: undefined,
 			tipsShow: null,
 			windLevelTypeArr: []
 		}
 	},
 	computed: {
+		updateTime() {
+			return this.showInfoData && this.showInfoData.updatedAt
+				? dayjs(this.showInfoData.updatedAt).format('YYYY-MM-DD HH:mm:ss')
+				: '-'
+		},
 		rules() {
 			const operateType = [
 				{ required: true, message: '请选择类型', trigger: 'change' }
@@ -336,8 +379,11 @@ export default {
 			}
 		}
 	},
-	mounted() {
+	created() {
 		this.queryPublicResources()
+	},
+	mounted() {
+		this.queryByType(0)
 	},
 	methods: {
 		// 查询类型
@@ -348,6 +394,18 @@ export default {
 					this.windLevelTypeArr = data || []
 				} else {
 					this.windLevelTypeArr = []
+				}
+			})
+		},
+
+		// 查询详情
+		queryByType(type) {
+			this.$api.clientCommonQueryByTypeAPI({ type }).then((res) => {
+				const { code, data } = res
+				if (code === 200) {
+					this.showInfoData = data
+				} else {
+					this.showInfoData = undefined
 				}
 			})
 		},
@@ -411,7 +469,7 @@ export default {
 		},
 		changeRiskType(evt) {
 			this.showInfoData = {}
-            evt = evt + ''
+			console.log('evt', evt)
 			this.queryData = {
 				userAddress: undefined,
 				agentAddress: undefined,
@@ -424,6 +482,7 @@ export default {
 				remark: undefined,
 				operateType: evt
 			}
+			this.queryByType(evt)
 			this.$refs['form'] && this.$refs['form'].resetFields()
 		},
 		checkRiskValue(val) {
