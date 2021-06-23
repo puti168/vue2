@@ -66,7 +66,7 @@ export function memberWithdrawRecordAPI(data) {
 // 资金 ===> 资金审核记录 ==> 会员提款审核记录 ==> 查看
 export function memberWithdrawDetailsAPI(data) {
 	return request({
-		url: '/user/queryMember',
+		url: '/memberWithDrawUser/selectMemberWithdrawUser',
 		method: 'post',
 		data
 	})
