@@ -536,11 +536,11 @@ export default {
 			this.$refs['form'].resetFields()
 			this.title = '新增'
 			this.dialogForm = {
-                supportTerminal: undefined,
-                startPageName: undefined,
-                preLoad: undefined,
-                imageAddress: null,
-                description: undefined
+				supportTerminal: undefined,
+				startPageName: undefined,
+				preLoad: undefined,
+				imageAddress: null,
+				description: undefined
 			}
 		},
 		edit(val) {

@@ -299,13 +299,13 @@
 </template>
 
 <script>
-import { routerNames } from '@/utils/consts'
+// import { routerNames } from '@/utils/consts'
 import list from '@/mixins/list'
 import dayjs from 'dayjs'
 // import { notSpecial2, isHaveEmoji } from '@/utils/validate'
 
 export default {
-	name: routerNames.clientCommon,
+	name: 'ClientCommon',
 	mixins: [list],
 	data() {
 		return {
@@ -474,16 +474,16 @@ export default {
 		reset() {
 			this.$refs['form'] && this.$refs['form'].resetFields()
 			this.queryData = {
-                operateType: 0,
-                userAddress: undefined,
-                agentAddress: undefined,
-                iosAddress: undefined,
-                androidAddress: undefined,
-                pcAddress: undefined,
-                complainAddress: undefined,
-                serviceAddress: undefined,
-                IdAddress: undefined,
-                remark: undefined
+				operateType: 0,
+				userAddress: undefined,
+				agentAddress: undefined,
+				iosAddress: undefined,
+				androidAddress: undefined,
+				pcAddress: undefined,
+				complainAddress: undefined,
+				serviceAddress: undefined,
+				IdAddress: undefined,
+				remark: undefined
 			}
 		},
 		changeRiskType(evt) {

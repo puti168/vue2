@@ -30,7 +30,7 @@ export function clientCommonQueryPublicResourcesAPI(params) {
 // 运营 ===> 启动页配置 ==> 列表
 export function clientStartListAPI(data) {
 	return request({
-		url: '/user/queryMember',
+		url: '/operate/startPage/queryList',
 		method: 'post',
 		data
 	})
