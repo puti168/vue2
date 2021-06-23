@@ -21,7 +21,7 @@
 					</el-form-item>
 					<el-form-item label="启动页名称:">
 						<el-input
-							v-model="queryData.startPageName"
+							v-model="queryData.pageName"
 							size="medium"
 							placeholder="请输入"
 							clearable
@@ -32,12 +32,13 @@
 					</el-form-item>
 					<el-form-item label="是否预加载:">
 						<el-select
-							v-model="queryData.preLoad"
+							v-model="queryData.loadStatus"
 							size="medium"
 							placeholder="默认选择全部"
 							clearable
 							style="width: 180px"
 						>
+							<el-option label="全部" value=""></el-option>
 							<el-option
 								v-for="item in preLoadArr"
 								:key="item.code"
@@ -54,6 +55,7 @@
 							clearable
 							style="width: 180px"
 						>
+							<el-option label="全部" value=""></el-option>
 							<el-option
 								v-for="item in statusArr"
 								:key="item.code"
@@ -64,7 +66,7 @@
 					</el-form-item>
 					<el-form-item label="创建人:">
 						<el-input
-							v-model="queryData.createBy"
+							v-model="queryData.createdBy"
 							size="medium"
 							placeholder="请输入"
 							clearable
@@ -129,56 +131,53 @@
 						label="显示终端"
 					>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.supportTerminal">
-								{{ scope.row.supportTerminal }}
+							<span v-if="!!scope.row.clientType">
+								<!--								{{ typeFilter(scope.row.clientType, 'supportTerminal') }}-->
+								{{ scope.row.clientType }}
 							</span>
 							<span v-else></span>
 						</template>
 					</el-table-column>
-					<el-table-column
-						prop="windControlLevelName"
-						align="center"
-						label="启动页名称"
-					>
+					<el-table-column prop="pageName" align="center" label="启动页名称">
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.windControlLevelName">
-								{{ scope.row.windControlLevelName }}
+							<span v-if="!!scope.row.pageName">
+								{{ scope.row.pageName }}
 							</span>
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="miaoShu" align="center" label="是否预加载">
+					<el-table-column prop="loadStatus" align="center" label="是否预加载">
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.description">
-								{{ scope.row.description }}
+							<span v-if="!!scope.row.loadStatus">
+								{{ scope.row.loadStatus }}
 							</span>
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="miaoShu" align="center" label="备注">
+					<el-table-column prop="remark" align="center" label="备注">
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.description">
-								{{ scope.row.description }}
+							<span v-if="!!scope.row.remark">
+								{{ scope.row.remark }}
 							</span>
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="miaoShu" align="center" label="状态">
+					<el-table-column prop="status" align="center" label="状态">
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.description">
-								{{ scope.row.description }}
+							<span v-if="!!scope.row.status || scope.row.status + '' === '0'">
+								{{ scope.row.status }}
 							</span>
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="miaoShu" align="center" label="图片">
+					<el-table-column prop="pictureUrl" align="center" label="图片">
 						<template slot-scope="scope">
 							<div
-								v-if="!!scope.row.description"
+								v-if="!!scope.row.pictureUrl"
 								class="blueColor decoration"
 								@click="preViewPicture(scope.row)"
 							>
-								{{ scope.row.description }}
+								点击预览
 							</div>
 							<span v-else>-</span>
 						</template>
@@ -196,7 +195,7 @@
 						align="center"
 						label="创建时间"
 						sortable="custom"
-						width="160px"
+						width="160"
 					>
 						<template slot-scope="scope">
 							<span v-if="!!scope.row.createdAt">
@@ -218,7 +217,7 @@
 						align="center"
 						label="最近操作时间"
 						sortable="custom"
-						width="160px"
+						width="160"
 					>
 						<template slot-scope="scope">
 							<span v-if="!!scope.row.updatedAt">
@@ -231,7 +230,7 @@
 						prop="operating"
 						align="center"
 						label="操作"
-						width="300px"
+						width="300"
 					>
 						<template slot-scope="scope">
 							<el-button
@@ -295,9 +294,9 @@
 					label-width="120px"
 					:rules="rules"
 				>
-					<el-form-item label="启动页名称:" prop="startPageName">
+					<el-form-item label="启动页名称:" prop="pageName">
 						<el-input
-							v-model="dialogForm.startPageName"
+							v-model="dialogForm.pageName"
 							:maxlength="20"
 							autocomplete="off"
 							style="width: 330px"
@@ -305,9 +304,9 @@
 							clearable
 						></el-input>
 					</el-form-item>
-					<el-form-item label="显示终端:" prop="supportTerminal">
+					<el-form-item label="显示终端:" prop="clientType">
 						<el-select
-							v-model="dialogForm.supportTerminal"
+							v-model="dialogForm.clientType"
 							size="medium"
 							placeholder="默认选择全部"
 							clearable
@@ -321,9 +320,9 @@
 							></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="是否预加载:" prop="preLoad">
+					<el-form-item label="是否预加载:" prop="loadStatus">
 						<el-select
-							v-model="dialogForm.preLoad"
+							v-model="dialogForm.loadStatus"
 							size="medium"
 							placeholder="默认选择全部"
 							clearable
@@ -337,21 +336,21 @@
 							></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="启动页上传:" prop="imageAddress">
+					<el-form-item label="启动页上传:" prop="pictureUrl">
 						<UploadItem
 							ref="imgUpload"
 							:upload-file-type="'image'"
 							:platform="'PC'"
-							:img-urls="queryData.imageAddress"
+							:img-urls="dialogForm.pictureUrl"
 							@upoladItemSucess="handleUploadSucess"
 							@startUpoladItem="handleStartUpload"
 							@deleteUpoladItem="handleDeleteUpload"
 							@upoladItemDefeat="handleUploadDefeat"
 						></UploadItem>
 					</el-form-item>
-					<el-form-item label="备注:" prop="description">
+					<el-form-item label="备注:" prop="remark">
 						<el-input
-							v-model="dialogForm.description"
+							v-model="dialogForm.remark"
 							type="textarea"
 							style="width: 330px"
 							:maxlength="50"
@@ -372,7 +371,7 @@
 				width="650px"
 				class="imgCenter"
 			>
-				<img :src="imageAddress" />
+				<img :src="pictureUrl" />
 			</el-dialog>
 		</div>
 	</div>
@@ -381,7 +380,7 @@
 <script>
 import list from '@/mixins/list'
 import { routerNames } from '@/utils/consts'
-import UploadItem from '@/components/UploadItem'
+import UploadItem from './components/uploadItem'
 // import { isHaveEmoji, notSpecial2 } from '@/utils/validate'
 
 export default {
@@ -391,25 +390,27 @@ export default {
 	data() {
 		return {
 			queryData: {
-				supportTerminal: undefined,
-				startPageName: undefined,
-				preLoad: '1',
-				status: '1',
+				clientType: undefined,
+				pageName: undefined,
+				loadStatus: '',
+				status: '',
 				createdBy: undefined,
-				updatedBy: undefined
+				updatedBy: undefined,
+				configType: 0
 			},
 			tableData: [],
 			dialogFormVisible: false,
 			dialogForm: {
-				supportTerminal: undefined,
-				startPageName: undefined,
-				preLoad: undefined,
-				imageAddress: null,
-				description: undefined
+				clientType: undefined,
+				pageName: undefined,
+				loadStatus: undefined,
+				pictureUrl: null,
+				remark: undefined,
+				configType: 0
 			},
 			total: 0,
 			title: '',
-			imageAddress: null,
+			pictureUrl: null,
 			dialogPictureVisible: false
 		}
 	},
@@ -418,42 +419,37 @@ export default {
 			return this.globalDics.terminalnType
 		},
 		preLoadArr() {
-			return [
-				{ description: '全部', code: '1' },
-				{ description: '是', code: '2' },
-				{ description: '否', code: '3' }
-			]
+			return [{ description: '是', code: 1 }, { description: '否', code: 0 }]
 		},
 		statusArr() {
 			return [
-				{ description: '全部', code: '1' },
-				{ description: '已开启', code: '2' },
-				{ description: '禁用', code: '3' }
+				{ description: '已开启', code: 1 },
+				{ description: '禁用', code: 0 }
 			]
 		},
 		rules() {
-			const startPageName = [
+			const pageName = [
 				{ required: true, message: '请填入风控层级', trigger: 'blur' }
 			]
-			const supportTerminal = [
+			const clientType = [
 				{ required: true, message: '请选择显示终端', trigger: 'change' }
 			]
-			const preLoad = [
+			const loadStatus = [
 				{ required: true, message: '请选择是否预加载', trigger: 'change' }
 			]
-			const imageAddress = [
+			const pictureUrl = [
 				{ required: true, message: '请上传图片', trigger: 'change' }
 			]
-			const description = [
+			const remark = [
 				{ required: true, message: '请填写备注', trigger: 'blur' },
 				{ min: 2, max: 50, message: '请填写备注', trigger: 'blur' }
 			]
 			return {
-				startPageName,
-				supportTerminal,
-				preLoad,
-				imageAddress,
-				description
+				pageName,
+				clientType,
+				loadStatus,
+				pictureUrl,
+				remark
 			}
 		}
 	},
@@ -468,20 +464,23 @@ export default {
 			params = {
 				...this.getParams(params)
 			}
-			// const idx = params.windControlLevelName.findIndex(
-			// 	(item) => item === 'all'
-			// )
-			// params.windControlLevelName.splice(idx, 1)
 			this.$api
-				.riskRankListAPI(params)
+				.clientStartListAPI(params)
 				.then((res) => {
-					const { code, data } = res
+					this.loading = false
+					const {
+						code,
+						data: { records, total },
+						msg
+					} = res
 					if (code === 200) {
-						this.tableData = data.record
-						this.total = data.totalRecord
-						this.loading = false
+						this.tableData = records || []
+						this.total = total
 					} else {
-						this.loading = false
+						this.$message({
+							message: msg,
+							type: 'error'
+						})
 					}
 				})
 				.catch(() => {
@@ -494,57 +493,39 @@ export default {
 		},
 		reset() {
 			this.pageNum = 1
-			this.$refs['form'].resetFields()
 			this.queryData = {
-				supportTerminal: undefined,
-				startPageName: undefined,
-				preLoad: '1',
-				status: '1',
+				clientType: undefined,
+				pageName: undefined,
+				loadStatus: '',
+				status: '',
 				createdBy: undefined,
-				updatedBy: undefined
+				updatedBy: undefined,
+				configType: 0
 			}
 			this.loadData()
-		},
-		switchClick(val) {
-			const status = val.labelStatus === 0 ? 1 : 0
-			console.log(val)
-			this.$confirm(
-				`<strong>是否对 ${val.gameLabelName} 进行${
-					val.labelStatus === 1 ? '启用' : '禁用'
-				}操作?</strong></br><span style='font-size:12px;color:#c1c1c1'>一旦操作将会立即生效</span>`,
-				`确认提示`,
-				{
-					dangerouslyUseHTMLString: true,
-					confirmButtonText: '确定',
-					cancelButtonText: '取消',
-					type: 'warning'
-				}
-			)
-				.then(() => {
-					this.$api
-						.setUpdateStatus({ id: val.id, status: status })
-						.then((res) => {
-							if (res.code === 200) {
-								this.loadData()
-							}
-						})
-				})
-				.catch(() => {})
 		},
 		addLabel() {
 			this.dialogFormVisible = true
 			this.$refs['form'].resetFields()
 			this.title = '新增'
 			this.dialogForm = {
-				supportTerminal: undefined,
-				startPageName: undefined,
-				preLoad: undefined,
-				imageAddress: null,
-				description: undefined
+				clientType: undefined,
+				pageName: undefined,
+				loadStatus: undefined,
+				pictureUrl: null,
+				remark: undefined,
+				configType: 0
 			}
 		},
 		edit(val) {
 			this.title = '编辑'
+            console.log('val', val)
+            delete val.merchantId
+            delete val.createdAt
+            delete val.createdBy
+            delete val.updatedAt
+            delete val.updatedBy
+            delete val.status
 			this.dialogForm = { ...val }
 			this.dialogFormVisible = true
 		},
@@ -564,7 +545,7 @@ export default {
 			})
 				.then(() => {
 					this.$api
-						.deleteRiskRankAPI({ id })
+						.clientStartDeleteAPI({ id })
 						.then((res) => {
 							loading.close()
 							const { code } = res
@@ -597,8 +578,8 @@ export default {
 			}
 			const handleClick =
 				this.title !== '编辑'
-					? this.$api.createRiskRankAPI
-					: this.$api.updateRiskRankAPI
+					? this.$api.clientStartAddAPI
+					: this.$api.clientStartUpdateAPI
 			this.$refs.formSub.validate((valid) => {
 				if (valid) {
 					handleClick(params).then((res) => {
@@ -608,7 +589,6 @@ export default {
 								message: `${this.title !== '编辑' ? '新增' : '更新'}成功`,
 								type: 'success'
 							})
-							this.reset()
 						} else {
 							this.$message({
 								message: msg,
@@ -617,6 +597,8 @@ export default {
 						}
 					})
 					this.dialogFormVisible = false
+
+					this.loadData()
 				}
 			})
 		},
@@ -644,13 +626,13 @@ export default {
 			this.$refs.formSub.resetFields()
 		},
 		preViewPicture(val) {
-			const { imageAddress } = val
-			this.imageAddress = imageAddress
+			const { pictureUrl } = val
+			this.pictureUrl = pictureUrl
 			this.dialogPictureVisible = true
 		},
 		recycle(val) {
-			const { id, assortStatus } = val
-			const status = !assortStatus
+			const { id } = val
+            const status = val.status === 0 ? 1 : 0
 			this.$confirm(
 				`<strong>是否对该配置进行开启/禁用操作</strong></br>
                  <span style='font-size:12px;color:#c1c1c1'>一旦操作将会立即生效</span>`,
@@ -664,7 +646,7 @@ export default {
 			)
 				.then(() => {
 					this.$api
-						.gameUpdateStatusAPI({ assortId: id, status })
+						.clientStartUseAPI({ id, status })
 						.then((res) => {
 							const { code, msg } = res
 							if (code === 200) {
@@ -687,14 +669,14 @@ export default {
 			this.$message.info('图片开始上传')
 		},
 		handleUploadSucess({ index, file, id }) {
-			this.queryData.imageAddress = file.imgUrl
+			this.dialogForm.pictureUrl = file.imgUrl
 		},
 		handleUploadDefeat() {
-			this.queryData.imageAddress = ''
+			this.dialogForm.pictureUrl = ''
 			this.$message.error('图片上传失败')
 		},
 		handleDeleteUpload() {
-			this.queryData.imageAddress = ''
+			this.dialogForm.pictureUrl = ''
 			this.$message.warning('图片已被移除')
 		}
 	}
@@ -757,5 +739,10 @@ p {
 	font-weight: 650;
 	border-top: 1px solid #e8e8e8;
 	margin-top: 15px;
+}
+.imgCenter {
+	img {
+		width: 100%;
+	}
 }
 </style>
