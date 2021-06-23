@@ -545,7 +545,7 @@ export default {
 			})
 				.then(() => {
 					this.$api
-						.deleteRiskRankAPI({ id })
+						.clientStartDeleteAPI({ id })
 						.then((res) => {
 							loading.close()
 							const { code } = res
