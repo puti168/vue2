@@ -132,16 +132,13 @@
 					>
 						<template slot-scope="scope">
 							<span v-if="!!scope.row.clientType">
-								{{ typeFilter(scope.row.clientType, 'supportTerminal') }}
+								<!--								{{ typeFilter(scope.row.clientType, 'supportTerminal') }}-->
+								{{ scope.row.clientType }}
 							</span>
 							<span v-else></span>
 						</template>
 					</el-table-column>
-					<el-table-column
-						prop="pageName"
-						align="center"
-						label="启动页名称"
-					>
+					<el-table-column prop="pageName" align="center" label="启动页名称">
 						<template slot-scope="scope">
 							<span v-if="!!scope.row.pageName">
 								{{ scope.row.pageName }}
@@ -167,7 +164,7 @@
 					</el-table-column>
 					<el-table-column prop="status" align="center" label="状态">
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.status">
+							<span v-if="!!scope.row.status || scope.row.status + '' === '0'">
 								{{ scope.row.status }}
 							</span>
 							<span v-else>-</span>
@@ -180,7 +177,7 @@
 								class="blueColor decoration"
 								@click="preViewPicture(scope.row)"
 							>
-								{{ scope.row.pictureUrl }}
+								点击预览
 							</div>
 							<span v-else>-</span>
 						</template>
@@ -198,7 +195,7 @@
 						align="center"
 						label="创建时间"
 						sortable="custom"
-						width="160px"
+						width="160"
 					>
 						<template slot-scope="scope">
 							<span v-if="!!scope.row.createdAt">
@@ -220,7 +217,7 @@
 						align="center"
 						label="最近操作时间"
 						sortable="custom"
-						width="160px"
+						width="160"
 					>
 						<template slot-scope="scope">
 							<span v-if="!!scope.row.updatedAt">
@@ -233,7 +230,7 @@
 						prop="operating"
 						align="center"
 						label="操作"
-						width="300px"
+						width="300"
 					>
 						<template slot-scope="scope">
 							<el-button
@@ -344,16 +341,16 @@
 							ref="imgUpload"
 							:upload-file-type="'image'"
 							:platform="'PC'"
-							:img-urls="queryData.pictureUrl"
+							:img-urls="dialogForm.pictureUrl"
 							@upoladItemSucess="handleUploadSucess"
 							@startUpoladItem="handleStartUpload"
 							@deleteUpoladItem="handleDeleteUpload"
 							@upoladItemDefeat="handleUploadDefeat"
 						></UploadItem>
 					</el-form-item>
-					<el-form-item label="备注:" prop="description">
+					<el-form-item label="备注:" prop="remark">
 						<el-input
-							v-model="dialogForm.description"
+							v-model="dialogForm.remark"
 							type="textarea"
 							style="width: 330px"
 							:maxlength="50"
@@ -393,7 +390,7 @@ export default {
 	data() {
 		return {
 			queryData: {
-                clientType: undefined,
+				clientType: undefined,
 				pageName: undefined,
 				loadStatus: '',
 				status: '',
@@ -404,15 +401,16 @@ export default {
 			tableData: [],
 			dialogFormVisible: false,
 			dialogForm: {
-                clientType: undefined,
+				clientType: undefined,
 				pageName: undefined,
 				loadStatus: undefined,
-                pictureUrl: null,
-				description: undefined
+				pictureUrl: null,
+				remark: undefined,
+				configType: 0
 			},
 			total: 0,
 			title: '',
-            pictureUrl: null,
+			pictureUrl: null,
 			dialogPictureVisible: false
 		}
 	},
@@ -442,16 +440,16 @@ export default {
 			const pictureUrl = [
 				{ required: true, message: '请上传图片', trigger: 'change' }
 			]
-			const description = [
+			const remark = [
 				{ required: true, message: '请填写备注', trigger: 'blur' },
 				{ min: 2, max: 50, message: '请填写备注', trigger: 'blur' }
 			]
 			return {
 				pageName,
-                clientType,
+				clientType,
 				loadStatus,
-                pictureUrl,
-				description
+				pictureUrl,
+				remark
 			}
 		}
 	},
@@ -476,7 +474,7 @@ export default {
 						msg
 					} = res
 					if (code === 200) {
-						this.tableData = records
+						this.tableData = records || []
 						this.total = total
 					} else {
 						this.$message({
@@ -496,7 +494,7 @@ export default {
 		reset() {
 			this.pageNum = 1
 			this.queryData = {
-                clientType: undefined,
+				clientType: undefined,
 				pageName: undefined,
 				loadStatus: '',
 				status: '',
@@ -506,46 +504,28 @@ export default {
 			}
 			this.loadData()
 		},
-		switchClick(val) {
-			const status = val.labelStatus === 0 ? 1 : 0
-			console.log(val)
-			this.$confirm(
-				`<strong>是否对 ${val.gameLabelName} 进行${
-					val.labelStatus === 1 ? '启用' : '禁用'
-				}操作?</strong></br><span style='font-size:12px;color:#c1c1c1'>一旦操作将会立即生效</span>`,
-				`确认提示`,
-				{
-					dangerouslyUseHTMLString: true,
-					confirmButtonText: '确定',
-					cancelButtonText: '取消',
-					type: 'warning'
-				}
-			)
-				.then(() => {
-					this.$api
-						.setUpdateStatus({ id: val.id, status: status })
-						.then((res) => {
-							if (res.code === 200) {
-								this.loadData()
-							}
-						})
-				})
-				.catch(() => {})
-		},
 		addLabel() {
 			this.dialogFormVisible = true
 			this.$refs['form'].resetFields()
 			this.title = '新增'
 			this.dialogForm = {
-                clientType: undefined,
+				clientType: undefined,
 				pageName: undefined,
 				loadStatus: undefined,
-                pictureUrl: null,
-				description: undefined
+				pictureUrl: null,
+				remark: undefined,
+				configType: 0
 			}
 		},
 		edit(val) {
 			this.title = '编辑'
+            console.log('val', val)
+            delete val.merchantId
+            delete val.createdAt
+            delete val.createdBy
+            delete val.updatedAt
+            delete val.updatedBy
+            delete val.status
 			this.dialogForm = { ...val }
 			this.dialogFormVisible = true
 		},
@@ -609,7 +589,6 @@ export default {
 								message: `${this.title !== '编辑' ? '新增' : '更新'}成功`,
 								type: 'success'
 							})
-							this.reset()
 						} else {
 							this.$message({
 								message: msg,
@@ -618,6 +597,8 @@ export default {
 						}
 					})
 					this.dialogFormVisible = false
+
+					this.loadData()
 				}
 			})
 		},
@@ -650,8 +631,8 @@ export default {
 			this.dialogPictureVisible = true
 		},
 		recycle(val) {
-			const { id, assortStatus } = val
-			const status = !assortStatus
+			const { id } = val
+            const status = val.status === 0 ? 1 : 0
 			this.$confirm(
 				`<strong>是否对该配置进行开启/禁用操作</strong></br>
                  <span style='font-size:12px;color:#c1c1c1'>一旦操作将会立即生效</span>`,
@@ -665,7 +646,7 @@ export default {
 			)
 				.then(() => {
 					this.$api
-						.gameUpdateStatusAPI({ assortId: id, status })
+						.clientStartUseAPI({ id, status })
 						.then((res) => {
 							const { code, msg } = res
 							if (code === 200) {
@@ -688,14 +669,14 @@ export default {
 			this.$message.info('图片开始上传')
 		},
 		handleUploadSucess({ index, file, id }) {
-			this.queryData.pictureUrl = file.imgUrl
+			this.dialogForm.pictureUrl = file.imgUrl
 		},
 		handleUploadDefeat() {
-			this.queryData.pictureUrl = ''
+			this.dialogForm.pictureUrl = ''
 			this.$message.error('图片上传失败')
 		},
 		handleDeleteUpload() {
-			this.queryData.pictureUrl = ''
+			this.dialogForm.pictureUrl = ''
 			this.$message.warning('图片已被移除')
 		}
 	}
@@ -758,5 +739,10 @@ p {
 	font-weight: 650;
 	border-top: 1px solid #e8e8e8;
 	margin-top: 15px;
+}
+.imgCenter {
+	img {
+		width: 100%;
+	}
 }
 </style>

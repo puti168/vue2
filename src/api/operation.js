@@ -39,7 +39,7 @@ export function clientStartListAPI(data) {
 // 运营 ===> 启动页配置 ==> 新增
 export function clientStartAddAPI(data) {
 	return request({
-		url: '/operate/startPage/queryList',
+		url: '/operate/startPage/add',
 		method: 'post',
 		data
 	})
@@ -48,7 +48,7 @@ export function clientStartAddAPI(data) {
 // 运营 ===> 启动页配置 ==> 修改
 export function clientStartUpdateAPI(data) {
 	return request({
-		url: '/operate/startPage/queryList',
+		url: '/operate/startPage/update',
 		method: 'post',
 		data
 	})
@@ -57,7 +57,7 @@ export function clientStartUpdateAPI(data) {
 // 运营 ===> 启动页配置 ==> 删除
 export function clientStartDeleteAPI(data) {
 	return request({
-		url: '/operate/startPage/queryList',
+		url: '/operate/startPage/delete',
 		method: 'post',
 		data
 	})
@@ -66,7 +66,7 @@ export function clientStartDeleteAPI(data) {
 // 运营 ===> 启动页配置 ==> 启用禁用
 export function clientStartUseAPI(data) {
 	return request({
-		url: '/operate/startPage/queryList',
+		url: '/operate/startPage/use',
 		method: 'post',
 		data
 	})
