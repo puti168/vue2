@@ -249,7 +249,23 @@ export function proxyCommissionRecordLock(data) {
 		data
 	})
 }
+export function memberArtificialPatchAccountAddAuditAuditDetail(data) {
+	return request({
+		url: '/memberArtificialPatchAccountAddAudit/auditDetail',
+		method: 'post',
+		data
+	})
+}
+export function memberArtificialPatchAccountAddAuditLockRecord(data) {
+	return request({
+		url: '/memberArtificialPatchAccountAddAudit/lockRecord',
+		method: 'post',
+		data
+	})
+}
 export default {
+	memberArtificialPatchAccountAddAuditLockRecord,
+	memberArtificialPatchAccountAddAuditAuditDetail,
 	proxyCommissionRecordLock,
 	lastInstancePage,
 	proxyCommissionRecordFirstInstancePage,

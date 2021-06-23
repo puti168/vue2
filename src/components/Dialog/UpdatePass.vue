@@ -121,13 +121,14 @@ export default {
 			this.$emit('update:dialog', false)
 		},
 		commitPassDialog() {
+			console.log(this.userName)
 			this.$refs.passDialogForm.validate((valid) => {
 				if (valid) {
 					this.$parent
 						.updatePassword({
 							id: this.agentid,
-							pwd: md5(this.passDialogForm.password + this.userName),
-							rePwd: md5(this.passDialogForm.passwordAgain + this.userName)
+							pwd: md5(this.userName.trim() + this.passDialogForm.password.trim()),
+							rePwd: md5(this.userName.trim() + this.passDialogForm.passwordAgain.trim())
 						})
 						.then((_) => {
 							this.handleClose()

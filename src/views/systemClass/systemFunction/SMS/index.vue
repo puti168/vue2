@@ -141,9 +141,9 @@ export default {
 					const username = this.username
 					const params = {
 						username,
-						pwd: md5(this.form.pwd + username),
-						rePwd: md5(this.form.rePwd + username),
-						oriPwd: md5(this.form.oriPwd + username)
+						pwd: md5(username.trim() + this.form.pwd.trim()),
+						rePwd: md5(username.trim() + this.form.rePwd.trim()),
+						oriPwd: md5(username.trim() + this.form.oriPwd.trim())
 					}
 					this.$confirm(
 						this.$t('message.isModifyPassword'),
