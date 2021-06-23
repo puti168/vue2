@@ -84,7 +84,7 @@ export function memberIncreaseQuotaRecordAPI(data) {
 // 资金 ===> 资金审核记录 ==> 会员人工增加额度记录  ==> 查看
 export function memberIncreaseQuotaDetailsAPI(data) {
 	return request({
-		url: '/user/queryMember',
+		url: '/memberArtificialPatchAccountAddAudit/auditDetail',
 		method: 'post',
 		data
 	})
