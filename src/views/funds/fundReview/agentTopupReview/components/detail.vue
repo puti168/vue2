@@ -326,7 +326,9 @@ export default {
 					const params = {
 						id: this.rowData.id,
 						remark: this.form.remark,
-						auditStatus: this.action ? 2 : 3
+						auditStatus: this.action ? 1 : 2,
+						orderStatus: this.action ? this.activeName === '0' ? 3 : 7 : this.activeName === '0' ? 5 : 6,
+						userType: 2
 					}
 
 					this.$api

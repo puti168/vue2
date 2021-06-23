@@ -319,7 +319,47 @@ export function proxyArtificialPatchAccountAddAuditauditRecord(data) {
 		data
 	})
 }
+export function memberWithDrawProxyUpdateWithdrawLock(data) {
+	return request({
+		url: '/memberWithDrawProxy/updateWithdrawLock',
+		method: 'post',
+		data
+	})
+}
+export function memberWithDrawProxySelectMemberWithDrawAuthEsPagePay(data) {
+	return request({
+		url: '/memberWithDrawProxy/selectMemberWithDrawAuthEsPagePay',
+		method: 'post',
+		data
+	})
+}
+export function memberWithDrawProxyselectMemberWithDrawAuthEsPageOne(data) {
+	return request({
+		url: '/memberWithDrawProxy/selectMemberWithDrawAuthEsPageOne',
+		method: 'post',
+		data
+	})
+}
+export function memberWithDrawProxyselectMemberWithDrawAuthEsPageTwo(data) {
+	return request({
+		url: '/memberWithDrawProxy/selectMemberWithDrawAuthEsPageTwo',
+		method: 'post',
+		data
+	})
+}
+export function memberWithDrawProxyselectMemberWithDrawAuthEsPageThree(data) {
+	return request({
+		url: '/memberWithDrawProxy/selectMemberWithDrawAuthEsPageThree',
+		method: 'post',
+		data
+	})
+}
 export default {
+	memberWithDrawProxyselectMemberWithDrawAuthEsPageThree,
+	memberWithDrawProxyselectMemberWithDrawAuthEsPageTwo,
+	memberWithDrawProxyselectMemberWithDrawAuthEsPageOne,
+	memberWithDrawProxySelectMemberWithDrawAuthEsPagePay,
+	memberWithDrawProxyUpdateWithdrawLock,
 	proxyArtificialPatchAccountAddAuditauditRecord,
 	proxyArtificialPatchAccountAddAuditauditDetail,
 	proxyArtificialPatchAccountAddAuditlockRecord,

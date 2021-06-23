@@ -386,7 +386,7 @@ export default {
 						auditResult: this.action ? 1 : 2,
 						orderStatus: 7
 					}
-					this.$api.selectMemberWithDrawAuthEsPagePay(params).then((res) => {
+					this.$api.memberWithDrawUserupdateWithdraw(params).then((res) => {
 						if (res.code === 200) {
 							this.$message({
 								message: '操作成功',
