@@ -157,14 +157,14 @@ width="120px"
             label="VIP等级："
             class="configure"
           >
-            <el-input v-model="dialogForm.vipNum" placeholder=""></el-input>
+            <el-input-number v-model="dialogForm.vipNum" placeholder=""></el-input-number>
           </el-form-item>
           <el-form-item label="单次提款最低额度：" prop="singleMinAmount">
-            <el-input
+            <el-input-number
               v-model="dialogForm.singleMinAmount"
               class="chief"
               placeholder="请输入金额，为0不限制"
-            ></el-input>
+            ></el-input-number>
             <span>元</span>
           </el-form-item>
           <el-form-item
@@ -172,35 +172,35 @@ width="120px"
             class="configure"
             prop="singleMaxAmount"
           >
-            <el-input
+            <el-input-number
               v-model="dialogForm.singleMaxAmount"
               class="chief"
               placeholder="请输入金额，为0不限制"
-            ></el-input>
+            ></el-input-number>
             <span>元</span>
           </el-form-item>
           <el-form-item label="单日免费提款次数：" prop="dateFreeNum">
-            <el-input
+            <el-input-number
               v-model="dialogForm.dateFreeNum"
               class="chief"
               placeholder="请输入金额，为0不限制"
-            ></el-input>
+            ></el-input-number>
             <span>次</span>
           </el-form-item>
           <el-form-item label="大额提款标记金额：" class="configure" prop="bigAmount">
-            <el-input
+            <el-input-number
               v-model="dialogForm.bigAmount"
               class="chief"
               placeholder="请输入金额，为0不限制"
-            ></el-input>
+            ></el-input-number>
             <span style="w">元</span>
           </el-form-item>
           <el-form-item label="单日免费提款总额：" prop="dateFreeAmount">
-            <el-input
+            <el-input-number
               v-model="dialogForm.dateFreeAmount"
               class="chief"
               placeholder="请输入金额，为0不限制"
-            ></el-input>
+            ></el-input-number>
             <span>元</span>
           </el-form-item>
           <h2>提款手续费配置</h2>
@@ -222,10 +222,10 @@ width="120px"
               >
               </el-option>
             </el-select>
-            <el-input
+            <el-input-number
               v-model="dialogForm.rateDateFreeType"
               class="sun"
-></el-input>
+            ></el-input-number>
           </el-form-item>
           <el-form-item label="超出单日免费次数总额：" prop="rateDateTotalType">
             <el-select
@@ -241,7 +241,11 @@ width="120px"
               >
               </el-option>
             </el-select>
-            <el-input v-model="dialogForm.rateDateTotalType" class="sun" placeholder="0"></el-input>
+            <el-input-number
+              v-model="dialogForm.rateDateTotalType"
+              class="sun"
+              placeholder="0"
+            ></el-input-number>
           </el-form-item>
           <el-form-item label="状态">
             <el-select
@@ -336,20 +340,22 @@ export default {
   mixins: [list],
   data() {
     return {
-      rateDateFreeType: [{
+      rateDateFreeType: [
+        {
           label: ' 固定金额（元）'
-      },
-      {
-
-        label: ' 百分比（%）'
-      }],
-      rateDateTotalType: [{
-
+        },
+        {
+          label: ' 百分比（%）'
+        }
+      ],
+      rateDateTotalType: [
+        {
           label: ' 固定金额（元）'
-      },
-      {
-        label: ' 百分比（%）'
-      }],
+        },
+        {
+          label: ' 百分比（%）'
+        }
+      ],
       formInline: {
         user: '',
         rateDateFreeType: '',
@@ -369,20 +375,21 @@ export default {
   computed: {
     rules() {
       const oneFreeRules = (rule, value, callback) => {
-        let vip
+        let vip = ''
+        const num = this.dialogForm.vipNum
         for (let i = 0; i < this.vipExclusive.length; i++) {
-          const ele = this.vipExclusive[i].vipLevel
-          if (this.dialogForm.vipNum === ele.vipLevely) {
+          const ele = this.vipExclusive[i]
+          console.log(ele, '11')
+          if (num === ele.vipLevel) {
             vip = ele.maxFrequency
           }
         }
+        console.log(vip, '11')
 
-        if (!Number.isInteger(value) || value < 1) {
-          callback(new Error('输入大于单日最高提款次数，请重新输入'))
+        if (typeof num !== 'number') {
+          callback(new Error('请输入vip等级'))
         } else if (value <= vip) {
           callback(new Error('输入大于单日最高提款总额，请重新输入'))
-        } else if (value > 9999999999) {
-          callback(new Error('输入值最多为9999999999'))
         } else {
           callback()
         }
@@ -390,24 +397,24 @@ export default {
       const dateFreeNum = [{ required: true, validator: oneFreeRules, trigger: 'blur' }]
 
       const singleMinAmount = [
-        { required: true, message: '请输入金额', trigger: 'blur' },
-        { min: 1, message: '不能为空', trigger: 'blur' }
+        { required: true, message: '请输入金额', trigger: 'blur' }
+        // { min: 1, message: '不能为空', trigger: 'blur' }
       ]
       const singleMaxAmount = [
-        { required: true, message: '请输入金额', trigger: 'blur' },
-        { min: 1, message: '不能为空', trigger: 'blur' }
+        { required: true, message: '请输入金额', trigger: 'blur' }
+        // { min: 1, message: '不能为空', trigger: 'blur' }
       ]
       const bigAmount = [
-        { required: true, message: '请输入金额', trigger: 'blur' },
-        { min: 1, message: '不能为空', trigger: 'blur' }
+        { required: true, message: '请输入金额', trigger: 'blur' }
+        // { min: 1, message: '不能为空', trigger: 'blur' }
       ]
       const dateFreeAmount = [
         {
           required: true,
-          message: '输入大于单日最高提款次数，请重新输入',
+          message: '输入大于单日最高提款额度，请重新输入',
           trigger: 'blur'
-        },
-        { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+        }
+        // { min: 1, message: '不能为空', trigger: 'blur' }
       ]
       const rateDateFreeType = [
         { required: true, message: '百分比（%）', trigger: 'change' }
@@ -416,12 +423,12 @@ export default {
         { required: true, message: '百分比（%）', trigger: 'change' }
       ]
       const beyondfrequency = [
-        { required: true, message: '请输入提示语', trigger: 'blur' },
-        { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+        { required: true, message: '请输入提示语', trigger: 'blur' }
+        // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
       ]
       const beyondtotal = [
-        { required: true, message: '请输入提示语', trigger: 'blur' },
-        { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+        { required: true, message: '请输入提示语', trigger: 'blur' }
+        // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
       ]
       return {
         dateFreeNum,

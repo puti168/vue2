@@ -225,6 +225,14 @@ export function queryVipActivityList(data) {
 		data
 	})
 }
+// 运营 ===>场馆配置管理 ==>操作记录
+export function getOperateObMerchantGameRecordSelect(data) {
+	return request({
+		url: '/operate/obMerchantGameRecord/select',
+		method: 'post',
+		data
+	})
+}
 export default {
 	queryDiscountTagList,
 	queryVipActivityList,
@@ -253,5 +261,6 @@ export default {
 	clientStartUpdateAPI,
 	clientStartDeleteAPI,
 	clientStartUseAPI,
-	clientStartUploadAPI
+	clientStartUploadAPI,
+	getOperateObMerchantGameRecordSelect
 }
