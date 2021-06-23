@@ -72,6 +72,16 @@ export function clientStartUseAPI(data) {
 	})
 }
 
+// 运营 ===> 启动页配置 ==> 文件上传
+export function clientStartUploadAPI(data, cb) {
+	return request({
+		url: '/uploadFile/image',
+		method: 'post',
+		data,
+		cb
+	})
+}
+
 export function configDiscountTagQueryList(data) {
 	return request({
 		url: '/operate/configDiscountTag/queryList',
@@ -242,5 +252,6 @@ export default {
 	clientStartAddAPI,
 	clientStartUpdateAPI,
 	clientStartDeleteAPI,
-	clientStartUseAPI
+	clientStartUseAPI,
+	clientStartUploadAPI
 }
