@@ -70,6 +70,78 @@ export function configDiscountTagEdit(data) {
 		data
 	})
 }
+// 运营==>公告配置==>查询所有公告配置
+export function getOperateConfigAnnouncementSelectAll(data) {
+	return request({
+		url: '/operate/obConfigAnnouncement/selectAll',
+		method: 'post',
+		data
+	})
+}
+// 运营==>公告配置==>查询单个公告配置
+export function getOperateConfigAnnouncementSelect(data) {
+	return request({
+		url: '/operate/obConfigAnnouncement/select',
+		method: 'post',
+		data
+	})
+}
+// 运营==>公告配置==>保存公告配置
+export function getOperateConfigAnnouncementSave(data) {
+	return request({
+		url: '/operate/obConfigAnnouncement/save',
+		method: 'post',
+		data
+	})
+}
+// 运营==>公告配置==>删除公告配置
+export function getOperateConfigAnnouncementDelete(data) {
+	return request({
+		url: '/operate/obConfigAnnouncement/delete',
+		method: 'post',
+		data
+	})
+}
+// 运营==>公告配置==>修改公告状态
+export function getOperateConfigAnnouncementStatus(data) {
+	return request({
+		url: '/operate/obConfigAnnouncement/status',
+		method: 'post',
+		data
+	})
+}
+// 运营==>活动，通知消息配置==>查询全部活动，通知配置
+export function getOperateConfigNoticeSelectAll(data) {
+	return request({
+		url: '/operate/obConfigNotice/selectAll',
+		method: 'post',
+		data
+	})
+}
+// 运营==>活动，通知消息配置==>查询单个活动，通知配置
+export function getOperateConfigNoticeSelect(data) {
+	return request({
+		url: '/operate/obConfigNotice/select',
+		method: 'post',
+		data
+	})
+}
+// 运营==>活动，通知消息配置==>保存，修改活动，通知配置
+export function getOperateConfigNoticeSave(data) {
+	return request({
+		url: '/operate/obConfigNotice/save',
+		method: 'post',
+		data
+	})
+}
+// 运营==>活动，通知消息配置==>活动，通知  撤回
+export function getOperateConfigNoticeRetract(data) {
+	return request({
+		url: '/operate/obConfigNotice/retract',
+		method: 'post',
+		data
+	})
+}
 
 export default {
 	configDiscountTagEdit,
@@ -80,5 +152,14 @@ export default {
 	clientCommonUpdateAPI,
 	clientCommonQueryByTypeAPI,
 	clientCommonQueryPublicResourcesAPI,
-	clientStartListAPI
+	clientStartListAPI,
+	getOperateConfigAnnouncementSelectAll,
+	getOperateConfigAnnouncementSelect,
+	getOperateConfigAnnouncementSave,
+	getOperateConfigAnnouncementDelete,
+	getOperateConfigAnnouncementStatus,
+	getOperateConfigNoticeSelectAll,
+	getOperateConfigNoticeSelect,
+	getOperateConfigNoticeSave,
+	getOperateConfigNoticeRetract
 }
