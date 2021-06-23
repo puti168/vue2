@@ -321,6 +321,7 @@ export default {
         rateDateFreeType: '',
         rateDateTotalType: ''
       },
+      vipexclusive: [],
       queryData: {},
       tableData: [],
       dialogFormVisible: false,
@@ -338,7 +339,7 @@ export default {
         if (!Number.isInteger(value) || value < 1) {
           callback(new Error('输入大于单日最高提款次数，请重新输入'))
         } else if (value <= this.ruleForm.singleMaxAmount) {
-          callback(new Error('输入大于单日最高提款次数，请重新输入'))
+          callback(new Error('输入大于单日最高提款总额，请重新输入'))
         } else if (value > 9999999999) {
           callback(new Error('输入值最多为9999999999'))
         } else {
