@@ -35,6 +35,43 @@ export function clientStartListAPI(data) {
 		data
 	})
 }
+
+// 运营 ===> 启动页配置 ==> 新增
+export function clientStartAddAPI(data) {
+	return request({
+		url: '/operate/startPage/queryList',
+		method: 'post',
+		data
+	})
+}
+
+// 运营 ===> 启动页配置 ==> 修改
+export function clientStartUpdateAPI(data) {
+	return request({
+		url: '/operate/startPage/queryList',
+		method: 'post',
+		data
+	})
+}
+
+// 运营 ===> 启动页配置 ==> 删除
+export function clientStartDeleteAPI(data) {
+	return request({
+		url: '/operate/startPage/queryList',
+		method: 'post',
+		data
+	})
+}
+
+// 运营 ===> 启动页配置 ==> 启用禁用
+export function clientStartUseAPI(data) {
+	return request({
+		url: '/operate/startPage/queryList',
+		method: 'post',
+		data
+	})
+}
+
 export function configDiscountTagQueryList(data) {
 	return request({
 		url: '/operate/configDiscountTag/queryList',
@@ -80,5 +117,9 @@ export default {
 	clientCommonUpdateAPI,
 	clientCommonQueryByTypeAPI,
 	clientCommonQueryPublicResourcesAPI,
-	clientStartListAPI
+	clientStartListAPI,
+	clientStartAddAPI,
+	clientStartUpdateAPI,
+	clientStartDeleteAPI,
+	clientStartUseAPI
 }

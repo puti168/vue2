@@ -69,7 +69,7 @@
 						v-model="queryData.iosAddress"
 						size="medium"
 						maxlength="70"
-						oninput="value=value.replace(/^(0+)|[^\d]+/g,'')"
+						oninput="value=value.replace(/[\u4E00-\u9FA5]/g ,'')"
 						placeholder="请输入"
 						clearable
 						style="width: 365px"
@@ -119,6 +119,7 @@
 						maxlength="70"
 						placeholder="请输入"
 						clearable
+						oninput="value=value.replace(/[\u4E00-\u9FA5]/g ,'')"
 						style="width: 365px"
 					></el-input>
 				</el-form-item>
@@ -134,6 +135,7 @@
 						maxlength="70"
 						placeholder="请输入"
 						clearable
+						oninput="value=value.replace(/[\u4E00-\u9FA5]/g ,'')"
 						style="width: 365px"
 					></el-input>
 				</el-form-item>
@@ -147,6 +149,7 @@
 						v-model="queryData.IdAddress"
 						size="medium"
 						maxlength="70"
+						oninput="value=value.replace(/[\u4E00-\u9FA5]/g ,'')"
 						placeholder="请输入"
 						clearable
 						style="width: 365px"
@@ -451,7 +454,8 @@ export default {
 									type: 'success',
 									showCancelButton: false
 								})
-								this.reset()
+								this.reset(operateType)
+								this.queryByType(operateType)
 							} else {
 								this.$message({
 									message: msg,
@@ -471,10 +475,10 @@ export default {
 				lock = true
 			}, 1000)
 		},
-		reset() {
+		reset(type) {
 			this.$refs['form'] && this.$refs['form'].resetFields()
 			this.queryData = {
-				operateType: 0,
+				operateType: type || 0,
 				userAddress: undefined,
 				agentAddress: undefined,
 				iosAddress: undefined,
@@ -488,7 +492,6 @@ export default {
 		},
 		changeRiskType(evt) {
 			this.showInfoData = undefined
-			console.log('evt', evt)
 			this.queryData = {
 				userAddress: undefined,
 				agentAddress: undefined,
