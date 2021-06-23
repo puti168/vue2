@@ -324,7 +324,6 @@ export default {
 				remark: undefined
 			},
 			showInfoData: undefined,
-			tipsShow: null,
 			windLevelTypeArr: []
 		}
 	},
@@ -357,13 +356,13 @@ export default {
 				{ required: true, message: '请输入投诉建议邮箱', trigger: 'blur' }
 			]
 			const serviceAddress = [
-				{ required: true, message: '请输入投诉建议邮箱', trigger: 'blur' }
+				{ required: true, message: '请输入客户邮箱', trigger: 'blur' }
 			]
 			const IdAddress = [
-				{ required: true, message: '请输入客服邮箱', trigger: 'blur' }
+				{ required: true, message: '请输入合营ID', trigger: 'blur' }
 			]
 			const remark = [
-				{ required: true, message: '请输入合营ID', trigger: 'blur' }
+				{ required: true, message: '请输入备注', trigger: 'blur' }
 			]
 			return {
 				operateType,
@@ -411,17 +410,37 @@ export default {
 		},
 		add() {
 			this.loadingT = true
+			const {
+				operateType,
+				userAddress,
+				agentAddress,
+				iosAddress,
+				androidAddress,
+				pcAddress,
+				complainAddress,
+				serviceAddress,
+				IdAddress,
+				remark
+			} = this.queryData
 			const params = {
-				...this.queryData
+				remark,
+				resourcesType: operateType,
+				resourcesUrl:
+					userAddress ||
+					agentAddress ||
+					iosAddress ||
+					androidAddress ||
+					pcAddress ||
+					complainAddress ||
+					serviceAddress ||
+					IdAddress
 			}
 			let lock = true
-			params.windControlType = params.windControlType * 1
-			params.proxyUserName ? (params.userName = params.proxyUserName) : null
 			this.$refs['form'].validate((valid) => {
-				if (valid && lock && !this.tipsShow) {
+				if (valid && lock) {
 					lock = false
 					this.$api
-						.riskEditAddAPI(params)
+						.clientCommonUpdateAPI(params)
 						.then((res) => {
 							this.loadingT = false
 							lock = true
@@ -455,20 +474,20 @@ export default {
 		reset() {
 			this.$refs['form'] && this.$refs['form'].resetFields()
 			this.queryData = {
-				operateType: '1',
-				userAddress: undefined,
-				agentAddress: undefined,
-				iosAddress: undefined,
-				androidAddress: undefined,
-				pcAddress: undefined,
-				complainAddress: undefined,
-				serviceAddress: undefined,
-				IdAddress: undefined,
-				remark: undefined
+                operateType: 0,
+                userAddress: undefined,
+                agentAddress: undefined,
+                iosAddress: undefined,
+                androidAddress: undefined,
+                pcAddress: undefined,
+                complainAddress: undefined,
+                serviceAddress: undefined,
+                IdAddress: undefined,
+                remark: undefined
 			}
 		},
 		changeRiskType(evt) {
-			this.showInfoData = {}
+			this.showInfoData = undefined
 			console.log('evt', evt)
 			this.queryData = {
 				userAddress: undefined,
