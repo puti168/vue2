@@ -71,7 +71,47 @@ export function configDiscountTagEdit(data) {
 	})
 }
 
+export function configDiscountTagQueryNames(params) {
+	return request({
+		url: '/operate/configDiscountTag/queryNames',
+		method: 'get',
+		params
+	})
+}
+export function queryActivityTypeList(data) {
+	return request({
+		url: '/operate/ActivityConfigRecord/queryActivityTypeList',
+		method: 'post',
+		data
+	})
+}
+export function queryDiscountActivityList(data) {
+	return request({
+		url: '/operate/ActivityConfigRecord/queryDiscountActivityList',
+		method: 'post',
+		data
+	})
+}
+export function queryDiscountTagList(data) {
+	return request({
+		url: '/operate/ActivityConfigRecord/queryDiscountTagList',
+		method: 'post',
+		data
+	})
+}
+export function queryVipActivityList(data) {
+	return request({
+		url: '/operate/ActivityConfigRecord/queryVipActivityList',
+		method: 'post',
+		data
+	})
+}
 export default {
+	queryDiscountTagList,
+	queryVipActivityList,
+	queryDiscountActivityList,
+	queryActivityTypeList,
+	configDiscountTagQueryNames,
 	configDiscountTagEdit,
 	configDiscountTagAdd,
 	configDiscountTagQueryList,

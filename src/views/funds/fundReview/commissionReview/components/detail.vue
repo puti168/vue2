@@ -187,47 +187,139 @@
 						<tbody>
 							<tr>
 								<td class="td-title">日期</td>
-								<td>{{ commissionRecordVo.reportDate ? commissionRecordVo.reportDate : '-' }}</td>
+								<td>
+									{{
+										commissionRecordVo.reportDate
+											? commissionRecordVo.reportDate
+											: '-'
+									}}
+								</td>
 								<td class="td-title">佣金比例</td>
-								<td colspan="2">{{ commissionRecordVo.commissionRate ? commissionRecordVo.commissionRate : '-' }}</td>
-								<td class="td-title" colspan="2">佣金金额</td>
-								<td colspan="3">{{ commissionRecordVo.totalRebateAmount ? commissionRecordVo.totalRebateAmount : '-' }}</td>
+								<td>
+									{{
+										commissionRecordVo.commissionRate
+											? commissionRecordVo.commissionRate
+											: '-'
+									}}
+								</td>
+								<td class="td-title">佣金金额</td>
+								<td>
+									{{
+										commissionRecordVo.totalRebateAmount
+											? commissionRecordVo.totalRebateAmount
+											: '-'
+									}}
+								</td>
+								<td class="td-title">等级专享</td>
+								<td>
+									{{
+										commissionRecordVo.rewardAmount
+											? commissionRecordVo.rewardAmount
+											: '-'
+									}}
+								</td>
 							</tr>
 							<tr>
 								<td class="td-title">活跃下级</td>
-								<td>{{ commissionRecordVo.activeSubordinate ? commissionRecordVo.activeSubordinate : '-' }}</td>
+								<td>
+									{{
+										commissionRecordVo.activeSubordinate
+											? commissionRecordVo.activeSubordinate
+											: '-'
+									}}
+								</td>
 								<td class="td-title">有效活跃下级</td>
-								<td>{{ commissionRecordVo.effectivelyActiveSubordinates ? commissionRecordVo.effectivelyActiveSubordinates : '-' }}</td>
+								<td>
+									{{
+										commissionRecordVo.effectivelyActiveSubordinates
+											? commissionRecordVo.effectivelyActiveSubordinates
+											: '-'
+									}}
+								</td>
 								<td class="td-title">新增活跃下级</td>
-								<td>{{ commissionRecordVo.addActiveSubordinates ? commissionRecordVo.addActiveSubordinates : '-' }}</td>
+								<td>
+									{{
+										commissionRecordVo.addActiveSubordinates
+											? commissionRecordVo.addActiveSubordinates
+											: '-'
+									}}
+								</td>
 								<td class="td-title">新增有效活跃下级</td>
-								<td>{{ commissionRecordVo.addEffectiveActiveSubordinates ? commissionRecordVo.addEffectiveActiveSubordinates : '-' }}</td>
+								<td>
+									{{
+										commissionRecordVo.addEffectiveActiveSubordinates
+											? commissionRecordVo.addEffectiveActiveSubordinates
+											: '-'
+									}}
+								</td>
+							</tr>
+							<tr>
 								<td class="td-title">总输赢</td>
-								<td>{{ commissionRecordVo.totalNetAmount ? commissionRecordVo.totalNetAmount : '-' }}</td>
-							</tr>
-							<tr>
+								<td>
+									{{
+										commissionRecordVo.totalNetAmount
+											? commissionRecordVo.totalNetAmount
+											: '-'
+									}}
+								</td>
 								<td class="td-title">场馆费</td>
-								<td>{{ commissionRecordVo.totalPlatformAmount ? commissionRecordVo.totalPlatformAmount : '-' }}</td>
+								<td>
+									{{
+										commissionRecordVo.totalPlatformAmount
+											? commissionRecordVo.totalPlatformAmount
+											: '-'
+									}}
+								</td>
 								<td class="td-title">总优惠</td>
-								<td>{{ commissionRecordVo.totalActivityAmount ? commissionRecordVo.totalActivityAmount : '-' }}</td>
+								<td>
+									{{
+										commissionRecordVo.totalActivityAmount
+											? commissionRecordVo.totalActivityAmount
+											: '-'
+									}}
+								</td>
 								<td class="td-title">总返水</td>
-								<td>{{ commissionRecordVo.commissionAmount ? commissionRecordVo.commissionAmount : '-' }}</td>
-								<td class="td-title">人工加减额</td>
-								<td>{{ commissionRecordVo.totalRebateAmount ? commissionRecordVo.totalRebateAmount : '-' }}</td>
-								<td class="td-title">补单输赢</td>
-								<td>{{ commissionRecordVo.totalPatchNetAmount ? commissionRecordVo.totalPatchNetAmount : '-' }}</td>
+								<td>
+									{{
+										commissionRecordVo.commissionAmount
+											? commissionRecordVo.commissionAmount
+											: '-'
+									}}
+								</td>
 							</tr>
 							<tr>
+								<td class="td-title">补单输赢</td>
+								<td>
+									{{
+										commissionRecordVo.totalPatchNetAmount
+											? commissionRecordVo.totalPatchNetAmount
+											: '-'
+									}}
+								</td>
 								<td class="td-title">净输赢</td>
-								<td>{{ commissionRecordVo.totalPureAmount ? commissionRecordVo.totalPureAmount : '-' }}</td>
+								<td>
+									{{
+										commissionRecordVo.totalPureAmount
+											? commissionRecordVo.totalPureAmount
+											: '-'
+									}}
+								</td>
 								<td class="td-title">上月结余</td>
-								<td>{{ commissionRecordVo.totalLastAmount ? commissionRecordVo.totalLastAmount : '-' }}</td>
+								<td>
+									{{
+										commissionRecordVo.totalLastAmount
+											? commissionRecordVo.totalLastAmount
+											: '-'
+									}}
+								</td>
 								<td class="td-title">冲正后净输赢</td>
-								<td>{{ commissionRecordVo.totalRushAmount ? commissionRecordVo.totalRushAmount : '-' }}</td>
-								<td class="td-title">等级专享</td>
-								<td>{{ commissionRecordVo.rewardAmount ? commissionRecordVo.rewardAmount : '-' }}</td>
-								<td class="td-title">佣金调整</td>
-								<td>{{ commissionRecordVo.totalRebateAmount ? commissionRecordVo.totalRebateAmount : '-' }}</td>
+								<td>
+									{{
+										commissionRecordVo.totalRushAmount
+											? commissionRecordVo.totalRushAmount
+											: '-'
+									}}
+								</td>
 							</tr>
 						</tbody>
 					</table>
@@ -299,6 +391,10 @@ export default {
 	props: {
 		// 审核 true 仅返回 false
 		type: Boolean,
+		activeName: {
+			type: String,
+			default: ''
+		},
 		rowData: {
 			type: Object,
 			default: () => {}
@@ -381,7 +477,7 @@ export default {
 				}
 
 				this.$api
-					.updateProxyAuditRecord(params)
+					.proxyCommissionRecordAudit(params)
 					.then((res) => {
 						loading.close()
 						if (res.code === 200) {
@@ -419,7 +515,7 @@ export default {
 						}
 
 						this.$api
-							.updateProxyAuditRecord(params)
+							.proxyCommissionRecordAudit(params)
 							.then((res) => {
 								loading.close()
 								if (res.code === 200) {

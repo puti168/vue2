@@ -101,7 +101,7 @@
 							<template slot-scope="scope">
 								<el-button
 									v-if="activeName !== '3'"
-									:class="scope.row.lockAccount !== name ? 'dis' : ''"
+									:class="scope.row.lockAccount !== name && scope.row.lockAccount ? 'dis' : ''"
 									type="primary"
 									size="medium"
 									@click="goDetail(scope.row)"

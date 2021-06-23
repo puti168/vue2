@@ -2,7 +2,7 @@
 	<div class="review-content">
 		<div class="head">
 			<span class="title">佣金审核详情</span>
-			<el-button plain @click="goBack">返回</el-button>
+			<el-button class="right-btn" plain @click="goBack">返回</el-button>
 		</div>
 		<div class="main-content">
 			<div class="review-content">
@@ -188,18 +188,26 @@
 									}}
 								</td>
 								<td class="td-title">佣金比例</td>
-								<td colspan="2">
+								<td>
 									{{
 										commissionRecordVo.commissionRate
 											? commissionRecordVo.commissionRate
 											: '-'
 									}}
 								</td>
-								<td class="td-title" colspan="2">佣金金额</td>
-								<td colspan="3">
+								<td class="td-title">佣金金额</td>
+								<td>
 									{{
 										commissionRecordVo.totalRebateAmount
 											? commissionRecordVo.totalRebateAmount
+											: '-'
+									}}
+								</td>
+								<td class="td-title">等级专享</td>
+								<td>
+									{{
+										commissionRecordVo.rewardAmount
+											? commissionRecordVo.rewardAmount
 											: '-'
 									}}
 								</td>
@@ -237,6 +245,8 @@
 											: '-'
 									}}
 								</td>
+							</tr>
+							<tr>
 								<td class="td-title">总输赢</td>
 								<td>
 									{{
@@ -245,8 +255,6 @@
 											: '-'
 									}}
 								</td>
-							</tr>
-							<tr>
 								<td class="td-title">场馆费</td>
 								<td>
 									{{
@@ -271,14 +279,8 @@
 											: '-'
 									}}
 								</td>
-								<td class="td-title">人工加减额</td>
-								<td>
-									{{
-										commissionRecordVo.totalRebateAmount
-											? commissionRecordVo.totalRebateAmount
-											: '-'
-									}}
-								</td>
+							</tr>
+							<tr>
 								<td class="td-title">补单输赢</td>
 								<td>
 									{{
@@ -287,8 +289,6 @@
 											: '-'
 									}}
 								</td>
-							</tr>
-							<tr>
 								<td class="td-title">净输赢</td>
 								<td>
 									{{
@@ -310,22 +310,6 @@
 									{{
 										commissionRecordVo.totalRushAmount
 											? commissionRecordVo.totalRushAmount
-											: '-'
-									}}
-								</td>
-								<td class="td-title">等级专享</td>
-								<td>
-									{{
-										commissionRecordVo.rewardAmount
-											? commissionRecordVo.rewardAmount
-											: '-'
-									}}
-								</td>
-								<td class="td-title">佣金调整</td>
-								<td>
-									{{
-										commissionRecordVo.totalRebateAmount
-											? commissionRecordVo.totalRebateAmount
 											: '-'
 									}}
 								</td>
