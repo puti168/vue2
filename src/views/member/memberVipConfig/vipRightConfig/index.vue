@@ -25,6 +25,7 @@
 									v-model="scope.row.dayWithdrawalNum"
 									size="medium"
 									:max="999999999"
+									:min="0"
 									placeholder="请输入"
 									clearable
 									style="width: 150px"
@@ -46,6 +47,7 @@
 									v-model.number="scope.row.dayWithdrawalQuota"
 									size="medium"
 									:max="999999999"
+									:min="0"
 									placeholder="请输入"
 									clearable
 									style="width: 150px"
@@ -63,6 +65,7 @@
 									v-model="scope.row.upgradeBonus"
 									size="medium"
 									:max="999999999"
+									:min="0"
 									placeholder="请输入"
 									clearable
 									:precision="0"
@@ -92,6 +95,7 @@
 									v-model="scope.row.birthdayBonus"
 									size="medium"
 									:max="999999999"
+									:min="0"
 									placeholder="请输入"
 									clearable
 									style="width: 150px"
@@ -119,6 +123,7 @@
 									v-model="scope.row.aboveMonthRedEnvelope"
 									size="medium"
 									:max="999999999"
+									:min="0"
 									placeholder="请输入"
 									clearable
 									style="width: 150px"
@@ -146,6 +151,7 @@
 									v-model="scope.row.belowMonthRedEnvelope"
 									size="medium"
 									:max="999999999"
+									:min="0"
 									placeholder="请输入"
 									clearable
 									style="width: 150px"

@@ -248,9 +248,6 @@ export default {
       this.loadData()
     },
     _changeTableSort({ column, prop, order }) {
-      if (prop === 'applyTime') {
-        prop = 1
-      }
       this.queryData.orderKey = prop
       if (order === 'ascending') {
         // 升序
