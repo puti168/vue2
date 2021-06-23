@@ -5,7 +5,7 @@
         <el-form ref="form" :inline="true" :model="queryData">
           <el-form-item label="活动消息标题:">
             <el-input
-              v-model="queryData.gameId"
+              v-model="queryData.noticeTitle"
               clearable
               :maxlength="20"
               size="medium"
@@ -15,9 +15,8 @@
           </el-form-item>
           <el-form-item label="发送对象:">
             <el-select
-              v-model="queryData.obj"
+              v-model="queryData.sendObj"
               clearable
-              multiple
               placeholder="默认选择全部"
               :popper-append-to-body="false"
             >
@@ -142,14 +141,14 @@
           <el-form-item
             label="活动消息标题:"
             class="tagheight"
-            prop="memberLabelName"
+            prop="noticeTitle"
             :rules="[
               { required: true, message: '请输入公告标题', trigger: 'blur' },
               { min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' },
             ]"
           >
             <el-input
-              v-model="dialogForm.memberLabelName"
+              v-model="dialogForm.noticeTitle"
               placeholder="请输入"
               maxlength="20"
               clearable
@@ -159,14 +158,14 @@
           <el-form-item
             label="活动消息内容:"
             class="tagheight"
-            prop="description"
+            prop="noticeContent"
             :rules="[
               { required: true, message: '请输入公告内容', trigger: 'blur' },
               { min: 1, max: 300, message: '长度在 1 到 300 个字符', trigger: 'blur' },
             ]"
           >
             <el-input
-              v-model="dialogForm.description"
+              v-model="dialogForm.noticeContent"
               placeholder="请输入 提交时不能为空"
               maxlength="300"
               clearable
@@ -177,7 +176,7 @@
           <el-form-item
             label="发送对象:"
             class="tagheight"
-            prop="logo"
+            prop="sendObj"
             :show-message="true"
             :rules="[
               {
@@ -186,7 +185,7 @@
             ]"
           >
             <el-select
-              v-model="dialogForm.logo"
+              v-model="dialogForm.sendObj"
               placeholder="默认选择全部"
               :popper-append-to-body="false"
               @change="sendObj"
@@ -196,7 +195,7 @@
             </el-select>
           </el-form-item>
           <el-form-item
-            v-show="dialogForm.logo === '0'"
+            v-show="dialogForm.sendObj === '0'"
             label="会员账号:"
             class="tagheight"
             :rules="[
@@ -215,13 +214,13 @@
             </el-select>
           </el-form-item>
           <el-form-item
-            v-show="dialogForm.logo === '1'"
+            v-show="dialogForm.sendObj === '1'"
             label="发送终端:"
             class="tagheight"
             :rules="[
               {
                 required: true,
-                message: '',
+                message: '请选择发送终端',
               },
             ]"
           >
@@ -241,7 +240,7 @@
             </el-select>
           </el-form-item>
           <el-form-item
-            v-if="dialogForm.logo === '0' && dialogForm.timeTab === '1'"
+            v-if="dialogForm.sendObj === '0' && dialogForm.timeTab === '1'"
             label="会员账号:"
             class="tagheight"
             prop="userNameList"
@@ -309,9 +308,9 @@ export default {
   mixins: [list],
   data() {
     return {
-      queryData: { obj: [] },
+      queryData: {},
       dialogFormVisible: false,
-      dialogForm: { logo: '0', deviceType: [], timeTab: '0' },
+      dialogForm: { sendObj: '0', deviceType: [], timeTab: '0' },
       lookVisible: false,
       userList: [],
       page: 1,
@@ -356,15 +355,15 @@ export default {
     },
 
     reset() {
-      this.queryData = { obj: [] }
+      this.queryData = {}
       this.pageNum = 1
       this.loadData()
     },
     sendObj(val) {
       if (val === '1') {
-        this.dialogForm = { logo: '1', deviceType: [], timeTab: '0' }
+        this.dialogForm = { sendObj: '1', deviceType: [], timeTab: '0' }
       } else {
-        this.dialogForm = { logo: '0', deviceType: [], timeTab: '0' }
+        this.dialogForm = { sendObj: '0', deviceType: [], timeTab: '0' }
       }
       console.log(val)
     },
@@ -390,7 +389,7 @@ export default {
         .catch(() => {})
     },
     clear() {
-      this.dialogForm = { logo: '0', deviceType: [], timeTab: '0' }
+      this.dialogForm = { sendObj: '0', deviceType: [], timeTab: '0' }
     },
     // 弹框标签添加人数
     getMemberMemberInfoByLabelId(val) {

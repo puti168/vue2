@@ -4,8 +4,12 @@
 			<span class="title">会员人工加额审核详情</span>
 			<div v-if="type" class="right-btn">
 				<el-button plain @click="goBack">取消</el-button>
-				<el-button type="success" @click="confirm(true)">一审通过</el-button>
-				<el-button type="danger" @click="confirm(false)">一审拒绝</el-button>
+				<el-button type="success" @click="confirm(true)">
+					{{ activeName === '0' ? '一审通过' : '二审通过' }}
+				</el-button>
+				<el-button type="danger" @click="confirm(false)">
+					{{ activeName === '0' ? '一审拒绝' : '二审拒绝' }}
+				</el-button>
 			</div>
 			<div v-else class="right-btn">
 				<el-button plain @click="goBack">返回</el-button>
@@ -24,47 +28,55 @@
 					>
 						<el-table-column align="center" label="注册时间">
 							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
+								{{ list.createDt ? list.createDt : '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="最后登录时间">
 							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
+								{{ list.lastLoginTime ? list.lastLoginTime : '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="最后下注时间">
 							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
+								{{ list.lastBetTime ? list.lastBetTime : '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="注册端">
 							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
+								{{
+									list.deviceType
+										? typeFilter(list.deviceType, 'deviceType')
+										: '-'
+								}}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="注册IP">
 							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
+								{{ list.registerIp ? list.registerIp : '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="注册端设备编号">
 							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
+								{{ list.deviceNo ? list.deviceNo : '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="账号类型">
 							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
+								{{
+									list.account_type
+										? typeFilter(list.account_type, 'accountType')
+										: '-'
+								}}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="注册域名">
 							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
+								{{ list.registerReference ? list.registerReference : '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="上级代理">
 							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
+								{{ list.parentProxyName ? list.parentProxyName : '-' }}
 							</template>
 						</el-table-column>
 					</el-table>
@@ -82,17 +94,21 @@
 					>
 						<el-table-column align="center" label="会员账号">
 							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
+								{{ list.userName ? list.userName : '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="会员姓名">
 							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
+								{{ list.realName ? list.realName : '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="账号状态">
 							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
+								{{
+									list.accountStatus
+										? typeFilter(list.accountStatus, 'accountStatusType')
+										: '-'
+								}}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="会员标签">
@@ -102,17 +118,17 @@
 						</el-table-column>
 						<el-table-column align="center" label="备注">
 							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
+								{{ list.labelName ? list.labelName : '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="绑定银行卡数量">
 							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
+								{{ list.bankCardNum ? list.bankCardNum : '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="虚拟币账号数量">
 							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
+								{{ list.virtualNum ? list.virtualNum : '-' }}
 							</template>
 						</el-table-column>
 					</el-table>
@@ -157,68 +173,45 @@
 				</div>
 			</div>
 			<div class="review-content">
-				<p class="name">近期存提款信息</p>
-				<div class="review-flex">
-					<el-table
-						border
-						size="mini"
-						:data="[1]"
-						style="width: 100%"
-						:header-cell-style="getRowClass"
-					>
-						<el-table-column align="center" label="上次提款时间">
-							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
-							</template>
-						</el-table-column>
-						<el-table-column align="center" label="上次提款金额">
-							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
-							</template>
-						</el-table-column>
-						<el-table-column
-							align="center"
-							label="上次提款至本次提款间存款金额"
-						>
-							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
-							</template>
-						</el-table-column>
-						<el-table-column align="center" label="上次提款方式">
-							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
-							</template>
-						</el-table-column>
-						<el-table-column align="center" label="上次是否为大额提款">
-							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
-							</template>
-						</el-table-column>
-					</el-table>
-				</div>
-			</div>
-			<div class="review-content">
-				<p class="name">本次提款信息</p>
+				<p class="name">审核详情</p>
 				<div class="review-flex">
 					<table class="review-table">
 						<tbody>
 							<tr>
 								<td class="td-title">申请人</td>
-								<td>33333333</td>
+								<td>
+									{{ list.operator ? list.operator : '-' }}
+								</td>
 								<td class="td-title">申请时间</td>
-								<td>PC</td>
+								<td>
+									{{ list.operatorTime ? list.operatorTime : '-' }}
+								</td>
 								<td class="td-title">申请原因</td>
-								<td colspan="3">33333333333</td>
+								<td colspan="3">
+									{{ list.operatorRemark ? list.operatorRemark : '-' }}
+								</td>
 							</tr>
 							<tr>
 								<td class="td-title">调整类型</td>
-								<td>33333333</td>
+								<td>
+									{{
+										list.adjustType
+											? typeFilter(list.adjustType, 'memberPatchAddAdjustType')
+											: '-'
+									}}
+								</td>
 								<td class="td-title">活动ID</td>
-								<td>PC</td>
+								<td>
+									{{ list.operatorTime ? list.operatorTime : '-' }}
+								</td>
 								<td class="td-title">流水倍数</td>
-								<td>33333333333</td>
+								<td style="width: 80px">
+									{{ list.validMultiple ? list.validMultiple : '-' }}
+								</td>
 								<td class="td-title">调整金额</td>
-								<td>否</td>
+								<td>
+									{{ list.adjustAmount ? list.adjustAmount : '-' }}
+								</td>
 							</tr>
 						</tbody>
 					</table>
@@ -227,9 +220,9 @@
 			<div class="review-content">
 				<p class="name">审核信息</p>
 				<div class="review-flex">
-					<div>一审人: 111</div>
-					<div>一审时间: 222</div>
-					<div>一审备注: 3333</div>
+					<div>一审人: {{ list.audit1Operator }}</div>
+					<div>一审时间: {{ list.audit1Time }}</div>
+					<div>一审备注: {{ list.audit1Operator }}</div>
 				</div>
 			</div>
 		</div>
@@ -242,19 +235,7 @@
 			class="audit-confirm"
 		>
 			<el-form ref="form" :model="form" :rules="formRules">
-				<el-form-item v-if="action" label="提交审核信息">
-					<el-input
-						v-model="form.remark"
-						clearable
-						type="textarea"
-						:maxlength="50"
-						show-word-limit
-						:autosize="{ minRows: 4, maxRows: 4 }"
-						style="width: 380px"
-						placeholder="请输入"
-					></el-input>
-				</el-form-item>
-				<el-form-item v-else label="提交审核信息" prop="remark">
+				<el-form-item label="提交审核信息" prop="remark">
 					<el-input
 						v-model="form.remark"
 						clearable
@@ -286,6 +267,10 @@ export default {
 	props: {
 		// 审核 true 仅返回 false
 		type: Boolean,
+		activeName: {
+			type: String,
+			default: ''
+		},
 		rowData: {
 			type: Object,
 			default: () => {}
@@ -324,101 +309,63 @@ export default {
 			this.visible = true
 		},
 		auditOne() {
-			if (this.action) {
-				const loading = this.$loading({
-					lock: true,
-					text: 'Loading',
-					spinner: 'el-icon-loading',
-					background: 'rgba(0, 0, 0, 0.7)'
-				})
-				const params = {
-					id: this.rowData.id,
-					userId: this.rowData.userId,
-					auditRemark: this.form.remark,
-					auditStatus: this.action ? 2 : 3
-				}
+			const loading = this.$loading({
+				lock: true,
+				text: 'Loading',
+				spinner: 'el-icon-loading',
+				background: 'rgba(0, 0, 0, 0.7)'
+			})
+			const params = {
+				id: this.rowData.id,
+				remark: this.form.remark,
+				auditStatus: this.action ? 2 : 3
+			}
 
-				this.$api
-					.updateProxyAuditRecord(params)
-					.then((res) => {
-						loading.close()
-						if (res.code === 200) {
-							this.$message({
-								type: 'success',
-								message: '操作成功!'
-							})
-							this.visible = false
-							this.goBack()
-						} else {
-							this.$message({
-								message: res.msg,
-								type: 'error'
-							})
-						}
-					})
-					.catch(() => {
-						loading.close()
-					})
-			} else {
-				this.$refs.form.validate((valid) => {
-					if (valid) {
-						const loading = this.$loading({
-							lock: true,
-							text: 'Loading',
-							spinner: 'el-icon-loading',
-							background: 'rgba(0, 0, 0, 0.7)'
+			this.$api
+				.memberArtificialPatchAccountAddAuditauditRecord(params)
+				.then((res) => {
+					loading.close()
+					if (res.code === 200) {
+						this.$message({
+							type: 'success',
+							message: '操作成功!'
 						})
-						const params = {
-							id: this.rowData.id,
-							auditRemark: this.form.remark,
-							auditStatus: this.action ? 2 : 3
-						}
-
-						this.$api
-							.updateProxyAuditRecord(params)
-							.then((res) => {
-								loading.close()
-								if (res.code === 200) {
-									this.$message({
-										type: 'success',
-										message: '操作成功!'
-									})
-									this.visible = false
-									this.goBack()
-								} else {
-									this.$message({
-										message: res.msg,
-										type: 'error'
-									})
-								}
-							})
-							.catch(() => {
-								loading.close()
-							})
+						this.visible = false
+						this.goBack()
+					} else {
+						this.$message({
+							message: res.msg,
+							type: 'error'
+						})
 					}
 				})
-			}
+				.catch(() => {
+					loading.close()
+				})
 		},
 		goBack() {
 			this.$emit('goBack')
 		},
 		getInfo() {
 			const params = {
-				id: this.rowData.id
+				id: this.rowData.id,
+				bizType: 1
 			}
-			this.$api.proxyDetail(params).then((res) => {
-				if (res.code === 200) {
-					const response = res.data
-					this.loading = false
-					this.list = response
-				} else {
-					this.loading = false
-					this.$message({
-						message: res.msg,
-						type: 'error'
-					})
-				}
-			})
+			this.$api
+				.memberArtificialPatchAccountAddAuditAuditDetail(params)
+				.then((res) => {
+					if (res.code === 200) {
+						const response = res.data
+						this.loading = false
+						this.list = response
+					} else {
+						this.loading = false
+						this.$message({
+							message: res.msg,
+							type: 'error'
+						})
+					}
+				})
 		}
 	}
 }

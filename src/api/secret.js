@@ -105,6 +105,13 @@ export function updateProxyAuditRecord(data) {
 		data
 	})
 }
+export function proxyCommissionRecordAudit(data) {
+	return request({
+		url: '/proxyCommissionRecord/audit',
+		method: 'post',
+		data
+	})
+}
 export function proxyList(data) {
 	return request({
 		url: '/proxy/proxyList',
@@ -208,6 +215,7 @@ export default {
 	memberTransferLockOrder,
 	memberTransferSelectPage,
 	updateProxyAuditRecord,
+	proxyCommissionRecordAudit,
 	lockProxyAuditRecord,
 	proxyDetail,
 	proxyList,

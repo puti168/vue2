@@ -333,8 +333,8 @@ export default {
     updatePassword(form) {
       return this.$api
         .modifyPassword({
-          pwd: md5(form.password + this.userName),
-          rePwd: md5(form.passwordAgain + this.userName),
+          pwd: md5(this.userName.trim() + form.password.trim()),
+          rePwd: md5(this.userName.trim() + form.passwordAgain.trim()),
           id: form.id,
           userName: this.userName
         })

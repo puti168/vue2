@@ -21,7 +21,7 @@
                     </el-form-item>
                     <el-form-item label="loading名称:">
                         <el-input
-                            v-model="queryData.startPageName"
+                            v-model="queryData.pageName"
                             size="medium"
                             placeholder="请输入"
                             clearable
@@ -271,9 +271,9 @@
                     label-width="120px"
                     :rules="rules"
                 >
-                    <el-form-item label="loading名称:" prop="startPageName">
+                    <el-form-item label="loading名称:" prop="pageName">
                         <el-input
-                            v-model="dialogForm.startPageName"
+                            v-model="dialogForm.pageName"
                             :maxlength="20"
                             autocomplete="off"
                             style="width: 330px"
@@ -352,16 +352,17 @@ export default {
         return {
             queryData: {
                 supportTerminal: undefined,
-                startPageName: undefined,
-                status: '1',
+                pageName: undefined,
+                status: undefined,
                 createdBy: undefined,
-                updatedBy: undefined
+                updatedBy: undefined,
+                configType: 1
             },
             tableData: [],
             dialogFormVisible: false,
             dialogForm: {
                 supportTerminal: undefined,
-                startPageName: undefined,
+                pageName: undefined,
                 imageAddress: null,
                 description: undefined
             },
@@ -383,8 +384,8 @@ export default {
             ]
         },
         rules() {
-            const startPageName = [
-                { required: true, message: '请填入风控层级', trigger: 'blur' }
+            const pageName = [
+                { required: true, message: '请填入启动页名称', trigger: 'blur' }
             ]
             const supportTerminal = [
                 { required: true, message: '请选择显示终端', trigger: 'change' }
@@ -397,7 +398,7 @@ export default {
                 { min: 2, max: 50, message: '请填写备注', trigger: 'blur' }
             ]
             return {
-                startPageName,
+                pageName,
                 supportTerminal,
                 imageAddress,
                 description
@@ -420,7 +421,7 @@ export default {
             // )
             // params.windControlLevelName.splice(idx, 1)
             this.$api
-                .riskRankListAPI(params)
+                .clientStartListAPI(params)
                 .then((res) => {
                     const { code, data } = res
                     if (code === 200) {
@@ -444,7 +445,7 @@ export default {
             this.$refs['form'].resetFields()
             this.queryData = {
                 supportTerminal: undefined,
-                startPageName: undefined,
+                pageName: undefined,
                 status: '1',
                 createdBy: undefined,
                 updatedBy: undefined
@@ -483,7 +484,7 @@ export default {
             this.title = '新增'
             this.dialogForm = {
                 supportTerminal: undefined,
-                startPageName: undefined,
+                pageName: undefined,
                 imageAddress: null,
                 description: undefined
             }
