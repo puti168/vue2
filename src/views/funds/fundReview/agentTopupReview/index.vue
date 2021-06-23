@@ -226,7 +226,7 @@ export default {
 				...this.getParams(params)
 			}
 			const type =
-				this.activeName === '0' ? 'firstAuditAddAudit' : 'secondAddAudit'
+				this.activeName === '0' ? 'firstAuditAddAuditProxy' : 'secondAddAuditProxy'
 			this.$api[type](params)
 				.then((res) => {
 					if (res.code === 200) {
@@ -283,7 +283,7 @@ export default {
 				background: 'rgba(0, 0, 0, 0.7)'
 			})
 			this.$api
-				.memberArtificialPatchAccountAddAuditLockRecord({
+				.proxyArtificialPatchAccountAddAuditlockRecord({
 					id: val.id,
 					lockStatus: Number(val.lockStatus) === 1 ? 0 : 1
 				})

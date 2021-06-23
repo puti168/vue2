@@ -4,8 +4,24 @@
 			<span class="title">会员提现审核详情</span>
 			<div v-if="type" class="right-btn">
 				<el-button plain @click="goBack">取消</el-button>
-				<el-button type="success" @click="confirm(true)">{{ activeName === '0' ? '一审通过' : activeName === '1' ? '二审通过' : '三审通过' }}</el-button>
-				<el-button type="danger" @click="confirm(false)">{{ activeName === '0' ? '一审拒绝' : activeName === '1' ? '二审拒绝' : '三审拒绝' }}</el-button>
+				<el-button type="success" @click="confirm(true)">
+					{{
+						activeName === '0'
+							? '一审通过'
+							: activeName === '1'
+							? '二审通过'
+							: '三审通过'
+					}}
+				</el-button>
+				<el-button type="danger" @click="confirm(false)">
+					{{
+						activeName === '0'
+							? '一审拒绝'
+							: activeName === '1'
+							? '二审拒绝'
+							: '三审拒绝'
+					}}
+				</el-button>
 			</div>
 			<div v-else class="right-btn">
 				<el-button plain @click="goBack">返回</el-button>
@@ -82,12 +98,12 @@
 					>
 						<el-table-column align="center" label="会员账号">
 							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
+								{{ list.userName ? list.userName : '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="会员姓名">
 							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
+								{{ list.realName ? list.realName : '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="账号状态">
@@ -165,27 +181,35 @@
 					>
 						<el-table-column align="center" label="风险会员">
 							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
+								{{ list.windControlName ? list.windControlName : '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="风险银行卡">
 							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
+								{{ list.cardWindControlName ? list.cardWindControlName : '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="风险虚拟币">
 							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
+								{{
+									list.virtualWindControlName
+										? list.virtualWindControlName
+										: '-'
+								}}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="风险IP">
 							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
+								{{ list.ipWindControlName ? list.ipWindControlName : '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="风险终端设备号">
 							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
+								{{
+									list.deviceNoWindControlName
+										? list.deviceNoWindControlName
+										: '-'
+								}}
 							</template>
 						</el-table-column>
 					</el-table>
@@ -291,9 +315,19 @@
 			<div class="review-content">
 				<p class="name">审核信息</p>
 				<div class="review-flex">
-					<div>一审人: 111</div>
-					<div>一审时间: 222</div>
-					<div>一审备注: 3333</div>
+					<div>一审人: {{ list.audit1Operator }}</div>
+					<div>一审时间: {{ list.audit1Time }}</div>
+					<div>一审备注: {{ list.audit1Desc }}</div>
+				</div>
+				<div class="review-flex">
+					<div>二审人: {{ list.audit2Operator }}</div>
+					<div>二审时间: {{ list.audit2Time }}</div>
+					<div>二审备注: {{ list.audit2Desc }}</div>
+				</div>
+				<div class="review-flex">
+					<div>三审人: {{ list.audit3Operator }}</div>
+					<div>三审时间: {{ list.audit3Time }}</div>
+					<div>三审备注: {{ list.audit3Desc }}</div>
 				</div>
 			</div>
 		</div>
@@ -372,9 +406,7 @@ export default {
 	computed: {
 		formRules() {
 			return {
-				remark: [
-					{ required: true, message: '审核拒绝备注必填', trigger: 'blur' }
-				]
+				remark: [{ required: true, message: '备注必填', trigger: 'blur' }]
 			}
 		}
 	},
@@ -392,84 +424,46 @@ export default {
 			this.visible = true
 		},
 		auditOne() {
-			if (this.action) {
-				const loading = this.$loading({
-					lock: true,
-					text: 'Loading',
-					spinner: 'el-icon-loading',
-					background: 'rgba(0, 0, 0, 0.7)'
-				})
-				const params = {
-					id: this.rowData.id,
-					userId: this.rowData.userId,
-					userType: 1,
-					transType: 2,
-					auditDesc: this.form.remark,
-					auditResult: this.action ? 1 : 2
-				}
-
-				this.$api
-					.updateProxyAuditRecord(params)
-					.then((res) => {
-						loading.close()
-						if (res.code === 200) {
-							this.$message({
-								type: 'success',
-								message: '操作成功!'
-							})
-							this.visible = false
-							this.goBack()
-						} else {
-							this.$message({
-								message: res.msg,
-								type: 'error'
-							})
-						}
+			this.$refs.form.validate((valid) => {
+				if (valid) {
+					const loading = this.$loading({
+						lock: true,
+						text: 'Loading',
+						spinner: 'el-icon-loading',
+						background: 'rgba(0, 0, 0, 0.7)'
 					})
-					.catch(() => {
-						loading.close()
-					})
-			} else {
-				this.$refs.form.validate((valid) => {
-					if (valid) {
-						const loading = this.$loading({
-							lock: true,
-							text: 'Loading',
-							spinner: 'el-icon-loading',
-							background: 'rgba(0, 0, 0, 0.7)'
-						})
-						const params = {
-							id: this.rowData.id,
-							auditDesc: this.form.remark,
-							userType: 1,
-							transType: 2,
-							auditResult: this.action ? 1 : 2
-						}
-
-						this.$api
-							.updateProxyAuditRecord(params)
-							.then((res) => {
-								loading.close()
-								if (res.code === 200) {
-									this.$message({
-										type: 'success',
-										message: '操作成功!'
-									})
-									this.visible = false
-									this.goBack()
-								} else {
-									this.$message({
-										message: res.msg,
-										type: 'error'
-									})
-								}
-							})
-							.catch(() => {
-								loading.close()
-							})
+					const params = {
+						id: this.rowData.id,
+						createdAt: this.rowData.createdAt,
+						auditDesc: this.form.remark,
+						auditResult: this.action ? 1 : 2,
+						orderStatus:
+							this.activeName === '0' ? 1 : this.activeName === '1' ? 3 : 5
 					}
-				})
-			}
+
+					this.$api
+						.memberWithDrawUserupdateWithdraw(params)
+						.then((res) => {
+							loading.close()
+							if (res.code === 200) {
+								this.$message({
+									type: 'success',
+									message: '操作成功!'
+								})
+								this.visible = false
+								this.goBack()
+							} else {
+								this.$message({
+									message: res.msg,
+									type: 'error'
+								})
+							}
+						})
+						.catch(() => {
+							loading.close()
+						})
+				}
+			})
 		},
 		goBack() {
 			this.$emit('goBack')
@@ -477,9 +471,7 @@ export default {
 		getInfo() {
 			const params = {
 				id: this.rowData.id,
-				transType: 2,
-				userId: this.rowData.userId,
-				userType: 1
+				createdAt: this.rowData.createdAt
 			}
 			this.$api.selectMemberWithdrawUser(params).then((res) => {
 				if (res.code === 200) {

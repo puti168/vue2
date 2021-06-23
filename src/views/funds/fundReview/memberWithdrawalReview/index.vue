@@ -85,27 +85,34 @@
 						<el-table-column align="center" label="锁单" width="60">
 							<template slot-scope="scope">
 								<el-checkbox
-									v-if="scope.row.lockAccount === name || !scope.row.lockAccount"
+									v-if="
+										scope.row.lockAccount === name || !scope.row.lockAccount
+									"
 									v-model="scope.row.lockOrder"
 									@change="lockChange(scope.row)"
 								></el-checkbox>
 							</template>
 						</el-table-column>
-						<el-table-column
-							prop="auditStep"
-							align="center"
-							label="操作"
-							width="180"
-						>
+						<el-table-column align="center" label="操作" width="180">
 							<template slot-scope="scope">
 								<el-button
 									v-if="activeName !== '3'"
-									:class="scope.row.lockAccount !== name && scope.row.lockAccount ? 'dis' : ''"
+									:class="
+										scope.row.lockAccount !== name && scope.row.lockAccount
+											? 'dis'
+											: ''
+									"
 									type="primary"
 									size="medium"
 									@click="goDetail(scope.row)"
 								>
-									{{ activeName === '0' ? '一审审核' : activeName === '1' ? '二审审核' : '三审审核' }}
+									{{
+										activeName === '0'
+											? '一审审核'
+											: activeName === '1'
+											? '二审审核'
+											: '三审审核'
+									}}
 								</el-button>
 								<template v-else>
 									<el-button
@@ -140,13 +147,11 @@
 							align="center"
 							label="会员姓名"
 						></el-table-column>
-						<el-table-column
-							prop="isBig"
-							align="center"
-							label="是否为大额提款"
-						><template slot-scope="scope">
-							{{ Number(scope.row.isBig) === 1 ? '是' : '否' }}
-							</template></el-table-column>
+						<el-table-column prop="isBig" align="center" label="是否为大额提款">
+							<template slot-scope="scope">
+								{{ Number(scope.row.isBig) === 1 ? '是' : '否' }}
+							</template>
+						</el-table-column>
 						<el-table-column
 							prop="orderAmount"
 							align="center"
@@ -165,15 +170,15 @@
 						<el-table-column align="center" label="审核状态">
 							<template slot-scope="scope">
 								<span
-								:class="
-									Number(scope.row.orderStatus) === 11
-										? 'normalRgba'
-										: '4267'.includes(Number(scope.row.orderStatus))
-										? 'lockingRgba'
-										: 'disableRgba'
-								"
-							>
-								{{ typeFilter(scope.row.orderStatus, 'withdrawStatus') }}
+									:class="
+										Number(scope.row.orderStatus) === 11
+											? 'normalRgba'
+											: '4267'.includes(Number(scope.row.orderStatus))
+											? 'lockingRgba'
+											: 'disableRgba'
+									"
+								>
+									{{ typeFilter(scope.row.orderStatus, 'withdrawStatus') }}
 								</span>
 							</template>
 						</el-table-column>
@@ -192,8 +197,42 @@
 					></el-pagination>
 				</div>
 			</div>
+			<el-dialog
+			title="提交确认"
+			center
+			:visible.sync="visible"
+			width="610px"
+			class="audit-confirm"
+		>
+			<el-form ref="form" :model="form" :rules="formRules">
+				<el-form-item label="提交审核信息" prop="remark">
+					<el-input
+						v-model="form.remark"
+						clearable
+						type="textarea"
+						:maxlength="50"
+						show-word-limit
+						:autosize="{ minRows: 4, maxRows: 4 }"
+						style="width: 380px"
+						placeholder="请输入"
+					></el-input>
+				</el-form-item>
+			</el-form>
+			<div slot="footer" class="dialog-footer">
+				<el-button @click="visible = false">取 消</el-button>
+				<el-button type="primary" @click="auditOne">
+					提交
+				</el-button>
+			</div>
+		</el-dialog>
 		</template>
-		<detail v-else :type="type" :rowData="rowData" :activeName="activeName" @goBack="goBack"></detail>
+		<detail
+			v-else
+			:type="type"
+			:rowData="rowData"
+			:activeName="activeName"
+			@goBack="goBack"
+		></detail>
 	</div>
 </template>
 
@@ -216,14 +255,20 @@ export default {
 		return {
 			queryData: {
 				id: '',
-				orderType: ''
+				lockStatus: ''
 			},
 			type: true,
 			showDetail: false,
+			visible: false,
+			form: {
+				remark: ''
+			},
 			formTime: {
 				time: [start, end]
 			},
 			rowData: {},
+			row: {},
+			action: '',
 			now: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
 			name: '',
 			activeName: '',
@@ -233,6 +278,13 @@ export default {
 	computed: {
 		lockOrderType() {
 			return this.globalDics.lockOrderType
+		},
+		formRules() {
+			return {
+				remark: [
+					{ required: true, message: '审核拒绝备注必填', trigger: 'blur' }
+				]
+			}
 		}
 	},
 	mounted() {
@@ -258,7 +310,9 @@ export default {
 				...this.getParams(params)
 			}
 			let type =
-				this.activeName === '0' ? 'selectMemberWithDrawAuthEsPageOne' : 'selectMemberWithDrawAuthEsPageTwo'
+				this.activeName === '0'
+					? 'selectMemberWithDrawAuthEsPageOne'
+					: 'selectMemberWithDrawAuthEsPageTwo'
 			if (this.activeName === '2') {
 				type = 'selectMemberWithDrawAuthEsPageThree'
 			}
@@ -304,31 +358,53 @@ export default {
 			this.loadData()
 		},
 		confirm(row, type) {
+			this.row = row
+			this.action = type
 			this.$confirm(`您确认要执行该操作？`, {
-              confirmButtonText: '确定',
-              cancelButtonText: '取消',
-              type: 'warning'
-            })
-              .then(() => {
-				  const params = {
-
-				  }
-				  this.$api.selectMemberWithDrawAuthEsPagePay(params)
-				.then((res) => {
-					if (res.code === 200) {
-						this.$message({
-							message: '操作成功',
-							type: 'success'
-						})
-					}
+				confirmButtonText: '确定',
+				cancelButtonText: '取消',
+				type: 'warning'
+			})
+				.then(() => {
+					this.visible = true
 				})
-              })
-              .catch(() => {})
+				.catch(() => {})
+		},
+		auditOne() {
+			this.$refs.form.validate((valid) => {
+				if (valid) {
+					const loading = this.$loading({
+						lock: true,
+						text: 'Loading',
+						spinner: 'el-icon-loading',
+						background: 'rgba(0, 0, 0, 0.7)'
+					})
+					const params = {
+						id: this.row.id,
+						createdAt: this.row.createdAt,
+						auditDesc: this.form.remark,
+						auditResult: this.action ? 1 : 2,
+						orderStatus: 7
+					}
+					this.$api.selectMemberWithDrawAuthEsPagePay(params).then((res) => {
+						if (res.code === 200) {
+							this.$message({
+								message: '操作成功',
+								type: 'success'
+							})
+							loading.close()
+							this.loadData()
+						}
+					}).catch(() => {
+							loading.close()
+						})
+				}
+			})
 		},
 		reset() {
 			this.queryData = {
 				id: '',
-				orderType: ''
+				lockStatus: ''
 			}
 			this.formTime = {
 				time: [start, end]
@@ -342,10 +418,12 @@ export default {
 				spinner: 'el-icon-loading',
 				background: 'rgba(0, 0, 0, 0.7)'
 			})
+			console.log(val)
 			this.$api
-				.updateWithdrawLock({
+				.memberWithDrawUserupdateWithdrawLock({
 					id: val.id,
-					lockFlag: Number(val.lockStatus) === 0 ? 0 : 1
+					createdAt: val.createdAt,
+					lockStatus: Number(val.lockStatus) === 1 ? 0 : 1
 				})
 				.then((res) => {
 					if (res.code === 200) {
