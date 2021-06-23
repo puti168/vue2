@@ -192,7 +192,7 @@
 								<td>
 									{{
 										list.adjustType
-											? typeFilter(list.adjustType, 'accountType')
+											? typeFilter(list.adjustType, 'memberPatchAddAdjustType')
 											: '-'
 									}}
 								</td>

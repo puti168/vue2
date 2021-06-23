@@ -348,24 +348,13 @@
 			class="audit-confirm"
 		>
 			<el-form ref="form" :model="form" :rules="formRules">
-				<el-form-item v-if="action" label="提交审核信息">
+				<el-form-item label="提交审核信息" prop="remark">
 					<el-input
 						v-model="form.remark"
 						clearable
 						type="textarea"
 						:maxlength="50"
-						show-word-limit
-						:autosize="{ minRows: 4, maxRows: 4 }"
-						style="width: 380px"
-						placeholder="请输入"
-					></el-input>
-				</el-form-item>
-				<el-form-item v-else label="提交审核信息" prop="remark">
-					<el-input
-						v-model="form.remark"
-						clearable
-						type="textarea"
-						:maxlength="50"
+						:minlength="2"
 						show-word-limit
 						:autosize="{ minRows: 4, maxRows: 4 }"
 						style="width: 380px"

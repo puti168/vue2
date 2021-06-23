@@ -208,8 +208,9 @@
 import EditAccount from './EditAccount'
 import AccountUpdatePass from '@/components/Dialog/UpdatePass'
 import list from '@/mixins/list'
+import { sleep } from '@/utils/sleep'
+import { message } from '@/utils/message'
 import { getUsername } from '@/utils/auth' // get token from cookie
-
 export default {
   name: 'Account',
   components: { EditAccount, AccountUpdatePass },
@@ -345,6 +346,37 @@ export default {
     addUser() {
       this.drawer = true
       this.isCreated = true
+    },
+    updatePassword(form) {
+      return this.$api
+        .modifyPassword({
+          pwd: form.pwd,
+          rePwd: form.rePwd,
+          id: form.id,
+          userName: this.userName
+        })
+        .then((_) => {
+          if (_.code === 200) {
+            this.$message({
+              message: '操作成功',
+              type: 'success'
+            })
+
+            if (this.curUsername === this.username) {
+              sleep(1000).then(() => {
+                this.$store
+                  .dispatch('user/logout')
+                  .then((_) => {
+                    location.reload()
+                  })
+                  .catch((err) => {
+                    message({ message: err.msg, type: 'error' })
+                    this.$router.go('/')
+                  })
+              })
+            }
+          }
+        })
     },
     handleSearch() {
       this.pageNum = 1
