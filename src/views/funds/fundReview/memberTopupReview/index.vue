@@ -116,12 +116,12 @@
 						<el-table-column
 							prop="userName"
 							align="center"
-							label="代理账号"
+							label="会员账号"
 						></el-table-column>
 						<el-table-column
 							prop="realName"
 							align="center"
-							label="代理姓名"
+							label="会员姓名"
 						></el-table-column>
 						<el-table-column
 							prop="applyTime"
@@ -161,7 +161,7 @@
 				</div>
 			</div>
 		</template>
-		<detail v-else :type="type" :rowData="rowData" @goBack="goBack"></detail>
+		<detail v-else :type="type" :rowData="rowData" :activeName="activeName" @goBack="goBack"></detail>
 	</div>
 </template>
 
@@ -285,7 +285,7 @@ export default {
 			this.$api
 				.memberArtificialPatchAccountAddAuditLockRecord({
 					id: val.id,
-					lockStatus: Number(val.lockStatus) === 0 ? 0 : 1
+					lockStatus: Number(val.lockStatus) === 1 ? 0 : 1
 				})
 				.then((res) => {
 					if (res.code === 200) {
