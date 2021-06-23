@@ -397,24 +397,24 @@ export default {
       const dateFreeNum = [{ required: true, validator: oneFreeRules, trigger: 'blur' }]
 
       const singleMinAmount = [
-        { required: true, message: '请输入金额', trigger: 'blur' },
-        { min: 1, message: '不能为空', trigger: 'blur' }
+        { required: true, message: '请输入金额', trigger: 'blur' }
+        // { min: 1, message: '不能为空', trigger: 'blur' }
       ]
       const singleMaxAmount = [
-        { required: true, message: '请输入金额', trigger: 'blur' },
-        { min: 1, message: '不能为空', trigger: 'blur' }
+        { required: true, message: '请输入金额', trigger: 'blur' }
+        // { min: 1, message: '不能为空', trigger: 'blur' }
       ]
       const bigAmount = [
-        { required: true, message: '请输入金额', trigger: 'blur' },
-        { min: 1, message: '不能为空', trigger: 'blur' }
+        { required: true, message: '请输入金额', trigger: 'blur' }
+        // { min: 1, message: '不能为空', trigger: 'blur' }
       ]
       const dateFreeAmount = [
         {
           required: true,
           message: '输入大于单日最高提款额度，请重新输入',
           trigger: 'blur'
-        },
-        { min: 1, message: '不能为空', trigger: 'blur' }
+        }
+        // { min: 1, message: '不能为空', trigger: 'blur' }
       ]
       const rateDateFreeType = [
         { required: true, message: '百分比（%）', trigger: 'change' }
@@ -423,12 +423,12 @@ export default {
         { required: true, message: '百分比（%）', trigger: 'change' }
       ]
       const beyondfrequency = [
-        { required: true, message: '请输入提示语', trigger: 'blur' },
-        { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+        { required: true, message: '请输入提示语', trigger: 'blur' }
+        // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
       ]
       const beyondtotal = [
-        { required: true, message: '请输入提示语', trigger: 'blur' },
-        { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+        { required: true, message: '请输入提示语', trigger: 'blur' }
+        // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
       ]
       return {
         dateFreeNum,
