@@ -20,8 +20,8 @@
               placeholder="默认选择全部"
               :popper-append-to-body="false"
             >
-              <el-option label="重要" value="0"></el-option>
-              <el-option label="无" value="1"></el-option>
+              <el-option label="重要" value="1"></el-option>
+              <el-option label="无" value="0"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="发送终端:">
@@ -47,8 +47,8 @@
               placeholder="默认选择全部"
               :popper-append-to-body="false"
             >
-              <el-option label="限时" value="0"></el-option>
-              <el-option label="永久" value="1"></el-option>
+              <el-option label="限时" value="1"></el-option>
+              <el-option label="永久" value="2"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="状态:">
@@ -111,7 +111,7 @@
               icon="el-icon-folder"
               :disabled="loading"
               size="medium"
-              @click="dialogFormVisible = true"
+              @click="Add('新增')"
             >
               新增
             </el-button>
@@ -199,7 +199,7 @@
                 type="primary"
                 icon="el-icon-edit"
                 size="medium"
-                @click="openEdit(scope.row)"
+                @click="openEdit('编辑', scope.row)"
               >
                 编辑信息
               </el-button>
@@ -240,14 +240,14 @@
           <el-form-item
             label="公告标题:"
             class="tagheight"
-            prop="memberLabelName"
+            prop="announcementTitle"
             :rules="[
               { required: true, message: '请输入公告标题', trigger: 'blur' },
               { min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' },
             ]"
           >
             <el-input
-              v-model="dialogForm.memberLabelName"
+              v-model="dialogForm.announcementTitle"
               placeholder="请输入"
               maxlength="20"
               clearable
@@ -257,14 +257,14 @@
           <el-form-item
             label="公告内容:"
             class="tagheight"
-            prop="description"
+            prop="announcementContent"
             :rules="[
               { required: true, message: '请输入公告内容', trigger: 'blur' },
               { min: 1, max: 50, message: '长度在 1 到 50 个字符', trigger: 'blur' },
             ]"
           >
             <el-input
-              v-model="dialogForm.description"
+              v-model="dialogForm.announcementContent"
               placeholder="请输入 提交时不能为空"
               maxlength="50"
               clearable
@@ -275,7 +275,7 @@
           <el-form-item
             label="标识:"
             class="tagheight"
-            prop="logo"
+            prop="tag"
             :show-message="true"
             :rules="[
               {
@@ -284,12 +284,12 @@
             ]"
           >
             <el-select
-              v-model="dialogForm.logo"
+              v-model="dialogForm.tag"
               placeholder="默认选择全部"
               :popper-append-to-body="false"
             >
-              <el-option label="重要" value="0"></el-option>
-              <el-option label="无" value="1"></el-option>
+              <el-option label="重要" value="1"></el-option>
+              <el-option label="无" value="0"></el-option>
             </el-select>
             <span class="el-form-item__error">
               *标识为重要时，前端公告栏该公告展示前方会显示”重要“两字
@@ -298,15 +298,11 @@
           <el-form-item
             label="发送终端:"
             class="tagheight"
-            prop="loginDeviceType"
-            :rules="[
-              {
-                required: true,
-              },
-            ]"
+            :rules="[{ required: true, message: '请选择终端', trigger: 'change' }]"
           >
             <el-select
-              v-model="dialogForm.loginDeviceType"
+              v-model="dialogForm.terminal"
+              multiple
               placeholder="默认选择全部"
               :popper-append-to-body="false"
             >
@@ -321,7 +317,7 @@
           <el-form-item
             label="公告时效:"
             class="tagheight"
-            prop="timeTab"
+            prop="announcementAging"
             :rules="[
               {
                 required: true,
@@ -329,12 +325,12 @@
             ]"
           >
             <el-select
-              v-model="dialogForm.timeTab"
+              v-model="dialogForm.announcementAging"
               placeholder="默认选择全部"
               :popper-append-to-body="false"
             >
-              <el-option label="限时" value="0"></el-option>
-              <el-option label="永久" value="1"></el-option>
+              <el-option label="限时" value="1"></el-option>
+              <el-option label="永久" value="2"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item
@@ -361,7 +357,7 @@
             </span>
           </el-form-item>
           <el-form-item
-            v-if="dialogForm.timeTab === '0'"
+            v-if="dialogForm.announcementAging === '1'"
             label="公告下架时间:"
             label-width="112px"
             :rules="[{ required: true }]"
@@ -400,9 +396,9 @@ export default {
   mixins: [list],
   data() {
     return {
-      queryData: { aaaaa: [] },
+      queryData: {},
       dialogFormVisible: false,
-      dialogForm: { logo: '0', loginDeviceType: '2', timeTab: '0' },
+      dialogForm: { tag: '1', terminal: ['2'], status: 1, announcementAging: '1' },
       onlineTime: Date.now(),
       offlineTime: endTime,
       dateNow: {
@@ -411,6 +407,7 @@ export default {
         }
       },
       dateEnd: {},
+      flag: '',
       errTime: false
     }
   },
@@ -442,7 +439,7 @@ export default {
       }
       this.loading = true
       this.$api
-        .gameList(params)
+        .getOperateConfigAnnouncementSelectAll(params)
         .then((res) => {
           if (res.code === 200) {
             const response = res.data
@@ -461,21 +458,6 @@ export default {
           this.loading = false
         })
     },
-    subAddOrEidt() {
-      this.$refs.formSub.validate((valid) => {
-        if (valid) {
-          if (this.dialogForm.timeTab === '0' && this.onlineTime < this.offlineTime) {
-            console.log(this.dialogForm, '00000')
-            this.errTime = false
-          } else if (this.dialogForm.timeTab === '1') {
-            this.errTime = false
-            console.log(this.dialogForm, '11111')
-          } else {
-            this.errTime = true
-          }
-        }
-      })
-    },
     changeTime(val) {
       const Timestamp = new Date(new Date(val).toLocaleDateString()).getTime()
       if (Timestamp === startTime) {
@@ -484,28 +466,68 @@ export default {
         this.onlineTime = Timestamp
       }
     },
+    Add(val) {
+      this.flag = val
+      this.dialogForm = { tag: '1', terminal: ['2'], status: 1, announcementAging: '1' }
+      this.dialogFormVisible = true
+    },
+    openEdit(val, row) {
+      this.flag = val
+      this.$api.getOperateConfigAnnouncementSelect({ id: row.id }).then((res) => {
+        if (res.code === 200) {
+          console.log(res)
+        }
+      })
+      this.dialogFormVisible = true
+    },
+    subAddOrEidt() {
+      const startTime =
+        typeof this.onlineTime === 'number'
+          ? this.onlineTime
+          : new Date(new Date(this.onlineTime).toLocaleDateString()).getTime()
+      const endTime =
+        typeof this.offlineTime === 'number'
+          ? this.offlineTime
+          : new Date(new Date(this.offlineTime).toLocaleDateString()).getTime()
+      console.log(startTime, endTime)
+      this.$refs.formSub.validate((valid) => {
+        if (valid) {
+          if (this.dialogForm.announcementAging === '1' && startTime < endTime) {
+            this.errTime = false
+            const params = {
+              ...this.dialogForm,
+              upTime: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : '',
+              downTime: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
+            }
+            console.log(params, '000')
+            this.getOperateConfigAnnouncementSave(params)
+          } else if (this.dialogForm.announcementAging === '2') {
+            this.errTime = false
+            const params = {
+              ...this.dialogForm,
+              upTime: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : ''
+            }
+            console.log(params, '111')
+            this.getOperateConfigAnnouncementSave(params)
+          } else {
+            this.errTime = true
+          }
+        }
+      })
+    },
+    getOperateConfigAnnouncementSave(val) {
+      this.loading = true
+      this.$api.getOperateConfigAnnouncementSave(val).then((res) => {
+        this.loading = false
+        if (res.code === 200) {
+          console.log(res)
+        }
+      })
+    },
     clear() {
       this.$refs.formSub.resetFields()
       this.onlineTime = Date.now()
       this.offlineTime = endTime
-    },
-    changeTableSort({ column, prop, order }) {
-      this.pageNum = 1
-      this.queryData.orderProperty = prop
-      const orderParams = this.checkOrderParams.get(prop)
-      if (orderParams) {
-        if (order === 'ascending') {
-          // 升序
-          this.queryData.orderType = 'asc'
-        } else if (column.order === 'descending') {
-          // 降序
-          this.queryData.orderType = 'desc'
-        }
-        this.loadData()
-      }
-    },
-    openEdit(row) {
-      this.dialogFormVisible = true
     },
     deleteBtn(row) {
       this.$confirm(
@@ -518,13 +540,21 @@ export default {
           type: 'warning'
         }
       )
-        .then(() => {})
+        .then(() => {
+          this.$api.getOperateConfigAnnouncementDelete({ id: row.id }).then((res) => {
+            if (res.code === 200) {
+              console.log(res)
+            }
+          })
+        })
         .catch(() => {})
     },
-    changeStatus(id, type) {
+    changeStatus(row) {
+      const id = row.id
+      const status = row.status
       this.$confirm(
         `<strong>是否对该配置进行${
-          Number(type) === 0 ? '禁用' : '开启'
+          status === 0 ? '禁用' : '开启'
         }操作?</strong></br><span style='font-size:12px;color:#c1c1c1'>一旦操作将会立即生效</span>`,
         '确认提示',
         {
@@ -536,9 +566,9 @@ export default {
       )
         .then(() => {
           this.$api
-            .editGameStatus({
+            .getOperateConfigAnnouncementStatus({
               id: id,
-              gameStatus: type
+              status: status
             })
             .then((res) => {
               if (res.code === 200) {
@@ -558,12 +588,27 @@ export default {
         })
         .catch(() => {})
     },
+    changeTableSort({ column, prop, order }) {
+      this.pageNum = 1
+      this.queryData.orderProperty = prop
+      const orderParams = this.checkOrderParams.get(prop)
+      if (orderParams) {
+        if (order === 'ascending') {
+          // 升序
+          this.queryData.orderType = 'asc'
+        } else if (column.order === 'descending') {
+          // 降序
+          this.queryData.orderType = 'desc'
+        }
+        this.loadData()
+      }
+    },
     reset() {
       this.queryData = {}
       this.pageNum = 1
       this.loadData()
     },
-    enterSubmit() {
+    enterSearch() {
       this.loadData()
     }
   }
