@@ -487,7 +487,7 @@ export default {
           )
           sums[index] = el
           return
-        } else if (index === 10 && this.summary !== null) {
+        } else if (index === 11 && this.summary !== null) {
           const el = (
             <div class='count_row'>
               <p>{this.summary.subtotal}</p>
