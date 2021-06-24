@@ -26,22 +26,16 @@
             prop="description"
             align="center"
             label="序号"
+            type="index"
           ></el-table-column>
           <el-table-column prop="operating" align="center" label="操作">
             <template slot-scope="scope">
-              <el-link
-                type="primary"
-                icon="el-icon-edit"
-                :disabled="scope.row.labelStatus === 1"
-                size="medium"
-                @click="edit(scope.row)"
-              >
+              <el-link type="primary" size="medium" @click="edit(scope.row)">
                 修改
               </el-link>
               <el-link
-                type="warning"
-                icon="el-icon-delete"
-                :disabled="scope.row.labelStatus === 1"
+                v-if="scope.row.status !== 0 && scope.row.proxyId !== '0'"
+                type="primary"
                 size="medium"
                 @click="deleteLabel(scope.row)"
               >
@@ -51,8 +45,8 @@
           </el-table-column>
           <el-table-column prop="status" align="center" label="状态">
             <template slot-scope="scope">
-              <div v-if="scope.row.status === 0" class="disableRgba">关闭</div>
-              <div v-else-if="scope.row.status === 1" class="normalRgba">开启</div>
+              <span v-if="scope.row.status === 0" class="normalRgba">开启</span>
+              <span v-else-if="scope.row.status === 1" class="disableRgba">关闭</span>
               <span v-else>-</span>
             </template>
           </el-table-column>
@@ -67,17 +61,17 @@
             label="代理姓名"
           ></el-table-column>
           <el-table-column
-            prop="description"
+            prop="proxyAccountType"
             align="center"
             label="代理类型"
           ></el-table-column>
           <el-table-column
-            prop="status"
+            prop="proxyAccountStatus"
             align="center"
             label="代理状态"
           ></el-table-column>
           <el-table-column
-            prop="description"
+            prop="windControlName"
             align="center"
             label="风控层级"
           ></el-table-column>
@@ -120,12 +114,14 @@
             prop="rateDateFree"
             align="center"
             label="超出单日免费次数手续费"
-          ></el-table-column>
+          >
+          </el-table-column>
           <el-table-column
             prop="rateDateTotal"
             align="center"
             label="超出单日提款总额手续费"
-          ></el-table-column>
+          >
+          </el-table-column>
         </el-table>
         <!-- 分页 -->
         <el-pagination
@@ -148,7 +144,14 @@
             为必填项
           </span>
         </div>
-        <el-form :inline="true" class="information" :model="queryData" label-width="92px">
+        <el-form
+          v-if="isUniversal"
+          ref="formProxy"
+          :inline="true"
+          class="information"
+          :model="queryData"
+          label-width="92px"
+        >
           <h3>代理信息</h3>
           <el-form-item
             prop="proxyAccount"
@@ -159,7 +162,12 @@
               { min: 1, max: 11, message: '长度在 1 到 11 个字符', trigger: 'blur' },
             ]"
           >
-            <el-input v-model="queryData.proxyAccount" class="proxyInput"></el-input>
+            <el-input
+              v-model="queryData.proxyAccount"
+              :disabled="isDisabled"
+              class="proxyInput"
+              @keyup.enter.native="enterSearch"
+            ></el-input>
           </el-form-item>
           <el-form-item label="代理姓名：" class="proxyItem">
             <el-input
@@ -169,18 +177,36 @@
             ></el-input>
           </el-form-item>
           <el-form-item label="代理类型：" class="proxyItem">
-            <el-input
-              v-model="queryData.agenttype"
-              disabled
+            <el-select
+              v-model="queryData.accountType"
               class="proxyInput"
-            ></el-input>
+              disabled
+              placeholder=""
+            >
+              <el-option
+                v-for="item in accountType"
+                :key="item.description"
+                :label="item.description"
+                :value="item.code"
+              >
+              </el-option>
+            </el-select>
           </el-form-item>
           <el-form-item label="代理状态：" class="proxyItem">
-            <el-input
-              v-model="queryData.agentstate"
+            <el-select
+              v-model="queryData.accountStatus"
               disabled
               class="proxyInput"
-            ></el-input>
+              placeholder=""
+            >
+              <el-option
+                v-for="item in accountStatusType"
+                :key="item.description"
+                :label="item.description"
+                :value="item.code"
+              >
+              </el-option>
+            </el-select>
           </el-form-item>
           <el-form-item label="风控层级：" class="proxyItem">
             <el-input
@@ -206,6 +232,8 @@
             <el-input-number
               v-model="dialogForm.singleMinAmount"
               class="setInput"
+              :min="0"
+              :precision="0"
               placeholder="请输入金额，0为不限制"
             ></el-input-number>
             <span>元</span>
@@ -218,6 +246,8 @@
             <el-input-number
               v-model="dialogForm.singleMaxAmount"
               class="setInput"
+              :min="0"
+              :precision="0"
               placeholder="请输入金额，0为不限制"
             ></el-input-number>
             <span>元</span>
@@ -226,6 +256,8 @@
             <el-input-number
               v-model="dialogForm.dateFreeNum"
               class="setInput"
+              :min="0"
+              :precision="0"
               placeholder="请输入次数，0为不限制"
             ></el-input-number>
             <span>次</span>
@@ -238,6 +270,8 @@
             <el-input-number
               v-model="dialogForm.dateFreeAmount"
               class="setInput"
+              :min="0"
+              :precision="0"
               placeholder="请输入金额，0为不限制"
             ></el-input-number>
             <span>元</span>
@@ -246,6 +280,8 @@
             <el-input-number
               v-model="dialogForm.dateTotalNum"
               class="setInput"
+              :min="0"
+              :precision="0"
               placeholder="请输入次数，0为不限制"
             ></el-input-number>
             <span>次</span>
@@ -254,6 +290,8 @@
             <el-input-number
               v-model="dialogForm.dateMaxAmount"
               class="setInput"
+              :min="0"
+              :precision="0"
               placeholder="请输入金额，0为不限制"
             ></el-input-number>
             <span>元</span>
@@ -262,6 +300,8 @@
             <el-input-number
               v-model="dialogForm.bigAmount"
               class="setInput"
+              :min="0"
+              :precision="0"
               placeholder="请输入金额，0为不限制"
             ></el-input-number>
             <span>元</span>
@@ -277,9 +317,21 @@
               <el-option label="百分比(%)" :value="2"></el-option>
             </el-select>
             <el-input-number
+              v-if="dialogForm.rateDateFreeType === 2"
               v-model="dialogForm.rateDateFree"
               style="width: 100px"
-              placeholder="0"
+              :min="0"
+              :max="100"
+              :precision="0"
+              placeholder="请输入"
+            ></el-input-number>
+            <el-input-number
+              v-else
+              v-model="dialogForm.rateDateFree"
+              style="width: 100px"
+              :min="0"
+              :precision="0"
+              placeholder="请输入"
             ></el-input-number>
           </el-form-item>
           <el-form-item label="超出单日免费次数总额：" prop="rateDateTotal">
@@ -292,9 +344,21 @@
               <el-option label="百分比(%)" :value="2"></el-option>
             </el-select>
             <el-input-number
+              v-if="dialogForm.rateDateTotalType === 2"
               v-model="dialogForm.rateDateTotal"
               style="width: 100px"
-              placeholder="0"
+              :min="0"
+              :max="100"
+              :precision="0"
+              placeholder="请输入"
+            ></el-input-number>
+            <el-input-number
+              v-else
+              v-model="dialogForm.rateDateTotal"
+              style="width: 100px"
+              :min="0"
+              :precision="0"
+              placeholder="请输入"
             ></el-input-number>
           </el-form-item>
           <h3>提款提示语配置</h3>
@@ -323,19 +387,18 @@
             </el-select>
           </el-form-item>
         </el-form>
-        <el-divider></el-divider>
-        <span slot="footer" class="dialog-footer">
+        <div slot="footer" style="text-align: center" class="dialog-footer">
           <el-button
             type="primary"
             icon="el-icon-search"
             :disabled="loading"
             size="medium"
-            @click="add"
+            @click="subAddOrEidt"
           >
             提交
           </el-button>
           <el-button @click="reset">重置</el-button>
-        </span>
+        </div>
       </el-dialog>
     </div>
   </div>
@@ -367,36 +430,73 @@ export default {
         rateDateTotalType: 2,
         status: 1
       },
-      gameList: [],
       title: '',
-      labelName: ''
+      isDisabled: true,
+      isUniversal: true
     }
   },
   computed: {
+    accountType() {
+      return this.globalDics.accountStatusType
+    },
+    accountStatusType() {
+      return this.globalDics.accountStatusType
+    },
+
     rules() {
-      // const oneFreeRules = (rule, value, callback) => {
-      //   console.log(value)
-      //   if (!Number.isInteger(value) || value < 1) {
-      //     callback(new Error('输入大于单日最高提款次数，请重新输入'))
-      //   } else if (value <= this.ruleForm.maxmum) {
-      //     callback(new Error('输入大于单日最高提款次数，请重新输入'))
-      //   } else if (value > 9999999999) {
-      //     callback(new Error('输入值最多为9999999999'))
-      //   } else {
-      //     callback()
-      //   }
-      // }
-      const singleMinAmount = [
-        { required: true, message: '请输入金额', trigger: 'blur' }
-      ]
-      const singleMaxAmount = [
-        { required: true, message: '请输入金额', trigger: 'blur' }
-      ]
-      const dateFreeNum = [{ required: true, message: '请输入次数', trigger: 'blur' }]
-      const dateFreeAmount = [{ required: true, message: '请输入金额', trigger: 'blur' }]
-      const dateTotalNum = [{ required: true, message: '请输入次数', trigger: 'blur' }]
-      const dateMaxAmount = [{ required: true, message: '请输入金额', trigger: 'blur' }]
-      const bigAmount = [{ required: true, message: '请输入金额', trigger: 'blur' }]
+      const minRules = (rule, value, callback) => {
+        console.log(value)
+        if (!Number.isInteger(value) || value < 0) {
+          callback(new Error('请输入金额'))
+        } else if (value > this.dialogForm.dateMaxAmount) {
+          callback(new Error('不能大于单日最高提款总额，请重新输入'))
+        } else {
+          callback()
+        }
+      }
+      const freeRules = (rule, value, callback) => {
+        console.log(value)
+        if (!Number.isInteger(value) || value < 0) {
+          callback(new Error('请输入次数'))
+        } else if (value > this.dialogForm.dateTotalNum) {
+          callback(new Error('不能大于单日最高提款次数，请重新输入'))
+        } else {
+          callback()
+        }
+      }
+      const maxRules = (rule, value, callback) => {
+        console.log(value)
+        if (!Number.isInteger(value) || value < 0) {
+          callback(new Error('请输入金额'))
+        } else if (value < this.dialogForm.singleMinAmount) {
+          callback(new Error('不能小于单次提款最低额度，请重新输入'))
+        } else if (value < this.dialogForm.singleMaxAmount) {
+          callback(new Error('不能小于单次提款最高额度，请重新输入'))
+        } else if (value < this.dialogForm.dateFreeAmount) {
+          callback(new Error('不能小于单日免费提款总额，请重新输入'))
+        } else if (value < this.dialogForm.bigAmount) {
+          callback(new Error('不能小于大额提款标记金额，请重新输入'))
+        } else {
+          callback()
+        }
+      }
+      const totalRules = (rule, value, callback) => {
+        console.log(value)
+        if (!Number.isInteger(value) || value < 0) {
+          callback(new Error('请输入次数'))
+        } else if (value < this.dialogForm.dateFreeNum) {
+          callback(new Error('不能小于单日免费提款次数，请重新输入'))
+        } else {
+          callback()
+        }
+      }
+      const singleMinAmount = [{ required: true, validator: minRules, trigger: 'blur' }]
+      const singleMaxAmount = [{ required: true, validator: minRules, trigger: 'blur' }]
+      const dateFreeNum = [{ required: true, validator: freeRules, trigger: 'blur' }]
+      const dateFreeAmount = [{ required: true, validator: minRules, trigger: 'blur' }]
+      const dateTotalNum = [{ required: true, validator: totalRules, trigger: 'blur' }]
+      const dateMaxAmount = [{ required: true, validator: maxRules, trigger: 'blur' }]
+      const bigAmount = [{ required: true, validator: minRules, trigger: 'blur' }]
       const rateDateFree = [
         {
           required: true,
@@ -413,7 +513,7 @@ export default {
       ]
       const status = [{ required: true, message: '请选择状态', trigger: 'blur' }]
 
-      // const oneFree = [{ required: true, validator: oneFreeRules, trigger: 'blur' }]
+      // const oneFree = [{ required: true, validator: oneFreeRules, trigger: 'blur' }]grady2dev
       return {
         singleMinAmount,
         singleMaxAmount,
@@ -451,13 +551,25 @@ export default {
           this.loading = false
         })
     },
-    add(done) {
-      this.$confirm('您确认要执行新增提款设置的操作？')
-        .then((_) => {
-          done()
-        })
-        .catch((_) => {})
+    getProxyDetailQueryDetail(val) {
+      this.$api.getProxyDetailQueryDetail({ userName: val }).then((res) => {
+        if (res.code === 200) {
+          const { id, realName, accountType, accountStatus, windControlName } = {
+            ...res.data
+          }
+          this.$set(this.queryData, 'proxyId', id)
+          this.$set(this.queryData, 'proxyName', realName)
+          this.$set(this.queryData, 'accountType', accountType + '')
+          this.$set(this.queryData, 'accountStatus', accountStatus + '')
+          this.$set(this.queryData, 'windControlName', windControlName)
+        }
+      })
     },
+    enterSearch() {
+      const val = this.queryData.proxyAccount
+      this.getProxyDetailQueryDetail(val)
+    },
+
     reset() {
       this.queryData = {}
       this.dialogForm = {
@@ -474,10 +586,14 @@ export default {
         rateDateTotalType: 2,
         status: 1
       }
+      this.$refs.formProxy.resetFields()
+      this.$refs.formSub.resetFields()
     },
     addLabel() {
-      console.log(11111)
       this.title = '新增'
+      this.isDisabled = false
+      this.isUniversal = true
+      this.queryData = {}
       this.dialogForm = {
         singleMinAmount: 0,
         singleMaxAmount: 0,
@@ -496,6 +612,29 @@ export default {
     },
     edit(val) {
       this.title = '编辑'
+      console.log('编辑', val)
+      this.isDisabled = true
+      this.isUniversal = val.proxyId === '0'
+      const {
+        proxyAccount,
+        proxyName,
+        proxyAccountType,
+        proxyAccountStatus,
+        windControlName
+      } = { ...val }
+      this.$set(this.queryData, 'proxyAccount', proxyAccount)
+      this.$set(this.queryData, 'proxyName', proxyName)
+      this.$set(
+        this.queryData,
+        'accountType',
+        proxyAccountType === 0 ? '' : proxyAccountType + ''
+      )
+      this.$set(
+        this.queryData,
+        'accountStatus',
+        proxyAccountStatus === 0 ? '' : proxyAccountStatus + ''
+      )
+      this.$set(this.queryData, 'windControlName', windControlName)
       this.dialogForm = { ...val }
       this.dialogFormVisible = true
     },
@@ -507,7 +646,7 @@ export default {
         type: 'warning'
       })
         .then(() => {
-          this.$api.setUpdateDelete({ id: val.id }).then((res) => {
+          this.$api.setWithdrawSettingProxyDelete({ id: val.id }).then((res) => {
             if (res.code === 200) {
               this.$message.success('删除成功')
               this.loadData()
@@ -516,30 +655,76 @@ export default {
         })
         .catch(() => {})
     },
-
     subAddOrEidt() {
-      this.$refs.formSub.validate((valid) => {
-        if (valid) {
-          if (this.title === '新增') {
-            console.log('新增')
-            // this.$api.addObGameLabel(data).then((res) => {
-            //   if (res.code === 200) {
-            //     this.$message.success('创建成功')
-            //     this.pageNum = 1
-            //     this.loadData()
-            //   }
-            // })
-          } else {
-            // this.$api.setUpdateLabel(data).then((res) => {
-            //   if (res.code === 200) {
-            //     this.$message.success('修改成功')
-            //     this.loadData()
-            //   }
-            // })
+      if (this.title === '新增') {
+        this.$refs.formProxy.validate((valid) => {
+          if (valid) {
+            const params = {
+              ...this.dialogForm,
+              proxyId: this.queryData.proxyId,
+              proxyName: this.queryData.proxyName,
+              proxyAccount: this.queryData.proxyAccount
+            }
+            this.$refs.formSub.validate((valid) => {
+              if (valid) {
+                console.log(params)
+                this.$confirm(
+                  `<strong>您确认要执行新增代理提款设置的操作?</strong>`,
+                  `确认提示`,
+                  {
+                    dangerouslyUseHTMLString: true,
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                  }
+                )
+                  .then(() => {
+                    this.$api.setWithdrawSettingProxyAdd(params).then((res) => {
+                      if (res.code === 200) {
+                        console.log(res)
+                        this.$message.success('新增成功!')
+                        this.loadData()
+                      }
+                      this.dialogFormVisible = false
+                    })
+                  })
+                  .catch(() => {})
+              }
+            })
           }
-          this.dialogFormVisible = false
+        })
+      } else {
+        const params = {
+          ...this.dialogForm
         }
-      })
+        this.$refs.formSub.validate((valid) => {
+          if (valid) {
+            console.log(params)
+            this.$confirm(
+              `<strong>您确认要执行修改代理提款设置的操作?</strong>`,
+              `确认提示`,
+              {
+                dangerouslyUseHTMLString: true,
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+              }
+            )
+              .then(() => {
+                console.log(params)
+                this.$api.setWithdrawSettingProxyUpdate(params).then((res) => {
+                  if (res.code === 200) {
+                    console.log(res)
+                    this.$message.success('修改成功!')
+                    this.loadData()
+                  }
+                  this.dialogFormVisible = false
+                })
+              })
+              .catch(() => {})
+          }
+        })
+      }
     }
   }
 }
@@ -569,6 +754,9 @@ export default {
   border: 1px solid #dcdfe6;
   .proxyItem {
     padding-left: 15px;
+    /deep/.el-icon-arrow-up:before {
+      content: "";
+    }
   }
   .proxyInput {
     width: 145px;
