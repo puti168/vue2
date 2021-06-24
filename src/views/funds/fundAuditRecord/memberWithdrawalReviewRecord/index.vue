@@ -347,7 +347,7 @@ export default {
 	},
 	computed: {
 		orderTypeArr() {
-			return this.globalDics.withdrawStatus
+			return this.globalDics.withdrawStatusFinish
 		}
 	},
 	mounted() {

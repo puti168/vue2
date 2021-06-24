@@ -320,7 +320,6 @@ export default {
 				const { code, data, msg } = res
 				if (code === 200) {
 					this.list = data
-					console.log('this.list', this.list)
 				} else {
 					this.$message({
 						message: msg,

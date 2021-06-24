@@ -4,8 +4,6 @@
 			<span class="title">会员提现审核详情</span>
 			<div v-if="type" class="right-btn">
 				<el-button plain @click="goBack">取消</el-button>
-				<el-button type="success" @click="confirm(true)">一审通过</el-button>
-				<el-button type="danger" @click="confirm(false)">一审拒绝</el-button>
 			</div>
 			<div v-else class="right-btn">
 				<el-button plain @click="goBack">返回</el-button>
@@ -357,112 +355,15 @@ export default {
 	},
 	data() {
 		return {
-			list: {},
-			form: {
-				remark: ''
-			},
-			visible: false,
-			action: false
+			list: undefined
 		}
 	},
-	computed: {
-		formRules() {
-			return {
-				remark: [
-					{ required: true, message: '审核拒绝备注必填', trigger: 'blur' }
-				]
-			}
-		}
-	},
+	computed: {},
 	created() {
 		this.getInfo()
 	},
 	mounted() {},
 	methods: {
-		closeFormDialog() {
-			this.visible = false
-		},
-		confirm(action) {
-			this.remark = ''
-			this.action = action
-			this.visible = true
-		},
-		auditOne() {
-			if (this.action) {
-				const loading = this.$loading({
-					lock: true,
-					text: 'Loading',
-					spinner: 'el-icon-loading',
-					background: 'rgba(0, 0, 0, 0.7)'
-				})
-				const params = {
-					id: this.rowData.id,
-					userId: this.rowData.userId,
-					auditRemark: this.form.remark,
-					auditStatus: this.action ? 2 : 3
-				}
-
-				this.$api
-					.updateProxyAuditRecord(params)
-					.then((res) => {
-						loading.close()
-						if (res.code === 200) {
-							this.$message({
-								type: 'success',
-								message: '操作成功!'
-							})
-							this.visible = false
-							this.goBack()
-						} else {
-							this.$message({
-								message: res.msg,
-								type: 'error'
-							})
-						}
-					})
-					.catch(() => {
-						loading.close()
-					})
-			} else {
-				this.$refs.form.validate((valid) => {
-					if (valid) {
-						const loading = this.$loading({
-							lock: true,
-							text: 'Loading',
-							spinner: 'el-icon-loading',
-							background: 'rgba(0, 0, 0, 0.7)'
-						})
-						const params = {
-							id: this.rowData.id,
-							auditRemark: this.form.remark,
-							auditStatus: this.action ? 2 : 3
-						}
-
-						this.$api
-							.updateProxyAuditRecord(params)
-							.then((res) => {
-								loading.close()
-								if (res.code === 200) {
-									this.$message({
-										type: 'success',
-										message: '操作成功!'
-									})
-									this.visible = false
-									this.goBack()
-								} else {
-									this.$message({
-										message: res.msg,
-										type: 'error'
-									})
-								}
-							})
-							.catch(() => {
-								loading.close()
-							})
-					}
-				})
-			}
-		},
 		goBack() {
 			this.$emit('goBack')
 		},
@@ -470,15 +371,14 @@ export default {
 			const params = {
 				id: this.rowData.id
 			}
-			this.$api.proxyDetail(params).then((res) => {
-				if (res.code === 200) {
-					const response = res.data
-					this.loading = false
-					this.list = response
+			this.$api.memberWithdrawDetailsAPI(params).then((res) => {
+				this.loading = false
+				const { code, data, msg } = res
+				if (code === 200) {
+					this.list = data
 				} else {
-					this.loading = false
 					this.$message({
-						message: res.msg,
+						message: msg,
 						type: 'error'
 					})
 				}
