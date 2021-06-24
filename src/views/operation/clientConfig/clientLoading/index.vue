@@ -215,11 +215,11 @@
 					>
 						<template slot-scope="scope">
 							<el-button
-								:type="scope.row.status + '' === '0' ? 'danger' : 'success'"
+								:type="scope.row.status + '' === '0' ? 'success' : 'danger'"
 								size="medium"
 								@click="recycle(scope.row)"
 							>
-								<div v-if="scope.row.status + '' === '0'">
+								<div v-if="scope.row.status + '' === '1'">
 									禁用
 								</div>
 								<div v-else>
