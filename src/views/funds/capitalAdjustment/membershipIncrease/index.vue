@@ -347,6 +347,8 @@ export default {
 		},
 		searchBalance() {
 			const { userName, balanceType } = this.queryData
+            this.$refs['form'].resetFields()
+            this.$refs.form.validateField('userName')
 			if (userName) {
 				this.loading = true
 				this.$api

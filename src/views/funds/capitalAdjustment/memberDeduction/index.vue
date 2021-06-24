@@ -163,7 +163,7 @@ export default {
 	},
 	computed: {
 		memberPatchAddAdjustTypeArr() {
-			return this.globalDics.memberPatchAddAdjustType
+			return this.globalDics.memberPatchSubAdjustType
 		},
 		rules() {
 			// const reg1 = /^[A-Za-z]{1}(?=(.*[a-zA-Z]){1,})(?=(.*[0-9]){1,})[0-9A-Za-z]{3,10}$/
@@ -232,6 +232,8 @@ export default {
 		},
 		searchBalance() {
 			const { userName, balanceType } = this.queryData
+            this.$refs['form'].resetFields()
+            this.$refs.form.validateField('userName')
 			if (userName) {
 				this.loading = true
 				this.$api
