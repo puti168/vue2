@@ -142,16 +142,10 @@
 					</el-table-column>
 					<el-table-column prop="status" align="center" label="状态">
 						<template slot-scope="scope">
-							<span
-								v-if="!!scope.row.status || scope.row.status + '' === '0'"
-								class="disableRgba"
-							>
+							<span v-if="scope.row.status + '' === '0'" class="disableRgba">
 								{{ typeFilter(scope.row.status, 'operateStatus') }}
 							</span>
-                            <span
-                                v-else-if="!!scope.row.status || scope.row.status + '' === '1'"
-                                class="normalRgba"
-                            >
+							<span v-else-if="!!scope.row.status" class="normalRgba">
 								{{ typeFilter(scope.row.status, 'operateStatus') }}
 							</span>
 							<span v-else>-</span>
@@ -164,7 +158,7 @@
 								class="blueColor pictureUrl"
 								@click="preViewPicture(scope.row)"
 							>
-                                点击预览
+								点击预览
 							</div>
 							<span v-else>-</span>
 						</template>
@@ -267,7 +261,7 @@
 				></el-pagination>
 			</div>
 			<el-dialog
-				title="新增/编辑"
+				:title="title"
 				:visible.sync="dialogFormVisible"
 				:destroy-on-close="true"
 				width="520px"
@@ -312,7 +306,7 @@
 							ref="imgUpload"
 							:upload-file-type="'image'"
 							:platform="'PC'"
-							:img-urls="queryData.pictureUrl"
+							:img-urls="dialogForm.pictureUrl"
 							@upoladItemSucess="handleUploadSucess"
 							@startUpoladItem="handleStartUpload"
 							@deleteUpoladItem="handleDeleteUpload"
@@ -363,7 +357,6 @@ export default {
 			queryData: {
 				clientType: undefined,
 				pageName: undefined,
-				loadStatus: '',
 				status: '',
 				createdBy: undefined,
 				updatedBy: undefined,
@@ -374,12 +367,12 @@ export default {
 			dialogForm: {
 				clientType: undefined,
 				pageName: undefined,
-				pictureUrl: null,
+				pictureUrl: undefined,
 				remark: undefined,
 				configType: 1
 			},
 			total: 0,
-			title: '',
+			title: undefined,
 			pictureUrl: null,
 			dialogPictureVisible: false
 		}
@@ -460,7 +453,7 @@ export default {
 				status: '',
 				createdBy: undefined,
 				updatedBy: undefined,
-				configType: 0
+				configType: 1
 			}
 			this.loadData()
 		},
@@ -478,23 +471,17 @@ export default {
 		},
 		edit(val) {
 			this.title = '编辑'
-			console.log('val', val)
-			// delete val.merchantId
-			// delete val.createdAt
-			// delete val.createdBy
-			// delete val.updatedAt
-			// delete val.updatedBy
-			// delete val.status
+			val.clientType = val.clientType + ''
 			this.dialogForm = { ...val }
 			this.dialogFormVisible = true
+			if (this.dialogForm.pictureUrl) {
+				this.$nextTick(() => {
+					this.$refs.imgUpload.state = 'image'
+					this.$refs.imgUpload.fileUrl = val.pictureUrl
+				})
+			}
 		},
 		deleteLabel(val) {
-			const loading = this.$loading({
-				lock: true,
-				text: 'Loading',
-				spinner: 'el-icon-loading',
-				background: 'rgba(0, 0, 0, 0.7)'
-			})
 			const { id } = val
 			this.$confirm(`<strong>确定删除此条配置?</strong>`, `确认提示`, {
 				dangerouslyUseHTMLString: true,
@@ -503,6 +490,12 @@ export default {
 				type: 'warning'
 			})
 				.then(() => {
+					const loading = this.$loading({
+						lock: true,
+						text: 'Loading',
+						spinner: 'el-icon-loading',
+						background: 'rgba(0, 0, 0, 0.7)'
+					})
 					this.$api
 						.clientStartDeleteAPI({ id })
 						.then((res) => {
@@ -522,14 +515,12 @@ export default {
 						.catch(() => {
 							loading.close()
 						})
-				})
-				.catch(() => {
-					loading.close()
-				})
 
-			setTimeout(() => {
-				loading.close()
-			}, 1000)
+					setTimeout(() => {
+						loading.close()
+					}, 1000)
+				})
+				.catch(() => {})
 		},
 		subAddOrEdit() {
 			const params = {
@@ -548,13 +539,14 @@ export default {
 								message: `${this.title !== '编辑' ? '新增' : '更新'}成功`,
 								type: 'success'
 							})
-							this.reset()
 						} else {
 							this.$message({
 								message: msg,
 								type: 'error'
 							})
 						}
+
+						this.loadData()
 					})
 					this.dialogFormVisible = false
 				}
@@ -589,8 +581,8 @@ export default {
 			this.dialogPictureVisible = true
 		},
 		recycle(val) {
-			const { id, assortStatus } = val
-			const status = !assortStatus
+			const { id } = val
+			const status = val.status === 0 ? 1 : 0
 			this.$confirm(
 				`<strong>是否对该配置进行开启/禁用操作</strong></br>
                  <span style='font-size:12px;color:#c1c1c1'>一旦操作将会立即生效</span>`,
@@ -603,7 +595,7 @@ export default {
 				}
 			)
 				.then(() => {
-					this.$api.clientStartUseAPI({ assortId: id, status }).then((res) => {
+					this.$api.clientStartUseAPI({ id, status }).then((res) => {
 						const { code, msg } = res
 						if (code === 200) {
 							this.$message({
@@ -697,8 +689,8 @@ p {
 	margin-top: 15px;
 }
 .imgCenter {
-    img {
-        width: 100%;
-    }
+	img {
+		width: 100%;
+	}
 }
 </style>

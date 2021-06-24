@@ -515,12 +515,6 @@ export default {
 		},
 		edit(val) {
 			this.title = '编辑'
-            delete val.merchantId
-            delete val.createdAt
-            delete val.createdBy
-            delete val.updatedAt
-            delete val.updatedBy
-            delete val.status
 			this.dialogForm = { ...val }
 			this.dialogFormVisible = true
 		},
