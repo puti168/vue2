@@ -63,7 +63,7 @@
               :popper-append-to-body="false"
             >
               <el-option
-                v-for="item in accessStatusType"
+                v-for="item in patchAdjustOrderStatus"
                 :key="item.code"
                 :label="item.description"
                 :value="item.code"
@@ -179,7 +179,7 @@
           </el-table-column>
           <el-table-column prop="orderStatus" align="center" label="状态">
             <template slot-scope="scope">
-              {{ typeFilter(scope.row.orderStatus, "accessStatusType") }}
+              {{ typeFilter(scope.row.orderStatus, "patchAdjustOrderStatus") }}
             </template>
           </el-table-column>
           <el-table-column prop="adjustType" align="center" label="调整类型">
@@ -235,8 +235,8 @@ export default {
     }
   },
   computed: {
-    accessStatusType() {
-      return this.globalDics.accessStatusType
+    patchAdjustOrderStatus() {
+      return this.globalDics.patchAdjustOrderStatus
     },
     memberPatchSubAdjustType() {
       return this.globalDics.memberPatchSubAdjustType
