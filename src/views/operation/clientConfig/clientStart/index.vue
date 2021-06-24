@@ -5,7 +5,7 @@
 				<el-form ref="form" :inline="true" :model="queryData">
 					<el-form-item label="显示终端:">
 						<el-select
-							v-model="queryData.supportTerminal"
+							v-model="queryData.clientType"
 							size="medium"
 							placeholder="默认选择全部"
 							clearable
@@ -131,9 +131,12 @@
 						label="显示终端"
 					>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.clientType">
-								<!--								{{ typeFilter(scope.row.clientType, 'supportTerminal') }}-->
-								{{ scope.row.clientType }}
+							<span
+								v-if="
+									!!scope.row.clientType || scope.row.clientType + '' === '0'
+								"
+							>
+								{{ typeFilter(scope.row.clientType, 'operateClient') }}
 							</span>
 							<span v-else></span>
 						</template>
@@ -148,8 +151,14 @@
 					</el-table-column>
 					<el-table-column prop="loadStatus" align="center" label="是否预加载">
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.loadStatus">
-								{{ scope.row.loadStatus }}
+							<span v-if="scope.row.loadStatus + '' === '1'" class="normalRgba">
+								是
+							</span>
+							<span
+								v-else-if="scope.row.loadStatus + '' === '0'"
+								class="disableRgba"
+							>
+								否
 							</span>
 							<span v-else>-</span>
 						</template>
@@ -164,8 +173,11 @@
 					</el-table-column>
 					<el-table-column prop="status" align="center" label="状态">
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.status || scope.row.status + '' === '0'">
-								{{ scope.row.status }}
+							<span v-if="scope.row.status + '' === '0'" class="disableRgba">
+								{{ typeFilter(scope.row.status, 'operateStatus') }}
+							</span>
+							<span v-else-if="!!scope.row.status" class="normalRgba">
+								{{ typeFilter(scope.row.status, 'operateStatus') }}
 							</span>
 							<span v-else>-</span>
 						</template>
@@ -280,7 +292,7 @@
 				></el-pagination>
 			</div>
 			<el-dialog
-				title="新增/编辑"
+				:title="title"
 				:visible.sync="dialogFormVisible"
 				:destroy-on-close="true"
 				width="520px"
@@ -416,16 +428,13 @@ export default {
 	},
 	computed: {
 		terminalTypeArr() {
-			return this.globalDics.terminalnType
+			return this.globalDics.operateClient
 		},
 		preLoadArr() {
-			return [{ description: '是', code: 1 }, { description: '否', code: 0 }]
+			return this.globalDics.operateYesNo
 		},
 		statusArr() {
-			return [
-				{ description: '已开启', code: 1 },
-				{ description: '禁用', code: 0 }
-			]
+			return this.globalDics.operateStatus
 		},
 		rules() {
 			const pageName = [
@@ -475,7 +484,7 @@ export default {
 					} = res
 					if (code === 200) {
 						this.tableData = records || []
-						this.total = total
+						this.total = total || 0
 					} else {
 						this.$message({
 							message: msg,
@@ -519,23 +528,18 @@ export default {
 		},
 		edit(val) {
 			this.title = '编辑'
-            console.log('val', val)
-            delete val.merchantId
-            delete val.createdAt
-            delete val.createdBy
-            delete val.updatedAt
-            delete val.updatedBy
-            delete val.status
+			val.clientType = val.clientType + ''
+			val.loadStatus = val.loadStatus + ''
 			this.dialogForm = { ...val }
 			this.dialogFormVisible = true
+			if (this.dialogForm.pictureUrl) {
+				this.$nextTick(() => {
+					this.$refs.imgUpload.state = 'image'
+					this.$refs.imgUpload.fileUrl = val.pictureUrl
+				})
+			}
 		},
 		deleteLabel(val) {
-			const loading = this.$loading({
-				lock: true,
-				text: 'Loading',
-				spinner: 'el-icon-loading',
-				background: 'rgba(0, 0, 0, 0.7)'
-			})
 			const { id } = val
 			this.$confirm(`<strong>确定删除此条配置?</strong>`, `确认提示`, {
 				dangerouslyUseHTMLString: true,
@@ -544,6 +548,12 @@ export default {
 				type: 'warning'
 			})
 				.then(() => {
+					const loading = this.$loading({
+						lock: true,
+						text: 'Loading',
+						spinner: 'el-icon-loading',
+						background: 'rgba(0, 0, 0, 0.7)'
+					})
 					this.$api
 						.clientStartDeleteAPI({ id })
 						.then((res) => {
@@ -563,14 +573,11 @@ export default {
 						.catch(() => {
 							loading.close()
 						})
+					setTimeout(() => {
+						loading.close()
+					}, 1000)
 				})
-				.catch(() => {
-					loading.close()
-				})
-
-			setTimeout(() => {
-				loading.close()
-			}, 1000)
+				.catch(() => {})
 		},
 		subAddOrEdit() {
 			const params = {
@@ -632,7 +639,7 @@ export default {
 		},
 		recycle(val) {
 			const { id } = val
-            const status = val.status === 0 ? 1 : 0
+			const status = val.status === 0 ? 1 : 0
 			this.$confirm(
 				`<strong>是否对该配置进行开启/禁用操作</strong></br>
                  <span style='font-size:12px;color:#c1c1c1'>一旦操作将会立即生效</span>`,
@@ -645,23 +652,21 @@ export default {
 				}
 			)
 				.then(() => {
-					this.$api
-						.clientStartUseAPI({ id, status })
-						.then((res) => {
-							const { code, msg } = res
-							if (code === 200) {
-								this.$message({
-									message: '操作成功',
-									type: 'success'
-								})
-							} else {
-								this.$message({
-									message: msg,
-									type: 'error'
-								})
-							}
-							this.loadData()
-						})
+					this.$api.clientStartUseAPI({ id, status }).then((res) => {
+						const { code, msg } = res
+						if (code === 200) {
+							this.$message({
+								message: '操作成功',
+								type: 'success'
+							})
+						} else {
+							this.$message({
+								message: msg,
+								type: 'error'
+							})
+						}
+						this.loadData()
+					})
 				})
 				.catch(() => {})
 		},
