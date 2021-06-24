@@ -132,8 +132,7 @@
 					>
 						<template slot-scope="scope">
 							<span v-if="!!scope.row.clientType">
-								<!--								{{ typeFilter(scope.row.clientType, 'supportTerminal') }}-->
-								{{ scope.row.clientType }}
+                                {{ typeFilter(scope.row.clientType, 'operateClient') }}
 							</span>
 							<span v-else></span>
 						</template>
@@ -416,16 +415,13 @@ export default {
 	},
 	computed: {
 		terminalTypeArr() {
-			return this.globalDics.terminalnType
+			return this.globalDics.operateClient
 		},
 		preLoadArr() {
-			return [{ description: '是', code: 1 }, { description: '否', code: 0 }]
+			return this.globalDics.operateYesNo
 		},
 		statusArr() {
-			return [
-				{ description: '已开启', code: 1 },
-				{ description: '禁用', code: 0 }
-			]
+			return this.globalDics.operateStatus
 		},
 		rules() {
 			const pageName = [
@@ -475,7 +471,7 @@ export default {
 					} = res
 					if (code === 200) {
 						this.tableData = records || []
-						this.total = total
+						this.total = total || 0
 					} else {
 						this.$message({
 							message: msg,
@@ -519,7 +515,6 @@ export default {
 		},
 		edit(val) {
 			this.title = '编辑'
-            console.log('val', val)
             delete val.merchantId
             delete val.createdAt
             delete val.createdBy
