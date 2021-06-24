@@ -214,7 +214,7 @@
             width="100px"
           >
             <template slot-scope="scope">
-              {{ typeFilter(scope.row.orderStatus, "depositStatus") }}
+              {{ typeFilter(scope.row.orderStatus, "withdrawStatus") }}
             </template>
           </el-table-column>
           <el-table-column
@@ -389,8 +389,8 @@ export default {
       const [startTime, endTime] = create
       let params = {
         ...this.queryData,
-        occurDtStart: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : '',
-        occurDtEnd: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
+        createdAtStart: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : '',
+        createdAtEnd: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
       }
       params = {
         ...this.getParams(params)

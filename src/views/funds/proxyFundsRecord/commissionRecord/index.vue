@@ -104,12 +104,12 @@
               <span v-else>-</span>
             </template>
           </el-table-column>
-          <el-table-column prop="orderStatus" align="center" label="订单状态">
+          <el-table-column prop="orderStatus" style="width:120px" align="center" label="订单状态">
             <template slot-scope="scope">
               {{ typeFilter(scope.row.orderStatus, "auditStatusType") }}
             </template>
           </el-table-column>
-          <el-table-column prop="createdTime" align="center" label="日期">
+          <el-table-column prop="createdTime" style="width:120px" align="center" label="日期">
           </el-table-column>
           <el-table-column
             prop="proxyAccount"

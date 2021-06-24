@@ -341,22 +341,6 @@ export default {
       params = {
         ...this.getParams(params)
       }
-      delete params.registerTime
-      delete params.lastLoginTime
-      delete params.firstSaveTime
-      delete params.accountStatus
-      delete params.deviceType
-      this.$confirm(
-        `<strong>是否导出?</strong></br><span style='font-size:12px;color:#c1c1c1'>数据过大时，请耐心等待</span>`,
-        '确认提示',
-        {
-          dangerouslyUseHTMLString: true,
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }
-      )
-        .then(() => {
           this.$api
             .getProxyFundsRecordsAssistDepositDownload(params)
             .then((res) => {
@@ -413,13 +397,13 @@ export default {
             })
             .catch(() => {
               this.loading = false
-              this.$message({
-                type: 'error',
-                message: '导出失败',
-                duration: 1500
-              })
+              // this.$message({
+              //   type: 'error',
+              //   message: '导出失败',
+              //   duration: 1500
+              // })
             })
-        })
+
         .catch(() => {})
     },
     getSummaries(param) {
@@ -478,16 +462,6 @@ export default {
         this.queryData.orderType = 'desc'
       }
       this.loadData()
-    },
-    handleCurrentChangeDialog(val) {
-      console.log(111, val)
-      this.page = val
-      // this.getMemberMemberInfoByLabelId(this.id)
-    },
-    handleSizeChangeDialog(val) {
-      console.log(222, val)
-      this.size = val
-      // this.getMemberMemberInfoByLabelId(this.id)
     }
 
   }

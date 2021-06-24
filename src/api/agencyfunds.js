@@ -119,6 +119,7 @@ export function getProxyFundsRecordsAssistDepositDownload(data) {
 	return request({
 		url: '/proxyFundsRecords/assistDeposit/download',
 		method: 'post',
+		responseType: 'blob',
 		data
 	})
 }
@@ -135,6 +136,7 @@ export function getProxyFundsRecordsArtificialAccountAddDownload(data) {
 	return request({
 		url: '/proxyFundsRecords/artificialAccountAdd/download',
 		method: 'post',
+		responseType: 'blob',
 		data
 	})
 }
@@ -143,6 +145,15 @@ export function getProxyFundsRecordsArtificialAccountSub(data) {
 	return request({
 		url: '/proxyFundsRecords/artificialAccountSub',
 		method: 'post',
+		data
+	})
+}
+// 代理资金记录-人工扣除额度申请记录导出
+export function getProxyFundsRecordsArtificialAccountSubDownload(data) {
+	return request({
+		url: '/proxyFundsRecords/artificialAccountSub/download',
+		method: 'post',
+		responseType: 'blob',
 		data
 	})
 }
@@ -173,5 +184,6 @@ export default {
 	getProxyCommissionRecordSelect,
 	getWithdrawSettingMemberSelectAll,
 	getWithdrawSettingMemberAdd,
-	getWithdrawSettingMemberUpdate
+	getWithdrawSettingMemberUpdate,
+	getProxyFundsRecordsArtificialAccountSubDownload
 }
