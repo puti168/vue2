@@ -180,6 +180,9 @@
             label="代存类型"
             width="130px"
           >
+          <template slot-scope="scope">
+              {{ typeFilter(scope.row.bizType, "proxyAssistDepositType") }}
+              </template>
           </el-table-column>
           <el-table-column
             prop="accountType"
@@ -293,6 +296,39 @@ export default {
       this.pageNum = 1
       this.loadData()
     },
+     checkValue(e) {
+      const { name, value } = e.target
+      switch (name) {
+        case 'amountMax':
+          if (
+            !!this.queryData.amountMin &&
+            value &&
+            value * 1 < this.queryData.amountMin * 1
+          ) {
+            this.$message({
+              type: 'warning',
+              message: `调整金额输入最大值不能小于最小值`
+            })
+          } else {
+            this.queryData.amountMax = value
+          }
+          break
+        case 'amountMin':
+          if (
+            !!this.queryData.amountMax &&
+            value &&
+            value * 1 > this.queryData.amountMax * 1
+          ) {
+            this.$message({
+              type: 'warning',
+              message: `调整金额输入最小值不能大于最大值`
+            })
+          } else {
+            this.queryData.amountMin = value
+          }
+          break
+      }
+    },
 
     exportExcel() {
       const create = this.searchTime || []
@@ -393,8 +429,8 @@ export default {
         if (index === 0) {
           const el = (
             <div class='count_row'>
-              <p>本页合计</p>
-              <p>全部合计</p>
+              <p>小计</p>
+              <p>总计</p>
             </div>
           )
           sums[index] = el

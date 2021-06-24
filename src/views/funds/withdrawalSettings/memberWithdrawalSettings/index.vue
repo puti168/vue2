@@ -4,7 +4,13 @@
       <div class="head flex-h-end">
         <el-form ref="form" :inline="true" :model="queryData">
           <el-form-item>
-            <el-button type="primary" class="pattern" @click="open">
+            <el-button
+              type="primary"
+              :disabled="loading"
+              size="medium"
+              class="pattern"
+              @click="open"
+            >
               初始化提款设置
             </el-button>
 
@@ -257,41 +263,6 @@ width="120px"
               <el-option label="开启" value="beijing"></el-option>
             </el-select>
           </el-form-item>
-
-          <!-- <el-form-item
-            label="标签名称:"
-            prop="gameLabelName"
-            :rules="[
-              { required: true, message: '请输入标签名称', trigger: 'blur' },
-              {
-                min: 1,
-                max: 10,
-                message: '长度在 2 到 10 个字符',
-                trigger: 'blur',
-              },
-            ]"
-          >
-            <el-input
-              v-model="dialogForm.gameLabelName"
-              :maxlength="10"
-              autocomplete="off"
-            ></el-input>
-          </el-form-item>
-          <el-form-item
-            label="描述:"
-            prop="description"
-            :rules="[
-              { required: true, message: '请输入描述内容', trigger: 'blur' },
-              {
-                min: 2,
-                max: 50,
-                message: '长度在 2 到 50 个字符',
-                trigger: 'blur',
-              },
-            ]"
-          >
-            <el-input v-model="dialogForm.description" type="textarea"></el-input>
-          </el-form-item> -->
         </el-form>
         <el-divider></el-divider>
         <span slot="footer" class="dialog-footer">
@@ -306,26 +277,6 @@ width="120px"
           </el-button>
           <el-button @click="reset">重置</el-button>
         </span>
-      </el-dialog>
-      <el-dialog
-        title="标签游戏"
-        :visible.sync="dialogGameVisible"
-        :destroy-on-close="true"
-        width="970px"
-        class="rempadding"
-      >
-        <el-divider></el-divider>
-        <div class="contentBox disableColor">标签名称：{{ labelName }}</div>
-        <p class="headerBox">
-          <span>游戏名称</span>
-          <span>添加时间</span>
-        </p>
-        <div class="bodyBox">
-          <p v-for="item in gameList" :key="item.gameName">
-            <span>{{ item.gameName }}</span>
-            <span>{{ item.createdAt }}</span>
-          </p>
-        </div>
       </el-dialog>
     </div>
   </div>
@@ -356,20 +307,13 @@ export default {
           label: ' 百分比（%）'
         }
       ],
-      formInline: {
-        user: '',
-        rateDateFreeType: '',
-        rateDateTotalType: ''
-      },
+
       vipExclusive: [],
       queryData: {},
       tableData: [],
       dialogFormVisible: false,
       dialogForm: { singleMinAmount: '' },
-      gameList: [],
-      dialogGameVisible: false,
-      title: '',
-      labelName: ''
+      title: ''
     }
   },
   computed: {
@@ -624,7 +568,7 @@ export default {
   line-height: 4;
 }
 .sun {
-  width: 95px;
+  width: 120px;
 }
 .configure {
   width: 420px;
@@ -673,7 +617,7 @@ export default {
 /deep/.el-input-number__increase {
   display: none;
 }
-/deep/.el-input-number--medium .el-input__inner {
+/deep/.el-input__inner {
   padding: 0 15px;
   text-align: left;
 }

@@ -164,13 +164,12 @@
             width="100px"
           >
             <template slot-scope="scope">
-              {{ typeFilter(scope.row.accountType, "accountType") }}
+              {{ typeFilter(scope.row.orderStatus, "accountType") }}
             </template>
           </el-table-column>
           <el-table-column
             prop="amount"
             align="center"
-            sortable="custom"
             label="转账金额"
           ></el-table-column>
           <el-table-column
@@ -369,8 +368,8 @@ export default {
         if (index === 0) {
           const el = (
             <div class='count_row'>
-              <p>本页合计</p>
-              <p>全部合计</p>
+              <p>小计</p>
+              <p>总计</p>
             </div>
           )
           sums[index] = el
@@ -399,9 +398,6 @@ export default {
     _changeTableSort({ column, prop, order }) {
       if (prop === 'createdTime') {
         prop = 1
-      }
-      if (prop === 'amount') {
-        prop = 2
       }
 
       this.queryData.orderKey = prop

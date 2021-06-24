@@ -175,6 +175,9 @@
             label="状态"
             width="100px"
           >
+           <template slot-scope="scope">
+              {{ typeFilter(scope.row.orderStatus, "accessStatusType") }}
+            </template>>
 
           </el-table-column>
           <el-table-column
@@ -183,11 +186,13 @@
             label="调整类型"
             width="150px"
           >
+           <template slot-scope="scope">
+              {{ typeFilter(scope.row.adjustType, "proxyPatchSubAdjustType") }}
+            </template>
           </el-table-column>
           <el-table-column
             prop="adjustAmount"
             align="center"
-            sortable="custom"
             label="调整金额"
           ></el-table-column>
 		  <el-table-column
@@ -312,6 +317,39 @@ export default {
       this.pageNum = 1
       this.loadData()
     },
+     checkValue(e) {
+      const { name, value } = e.target
+      switch (name) {
+        case 'adjustAmountMax':
+          if (
+            !!this.queryData.adjustAmountMin &&
+            value &&
+            value * 1 < this.queryData.adjustAmountMin * 1
+          ) {
+            this.$message({
+              type: 'warning',
+              message: `调整金额输入最大值不能小于最小值`
+            })
+          } else {
+            this.queryData.adjustAmountMax = value
+          }
+          break
+        case 'adjustAmountMin':
+          if (
+            !!this.queryData.adjustAmountMax &&
+            value &&
+            value * 1 > this.queryData.adjustAmountMax * 1
+          ) {
+            this.$message({
+              type: 'warning',
+              message: `调整金额输入最小值不能大于最大值`
+            })
+          } else {
+            this.queryData.adjustAmountMin = value
+          }
+          break
+      }
+    },
 
     exportExcel() {
       const create = this.searchTime || []
@@ -394,8 +432,8 @@ export default {
         if (index === 0) {
           const el = (
             <div class='count_row'>
-              <p>本页合计</p>
-              <p>全部合计</p>
+              <p>小计</p>
+              <p>总计</p>
             </div>
           )
           sums[index] = el
@@ -424,9 +462,6 @@ export default {
     _changeTableSort({ column, prop, order }) {
       if (prop === 'operatorTime') {
         prop = 1
-      }
-      if (prop === 'adjustAmount') {
-        prop = 2
       }
 
       this.queryData.orderKey = prop

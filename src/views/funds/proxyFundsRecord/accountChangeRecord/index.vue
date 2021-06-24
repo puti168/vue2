@@ -19,7 +19,7 @@
               style="width: 375px"
             ></el-date-picker>
           </el-form-item>
-           <el-form-item label="代理账号:">
+          <el-form-item label="代理账号:">
             <el-input
               v-model="queryData.userName"
               clearable
@@ -78,7 +78,7 @@
           <el-form-item label="业务类型:" class="tagheight">
             <el-select
               v-model="queryData.bizType"
-               clearable
+              clearable
               style="width: 300px"
               placeholder="默认选择全部"
               :popper-append-to-body="false"
@@ -191,7 +191,13 @@
           :header-cell-style="getRowClass"
           @sort-change="_changeTableSort"
         >
-          <el-table-column prop="eventId" fixed align="center" width="180px" label="关联订单号">
+          <el-table-column
+            prop="eventId"
+            fixed
+            align="center"
+            width="180px"
+            label="关联订单号"
+          >
             <template slot-scope="scope">
               <Copy v-if="!!scope.row.eventId" :title="scope.row.eventId" :copy="copy">
                 {{ scope.row.eventId }}
@@ -222,14 +228,7 @@
             width="130px"
           >
             <template slot-scope="scope">
-              <Copy
-                v-if="!!scope.row.windControlName"
-                :title="scope.row.windControlName"
-                :copy="copy"
-              >
-                {{ scope.row.windControlName }}
-              </Copy>
-              <span v-else>-</span>
+              {{ scope.row.windControlName !== null ? scope.row.windControlName : "-" }}
             </template>
           </el-table-column>
           <el-table-column
@@ -238,49 +237,36 @@
             label="账号状态"
             width="100px"
           >
-           <template slot-scope="scope">
-							<span
-								v-if="
-									!!scope.row.accountStatus && scope.row.accountStatus * 1 === 1
-								"
-								class="normalRgba"
-							>
-								{{ typeFilter(scope.row.accountStatus, 'accountStatusType') }}
-							</span>
-							<span
-								v-else-if="
-									!!scope.row.accountStatus && scope.row.accountStatus * 1 === 2
-								"
-								class="disableRgba"
-							>
-								{{ typeFilter(scope.row.accountStatus, 'accountStatusType') }}
-							</span>
-							<span
-								v-else-if="
-									!!scope.row.accountStatus && scope.row.accountStatus * 1 === 3
-								"
-								class="lockingRgba"
-							>
-								{{ typeFilter(scope.row.accountStatus, 'accountStatusType') }}
-							</span>
-							<span
-								v-else-if="
-									!!scope.row.accountStatus && scope.row.accountStatus * 1 === 4
-								"
-								class="deleteRgba"
-							>
-								{{ typeFilter(scope.row.accountStatus, 'accountStatusType') }}
-							</span>
-							<span v-else>-</span>
-						</template>
+            <template slot-scope="scope">
+              <span
+                v-if="!!scope.row.accountStatus && scope.row.accountStatus * 1 === 1"
+                class="normalRgba"
+              >
+                {{ typeFilter(scope.row.accountStatus, "accountStatusType") }}
+              </span>
+              <span
+                v-else-if="!!scope.row.accountStatus && scope.row.accountStatus * 1 === 2"
+                class="disableRgba"
+              >
+                {{ typeFilter(scope.row.accountStatus, "accountStatusType") }}
+              </span>
+              <span
+                v-else-if="!!scope.row.accountStatus && scope.row.accountStatus * 1 === 3"
+                class="lockingRgba"
+              >
+                {{ typeFilter(scope.row.accountStatus, "accountStatusType") }}
+              </span>
+              <span
+                v-else-if="!!scope.row.accountStatus && scope.row.accountStatus * 1 === 4"
+                class="deleteRgba"
+              >
+                {{ typeFilter(scope.row.accountStatus, "accountStatusType") }}
+              </span>
+              <span v-else>-</span>
+            </template>
           </el-table-column>
-          <el-table-column
-            prop="bizType"
-            align="center"
-            label="业务类型"
-            width="180px"
-          >
-           <template slot-scope="scope">
+          <el-table-column prop="bizType" align="center" label="业务类型" width="180px">
+            <template slot-scope="scope">
               {{
                 scope.row.bizType === 0
                   ? "-"
@@ -288,23 +274,13 @@
               }}
             </template>
           </el-table-column>
-          <el-table-column
-            prop="type"
-            align="center"
-            label="账变类型"
-            width="150px"
-          >
+          <el-table-column prop="type" align="center" label="账变类型" width="150px">
             <template slot-scope="scope">
-              {{ typeFilter(scope.row.type, "memberAccountChangeType") }}
+              {{ typeFilter(scope.row.type, "proxyAccountChangeType") }}
             </template>
           </el-table-column>
-          <el-table-column
-            prop="transType"
-            align="center"
-            label="收支类型"
-            width="150px"
-          >
-          <template slot-scope="scope">
+          <el-table-column prop="transType" align="center" label="收支类型" width="150px">
+            <template slot-scope="scope">
               {{
                 scope.row.transType === 0
                   ? "-"
@@ -319,7 +295,7 @@
             sortable="custom"
             label="账变金额"
           ></el-table-column>
-         <el-table-column
+          <el-table-column
             prop="occurDt"
             align="center"
             label="账变时间"
@@ -327,13 +303,8 @@
             sortable="custom"
           >
           </el-table-column>
-          <el-table-column
-            prop="remark"
-            align="center"
-            label="备注"
-            width="150px"
-          >
-           <template slot-scope="scope">
+          <el-table-column prop="remark" align="center" label="备注" width="150px">
+            <template slot-scope="scope">
               {{ scope.row.remark !== null ? scope.row.remark : "-" }}
             </template>
           </el-table-column>
@@ -351,7 +322,6 @@
           @size-change="handleSizeChange"
         ></el-pagination>
       </div>
-
     </div>
   </div>
 </template>
@@ -375,20 +345,19 @@ export default {
       summary: {},
       visible: false,
       tableVisible: false
-
     }
   },
   computed: {
     accountType() {
       return this.globalDics.accountType
     },
-     accountStatusType() {
+    accountStatusType() {
       return this.globalDics.accountStatusType
     },
-     memberAccountBizType() {
+    memberAccountBizType() {
       return this.globalDics.memberAccountBizType
     },
-     proxyAccountChangeType() {
+    proxyAccountChangeType() {
       return this.globalDics.proxyAccountChangeType
     },
     accountBizType() {
@@ -396,8 +365,8 @@ export default {
     }
   },
   created() {
-		this.getWindControllerLevelDict()
-	},
+    this.getWindControllerLevelDict()
+  },
   mounted() {},
 
   methods: {
@@ -429,23 +398,19 @@ export default {
     },
     // 获取风控层级
     getWindControllerLevelDict() {
-            this.$api
-                .getWindControllerLevelDict({ windControlType: 3 })
-                .then((res) => {
-                    if (res.code === 200) {
-                        this.windControlLevelList = res.data
-                    }
-                })
-        },
-         getDictgetAllDictList() {
-            this.$api
-                .getDictgetAllDictList()
-                .then((res) => {
-                    if (res.code === 200) {
-                        this.accountStatusType = res.data
-                    }
-                })
-        },
+      this.$api.getWindControllerLevelDict({ windControlType: 3 }).then((res) => {
+        if (res.code === 200) {
+          this.windControlLevelList = res.data
+        }
+      })
+    },
+    getDictgetAllDictList() {
+      this.$api.getDictgetAllDictList().then((res) => {
+        if (res.code === 200) {
+          this.accountStatusType = res.data
+        }
+      })
+    },
     reset() {
       this.queryData = {}
       this.searchTime = [startTime, endTime]
@@ -464,68 +429,68 @@ export default {
       params = {
         ...this.getParams(params)
       }
-          this.$api
-            .getProxyFundsRecordsAccountChangeDownload(params)
-            .then((res) => {
-              this.loading = false
-              const { data, status } = res
-              if (res && status === 200) {
-                const { type } = data
-                if (type.includes('application/json')) {
-                  const reader = new FileReader()
-                  reader.onload = (evt) => {
-                    if (evt.target.readyState === 2) {
-                      const {
-                        target: { result }
-                      } = evt
-                      const ret = JSON.parse(result)
-                      if (ret.code !== 200) {
-                        this.$message({
-                          type: 'error',
-                          message: ret.msg,
-                          duration: 1500
-                        })
-                      }
-                    }
+      this.$api
+        .getProxyFundsRecordsAccountChangeDownload(params)
+        .then((res) => {
+          this.loading = false
+          const { data, status } = res
+          if (res && status === 200) {
+            const { type } = data
+            if (type.includes('application/json')) {
+              const reader = new FileReader()
+              reader.onload = (evt) => {
+                if (evt.target.readyState === 2) {
+                  const {
+                    target: { result }
+                  } = evt
+                  const ret = JSON.parse(result)
+                  if (ret.code !== 200) {
+                    this.$message({
+                      type: 'error',
+                      message: ret.msg,
+                      duration: 1500
+                    })
                   }
-                  reader.readAsText(data)
-                } else {
-                  const result = res.data
-                  const disposition = res.headers['content-disposition']
-                  const fileNames = disposition && disposition.split("''")
-                  let fileName = fileNames[1]
-                  fileName = decodeURIComponent(fileName)
-                  const blob = new Blob([result], {
-                    type: 'application/octet-stream'
-                  })
-                  if ('download' in document.createElement('a')) {
-                    const downloadLink = document.createElement('a')
-                    downloadLink.download = fileName || ''
-                    downloadLink.style.display = 'none'
-                    downloadLink.href = URL.createObjectURL(blob)
-                    document.body.appendChild(downloadLink)
-                    downloadLink.click()
-                    URL.revokeObjectURL(downloadLink.href)
-                    document.body.removeChild(downloadLink)
-                  } else {
-                    window.navigator.msSaveBlob(blob, fileName)
-                  }
-                  this.$message({
-                    type: 'success',
-                    message: '导出成功',
-                    duration: 1500
-                  })
                 }
               }
-            })
-            .catch(() => {
-              this.loading = false
-              // this.$message({
-              //   type: 'error',
-              //   message: '导出失败',
-              //   duration: 1500
-              // })
-            })
+              reader.readAsText(data)
+            } else {
+              const result = res.data
+              const disposition = res.headers['content-disposition']
+              const fileNames = disposition && disposition.split("''")
+              let fileName = fileNames[1]
+              fileName = decodeURIComponent(fileName)
+              const blob = new Blob([result], {
+                type: 'application/octet-stream'
+              })
+              if ('download' in document.createElement('a')) {
+                const downloadLink = document.createElement('a')
+                downloadLink.download = fileName || ''
+                downloadLink.style.display = 'none'
+                downloadLink.href = URL.createObjectURL(blob)
+                document.body.appendChild(downloadLink)
+                downloadLink.click()
+                URL.revokeObjectURL(downloadLink.href)
+                document.body.removeChild(downloadLink)
+              } else {
+                window.navigator.msSaveBlob(blob, fileName)
+              }
+              this.$message({
+                type: 'success',
+                message: '导出成功',
+                duration: 1500
+              })
+            }
+          }
+        })
+        .catch(() => {
+          this.loading = false
+          // this.$message({
+          //   type: 'error',
+          //   message: '导出失败',
+          //   duration: 1500
+          // })
+        })
     },
     getSummaries(param) {
       const { columns } = param
@@ -534,8 +499,8 @@ export default {
         if (index === 0) {
           const el = (
             <div class='count_row'>
-              <p>本页合计</p>
-              <p>全部合计</p>
+              <p>小计</p>
+              <p>总计</p>
             </div>
           )
           sums[index] = el
@@ -582,41 +547,41 @@ export default {
   },
   checkValue(e) {
     const { name, value } = e.target
-   switch (name) {
-        case 'netAmountMax':
-          if (
-            !!this.queryData.netAmountMin &&
-            value &&
-            value * 1 < this.queryData.netAmountMin * 1
-          ) {
-            this.$message({
-              type: 'warning',
-              message: `账变金额输入最大值不能小于最小值`
-            })
-          } else {
-            this.queryData.netAmountMax = value
-          }
-          break
-        case 'netAmountMin':
-          if (
-            !!this.queryData.netAmountMax &&
-            value &&
-            value * 1 > this.queryData.netAmountMax * 1
-          ) {
-            this.$message({
-              type: 'warning',
-              message: `账变金额输入最小值不能大于最大值`
-            })
-          } else {
-            this.queryData.netAmountMin = value
-          }
-          break
-      }
+    switch (name) {
+      case 'netAmountMax':
+        if (
+          !!this.queryData.netAmountMin &&
+          value &&
+          value * 1 < this.queryData.netAmountMin * 1
+        ) {
+          this.$message({
+            type: 'warning',
+            message: `账变金额输入最大值不能小于最小值`
+          })
+        } else {
+          this.queryData.netAmountMax = value
+        }
+        break
+      case 'netAmountMin':
+        if (
+          !!this.queryData.netAmountMax &&
+          value &&
+          value * 1 > this.queryData.netAmountMax * 1
+        ) {
+          this.$message({
+            type: 'warning',
+            message: `账变金额输入最小值不能大于最大值`
+          })
+        } else {
+          this.queryData.netAmountMin = value
+        }
+        break
+    }
   },
 
-    enterSearch() {
-      this.loadData()
-    }
+  enterSearch() {
+    this.loadData()
+  }
 }
 </script>
 

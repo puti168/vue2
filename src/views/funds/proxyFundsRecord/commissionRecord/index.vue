@@ -90,11 +90,13 @@
           size="mini"
           class="small-size-table"
           :data="tableData"
+           show-summary
+          :summary-method="getSummaries"
           style="width: 100%"
           :header-cell-style="getRowClass"
           @sort-change="_changeTableSort"
         >
-          <el-table-column prop="orderNo" align="center" label="订单号">
+          <el-table-column prop="orderNo" style="width:120px" align="center" label="订单号">
             <template slot-scope="scope">
               <span v-if="!!scope.row.orderNo" :title="scope.row.orderNo">
                 {{ scope.row.orderNo }}
@@ -274,7 +276,7 @@ export default {
       gameList: [],
       page: 1,
       size: 10,
-      summary: 0,
+      summary: {},
       visible: false,
       tableVisible: false
 
@@ -305,6 +307,7 @@ export default {
           if (res.code === 200) {
             this.tableData = res.data.record
             this.total = res.data.totalRecord
+            this.summary = res.data.summary
           }
           this.loading = false
         })
@@ -451,6 +454,112 @@ export default {
       console.log(222, val)
       this.size = val
       // this.getMemberMemberInfoByLabelId(this.id)
+    },
+    getSummaries(param) {
+      const { columns } = param
+      const sums = []
+      columns.forEach((column, index) => {
+        if (index === 0) {
+          const el = (
+            <div class='count'>
+              <p>小计</p>
+              <p>合计</p>
+            </div>
+          )
+          sums[index] = el
+          return
+        } else if (index === 8 && this.summary !== null) {
+          const el = (
+            <div class='count'>
+              <p>{this.summary.validBetSubtotal}</p>
+              <p>{this.summary.validBetSubtotal}</p>
+            </div>
+          )
+          sums[index] = el
+          return
+        } else if (index === 11 && this.summary !== null) {
+          const el = (
+            <div class='count_row'>
+              <p>{this.summary.rebateSubtotal}</p>
+              <p>{this.summary.rebateTotal}</p>
+            </div>
+          )
+          sums[index] = el
+          return
+        } else if (index === 12 && this.summary !== null) {
+          const el = (
+            <div class='count_row'>
+              <p>{this.summary.rebateSubtotal}</p>
+              <p>{this.summary.rebateTotal}</p>
+            </div>
+          )
+          sums[index] = el
+          return
+        } else if (index === 14 && this.summary !== null) {
+          const el = (
+            <div class='count_row'>
+              <p>{this.summary.rebateSubtotal}</p>
+              <p>{this.summary.rebateTotal}</p>
+            </div>
+          )
+          sums[index] = el
+          return
+        } else if (index === 15 && this.summary !== null) {
+          const el = (
+            <div class='count_row'>
+              <p>{this.summary.rebateSubtotal}</p>
+              <p>{this.summary.rebateTotal}</p>
+            </div>
+          )
+          sums[index] = el
+          return
+        } else if (index === 16 && this.summary !== null) {
+          const el = (
+            <div class='count_row'>
+              <p>{this.summary.rebateSubtotal}</p>
+              <p>{this.summary.rebateTotal}</p>
+            </div>
+          )
+          sums[index] = el
+          return
+        } else if (index === 17 && this.summary !== null) {
+          const el = (
+            <div class='count_row'>
+              <p>{this.summary.rebateSubtotal}</p>
+              <p>{this.summary.rebateTotal}</p>
+            </div>
+          )
+          sums[index] = el
+          return
+        } else if (index === 18 && this.summary !== null) {
+          const el = (
+            <div class='count_row'>
+              <p>{this.summary.rebateSubtotal}</p>
+              <p>{this.summary.rebateTotal}</p>
+            </div>
+          )
+          sums[index] = el
+          return
+        } else if (index === 19 && this.summary !== null) {
+          const el = (
+            <div class='count_row'>
+              <p>{this.summary.rebateSubtotal}</p>
+              <p>{this.summary.rebateTotal}</p>
+            </div>
+          )
+          sums[index] = el
+          return
+        } else {
+          sums[index] = (
+            <div class='count_row'>
+              <p>-</p>
+              <p>-</p>
+            </div>
+          )
+        }
+      })
+
+      return sums
     }
 
   }
@@ -458,8 +567,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-body .el-table th.gutter {
-  display: table-cell !important;
+.count {
+  height: 80px;
+  p {
+    height: 40px;
+    line-height: 40px;
+    color: #5c5c5c;
+    font-weight: 700;
+    span {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+    }
+  }
 }
 .sum_footer {
   display: flex;

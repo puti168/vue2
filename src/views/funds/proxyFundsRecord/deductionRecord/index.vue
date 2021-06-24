@@ -64,7 +64,7 @@
               :popper-append-to-body="false"
             >
               <el-option
-                v-for="item in accountType"
+                v-for="item in proxyPatchSubAdjustType"
                 :key="item.code"
                 :label="item.description"
                 :value="item.code"
@@ -175,8 +175,8 @@
             label="状态"
             width="100px"
           >
-            <template slot-scope="scope">
-              {{ typeFilter(scope.row.accountType, "accountType") }}
+             <template slot-scope="scope">
+              {{ typeFilter(scope.row.accountType, "accessStatusType") }}
             </template>
           </el-table-column>
           <el-table-column
@@ -185,11 +185,13 @@
             label="调整类型"
             width="150px"
           >
+          <template slot-scope="scope">
+              {{ typeFilter(scope.row.adjustType, "proxyPatchSubAdjustType") }}
+            </template>
           </el-table-column>
           <el-table-column
             prop="adjustAmount"
             align="center"
-            sortable="custom"
             label="调整金额"
           ></el-table-column>
 		  <el-table-column
@@ -271,8 +273,8 @@ export default {
     }
   },
   computed: {
-    accountType() {
-      return this.globalDics.accountType
+    proxyPatchSubAdjustType() {
+      return this.globalDics.proxyPatchSubAdjustType
     }
   },
   mounted() { },
@@ -310,6 +312,39 @@ export default {
       this.searchTime = [startTime, endTime]
       this.pageNum = 1
       this.loadData()
+    },
+     checkValue(e) {
+      const { name, value } = e.target
+      switch (name) {
+        case 'betAmountMax':
+          if (
+            !!this.queryData.betAmountMin &&
+            value &&
+            value * 1 < this.queryData.betAmountMin * 1
+          ) {
+            this.$message({
+              type: 'warning',
+              message: `调整金额输入最大值不能小于最小值`
+            })
+          } else {
+            this.queryData.betAmountMax = value
+          }
+          break
+        case 'betAmountMin':
+          if (
+            !!this.queryData.betAmountMax &&
+            value &&
+            value * 1 > this.queryData.betAmountMax * 1
+          ) {
+            this.$message({
+              type: 'warning',
+              message: `调整金额输入最小值不能大于最大值`
+            })
+          } else {
+            this.queryData.betAmountMin = value
+          }
+          break
+      }
     },
 
     exportExcel() {
@@ -398,8 +433,8 @@ export default {
         if (index === 0) {
           const el = (
             <div class='count_row'>
-              <p>本页合计</p>
-              <p>全部合计</p>
+              <p>小计</p>
+              <p>总计</p>
             </div>
           )
           sums[index] = el
@@ -426,18 +461,10 @@ export default {
       return sums
     },
     _changeTableSort({ column, prop, order }) {
-      if (prop === 'betAmount') {
+      if (prop === 'createAt') {
         prop = 1
       }
-      if (prop === 'netAmount') {
-        prop = 2
-      }
-      if (prop === 'createAt') {
-        prop = 3
-      }
-      if (prop === 'netAt') {
-        prop = 4
-      }
+
       this.queryData.orderKey = prop
       if (order === 'ascending') {
         // 升序
