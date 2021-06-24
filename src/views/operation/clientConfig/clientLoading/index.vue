@@ -49,7 +49,7 @@
 					</el-form-item>
 					<el-form-item label="创建人:">
 						<el-input
-							v-model="queryData.createBy"
+							v-model="queryData.createdBy"
 							size="medium"
 							placeholder="请输入"
 							clearable
