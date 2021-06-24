@@ -34,7 +34,11 @@
 						</el-table-column>
 						<el-table-column align="center" label="注册端">
 							<template>
-								{{ list && list.deviceNo ? list.deviceNo : '-' }}
+                                {{
+                                    list && list.deviceType
+                                        ? typeFilter(list.deviceType, 'deviceType')
+                                        : '-'
+                                }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="注册IP">
@@ -49,7 +53,11 @@
 						</el-table-column>
 						<el-table-column align="center" label="账号类型">
 							<template>
-								{{ list && list.accountType ? list.accountType : '-' }}
+								{{
+									list && list.accountType
+										? typeFilter(list.accountType, 'accountType')
+										: '-'
+								}}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="注册域名">
@@ -89,7 +97,11 @@
 						</el-table-column>
 						<el-table-column align="center" label="账号状态">
 							<template>
-								{{ list && list.accountStatus ? list.accountStatus : '-' }}
+								{{
+									list.accountStatus
+										? typeFilter(list.accountStatus, 'accountStatusType')
+										: '-'
+								}}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="会员标签">
@@ -228,6 +240,18 @@
 					<div>
 						一审备注: {{ list && list.audit1Desc ? list.audit1Desc : '-' }}
 					</div>
+					<div v-if="list && list.audit1Desc && list.audit1Desc === '0'">
+						一审结果: 未处理
+					</div>
+					<div v-else-if="list && list.audit1Desc && list.audit1Desc === '1'">
+						一审结果: 通过
+					</div>
+					<div v-else-if="list && list.audit1Desc && list.audit1Desc === '2'">
+						一审结果: 拒绝
+					</div>
+					<div v-else>
+						一审结果: -
+					</div>
 				</div>
 				<div class="review-flex">
 					<div>
@@ -240,6 +264,18 @@
 					<div>
 						二审备注: {{ list && list.audit2Desc ? list.audit2Desc : '-' }}
 					</div>
+                    <div v-if="list && list.audit2Result && list.audit2Result === '0'">
+                        一审结果: 未处理
+                    </div>
+                    <div v-else-if="list && list.audit2Result && list.audit2Result === '1'">
+                        一审结果: 通过
+                    </div>
+                    <div v-else-if="list && list.audit2Result && list.audit2Result === '2'">
+                        一审结果: 拒绝
+                    </div>
+                    <div v-else>
+                        一审结果: -
+                    </div>
 				</div>
 			</div>
 		</div>
