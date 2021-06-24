@@ -21,7 +21,6 @@
           :data="tableData"
           style="width: 100%"
           :header-cell-style="getRowClass"
-          @sort-change="_changeTableSort"
         >
           <el-table-column
             prop="description"
@@ -30,7 +29,7 @@
           ></el-table-column>
           <el-table-column prop="operating" align="center" label="操作">
             <template slot-scope="scope">
-              <el-button
+              <el-link
                 type="primary"
                 icon="el-icon-edit"
                 :disabled="scope.row.labelStatus === 1"
@@ -38,8 +37,8 @@
                 @click="edit(scope.row)"
               >
                 修改
-              </el-button>
-              <el-button
+              </el-link>
+              <el-link
                 type="warning"
                 icon="el-icon-delete"
                 :disabled="scope.row.labelStatus === 1"
@@ -47,7 +46,7 @@
                 @click="deleteLabel(scope.row)"
               >
                 删除
-              </el-button>
+              </el-link>
             </template>
           </el-table-column>
           <el-table-column prop="status" align="center" label="状态">
@@ -141,12 +140,7 @@
           @size-change="handleSizeChange"
         ></el-pagination>
       </div>
-      <el-dialog
-        :visible.sync="dialogFormVisible"
-        :destroy-on-close="true"
-        width="800px"
-        @close="clear"
-      >
+      <el-dialog :visible.sync="dialogFormVisible" :destroy-on-close="true" width="870px">
         <div class="form-header">
           <span class="fontSize">新增代理提款设置</span>
           <span>
@@ -154,22 +148,46 @@
             为必填项
           </span>
         </div>
-        <el-form :inline="true" class="information">
+        <el-form :inline="true" class="information" :model="queryData" label-width="92px">
           <h3>代理信息</h3>
-          <el-form-item prop="proxyAccount" class="proxyItem" label="代理账号:">
+          <el-form-item
+            prop="proxyAccount"
+            class="proxyItem"
+            label="代理账号："
+            :rules="[
+              { required: true, message: '请输入代理账号', trigger: 'blur' },
+              { min: 1, max: 11, message: '长度在 1 到 11 个字符', trigger: 'blur' },
+            ]"
+          >
             <el-input v-model="queryData.proxyAccount" class="proxyInput"></el-input>
           </el-form-item>
-          <el-form-item label="代理姓名:" class="proxyItem">
-            <el-input v-model="queryData.proxyName" class="proxyInput"></el-input>
+          <el-form-item label="代理姓名：" class="proxyItem">
+            <el-input
+              v-model="queryData.proxyName"
+              disabled
+              class="proxyInput"
+            ></el-input>
           </el-form-item>
-          <el-form-item label="代理类型:" class="proxyItem">
-            <el-input v-model="queryData.agenttype" class="proxyInput"></el-input>
+          <el-form-item label="代理类型：" class="proxyItem">
+            <el-input
+              v-model="queryData.agenttype"
+              disabled
+              class="proxyInput"
+            ></el-input>
           </el-form-item>
-          <el-form-item label="代理状态:" class="proxyItem">
-            <el-input v-model="queryData.agentstate" class="proxyInput"></el-input>
+          <el-form-item label="代理状态：" class="proxyItem">
+            <el-input
+              v-model="queryData.agentstate"
+              disabled
+              class="proxyInput"
+            ></el-input>
           </el-form-item>
-          <el-form-item label="风控层级:" class="proxyItem">
-            <el-input v-model="queryData.risk" class="proxyInput"></el-input>
+          <el-form-item label="风控层级：" class="proxyItem">
+            <el-input
+              v-model="queryData.windControlName"
+              disabled
+              class="proxyInput"
+            ></el-input>
           </el-form-item>
         </el-form>
         <el-form
@@ -181,114 +199,127 @@
         >
           <h3>提款配置</h3>
           <el-form-item
-            label="单次提款最低额度:"
+            label="单次提款最低额度："
             prop="singleMinAmount"
             class="proxyItem"
           >
             <el-input-number
               v-model="dialogForm.singleMinAmount"
+              class="setInput"
               placeholder="请输入金额，0为不限制"
             ></el-input-number>
             <span>元</span>
           </el-form-item>
           <el-form-item
-            label="单次提款最高额度:"
+            label="单次提款最高额度："
             prop="singleMaxAmount"
             class="proxyItem"
           >
             <el-input-number
               v-model="dialogForm.singleMaxAmount"
+              class="setInput"
               placeholder="请输入金额，0为不限制"
             ></el-input-number>
             <span>元</span>
           </el-form-item>
-          <el-form-item label="单日免费提款次数:" prop="dateFreeNum" class="proxyItem">
+          <el-form-item label="单日免费提款次数：" prop="dateFreeNum" class="proxyItem">
             <el-input-number
               v-model="dialogForm.dateFreeNum"
+              class="setInput"
               placeholder="请输入次数，0为不限制"
             ></el-input-number>
             <span>次</span>
           </el-form-item>
-          <el-form-item label="单日免费提款总额:" prop="dateFreeAmount" class="proxyItem">
+          <el-form-item
+            label="单日免费提款总额："
+            prop="dateFreeAmount"
+            class="proxyItem"
+          >
             <el-input-number
               v-model="dialogForm.dateFreeAmount"
+              class="setInput"
               placeholder="请输入金额，0为不限制"
             ></el-input-number>
             <span>元</span>
           </el-form-item>
-          <el-form-item label="单日最高提款次数:" prop="dateTotalNum" class="proxyItem">
+          <el-form-item label="单日最高提款次数：" prop="dateTotalNum" class="proxyItem">
             <el-input-number
               v-model="dialogForm.dateTotalNum"
+              class="setInput"
               placeholder="请输入次数，0为不限制"
             ></el-input-number>
             <span>次</span>
           </el-form-item>
-          <el-form-item label="单日最高提款总额:" prop="dateMaxAmount" class="proxyItem">
+          <el-form-item label="单日最高提款总额：" prop="dateMaxAmount" class="proxyItem">
             <el-input-number
               v-model="dialogForm.dateMaxAmount"
+              class="setInput"
               placeholder="请输入金额，0为不限制"
             ></el-input-number>
             <span>元</span>
           </el-form-item>
-          <el-form-item label="大额提款标记金额:" prop="bigAmount" class="proxyItem">
+          <el-form-item label="大额提款标记金额：" prop="bigAmount" class="proxyItem">
             <el-input-number
               v-model="dialogForm.bigAmount"
+              class="setInput"
               placeholder="请输入金额，0为不限制"
             ></el-input-number>
             <span>元</span>
           </el-form-item>
           <h3>提款手续费配置</h3>
           <el-form-item label="超出单日免费次数：" prop="rateDateFree">
-            <el-select v-model="dialogForm.rateDateFreeType" placeholder="请选择">
+            <el-select
+              v-model="dialogForm.rateDateFreeType"
+              placeholder="请选择"
+              class="selectW"
+            >
               <el-option label="固定金额(元)" :value="1"></el-option>
               <el-option label="百分比(%)" :value="2"></el-option>
             </el-select>
             <el-input-number
               v-model="dialogForm.rateDateFree"
+              style="width: 100px"
               placeholder="0"
             ></el-input-number>
           </el-form-item>
           <el-form-item label="超出单日免费次数总额：" prop="rateDateTotal">
-            <el-select v-model="dialogForm.rateDateTotalType" placeholder="请选择">
+            <el-select
+              v-model="dialogForm.rateDateTotalType"
+              placeholder="请选择"
+              class="selectW"
+            >
               <el-option label="固定金额(元)" :value="1"></el-option>
               <el-option label="百分比(%)" :value="2"></el-option>
             </el-select>
             <el-input-number
               v-model="dialogForm.rateDateTotal"
+              style="width: 100px"
               placeholder="0"
             ></el-input-number>
           </el-form-item>
           <h3>提款提示语配置</h3>
-          <el-form-item
-            class="configure"
-            label="超出单日最高次数提示语："
-            prop="dateTotalNumRemark"
-          >
+          <div class="disp">
+            <p>超出单日最高次数提示语：</p>
+            <p>超出单日最高提款总额提示语：</p>
+          </div>
+          <el-form-item label="" prop="dateTotalNumRemark">
             <el-input
               v-model="dialogForm.dateTotalNumRemark"
-              style="width: 260px"
+              style="width: 385px"
               placeholder="游戏前端提示语，限制25字以内"
             ></el-input>
           </el-form-item>
-          <el-form-item
-            class="configure"
-            label="超出单日最高提款总额提示语："
-            prop="dateMaxAmountRemark"
-          >
+          <el-form-item label="" prop="dateMaxAmountRemark">
             <el-input
               v-model="dialogForm.dateMaxAmountRemark"
-              style="width: 260px"
+              style="width: 385px"
               placeholder="游戏前端提示语，限制25字以内"
             ></el-input>
           </el-form-item>
-          <el-form-item label="状态">
-            <el-select
-              v-model="dialogForm.status"
-              clearable
-              :popper-append-to-body="false"
-            >
-              <el-option label="关闭" value="shanghai"></el-option>
-              <el-option label="开启" value="beijing"></el-option>
+          <el-form-item label="状态" prop="status">
+            <el-select v-model="dialogForm.status" :popper-append-to-body="false">
+              <el-option label="开启" :value="0"></el-option>
+              <el-option label="关闭" :value="1"></el-option>
             </el-select>
           </el-form-item>
         </el-form>
@@ -322,7 +353,20 @@ export default {
       queryData: {},
       tableData: [],
       dialogFormVisible: false,
-      dialogForm: { minimum: '' },
+      dialogForm: {
+        singleMinAmount: 0,
+        singleMaxAmount: 0,
+        dateFreeNum: 0,
+        dateFreeAmount: 0,
+        dateTotalNum: 0,
+        dateMaxAmount: 0,
+        bigAmount: 0,
+        rateDateFree: 0,
+        rateDateTotal: 0,
+        rateDateFreeType: 2,
+        rateDateTotalType: 2,
+        status: 1
+      },
       gameList: [],
       title: '',
       labelName: ''
@@ -330,78 +374,46 @@ export default {
   },
   computed: {
     rules() {
-      const oneFreeRules = (rule, value, callback) => {
-        console.log(value)
-        if (!Number.isInteger(value) || value < 1) {
-          callback(new Error('输入大于单日最高提款次数，请重新输入'))
-        } else if (value <= this.ruleForm.maxmum) {
-          callback(new Error('输入大于单日最高提款次数，请重新输入'))
-        } else if (value > 9999999999) {
-          callback(new Error('输入值最多为9999999999'))
-        } else {
-          callback()
-        }
-      }
+      // const oneFreeRules = (rule, value, callback) => {
+      //   console.log(value)
+      //   if (!Number.isInteger(value) || value < 1) {
+      //     callback(new Error('输入大于单日最高提款次数，请重新输入'))
+      //   } else if (value <= this.ruleForm.maxmum) {
+      //     callback(new Error('输入大于单日最高提款次数，请重新输入'))
+      //   } else if (value > 9999999999) {
+      //     callback(new Error('输入值最多为9999999999'))
+      //   } else {
+      //     callback()
+      //   }
+      // }
       const singleMinAmount = [
-        { required: true, message: '请输入金额', trigger: 'blur' },
-        { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+        { required: true, message: '请输入金额', trigger: 'blur' }
       ]
       const singleMaxAmount = [
-        { required: true, message: '请输入金额', trigger: 'blur' },
-        { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+        { required: true, message: '请输入金额', trigger: 'blur' }
       ]
-      const dateFreeNum = [
-        { required: true, message: '请输入金额', trigger: 'blur' },
-        { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
-      ]
-      const dateFreeAmount = [
-        { required: true, message: '请输入金额', trigger: 'blur' },
-        { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
-      ]
-      const dateTotalNum = [
-        { required: true, message: '请输入金额', trigger: 'blur' },
-        { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
-      ]
-      const dateMaxAmount = [
-        { required: true, message: '请输入金额', trigger: 'blur' },
-        { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
-      ]
-      const bigAmount = [
-        { required: true, message: '请输入金额', trigger: 'blur' },
-        { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
-      ]
-
-      const oneFree = [{ required: true, validator: oneFreeRules, trigger: 'blur' }]
-
-      const minimum = [
-        { required: true, message: '请输入金额', trigger: 'blur' },
-        { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
-      ]
-      const maxmum = [
-        { required: true, message: '请输入金额', trigger: 'blur' },
-        { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
-      ]
-      const signminimum = [
-        { required: true, message: '请输入金额', trigger: 'blur' },
-        { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
-      ]
-      const onefreetotal = [
+      const dateFreeNum = [{ required: true, message: '请输入次数', trigger: 'blur' }]
+      const dateFreeAmount = [{ required: true, message: '请输入金额', trigger: 'blur' }]
+      const dateTotalNum = [{ required: true, message: '请输入次数', trigger: 'blur' }]
+      const dateMaxAmount = [{ required: true, message: '请输入金额', trigger: 'blur' }]
+      const bigAmount = [{ required: true, message: '请输入金额', trigger: 'blur' }]
+      const rateDateFree = [
         {
           required: true,
-          message: '输入大于单日最高提款次数，请重新输入',
+          message: '请输入超出次数手续费收取金额或百分比',
           trigger: 'blur'
-        },
-        { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+        }
       ]
-      const region = [{ required: true, message: '百分比（%）', trigger: 'change' }]
-      const beyondfrequency = [
-        { required: true, message: '请输入提示语', trigger: 'blur' },
-        { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+      const rateDateTotal = [
+        {
+          required: true,
+          message: '请输入超出金额手续费收取金额或百分比',
+          trigger: 'blur'
+        }
       ]
-      const beyondtotal = [
-        { required: true, message: '请输入提示语', trigger: 'blur' },
-        { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
-      ]
+      const status = [{ required: true, message: '请选择状态', trigger: 'blur' }]
+
+      // const oneFree = [{ required: true, validator: oneFreeRules, trigger: 'blur' }]
       return {
         singleMinAmount,
         singleMaxAmount,
@@ -410,14 +422,9 @@ export default {
         dateTotalNum,
         dateMaxAmount,
         bigAmount,
-        oneFree,
-        minimum,
-        maxmum,
-        signminimum,
-        onefreetotal,
-        region,
-        beyondfrequency,
-        beyondtotal
+        rateDateFree,
+        rateDateTotal,
+        status
       }
     }
   },
@@ -425,10 +432,7 @@ export default {
   methods: {
     loadData() {
       this.loading = true
-      let params = {
-        ...this.queryData
-      }
-      params = {
+      const params = {
         ...this.getParams(params)
       }
 
@@ -436,8 +440,8 @@ export default {
         .getWithdrawSettingProxySelectPage(params)
         .then((res) => {
           if (res.code === 200) {
-            this.tableData = res.data.record
-            this.total = res.data.totalRecord
+            this.tableData = res.data.records
+            this.total = res.data.total
             this.loading = false
           } else {
             this.loading = false
@@ -456,12 +460,38 @@ export default {
     },
     reset() {
       this.queryData = {}
-      this.$refs['form'].resetFields()
+      this.dialogForm = {
+        singleMinAmount: 0,
+        singleMaxAmount: 0,
+        dateFreeNum: 0,
+        dateFreeAmount: 0,
+        dateTotalNum: 0,
+        dateMaxAmount: 0,
+        bigAmount: 0,
+        rateDateFree: 0,
+        rateDateTotal: 0,
+        rateDateFreeType: 2,
+        rateDateTotalType: 2,
+        status: 1
+      }
     },
     addLabel() {
       console.log(11111)
       this.title = '新增'
-      this.dialogForm = {}
+      this.dialogForm = {
+        singleMinAmount: 0,
+        singleMaxAmount: 0,
+        dateFreeNum: 0,
+        dateFreeAmount: 0,
+        dateTotalNum: 0,
+        dateMaxAmount: 0,
+        bigAmount: 0,
+        rateDateFree: 0,
+        rateDateTotal: 0,
+        rateDateFreeType: 2,
+        rateDateTotalType: 2,
+        status: 1
+      }
       this.dialogFormVisible = true
     },
     edit(val) {
@@ -470,18 +500,14 @@ export default {
       this.dialogFormVisible = true
     },
     deleteLabel(val) {
-      const data = {}
-      data.id = val.id
-      data.description = val.description
-      data.gameLabelName = val.gameLabelName
-      this.$confirm(`<strong>确定删除此条标签类型吗?</strong>`, `确认提示`, {
+      this.$confirm(`<strong>确定删除此条配置吗?</strong>`, `确认提示`, {
         dangerouslyUseHTMLString: true,
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       })
         .then(() => {
-          this.$api.setUpdateDelete(data).then((res) => {
+          this.$api.setUpdateDelete({ id: val.id }).then((res) => {
             if (res.code === 200) {
               this.$message.success('删除成功')
               this.loadData()
@@ -492,64 +518,28 @@ export default {
     },
 
     subAddOrEidt() {
-      console.log(this.title)
-      const data = {}
-      data.id = this.dialogForm.id
-      data.description = this.dialogForm.description
-      data.gameLabelName = this.dialogForm.gameLabelName
       this.$refs.formSub.validate((valid) => {
         if (valid) {
           if (this.title === '新增') {
             console.log('新增')
-            this.$api.addObGameLabel(data).then((res) => {
-              if (res.code === 200) {
-                this.$message.success('创建成功')
-                this.pageNum = 1
-                this.loadData()
-              }
-            })
+            // this.$api.addObGameLabel(data).then((res) => {
+            //   if (res.code === 200) {
+            //     this.$message.success('创建成功')
+            //     this.pageNum = 1
+            //     this.loadData()
+            //   }
+            // })
           } else {
-            this.$api.setUpdateLabel(data).then((res) => {
-              if (res.code === 200) {
-                this.$message.success('修改成功')
-                this.loadData()
-              }
-            })
+            // this.$api.setUpdateLabel(data).then((res) => {
+            //   if (res.code === 200) {
+            //     this.$message.success('修改成功')
+            //     this.loadData()
+            //   }
+            // })
           }
           this.dialogFormVisible = false
         }
       })
-    },
-    checkValue(e) {
-      const { value } = e.target
-      this.queryData.gameLabelId = value
-      console.log(value)
-    },
-    _changeTableSort({ column, prop, order }) {
-      if (prop === 'gameLabelId') {
-        prop = 1
-      }
-      if (prop === 'createdAt') {
-        prop = 2
-      }
-      if (prop === 'updatedAt') {
-        prop = 3
-      }
-      this.queryData.orderKey = prop
-      if (order === 'ascending') {
-        // 升序
-        this.queryData.orderType = 'asc'
-      } else if (column.order === 'descending') {
-        // 降序
-        this.queryData.orderType = 'desc'
-      }
-      this.loadData()
-    },
-    clear() {
-      this.$refs.formSub.resetFields()
-    },
-    enterSubmit() {
-      this.loadData()
     }
   }
 }
@@ -581,17 +571,30 @@ export default {
     padding-left: 15px;
   }
   .proxyInput {
-    width: 130px;
+    width: 145px;
+  }
+  .setInput {
+    width: 205px;
   }
   /deep/label {
     font-weight: 500;
+  }
+  .selectW {
+    width: 120px;
+  }
+}
+.disp {
+  display: flex;
+  p {
+    width: 50%;
+    margin-bottom: 10px;
   }
 }
 /deep/.el-input-number__decrease,
 /deep/.el-input-number__increase {
   display: none;
 }
-/deep/.el-input-number--medium .el-input__inner {
+/deep/.el-input__inner {
   padding: 0 15px;
   text-align: left;
 }
