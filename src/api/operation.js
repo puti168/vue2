@@ -100,6 +100,33 @@ export function platformUpdateAPI(data) {
 	})
 }
 
+// 运营 ===> 活动类型 ==> 详情
+export function activityTypeDetailAPI(params) {
+	return request({
+		url: '/operate/configActivityType/queryDetail',
+		method: 'get',
+		params
+	})
+}
+
+// 运营 ===> 活动类型 ==> 排序
+export function activitySortAPI(data) {
+	return request({
+		url: '/operate/configActivityType/sort',
+		method: 'post',
+		data
+	})
+}
+
+// 运营 ===> 活动类型 ==> 更新
+export function activityUpdateAPI(params) {
+	return request({
+		url: '/operate/configActivityType/update',
+		method: 'get',
+		params
+	})
+}
+
 export function configDiscountTagQueryList(data) {
 	return request({
 		url: '/operate/configDiscountTag/queryList',
@@ -282,5 +309,8 @@ export default {
 	clientStartUploadAPI,
 	platformSelectAPI,
 	platformUpdateAPI,
+	activityTypeDetailAPI,
+	activitySortAPI,
+	activityUpdateAPI,
 	getOperateObMerchantGameRecordSelect
 }
