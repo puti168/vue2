@@ -318,7 +318,6 @@ import list from '@/mixins/list'
 import detail from './components/detail'
 import dayjs from 'dayjs'
 import { getUsername } from '@/utils/auth'
-import { routerNames } from '@/utils/consts'
 const end = dayjs()
 	.endOf('day')
 	.valueOf()
@@ -327,7 +326,7 @@ const start = dayjs()
 	.valueOf()
 
 export default {
-	name: routerNames.memberWithdrawalReviewRecord,
+	name: 'MemberWithdrawalReviewRecord',
 	components: { detail },
 	mixins: [list],
 	data() {

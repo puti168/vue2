@@ -86,7 +86,7 @@
 						<el-table-column align="center" label="账号状态">
 							<template>
                                 {{
-                                    list.accountStatus
+                                    list && list.accountStatus
                                         ? typeFilter(list.accountStatus, 'accountStatusType')
                                         : '-'
                                 }}
@@ -116,7 +116,7 @@
 				</div>
 			</div>
 			<div class="review-content">
-				<p class="name">账号风控层级</p>
+				<p class="name">会员风控信息</p>
 				<div class="review-flex">
 					<el-table
 						border
@@ -168,7 +168,7 @@
 				</div>
 			</div>
 			<div class="review-content">
-				<p class="name">申请人信息</p>
+				<p class="name">申请信息</p>
 				<div class="review-flex">
 					<el-table
 						border

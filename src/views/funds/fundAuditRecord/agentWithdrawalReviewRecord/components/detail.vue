@@ -2,12 +2,7 @@
 	<div class="review-content">
 		<div class="head">
 			<span class="title">代理提现审核详情</span>
-			<div v-if="type" class="right-btn">
-				<el-button plain @click="goBack">取消</el-button>
-				<el-button type="success" @click="confirm(true)">一审通过</el-button>
-				<el-button type="danger" @click="confirm(false)">一审拒绝</el-button>
-			</div>
-			<div v-else class="right-btn">
+			<div class="right-btn">
 				<el-button plain @click="goBack">返回</el-button>
 			</div>
 		</div>
@@ -24,39 +19,49 @@
 					>
 						<el-table-column align="center" label="注册时间">
 							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
+                                {{ list && list.createDt ? list.createDt : '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="最后登录时间">
 							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
+                                {{ list && list.lastLoginTime ? list.lastLoginTime : '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="注册端">
 							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
+                                {{
+                                    list && list.deviceType
+                                        ? typeFilter(list.deviceType, 'deviceType')
+                                        : '-'
+                                }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="注册IP">
 							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
+                                {{ list && list.registerIp ? list.registerIp : '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="注册端设备编号">
 							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
+                                {{ list && list.deviceNo ? list.deviceNo : '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="账号类型">
 							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
+                                {{
+                                    list && list.accountType
+                                        ? typeFilter(list.accountType, 'accountType')
+                                        : '-'
+                                }}
 							</template>
 						</el-table-column>
-						<el-table-column align="center" label="注册域名">
-							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
-							</template>
-						</el-table-column>
+                        <el-table-column align="center" label="注册域名">
+                            <template>
+                                {{
+                                    list && list.registerReference ? list.registerReference : '-'
+                                }}
+                            </template>
+                        </el-table-column>
 					</el-table>
 				</div>
 			</div>
@@ -72,75 +77,81 @@
 					>
 						<el-table-column align="center" label="代理账号">
 							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
+                                {{ list && list.userName ? list.userName : '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="代理姓名">
 							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
+                                {{ list && list.realName ? list.realName : '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="账号状态">
 							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
+                                {{
+                                    list.accountStatus
+                                        ? typeFilter(list.accountStatus, 'accountStatusType')
+                                        : '-'
+                                }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="代理标签">
 							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
+                                {{ list && list.labelName ? list.labelName : '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="备注">
 							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
+                                {{ list && list.remark ? list.remark : '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="绑定银行卡数量">
 							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
+                                {{ list && list.bankCardNum ? list.bankCardNum : '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="虚拟币账号数量">
 							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
+                                {{ list && list.virtualNum ? list.virtualNum : '-' }}
 							</template>
 						</el-table-column>
 					</el-table>
-				</div>
-				<div class="review-flex">
-					<el-table
-						border
-						size="mini"
-						:data="[1]"
-						style="width: 100%"
-						:header-cell-style="getRowClass"
-					>
-						<el-table-column align="center" label="累计总存款金额（万元）">
-							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
-							</template>
-						</el-table-column>
-						<el-table-column align="center" label="累计总存款次数">
-							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
-							</template>
-						</el-table-column>
-						<el-table-column align="center" label="累计总提款金额（万元）">
-							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
-							</template>
-						</el-table-column>
-						<el-table-column align="center" label="累计总提款次数">
-							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
-							</template>
-						</el-table-column>
-						<el-table-column align="center" label="累计总存提款差额（万元）">
-							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
-							</template>
-						</el-table-column>
-					</el-table>
+                    <el-table
+                        border
+                        size="mini"
+                        :data="[1]"
+                        style="width: 100%"
+                        :header-cell-style="getRowClass"
+                    >
+                        <el-table-column align="center" label="累计总存款金额(万元)">
+                            <template>
+                                {{ list && list.userName ? list.userName : '-' }}
+                            </template>
+                        </el-table-column>
+                        <el-table-column align="center" label="累计总存款次数">
+                            <template>
+                                {{ list && list.realName ? list.realName : '-' }}
+                            </template>
+                        </el-table-column>
+                        <el-table-column align="center" label="累计总提款金额(万元)">
+                            <template>
+                                {{
+                                    list.accountStatus
+                                        ? typeFilter(list.accountStatus, 'accountStatusType')
+                                        : '-'
+                                }}
+                            </template>
+                        </el-table-column>
+                        <el-table-column align="center" label="累计总提款次数">
+                            <template>
+                                {{ list && list.labelName ? list.labelName : '-' }}
+                            </template>
+                        </el-table-column>
+                        <el-table-column align="center" label="累计总提款差额(万元)">
+                            <template>
+                                {{ list && list.remark ? list.remark : '-' }}
+                            </template>
+                        </el-table-column>
+                    </el-table>
 				</div>
 			</div>
 			<div class="review-content">
@@ -155,27 +166,41 @@
 					>
 						<el-table-column align="center" label="风险代理">
 							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
+                                {{ list && list.windControlName ? list.windControlName : '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="风险银行卡">
 							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
+                                {{
+                                    list && list.cardWindControlName
+                                        ? list.cardWindControlName
+                                        : '-'
+                                }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="风险虚拟币">
 							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
+                                {{
+                                    list && list.virtualWindControlName
+                                        ? list.virtualWindControlName
+                                        : '-'
+                                }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="风险IP">
 							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
+                                {{
+                                    list && list.ipWindControlName ? list.ipWindControlName : '-'
+                                }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="风险终端设备号">
 							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
+                                {{
+                                    list && list.deviceNoWindControlName
+                                        ? list.deviceNoWindControlName
+                                        : '-'
+                                }}
 							</template>
 						</el-table-column>
 					</el-table>
