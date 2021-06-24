@@ -428,7 +428,8 @@ export default {
         rateDateTotal: 0,
         rateDateFreeType: 2,
         rateDateTotalType: 2,
-        status: 1
+        status: 1,
+        temporary: {}
       },
       title: '',
       isDisabled: true,
@@ -571,22 +572,28 @@ export default {
     },
 
     reset() {
-      this.queryData = {}
-      this.dialogForm = {
-        singleMinAmount: 0,
-        singleMaxAmount: 0,
-        dateFreeNum: 0,
-        dateFreeAmount: 0,
-        dateTotalNum: 0,
-        dateMaxAmount: 0,
-        bigAmount: 0,
-        rateDateFree: 0,
-        rateDateTotal: 0,
-        rateDateFreeType: 2,
-        rateDateTotalType: 2,
-        status: 1
+      if (this.title === '新增') {
+        this.queryData = {}
+        this.dialogForm = {
+          singleMinAmount: 0,
+          singleMaxAmount: 0,
+          dateFreeNum: 0,
+          dateFreeAmount: 0,
+          dateTotalNum: 0,
+          dateMaxAmount: 0,
+          bigAmount: 0,
+          rateDateFree: 0,
+          rateDateTotal: 0,
+          rateDateFreeType: 2,
+          rateDateTotalType: 2,
+          status: 1
+        }
+      } else {
+        this.dialogForm = this.temporary
       }
-      this.$refs.formProxy.resetFields()
+      if (this.isUniversal) {
+        this.$refs.formProxy.resetFields()
+      }
       this.$refs.formSub.resetFields()
     },
     addLabel() {
@@ -635,6 +642,7 @@ export default {
         proxyAccountStatus === 0 ? '' : proxyAccountStatus + ''
       )
       this.$set(this.queryData, 'windControlName', windControlName)
+      this.temporary = { ...val }
       this.dialogForm = { ...val }
       this.dialogFormVisible = true
     },
