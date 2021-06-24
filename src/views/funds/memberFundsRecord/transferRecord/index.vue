@@ -93,7 +93,7 @@
               :popper-append-to-body="false"
             >
               <el-option
-                v-for="item in gameTransferStatus"
+                v-for="item in transferStatus"
                 :key="item.code"
                 :label="item.description"
                 :value="item.code"
@@ -186,7 +186,7 @@
               {{
                 scope.row.transferStatus === 0
                   ? "-"
-                  : typeFilter(scope.row.transferStatus, "gameTransferStatus")
+                  : typeFilter(scope.row.transferStatus, "transferStatus")
               }}
             </template>
           </el-table-column>
@@ -237,8 +237,8 @@ export default {
     }
   },
   computed: {
-    gameTransferStatus() {
-      return this.globalDics.gameTransferStatus
+    transferStatus() {
+      return this.globalDics.transferStatus
     }
   },
   created() {
