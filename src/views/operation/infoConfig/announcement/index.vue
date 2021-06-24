@@ -20,8 +20,8 @@
               placeholder="默认选择全部"
               :popper-append-to-body="false"
             >
-              <el-option label="重要" value="1"></el-option>
-              <el-option label="无" value="0"></el-option>
+              <el-option label="重要" :value="1"></el-option>
+              <el-option label="无" :value="0"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="发送终端:">
@@ -47,8 +47,8 @@
               placeholder="默认选择全部"
               :popper-append-to-body="false"
             >
-              <el-option label="限时" value="1"></el-option>
-              <el-option label="永久" value="2"></el-option>
+              <el-option label="限时" :value="1"></el-option>
+              <el-option label="永久" :value="2"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="状态:">
@@ -131,19 +131,31 @@
           <el-table-column
             prop="announcementTitle"
             align="center"
+            width="200px"
             label="公告标题"
           ></el-table-column>
-          <el-table-column align="center" label="公告内容" prop="announcementContent">
+          <el-table-column align="center" label="公告内容" width="200px" prop="announcementContent">
           </el-table-column>
-          <el-table-column prop="tag" align="center" label="标识"></el-table-column>
-          <el-table-column align="center" label="发送终端" prop="terminal">
+          <el-table-column prop="tag" align="center" label="标识">
+            <template slot-scope="scope">
+              {{ scope.row.tag === 0 ? "无" : "重要" }}
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="发送终端" width="120px" prop="terminal">
+            <template slot-scope="scope">
+              {{ typeFilter(scope.row.terminal, "loginDeviceType") }}
+            </template>
           </el-table-column>
           <el-table-column align="center" label="公告时效" prop="announcementAging">
+            <template slot-scope="scope">
+              {{ scope.row.announcementAging === 1 ? "限时" : "永久" }}
+            </template>
           </el-table-column>
           <el-table-column
             align="center"
             label="公告上架时间"
             prop="upTime"
+            width="155px"
             sortable="custom"
           >
           </el-table-column>
@@ -151,16 +163,33 @@
             align="center"
             label="公告下架时间"
             prop="downTime"
+            width="155px"
             sortable="custom"
           >
+            <template slot-scope="scope">
+              <span v-if="scope.row.announcementAging === 1">
+                {{ scope.row.downTime }}
+              </span>
+              <span v-else> - </span>
+            </template>
           </el-table-column>
-          <el-table-column prop="status" align="center" label="状态"></el-table-column>
+          <el-table-column prop="status" align="center" width="90px" label="状态">
+            <template slot-scope="scope">
+              <span v-if="scope.row.status === 1" class="normalRgba">{{
+                typeFilter(scope.row.status, "blackStatusType")
+              }}</span>
+              <span v-else class="disableRgba">{{
+                typeFilter(scope.row.status, "blackStatusType")
+              }}</span>
+            </template>
+          </el-table-column>
           <el-table-column prop="createdBy" align="center" label="创建人">
           </el-table-column>
           <el-table-column
             prop="createdAt"
             align="center"
             label="创建时间"
+            width="155px"
             sortable="custom"
           >
           </el-table-column>
@@ -173,11 +202,13 @@
             prop="updatedAt"
             align="center"
             label="最近操作时间"
+            width="155px"
             sortable="custom"
           ></el-table-column>
-          <el-table-column prop="operating" align="center" label="操作">
+          <el-table-column prop="operating" align="center" width="240px" label="操作">
             <template slot-scope="scope">
               <el-button
+                v-if="scope.row.status === 1"
                 :disabled="loading"
                 type="danger"
                 size="medium"
@@ -187,6 +218,7 @@
                 禁用
               </el-button>
               <el-button
+                v-else
                 :disabled="loading"
                 type="success"
                 size="medium"
@@ -288,8 +320,8 @@
               placeholder="默认选择全部"
               :popper-append-to-body="false"
             >
-              <el-option label="重要" value="1"></el-option>
-              <el-option label="无" value="0"></el-option>
+              <el-option label="重要" :value="1"></el-option>
+              <el-option label="无" :value="0"></el-option>
             </el-select>
             <span class="el-form-item__error">
               *标识为重要时，前端公告栏该公告展示前方会显示”重要“两字
@@ -329,8 +361,8 @@
               placeholder="默认选择全部"
               :popper-append-to-body="false"
             >
-              <el-option label="限时" value="1"></el-option>
-              <el-option label="永久" value="2"></el-option>
+              <el-option label="限时" :value="1"></el-option>
+              <el-option label="永久" :value="2"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item
@@ -357,7 +389,7 @@
             </span>
           </el-form-item>
           <el-form-item
-            v-if="dialogForm.announcementAging === '1'"
+            v-if="dialogForm.announcementAging === 1"
             label="公告下架时间:"
             label-width="112px"
             :rules="[{ required: true }]"
@@ -396,9 +428,9 @@ export default {
   mixins: [list],
   data() {
     return {
-      queryData: {},
+      queryData: {terminal: []},
       dialogFormVisible: false,
-      dialogForm: { tag: '1', terminal: ['2'], status: 1, announcementAging: '1' },
+      dialogForm: { tag: 1, terminal: ['2'], status: 0, announcementAging: 1 },
       onlineTime: Date.now(),
       offlineTime: endTime,
       dateNow: {
@@ -468,7 +500,7 @@ export default {
     },
     Add(val) {
       this.flag = val
-      this.dialogForm = { tag: '1', terminal: ['2'], status: 1, announcementAging: '1' }
+      this.dialogForm = { tag: 1, terminal: ['2'], status: 0, announcementAging: 1 }
       this.dialogFormVisible = true
     },
     openEdit(val, row) {
@@ -476,9 +508,10 @@ export default {
       this.$api.getOperateConfigAnnouncementSelect({ id: row.id }).then((res) => {
         if (res.code === 200) {
           console.log(res)
+          this.dialogForm = res.data
+          this.dialogFormVisible = true
         }
       })
-      this.dialogFormVisible = true
     },
     subAddOrEidt() {
       const startTime =
@@ -492,7 +525,7 @@ export default {
       console.log(startTime, endTime)
       this.$refs.formSub.validate((valid) => {
         if (valid) {
-          if (this.dialogForm.announcementAging === '1' && startTime < endTime) {
+          if (this.dialogForm.announcementAging === 1 && startTime < endTime) {
             this.errTime = false
             const params = {
               ...this.dialogForm,
@@ -501,10 +534,11 @@ export default {
             }
             console.log(params, '000')
             this.getOperateConfigAnnouncementSave(params)
-          } else if (this.dialogForm.announcementAging === '2') {
+          } else if (this.dialogForm.announcementAging === 2) {
             this.errTime = false
             const params = {
               ...this.dialogForm,
+              downTime: '',
               upTime: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : ''
             }
             console.log(params, '111')
@@ -520,8 +554,13 @@ export default {
       this.$api.getOperateConfigAnnouncementSave(val).then((res) => {
         this.loading = false
         if (res.code === 200) {
-          console.log(res)
+          this.$message({
+            message: this.flag === '新增' ? '新增成功！' : '编辑成功！',
+            type: 'success'
+          })
+          this.loadData()
         }
+        this.dialogFormVisible = false
       })
     },
     clear() {
@@ -543,7 +582,11 @@ export default {
         .then(() => {
           this.$api.getOperateConfigAnnouncementDelete({ id: row.id }).then((res) => {
             if (res.code === 200) {
-              console.log(res)
+              this.$message({
+                message: '删除成功！',
+                type: 'success'
+              })
+              this.loadData()
             }
           })
         })
@@ -551,10 +594,10 @@ export default {
     },
     changeStatus(row) {
       const id = row.id
-      const status = row.status
+      const status = row.status === 0 ? 1 : 0
       this.$confirm(
         `<strong>是否对该配置进行${
-          status === 0 ? '禁用' : '开启'
+          status === 0 ? '启用' : '禁用'
         }操作?</strong></br><span style='font-size:12px;color:#c1c1c1'>一旦操作将会立即生效</span>`,
         '确认提示',
         {
@@ -589,22 +632,31 @@ export default {
         .catch(() => {})
     },
     changeTableSort({ column, prop, order }) {
-      this.pageNum = 1
-      this.queryData.orderProperty = prop
-      const orderParams = this.checkOrderParams.get(prop)
-      if (orderParams) {
-        if (order === 'ascending') {
-          // 升序
-          this.queryData.orderType = 'asc'
-        } else if (column.order === 'descending') {
-          // 降序
-          this.queryData.orderType = 'desc'
-        }
-        this.loadData()
+      if (prop === 'upTime') {
+        prop = 1
       }
+      if (prop === 'downTime') {
+        prop = 2
+      }
+      if (prop === 'createdAt') {
+        prop = 3
+      }
+      if (prop === 'updatedAt') {
+        prop = 4
+      }
+      this.pageNum = 1
+      this.queryData.orderKey = prop
+      if (order === 'ascending') {
+        // 升序
+        this.queryData.orderType = 'asc'
+      } else if (column.order === 'descending') {
+        // 降序
+        this.queryData.orderType = 'desc'
+      }
+      this.loadData()
     },
     reset() {
-      this.queryData = {}
+      this.queryData = { terminal: [] }
       this.pageNum = 1
       this.loadData()
     },

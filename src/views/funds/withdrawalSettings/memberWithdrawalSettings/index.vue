@@ -148,7 +148,7 @@ width="120px"
           ref="formSub"
           :rules="rules"
           :inline="true"
-          class="inline"
+          class="demo-form-inline"
           :model="dialogForm"
         >
           <el-form-item
@@ -193,7 +193,7 @@ width="120px"
               class="chief"
               placeholder="请输入金额，为0不限制"
             ></el-input-number>
-            <span>元</span>
+            <span style="w">元</span>
           </el-form-item>
           <el-form-item label="单日免费提款总额：" prop="dateFreeAmount">
             <el-input-number
@@ -204,23 +204,35 @@ width="120px"
             <span>元</span>
           </el-form-item>
           <h2>提款手续费配置</h2>
-          <el-form-item label="超出单日免费次数：" class="inline" prop="rateDateFreeType">
-            <el-select v-model="dialogForm.rateDateFreeType" style="width:140px" placeholder="请选择">
+          <el-form-item
+            label="超出单日免费次数："
+            class="configure"
+            prop="rateDateFreeType"
+          >
+            <el-select
+              v-model="dialogForm.rateDateFreeType"
+              class="sun"
+              placeholder="请选择"
+            >
               <el-option
                 v-for="item in rateDateFreeType"
                 :key="item.value"
-
                 :label="item.label"
                 :value="item.value"
               >
               </el-option>
             </el-select>
+            <el-input-number
+              v-model="dialogForm.rateDateFreeType"
+              class="sun"
+            ></el-input-number>
           </el-form-item>
-          <el-form-item>
-            <el-input-number v-model="dialogForm.rateDateFree" class="elform"></el-input-number>
-          </el-form-item>
-          <el-form-item label="超出单日免费次数总额：" class="inline foleb" prop="rateDateTotalType">
-            <el-select v-model="dialogForm.rateDateTotalType" style="width:140px" placeholder="请选择">
+          <el-form-item label="超出单日免费次数总额：" prop="rateDateTotalType">
+            <el-select
+              v-model="dialogForm.rateDateTotalType"
+              class="sun"
+              placeholder="请选择"
+            >
               <el-option
                 v-for="item in rateDateTotalType"
                 :key="item.value"
@@ -229,20 +241,57 @@ width="120px"
               >
               </el-option>
             </el-select>
+            <el-input-number
+              v-model="dialogForm.rateDateTotalType"
+              class="sun"
+              placeholder="0"
+            ></el-input-number>
           </el-form-item>
-          <el-form-item>
-            <el-input-number class="elform" placeholder=""></el-input-number>
-          </el-form-item>
-          <el-form-item label="状态：">
+          <el-form-item label="状态">
             <el-select
               v-model="dialogForm.status"
               clearable
               :popper-append-to-body="false"
             >
-              <el-option label="关闭"></el-option>
-              <el-option label="开启"></el-option>
+              <el-option label="关闭" value="shanghai"></el-option>
+              <el-option label="开启" value="beijing"></el-option>
             </el-select>
           </el-form-item>
+
+          <!-- <el-form-item
+            label="标签名称:"
+            prop="gameLabelName"
+            :rules="[
+              { required: true, message: '请输入标签名称', trigger: 'blur' },
+              {
+                min: 1,
+                max: 10,
+                message: '长度在 2 到 10 个字符',
+                trigger: 'blur',
+              },
+            ]"
+          >
+            <el-input
+              v-model="dialogForm.gameLabelName"
+              :maxlength="10"
+              autocomplete="off"
+            ></el-input>
+          </el-form-item>
+          <el-form-item
+            label="描述:"
+            prop="description"
+            :rules="[
+              { required: true, message: '请输入描述内容', trigger: 'blur' },
+              {
+                min: 2,
+                max: 50,
+                message: '长度在 2 到 50 个字符',
+                trigger: 'blur',
+              },
+            ]"
+          >
+            <el-input v-model="dialogForm.description" type="textarea"></el-input>
+          </el-form-item> -->
         </el-form>
         <el-divider></el-divider>
         <span slot="footer" class="dialog-footer">
@@ -293,24 +342,25 @@ export default {
     return {
       rateDateFreeType: [
         {
-          value: '1',
           label: ' 固定金额（元）'
         },
         {
-          value: '2',
           label: ' 百分比（%）'
         }
       ],
       rateDateTotalType: [
         {
-          value: '1',
           label: ' 固定金额（元）'
         },
         {
-          value: '2',
           label: ' 百分比（%）'
         }
       ],
+      formInline: {
+        user: '',
+        rateDateFreeType: '',
+        rateDateTotalType: ''
+      },
       vipExclusive: [],
       queryData: {},
       tableData: [],
@@ -397,6 +447,7 @@ export default {
   mounted() {},
   methods: {
     add() {
+      this.loading = true
       const params = {
         ...this.queryData
       }
@@ -569,21 +620,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.foleb{
-  padding-left: 40px;
-}
-.el-input__inner{
-   padding-left: 0px;
-  padding-right: 0px;
-}
-.elform{
-  width: 100px;
-  padding-left: 0px;
-  padding-right: 0px;
-}
-.inline{
-  margin-right:0px
-}
 .el-form--inline {
   line-height: 4;
 }

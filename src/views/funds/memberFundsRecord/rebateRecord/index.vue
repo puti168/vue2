@@ -159,6 +159,11 @@
               </span>
             </template>
           </el-table-column>
+          <el-table-column prop="gameName" align="center" label="游戏名称">
+            <template slot-scope="scope">
+              {{ scope.row.gameName !== null ? scope.row.gameName : "-" }}
+            </template>
+          </el-table-column>
           <el-table-column prop="rebateStatus" align="center" label="订单状态">
             <template slot-scope="scope">
               {{ typeFilter(scope.row.rebateStatus, "rebateType") }}

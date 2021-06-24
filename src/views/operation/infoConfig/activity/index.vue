@@ -57,7 +57,7 @@
               icon="el-icon-folder"
               :disabled="loading"
               size="medium"
-              @click="dialogFormVisible = true"
+              @click="Add"
             >
               新增
             </el-button>
@@ -330,11 +330,12 @@ export default {
   methods: {
     loadData() {
       const params = {
+        type: 2,
         ...this.getParams(this.queryData)
       }
       this.loading = true
       this.$api
-        .gameList(params)
+        .getOperateConfigNoticeSelectAll(params)
         .then((res) => {
           if (res.code === 200) {
             const response = res.data
@@ -359,6 +360,10 @@ export default {
       this.pageNum = 1
       this.loadData()
     },
+    Add() {
+      this.dialogForm = { sendObj: '0', deviceType: [], timeTab: '0' }
+      this.dialogFormVisible = true
+    },
     sendObj(val) {
       if (val === '1') {
         this.dialogForm = { sendObj: '1', deviceType: [], timeTab: '0' }
@@ -368,9 +373,17 @@ export default {
       console.log(val)
     },
     subAddOrEidt() {
+      const params = {
+        ...this.dialogForm
+      }
       this.$refs.formSub.validate((valid) => {
         if (valid) {
-          console.log(this.dialogForm)
+          console.log(params)
+          this.$api.getOperateConfigNoticeSave(params).then((res) => {
+            if (res.code === 200) {
+              console.log(res)
+            }
+          })
         }
       })
     },
@@ -385,19 +398,26 @@ export default {
           type: 'warning'
         }
       )
-        .then(() => {})
+        .then(() => {
+          const params = row
+          this.$api.getOperateConfigNoticeRetract(params).then((res) => {
+            if (res.code === 200) {
+              console.log(res)
+            }
+          })
+        })
         .catch(() => {})
     },
     clear() {
       this.dialogForm = { sendObj: '0', deviceType: [], timeTab: '0' }
     },
     // 弹框标签添加人数
-    getMemberMemberInfoByLabelId(val) {
+    getOperateConfigNoticeSelect(val) {
       const params = {}
       params.id = val
       params.pageNum = this.page
       params.pageSize = this.size
-      this.$api.getMemberMemberInfoByLabelId(params).then((res) => {
+      this.$api.getOperateConfigNoticeSelect(params).then((res) => {
         if (res.code === 200) {
           this.gameList = res.data.record
           this.lookVisible = true
@@ -407,17 +427,17 @@ export default {
     lookGame(val) {
       this.id = val.id
       this.lookVisible = true
-      // this.getMemberMemberInfoByLabelId(val.id)
+      // this.getOperateConfigNoticeSelect(val.id)
     },
     handleCurrentChangeDialog(val) {
       console.log(111, val)
       this.page = val
-      // this.getMemberMemberInfoByLabelId(this.id)
+      // this.getOperateConfigNoticeSelect(this.id)
     },
     handleSizeChangeDialog(val) {
       console.log(222, val)
       this.size = val
-      // this.getMemberMemberInfoByLabelId(this.id)
+      // this.getOperateConfigNoticeSelect(this.id)
     },
     changeTableSort({ column, prop, order }) {
       this.pageNum = 1
