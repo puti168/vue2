@@ -10,26 +10,26 @@
 				</span>
 			</div>
 			<el-form ref="form" :model="queryData" :rules="rules" label-width="120px">
-				<el-form-item label="场馆:" prop="pateVenue">
+				<el-form-item label="场馆:" prop="gameName">
 					<el-select
-						v-model="queryData.pateVenue"
+						v-model="queryData.gameName"
 						size="medium"
 						placeholder="请选择"
 						clearable
 						style="width: 365px"
-						@change="changeRiskType($event)"
+						@change="changeType($event)"
 					>
 						<el-option
 							v-for="item in gameVenueList"
 							:key="item.id"
 							:label="item.gameName"
-							:value="item.id"
+							:value="item"
 						></el-option>
 					</el-select>
 				</el-form-item>
-				<el-form-item label="费率" prop="rebate">
+				<el-form-item label="费率" prop="feeRate">
 					<el-input
-						v-model="queryData.rebate"
+						v-model="queryData.feeRate"
 						size="medium"
 						maxlength="4"
 						placeholder="请输入"
@@ -65,7 +65,7 @@
 				</el-form-item>
 			</el-form>
 		</div>
-		<div class="info-show">
+		<div v-if="showInfoData" class="info-show">
 			<div class="info-header">
 				<span>基本信息</span>
 			</div>
@@ -75,37 +75,58 @@
 						<p>
 							<span>场馆：</span>
 							<span>
-								{{ showInfoData.deviceNo ? showInfoData.deviceNo : '-' }}
+								{{
+									showInfoData && showInfoData.gameName
+										? showInfoData.gameName
+										: '-'
+								}}
 							</span>
 						</p>
 					</el-col>
 					<el-col :span="6">
 						<span>费率：</span>
 						<span>
-							{{ showInfoData.remark ? showInfoData.remark : '-' }}
+							{{
+								showInfoData && showInfoData.feeRate
+									? showInfoData.feeRate * 100 + '%'
+									: '-'
+							}}
 						</span>
 					</el-col>
 					<el-col :span="6">
 						<span>备注：</span>
 						<span>
-							{{ showInfoData.updateBy ? showInfoData.updateBy : '-' }}
+							{{
+								showInfoData && showInfoData.remark ? showInfoData.remark : '-'
+							}}
 						</span>
 					</el-col>
 					<el-col :span="6">
 						<span>最近操作人：</span>
 						<span>
-							{{ showInfoData.updateAt ? showInfoData.updateAt : '-' }}
+							{{
+								showInfoData && showInfoData.updateBy
+									? showInfoData.updateBy
+									: '-'
+							}}
 						</span>
 					</el-col>
 				</el-row>
-                <el-row class="info-content-row">
-                    <el-col :span="8">最近操作时间：</el-col>
-                    <el-col :span="5" />
-                    <el-col :span="5" />
-                    <el-col :span="6" />
-                </el-row>
+				<el-row class="info-content-row">
+					<el-col :span="8">
+						最近操作时间：{{
+							showInfoData && showInfoData.updateAt
+								? showInfoData.updateAt
+								: '-'
+						}}
+					</el-col>
+					<el-col :span="5" />
+					<el-col :span="5" />
+					<el-col :span="6" />
+				</el-row>
 			</div>
 		</div>
+        <div v-else class="info-show"></div>
 	</div>
 </template>
 
@@ -121,50 +142,67 @@ export default {
 		return {
 			loadingT: false,
 			queryData: {
-				pateVenue: '',
-                rebate: undefined,
-				remark: undefined
+				gameName: undefined,
+                feeRate: undefined,
+				remark: undefined,
+				id: undefined,
+				merchantId: undefined
 			},
-			showInfoData: {},
-			tipsShow: null,
+			showInfoData: undefined,
 			gameVenueList: []
 		}
 	},
 	computed: {
 		rules() {
-			const pateVenue = [
+			const gameName = [
 				{ required: true, message: '请选择场馆', trigger: 'change' }
 			]
-			const rebate = [
+			const feeRate = [
 				{ required: true, message: '请输入费率', trigger: 'blur' }
 			]
 			const remark = [
 				{ required: true, message: '请输入备注', trigger: 'blur' }
 			]
 			return {
-				pateVenue,
-                rebate,
+				gameName,
+				feeRate,
 				remark
 			}
 		}
 	},
-	mounted() {
-		this.getMemberVipMerchantGame()
-	},
+	created() {
+        this.getMemberVipMerchantGame()
+    },
+	mounted() {},
 	methods: {
+		// 查询详情
+		queryDetails(id) {
+			this.$api.platformSelectAPI(Number(id)).then((res) => {
+				const { code, data } = res
+				console.log('res', res)
+				if (code === 200) {
+					this.showInfoData = data
+					const { id, merchantId, gameCode } = data
+					this.queryData.id = id
+					this.queryData.merchantId = merchantId
+					this.queryData.gameCode = gameCode
+				} else {
+					this.showInfoData = undefined
+				}
+			})
+		},
 		add() {
 			this.loadingT = true
 			const params = {
 				...this.queryData
 			}
 			let lock = true
-			params.windControlType = params.windControlType * 1
-			params.proxyUserName ? (params.userName = params.proxyUserName) : null
+            params.feeRate = params.feeRate / 100
 			this.$refs['form'].validate((valid) => {
-				if (valid && lock && !this.tipsShow) {
+				if (valid && lock) {
 					lock = false
 					this.$api
-						.riskEditAddAPI(params)
+						.platformUpdateAPI(params)
 						.then((res) => {
 							this.loadingT = false
 							lock = true
@@ -198,13 +236,25 @@ export default {
 		reset() {
 			this.$refs['form'] && this.$refs['form'].resetFields()
 			this.queryData = {
-                pateVenue: '',
-                rebate: undefined,
-                remark: undefined
+                gameName: undefined,
+                feeRate: undefined,
+                remark: undefined,
+                id: undefined,
+                merchantId: undefined
 			}
+			this.showInfoData = undefined
 		},
-		changeRiskType(evt) {
-			// this.$refs['form'] && this.$refs['form'].resetFields()
+		changeType(evt) {
+			this.$refs['form'] && this.$refs['form'].resetFields()
+			this.showInfoData = undefined
+			this.queryData = {
+				gameName: evt.gameName,
+                feeRate: undefined,
+                remark: undefined,
+                id: undefined,
+                merchantId: undefined
+			}
+			this.queryDetails(evt.id)
 		},
 		checkRiskValue(val) {
 			// console.log('val', val)

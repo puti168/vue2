@@ -82,6 +82,24 @@ export function clientStartUploadAPI(data, cb) {
 	})
 }
 
+// 运营 ===> 场馆费率 ==> 配置查询
+export function platformSelectAPI(data) {
+	return request({
+		url: '/operate/obMerchantGame/select',
+		method: 'post',
+		data
+	})
+}
+
+// 运营 ===> 场馆费率 ==> 更新配置
+export function platformUpdateAPI(data) {
+	return request({
+		url: '/operate/obMerchantGame/update',
+		method: 'post',
+		data
+	})
+}
+
 export function configDiscountTagQueryList(data) {
 	return request({
 		url: '/operate/configDiscountTag/queryList',
@@ -262,5 +280,7 @@ export default {
 	clientStartDeleteAPI,
 	clientStartUseAPI,
 	clientStartUploadAPI,
+	platformSelectAPI,
+	platformUpdateAPI,
 	getOperateObMerchantGameRecordSelect
 }

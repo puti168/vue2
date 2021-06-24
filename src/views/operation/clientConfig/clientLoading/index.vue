@@ -49,7 +49,7 @@
 					</el-form-item>
 					<el-form-item label="创建人:">
 						<el-input
-							v-model="queryData.createBy"
+							v-model="queryData.createdBy"
 							size="medium"
 							placeholder="请输入"
 							clearable
@@ -215,11 +215,11 @@
 					>
 						<template slot-scope="scope">
 							<el-button
-								:type="scope.row.assortStatus ? 'danger' : 'success'"
+								:type="scope.row.status + '' === '0' ? 'success' : 'danger'"
 								size="medium"
 								@click="recycle(scope.row)"
 							>
-								<div v-if="scope.row.assortStatus">
+								<div v-if="scope.row.status + '' === '1'">
 									禁用
 								</div>
 								<div v-else>
