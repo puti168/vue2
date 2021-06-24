@@ -358,13 +358,8 @@ export default {
       params = {
         ...this.getParams(params)
       }
-      delete params.registerTime
-      delete params.lastLoginTime
-      delete params.firstSaveTime
-      delete params.accountStatus
-      delete params.deviceType
           this.$api
-            .getGameRecordDownload(params)
+            .getProxyFundsRecordsArtificialAccountSubDownload(params)
             .then((res) => {
               this.loading = false
               const { data, status } = res
@@ -419,11 +414,11 @@ export default {
             })
             .catch(() => {
               this.loading = false
-              this.$message({
-                type: 'error',
-                message: '导出失败',
-                duration: 1500
-              })
+              // this.$message({
+              //   type: 'error',
+              //   message: '导出失败',
+              //   duration: 1500
+              // })
             })
     },
      getSummaries(param) {
@@ -474,16 +469,6 @@ export default {
         this.queryData.orderType = 'desc'
       }
       this.loadData()
-    },
-    handleCurrentChangeDialog(val) {
-      console.log(111, val)
-      this.page = val
-      // this.getMemberMemberInfoByLabelId(this.id)
-    },
-    handleSizeChangeDialog(val) {
-      console.log(222, val)
-      this.size = val
-      // this.getMemberMemberInfoByLabelId(this.id)
     }
 
   }
