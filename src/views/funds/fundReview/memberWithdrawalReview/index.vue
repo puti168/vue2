@@ -34,10 +34,10 @@
 					</el-form-item>
 					<el-form-item label="订单号:">
 						<el-input
-							v-model="queryData.id"
+							v-model="queryData.thirdOrderNo"
 							clearable
 							size="medium"
-							:maxlength="19"
+							:maxlength="21"
 							style="width: 180px"
 							placeholder="请输入"
 							@keyup.enter.native="enterSearch"
@@ -133,20 +133,37 @@
 							</template>
 						</el-table-column>
 						<el-table-column
-							prop="id"
+							prop="thirdOrderNo"
 							align="center"
 							label="审核订单号"
-						></el-table-column>
-						<el-table-column
-							prop="userName"
-							align="center"
-							label="会员账号"
-						></el-table-column>
+						>
+                            <template slot-scope="scope">
+								<span v-if="!!scope.row.thirdOrderNo">
+									{{ scope.row.thirdOrderNo }}
+								</span>
+                                <span v-else>-</span>
+                            </template>
+                        </el-table-column>
+						<el-table-column prop="userName" align="center" label="会员账号">
+							<template slot-scope="scope">
+								<span v-if="!!scope.row.userName">
+									{{ scope.row.userName }}
+								</span>
+								<span v-else>-</span>
+							</template>
+						</el-table-column>
 						<el-table-column
 							prop="realName"
 							align="center"
 							label="会员姓名"
-						></el-table-column>
+						>
+                            <template slot-scope="scope">
+								<span v-if="!!scope.row.realName">
+									{{ scope.row.realName }}
+								</span>
+                                <span v-else>-</span>
+                            </template>
+                        </el-table-column>
 						<el-table-column prop="isBig" align="center" label="是否为大额提款">
 							<template slot-scope="scope">
 								{{ Number(scope.row.isBig) === 1 ? '是' : '否' }}
@@ -156,17 +173,38 @@
 							prop="orderAmount"
 							align="center"
 							label="提款金额"
-						></el-table-column>
+						>
+                            <template slot-scope="scope">
+								<span v-if="!!scope.row.orderAmount">
+									{{ scope.row.orderAmount }}
+								</span>
+                                <span v-else>-</span>
+                            </template>
+                        </el-table-column>
 						<el-table-column
 							prop="orderRateAmount"
 							align="center"
 							label="提款手续费"
-						></el-table-column>
+						>
+                            <template slot-scope="scope">
+								<span v-if="!!scope.row.orderRateAmount">
+									{{ scope.row.orderRateAmount }}
+								</span>
+                                <span v-else>-</span>
+                            </template>
+                        </el-table-column>
 						<el-table-column
 							prop="createdAt"
 							align="center"
 							label="申请时间"
-						></el-table-column>
+						>
+                            <template slot-scope="scope">
+								<span v-if="!!scope.row.createdAt">
+									{{ scope.row.createdAt }}
+								</span>
+                                <span v-else>-</span>
+                            </template>
+                        </el-table-column>
 						<el-table-column align="center" label="审核状态">
 							<template slot-scope="scope">
 								<span
@@ -198,33 +236,33 @@
 				</div>
 			</div>
 			<el-dialog
-			title="提交确认"
-			center
-			:visible.sync="visible"
-			width="610px"
-			class="audit-confirm"
-		>
-			<el-form ref="form" :model="form" :rules="formRules">
-				<el-form-item label="提交审核信息" prop="remark">
-					<el-input
-						v-model="form.remark"
-						clearable
-						type="textarea"
-						:maxlength="50"
-						show-word-limit
-						:autosize="{ minRows: 4, maxRows: 4 }"
-						style="width: 380px"
-						placeholder="请输入"
-					></el-input>
-				</el-form-item>
-			</el-form>
-			<div slot="footer" class="dialog-footer">
-				<el-button @click="visible = false">取 消</el-button>
-				<el-button type="primary" @click="auditOne">
-					提交
-				</el-button>
-			</div>
-		</el-dialog>
+				title="提交确认"
+				center
+				:visible.sync="visible"
+				width="610px"
+				class="audit-confirm"
+			>
+				<el-form ref="form" :model="form" :rules="formRules">
+					<el-form-item label="提交审核信息" prop="remark">
+						<el-input
+							v-model="form.remark"
+							clearable
+							type="textarea"
+							:maxlength="50"
+							show-word-limit
+							:autosize="{ minRows: 4, maxRows: 4 }"
+							style="width: 380px"
+							placeholder="请输入"
+						></el-input>
+					</el-form-item>
+				</el-form>
+				<div slot="footer" class="dialog-footer">
+					<el-button @click="visible = false">取 消</el-button>
+					<el-button type="primary" @click="auditOne">
+						提交
+					</el-button>
+				</div>
+			</el-dialog>
 		</template>
 		<detail
 			v-else
@@ -247,6 +285,7 @@ const end = dayjs()
 const start = dayjs()
 	.startOf('day')
 	.valueOf()
+
 export default {
 	name: 'MemberWithdrawalReview',
 	components: { detail },
@@ -254,8 +293,8 @@ export default {
 	data() {
 		return {
 			queryData: {
-				id: '',
-				lockStatus: ''
+				thirdOrderNo: undefined,
+				lockStatus: undefined
 			},
 			type: true,
 			showDetail: false,
@@ -386,16 +425,19 @@ export default {
 						auditResult: this.action ? 1 : 2,
 						orderStatus: 7
 					}
-					this.$api.memberWithDrawUserupdateWithdraw(params).then((res) => {
-						if (res.code === 200) {
-							this.$message({
-								message: '操作成功',
-								type: 'success'
-							})
-							loading.close()
-							this.loadData()
-						}
-					}).catch(() => {
+					this.$api
+						.memberWithDrawUserupdateWithdraw(params)
+						.then((res) => {
+							if (res.code === 200) {
+								this.$message({
+									message: '操作成功',
+									type: 'success'
+								})
+								loading.close()
+								this.loadData()
+							}
+						})
+						.catch(() => {
 							loading.close()
 						})
 				}
@@ -412,12 +454,6 @@ export default {
 			this.loadData()
 		},
 		lockChange(val) {
-			const loading = this.$loading({
-				lock: true,
-				text: 'Loading',
-				spinner: 'el-icon-loading',
-				background: 'rgba(0, 0, 0, 0.7)'
-			})
 			console.log(val)
 			this.$api
 				.memberWithDrawUserupdateWithdrawLock({
@@ -426,6 +462,12 @@ export default {
 					lockStatus: Number(val.lockStatus) === 1 ? 0 : 1
 				})
 				.then((res) => {
+					const loading = this.$loading({
+						lock: true,
+						text: 'Loading',
+						spinner: 'el-icon-loading',
+						background: 'rgba(0, 0, 0, 0.7)'
+					})
 					if (res.code === 200) {
 						loading.close()
 						this.$message({
@@ -441,9 +483,7 @@ export default {
 						})
 					}
 				})
-				.catch(() => {
-					loading.close()
-				})
+				.catch(() => {})
 		}
 	}
 }

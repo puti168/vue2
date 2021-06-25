@@ -94,7 +94,7 @@
 								}}
 							</template>
 						</el-table-column>
-						<el-table-column align="center" label="代理标签">
+						<el-table-column align="center" label="会员标签">
 							<template>
 								{{ list && list.labelName ? list.labelName : '-' }}
 							</template>

@@ -190,7 +190,7 @@
 						>
 							<template slot-scope="scope">
 								<span v-if="!!scope.row.orderAmount">
-									{{ scope.row.orderAmount.toFixed(2) }}
+									{{ scope.row.orderAmount }}
 								</span>
 								<span v-else>-</span>
 							</template>
@@ -208,7 +208,7 @@
 											scope.row.orderRateAmount + '' === '0'
 									"
 								>
-									{{ scope.row.orderRateAmount.toFixed(2) }}
+									{{ scope.row.orderRateAmount }}
 								</span>
 								<span v-else>-</span>
 							</template>
