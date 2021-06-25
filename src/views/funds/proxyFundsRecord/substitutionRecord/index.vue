@@ -185,13 +185,13 @@
               </template>
           </el-table-column>
           <el-table-column
-            prop="accountType"
+            prop="orderStatus"
             align="center"
             label="状态"
             width="100px"
           >
             <template slot-scope="scope">
-              {{ typeFilter(scope.row.accountType, "accountType") }}
+              {{ typeFilter(scope.row.orderStatus, "accessStatusType") }}
             </template>
           </el-table-column>
           <el-table-column

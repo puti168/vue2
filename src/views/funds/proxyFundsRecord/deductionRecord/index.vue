@@ -217,8 +217,8 @@
             width="150px"
           >
             <template slot-scope="scope">
-              <span v-if="scope.row.parentProxyName">{{
-                scope.row.parentProxyName
+              <span v-if="scope.row.operator">{{
+                scope.row.operator
               }}</span>
               <span v-else>-</span>
             </template>
@@ -238,8 +238,8 @@
             width="150px"
           >
             <template slot-scope="scope">
-              <span v-if="scope.row.parentProxyName">{{
-                scope.row.parentProxyName
+              <span v-if="scope.row.remark">{{
+                scope.row.remark
               }}</span>
               <span v-else>-</span>
             </template>
