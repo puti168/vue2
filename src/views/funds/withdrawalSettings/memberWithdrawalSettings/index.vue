@@ -475,17 +475,16 @@ export default {
         type: 'warning'
       })
         .then(() => {
-          this.$message({
-            type: 'success',
-            message: '初始化成功!'
+          this.$api.getWithdrawSettingMemberreset().then((res) => {
+             if (res.code === 200) {
+               console.log(res)
+               this.$message.success('初始化会员提款设置成功!')
+                    this.loadData()
+             }
+               this.dialogFormVisible = false
           })
         })
-        .catch(() => {
-          this.$message({
-            type: 'info',
-            message: '操作取消'
-          })
-        })
+        .catch(() => {})
     },
     reset() {
       if (this.title === '新增') {

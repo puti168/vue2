@@ -184,6 +184,14 @@ export function setwithdrawSettingMemberUpdate(data) {
 		data
 	})
 }
+// 会员提款设置==>初始化提款设置
+export function getWithdrawSettingMemberreset(data) {
+	return request({
+		url: '/withdrawSettingMember/reset',
+		method: 'post',
+		data
+	})
+}
 export default {
     getWithdrawSettingProxySelectPage,
 	getProxyFundsRecordsAccountChange,
@@ -206,5 +214,6 @@ export default {
 	getWithdrawSettingMemberUpdate,
 	getProxyFundsRecordsArtificialAccountSubDownload,
 	getProxyCommissionRecordProxyCommissionExport,
-	setwithdrawSettingMemberUpdate
+	setwithdrawSettingMemberUpdate,
+	getWithdrawSettingMemberreset
 }
