@@ -55,11 +55,11 @@
 						</el-table-column>
 						<el-table-column align="center" label="注册端">
 							<template>
-                                {{
-                                    list && list.deviceType
-                                        ? typeFilter(list.deviceType, 'deviceType')
-                                        : '-'
-                                }}
+								{{
+									list && list.deviceType
+										? typeFilter(list.deviceType, 'deviceType')
+										: '-'
+								}}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="注册IP">
@@ -74,18 +74,18 @@
 						</el-table-column>
 						<el-table-column align="center" label="账号类型">
 							<template>
-                                {{
-                                    list && list.accountType
-                                        ? typeFilter(list.accountType, 'accountType')
-                                        : '-'
-                                }}
+								{{
+									list && list.accountType
+										? typeFilter(list.accountType, 'accountType')
+										: '-'
+								}}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="注册域名">
 							<template>
-                                {{
-                                    list && list.registerReference ? list.registerReference : '-'
-                                }}
+								{{
+									list && list.registerReference ? list.registerReference : '-'
+								}}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="上级代理">
@@ -118,31 +118,31 @@
 						</el-table-column>
 						<el-table-column align="center" label="账号状态">
 							<template>
-                                {{
-                                    list.accountStatus
-                                        ? typeFilter(list.accountStatus, 'accountStatusType')
-                                        : '-'
-                                }}
+								{{
+									list.accountStatus
+										? typeFilter(list.accountStatus, 'accountStatusType')
+										: '-'
+								}}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="会员标签">
 							<template>
-								{{ list && list.beforeModify ? list.beforeModify : '-' }}
+								{{ list && list.labelName ? list.labelName : '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="备注">
 							<template>
-								{{ list && list.beforeModify ? list.beforeModify : '-' }}
+								{{ list && list.remark ? list.remark : '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="绑定银行卡数量">
 							<template>
-								{{ list && list.beforeModify ? list.beforeModify : '-' }}
+								{{ list && list.bankNum ? list.bankNum : '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="虚拟币账号数量">
 							<template>
-								{{ list && list.beforeModify ? list.beforeModify : '-' }}
+								{{ list && list.virtualNum ? list.virtualNum : '-' }}
 							</template>
 						</el-table-column>
 					</el-table>
@@ -157,27 +157,41 @@
 					>
 						<el-table-column align="center" label="累计总存款金额（万元）">
 							<template>
-								{{ list && list.beforeModify ? list.beforeModify : '-' }}
+								{{
+									list && list.totalDepositAmount
+										? list.totalDepositAmount
+										: '-'
+								}}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="累计总存款次数">
 							<template>
-								{{ list && list.beforeModify ? list.beforeModify : '-' }}
+								{{ list && list.totalDepositNum ? list.totalDepositNum : '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="累计总提款金额（万元）">
 							<template>
-								{{ list && list.beforeModify ? list.beforeModify : '-' }}
+								{{
+									list && list.totalWithdrawAmount
+										? list.totalWithdrawAmount
+										: '-'
+								}}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="累计总提款次数">
 							<template>
-								{{ list && list.beforeModify ? list.beforeModify : '-' }}
+								{{
+									list && list.totalWithdrawNum ? list.totalWithdrawNum : '-'
+								}}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="累计总存提款差额（万元）">
 							<template>
-								{{ list && list.beforeModify ? list.beforeModify : '-' }}
+								{{
+									list && list.beforeModify
+										? list.totalDepositAmount * 1 - list.totalWithdrawAmount * 1
+										: '-'
+								}}
 							</template>
 						</el-table-column>
 					</el-table>
@@ -200,20 +214,12 @@
 						</el-table-column>
 						<el-table-column align="center" label="风险银行卡">
 							<template>
-								{{
-									list && list.cardWindControlName
-										? list.cardWindControlName
-										: '-'
-								}}
+								{{ list && list.windBank ? list.windBank : '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="风险虚拟币">
 							<template>
-								{{
-									list && list.virtualWindControlName
-										? list.virtualWindControlName
-										: '-'
-								}}
+								{{ list && list.windVirtual ? list.windVirtual : '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="风险IP">
@@ -225,11 +231,7 @@
 						</el-table-column>
 						<el-table-column align="center" label="风险终端设备号">
 							<template>
-								{{
-									list && list.deviceNoWindControlName
-										? list.deviceNoWindControlName
-										: '-'
-								}}
+								{{ list && list.windEquipment ? list.windEquipment : '-' }}
 							</template>
 						</el-table-column>
 					</el-table>
@@ -247,12 +249,12 @@
 					>
 						<el-table-column align="center" label="上次提款时间">
 							<template>
-								{{ list && list.beforeModify ? list.beforeModify : '-' }}
+								{{ list && list.lastTime ? list.lastTime : '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="上次提款金额">
 							<template>
-								{{ list && list.beforeModify ? list.beforeModify : '-' }}
+								{{ list && list.lastAmount ? list.lastAmount : '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column
@@ -260,17 +262,27 @@
 							label="上次提款至本次提款间存款金额"
 						>
 							<template>
-								{{ list && list.beforeModify ? list.beforeModify : '-' }}
+								{{
+									list && list.lastBetweenThisDepositAmount
+										? list.lastBetweenThisDepositAmount
+										: '-'
+								}}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="上次提款方式">
 							<template>
-								{{ list && list.beforeModify ? list.beforeModify : '-' }}
+								{{ list && list.lastType ? list.lastType : '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="上次是否为大额提款">
 							<template>
-								{{ list && list.beforeModify ? list.beforeModify : '-' }}
+								{{
+									list && list.lastBig
+										? Number(list.lastBig) === 0
+											? '否'
+											: '是'
+										: '-'
+								}}
 							</template>
 						</el-table-column>
 					</el-table>
@@ -283,37 +295,87 @@
 						<tbody>
 							<tr>
 								<td class="td-title">订单号</td>
-								<td>33333333</td>
+								<td>{{ list && list.orderId ? list.orderId : '-' }}</td>
 								<td class="td-title">订单来源</td>
-								<td>PC</td>
+								<td>{{ list && list.deviceNo ? list.deviceNo : '-' }}</td>
 								<td class="td-title">提款IP</td>
-								<td>33333333333</td>
+								<td>{{ list && list.customerIp ? list.customerIp : '-' }}</td>
 								<td class="td-title">是否为首提</td>
-								<td>否</td>
+								<td>
+									{{
+										list && list.isFirst
+											? Number(list.isFirst) === 1
+												? '是'
+												: '否'
+											: '-'
+									}}
+								</td>
 								<td class="td-title">是否为大额提款</td>
-								<td>否</td>
+								<td>
+									{{
+										list && list.isBig
+											? Number(list.isBig) === 1
+												? '是'
+												: '否'
+											: '-'
+									}}
+								</td>
 							</tr>
 							<tr>
 								<td class="td-title">今日提款次数</td>
-								<td>33333333</td>
+								<td>
+									{{ list && list.dayWithDrawNum ? list.dayWithDrawNum : '-' }}
+								</td>
 								<td class="td-title">免费提款次数</td>
-								<td>PC</td>
+								<td>{{ list && list.freeNum ? list.freeNum : '-' }}</td>
 								<td class="td-title">今日提款总额</td>
-								<td>33333333333</td>
+								<td>
+									{{
+										list && list.dayWithDrawNumSum
+											? list.dayWithDrawNumSum
+											: '-'
+									}}
+								</td>
 								<td class="td-title">是否连续提款</td>
-								<td>否</td>
+								<td>
+									{{
+										list && list.isContinuityWithDraw
+											? Number(list.isContinuityWithDraw) === 1
+												? '是'
+												: '否'
+											: '-'
+									}}
+								</td>
 								<td class="td-title">提款方式</td>
-								<td>否</td>
+								<td>
+									{{
+										list && list.isContinuityWithDraw
+											? Number(list.isContinuityWithDraw) === 1
+												? '银行卡'
+												: '虚拟币'
+											: '-'
+									}}
+								</td>
 							</tr>
 							<tr>
 								<td class="td-title">提款设备终端</td>
-								<td colspan="2">33333333</td>
+								<td colspan="2">
+									{{
+										list && list.withdrawDeviceType
+											? list.withdrawDeviceType
+											: '-'
+									}}
+								</td>
 								<td class="td-title">提款绑定域名</td>
-								<td colspan="6">PC</td>
+								<td colspan="6">
+									{{ list && list.withdrawDomain ? list.withdrawDomain : '-' }}
+								</td>
 							</tr>
 							<tr>
 								<td class="td-title">提款银行信息</td>
-								<td colspan="9">33333333</td>
+								<td colspan="9">
+									{{ list && list.bankInfo ? list.bankInfo : '-' }}
+								</td>
 							</tr>
 							<tr>
 								<td rowspan="2" class="td-title">账目审核信息</td>
@@ -323,10 +385,20 @@
 								<td colspan="2" class="td-title">实际打款</td>
 							</tr>
 							<tr>
-								<td colspan="3">1000.00</td>
-								<td colspan="2">1000.00</td>
-								<td colspan="2">1000.00</td>
-								<td colspan="2">1000.00</td>
+								<td colspan="3">
+									{{ list && list.withdrawWater ? list.withdrawWater : '-' }}
+								</td>
+								<td colspan="2">
+									{{ list && list.orderAmount ? list.orderAmount : '-' }}
+								</td>
+								<td colspan="2">
+									{{
+										list && list.orderRateAmount ? list.orderRateAmount : '-'
+									}}
+								</td>
+								<td colspan="2">
+									{{ list && list.realAmount ? list.realAmount : '-' }}
+								</td>
 							</tr>
 						</tbody>
 					</table>
