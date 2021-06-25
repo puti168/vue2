@@ -34,7 +34,7 @@
                 修改
               </el-link>
               <el-link
-                v-if="scope.row.status === 1 || scope.row.proxyAccount === '0'"
+                v-if="scope.row.status !== 0 && scope.row.proxyAccount !== '0'"
                 type="primary"
                 size="medium"
                 @click="deleteLabel(scope.row)"
@@ -633,7 +633,7 @@ export default {
       this.title = '编辑'
       console.log('编辑', val)
       this.isDisabled = true
-      this.isUniversal = val.proxyAccount === '0'
+      this.isUniversal = val.proxyAccount !== '0'
       const {
         proxyAccount,
         proxyName,
