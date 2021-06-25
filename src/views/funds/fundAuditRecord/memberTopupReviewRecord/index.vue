@@ -172,7 +172,7 @@
 						>
 							<template slot-scope="scope">
 								<span v-if="!!scope.row.adjustAmount">
-									{{ scope.row.adjustAmount.toFixed(2) }}
+									{{ Number(scope.row.adjustAmount) }}
 								</span>
 								<span v-else>-</span>
 							</template>
