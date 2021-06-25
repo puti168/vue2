@@ -153,7 +153,7 @@ width="120px"
             label="VIP等级："
             class="configure"
           >
-            <el-input-number v-model="dialogForm.vipNum" placeholder=""></el-input-number>
+            <el-input-number v-model="dialogForm.vipNum" :disabled="isDisabled" placeholder=""></el-input-number>
           </el-form-item>
           <el-form-item label="单次提款最低额度：" prop="singleMinAmount">
             <el-input-number
@@ -251,7 +251,7 @@ width="120px"
             icon="el-icon-search"
             :disabled="loading"
             size="medium"
-            @click="add('formSub')"
+            @click="add"
           >
             提交
           </el-button>
@@ -335,7 +335,7 @@ export default {
       const dateFreeNum = [
         { required: true, validator: withdrawaltimes, trigger: 'blur' }
       ]
-       const dateFreeAmount = [
+      const dateFreeAmount = [
         { required: true, validator: withdrawallimit, trigger: 'blur' }
       ]
 
@@ -376,32 +376,16 @@ export default {
   mounted() {},
   methods: {
     add() {
-      this.loading = true
       const params = {
-        ...this.queryData
-      }
-      console.log(params)
-      this.$refs['formSub'].validate((valid) => {
-        if (valid) {
-          if (params.id) {
-            this.$confirm(`确定修改吗？`, {
-              confirmButtonText: '确定',
-              cancelButtonText: '取消',
-              type: 'warning'
-            })
-              .then(() => {
-                this.setMemberUpdate(params)
-              })
-              .catch(() => {})
-          } else {
-            const params = {
-              ...this.dialogForm
-            }
-            this.$refs.formSub.validate((valid) => {
-              if (valid) {
-                console.log(params)
-                this.$confirm(
-                  `<strong>您确认要执行修改代理提款设置的操作?</strong>`,
+				...this.dialogForm
+			}
+      console.log(params, '11222')
+      if (this.title === '新增') {
+        this.$refs.formSub.validate((valid) => {
+          if (valid) {
+            console.log(params, '33322')
+            this.$confirm(
+                  `<strong>您确认要执行新增会员提款设置的操作?</strong>`,
                   `确认提示`,
                   {
                     dangerouslyUseHTMLString: true,
@@ -410,23 +394,50 @@ export default {
                     type: 'warning'
                   }
                 )
-                  .then(() => {
-                    console.log(params)
-                    this.$api.setwithdrawSettingMemberUpdate(params).then((res) => {
-                      if (res.code === 200) {
+                .then(() => {
+                  this.$api.getWithdrawSettingMemberAdd(params).then((res) => {
+                    if (res.code === 200) {
                         console.log(res)
-                        this.$message.success('修改成功!')
+                        this.$message.success('新增成功!')
                         this.loadData()
                       }
                       this.dialogFormVisible = false
-                    })
                   })
-                  .catch(() => {})
-              }
-            })
+                })
+                .catch(() => {})
           }
+        })
+      } else {
+        const params = {
+          ...this.dialogForm
         }
-      })
+        this.$refs.formSub.validate((valid) => {
+          if (valid) {
+             console.log(params)
+            this.$confirm(
+              `<strong>您确认要执行修改会员提款设置的操作?</strong>`,
+              `确认提示`,
+              {
+                dangerouslyUseHTMLString: true,
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+              }
+            )
+            .then(() => {
+              this.$api.getWithdrawSettingMemberUpdate(params).then((res) => {
+                if (res.code === 200) {
+                    console.log(res)
+                    this.$message.success('修改成功!')
+                    this.loadData()
+                  }
+                  this.dialogFormVisible = false
+              })
+            })
+             .catch(() => {})
+          }
+        })
+      }
     },
     open() {
       this.$confirm('您确定要初始化会员提款设置？请谨慎操作！！！', {
@@ -447,56 +458,26 @@ export default {
           })
         })
     },
-    getWithdrawSettingMemberAdd(val) {
-      this.$api
-        .getWithdrawSettingMemberAdd(val)
-        .then((res) => {
-          this.loading = false
-          if (res.code === 200) {
-            this.$message.success('新增成功')
-            this.pageNum = 1
-            this.reset()
-            setTimeout(() => {
-              this.back()
-            }, 500)
-          }
-        })
-        .catch(() => {
-          this.loading = false
-        })
-    },
-    getWithdrawSettingMemberUpdate(val) {
-      this.$api
-        .getWithdrawSettingMemberUpdate(val)
-        .then((res) => {
-          this.loading = false
-          if (res.code === 200) {
-            this.$message.success('修改成功')
-            setTimeout(() => {
-              this.back()
-            }, 500)
-          }
-        })
-        .catch(() => {
-          this.loading = false
-        })
-    },
     reset() {
-      this.queryData = {}
-      this.dialogForm = {
-        vipNum: 0,
-        singleMinAmount: 0,
-        singleMaxAmount: 0,
-        dateFreeNum: 0,
-        bigAmount: 0,
-        dateFreeAmount: 0,
-        rateDateFreeType: 2,
-        rateDateFree: 0,
-        rateDateTotalType: 2,
-        rateDateTotal: 0,
-        status: 1
+      if (this.title === '新增') {
+        this.queryData = {}
+        this.dialogForm = {
+          vipNum: 0,
+          singleMinAmount: 0,
+          singleMaxAmount: 0,
+          dateFreeNum: 0,
+          bigAmount: 0,
+          dateFreeAmount: 0,
+          rateDateFreeType: 2,
+          rateDateFree: 0,
+          rateDateTotalType: 2,
+          rateDateTotal: 0,
+          status: 1
+        }
+      } else {
+         this.dialogForm = this.temporary
       }
-      this.$refs['form'].resetFields()
+      this.$refs.formSub.resetFields()
     },
     loadData() {
       this.loading = true
@@ -554,9 +535,10 @@ export default {
     },
     edit(val) {
       this.title = '编辑'
-      console.log('编辑', val)
+      console.log('编辑', val, '1314')
       this.dialogForm = { ...val }
       this.dialogFormVisible = true
+      this.isDisabled = false
     }
   }
 }
