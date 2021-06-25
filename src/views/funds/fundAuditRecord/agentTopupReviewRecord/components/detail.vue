@@ -191,7 +191,12 @@
 						</el-table-column>
 						<el-table-column align="center" label="调整类型">
 							<template>
-								{{ list && list.adjustType ? list.adjustType : '-' }}
+								{{
+									list.adjustType
+										? typeFilter(list.adjustType, 'proxyPatchAddAdjustType')
+										: '-'
+								}}
+								<!-- {{ list && list.adjustType ? list.adjustType : '-' }} -->
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="增加金额">

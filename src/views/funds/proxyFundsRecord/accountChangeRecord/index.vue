@@ -398,7 +398,7 @@ export default {
     },
     // 获取风控层级
     getWindControllerLevelDict() {
-      this.$api.getWindControllerLevelDict({ windControlType: 3 }).then((res) => {
+      this.$api.getWindControllerLevelDict({ windControlType: 2 }).then((res) => {
         if (res.code === 200) {
           this.windControlLevelList = res.data
         }
