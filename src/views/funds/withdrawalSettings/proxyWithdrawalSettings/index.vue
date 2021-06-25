@@ -50,26 +50,38 @@
               <span v-else>-</span>
             </template>
           </el-table-column>
-          <el-table-column
-            prop="proxyAccount"
-            align="center"
-            label="代理账号"
-          ></el-table-column>
-          <el-table-column
-            prop="proxyName"
-            align="center"
-            label="代理姓名"
-          ></el-table-column>
-          <el-table-column
-            prop="proxyAccountType"
-            align="center"
-            label="代理类型"
-          ></el-table-column>
-          <el-table-column
-            prop="proxyAccountStatus"
-            align="center"
-            label="代理状态"
-          ></el-table-column>
+          <el-table-column prop="proxyAccount" align="center" label="代理账号">
+            <template slot-scope="scope">
+              <span v-if="scope.row.proxyAccount === '0'">通用</span>
+              <span v-else>{{ scope.row.proxyAccount }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="proxyName" align="center" label="代理姓名">
+            <template slot-scope="scope">
+              <span v-if="scope.row.proxyAccount === '0'">-</span>
+              <span v-else>{{ scope.row.proxyName }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="proxyAccountType" align="center" label="代理类型">
+            <template slot-scope="scope">
+              <span v-if="scope.row.proxyAccount === '0'">-</span>
+              <span v-else>{{
+                typeFilter(scope.row.proxyAccountType, "accountType")
+                  ? typeFilter(scope.row.proxyAccountType, "accountType")
+                  : "-"
+              }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="proxyAccountStatus" align="center" label="代理状态">
+            <template slot-scope="scope">
+              <span v-if="scope.row.proxyAccount === '0'">-</span>
+              <span v-else>{{
+                typeFilter(scope.row.proxyAccountStatus, "accountStatusType")
+                  ? typeFilter(scope.row.proxyAccountStatus, "accountStatusType")
+                  : "-"
+              }}</span>
+            </template>
+          </el-table-column>
           <el-table-column
             prop="windControlName"
             align="center"
