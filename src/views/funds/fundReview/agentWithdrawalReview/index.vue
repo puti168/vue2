@@ -323,8 +323,8 @@ export default {
                 }
               })
             }
-            console.log(this.dataList)
-            console.log(response)
+            console.log(this.dataList, 11111)
+            console.log(response, 22222)
             this.total = response.totalRecord
           } else {
             this.loading = false
@@ -427,7 +427,7 @@ export default {
             setTimeout(() => {
               this.loadData()
               console.log(1111111)
-            }, 100)
+            }, 300)
             console.log(22222)
           } else {
             loading.close()
