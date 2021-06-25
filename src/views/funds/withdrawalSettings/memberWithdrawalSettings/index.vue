@@ -45,8 +45,8 @@
           </el-table-column>
           <el-table-column prop="status" align="center" label="状态" width="100px">
             <template slot-scope="scope">
-              <div v-if="scope.row.status === 0" class="disableRgba">关闭</div>
-              <div v-else-if="scope.row.status === 1" class="normalRgba">开启</div>
+              <div v-if="scope.row.status === 1" class="disableRgba">关闭</div>
+              <div v-else-if="scope.row.status === 0" class="normalRgba">开启</div>
               <span v-else>-</span>
             </template>
           </el-table-column>
@@ -153,7 +153,11 @@ width="120px"
             label="VIP等级："
             class="configure"
           >
-            <el-input-number v-model="dialogForm.vipNum" :disabled="isDisabled" placeholder=""></el-input-number>
+            <el-input-number
+              v-model="dialogForm.vipNum"
+              :disabled="isDisabled"
+              placeholder=""
+            ></el-input-number>
           </el-form-item>
           <el-form-item label="单次提款最低额度：" prop="singleMinAmount">
             <el-input-number
@@ -214,8 +218,21 @@ width="120px"
               <el-option label="百分比(%)" :value="2"></el-option>
             </el-select>
             <el-input-number
+            v-if="dialogForm.rateDateFreeType === 2"
+              v-model="dialogForm.rateDateFree"
+              :min="0"
+              :max="100"
+              :precision="0"
+              placeholder="请输入"
+              class="sun"
+            ></el-input-number>
+            <el-input-number
+              v-else
               v-model="dialogForm.rateDateFree"
               class="sun"
+              :min="0"
+              :precision="0"
+              placeholder="请输入"
             ></el-input-number>
           </el-form-item>
           <el-form-item label="超出单日免费次数总额：" prop="rateDateTotalType">
@@ -228,9 +245,21 @@ width="120px"
               <el-option label="百分比(%)" :value="2"></el-option>
             </el-select>
             <el-input-number
+             v-if="dialogForm.rateDateTotalType === 2"
+              v-model="dialogForm.rateDateTotal"
+              :min="0"
+              :max="100"
+              :precision="0"
+              placeholder="请输入"
+              class="sun"
+            ></el-input-number>
+            <el-input-number
+              v-else
               v-model="dialogForm.rateDateTotal"
               class="sun"
-              placeholder="0"
+              :min="0"
+              :precision="0"
+              placeholder="请输入"
             ></el-input-number>
           </el-form-item>
           <el-form-item label="状态" prop="status">
@@ -239,8 +268,8 @@ width="120px"
               clearable
               :popper-append-to-body="false"
             >
-              <el-option label="开启" :value="1"></el-option>
-              <el-option label="关闭" :value="0"></el-option>
+              <el-option label="开启" :value="0"></el-option>
+              <el-option label="关闭" :value="1"></el-option>
             </el-select>
           </el-form-item>
         </el-form>
@@ -377,34 +406,34 @@ export default {
   methods: {
     add() {
       const params = {
-				...this.dialogForm
-			}
+        ...this.dialogForm
+      }
       console.log(params, '11222')
       if (this.title === '新增') {
         this.$refs.formSub.validate((valid) => {
           if (valid) {
             console.log(params, '33322')
             this.$confirm(
-                  `<strong>您确认要执行新增会员提款设置的操作?</strong>`,
-                  `确认提示`,
-                  {
-                    dangerouslyUseHTMLString: true,
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
+              `<strong>您确认要执行新增会员提款设置的操作?</strong>`,
+              `确认提示`,
+              {
+                dangerouslyUseHTMLString: true,
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+              }
+            )
+              .then(() => {
+                this.$api.getWithdrawSettingMemberAdd(params).then((res) => {
+                  if (res.code === 200) {
+                    console.log(res)
+                    this.$message.success('新增成功!')
+                    this.loadData()
                   }
-                )
-                .then(() => {
-                  this.$api.getWithdrawSettingMemberAdd(params).then((res) => {
-                    if (res.code === 200) {
-                        console.log(res)
-                        this.$message.success('新增成功!')
-                        this.loadData()
-                      }
-                      this.dialogFormVisible = false
-                  })
+                  this.dialogFormVisible = false
                 })
-                .catch(() => {})
+              })
+              .catch(() => {})
           }
         })
       } else {
@@ -413,7 +442,7 @@ export default {
         }
         this.$refs.formSub.validate((valid) => {
           if (valid) {
-             console.log(params)
+            console.log(params)
             this.$confirm(
               `<strong>您确认要执行修改会员提款设置的操作?</strong>`,
               `确认提示`,
@@ -424,17 +453,17 @@ export default {
                 type: 'warning'
               }
             )
-            .then(() => {
-              this.$api.getWithdrawSettingMemberUpdate(params).then((res) => {
-                if (res.code === 200) {
+              .then(() => {
+                this.$api.getWithdrawSettingMemberUpdate(params).then((res) => {
+                  if (res.code === 200) {
                     console.log(res)
                     this.$message.success('修改成功!')
                     this.loadData()
                   }
                   this.dialogFormVisible = false
+                })
               })
-            })
-             .catch(() => {})
+              .catch(() => {})
           }
         })
       }
@@ -475,7 +504,7 @@ export default {
           status: 1
         }
       } else {
-         this.dialogForm = this.temporary
+        this.dialogForm = this.temporary
       }
       this.$refs.formSub.resetFields()
     },
