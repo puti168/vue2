@@ -55,7 +55,7 @@
               @keyup.enter.native="enterSearch"
             ></el-input>
           </el-form-item>
-         <el-form-item label="订单来源：" class="tagheight">
+          <el-form-item label="订单来源：" class="tagheight">
             <el-select
               v-model="queryData.deviceType"
               clearable
@@ -260,7 +260,7 @@ class="redColor"
             label="提款方式"
             width="150px"
           >
-          <template slot-scope="scope">
+            <template slot-scope="scope">
               {{ typeFilter(scope.row.withdrawType, "payDataType") }}
             </template>
           </el-table-column>

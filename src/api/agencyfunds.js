@@ -165,6 +165,23 @@ export function getProxyCommissionRecordSelect(data) {
 		data
 	})
 }
+// 代理资金记录-佣金记录导出
+export function getProxyCommissionRecordProxyCommissionExport(data) {
+	return request({
+		url: '/proxyCommissionRecord/proxyCommissionExport',
+		responseType: 'blob',
+		method: 'post',
+		data
+	})
+}
+// 会员提款设置==>修改会员提款设置
+export function setwithdrawSettingMemberUpdate(data) {
+	return request({
+		url: '/withdrawSettingMember/update',
+		method: 'post',
+		data
+	})
+}
 export default {
     getWithdrawSettingProxySelectPage,
 	getProxyFundsRecordsAccountChange,
@@ -185,5 +202,7 @@ export default {
 	getWithdrawSettingMemberSelectAll,
 	getWithdrawSettingMemberAdd,
 	getWithdrawSettingMemberUpdate,
-	getProxyFundsRecordsArtificialAccountSubDownload
+	getProxyFundsRecordsArtificialAccountSubDownload,
+	getProxyCommissionRecordProxyCommissionExport,
+	setwithdrawSettingMemberUpdate
 }
