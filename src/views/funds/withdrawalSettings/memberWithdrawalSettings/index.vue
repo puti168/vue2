@@ -38,11 +38,7 @@
         >
           <el-table-column prop="operating" align="center" label="操作" width="140px">
             <template slot-scope="scope">
-              <el-link
-                type="primary"
-                size="medium"
-                @click="edit(scope.row)"
-              >
+              <el-link type="primary" size="medium" @click="edit(scope.row)">
                 修改
               </el-link>
             </template>
@@ -299,18 +295,35 @@ export default {
   },
   computed: {
     rules() {
-      const oneFreeRules = (rule, value, callback) => {
+      // 单日免费提款次数
+      const withdrawaltimes = (rule, value, callback) => {
         let vip = ''
         const num = this.dialogForm.vipNum
         for (let i = 0; i < this.vipExclusive.length; i++) {
           const ele = this.vipExclusive[i]
-          console.log(ele, '11')
           if (num === ele.vipLevel) {
             vip = ele.maxFrequency
           }
         }
-        console.log(vip, '11')
 
+        if (typeof num !== 'number') {
+          callback(new Error('请输入vip等级'))
+        } else if (value <= vip) {
+          callback(new Error('输入大于单日最高提款次数，请重新输入'))
+        } else {
+          callback()
+        }
+      }
+      // 单日免费提款总额
+      const withdrawallimit = (rule, value, callback) => {
+        let vip = ''
+        const num = this.dialogForm.vipNum
+        for (let i = 0; i < this.vipExclusive.length; i++) {
+          const ele = this.vipExclusive[i]
+          if (num === ele.maxTotal) {
+            vip = ele.maxFrequency
+          }
+        }
         if (typeof num !== 'number') {
           callback(new Error('请输入vip等级'))
         } else if (value <= vip) {
@@ -319,28 +332,21 @@ export default {
           callback()
         }
       }
-      const dateFreeNum = [{ required: true, validator: oneFreeRules, trigger: 'blur' }]
+      const dateFreeNum = [
+        { required: true, validator: withdrawaltimes, trigger: 'blur' }
+      ]
+       const dateFreeAmount = [
+        { required: true, validator: withdrawallimit, trigger: 'blur' }
+      ]
 
       const singleMinAmount = [
         { required: true, message: '请输入金额', trigger: 'blur' }
-        // { min: 1, message: '不能为空', trigger: 'blur' }
       ]
       const singleMaxAmount = [
         { required: true, message: '请输入金额', trigger: 'blur' }
-        // { min: 1, message: '不能为空', trigger: 'blur' }
       ]
-      const bigAmount = [
-        { required: true, message: '请输入金额', trigger: 'blur' }
-        // { min: 1, message: '不能为空', trigger: 'blur' }
-      ]
-      const dateFreeAmount = [
-        {
-          required: true,
-          message: '输入大于单日最高提款额度，请重新输入',
-          trigger: 'blur'
-        }
-        // { min: 1, message: '不能为空', trigger: 'blur' }
-      ]
+      const bigAmount = [{ required: true, message: '请输入金额', trigger: 'blur' }]
+
       const rateDateFreeType = [
         { required: true, message: '百分比（%）', trigger: 'change' }
       ]
@@ -349,12 +355,8 @@ export default {
       ]
       const beyondfrequency = [
         { required: true, message: '请输入提示语', trigger: 'blur' }
-        // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
       ]
-      const beyondtotal = [
-        { required: true, message: '请输入提示语', trigger: 'blur' }
-        // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
-      ]
+      const beyondtotal = [{ required: true, message: '请输入提示语', trigger: 'blur' }]
       const status = [{ required: true, message: '请选择状态', trigger: 'blur' }]
       return {
         dateFreeNum,
@@ -400,29 +402,29 @@ export default {
                 console.log(params)
                 this.$confirm(
                   `<strong>您确认要执行修改代理提款设置的操作?</strong>`,
-              `确认提示`,
-               {
-                dangerouslyUseHTMLString: true,
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-              }
-                )
-                 .then(() => {
-                   console.log(params)
-                   this.$api.setwithdrawSettingMemberUpdate(params).then((res) => {
-                     if (res.code === 200) {
-                    console.log(res)
-                    this.$message.success('修改成功!')
-                    this.loadData()
+                  `确认提示`,
+                  {
+                    dangerouslyUseHTMLString: true,
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
                   }
-                  this.dialogFormVisible = false
-                })
-                 })
-                 .catch(() => {})
+                )
+                  .then(() => {
+                    console.log(params)
+                    this.$api.setwithdrawSettingMemberUpdate(params).then((res) => {
+                      if (res.code === 200) {
+                        console.log(res)
+                        this.$message.success('修改成功!')
+                        this.loadData()
+                      }
+                      this.dialogFormVisible = false
+                    })
+                  })
+                  .catch(() => {})
               }
             })
-        }
+          }
         }
       })
     },
