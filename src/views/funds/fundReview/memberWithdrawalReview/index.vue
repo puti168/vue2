@@ -457,7 +457,7 @@ export default {
 			console.log(val)
 			this.$api
 				.memberWithDrawUserupdateWithdrawLock({
-					id: val.id,
+                    thirdOrderNo: val.thirdOrderNo,
 					createdAt: val.createdAt,
 					lockStatus: Number(val.lockStatus) === 1 ? 0 : 1
 				})

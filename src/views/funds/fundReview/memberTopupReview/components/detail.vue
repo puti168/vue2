@@ -120,12 +120,12 @@
 						</el-table-column>
 						<el-table-column align="center" label="备注">
 							<template>
-								{{ list && list.labelName ? list.labelName : '-' }}
+								{{ list && list.remark ? list.remark : '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="绑定银行卡数量">
 							<template>
-								{{ list && list.bankCardNum ? list.bankCardNum : '-' }}
+								{{ list && list.bankNum ? list.bankNum : '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="虚拟币账号数量">
