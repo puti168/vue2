@@ -35,13 +35,11 @@
           :data="tableData"
           style="width: 100%"
           :header-cell-style="getRowClass"
-          @sort-change="_changeTableSort"
         >
           <el-table-column prop="operating" align="center" label="操作" width="140px">
             <template slot-scope="scope">
               <el-link
                 type="primary"
-                :disabled="scope.row.labelStatus === 1"
                 size="medium"
                 @click="edit(scope.row)"
               >
@@ -136,12 +134,7 @@ width="120px"
           @size-change="handleSizeChange"
         ></el-pagination>
       </div>
-      <el-dialog
-        :visible.sync="dialogFormVisible"
-        :destroy-on-close="true"
-        width="970px"
-        @close="clear"
-      >
+      <el-dialog :visible.sync="dialogFormVisible" :destroy-on-close="true" width="970px">
         <div class="form-header">
           <span>新增会员资料</span>
           <span>
@@ -151,6 +144,7 @@ width="120px"
         </div>
         <h2>提款配置</h2>
         <el-form
+          v-if="isUniversal"
           ref="formSub"
           :rules="rules"
           :inline="true"
@@ -220,16 +214,11 @@ width="120px"
               class="sun"
               placeholder="请选择"
             >
-              <el-option
-                v-for="item in rateDateFreeType"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              >
-              </el-option>
+              <el-option label="固定金额(元)" :value="1"></el-option>
+              <el-option label="百分比(%)" :value="2"></el-option>
             </el-select>
             <el-input-number
-              v-model="dialogForm.rateDateFreeType"
+              v-model="dialogForm.rateDateFree"
               class="sun"
             ></el-input-number>
           </el-form-item>
@@ -239,28 +228,23 @@ width="120px"
               class="sun"
               placeholder="请选择"
             >
-              <el-option
-                v-for="item in rateDateTotalType"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              >
-              </el-option>
+              <el-option label="固定金额(元)" :value="1"></el-option>
+              <el-option label="百分比(%)" :value="2"></el-option>
             </el-select>
             <el-input-number
-              v-model="dialogForm.rateDateTotalType"
+              v-model="dialogForm.rateDateTotal"
               class="sun"
               placeholder="0"
             ></el-input-number>
           </el-form-item>
-          <el-form-item label="状态">
+          <el-form-item label="状态" prop="status">
             <el-select
               v-model="dialogForm.status"
               clearable
               :popper-append-to-body="false"
             >
-              <el-option label="关闭" value="shanghai"></el-option>
-              <el-option label="开启" value="beijing"></el-option>
+              <el-option label="开启" :value="0"></el-option>
+              <el-option label="关闭" :value="1"></el-option>
             </el-select>
           </el-form-item>
         </el-form>
@@ -291,29 +275,26 @@ export default {
   mixins: [list],
   data() {
     return {
-      rateDateFreeType: [
-        {
-          label: ' 固定金额（元）'
-        },
-        {
-          label: ' 百分比（%）'
-        }
-      ],
-      rateDateTotalType: [
-        {
-          label: ' 固定金额（元）'
-        },
-        {
-          label: ' 百分比（%）'
-        }
-      ],
-
       vipExclusive: [],
       queryData: {},
       tableData: [],
       dialogFormVisible: false,
-      dialogForm: { singleMinAmount: '' },
-      title: ''
+      dialogForm: {
+        vipNum: 0,
+        singleMinAmount: 0,
+        singleMaxAmount: 0,
+        dateFreeNum: 0,
+        bigAmount: 0,
+        dateFreeAmount: 0,
+        rateDateFreeType: 2,
+        rateDateFree: 0,
+        rateDateTotalType: 2,
+        rateDateTotal: 0,
+        status: 1
+      },
+      title: '',
+      isDisabled: true,
+      isUniversal: true
     }
   },
   computed: {
@@ -374,6 +355,7 @@ export default {
         { required: true, message: '请输入提示语', trigger: 'blur' }
         // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
       ]
+      const status = [{ required: true, message: '请选择状态', trigger: 'blur' }]
       return {
         dateFreeNum,
         singleMinAmount,
@@ -383,7 +365,8 @@ export default {
         rateDateFreeType,
         rateDateTotalType,
         beyondfrequency,
-        beyondtotal
+        beyondtotal,
+        status
       }
     }
   },
@@ -409,20 +392,40 @@ export default {
               })
               .catch(() => {})
           } else {
-            this.$confirm(`确定创建吗？`, {
-              confirmButtonText: '确定',
-              cancelButtonText: '取消',
-              type: 'success'
+            const params = {
+              ...this.dialogForm
+            }
+            this.$refs.formSub.validate((valid) => {
+              if (valid) {
+                console.log(params)
+                this.$confirm(
+                  `<strong>您确认要执行修改代理提款设置的操作?</strong>`,
+              `确认提示`,
+               {
+                dangerouslyUseHTMLString: true,
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+              }
+                )
+                 .then(() => {
+                   console.log(params)
+                   this.$api.setwithdrawSettingMemberUpdate(params).then((res) => {
+                     if (res.code === 200) {
+                    console.log(res)
+                    this.$message.success('修改成功!')
+                    this.loadData()
+                  }
+                  this.dialogFormVisible = false
+                })
+                 })
+                 .catch(() => {})
+              }
             })
-              .then(() => {
-                this.getWithdrawSettingMemberAdd(params)
-              })
-              .catch(() => {})
-          }
+        }
         }
       })
     },
-
     open() {
       this.$confirm('您确定要初始化会员提款设置？请谨慎操作！！！', {
         confirmButtonText: '确定',
@@ -477,19 +480,19 @@ export default {
         })
     },
     reset() {
-      this.queryData = {
-        vipNum: undefined,
-        miniamount: undefined,
-        maxamount: undefined,
-        dateFreeNum: undefined,
-        singleMinAmount: undefined,
-        dateFreeAmount: undefined,
-        rateDateFreeType: undefined,
-        rateDateTotalType: undefined,
-        exregion: undefined,
-        exregions: undefined,
-        extips: undefined,
-        extotaltips: undefined
+      this.queryData = {}
+      this.dialogForm = {
+        vipNum: 0,
+        singleMinAmount: 0,
+        singleMaxAmount: 0,
+        dateFreeNum: 0,
+        bigAmount: 0,
+        dateFreeAmount: 0,
+        rateDateFreeType: 2,
+        rateDateFree: 0,
+        rateDateTotalType: 2,
+        rateDateTotal: 0,
+        status: 1
       }
       this.$refs['form'].resetFields()
     },
@@ -527,37 +530,31 @@ export default {
     },
 
     addLabel() {
+      console.log(11111)
       this.title = '新增'
-      this.dialogForm = {}
+      this.isDisabled = false
+      this.isUniversal = true
+      this.queryData = {}
+      this.dialogForm = {
+        vipNum: 0,
+        singleMinAmount: 0,
+        singleMaxAmount: 0,
+        dateFreeNum: 0,
+        bigAmount: 0,
+        dateFreeAmount: 0,
+        rateDateFreeType: 2,
+        rateDateFree: 0,
+        rateDateTotalType: 2,
+        rateDateTotal: 0,
+        status: 1
+      }
       this.dialogFormVisible = true
     },
     edit(val) {
       this.title = '编辑'
+      console.log('编辑', val)
       this.dialogForm = { ...val }
       this.dialogFormVisible = true
-    },
-
-    checkValue(e) {
-      const { value } = e.target
-      this.queryData.gameLabelId = value
-      console.log(value)
-    },
-    _changeTableSort({ column, prop, order }) {
-      this.queryData.orderKey = prop
-      if (order === 'ascending') {
-        // 升序
-        this.queryData.orderType = 'asc'
-      } else if (column.order === 'descending') {
-        // 降序
-        this.queryData.orderType = ' desc '
-      }
-      this.loadData()
-    },
-    clear() {
-      this.$refs.formSub.resetFields()
-    },
-    enterSubmit() {
-      this.loadData()
     }
   }
 }
@@ -620,34 +617,5 @@ export default {
 /deep/.el-input__inner {
   padding: 0 15px;
   text-align: left;
-}
-
-.decoration {
-  text-decoration: underline;
-  cursor: pointer;
-}
-.bodyBox {
-  max-height: 400px;
-  overflow: auto;
-}
-p {
-  display: flex;
-  height: 40px;
-  line-height: 40px;
-  border-bottom: 1px solid #e8e8e8;
-  justify-content: space-around;
-  span {
-    display: inline-block;
-    width: 50%;
-    text-align: center;
-  }
-}
-.headerBox {
-  color: #000000d8;
-  background: #fafafa;
-  font-family: "PingFang SC ", "PingFang SC", sans-serif;
-  font-weight: 650;
-  border-top: 1px solid #e8e8e8;
-  margin-top: 15px;
 }
 </style>

@@ -55,6 +55,22 @@
               @keyup.enter.native="enterSearch"
             ></el-input>
           </el-form-item>
+          <el-form-item label="状态：" class="tagheight">
+            <el-select
+              v-model="queryData.orderStatus"
+              style="width: 300px"
+              clearable
+              placeholder="默认选择全部"
+              :popper-append-to-body="false"
+            >
+              <el-option
+                v-for="item in successOrFail"
+                :key="item.code"
+                :label="item.description"
+                :value="item.code"
+              ></el-option>
+            </el-select>
+          </el-form-item>
           <el-form-item label="调整类型：" class="tagheight">
             <el-select
               v-model="queryData.accountType"
@@ -170,13 +186,13 @@
           >
           </el-table-column>
           <el-table-column
-            prop="accountType"
+            prop="orderStatus"
             align="center"
             label="状态"
             width="100px"
           >
              <template slot-scope="scope">
-              {{ typeFilter(scope.row.accountType, "accessStatusType") }}
+              {{ typeFilter(scope.row.orderStatus, "successOrFail") }}
             </template>
           </el-table-column>
           <el-table-column
@@ -275,6 +291,9 @@ export default {
   computed: {
     proxyPatchSubAdjustType() {
       return this.globalDics.proxyPatchSubAdjustType
+    },
+    successOrFail() {
+      return this.globalDics.successOrFail
     }
   },
   mounted() { },

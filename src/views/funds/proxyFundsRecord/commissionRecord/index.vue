@@ -96,7 +96,7 @@
           :header-cell-style="getRowClass"
           @sort-change="_changeTableSort"
         >
-          <el-table-column prop="orderNo" style="width:120px" align="center" label="订单号">
+          <el-table-column prop="orderNo" width="180px" align="center" label="订单号">
             <template slot-scope="scope">
               <span v-if="!!scope.row.orderNo" :title="scope.row.orderNo">
                 {{ scope.row.orderNo }}
@@ -104,12 +104,24 @@
               <span v-else>-</span>
             </template>
           </el-table-column>
-          <el-table-column prop="orderStatus" style="width:120px" align="center" label="订单状态">
+          <el-table-column prop="orderStatus" width="180px" align="center" label="订单状态">
             <template slot-scope="scope">
-              {{ typeFilter(scope.row.orderStatus, "auditStatusType") }}
+              <span v-if="scope.row.orderStatus === 1">{{
+                typeFilter(scope.row.orderStatus, "auditStatusType")
+              }}</span>
+              <span v-else-if="scope.row.orderStatus === 2">{{
+                typeFilter(scope.row.orderStatus, "auditStatusType")
+              }}</span>
+              <span v-else-if="scope.row.orderStatus === 3">{{
+                typeFilter(scope.row.orderStatus, "auditStatusType")
+              }}</span>
+              <span v-else-if="scope.row.orderStatus === 4">{{
+                typeFilter(scope.row.orderStatus, "auditStatusType")
+              }}</span>
+              <span v-else>-</span>
             </template>
           </el-table-column>
-          <el-table-column prop="createdTime" style="width:120px" align="center" label="日期">
+          <el-table-column prop="createdTime" width="180px" align="center" label="日期">
           </el-table-column>
           <el-table-column
             prop="proxyAccount"
@@ -346,24 +358,8 @@ export default {
       params = {
         ...this.getParams(params)
       }
-      delete params.registerTime
-      delete params.lastLoginTime
-      delete params.firstSaveTime
-      delete params.accountStatus
-      delete params.deviceType
-      this.$confirm(
-        `<strong>是否导出?</strong></br><span style='font-size:12px;color:#c1c1c1'>数据过大时，请耐心等待</span>`,
-        '确认提示',
-        {
-          dangerouslyUseHTMLString: true,
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }
-      )
-        .then(() => {
           this.$api
-            .getGameRecordDownload(params)
+            .getProxyCommissionRecordProxyCommissionExport(params)
             .then((res) => {
               this.loading = false
               const { data, status } = res
@@ -418,13 +414,12 @@ export default {
             })
             .catch(() => {
               this.loading = false
-              this.$message({
-                type: 'error',
-                message: '导出失败',
-                duration: 1500
-              })
+              // this.$message({
+              //   type: 'error',
+              //   message: '导出失败',
+              //   duration: 1500
+              // })
             })
-        })
         .catch(() => {})
     },
     _changeTableSort({ column, prop, order }) {
@@ -445,16 +440,6 @@ export default {
     	clear() {
 			this.onlineTime = Date.now()
 		},
-    handleCurrentChangeDialog(val) {
-      console.log(111, val)
-      this.page = val
-      // this.getMemberMemberInfoByLabelId(this.id)
-    },
-    handleSizeChangeDialog(val) {
-      console.log(222, val)
-      this.size = val
-      // this.getMemberMemberInfoByLabelId(this.id)
-    },
     getSummaries(param) {
       const { columns } = param
       const sums = []
@@ -580,6 +565,9 @@ export default {
       height: 20px;
     }
   }
+}
+.wadd{
+  width: 130px;
 }
 .sum_footer {
   display: flex;
