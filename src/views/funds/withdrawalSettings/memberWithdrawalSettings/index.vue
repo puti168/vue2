@@ -38,19 +38,15 @@
         >
           <el-table-column prop="operating" align="center" label="操作" width="140px">
             <template slot-scope="scope">
-              <el-link
-                type="primary"
-                size="medium"
-                @click="edit(scope.row)"
-              >
+              <el-link type="primary" size="medium" @click="edit(scope.row)">
                 修改
               </el-link>
             </template>
           </el-table-column>
           <el-table-column prop="status" align="center" label="状态" width="100px">
             <template slot-scope="scope">
-              <div v-if="scope.row.status === 0" class="disableRgba">关闭</div>
-              <div v-else-if="scope.row.status === 1" class="normalRgba">开启</div>
+              <div v-if="scope.row.status === 1" class="disableRgba">关闭</div>
+              <div v-else-if="scope.row.status === 0" class="normalRgba">开启</div>
               <span v-else>-</span>
             </template>
           </el-table-column>
@@ -157,7 +153,11 @@ width="120px"
             label="VIP等级："
             class="configure"
           >
-            <el-input-number v-model="dialogForm.vipNum" placeholder=""></el-input-number>
+            <el-input-number
+              v-model="dialogForm.vipNum"
+              :disabled="isDisabled"
+              placeholder=""
+            ></el-input-number>
           </el-form-item>
           <el-form-item label="单次提款最低额度：" prop="singleMinAmount">
             <el-input-number
@@ -218,8 +218,21 @@ width="120px"
               <el-option label="百分比(%)" :value="2"></el-option>
             </el-select>
             <el-input-number
+            v-if="dialogForm.rateDateFreeType === 2"
+              v-model="dialogForm.rateDateFree"
+              :min="0"
+              :max="100"
+              :precision="0"
+              placeholder="请输入"
+              class="sun"
+            ></el-input-number>
+            <el-input-number
+              v-else
               v-model="dialogForm.rateDateFree"
               class="sun"
+              :min="0"
+              :precision="0"
+              placeholder="请输入"
             ></el-input-number>
           </el-form-item>
           <el-form-item label="超出单日免费次数总额：" prop="rateDateTotalType">
@@ -232,9 +245,21 @@ width="120px"
               <el-option label="百分比(%)" :value="2"></el-option>
             </el-select>
             <el-input-number
+             v-if="dialogForm.rateDateTotalType === 2"
+              v-model="dialogForm.rateDateTotal"
+              :min="0"
+              :max="100"
+              :precision="0"
+              placeholder="请输入"
+              class="sun"
+            ></el-input-number>
+            <el-input-number
+              v-else
               v-model="dialogForm.rateDateTotal"
               class="sun"
-              placeholder="0"
+              :min="0"
+              :precision="0"
+              placeholder="请输入"
             ></el-input-number>
           </el-form-item>
           <el-form-item label="状态" prop="status">
@@ -255,7 +280,7 @@ width="120px"
             icon="el-icon-search"
             :disabled="loading"
             size="medium"
-            @click="add('formSub')"
+            @click="add"
           >
             提交
           </el-button>
@@ -299,18 +324,35 @@ export default {
   },
   computed: {
     rules() {
-      const oneFreeRules = (rule, value, callback) => {
+      // 单日免费提款次数
+      const withdrawaltimes = (rule, value, callback) => {
         let vip = ''
         const num = this.dialogForm.vipNum
         for (let i = 0; i < this.vipExclusive.length; i++) {
           const ele = this.vipExclusive[i]
-          console.log(ele, '11')
           if (num === ele.vipLevel) {
             vip = ele.maxFrequency
           }
         }
-        console.log(vip, '11')
 
+        if (typeof num !== 'number') {
+          callback(new Error('请输入vip等级'))
+        } else if (value <= vip) {
+          callback(new Error('输入大于单日最高提款次数，请重新输入'))
+        } else {
+          callback()
+        }
+      }
+      // 单日免费提款总额
+      const withdrawallimit = (rule, value, callback) => {
+        let vip = ''
+        const num = this.dialogForm.vipNum
+        for (let i = 0; i < this.vipExclusive.length; i++) {
+          const ele = this.vipExclusive[i]
+          if (num === ele.maxTotal) {
+            vip = ele.maxFrequency
+          }
+        }
         if (typeof num !== 'number') {
           callback(new Error('请输入vip等级'))
         } else if (value <= vip) {
@@ -319,28 +361,21 @@ export default {
           callback()
         }
       }
-      const dateFreeNum = [{ required: true, validator: oneFreeRules, trigger: 'blur' }]
+      const dateFreeNum = [
+        { required: true, validator: withdrawaltimes, trigger: 'blur' }
+      ]
+      const dateFreeAmount = [
+        { required: true, validator: withdrawallimit, trigger: 'blur' }
+      ]
 
       const singleMinAmount = [
         { required: true, message: '请输入金额', trigger: 'blur' }
-        // { min: 1, message: '不能为空', trigger: 'blur' }
       ]
       const singleMaxAmount = [
         { required: true, message: '请输入金额', trigger: 'blur' }
-        // { min: 1, message: '不能为空', trigger: 'blur' }
       ]
-      const bigAmount = [
-        { required: true, message: '请输入金额', trigger: 'blur' }
-        // { min: 1, message: '不能为空', trigger: 'blur' }
-      ]
-      const dateFreeAmount = [
-        {
-          required: true,
-          message: '输入大于单日最高提款额度，请重新输入',
-          trigger: 'blur'
-        }
-        // { min: 1, message: '不能为空', trigger: 'blur' }
-      ]
+      const bigAmount = [{ required: true, message: '请输入金额', trigger: 'blur' }]
+
       const rateDateFreeType = [
         { required: true, message: '百分比（%）', trigger: 'change' }
       ]
@@ -349,12 +384,8 @@ export default {
       ]
       const beyondfrequency = [
         { required: true, message: '请输入提示语', trigger: 'blur' }
-        // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
       ]
-      const beyondtotal = [
-        { required: true, message: '请输入提示语', trigger: 'blur' }
-        // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
-      ]
+      const beyondtotal = [{ required: true, message: '请输入提示语', trigger: 'blur' }]
       const status = [{ required: true, message: '请选择状态', trigger: 'blur' }]
       return {
         dateFreeNum,
@@ -374,57 +405,68 @@ export default {
   mounted() {},
   methods: {
     add() {
-      this.loading = true
       const params = {
-        ...this.queryData
+        ...this.dialogForm
       }
-      console.log(params)
-      this.$refs['formSub'].validate((valid) => {
-        if (valid) {
-          if (params.id) {
-            this.$confirm(`确定修改吗？`, {
-              confirmButtonText: '确定',
-              cancelButtonText: '取消',
-              type: 'warning'
-            })
-              .then(() => {
-                this.setMemberUpdate(params)
-              })
-              .catch(() => {})
-          } else {
-            const params = {
-              ...this.dialogForm
-            }
-            this.$refs.formSub.validate((valid) => {
-              if (valid) {
-                console.log(params)
-                this.$confirm(
-                  `<strong>您确认要执行修改代理提款设置的操作?</strong>`,
+      console.log(params, '11222')
+      if (this.title === '新增') {
+        this.$refs.formSub.validate((valid) => {
+          if (valid) {
+            console.log(params, '33322')
+            this.$confirm(
+              `<strong>您确认要执行新增会员提款设置的操作?</strong>`,
               `确认提示`,
-               {
+              {
                 dangerouslyUseHTMLString: true,
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
               }
-                )
-                 .then(() => {
-                   console.log(params)
-                   this.$api.setwithdrawSettingMemberUpdate(params).then((res) => {
-                     if (res.code === 200) {
+            )
+              .then(() => {
+                this.$api.getWithdrawSettingMemberAdd(params).then((res) => {
+                  if (res.code === 200) {
+                    console.log(res)
+                    this.$message.success('新增成功!')
+                    this.loadData()
+                  }
+                  this.dialogFormVisible = false
+                })
+              })
+              .catch(() => {})
+          }
+        })
+      } else {
+        const params = {
+          ...this.dialogForm
+        }
+        this.$refs.formSub.validate((valid) => {
+          if (valid) {
+            console.log(params)
+            this.$confirm(
+              `<strong>您确认要执行修改会员提款设置的操作?</strong>`,
+              `确认提示`,
+              {
+                dangerouslyUseHTMLString: true,
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+              }
+            )
+              .then(() => {
+                this.$api.getWithdrawSettingMemberUpdate(params).then((res) => {
+                  if (res.code === 200) {
                     console.log(res)
                     this.$message.success('修改成功!')
                     this.loadData()
                   }
                   this.dialogFormVisible = false
                 })
-                 })
-                 .catch(() => {})
-              }
-            })
-        }
-        }
-      })
+              })
+              .catch(() => {})
+          }
+        })
+      }
     },
     open() {
       this.$confirm('您确定要初始化会员提款设置？请谨慎操作！！！', {
@@ -445,56 +487,26 @@ export default {
           })
         })
     },
-    getWithdrawSettingMemberAdd(val) {
-      this.$api
-        .getWithdrawSettingMemberAdd(val)
-        .then((res) => {
-          this.loading = false
-          if (res.code === 200) {
-            this.$message.success('新增成功')
-            this.pageNum = 1
-            this.reset()
-            setTimeout(() => {
-              this.back()
-            }, 500)
-          }
-        })
-        .catch(() => {
-          this.loading = false
-        })
-    },
-    getWithdrawSettingMemberUpdate(val) {
-      this.$api
-        .getWithdrawSettingMemberUpdate(val)
-        .then((res) => {
-          this.loading = false
-          if (res.code === 200) {
-            this.$message.success('修改成功')
-            setTimeout(() => {
-              this.back()
-            }, 500)
-          }
-        })
-        .catch(() => {
-          this.loading = false
-        })
-    },
     reset() {
-      this.queryData = {}
-      this.dialogForm = {
-        vipNum: 0,
-        singleMinAmount: 0,
-        singleMaxAmount: 0,
-        dateFreeNum: 0,
-        bigAmount: 0,
-        dateFreeAmount: 0,
-        rateDateFreeType: 2,
-        rateDateFree: 0,
-        rateDateTotalType: 2,
-        rateDateTotal: 0,
-        status: 1
+      if (this.title === '新增') {
+        this.queryData = {}
+        this.dialogForm = {
+          vipNum: 0,
+          singleMinAmount: 0,
+          singleMaxAmount: 0,
+          dateFreeNum: 0,
+          bigAmount: 0,
+          dateFreeAmount: 0,
+          rateDateFreeType: 2,
+          rateDateFree: 0,
+          rateDateTotalType: 2,
+          rateDateTotal: 0,
+          status: 1
+        }
+      } else {
+        this.dialogForm = this.temporary
       }
-      this.$refs['form'].resetFields()
+      this.$refs.formSub.resetFields()
     },
     loadData() {
       this.loading = true
@@ -552,9 +564,10 @@ export default {
     },
     edit(val) {
       this.title = '编辑'
-      console.log('编辑', val)
+      console.log('编辑', val, '1314')
       this.dialogForm = { ...val }
       this.dialogFormVisible = true
+      this.isDisabled = false
     }
   }
 }

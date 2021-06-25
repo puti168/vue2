@@ -87,6 +87,7 @@ export function getProxyFundsRecordsWithdrawDownload(data) {
 	return request({
 		url: '/proxyFundsRecords/withdraw/download',
 		method: 'post',
+		responseType: 'blob',
 		data
 	})
 }
@@ -103,6 +104,7 @@ export function getProxyFundsRecordsTransferDownload(data) {
 	return request({
 		url: '/proxyFundsRecords/transfer/download',
 		method: 'post',
+		responseType: 'blob',
 		data
 	})
 }

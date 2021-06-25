@@ -122,11 +122,11 @@
           size="mini"
           class="small-size-table"
           :data="tableData"
-          style="width: 100%"
+          style="width: 2100px"
           :header-cell-style="getRowClass"
           @sort-change="_changeTableSort"
         >
-          <el-table-column prop="orderNo" align="center" label="订单号">
+          <el-table-column prop="orderNo" width="300px" align="center" label="订单号">
             <template slot-scope="scope">
               <Copy v-if="!!scope.row.orderNo" :title="scope.row.orderNo" :copy="copy">
                 {{ scope.row.orderNo }}
@@ -134,7 +134,7 @@
               <span v-else>-</span>
             </template>
           </el-table-column>
-          <el-table-column prop="proxyName" align="center" label="代理账号">
+          <el-table-column prop="proxyName" width="300px" align="center" label="代理账号">
             <template slot-scope="scope">
               <Copy v-if="!!scope.row.proxyName" :title="scope.row.proxyName" :copy="copy">
                 {{ scope.row.proxyName }}
@@ -142,7 +142,7 @@
               <span v-else>-</span>
             </template>
           </el-table-column>
-          <el-table-column prop="realName" align="center" label="代理姓名">
+          <el-table-column prop="realName" width="300px" align="center" label="代理姓名">
             <template slot-scope="scope">
               <Copy v-if="!!scope.row.realName" :title="scope.row.realName" :copy="copy">
                 {{ scope.row.realName }}
@@ -154,29 +154,30 @@
             prop="windControlName"
             align="center"
             label="风控等级"
-            width="130px"
+            width="300px"
           >
           </el-table-column>
           <el-table-column
             prop="orderStatus"
             align="center"
             label="订单状态"
-            width="100px"
+            width="300px"
           >
             <template slot-scope="scope">
-              {{ typeFilter(scope.row.orderStatus, "accountType") }}
+              {{ typeFilter(scope.row.orderStatus, "accessStatusType") }}
             </template>
           </el-table-column>
           <el-table-column
             prop="amount"
             align="center"
+            width="300px"
             label="转账金额"
           ></el-table-column>
           <el-table-column
             prop="createdTime"
             align="center"
             label="转账时间"
-            width="150px"
+           width="300px"
             sortable="custom"
           >
           </el-table-column>
