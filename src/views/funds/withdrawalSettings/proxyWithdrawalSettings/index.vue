@@ -553,18 +553,25 @@ export default {
         })
     },
     getProxyDetailQueryDetail(val) {
-      this.$api.getProxyDetailQueryDetail({ userName: val }).then((res) => {
-        if (res.code === 200) {
-          const { id, realName, accountType, accountStatus, windControlName } = {
-            ...res.data
+      this.$api
+        .getProxyDetailQueryDetail({ userName: val })
+        .then((res) => {
+          if (res.code === 200) {
+            const { id, realName, accountType, accountStatus, windControlName } = {
+              ...res.data
+            }
+            this.$set(this.queryData, 'proxyId', id)
+            this.$set(this.queryData, 'proxyName', realName)
+            this.$set(this.queryData, 'accountType', accountType + '')
+            this.$set(this.queryData, 'accountStatus', accountStatus + '')
+            this.$set(this.queryData, 'windControlName', windControlName)
+          } else {
+            this.queryData.proxyAccount = ''
           }
-          this.$set(this.queryData, 'proxyId', id)
-          this.$set(this.queryData, 'proxyName', realName)
-          this.$set(this.queryData, 'accountType', accountType + '')
-          this.$set(this.queryData, 'accountStatus', accountStatus + '')
-          this.$set(this.queryData, 'windControlName', windControlName)
-        }
-      })
+        })
+        .catch(() => {
+          this.queryData.proxyAccount = ''
+        })
     },
     enterSearch() {
       const val = this.queryData.proxyAccount
@@ -667,15 +674,16 @@ export default {
       if (this.title === '新增') {
         this.$refs.formProxy.validate((valid) => {
           if (valid) {
+            console.log(this.queryData.proxyId)
             const params = {
               ...this.dialogForm,
               proxyId: this.queryData.proxyId,
               proxyName: this.queryData.proxyName,
               proxyAccount: this.queryData.proxyAccount
             }
+            console.log(params)
             this.$refs.formSub.validate((valid) => {
-              if (valid) {
-                console.log(params)
+              if (valid && params.proxyId) {
                 this.$confirm(
                   `<strong>您确认要执行新增代理提款设置的操作?</strong>`,
                   `确认提示`,
@@ -697,6 +705,8 @@ export default {
                     })
                   })
                   .catch(() => {})
+              } else {
+                this.$message.warning('请先查询代理!')
               }
             })
           }
