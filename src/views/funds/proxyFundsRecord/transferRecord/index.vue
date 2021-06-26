@@ -134,7 +134,7 @@
               <span v-else>-</span>
             </template>
           </el-table-column>
-          <el-table-column prop="proxyName" width="300px" align="center" label="代理账号">
+          <el-table-column prop="proxyName" width="264px" align="center" label="代理账号">
             <template slot-scope="scope">
               <Copy v-if="!!scope.row.proxyName" :title="scope.row.proxyName" :copy="copy">
                 {{ scope.row.proxyName }}
@@ -142,7 +142,7 @@
               <span v-else>-</span>
             </template>
           </el-table-column>
-          <el-table-column prop="realName" width="300px" align="center" label="代理姓名">
+          <el-table-column prop="realName" width="200px" align="center" label="代理姓名">
             <template slot-scope="scope">
               <Copy v-if="!!scope.row.realName" :title="scope.row.realName" :copy="copy">
                 {{ scope.row.realName }}
@@ -154,14 +154,14 @@
             prop="windControlName"
             align="center"
             label="风控等级"
-            width="300px"
+            width="200px"
           >
           </el-table-column>
           <el-table-column
             prop="orderStatus"
             align="center"
             label="订单状态"
-            width="300px"
+            width="200px"
           >
             <template slot-scope="scope">
               {{ typeFilter(scope.row.orderStatus, "accessStatusType") }}
@@ -170,7 +170,7 @@
           <el-table-column
             prop="amount"
             align="center"
-            width="300px"
+            width="200px"
             label="转账金额"
           ></el-table-column>
           <el-table-column
@@ -368,12 +368,12 @@ export default {
           sums[index] = el
           return
         } else {
-          sums[index] = (
-            <div class='count_row'>
-              <p>-</p>
-              <p>-</p>
-            </div>
-          )
+          // sums[index] = (
+          //   <div class='count_row'>
+          //     <p>-</p>
+          //     <p>-</p>
+          //   </div>
+          // )
         }
       })
 

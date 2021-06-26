@@ -200,7 +200,7 @@
             prop="adjustType"
             align="center"
             label="调整类型"
-            width="150px"
+            width="130px"
           >
            <template slot-scope="scope">
               {{ typeFilter(scope.row.adjustType, "proxyPatchSubAdjustType") }}
@@ -209,6 +209,7 @@
           <el-table-column
             prop="adjustAmount"
             align="center"
+            width="130px"
             label="调整金额"
           ></el-table-column>
 		  <el-table-column
@@ -228,7 +229,7 @@
             prop="operatorTime"
             align="center"
             label="申请时间"
-            width="150px"
+            width="160px"
             sortable="custom"
           >
           </el-table-column>
@@ -236,7 +237,7 @@
             prop="remark"
             align="center"
             label="备注"
-            width="150px"
+            width="160px"
           >
             <template slot-scope="scope">
               <span v-if="scope.row.remark">{{
@@ -468,12 +469,12 @@ export default {
           sums[index] = el
           return
         } else {
-          sums[index] = (
-            <div class='count_row'>
-              <p>-</p>
-              <p>-</p>
-            </div>
-          )
+          // sums[index] = (
+          //   <div class='count_row'>
+          //     <p>-</p>
+          //     <p>-</p>
+          //   </div>
+          // )
         }
       })
 

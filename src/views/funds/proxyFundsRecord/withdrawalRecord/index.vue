@@ -173,7 +173,7 @@
           :header-cell-style="getRowClass"
           @sort-change="_changeTableSort"
         >
-          <el-table-column prop="id" align="center" width="160px" label="订单号">
+          <el-table-column prop="id" align="center" width="180px" label="订单号">
             <template slot-scope="scope">
               <Copy v-if="!!scope.row.id" :title="scope.row.id" :copy="copy">
                 {{ scope.row.id }}
@@ -284,7 +284,7 @@ class="redColor"
             prop="createdAt"
             align="center"
             label="提款时间"
-            width="150px"
+            width="160px"
             sortable="custom"
           >
           </el-table-column>
@@ -481,12 +481,12 @@ export default {
           sums[index] = el
           return
         } else {
-          sums[index] = (
-            <div class='count_row'>
-              <p>-</p>
-              <p>-</p>
-            </div>
-          )
+          // sums[index] = (
+          //   <div class='count_row'>
+          //     <p>-</p>
+          //     <p>-</p>
+          //   </div>
+          // )
         }
       })
 
