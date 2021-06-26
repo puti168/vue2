@@ -28,27 +28,27 @@
           >
             <el-table-column align="center" label="注册时间">
               <template>
-                {{ list.beforeModify ? list.beforeModify : "-" }}
+                {{ list.createDt ? list.createDt : "-" }}
               </template>
             </el-table-column>
             <el-table-column align="center" label="最后登录时间">
               <template>
-                {{ list.beforeModify ? list.beforeModify : "-" }}
+                {{ list.lastLoginTime ? list.lastLoginTime : "-" }}
               </template>
             </el-table-column>
             <el-table-column align="center" label="最后下注时间">
               <template>
-                {{ list.beforeModify ? list.beforeModify : "-" }}
+                {{ list.lastBetTime ? list.lastBetTime : "-" }}
               </template>
             </el-table-column>
             <el-table-column align="center" label="注册端">
               <template>
-                {{ list.beforeModify ? list.beforeModify : "-" }}
+                {{ list.deviceType ? list.deviceType : "-" }}
               </template>
             </el-table-column>
             <el-table-column align="center" label="注册IP">
               <template>
-                {{ list.beforeModify ? list.beforeModify : "-" }}
+                {{ list.registerIp ? list.registerIp : "-" }}
               </template>
             </el-table-column>
             <el-table-column align="center" label="注册端设备编号">
@@ -58,12 +58,12 @@
             </el-table-column>
             <el-table-column align="center" label="账号类型">
               <template>
-                {{ list.beforeModify ? list.beforeModify : "-" }}
+                {{ list.accountType ? list.accountType : "-" }}
               </template>
             </el-table-column>
             <el-table-column align="center" label="注册域名">
               <template>
-                {{ list.beforeModify ? list.beforeModify : "-" }}
+                {{ list.registerReference ? list.registerReference : "-" }}
               </template>
             </el-table-column>
           </el-table>
@@ -81,37 +81,37 @@
           >
             <el-table-column align="center" label="代理账号">
               <template>
-                {{ list.beforeModify ? list.beforeModify : "-" }}
+                {{ list.userName ? list.userName : "-" }}
               </template>
             </el-table-column>
             <el-table-column align="center" label="代理姓名">
               <template>
-                {{ list.beforeModify ? list.beforeModify : "-" }}
+                {{ list.realName ? list.realName : "-" }}
               </template>
             </el-table-column>
             <el-table-column align="center" label="账号状态">
               <template>
-                {{ list.beforeModify ? list.beforeModify : "-" }}
+                {{ list.accountStatus ? list.accountStatus : "-" }}
               </template>
             </el-table-column>
             <el-table-column align="center" label="代理标签">
               <template>
-                {{ list.beforeModify ? list.beforeModify : "-" }}
+                {{ list.labelName ? list.labelName : "-" }}
               </template>
             </el-table-column>
             <el-table-column align="center" label="备注">
               <template>
-                {{ list.beforeModify ? list.beforeModify : "-" }}
+                {{ list.remark ? list.remark : "-" }}
               </template>
             </el-table-column>
             <el-table-column align="center" label="绑定银行卡数量">
               <template>
-                {{ list.beforeModify ? list.beforeModify : "-" }}
+                {{ list.bankNum ? list.bankNum : "-" }}
               </template>
             </el-table-column>
             <el-table-column align="center" label="虚拟币账号数量">
               <template>
-                {{ list.beforeModify ? list.beforeModify : "-" }}
+                {{ list.virtualNum ? list.virtualNum : "-" }}
               </template>
             </el-table-column>
           </el-table>
@@ -126,22 +126,22 @@
           >
             <el-table-column align="center" label="累计总存款金额（万元）">
               <template>
-                {{ list.beforeModify ? list.beforeModify : "-" }}
+                {{ list.totalDepositAmount ? list.totalDepositAmount : "-" }}
               </template>
             </el-table-column>
             <el-table-column align="center" label="累计总存款次数">
               <template>
-                {{ list.beforeModify ? list.beforeModify : "-" }}
+                {{ list.totalDepositNum ? list.totalDepositNum : "-" }}
               </template>
             </el-table-column>
             <el-table-column align="center" label="累计总提款金额（万元）">
               <template>
-                {{ list.beforeModify ? list.beforeModify : "-" }}
+                {{ list.totalWithdrawAmount ? list.totalWithdrawAmount : "-" }}
               </template>
             </el-table-column>
             <el-table-column align="center" label="累计总提款次数">
               <template>
-                {{ list.beforeModify ? list.beforeModify : "-" }}
+                {{ list.totalWithdrawNum ? list.totalWithdrawNum : "-" }}
               </template>
             </el-table-column>
             <el-table-column align="center" label="累计总存提款差额（万元）">
@@ -164,27 +164,27 @@
           >
             <el-table-column align="center" label="风险代理">
               <template>
-                {{ list.beforeModify ? list.beforeModify : "-" }}
+                {{ list.windControlName ? list.windControlName : "-" }}
               </template>
             </el-table-column>
             <el-table-column align="center" label="风险银行卡">
               <template>
-                {{ list.beforeModify ? list.beforeModify : "-" }}
+                {{ list.windBank ? list.windBank : "-" }}
               </template>
             </el-table-column>
             <el-table-column align="center" label="风险虚拟币">
               <template>
-                {{ list.beforeModify ? list.beforeModify : "-" }}
+                {{ list.windVirtual ? list.windVirtual : "-" }}
               </template>
             </el-table-column>
             <el-table-column align="center" label="风险IP">
               <template>
-                {{ list.beforeModify ? list.beforeModify : "-" }}
+                {{ list.ipWindControlName ? list.ipWindControlName : "-" }}
               </template>
             </el-table-column>
             <el-table-column align="center" label="风险终端设备号">
               <template>
-                {{ list.beforeModify ? list.beforeModify : "-" }}
+                {{ list.windEquipment ? list.windEquipment : "-" }}
               </template>
             </el-table-column>
           </el-table>
@@ -202,27 +202,31 @@
           >
             <el-table-column align="center" label="上次提款时间">
               <template>
-                {{ list.beforeModify ? list.beforeModify : "-" }}
+                {{ list.lastTime ? list.lastTime : "-" }}
               </template>
             </el-table-column>
             <el-table-column align="center" label="上次提款金额">
               <template>
-                {{ list.beforeModify ? list.beforeModify : "-" }}
+                {{ list.lastAmount ? list.lastAmount : "-" }}
               </template>
             </el-table-column>
             <el-table-column align="center" label="上次提款至本次提款间存款金额">
               <template>
-                {{ list.beforeModify ? list.beforeModify : "-" }}
+                {{
+                  list.lastBetweenThisDepositAmount
+                    ? list.lastBetweenThisDepositAmount
+                    : "-"
+                }}
               </template>
             </el-table-column>
             <el-table-column align="center" label="上次提款方式">
               <template>
-                {{ list.beforeModify ? list.beforeModify : "-" }}
+                {{ list.lastType ? list.lastType : "-" }}
               </template>
             </el-table-column>
             <el-table-column align="center" label="上次是否为大额提款">
               <template>
-                {{ list.beforeModify ? list.beforeModify : "-" }}
+                {{ list.lastBig ? list.lastBig : "-" }}
               </template>
             </el-table-column>
           </el-table>
@@ -235,37 +239,37 @@
             <tbody>
               <tr>
                 <td class="td-title">订单号</td>
-                <td>33333333</td>
+                <td>{{ list.thirdOrderNo }}</td>
                 <td class="td-title">订单来源</td>
-                <td>PC</td>
+                <td>{{ list.deviceNo }}</td>
                 <td class="td-title">提款IP</td>
-                <td>33333333333</td>
+                <td>{{ list.customerIp }}</td>
                 <td class="td-title">是否为首提</td>
-                <td>否</td>
+                <td>{{ list.isOneWith }}</td>
                 <td class="td-title">是否为大额提款</td>
-                <td>否</td>
+                <td>{{ list.isBig }}</td>
               </tr>
               <tr>
                 <td class="td-title">今日提款次数</td>
-                <td>33333333</td>
+                <td>{{ list.dayWithDrawNum }}</td>
                 <td class="td-title">免费提款次数</td>
-                <td>PC</td>
+                <td>{{ list.freeNum }}</td>
                 <td class="td-title">今日提款总额</td>
-                <td>33333333333</td>
+                <td>{{ list.dayWithDrawNumSum }}</td>
                 <td class="td-title">是否连续提款</td>
-                <td>否</td>
+                <td>{{ list.isContinuityWithDraw }}</td>
                 <td class="td-title">提款方式</td>
-                <td>否</td>
+                <td>{{ list.withdrawType }}</td>
               </tr>
               <tr>
                 <td class="td-title">提款设备终端</td>
-                <td colspan="2">33333333</td>
+                <td colspan="2">{{ list.withdrawDeviceType }}</td>
                 <td class="td-title">提款绑定域名</td>
-                <td colspan="6">PC</td>
+                <td colspan="6">{{ list.withdrawDomain }}</td>
               </tr>
               <tr>
                 <td class="td-title">提款银行信息</td>
-                <td colspan="9">33333333</td>
+                <td colspan="9">{{ list.bankInfo }}</td>
               </tr>
               <tr>
                 <td rowspan="2" class="td-title">账目审核信息</td>
@@ -275,10 +279,10 @@
                 <td colspan="2" class="td-title">实际打款</td>
               </tr>
               <tr>
-                <td colspan="3">1000.00</td>
-                <td colspan="2">1000.00</td>
-                <td colspan="2">1000.00</td>
-                <td colspan="2">1000.00</td>
+                <td colspan="3">{{ list.withdrawWater }}</td>
+                <td colspan="2">{{ list.orderAmount }}</td>
+                <td colspan="2">{{ list.orderRateAmount }}</td>
+                <td colspan="2">{{ list.realAmount }}</td>
               </tr>
             </tbody>
           </table>
@@ -286,10 +290,20 @@
       </div>
       <div class="review-content">
         <p class="name">审核信息</p>
-        <div class="review-flex">
-          <div>一审人: 111</div>
-          <div>一审时间: 222</div>
-          <div>一审备注: 3333</div>
+        <div v-if="activeName === '0'" class="review-flex">
+          <div>一审人: {{ list.audit1Operator }}</div>
+          <div>一审时间: {{ list.audit1Time }}</div>
+          <div>一审备注: {{ list.audit1Desc }}</div>
+        </div>
+        <div v-else-if="activeName === '1'" class="review-flex">
+          <div>二审人: {{ list.audit2Operator }}</div>
+          <div>二审时间: {{ list.audit2Time }}</div>
+          <div>二审备注: {{ list.audit2Desc }}</div>
+        </div>
+        <div v-else class="review-flex">
+          <div>三审人: {{ list.audit3Operator }}</div>
+          <div>三审时间: {{ list.audit3Time }}</div>
+          <div>三审备注: {{ list.audit3Desc }}</div>
         </div>
       </div>
     </div>
@@ -467,6 +481,7 @@ export default {
     td {
       border-right: 1px solid #bcbec2;
       border-bottom: 1px solid #bcbec2;
+      min-width: 150px;
       height: 36px;
       line-height: 36px;
     }
