@@ -525,7 +525,7 @@ export default {
 						background: 'rgba(0, 0, 0, 0.7)'
 					})
 					const params = {
-						id: this.rowData.id,
+						thirdOrderNo: this.rowData.thirdOrderNo,
 						createdAt: this.rowData.createdAt,
 						auditDesc: this.form.remark,
 						auditResult: this.action ? 1 : 2,

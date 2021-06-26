@@ -218,17 +218,17 @@
 					>
 						<el-table-column align="center" label="上次提款时间">
 							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
+								{{ list && list.beforeModify ? list.beforeModify : '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="上次提款金额">
 							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
+								{{ list && list.beforeModify ? list.beforeModify : '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="上次提款后余额">
 							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
+								{{ list && list.beforeModify ? list.beforeModify : '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column
@@ -236,17 +236,17 @@
 							label="上次提款至本次提款间存款金额"
 						>
 							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
+								{{ list && list.beforeModify ? list.beforeModify : '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="上次提款方式">
 							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
+								{{ list && list.beforeModify ? list.beforeModify : '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="上次是否为大额提款">
 							<template>
-								{{ list.beforeModify ? list.beforeModify : '-' }}
+								{{ list && list.beforeModify ? list.beforeModify : '-' }}
 							</template>
 						</el-table-column>
 					</el-table>
@@ -395,9 +395,9 @@ export default {
 			this.$emit('goBack')
 		},
 		getInfo() {
-			const { id, createdAt } = this.rowData
+			const { thirdOrderNo, createdAt } = this.rowData
 			const params = {
-				id,
+				thirdOrderNo,
 				createdAt
 			}
 			this.$api.proxyDetail(params).then((res) => {

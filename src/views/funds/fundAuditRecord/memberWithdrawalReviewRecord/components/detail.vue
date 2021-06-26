@@ -279,10 +279,9 @@ export default {
 			this.$emit('goBack')
 		},
 		getInfo() {
-			console.log('this.rowDat', this.rowData)
-			const { id, createdAt } = this.rowData
+			const { thirdOrderNo, createdAt } = this.rowData
 			const params = {
-				id,
+                thirdOrderNo,
 				createdAt
 			}
 			this.$api.memberWithdrawDetailsAPI(params).then((res) => {
