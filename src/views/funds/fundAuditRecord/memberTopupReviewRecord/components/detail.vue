@@ -98,7 +98,7 @@
 						<el-table-column align="center" label="账号状态">
 							<template>
 								{{
-									list.accountStatus
+                                    list && list.accountStatus
 										? typeFilter(list.accountStatus, 'accountStatusType')
 										: '-'
 								}}

@@ -88,7 +88,7 @@
 						<el-table-column align="center" label="账号状态">
 							<template>
 								{{
-									list.accountStatus
+                                    list && list.accountStatus
 										? typeFilter(list.accountStatus, 'accountStatusType')
 										: '-'
 								}}
@@ -191,14 +191,14 @@
 						</el-table-column>
 						<el-table-column align="center" label="风险IP">
 							<template>
-                                {{
-                                    list && list.ipWindControlName ? list.ipWindControlName : '-'
-                                }}
+								{{
+									list && list.ipWindControlName ? list.ipWindControlName : '-'
+								}}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="风险终端设备号">
 							<template>
-                                {{ list && list.windEquipment ? list.windEquipment : '-' }}
+								{{ list && list.windEquipment ? list.windEquipment : '-' }}
 							</template>
 						</el-table-column>
 					</el-table>
@@ -216,17 +216,21 @@
 					>
 						<el-table-column align="center" label="上次提款时间">
 							<template>
-								{{ list && list.beforeModify ? list.beforeModify : '-' }}
+								{{ list && list.lastTime ? list.lastTime : '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="上次提款金额">
 							<template>
-								{{ list && list.beforeModify ? list.beforeModify : '-' }}
+								{{ list && list.lastAmount ? list.lastAmount : '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="上次提款后余额">
 							<template>
-								{{ list && list.beforeModify ? list.beforeModify : '-' }}
+								{{
+									list && list.lastWithdrawalBalance
+										? list.lastWithdrawalBalance
+										: '-'
+								}}
 							</template>
 						</el-table-column>
 						<el-table-column
@@ -234,17 +238,27 @@
 							label="上次提款至本次提款间存款金额"
 						>
 							<template>
-								{{ list && list.beforeModify ? list.beforeModify : '-' }}
+								{{
+									list && list.lastBetweenThisDepositAmount
+										? list.lastBetweenThisDepositAmount
+										: '-'
+								}}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="上次提款方式">
 							<template>
-								{{ list && list.beforeModify ? list.beforeModify : '-' }}
+								{{ list && list.lastType ? list.lastType : '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="上次是否为大额提款">
 							<template>
-								{{ list && list.beforeModify ? list.beforeModify : '-' }}
+								{{
+									list && list.lastBig
+										? Number(list.lastBig) === 0
+											? '否'
+											: '是'
+										: '-'
+								}}
 							</template>
 						</el-table-column>
 					</el-table>
@@ -257,37 +271,87 @@
 						<tbody>
 							<tr>
 								<td class="td-title">订单号</td>
-								<td>33333333</td>
+								<td>{{ list && list.orderId ? list.orderId : '-' }}</td>
 								<td class="td-title">订单来源</td>
-								<td>PC</td>
+								<td>{{ list && list.deviceNo ? list.deviceNo : '-' }}</td>
 								<td class="td-title">提款IP</td>
-								<td>33333333333</td>
+								<td>{{ list && list.customerIp ? list.customerIp : '-' }}</td>
 								<td class="td-title">是否为首提</td>
-								<td>否</td>
+								<td>
+									{{
+										list && list.isFirst
+											? Number(list.isFirst) === 1
+												? '是'
+												: '否'
+											: '-'
+									}}
+								</td>
 								<td class="td-title">是否为大额提款</td>
-								<td>否</td>
+								<td>
+									{{
+										list && list.isBig
+											? Number(list.isBig) === 1
+												? '是'
+												: '否'
+											: '-'
+									}}
+								</td>
 							</tr>
 							<tr>
 								<td class="td-title">今日提款次数</td>
-								<td>33333333</td>
+								<td>
+									{{ list && list.dayWithDrawNum ? list.dayWithDrawNum : '-' }}
+								</td>
 								<td class="td-title">免费提款次数</td>
-								<td>PC</td>
+								<td>{{ list && list.freeNum ? list.freeNum : '-' }}</td>
 								<td class="td-title">今日提款总额</td>
-								<td>33333333333</td>
+								<td>
+									{{
+										list && list.dayWithDrawNumSum
+											? list.dayWithDrawNumSum
+											: '-'
+									}}
+								</td>
 								<td class="td-title">是否连续提款</td>
-								<td>否</td>
+								<td>
+									{{
+										list && list.isContinuityWithDraw
+											? Number(list.isContinuityWithDraw) === 1
+												? '是'
+												: '否'
+											: '-'
+									}}
+								</td>
 								<td class="td-title">提款方式</td>
-								<td>否</td>
+								<td>
+									{{
+										list && list.isContinuityWithDraw
+											? Number(list.isContinuityWithDraw) === 1
+												? '银行卡'
+												: '虚拟币'
+											: '-'
+									}}
+								</td>
 							</tr>
 							<tr>
 								<td class="td-title">提款设备终端</td>
-								<td colspan="2">33333333</td>
+								<td colspan="2">
+									{{
+										list && list.withdrawDeviceType
+											? list.withdrawDeviceType
+											: '-'
+									}}
+								</td>
 								<td class="td-title">提款绑定域名</td>
-								<td colspan="6">PC</td>
+								<td colspan="6">
+									{{ list && list.withdrawDomain ? list.withdrawDomain : '-' }}
+								</td>
 							</tr>
 							<tr>
 								<td class="td-title">提款银行信息</td>
-								<td colspan="9">33333333</td>
+								<td colspan="9">
+									{{ list && list.bankInfo ? list.bankInfo : '-' }}
+								</td>
 							</tr>
 							<tr>
 								<td rowspan="2" class="td-title">账目审核信息</td>
@@ -297,10 +361,20 @@
 								<td colspan="2" class="td-title">实际打款</td>
 							</tr>
 							<tr>
-								<td colspan="3">1000.00</td>
-								<td colspan="2">1000.00</td>
-								<td colspan="2">1000.00</td>
-								<td colspan="2">1000.00</td>
+								<td colspan="3">
+									{{ list && list.withdrawWater ? list.withdrawWater : '-' }}
+								</td>
+								<td colspan="2">
+									{{ list && list.orderAmount ? list.orderAmount : '-' }}
+								</td>
+								<td colspan="2">
+									{{
+										list && list.orderRateAmount ? list.orderRateAmount : '-'
+									}}
+								</td>
+								<td colspan="2">
+									{{ list && list.realAmount ? list.realAmount : '-' }}
+								</td>
 							</tr>
 						</tbody>
 					</table>
@@ -309,58 +383,17 @@
 			<div class="review-content">
 				<p class="name">审核信息</p>
 				<div class="review-flex">
-					<div>一审人: 111</div>
-					<div>一审时间: 222</div>
-					<div>一审备注: 3333</div>
+					<div>一审人: {{ list && list.audit1Operator }}</div>
+					<div>一审时间: {{ list && list.audit1Time }}</div>
+					<div>一审备注: {{ list && list.audit1Desc }}</div>
 				</div>
 				<div class="review-flex">
-					<div>二审人: 111</div>
-					<div>二审时间: 222</div>
-					<div>二审备注: 3333</div>
+					<div>二审人: {{ list && list.audit2Operator }}</div>
+					<div>二审时间: {{ list && list.audit2Time }}</div>
+					<div>二审备注: {{ list && list.audit2Desc }}</div>
 				</div>
 			</div>
 		</div>
-		<el-dialog
-			title="提交确认"
-			center
-			:visible.sync="visible"
-			:before-close="closeFormDialog"
-			width="610px"
-			class="audit-confirm"
-		>
-			<el-form ref="form" :model="form" :rules="formRules">
-				<el-form-item v-if="action" label="提交审核信息">
-					<el-input
-						v-model="form.remark"
-						clearable
-						type="textarea"
-						:maxlength="50"
-						show-word-limit
-						:autosize="{ minRows: 4, maxRows: 4 }"
-						style="width: 380px"
-						placeholder="请输入"
-					></el-input>
-				</el-form-item>
-				<el-form-item v-else label="提交审核信息" prop="remark">
-					<el-input
-						v-model="form.remark"
-						clearable
-						type="textarea"
-						:maxlength="50"
-						show-word-limit
-						:autosize="{ minRows: 4, maxRows: 4 }"
-						style="width: 380px"
-						placeholder="请输入"
-					></el-input>
-				</el-form-item>
-			</el-form>
-			<div slot="footer" class="dialog-footer">
-				<el-button @click="visible = false">取 消</el-button>
-				<el-button type="primary" @click="auditOne">
-					提交
-				</el-button>
-			</div>
-		</el-dialog>
 	</div>
 </template>
 
