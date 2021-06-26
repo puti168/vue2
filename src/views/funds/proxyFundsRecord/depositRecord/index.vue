@@ -440,12 +440,12 @@ export default {
           sums[index] = el
           return
         } else {
-          sums[index] = (
-            <div class='count_row'>
-              <p>-</p>
-              <p>-</p>
-            </div>
-          )
+            // sums[index] = (
+            //   <div class='count_row'>
+            //     <p>-</p>
+            //     <p>-</p>
+            //   </div>
+            // )
         }
       })
 

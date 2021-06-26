@@ -186,46 +186,55 @@
           <el-table-column
             prop="totalNetAmount"
             align="center"
+            width="130px"
             label="总输赢"
           ></el-table-column>
 		   <el-table-column
             prop="totalPlatformAmount	"
             align="center"
             label="场馆费"
+            width="130px"
           ></el-table-column>
 		  <el-table-column
             prop="totalActivityAmount	"
             align="center"
+            width="130px"
             label="活动彩金"
           ></el-table-column>
 		  <el-table-column
             prop="totalRebateAmount"
             align="center"
+            width="130px"
             label="返水"
           ></el-table-column>
 		  <el-table-column
             prop="totalAdjustAmount"
+            width="130px"
             align="center"
             label="账号调整"
           ></el-table-column>
 		  <el-table-column
             prop="gameRebateRate"
+            width="130px"
             align="center"
             label="补单输赢"
           ></el-table-column>
 		  <el-table-column
             prop="totalPureAmount"
             align="center"
+            width="130px"
             label="净输赢"
           ></el-table-column>
 		  <el-table-column
             prop="totalLastAmount"
             align="center"
+            width="130px"
             label="上月结余"
           ></el-table-column>
 		  <el-table-column
             prop="totalRushAmount"
             align="center"
+            width="150px"
             label="冲正后净输赢"
           ></el-table-column>
          <el-table-column
@@ -240,12 +249,14 @@
             prop="rewardAmount"
             align="center"
             label="等级专享"
+            width="130px"
           ></el-table-column>
 
 		   <el-table-column
             prop="commissionAmount"
             align="center"
              sortable="custom"
+             width="130px"
             label="返佣"
           ></el-table-column>
 
@@ -446,7 +457,7 @@ export default {
       columns.forEach((column, index) => {
         if (index === 0) {
           const el = (
-            <div class='count'>
+            <div class='count_row'>
               <p>小计</p>
               <p>合计</p>
             </div>
@@ -455,9 +466,9 @@ export default {
           return
         } else if (index === 8 && this.summary !== null) {
           const el = (
-            <div class='count'>
-              <p>{this.summary.validBetSubtotal}</p>
-              <p>{this.summary.validBetSubtotal}</p>
+            <div class='count_row'>
+              <p>{this.summary.proxyCommissionRecordPageTotal.totalNetAmount}</p>
+              <p>{this.summary.proxyCommissionRecordSumTotal.totalNetAmount}</p>
             </div>
           )
           sums[index] = el
@@ -465,8 +476,8 @@ export default {
         } else if (index === 11 && this.summary !== null) {
           const el = (
             <div class='count_row'>
-              <p>{this.summary.rebateSubtotal}</p>
-              <p>{this.summary.rebateTotal}</p>
+              <p>{this.summary.proxyCommissionRecordPageTotal.totalRebateAmount}</p>
+              <p>{this.summary.proxyCommissionRecordSumTotal.totalRebateAmount}</p>
             </div>
           )
           sums[index] = el
@@ -474,8 +485,8 @@ export default {
         } else if (index === 12 && this.summary !== null) {
           const el = (
             <div class='count_row'>
-              <p>{this.summary.rebateSubtotal}</p>
-              <p>{this.summary.rebateTotal}</p>
+              <p>{this.summary.proxyCommissionRecordPageTotal.totalAdjustAmount}</p>
+              <p>{this.summary.proxyCommissionRecordSumTotal.totalAdjustAmount}</p>
             </div>
           )
           sums[index] = el
@@ -483,8 +494,8 @@ export default {
         } else if (index === 14 && this.summary !== null) {
           const el = (
             <div class='count_row'>
-              <p>{this.summary.rebateSubtotal}</p>
-              <p>{this.summary.rebateTotal}</p>
+              <p>{this.summary.proxyCommissionRecordPageTotal.totalPureAmount}</p>
+              <p>{this.summary.proxyCommissionRecordSumTotal.totalPureAmount}</p>
             </div>
           )
           sums[index] = el
@@ -492,8 +503,8 @@ export default {
         } else if (index === 15 && this.summary !== null) {
           const el = (
             <div class='count_row'>
-              <p>{this.summary.rebateSubtotal}</p>
-              <p>{this.summary.rebateTotal}</p>
+              <p>{this.summary.proxyCommissionRecordPageTotal.totalLastAmount}</p>
+              <p>{this.summary.proxyCommissionRecordSumTotal.totalLastAmount}</p>
             </div>
           )
           sums[index] = el
@@ -501,17 +512,8 @@ export default {
         } else if (index === 16 && this.summary !== null) {
           const el = (
             <div class='count_row'>
-              <p>{this.summary.rebateSubtotal}</p>
-              <p>{this.summary.rebateTotal}</p>
-            </div>
-          )
-          sums[index] = el
-          return
-        } else if (index === 17 && this.summary !== null) {
-          const el = (
-            <div class='count_row'>
-              <p>{this.summary.rebateSubtotal}</p>
-              <p>{this.summary.rebateTotal}</p>
+              <p>{this.summary.proxyCommissionRecordPageTotal.totalRushAmount}</p>
+              <p>{this.summary.proxyCommissionRecordSumTotal.totalRushAmount}</p>
             </div>
           )
           sums[index] = el
@@ -519,8 +521,8 @@ export default {
         } else if (index === 18 && this.summary !== null) {
           const el = (
             <div class='count_row'>
-              <p>{this.summary.rebateSubtotal}</p>
-              <p>{this.summary.rebateTotal}</p>
+              <p>{this.summary.proxyCommissionRecordPageTotal.rewardAmount}</p>
+              <p>{this.summary.proxyCommissionRecordSumTotal.rewardAmount}</p>
             </div>
           )
           sums[index] = el
@@ -528,19 +530,19 @@ export default {
         } else if (index === 19 && this.summary !== null) {
           const el = (
             <div class='count_row'>
-              <p>{this.summary.rebateSubtotal}</p>
-              <p>{this.summary.rebateTotal}</p>
+              <p>{this.summary.proxyCommissionRecordPageTotal.commissionAmount}</p>
+              <p>{this.summary.proxyCommissionRecordSumTotal.commissionAmount}</p>
             </div>
           )
           sums[index] = el
           return
         } else {
-          sums[index] = (
-            <div class='count_row'>
-              <p>-</p>
-              <p>-</p>
-            </div>
-          )
+          // sums[index] = (
+          //   <div class='count_row'>
+          //     <p>-</p>
+          //     <p>-</p>
+          //   </div>
+          // )
         }
       })
 
@@ -552,13 +554,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.count {
+.count_row {
   height: 80px;
   p {
     height: 40px;
     line-height: 40px;
-    color: #5c5c5c;
-    font-weight: 700;
     span {
       display: inline-block;
       width: 20px;
@@ -566,9 +566,7 @@ export default {
     }
   }
 }
-.wadd{
-  width: 130px;
-}
+
 .sum_footer {
   display: flex;
   display: -webkit-flex;

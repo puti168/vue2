@@ -89,22 +89,22 @@
           </el-form-item>
           <el-form-item label="调整金额:">
             <el-input
-              v-model="queryData.betAmountMin"
+              v-model="queryData.adjustAmountMin"
               size="medium"
               placeholder="最小数值"
               style="width: 100px"
-              :maxlength="3"
+              :maxlength="10"
               name="betAmountMin"
               oninput="value=value.replace(/[^\d]/g,'')"
               @blur="checkValue($event)"
             ></el-input>
             -
             <el-input
-              v-model="queryData.betAmountMax"
+              v-model="queryData.adjustAmountMax"
               size="medium"
               placeholder="最大数值"
               style="width: 100px"
-              :maxlength="3"
+              :maxlength="10"
               name="betAmountMax"
               oninput="value=value.replace(/[^\d]/g,'')"
               @blur="checkValue($event)"
@@ -208,6 +208,7 @@
           <el-table-column
             prop="adjustAmount"
             align="center"
+            width="130px"
             label="调整金额"
           ></el-table-column>
 		  <el-table-column
@@ -227,7 +228,7 @@
             prop="operatorTime"
             align="center"
             label="操作时间"
-            width="150px"
+            width="160px"
             sortable="custom"
           >
           </el-table-column>
@@ -463,12 +464,12 @@ export default {
           sums[index] = el
           return
         } else {
-          sums[index] = (
-            <div class='count_row'>
-              <p>-</p>
-              <p>-</p>
-            </div>
-          )
+          // sums[index] = (
+          //   <div class='count_row'>
+          //     <p>-</p>
+          //     <p>-</p>
+          //   </div>
+          // )
         }
       })
 

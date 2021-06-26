@@ -81,7 +81,7 @@
               size="medium"
               placeholder="最小数值"
               style="width: 100px"
-              :maxlength="3"
+              :maxlength="10"
               name="betAmountMin"
               oninput="value=value.replace(/[^\d]/g,'')"
               @blur="checkValue($event)"
@@ -92,7 +92,7 @@
               size="medium"
               placeholder="最大数值"
               style="width: 100px"
-              :maxlength="3"
+              :maxlength="10"
               name="betAmountMax"
               oninput="value=value.replace(/[^\d]/g,'')"
               @blur="checkValue($event)"
@@ -150,7 +150,7 @@
               <span v-else>-</span>
             </template>
           </el-table-column>
-          <el-table-column prop="proxyName" align="center" label="代理账号">
+          <el-table-column prop="proxyName" width="180px" align="center" label="代理账号">
             <template slot-scope="scope">
               <Copy v-if="!!scope.row.proxyName" :title="scope.row.proxyName" :copy="copy">
                 {{ scope.row.proxyName }}
@@ -158,7 +158,7 @@
               <span v-else>-</span>
             </template>
           </el-table-column>
-          <el-table-column prop="proxyRealName" align="center" label="代理姓名">
+          <el-table-column prop="proxyRealName" width="180px" align="center" label="代理姓名">
             <template slot-scope="scope">
               <Copy v-if="!!scope.row.proxyRealName" :title="scope.row.proxyRealName" :copy="copy">
                 {{ scope.row.proxyRealName }}
@@ -166,7 +166,7 @@
               <span v-else>-</span>
             </template>
           </el-table-column>
-		  <el-table-column prop="userName" align="center" label="代存会员账号">
+		  <el-table-column prop="userName" width="180px" align="center" label="代存会员账号">
             <template slot-scope="scope">
               <Copy v-if="!!scope.row.userName" :title="scope.row.userName" :copy="copy">
                 {{ scope.row.userName }}
@@ -178,7 +178,7 @@
             prop="bizType"
             align="center"
             label="代存类型"
-            width="130px"
+            width="180px"
           >
           <template slot-scope="scope">
               {{ typeFilter(scope.row.bizType, "proxyAssistDepositType") }}
@@ -197,6 +197,7 @@
           <el-table-column
             prop="amount"
             align="center"
+            width="180px"
             sortable="custom"
             label="代存金额"
           ></el-table-column>
@@ -204,7 +205,7 @@
             prop="createdTime"
             align="center"
             label="代存时间"
-            width="150px"
+            width="300px"
             sortable="custom"
           >
           </el-table-column>
@@ -429,12 +430,12 @@ export default {
           sums[index] = el
           return
         } else {
-          sums[index] = (
-            <div class='count_row'>
-              <p>-</p>
-              <p>-</p>
-            </div>
-          )
+          // sums[index] = (
+          //   <div class='count_row'>
+          //     <p>-</p>
+          //     <p>-</p>
+          //   </div>
+          // )
         }
       })
 
