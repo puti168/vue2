@@ -307,13 +307,6 @@ export default {
             id: this.rowData.id,
             remark: this.form.remark,
             auditStatus: this.action ? 1 : 2,
-            // orderStatus: this.action
-            //   ? this.activeName === "0"
-            //     ? 2
-            //     : 4
-            //   : this.activeName === "1"
-            //   ? 5
-            //   : 6,
             userType: 2
           }
 
@@ -345,22 +338,34 @@ export default {
       this.$emit('goBack')
     },
     getInfo() {
+      const loading = this.$loading({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      })
       const params = {
         id: this.rowData.id
       }
-      this.$api.proxyArtificialPatchAccountAddAuditauditDetail(params).then((res) => {
-        if (res.code === 200) {
-          const response = res.data
-          this.loading = false
-          this.list = response
-        } else {
-          this.loading = false
-          this.$message({
-            message: res.msg,
-            type: 'error'
-          })
-        }
-      })
+      this.$api
+        .proxyArtificialPatchAccountAddAuditauditDetail(params)
+        .then((res) => {
+          loading.close()
+          if (res.code === 200) {
+            const response = res.data
+            this.loading = false
+            this.list = response
+          } else {
+            this.loading = false
+            this.$message({
+              message: res.msg,
+              type: 'error'
+            })
+          }
+        })
+        .catch(() => {
+          loading.close()
+        })
     }
   }
 }

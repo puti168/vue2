@@ -43,7 +43,7 @@
             </el-table-column>
             <el-table-column align="center" label="注册端">
               <template>
-                {{ list.deviceType ? list.deviceType : "-" }}
+                {{ list.deviceType ? typeFilter(list.deviceType, "deviceType") : "-" }}
               </template>
             </el-table-column>
             <el-table-column align="center" label="注册IP">
@@ -53,12 +53,12 @@
             </el-table-column>
             <el-table-column align="center" label="注册端设备编号">
               <template>
-                {{ list.beforeModify ? list.beforeModify : "-" }}
+                {{ list.registerNo ? list.registerNo : "-" }}
               </template>
             </el-table-column>
             <el-table-column align="center" label="账号类型">
               <template>
-                {{ list.accountType ? list.accountType : "-" }}
+                {{ list.accountType ? typeFilter(list.accountType, "accountType") : "-" }}
               </template>
             </el-table-column>
             <el-table-column align="center" label="注册域名">
@@ -91,7 +91,11 @@
             </el-table-column>
             <el-table-column align="center" label="账号状态">
               <template>
-                {{ list.accountStatus ? list.accountStatus : "-" }}
+                {{
+                  list.accountStatus
+                    ? typeFilter(list.accountStatus, "accountStatusType")
+                    : "-"
+                }}
               </template>
             </el-table-column>
             <el-table-column align="center" label="代理标签">
@@ -106,12 +110,12 @@
             </el-table-column>
             <el-table-column align="center" label="绑定银行卡数量">
               <template>
-                {{ list.bankNum ? list.bankNum : "-" }}
+                {{ list.bankNum }}
               </template>
             </el-table-column>
             <el-table-column align="center" label="虚拟币账号数量">
               <template>
-                {{ list.virtualNum ? list.virtualNum : "-" }}
+                {{ list.virtualNum }}
               </template>
             </el-table-column>
           </el-table>
@@ -146,7 +150,7 @@
             </el-table-column>
             <el-table-column align="center" label="累计总存提款差额（万元）">
               <template>
-                {{ list.beforeModify ? list.beforeModify : "-" }}
+                {{ list.totalWithdrawDiff ? list.totalWithdrawDiff : "-" }}
               </template>
             </el-table-column>
           </el-table>
@@ -288,19 +292,40 @@
           </table>
         </div>
       </div>
-      <div class="review-content">
+      <div v-if="activeName === '0'" class="review-content">
         <p class="name">审核信息</p>
-        <div v-if="activeName === '0'" class="review-flex">
+        <div class="review-flex">
           <div>一审人: {{ list.audit1Operator }}</div>
           <div>一审时间: {{ list.audit1Time }}</div>
           <div>一审备注: {{ list.audit1Desc }}</div>
         </div>
-        <div v-else-if="activeName === '1'" class="review-flex">
+      </div>
+      <div v-else-if="activeName === '1'" class="review-content">
+        <p class="name">审核信息</p>
+        <div class="review-flex">
+          <div>一审人: {{ list.audit1Operator }}</div>
+          <div>一审时间: {{ list.audit1Time }}</div>
+          <div>一审备注: {{ list.audit1Desc }}</div>
+        </div>
+        <div class="review-flex">
           <div>二审人: {{ list.audit2Operator }}</div>
           <div>二审时间: {{ list.audit2Time }}</div>
           <div>二审备注: {{ list.audit2Desc }}</div>
         </div>
-        <div v-else class="review-flex">
+      </div>
+      <div v-else-if="activeName === '2'" class="review-content">
+        <p class="name">审核信息</p>
+        <div class="review-flex">
+          <div>一审人: {{ list.audit1Operator }}</div>
+          <div>一审时间: {{ list.audit1Time }}</div>
+          <div>一审备注: {{ list.audit1Desc }}</div>
+        </div>
+        <div class="review-flex">
+          <div>二审人: {{ list.audit2Operator }}</div>
+          <div>二审时间: {{ list.audit2Time }}</div>
+          <div>二审备注: {{ list.audit2Desc }}</div>
+        </div>
+        <div class="review-flex">
           <div>三审人: {{ list.audit3Operator }}</div>
           <div>三审时间: {{ list.audit3Time }}</div>
           <div>三审备注: {{ list.audit3Desc }}</div>
@@ -316,7 +341,7 @@
       class="audit-confirm"
     >
       <el-form ref="form" :model="form" :rules="formRules">
-        <el-form-item v-if="action" label="提交审核信息">
+        <el-form-item v-if="action" label="提交审核信息" prop="remark">
           <el-input
             v-model="form.remark"
             clearable
@@ -393,17 +418,11 @@ export default {
       this.visible = false
     },
     confirm(action) {
-      this.remark = ''
+      this.form.remark = ''
       this.action = action
       this.visible = true
     },
     auditOne() {
-      const loading = this.$loading({
-        lock: true,
-        text: 'Loading',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
-      })
       const params = {
         createdAt: this.rowData.createdAt,
         thirdOrderNo: this.rowData.thirdOrderNo,
@@ -413,6 +432,12 @@ export default {
       }
       this.$refs.form.validate((valid) => {
         if (valid) {
+          const loading = this.$loading({
+            lock: true,
+            text: 'Loading',
+            spinner: 'el-icon-loading',
+            background: 'rgba(0, 0, 0, 0.7)'
+          })
           this.$api
             .memberWithDrawProxyUpdateWithdraw(params)
             .then((res) => {
