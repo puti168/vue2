@@ -441,23 +441,33 @@ export default {
       this.$emit('goBack')
     },
     getInfo() {
+      const loading = this.$loading({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      })
       const params = {
         createdAt: this.rowData.createdAt,
         thirdOrderNo: this.rowData.thirdOrderNo
       }
-      this.$api.memberWithDrawProxySelectMemberWithdrawProxy(params).then((res) => {
-        if (res.code === 200) {
-          const response = res.data
-          this.loading = false
-          this.list = response
-        } else {
-          this.loading = false
-          this.$message({
-            message: res.msg,
-            type: 'error'
-          })
-        }
-      })
+      this.$api
+        .memberWithDrawProxySelectMemberWithdrawProxy(params)
+        .then((res) => {
+          loading.close()
+          if (res.code === 200) {
+            const response = res.data
+            this.list = response
+          } else {
+            this.$message({
+              message: res.msg,
+              type: 'error'
+            })
+          }
+        })
+        .catch(() => {
+          loading.close()
+        })
     }
   }
 }

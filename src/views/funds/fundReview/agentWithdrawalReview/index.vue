@@ -118,6 +118,7 @@
                   <el-button
                     type="success"
                     size="medium"
+                    :disabled="scope.row.lockStatus === 0"
                     @click="confirm(scope.row, true)"
                   >
                     出款通过
@@ -125,6 +126,7 @@
                   <el-button
                     type="danger"
                     size="medium"
+                    :disabled="scope.row.lockStatus === 0"
                     @click="confirm(scope.row, false)"
                   >
                     出款拒绝
@@ -302,10 +304,10 @@ export default {
           ? 'memberWithDrawProxyselectMemberWithDrawAuthEsPageOne'
           : 'memberWithDrawProxyselectMemberWithDrawAuthEsPageTwo'
       if (this.activeName === '2') {
-        type = 'selectMemberWithDrawAuthEsPageThree'
+        type = 'memberWithDrawProxyselectMemberWithDrawAuthEsPageThree'
       }
       if (this.activeName === '3') {
-        type = 'selectMemberWithDrawAuthEsPagePay'
+        type = 'memberWithDrawProxySelectMemberWithDrawAuthEsPagePay'
       }
       this.$api[type](params)
         .then((res) => {
@@ -361,6 +363,7 @@ export default {
         .catch(() => {})
     },
     auditOne() {
+      console.log(849646455646)
       this.$refs.form.validate((valid) => {
         if (valid) {
           const loading = this.$loading({
@@ -377,7 +380,7 @@ export default {
             orderStatus: 7
           }
           this.$api
-            .memberWithDrawProxySelectMemberWithDrawAuthEsPagePay(params)
+            .memberWithDrawProxyUpdateWithdraw(params)
             .then((res) => {
               if (res.code === 200) {
                 this.$message({
