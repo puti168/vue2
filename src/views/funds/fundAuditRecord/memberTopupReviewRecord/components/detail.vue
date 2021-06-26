@@ -34,11 +34,11 @@
 						</el-table-column>
 						<el-table-column align="center" label="注册端">
 							<template>
-                                {{
-                                    list && list.deviceType
-                                        ? typeFilter(list.deviceType, 'deviceType')
-                                        : '-'
-                                }}
+								{{
+									list && list.deviceType
+										? typeFilter(list.deviceType, 'deviceType')
+										: '-'
+								}}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="注册IP">
@@ -206,7 +206,11 @@
 						</el-table-column>
 						<el-table-column align="center" label="调整类型">
 							<template>
-								{{ list && list.adjustType ? list.adjustType : '-' }}
+								{{
+									list && list.adjustType
+										? typeFilter(list.adjustType, 'memberPatchAddAdjustType')
+										: '-'
+								}}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="活动ID">
@@ -264,18 +268,22 @@
 					<div>
 						二审备注: {{ list && list.audit2Desc ? list.audit2Desc : '-' }}
 					</div>
-                    <div v-if="list && list.audit2Result && list.audit2Result === '0'">
-                        一审结果: 未处理
-                    </div>
-                    <div v-else-if="list && list.audit2Result && list.audit2Result === '1'">
-                        一审结果: 通过
-                    </div>
-                    <div v-else-if="list && list.audit2Result && list.audit2Result === '2'">
-                        一审结果: 拒绝
-                    </div>
-                    <div v-else>
-                        一审结果: -
-                    </div>
+					<div v-if="list && list.audit2Result && list.audit2Result === '0'">
+						一审结果: 未处理
+					</div>
+					<div
+						v-else-if="list && list.audit2Result && list.audit2Result === '1'"
+					>
+						一审结果: 通过
+					</div>
+					<div
+						v-else-if="list && list.audit2Result && list.audit2Result === '2'"
+					>
+						一审结果: 拒绝
+					</div>
+					<div v-else>
+						一审结果: -
+					</div>
 				</div>
 			</div>
 		</div>
