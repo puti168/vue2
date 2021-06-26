@@ -476,6 +476,7 @@ export default {
       })
         .then(() => {
           this.$api.getWithdrawSettingMemberreset().then((res) => {
+            console.log(res, '90')
              if (res.code === 200) {
                console.log(res)
                this.$message.success('初始化会员提款设置成功!')
@@ -566,7 +567,7 @@ export default {
       console.log('编辑', val, '1314')
       this.dialogForm = { ...val }
       this.dialogFormVisible = true
-      this.isDisabled = false
+      this.isDisabled = true
     }
   }
 }
