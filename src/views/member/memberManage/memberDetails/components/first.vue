@@ -627,29 +627,29 @@ export default {
               : (this.percentagea = 100)
           }
           if (newV.validBetsCurr === 0 && newV.validBetsTotal === 0) {
-            this.percentageb = 0
+            this.percentageb = 100
           } else {
             const p2 = (newV.validBetsCurr / newV.validBetsTotal) * 100
             p2 >= 100
               ? (this.percentageb = 100)
               : p2 > 0
               ? (this.percentageb = p2)
-              : (this.percentageb = 0)
+              : (this.percentageb = 100)
           }
           if (newV.validBetsCurr === 0 && newV.bjValidBetsTotal === 0) {
-            this.percentagec = 0
+            this.percentagec = 100
           } else {
             const p3 = (newV.validBetsCurr / newV.bjValidBetsTotal) * 100
             p3 >= 100
               ? (this.percentagec = 100)
               : p3 > 0
               ? (this.percentagec = p3)
-              : (this.percentagec = 0)
+              : (this.percentagec = 100)
           }
         } else {
           this.percentagea = 100
-          this.percentageb = 0
-          this.percentagec = 0
+          this.percentageb = 100
+          this.percentagec = 100
         }
       },
       deep: true
@@ -747,24 +747,24 @@ export default {
               : (this.percentagea = 100)
           }
           if (newV.validBetsCurr === 0 && newV.validBetsTotal === 0) {
-            this.percentageb = 0
+            this.percentageb = 100
           } else {
             const p2 = (newV.validBetsCurr / newV.validBetsTotal) * 100
             p2 >= 100
               ? (this.percentageb = 100)
               : p2 > 0
               ? (this.percentageb = p2)
-              : (this.percentageb = 0)
+              : (this.percentageb = 100)
           }
           if (newV.validBetsCurr === 0 && newV.bjValidBetsTotal === 0) {
-            this.percentagec = 0
+            this.percentagec = 100
           } else {
             const p3 = (newV.validBetsCurr / newV.bjValidBetsTotal) * 100
             p3 >= 100
               ? (this.percentagec = 100)
               : p3 > 0
               ? (this.percentagec = p3)
-              : (this.percentagec = 0)
+              : (this.percentagec = 100)
           }
         }
       })
