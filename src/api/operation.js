@@ -296,6 +296,21 @@ export function getOperateObMerchantGameRecordSelect(data) {
 		data
 	})
 }
+// 运营 ===>客户端配置管理 ==>查询banner列表
+export function getQperateConfigBannerQueryBannerList(data) {
+	return request({
+		url: '/operate/configBanner/queryBannerList',
+		method: 'post',
+		data
+	})
+}
+export function getOperateConfigBannerUse(data) {
+	return request({
+		url: '/operate/configBanner/use',
+		method: 'post',
+		data
+	})
+}
 export default {
 	queryDiscountTagList,
 	queryVipActivityList,
@@ -332,5 +347,7 @@ export default {
 	activityTypeDetailAPI,
 	activitySortAPI,
 	activityUpdateAPI,
-	getOperateObMerchantGameRecordSelect
+	getOperateObMerchantGameRecordSelect,
+	getQperateConfigBannerQueryBannerList,
+	getOperateConfigBannerUse
 }

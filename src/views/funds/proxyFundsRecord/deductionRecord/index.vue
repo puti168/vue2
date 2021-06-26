@@ -89,22 +89,22 @@
           </el-form-item>
           <el-form-item label="调整金额:">
             <el-input
-              v-model="queryData.betAmountMin"
+              v-model="queryData.adjustAmountMin"
               size="medium"
               placeholder="最小数值"
               style="width: 100px"
-              :maxlength="3"
+              :maxlength="10"
               name="betAmountMin"
               oninput="value=value.replace(/[^\d]/g,'')"
               @blur="checkValue($event)"
             ></el-input>
             -
             <el-input
-              v-model="queryData.betAmountMax"
+              v-model="queryData.adjustAmountMax"
               size="medium"
               placeholder="最大数值"
               style="width: 100px"
-              :maxlength="3"
+              :maxlength="10"
               name="betAmountMax"
               oninput="value=value.replace(/[^\d]/g,'')"
               @blur="checkValue($event)"
