@@ -65,7 +65,7 @@
               size="medium"
               placeholder="最小数值"
               style="width: 100px"
-              :maxlength="3"
+              :maxlength="10"
               name="betAmountMin"
               oninput="value=value.replace(/[^\d]/g,'')"
               @blur="checkValue($event)"
@@ -76,7 +76,7 @@
               size="medium"
               placeholder="最大数值"
               style="width: 100px"
-              :maxlength="3"
+              :maxlength="10"
               name="betAmountMax"
               oninput="value=value.replace(/[^\d]/g,'')"
               @blur="checkValue($event)"
@@ -269,20 +269,53 @@ export default {
       this.pageNum = 1
       this.loadData()
     },
+     checkValue(e) {
+      const { name, value } = e.target
+      switch (name) {
+        case 'amountMax':
+          if (
+            !!this.queryData.amountMin &&
+            value &&
+            value * 1 < this.queryData.amountMin * 1
+          ) {
+            this.$message({
+              type: 'warning',
+              message: `调整金额输入最大值不能小于最小值`
+            })
+          } else {
+            this.queryData.amountMax = value
+          }
+          break
+        case 'amountMin':
+          if (
+            !!this.queryData.amountMax &&
+            value &&
+            value * 1 > this.queryData.amountMax * 1
+          ) {
+            this.$message({
+              type: 'warning',
+              message: `调整金额输入最小值不能大于最大值`
+            })
+          } else {
+            this.queryData.amountMin = value
+          }
+          break
+      }
+    },
 
     exportExcel() {
       const create = this.searchTime || []
       const [startTime, endTime] = create
       let params = {
         ...this.queryData,
-        createAtStart: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : '',
-        createAtEnd: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
+        createdTimeStart: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : '',
+        createdTimeEnd: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
       }
       params = {
         ...this.getParams(params)
       }
           this.$api
-            .getGameRecordDownload(params)
+            .getProxyFundsRecordsTransferDownload(params)
             .then((res) => {
               this.loading = false
               const { data, status } = res
@@ -393,16 +426,6 @@ export default {
         this.queryData.orderType = 'desc'
       }
       this.loadData()
-    },
-    handleCurrentChangeDialog(val) {
-      console.log(111, val)
-      this.page = val
-      // this.getMemberMemberInfoByLabelId(this.id)
-    },
-    handleSizeChangeDialog(val) {
-      console.log(222, val)
-      this.size = val
-      // this.getMemberMemberInfoByLabelId(this.id)
     }
 
   }
