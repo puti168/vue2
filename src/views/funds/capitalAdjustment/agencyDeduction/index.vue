@@ -260,8 +260,6 @@ export default {
 		},
 		searchBalance() {
 			const { userName, userType } = this.queryData
-            this.$refs['form'].resetFields()
-            this.$refs.form.validateField('userName')
 			if (userName) {
 				this.loading = true
 				this.$api
@@ -281,6 +279,9 @@ export default {
 				setTimeout(() => {
 					this.loading = false
 				}, 1000)
+			} else {
+				this.$refs['form'].resetFields()
+				this.$refs.form.validateField('userName')
 			}
 		},
 		add() {
@@ -327,19 +328,19 @@ export default {
 		reset() {
 			this.$refs['form'].resetFields()
 			this.queryData = {
-                userName: undefined,
-                realName: undefined,
-                accountType: undefined,
-                balance: undefined,
-                adjustType: undefined,
-                parentProxyId: undefined,
-                lessMoney: undefined,
-                userType: '7',
-                bizType: 2,
-                userId: undefined,
-                remark: undefined,
-                relationId: undefined,
-                imageAddress: undefined
+				userName: undefined,
+				realName: undefined,
+				accountType: undefined,
+				balance: undefined,
+				adjustType: undefined,
+				parentProxyId: undefined,
+				lessMoney: undefined,
+				userType: '7',
+				bizType: 2,
+				userId: undefined,
+				remark: undefined,
+				relationId: undefined,
+				imageAddress: undefined
 			}
 		},
 		checkRiskValue(val) {

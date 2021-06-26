@@ -189,6 +189,7 @@ export default {
 				imageAnnexId: undefined,
 				userType: 1,
                 bizType: 1,
+                parentProxyId: undefined,
 				userId: undefined,
 				activityId: undefined,
 				validmultiple: undefined
@@ -337,18 +338,17 @@ export default {
 					.then((res) => {
 						const { code, data } = res
 						if (code === 200) {
-							const { realName, accountType, userId } = data
+							const { realName, accountType, userId, parentProxyId } = data
 							this.queryData.realName = realName
 							this.queryData.accountType = accountType
 							this.queryData.userId = userId
+                            this.queryData.parentProxyId = parentProxyId
 						}
 					})
 			}
 		},
 		searchBalance() {
 			const { userName, balanceType } = this.queryData
-            this.$refs['form'].resetFields()
-            this.$refs.form.validateField('userName')
 			if (userName) {
 				this.loading = true
 				this.$api
@@ -368,7 +368,10 @@ export default {
 				setTimeout(() => {
 					this.loading = false
 				}, 1000)
-			}
+			} else {
+                this.$refs['form'].resetFields()
+                this.$refs.form.validateField('userName')
+            }
 		},
 		handleStartUpload() {
 			this.$message.info('图片开始上传')

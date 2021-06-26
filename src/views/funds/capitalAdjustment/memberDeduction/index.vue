@@ -153,7 +153,8 @@ export default {
 				lessMoney: undefined,
 				remark: undefined,
 				userType: 1,
-                bizType: 1,
+				bizType: 1,
+				parentProxyId: undefined,
 				userId: undefined,
 				relationId: undefined,
 				imageAddress: undefined
@@ -222,18 +223,17 @@ export default {
 					.then((res) => {
 						const { code, data } = res
 						if (code === 200) {
-							const { realName, accountType, userId } = data
+							const { realName, accountType, userId, parentProxyId } = data
 							this.queryData.realName = realName
 							this.queryData.accountType = accountType
 							this.queryData.userId = userId
+							this.queryData.parentProxyId = parentProxyId
 						}
 					})
 			}
 		},
 		searchBalance() {
 			const { userName, balanceType } = this.queryData
-            this.$refs['form'].resetFields()
-            this.$refs.form.validateField('userName')
 			if (userName) {
 				this.loading = true
 				this.$api
@@ -253,6 +253,9 @@ export default {
 				setTimeout(() => {
 					this.loading = false
 				}, 1000)
+			} else {
+				this.$refs['form'].resetFields()
+				this.$refs.form.validateField('userName')
 			}
 		},
 		add() {
@@ -302,19 +305,19 @@ export default {
 		reset() {
 			this.$refs['form'].resetFields()
 			this.queryData = {
-                userName: undefined,
-                realName: undefined,
-                accountType: undefined,
-                balance: undefined,
-                balanceType: '1',
-                adjustType: undefined,
-                lessMoney: undefined,
-                remark: undefined,
-                userType: 1,
-                bizType: 1,
-                userId: undefined,
-                relationId: undefined,
-                imageAddress: undefined
+				userName: undefined,
+				realName: undefined,
+				accountType: undefined,
+				balance: undefined,
+				balanceType: '1',
+				adjustType: undefined,
+				lessMoney: undefined,
+				remark: undefined,
+				userType: 1,
+				bizType: 1,
+				userId: undefined,
+				relationId: undefined,
+				imageAddress: undefined
 			}
 		},
 		checkRiskValue(val) {

@@ -169,7 +169,7 @@ export default {
 				parentProxyId: undefined,
 				userId: undefined,
 				userType: '7',
-                bizType: 2,
+				bizType: 2,
 				remark: undefined,
 				imageAnnexId: undefined,
 				imageAddress: undefined
@@ -260,8 +260,6 @@ export default {
 		},
 		searchBalance() {
 			const { userName, userType } = this.queryData
-            this.$refs['form'].resetFields()
-            this.$refs.form.validateField('userName')
 			if (userName) {
 				this.loading = true
 				this.$api
@@ -281,6 +279,9 @@ export default {
 				setTimeout(() => {
 					this.loading = false
 				}, 1000)
+			} else {
+				this.$refs['form'].resetFields()
+				this.$refs.form.validateField('userName')
 			}
 		},
 		add() {
@@ -337,7 +338,7 @@ export default {
 				amount: undefined,
 				userId: undefined,
 				userType: '7',
-                bizType: 2,
+				bizType: 2,
 				remark: undefined,
 				imageAnnexId: undefined,
 				imageAddress: undefined

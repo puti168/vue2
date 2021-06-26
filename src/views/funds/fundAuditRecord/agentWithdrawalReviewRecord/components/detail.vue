@@ -94,7 +94,7 @@
 								}}
 							</template>
 						</el-table-column>
-						<el-table-column align="center" label="会员标签">
+						<el-table-column align="center" label="代理标签">
 							<template>
 								{{ list && list.labelName ? list.labelName : '-' }}
 							</template>
@@ -106,7 +106,7 @@
 						</el-table-column>
 						<el-table-column align="center" label="绑定银行卡数量">
 							<template>
-								{{ list && list.bankCardNum ? list.bankCardNum : '-' }}
+								{{ list && list.bankNum ? list.bankNum : '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="虚拟币账号数量">
@@ -124,31 +124,41 @@
 					>
 						<el-table-column align="center" label="累计总存款金额(万元)">
 							<template>
-								{{ list && list.userName ? list.userName : '-' }}
+								{{
+									list && list.totalDepositAmount
+										? list.totalDepositAmount
+										: '-'
+								}}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="累计总存款次数">
 							<template>
-								{{ list && list.realName ? list.realName : '-' }}
+								{{ list && list.totalDepositNum ? list.totalDepositNum : '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="累计总提款金额(万元)">
 							<template>
 								{{
-									list.accountStatus
-										? typeFilter(list.accountStatus, 'accountStatusType')
+									list && list.totalWithdrawAmount
+										? list.totalWithdrawAmount
 										: '-'
 								}}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="累计总提款次数">
 							<template>
-								{{ list && list.labelName ? list.labelName : '-' }}
+								{{
+									list && list.totalWithdrawNum ? list.totalWithdrawNum : '-'
+								}}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="累计总提款差额(万元)">
 							<template>
-								{{ list && list.remark ? list.remark : '-' }}
+								{{
+									list && list.beforeModify
+										? list.totalDepositAmount * 1 - list.totalWithdrawAmount * 1
+										: '-'
+								}}
 							</template>
 						</el-table-column>
 					</el-table>
@@ -171,36 +181,24 @@
 						</el-table-column>
 						<el-table-column align="center" label="风险银行卡">
 							<template>
-								{{
-									list && list.cardWindControlName
-										? list.cardWindControlName
-										: '-'
-								}}
+								{{ list && list.windBank ? list.windBank : '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="风险虚拟币">
 							<template>
-								{{
-									list && list.virtualWindControlName
-										? list.virtualWindControlName
-										: '-'
-								}}
+								{{ list && list.windVirtual ? list.windVirtual : '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="风险IP">
 							<template>
-								{{
-									list && list.ipWindControlName ? list.ipWindControlName : '-'
-								}}
+                                {{
+                                    list && list.ipWindControlName ? list.ipWindControlName : '-'
+                                }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="风险终端设备号">
 							<template>
-								{{
-									list && list.deviceNoWindControlName
-										? list.deviceNoWindControlName
-										: '-'
-								}}
+                                {{ list && list.windEquipment ? list.windEquipment : '-' }}
 							</template>
 						</el-table-column>
 					</el-table>
