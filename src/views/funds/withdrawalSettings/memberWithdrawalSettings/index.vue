@@ -528,7 +528,6 @@ export default {
               obj.maxTotal = ele.dateMaxAmount
               this.vipExclusive.push(obj)
             }
-            console.log(this.vipExclusive, '12')
             this.tableData = res.data
             this.total = res.data.totalRecord
             this.loading = false
