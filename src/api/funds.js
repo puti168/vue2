@@ -326,6 +326,20 @@ export function memberWithDrawProxyUpdateWithdrawLock(data) {
 		data
 	})
 }
+export function memberWithDrawProxySelectMemberWithdrawProxy(data) {
+	return request({
+		url: '/memberWithDrawProxy/selectMemberWithdrawProxy',
+		method: 'post',
+		data
+	})
+}
+export function memberWithDrawProxyUpdateWithdraw(data) {
+	return request({
+		url: '/memberWithDrawProxy/updateWithdraw',
+		method: 'post',
+		data
+	})
+}
 export function memberWithDrawProxySelectMemberWithDrawAuthEsPagePay(data) {
 	return request({
 		url: '/memberWithDrawProxy/selectMemberWithDrawAuthEsPagePay',
@@ -360,6 +374,8 @@ export default {
 	memberWithDrawProxyselectMemberWithDrawAuthEsPageOne,
 	memberWithDrawProxySelectMemberWithDrawAuthEsPagePay,
 	memberWithDrawProxyUpdateWithdrawLock,
+	memberWithDrawProxySelectMemberWithdrawProxy,
+	memberWithDrawProxyUpdateWithdraw,
 	proxyArtificialPatchAccountAddAuditauditRecord,
 	proxyArtificialPatchAccountAddAuditauditDetail,
 	proxyArtificialPatchAccountAddAuditlockRecord,

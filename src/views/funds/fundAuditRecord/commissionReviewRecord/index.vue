@@ -47,10 +47,10 @@
 						>
 							<el-option label="全部" value=""></el-option>
 							<el-option
-								v-for="item in patchAdjustStatus"
+								v-for="item in patchAdjustStatusFinish"
 								:key="item.code"
 								:label="item.description"
-								:value="Number(item.code)"
+								:value="item.code"
 							></el-option>
 						</el-select>
 					</el-form-item>
@@ -87,6 +87,7 @@
 						:header-cell-style="getRowClass"
 					>
 						<el-table-column
+							prop="auditStep"
 							align="center"
 							label="操作"
 							width="100"
@@ -105,7 +106,13 @@
 							prop="orderNo"
 							align="center"
 							label="订单号"
-						></el-table-column>
+						>	<template slot-scope="scope">
+								<span v-if="!!scope.row.orderNo">
+									{{ scope.row.orderNo }}
+								</span>
+								<span v-else>-</span>
+							</template>
+						</el-table-column>
 						<el-table-column
 							prop="createdTime"
 							align="center"
@@ -115,30 +122,39 @@
 							prop="proxyAccount"
 							align="center"
 							label="代理账号"
-						></el-table-column>
+						>
+						<template slot-scope="scope">
+								<span v-if="!!scope.row.proxyAccount">
+									{{ scope.row.proxyAccount }}
+								</span>
+								<span v-else>-</span>
+							</template>
+						</el-table-column>
 						<el-table-column
 							prop="proxyName"
 							align="center"
 							label="代理姓名"
-						></el-table-column>
+						>
+						<template slot-scope="scope">
+								<span v-if="!!scope.row.proxyName">
+									{{ scope.row.proxyName }}
+								</span>
+								<span v-else>-</span>
+							</template>
+						</el-table-column>
 						<el-table-column
 							prop="orderStatus"
 							align="center"
 							label="订单状态"
 						>
 						<template slot-scope="scope">
-								<span
-								:class="
-									Number(scope.row.orderStatus) === 7
-										? 'normalRgba'
-										: '24'.includes(Number(scope.row.orderStatus))
-										? 'lockingRgba'
-										: 'disableRgba'
-								"
-							>
-								{{ typeFilter(scope.row.orderStatus, 'patchAdjustStatus') }}
-							</span>
-							</template></el-table-column>
+								<span v-if="!!scope.row.orderStatus">
+									{{ typeFilter(scope.row.orderStatus, 'patchAdjustStatusFinish') }}
+								</span>
+								<span v-else>-</span>
+							</template>
+
+							</el-table-column>
 						<el-table-column
 							align="center"
 							label="调整类型"
@@ -149,12 +165,26 @@
 							prop="commissionAmount"
 							align="center"
 							label="佣金金额"
-						></el-table-column>
+						>
+						<template slot-scope="scope">
+								<span v-if="!!scope.row.commissionAmount">
+									{{ scope.row.commissionAmount.toFixed(2) }}
+								</span>
+								<span v-else>-</span>
+							</template>
+						</el-table-column>
 						<el-table-column
 							prop="createdTime"
 							align="center"
 							label="申请时间"
-						></el-table-column>
+						>
+						<template slot-scope="scope">
+								<span v-if="!!scope.row.createdTime">
+									{{ scope.row.createdTime }}
+								</span>
+								<span v-else>-</span>
+							</template>
+						</el-table-column>
 						<el-table-column
 							align="center"
 							label="审核人"
@@ -175,17 +205,21 @@
 							align="center"
 							label="审核用时"
 						><template slot-scope="scope">
-								<p>一审：{{ scope.row.audit1Cost ? scope.row.audit1Cost : '-' }}m</p>
-								<p>二审：{{ scope.row.audit2Cost ? scope.row.audit2Cost : '-' }}m</p>
+								<p>一审：{{ scope.row.audit1Time ? scope.row.audit1Time : '-' }}m</p>
+								<p>二审：{{ scope.row.audit2Time ? scope.row.audit2Time : '-' }}m</p>
 							</template></el-table-column>
 						<el-table-column
 							prop="remark"
 							align="center"
 							label="备注"
-						><template slot-scope="scope">
-								<p>{{ scope.row.audit1Desc }}</p>
-								<p>{{ scope.row.audit2Desc }}</p>
-							</template></el-table-column>
+						>
+						<template slot-scope="scope">
+								<span v-if="!!scope.row.remark">
+									{{ scope.row.remark }}
+								</span>
+								<span v-else>-</span>
+							</template>
+						</el-table-column>
 					</el-table>
 					<!-- 分页 -->
 					<el-pagination
@@ -239,8 +273,8 @@ export default {
 		}
 	},
 	computed: {
-		patchAdjustStatus() {
-			return this.globalDics.patchAdjustStatus
+		patchAdjustStatusFinish() {
+			return this.globalDics.patchAdjustStatusFinish
 		}
 	},
 	mounted() {

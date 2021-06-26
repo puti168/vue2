@@ -191,7 +191,12 @@
 						</el-table-column>
 						<el-table-column align="center" label="调整类型">
 							<template>
-								{{ list && list.adjustType ? list.adjustType : '-' }}
+								{{
+									list.adjustType
+										? typeFilter(list.adjustType, 'proxyPatchAddAdjustType')
+										: '-'
+								}}
+								<!-- {{ list && list.adjustType ? list.adjustType : '-' }} -->
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="增加金额">
@@ -220,13 +225,13 @@
 					<div>
 						一审备注: {{ list && list.audit1Desc ? list.audit1Desc : '-' }}
 					</div>
-					<div v-if="list && list.audit1Desc && list.audit1Desc === '0'">
+					<div v-if="list && list.audit1Result && list.audit1Result === '0'">
 						一审结果: 未处理
 					</div>
-					<div v-else-if="list && list.audit1Desc && list.audit1Desc === '1'">
+					<div v-else-if="list && list.audit1Result && list.audit1Result === '1'">
 						一审结果: 通过
 					</div>
-					<div v-else-if="list && list.audit1Desc && list.audit1Desc === '2'">
+					<div v-else-if="list && list.audit1Result && list.audit1Result === '2'">
 						一审结果: 拒绝
 					</div>
 					<div v-else>

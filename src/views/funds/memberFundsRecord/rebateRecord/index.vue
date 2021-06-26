@@ -361,7 +361,7 @@ export default {
           )
           sums[index] = el
           return
-        } else if (index === 5 && this.summary !== null) {
+        } else if (index === 6 && this.summary !== null) {
           const el = (
             <div class='count_row'>
               <p>{this.summary.validBetSubtotal}</p>
@@ -370,7 +370,7 @@ export default {
           )
           sums[index] = el
           return
-        } else if (index === 7 && this.summary !== null) {
+        } else if (index === 8 && this.summary !== null) {
           const el = (
             <div class='count_row'>
               <p>{this.summary.rebateSubtotal}</p>

@@ -34,7 +34,7 @@
                 修改
               </el-link>
               <el-link
-                v-if="scope.row.status !== 0 && scope.row.proxyId !== '0'"
+                v-if="scope.row.status !== 0 && scope.row.proxyAccount !== '0'"
                 type="primary"
                 size="medium"
                 @click="deleteLabel(scope.row)"
@@ -50,26 +50,38 @@
               <span v-else>-</span>
             </template>
           </el-table-column>
-          <el-table-column
-            prop="proxyAccount"
-            align="center"
-            label="代理账号"
-          ></el-table-column>
-          <el-table-column
-            prop="proxyName"
-            align="center"
-            label="代理姓名"
-          ></el-table-column>
-          <el-table-column
-            prop="proxyAccountType"
-            align="center"
-            label="代理类型"
-          ></el-table-column>
-          <el-table-column
-            prop="proxyAccountStatus"
-            align="center"
-            label="代理状态"
-          ></el-table-column>
+          <el-table-column prop="proxyAccount" align="center" label="代理账号">
+            <template slot-scope="scope">
+              <span v-if="scope.row.proxyAccount === '0'">通用</span>
+              <span v-else>{{ scope.row.proxyAccount }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="proxyName" align="center" label="代理姓名">
+            <template slot-scope="scope">
+              <span v-if="scope.row.proxyAccount === '0'">-</span>
+              <span v-else>{{ scope.row.proxyName }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="proxyAccountType" align="center" label="代理类型">
+            <template slot-scope="scope">
+              <span v-if="scope.row.proxyAccount === '0'">-</span>
+              <span v-else>{{
+                typeFilter(scope.row.proxyAccountType, "accountType")
+                  ? typeFilter(scope.row.proxyAccountType, "accountType")
+                  : "-"
+              }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="proxyAccountStatus" align="center" label="代理状态">
+            <template slot-scope="scope">
+              <span v-if="scope.row.proxyAccount === '0'">-</span>
+              <span v-else>{{
+                typeFilter(scope.row.proxyAccountStatus, "accountStatusType")
+                  ? typeFilter(scope.row.proxyAccountStatus, "accountStatusType")
+                  : "-"
+              }}</span>
+            </template>
+          </el-table-column>
           <el-table-column
             prop="windControlName"
             align="center"
@@ -621,7 +633,7 @@ export default {
       this.title = '编辑'
       console.log('编辑', val)
       this.isDisabled = true
-      this.isUniversal = val.proxyId === '0'
+      this.isUniversal = val.proxyAccount !== '0'
       const {
         proxyAccount,
         proxyName,

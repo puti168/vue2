@@ -87,6 +87,7 @@ export function getProxyFundsRecordsWithdrawDownload(data) {
 	return request({
 		url: '/proxyFundsRecords/withdraw/download',
 		method: 'post',
+		responseType: 'blob',
 		data
 	})
 }
@@ -103,6 +104,7 @@ export function getProxyFundsRecordsTransferDownload(data) {
 	return request({
 		url: '/proxyFundsRecords/transfer/download',
 		method: 'post',
+		responseType: 'blob',
 		data
 	})
 }
@@ -182,6 +184,14 @@ export function setwithdrawSettingMemberUpdate(data) {
 		data
 	})
 }
+// 会员提款设置==>初始化提款设置
+export function getWithdrawSettingMemberreset(data) {
+	return request({
+		url: '/withdrawSettingMember/reset',
+		method: 'post',
+		data
+	})
+}
 export default {
     getWithdrawSettingProxySelectPage,
 	getProxyFundsRecordsAccountChange,
@@ -204,5 +214,6 @@ export default {
 	getWithdrawSettingMemberUpdate,
 	getProxyFundsRecordsArtificialAccountSubDownload,
 	getProxyCommissionRecordProxyCommissionExport,
-	setwithdrawSettingMemberUpdate
+	setwithdrawSettingMemberUpdate,
+	getWithdrawSettingMemberreset
 }

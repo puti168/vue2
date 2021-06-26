@@ -184,9 +184,9 @@
           <el-table-column prop="transferStatus" align="center" label="订单状态">
             <template slot-scope="scope">
               {{
-                scope.row.transferStatus === 0
-                  ? "-"
-                  : typeFilter(scope.row.transferStatus, "transferStatus")
+                typeFilter(scope.row.transferStatus, "transferStatus")
+                  ? typeFilter(scope.row.transferStatus, "transferStatus")
+                  : "-"
               }}
             </template>
           </el-table-column>
