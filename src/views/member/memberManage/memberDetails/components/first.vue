@@ -622,7 +622,7 @@ export default {
             const p1 = (newV.depositAmountCurr / newV.depositAmountTotal) * 100
             p1 >= 100
               ? (this.percentagea = 100)
-              : p1 > 0
+              : p1 >= 0
               ? (this.percentagea = p1)
               : (this.percentagea = 100)
           }
@@ -632,7 +632,7 @@ export default {
             const p2 = (newV.validBetsCurr / newV.validBetsTotal) * 100
             p2 >= 100
               ? (this.percentageb = 100)
-              : p2 > 0
+              : p2 >= 0
               ? (this.percentageb = p2)
               : (this.percentageb = 100)
           }
@@ -642,7 +642,7 @@ export default {
             const p3 = (newV.validBetsCurr / newV.bjValidBetsTotal) * 100
             p3 >= 100
               ? (this.percentagec = 100)
-              : p3 > 0
+              : p3 >= 0
               ? (this.percentagec = p3)
               : (this.percentagec = 100)
           }
@@ -742,7 +742,7 @@ export default {
             const p1 = (newV.depositAmountCurr / newV.depositAmountTotal) * 100
             p1 >= 100
               ? (this.percentagea = 100)
-              : p1 > 0
+              : p1 >= 0
               ? (this.percentagea = p1)
               : (this.percentagea = 100)
           }
@@ -752,7 +752,7 @@ export default {
             const p2 = (newV.validBetsCurr / newV.validBetsTotal) * 100
             p2 >= 100
               ? (this.percentageb = 100)
-              : p2 > 0
+              : p2 >= 0
               ? (this.percentageb = p2)
               : (this.percentageb = 100)
           }
@@ -762,7 +762,7 @@ export default {
             const p3 = (newV.validBetsCurr / newV.bjValidBetsTotal) * 100
             p3 >= 100
               ? (this.percentagec = 100)
-              : p3 > 0
+              : p3 >= 0
               ? (this.percentagec = p3)
               : (this.percentagec = 100)
           }
