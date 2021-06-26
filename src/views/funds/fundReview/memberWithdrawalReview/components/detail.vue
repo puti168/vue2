@@ -516,6 +516,7 @@ export default {
 			this.visible = true
 		},
 		auditOne() {
+			console.log('this.rowData', this.rowData)
 			this.$refs.form.validate((valid) => {
 				if (valid) {
 					const loading = this.$loading({
@@ -529,8 +530,7 @@ export default {
 						createdAt: this.rowData.createdAt,
 						auditDesc: this.form.remark,
 						auditResult: this.action ? 1 : 2,
-						orderStatus:
-							this.activeName === '0' ? 1 : this.activeName === '1' ? 3 : 5
+						orderStatus: this.rowData.orderStatus
 					}
 
 					this.$api

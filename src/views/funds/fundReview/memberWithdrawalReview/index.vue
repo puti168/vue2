@@ -85,9 +85,6 @@
 						<el-table-column align="center" label="锁单" width="60">
 							<template slot-scope="scope">
 								<el-checkbox
-									v-if="
-										scope.row.lockAccount === name || !scope.row.lockAccount
-									"
 									v-model="scope.row.lockOrder"
 									@change="lockChange(scope.row)"
 								></el-checkbox>
@@ -137,13 +134,13 @@
 							align="center"
 							label="审核订单号"
 						>
-                            <template slot-scope="scope">
+							<template slot-scope="scope">
 								<span v-if="!!scope.row.thirdOrderNo">
 									{{ scope.row.thirdOrderNo }}
 								</span>
-                                <span v-else>-</span>
-                            </template>
-                        </el-table-column>
+								<span v-else>-</span>
+							</template>
+						</el-table-column>
 						<el-table-column prop="userName" align="center" label="会员账号">
 							<template slot-scope="scope">
 								<span v-if="!!scope.row.userName">
@@ -152,59 +149,47 @@
 								<span v-else>-</span>
 							</template>
 						</el-table-column>
-						<el-table-column
-							prop="realName"
-							align="center"
-							label="会员姓名"
-						>
-                            <template slot-scope="scope">
+						<el-table-column prop="realName" align="center" label="会员姓名">
+							<template slot-scope="scope">
 								<span v-if="!!scope.row.realName">
 									{{ scope.row.realName }}
 								</span>
-                                <span v-else>-</span>
-                            </template>
-                        </el-table-column>
+								<span v-else>-</span>
+							</template>
+						</el-table-column>
 						<el-table-column prop="isBig" align="center" label="是否为大额提款">
 							<template slot-scope="scope">
 								{{ Number(scope.row.isBig) === 1 ? '是' : '否' }}
 							</template>
 						</el-table-column>
-						<el-table-column
-							prop="orderAmount"
-							align="center"
-							label="提款金额"
-						>
-                            <template slot-scope="scope">
+						<el-table-column prop="orderAmount" align="center" label="提款金额">
+							<template slot-scope="scope">
 								<span v-if="!!scope.row.orderAmount">
 									{{ scope.row.orderAmount }}
 								</span>
-                                <span v-else>-</span>
-                            </template>
-                        </el-table-column>
+								<span v-else>-</span>
+							</template>
+						</el-table-column>
 						<el-table-column
 							prop="orderRateAmount"
 							align="center"
 							label="提款手续费"
 						>
-                            <template slot-scope="scope">
+							<template slot-scope="scope">
 								<span v-if="!!scope.row.orderRateAmount">
 									{{ scope.row.orderRateAmount }}
 								</span>
-                                <span v-else>-</span>
-                            </template>
-                        </el-table-column>
-						<el-table-column
-							prop="createdAt"
-							align="center"
-							label="申请时间"
-						>
-                            <template slot-scope="scope">
+								<span v-else>-</span>
+							</template>
+						</el-table-column>
+						<el-table-column prop="createdAt" align="center" label="申请时间">
+							<template slot-scope="scope">
 								<span v-if="!!scope.row.createdAt">
 									{{ scope.row.createdAt }}
 								</span>
-                                <span v-else>-</span>
-                            </template>
-                        </el-table-column>
+								<span v-else>-</span>
+							</template>
+						</el-table-column>
 						<el-table-column align="center" label="审核状态">
 							<template slot-scope="scope">
 								<span
@@ -394,7 +379,9 @@ export default {
 		},
 		goBack() {
 			this.showDetail = false
-			this.loadData()
+            setTimeout(() => {
+                this.loadData()
+            }, 1200)
 		},
 		confirm(row, type) {
 			this.row = row
@@ -410,6 +397,7 @@ export default {
 				.catch(() => {})
 		},
 		auditOne() {
+		    console.log('this.row', this.row)
 			this.$refs.form.validate((valid) => {
 				if (valid) {
 					const loading = this.$loading({
@@ -419,11 +407,11 @@ export default {
 						background: 'rgba(0, 0, 0, 0.7)'
 					})
 					const params = {
-						id: this.row.id,
+                        thirdOrderNo: this.row.thirdOrderNo,
 						createdAt: this.row.createdAt,
 						auditDesc: this.form.remark,
 						auditResult: this.action ? 1 : 2,
-						orderStatus: 7
+						orderStatus: this.row.orderStatus
 					}
 					this.$api
 						.memberWithDrawUserupdateWithdraw(params)
@@ -434,7 +422,9 @@ export default {
 									type: 'success'
 								})
 								loading.close()
-								this.loadData()
+								setTimeout(() => {
+									this.loadData()
+								}, 1200)
 							}
 						})
 						.catch(() => {
@@ -457,7 +447,7 @@ export default {
 			console.log(val)
 			this.$api
 				.memberWithDrawUserupdateWithdrawLock({
-                    thirdOrderNo: val.thirdOrderNo,
+					thirdOrderNo: val.thirdOrderNo,
 					createdAt: val.createdAt,
 					lockStatus: Number(val.lockStatus) === 1 ? 0 : 1
 				})
@@ -474,7 +464,9 @@ export default {
 							type: 'success',
 							message: '操作成功!'
 						})
-						this.loadData()
+						setTimeout(() => {
+							this.loadData()
+						}, 1200)
 					} else {
 						loading.close()
 						this.$message({
