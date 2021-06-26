@@ -102,7 +102,7 @@ export function agentWithdrawRecordAPI(data) {
 // 资金 ===> 资金审核记录 ==> 代理提款审核记录 ==> 查看
 export function agentWithdrawDetailsAPI(data) {
 	return request({
-		url: '/user/queryMember',
+		url: '/memberWithDrawProxy/selectMemberWithdrawProxy',
 		method: 'post',
 		data
 	})

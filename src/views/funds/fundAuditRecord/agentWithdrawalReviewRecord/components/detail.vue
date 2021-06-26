@@ -400,7 +400,7 @@ export default {
 				thirdOrderNo,
 				createdAt
 			}
-			this.$api.proxyDetail(params).then((res) => {
+			this.$api.agentWithdrawDetailsAPI(params).then((res) => {
 				this.loading = false
 				const { code, data, msg } = res
 				if (code === 200) {

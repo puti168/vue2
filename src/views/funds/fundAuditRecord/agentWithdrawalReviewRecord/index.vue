@@ -341,6 +341,7 @@ export default {
 			params = {
 				...this.getParams(params)
 			}
+            delete params.time
 			this.$api
 				.agentWithdrawRecordAPI(params)
 				.then((res) => {
