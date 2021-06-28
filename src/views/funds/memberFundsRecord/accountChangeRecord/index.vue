@@ -23,7 +23,7 @@
             <el-input
               v-model="queryData.eventId"
               clearable
-              :maxlength="25"
+              :maxlength="50"
               size="medium"
               style="width: 200px"
               placeholder="请输入"
