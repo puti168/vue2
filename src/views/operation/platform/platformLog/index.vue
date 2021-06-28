@@ -82,15 +82,15 @@
         >
           <el-table-column prop="gameName" align="center" label="场馆名称">
             <template slot-scope="scope">
-              <span v-for="item in gameTypeList" :key="item.gameName">
+              <span v-for="item in gameTypeList" :key="item.id">
                 {{ scope.row.gameName === item.id ? item.gameName : "" }}
               </span>
             </template>
           </el-table-column>
           <el-table-column prop="rateType" align="center" label="变更类型">
-            <template slot-scope="scope">
+            <!-- <template slot-scope="scope">
               {{ typeFilter(scope.row.rateType, "rateType") }}
-            </template>
+            </template> -->
           </el-table-column>
           <el-table-column prop="changeFront" align="center" label="变更前">
           </el-table-column>
