@@ -26,7 +26,7 @@
           </el-form-item>
           <el-form-item label="创建人:">
             <el-input
-              v-model="queryData.gameName"
+              v-model="queryData.createdBy"
               clearable
               :maxlength="15"
               size="medium"
@@ -79,10 +79,10 @@
             align="center"
             label="活动消息标题"
           ></el-table-column>
-          <el-table-column align="center" label="活动消息内容" prop="description">
+          <el-table-column align="center" label="活动消息内容" prop="noticeTitle">
             <template slot-scope="scope">
-              <el-tooltip :content="scope.row.description" placement="top">
-                <p>{{ scope.row.description }}</p>
+              <el-tooltip :content="scope.row.noticeTitle" placement="top">
+                <p>{{ scope.row.noticeTitle }}</p>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -91,17 +91,17 @@
             align="center"
             label="发送对象"
           ></el-table-column>
-          <el-table-column align="center" label="发送对象详情" prop="description">
+          <el-table-column align="center" label="发送对象详情" prop="sendObj">
             <template slot-scope="scope">
               <div class="decoration" @click="lookGame(scope.row)">
-                {{ scope.row.description }}
+                {{ scope.row.sendObj }}
               </div>
             </template>
           </el-table-column>
-          <el-table-column prop="relationOtherGameId" align="center" label="创建人">
+          <el-table-column prop="createdBy" align="center" label="创建人">
           </el-table-column>
           <el-table-column
-            prop="relationGameModuleId"
+            prop="createdAt"
             align="center"
             label="创建时间"
             sortable="custom"
@@ -335,7 +335,7 @@ export default {
       }
       this.loading = true
       this.$api
-        .getOperateConfigNoticeSelectAll(params)
+        .getOperateObConfigNoticeSelectAll(params)
         .then((res) => {
           if (res.code === 200) {
             const response = res.data

@@ -168,12 +168,13 @@
       <el-dialog
         title="轮播图区域排序"
         :visible.sync="sortLabel"
+        :model="queryData"
         width="970px"
         :destroy-on-close="true"
       >
-        <draggable v-model="options" @start="onStart" @end="onEnd">
+        <draggable v-model="queryData.QueryareaList" @start="onStart" @end="onEnd">
           <transition-group>
-            <div v-for="tiem in options" :key="tiem.value" class="reach">
+            <div v-for="tiem in QueryareaList" :key="tiem.value" class="reach">
               {{ tiem.label }}
             </div>
           </transition-group>
@@ -379,11 +380,11 @@
                 placeholder="请选择活动区域"
               >
                 <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                ></el-option>
+                v-for="item in QueryareaList"
+                :key="item.code"
+                :label="item.value"
+                :value="item.code"
+              ></el-option>>
               </el-select>
               <span class="el-form-item__error">
                 *首页轮播图从左至右排列依次为：1.2.3.4.5.6.7.8.9.10区
@@ -511,8 +512,7 @@
             </el-form-item>
             <el-form-item
               label="图片上传"
-              :rules="[{required: true},]"
-              prop="pictureUrl"
+              prop="image"
             >
               <Upload :nowImage="nowImage" @uploadSuccess="uploadSuccess"></Upload>
               <p class="imgTip">请上传图片！图片格式仅支持png,jpg 图片大小不超过2MB</p>
@@ -553,19 +553,6 @@ export default {
       tableData: [],
       drag: false,
       sortLabel: false,
-      options: [
-        { value: '1', label: '1区' },
-        { value: '2', label: '2区' },
-        { value: '3', label: '3区' },
-        { value: '4', label: '4区' },
-        { value: '5', label: '5区' },
-        { value: '6', label: '6区' },
-        { value: '7', label: '7区' },
-        { value: '8', label: '8区' },
-        { value: '9', label: '9区' },
-        { value: '10', label: '10区' }
-      ],
-
       form: {
         status: '1'
       },
@@ -598,7 +585,7 @@ export default {
         callback()
       }
       return {
-        pictureUrl: [
+        image: [
           {
             required: true,
             validator: valiIMG,
@@ -697,7 +684,7 @@ export default {
               downTime: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
             }
             console.log(params, '000')
-            this.getOperateConfigAnnouncementSave(params)
+            this.getOperateConfigBannerAdd(params)
           } else if (this.dialogForm.announcementAging === 2) {
             this.errTime = false
             const params = {
@@ -706,7 +693,7 @@ export default {
               upTime: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : ''
             }
             console.log(params, '111')
-            this.getOperateConfigAnnouncementSave(params)
+            this.getOperateConfigBannerAdd(params)
           } else {
             this.errTime = true
           }
