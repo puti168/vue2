@@ -97,7 +97,7 @@
               <template slot-scope="scope">
                 <el-button
                   :class="
-                    scope.row.lockAccount !== name && scope.row.lockAccount ? 'dis' : ''
+                    scope.row.lockAccount !== name || !scope.row.lockAccount ? 'dis' : ''
                   "
                   type="primary"
                   size="medium"
