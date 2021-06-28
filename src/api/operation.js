@@ -335,6 +335,13 @@ export function getOperateConfigBannerAdd(data) {
 		data
 	})
 }
+export function operateConfigBannerQueryBannerAreaAPI(params) {
+	return request({
+		url: '/operate/configBanner/queryBannerArea',
+		method: 'get',
+		params
+	})
+}
 export default {
 	queryDiscountTagList,
 	queryVipActivityList,
@@ -376,5 +383,6 @@ export default {
 	getOperateConfigBannerUse,
 	getOperateConfigBannerDelete,
 	getPperateConfigBannerUpdate,
-	getOperateConfigBannerAdd
+	getOperateConfigBannerAdd,
+	operateConfigBannerQueryBannerAreaAPI
 }
