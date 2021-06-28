@@ -19,6 +19,18 @@
               style="width: 375px"
             ></el-date-picker>
           </el-form-item>
+          <el-form-item label="关联订单号:">
+            <el-input
+              v-model="queryData.eventId"
+              clearable
+              :maxlength="25"
+              size="medium"
+              style="width: 200px"
+              placeholder="请输入"
+              :disabled="loading"
+              @keyup.enter.native="enterSearch"
+            ></el-input>
+          </el-form-item>
           <el-form-item label="会员账号:">
             <el-input
               v-model="queryData.userName"
@@ -234,7 +246,7 @@
               <span v-else>-</span>
             </template>
           </el-table-column>
-          <el-table-column prop="userName" align="center" label="会员账号" width="130px">
+          <el-table-column prop="userName" align="center" label="会员账号" width="120px">
             <template slot-scope="scope">
               <Copy v-if="!!scope.row.userName" :title="scope.row.userName" :copy="copy">
                 {{ scope.row.userName }}
@@ -242,7 +254,7 @@
               <span v-else>-</span>
             </template>
           </el-table-column>
-          <el-table-column prop="realName" align="center" label="会员姓名" width="130px">
+          <el-table-column prop="realName" align="center" label="会员姓名" width="120px">
             <template slot-scope="scope">
               <Copy v-if="!!scope.row.realName" :title="scope.row.realName" :copy="copy">
                 {{ scope.row.realName }}
@@ -254,7 +266,7 @@
             prop="parentProxyName"
             align="center"
             label="上级代理"
-            width="130px"
+            width="120px"
           >
             <template slot-scope="scope">
               <Copy
@@ -271,7 +283,7 @@
             prop="windControlName"
             align="center"
             label="风控等级"
-            width="180px"
+            width="90px"
           >
             <template slot-scope="scope">
               {{ scope.row.windControlName !== null ? scope.row.windControlName : "-" }}
@@ -281,7 +293,7 @@
             prop="accountStatus"
             align="center"
             label="账号状态"
-            width="150px"
+            width="100px"
           >
             <template slot-scope="scope">
               <span v-if="scope.row.accountStatus === 1" class="normalRgba">
@@ -303,7 +315,7 @@
             prop="vipIdName"
             align="center"
             label="VIP等级"
-            width="150px"
+            width="70px"
             sortable="custom"
           >
           </el-table-column>
@@ -314,7 +326,7 @@
             width="150px"
           >
           </el-table-column> -->
-          <el-table-column prop="bizType" align="center" label="业务类型" width="150px">
+          <el-table-column prop="bizType" align="center" label="业务类型" width="120px">
             <template slot-scope="scope">
               {{
                 scope.row.bizType === 0
@@ -323,12 +335,12 @@
               }}
             </template>
           </el-table-column>
-          <el-table-column prop="type" align="center" label="账变类型" width="150px">
+          <el-table-column prop="type" align="center" label="账变类型" width="120px">
             <template slot-scope="scope">
               {{ typeFilter(scope.row.type, "memberAccountChangeType") }}
             </template>
           </el-table-column>
-          <el-table-column prop="transType" align="center" label="收支类型" width="150px">
+          <el-table-column prop="transType" align="center" label="收支类型" width="70px">
             <template slot-scope="scope">
               {{
                 scope.row.transType === 0
@@ -341,7 +353,7 @@
             prop="amount"
             align="center"
             label="账变金额"
-            width="150px"
+            width="120px"
             sortable="custom"
           >
           </el-table-column>
@@ -353,7 +365,7 @@
             sortable="custom"
           >
           </el-table-column>
-          <el-table-column prop="remark" align="center" label="备注" width="150px">
+          <el-table-column prop="remark" align="center" label="备注">
             <template slot-scope="scope">
               {{ scope.row.remark !== null ? scope.row.remark : "-" }}
             </template>
@@ -414,7 +426,7 @@ export default {
   },
   methods: {
     getWindControllerLevelDict() {
-      this.$api.getWindControllerLevelDict({ windControlType: 3 }).then((res) => {
+      this.$api.getWindControllerLevelDict({ windControlType: 1 }).then((res) => {
         if (res.code === 200) {
           this.windControlLevelList = res.data
         }
@@ -638,8 +650,8 @@ export default {
         } else {
           sums[index] = (
             <div class='count_row'>
-              <p>-</p>
-              <p>-</p>
+              <p></p>
+              <p></p>
             </div>
           )
         }

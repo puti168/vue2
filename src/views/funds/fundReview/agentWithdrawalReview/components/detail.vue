@@ -43,7 +43,11 @@
             </el-table-column>
             <el-table-column align="center" label="注册端">
               <template>
-                {{ list.deviceType ? typeFilter(list.deviceType, "deviceType") : "-" }}
+                {{
+                  typeFilter(list.deviceType, "deviceType")
+                    ? typeFilter(list.deviceType, "deviceType")
+                    : "-"
+                }}
               </template>
             </el-table-column>
             <el-table-column align="center" label="注册IP">
@@ -58,7 +62,11 @@
             </el-table-column>
             <el-table-column align="center" label="账号类型">
               <template>
-                {{ list.accountType ? typeFilter(list.accountType, "accountType") : "-" }}
+                {{
+                  typeFilter(list.accountType, "accountType")
+                    ? typeFilter(list.accountType, "accountType")
+                    : "-"
+                }}
               </template>
             </el-table-column>
             <el-table-column align="center" label="注册域名">
@@ -92,7 +100,7 @@
             <el-table-column align="center" label="账号状态">
               <template>
                 {{
-                  list.accountStatus
+                  typeFilter(list.accountStatus, "accountStatusType")
                     ? typeFilter(list.accountStatus, "accountStatusType")
                     : "-"
                 }}
@@ -110,12 +118,12 @@
             </el-table-column>
             <el-table-column align="center" label="绑定银行卡数量">
               <template>
-                {{ list.bankNum }}
+                {{ list.bankNum !== null ? list.bankNum : "-" }}
               </template>
             </el-table-column>
             <el-table-column align="center" label="虚拟币账号数量">
               <template>
-                {{ list.virtualNum }}
+                {{ list.virtualNum !== null ? list.virtualNum : "-" }}
               </template>
             </el-table-column>
           </el-table>
@@ -130,27 +138,27 @@
           >
             <el-table-column align="center" label="累计总存款金额（万元）">
               <template>
-                {{ list.totalDepositAmount ? list.totalDepositAmount : "-" }}
+                {{ list.totalDepositAmount }}
               </template>
             </el-table-column>
             <el-table-column align="center" label="累计总存款次数">
               <template>
-                {{ list.totalDepositNum ? list.totalDepositNum : "-" }}
+                {{ list.totalDepositNum }}
               </template>
             </el-table-column>
             <el-table-column align="center" label="累计总提款金额（万元）">
               <template>
-                {{ list.totalWithdrawAmount ? list.totalWithdrawAmount : "-" }}
+                {{ list.totalWithdrawAmount }}
               </template>
             </el-table-column>
             <el-table-column align="center" label="累计总提款次数">
               <template>
-                {{ list.totalWithdrawNum ? list.totalWithdrawNum : "-" }}
+                {{ list.totalWithdrawNum }}
               </template>
             </el-table-column>
             <el-table-column align="center" label="累计总存提款差额（万元）">
               <template>
-                {{ list.totalWithdrawDiff ? list.totalWithdrawDiff : "-" }}
+                {{ list.totalWithdrawDiff }}
               </template>
             </el-table-column>
           </el-table>
@@ -211,13 +219,13 @@
             </el-table-column>
             <el-table-column align="center" label="上次提款金额">
               <template>
-                {{ list.lastAmount ? list.lastAmount : "-" }}
+                {{ list.lastAmount !== null ? list.lastAmount : "-" }}
               </template>
             </el-table-column>
             <el-table-column align="center" label="上次提款至本次提款间存款金额">
               <template>
                 {{
-                  list.lastBetweenThisDepositAmount
+                  list.lastBetweenThisDepositAmount !== null
                     ? list.lastBetweenThisDepositAmount
                     : "-"
                 }}
@@ -225,12 +233,20 @@
             </el-table-column>
             <el-table-column align="center" label="上次提款方式">
               <template>
-                {{ list.lastType ? list.lastType : "-" }}
+                {{
+                  typeFilter(list.lastType, "payDataType")
+                    ? typeFilter(list.lastType, "payDataType")
+                    : "-"
+                }}
               </template>
             </el-table-column>
             <el-table-column align="center" label="上次是否为大额提款">
               <template>
-                {{ list.lastBig ? list.lastBig : "-" }}
+                {{
+                  typeFilter(list.lastBig, "withdrawBiggerType")
+                    ? typeFilter(list.lastBig, "withdrawBiggerType")
+                    : "-"
+                }}
               </template>
             </el-table-column>
           </el-table>
@@ -243,37 +259,75 @@
             <tbody>
               <tr>
                 <td class="td-title">订单号</td>
-                <td>{{ list.thirdOrderNo }}</td>
+                <td>{{ list.thirdOrderNo ? list.thirdOrderNo : "-" }}</td>
                 <td class="td-title">订单来源</td>
-                <td>{{ list.deviceNo }}</td>
+                <td>
+                  {{
+                    typeFilter(list.deviceNo, "deviceType")
+                      ? typeFilter(list.deviceNo, "deviceType")
+                      : "-"
+                  }}
+                </td>
                 <td class="td-title">提款IP</td>
-                <td>{{ list.customerIp }}</td>
+                <td>{{ list.customerIp ? list.customerIp : "-" }}</td>
                 <td class="td-title">是否为首提</td>
-                <td>{{ list.isOneWith }}</td>
+                <td>
+                  {{
+                    typeFilter(list.isOneWith, "withdrawOneStatus")
+                      ? typeFilter(list.isOneWith, "withdrawOneStatus")
+                      : "-"
+                  }}
+                </td>
                 <td class="td-title">是否为大额提款</td>
-                <td>{{ list.isBig }}</td>
+                <td>
+                  {{
+                    typeFilter(list.isBig, "withdrawBiggerType")
+                      ? typeFilter(list.isBig, "withdrawBiggerType")
+                      : "-"
+                  }}
+                </td>
               </tr>
               <tr>
                 <td class="td-title">今日提款次数</td>
-                <td>{{ list.dayWithDrawNum }}</td>
+                <td>{{ list.dayWithDrawNum !== null ? list.dayWithDrawNum : "-" }}</td>
                 <td class="td-title">免费提款次数</td>
-                <td>{{ list.freeNum }}</td>
+                <td>{{ list.freeNum !== null ? list.freeNum : "-" }}</td>
                 <td class="td-title">今日提款总额</td>
-                <td>{{ list.dayWithDrawNumSum }}</td>
+                <td>
+                  {{ list.dayWithDrawNumSum !== null ? list.dayWithDrawNumSum : "-" }}
+                </td>
                 <td class="td-title">是否连续提款</td>
-                <td>{{ list.isContinuityWithDraw }}</td>
+                <td>
+                  {{
+                    typeFilter(list.isContinuityWithDraw, "withdrawContinuityStatus")
+                      ? typeFilter(list.isContinuityWithDraw, "withdrawContinuityStatus")
+                      : "-"
+                  }}
+                </td>
                 <td class="td-title">提款方式</td>
-                <td>{{ list.withdrawType }}</td>
+                <td>
+                  {{
+                    typeFilter(list.withdrawType, "payDataType")
+                      ? typeFilter(list.withdrawType, "payDataType")
+                      : "-"
+                  }}
+                </td>
               </tr>
               <tr>
                 <td class="td-title">提款设备终端</td>
-                <td colspan="2">{{ list.withdrawDeviceType }}</td>
+                <td colspan="2">
+                  {{
+                    typeFilter(list.withdrawDeviceType, "deviceType")
+                      ? typeFilter(list.withdrawDeviceType, "deviceType")
+                      : "-"
+                  }}
+                </td>
                 <td class="td-title">提款绑定域名</td>
-                <td colspan="6">{{ list.withdrawDomain }}</td>
+                <td colspan="6">{{ list.withdrawDomain ? list.withdrawDomai : "-" }}</td>
               </tr>
               <tr>
                 <td class="td-title">提款银行信息</td>
-                <td colspan="9">{{ list.bankInfo }}</td>
+                <td colspan="9">{{ list.bankInfo ? list.bankInfo : "-" }}</td>
               </tr>
               <tr>
                 <td rowspan="2" class="td-title">账目审核信息</td>
@@ -283,10 +337,18 @@
                 <td colspan="2" class="td-title">实际打款</td>
               </tr>
               <tr>
-                <td colspan="3">{{ list.withdrawWater }}</td>
-                <td colspan="2">{{ list.orderAmount }}</td>
-                <td colspan="2">{{ list.orderRateAmount }}</td>
-                <td colspan="2">{{ list.realAmount }}</td>
+                <td colspan="3">
+                  {{ list.withdrawWater !== null ? list.withdrawWater : "-" }}
+                </td>
+                <td colspan="2">
+                  {{ list.orderAmount !== null ? list.orderAmount : "-" }}
+                </td>
+                <td colspan="2">
+                  {{ list.orderRateAmount !== null ? list.orderRateAmount : "-" }}
+                </td>
+                <td colspan="2">
+                  {{ list.realAmount !== null ? list.realAmount : "-" }}
+                </td>
               </tr>
             </tbody>
           </table>
@@ -295,40 +357,40 @@
       <div v-if="activeName === '0'" class="review-content">
         <p class="name">审核信息</p>
         <div class="review-flex">
-          <div>一审人: {{ list.audit1Operator }}</div>
-          <div>一审时间: {{ list.audit1Time }}</div>
-          <div>一审备注: {{ list.audit1Desc }}</div>
+          <div>一审人: {{ list.audit1Operator ? list.audit1Operator : "-" }}</div>
+          <div>一审时间: {{ list.audit1Time ? list.audit1Time : "-" }}</div>
+          <div>一审备注: {{ list.audit1Desc ? list.audit1Desc : "-" }}</div>
         </div>
       </div>
       <div v-else-if="activeName === '1'" class="review-content">
         <p class="name">审核信息</p>
         <div class="review-flex">
-          <div>一审人: {{ list.audit1Operator }}</div>
-          <div>一审时间: {{ list.audit1Time }}</div>
-          <div>一审备注: {{ list.audit1Desc }}</div>
+          <div>一审人: {{ list.audit1Operator ? list.audit1Operator : "-" }}</div>
+          <div>一审时间: {{ list.audit1Time ? list.audit1Time : "-" }}</div>
+          <div>一审备注: {{ list.audit1Desc ? list.audit1Desc : "-" }}</div>
         </div>
         <div class="review-flex">
-          <div>二审人: {{ list.audit2Operator }}</div>
-          <div>二审时间: {{ list.audit2Time }}</div>
-          <div>二审备注: {{ list.audit2Desc }}</div>
+          <div>二审人: {{ list.audit2Operator ? list.audit2Operator : "-" }}</div>
+          <div>二审时间: {{ list.audit2Time ? list.audit2Time : "-" }}</div>
+          <div>二审备注: {{ list.audit2Desc ? list.audit2Desc : "-" }}</div>
         </div>
       </div>
       <div v-else-if="activeName === '2'" class="review-content">
         <p class="name">审核信息</p>
         <div class="review-flex">
-          <div>一审人: {{ list.audit1Operator }}</div>
-          <div>一审时间: {{ list.audit1Time }}</div>
-          <div>一审备注: {{ list.audit1Desc }}</div>
+          <div>一审人: {{ list.audit1Operator ? list.audit1Operator : "-" }}</div>
+          <div>一审时间: {{ list.audit1Time ? list.audit1Time : "-" }}</div>
+          <div>一审备注: {{ list.audit1Desc ? list.audit1Desc : "-" }}</div>
         </div>
         <div class="review-flex">
-          <div>二审人: {{ list.audit2Operator }}</div>
-          <div>二审时间: {{ list.audit2Time }}</div>
-          <div>二审备注: {{ list.audit2Desc }}</div>
+          <div>二审人: {{ list.audit2Operator ? list.audit2Operator : "-" }}</div>
+          <div>二审时间: {{ list.audit2Time ? list.audit2Time : "-" }}</div>
+          <div>二审备注: {{ list.audit2Desc ? list.audit2Desc : "-" }}</div>
         </div>
         <div class="review-flex">
-          <div>三审人: {{ list.audit3Operator }}</div>
-          <div>三审时间: {{ list.audit3Time }}</div>
-          <div>三审备注: {{ list.audit3Desc }}</div>
+          <div>三审人: {{ list.audit3Operator ? list.audit3Operator : "-" }}</div>
+          <div>三审时间: {{ list.audit3Time ? list.audit3Time : "-" }}</div>
+          <div>三审备注: {{ list.audit3Desc ? list.audit3Desc : "-" }}</div>
         </div>
       </div>
     </div>

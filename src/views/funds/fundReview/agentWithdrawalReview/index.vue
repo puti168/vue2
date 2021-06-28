@@ -37,7 +37,7 @@
               v-model="queryData.thirdOrderNo"
               clearable
               size="medium"
-              :maxlength="20"
+              :maxlength="25"
               style="width: 185px"
               placeholder="请输入"
               @keyup.enter.native="enterSearch"
@@ -430,7 +430,7 @@ export default {
             setTimeout(() => {
               this.loadData()
               console.log(1111111)
-            }, 300)
+            }, 1000)
             console.log(22222)
           } else {
             loading.close()

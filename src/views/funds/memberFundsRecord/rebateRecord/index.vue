@@ -23,7 +23,7 @@
             <el-input
               v-model="queryData.id"
               clearable
-              :maxlength="19"
+              :maxlength="25"
               size="medium"
               style="width: 200px"
               placeholder="请输入"
@@ -382,8 +382,8 @@ export default {
         } else {
           sums[index] = (
             <div class='count_row'>
-              <p>-</p>
-              <p>-</p>
+              <p></p>
+              <p></p>
             </div>
           )
         }
