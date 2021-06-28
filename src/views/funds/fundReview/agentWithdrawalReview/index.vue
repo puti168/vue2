@@ -37,7 +37,7 @@
               v-model="queryData.thirdOrderNo"
               clearable
               size="medium"
-              :maxlength="25"
+              :maxlength="50"
               style="width: 185px"
               placeholder="请输入"
               @keyup.enter.native="enterSearch"
