@@ -134,7 +134,12 @@
             width="200px"
             label="公告标题"
           ></el-table-column>
-          <el-table-column align="center" label="公告内容" width="200px" prop="announcementContent">
+          <el-table-column
+            align="center"
+            label="公告内容"
+            width="200px"
+            prop="announcementContent"
+          >
           </el-table-column>
           <el-table-column prop="tag" align="center" label="标识">
             <template slot-scope="scope">
@@ -143,7 +148,18 @@
           </el-table-column>
           <el-table-column align="center" label="发送终端" width="120px" prop="terminal">
             <template slot-scope="scope">
-              {{ typeFilter(scope.row.terminal, "loginDeviceType") }}
+              <div v-if="scope.row.terminal.length === 0">
+                <span v-for="(item, index) in loginDeviceType" :key="index">
+                  {{ item.description + "，" }}
+                </span>
+              </div>
+              <div v-else>
+                <p v-for="(item, index) in scope.row.terminal" :key="index">
+                  <span v-for="(obj, index) in loginDeviceType" :key="index">
+                    {{ item === obj.code ? obj.description + "，" : "" }}
+                  </span>
+                </p>
+              </div>
             </template>
           </el-table-column>
           <el-table-column align="center" label="公告时效" prop="announcementAging">
@@ -197,6 +213,7 @@
             prop="updatedBy"
             align="center"
             label="最近操作人"
+            width="120px"
           ></el-table-column>
           <el-table-column
             prop="updatedAt"
@@ -428,7 +445,7 @@ export default {
   mixins: [list],
   data() {
     return {
-      queryData: {terminal: []},
+      queryData: { terminal: [] },
       dialogFormVisible: false,
       dialogForm: { tag: 1, terminal: ['2'], status: 0, announcementAging: 1 },
       onlineTime: Date.now(),
@@ -509,6 +526,12 @@ export default {
         if (res.code === 200) {
           console.log(res)
           this.dialogForm = res.data
+          if (res.data.terminal.length === 0) {
+            for (let i = 0; i < this.loginDeviceType.length; i++) {
+              const ele = this.loginDeviceType[i]
+              this.dialogForm.terminal.push(ele.code)
+            }
+          }
           this.dialogFormVisible = true
         }
       })

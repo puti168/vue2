@@ -43,7 +43,11 @@
             </el-table-column>
             <el-table-column align="center" label="注册端">
               <template>
-                {{ list.deviceType ? typeFilter(list.deviceType, "deviceType") : "-" }}
+                {{
+                  typeFilter(list.deviceType, "deviceType")
+                    ? typeFilter(list.deviceType, "deviceType")
+                    : "-"
+                }}
               </template>
             </el-table-column>
             <el-table-column align="center" label="注册IP">
@@ -58,7 +62,11 @@
             </el-table-column>
             <el-table-column align="center" label="账号类型">
               <template>
-                {{ list.accountType ? typeFilter(list.accountType, "accountType") : "-" }}
+                {{
+                  typeFilter(list.accountType, "accountType")
+                    ? typeFilter(list.accountType, "accountType")
+                    : "-"
+                }}
               </template>
             </el-table-column>
             <el-table-column align="center" label="注册域名">
@@ -92,7 +100,7 @@
             <el-table-column align="center" label="账号状态">
               <template>
                 {{
-                  list.accountStatus
+                  typeFilter(list.accountStatus, "accountStatusType")
                     ? typeFilter(list.accountStatus, "accountStatusType")
                     : "-"
                 }}
@@ -110,12 +118,12 @@
             </el-table-column>
             <el-table-column align="center" label="绑定银行卡数量">
               <template>
-                {{ list.bankCardNum }}
+                {{ list.bankCardNum !== null ? list.bankCardNum : "-" }}
               </template>
             </el-table-column>
             <el-table-column align="center" label="虚拟币账号数量">
               <template>
-                {{ list.virtualNum }}
+                {{ list.virtualNum !== null ? list.virtualNum : "-" }}
               </template>
             </el-table-column>
           </el-table>
@@ -183,7 +191,7 @@
             <el-table-column align="center" label="调整类型">
               <template>
                 {{
-                  list.adjustType
+                  typeFilter(list.adjustType, "proxyPatchAddAdjustType")
                     ? typeFilter(list.adjustType, "proxyPatchAddAdjustType")
                     : "-"
                 }}
@@ -191,7 +199,7 @@
             </el-table-column>
             <el-table-column align="center" label="增加金额">
               <template>
-                {{ list.adjustAmount ? list.adjustAmount : "-" }}
+                {{ list.adjustAmount !== null ? list.adjustAmount : "-" }}
               </template>
             </el-table-column>
             <el-table-column align="center" label="申请原因">
@@ -205,8 +213,8 @@
       <div class="review-content">
         <p class="name">审核信息</p>
         <div class="review-flex">
-          <div>一审人: {{ list.audit1Operator }}</div>
-          <div>一审时间: {{ list.audit1Time }}</div>
+          <div>一审人: {{ list.audit1Operator ? list.audit1Operator : "-" }}</div>
+          <div>一审时间: {{ list.audit1Time ? list.audit1Time : "-" }}</div>
           <div>一审备注: {{ list.audit1Desc ? list.audit2Desc : "-" }}</div>
         </div>
         <div v-if="activeName === '1'" class="review-flex">

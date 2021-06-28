@@ -21,9 +21,9 @@
           </el-form-item>
           <el-form-item label="订单号:">
             <el-input
-              v-model="queryData.id"
+              v-model="queryData.thirdOrderNo"
               clearable
-              :maxlength="19"
+              :maxlength="25"
               size="medium"
               style="width: 200px"
               placeholder="请输入"
@@ -156,10 +156,19 @@
           :header-cell-style="getRowClass"
           @sort-change="_changeTableSort"
         >
-          <el-table-column prop="id" align="center" width="240px" label="订单号">
+          <el-table-column
+            prop="thirdOrderNo"
+            align="center"
+            width="240px"
+            label="订单号"
+          >
             <template slot-scope="scope">
-              <Copy v-if="!!scope.row.id" :title="scope.row.id" :copy="copy">
-                {{ scope.row.id }}
+              <Copy
+                v-if="!!scope.row.thirdOrderNo"
+                :title="scope.row.thirdOrderNo"
+                :copy="copy"
+              >
+                {{ scope.row.thirdOrderNo }}
               </Copy>
               <span v-else>-</span>
             </template>
@@ -222,7 +231,11 @@ class="redColor"
           </el-table-column>
           <el-table-column prop="payType" align="center" label="支付方式">
             <template slot-scope="scope">
-              {{ typeFilter(scope.row.payType, "payType") }}
+              {{
+                typeFilter(scope.row.payType, "payType")
+                  ? typeFilter(scope.row.payType, "payType")
+                  : "-"
+              }}
             </template>
           </el-table-column>
           <el-table-column
@@ -430,8 +443,8 @@ export default {
         } else {
           sums[index] = (
             <div class='count_row'>
-              <p>-</p>
-              <p>-</p>
+              <p></p>
+              <p></p>
             </div>
           )
         }

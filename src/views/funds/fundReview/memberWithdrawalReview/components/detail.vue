@@ -188,9 +188,7 @@
 						<el-table-column align="center" label="累计总存提款差额（万元）">
 							<template>
 								{{
-									list && list.totalDepositAmount && list.totalWithdrawAmount
-										? list.totalDepositAmount * 1 - list.totalWithdrawAmount * 1
-										: '-'
+									list && list.totalWithdrawDiff ? list.totalWithdrawDiff : '-'
 								}}
 							</template>
 						</el-table-column>

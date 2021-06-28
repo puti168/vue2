@@ -34,7 +34,7 @@
                 修改
               </el-link>
               <el-link
-                v-if="scope.row.status !== 0 && scope.row.proxyAccount !== '0'"
+                v-if="scope.row.withdrawStatus !== 0 && scope.row.proxyAccount !== '0'"
                 type="primary"
                 size="medium"
                 @click="deleteLabel(scope.row)"
@@ -43,10 +43,10 @@
               </el-link>
             </template>
           </el-table-column>
-          <el-table-column prop="status" align="center" label="状态">
+          <el-table-column prop="withdrawStatus" align="center" label="状态">
             <template slot-scope="scope">
-              <span v-if="scope.row.status === 0" class="normalRgba">开启</span>
-              <span v-else-if="scope.row.status === 1" class="disableRgba">关闭</span>
+              <span v-if="scope.row.withdrawStatus === 0" class="normalRgba">开启</span>
+              <span v-else-if="scope.row.withdrawStatus === 1" class="disableRgba">关闭</span>
               <span v-else>-</span>
             </template>
           </el-table-column>
@@ -392,8 +392,8 @@
               placeholder="游戏前端提示语，限制25字以内"
             ></el-input>
           </el-form-item>
-          <el-form-item label="状态" prop="status">
-            <el-select v-model="dialogForm.status" :popper-append-to-body="false">
+          <el-form-item label="状态" prop="withdrawStatus">
+            <el-select v-model="dialogForm.withdrawStatus" :popper-append-to-body="false">
               <el-option label="开启" :value="0"></el-option>
               <el-option label="关闭" :value="1"></el-option>
             </el-select>
@@ -440,7 +440,7 @@ export default {
         rateDateTotal: 0,
         rateDateFreeType: 2,
         rateDateTotalType: 2,
-        status: 1,
+        withdrawStatus: 1,
         temporary: {}
       },
       title: '',
@@ -524,7 +524,7 @@ export default {
           trigger: 'blur'
         }
       ]
-      const status = [{ required: true, message: '请选择状态', trigger: 'blur' }]
+      const withdrawStatus = [{ required: true, message: '请选择状态', trigger: 'blur' }]
 
       // const oneFree = [{ required: true, validator: oneFreeRules, trigger: 'blur' }]grady2dev
       return {
@@ -537,7 +537,7 @@ export default {
         bigAmount,
         rateDateFree,
         rateDateTotal,
-        status
+        withdrawStatus
       }
     }
   },
@@ -598,7 +598,7 @@ export default {
           rateDateTotal: 0,
           rateDateFreeType: 2,
           rateDateTotalType: 2,
-          status: 1
+          withdrawStatus: 1
         }
       } else {
         this.dialogForm = this.temporary
@@ -625,7 +625,7 @@ export default {
         rateDateTotal: 0,
         rateDateFreeType: 2,
         rateDateTotalType: 2,
-        status: 1
+        withdrawStatus: 1
       }
       this.dialogFormVisible = true
     },
