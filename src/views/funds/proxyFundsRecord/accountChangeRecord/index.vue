@@ -19,6 +19,18 @@
               style="width: 375px"
             ></el-date-picker>
           </el-form-item>
+          <el-form-item label="关联订单号:">
+            <el-input
+              v-model="queryData.eventId"
+              clearable
+              :maxlength="50"
+              size="medium"
+              style="width: 200px"
+              placeholder="请输入"
+              :disabled="loading"
+              @keyup.enter.native="enterSearch"
+            ></el-input>
+          </el-form-item>
           <el-form-item label="代理账号:">
             <el-input
               v-model="queryData.userName"

@@ -43,10 +43,10 @@
               </el-link>
             </template>
           </el-table-column>
-          <el-table-column prop="status" align="center" label="状态" width="100px">
+          <el-table-column prop="withdrawStatus" align="center" label="状态" width="100px">
             <template slot-scope="scope">
-              <div v-if="scope.row.status === 1" class="disableRgba">关闭</div>
-              <div v-else-if="scope.row.status === 0" class="normalRgba">开启</div>
+              <div v-if="scope.row.withdrawStatus === 1" class="disableRgba">关闭</div>
+              <div v-else-if="scope.row.withdrawStatus === 0" class="normalRgba">开启</div>
               <span v-else>-</span>
             </template>
           </el-table-column>
@@ -262,9 +262,9 @@ width="120px"
               placeholder="请输入"
             ></el-input-number>
           </el-form-item>
-          <el-form-item label="状态" prop="status">
+          <el-form-item label="状态" prop="withdrawStatus">
             <el-select
-              v-model="dialogForm.status"
+              v-model="dialogForm.withdrawStatus"
               clearable
               :popper-append-to-body="false"
             >
@@ -315,7 +315,7 @@ export default {
         rateDateFree: 0,
         rateDateTotalType: 2,
         rateDateTotal: 0,
-        status: 1
+        withdrawStatus: 1
       },
       title: '',
       isDisabled: true,
@@ -386,7 +386,7 @@ export default {
         { required: true, message: '请输入提示语', trigger: 'blur' }
       ]
       const beyondtotal = [{ required: true, message: '请输入提示语', trigger: 'blur' }]
-      const status = [{ required: true, message: '请选择状态', trigger: 'blur' }]
+      const withdrawStatus = [{ required: true, message: '请选择状态', trigger: 'blur' }]
       return {
         dateFreeNum,
         singleMinAmount,
@@ -397,7 +397,7 @@ export default {
         rateDateTotalType,
         beyondfrequency,
         beyondtotal,
-        status
+        withdrawStatus
       }
     }
   },
@@ -501,7 +501,7 @@ export default {
           rateDateFree: 0,
           rateDateTotalType: 2,
           rateDateTotal: 0,
-          status: 1
+          withdrawStatus: 1
         }
       } else {
         this.dialogForm = this.temporary
@@ -557,7 +557,7 @@ export default {
         rateDateFree: 0,
         rateDateTotalType: 2,
         rateDateTotal: 0,
-        status: 1
+        withdrawStatus: 1
       }
       this.dialogFormVisible = true
     },

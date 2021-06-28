@@ -20,7 +20,7 @@
 
           <el-form-item label="订单号:">
             <el-input
-              v-model="queryData.id"
+              v-model="queryData.orderNo"
               clearable
               size="medium"
               :maxlength="19"
@@ -95,10 +95,10 @@
                 </el-button>
               </template>
             </el-table-column>
-            <el-table-column prop="id" align="center" label="订单号">
+            <el-table-column prop="orderNo" align="center" label="订单号">
               <template slot-scope="scope">
-                <span v-if="!!scope.row.id">
-                  {{ scope.row.id }}
+                <span v-if="!!scope.row.orderNo">
+                  {{ scope.row.orderNo }}
                 </span>
                 <span v-else>-</span>
               </template></el-table-column>

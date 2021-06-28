@@ -21,9 +21,9 @@
               :popper-append-to-body="false"
             >
               <el-option
-                v-for="item in accountType"
+                v-for="item in QueryareaList"
                 :key="item.code"
-                :label="item.description"
+                :label="item.value"
                 :value="item.code"
               ></el-option>
             </el-select>
@@ -199,7 +199,14 @@
               align="center"
               label="轮播图区域"
               width="100px"
-            ></el-table-column>
+            >
+            <template slot-scope="scope">
+                <!-- {{ scope.row.areaType }} -->
+                 <span v-for="item in QueryareaList" :key="item.code">
+                {{ scope.row.QueryareaList === item.code ? item.code : "" }}
+              </span>
+              </template>
+            </el-table-column>
             <el-table-column align="center" label="轮播图名称" width="120px">
               <template slot-scope="scope">
                 <span v-if="scope.row.bannerName === '0'">-</span>
@@ -350,6 +357,9 @@
             @size-change="handleSizeChange"
           ></el-pagination>
         </div>
+        <div v-if="imgVisible" class="imgCenter" @click="closeImage">
+				<img :src="bigImage" />
+			</div>
         <el-dialog
           title="新增/编辑"
           :visible.sync="dialogFormVisible"
@@ -538,6 +548,7 @@ export default {
         }
       },
       dateEnd: {},
+      QueryareaList: [],
       errTime: false,
       tableData: [],
       drag: false,
@@ -566,10 +577,10 @@ export default {
       dataList: [],
       title: '',
       // 终端类型
-      terminalType: 1,
+      clientType: 1,
       recommendDetails: {},
       queryData: {
-        terminalType: 1
+        clientType: 1
       },
       activeName: 'first'
     }
@@ -626,6 +637,9 @@ export default {
       deep: true
     }
   },
+  created() {
+    this.getQueryarea()
+  },
   mounted() {},
   methods: {
     // 开始拖拽事件
@@ -655,6 +669,13 @@ export default {
     clear() {
       this.onlineTime = Date.now()
       this.offlineTime = endTime
+    },
+    getQueryarea() {
+      this.$api.operateConfigBannerQueryBannerAreaAPI().then((res) => {
+        if (res.code === 200) {
+          this.QueryareaList = res.data
+        }
+      })
     },
     subAddOrEidt() {
       const startTime =
@@ -711,11 +732,11 @@ export default {
     handleClick(tab) {
       const name = tab.name
       if (name === 'first') {
-        this.queryData.terminalType = 1
+        this.queryData.clientType = 1
       } else if (name === 'second') {
-        this.queryData.terminalType = 2
+        this.queryData.clientType = 2
       } else {
-        this.queryData.terminalType = 2
+        this.queryData.clientType = 2
       }
       this.loadData()
     },
@@ -819,15 +840,18 @@ export default {
         .catch(() => {})
     },
     openEdit(val) {
-      console.log('111111')
+      console.log(val, '111111')
       this.flag = val
-			this.$api.getPperateConfigBannerUpdate({id: val.id}).then((res) => {
+			this.$api.getPperateConfigBannerUpdate({clientType: 1}).then((res) => {
         if (res.code === 200) {
           console.log(res)
           this.dialogForm = res.data
           this.dialogFormVisible = true
         }
       })
+		},
+    closeImage() {
+			this.imgVisible = false
 		},
     lookGame(val) {
       this.imgVisible = true
@@ -860,7 +884,7 @@ export default {
     },
     reset() {
       this.pageNum = 1
-      this.queryData = 1
+      this.queryData = {clientType: 1}
       this.loadData()
     }
   }
