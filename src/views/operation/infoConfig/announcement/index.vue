@@ -182,12 +182,6 @@
             width="155px"
             sortable="custom"
           >
-            <template slot-scope="scope">
-              <span v-if="scope.row.announcementAging === 1">
-                {{ scope.row.downTime }}
-              </span>
-              <span v-else> - </span>
-            </template>
           </el-table-column>
           <el-table-column prop="status" align="center" width="90px" label="状态">
             <template slot-scope="scope">
@@ -214,14 +208,22 @@
             align="center"
             label="最近操作人"
             width="120px"
-          ></el-table-column>
+          >
+            <template slot-scope="scope">
+              {{ scope.row.updatedBy ? scope.row.updatedBy : "-" }}
+            </template>
+          </el-table-column>
           <el-table-column
             prop="updatedAt"
             align="center"
             label="最近操作时间"
             width="155px"
             sortable="custom"
-          ></el-table-column>
+          >
+            <template slot-scope="scope">
+              {{ scope.row.updatedAt ? scope.row.updatedAt : "-" }}
+            </template>
+          </el-table-column>
           <el-table-column prop="operating" align="center" width="240px" label="操作">
             <template slot-scope="scope">
               <el-button

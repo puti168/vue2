@@ -23,7 +23,7 @@
             <el-input
               v-model="queryData.id"
               clearable
-              :maxlength="25"
+              :maxlength="50"
               size="medium"
               style="width: 200px"
               placeholder="请输入"
@@ -172,7 +172,9 @@
           <el-table-column prop="validBetAmount" align="center" label="有效金额 ">
           </el-table-column>
           <el-table-column prop="rebateRatio" align="center" label="返水比例">
-            <template slot-scope="scope"> {{ scope.row.rebateRatio * 100 }}% </template>
+            <template slot-scope="scope">
+              {{ (scope.row.rebateRatio * 100).toFixed(2) }}%
+            </template>
           </el-table-column>
           <el-table-column prop="rebateAmount" align="center" label="返水金额">
           </el-table-column>
