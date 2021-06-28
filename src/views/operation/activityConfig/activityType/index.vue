@@ -39,7 +39,7 @@
 					<el-input
 						v-model="queryData.activityTypeName"
 						size="medium"
-						maxlength="4"
+						maxlength="10"
 						placeholder="请输入"
 						clearable
 						style="width: 365px"
@@ -71,26 +71,40 @@
 						<p>
 							<span>优惠活动：</span>
 							<span>
-								{{ showInfoData.deviceNo ? showInfoData.deviceNo : '-' }}
+								{{
+									showInfoData && showInfoData.deviceNo
+										? showInfoData.deviceNo
+										: '-'
+								}}
 							</span>
 						</p>
 					</el-col>
 					<el-col :span="6">
 						<span>优惠类型名称：</span>
 						<span>
-							{{ showInfoData.remark ? showInfoData.remark : '-' }}
+							{{
+								showInfoData && showInfoData.remark ? showInfoData.remark : '-'
+							}}
 						</span>
 					</el-col>
 					<el-col :span="6">
 						<span>最近操作人：</span>
 						<span>
-							{{ showInfoData.updateBy ? showInfoData.updateBy : '-' }}
+							{{
+								showInfoData && showInfoData.updateBy
+									? showInfoData.updateBy
+									: '-'
+							}}
 						</span>
 					</el-col>
 					<el-col :span="6">
 						<span>最近操作时间：</span>
 						<span>
-							{{ showInfoData.updateAt ? showInfoData.updateAt : '-' }}
+							{{
+								showInfoData && showInfoData.updateAt
+									? showInfoData.updateAt
+									: '-'
+							}}
 						</span>
 					</el-col>
 				</el-row>
@@ -116,13 +130,12 @@
 </template>
 
 <script>
-import { routerNames } from '@/utils/consts'
 import list from '@/mixins/list'
 import draggable from 'vuedraggable'
 // import { notSpecial2, isHaveEmoji } from '@/utils/validate'
 
 export default {
-	name: routerNames.platformRate,
+	name: 'PlatformRate',
 	components: { draggable },
 	mixins: [list],
 	data() {
@@ -134,22 +147,13 @@ export default {
 			},
 			showInfoData: {},
 			tipsShow: null,
-			sortLabel: false,
-			activityTypeArr: [
-				{ description: '优惠', code: '1' },
-				{ description: 'vip', code: '2' },
-				{ description: '赞助', code: '3' }
-			]
+			sortLabel: false
 		}
 	},
 	computed: {
-		// activityTypeArr() {
-		// 	return [
-		// 		{ description: '优惠', code: '1' },
-		// 		{ description: 'vip', code: '2' },
-		// 		{ description: '赞助', code: '3' }
-		// 	]
-		// },
+		activityTypeArr() {
+			return this.globalDics.operateActivityNameType
+		},
 		rules() {
 			const activityType = [
 				{ required: true, message: '请选择活动类型', trigger: 'change' }
