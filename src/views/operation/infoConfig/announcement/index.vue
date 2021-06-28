@@ -160,7 +160,6 @@
                   </span>
                 </p>
               </div>
-              <!-- {{ typeFilter(scope.row.terminal, "loginDeviceType") }} -->
             </template>
           </el-table-column>
           <el-table-column align="center" label="公告时效" prop="announcementAging">
@@ -527,6 +526,12 @@ export default {
         if (res.code === 200) {
           console.log(res)
           this.dialogForm = res.data
+          if (res.data.terminal.length === 0) {
+            for (let i = 0; i < this.loginDeviceType.length; i++) {
+              const ele = this.loginDeviceType[i]
+              this.dialogForm.terminal.push(ele.code)
+            }
+          }
           this.dialogFormVisible = true
         }
       })
