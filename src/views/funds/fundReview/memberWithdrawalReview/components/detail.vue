@@ -119,7 +119,7 @@
 						<el-table-column align="center" label="账号状态">
 							<template>
 								{{
-									list.accountStatus
+									list && list.accountStatus
 										? typeFilter(list.accountStatus, 'accountStatusType')
 										: '-'
 								}}
@@ -188,7 +188,7 @@
 						<el-table-column align="center" label="累计总存提款差额（万元）">
 							<template>
 								{{
-									list && list.beforeModify
+									list && list.totalDepositAmount && list.totalWithdrawAmount
 										? list.totalDepositAmount * 1 - list.totalWithdrawAmount * 1
 										: '-'
 								}}
@@ -407,19 +407,40 @@
 			<div class="review-content">
 				<p class="name">审核信息</p>
 				<div class="review-flex">
-					<div>一审人: {{ list && list.audit1Operator }}</div>
-					<div>一审时间: {{ list && list.audit1Time }}</div>
-					<div>一审备注: {{ list && list.audit1Desc }}</div>
+					<div>
+						一审人:
+						{{ list && list.audit1Operator ? list.audit1Operator : '-' }}
+					</div>
+					<div>
+						一审时间: {{ list && list.audit1Time ? list.audit1Time : '-' }}
+					</div>
+					<div>
+						一审备注: {{ list && list.audit1Desc ? list.audit1Desc : '-' }}
+					</div>
 				</div>
 				<div class="review-flex">
-					<div>二审人: {{ list && list.audit2Operator }}</div>
-					<div>二审时间: {{ list && list.audit2Time }}</div>
-					<div>二审备注: {{ list && list.audit2Desc }}</div>
+					<div>
+						二审人:
+						{{ list && list.audit2Operator ? list.audit2Operator : '-' }}
+					</div>
+					<div>
+						二审时间: {{ list && list.audit2Time ? list.audit2Time : '-' }}
+					</div>
+					<div>
+						二审备注: {{ list && list.audit2Desc ? list.audit2Time : '-' }}
+					</div>
 				</div>
 				<div class="review-flex">
-					<div>三审人: {{ list && list.audit3Operator }}</div>
-					<div>三审时间: {{ list && list.audit3Time }}</div>
-					<div>三审备注: {{ list && list.audit3Desc }}</div>
+					<div>
+						三审人:
+						{{ list && list.audit3Operator ? list.audit3Operator : '-' }}
+					</div>
+					<div>
+						三审时间: {{ list && list.audit3Time ? list.audit3Time : '-' }}
+					</div>
+					<div>
+						三审备注: {{ list && list.audit3Desc ? list.audit3Desc : '-' }}
+					</div>
 				</div>
 			</div>
 		</div>

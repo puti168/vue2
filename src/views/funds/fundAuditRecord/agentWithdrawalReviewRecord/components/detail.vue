@@ -155,7 +155,7 @@
 						<el-table-column align="center" label="累计总提款差额(万元)">
 							<template>
 								{{
-									list && list.beforeModify
+									list && list.totalDepositAmount && list.totalWithdrawAmount
 										? list.totalDepositAmount * 1 - list.totalWithdrawAmount * 1
 										: '-'
 								}}
@@ -393,17 +393,17 @@
 					<div>
 						一审备注: {{ list && list.audit1Desc ? list.audit1Desc : '-' }}
 					</div>
-                    <div>
-                        一审结果: {{ list && list.audit1Result ? list.audit1Result : '-' }}
-                    </div>
+					<div>
+						一审结果: {{ list && list.audit1Result ? list.audit1Result : '-' }}
+					</div>
 				</div>
 				<div class="review-flex">
 					<div>二审人: {{ list && list.audit2Operator }}</div>
 					<div>二审时间: {{ list && list.audit2Time }}</div>
 					<div>二审备注: {{ list && list.audit2Desc }}</div>
-                    <div>
-                        二审结果: {{ list && list.audit1Result ? list.audit1Result : '-' }}
-                    </div>
+					<div>
+						二审结果: {{ list && list.audit1Result ? list.audit1Result : '-' }}
+					</div>
 				</div>
 			</div>
 		</div>
