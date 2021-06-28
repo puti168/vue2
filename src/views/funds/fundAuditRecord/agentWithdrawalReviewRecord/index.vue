@@ -19,10 +19,10 @@
 					</el-form-item>
 					<el-form-item label="订单号:">
 						<el-input
-							v-model="queryData.id"
+							v-model="queryData.thirdOrderNo"
 							clearable
 							size="medium"
-							:maxlength="19"
+							:maxlength="50"
 							style="width: 180px"
 							placeholder="请输入"
 							@keyup.enter.native="enterSearch"
@@ -115,8 +115,8 @@
 						</el-table-column>
 						<el-table-column prop="auditNum" align="center" label="订单号" width="180">
 							<template slot-scope="scope">
-								<span v-if="!!scope.row.id">
-									{{ scope.row.id }}
+								<span v-if="!!scope.row.thirdOrderNo">
+									{{ scope.row.thirdOrderNo }}
 								</span>
 								<span v-else>-</span>
 							</template>
@@ -305,7 +305,7 @@ export default {
 		return {
 			queryData: {
 				time: [start, end],
-				id: undefined,
+                thirdOrderNo: undefined,
 				userName: undefined,
 				realName: undefined,
 				orderStatus: ''
@@ -377,7 +377,7 @@ export default {
 		reset() {
 			this.queryData = {
                 time: [start, end],
-                id: undefined,
+                thirdOrderNo: undefined,
                 userName: undefined,
                 realName: undefined,
                 orderStatus: ''
