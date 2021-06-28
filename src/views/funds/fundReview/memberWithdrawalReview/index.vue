@@ -85,6 +85,11 @@
 						<el-table-column align="center" label="锁单" width="60">
 							<template slot-scope="scope">
 								<el-checkbox
+									v-if="
+										scope.row.lockAccount === name ||
+											!scope.row.lockAccount ||
+											scope.row.lockAccount === '无'
+									"
 									v-model="scope.row.lockOrder"
 									@change="lockChange(scope.row)"
 								></el-checkbox>
@@ -115,14 +120,16 @@
 									<el-button
 										type="success"
 										size="medium"
-										@click="confirm(scope.row, true)"
+										:disabled="scope.row.lockStatus === 0"
+                                        @click="confirm(scope.row, true)"
 									>
 										出款通过
 									</el-button>
 									<el-button
 										type="danger"
 										size="medium"
-										@click="confirm(scope.row, false)"
+										:disabled="scope.row.lockStatus === 0"
+                                        @click="confirm(scope.row, false)"
 									>
 										出款拒绝
 									</el-button>
@@ -379,9 +386,9 @@ export default {
 		},
 		goBack() {
 			this.showDetail = false
-            setTimeout(() => {
-                this.loadData()
-            }, 1200)
+			setTimeout(() => {
+				this.loadData()
+			}, 1010)
 		},
 		confirm(row, type) {
 			this.row = row
@@ -397,7 +404,6 @@ export default {
 				.catch(() => {})
 		},
 		auditOne() {
-		    console.log('this.row', this.row)
 			this.$refs.form.validate((valid) => {
 				if (valid) {
 					const loading = this.$loading({
@@ -407,7 +413,7 @@ export default {
 						background: 'rgba(0, 0, 0, 0.7)'
 					})
 					const params = {
-                        thirdOrderNo: this.row.thirdOrderNo,
+						thirdOrderNo: this.row.thirdOrderNo,
 						createdAt: this.row.createdAt,
 						auditDesc: this.form.remark,
 						auditResult: this.action ? 1 : 2,
@@ -424,7 +430,7 @@ export default {
 								loading.close()
 								setTimeout(() => {
 									this.loadData()
-								}, 1200)
+								}, 1010)
 							}
 						})
 						.catch(() => {
@@ -435,7 +441,7 @@ export default {
 		},
 		reset() {
 			this.queryData = {
-				id: '',
+                thirdOrderNo: '',
 				lockStatus: ''
 			}
 			this.formTime = {
@@ -444,7 +450,6 @@ export default {
 			this.loadData()
 		},
 		lockChange(val) {
-			console.log(val)
 			this.$api
 				.memberWithDrawUserupdateWithdrawLock({
 					thirdOrderNo: val.thirdOrderNo,
