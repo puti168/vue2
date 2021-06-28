@@ -198,7 +198,6 @@
             prop="amount"
             align="center"
             width="180px"
-            sortable="custom"
             label="代存金额"
           ></el-table-column>
           <el-table-column
@@ -442,17 +441,8 @@ export default {
       return sums
     },
     _changeTableSort({ column, prop, order }) {
-      if (prop === 'betAmount') {
+      if (prop === 'createdTime') {
         prop = 1
-      }
-      if (prop === 'netAmount') {
-        prop = 2
-      }
-      if (prop === 'createAt') {
-        prop = 3
-      }
-      if (prop === 'netAt') {
-        prop = 4
       }
       this.queryData.orderKey = prop
       if (order === 'ascending') {

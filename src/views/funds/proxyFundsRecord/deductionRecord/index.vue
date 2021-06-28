@@ -21,9 +21,9 @@
           </el-form-item>
           <el-form-item label="订单号:">
             <el-input
-              v-model="queryData.memberName"
-              clearable
+              v-model="queryData.id"
               :maxlength="19"
+              clearable
               size="medium"
               style="width: 200px"
               placeholder="请输入"
@@ -33,14 +33,14 @@
           </el-form-item>
           <el-form-item label="代理账号:">
             <el-input
-              v-model="queryData.memberName"
+              v-model="queryData.userName"
               clearable
               :maxlength="11"
               size="medium"
               style="width: 200px"
               placeholder="请输入"
               :disabled="loading"
-              @keyup.enter.native="enterSearch"
+              @keyup.enter.native="realName"
             ></el-input>
           </el-form-item>
           <el-form-item label="代理姓名:">
@@ -73,7 +73,7 @@
           </el-form-item>
           <el-form-item label="调整类型：" class="tagheight">
             <el-select
-              v-model="queryData.accountType"
+              v-model="queryData.adjustType"
               style="width: 300px"
               clearable
               placeholder="默认选择全部"
