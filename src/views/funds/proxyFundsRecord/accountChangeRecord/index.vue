@@ -207,7 +207,7 @@
             prop="eventId"
             fixed
             align="center"
-            width="180px"
+            width="260px"
             label="关联订单号"
           >
             <template slot-scope="scope">
@@ -311,7 +311,7 @@
             prop="occurDt"
             align="center"
             label="账变时间"
-            width="150px"
+            width="170px"
             sortable="custom"
           >
           </el-table-column>

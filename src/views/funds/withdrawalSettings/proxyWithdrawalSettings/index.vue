@@ -46,7 +46,10 @@
           <el-table-column prop="withdrawStatus" align="center" label="状态">
             <template slot-scope="scope">
               <span v-if="scope.row.withdrawStatus === 0" class="normalRgba">开启</span>
-              <span v-else-if="scope.row.withdrawStatus === 1" class="disableRgba">关闭</span>
+              <span
+v-else-if="scope.row.withdrawStatus === 1"
+class="disableRgba"
+>关闭</span>
               <span v-else>-</span>
             </template>
           </el-table-column>
@@ -440,8 +443,7 @@ export default {
         rateDateTotal: 0,
         rateDateFreeType: 2,
         rateDateTotalType: 2,
-        withdrawStatus: 1,
-        temporary: {}
+        withdrawStatus: 1
       },
       title: '',
       isDisabled: true,
@@ -584,24 +586,20 @@ export default {
     },
 
     reset() {
-      if (this.title === '新增') {
-        this.queryData = {}
-        this.dialogForm = {
-          singleMinAmount: 0,
-          singleMaxAmount: 0,
-          dateFreeNum: 0,
-          dateFreeAmount: 0,
-          dateTotalNum: 0,
-          dateMaxAmount: 0,
-          bigAmount: 0,
-          rateDateFree: 0,
-          rateDateTotal: 0,
-          rateDateFreeType: 2,
-          rateDateTotalType: 2,
-          withdrawStatus: 1
-        }
-      } else {
-        this.dialogForm = this.temporary
+      this.queryData = {}
+      this.dialogForm = {
+        singleMinAmount: 0,
+        singleMaxAmount: 0,
+        dateFreeNum: 0,
+        dateFreeAmount: 0,
+        dateTotalNum: 0,
+        dateMaxAmount: 0,
+        bigAmount: 0,
+        rateDateFree: 0,
+        rateDateTotal: 0,
+        rateDateFreeType: 2,
+        rateDateTotalType: 2,
+        withdrawStatus: 1
       }
       if (this.isUniversal) {
         this.$refs.formProxy.resetFields()
@@ -654,7 +652,6 @@ export default {
         proxyAccountStatus === 0 ? '' : proxyAccountStatus + ''
       )
       this.$set(this.queryData, 'windControlName', windControlName)
-      this.temporary = { ...val }
       this.dialogForm = { ...val }
       this.dialogFormVisible = true
     },

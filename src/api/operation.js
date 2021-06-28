@@ -335,11 +335,44 @@ export function getOperateConfigBannerAdd(data) {
 		data
 	})
 }
+// 查询banner区域
 export function operateConfigBannerQueryBannerAreaAPI(params) {
 	return request({
 		url: '/operate/configBanner/queryBannerArea',
 		method: 'get',
 		params
+	})
+}
+// 客户端配置管理操作记录=》查询
+export function operateConfigClientRecordQueryEnumsAPI(params) {
+	return request({
+		url: '/operate/ConfigClientRecord/queryEnums',
+		method: 'get',
+		params
+	})
+}
+// 客户端配置管理操作记录==>查询操作记录列表
+export function getOperateConfigClientRecordQueryRecordList(data) {
+	return request({
+		url: '/operate/ConfigClientRecord/queryRecordList',
+		method: 'post',
+		data
+	})
+}
+// 活动消息配置
+export function getOperateObConfigNoticeSelectAll(data) {
+	return request({
+		url: '/operate/obConfigNotice/selectAll',
+		method: 'post',
+		data
+	})
+}
+// 会员意见反馈
+export function getFeedBackPageFeedBack(data) {
+	return request({
+		url: '/feedBack/pageFeedBack',
+		method: 'post',
+		data
 	})
 }
 export default {
@@ -384,5 +417,9 @@ export default {
 	getOperateConfigBannerDelete,
 	getPperateConfigBannerUpdate,
 	getOperateConfigBannerAdd,
-	operateConfigBannerQueryBannerAreaAPI
+	operateConfigBannerQueryBannerAreaAPI,
+	operateConfigClientRecordQueryEnumsAPI,
+	getOperateConfigClientRecordQueryRecordList,
+	getOperateObConfigNoticeSelectAll,
+	getFeedBackPageFeedBack
 }

@@ -21,9 +21,9 @@
           </el-form-item>
           <el-form-item label="订单号:">
             <el-input
-              v-model="queryData.id"
+              v-model="queryData.orderId"
               clearable
-              :maxlength="25"
+              :maxlength="50"
               size="medium"
               style="width: 200px"
               placeholder="请输入"
@@ -143,10 +143,10 @@
           :header-cell-style="getRowClass"
           @sort-change="_changeTableSort"
         >
-          <el-table-column prop="id" align="center" width="240px" label="订单号">
+          <el-table-column prop="orderId" align="center" width="240px" label="订单号">
             <template slot-scope="scope">
-              <Copy v-if="!!scope.row.id" :title="scope.row.id" :copy="copy">
-                {{ scope.row.id }}
+              <Copy v-if="!!scope.row.orderId" :title="scope.row.orderId" :copy="copy">
+                {{ scope.row.orderId }}
               </Copy>
               <span v-else>-</span>
             </template>
