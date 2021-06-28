@@ -311,6 +311,30 @@ export function getOperateConfigBannerUse(data) {
 		data
 	})
 }
+export function getOperateConfigBannerDelete(data) {
+	return request({
+		url: '/operate/configBanner/delete',
+		method: 'post',
+		data
+	})
+}
+
+// 修改banner
+export function getPperateConfigBannerUpdate(data) {
+	return request({
+		url: '/operate/configBanner/update',
+		method: 'post',
+		data
+	})
+}
+// 新增banner
+export function getOperateConfigBannerAdd(data) {
+	return request({
+		url: '/operate/configBanner/add',
+		method: 'post',
+		data
+	})
+}
 export default {
 	queryDiscountTagList,
 	queryVipActivityList,
@@ -349,5 +373,8 @@ export default {
 	activityUpdateAPI,
 	getOperateObMerchantGameRecordSelect,
 	getQperateConfigBannerQueryBannerList,
-	getOperateConfigBannerUse
+	getOperateConfigBannerUse,
+	getOperateConfigBannerDelete,
+	getPperateConfigBannerUpdate,
+	getOperateConfigBannerAdd
 }
