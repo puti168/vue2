@@ -40,9 +40,9 @@
               :popper-append-to-body="false"
             >
               <el-option
-                v-for="item in accountTypeArr"
+                v-for="item in BackEnumsList.problemType"
                 :key="item.code"
-                :label="item.description"
+                :label="item.value"
                 :value="item.code"
               ></el-option>
             </el-select>
@@ -56,7 +56,7 @@
               :popper-append-to-body="false"
             >
               <el-option
-                v-for="item in memberVipOperateFieldType"
+                v-for="item in problemType"
                 :key="item.code"
                 :label="item.description"
                 :value="item.code"
@@ -188,6 +188,7 @@ export default {
       foundIn: false,
       rowAssortId: '',
       rowData: {},
+      BackEnumsList: [],
       queryData: {},
       searchTime: [startTime, endTime],
       now: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
@@ -206,9 +207,12 @@ export default {
     memberVipOperateFieldType() {
       return this.globalDics.memberVipOperateFieldType
     },
-    memberVipOperateType() {
-      return this.globalDics.memberVipOperateType
+    problemType() {
+      return this.globalDics.problemType
     }
+  },
+  created() {
+    this.getBackEnums()
   },
   mounted() {},
   methods: {
@@ -244,6 +248,13 @@ export default {
       this.queryData = {}
       this.searchTime = [startTime, endTime]
       this.loadData()
+    },
+    getBackEnums() {
+      this.$api.OperateObConfigAnnouncementRecordQueryFeedBackEnums().then((res) => {
+        if (res.code === 200) {
+          this.BackEnumsList = res.data
+        }
+      })
     },
     _changeTableSort({ column, prop, order }) {
       this.queryData.orderKey = prop
