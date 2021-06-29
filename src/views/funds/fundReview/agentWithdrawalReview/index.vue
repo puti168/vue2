@@ -142,12 +142,12 @@
             <el-table-column
               prop="userName"
               align="center"
-              label="会员账号"
+              label="代理账号"
             ></el-table-column>
             <el-table-column
               prop="realName"
               align="center"
-              label="会员姓名"
+              label="代理姓名"
             ></el-table-column>
             <el-table-column prop="isBig" align="center" label="是否为大额提款">
               <template slot-scope="scope">

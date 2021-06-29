@@ -132,7 +132,7 @@ width="120px"
       </div>
       <el-dialog :visible.sync="dialogFormVisible" :destroy-on-close="true" width="970px">
         <div class="form-header">
-          <span>新增会员资料</span>
+          <span>{{ title }}会员资提款设置</span>
           <span>
             <code style="color: #ff3b30">*</code>
             为必填项
@@ -221,7 +221,6 @@ width="120px"
             v-if="dialogForm.rateDateFreeType === 2"
               v-model="dialogForm.rateDateFree"
               :min="0"
-              :max="100"
               :precision="0"
               placeholder="请输入"
               class="sun"
@@ -248,7 +247,6 @@ width="120px"
              v-if="dialogForm.rateDateTotalType === 2"
               v-model="dialogForm.rateDateTotal"
               :min="0"
-              :max="100"
               :precision="0"
               placeholder="请输入"
               class="sun"
@@ -453,6 +451,7 @@ export default {
                 type: 'warning'
               }
             )
+
               .then(() => {
                 this.$api.getWithdrawSettingMemberUpdate(params).then((res) => {
                   if (res.code === 200) {
@@ -488,7 +487,6 @@ export default {
         .catch(() => {})
     },
     reset() {
-      if (this.title === '新增') {
         this.queryData = {}
         this.dialogForm = {
           vipNum: 0,
@@ -503,8 +501,8 @@ export default {
           rateDateTotal: 0,
           withdrawStatus: 1
         }
-      } else {
-        this.dialogForm = this.temporary
+        if (this.isUniversal) {
+        this.$refs.formProxy.resetFields()
       }
       this.$refs.formSub.resetFields()
     },
@@ -562,8 +560,7 @@ export default {
       this.dialogFormVisible = true
     },
     edit(val) {
-      this.title = '编辑'
-      console.log('编辑', val, '1314')
+      this.title = '修改'
       this.dialogForm = { ...val }
       this.dialogFormVisible = true
       this.isDisabled = true

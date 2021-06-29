@@ -817,18 +817,18 @@ export default {
     },
     changeTableSort({ column, prop, order }) {
       this.pageNum = 1
-      this.queryData.orderProperty = prop
-      const orderParams = this.checkOrderParams.get(prop)
-      if (orderParams) {
-        if (order === 'ascending') {
-          // 升序
-          this.queryData.orderType = 'asc'
-        } else if (column.order === 'descending') {
-          // 降序
-          this.queryData.orderType = 'desc'
-        }
-        this.loadData()
+      this.queryData.orderKey = prop
+      if (order === 'ascending') {
+        // 升序
+        this.queryData.orderType = 'asc'
+      } else if (order === 'descending') {
+        // 降序
+        this.queryData.orderType = 'desc'
+      } else {
+        delete this.queryData.orderKey
+        delete this.queryData.orderType
       }
+      this.loadData()
     },
     enterSearch() {
       this.loadData()
