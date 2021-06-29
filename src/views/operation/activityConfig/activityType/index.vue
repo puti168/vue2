@@ -61,7 +61,7 @@
 				</el-form-item>
 			</el-form>
 		</div>
-		<div class="info-show">
+		<div v-if="showInfoData" class="info-show">
 			<div class="info-header">
 				<span>基本信息</span>
 			</div>
@@ -111,15 +111,11 @@
 				</el-row>
 			</div>
 		</div>
-<!--		<div v-else class="info-show"></div>-->
-		<el-dialog
-			title="活动类型区域排序"
-			:visible.sync="sortLabel"
-			width="650px"
-		>
-			<draggable v-model="activityTypeArr" @start="onStart" @end="onEnd">
+		<div v-else class="info-show"></div>
+		<el-dialog title="活动类型区域排序" :visible.sync="sortLabel" width="650px">
+			<draggable v-model="cloneActivityArr" @start="onStart" @end="onEnd">
 				<transition-group>
-					<div v-for="item in activityTypeArr" :key="item.code" class="reach">
+					<div v-for="item in cloneActivityArr" :key="item.code" class="reach">
 						{{ item.description }}
 					</div>
 				</transition-group>
@@ -144,16 +140,27 @@ export default {
 		return {
 			loadingT: false,
 			queryData: {
-				activityType: '',
+				activityType: undefined,
 				activityName: undefined
 			},
 			showInfoData: undefined,
-			sortLabel: false
+			sortLabel: false,
+			drag: false,
+			newActivityTypeArr: []
 		}
 	},
 	computed: {
 		activityTypeArr() {
 			return this.globalDics.operateActivityNameType
+		},
+		cloneActivityArr: {
+			get() {
+				return this.newActivityTypeArr
+			},
+			set(newVal) {
+				console.log('newVal', newVal)
+				this.newActivityTypeArr = newVal
+			}
 		},
 		updateTime() {
 			return this.showInfoData && this.showInfoData.updatedAt
@@ -173,7 +180,12 @@ export default {
 			}
 		}
 	},
-	mounted() {},
+	mounted() {
+		this.$nextTick(() => {
+			const arr = JSON.stringify(this.globalDics.operateActivityNameType)
+			this.newActivityTypeArr = JSON.parse(arr)
+		})
+	},
 	methods: {
 		// 查询详情
 		queryDetails(type) {
@@ -245,7 +257,7 @@ export default {
 		changeType(evt) {
 			this.$refs['form'] && this.$refs['form'].resetFields()
 			this.showInfoData = undefined
-			console.log('evt', evt)
+			// console.log('evt', evt)
 			this.queryData = {
 				activityType: evt.description
 			}
@@ -253,10 +265,6 @@ export default {
 		},
 		checkRiskValue(val) {
 			// console.log('val', val)
-		},
-		activityTypeSort() {
-            console.log('按钮点击')
-            // this.sortLabel = true
 		},
 		// 开始拖拽事件
 		onStart() {
@@ -266,7 +274,13 @@ export default {
 		onEnd() {
 			this.drag = false
 		},
-		handleClickSort() {}
+		handleClickSort() {
+			let sortIds = this.newActivityTypeArr.map((item) => item.code)
+            sortIds = sortIds.join(',')
+			this.$api.activitySortAPI({ sortIds }).then((res) => {
+				console.log('res', res)
+			})
+		}
 	}
 }
 </script>
