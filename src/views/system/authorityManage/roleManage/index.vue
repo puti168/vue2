@@ -143,6 +143,7 @@
 import list from '@/mixins/list'
 // import { routerNames } from '@/utils/consts'
 import editPage from './components/editPage'
+// import dayjs from "dayjs";
 
 export default {
 	name: 'RoleManage',
@@ -161,7 +162,10 @@ export default {
 	computed: {},
 	mounted() {},
 	methods: {
-		loadData(params) {
+		loadData() {
+            let params = {
+                ...this.queryData
+            }
 			params = {
 				...this.getParams(params)
 			}

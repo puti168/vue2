@@ -50,7 +50,7 @@ export function getPageRoleUsers(data) {
 // 查询当前登录用户拥有的全部权限
 export function getRolePermissions(params) {
 	return request({
-		url: '/role/permissions',
+		url: '/system/role/queryPermissionList',
 		method: 'GET',
 		params
 	})
