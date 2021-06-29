@@ -180,7 +180,7 @@
           </transition-group>
         </draggable>
         <el-button @click="sortLabel = false">取消</el-button>
-        <el-button type="primary" @click="subAddOrEidt">确定</el-button>
+        <el-button type="primary" @click="Eidt">确定</el-button>
       </el-dialog>
 
       <div class="view-container dealer-container">
@@ -201,11 +201,11 @@
               label="轮播图区域"
               width="100px"
             >
-            <template slot-scope="scope">
+              <template slot-scope="scope">
                 <!-- {{ scope.row.areaType }} -->
-                 <span v-for="item in QueryareaList" :key="item.code">
-                {{ scope.row.QueryareaList === item.code ? item.code : "" }}
-              </span>
+                <span v-for="item in QueryareaList" :key="item.code">
+                  {{ scope.row.QueryareaList === item.code ? item.code : "" }}
+                </span>
               </template>
             </el-table-column>
             <el-table-column align="center" label="轮播图名称" width="120px">
@@ -221,7 +221,8 @@
               width="120px"
             >
               <template slot-scope="scope">
-                {{ typeFilter(scope.row.bannerValidity, "operateValidityType") }}
+                <!-- {{ typeFilter(scope.row.bannerValidity, "operateValidityType") }} -->
+                   {{ scope.row.bannerValidity === 1 ? "限时" : "永久" }}
               </template>
             </el-table-column>
             <el-table-column
@@ -257,8 +258,8 @@
             <el-table-column prop="status" align="center" label="状态">
               <template slot-scope="scope">
                 <div v-if="scope.row.status === 0" class="disableRgba">已禁用</div>
-              <div v-else-if="scope.row.status === 1" class="normalRgba">开启中</div>
-              <span v-else>-</span>
+                <div v-else-if="scope.row.status === 1" class="normalRgba">开启中</div>
+                <span v-else>-</span>
               </template>
             </el-table-column>
             <el-table-column align="center" label="游戏图片" width="80px">
@@ -314,7 +315,7 @@
                   开启
                 </el-button>
                 <el-button
-                 v-else
+                  v-else
                   :disabled="loading"
                   type="danger"
                   size="medium"
@@ -359,8 +360,8 @@
           ></el-pagination>
         </div>
         <div v-if="imgVisible" class="imgCenter" @click="closeImage">
-				<img :src="bigImage" />
-			</div>
+          <img :src="bigImage" />
+        </div>
         <el-dialog
           title="新增/编辑"
           :visible.sync="dialogFormVisible"
@@ -380,20 +381,17 @@
                 placeholder="请选择活动区域"
               >
                 <el-option
-                v-for="item in QueryareaList"
-                :key="item.code"
-                :label="item.value"
-                :value="item.code"
-              ></el-option>>
+                  v-for="item in QueryareaList"
+                  :key="item.code"
+                  :label="item.value"
+                  :value="item.code"
+                ></el-option>>
               </el-select>
               <span class="el-form-item__error">
                 *首页轮播图从左至右排列依次为：1.2.3.4.5.6.7.8.9.10区
               </span>
             </el-form-item>
-            <el-form-item
-              label="轮播图名称:"
-              :rules="[{required: true }]"
-            >
+            <el-form-item label="轮播图名称:" :rules="[{ required: true }]">
               <el-input
                 v-model="dialogForm.bannerName"
                 class="region"
@@ -411,16 +409,9 @@
                 },
               ]"
             >
-              <el-select
-                v-model="dialogForm.bannerValidity"
-                class="region"
-              >
-                <el-option
-                v-for="item in operateValidityType"
-                :key="item.code"
-                :label="item.description"
-                :value="item.code"
-              ></el-option>
+              <el-select v-model="dialogForm.bannerValidity" class="region">
+                 <el-option label="限时" :value="1"></el-option>
+                <el-option label="永久" :value="2"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item></el-form-item>
@@ -438,11 +429,9 @@
                 align="right"
                 @change="changeTime"
               ></el-date-picker>
-              <span v-show="errTime" class="el-form-item__error">
-                公告上架时间不能大于公告下架时间
-              </span>
             </el-form-item>
             <el-form-item
+            v-if="dialogForm.bannerValidity === 1"
               label="下架时间:"
               label-width="112px"
               :rules="[{ required: true }]"
@@ -456,35 +445,26 @@
                 align="right"
                 :clearable="false"
               ></el-date-picker>
-              <span v-show="errTime" class="el-form-item__error">
-                公告下架时间不能小于公告上架时间
-              </span>
             </el-form-item>
-            <el-form-item
-              label="是否跳转:"
-              :rules="[{required: true},]"
-            >
+            <el-form-item label="是否跳转:" :rules="[{ required: true }]">
               <el-select
                 v-model="dialogForm.isLink"
                 :popper-append-to-body="false"
                 class="region"
               >
-               <el-option label="是" :value="1"></el-option>
-              <el-option label="否" :value="2"></el-option>
+                <el-option label="是" :value="1"></el-option>
+                <el-option label="否" :value="2"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item
-             v-if="dialogForm.isLink === 1"
+              v-if="dialogForm.isLink === 1"
               label="跳转目标:"
-              :rules="[{ required: true},]"
+              :rules="[{ required: true }]"
             >
-              <el-select
-                v-model="dialogForm.linkTarget"
-                class="region"
-              >
-              <el-option label="游戏" :value="1"></el-option>
-              <el-option label="现金网内部" :value="2"></el-option>
-              <el-option label="外部地址" :value="3"></el-option>
+              <el-select v-model="dialogForm.linkTarget" class="region">
+                <el-option label="游戏" :value="1"></el-option>
+                <el-option label="现金网内部" :value="2"></el-option>
+                <el-option label="外部地址" :value="3"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item v-if="dialogForm.isLink === 1" label="游戏:" :rules="[]">
@@ -500,8 +480,7 @@
             <el-form-item
               v-if="dialogForm.linkTarget === 2"
               label="URL链接:"
-              :rules="[
-                {required: true,},]"
+              :rules="[{ required: true }]"
             >
               <el-input
                 v-model="dialogForm.targetUrl"
@@ -510,10 +489,7 @@
                 show-word-limit
               ></el-input>
             </el-form-item>
-            <el-form-item
-              label="图片上传"
-              prop="image"
-            >
+            <el-form-item label="图片上传" prop="image">
               <Upload :nowImage="nowImage" @uploadSuccess="uploadSuccess"></Upload>
               <p class="imgTip">请上传图片！图片格式仅支持png,jpg 图片大小不超过2MB</p>
             </el-form-item>
@@ -641,8 +617,14 @@ export default {
       this.$set(this.form, 'imageAddress', data)
     },
     addLabel(val) {
-      this.flag = val
-      this.dialogForm = {status: 0, isLink: 1 }
+      this.dialogForm = {
+        status: 0,
+        isLink: 2,
+        areaType: 0,
+        bannerName: '',
+        bannerValidity: 1
+
+       }
       this.dialogFormVisible = true
     },
     changeTime(val) {
@@ -665,55 +647,54 @@ export default {
       })
     },
     subAddOrEidt() {
-      const startTime =
-        typeof this.onlineTime === 'number'
-          ? this.onlineTime
-          : new Date(new Date(this.onlineTime).toLocaleDateString()).getTime()
-      const endTime =
-        typeof this.offlineTime === 'number'
-          ? this.offlineTime
-          : new Date(new Date(this.offlineTime).toLocaleDateString()).getTime()
-      console.log(startTime, endTime)
-      this.$refs.formSub.validate((valid) => {
-        if (valid) {
-          if (this.dialogForm.announcementAging === 1 && startTime < endTime) {
-            this.errTime = false
-            const params = {
-              ...this.dialogForm,
-              upTime: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : '',
-              downTime: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
+      const params = {
+        ...this.dialogForm
+      }
+      console
+        .log(params, '11222')
+        .then(() => {
+          this.$api.getOperateConfigBannerAdd(params).then((res) => {
+            if (res.code === 200) {
+              console.log(res)
+              this.$message.success('新增成功!')
+              this.loadData()
             }
-            console.log(params, '000')
-            this.getOperateConfigBannerAdd(params)
-          } else if (this.dialogForm.announcementAging === 2) {
-            this.errTime = false
-            const params = {
-              ...this.dialogForm,
-              downTime: '',
-              upTime: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : ''
-            }
-            console.log(params, '111')
-            this.getOperateConfigBannerAdd(params)
-          } else {
-            this.errTime = true
-          }
-        }
-      })
-    },
-     getOperateConfigBannerAdd(val) {
-      this.loading = true
-      this.$api.getOperateConfigBannerAdd(val).then((res) => {
-        this.loading = false
-        if (res.code === 200) {
-          this.$message({
-            message: this.flag === '新增' ? '新增成功！' : '编辑成功！',
-            type: 'success'
+            this.dialogFormVisible = false
           })
-          this.loadData()
-        }
-        this.dialogFormVisible = false
-      })
+        })
+        .catch(() => {})
     },
+    Eidt() {},
+    // subAddOrEidt() {
+    //         this.getOperateConfigBannerAdd(params)
+    //         if (this.dialogForm.announcementAging === 2) {
+    //         this.errTime = false
+    //         const params = {
+    //           ...this.dialogForm,
+    //           downTime: '',
+    //           upTime: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : ''
+    //         }
+    //         console.log(params, '111')
+    //         this.getOperateConfigBannerAdd(params)
+    //       } else {
+    //         this.errTime = true
+    //       }
+
+    // },
+    //  getOperateConfigBannerAdd(val) {
+    //   this.loading = true
+    //   this.$api.getOperateConfigBannerAdd(val).then((res) => {
+    //     this.loading = false
+    //     if (res.code === 200) {
+    //       this.$message({
+    //         message: this.flag === '新增' ? '新增成功！' : '编辑成功！',
+    //         type: 'success'
+    //       })
+    //       this.loadData()
+    //     }
+    //     this.dialogFormVisible = false
+    //   })
+    // },
 
     // 切换导航
     handleClick(tab) {
@@ -763,47 +744,49 @@ export default {
     //     .catch(() => {});
     // },
     deleteBtn(val) {
-			const { id } = val
-			this.$confirm(`<strong>是否删除该条配置?</strong></br><span style='font-size:12px;color:#c1c1c1'>请谨慎操作</span>`,
-       '确认提示',
+      const { id } = val
+      this.$confirm(
+        `<strong>是否删除该条配置?</strong></br><span style='font-size:12px;color:#c1c1c1'>请谨慎操作</span>`,
+        '确认提示',
         {
-        dangerouslyUseHTMLString: true,
-				confirmButtonText: '确定',
-				cancelButtonText: '取消',
-				type: 'warning'
-			})
-				.then(() => {
-					const loading = this.$loading({
-						lock: true,
-						text: 'Loading',
-						spinner: 'el-icon-loading',
-						background: 'rgba(0, 0, 0, 0.7)'
-					})
-					this.$api
-						.getOperateConfigBannerDelete({ id })
-						.then((res) => {
-							loading.close()
-							const { code } = res
-							if (code === 200) {
-								this.$message({
-									type: 'success',
-									message: '删除成功!'
-								})
-							} else {
-								this.$message({
-									type: 'error',
-									message: '删除失败!'
-								})
-							}
-							this.loadData()
-						})
-						.catch(() => {
-							loading.close()
-						})
-				})
-				.catch(() => {})
-		},
-     changeStatus(val) {
+          dangerouslyUseHTMLString: true,
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }
+      )
+        .then(() => {
+          const loading = this.$loading({
+            lock: true,
+            text: 'Loading',
+            spinner: 'el-icon-loading',
+            background: 'rgba(0, 0, 0, 0.7)'
+          })
+          this.$api
+            .getOperateConfigBannerDelete({ id })
+            .then((res) => {
+              loading.close()
+              const { code } = res
+              if (code === 200) {
+                this.$message({
+                  type: 'success',
+                  message: '删除成功!'
+                })
+              } else {
+                this.$message({
+                  type: 'error',
+                  message: '删除失败!'
+                })
+              }
+              this.loadData()
+            })
+            .catch(() => {
+              loading.close()
+            })
+        })
+        .catch(() => {})
+    },
+    changeStatus(val) {
       const status = val.status === 0 ? 1 : 0
       this.$confirm(
         `<strong>是否对该配置进行${
@@ -818,28 +801,30 @@ export default {
         }
       )
         .then(() => {
-          this.$api.getOperateConfigBannerUse({ id: val.id, status: status }).then((res) => {
-            if (res.code === 200) {
-              this.loadData()
-            }
-          })
+          this.$api
+            .getOperateConfigBannerUse({ id: val.id, status: status })
+            .then((res) => {
+              if (res.code === 200) {
+                this.loadData()
+              }
+            })
         })
         .catch(() => {})
     },
     openEdit(val) {
       console.log(val, '111111')
       this.flag = val
-			this.$api.getPperateConfigBannerUpdate({clientType: 1}).then((res) => {
+      this.$api.getPperateConfigBannerUpdate({ clientType: 1 }).then((res) => {
         if (res.code === 200) {
           console.log(res)
           this.dialogForm = res.data
           this.dialogFormVisible = true
         }
       })
-		},
+    },
     closeImage() {
-			this.imgVisible = false
-		},
+      this.imgVisible = false
+    },
     lookGame(val) {
       this.imgVisible = true
       this.bigImage = val
@@ -860,18 +845,18 @@ export default {
       }
       this.pageNum = 1
       this.queryData.orderProperty = prop
-        if (order === 'ascending') {
-          // 升序
-          this.queryData.orderType = 'asc'
-        } else if (column.order === 'descending') {
-          // 降序
-          this.queryData.orderType = 'desc'
-        }
-        this.loadData()
+      if (order === 'ascending') {
+        // 升序
+        this.queryData.orderType = 'asc'
+      } else if (column.order === 'descending') {
+        // 降序
+        this.queryData.orderType = 'desc'
+      }
+      this.loadData()
     },
     reset() {
       this.pageNum = 1
-      this.queryData = {clientType: 1}
+      this.queryData = { clientType: 1 }
       this.loadData()
     }
   }

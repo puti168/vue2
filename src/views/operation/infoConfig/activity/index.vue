@@ -301,14 +301,15 @@
         <el-table
           v-loading="loading"
           size="mini"
+          border
           class="small-size-table"
           :data="userList"
-          style="width: 100%; margin: 15px 0"
+          style="width: 100%; margin-bottom: 15px"
           :header-cell-style="getRowClass"
         >
           <el-table-column type="index" align="center" label="序号"> </el-table-column>
           <el-table-column
-            prop="accountTypeName"
+            prop="userName"
             align="center"
             label="发送会员账号"
           ></el-table-column>
@@ -451,7 +452,7 @@ export default {
     // 弹框标签添加人数
     getOperateConfigNoticeSelectDetail(val) {
       const params = {}
-      params.id = val
+      params.noticeId = val
       params.configType = 2
       params.pageNum = this.page
       params.pageSize = this.size
@@ -508,6 +509,7 @@ export default {
   text-align: center;
   color: #909399;
   font-weight: 700;
+  border: 1px solid #dddddd;
 }
 /deep/ .tagheight {
   .el-form-item__content,
