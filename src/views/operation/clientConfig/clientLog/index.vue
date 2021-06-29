@@ -126,19 +126,25 @@
         >
           <el-table-column prop="operatePage" align="center" label="操作页面">
             <template slot-scope="scope">
-              <p>{{ typeFilter(scope.row.operatePage, "operatePage") }}</p>
+             <span v-for="item in operatePage" :key="item.value">
+                {{ scope.row.clientType === item.code ? item.value : "" }}
+              </span>
             </template>
           </el-table-column>
-          <el-table-column prop="clientType" align="center" label="显示终端">
-            <template slot-scope="scope">
-              <p>{{ typeFilter(scope.row.clientType, "EnumsList.client") }}</p>
+          <el-table-column prop="client" align="center" label="显示终端">
+             <template slot-scope="scope">
+             <span v-for="item in client" :key="item.value">
+                {{ scope.row.clientType === item.code ? item.value : "" }}
+              </span>
             </template>
           </el-table-column>
           <el-table-column prop="fieldName" align="center" label="名称">
           </el-table-column>
-          <el-table-column prop="changeType" align="center" label="">
-            <template slot-scope="scope">
-              <p>{{ typeFilter(scope.row.changeType, "EnumsList.changeType") }}</p>
+          <el-table-column prop="changeType" align="center" label="变更类型">
+           <template slot-scope="scope">
+             <span v-for="item in changeType" :key="item.value">
+                {{ scope.row.clientType === item.code ? item.value : "" }}
+              </span>
             </template>
           </el-table-column>
           <el-table-column align="center" prop="beforeValue" label="变更前">
@@ -149,7 +155,7 @@
           </el-table-column>
           <el-table-column prop="createdBy" align="center" width="100" label="操作人">
             <template slot-scope="scope">
-              <p>{{ scope.row.applyName }}</p>
+              <p>{{ scope.row.createdBy }}</p>
             </template>
           </el-table-column>
           <el-table-column
@@ -240,10 +246,9 @@ export default {
         .getOperateConfigClientRecordQueryRecordList(params)
         .then((res) => {
           if (res.code === 200) {
-            const response = res.data
             this.loading = false
-            this.dataList = response.record
-            this.total = response.totalRecord
+            this.dataList = res.data.records
+            this.total = res.data.total
           } else {
             this.loading = false
             this.$message({
