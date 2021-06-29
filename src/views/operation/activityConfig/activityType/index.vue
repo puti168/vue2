@@ -17,13 +17,13 @@
 						placeholder="请选择"
 						clearable
 						style="width: 365px"
-						@change="changeRiskType($event)"
+						@change="changeType($event)"
 					>
 						<el-option
 							v-for="item in activityTypeArr"
 							:key="item.code"
 							:label="item.description"
-							:value="item.code"
+							:value="item"
 						></el-option>
 					</el-select>
 					<el-button
@@ -35,9 +35,9 @@
 						活动优惠排序
 					</el-button>
 				</el-form-item>
-				<el-form-item label="优惠类型名称" prop="activityTypeName">
+				<el-form-item label="优惠类型名称" prop="activityName">
 					<el-input
-						v-model="queryData.activityTypeName"
+						v-model="queryData.activityName"
 						size="medium"
 						maxlength="10"
 						placeholder="请输入"
@@ -61,7 +61,7 @@
 				</el-form-item>
 			</el-form>
 		</div>
-		<div class="info-show">
+		<div v-if="showInfoData" class="info-show">
 			<div class="info-header">
 				<span>基本信息</span>
 			</div>
@@ -72,8 +72,8 @@
 							<span>优惠活动：</span>
 							<span>
 								{{
-									showInfoData && showInfoData.deviceNo
-										? showInfoData.deviceNo
+									showInfoData && showInfoData.activityType
+										? typeFilter(showInfoData.activityType, 'operateActivityNameType')
 										: '-'
 								}}
 							</span>
@@ -83,28 +83,26 @@
 						<span>优惠类型名称：</span>
 						<span>
 							{{
-								showInfoData && showInfoData.remark ? showInfoData.remark : '-'
+								showInfoData && showInfoData.activityName
+									? showInfoData.activityName
+									: '-'
 							}}
 						</span>
 					</el-col>
-					<el-col :span="6">
+					<el-col :span="5">
 						<span>最近操作人：</span>
 						<span>
 							{{
-								showInfoData && showInfoData.updateBy
-									? showInfoData.updateBy
+								showInfoData && showInfoData.updatedBy
+									? showInfoData.updatedBy
 									: '-'
 							}}
 						</span>
 					</el-col>
-					<el-col :span="6">
+					<el-col :span="7">
 						<span>最近操作时间：</span>
 						<span>
-							{{
-								showInfoData && showInfoData.updateAt
-									? showInfoData.updateAt
-									: '-'
-							}}
+							{{ updateTime }}
 						</span>
 					</el-col>
 				</el-row>
@@ -126,12 +124,14 @@
 				<el-button type="primary" @click="handleClickSort">确定</el-button>
 			</el-dialog>
 		</div>
+		<div v-else class="info-show"></div>
 	</div>
 </template>
 
 <script>
 import list from '@/mixins/list'
 import draggable from 'vuedraggable'
+import dayjs from 'dayjs'
 // import { notSpecial2, isHaveEmoji } from '@/utils/validate'
 
 export default {
@@ -143,10 +143,9 @@ export default {
 			loadingT: false,
 			queryData: {
 				activityType: '',
-				activityTypeName: undefined
+				activityName: undefined
 			},
-			showInfoData: {},
-			tipsShow: null,
+			showInfoData: undefined,
 			sortLabel: false
 		}
 	},
@@ -154,21 +153,42 @@ export default {
 		activityTypeArr() {
 			return this.globalDics.operateActivityNameType
 		},
+		updateTime() {
+			return this.showInfoData && this.showInfoData.updatedAt
+				? dayjs(this.showInfoData.updatedAt).format('YYYY-MM-DD HH:mm:ss')
+				: '-'
+		},
 		rules() {
 			const activityType = [
 				{ required: true, message: '请选择活动类型', trigger: 'change' }
 			]
-			const activityTypeName = [
+			const activityName = [
 				{ required: true, message: '优惠类型名称', trigger: 'blur' }
 			]
 			return {
 				activityType,
-				activityTypeName
+				activityName
 			}
 		}
 	},
 	mounted() {},
 	methods: {
+		// 查询详情
+		queryDetails(type) {
+			this.$api.activityTypeDetailAPI({ type }).then((res) => {
+				const { code, data } = res
+				console.log('res', res)
+				if (code === 200) {
+					this.showInfoData = data
+					const { id, merchantId, gameCode } = data
+					this.queryData.id = id
+					this.queryData.merchantId = merchantId
+					this.queryData.gameCode = gameCode
+				} else {
+					this.showInfoData = undefined
+				}
+			})
+		},
 		add() {
 			this.loadingT = true
 			const params = {
@@ -219,8 +239,14 @@ export default {
 				activityTypeName: undefined
 			}
 		},
-		changeRiskType(evt) {
-			// this.$refs['form'] && this.$refs['form'].resetFields()
+		changeType(evt) {
+			this.$refs['form'] && this.$refs['form'].resetFields()
+			this.showInfoData = undefined
+			console.log('evt', evt)
+			this.queryData = {
+				activityType: evt.description
+			}
+			this.queryDetails(evt.code)
 		},
 		checkRiskValue(val) {
 			// console.log('val', val)
