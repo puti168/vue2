@@ -11,24 +11,24 @@
 				<el-form ref="form" :model="form" label-width="auto">
 					<strong>反馈会员信息</strong>
 					<el-row>
-						<el-col class="space" :span="7">会员账号：{{ }}</el-col>
-						<el-col class="space" :span="7">账号类型：{{ }}</el-col>
-						<el-col class="space" :span="6">会员标签：{{ }}</el-col>
-						<el-col class="space" :span="6">VIP等级：{{ }}</el-col>
+						<el-col class="space" :span="7">会员账号：{{ rowData.userName }}</el-col>
+						<el-col class="space" :span="7">账号类型：{{ rowData.accountType }}</el-col>
+						<el-col class="space" :span="6">会员标签：{{ rowData.labelName	}}</el-col>
+						<el-col class="space" :span="6">VIP等级：{{ rowData.levelId }}</el-col>
 					</el-row>
 					<el-divider></el-divider>
 					<strong>反馈内容</strong>
 					<el-row>
-						<el-col class="space" :span="12">反馈类型：{{ }}</el-col>
-						<el-col class="space" :span="12">反馈时间：{{ }}</el-col>
-						<el-col class="space" :span="6">反馈内容：{{ }}</el-col>
+						<el-col class="space" :span="12">反馈类型：{{ rowData.problemType }}</el-col>
+						<el-col class="space" :span="12">反馈时间：{{ rowData. createDt }}</el-col>
+						<el-col class="space" :span="6">反馈内容：{{ rowData.problemDescribe }}</el-col>
 					</el-row>
 					<el-divider></el-divider>
 					<div class="review-flex">
 						<div class="img-div">
 							上传的图片：
 							<img
-								v-for="item in list.list"
+								v-for="item in rowData.url"
 								:key="item.imageAddress"
 								:src="item.imageAddress"
 								class="detail-img text-link"
@@ -44,8 +44,6 @@
 
 <script>
 import list from '@/mixins/list'
-
-import { getToken } from '@/utils/auth'
 export default {
 	components: {},
 	mixins: [list],
@@ -59,21 +57,13 @@ export default {
 
 	data() {
 		return {
+			list: {},
 			gameLabelParam2: '',
 			gameLabelParam3: ''
 		}
 	},
 	computed: {
-		token() {
-			return getToken()
-		},
 
-		gameIconType() {
-			return this.globalDics.gameIconType
-		},
-		betDeviceType() {
-			return this.globalDics.betDeviceType
-		}
 	},
 	watch: {
 		rowData: {
@@ -103,7 +93,7 @@ export default {
 				}
 				this.form = JSON.parse(JSON.stringify(arr))
 				console.log(this.form)
-				console.log(arr)
+				console.log(arr.userName, '21321')
 			},
 			immediate: true,
 			deep: true
