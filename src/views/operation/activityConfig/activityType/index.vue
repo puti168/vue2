@@ -234,6 +234,7 @@ export default {
 		},
 		reset() {
 			this.$refs['form'] && this.$refs['form'].resetFields()
+            this.showInfoData = undefined
 			this.queryData = {
 				activityType: '',
 				activityTypeName: undefined
