@@ -20,8 +20,8 @@
               placeholder="默认选择全部"
               :popper-append-to-body="false"
             >
-              <el-option label="会员" value="0"></el-option>
-              <el-option label="终端" value="1"></el-option>
+              <el-option label="会员" value="1"></el-option>
+              <el-option label="终端" value="2"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="创建人:">
@@ -75,26 +75,50 @@
           @sort-change="changeTableSort"
         >
           <el-table-column
-            prop="gameId"
+            prop="noticeTitle"
             align="center"
             label="活动消息标题"
           ></el-table-column>
-          <el-table-column align="center" label="活动消息内容" prop="noticeTitle">
+          <el-table-column align="center" label="活动消息内容" prop="noticeContent">
             <template slot-scope="scope">
-              <el-tooltip :content="scope.row.noticeTitle" placement="top">
-                <p>{{ scope.row.noticeTitle }}</p>
+              <el-tooltip :content="scope.row.noticeContent" placement="top">
+                <p>{{ scope.row.noticeContent }}</p>
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column
-            prop="gameName"
-            align="center"
-            label="发送对象"
-          ></el-table-column>
+          <el-table-column prop="sendObj" align="center" label="发送对象">
+            <template slot-scope="scope">
+              <span>
+                {{ scope.row.sendObj === 1 ? "会员" : "终端" }}
+              </span>
+            </template>
+          </el-table-column>
           <el-table-column align="center" label="发送对象详情" prop="sendObj">
             <template slot-scope="scope">
-              <div class="decoration" @click="lookGame(scope.row)">
-                {{ scope.row.sendObj }}
+              <div v-if="scope.row.sendObj === 1">
+                {{ scope.row.objDetail }}
+              </div>
+              <div
+                v-else-if="scope.row.sendObj === 2 && scope.row.deviceType.length === 0"
+              >
+                <span v-for="(item, index) in loginDeviceType" :key="index">
+                  {{ item.description + "，" }}
+                </span>
+              </div>
+              <div v-else>
+                <p v-for="(item, index) in scope.row.deviceType" :key="index">
+                  <span v-for="(obj, index) in loginDeviceType" :key="index">
+                    {{ item === obj.code ? obj.description + "，" : "" }}
+                  </span>
+                </p>
+              </div>
+              <div v-if="scope.row.userType === 0 && scope.row.sendObj === 1">全部</div>
+              <div
+                v-if="scope.row.userType === 1"
+                class="decoration"
+                @click="lookGame(scope.row)"
+              >
+                点击查看更多会员
               </div>
             </template>
           </el-table-column>
@@ -109,7 +133,12 @@
           </el-table-column>
           <el-table-column prop="operating" align="center" label="操作">
             <template slot-scope="scope">
-              <el-button type="primary" size="medium" @click="withdraw(scope.row)">
+              <el-button
+                :disabled="scope.row.retract === 1"
+                type="primary"
+                size="medium"
+                @click="withdraw(scope.row)"
+              >
                 撤回
               </el-button>
             </template>
@@ -190,13 +219,13 @@
               :popper-append-to-body="false"
               @change="sendObj"
             >
-              <el-option label="会员" value="0"></el-option>
-              <el-option label="终端" value="1"></el-option>
+              <el-option label="会员" value="1"></el-option>
+              <el-option label="终端" value="2"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item
-            v-show="dialogForm.sendObj === '0'"
-            label="会员账号:"
+            v-show="dialogForm.sendObj === '1'"
+            label="会员类型:"
             class="tagheight"
             :rules="[
               {
@@ -205,7 +234,7 @@
             ]"
           >
             <el-select
-              v-model="dialogForm.timeTab"
+              v-model="dialogForm.userType"
               placeholder="默认选择全部"
               :popper-append-to-body="false"
             >
@@ -214,7 +243,7 @@
             </el-select>
           </el-form-item>
           <el-form-item
-            v-show="dialogForm.sendObj === '1'"
+            v-show="dialogForm.sendObj === '2'"
             label="发送终端:"
             class="tagheight"
             :rules="[
@@ -240,17 +269,17 @@
             </el-select>
           </el-form-item>
           <el-form-item
-            v-if="dialogForm.sendObj === '0' && dialogForm.timeTab === '1'"
+            v-if="dialogForm.sendObj === '1' && dialogForm.userType === '1'"
             label="会员账号:"
             class="tagheight"
-            prop="userNameList"
+            prop="objDetail"
             :rules="[
               { required: true, message: '请输入会员账号', trigger: 'blur' },
               { min: 1, message: '请输入会员账号', trigger: 'blur' },
             ]"
           >
             <el-input
-              v-model="dialogForm.userNameList"
+              v-model="dialogForm.objDetail"
               placeholder="请输入会员账号，会员账号之间用英文“,'隔开'"
               clearable
               show-word-limit
@@ -310,7 +339,7 @@ export default {
     return {
       queryData: {},
       dialogFormVisible: false,
-      dialogForm: { sendObj: '0', deviceType: [], timeTab: '0' },
+      dialogForm: { sendObj: '1', deviceType: [], userType: '0' },
       lookVisible: false,
       userList: [],
       page: 1,
@@ -361,27 +390,30 @@ export default {
       this.loadData()
     },
     Add() {
-      this.dialogForm = { sendObj: '0', deviceType: [], timeTab: '0' }
+      this.dialogForm = { sendObj: '1', deviceType: [], userType: '0' }
       this.dialogFormVisible = true
     },
     sendObj(val) {
       if (val === '1') {
-        this.dialogForm = { sendObj: '1', deviceType: [], timeTab: '0' }
+        this.dialogForm = { sendObj: '1', deviceType: [], userType: '0' }
       } else {
-        this.dialogForm = { sendObj: '0', deviceType: [], timeTab: '0' }
+        this.dialogForm = { sendObj: '2', deviceType: [], userType: '0' }
       }
       console.log(val)
     },
     subAddOrEidt() {
       const params = {
+        type: 2,
         ...this.dialogForm
       }
+      console.log(params)
       this.$refs.formSub.validate((valid) => {
         if (valid) {
-          console.log(params)
           this.$api.getOperateConfigNoticeSave(params).then((res) => {
             if (res.code === 200) {
-              console.log(res)
+              this.$message.success('保存成功')
+              this.dialogFormVisible = false
+              this.loadData()
             }
           })
         }
@@ -399,27 +431,33 @@ export default {
         }
       )
         .then(() => {
-          const params = row
+          const params = {}
+          params.noticeTitle = row.noticeTitle
+          params.retract = 1
+          params.type = 2
+          params.id = row.id
           this.$api.getOperateConfigNoticeRetract(params).then((res) => {
             if (res.code === 200) {
-              console.log(res)
+              this.$message.success('成功撤回！')
+              this.loadData()
             }
           })
         })
         .catch(() => {})
     },
     clear() {
-      this.dialogForm = { sendObj: '0', deviceType: [], timeTab: '0' }
+      this.dialogForm = { sendObj: '1', deviceType: [], userType: '0' }
     },
     // 弹框标签添加人数
-    getOperateConfigNoticeSelect(val) {
+    getOperateConfigNoticeSelectDetail(val) {
       const params = {}
       params.id = val
+      params.configType = 2
       params.pageNum = this.page
       params.pageSize = this.size
-      this.$api.getOperateConfigNoticeSelect(params).then((res) => {
+      this.$api.getOperateConfigNoticeSelectDetail(params).then((res) => {
         if (res.code === 200) {
-          this.gameList = res.data.record
+          this.userList = res.data.records
           this.lookVisible = true
         }
       })
@@ -427,32 +465,35 @@ export default {
     lookGame(val) {
       this.id = val.id
       this.lookVisible = true
-      // this.getOperateConfigNoticeSelect(val.id)
+      this.getOperateConfigNoticeSelectDetail(val.id)
     },
     handleCurrentChangeDialog(val) {
       console.log(111, val)
       this.page = val
-      // this.getOperateConfigNoticeSelect(this.id)
+      this.getOperateConfigNoticeSelectDetail(this.id)
     },
     handleSizeChangeDialog(val) {
       console.log(222, val)
       this.size = val
-      // this.getOperateConfigNoticeSelect(this.id)
+      this.getOperateConfigNoticeSelectDetail(this.id)
     },
     changeTableSort({ column, prop, order }) {
-      this.pageNum = 1
-      this.queryData.orderProperty = prop
-      const orderParams = this.checkOrderParams.get(prop)
-      if (orderParams) {
-        if (order === 'ascending') {
-          // 升序
-          this.queryData.orderType = 'asc'
-        } else if (column.order === 'descending') {
-          // 降序
-          this.queryData.orderType = 'desc'
-        }
-        this.loadData()
+      if (prop === 'createdAt') {
+        prop = 1
       }
+      this.pageNum = 1
+      this.queryData.orderKey = prop
+      if (order === 'ascending') {
+        // 升序
+        this.queryData.orderType = 'asc'
+      } else if (order === 'descending') {
+        // 降序
+        this.queryData.orderType = 'desc'
+      } else {
+        delete this.queryData.orderKey
+        delete this.queryData.orderType
+      }
+      this.loadData()
     },
 
     enterSearch() {

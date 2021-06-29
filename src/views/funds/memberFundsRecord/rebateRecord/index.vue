@@ -173,7 +173,7 @@
           </el-table-column>
           <el-table-column prop="rebateRatio" align="center" label="返水比例">
             <template slot-scope="scope">
-              {{ (scope.row.rebateRatio * 100).toFixed(2) }}%
+              {{ (scope.row.rebateRatio * 100).toFixed() }}%
             </template>
           </el-table-column>
           <el-table-column prop="rebateAmount" align="center" label="返水金额">
@@ -265,13 +265,17 @@ export default {
       this.loadData()
     },
     _changeTableSort({ column, prop, order }) {
+      this.pageNum = 1
       this.queryData.orderKey = prop
       if (order === 'ascending') {
         // 升序
         this.queryData.orderType = 'asc'
-      } else if (column.order === 'descending') {
+      } else if (order === 'descending') {
         // 降序
         this.queryData.orderType = 'desc'
+      } else {
+        delete this.queryData.orderKey
+        delete this.queryData.orderType
       }
       this.loadData()
     },

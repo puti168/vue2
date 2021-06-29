@@ -622,7 +622,7 @@ export default {
       const status = row.status === 0 ? 1 : 0
       this.$confirm(
         `<strong>是否对该配置进行${
-          status === 0 ? '启用' : '禁用'
+          status === 1 ? '启用' : '禁用'
         }操作?</strong></br><span style='font-size:12px;color:#c1c1c1'>一旦操作将会立即生效</span>`,
         '确认提示',
         {
@@ -657,6 +657,7 @@ export default {
         .catch(() => {})
     },
     changeTableSort({ column, prop, order }) {
+      console.log(column, prop, order)
       if (prop === 'upTime') {
         prop = 1
       }
@@ -674,9 +675,12 @@ export default {
       if (order === 'ascending') {
         // 升序
         this.queryData.orderType = 'asc'
-      } else if (column.order === 'descending') {
+      } else if (order === 'descending') {
         // 降序
         this.queryData.orderType = 'desc'
+      } else {
+        delete this.queryData.orderKey
+        delete this.queryData.orderType
       }
       this.loadData()
     },
