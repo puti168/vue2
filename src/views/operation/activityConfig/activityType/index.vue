@@ -30,7 +30,7 @@
 						type="warning"
 						style="margin-left: 20px;padding: 0 5px"
 						icon="el-icon-sort"
-						@click="activityTypeSort"
+						@click="sortLabel = true"
 					>
 						活动优惠排序
 					</el-button>
@@ -61,7 +61,7 @@
 				</el-form-item>
 			</el-form>
 		</div>
-		<div v-if="showInfoData" class="info-show">
+		<div class="info-show">
 			<div class="info-header">
 				<span>基本信息</span>
 			</div>
@@ -73,7 +73,10 @@
 							<span>
 								{{
 									showInfoData && showInfoData.activityType
-										? typeFilter(showInfoData.activityType, 'operateActivityNameType')
+										? typeFilter(
+												showInfoData.activityType,
+												'operateActivityNameType'
+										  )
 										: '-'
 								}}
 							</span>
@@ -107,24 +110,23 @@
 					</el-col>
 				</el-row>
 			</div>
-			<el-dialog
-				title="活动类型区域排序"
-				:visible.sync="sortLabel"
-				width="650px"
-				:destroy-on-close="true"
-			>
-				<draggable v-model="activityTypeArr" @start="onStart" @end="onEnd">
-					<transition-group>
-						<div v-for="item in activityTypeArr" :key="item.code" class="reach">
-							{{ item.description }}
-						</div>
-					</transition-group>
-				</draggable>
-				<el-button @click="sortLabel = false">取消</el-button>
-				<el-button type="primary" @click="handleClickSort">确定</el-button>
-			</el-dialog>
 		</div>
-		<div v-else class="info-show"></div>
+<!--		<div v-else class="info-show"></div>-->
+		<el-dialog
+			title="活动类型区域排序"
+			:visible.sync="sortLabel"
+			width="650px"
+		>
+			<draggable v-model="activityTypeArr" @start="onStart" @end="onEnd">
+				<transition-group>
+					<div v-for="item in activityTypeArr" :key="item.code" class="reach">
+						{{ item.description }}
+					</div>
+				</transition-group>
+			</draggable>
+			<el-button @click="sortLabel = false">取消</el-button>
+			<el-button type="primary" @click="handleClickSort">确定</el-button>
+		</el-dialog>
 	</div>
 </template>
 
@@ -180,10 +182,10 @@ export default {
 				console.log('res', res)
 				if (code === 200) {
 					this.showInfoData = data
-					const { id, merchantId, gameCode } = data
-					this.queryData.id = id
-					this.queryData.merchantId = merchantId
-					this.queryData.gameCode = gameCode
+					// const { id, merchantId, gameCode } = data
+					// this.queryData.id = id
+					// this.queryData.merchantId = merchantId
+					// this.queryData.gameCode = gameCode
 				} else {
 					this.showInfoData = undefined
 				}
@@ -234,7 +236,7 @@ export default {
 		},
 		reset() {
 			this.$refs['form'] && this.$refs['form'].resetFields()
-            this.showInfoData = undefined
+			this.showInfoData = undefined
 			this.queryData = {
 				activityType: '',
 				activityTypeName: undefined
@@ -253,7 +255,8 @@ export default {
 			// console.log('val', val)
 		},
 		activityTypeSort() {
-			this.sortLabel = true
+            console.log('按钮点击')
+            // this.sortLabel = true
 		},
 		// 开始拖拽事件
 		onStart() {
