@@ -16,7 +16,7 @@
             <el-input
               v-model="queryData.orderNo"
               clearable
-              :maxlength="19"
+              :maxlength="50"
               size="medium"
               style="width: 200px"
               placeholder="请输入"
