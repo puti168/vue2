@@ -493,10 +493,10 @@ export default {
       return sums
     },
     _changeTableSort({ column, prop, order }) {
-      if (prop === 'amount') {
+      if (prop === 'orderAmount') {
         prop = 1
       }
-      if (prop === 'occurDt') {
+      if (prop === 'createdAt') {
         prop = 2
       }
 
