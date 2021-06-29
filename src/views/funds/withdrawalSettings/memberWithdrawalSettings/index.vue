@@ -118,17 +118,6 @@ width="120px"
           ></el-table-column>
         </el-table>
         <!-- 分页 -->
-        <el-pagination
-          :current-page.sync="pageNum"
-          class="pageValue"
-          background
-          layout="total, sizes,prev, pager, next, jumper"
-          :page-size="pageSize"
-          :page-sizes="pageSizes"
-          :total="total"
-          @current-change="handleCurrentChange"
-          @size-change="handleSizeChange"
-        ></el-pagination>
       </div>
       <el-dialog :visible.sync="dialogFormVisible" :destroy-on-close="true" width="970px">
         <div class="form-header">

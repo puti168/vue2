@@ -35,14 +35,13 @@
             <el-select
               v-model="queryData.accountType"
               style="width: 300px"
-              multiple
               placeholder="全部"
               :popper-append-to-body="false"
             >
               <el-option
-                v-for="item in BackEnumsList.problemType"
+                v-for="item in accountTypeArr"
                 :key="item.code"
-                :label="item.value"
+                :label="item.description"
                 :value="item.code"
               ></el-option>
             </el-select>
@@ -51,14 +50,13 @@
             <el-select
               v-model="queryData.problemType"
               style="width: 300px"
-              multiple
               placeholder="全部"
               :popper-append-to-body="false"
             >
               <el-option
-                v-for="item in problemType"
+                v-for="item in BackEnumsList"
                 :key="item.code"
-                :label="item.description"
+                :label="item.value"
                 :value="item.code"
               ></el-option>
             </el-select>
@@ -98,48 +96,53 @@
         >
           <!-- 操作时间 -->
           <el-table-column
-            prop="createdAt"
+            prop="createDt"
             align="center"
             label="反馈时间"
             sortable="custom"
           ></el-table-column>
 
-          <el-table-column prop="operateType" align="center" label="会员账号">
+          <el-table-column prop="userName" align="center" label="会员账号">
             <template slot-scope="scope">
-              {{ typeFilter(scope.row.operateType, "memberVipOperateType") }}
+              <span v-if="!!scope.row.userName" :title="scope.row.userName" :copy="copy">
+                {{ scope.row.userName }}
+              </span>
+              <span v-else>-</span>
             </template>
           </el-table-column>
 
-          <el-table-column prop="operateField" align="center" label="账号类型">
-            <template slot-scope="scope">
-              {{ typeFilter(scope.row.operateField, "memberVipOperateFieldType") }}
+          <el-table-column prop="accountType " align="center" label="账号类型">
+             <template slot-scope="scope">
+              {{ typeFilter(scope.row.accountType, 'auditStepType') }}
             </template>
           </el-table-column>
 
-          <el-table-column prop="beforeModify" align="center" label="会员标签">
+          <el-table-column prop="labelName" align="center" label="会员标签">
             <template slot-scope="scope">
-              <span>{{ scope.row.beforeModify }}</span>
+              <span>{{ scope.row.labelName }}</span>
             </template>
           </el-table-column>
 
           <el-table-column
-            prop="afterModify"
+            prop="levelId"
             align="center"
             sortable="custom"
             label="VIP等级"
           >
             <template slot-scope="scope">
-              <span>{{ scope.row.afterModify }}</span>
+              <span>{{ scope.row.levelId }}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="afterModify" align="center" label="反馈类型">
+          <el-table-column align="center" label="反馈类型">
             <template slot-scope="scope">
-              <span>{{ scope.row.afterModify }}</span>
+             <span v-for="item in BackEnumsList" :key="item.value">
+                {{ scope.row.problemType === item.code ? item.value : "" }}
+              </span>
             </template>
           </el-table-column>
-          <el-table-column prop="afterModify" align="center" label="反馈内容">
+          <el-table-column prop="problemDescribe" align="center" label="反馈内容">
             <template slot-scope="scope">
-              <span>{{ scope.row.afterModify }}</span>
+              <span>{{ scope.row.problemDescribe }}</span>
             </template>
           </el-table-column>
           <el-table-column prop="operation" align="center" label="操作">
@@ -185,6 +188,7 @@ export default {
   mixins: [list],
   data() {
     return {
+      accountType: '',
       foundIn: false,
       rowAssortId: '',
       rowData: {},
@@ -206,10 +210,8 @@ export default {
 		},
     memberVipOperateFieldType() {
       return this.globalDics.memberVipOperateFieldType
-    },
-    problemType() {
-      return this.globalDics.problemType
     }
+
   },
   created() {
     this.getBackEnums()
@@ -252,7 +254,7 @@ export default {
     getBackEnums() {
       this.$api.OperateObConfigAnnouncementRecordQueryFeedBackEnums().then((res) => {
         if (res.code === 200) {
-          this.BackEnumsList = res.data
+          this.BackEnumsList = res.data.problemType
         }
       })
     },

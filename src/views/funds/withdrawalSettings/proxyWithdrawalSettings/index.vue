@@ -441,11 +441,12 @@ export default {
         rateDateTotal: 0,
         rateDateFreeType: 2,
         rateDateTotalType: 2,
-        withdrawStatus: 1
+        withdrawStatus: 0
       },
       title: '',
       isDisabled: true,
-      isUniversal: true
+      isUniversal: true,
+      withdrawStatus: ''
     }
   },
   computed: {
@@ -584,7 +585,6 @@ export default {
     },
 
     reset() {
-      this.queryData = {}
       this.dialogForm = {
         singleMinAmount: 0,
         singleMaxAmount: 0,
@@ -599,10 +599,11 @@ export default {
         rateDateTotalType: 2,
         withdrawStatus: 1
       }
-      if (this.isUniversal) {
-        this.$refs.formProxy.resetFields()
+      if (this.title === '新增') {
+        this.queryData = {}
+      } else if (this.title === '编辑' && !this.isUniversal) {
+        this.dialogForm.withdrawStatus = this.withdrawStatus
       }
-      this.$refs.formSub.resetFields()
     },
     addLabel() {
       this.title = '新增'
@@ -631,12 +632,15 @@ export default {
       this.isDisabled = true
       this.isUniversal = val.proxyAccount !== '0'
       const {
+        id,
         proxyAccount,
         proxyName,
         proxyAccountType,
         proxyAccountStatus,
         windControlName
       } = { ...val }
+      this.withdrawStatus = val.withdrawStatus
+      this.$set(this.queryData, 'proxyId', id)
       this.$set(this.queryData, 'proxyAccount', proxyAccount)
       this.$set(this.queryData, 'proxyName', proxyName)
       this.$set(
@@ -710,7 +714,10 @@ export default {
         })
       } else {
         const params = {
-          ...this.dialogForm
+          ...this.dialogForm,
+          id: this.queryData.proxyId,
+          proxyName: this.queryData.proxyName,
+          proxyAccount: this.queryData.proxyAccount
         }
         this.$refs.formSub.validate((valid) => {
           if (valid) {

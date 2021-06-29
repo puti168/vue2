@@ -17,29 +17,29 @@
 						placeholder="请选择"
 						clearable
 						style="width: 365px"
-						@change="changeRiskType($event)"
+						@change="changeType($event)"
 					>
 						<el-option
 							v-for="item in activityTypeArr"
 							:key="item.code"
 							:label="item.description"
-							:value="item.code"
+							:value="item"
 						></el-option>
 					</el-select>
 					<el-button
 						type="warning"
 						style="margin-left: 20px;padding: 0 5px"
 						icon="el-icon-sort"
-						@click="activityTypeSort"
+						@click="sortLabel = true"
 					>
 						活动优惠排序
 					</el-button>
 				</el-form-item>
-				<el-form-item label="优惠类型名称" prop="activityTypeName">
+				<el-form-item label="优惠类型名称" prop="activityName">
 					<el-input
-						v-model="queryData.activityTypeName"
+						v-model="queryData.activityName"
 						size="medium"
-						maxlength="4"
+						maxlength="10"
 						placeholder="请输入"
 						clearable
 						style="width: 365px"
@@ -61,7 +61,7 @@
 				</el-form-item>
 			</el-form>
 		</div>
-		<div class="info-show">
+		<div v-if="showInfoData" class="info-show">
 			<div class="info-header">
 				<span>基本信息</span>
 			</div>
@@ -71,113 +71,153 @@
 						<p>
 							<span>优惠活动：</span>
 							<span>
-								{{ showInfoData.deviceNo ? showInfoData.deviceNo : '-' }}
+								{{
+									showInfoData && showInfoData.activityType
+										? typeFilter(
+												showInfoData.activityType,
+												'operateActivityNameType'
+										  )
+										: '-'
+								}}
 							</span>
 						</p>
 					</el-col>
 					<el-col :span="6">
 						<span>优惠类型名称：</span>
 						<span>
-							{{ showInfoData.remark ? showInfoData.remark : '-' }}
+							{{
+								showInfoData && showInfoData.activityName
+									? showInfoData.activityName
+									: '-'
+							}}
 						</span>
 					</el-col>
-					<el-col :span="6">
+					<el-col :span="5">
 						<span>最近操作人：</span>
 						<span>
-							{{ showInfoData.updateBy ? showInfoData.updateBy : '-' }}
+							{{
+								showInfoData && showInfoData.updatedBy
+									? showInfoData.updatedBy
+									: '-'
+							}}
 						</span>
 					</el-col>
-					<el-col :span="6">
+					<el-col :span="7">
 						<span>最近操作时间：</span>
 						<span>
-							{{ showInfoData.updateAt ? showInfoData.updateAt : '-' }}
+							{{ updateTime }}
 						</span>
 					</el-col>
 				</el-row>
 			</div>
-			<el-dialog
-				title="活动类型区域排序"
-				:visible.sync="sortLabel"
-				width="650px"
-				:destroy-on-close="true"
-			>
-				<draggable v-model="activityTypeArr" @start="onStart" @end="onEnd">
-					<transition-group>
-						<div v-for="item in activityTypeArr" :key="item.code" class="reach">
-							{{ item.description }}
-						</div>
-					</transition-group>
-				</draggable>
-				<el-button @click="sortLabel = false">取消</el-button>
-				<el-button type="primary" @click="handleClickSort">确定</el-button>
-			</el-dialog>
 		</div>
+		<div v-else class="info-show"></div>
+		<el-dialog title="活动类型区域排序" :visible.sync="sortLabel" width="650px">
+			<draggable v-model="cloneActivityArr" @start="onStart" @end="onEnd">
+				<transition-group>
+					<div v-for="item in cloneActivityArr" :key="item.code" class="reach">
+						{{ item.description }}
+					</div>
+				</transition-group>
+			</draggable>
+			<el-button @click="sortLabel = false">取消</el-button>
+			<el-button type="primary" @click="handleClickSort">确定</el-button>
+		</el-dialog>
 	</div>
 </template>
 
 <script>
-import { routerNames } from '@/utils/consts'
 import list from '@/mixins/list'
 import draggable from 'vuedraggable'
+import dayjs from 'dayjs'
 // import { notSpecial2, isHaveEmoji } from '@/utils/validate'
 
 export default {
-	name: routerNames.platformRate,
+	name: 'PlatformRate',
 	components: { draggable },
 	mixins: [list],
 	data() {
 		return {
 			loadingT: false,
 			queryData: {
-				activityType: '',
-				activityTypeName: undefined
+				activityType: undefined,
+				activityCode: undefined,
+				activityName: undefined,
+				id: undefined
 			},
-			showInfoData: {},
-			tipsShow: null,
+			showInfoData: undefined,
 			sortLabel: false,
-			activityTypeArr: [
-				{ description: '优惠', code: '1' },
-				{ description: 'vip', code: '2' },
-				{ description: '赞助', code: '3' }
-			]
+			drag: false,
+			newActivityTypeArr: []
 		}
 	},
 	computed: {
-		// activityTypeArr() {
-		// 	return [
-		// 		{ description: '优惠', code: '1' },
-		// 		{ description: 'vip', code: '2' },
-		// 		{ description: '赞助', code: '3' }
-		// 	]
-		// },
+		activityTypeArr() {
+			return this.globalDics.operateActivityNameType
+		},
+		cloneActivityArr: {
+			get() {
+				return this.newActivityTypeArr
+			},
+			set(newVal) {
+				console.log('newVal', newVal)
+				this.newActivityTypeArr = newVal
+			}
+		},
+		updateTime() {
+			return this.showInfoData && this.showInfoData.updatedAt
+				? dayjs(this.showInfoData.updatedAt).format('YYYY-MM-DD HH:mm:ss')
+				: '-'
+		},
 		rules() {
 			const activityType = [
 				{ required: true, message: '请选择活动类型', trigger: 'change' }
 			]
-			const activityTypeName = [
+			const activityName = [
 				{ required: true, message: '优惠类型名称', trigger: 'blur' }
 			]
 			return {
 				activityType,
-				activityTypeName
+				activityName
 			}
 		}
 	},
-	mounted() {},
+	mounted() {
+		this.$nextTick(() => {
+			const arr = JSON.stringify(this.globalDics.operateActivityNameType)
+			this.newActivityTypeArr = JSON.parse(arr)
+		})
+	},
 	methods: {
+		// 查询详情
+		queryDetails(type) {
+			this.$api.activityTypeDetailAPI({ type }).then((res) => {
+				const { code, data } = res
+				console.log('res', res)
+				if (code === 200) {
+					const { id } = data
+					this.showInfoData = data
+					this.queryData.id = id
+				} else {
+					this.showInfoData = undefined
+					this.queryData.id = undefined
+				}
+			})
+		},
 		add() {
 			this.loadingT = true
 			const params = {
 				...this.queryData
 			}
 			let lock = true
-			params.windControlType = params.windControlType * 1
-			params.proxyUserName ? (params.userName = params.proxyUserName) : null
+			params.activityType = params.activityCode * 1
+			delete params.activityCode
+            console.log('params', params)
 			this.$refs['form'].validate((valid) => {
-				if (valid && lock && !this.tipsShow) {
+				if (valid && lock) {
 					lock = false
 					this.$api
-						.riskEditAddAPI(params)
+						.activityUpdateAPI(params)
 						.then((res) => {
 							this.loadingT = false
 							lock = true
@@ -210,19 +250,22 @@ export default {
 		},
 		reset() {
 			this.$refs['form'] && this.$refs['form'].resetFields()
+			this.showInfoData = undefined
 			this.queryData = {
-				activityType: '',
+				activityType: undefined,
+				activityCode: undefined,
 				activityTypeName: undefined
 			}
 		},
-		changeRiskType(evt) {
-			// this.$refs['form'] && this.$refs['form'].resetFields()
-		},
-		checkRiskValue(val) {
-			// console.log('val', val)
-		},
-		activityTypeSort() {
-			this.sortLabel = true
+		changeType(evt) {
+			this.$refs['form'] && this.$refs['form'].resetFields()
+			this.showInfoData = undefined
+			// console.log('evt', evt)
+			this.queryData = {
+				activityType: evt.description,
+				activityCode: evt.code
+			}
+			this.queryDetails(evt.code)
 		},
 		// 开始拖拽事件
 		onStart() {
@@ -232,7 +275,20 @@ export default {
 		onEnd() {
 			this.drag = false
 		},
-		handleClickSort() {}
+		handleClickSort() {
+			let sortIds = this.newActivityTypeArr.map((item) => item.code)
+			sortIds = sortIds.join(',')
+			this.$api.activitySortAPI({ sortIds }).then((res) => {
+				const { code } = res
+				if (code === 200) {
+					this.$message({
+						message: '操作成功',
+						type: 'success'
+					})
+					this.sortLabel = false
+				}
+			})
+		}
 	}
 }
 </script>

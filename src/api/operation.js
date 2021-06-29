@@ -137,11 +137,11 @@ export function activitySortAPI(data) {
 }
 
 // 运营 ===> 活动类型 ==> 更新
-export function activityUpdateAPI(params) {
+export function activityUpdateAPI(data) {
 	return request({
 		url: '/operate/configActivityType/update',
-		method: 'get',
-		params
+		method: 'post',
+		data
 	})
 }
 

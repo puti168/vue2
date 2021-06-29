@@ -269,16 +269,18 @@
 						</el-table-column>
 						<el-table-column align="center" label="上次提款方式">
 							<template>
-								{{ list && list.lastType ? list.lastType : '-' }}
+								{{
+									list && list.lastType
+										? typeFilter(list.lastType, 'payDataType')
+										: '-'
+								}}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="上次是否为大额提款">
 							<template>
 								{{
 									list && list.lastBig
-										? Number(list.lastBig) === 0
-											? '否'
-											: '是'
+										? typeFilter(list.lastBig, 'withdrawBiggerType')
 										: '-'
 								}}
 							</template>
@@ -293,7 +295,9 @@
 						<tbody>
 							<tr>
 								<td class="td-title">订单号</td>
-								<td>{{ list && list.thirdOrderNo ? list.thirdOrderNo : '-' }}</td>
+								<td>
+									{{ list && list.thirdOrderNo ? list.thirdOrderNo : '-' }}
+								</td>
 								<td class="td-title">订单来源</td>
 								<td>{{ list && list.deviceNo ? list.deviceNo : '-' }}</td>
 								<td class="td-title">提款IP</td>
@@ -301,20 +305,16 @@
 								<td class="td-title">是否为首提</td>
 								<td>
 									{{
-										list && list.isFirst
-											? Number(list.isFirst) === 1
-												? '是'
-												: '否'
+										list && list.isOneWith
+											? typeFilter(list.isOneWith, 'withdrawOneStatus')
 											: '-'
 									}}
 								</td>
 								<td class="td-title">是否为大额提款</td>
 								<td>
 									{{
-										list && list.isBig
-											? Number(list.isBig) === 1
-												? '是'
-												: '否'
+										list && (list.isBig || list.isBig + '' === '0')
+											? typeFilter(String(list.isBig), 'withdrawBiggerType')
 											: '-'
 									}}
 								</td>
@@ -347,10 +347,8 @@
 								<td class="td-title">提款方式</td>
 								<td>
 									{{
-										list && list.isContinuityWithDraw
-											? Number(list.isContinuityWithDraw) === 1
-												? '银行卡'
-												: '虚拟币'
+										list && list.withdrawType
+											? typeFilter(list.withdrawType, 'payDataType')
 											: '-'
 									}}
 								</td>
