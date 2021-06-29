@@ -488,7 +488,6 @@ export default {
         .catch(() => {})
     },
     reset() {
-      if (this.title === '新增') {
         this.queryData = {}
         this.dialogForm = {
           vipNum: 0,
@@ -503,8 +502,8 @@ export default {
           rateDateTotal: 0,
           withdrawStatus: 1
         }
-      } else {
-        this.dialogForm = this.temporary
+        if (this.isUniversal) {
+        this.$refs.formProxy.resetFields()
       }
       this.$refs.formSub.resetFields()
     },
@@ -562,7 +561,7 @@ export default {
       this.dialogFormVisible = true
     },
     edit(val) {
-      this.title = '编辑'
+      this.title = '修改'
       console.log('编辑', val, '1314')
       this.dialogForm = { ...val }
       this.dialogFormVisible = true

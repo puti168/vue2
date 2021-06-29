@@ -33,53 +33,14 @@
           </el-form-item>
           <el-form-item label="账号类型:" class="tagheight" prop="operateType">
             <el-select
-              v-model="queryData.operateType"
+              v-model="queryData.accountType"
               style="width: 300px"
               multiple
               placeholder="全部"
               :popper-append-to-body="false"
             >
               <el-option
-                v-for="item in memberVipOperateType"
-                :key="item.code"
-                :label="item.description"
-                :value="item.code"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="VIP等级:">
-            <el-input
-              v-model="queryData.vipSerialNumMin"
-              size="medium"
-              placeholder="最小数值"
-              style="width: 100px"
-              maxlength="3"
-              name="vipSerialNumMin"
-              oninput="value=value.replace(/[^\d]/g,'')"
-              @blur="checkValue($event)"
-            ></el-input>
-            -
-            <el-input
-              v-model="queryData.vipSerialNumMax"
-              size="medium"
-              placeholder="最大数值"
-              style="width: 100px"
-              maxlength="3"
-              oninput="value=value.replace(/[^\d]/g,'')"
-              name="vipSerialNumMax"
-              @blur="checkValue($event)"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="会员标签:">
-            <el-select
-              v-model="queryData.userLabel"
-              size="medium"
-              placeholder="全部"
-              clearable
-              style="width: 180px"
-            >
-              <el-option
-                v-for="item in memberVipOperateType"
+                v-for="item in accountTypeArr"
                 :key="item.code"
                 :label="item.description"
                 :value="item.code"
@@ -88,7 +49,7 @@
           </el-form-item>
           <el-form-item label="反馈类型:" class="tagheight">
             <el-select
-              v-model="queryData.operateField"
+              v-model="queryData.problemType"
               style="width: 300px"
               multiple
               placeholder="全部"
@@ -239,6 +200,9 @@ export default {
     }
   },
   computed: {
+    accountTypeArr() {
+			return this.globalDics.accountType
+		},
     memberVipOperateFieldType() {
       return this.globalDics.memberVipOperateFieldType
     },
@@ -254,7 +218,7 @@ export default {
       const [startTime, endTime] = create
       let params = {
         ...this.queryData,
-        beginTime: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : '',
+        startTime: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : '',
         endTime: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
       }
       params = {
