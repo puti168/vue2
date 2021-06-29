@@ -127,6 +127,15 @@ export function activityTypeDetailAPI(params) {
 	})
 }
 
+// 运营 ===> 活动类型 ==> 弹框列表
+export function activityQueryTypeListAPI(params) {
+	return request({
+		url: '/operate/configActivityType/queryTypeList',
+		method: 'get',
+		params
+	})
+}
+
 // 运营 ===> 活动类型 ==> 排序
 export function activitySortAPI(data) {
 	return request({
@@ -418,6 +427,7 @@ export default {
 	activityInfoLogAPI,
 	activityInfoLogListAPI,
 	activityTypeDetailAPI,
+	activityQueryTypeListAPI,
 	activitySortAPI,
 	activityUpdateAPI,
 	getOperateObMerchantGameRecordSelect,
@@ -432,5 +442,4 @@ export default {
 	getOperateObConfigNoticeSelectAll,
 	getFeedBackPageFeedBack,
 	OperateObConfigAnnouncementRecordQueryFeedBackEnums
-
 }
