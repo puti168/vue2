@@ -163,9 +163,9 @@ export default {
 	mounted() {},
 	methods: {
 		loadData() {
-            let params = {
-                ...this.queryData
-            }
+			let params = {
+				...this.queryData
+			}
 			params = {
 				...this.getParams(params)
 			}
@@ -219,14 +219,15 @@ export default {
 					console.log('id', id)
 					this.$api.deleteRoleAPI({ id }).then((res) => {
 						console.log(res)
-						loading.close()
 						const { code } = res
 						if (code === 200) {
+                            loading.close()
 							this.$message({
 								type: 'success',
 								message: '删除成功!'
 							})
 						} else {
+                            loading.close()
 							this.$message({
 								type: 'error',
 								message: '删除失败!'
@@ -235,6 +236,10 @@ export default {
 
 						this.reset()
 					})
+
+					setTimeout(() => {
+						loading.close()
+					}, 1500)
 				})
 				.catch(() => {})
 		},
