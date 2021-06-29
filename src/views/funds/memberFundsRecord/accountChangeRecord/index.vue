@@ -315,7 +315,7 @@
             prop="vipIdName"
             align="center"
             label="VIP等级"
-            width="70px"
+            width="90px"
             sortable="custom"
           >
           </el-table-column>
