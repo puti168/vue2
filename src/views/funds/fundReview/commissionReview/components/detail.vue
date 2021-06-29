@@ -327,12 +327,12 @@
 			</div>
 			<div class="review-content">
 				<p class="name">审核信息</p>
-				<div class="review-flex">
+				<div v-if="activeName === '0'" class="review-flex">
 					<div>一审人: {{ proxyCommissionDetaiVoList[0] ? proxyCommissionDetaiVoList[0].lockOperator : '-' }}</div>
 					<div>一审时间: {{ proxyCommissionDetaiVoList[0] ? proxyCommissionDetaiVoList[0].auditTime : '-' }}</div>
 					<div>一审备注: {{ proxyCommissionDetaiVoList[0] ? proxyCommissionDetaiVoList[0].auditDesc : '-' }}</div>
 				</div>
-				<div class="review-flex">
+				<div v-else-if="activeName === '1'" class="review-flex">
 					<div>二审人: {{ proxyCommissionDetaiVoList[1] ? proxyCommissionDetaiVoList[1].lockOperator : '-' }}</div>
 					<div>二审时间: {{ proxyCommissionDetaiVoList[1] ? proxyCommissionDetaiVoList[1].auditTime : '-' }}</div>
 					<div>二审备注: {{ proxyCommissionDetaiVoList[1] ? proxyCommissionDetaiVoList[1].auditDesc : '-' }}</div>

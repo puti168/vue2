@@ -229,9 +229,9 @@ export function getOperateConfigNoticeSelectAll(data) {
 	})
 }
 // 运营==>活动，通知消息配置==>查询单个活动，通知配置
-export function getOperateConfigNoticeSelect(data) {
+export function getOperateConfigNoticeSelectDetail(data) {
 	return request({
-		url: '/operate/obConfigNotice/select',
+		url: '/operate/obConfigNoticeDetail/selectDetail',
 		method: 'post',
 		data
 	})
@@ -396,7 +396,7 @@ export default {
 	getOperateConfigAnnouncementDelete,
 	getOperateConfigAnnouncementStatus,
 	getOperateConfigNoticeSelectAll,
-	getOperateConfigNoticeSelect,
+	getOperateConfigNoticeSelectDetail,
 	getOperateConfigNoticeSave,
 	getOperateConfigNoticeRetract,
 	clientStartAddAPI,

@@ -233,7 +233,7 @@ export default {
 		}
 	},
 	mounted() {
-		this.getRelationId()
+		// this.getRelationId()
 	},
 	methods: {
 		getRelationId() {
@@ -256,6 +256,8 @@ export default {
 							this.queryData.parentProxyId = parentProxyId
 						}
 					})
+
+                this.getRelationId()
 			}
 		},
 		searchBalance() {

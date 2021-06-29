@@ -80,11 +80,7 @@
             style="width: 100%"
             :header-cell-style="getRowClass"
           >
-            <el-table-column
-              align="center"
-              label="锁单"
-              width="60"
-            >
+            <el-table-column align="center" label="锁单" width="60">
               <template slot-scope="scope">
                 <el-checkbox
                   v-if="
@@ -129,7 +125,7 @@
             <el-table-column
 prop="applyTime"
 align="center"
-label="调整类型"
+label="申请类型"
 ><template slot-scope="scope">
                 {{ typeFilter(scope.row.adjustType, "memberPatchAddAdjustType") }}
               </template></el-table-column>
