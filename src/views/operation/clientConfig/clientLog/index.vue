@@ -27,7 +27,7 @@
             :popper-append-to-body="false"
           >
             <el-option
-              v-for="item in EnumsList.operatePage"
+              v-for="item in operatePage"
               :key="item.value"
               :label="item.value"
               :value="item.code"
@@ -45,7 +45,7 @@
           >
             <el-option label="全部" value></el-option>
             <el-option
-              v-for="item in EnumsList.client"
+              v-for="item in client"
               :key="item.codes"
               :label="item.value"
               :value="item.code"
@@ -73,7 +73,7 @@
           >
             <el-option label="全部" value></el-option>
             <el-option
-              v-for="item in EnumsList.changeType"
+              v-for="item in changeType"
               :key="item.codein"
               :label="item.value"
               :value="item.code"
@@ -124,9 +124,9 @@
           :header-cell-style="getRowClass"
           @sort-change="changeTableSort"
         >
-          <el-table-column prop="pageName" align="center" label="操作页面">
+          <el-table-column prop="operatePage" align="center" label="操作页面">
             <template slot-scope="scope">
-              <p>{{ typeFilter(scope.row.pageName, "EnumsList.operatePage") }}</p>
+              <p>{{ typeFilter(scope.row.operatePage, "operatePage") }}</p>
             </template>
           </el-table-column>
           <el-table-column prop="clientType" align="center" label="显示终端">
@@ -192,7 +192,9 @@ export default {
         time: [start, end]
       },
       dataList: [],
-	  EnumsList: [],
+	  changeType: [],
+	  client: [],
+	  operatePage: [],
       title: ''
     }
   },
@@ -257,7 +259,9 @@ export default {
     getEnums() {
       this.$api.operateConfigClientRecordQueryEnumsAPI().then((res) => {
         if (res.code === 200) {
-          this.EnumsList = res.data
+          this.changeType = res.data.changeType
+          this.client = res.data.client
+          this.operatePage = res.data.operatePage
         }
       })
     },
