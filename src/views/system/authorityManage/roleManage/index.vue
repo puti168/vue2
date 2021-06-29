@@ -174,12 +174,11 @@ export default {
 						data: { records, total },
 						msg
 					} = res
+					this.loading = false
 					if (code === 200) {
-						this.loading = false
 						this.dataList = records || []
 						this.total = total || 0
 					} else {
-						this.loading = false
 						this.$message({
 							message: msg,
 							type: 'error'
@@ -200,29 +199,40 @@ export default {
 			this.loadData()
 		},
 		deleteUp(val) {
+			const { id } = val
 			this.$confirm('确定删除此角色吗?', {
 				confirmButtonText: '确定',
 				cancelButtonText: '取消',
 				type: 'warning'
 			})
 				.then(() => {
-                    const loading = this.$loading({
-                        lock: true,
-                        text: 'Loading',
-                        spinner: 'el-icon-loading',
-                        background: 'rgba(0, 0, 0, 0.7)'
-                    })
-					this.$message({
-						type: 'success',
-						message: '删除成功!'
+					const loading = this.$loading({
+						lock: true,
+						text: 'Loading',
+						spinner: 'el-icon-loading',
+						background: 'rgba(0, 0, 0, 0.7)'
 					})
-                    loading.close()
-					// setDeleteBank(val).then((res) => {
-					//   console.log(res);
-					// });
+					console.log('id', id)
+					this.$api.deleteRoleAPI({ id }).then((res) => {
+						console.log(res)
+						loading.close()
+						const { code } = res
+						if (code === 200) {
+							this.$message({
+								type: 'success',
+								message: '删除成功!'
+							})
+						} else {
+							this.$message({
+								type: 'error',
+								message: '删除失败!'
+							})
+						}
+
+						this.reset()
+					})
 				})
-				.catch(() => {
-				})
+				.catch(() => {})
 		},
 		openEdit(val) {
 			// const { id } = val

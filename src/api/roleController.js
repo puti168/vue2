@@ -1,10 +1,10 @@
 import request from '@/utils/request'
 // 删除角色
-export function setDeleteRole(params, url) {
+export function deleteRoleAPI(data) {
 	return request({
-		url: `/role/deleteRole/${url}`,
+		url: '/system/role/delete',
 		method: 'post',
-		params
+		data
 	})
 }
 // 查询权限列表
@@ -32,11 +32,11 @@ export function getRoleStatus(data) {
 	})
 }
 // 分页查询角色列表
-export function getRoleListPage(data) {
+export function getRoleListPage(params) {
 	return request({
-		url: '/role/listPage',
-		method: 'post',
-		data
+		url: '/system/role/queryRoleList',
+		method: 'get',
+		params
 	})
 }
 // 分页查询角色下的用户
@@ -80,7 +80,7 @@ export function setUpdateRoleStatus(data) {
 	})
 }
 export default {
-	setDeleteRole,
+	deleteRoleAPI,
 	getRolePermissionList,
 	getRoleDetailInfo,
 	getRoleStatus,
