@@ -414,13 +414,17 @@ export default {
       if (prop === 'updatedAt') {
         prop = 2
       }
+      this.pageNum = 1
       this.queryData.orderKey = prop
       if (order === 'ascending') {
         // 升序
         this.queryData.orderType = 'asc'
-      } else if (column.order === 'descending') {
+      } else if (order === 'descending') {
         // 降序
         this.queryData.orderType = 'desc'
+      } else {
+        delete this.queryData.orderKey
+        delete this.queryData.orderType
       }
       this.loadData()
     },

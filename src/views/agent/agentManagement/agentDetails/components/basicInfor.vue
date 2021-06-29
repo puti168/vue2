@@ -435,7 +435,7 @@ export default {
           console.log('风控，标签', res)
         }
       })
-      this.$api.getWindControllerLevelDict({ windControlType: 1 }).then((res) => {
+      this.$api.getWindControllerLevelDict({ windControlType: 2 }).then((res) => {
         if (res.code === 200) {
           this.riskLevelList = res.data
         }
