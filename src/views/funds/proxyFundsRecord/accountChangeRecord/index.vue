@@ -282,7 +282,7 @@
               {{
                 scope.row.bizType === 0
                   ? "-"
-                  : typeFilter(scope.row.bizType, "memberAccountBizType")
+                  : typeFilter(scope.row.bizType, "proxyAccountBizType")
               }}
             </template>
           </el-table-column>
