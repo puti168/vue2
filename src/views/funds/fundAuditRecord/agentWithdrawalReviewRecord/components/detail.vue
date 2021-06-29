@@ -269,7 +269,7 @@
 						<tbody>
 							<tr>
 								<td class="td-title">订单号</td>
-								<td>{{ list && list.orderId ? list.orderId : '-' }}</td>
+								<td>{{ list && list.thirdOrderNo ? list.thirdOrderNo : '-' }}</td>
 								<td class="td-title">订单来源</td>
 								<td>{{ list && list.deviceNo ? list.deviceNo : '-' }}</td>
 								<td class="td-title">提款IP</td>
