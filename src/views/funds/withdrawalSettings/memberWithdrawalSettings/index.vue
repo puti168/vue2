@@ -299,6 +299,7 @@ export default {
   data() {
     return {
       vipExclusive: [],
+      vipadd: {},
       queryData: {},
       tableData: [],
       dialogFormVisible: false,
@@ -488,6 +489,8 @@ export default {
     },
     reset() {
         this.queryData = {}
+        debugger
+        if (this.title === '新增') {
         this.dialogForm = {
           vipNum: 0,
           singleMinAmount: 0,
@@ -501,10 +504,20 @@ export default {
           rateDateTotal: 0,
           withdrawStatus: 1
         }
-        if (this.isUniversal) {
-        this.$refs.formProxy.resetFields()
+      } else {
+        this.dialogForm = {
+          singleMinAmount: 0,
+          singleMaxAmount: 0,
+          dateFreeNum: 0,
+          bigAmount: 0,
+          dateFreeAmount: 0,
+          rateDateFreeType: 2,
+          rateDateFree: 0,
+          rateDateTotalType: 2,
+          rateDateTotal: 0,
+          withdrawStatus: 1
+        }
       }
-      this.$refs.formSub.resetFields()
     },
     loadData() {
       this.loading = true
@@ -562,6 +575,7 @@ export default {
     edit(val) {
       this.title = '修改'
       this.dialogForm = { ...val }
+
       this.dialogFormVisible = true
       this.isDisabled = true
     }
