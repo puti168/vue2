@@ -141,7 +141,9 @@ export default {
 			loadingT: false,
 			queryData: {
 				activityType: undefined,
-				activityName: undefined
+				activityCode: undefined,
+				activityName: undefined,
+				id: undefined
 			},
 			showInfoData: undefined,
 			sortLabel: false,
@@ -193,13 +195,12 @@ export default {
 				const { code, data } = res
 				console.log('res', res)
 				if (code === 200) {
+					const { id } = data
 					this.showInfoData = data
-					// const { id, merchantId, gameCode } = data
-					// this.queryData.id = id
-					// this.queryData.merchantId = merchantId
-					// this.queryData.gameCode = gameCode
+					this.queryData.id = id
 				} else {
 					this.showInfoData = undefined
+					this.queryData.id = undefined
 				}
 			})
 		},
@@ -209,13 +210,14 @@ export default {
 				...this.queryData
 			}
 			let lock = true
-			params.windControlType = params.windControlType * 1
-			params.proxyUserName ? (params.userName = params.proxyUserName) : null
+			params.activityType = params.activityCode * 1
+			delete params.activityCode
+            console.log('params', params)
 			this.$refs['form'].validate((valid) => {
-				if (valid && lock && !this.tipsShow) {
+				if (valid && lock) {
 					lock = false
 					this.$api
-						.riskEditAddAPI(params)
+						.activityUpdateAPI(params)
 						.then((res) => {
 							this.loadingT = false
 							lock = true
@@ -250,7 +252,8 @@ export default {
 			this.$refs['form'] && this.$refs['form'].resetFields()
 			this.showInfoData = undefined
 			this.queryData = {
-				activityType: '',
+				activityType: undefined,
+				activityCode: undefined,
 				activityTypeName: undefined
 			}
 		},
@@ -259,12 +262,10 @@ export default {
 			this.showInfoData = undefined
 			// console.log('evt', evt)
 			this.queryData = {
-				activityType: evt.description
+				activityType: evt.description,
+				activityCode: evt.code
 			}
 			this.queryDetails(evt.code)
-		},
-		checkRiskValue(val) {
-			// console.log('val', val)
 		},
 		// 开始拖拽事件
 		onStart() {
@@ -276,9 +277,16 @@ export default {
 		},
 		handleClickSort() {
 			let sortIds = this.newActivityTypeArr.map((item) => item.code)
-            sortIds = sortIds.join(',')
+			sortIds = sortIds.join(',')
 			this.$api.activitySortAPI({ sortIds }).then((res) => {
-				console.log('res', res)
+				const { code } = res
+				if (code === 200) {
+					this.$message({
+						message: '操作成功',
+						type: 'success'
+					})
+					this.sortLabel = false
+				}
 			})
 		}
 	}
