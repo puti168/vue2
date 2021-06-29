@@ -714,7 +714,7 @@ export default {
             if (this.checked) {
               params.bindStatus = 0
             }
-			console.log(params, this.checked)
+            console.log(params, this.checked)
             this.$api.setUpdateUserBankAndVirtualBindStatus(params).then((res) => {
               if (res.code === 200) {
                 this.$message.success('解绑成功')
@@ -742,13 +742,17 @@ export default {
       if (prop === 'updatedAt') {
         prop = 3
       }
+      this.pageNum = 1
       this.queryData.orderKey = prop
       if (order === 'ascending') {
         // 升序
         this.queryData.orderType = 'asc'
-      } else if (column.order === 'descending') {
+      } else if (order === 'descending') {
         // 降序
         this.queryData.orderType = 'desc'
+      } else {
+        delete this.queryData.orderKey
+        delete this.queryData.orderType
       }
       this.loadData()
     },
