@@ -313,8 +313,8 @@
 								<td class="td-title">是否为大额提款</td>
 								<td>
 									{{
-										list && list.isBig
-											? typeFilter(list.isBig, 'withdrawBiggerType')
+										list && (list.isBig || list.isBig + '' === '0')
+											? typeFilter(String(list.isBig), 'withdrawBiggerType')
 											: '-'
 									}}
 								</td>
