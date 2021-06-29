@@ -23,6 +23,7 @@
             <el-select
               v-model="queryData.gameName"
               style="width: 300px"
+               clearable
               multiple
               placeholder="全部"
               :popper-append-to-body="false"
@@ -81,16 +82,17 @@
           @sort-change="_changeTableSort"
         >
           <el-table-column prop="gameName" align="center" label="场馆名称">
-            <template slot-scope="scope">
-              <span v-for="item in gameTypeList" :key="item.id">
-                {{ scope.row.gameName === item.id ? item.gameName : "" }}
-              </span>
+             <template slot-scope="scope">
+              <span>{{ scope.row.gameName }}</span>
             </template>
           </el-table-column>
           <el-table-column prop="rateType" align="center" label="变更类型">
-            <!-- <template slot-scope="scope">
-              {{ typeFilter(scope.row.rateType, "rateType") }}
+           <!-- <template slot-scope="scope">
+              <span v-for="item in gameTypeList" :key="item.id">
+                {{ scope.row.gameName === item.id ? item.gameName : "" }}
+              </span>
             </template> -->
+            费率
           </el-table-column>
           <el-table-column prop="changeFront" align="center" label="变更前">
           </el-table-column>
@@ -211,7 +213,7 @@ export default {
       this.loadData()
     },
     _changeTableSort({ column, prop, order }) {
-      if (prop === 'applyTime') {
+      if (prop === 'updateAt') {
         prop = 1
       }
       this.queryData.orderKey = prop
