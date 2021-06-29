@@ -246,7 +246,7 @@
               {{ typeFilter(scope.row.clientStatus, "accessStatusType") }}
             </template>
           </el-table-column>
-          <el-table-column prop="customerIp" align="center">
+          <el-table-column prop="customerIp" align="center" width="120px">
             <template slot="header">
               提款IP <br />
               风控层级

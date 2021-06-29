@@ -375,6 +375,15 @@ export function getFeedBackPageFeedBack(data) {
 		data
 	})
 }
+// 会员意见反馈===>反馈类型
+export function OperateObConfigAnnouncementRecordQueryFeedBackEnums(params) {
+	return request({
+		url: '/operate/obConfigAnnouncementRecord/queryFeedBackEnums',
+		method: 'get',
+		params
+	})
+}
+
 export default {
 	queryDiscountTagList,
 	queryVipActivityList,
@@ -421,5 +430,7 @@ export default {
 	operateConfigClientRecordQueryEnumsAPI,
 	getOperateConfigClientRecordQueryRecordList,
 	getOperateObConfigNoticeSelectAll,
-	getFeedBackPageFeedBack
+	getFeedBackPageFeedBack,
+	OperateObConfigAnnouncementRecordQueryFeedBackEnums
+
 }
