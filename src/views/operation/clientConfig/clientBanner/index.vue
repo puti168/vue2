@@ -168,11 +168,11 @@
       <el-dialog
         title="轮播图区域排序"
         :visible.sync="sortLabel"
-        :model="queryData"
+        :model="carouselData"
         width="970px"
         :destroy-on-close="true"
       >
-        <draggable v-model="queryData.QueryareaList" @start="onStart" @end="onEnd">
+        <draggable v-model="carouselData.QueryareaList" @start="onStart" @end="onEnd">
           <transition-group>
             <div v-for="tiem in QueryareaList" :key="tiem.value" class="reach">
               {{ tiem.label }}
@@ -204,7 +204,7 @@
               <template slot-scope="scope">
                 <!-- {{ scope.row.areaType }} -->
                 <span v-for="item in QueryareaList" :key="item.code">
-                  {{ scope.row.QueryareaList === item.code ? item.code : "" }}
+                  {{ scope.row.areaType === item.code ? item.code : "" }}
                 </span>
               </template>
             </el-table-column>
@@ -516,6 +516,7 @@ export default {
   mixins: [list],
   data() {
     return {
+      carouselData: {},
       onlineTime: Date.now(),
       offlineTime: endTime,
       dateNow: {
@@ -650,9 +651,7 @@ export default {
       const params = {
         ...this.dialogForm
       }
-      console
-        .log(params, '11222')
-        .then(() => {
+
           this.$api.getOperateConfigBannerAdd(params).then((res) => {
             if (res.code === 200) {
               console.log(res)
@@ -661,7 +660,7 @@ export default {
             }
             this.dialogFormVisible = false
           })
-        })
+
         .catch(() => {})
     },
     Eidt() {},
