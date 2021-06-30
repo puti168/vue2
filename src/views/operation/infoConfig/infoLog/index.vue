@@ -100,60 +100,52 @@
 						<template slot-scope="scope">
 							<span v-if="scope.row.changeType">
 								{{
-									changeType.find(
-										(item) => item.code = scope.row.changeType
-									)
+									changeType.filter(
+										(item) => item.code === scope.row.changeType
+									)[0].value
 								}}
 							</span>
+							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column align="center" label="变更前">
+					<el-table-column align="center" label="变更前" prop="beforeValue">
 						<template slot-scope="scope">
-							<template v-if="scope.row.applyType * 1 === 2">
-								{{ typeFilter(scope.row.beforeModify, 'genderType') }}
-							</template>
-							<template v-else-if="Number(scope.row.applyType === 6)">
-								{{ typeFilter(scope.row.beforeModify, 'accountStatusType') }}
-							</template>
-							<template v-else>
-								{{ scope.row.beforeModify ? scope.row.beforeModify : '-' }}
-							</template>
+							<span v-if="scope.row.beforeValue">
+								{{ scope.row.beforeValue }}
+							</span>
+							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column align="center" label="变更后">
+					<el-table-column align="center" label="变更后" prop="afterValue">
 						<template slot-scope="scope">
-							<template v-if="scope.row.applyType * 1 === 2">
-								{{ typeFilter(scope.row.afterModify, 'genderType') }}
-							</template>
-							<template v-else-if="Number(scope.row.applyType === 6)">
-								{{ typeFilter(scope.row.afterModify, 'accountStatusType') }}
-							</template>
-							<template v-else>
-								{{ scope.row.afterModify ? scope.row.afterModify : '-' }}
-							</template>
-						</template>
-					</el-table-column>
-					<el-table-column prop="applyType" align="center" label="备注">
-						<template slot-scope="scope">
-							<p>{{ typeFilter(scope.row.applyType, 'applyType') }}</p>
+							<span v-if="scope.row.afterValue">
+								{{ scope.row.afterValue }}
+							</span>
+							<span v-else>-</span>
 						</template>
 					</el-table-column>
 					<el-table-column
-						prop="applyName"
+						prop="createdBy"
 						align="center"
-						width="100"
+						width="120"
 						label="操作人"
 					>
 						<template slot-scope="scope">
-							<p>{{ scope.row.applyName }}</p>
+							<span v-if="scope.row.createdBy">{{ scope.row.createdBy }}</span>
+							<span v-else>-</span>
 						</template>
 					</el-table-column>
 					<el-table-column
-						prop="applyTime"
+						prop="createdAt"
 						align="center"
 						label="操作时间"
 						sortable="custom"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							<span v-if="scope.row.createdAt">{{ scope.row.createdAt }}</span>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
 				</el-table>
 				<!-- 分页 -->
 				<el-pagination
@@ -257,7 +249,7 @@ export default {
 		},
 		_changeTableSort({ column, prop, order }) {
 			this.pageNum = 1
-			console.log(prop)
+            this.queryData.orderKey = 1
 			if (order === 'ascending') {
 				// 升序
 				this.queryData.orderType = 'asc'
