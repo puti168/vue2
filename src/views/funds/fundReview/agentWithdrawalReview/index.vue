@@ -383,6 +383,7 @@ export default {
             .memberWithDrawProxyUpdateWithdraw(params)
             .then((res) => {
               if (res.code === 200) {
+                this.visible = false
                 this.$message({
                   message: '操作成功',
                   type: 'success'
