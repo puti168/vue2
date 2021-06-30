@@ -490,7 +490,11 @@
               ></el-input>
             </el-form-item>
             <el-form-item label="图片上传" prop="image">
-              <Upload :nowImage="nowImage" @uploadSuccess="uploadSuccess"></Upload>
+              <Upload
+              :nowImage="nowImage"
+              :img-urls="dialogForm.image"
+              @upoladItemSucess="image"
+              ></Upload>
               <p class="imgTip">请上传图片！图片格式仅支持png,jpg 图片大小不超过2MB</p>
             </el-form-item>
           </el-form>
@@ -536,7 +540,7 @@ export default {
       imgVisible: false,
       nowImage: '',
       dialogFormVisible: false,
-      dialogForm: { aaaaa: '1' },
+      dialogForm: { image: null},
       isEdit: false,
       dataList: [],
       title: '',
@@ -623,7 +627,8 @@ export default {
         isLink: 2,
         areaType: 0,
         bannerName: '',
-        bannerValidity: 1
+        bannerValidity: 1,
+        image: null
 
        }
       this.dialogFormVisible = true
@@ -651,7 +656,6 @@ export default {
       const params = {
         ...this.dialogForm
       }
-
           this.$api.getOperateConfigBannerAdd(params).then((res) => {
             if (res.code === 200) {
               console.log(res)
@@ -827,6 +831,10 @@ export default {
     lookGame(val) {
       this.imgVisible = true
       this.bigImage = val
+    },
+     handleUploadSucessShare({ index, file, id }) {
+      this.dialogForm.image = file.imgUrl
+      this.$refs['formSub'].validateField('image')
     },
 
     changeTableSort({ column, prop, order }) {

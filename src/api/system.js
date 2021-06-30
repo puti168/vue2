@@ -10,7 +10,7 @@ export function getkvconfigQueryList(data) {
 // 系统===》参数字典===>修改
 export function getkvconfigUpdate(data) {
 	return request({
-		url: 'kvconfig/update',
+		url: '/kvconfig/update',
 		method: 'post',
 		data
 	})
@@ -23,8 +23,26 @@ export function getSystemUserLoginRecordQueryLoginLog(params) {
 		params
 	})
 }
+// 系统===》参数字典===>修改
+export function getUserInfoUpdatePwdAdmin(data) {
+	return request({
+		url: '/userInfo/updatePwdAdmin',
+		method: 'post',
+		data
+	})
+}
+// 系统管理-职员登录日志
+export function getUserInfoList(data) {
+	return request({
+		url: '/userInfo/list',
+		method: 'post',
+		data
+	})
+}
 export default {
     getkvconfigQueryList,
 	getkvconfigUpdate,
-	getSystemUserLoginRecordQueryLoginLog
+	getSystemUserLoginRecordQueryLoginLog,
+	getUserInfoUpdatePwdAdmin,
+	getUserInfoList
 }
