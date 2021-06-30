@@ -383,12 +383,16 @@ export default {
             .memberWithDrawProxyUpdateWithdraw(params)
             .then((res) => {
               if (res.code === 200) {
+                this.visible = false
                 this.$message({
                   message: '操作成功',
                   type: 'success'
                 })
                 loading.close()
-                this.loadData()
+                setTimeout(() => {
+                  this.loadData()
+                  console.log(1111111)
+                }, 1000)
               }
             })
             .catch(() => {

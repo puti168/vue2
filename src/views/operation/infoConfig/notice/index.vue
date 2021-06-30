@@ -307,7 +307,6 @@
           style="width: 100%; margin-bottom: 15px"
           :header-cell-style="getRowClass"
         >
-          <el-table-column type="index" align="center" label="序号"> </el-table-column>
           <el-table-column
             prop="userName"
             align="center"

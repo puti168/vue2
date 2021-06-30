@@ -303,7 +303,10 @@ export default {
               type: 'success',
               message: '操作成功!'
             })
-            this.loadData()
+            setTimeout(() => {
+              this.loadData()
+              console.log(1111111)
+            }, 1000)
           } else {
             loading.close()
             this.$message({

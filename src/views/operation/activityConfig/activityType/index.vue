@@ -183,10 +183,7 @@ export default {
 		}
 	},
 	mounted() {
-		this.$nextTick(() => {
-			const arr = JSON.stringify(this.globalDics.operateActivityNameType)
-			this.newActivityTypeArr = JSON.parse(arr)
-		})
+		this.queryTypeList()
 	},
 	methods: {
 		// 查询详情
@@ -204,6 +201,32 @@ export default {
 				}
 			})
 		},
+		// 查询弹框列表
+		queryTypeList(type) {
+			this.$api.activityQueryTypeListAPI({ type }).then((res) => {
+				const { code, data } = res
+				const arr = JSON.stringify(this.globalDics.operateActivityNameType)
+                console.log('arr', arr)
+				const newArr = JSON.parse(arr)
+				if (code === 200) {
+					newArr.forEach((item, idx) => {
+						let isExist = false
+						const itemId = item.code * 1
+						if (itemId === data[idx]) {
+							isExist = true
+						}
+						if (!isExist) {
+							this.newActivityTypeArr.push({
+								code: data[idx] + '',
+								description: newArr[data[idx]].description
+							})
+						}
+					})
+				} else {
+					this.newActivityTypeArr = []
+				}
+			})
+		},
 		add() {
 			this.loadingT = true
 			const params = {
@@ -212,7 +235,7 @@ export default {
 			let lock = true
 			params.activityType = params.activityCode * 1
 			delete params.activityCode
-            console.log('params', params)
+			console.log('params', params)
 			this.$refs['form'].validate((valid) => {
 				if (valid && lock) {
 					lock = false
