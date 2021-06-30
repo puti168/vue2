@@ -392,6 +392,62 @@ export function OperateObConfigAnnouncementRecordQueryFeedBackEnums(params) {
 		params
 	})
 }
+// vip活动配置/赞助活动配置 ==> 查询分页列表
+export function getOperateActivityVipQueryList(data) {
+	return request({
+		url: '/operate/activityVip/queryList',
+		method: 'post',
+		data
+	})
+}
+// vip活动配置/赞助活动配置 ==> 获取已创建的活动
+export function getOperateActivityVipQueryActivityNameList(params) {
+	return request({
+		url: '/operate/activityVip/queryActivityNameList',
+		method: 'get',
+		params
+	})
+}
+// vip活动配置/赞助活动配置 ==> 新增
+export function setOperateActivityVipAdd(data) {
+	return request({
+		url: '/operate/activityVip/add',
+		method: 'post',
+		data
+	})
+}
+// vip活动配置/赞助活动配置 ==> 删除
+export function setOperateActivityVipDelete(data) {
+	return request({
+		url: '/operate/activityVip/delete',
+		method: 'post',
+		data
+	})
+}
+// vip活动配置/赞助活动配置 ==> 修改
+export function setOperateActivityVipUpdate(data) {
+	return request({
+		url: '/operate/activityVip/update',
+		method: 'post',
+		data
+	})
+}
+// vip活动配置/赞助活动配置 ==> 启用,禁用
+export function setOperateActivityVipUse(data) {
+	return request({
+		url: '/operate/activityVip/use',
+		method: 'post',
+		data
+	})
+}
+// vip活动配置/赞助活动配置 ==> 排序
+export function setOperateActivityVipSort(data) {
+	return request({
+		url: '/operate/activityVip/sort',
+		method: 'post',
+		data
+	})
+}
 
 export default {
 	queryDiscountTagList,
@@ -441,5 +497,12 @@ export default {
 	getOperateConfigClientRecordQueryRecordList,
 	getOperateObConfigNoticeSelectAll,
 	getFeedBackPageFeedBack,
-	OperateObConfigAnnouncementRecordQueryFeedBackEnums
+	OperateObConfigAnnouncementRecordQueryFeedBackEnums,
+	getOperateActivityVipQueryList,
+	getOperateActivityVipQueryActivityNameList,
+	setOperateActivityVipAdd,
+	setOperateActivityVipDelete,
+	setOperateActivityVipUpdate,
+	setOperateActivityVipUse,
+	setOperateActivityVipSort
 }
