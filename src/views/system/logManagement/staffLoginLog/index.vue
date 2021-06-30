@@ -13,23 +13,12 @@
 						@keyup.enter.native="enterSearch"
 					></el-input>
 				</el-form-item>
-				<el-form-item label="角色名称:">
-					<el-input
-						v-model="queryData.userName"
-						clearable
-						:maxlength="11"
-						size="medium"
-						style="width: 180px"
-						placeholder="请输入"
-						@keyup.enter.native="enterSearch"
-					></el-input>
-				</el-form-item>
 				<el-form-item label="登录IP:">
 					<el-input
 						v-model="queryData.loginIp"
 						clearable
 						size="medium"
-						:maxlength="15"
+						:maxlength="20"
 						style="width: 180px"
 						placeholder="请输入"
 						@keyup.enter.native="enterSearch"
@@ -68,16 +57,6 @@
 						align="center"
 						label="用户名"
 						width="150px"
-					>
-						<template slot-scope="scope">
-							{{ typeFilter(scope.row.accountType, 'accountType') }}
-						</template>
-					</el-table-column>
-          <el-table-column
-						prop="accountType"
-						align="center"
-						label="角色名称"
-						width="200px"
 					>
 						<template slot-scope="scope">
 							{{ typeFilter(scope.row.accountType, 'accountType') }}

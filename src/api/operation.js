@@ -112,7 +112,7 @@ export function activityInfoLogAPI(params) {
 // 运营 ===> 公告配置 ==> 操作记录列表
 export function activityInfoLogListAPI(data) {
 	return request({
-		url: '/operate/obConfigAnnouncementRecord/queryEnums',
+		url: '/operate/obConfigAnnouncementRecord/select',
 		method: 'post',
 		data
 	})
