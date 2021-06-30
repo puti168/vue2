@@ -182,6 +182,9 @@
             width="155px"
             sortable="custom"
           >
+            <template slot-scope="scope">
+              {{ scope.row.announcementAging === 1 ? scope.row.downTime : "-" }}
+            </template>
           </el-table-column>
           <el-table-column prop="status" align="center" width="90px" label="状态">
             <template slot-scope="scope">
