@@ -33,7 +33,7 @@
 							:popper-append-to-body="false"
 						>
 							<el-option
-								v-for="item in auditStatusType"
+								v-for="item in patchAdjustStatus"
 								:key="item.code"
 								:label="item.description"
 								:value="item.code"
@@ -107,16 +107,7 @@
           <el-table-column prop="orderStatus" width="180px" align="center" label="订单状态">
             <template slot-scope="scope">
               <span v-if="scope.row.orderStatus === 1">{{
-                typeFilter(scope.row.orderStatus, "auditStatusType")
-              }}</span>
-              <span v-else-if="scope.row.orderStatus === 2">{{
-                typeFilter(scope.row.orderStatus, "auditStatusType")
-              }}</span>
-              <span v-else-if="scope.row.orderStatus === 3">{{
-                typeFilter(scope.row.orderStatus, "auditStatusType")
-              }}</span>
-              <span v-else-if="scope.row.orderStatus === 4">{{
-                typeFilter(scope.row.orderStatus, "auditStatusType")
+                typeFilter(scope.row.orderStatus, "patchAdjustStatus")
               }}</span>
               <span v-else>-</span>
             </template>
@@ -306,8 +297,8 @@ export default {
     }
   },
   computed: {
-    auditStatusType() {
-      return this.globalDics.auditStatusType
+    patchAdjustStatus() {
+      return this.globalDics.patchAdjustStatus
     }
   },
 
