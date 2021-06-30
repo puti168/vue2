@@ -13,6 +13,7 @@ import memberFunds from './memberFunds'
 import funds from './funds'
 import operation from './operation'
 import agencyfunds from './agencyfunds'
+import system from './system'
 
 export default {
 	...bankController,
@@ -29,5 +30,6 @@ export default {
 	...memberFunds,
 	...funds,
 	...operation,
-	...agencyfunds
+	...agencyfunds,
+	...system
 }
