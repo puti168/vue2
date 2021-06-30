@@ -98,7 +98,9 @@
 					</el-table-column>
 					<el-table-column prop="changeType" align="center" label="变更类型">
 						<template slot-scope="scope">
-							<span v-if="scope.row.changeType">
+							<span
+								v-if="scope.row.changeType || scope.row.changeType + '' === '0'"
+							>
 								{{
 									changeType.filter(
 										(item) => item.code === scope.row.changeType
@@ -249,7 +251,7 @@ export default {
 		},
 		_changeTableSort({ column, prop, order }) {
 			this.pageNum = 1
-            this.queryData.orderKey = 1
+			this.queryData.orderKey = 1
 			if (order === 'ascending') {
 				// 升序
 				this.queryData.orderType = 'asc'
@@ -263,9 +265,9 @@ export default {
 			this.pageNum = 1
 			this.queryData = {
 				time: [start, end],
-				title: undefined,
-				accountType: [],
-				applyType: []
+				announcementTitel: undefined,
+				createdBy: undefined,
+				changeType: []
 			}
 			this.loadData()
 		}
