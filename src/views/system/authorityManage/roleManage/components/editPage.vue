@@ -53,92 +53,6 @@
                         :check-on-click-node="false"
                     ></el-tree>
                 </div>
-				<!--				<div class="role-container">-->
-				<!--					<el-row class="btn-control">-->
-				<!--						<el-button-->
-				<!--							v-for="(item, idx) in dataList"-->
-				<!--							:key="item.id"-->
-				<!--							type="info"-->
-				<!--							class="btn-style-role"-->
-				<!--							@click="handleChangeModule(idx)"-->
-				<!--						>-->
-				<!--							{{ item.permissionName }}-->
-				<!--						</el-button>-->
-				<!--					</el-row>-->
-				<!--					<div class="role-content">-->
-				<!--						<el-row>-->
-				<!--							<el-col :span="4">-->
-				<!--								<div class="name">模块</div>-->
-				<!--							</el-col>-->
-				<!--							<el-col :span="20">-->
-				<!--								<el-row>-->
-				<!--									<el-col :span="6">-->
-				<!--										<div class="name">页面</div>-->
-				<!--									</el-col>-->
-				<!--									<el-col :span="18">-->
-				<!--										<div class="name">权限配置规则</div>-->
-				<!--									</el-col>-->
-				<!--								</el-row>-->
-				<!--							</el-col>-->
-				<!--						</el-row>-->
-				<!--						<el-row>-->
-				<!--							<el-col :span="4">-->
-				<!--								<div class="btn-group first">-->
-				<!--									<el-checkbox-->
-				<!--										v-model="checkAllModule"-->
-				<!--										@change="handleCheckAllChangeModule"-->
-				<!--									>-->
-				<!--										{{ defaultList.permissionName }}-->
-				<!--									</el-checkbox>-->
-				<!--								</div>-->
-				<!--							</el-col>-->
-				<!--							<el-col :span="20">-->
-				<!--								<div class="btn-group">-->
-				<!--									<el-row-->
-				<!--										v-for="(item, idx) in defaultList.children"-->
-				<!--										:key="item.id"-->
-				<!--										class="div-cell"-->
-				<!--									>-->
-				<!--										<el-col :span="6">-->
-				<!--											<el-checkbox-->
-				<!--												v-model="checkedAll[idx]"-->
-				<!--												@change="handleCheckAllChangePage(idx, checkedAll[idx])"-->
-				<!--											>-->
-				<!--												<span style="font-weight: bold;">-->
-				<!--													{{ item.permissionName }}-->
-				<!--												</span>-->
-				<!--											</el-checkbox>-->
-				<!--										</el-col>-->
-				<!--										<el-col :span="18">-->
-				<!--											<el-checkbox-group-->
-				<!--												v-model="checkedList[idx]"-->
-				<!--												class="cell-group"-->
-				<!--												@change="-->
-				<!--													handleCheckedCitiesChangeBtn(idx, checkedList[idx])-->
-				<!--												"-->
-				<!--											>-->
-				<!--												<el-checkbox-->
-				<!--													v-for="lis in item.children"-->
-				<!--													:key="lis.id"-->
-				<!--													class="child-cell"-->
-				<!--													:label="lis.id"-->
-				<!--												>-->
-				<!--													{{ lis.permissionName }}-->
-				<!--												</el-checkbox>-->
-				<!--											</el-checkbox-group>-->
-				<!--										</el-col>-->
-				<!--									</el-row>-->
-				<!--								</div>-->
-				<!--							</el-col>-->
-				<!--						</el-row>-->
-				<!--					</div>-->
-				<!--					<el-checkbox-->
-				<!--						v-model="chooseAll"-->
-				<!--						class="chooseAll"-->
-				<!--					>-->
-				<!--						选择全部-->
-				<!--					</el-checkbox>-->
-				<!--				</div>-->
 			</div>
 			<div class="save-container">
 				<div class="save-btn" @click.prevent="save">
@@ -262,17 +176,6 @@ export default {
 	},
 	updated() {},
 	methods: {
-		handleCheckAllChange(val) {
-			console.log('val', val)
-			this.checkedCities = val ? cityOptions : []
-			this.isIndeterminate = false
-		},
-		handleCheckedCitiesChange(value) {
-			const checkedCount = value.length
-			this.checkAll = checkedCount === this.cities.length
-			this.isIndeterminate =
-				checkedCount > 0 && checkedCount < this.cities.length
-		},
 		back() {
 			this.$emit('back')
 		},
@@ -336,16 +239,6 @@ export default {
 			console.log('checkedAll', this.checkedAll)
 			console.log('this.checkedList', this.checkedList)
 		},
-		handleChangeModule(type) {
-			this.defaultList = this.dataList[type]
-			this.systemOptions1 = this.dataList[type].children
-			for (const item in this.dataList[type].children) {
-				const strArr = []
-				this.checkedList.push(strArr)
-				this.systemOptionsList.push(this.dataList[type].children[item].children)
-				this.checkedAll.push(false)
-			}
-		},
 		save() {
 			this.loading = true
 			const params = {
@@ -394,58 +287,6 @@ export default {
 				remark: undefined,
 				id: undefined
 			}
-		},
-		handleCheckAllChangeModule(val) {
-			// 全选
-			const arrList = []
-			for (let i = 0; i < this.systemOptions1.length; i++) {
-				const arr = []
-				arrList.push(arr)
-			}
-			for (const index in this.systemOptions1) {
-				for (const index1 in this.systemOptions1[index].children) {
-					arrList[index].push(this.systemOptions1[index].children[index1].id)
-				}
-				this.checkedList[index] = val ? arrList[index] : []
-			}
-			for (const index in this.checkedAll) {
-				this.checkedAll[index] = val
-			}
-		},
-		handleCheckAllChangePage(index, val) {
-			// 列表类全选
-			const arr = []
-			// console.log('systemOptionsList', this.systemOptionsList)
-			// console.log('index', index)
-			// console.log('val', val)
-			for (const item in this.systemOptionsList[index]) {
-				arr.push(this.systemOptionsList[index][item].id)
-			}
-			// console.log('arr', arr)
-			// console.log('this.checkedList', this.checkedList)
-			this.checkedList[index] = val ? arr : []
-			const [...arrFlag] = new Set(this.checkedAll)
-			if (arrFlag.length === 1 && arrFlag[0] === true) {
-				this.checkAllModule = true
-			} else {
-				this.checkAllModule = false
-			}
-		},
-		handleCheckedCitiesChangeBtn(index, value) {
-			// 子选项联动
-			this.$forceUpdate() // ！！！实时改变数据
-			const b = value.length === this.systemOptionsList[index].length
-			this.checkedAll[index] = b
-			// 判断列表类是否全选来改变总的全选状态
-			const [...arrFlag] = new Set(this.checkedAll)
-			if (arrFlag.length === 1 && arrFlag[0] === true) {
-				this.checkAllModule = true
-			} else {
-				this.checkAllModule = false
-			}
-		},
-		handleCheckAll(val) {
-			this.handleCheckAllChangeModule(val)
 		}
 	}
 }
