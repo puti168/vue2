@@ -32,7 +32,7 @@
                 v-for="item in gameTypeList"
                 :key="item.id"
                 :label="item.gameName"
-                :value="item.id"
+                :value="item.gameName"
               ></el-option>
             </el-select>
           </el-form-item>

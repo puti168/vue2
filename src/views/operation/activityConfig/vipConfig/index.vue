@@ -295,7 +295,6 @@
             >
               <el-select
                 v-model="dialogForm.memberLabelName"
-                clearable
                 placeholder="默认选择全部"
                 :popper-append-to-body="false"
               >
