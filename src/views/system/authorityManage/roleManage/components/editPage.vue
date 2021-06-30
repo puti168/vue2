@@ -42,17 +42,17 @@
 			</div>
 			<div class="content-part3">
 				<p class="part-title">角色权限</p>
-                <div class="role-container">
-                    <el-tree
-                        ref="tree"
-                        :data="dataList"
-                        default-expand-all
-                        node-key="id"
-                        show-checkbox
-                        :props="defaultProps"
-                        :check-on-click-node="false"
-                    ></el-tree>
-                </div>
+				<div class="role-container">
+					<el-tree
+						ref="tree"
+						:data="rolePermissions"
+						default-expand-all
+						node-key="id"
+						show-checkbox
+						:props="defaultProps"
+						:check-on-click-node="true"
+					></el-tree>
+				</div>
 			</div>
 			<div class="save-container">
 				<div class="save-btn" @click.prevent="save">
@@ -67,7 +67,7 @@
 <script>
 import list from '@/mixins/list'
 import { isHaveEmoji, notSpecial2 } from '@/utils/validate'
-const cityOptions = ['上海', '北京', '广州', '深圳']
+const storeDatas = []
 
 export default {
 	name: 'EditPage',
@@ -86,23 +86,12 @@ export default {
 				remark: undefined,
 				id: undefined
 			},
-			defaultProps: {
-				children: 'children',
-				label: 'permissionName'
-			},
 			chooseAll: false,
 			dataList: [],
 			otherArr: [],
 			checkAll: false,
-			checkedCities: ['上海', '北京'],
-			cities: cityOptions,
-			isIndeterminate: true,
 			defaultList: [],
-			systemOptions1: [],
-			checkedList: [], // 选中的列表
-			checkedAll: [], // 列表类全选
-			systemOptionsList: [], // 所有可选项
-			checkAllModule: false // 全选
+            rolePermissions: []
 		}
 	},
 	computed: {
@@ -139,7 +128,15 @@ export default {
 				roleName,
 				remark
 			}
-		}
+		},
+        defaultProps() {
+            return {
+                label: (data) => {
+                    return data.permissionName
+                },
+                children: 'children'
+            }
+        }
 	},
 	watch: {
 		// editData: {
@@ -166,13 +163,12 @@ export default {
 		// 	immediate: true
 		// }
 	},
-	mounted() {
+    created() {
+        this.rolePermissions = storeDatas
+    },
+    mounted() {
 		this.getRoleList()
-		// this.$nextTick(() => {
-		// 	!this.updateStatus
-		// 		? (this.queryData.displayOrder = this.lastSortId + 1)
-		// 		: ''
-		// })
+        console.log('storeDatas', storeDatas)
 	},
 	updated() {},
 	methods: {
@@ -180,64 +176,52 @@ export default {
 			this.$emit('back')
 		},
 		async getRoleList() {
-			// const obj = {}
 			const { code, data } = await this.$api.getRolePermissions()
-			console.log('data', data)
 			if (code === 200) {
 				this.dataList = data
-				// data &&
-				// 	data.length &&
-				// 	data.forEach((item) => {
-				// 		data &&
-				// 			data.length &&
-				// 			data.forEach((item) => {
-				// 				obj[item.permissionName] = item
-				// 			})
-				// 	})
 				this.filterData(data)
 			}
-			// console.log('obj', obj)
 		},
 
 		filterData(data) {
-			const arr = []
-			let copyItem = {}
-			const copyData = JSON.parse(JSON.stringify(data))
-			copyData.forEach((route) => {
-				copyItem = JSON.parse(JSON.stringify(route))
-				route.level === 1 ? (copyItem.children = []) : null
-				arr.push(copyItem)
-				if (route.children && route.children.length) {
-					route.children.forEach((item) => {
-						if (item.level === 2) {
-							arr.forEach((val) => {
-								if (val.id === item.parentId) {
-									val.children = [...item.children, ...val.children]
-								}
-							})
-							//    测试假数组
-							item.children.forEach((lis, idx) => {
-								lis.children = []
-								lis.children = [].concat([
-									{ permissionName: '导出', id: idx + '1' },
-									{ permissionName: '查看', id: idx + '2' }
-								])
-							})
-						}
+			const _data = [...data]
+            _data.forEach((ele, i) => {
+				const index = data.findIndex((val) => val.id === ele.parentId)
+				if (index < 0) {
+					storeDatas.push({
+						id: ele.id,
+						label: ele.permissionName,
+						children: [],
+						...ele
 					})
+                    _data.splice(i, 1)
 				}
 			})
-			console.log('arr', arr)
-			this.defaultList = arr[0]
-			this.systemOptions1 = arr[0].children
-			for (const item in arr[0].children) {
-				this.checkedAll.push(false)
-				const strArr = []
-				this.checkedList.push(strArr)
-				this.systemOptionsList.push(arr[0].children[item].children)
+			this.generateData(_data, storeDatas)
+		},
+        generateData(data, tree) {
+			const data_s = [...data]
+			const pickIndex = []
+			const leftData = []
+            data_s.forEach((ele) => {
+				const index = tree.findIndex((val) => val.id === ele.parentId)
+				if (index > -1) {
+					tree[index].children.push({
+						id: ele.id,
+						label: ele.permissionName,
+						children: [],
+						...ele
+					})
+					!pickIndex.includes(index) && pickIndex.push(index)
+				} else {
+                    leftData.push(ele)
+				}
+			})
+			if (pickIndex.length > 0) {
+				pickIndex.forEach((ele) => {
+					this.generateData(leftData, tree[ele].children)
+				})
 			}
-			console.log('checkedAll', this.checkedAll)
-			console.log('this.checkedList', this.checkedList)
 		},
 		save() {
 			this.loading = true
