@@ -25,16 +25,16 @@
           </el-form-item>
           <el-form-item label="活动页签:">
             <el-select
-              v-model="queryData.activityType"
+              v-model="queryData.discountTagId"
               multiple
               placeholder="默认选择全部"
               :popper-append-to-body="false"
             >
               <el-option
-                v-for="item in operateVipActivityType"
-                :key="item.code"
-                :label="item.description"
-                :value="item.code"
+                v-for="item in bookmarkList"
+                :key="item.id"
+                :label="item.activityName"
+                :value="item.id"
               ></el-option>
             </el-select>
           </el-form-item>
@@ -46,10 +46,10 @@
               :popper-append-to-body="false"
             >
               <el-option
-                v-for="item in operateVipActivityType"
-                :key="item.code"
-                :label="item.description"
-                :value="item.code"
+                v-for="item in activityList"
+                :key="item.id"
+                :label="item.activityName"
+                :value="item.id"
               ></el-option>
             </el-select>
           </el-form-item>
@@ -65,7 +65,7 @@
           </el-form-item>
           <el-form-item label="洗码倍率:" class="numberBox">
             <el-input-number
-              v-model="queryData.id"
+              v-model="queryData.activityWashCodeTimes"
               clearable
               :max="4"
               :precision="2"
@@ -123,7 +123,7 @@
           </el-form-item>
           <el-form-item label="状态:">
             <el-select
-              v-model="queryData.activityPrescription"
+              v-model="queryData.status"
               clearable
               placeholder="默认选择全部"
               :popper-append-to-body="false"
@@ -214,12 +214,7 @@
             align="center"
             label="活动名称"
           ></el-table-column>
-          <el-table-column prop="activityType" align="center" label="活动页签">
-            <template slot-scope="scope">
-              <span>{{
-                typeFilter(scope.row.activityType, "operateVipActivityType")
-              }}</span>
-            </template>
+          <el-table-column prop="discountTagId" align="center" label="活动页签">
           </el-table-column>
           <el-table-column prop="activityType" align="center" label="活动">
             <template slot-scope="scope">
@@ -230,7 +225,7 @@
           </el-table-column>
           <el-table-column align="center" prop="activityTitle" label="活动主标题">
           </el-table-column>
-          <el-table-column align="center" prop="activityTitle" label="洗码倍率">
+          <el-table-column align="center" prop="activityWashCodeTimes" label="洗码倍率">
           </el-table-column>
           <el-table-column align="center" prop="activityAppTypeName" label="活动支持终端">
           </el-table-column>
@@ -407,16 +402,16 @@
               :rules="[{ required: true }]"
             >
               <el-select
-                v-model="dialogForm.activityType"
+                v-model="dialogForm.discountTagId"
                 placeholder="默认选择全部"
                 :popper-append-to-body="false"
                 @change="changeActivityType"
               >
                 <el-option
-                  v-for="item in operateVipActivityType"
-                  :key="item.code"
-                  :label="item.description"
-                  :value="item.code"
+                  v-for="item in bookmarkList"
+                  :key="item.id"
+                  :label="item.activityName"
+                  :value="item.id"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -540,7 +535,7 @@
               ]"
             >
               <el-date-picker
-                v-model="activityUpAt"
+                v-model="activityPictureUpAt"
                 size="medium"
                 format="yyyy-MM-dd HH:mm:ss"
                 :picker-options="dateNow"
@@ -549,7 +544,7 @@
                 :clearable="false"
                 @change="changeTime"
               ></el-date-picker>
-              <span v-show="errTime" class="el-form-item__error">
+              <span v-show="upTime" class="el-form-item__error">
                 活动图上架时间不能大于活动图下架时间
               </span>
             </el-form-item>
@@ -560,7 +555,7 @@
               :rules="[{ required: true }]"
             >
               <el-date-picker
-                v-model="activityDownAt"
+                v-model="activityPictureDownAt"
                 size="medium"
                 format="yyyy-MM-dd HH:mm:ss"
                 :picker-options="dateEnd"
@@ -568,10 +563,11 @@
                 align="right"
                 :clearable="false"
               ></el-date-picker>
-              <span v-show="errTime" class="el-form-item__error">
+              <span v-show="upTime" class="el-form-item__error">
                 活动图下架时间不能小于活动图上架时间
               </span>
             </el-form-item>
+            <br />
             <el-form-item
               label="活动开始时间:"
               label-width="125px"
@@ -582,16 +578,16 @@
               ]"
             >
               <el-date-picker
-                v-model="activityUpAt"
+                v-model="activityStartAt"
                 size="medium"
                 format="yyyy-MM-dd HH:mm:ss"
-                :picker-options="dateNow"
+                :picker-options="activityNow"
                 type="datetime"
                 align="right"
                 :clearable="false"
                 @change="changeTime"
               ></el-date-picker>
-              <span v-show="errTime" class="el-form-item__error">
+              <span v-show="upTime" class="el-form-item__error">
                 活动开始时间不能大于活动结束时间
               </span>
             </el-form-item>
@@ -602,15 +598,15 @@
               :rules="[{ required: true }]"
             >
               <el-date-picker
-                v-model="activityDownAt"
+                v-model="activityEndAt"
                 size="medium"
                 format="yyyy-MM-dd HH:mm:ss"
-                :picker-options="dateEnd"
+                :picker-options="activityEnd"
                 type="datetime"
                 align="right"
                 :clearable="false"
               ></el-date-picker>
-              <span v-show="errTime" class="el-form-item__error">
+              <span v-show="upTime" class="el-form-item__error">
                 活动开始时间不能小于活动结束时间
               </span>
             </el-form-item>
@@ -697,9 +693,13 @@
                 clearable
               ></el-input>
             </el-form-item>
-            <el-form-item label="洗码倍率:" class="numberBox" prop="beil">
+            <el-form-item
+              label="洗码倍率:"
+              class="numberBox tagheight"
+              prop="activityWashCodeTimes"
+            >
               <el-input-number
-                v-model="dialogForm.beil"
+                v-model="dialogForm.activityWashCodeTimes"
                 clearable
                 :max="4"
                 :precision="2"
@@ -718,21 +718,25 @@
               ]"
             >
               <el-select
-                v-model="dialogForm.activityPrescription"
+                v-model="dialogForm.venueName"
                 placeholder="请选择"
                 :popper-append-to-body="false"
               >
                 <el-option
-                  v-for="item in operateValidityType"
-                  :key="item.code"
-                  :label="item.description"
-                  :value="item.code"
+                  v-for="item in gameTypeList"
+                  :key="item.gameCode"
+                  :label="item.gameName"
+                  :value="item.gameCode"
                 ></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="充值金额大于等于:" class="numberBox" prop="beil">
+            <el-form-item
+              label="充值金额大于等于:"
+              class="numberBox tagheight"
+              prop="activityRechargeMoney"
+            >
               <el-input-number
-                v-model="dialogForm.beil"
+                v-model="dialogForm.activityRechargeMoney"
                 clearable
                 :max="4"
                 :precision="2"
@@ -751,7 +755,7 @@
               ]"
             >
               <el-select
-                v-model="dialogForm.activityPrescription"
+                v-model="dialogForm.activityDiscountType"
                 placeholder="请选择"
                 :popper-append-to-body="false"
               >
@@ -763,9 +767,13 @@
                 ></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="优惠百分比:" class="numberBox" prop="beil">
+            <el-form-item
+              label="优惠百分比:"
+              class="numberBox tagheight"
+              prop="activityDiscountScale"
+            >
               <el-input-number
-                v-model="dialogForm.beil"
+                v-model="dialogForm.activityDiscountScale"
                 clearable
                 :max="4"
                 :precision="2"
@@ -774,9 +782,13 @@
                 @keyup.enter.native="enterSearch"
               ></el-input-number>
             </el-form-item>
-            <el-form-item label="单日最高赠送总金额:" class="numberBox" prop="beil">
+            <el-form-item
+              label="单日最高赠送总金额:"
+              class="numberBox tagheight"
+              prop="activityGiveMaxMoney"
+            >
               <el-input-number
-                v-model="dialogForm.beil"
+                v-model="dialogForm.activityGiveMaxMoney"
                 clearable
                 :max="4"
                 :precision="2"
@@ -860,8 +872,13 @@ export default {
         activityEnterPicture: null,
         activitySharePicture: null
       },
-      activityUpAt: Date.now(),
-      activityDownAt: endTime,
+      activityList: [],
+      bookmarkList: [],
+      gameTypeList: [],
+      activityPictureUpAt: Date.now(),
+      activityPictureDownAt: endTime,
+      activityStartAt: Date.now(),
+      activityEndAt: endTime,
       dateNow: {
         disabledDate(time) {
           return time.getTime() < Date.now() - 24 * 60 * 60 * 1000
@@ -872,7 +889,17 @@ export default {
           return time.getTime() < Date.now() - 24 * 60 * 60 * 1000
         }
       },
-      // errTime: false,
+      activityNow: {
+        disabledDate(time) {
+          return time.getTime() < Date.now() - 24 * 60 * 60 * 1000
+        }
+      },
+      activityEnd: {
+        disabledDate(time) {
+          return time.getTime() < Date.now() - 24 * 60 * 60 * 1000
+        }
+      },
+      // upTime: false,
       bigImage: '',
       imgVisible: false,
       sortVisible: false,
@@ -898,10 +925,10 @@ export default {
     accountType() {
       return this.globalDics.accountType
     },
-    errTime() {
+    upTime() {
       if (
         this.dialogForm.activityPrescription === '0' &&
-        this.activityUpAt < this.activityDownAt
+        this.activityPictureUpAt < this.activityPictureDownAt
       ) {
         console.log(this.dialogForm, '00000')
         return false
@@ -914,9 +941,14 @@ export default {
     }
   },
   watch: {
-    activityUpAt: {
+    activityPictureUpAt: {
       handler(newV, oldV) {
         this.dateEnd = {
+          disabledDate(time) {
+            return time.getTime() < newV
+          }
+        }
+        this.activityNow = {
           disabledDate(time) {
             return time.getTime() < newV
           }
@@ -925,7 +957,9 @@ export default {
       deep: true
     }
   },
-  created() {},
+  created() {
+    this.seleceInit()
+  },
   methods: {
     loadData() {
       const params = {
@@ -933,7 +967,7 @@ export default {
       }
       // this.loading = true;
       this.$api
-        .getOperateActivityVipQueryList(params)
+        .getOperateDiscountActivityQueryList(params)
         .then((res) => {
           if (res.code === 200) {
             const response = res.data
@@ -951,6 +985,23 @@ export default {
         .catch(() => {
           this.loading = false
         })
+    },
+    seleceInit() {
+      this.$api.getOperateDiscountActivityQueryActivityNameList().then((res) => {
+        if (res.code === 200) {
+          this.activityList = res.data
+        }
+      })
+      this.$api.getOperateDiscountActivityQueryActivityNameListByTag().then((res) => {
+        if (res.code === 200) {
+          this.bookmarkList = res.data
+        }
+      })
+      this.$api.getMerchantGameGamePlant().then((res) => {
+        if (res.code === 200) {
+          this.gameTypeList = res.data
+        }
+      })
     },
     getSortData() {
       const params = {
@@ -995,35 +1046,35 @@ export default {
     },
     subAddOrEdit() {
       if (this.dialogForm.activityPrescription === '0') {
-        this.dialogForm.activityUpAt = dayjs(this.activityUpAt).format(
+        this.dialogForm.activityPictureUpAt = dayjs(this.activityPictureUpAt).format(
           'YYYY-MM-DD HH:mm:ss'
         )
-        this.dialogForm.activityDownAt = dayjs(this.activityDownAt).format(
+        this.dialogForm.activityPictureDownAt = dayjs(this.activityPictureDownAt).format(
           'YYYY-MM-DD HH:mm:ss'
         )
       } else {
-        this.dialogForm.activityUpAt = dayjs(this.activityDownAt).format(
+        this.dialogForm.activityPictureUpAt = dayjs(this.activityPictureDownAt).format(
           'YYYY-MM-DD HH:mm:ss'
         )
-        delete this.dialogForm.activityDownAt
+        delete this.dialogForm.activityPictureDownAt
       }
       this.$refs.formSub.validate((valid) => {
-        if (valid && !this.errTime) {
+        if (valid && !this.upTime) {
           const params = { ...this.dialogForm }
           params.activityAppType = params.activityAppType.join(',')
           params.activityUserType = params.activityUserType.join(',')
           console.log(params)
           if (this.addOrEdit === 'add') {
-            this.setOperateActivityVipAdd(params)
+            this.setOperateDiscountActivityAdd(params)
           } else {
-            this.setOperateActivityVipUpdate(params)
+            this.setOperateDiscountActivityUpdate(params)
           }
         }
       })
     },
     // 新增保存
-    setOperateActivityVipAdd(val) {
-      this.$api.setOperateActivityVipAdd(val).then((res) => {
+    setOperateDiscountActivityAdd(val) {
+      this.$api.setOperateDiscountActivityAdd(val).then((res) => {
         if (res.code === 200) {
           this.$message({
             message: '新增成功！',
@@ -1035,8 +1086,8 @@ export default {
       })
     },
     // 修改保存
-    setOperateActivityVipUpdate(val) {
-      this.$api.setOperateActivityVipUpdate(val).then((res) => {
+    setOperateDiscountActivityUpdate(val) {
+      this.$api.setOperateDiscountActivityUpdate(val).then((res) => {
         if (res.code === 200) {
           this.$message({
             message: '编辑成功！',
@@ -1050,15 +1101,15 @@ export default {
     changeTime(val) {
       const Timestamp = new Date(new Date(val).toLocaleDateString()).getTime()
       if (Timestamp === startTime) {
-        this.activityUpAt = Date.now()
+        this.activityPictureUpAt = Date.now()
       } else {
-        this.activityUpAt = Timestamp
+        this.activityPictureUpAt = Timestamp
       }
     },
     clear() {
       this.$refs.formSub.resetFields()
-      this.activityUpAt = Date.now()
-      this.activityDownAt = endTime
+      this.activityPictureUpAt = Date.now()
+      this.activityPictureDownAt = endTime
       this.dialogFormVisible = false
     },
 
@@ -1093,7 +1144,7 @@ export default {
       )
         .then(() => {
           this.$api
-            .setOperateActivityVipUse({
+            .setOperateDiscountActivityUse({
               id: val.id,
               status: val.status === 0 ? 1 : 0
             })
@@ -1127,7 +1178,7 @@ export default {
         }
       )
         .then(() => {
-          this.$api.setOperateActivityVipDelete({ id: row.id }).then((res) => {
+          this.$api.setOperateDiscountActivityDelete({ id: row.id }).then((res) => {
             if (res.code === 200) {
               this.$message({
                 message: '操作成功！',
@@ -1159,8 +1210,8 @@ export default {
         activityEnterPicture: null,
         activitySharePicture: null
       }
-      this.activityUpAt = Date.now()
-      this.activityDownAt = endTime
+      this.activityPictureUpAt = Date.now()
+      this.activityPictureDownAt = endTime
       this.dialogFormVisible = true
     },
     lookImg(val) {
@@ -1235,7 +1286,8 @@ export default {
 }
 /deep/ .tagheight {
   .el-form-item__content,
-  .el-select {
+  .el-select,
+  .el-input__inner {
     width: 480px;
   }
 }
@@ -1279,8 +1331,7 @@ export default {
     }
     .content-part2 {
       width: 100%;
-      padding: 25px 35px 20px;
-
+      padding: 25px 30px 20px;
       position: relative;
       margin: 0 auto;
       /deep/.agent-form {

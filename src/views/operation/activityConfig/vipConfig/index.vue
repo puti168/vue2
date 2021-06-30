@@ -741,7 +741,7 @@ export default {
       const params = {
         ...this.getParams(this.queryData)
       }
-      // this.loading = true;
+      this.loading = true
       this.$api
         .getOperateActivityVipQueryList(params)
         .then((res) => {
@@ -1088,7 +1088,7 @@ export default {
     }
     .content-part2 {
       width: 100%;
-      padding: 25px 35px 20px;
+      padding: 25px 30px 20px;
       background-color: #fff;
       position: relative;
       margin: 0 auto;
