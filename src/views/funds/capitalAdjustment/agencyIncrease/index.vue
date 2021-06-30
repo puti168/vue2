@@ -149,7 +149,7 @@
 // import { routerNames } from '@/utils/consts'
 import list from '@/mixins/list'
 import UploadItem from '@/components/UploadItem'
-// import { notSpecial2, isHaveEmoji } from '@/utils/validate'
+import { notSpecial2, isHaveEmoji } from '@/utils/validate'
 
 export default {
 	name: 'AgentShipIncrease',
@@ -188,23 +188,29 @@ export default {
 			]
 		},
 		rules() {
-			// const reg1 = /^[A-Za-z]{1}(?=(.*[a-zA-Z]){1,})(?=(.*[0-9]){1,})[0-9A-Za-z]{3,10}$/
-			// const testUserName = (rule, value, callback) => {
-			// 	const isSpecial = !notSpecial2(String(value))
-			// 	const isRmoji = isHaveEmoji(String(value))
-			// 	if (isSpecial) {
-			// 		callback(new Error('不支持空格及特殊字符'))
-			// 	} else if (isRmoji) {
-			// 		callback(new Error('不支持表情'))
-			// 	} else if (!reg1.test(value)) {
-			// 		callback(new Error('请输入4-11位，最少2个字母+数字组合，首位字母'))
-			// 	} else {
-			// 		callback()
-			// 	}
-			// }
+			const reg1 = /^[A-Za-z]{1}(?=(.*[a-zA-Z]){1,})(?=(.*[0-9]){1,})[0-9A-Za-z]{3,10}$/
+			const testUserName = (rule, value, callback) => {
+				const isSpecial = !notSpecial2(String(value))
+				const isRmoji = isHaveEmoji(String(value))
+				if (isSpecial) {
+					callback(new Error('不支持空格及特殊字符'))
+				} else if (isRmoji) {
+					callback(new Error('不支持表情'))
+				} else if (!reg1.test(value)) {
+					callback(new Error('请输入4-11位，最少2个字母+数字组合，首位字母'))
+				} else {
+					callback()
+				}
+			}
 
 			const userName = [
-				{ required: true, message: '请输入会员账号', trigger: 'blur' }
+				{ required: true, validator: testUserName, trigger: 'blur' },
+				{
+					min: 4,
+					max: 11,
+					message: '长度在 4 到 11 个字符',
+					trigger: 'blur'
+				}
 			]
 
 			const adjustType = [
@@ -243,48 +249,52 @@ export default {
 		},
 		searchRealName() {
 			const { userName, userType } = this.queryData
-			if (userName) {
-				this.$api
-					.memberIncreaseSearchAPI({ userName, accountType: userType })
-					.then((res) => {
-						const { code, data } = res
-						if (code === 200) {
-							const { realName, accountType, userId, parentProxyId } = data
-							this.queryData.realName = realName
-							this.queryData.accountType = accountType
-							this.queryData.userId = userId
-							this.queryData.parentProxyId = parentProxyId
-						}
-					})
-
-                this.getRelationId()
-			}
+			this.$refs.form.validateField('userName', (errMsg) => {
+				if (!errMsg) {
+					this.$api
+						.memberIncreaseSearchAPI({ userName, accountType: userType })
+						.then((res) => {
+							const { code, data } = res
+							if (code === 200) {
+								const { realName, accountType, userId, parentProxyId } = data
+								this.queryData.realName = realName
+								this.queryData.accountType = accountType
+								this.queryData.userId = userId
+								this.queryData.parentProxyId = parentProxyId
+							}
+						})
+					this.getRelationId()
+				}
+			})
 		},
 		searchBalance() {
 			const { userName, userType } = this.queryData
-			if (userName) {
-				this.loading = true
-				this.$api
-					.memberIncreaseSearchAPI({ userName, accountType: userType })
-					.then((res) => {
-						this.loading = false
-						const { code, data } = res
-						if (code === 200) {
-							const { balance } = data
-							this.queryData.accountBalance = balance
-						}
-					})
-					.catch(() => {
-						this.loading = false
-					})
+            this.$refs.form.clearValidate('adjustType')
+            this.$refs.form.clearValidate('amount')
+            this.$refs.form.clearValidate('accountBalance')
+            this.$refs.form.clearValidate('remark')
+			this.$refs.form.validateField('userName', (errMsg) => {
+				if (!errMsg) {
+					this.loading = true
+					this.$api
+						.memberIncreaseSearchAPI({ userName, accountType: userType })
+						.then((res) => {
+							this.loading = false
+							const { code, data } = res
+							if (code === 200) {
+								const { balance } = data
+								this.queryData.accountBalance = balance
+							}
+						})
+						.catch(() => {
+							this.loading = false
+						})
 
-				setTimeout(() => {
-					this.loading = false
-				}, 1000)
-			} else {
-				this.$refs['form'].resetFields()
-				this.$refs.form.validateField('userName')
-			}
+					setTimeout(() => {
+						this.loading = false
+					}, 1000)
+				}
+			})
 		},
 		add() {
 			this.loadingT = true
