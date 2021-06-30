@@ -19,7 +19,7 @@
 				</el-form-item>
 				<el-form-item label="标题:">
 					<el-input
-						v-model="queryData.title"
+						v-model="queryData.announcementTitel"
 						clearable
 						size="medium"
 						:maxlength="20"
@@ -30,23 +30,23 @@
 				</el-form-item>
 				<el-form-item label="变更类型:">
 					<el-select
-						v-model="queryData.title"
+						v-model="queryData.changeType"
 						style="width: 300px"
 						multiple
 						placeholder="默认选择全部"
 						:popper-append-to-body="false"
 					>
 						<el-option
-							v-for="item in accountType"
+							v-for="item in changeType"
 							:key="item.code"
-							:label="item.description"
+							:label="item.value"
 							:value="item.code"
 						></el-option>
 					</el-select>
 				</el-form-item>
 				<el-form-item label="操作人:">
 					<el-input
-						v-model="queryData.applyName"
+						v-model="queryData.createdBy"
 						clearable
 						size="medium"
 						:maxlength="12"
@@ -86,65 +86,68 @@
 					:data="dataList"
 					style="width: 100%"
 					:header-cell-style="getRowClass"
-					@sort-change="changeTableSort"
+					@sort-change="_changeTableSort"
 				>
-					<el-table-column prop="applyType" align="center" label="标题">
+					<el-table-column prop="announcementTitle" align="center" label="标题">
 						<template slot-scope="scope">
-							<p>{{ typeFilter(scope.row.applyType, 'applyType') }}</p>
+							<span v-if="scope.row.announcementTitle">
+								{{ scope.row.announcementTitle }}
+							</span>
+							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="applyType" align="center" label="变更类型">
-						<!-- <template slot-scope="scope">
-							<p>{{ typeFilter(scope.row.applyType, 'applyType') }}</p>
-						</template> -->
-					</el-table-column>
-					<el-table-column align="center" label="变更前">
+					<el-table-column prop="changeType" align="center" label="变更类型">
 						<template slot-scope="scope">
-							<template v-if="scope.row.applyType * 1 === 2">
-								{{ typeFilter(scope.row.beforeModify, 'genderType') }}
-							</template>
-							<template v-else-if="Number(scope.row.applyType === 6)">
-								{{ typeFilter(scope.row.beforeModify, 'accountStatusType') }}
-							</template>
-							<template v-else>
-								{{ scope.row.beforeModify ? scope.row.beforeModify : '-' }}
-							</template>
+							<span
+								v-if="scope.row.changeType || scope.row.changeType + '' === '0'"
+							>
+								{{
+									changeType.filter(
+										(item) => item.code === scope.row.changeType
+									)[0].value
+								}}
+							</span>
+							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column align="center" label="变更后">
+					<el-table-column align="center" label="变更前" prop="beforeValue">
 						<template slot-scope="scope">
-							<template v-if="scope.row.applyType * 1 === 2">
-								{{ typeFilter(scope.row.afterModify, 'genderType') }}
-							</template>
-							<template v-else-if="Number(scope.row.applyType === 6)">
-								{{ typeFilter(scope.row.afterModify, 'accountStatusType') }}
-							</template>
-							<template v-else>
-								{{ scope.row.afterModify ? scope.row.afterModify : '-' }}
-							</template>
+							<span v-if="scope.row.beforeValue">
+								{{ scope.row.beforeValue }}
+							</span>
+							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="applyType" align="center" label="备注">
+					<el-table-column align="center" label="变更后" prop="afterValue">
 						<template slot-scope="scope">
-							<p>{{ typeFilter(scope.row.applyType, 'applyType') }}</p>
+							<span v-if="scope.row.afterValue">
+								{{ scope.row.afterValue }}
+							</span>
+							<span v-else>-</span>
 						</template>
 					</el-table-column>
 					<el-table-column
-						prop="applyName"
+						prop="createdBy"
 						align="center"
-						width="100"
+						width="120"
 						label="操作人"
 					>
 						<template slot-scope="scope">
-							<p>{{ scope.row.applyName }}</p>
+							<span v-if="scope.row.createdBy">{{ scope.row.createdBy }}</span>
+							<span v-else>-</span>
 						</template>
 					</el-table-column>
 					<el-table-column
-						prop="applyTime"
+						prop="createdAt"
 						align="center"
 						label="操作时间"
 						sortable="custom"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							<span v-if="scope.row.createdAt">{{ scope.row.createdAt }}</span>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
 				</el-table>
 				<!-- 分页 -->
 				<el-pagination
@@ -181,59 +184,50 @@ export default {
 		return {
 			queryData: {
 				time: [start, end],
-				title: undefined,
-				accountType: [],
-				applyType: []
+				announcementTitel: undefined,
+				createdBy: undefined,
+				changeType: []
 			},
 			dataList: [],
-			title: ''
+			total: 0,
+			changeType: []
 		}
 	},
-	computed: {
-		accountType() {
-			return this.globalDics.accountType
-		},
-		applyType() {
-			return this.globalDics.applyType
-		}
+	computed: {},
+	mounted() {
+		this.queryEnums()
 	},
-	mounted() {},
 	methods: {
 		loadData() {
 			const [startTime, endTime] = this.queryData.time || []
 			let params = {
 				...this.queryData,
-				applyTimeStart: startTime
+				startTime: startTime
 					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
 					: '',
-				applyTimeEnd: endTime
-					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
-					: ''
-			}
-			if (!params.applyTimeStart || !params.applyTimeEnd) {
-				this.$message({
-					message: '操作时间参数必传',
-					type: 'info'
-				})
-				return
+				endTime: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
 			}
 			params = {
 				...this.getParams(params)
 			}
+			delete params.time
 			this.loading = true
 
 			this.$api
-				.memberDataInfoChangeRecord(params)
+				.activityInfoLogListAPI(params)
 				.then((res) => {
-					if (res.code === 200) {
-						const response = res.data
-						this.loading = false
-						this.dataList = response.record
-						this.total = response.totalRecord
+					this.loading = false
+					const {
+						code,
+						data: { record, totalRecord },
+						msg
+					} = res
+					if (code === 200) {
+						this.dataList = record || []
+						this.total = totalRecord || 0
 					} else {
-						this.loading = false
 						this.$message({
-							message: res.msg,
+							message: msg,
 							type: 'error'
 						})
 					}
@@ -242,9 +236,22 @@ export default {
 					this.loading = false
 				})
 		},
-		changeTableSort({ column, prop, order }) {
+		queryEnums() {
+			this.$api.activityInfoLogAPI().then((res) => {
+				const {
+					code,
+					data: { changeType }
+				} = res
+				if (code === 200) {
+					this.changeType = changeType
+				} else {
+					this.changeType = []
+				}
+			})
+		},
+		_changeTableSort({ column, prop, order }) {
 			this.pageNum = 1
-			console.log(prop)
+			this.queryData.orderKey = 1
 			if (order === 'ascending') {
 				// 升序
 				this.queryData.orderType = 'asc'
@@ -255,16 +262,13 @@ export default {
 			this.loadData()
 		},
 		reset() {
+			this.pageNum = 1
 			this.queryData = {
 				time: [start, end],
-				title: undefined,
-				accountType: [],
-				applyType: []
+				announcementTitel: undefined,
+				createdBy: undefined,
+				changeType: []
 			}
-			this.pageNum = 1
-			this.loadData()
-		},
-		handleCurrentChange() {
 			this.loadData()
 		}
 	}
