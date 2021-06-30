@@ -389,7 +389,10 @@ export default {
                   type: 'success'
                 })
                 loading.close()
-                this.loadData()
+                setTimeout(() => {
+                  this.loadData()
+                  console.log(1111111)
+                }, 1000)
               }
             })
             .catch(() => {
