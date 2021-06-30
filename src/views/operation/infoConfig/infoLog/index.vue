@@ -19,7 +19,7 @@
 				</el-form-item>
 				<el-form-item label="标题:">
 					<el-input
-						v-model="queryData.title"
+						v-model="queryData.announcementTitel"
 						clearable
 						size="medium"
 						:maxlength="20"
@@ -30,23 +30,23 @@
 				</el-form-item>
 				<el-form-item label="变更类型:">
 					<el-select
-						v-model="queryData.title"
+						v-model="queryData.changeType"
 						style="width: 300px"
 						multiple
 						placeholder="默认选择全部"
 						:popper-append-to-body="false"
 					>
 						<el-option
-							v-for="item in accountType"
+							v-for="item in changeType"
 							:key="item.code"
-							:label="item.description"
+							:label="item.value"
 							:value="item.code"
 						></el-option>
 					</el-select>
 				</el-form-item>
 				<el-form-item label="操作人:">
 					<el-input
-						v-model="queryData.applyName"
+						v-model="queryData.createdBy"
 						clearable
 						size="medium"
 						:maxlength="12"
@@ -86,17 +86,26 @@
 					:data="dataList"
 					style="width: 100%"
 					:header-cell-style="getRowClass"
-					@sort-change="changeTableSort"
+					@sort-change="_changeTableSort"
 				>
-					<el-table-column prop="applyType" align="center" label="标题">
+					<el-table-column prop="announcementTitle" align="center" label="标题">
 						<template slot-scope="scope">
-							<p>{{ typeFilter(scope.row.applyType, 'applyType') }}</p>
+							<span v-if="scope.row.announcementTitle">
+								{{ scope.row.announcementTitle }}
+							</span>
+							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="applyType" align="center" label="变更类型">
-						<!-- <template slot-scope="scope">
-							<p>{{ typeFilter(scope.row.applyType, 'applyType') }}</p>
-						</template> -->
+					<el-table-column prop="changeType" align="center" label="变更类型">
+						<template slot-scope="scope">
+							<span v-if="scope.row.changeType">
+								{{
+									changeType.find(
+										(item) => item.code = scope.row.changeType
+									)
+								}}
+							</span>
+						</template>
 					</el-table-column>
 					<el-table-column align="center" label="变更前">
 						<template slot-scope="scope">
@@ -181,59 +190,50 @@ export default {
 		return {
 			queryData: {
 				time: [start, end],
-				title: undefined,
-				accountType: [],
-				applyType: []
+				announcementTitel: undefined,
+				createdBy: undefined,
+				changeType: []
 			},
 			dataList: [],
-			title: ''
+			total: 0,
+			changeType: []
 		}
 	},
-	computed: {
-		accountType() {
-			return this.globalDics.accountType
-		},
-		applyType() {
-			return this.globalDics.applyType
-		}
+	computed: {},
+	mounted() {
+		this.queryEnums()
 	},
-	mounted() {},
 	methods: {
 		loadData() {
 			const [startTime, endTime] = this.queryData.time || []
 			let params = {
 				...this.queryData,
-				applyTimeStart: startTime
+				startTime: startTime
 					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
 					: '',
-				applyTimeEnd: endTime
-					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
-					: ''
-			}
-			if (!params.applyTimeStart || !params.applyTimeEnd) {
-				this.$message({
-					message: '操作时间参数必传',
-					type: 'info'
-				})
-				return
+				endTime: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
 			}
 			params = {
 				...this.getParams(params)
 			}
+			delete params.time
 			this.loading = true
 
 			this.$api
-				.memberDataInfoChangeRecord(params)
+				.activityInfoLogListAPI(params)
 				.then((res) => {
-					if (res.code === 200) {
-						const response = res.data
-						this.loading = false
-						this.dataList = response.record
-						this.total = response.totalRecord
+					this.loading = false
+					const {
+						code,
+						data: { record, totalRecord },
+						msg
+					} = res
+					if (code === 200) {
+						this.dataList = record || []
+						this.total = totalRecord || 0
 					} else {
-						this.loading = false
 						this.$message({
-							message: res.msg,
+							message: msg,
 							type: 'error'
 						})
 					}
@@ -242,7 +242,20 @@ export default {
 					this.loading = false
 				})
 		},
-		changeTableSort({ column, prop, order }) {
+		queryEnums() {
+			this.$api.activityInfoLogAPI().then((res) => {
+				const {
+					code,
+					data: { changeType }
+				} = res
+				if (code === 200) {
+					this.changeType = changeType
+				} else {
+					this.changeType = []
+				}
+			})
+		},
+		_changeTableSort({ column, prop, order }) {
 			this.pageNum = 1
 			console.log(prop)
 			if (order === 'ascending') {
@@ -255,16 +268,13 @@ export default {
 			this.loadData()
 		},
 		reset() {
+			this.pageNum = 1
 			this.queryData = {
 				time: [start, end],
 				title: undefined,
 				accountType: [],
 				applyType: []
 			}
-			this.pageNum = 1
-			this.loadData()
-		},
-		handleCurrentChange() {
 			this.loadData()
 		}
 	}
