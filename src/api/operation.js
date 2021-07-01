@@ -358,6 +358,14 @@ export function operateConfigBannerQueryBannerAreaAPI(params) {
 		params
 	})
 }
+// 按banner区域排序
+export function setoperateConfigBannerSort(data) {
+	return request({
+		url: '/operate/configBanner/sort',
+		method: 'post',
+		data
+	})
+}
 // 客户端配置管理操作记录=》查询
 export function operateConfigClientRecordQueryEnumsAPI(params) {
 	return request({
@@ -578,6 +586,7 @@ export default {
 	getPperateConfigBannerUpdate,
 	getOperateConfigBannerAdd,
 	operateConfigBannerQueryBannerAreaAPI,
+	setoperateConfigBannerSort,
 	operateConfigClientRecordQueryEnumsAPI,
 	getOperateConfigClientRecordQueryRecordList,
 	getOperateObConfigNoticeSelectAll,
