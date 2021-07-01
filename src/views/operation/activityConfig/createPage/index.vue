@@ -90,9 +90,9 @@
 							icon="el-icon-sort"
 							:disabled="loading"
 							size="medium"
-							@click="sortLabel = true"
+							@click="activepage"
 						>
-							排序
+							优惠活动页签排序
 						</el-button>
 					</el-form-item>
 				</el-form>
@@ -338,38 +338,9 @@ export default {
 		onEnd() {
 			this.drag = false
 		},
+		// 排序确定
 		changeSort() {
-			console.log(this.title)
-			const data = {}
-			data.activityTagRemark = this.dialogForm.activityTagRemark
-			data.memberLabelName = this.dialogForm.memberLabelName
-			data.mregionAging = this.dialogForm.mregionAging
-
-			this.$refs.formSub.validate((valid) => {
-				if (valid) {
-					if (this.title === '新增') {
-						console.log('新增')
-
-						this.$api.setMemberAddOrEditMemberLabel(data).then((res) => {
-							if (res.code === 200) {
-								this.$message.success('新增成功')
-								this.pageNum = 1
-								this.loadData()
-							}
-							this.dialogFormVisible = false
-						})
-					} else {
-						data.id = this.dialogForm.id
-						this.$api.setMemberAddOrEditMemberLabel(data).then((res) => {
-							if (res.code === 200) {
-								this.$message.success('修改成功')
-								this.loadData()
-							}
-							this.dialogFormVisible = false
-						})
-					}
-				}
-			})
+			console.log('77777')
 		},
 		loadGame() {
 			this.$api
@@ -405,6 +376,18 @@ export default {
 				.catch(() => {
 					this.loading = false
 				})
+		},
+		activepage() {
+			 const params = {
+
+             }
+          this.$api.setoperateconfigDiscountTagquerySortedNames(params).then((res) => {
+			  console.log(params, '555')
+        if (res.code === 200) {
+          this.sortList[0].sortLabel = res.data
+          this.sortVisible = true
+        }
+      })
 		},
 		reset() {
 			this.queryData = {
