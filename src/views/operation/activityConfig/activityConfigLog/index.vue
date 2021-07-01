@@ -182,38 +182,6 @@
 						label="操作页面"
 					></el-table-column>
 					<el-table-column
-						v-if="activeName === '3'"
-						prop="activityType"
-						align="center"
-						label="活动类型"
-					>
-						<template slot-scope="scope">
-							<span
-								v-if="
-									scope.row.activityType || scope.row.activityType + '' === '0'
-								"
-							>
-								{{ typeFilter(scope.row.activityType, 'operateActivityType') }}
-							</span>
-							<span v-else>-</span>
-						</template>
-					</el-table-column>
-					<el-table-column
-						v-if="activeName === '3'"
-						prop="activityId"
-						align="center"
-						label="活动ID"
-					>
-						<template slot-scope="scope">
-							<span
-								v-if="scope.row.activityId || scope.row.activityId + '' === '0'"
-							>
-								{{ scope.row.activityId }}
-							</span>
-							<span v-else>-</span>
-						</template>
-					</el-table-column>
-					<el-table-column
 						v-if="activeName === '1'"
 						prop="operationPageName"
 						align="center"
@@ -253,6 +221,38 @@
 						</template>
 					</el-table-column>
 					<el-table-column
+						v-if="activeName === '3'"
+						prop="activityType"
+						align="center"
+						label="活动类型"
+					>
+						<template slot-scope="scope">
+							<span
+								v-if="
+									scope.row.activityType || scope.row.activityType + '' === '0'
+								"
+							>
+								{{ typeFilter(scope.row.activityType, 'operateActivityType') }}
+							</span>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
+					<el-table-column
+						v-if="activeName === '3'"
+						prop="activityId"
+						align="center"
+						label="活动ID"
+					>
+						<template slot-scope="scope">
+							<span
+								v-if="scope.row.activityId || scope.row.activityId + '' === '0'"
+							>
+								{{ scope.row.activityId }}
+							</span>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
+					<el-table-column
 						v-if="activeName === '0'"
 						prop="changeType"
 						align="center"
@@ -265,7 +265,7 @@
 						</template>
 					</el-table-column>
 					<el-table-column
-						v-if="activeName === '1'"
+						v-else-if="activeName === '1'"
 						prop="changeType"
 						align="center"
 						label="变更类型"
@@ -277,7 +277,7 @@
 						</template>
 					</el-table-column>
 					<el-table-column
-						v-if="activeName === '2'"
+						v-else-if="activeName === '2'"
 						prop="changeType"
 						align="center"
 						label="变更类型"
@@ -285,6 +285,18 @@
 						<template slot-scope="scope">
 							<p>
 								{{ typeFilter(scope.row.changeType, 'operateChangeTypeDis') }}
+							</p>
+						</template>
+					</el-table-column>
+					<el-table-column
+						v-else
+						prop="changeType"
+						align="center"
+						label="变更类型"
+					>
+						<template slot-scope="scope">
+							<p>
+								{{ typeFilter(scope.row.changeType, 'operateChangeTypeVip') }}
 							</p>
 						</template>
 					</el-table-column>
@@ -299,7 +311,7 @@
 						label="变更后"
 					></el-table-column>
 					<el-table-column
-						v-if="activeName === '1'"
+						v-if="activeName && activeName === '1'"
 						prop="remark"
 						align="center"
 						label="备注"
