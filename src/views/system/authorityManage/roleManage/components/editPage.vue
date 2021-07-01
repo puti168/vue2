@@ -61,6 +61,7 @@
 					v-model="chooseAll"
 					class="chooseAll"
 					:indeterminate="isIndeterminate"
+                    @change="handleAllChoose"
 				>
 					选择全部
 				</el-checkbox>
@@ -99,10 +100,10 @@ export default {
 			},
 			chooseAll: false,
 			dataList: [],
-			otherArr: [],
 			checkAll: false,
 			defaultList: [],
 			rolePermissions: [],
+            permissions: [],
 			checkedKeys: [],
 			isIndeterminate: false
 		}
@@ -190,7 +191,7 @@ export default {
 		async getRoleList() {
 			const { code, data } = await this.$api.getRolePermissions()
 			if (code === 200) {
-				this.dataList = data
+                this.permissions = JSON.parse(JSON.stringify(data))
 				this.filterData(data)
 			}
 		},
@@ -236,8 +237,23 @@ export default {
 			}
 		},
 		handleCheck(data, obj) {
-		    console.log('data', data)
-		    console.log('obj', obj)
+			if (!obj.checkedKeys.includes(data.id)) {
+				this.$refs.tree.setChecked(data.parentId, false, true)
+			}
+		},
+        handleAllChoose(val) {
+            const ids = this.getAllIds(this.permissions, [])
+            this.$nextTick(() => {
+                this.$refs.tree.setCheckedKeys(val ? ids : [])
+            })
+            this.isIndeterminate = false
+        },
+        getAllIds(permissions, arr) {
+            permissions.forEach((item) => {
+                arr.push(item.id)
+                item.children && this.getAllIds(item.children, arr)
+            })
+            return arr
         },
 		save() {
 			this.loading = true
@@ -378,7 +394,7 @@ export default {
 				border: 1px solid #eee;
 				overflow-y: scroll;
 				.tree-content {
-					height: 1000px;
+					height: 800px;
 				}
 				.btn-style-role {
 					width: 120px;
@@ -448,7 +464,7 @@ export default {
 	.save-container {
 		.save-btn {
 			text-align: center;
-			margin: 0 auto;
+			margin: 0 auto 50px;
 			background-color: rgba(26, 188, 156, 1);
 			height: 40px;
 			line-height: 40px;
