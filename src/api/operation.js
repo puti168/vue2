@@ -470,7 +470,70 @@ export function setUserInfoupdatePwdAdmin(data) {
 		data
 	})
 }
-
+// 优惠活动配置 ==> 查询列表
+export function getOperateDiscountActivityQueryList(data) {
+	return request({
+		url: '/operate/discountActivity/queryList',
+		method: 'post',
+		data
+	})
+}
+// 优惠活动配置 ==> 获取已创建的活动id，名称
+export function getOperateDiscountActivityQueryActivityNameList(params) {
+	return request({
+		url: '/operate/discountActivity/queryActivityNameList',
+		method: 'get',
+		params
+	})
+}
+// 优惠活动配置 ==> 获取页签下的所有活动
+export function getOperateDiscountActivityQueryActivityNameListByTag(params) {
+	return request({
+		url: '/operate/discountActivity/queryActivityNameListByTag',
+		method: 'get',
+		params
+	})
+}
+// 优惠活动配置 ==> 新增
+export function setOperateDiscountActivityAdd(data) {
+	return request({
+		url: '/operate/discountActivity/add',
+		method: 'post',
+		data
+	})
+}
+// 优惠活动配置 ==> 删除
+export function setOperateDiscountActivityDelete(data) {
+	return request({
+		url: '/operate/discountActivity/delete',
+		method: 'post',
+		data
+	})
+}
+// 优惠活动配置 ==> 排序
+export function setOperateDiscountActivitySort(data) {
+	return request({
+		url: '/operate/discountActivity/sort',
+		method: 'post',
+		data
+	})
+}
+// 优惠活动配置 ==> 修改
+export function setOperateDiscountActivityUpdate(data) {
+	return request({
+		url: '/operate/discountActivity/update',
+		method: 'post',
+		data
+	})
+}
+// 优惠活动配置 ==> 启用、禁用
+export function setOperateDiscountActivityUse(data) {
+	return request({
+		url: '/operate/discountActivity/use',
+		method: 'post',
+		data
+	})
+}
 export default {
 	queryDiscountTagList,
 	queryVipActivityList,
@@ -528,5 +591,13 @@ export default {
 	setOperateActivityVipUse,
 	setOperateActivityVipSort,
 	operateConfigBannerQueryGameList,
-	setUserInfoupdatePwdAdmin
+	setUserInfoupdatePwdAdmin,
+	getOperateDiscountActivityQueryList,
+	getOperateDiscountActivityQueryActivityNameList,
+	getOperateDiscountActivityQueryActivityNameListByTag,
+	setOperateDiscountActivityAdd,
+	setOperateDiscountActivityDelete,
+	setOperateDiscountActivitySort,
+	setOperateDiscountActivityUpdate,
+	setOperateDiscountActivityUse
 }
