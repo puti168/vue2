@@ -54,6 +54,7 @@
 							:props="defaultProps"
 							:check-on-click-node="true"
 							@check="handleCheck"
+							@check-change="handleCheckChange"
 						></el-tree>
 					</div>
 				</div>
@@ -61,7 +62,7 @@
 					v-model="chooseAll"
 					class="chooseAll"
 					:indeterminate="isIndeterminate"
-                    @change="handleAllChoose"
+					@change="handleAllChoose"
 				>
 					选择全部
 				</el-checkbox>
@@ -100,12 +101,13 @@ export default {
 			},
 			chooseAll: false,
 			dataList: [],
-			checkAll: false,
-			defaultList: [],
 			rolePermissions: [],
-            permissions: [],
+			permissions: [],
 			checkedKeys: [],
-			isIndeterminate: false
+			chooseIds: [],
+			allChooseLen: 0,
+			isIndeterminate: false,
+            updateStatus: false
 		}
 	},
 	computed: {
@@ -189,9 +191,10 @@ export default {
 			this.$emit('back')
 		},
 		async getRoleList() {
-			const { code, data } = await this.$api.getRolePermissions()
+			const { code, data } = await this.$api.getRolePermissionsAPI()
 			if (code === 200) {
-                this.permissions = JSON.parse(JSON.stringify(data))
+				this.permissions = JSON.parse(JSON.stringify(data))
+				this.allChooseLen = data.length
 				this.filterData(data)
 			}
 		},
@@ -236,25 +239,38 @@ export default {
 				})
 			}
 		},
-		handleCheck(data, obj) {
-			if (!obj.checkedKeys.includes(data.id)) {
-				this.$refs.tree.setChecked(data.parentId, false, true)
-			}
+		handleCheck(checkedNodes, checkedKeys) {
+			this.chooseIds = checkedKeys.checkedKeys.concat(
+				checkedKeys.halfCheckedKeys
+			)
+			!!this.chooseIds.length && this.chooseIds.length < this.allChooseLen
+				? ((this.chooseAll = false), (this.isIndeterminate = true))
+				: this.allChooseLen === this.chooseIds.length
+				? ((this.chooseAll = true), (this.isIndeterminate = false))
+				: ((this.chooseAll = false), (this.isIndeterminate = false))
 		},
-        handleAllChoose(val) {
-            const ids = this.getAllIds(this.permissions, [])
-            this.$nextTick(() => {
-                this.$refs.tree.setCheckedKeys(val ? ids : [])
-            })
-            this.isIndeterminate = false
-        },
-        getAllIds(permissions, arr) {
-            permissions.forEach((item) => {
-                arr.push(item.id)
-                item.children && this.getAllIds(item.children, arr)
-            })
-            return arr
-        },
+		handleAllChoose(val) {
+			const ids = this.getAllIds(this.permissions, [])
+			this.$nextTick(() => {
+				this.$refs.tree.setCheckedKeys(val ? ids : [])
+				val ? (this.chooseIds = ids) : (this.chooseIds = [])
+			})
+			this.isIndeterminate = false
+		},
+		getAllIds(permissions, arr) {
+			permissions.forEach((item) => {
+				arr.push(item.id)
+				item.children && this.getAllIds(item.children, arr)
+			})
+			return arr
+		},
+		handleCheckChange(data) {
+			// if (this.$refs.tree) {
+			//     const selected = this.$refs.tree.getCheckedKeys()
+			//     const ids = this.getAllIds(this.permissions, [])
+			//     this.checkAll = selected.length === ids.length
+			// }
+		},
 		save() {
 			this.loading = true
 			const params = {

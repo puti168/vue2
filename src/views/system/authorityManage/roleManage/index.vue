@@ -171,7 +171,7 @@ export default {
 			}
 			this.loading = true
 			this.$api
-				.getRoleListPage(params)
+				.getRoleListPageAPI(params)
 				.then((res) => {
 					const {
 						code,

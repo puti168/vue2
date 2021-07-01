@@ -1,4 +1,14 @@
 import request from '@/utils/request'
+
+// 分页查询角色列表
+export function getRoleListPageAPI(params) {
+	return request({
+		url: '/system/role/queryRoleList',
+		method: 'get',
+		params
+	})
+}
+
 // 删除角色
 export function deleteRoleAPI(data) {
 	return request({
@@ -7,8 +17,18 @@ export function deleteRoleAPI(data) {
 		data
 	})
 }
+
+// 查询当前登录用户拥有的全部权限
+export function getRolePermissionsAPI(params) {
+	return request({
+		url: '/system/role/queryPermissionList',
+		method: 'GET',
+		params
+	})
+}
+
 // 查询权限列表
-export function getRolePermissionList(data) {
+export function getRolePermissionListAPI(data) {
 	return request({
 		url: '/role/permissions/list',
 		method: 'post',
@@ -31,14 +51,6 @@ export function getRoleStatus(data) {
 		data
 	})
 }
-// 分页查询角色列表
-export function getRoleListPage(params) {
-	return request({
-		url: '/system/role/queryRoleList',
-		method: 'get',
-		params
-	})
-}
 // 分页查询角色下的用户
 export function getPageRoleUsers(data) {
 	return request({
@@ -47,14 +59,7 @@ export function getPageRoleUsers(data) {
 		data
 	})
 }
-// 查询当前登录用户拥有的全部权限
-export function getRolePermissions(params) {
-	return request({
-		url: '/system/role/queryPermissionList',
-		method: 'GET',
-		params
-	})
-}
+
 // 添加角色
 export function setSaveRoleInfo(data) {
 	return request({
@@ -80,13 +85,13 @@ export function setUpdateRoleStatus(data) {
 	})
 }
 export default {
+	getRoleListPageAPI,
 	deleteRoleAPI,
-	getRolePermissionList,
+	getRolePermissionsAPI,
+	getRolePermissionListAPI,
 	getRoleDetailInfo,
 	getRoleStatus,
-	getRoleListPage,
 	getPageRoleUsers,
-	getRolePermissions,
 	setSaveRoleInfo,
 	setUpdateRoleInfo,
 	setUpdateRoleStatus
