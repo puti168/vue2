@@ -14,10 +14,12 @@
         <el-form-item class="pding" label="角色名称：">
           <el-input
             v-model="form.agentCode"
+            class="text"
             readonly
             unselectable="on"
             size="medium"
             clearable
+            type="text"
             maxlength="6"
             style="width: 365px"
           ></el-input>
@@ -25,8 +27,10 @@
             <el-form-item label="用户名称：">
           <el-input
             v-model="form.userName"
+            type="text"
+            class="text"
             size="medium"
-            placeholder="请输入联系电话"
+            readonly="readonly"
             clearable
             maxlength="6"
             style="width: 365px"
@@ -116,6 +120,7 @@ export default {
        circleUrl: 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png',
       passwordType: 'password',
       loading: false,
+      id: '',
       form: {
         id: '',
         newPwd: '',
@@ -202,6 +207,9 @@ export default {
       }
     }
   },
+   created() {
+
+   },
   mounted() {
 
   },
@@ -214,23 +222,25 @@ export default {
         this.passwordType = 'password'
       }
     },
-     loadData(id) {
-       console.log(id, 'id31232')
-      this.$api.getUserInfoList({}).then((response) => {
-        console.log(response, '34324')
-
+     loadData() {
+         const id = localStorage.getItem('id')
+      this.$api.getuserInfolist({id}).then((res) => {
+         if (res.code === 200) {
+          this.form = res.data
+          this.dialogGameVisible = true
+        }
         this.loading = false
       })
     },
     onUpdateUser() {
-      //  this.$api.getUserInfoList(data).then((res) => {
-      //    console.log(res,"8989");
-      //         if (res.code === 200) {
-      //           this.$message.success('修改成功')
-      //           this.loadData()
-      //         }
-      //         this.dialogFormVisible = false
-      //       })
+       this.$api.setUserInfoupdatePwdAdmin().then((res) => {
+         console.log(res, '8989')
+              if (res.code === 200) {
+                this.$message.success('修改成功')
+                this.loadData()
+              }
+              this.dialogFormVisible = false
+            })
     },
     reset() {
       this.$refs['form'].resetFields()
@@ -252,6 +262,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.forbid{
+  background: #889aa4
+}
 .pding{
   padding-top: 40px;
 }
