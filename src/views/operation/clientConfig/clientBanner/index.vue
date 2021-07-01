@@ -158,7 +158,7 @@
               icon="el-icon-sort"
               :disabled="loading"
               size="medium"
-              @click="sortLabel = true"
+              @click="sortLabel"
             >
               排序
             </el-button>
@@ -204,7 +204,7 @@
               <template slot-scope="scope">
                 <!-- {{ scope.row.areaType }} -->
                 <span v-for="item in QueryareaList" :key="item.code">
-                  {{ scope.row.areaType === item.code ? item.code : "" }}
+                  {{ scope.row.areaType === item.code ? item.value : "" }}
                 </span>
               </template>
             </el-table-column>
@@ -385,7 +385,7 @@
                   :key="item.code"
                   :label="item.value"
                   :value="item.code"
-                ></el-option>>
+                ></el-option>
               </el-select>
               <span class="el-form-item__error">
                 *首页轮播图从左至右排列依次为：1.2.3.4.5.6.7.8.9.10区
@@ -410,8 +410,8 @@
               ]"
             >
               <el-select v-model="dialogForm.bannerValidity" class="region">
-                 <el-option label="限时" :value="1"></el-option>
-                <el-option label="永久" :value="2"></el-option>
+                 <el-option label="限时" :value="0"></el-option>
+                <el-option label="永久" :value="1"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item></el-form-item>
@@ -437,7 +437,7 @@
               :rules="[{ required: true }]"
             >
               <el-date-picker
-                v-model="offlineTime"
+                v-model="downTime"
                 size="medium"
                 format="yyyy-MM-dd HH:mm:ss"
                 :picker-options="dateEnd"
@@ -453,7 +453,7 @@
                 class="region"
               >
                 <el-option label="是" :value="1"></el-option>
-                <el-option label="否" :value="2"></el-option>
+                <el-option label="否" :value="0"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item
@@ -462,23 +462,38 @@
               :rules="[{ required: true }]"
             >
               <el-select v-model="dialogForm.linkTarget" class="region">
-                <el-option label="游戏" :value="1"></el-option>
-                <el-option label="现金网内部" :value="2"></el-option>
-                <el-option label="外部地址" :value="3"></el-option>
+                <el-option label="游戏" :value="0"></el-option>
+                <el-option v-if="dialogForm.isLink === 1" label="现金网内部" :value="1"></el-option>
+                <el-option v-if="dialogForm.isLink === 1" label="外部地址" :value="2"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item v-if="dialogForm.isLink === 1" label="游戏:" :rules="[]">
               <el-select
                 v-model="dialogForm.mregionAging"
                 class="region"
-                placeholder="1区"
               >
-                <el-option label="1区" value="shanghai"></el-option>
-                <el-option label="2区" value="beijing"></el-option>
+                <el-option
+                  v-for="item in QueryGameList"
+                  :key="item.gameId"
+                  :label="item.gameName"
+                  :value="item.gameId"
+                ></el-option>
               </el-select>
             </el-form-item>
             <el-form-item
-              v-if="dialogForm.linkTarget === 2"
+              v-if="dialogForm.linkTarget === 2 "
+              label="URL链接:"
+              :rules="[{ required: true }]"
+            >
+              <el-input
+                v-model="dialogForm.targetUrl"
+                class="region"
+                placeholder="请输入"
+                show-word-limit
+              ></el-input>
+            </el-form-item>
+             <el-form-item
+              v-if="dialogForm.linkTarget === 1 "
               label="URL链接:"
               :rules="[{ required: true }]"
             >
@@ -491,7 +506,7 @@
             </el-form-item>
             <el-form-item label="图片上传" prop="pictureUrl">
               <UploadItem
-              ref="imgUpload2"
+                ref="imgUpload1"
                 :upload-file-type="'image'"
                 :platform="'PC'"
                 :img-urls="dialogForm.activitySharePicture"
@@ -527,7 +542,7 @@ export default {
     return {
       carouselData: {},
       upTime: Date.now(),
-      offlineTime: endTime,
+      downTime: endTime,
       dateNow: {
         disabledDate(time) {
           return time.getTime() < Date.now() - 24 * 60 * 60 * 1000
@@ -535,6 +550,7 @@ export default {
       },
       dateEnd: {},
       QueryareaList: [],
+      QueryGameList: [],
       tableData: [],
       drag: false,
       sortLabel: false,
@@ -544,13 +560,14 @@ export default {
       imgVisible: false,
       nowImage: '',
       dialogFormVisible: false,
-      dialogForm: { pictureUrl: null},
+      dialogForm: { pictureUrl: null, upTime: '', downTime: ''},
       isEdit: false,
       dataList: [],
       title: '',
       // 终端类型
       clientType: 1,
       recommendDetails: {},
+      addOrEdit: 'add',
       queryData: {
         clientType: 1
       },
@@ -625,6 +642,7 @@ export default {
   },
   created() {
     this.getQueryarea()
+    this.getQueryGameList()
   },
   mounted() {},
   methods: {
@@ -647,9 +665,14 @@ export default {
         bannerName: '',
         bannerValidity: 1,
         pictureUrl: null,
-        clientType: 0
+        clientType: 0,
+        upTime: '',
+        linkTarget: 0,
+        downTime: ''
 
        }
+       this.upTime = Date.now()
+       this.downTime = endTime
       this.dialogFormVisible = true
     },
     changeTime(val) {
@@ -662,7 +685,7 @@ export default {
     },
     clear() {
       this.upTime = Date.now()
-      this.offlineTime = endTime
+      this.downTime = endTime
     },
     getQueryarea() {
       this.$api.operateConfigBannerQueryBannerAreaAPI().then((res) => {
@@ -671,11 +694,40 @@ export default {
         }
       })
     },
-    subAddOrEidt() {
-      const params = {
-        ...this.dialogForm
+    // 获取所有游戏
+     getQueryGameList() {
+      this.$api.operateConfigBannerQueryGameList().then((res) => {
+        if (res.code === 200) {
+          this.QueryGameList = res.data
+        }
+      })
+    },
+     subAddOrEidt() {
+      if (this.dialogForm.isLink === '0') {
+        this.dialogForm.upTime = dayjs(this.upTime).format(
+          'YYYY-MM-DD HH:mm:ss'
+        )
+        this.dialogForm.downTime = dayjs(this.downTime).format(
+          'YYYY-MM-DD HH:mm:ss'
+        )
+      } else {
+        this.dialogForm.upTime = dayjs(this.downTime).format(
+          'YYYY-MM-DD HH:mm:ss'
+        )
+        delete this.dialogForm.downTime
       }
-          this.$api.getOperateConfigBannerAdd(params).then((res) => {
+      this.$refs.formSub.validate(() => {
+        const params = { ...this.dialogForm }
+         console.log(params, '0000')
+          if (this.addOrEdit === 'add') {
+            this.setOperateConfigBannerAdd(params)
+          } else {
+            this.setBannerUpdate(params)
+          }
+      })
+    },
+    setOperateConfigBannerAdd(val) {
+          this.$api.getOperateConfigBannerAdd(val).then((res) => {
             if (res.code === 200) {
               console.log(res)
               this.$message.success('新增成功!')
@@ -685,6 +737,18 @@ export default {
           })
 
         .catch(() => {})
+    },
+    setBannerUpdate(val) {
+      this.$api.getPperateConfigBannerUpdate(val).then((res) => {
+        if (res.code === 200) {
+          this.$message({
+            message: '编辑成功！',
+            type: 'success'
+          })
+          this.dialogFormVisible = false
+          this.loadData()
+        }
+      })
     },
     Eidt() {},
     // subAddOrEidt() {
@@ -833,16 +897,25 @@ export default {
         })
         .catch(() => {})
     },
-    openEdit(val) {
-      console.log(val, '111111')
-      this.flag = val
-      this.$api.getPperateConfigBannerUpdate({ clientType: 1 }).then((res) => {
-        if (res.code === 200) {
-          console.log(res)
-          this.dialogForm = res.data
-          this.dialogFormVisible = true
-        }
+    openEdit(row) {
+      this.addOrEdit = 'edit'
+     this.dialogForm = { ...row }
+     console.log(this.dialogForm, '编辑的事')
+     this.dialogForm.upTime = row.upTime + ''
+     this.dialogForm.downTime = row.downTime + ''
+      this.dialogForm.isLink = row.isLink + ''
+      this.dialogFormVisible = true
+      this.$nextTick(() => {
+        this.$refs.imgUpload1.state = 'image'
+        this.$refs.imgUpload1.fileUrl = row.pictureUrl
       })
+      // this.$api.getPperateConfigBannerUpdate({ clientType: 1 }).then((res) => {
+      //   if (res.code === 200) {
+      //     console.log(res)
+      //     this.dialogForm = res.data
+      //     this.dialogFormVisible = true
+      //   }
+      // })
     },
     closeImage() {
       this.imgVisible = false

@@ -448,6 +448,22 @@ export function setOperateActivityVipSort(data) {
 		data
 	})
 }
+// 查询banner区域
+export function operateConfigBannerQueryGameList(params) {
+	return request({
+		url: '/operate/configBanner/queryGameList',
+		method: 'get',
+		params
+	})
+}
+// vip活动配置/赞助活动配置 ==> 排序
+export function setUserInfoupdatePwdAdmin(data) {
+	return request({
+		url: '/userInfo/updatePwdAdmin',
+		method: 'post',
+		data
+	})
+}
 
 export default {
 	queryDiscountTagList,
@@ -504,5 +520,7 @@ export default {
 	setOperateActivityVipDelete,
 	setOperateActivityVipUpdate,
 	setOperateActivityVipUse,
-	setOperateActivityVipSort
+	setOperateActivityVipSort,
+	operateConfigBannerQueryGameList,
+	setUserInfoupdatePwdAdmin
 }
