@@ -421,7 +421,7 @@
               :rules="[{ required: true }]"
             >
               <el-date-picker
-                v-model="onlineTime"
+                v-model="upTime"
                 size="medium"
                 format="yyyy-MM-dd HH:mm:ss"
                 :picker-options="dateNow"
@@ -489,8 +489,17 @@
                 show-word-limit
               ></el-input>
             </el-form-item>
-            <el-form-item label="图片上传" prop="image">
-              <Upload :nowImage="nowImage" @uploadSuccess="uploadSuccess"></Upload>
+            <el-form-item label="图片上传" prop="pictureUrl">
+              <UploadItem
+              ref="imgUpload2"
+                :upload-file-type="'image'"
+                :platform="'PC'"
+                :img-urls="dialogForm.activitySharePicture"
+                @upoladItemSucess="handleUploadSucessShare"
+                @startUpoladItem="handleStartUploadShare"
+                @deleteUpoladItem="handleDeleteUploadShare"
+                @upoladItemDefeat="handleUploadDefeatShare"
+              ></UploadItem>
               <p class="imgTip">请上传图片！图片格式仅支持png,jpg 图片大小不超过2MB</p>
             </el-form-item>
           </el-form>
@@ -505,19 +514,19 @@
 </template>
 
 <script>
-import Upload from '@/components/Upload'
+import UploadItem from '@/components/UploadItem'
 import dayjs from 'dayjs'
 import list from '@/mixins/list'
 import draggable from 'vuedraggable'
 const startTime = dayjs().startOf('day').valueOf()
 const endTime = dayjs().endOf('day').valueOf()
 export default {
-  components: { draggable, Upload },
+  components: { draggable, UploadItem },
   mixins: [list],
   data() {
     return {
       carouselData: {},
-      onlineTime: Date.now(),
+      upTime: Date.now(),
       offlineTime: endTime,
       dateNow: {
         disabledDate(time) {
@@ -526,7 +535,6 @@ export default {
       },
       dateEnd: {},
       QueryareaList: [],
-      errTime: false,
       tableData: [],
       drag: false,
       sortLabel: false,
@@ -536,7 +544,7 @@ export default {
       imgVisible: false,
       nowImage: '',
       dialogFormVisible: false,
-      dialogForm: { aaaaa: '1' },
+      dialogForm: { pictureUrl: null},
       isEdit: false,
       dataList: [],
       title: '',
@@ -562,7 +570,7 @@ export default {
         callback()
       }
       return {
-        image: [
+        pictureUrl: [
           {
             required: true,
             validator: valiIMG,
@@ -572,6 +580,20 @@ export default {
         ]
       }
     },
+    // errTime() {
+    //   if (
+    //     this.dialogForm.bannerValidity === '0' &&
+    //     this.upTime < this.upTime
+    //   ) {
+    //     console.log(this.dialogForm, '00000')
+    //     return false
+    //   } else if (this.dialogForm.bannerValidity === '1') {
+    //     console.log(this.dialogForm, '11111')
+    //     return false
+    //   } else {
+    //     return true
+    //   }
+    // },
 
     operateValidityType() {
       return this.globalDics.operateValidityType
@@ -590,7 +612,7 @@ export default {
     }
   },
   watch: {
-    onlineTime: {
+    upTime: {
       handler(newV, oldV) {
         this.dateEnd = {
           disabledDate(time) {
@@ -620,10 +642,12 @@ export default {
     addLabel(val) {
       this.dialogForm = {
         status: 0,
-        isLink: 2,
+        isLink: 1,
         areaType: 0,
         bannerName: '',
-        bannerValidity: 1
+        bannerValidity: 1,
+        pictureUrl: null,
+        clientType: 0
 
        }
       this.dialogFormVisible = true
@@ -631,13 +655,13 @@ export default {
     changeTime(val) {
       const Timestamp = new Date(new Date(val).toLocaleDateString()).getTime()
       if (Timestamp === startTime) {
-        this.onlineTime = Date.now()
+        this.upTime = Date.now()
       } else {
-        this.onlineTime = Timestamp
+        this.upTime = Timestamp
       }
     },
     clear() {
-      this.onlineTime = Date.now()
+      this.upTime = Date.now()
       this.offlineTime = endTime
     },
     getQueryarea() {
@@ -651,7 +675,6 @@ export default {
       const params = {
         ...this.dialogForm
       }
-
           this.$api.getOperateConfigBannerAdd(params).then((res) => {
             if (res.code === 200) {
               console.log(res)
@@ -828,6 +851,21 @@ export default {
       this.imgVisible = true
       this.bigImage = val
     },
+     handleUploadDefeatShare() {
+      this.dialogForm.activitySharePicture = ''
+      this.$message.error('图片上传失败')
+    },
+     handleDeleteUploadShare() {
+      this.dialogForm.activitySharePicture = ''
+      this.$message.warning('图片已被移除')
+    },
+     handleStartUploadShare() {
+      this.$message.info('图片开始上传')
+    },
+     handleUploadSucessShare({ index, file, id }) {
+      this.dialogForm.pictureUrl = file.imgUrl
+      this.$refs['formSub'].validateField('pictureUrl')
+    },
 
     changeTableSort({ column, prop, order }) {
       if (prop === 'upTime') {
@@ -855,7 +893,7 @@ export default {
     },
     reset() {
       this.pageNum = 1
-      this.queryData = { clientType: 1 }
+      this.dialogForm = { clientType: 1 }
       this.loadData()
     }
   }

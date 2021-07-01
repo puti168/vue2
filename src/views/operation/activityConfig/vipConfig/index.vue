@@ -5,18 +5,22 @@
         <el-form ref="form" :inline="true" :model="queryData">
           <el-form-item label="活动类型:">
             <el-select
-              v-model="queryData.gameStatusList"
+              v-model="queryData.activityType"
               clearable
               placeholder="默认选择全部"
               :popper-append-to-body="false"
             >
-              <el-option label="赞助活动" value="0"></el-option>
-              <el-option label="VIP活动" value="1"></el-option>
+              <el-option
+                v-for="item in operateVipActivityType"
+                :key="item.code"
+                :label="item.description"
+                :value="item.code"
+              ></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="活动ID:">
             <el-input
-              v-model="queryData.gameId"
+              v-model="queryData.id"
               clearable
               :maxlength="10"
               size="medium"
@@ -26,7 +30,7 @@
           </el-form-item>
           <el-form-item label="活动名称:">
             <el-input
-              v-model="queryData.gameId"
+              v-model="queryData.activityName"
               clearable
               :maxlength="20"
               size="medium"
@@ -36,7 +40,7 @@
           </el-form-item>
           <el-form-item label="活动主标题:">
             <el-input
-              v-model="queryData.gameId"
+              v-model="queryData.activityTitle"
               clearable
               :maxlength="20"
               size="medium"
@@ -47,7 +51,7 @@
 
           <el-form-item label="活动支持终端:">
             <el-select
-              v-model="queryData.aaaaa"
+              v-model="queryData.activityAppType"
               style="width: 300px"
               multiple
               placeholder="默认选择全部"
@@ -61,9 +65,9 @@
               ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="活动支持账户类型:">
+          <el-form-item label="活动生效账户类型:">
             <el-select
-              v-model="queryData.bbbbb"
+              v-model="queryData.activityUserType"
               style="width: 300px"
               multiple
               placeholder="默认选择全部"
@@ -77,20 +81,24 @@
               ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="公告时效:">
+          <el-form-item label="活动时效:">
             <el-select
-              v-model="queryData.gameStatusList"
+              v-model="queryData.activityPrescription"
               clearable
               placeholder="默认选择全部"
               :popper-append-to-body="false"
             >
-              <el-option label="限时" value="0"></el-option>
-              <el-option label="永久" value="1"></el-option>
+              <el-option
+                v-for="item in operateValidityType"
+                :key="item.code"
+                :label="item.description"
+                :value="item.code"
+              ></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="创建人:">
             <el-input
-              v-model="queryData.gameName"
+              v-model="queryData.createdBy"
               clearable
               :maxlength="15"
               size="medium"
@@ -100,7 +108,7 @@
           </el-form-item>
           <el-form-item label="最近操作人:">
             <el-input
-              v-model="queryData.gameName"
+              v-model="queryData.updatedBy"
               clearable
               :maxlength="15"
               size="medium"
@@ -133,7 +141,7 @@
               icon="el-icon-folder"
               :disabled="loading"
               size="medium"
-              @click="dialogFormVisible = true"
+              @click="Add"
             >
               新增
             </el-button>
@@ -143,7 +151,7 @@
               :disabled="loading"
               size="medium"
               style="padding: 0 10px"
-              @click="sortVisible = true"
+              @click="getSortData"
             >
               赞助活动排序
             </el-button>
@@ -160,55 +168,91 @@
           :header-cell-style="getRowClass"
           @sort-change="changeTableSort"
         >
+          <el-table-column prop="activityType" align="center" label="活动类型">
+            <template slot-scope="scope">
+              <span>{{
+                typeFilter(scope.row.activityType, "operateVipActivityType")
+              }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="活动ID" prop="id"> </el-table-column>
           <el-table-column
-            prop="gameId"
-            align="center"
-            label="活动类型"
-          ></el-table-column>
-          <el-table-column align="center" label="活动ID"> </el-table-column>
-          <el-table-column
-            prop="gameName"
+            prop="activityName"
             align="center"
             label="活动名称"
           ></el-table-column>
-          <el-table-column align="center" label="活动主标题"> </el-table-column>
-          <el-table-column align="center" label="活动支持终端"> </el-table-column>
-          <el-table-column align="center" label="活动支持账户类型"> </el-table-column>
-          <el-table-column align="center" label="活动时效"> </el-table-column>
+          <el-table-column align="center" prop="activityTitle" label="活动主标题">
+          </el-table-column>
+          <el-table-column align="center" prop="activityAppTypeName" label="活动支持终端">
+          </el-table-column>
           <el-table-column
-            prop="description"
             align="center"
-            label="活动图时间"
-          ></el-table-column>
-          <el-table-column prop="relationOtherGameId" align="center" label="状态">
+            prop="activityUserTypeName"
+            label="活动生效账户类型"
+          >
           </el-table-column>
-          <el-table-column prop="relationGameModuleId" align="center" label="入口图">
+          <el-table-column align="center" prop="activityPrescription" label="活动时效">
             <template slot-scope="scope">
-              <span class="text-link" @click="lookImg(scope.row.relationGameModuleId)">
+              <span>{{
+                typeFilter(scope.row.activityPrescription, "operateValidityType")
+              }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="activityUpAt" align="center" label="活动图时间">
+            <template slot-scope="scope">
+              <span v-if="scope.row.activityPrescription === 0">
+                {{ scope.row.activityUpAt }}
+                <br />
+                至
+                <br />
+                {{ scope.row.activityDownAt }}
+              </span>
+              <span v-else>
+                {{ scope.row.activityUpAt }}
+                <br />
+                至
+                <br />
+                --
+              </span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="status" align="center" label="状态">
+            <template slot-scope="scope">
+              <span v-if="scope.row.status === 0" class="disableRgba">
+                {{ typeFilter(scope.row.status, "operateStatus") }}
+              </span>
+              <span v-else class="normalRgba">
+                {{ typeFilter(scope.row.status, "operateStatus") }}
+              </span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="activityEnterPicture" align="center" label="入口图">
+            <template slot-scope="scope">
+              <span class="text-link" @click="lookImg(scope.row.activityEnterPicture)">
                 点击预览
               </span>
             </template>
           </el-table-column>
-          <el-table-column prop="updatedBy" align="center" label="分享图">
+          <el-table-column prop="activitySharePicture" align="center" label="分享图">
             <template slot-scope="scope">
-              <span class="text-link" @click="lookImg(scope.row.updatedBy)">
+              <span class="text-link" @click="lookImg(scope.row.activitySharePicture)">
                 点击预览
               </span>
             </template>
           </el-table-column>
           <el-table-column
-            prop="updatedAt"
+            prop="createdBy"
             align="center"
             label="创建人"
           ></el-table-column>
           <el-table-column
-            prop="updatedAt"
+            prop="createdAt"
             align="center"
             label="创建时间"
             sortable="custom"
           ></el-table-column>
           <el-table-column
-            prop="updatedAt"
+            prop="updatedBy"
             align="center"
             label="最近操作人"
           ></el-table-column>
@@ -221,15 +265,7 @@
           <el-table-column prop="operating" align="center" label="操作">
             <template slot-scope="scope">
               <el-button
-                :disabled="loading"
-                type="danger"
-                size="medium"
-                class="noicon"
-                @click="changeStatus(scope.row)"
-              >
-                禁用
-              </el-button>
-              <el-button
+                v-if="scope.row.status === 0"
                 :disabled="loading"
                 type="success"
                 size="medium"
@@ -239,6 +275,17 @@
                 开启
               </el-button>
               <el-button
+                v-else
+                :disabled="loading"
+                type="danger"
+                size="medium"
+                class="noicon"
+                @click="changeStatus(scope.row)"
+              >
+                禁用
+              </el-button>
+
+              <el-button
                 type="primary"
                 icon="el-icon-edit"
                 size="medium"
@@ -247,6 +294,7 @@
                 编辑信息
               </el-button>
               <el-button
+                v-if="scope.row.status === 0"
                 type="danger"
                 icon="el-icon-delete"
                 size="medium"
@@ -277,7 +325,7 @@
           <span>创建/编辑</span>
           <span>
             <el-button type="info" @click="clear">取消</el-button>
-            <el-button type="success" @click="subAddOrEidt">保存</el-button>
+            <el-button type="success" @click="subAddOrEdit">保存</el-button>
           </span>
         </div>
         <div class="content-part2">
@@ -294,25 +342,30 @@
               :rules="[{ required: true }]"
             >
               <el-select
-                v-model="dialogForm.memberLabelName"
+                v-model="dialogForm.activityType"
                 placeholder="默认选择全部"
                 :popper-append-to-body="false"
+                @change="changeActivityType"
               >
-                <el-option label="赞助活动" value="0"></el-option>
-                <el-option label="VIP活动" value="1"></el-option>
+                <el-option
+                  v-for="item in operateVipActivityType"
+                  :key="item.code"
+                  :label="item.description"
+                  :value="item.code"
+                ></el-option>
               </el-select>
             </el-form-item>
             <el-form-item
               label="活动名称:"
               class="tagheight"
-              prop="description"
+              prop="activityName"
               :rules="[
                 { required: true, message: '请输入活动名称', trigger: 'blur' },
                 { min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' },
               ]"
             >
               <el-input
-                v-model="dialogForm.description"
+                v-model="dialogForm.activityName"
                 placeholder="请输入"
                 maxlength="20"
                 clearable
@@ -321,14 +374,14 @@
             <el-form-item
               label="活动主标题:"
               class="tagheight"
-              prop="description"
+              prop="activityTitle"
               :rules="[
                 { required: true, message: '请输入活动主标题', trigger: 'blur' },
                 { min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' },
               ]"
             >
               <el-input
-                v-model="dialogForm.description"
+                v-model="dialogForm.activityTitle"
                 placeholder="请输入"
                 maxlength="20"
                 clearable
@@ -337,6 +390,7 @@
             <el-form-item
               label="活动支持终端:"
               class="tagheight"
+              prop="activityAppType"
               :rules="[
                 {
                   required: true,
@@ -346,8 +400,8 @@
               ]"
             >
               <el-select
-                v-model="dialogForm.loginDeviceType"
-                placeholder="默认选择全部"
+                v-model="dialogForm.activityAppType"
+                placeholder="请选择"
                 multiple
                 :popper-append-to-body="false"
               >
@@ -360,8 +414,9 @@
               </el-select>
             </el-form-item>
             <el-form-item
-              label="活动生效的账户类型:"
+              label="活动生效账户类型:"
               class="tagheight"
+              prop="activityUserType"
               :rules="[
                 {
                   required: true,
@@ -371,8 +426,8 @@
               ]"
             >
               <el-select
-                v-model="dialogForm.accountType"
-                placeholder="默认选择全部"
+                v-model="dialogForm.activityUserType"
+                placeholder="请选择"
                 multiple
                 :popper-append-to-body="false"
               >
@@ -394,17 +449,30 @@
               ]"
             >
               <el-select
-                v-model="dialogForm.timeTab"
-                placeholder="默认选择全部"
+                v-if="dialogForm.activityType === '0'"
+                v-model="dialogForm.activityPrescription"
+                placeholder="请选择"
                 :popper-append-to-body="false"
               >
-                <el-option label="限时" value="0"></el-option>
+                <el-option
+                  v-for="item in operateValidityType"
+                  :key="item.code"
+                  :label="item.description"
+                  :value="item.code"
+                ></el-option>
+              </el-select>
+              <el-select
+                v-else
+                v-model="dialogForm.activityPrescription"
+                placeholder="请选择"
+                :popper-append-to-body="false"
+              >
                 <el-option label="永久" value="1"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item
-              label="公告上架时间:"
-              label-width="112px"
+              label="活动图上架时间:"
+              label-width="125px"
               :rules="[
                 {
                   required: true,
@@ -412,49 +480,49 @@
               ]"
             >
               <el-date-picker
-                v-model="onlineTime"
+                v-model="activityUpAt"
                 size="medium"
                 format="yyyy-MM-dd HH:mm:ss"
-                :picker-sortLabel="dateNow"
+                :picker-options="dateNow"
                 type="datetime"
                 align="right"
                 :clearable="false"
                 @change="changeTime"
               ></el-date-picker>
               <span v-show="errTime" class="el-form-item__error">
-                公告上架时间不能大于公告下架时间
+                活动图上架时间不能大于活动图下架时间
               </span>
             </el-form-item>
             <el-form-item
-              v-if="dialogForm.timeTab === '0'"
-              label="公告下架时间:"
-              label-width="112px"
+              v-if="dialogForm.activityPrescription === '0'"
+              label="活动图下架时间:"
+              label-width="125px"
               :rules="[{ required: true }]"
             >
               <el-date-picker
-                v-model="offlineTime"
+                v-model="activityDownAt"
                 size="medium"
                 format="yyyy-MM-dd HH:mm:ss"
-                :picker-sortLabel="dateEnd"
+                :picker-options="dateEnd"
                 type="datetime"
                 align="right"
                 :clearable="false"
               ></el-date-picker>
               <span v-show="errTime" class="el-form-item__error">
-                公告下架时间不能小于公告上架时间
+                活动图下架时间不能小于活动图上架时间
               </span>
             </el-form-item>
             <el-form-item
               label="入口图片上传:"
-              prop="enterImg"
+              prop="activityEnterPicture"
               style="width: 400px"
               :rules="[{ required: true, message: '请上传图片', trigger: 'change' }]"
             >
               <UploadItem
-                ref="imgUpload"
+                ref="imgUpload1"
                 :upload-file-type="'image'"
                 :platform="'PC'"
-                :img-urls="dialogForm.enterImg"
+                :img-urls="dialogForm.activityEnterPicture"
                 @upoladItemSucess="handleUploadSucessEnter"
                 @startUpoladItem="handleStartUploadEnter"
                 @deleteUpoladItem="handleDeleteUploadEnter"
@@ -468,7 +536,7 @@
             <el-form-item
               label="活动详情跳转地址:"
               class="tagheight"
-              prop="description"
+              prop="activityForwordLink"
               :rules="[
                 { required: true, message: '请输入活动详情跳转地址', trigger: 'blur' },
                 {
@@ -480,7 +548,7 @@
               ]"
             >
               <el-input
-                v-model="dialogForm.description"
+                v-model="dialogForm.activityForwordLink"
                 placeholder="请输入 "
                 maxlength="2038"
                 clearable
@@ -488,14 +556,14 @@
             </el-form-item>
             <el-form-item
               label="分享图片上传:"
-              prop="shareImg"
+              prop="activitySharePicture"
               :rules="[{ required: true, message: '请上传图片', trigger: 'change' }]"
             >
               <UploadItem
-                ref="imgUpload"
+                ref="imgUpload2"
                 :upload-file-type="'image'"
                 :platform="'PC'"
-                :img-urls="dialogForm.shareImg"
+                :img-urls="dialogForm.activitySharePicture"
                 @upoladItemSucess="handleUploadSucessShare"
                 @startUpoladItem="handleStartUploadShare"
                 @deleteUpoladItem="handleDeleteUploadShare"
@@ -509,9 +577,9 @@
             <el-form-item
               label="分享链接:"
               class="tagheight"
-              prop="description"
+              prop="activityShareLink"
               :rules="[
-                { required: true, message: '请输入活动详情跳转地址', trigger: 'blur' },
+                { required: true, message: '请输入分享链接', trigger: 'blur' },
                 {
                   min: 1,
                   max: 2038,
@@ -521,7 +589,7 @@
               ]"
             >
               <el-input
-                v-model="dialogForm.description"
+                v-model="dialogForm.activityShareLink"
                 placeholder="请输入 "
                 maxlength="2038"
                 clearable
@@ -561,10 +629,10 @@
               <transition-group class="sortCss">
                 <div
                   v-for="itme in scope.row.sortLabel"
-                  :key="itme.value"
-                  :class="{ open: itme.status === '1', close: itme.status === '2' }"
+                  :key="itme.id"
+                  :class="{ open: itme.status === 1, close: itme.status === 0 }"
                 >
-                  {{ itme.label }}{{ itme.status === "1" ? "(启用中)" : "(已禁用)" }}
+                  {{ itme.activityName }}({{ typeFilter(itme.status, "operateStatus") }})
                 </div>
               </transition-group>
             </draggable>
@@ -592,57 +660,71 @@ export default {
   mixins: [list],
   data() {
     return {
-      queryData: { aaaaa: [], bbbbb: [] },
+      queryData: {},
       dialogFormVisible: false,
       dialogForm: {
-        memberLabelName: '0',
-        loginDeviceType: '2',
-        timeTab: '0',
-        enterImg: null,
-        shareImg: null,
-        accountType: []
+        activityType: '0',
+        activityAppType: ['2'],
+        activityUserType: ['1'],
+        activityPrescription: '1',
+        activityEnterPicture: null,
+        activitySharePicture: null
       },
-      onlineTime: Date.now(),
-      offlineTime: endTime,
+      activityUpAt: Date.now(),
+      activityDownAt: endTime,
       dateNow: {
         disabledDate(time) {
           return time.getTime() < Date.now() - 24 * 60 * 60 * 1000
         }
       },
-      dateEnd: {},
-      errTime: false,
+      dateEnd: {
+        disabledDate(time) {
+          return time.getTime() < Date.now() - 24 * 60 * 60 * 1000
+        }
+      },
+      // errTime: false,
       bigImage: '',
       imgVisible: false,
       sortVisible: false,
+      addOrEdit: 'add',
       sortList: [
         {
           remake: '赞助活动',
-          sortLabel: [
-            { value: '1', status: '1', label: '获取新增的赞助活动一' },
-            { value: '2', status: '1', label: '获取新增的赞助活动二' },
-            { value: '3', status: '1', label: '获取新增的赞助活动三' },
-            { value: '4', status: '2', label: '获取新增的赞助活动四' },
-            { value: '5', status: '2', label: '获取新增的赞助活动五' },
-            { value: '6', status: '2', label: '获取新增的赞助活动六' },
-            { value: '7', status: '2', label: '获取新增的赞助活动七' },
-            { value: '8', status: '2', label: '获取新增的赞助活动八' },
-            { value: '9', status: '2', label: '获取新增的赞助活动九' },
-            { value: '10', status: '2', label: '获取新增的赞助活动十' }
-          ]
+          sortLabel: []
         }
       ]
     }
   },
   computed: {
+    operateVipActivityType() {
+      return this.globalDics.operateVipActivityType
+    },
+    operateValidityType() {
+      return this.globalDics.operateValidityType
+    },
     loginDeviceType() {
       return this.globalDics.loginDeviceType
     },
     accountType() {
       return this.globalDics.accountType
+    },
+    errTime() {
+      if (
+        this.dialogForm.activityPrescription === '0' &&
+        this.activityUpAt < this.activityDownAt
+      ) {
+        console.log(this.dialogForm, '00000')
+        return false
+      } else if (this.dialogForm.activityPrescription === '1') {
+        console.log(this.dialogForm, '11111')
+        return false
+      } else {
+        return true
+      }
     }
   },
   watch: {
-    onlineTime: {
+    activityUpAt: {
       handler(newV, oldV) {
         this.dateEnd = {
           disabledDate(time) {
@@ -659,15 +741,15 @@ export default {
       const params = {
         ...this.getParams(this.queryData)
       }
-      this.loading = true
+      // this.loading = true;
       this.$api
-        .gameList(params)
+        .getOperateActivityVipQueryList(params)
         .then((res) => {
           if (res.code === 200) {
             const response = res.data
             this.loading = false
-            this.list = response.record
-            this.total = response.totalRecord
+            this.list = response.records
+            this.total = response.total
           } else {
             this.loading = false
             this.$message({
@@ -680,66 +762,137 @@ export default {
           this.loading = false
         })
     },
-    subAddOrEidt() {
-      this.$refs.formSub.validate((valid) => {
-        if (valid) {
-          if (this.dialogForm.timeTab === '0' && this.onlineTime < this.offlineTime) {
-            console.log(this.dialogForm, '00000')
-            this.errTime = false
-          } else if (this.dialogForm.timeTab === '1') {
-            this.errTime = false
-            console.log(this.dialogForm, '11111')
-          } else {
-            this.errTime = true
-          }
+    getSortData() {
+      const params = {
+        type: '0'
+      }
+      this.$api.getOperateActivityVipQueryActivityNameList(params).then((res) => {
+        if (res.code === 200) {
+          this.sortList[0].sortLabel = res.data
+          this.sortVisible = true
         }
       })
     },
-    changeTime(val) {
-      const Timestamp = new Date(new Date(val).toLocaleDateString()).getTime()
-      if (Timestamp === startTime) {
-        this.onlineTime = Date.now()
-      } else {
-        this.onlineTime = Timestamp
-      }
-    },
-    clear() {
-      this.$refs.formSub.resetFields()
-      this.onlineTime = Date.now()
-      this.offlineTime = endTime
-      this.dialogFormVisible = false
-    },
-    subSort() {
-      console.log(this.sortList)
-    },
+
     startChange() {
       this.drag = true
     },
     endChange() {
       this.drag = false
     },
-    openEdit(row) {
-      this.dialogFormVisible = true
-    },
-    deleteBtn(row) {
-      this.$confirm(
-        `<strong>是否删除该条配置?</strong></br><span style='font-size:12px;color:#c1c1c1'>请谨慎操作</span>`,
-        '确认提示',
-        {
-          dangerouslyUseHTMLString: true,
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
+    subSort() {
+      const arr = this.sortList[0].sortLabel
+      const newArr = []
+      for (let i = 0; i < arr.length; i++) {
+        const ele = arr[i]
+        newArr.push(ele.id)
+      }
+      const sortIds = newArr.join(',')
+      console.log(sortIds)
+      this.$api.setOperateActivityVipSort({ sortIds: sortIds }).then((res) => {
+        if (res.code === 200) {
+          this.$message({
+            message: '操作成功！',
+            type: 'success'
+          })
+          this.sortVisible = false
+          this.loadData()
         }
-      )
-        .then(() => {})
-        .catch(() => {})
+      })
     },
+    changeActivityType(val) {
+      this.dialogForm.activityPrescription = '1'
+    },
+    subAddOrEdit() {
+      if (this.dialogForm.activityPrescription === '0') {
+        this.dialogForm.activityUpAt = dayjs(this.activityUpAt).format(
+          'YYYY-MM-DD HH:mm:ss'
+        )
+        this.dialogForm.activityDownAt = dayjs(this.activityDownAt).format(
+          'YYYY-MM-DD HH:mm:ss'
+        )
+      } else {
+        this.dialogForm.activityUpAt = dayjs(this.activityDownAt).format(
+          'YYYY-MM-DD HH:mm:ss'
+        )
+        delete this.dialogForm.activityDownAt
+      }
+      this.$refs.formSub.validate((valid) => {
+        if (valid && !this.errTime) {
+          const params = { ...this.dialogForm }
+          params.activityAppType = params.activityAppType.join(',')
+          params.activityUserType = params.activityUserType.join(',')
+          console.log(params)
+          if (this.addOrEdit === 'add') {
+            this.setOperateActivityVipAdd(params)
+          } else {
+            this.setOperateActivityVipUpdate(params)
+          }
+        }
+      })
+    },
+    // 新增保存
+    setOperateActivityVipAdd(val) {
+      this.$api.setOperateActivityVipAdd(val).then((res) => {
+        if (res.code === 200) {
+          this.$message({
+            message: '新增成功！',
+            type: 'success'
+          })
+          this.dialogFormVisible = false
+          this.loadData()
+        }
+      })
+    },
+    // 修改保存
+    setOperateActivityVipUpdate(val) {
+      this.$api.setOperateActivityVipUpdate(val).then((res) => {
+        if (res.code === 200) {
+          this.$message({
+            message: '编辑成功！',
+            type: 'success'
+          })
+          this.dialogFormVisible = false
+          this.loadData()
+        }
+      })
+    },
+    changeTime(val) {
+      const Timestamp = new Date(new Date(val).toLocaleDateString()).getTime()
+      if (Timestamp === startTime) {
+        this.activityUpAt = Date.now()
+      } else {
+        this.activityUpAt = Timestamp
+      }
+    },
+    clear() {
+      this.$refs.formSub.resetFields()
+      this.activityUpAt = Date.now()
+      this.activityDownAt = endTime
+      this.dialogFormVisible = false
+    },
+
+    openEdit(row) {
+      this.addOrEdit = 'edit'
+      this.dialogForm = { ...row }
+      this.dialogForm.activityType = row.activityType + ''
+      this.dialogForm.activityAppType = row.activityAppType.split(',')
+      this.dialogForm.activityUserType = row.activityUserType.split(',')
+      this.dialogForm.activityPrescription = row.activityPrescription + ''
+      this.dialogFormVisible = true
+      this.$nextTick(() => {
+        this.$refs.imgUpload1.state = 'image'
+        this.$refs.imgUpload1.fileUrl = row.activityEnterPicture
+        this.$refs.imgUpload2.state = 'image'
+        this.$refs.imgUpload2.fileUrl = row.activitySharePicture
+      })
+    },
+
     changeStatus(val) {
       this.$confirm(
-        `<strong>是否对该配置进行${
-          Number(val.gameStatus) === 0 ? '禁用' : '开启'
-        }操作?</strong></br><span>${val.supportTerminal}</span>`,
+        `<strong>是否对该配置进行${val === 0 ? '开启' : '禁用'}操作?</strong></br><span>${
+          val.activityAppTypeName
+        }</span>`,
         '确认提示',
         {
           dangerouslyUseHTMLString: true,
@@ -750,14 +903,14 @@ export default {
       )
         .then(() => {
           this.$api
-            .editGameStatus({
+            .setOperateActivityVipUse({
               id: val.id,
-              gameStatus: val.gameStatus
+              status: val.status === 0 ? 1 : 0
             })
             .then((res) => {
               if (res.code === 200) {
                 this.$message({
-                  message: '操作成功！',
+                  message: '修改成功！',
                   type: 'success'
                 })
                 this.loadData()
@@ -772,10 +925,53 @@ export default {
         })
         .catch(() => {})
     },
+    deleteBtn(row) {
+      this.$confirm(
+        `<strong>是否删除该条配置?</strong></br><span style='font-size:12px;color:#c1c1c1'>请谨慎操作</span>`,
+        '确认提示',
+        {
+          dangerouslyUseHTMLString: true,
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }
+      )
+        .then(() => {
+          this.$api.setOperateActivityVipDelete({ id: row.id }).then((res) => {
+            if (res.code === 200) {
+              this.$message({
+                message: '操作成功！',
+                type: 'success'
+              })
+              this.loadData()
+            } else {
+              this.$message({
+                message: res.msg,
+                type: 'error'
+              })
+            }
+          })
+        })
+        .catch(() => {})
+    },
     reset() {
       this.queryData = {}
       this.pageNum = 1
       this.loadData()
+    },
+    Add() {
+      this.addOrEdit = 'add'
+      this.dialogForm = {
+        activityType: '0',
+        activityAppType: ['2'],
+        activityUserType: ['1'],
+        activityPrescription: '1',
+        activityEnterPicture: null,
+        activitySharePicture: null
+      }
+      this.activityUpAt = Date.now()
+      this.activityDownAt = endTime
+      this.dialogFormVisible = true
     },
     lookImg(val) {
       this.imgVisible = true
@@ -788,33 +984,38 @@ export default {
       this.$message.info('图片开始上传')
     },
     handleUploadSucessEnter({ index, file, id }) {
-      this.dialogForm.enterImg = file.imgUrl
-      this.$refs['formSub'].validateField('enterImg')
+      this.dialogForm.activityEnterPicture = file.imgUrl
+      this.$refs['formSub'].validateField('activityEnterPicture')
     },
     handleUploadDefeatEnter() {
-      this.dialogForm.enterImg = ''
+      this.dialogForm.activityEnterPicture = ''
       this.$message.error('图片上传失败')
     },
     handleDeleteUploadEnter() {
-      this.dialogForm.enterImg = ''
+      this.dialogForm.activityEnterPicture = ''
       this.$message.warning('图片已被移除')
     },
     handleStartUploadShare() {
       this.$message.info('图片开始上传')
     },
     handleUploadSucessShare({ index, file, id }) {
-      this.dialogForm.shareImg = file.imgUrl
-      this.$refs['formSub'].validateField('shareImg')
+      this.dialogForm.activitySharePicture = file.imgUrl
+      this.$refs['formSub'].validateField('activitySharePicture')
     },
     handleUploadDefeatShare() {
-      this.dialogForm.shareImg = ''
+      this.dialogForm.activitySharePicture = ''
       this.$message.error('图片上传失败')
     },
     handleDeleteUploadShare() {
-      this.dialogForm.shareImg = ''
+      this.dialogForm.activitySharePicture = ''
       this.$message.warning('图片已被移除')
     },
     changeTableSort({ column, prop, order }) {
+      if (prop === 'createdAt') {
+        prop = 0
+      } else {
+        prop = 1
+      }
       this.pageNum = 1
       this.queryData.orderKey = prop
       if (order === 'ascending') {
@@ -853,7 +1054,7 @@ export default {
   margin: 0;
   padding: 15px 0 20px;
   .editPicturePage-content {
-    width: 800px;
+    width: 825px;
     margin: 0 auto;
     background-color: #fff;
     position: relative;
@@ -888,10 +1089,13 @@ export default {
     .content-part2 {
       width: 100%;
       padding: 25px 35px 20px;
+      background-color: #fff;
       position: relative;
       margin: 0 auto;
       /deep/.agent-form {
         padding: 20px;
+        max-height: 600px;
+        overflow: auto;
         box-shadow: rgba(88, 88, 88, 0.35) 0px 0px 5px;
         .remakeBox {
           width: 164px;
