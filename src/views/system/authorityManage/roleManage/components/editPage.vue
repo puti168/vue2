@@ -107,7 +107,7 @@ export default {
 			chooseIds: [],
 			allChooseLen: 0,
 			isIndeterminate: false,
-            updateStatus: false
+			updateStatus: false
 		}
 	},
 	computed: {
@@ -276,9 +276,10 @@ export default {
 			const params = {
 				...this.queryData
 			}
+			params.permissionId = this.chooseIds
 			const handle = this.updateStatus
-				? this.$api.agentPictureListUpdateAPI
-				: this.$api.agentPictureListCreateAPI
+				? this.$api.setUpdateRoleInfoAPI
+				: this.$api.setSaveRoleInfoAPI
 			this.$refs['form'].validate((valid) => {
 				if (valid && this.loading) {
 					handle(params)
@@ -291,10 +292,9 @@ export default {
 									type: 'success'
 								})
 								this.reset()
-								this.$refs.imgUpload.clearFile()
 								setTimeout(() => {
 									this.back()
-								}, 1500)
+								}, 1000)
 							} else {
 								this.$message({
 									message: msg,

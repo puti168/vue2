@@ -86,7 +86,7 @@
 						<el-table-column prop="createdAt" align="center" label="添加时间">
 							<template slot-scope="scope">
 								<span v-if="!!scope.row.createdAt">
-									{{ scope.row.createdAt }}
+									{{ formatTime(scope.row.createdAt) }}
 								</span>
 								<span v-else>-</span>
 							</template>
@@ -143,7 +143,7 @@
 import list from '@/mixins/list'
 // import { routerNames } from '@/utils/consts'
 import editPage from './components/editPage'
-// import dayjs from "dayjs";
+import dayjs from 'dayjs'
 
 export default {
 	name: 'RoleManage',
@@ -221,13 +221,13 @@ export default {
 						console.log(res)
 						const { code } = res
 						if (code === 200) {
-                            loading.close()
+							loading.close()
 							this.$message({
 								type: 'success',
 								message: '删除成功!'
 							})
 						} else {
-                            loading.close()
+							loading.close()
 							this.$message({
 								type: 'error',
 								message: '删除失败!'
@@ -252,6 +252,9 @@ export default {
 		back() {
 			this.editPage = false
 			this.loadData()
+		},
+		formatTime(time) {
+			return dayjs(time).format('YYYY-MM-DD HH:mm:ss')
 		}
 	}
 }

@@ -27,6 +27,24 @@ export function getRolePermissionsAPI(params) {
 	})
 }
 
+// 添加角色
+export function setSaveRoleInfoAPI(data) {
+	return request({
+		url: '/system/role/add',
+		method: 'post',
+		data
+	})
+}
+
+// 修改角色
+export function setUpdateRoleInfoAPI(data) {
+	return request({
+		url: '/system/role/update',
+		method: 'post',
+		data
+	})
+}
+
 // 查询权限列表
 export function getRolePermissionListAPI(data) {
 	return request({
@@ -60,22 +78,6 @@ export function getPageRoleUsers(data) {
 	})
 }
 
-// 添加角色
-export function setSaveRoleInfo(data) {
-	return request({
-		url: '/role/saveRoleInfo',
-		method: 'post',
-		data
-	})
-}
-// 修改角色
-export function setUpdateRoleInfo(data) {
-	return request({
-		url: '/role/updateRoleInfo',
-		method: 'post',
-		data
-	})
-}
 // 修改角色状态
 export function setUpdateRoleStatus(data) {
 	return request({
@@ -88,11 +90,11 @@ export default {
 	getRoleListPageAPI,
 	deleteRoleAPI,
 	getRolePermissionsAPI,
+	setSaveRoleInfoAPI,
+	setUpdateRoleInfoAPI,
 	getRolePermissionListAPI,
 	getRoleDetailInfo,
 	getRoleStatus,
 	getPageRoleUsers,
-	setSaveRoleInfo,
-	setUpdateRoleInfo,
 	setUpdateRoleStatus
 }
