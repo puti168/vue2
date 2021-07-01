@@ -31,8 +31,8 @@ export function getUserInfoUpdatePwdAdmin(data) {
 		data
 	})
 }
-// 系统管理-职员登录日志
-export function getUserInfoList(data) {
+// 系统管理-账户设置获取页面
+export function getuserInfolist(data) {
 	return request({
 		url: '/userInfo/list',
 		method: 'post',
@@ -43,6 +43,6 @@ export default {
     getkvconfigQueryList,
 	getkvconfigUpdate,
 	getSystemUserLoginRecordQueryLoginLog,
-	getUserInfoUpdatePwdAdmin,
-	getUserInfoList
+	getuserInfolist
+
 }

@@ -58,7 +58,7 @@
               :popper-append-to-body="false"
             >
               <el-option
-                v-for="item in loginDeviceType"
+                v-for="item in operateActivitySupportClient"
                 :key="item.code"
                 :label="item.description"
                 :value="item.code"
@@ -74,7 +74,7 @@
               :popper-append-to-body="false"
             >
               <el-option
-                v-for="item in accountType"
+                v-for="item in operateActivityUserType"
                 :key="item.code"
                 :label="item.description"
                 :value="item.code"
@@ -406,7 +406,7 @@
                 :popper-append-to-body="false"
               >
                 <el-option
-                  v-for="item in loginDeviceType"
+                  v-for="item in operateActivitySupportClient"
                   :key="item.code"
                   :label="item.description"
                   :value="item.code"
@@ -432,7 +432,7 @@
                 :popper-append-to-body="false"
               >
                 <el-option
-                  v-for="item in accountType"
+                  v-for="item in operateActivityUserType"
                   :key="item.code"
                   :label="item.description"
                   :value="item.code"
@@ -664,8 +664,8 @@ export default {
       dialogFormVisible: false,
       dialogForm: {
         activityType: '0',
-        activityAppType: ['2'],
-        activityUserType: ['1'],
+        activityAppType: ['1'],
+        activityUserType: ['0'],
         activityPrescription: '1',
         activityEnterPicture: null,
         activitySharePicture: null
@@ -702,11 +702,11 @@ export default {
     operateValidityType() {
       return this.globalDics.operateValidityType
     },
-    loginDeviceType() {
-      return this.globalDics.loginDeviceType
+    operateActivitySupportClient() {
+      return this.globalDics.operateActivitySupportClient
     },
-    accountType() {
-      return this.globalDics.accountType
+    operateActivityUserType() {
+      return this.globalDics.operateActivityUserType
     },
     errTime() {
       if (
@@ -741,7 +741,7 @@ export default {
       const params = {
         ...this.getParams(this.queryData)
       }
-      // this.loading = true;
+      this.loading = true
       this.$api
         .getOperateActivityVipQueryList(params)
         .then((res) => {
@@ -963,8 +963,8 @@ export default {
       this.addOrEdit = 'add'
       this.dialogForm = {
         activityType: '0',
-        activityAppType: ['2'],
-        activityUserType: ['1'],
+        activityAppType: ['1'],
+        activityUserType: ['0'],
         activityPrescription: '1',
         activityEnterPicture: null,
         activitySharePicture: null
@@ -1088,7 +1088,7 @@ export default {
     }
     .content-part2 {
       width: 100%;
-      padding: 25px 35px 20px;
+      padding: 25px 30px 20px;
       background-color: #fff;
       position: relative;
       margin: 0 auto;
