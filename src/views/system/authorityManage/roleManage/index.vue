@@ -86,7 +86,7 @@
 						<el-table-column prop="createdAt" align="center" label="添加时间">
 							<template slot-scope="scope">
 								<span v-if="!!scope.row.createdAt">
-									{{ scope.row.createdAt }}
+									{{ formatTime(scope.row.createdAt) }}
 								</span>
 								<span v-else>-</span>
 							</template>
@@ -135,7 +135,7 @@
 				</div>
 			</div>
 		</div>
-		<editPage v-else :rowData="rowData" @back="back"></editPage>
+		<editPage v-else :editData="rowData" @back="back"></editPage>
 	</transition>
 </template>
 
@@ -143,7 +143,7 @@
 import list from '@/mixins/list'
 // import { routerNames } from '@/utils/consts'
 import editPage from './components/editPage'
-// import dayjs from "dayjs";
+import dayjs from 'dayjs'
 
 export default {
 	name: 'RoleManage',
@@ -156,6 +156,7 @@ export default {
 			},
 			dataList: [],
 			total: 0,
+			rowData: undefined,
 			editPage: false
 		}
 	},
@@ -171,7 +172,7 @@ export default {
 			}
 			this.loading = true
 			this.$api
-				.getRoleListPage(params)
+				.getRoleListPageAPI(params)
 				.then((res) => {
 					const {
 						code,
@@ -221,13 +222,13 @@ export default {
 						console.log(res)
 						const { code } = res
 						if (code === 200) {
-                            loading.close()
+							loading.close()
 							this.$message({
 								type: 'success',
 								message: '删除成功!'
 							})
 						} else {
-                            loading.close()
+							loading.close()
 							this.$message({
 								type: 'error',
 								message: '删除失败!'
@@ -244,14 +245,36 @@ export default {
 				.catch(() => {})
 		},
 		openEdit(val) {
-			// const { id } = val
-			this.rowData = val
-			// this.rowAssortId = id
+			if (val) {
+				const { id } = val
+				id && this.getRoleList(id, val)
+				console.log(val)
+			}
 			this.editPage = true
+		},
+		async getRoleList(id, value) {
+			const { code, data } = await this.$api.getRolePermissionsAPI({
+				roleId: id
+			})
+			if (code === 200) {
+				const arr = JSON.parse(JSON.stringify(data)) || []
+				const _arr = []
+				arr.forEach((item) => {
+					if (item.isExist === '1') {
+						_arr.push(item.id)
+					}
+				})
+				console.log('_arr', _arr)
+				// console.log('value', value)
+				this.rowData = Object.assign({ chooseIds: _arr }, value)
+			}
 		},
 		back() {
 			this.editPage = false
 			this.loadData()
+		},
+		formatTime(time) {
+			return dayjs(time).format('YYYY-MM-DD HH:mm:ss')
 		}
 	}
 }

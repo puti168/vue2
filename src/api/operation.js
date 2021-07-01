@@ -269,6 +269,8 @@ export function configDiscountTagQueryNames(params) {
 		params
 	})
 }
+
+// 活动类型名称配置操作记录
 export function queryActivityTypeList(data) {
 	return request({
 		url: '/operate/ActivityConfigRecord/queryActivityTypeList',
@@ -276,13 +278,8 @@ export function queryActivityTypeList(data) {
 		data
 	})
 }
-export function queryDiscountActivityList(data) {
-	return request({
-		url: '/operate/ActivityConfigRecord/queryDiscountActivityList',
-		method: 'post',
-		data
-	})
-}
+
+// 优惠类型页签操作记录
 export function queryDiscountTagList(data) {
 	return request({
 		url: '/operate/ActivityConfigRecord/queryDiscountTagList',
@@ -290,6 +287,15 @@ export function queryDiscountTagList(data) {
 		data
 	})
 }
+
+export function queryDiscountActivityList(data) {
+	return request({
+		url: '/operate/ActivityConfigRecord/queryDiscountActivityList',
+		method: 'post',
+		data
+	})
+}
+
 export function queryVipActivityList(data) {
 	return request({
 		url: '/operate/ActivityConfigRecord/queryVipActivityList',

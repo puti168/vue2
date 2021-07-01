@@ -54,6 +54,7 @@
 							:props="defaultProps"
 							:check-on-click-node="true"
 							@check="handleCheck"
+							@check-change="handleCheckChange"
 						></el-tree>
 					</div>
 				</div>
@@ -61,6 +62,7 @@
 					v-model="chooseAll"
 					class="chooseAll"
 					:indeterminate="isIndeterminate"
+					@change="handleAllChoose"
 				>
 					选择全部
 				</el-checkbox>
@@ -99,12 +101,13 @@ export default {
 			},
 			chooseAll: false,
 			dataList: [],
-			otherArr: [],
-			checkAll: false,
-			defaultList: [],
 			rolePermissions: [],
+			permissions: [],
 			checkedKeys: [],
-			isIndeterminate: false
+			chooseIds: [],
+			allChooseLen: 0,
+			isIndeterminate: false,
+			updateStatus: false
 		}
 	},
 	computed: {
@@ -152,35 +155,44 @@ export default {
 		}
 	},
 	watch: {
-		// editData: {
-		// 	handler(newData) {
-		// 		if (Object.keys(newData).length) {
-		// 			this.queryData = {
-		// 				...newData
-		// 			}
-		// 			if (this.queryData.imageAddress) {
-		// 				this.$nextTick(() => {
-		// 					this.$refs.imgUpload.state = 'image'
-		// 					this.$refs.imgUpload.fileUrl = newData.imageAddress
-		// 				})
-		// 			}
-		// 		} else {
-		// 			this.queryData = {
-		// 				roleName: undefined,
-		// 				remark: undefined,
-		// 				id: undefined
-		// 			}
-		// 		}
-		// 	},
-		// 	deep: true,
-		// 	immediate: true
-		// }
+		editData: {
+			handler(newData) {
+				if (newData && Object.keys(newData).length) {
+					this.updateStatus = true
+					console.log('newData', newData)
+					const { id, roleName, remark, chooseIds } = newData
+					this.queryData = {
+						roleName,
+						remark,
+						id
+					}
+					this.chooseIds = chooseIds
+					if (this.$refs.tree) {
+						this.$refs.tree.setCheckedKeys(chooseIds)
+					}
+				} else {
+					this.updateStatus = false
+					this.queryData = {
+						roleName: undefined,
+						remark: undefined,
+						id: undefined
+					}
+					this.chooseIds = []
+					this.getRoleList()
+					if (this.$refs.tree) {
+						this.$refs.tree.setCheckedKeys([])
+					}
+				}
+			},
+			deep: true,
+			immediate: true
+		}
 	},
 	created() {
 		this.rolePermissions = storeDatas
 	},
 	mounted() {
-		this.getRoleList()
+		// this.getRoleList()
 	},
 	updated() {},
 	methods: {
@@ -188,9 +200,10 @@ export default {
 			this.$emit('back')
 		},
 		async getRoleList() {
-			const { code, data } = await this.$api.getRolePermissions()
+			const { code, data } = await this.$api.getRolePermissionsAPI()
 			if (code === 200) {
-				this.dataList = data
+				this.permissions = JSON.parse(JSON.stringify(data))
+				this.allChooseLen = data.length
 				this.filterData(data)
 			}
 		},
@@ -235,18 +248,47 @@ export default {
 				})
 			}
 		},
-		handleCheck(data, obj) {
-		    console.log('data', data)
-		    console.log('obj', obj)
-        },
+		handleCheck(checkedNodes, checkedKeys) {
+			this.chooseIds = checkedKeys.checkedKeys.concat(
+				checkedKeys.halfCheckedKeys
+			)
+			!!this.chooseIds.length && this.chooseIds.length < this.allChooseLen
+				? ((this.chooseAll = false), (this.isIndeterminate = true))
+				: this.allChooseLen === this.chooseIds.length
+				? ((this.chooseAll = true), (this.isIndeterminate = false))
+				: ((this.chooseAll = false), (this.isIndeterminate = false))
+		},
+		handleAllChoose(val) {
+			const ids = this.getAllIds(this.permissions, [])
+			this.$nextTick(() => {
+				this.$refs.tree.setCheckedKeys(val ? ids : [])
+				val ? (this.chooseIds = ids) : (this.chooseIds = [])
+			})
+			this.isIndeterminate = false
+		},
+		getAllIds(permissions, arr) {
+			permissions.forEach((item) => {
+				arr.push(item.id)
+				item.children && this.getAllIds(item.children, arr)
+			})
+			return arr
+		},
+		handleCheckChange(data) {
+			// if (this.$refs.tree) {
+			//     const selected = this.$refs.tree.getCheckedKeys()
+			//     const ids = this.getAllIds(this.permissions, [])
+			//     this.checkAll = selected.length === ids.length
+			// }
+		},
 		save() {
 			this.loading = true
 			const params = {
 				...this.queryData
 			}
+			params.permissionId = this.chooseIds
 			const handle = this.updateStatus
-				? this.$api.agentPictureListUpdateAPI
-				: this.$api.agentPictureListCreateAPI
+				? this.$api.setUpdateRoleInfoAPI
+				: this.$api.setSaveRoleInfoAPI
 			this.$refs['form'].validate((valid) => {
 				if (valid && this.loading) {
 					handle(params)
@@ -259,10 +301,9 @@ export default {
 									type: 'success'
 								})
 								this.reset()
-								this.$refs.imgUpload.clearFile()
 								setTimeout(() => {
 									this.back()
-								}, 1500)
+								}, 1000)
 							} else {
 								this.$message({
 									message: msg,
@@ -378,7 +419,7 @@ export default {
 				border: 1px solid #eee;
 				overflow-y: scroll;
 				.tree-content {
-					height: 1000px;
+					height: 800px;
 				}
 				.btn-style-role {
 					width: 120px;
@@ -448,7 +489,7 @@ export default {
 	.save-container {
 		.save-btn {
 			text-align: center;
-			margin: 0 auto;
+			margin: 0 auto 50px;
 			background-color: rgba(26, 188, 156, 1);
 			height: 40px;
 			line-height: 40px;

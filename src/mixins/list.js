@@ -100,12 +100,15 @@ export default {
 			}
 		},
 		typeFilter(val, type) {
-			let name = ''
-			this.globalDics[type].forEach((item) => {
-				if (Number(item.code) === Number(val)) {
-					name = item.description
-				}
-			})
+			let name = '-'
+			this.globalDics &&
+				this.globalDics[type] &&
+				this.globalDics[type].length &&
+				this.globalDics[type].forEach((item) => {
+					if (Number(item.code) === Number(val)) {
+						name = item.description
+					}
+				})
 			return name
 		},
 		/**

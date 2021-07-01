@@ -71,55 +71,47 @@
 								</el-row>
 							</template>
 							<el-row>
-								<el-form-item
-									label="谷歌验证秘钥"
-									prop="googleAuthCodeHide"
-								>
+								<el-form-item label="谷歌验证秘钥" prop="googleAuthCodeHide">
 									<el-input
 										v-model="form.googleAuthCode"
 										disabled
 										style="width:300px;"
 										:placeholder="$t('login_index_258')"
 									></el-input>
-									</el-form-item>
+								</el-form-item>
 							</el-row>
 						</el-col>
 					</el-row>
-						<el-form-item
-									label="分配角色："
-								>
-					<el-transfer
-						ref="transfer"
-						v-model="tranferVal"
-						class="transfer"
-						:titles="[
-							'可选角色',
-							'已选角色'
-						]"
-						:data="ps"
-						:props="{ key: 'id', label: 'roleName' }"
-					></el-transfer>
-					<div class="handles center" chenter>
-						<el-button
-							round
-							type="default"
-							class="item"
-							style="padding: 0"
-							@click.native="handleClose"
-						>
-							{{ $t('system_component_component_editaccount_417') }}
-						</el-button>
-						<el-button
-							round
-							type="primary"
-							class="item"
-							style="padding: 0"
-							@click.native="handleSure"
-						>
-							{{ $t('system_component_component_editaccount_418') }}
-						</el-button>
-					</div>
-						</el-form-item>
+					<el-form-item label="分配角色：">
+						<el-transfer
+							ref="transfer"
+							v-model="tranferVal"
+							class="transfer"
+							:titles="['可选角色', '已选角色']"
+							:data="ps"
+							:props="{ key: 'id', label: 'roleName' }"
+						></el-transfer>
+						<div class="handles center" chenter>
+							<el-button
+								round
+								type="default"
+								class="item"
+								style="padding: 0"
+								@click.native="handleClose"
+							>
+								{{ $t('system_component_component_editaccount_417') }}
+							</el-button>
+							<el-button
+								round
+								type="primary"
+								class="item"
+								style="padding: 0"
+								@click.native="handleSure"
+							>
+								{{ $t('system_component_component_editaccount_418') }}
+							</el-button>
+						</div>
+					</el-form-item>
 				</el-form>
 			</el-card>
 		</el-dialog>
@@ -128,7 +120,6 @@
 
 <script>
 import { editUser, addUser } from '@/api/user'
-// import { googleAuth } from '@/api/system'
 import { isEmptyObj } from '@/utils'
 import { message } from '@/utils/message'
 import PasswordWithEye from '@/components/PasswordWithEye'
@@ -288,6 +279,14 @@ export default {
 		this.listLoading = true
 	},
 	methods: {
+	    getGoogleAuth() {
+            this.$api.googleAuth().then((res) => {
+                const { code, data } = res
+                if (code === 200) {
+                    this.form.googleAuthCode = data
+                }
+            })
+        },
 		handleChoose() {
 			this.dialogTableVisible = true
 			this.$refs['form'].resetFields()
