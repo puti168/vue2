@@ -1187,7 +1187,7 @@ export default {
       }
       const sortIds = newArr.join(',')
       console.log(sortIds)
-      this.$api.setOperateActivityVipSort({ sortIds: sortIds }).then((res) => {
+      this.$api.setOperateDiscountActivitySort({ sortIds: sortIds }).then((res) => {
         if (res.code === 200) {
           this.$message({
             message: '操作成功！',
