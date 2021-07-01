@@ -168,7 +168,6 @@ export default {
     },
     mounted() {
 		this.getRoleList()
-        console.log('storeDatas', storeDatas)
 	},
 	updated() {},
 	methods: {
