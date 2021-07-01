@@ -135,7 +135,7 @@
 				</div>
 			</div>
 		</div>
-		<editPage v-else :rowData="rowData" @back="back"></editPage>
+		<editPage v-else :editData="rowData" @back="back"></editPage>
 	</transition>
 </template>
 
@@ -156,6 +156,7 @@ export default {
 			},
 			dataList: [],
 			total: 0,
+			rowData: undefined,
 			editPage: false
 		}
 	},
@@ -244,10 +245,29 @@ export default {
 				.catch(() => {})
 		},
 		openEdit(val) {
-			// const { id } = val
-			this.rowData = val
-			// this.rowAssortId = id
+			if (val) {
+				const { id } = val
+				id && this.getRoleList(id, val)
+				console.log(val)
+			}
 			this.editPage = true
+		},
+		async getRoleList(id, value) {
+			const { code, data } = await this.$api.getRolePermissionsAPI({
+				roleId: id
+			})
+			if (code === 200) {
+				const arr = JSON.parse(JSON.stringify(data)) || []
+				const _arr = []
+				arr.forEach((item) => {
+					if (item.isExist === '1') {
+						_arr.push(item.id)
+					}
+				})
+				console.log('_arr', _arr)
+				// console.log('value', value)
+				this.rowData = Object.assign({ chooseIds: _arr }, value)
+			}
 		},
 		back() {
 			this.editPage = false

@@ -155,35 +155,44 @@ export default {
 		}
 	},
 	watch: {
-		// editData: {
-		// 	handler(newData) {
-		// 		if (Object.keys(newData).length) {
-		// 			this.queryData = {
-		// 				...newData
-		// 			}
-		// 			if (this.queryData.imageAddress) {
-		// 				this.$nextTick(() => {
-		// 					this.$refs.imgUpload.state = 'image'
-		// 					this.$refs.imgUpload.fileUrl = newData.imageAddress
-		// 				})
-		// 			}
-		// 		} else {
-		// 			this.queryData = {
-		// 				roleName: undefined,
-		// 				remark: undefined,
-		// 				id: undefined
-		// 			}
-		// 		}
-		// 	},
-		// 	deep: true,
-		// 	immediate: true
-		// }
+		editData: {
+			handler(newData) {
+				if (newData && Object.keys(newData).length) {
+					this.updateStatus = true
+					console.log('newData', newData)
+					const { id, roleName, remark, chooseIds } = newData
+					this.queryData = {
+						roleName,
+						remark,
+						id
+					}
+					this.chooseIds = chooseIds
+					if (this.$refs.tree) {
+						this.$refs.tree.setCheckedKeys(chooseIds)
+					}
+				} else {
+					this.updateStatus = false
+					this.queryData = {
+						roleName: undefined,
+						remark: undefined,
+						id: undefined
+					}
+					this.chooseIds = []
+					this.getRoleList()
+					if (this.$refs.tree) {
+						this.$refs.tree.setCheckedKeys([])
+					}
+				}
+			},
+			deep: true,
+			immediate: true
+		}
 	},
 	created() {
 		this.rolePermissions = storeDatas
 	},
 	mounted() {
-		this.getRoleList()
+		// this.getRoleList()
 	},
 	updated() {},
 	methods: {
