@@ -43,16 +43,27 @@
 			<div class="content-part3">
 				<p class="part-title">角色权限</p>
 				<div class="role-container">
-					<el-tree
-						ref="tree"
-						:data="rolePermissions"
-						default-expand-all
-						node-key="id"
-						show-checkbox
-						:props="defaultProps"
-						:check-on-click-node="true"
-					></el-tree>
+					<div class="tree-content">
+						<el-tree
+							ref="tree"
+							:data="rolePermissions"
+							:default-checked-keys="checkedKeys"
+							default-expand-all
+							node-key="id"
+							show-checkbox
+							:props="defaultProps"
+							:check-on-click-node="true"
+							@check="handleCheck"
+						></el-tree>
+					</div>
 				</div>
+				<el-checkbox
+					v-model="chooseAll"
+					class="chooseAll"
+					:indeterminate="isIndeterminate"
+				>
+					选择全部
+				</el-checkbox>
 			</div>
 			<div class="save-container">
 				<div class="save-btn" @click.prevent="save">
@@ -91,7 +102,9 @@ export default {
 			otherArr: [],
 			checkAll: false,
 			defaultList: [],
-            rolePermissions: []
+			rolePermissions: [],
+			checkedKeys: [],
+			isIndeterminate: false
 		}
 	},
 	computed: {
@@ -129,14 +142,14 @@ export default {
 				remark
 			}
 		},
-        defaultProps() {
-            return {
-                label: (data) => {
-                    return data.permissionName
-                },
-                children: 'children'
-            }
-        }
+		defaultProps() {
+			return {
+				label: (data) => {
+					return data.permissionName
+				},
+				children: 'children'
+			}
+		}
 	},
 	watch: {
 		// editData: {
@@ -163,10 +176,10 @@ export default {
 		// 	immediate: true
 		// }
 	},
-    created() {
-        this.rolePermissions = storeDatas
-    },
-    mounted() {
+	created() {
+		this.rolePermissions = storeDatas
+	},
+	mounted() {
 		this.getRoleList()
 	},
 	updated() {},
@@ -184,7 +197,7 @@ export default {
 
 		filterData(data) {
 			const _data = [...data]
-            _data.forEach((ele, i) => {
+			_data.forEach((ele, i) => {
 				const index = data.findIndex((val) => val.id === ele.parentId)
 				if (index < 0) {
 					storeDatas.push({
@@ -193,16 +206,16 @@ export default {
 						children: [],
 						...ele
 					})
-                    _data.splice(i, 1)
+					_data.splice(i, 1)
 				}
 			})
 			this.generateData(_data, storeDatas)
 		},
-        generateData(data, tree) {
+		generateData(data, tree) {
 			const data_s = [...data]
 			const pickIndex = []
 			const leftData = []
-            data_s.forEach((ele) => {
+			data_s.forEach((ele) => {
 				const index = tree.findIndex((val) => val.id === ele.parentId)
 				if (index > -1) {
 					tree[index].children.push({
@@ -213,7 +226,7 @@ export default {
 					})
 					!pickIndex.includes(index) && pickIndex.push(index)
 				} else {
-                    leftData.push(ele)
+					leftData.push(ele)
 				}
 			})
 			if (pickIndex.length > 0) {
@@ -222,6 +235,10 @@ export default {
 				})
 			}
 		},
+		handleCheck(data, obj) {
+		    console.log('data', data)
+		    console.log('obj', obj)
+        },
 		save() {
 			this.loading = true
 			const params = {
@@ -294,6 +311,11 @@ export default {
 	margin-right: 15px;
 	margin-bottom: 15px;
 }
+
+/deep/ .el-tree-node__content > label.el-checkbox {
+	margin-right: 8px;
+}
+
 .editRolePage-container {
 	background-color: #f5f5f5;
 	margin: 0;
@@ -353,6 +375,11 @@ export default {
 			.role-container {
 				padding-left: 15px;
 				padding-right: 15px;
+				border: 1px solid #eee;
+				overflow-y: scroll;
+				.tree-content {
+					height: 1000px;
+				}
 				.btn-style-role {
 					width: 120px;
 					height: 30px;
