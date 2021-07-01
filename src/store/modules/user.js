@@ -117,11 +117,13 @@ const actions = {
 	},
 	// user login
 	login({ commit }, userInfo) {
-		const { username, password, googleAuth } = userInfo
+		const { id, username, password, googleAuth } = userInfo
+		console.log(userInfo, '23')
 		return new Promise((resolve, reject) => {
 			localStorage.setItem('username', username)
 			localStorage.setItem('password', password)
 			localStorage.setItem('googleAuth', googleAuth)
+			localStorage.setItem('id', id)
 			login({
 				username: username.trim(),
 				password: md5(username.trim() + password.trim()),
@@ -142,6 +144,7 @@ const actions = {
 						setUserInfo(data.userInfo)
 						setUsername(data.userInfo.username)
 						setNickName(data.userInfo.nickName)
+						localStorage.setItem('id', data.userInfo.id)
 						resolve(data)
 					} else {
 						reject(response.data)

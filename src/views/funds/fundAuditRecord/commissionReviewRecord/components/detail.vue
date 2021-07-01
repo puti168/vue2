@@ -147,7 +147,10 @@
           >
             <el-table-column align="center" label="风险代理">
               <template>
-            {{ proxyRiskControlLevelVo.riskAgent ? proxyRiskControlLevelVo.riskAgent : '-' }}
+              <span v-if="!!scope.row.orderNo">
+									{{ scope.row.orderNo }}
+								</span>
+								<span v-else>-</span>
               </template>
             </el-table-column>
             <el-table-column align="center" label="风险银行卡">
@@ -215,7 +218,7 @@
               </tr>
               <tr>
                 <td class="td-title">活跃下级</td>
-                <td>
+                <td @click="active()">
                    {{
 										commissionRecordVo.activeSubordinate
 											? commissionRecordVo.activeSubordinate
@@ -398,7 +401,10 @@ export default {
 					})
 				}
 			})
-		}
+		},
+    active() {
+      console.log('12321')
+    }
   }
 }
 </script>

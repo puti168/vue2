@@ -8,25 +8,31 @@
       <el-form ref="form" :model="form" :rules="rules" label-width="124px">
         <div class="ctbox">
           <!-- <el-avatar icon="el-icon-user-solid" :size="150" class="fit"></el-avatar> -->
-          <div class="block"><el-avatar :size="150" class="fit" :src="circleUrl"></el-avatar></div>
+          <div class="block">
+            <el-avatar :size="150" class="fit" :src="circleUrl"></el-avatar>
+          </div>
         </div>
 
         <el-form-item class="pding" label="角色名称：">
           <el-input
             v-model="form.agentCode"
+            class="text"
             readonly
             unselectable="on"
             size="medium"
             clearable
+            type="text"
             maxlength="6"
             style="width: 365px"
           ></el-input>
         </el-form-item>
-            <el-form-item label="用户名称：">
+        <el-form-item label="用户名称：">
           <el-input
             v-model="form.userName"
+            type="text"
+            class="text"
             size="medium"
-            placeholder="请输入联系电话"
+            readonly="readonly"
             clearable
             maxlength="6"
             style="width: 365px"
@@ -101,112 +107,109 @@
       </el-form>
     </div>
   </div>
-
 </template>
 
 <script>
 import list from '@/mixins/list'
-import { notSpecial2, isHaveEmoji } from '@/utils/validate'
-import { EMAIL_PATTERN } from '@/utils/pattern'
 
 export default {
   mixins: [list],
   data() {
     return {
-       circleUrl: 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png',
+      circleUrl: 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png',
       passwordType: 'password',
       loading: false,
+      id: '',
       form: {
-        id: '',
-        newPwd: '',
-        pwd: '',
         agentCode: '',
+        newPwd: '',
         phone: '',
-        userName: '1',
-        reNewPwd: ''
+        pwd: '',
+        reNewPwd: '',
+        type: '',
+        id: 0,
+        userName: ''
       }
     }
   },
   computed: {
+    // genderType() {
+    //    const equalToPassword = (rule, value, callback) => {
+    //   if (this.user.newPassword !== value) {
+    //     callback(new Error("两次输入的密码不一致"));
+    //   } else {
+    //     callback();
+    //   }
+    //   const arr = [];
+    //   if (this.globalDics.genderType && this.globalDics.genderType.length) {
+    //     this.globalDics.genderType.forEach((item) => {
+    //       arr.unshift(item);
+    //     });
+    //   }
+    //   return arr;
+    // },
+    // rules() {
+    //   const reg2 = /^([a-zA-Z0-9]*[a-zA-Z]+[0-9]+[a-zA-Z0-9]*|[a-zA-Z0-9]*[0-9]+[a-zA-Z]+[a-zA-Z0-9]*)$/;
 
-    genderType() {
-      const arr = []
-      if (this.globalDics.genderType && this.globalDics.genderType.length) {
-        this.globalDics.genderType.forEach((item) => {
-          arr.unshift(item)
-        })
-      }
-      return arr
-    },
+    //   const testPassword = (rule, value, callback) => {
+    //     const isSpecial = !notSpecial2(String(value));
+    //     const isRmoji = isHaveEmoji(String(value));
+    //     if (isSpecial) {
+    //       callback(new Error("不支持空格及特殊字符"));
+    //     } else if (isRmoji) {
+    //       callback(new Error("不支持表情"));
+    //     } else if (!reg2.test(value)) {
+    //       callback(new Error("请输入8-12位，字母+数字组合"));
+    //     } else {
+    //       callback();
+    //     }
+    //   };
+
+    //   // const testMobile = (rule, value, callback) => {
+    //   // 	if (!!value && !MOBILE_PATTERN.test(value)) {
+    //   // 		callback(new Error('请输入有效的手机号码'))
+    //   // 	} else {
+    //   // 		callback()
+    //   // 	}
+    //   // }
+
+    //   return {
+    //     password: [
+    //       {
+    //         required: true,
+    //         validator: testPassword,
+    //         trigger: "blur",
+    //       },
+    //       {
+    //         min: 8,
+    //         max: 12,
+    //         message: "请输入8-12位，字母+数字组合",
+    //         trigger: "blur",
+    //       },
+    //     ],
+    //     // mobile: [
+    //     // 	{
+    //     // 		required: false,
+    //     // 		validator: testMobile,
+    //     // 		trigger: 'blur'
+    //     // 	}
+    //     // ],
+    //   };
+    // },
     rules() {
-      const reg2 = /^([a-zA-Z0-9]*[a-zA-Z]+[0-9]+[a-zA-Z0-9]*|[a-zA-Z0-9]*[0-9]+[a-zA-Z]+[a-zA-Z0-9]*)$/
-
-      const testPassword = (rule, value, callback) => {
-        const isSpecial = !notSpecial2(String(value))
-        const isRmoji = isHaveEmoji(String(value))
-        if (isSpecial) {
-          callback(new Error('不支持空格及特殊字符'))
-        } else if (isRmoji) {
-          callback(new Error('不支持表情'))
-        } else if (!reg2.test(value)) {
-          callback(new Error('请输入8-12位，字母+数字组合'))
-        } else {
-          callback()
-        }
-      }
-
-      // const testMobile = (rule, value, callback) => {
-      // 	if (!!value && !MOBILE_PATTERN.test(value)) {
-      // 		callback(new Error('请输入有效的手机号码'))
-      // 	} else {
-      // 		callback()
-      // 	}
-      // }
-
-      const testEmail = (rule, value, callback) => {
-        if (!!value && !EMAIL_PATTERN.test(value)) {
-          callback(new Error('请输入正确的邮箱'))
-        } else {
-          callback()
-        }
-      }
-
+      const pwd = [{ required: true, trigger: 'blur' }]
+      const reNewPwd = [{ required: true, trigger: 'blur' }]
+      const newPwd = [{ required: true, trigger: 'blur' }]
       return {
-        password: [
-          {
-            required: true,
-            validator: testPassword,
-            trigger: 'blur'
-          },
-          {
-            min: 8,
-            max: 12,
-            message: '请输入8-12位，字母+数字组合',
-            trigger: 'blur'
-          }
-        ],
-        // mobile: [
-        // 	{
-        // 		required: false,
-        // 		validator: testMobile,
-        // 		trigger: 'blur'
-        // 	}
-        // ],
-        email: [
-          {
-            required: false,
-            validator: testEmail,
-            trigger: 'blur'
-          }
-        ]
+        pwd,
+        reNewPwd,
+        newPwd
       }
     }
   },
-  mounted() {
-
-  },
+  created() {},
+  mounted() {},
   methods: {
-
     showPwd() {
       if (this.passwordType === 'password') {
         this.passwordType = ''
@@ -214,36 +217,48 @@ export default {
         this.passwordType = 'password'
       }
     },
-     loadData(id) {
-       console.log(id, 'id31232')
-      this.$api.getUserInfoList({}).then((response) => {
-        console.log(response, '34324')
-
+    loadData() {
+      const id = localStorage.getItem('id')
+      this.$api.getuserInfolist({ id }).then((res) => {
+        if (res.code === 200) {
+          this.form = res.data
+          this.dialogGameVisible = true
+        }
         this.loading = false
       })
     },
-    onUpdateUser() {
-      //  this.$api.getUserInfoList(data).then((res) => {
-      //    console.log(res,"8989");
-      //         if (res.code === 200) {
-      //           this.$message.success('修改成功')
-      //           this.loadData()
-      //         }
-      //         this.dialogFormVisible = false
-      //       })
+    onUpdateUser(form) {
+      const id = localStorage.getItem('id')
+      const userName = localStorage.getItem('username')
+      const rePwd = localStorage.getItem('password')
+      console.log(id, userName, '334')
+      this.$api
+        .setUserInfoupdatePwdAdmin({
+          pwd: form.pwd,
+          phone: form.phone,
+          newPwd: form.newPwd,
+          rePwd,
+          id,
+          userName
+        })
+        .then((_) => {
+          if (_.code === 200) {
+            this.$message.success('修改成功')
+            'success'
+          }
+          this.dialogFormVisible = false
+        })
     },
     reset() {
       this.$refs['form'].resetFields()
       this.form = {
-        username: '',
-        password: '',
-        mobile: '',
-        parentProxyName: '',
-        gender: '1',
-        vipExperenceValue: '',
-        email: '',
-        realName: '',
-        applyInfo: ''
+        newPwd: '',
+        phone: '',
+        pwd: '',
+        reNewPwd: '',
+        type: '1',
+        userId: 0,
+        userName: ''
       }
     },
     checkValue(val) {}
@@ -252,7 +267,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.pding{
+.forbid {
+  background: #889aa4;
+}
+.pding {
   padding-top: 40px;
 }
 $dark_gray: #889aa4;

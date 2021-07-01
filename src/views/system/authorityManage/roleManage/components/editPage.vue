@@ -42,103 +42,30 @@
 			</div>
 			<div class="content-part3">
 				<p class="part-title">角色权限</p>
-                <div class="role-container">
-                    <el-tree
-                        ref="tree"
-                        :data="dataList"
-                        default-expand-all
-                        node-key="id"
-                        show-checkbox
-                        :props="defaultProps"
-                        :check-on-click-node="false"
-                    ></el-tree>
-                </div>
-				<!--				<div class="role-container">-->
-				<!--					<el-row class="btn-control">-->
-				<!--						<el-button-->
-				<!--							v-for="(item, idx) in dataList"-->
-				<!--							:key="item.id"-->
-				<!--							type="info"-->
-				<!--							class="btn-style-role"-->
-				<!--							@click="handleChangeModule(idx)"-->
-				<!--						>-->
-				<!--							{{ item.permissionName }}-->
-				<!--						</el-button>-->
-				<!--					</el-row>-->
-				<!--					<div class="role-content">-->
-				<!--						<el-row>-->
-				<!--							<el-col :span="4">-->
-				<!--								<div class="name">模块</div>-->
-				<!--							</el-col>-->
-				<!--							<el-col :span="20">-->
-				<!--								<el-row>-->
-				<!--									<el-col :span="6">-->
-				<!--										<div class="name">页面</div>-->
-				<!--									</el-col>-->
-				<!--									<el-col :span="18">-->
-				<!--										<div class="name">权限配置规则</div>-->
-				<!--									</el-col>-->
-				<!--								</el-row>-->
-				<!--							</el-col>-->
-				<!--						</el-row>-->
-				<!--						<el-row>-->
-				<!--							<el-col :span="4">-->
-				<!--								<div class="btn-group first">-->
-				<!--									<el-checkbox-->
-				<!--										v-model="checkAllModule"-->
-				<!--										@change="handleCheckAllChangeModule"-->
-				<!--									>-->
-				<!--										{{ defaultList.permissionName }}-->
-				<!--									</el-checkbox>-->
-				<!--								</div>-->
-				<!--							</el-col>-->
-				<!--							<el-col :span="20">-->
-				<!--								<div class="btn-group">-->
-				<!--									<el-row-->
-				<!--										v-for="(item, idx) in defaultList.children"-->
-				<!--										:key="item.id"-->
-				<!--										class="div-cell"-->
-				<!--									>-->
-				<!--										<el-col :span="6">-->
-				<!--											<el-checkbox-->
-				<!--												v-model="checkedAll[idx]"-->
-				<!--												@change="handleCheckAllChangePage(idx, checkedAll[idx])"-->
-				<!--											>-->
-				<!--												<span style="font-weight: bold;">-->
-				<!--													{{ item.permissionName }}-->
-				<!--												</span>-->
-				<!--											</el-checkbox>-->
-				<!--										</el-col>-->
-				<!--										<el-col :span="18">-->
-				<!--											<el-checkbox-group-->
-				<!--												v-model="checkedList[idx]"-->
-				<!--												class="cell-group"-->
-				<!--												@change="-->
-				<!--													handleCheckedCitiesChangeBtn(idx, checkedList[idx])-->
-				<!--												"-->
-				<!--											>-->
-				<!--												<el-checkbox-->
-				<!--													v-for="lis in item.children"-->
-				<!--													:key="lis.id"-->
-				<!--													class="child-cell"-->
-				<!--													:label="lis.id"-->
-				<!--												>-->
-				<!--													{{ lis.permissionName }}-->
-				<!--												</el-checkbox>-->
-				<!--											</el-checkbox-group>-->
-				<!--										</el-col>-->
-				<!--									</el-row>-->
-				<!--								</div>-->
-				<!--							</el-col>-->
-				<!--						</el-row>-->
-				<!--					</div>-->
-				<!--					<el-checkbox-->
-				<!--						v-model="chooseAll"-->
-				<!--						class="chooseAll"-->
-				<!--					>-->
-				<!--						选择全部-->
-				<!--					</el-checkbox>-->
-				<!--				</div>-->
+				<div class="role-container">
+					<div class="tree-content">
+						<el-tree
+							ref="tree"
+							:data="rolePermissions"
+							:default-checked-keys="checkedKeys"
+							default-expand-all
+							node-key="id"
+							show-checkbox
+							:props="defaultProps"
+							:check-on-click-node="true"
+							@check="handleCheck"
+							@check-change="handleCheckChange"
+						></el-tree>
+					</div>
+				</div>
+				<el-checkbox
+					v-model="chooseAll"
+					class="chooseAll"
+					:indeterminate="isIndeterminate"
+					@change="handleAllChoose"
+				>
+					选择全部
+				</el-checkbox>
 			</div>
 			<div class="save-container">
 				<div class="save-btn" @click.prevent="save">
@@ -153,7 +80,7 @@
 <script>
 import list from '@/mixins/list'
 import { isHaveEmoji, notSpecial2 } from '@/utils/validate'
-const cityOptions = ['上海', '北京', '广州', '深圳']
+const storeDatas = []
 
 export default {
 	name: 'EditPage',
@@ -172,23 +99,15 @@ export default {
 				remark: undefined,
 				id: undefined
 			},
-			defaultProps: {
-				children: 'children',
-				label: 'permissionName'
-			},
 			chooseAll: false,
 			dataList: [],
-			otherArr: [],
-			checkAll: false,
-			checkedCities: ['上海', '北京'],
-			cities: cityOptions,
-			isIndeterminate: true,
-			defaultList: [],
-			systemOptions1: [],
-			checkedList: [], // 选中的列表
-			checkedAll: [], // 列表类全选
-			systemOptionsList: [], // 所有可选项
-			checkAllModule: false // 全选
+			rolePermissions: [],
+			permissions: [],
+			checkedKeys: [],
+			chooseIds: [],
+			allChooseLen: 0,
+			isIndeterminate: false,
+			updateStatus: false
 		}
 	},
 	computed: {
@@ -225,135 +144,151 @@ export default {
 				roleName,
 				remark
 			}
+		},
+		defaultProps() {
+			return {
+				label: (data) => {
+					return data.permissionName
+				},
+				children: 'children'
+			}
 		}
 	},
 	watch: {
-		// editData: {
-		// 	handler(newData) {
-		// 		if (Object.keys(newData).length) {
-		// 			this.queryData = {
-		// 				...newData
-		// 			}
-		// 			if (this.queryData.imageAddress) {
-		// 				this.$nextTick(() => {
-		// 					this.$refs.imgUpload.state = 'image'
-		// 					this.$refs.imgUpload.fileUrl = newData.imageAddress
-		// 				})
-		// 			}
-		// 		} else {
-		// 			this.queryData = {
-		// 				roleName: undefined,
-		// 				remark: undefined,
-		// 				id: undefined
-		// 			}
-		// 		}
-		// 	},
-		// 	deep: true,
-		// 	immediate: true
-		// }
+		editData: {
+			handler(newData) {
+				if (newData && Object.keys(newData).length) {
+					this.updateStatus = true
+					console.log('newData', newData)
+					const { id, roleName, remark, chooseIds } = newData
+					this.queryData = {
+						roleName,
+						remark,
+						id
+					}
+					this.chooseIds = chooseIds
+					if (this.$refs.tree) {
+						this.$refs.tree.setCheckedKeys(chooseIds)
+					}
+				} else {
+					this.updateStatus = false
+					this.queryData = {
+						roleName: undefined,
+						remark: undefined,
+						id: undefined
+					}
+					this.chooseIds = []
+					this.getRoleList()
+					if (this.$refs.tree) {
+						this.$refs.tree.setCheckedKeys([])
+					}
+				}
+			},
+			deep: true,
+			immediate: true
+		}
+	},
+	created() {
+		this.rolePermissions = storeDatas
 	},
 	mounted() {
-		this.getRoleList()
-		// this.$nextTick(() => {
-		// 	!this.updateStatus
-		// 		? (this.queryData.displayOrder = this.lastSortId + 1)
-		// 		: ''
-		// })
+		// this.getRoleList()
 	},
 	updated() {},
 	methods: {
-		handleCheckAllChange(val) {
-			console.log('val', val)
-			this.checkedCities = val ? cityOptions : []
-			this.isIndeterminate = false
-		},
-		handleCheckedCitiesChange(value) {
-			const checkedCount = value.length
-			this.checkAll = checkedCount === this.cities.length
-			this.isIndeterminate =
-				checkedCount > 0 && checkedCount < this.cities.length
-		},
 		back() {
 			this.$emit('back')
 		},
 		async getRoleList() {
-			// const obj = {}
-			const { code, data } = await this.$api.getRolePermissions()
-			console.log('data', data)
+			const { code, data } = await this.$api.getRolePermissionsAPI()
 			if (code === 200) {
-				this.dataList = data
-				// data &&
-				// 	data.length &&
-				// 	data.forEach((item) => {
-				// 		data &&
-				// 			data.length &&
-				// 			data.forEach((item) => {
-				// 				obj[item.permissionName] = item
-				// 			})
-				// 	})
+				this.permissions = JSON.parse(JSON.stringify(data))
+				this.allChooseLen = data.length
 				this.filterData(data)
 			}
-			// console.log('obj', obj)
 		},
 
 		filterData(data) {
-			const arr = []
-			let copyItem = {}
-			const copyData = JSON.parse(JSON.stringify(data))
-			copyData.forEach((route) => {
-				copyItem = JSON.parse(JSON.stringify(route))
-				route.level === 1 ? (copyItem.children = []) : null
-				arr.push(copyItem)
-				if (route.children && route.children.length) {
-					route.children.forEach((item) => {
-						if (item.level === 2) {
-							arr.forEach((val) => {
-								if (val.id === item.parentId) {
-									val.children = [...item.children, ...val.children]
-								}
-							})
-							//    测试假数组
-							item.children.forEach((lis, idx) => {
-								lis.children = []
-								lis.children = [].concat([
-									{ permissionName: '导出', id: idx + '1' },
-									{ permissionName: '查看', id: idx + '2' }
-								])
-							})
-						}
+			const _data = [...data]
+			_data.forEach((ele, i) => {
+				const index = data.findIndex((val) => val.id === ele.parentId)
+				if (index < 0) {
+					storeDatas.push({
+						id: ele.id,
+						label: ele.permissionName,
+						children: [],
+						...ele
 					})
+					_data.splice(i, 1)
 				}
 			})
-			console.log('arr', arr)
-			this.defaultList = arr[0]
-			this.systemOptions1 = arr[0].children
-			for (const item in arr[0].children) {
-				this.checkedAll.push(false)
-				const strArr = []
-				this.checkedList.push(strArr)
-				this.systemOptionsList.push(arr[0].children[item].children)
-			}
-			console.log('checkedAll', this.checkedAll)
-			console.log('this.checkedList', this.checkedList)
+			this.generateData(_data, storeDatas)
 		},
-		handleChangeModule(type) {
-			this.defaultList = this.dataList[type]
-			this.systemOptions1 = this.dataList[type].children
-			for (const item in this.dataList[type].children) {
-				const strArr = []
-				this.checkedList.push(strArr)
-				this.systemOptionsList.push(this.dataList[type].children[item].children)
-				this.checkedAll.push(false)
+		generateData(data, tree) {
+			const data_s = [...data]
+			const pickIndex = []
+			const leftData = []
+			data_s.forEach((ele) => {
+				const index = tree.findIndex((val) => val.id === ele.parentId)
+				if (index > -1) {
+					tree[index].children.push({
+						id: ele.id,
+						label: ele.permissionName,
+						children: [],
+						...ele
+					})
+					!pickIndex.includes(index) && pickIndex.push(index)
+				} else {
+					leftData.push(ele)
+				}
+			})
+			if (pickIndex.length > 0) {
+				pickIndex.forEach((ele) => {
+					this.generateData(leftData, tree[ele].children)
+				})
 			}
+		},
+		handleCheck(checkedNodes, checkedKeys) {
+			this.chooseIds = checkedKeys.checkedKeys.concat(
+				checkedKeys.halfCheckedKeys
+			)
+			!!this.chooseIds.length && this.chooseIds.length < this.allChooseLen
+				? ((this.chooseAll = false), (this.isIndeterminate = true))
+				: this.allChooseLen === this.chooseIds.length
+				? ((this.chooseAll = true), (this.isIndeterminate = false))
+				: ((this.chooseAll = false), (this.isIndeterminate = false))
+		},
+		handleAllChoose(val) {
+			const ids = this.getAllIds(this.permissions, [])
+			this.$nextTick(() => {
+				this.$refs.tree.setCheckedKeys(val ? ids : [])
+				val ? (this.chooseIds = ids) : (this.chooseIds = [])
+			})
+			this.isIndeterminate = false
+		},
+		getAllIds(permissions, arr) {
+			permissions.forEach((item) => {
+				arr.push(item.id)
+				item.children && this.getAllIds(item.children, arr)
+			})
+			return arr
+		},
+		handleCheckChange(data) {
+			// if (this.$refs.tree) {
+			//     const selected = this.$refs.tree.getCheckedKeys()
+			//     const ids = this.getAllIds(this.permissions, [])
+			//     this.checkAll = selected.length === ids.length
+			// }
 		},
 		save() {
 			this.loading = true
 			const params = {
 				...this.queryData
 			}
+			params.permissionId = this.chooseIds
 			const handle = this.updateStatus
-				? this.$api.agentPictureListUpdateAPI
-				: this.$api.agentPictureListCreateAPI
+				? this.$api.setUpdateRoleInfoAPI
+				: this.$api.setSaveRoleInfoAPI
 			this.$refs['form'].validate((valid) => {
 				if (valid && this.loading) {
 					handle(params)
@@ -366,10 +301,9 @@ export default {
 									type: 'success'
 								})
 								this.reset()
-								this.$refs.imgUpload.clearFile()
 								setTimeout(() => {
 									this.back()
-								}, 1500)
+								}, 1000)
 							} else {
 								this.$message({
 									message: msg,
@@ -394,58 +328,6 @@ export default {
 				remark: undefined,
 				id: undefined
 			}
-		},
-		handleCheckAllChangeModule(val) {
-			// 全选
-			const arrList = []
-			for (let i = 0; i < this.systemOptions1.length; i++) {
-				const arr = []
-				arrList.push(arr)
-			}
-			for (const index in this.systemOptions1) {
-				for (const index1 in this.systemOptions1[index].children) {
-					arrList[index].push(this.systemOptions1[index].children[index1].id)
-				}
-				this.checkedList[index] = val ? arrList[index] : []
-			}
-			for (const index in this.checkedAll) {
-				this.checkedAll[index] = val
-			}
-		},
-		handleCheckAllChangePage(index, val) {
-			// 列表类全选
-			const arr = []
-			// console.log('systemOptionsList', this.systemOptionsList)
-			// console.log('index', index)
-			// console.log('val', val)
-			for (const item in this.systemOptionsList[index]) {
-				arr.push(this.systemOptionsList[index][item].id)
-			}
-			// console.log('arr', arr)
-			// console.log('this.checkedList', this.checkedList)
-			this.checkedList[index] = val ? arr : []
-			const [...arrFlag] = new Set(this.checkedAll)
-			if (arrFlag.length === 1 && arrFlag[0] === true) {
-				this.checkAllModule = true
-			} else {
-				this.checkAllModule = false
-			}
-		},
-		handleCheckedCitiesChangeBtn(index, value) {
-			// 子选项联动
-			this.$forceUpdate() // ！！！实时改变数据
-			const b = value.length === this.systemOptionsList[index].length
-			this.checkedAll[index] = b
-			// 判断列表类是否全选来改变总的全选状态
-			const [...arrFlag] = new Set(this.checkedAll)
-			if (arrFlag.length === 1 && arrFlag[0] === true) {
-				this.checkAllModule = true
-			} else {
-				this.checkAllModule = false
-			}
-		},
-		handleCheckAll(val) {
-			this.handleCheckAllChangeModule(val)
 		}
 	}
 }
@@ -470,6 +352,11 @@ export default {
 	margin-right: 15px;
 	margin-bottom: 15px;
 }
+
+/deep/ .el-tree-node__content > label.el-checkbox {
+	margin-right: 8px;
+}
+
 .editRolePage-container {
 	background-color: #f5f5f5;
 	margin: 0;
@@ -529,6 +416,11 @@ export default {
 			.role-container {
 				padding-left: 15px;
 				padding-right: 15px;
+				border: 1px solid #eee;
+				overflow-y: scroll;
+				.tree-content {
+					height: 800px;
+				}
 				.btn-style-role {
 					width: 120px;
 					height: 30px;
@@ -597,7 +489,7 @@ export default {
 	.save-container {
 		.save-btn {
 			text-align: center;
-			margin: 0 auto;
+			margin: 0 auto 50px;
 			background-color: rgba(26, 188, 156, 1);
 			height: 40px;
 			line-height: 40px;
