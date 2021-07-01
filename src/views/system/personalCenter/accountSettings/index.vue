@@ -62,7 +62,7 @@
             <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
           </span>
         </el-form-item>
-        <el-form-item label="新登录密码：">
+        <el-form-item label="新登录密码：" prop="newPwd">
           <el-input
             v-model="form.newPwd"
             :type="passwordType"
@@ -132,73 +132,18 @@ export default {
       }
     }
   },
-  computed: {
-    // genderType() {
-    //    const equalToPassword = (rule, value, callback) => {
-    //   if (this.user.newPassword !== value) {
-    //     callback(new Error("两次输入的密码不一致"));
-    //   } else {
-    //     callback();
-    //   }
-    //   const arr = [];
-    //   if (this.globalDics.genderType && this.globalDics.genderType.length) {
-    //     this.globalDics.genderType.forEach((item) => {
-    //       arr.unshift(item);
-    //     });
-    //   }
-    //   return arr;
-    // },
-    // rules() {
-    //   const reg2 = /^([a-zA-Z0-9]*[a-zA-Z]+[0-9]+[a-zA-Z0-9]*|[a-zA-Z0-9]*[0-9]+[a-zA-Z]+[a-zA-Z0-9]*)$/;
-
-    //   const testPassword = (rule, value, callback) => {
-    //     const isSpecial = !notSpecial2(String(value));
-    //     const isRmoji = isHaveEmoji(String(value));
-    //     if (isSpecial) {
-    //       callback(new Error("不支持空格及特殊字符"));
-    //     } else if (isRmoji) {
-    //       callback(new Error("不支持表情"));
-    //     } else if (!reg2.test(value)) {
-    //       callback(new Error("请输入8-12位，字母+数字组合"));
-    //     } else {
-    //       callback();
-    //     }
-    //   };
-
-    //   // const testMobile = (rule, value, callback) => {
-    //   // 	if (!!value && !MOBILE_PATTERN.test(value)) {
-    //   // 		callback(new Error('请输入有效的手机号码'))
-    //   // 	} else {
-    //   // 		callback()
-    //   // 	}
-    //   // }
-
-    //   return {
-    //     password: [
-    //       {
-    //         required: true,
-    //         validator: testPassword,
-    //         trigger: "blur",
-    //       },
-    //       {
-    //         min: 8,
-    //         max: 12,
-    //         message: "请输入8-12位，字母+数字组合",
-    //         trigger: "blur",
-    //       },
-    //     ],
-    //     // mobile: [
-    //     // 	{
-    //     // 		required: false,
-    //     // 		validator: testMobile,
-    //     // 		trigger: 'blur'
-    //     // 	}
-    //     // ],
-    //   };
-    // },
+ computed: {
     rules() {
+      const reNewPwds = (rule, value, callback) => {
+        console.log(value, '密码')
+           if (this.form.newPwd !== value) {
+             callback(new Error('两次输入的密码不一致'))
+           } else {
+              callback()
+           }
+      }
       const pwd = [{ required: true, trigger: 'blur' }]
-      const reNewPwd = [{ required: true, trigger: 'blur' }]
+      const reNewPwd = [{ required: true, validator: reNewPwds, trigger: 'blur' }]
       const newPwd = [{ required: true, trigger: 'blur' }]
       return {
         pwd,

@@ -542,6 +542,14 @@ export function setOperateDiscountActivityUse(data) {
 		data
 	})
 }
+// 排序
+export function setoperateConfigDiscountTagSort(data) {
+	return request({
+		url: '/operate/configDiscountTag/sort',
+		method: 'post',
+		data
+	})
+}
 export default {
 	queryDiscountTagList,
 	queryVipActivityList,
@@ -608,5 +616,6 @@ export default {
 	setOperateDiscountActivityDelete,
 	setOperateDiscountActivitySort,
 	setOperateDiscountActivityUpdate,
-	setOperateDiscountActivityUse
+	setOperateDiscountActivityUse,
+	setoperateConfigDiscountTagSort
 }
