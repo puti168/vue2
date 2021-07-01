@@ -182,38 +182,110 @@
 						label="操作页面"
 					></el-table-column>
 					<el-table-column
-						v-if="activeName === '1'"
-						prop="applyType"
-						align="center"
-						label="活动页签名称"
-					>
-						<template slot-scope="scope">
-							<p>{{ typeFilter(scope.row.applyType, 'applyType') }}</p>
-						</template>
-					</el-table-column>
-					<el-table-column
-						v-if="activeName === '2'"
-						prop="applyType"
+						v-if="activeName === '3'"
+						prop="activityType"
 						align="center"
 						label="活动类型"
 					>
 						<template slot-scope="scope">
-							<p>{{ typeFilter(scope.row.applyType, 'applyType') }}</p>
+							<span
+								v-if="
+									scope.row.activityType || scope.row.activityType + '' === '0'
+								"
+							>
+								{{ typeFilter(scope.row.activityType, 'operateActivityType') }}
+							</span>
+							<span v-else>-</span>
 						</template>
 					</el-table-column>
 					<el-table-column
-						v-if="activeName === '2'"
-						prop="applyType"
+						v-if="activeName === '3'"
+						prop="activityId"
 						align="center"
 						label="活动ID"
 					>
 						<template slot-scope="scope">
-							<p>{{ typeFilter(scope.row.applyType, 'applyType') }}</p>
+							<span
+								v-if="scope.row.activityId || scope.row.activityId + '' === '0'"
+							>
+								{{ scope.row.activityId }}
+							</span>
+							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="changeType" align="center" label="变更类型">
+					<el-table-column
+						v-if="activeName === '1'"
+						prop="operationPageName"
+						align="center"
+						label="活动页签名称"
+					>
 						<template slot-scope="scope">
-							<p>{{ typeFilter(scope.row.changeType, 'operateChangeTypeName') }}</p>
+							<span v-if="scope.row.operationPageName">
+								{{ scope.row.operationPageName }}
+							</span>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
+					<el-table-column
+						v-if="activeName === '2'"
+						prop="activityType"
+						align="center"
+						label="活动类型"
+					>
+						<template slot-scope="scope">
+							<span v-if="scope.row.activityType">
+								{{ scope.row.activityType }}
+							</span>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
+					<el-table-column
+						v-if="activeName === '2'"
+						prop="activityId"
+						align="center"
+						label="活动ID"
+					>
+						<template slot-scope="scope">
+							<span v-if="scope.row.activityId">
+								{{ scope.row.activityId }}
+							</span>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
+					<el-table-column
+						v-if="activeName === '0'"
+						prop="changeType"
+						align="center"
+						label="变更类型"
+					>
+						<template slot-scope="scope">
+							<p>
+								{{ typeFilter(scope.row.changeType, 'operateChangeTypeName') }}
+							</p>
+						</template>
+					</el-table-column>
+					<el-table-column
+						v-if="activeName === '1'"
+						prop="changeType"
+						align="center"
+						label="变更类型"
+					>
+						<template slot-scope="scope">
+							<p>
+								{{ typeFilter(scope.row.changeType, 'operateChangeTypeTag') }}
+							</p>
+						</template>
+					</el-table-column>
+					<el-table-column
+						v-if="activeName === '2'"
+						prop="changeType"
+						align="center"
+						label="变更类型"
+					>
+						<template slot-scope="scope">
+							<p>
+								{{ typeFilter(scope.row.changeType, 'operateChangeTypeDis') }}
+							</p>
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -225,6 +297,12 @@
 						prop="changeAfter"
 						align="center"
 						label="变更后"
+					></el-table-column>
+					<el-table-column
+						v-if="activeName === '1'"
+						prop="remark"
+						align="center"
+						label="备注"
 					></el-table-column>
 					<el-table-column
 						prop="operatorBy"
@@ -276,7 +354,7 @@ export default {
 				operatorBy: undefined,
 				changeType: [],
 				activityType: [],
-                tagIds: []
+				tagIds: []
 			},
 			formTime: {
 				time: [start, end]
@@ -304,19 +382,20 @@ export default {
 			return this.globalDics.operateActivityType
 		}
 	},
-	mounted() {},
+	mounted() {
+		this.loadGame()
+	},
 	methods: {
 		loadGame() {
 			this.$api
 				.configDiscountTagQueryNames()
 				.then((res) => {
-					if (res.code === 200) {
-						this.gameList = res.data
+					const { code, data } = res
+					if (code === 200) {
+						this.gameList = data || []
 					}
 				})
-				.catch(() => {
-					this.loading = false
-				})
+				.catch(() => {})
 		},
 		handleClick() {
 			this.reset()
@@ -341,7 +420,7 @@ export default {
 				params = {
 					changeType: this.queryData.changeType,
 					operatorBy: this.queryData.operatorBy,
-                    tagIds: this.queryData.tagIds,
+					tagIds: this.queryData.tagIds,
 					startAt: startTime
 						? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
 						: '',
@@ -403,11 +482,11 @@ export default {
 			this.loadData()
 		},
 		reset() {
-            this.pageNum = 1
+			this.pageNum = 1
 			this.queryData = {
-                operatorBy: undefined,
-                changeType: [],
-                activityType: []
+				operatorBy: undefined,
+				changeType: [],
+				activityType: []
 			}
 			this.formTime.time = [start, end]
 			this.loadData()
