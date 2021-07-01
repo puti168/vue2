@@ -30,6 +30,14 @@ export function updateXPSStatus(data) {
 		data
 	})
 }
+
+export function googleAuth() {
+	return request({
+		url: '/userInfo/getGoogleAuth',
+		method: 'get'
+	})
+}
+
 export function modifyPassword(data) {
 	return request({
 		url: '/userInfo/updatePassword',
@@ -37,6 +45,7 @@ export function modifyPassword(data) {
 		data
 	})
 }
+
 export function getUsers(data) {
 	return request({
 		url: '/userInfo/listPage',
@@ -246,5 +255,6 @@ export default {
 	setMemberAddOrEditMemberLabel,
 	getMemberMemberInfoByLabelId,
 	setMemberDeleteLabel,
-	getMemberLabelChangeRecordPage
+	getMemberLabelChangeRecordPage,
+	googleAuth
 }
