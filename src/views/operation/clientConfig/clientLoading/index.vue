@@ -556,19 +556,24 @@ export default {
 			// const { value } = e.target
 		},
 		_changeTableSort({ column, prop, order }) {
-			if (prop === 'createdAt') {
-				prop = 0
-			}
-			if (prop === 'updatedAt') {
-				prop = 1
-			}
-			this.queryData.orderKey = prop
-			if (order === 'ascending') {
-				// 升序
-				this.queryData.orderType = 'asc'
-			} else if (column.order === 'descending') {
-				// 降序
-				this.queryData.orderType = 'desc'
+			if (order) {
+				if (prop === 'createdAt') {
+					prop = 0
+				}
+				if (prop === 'updatedAt') {
+					prop = 1
+				}
+				this.queryData.orderKey = prop
+				if (order === 'ascending') {
+					// 升序
+					this.queryData.orderType = 'asc'
+				} else if (column.order === 'descending') {
+					// 降序
+					this.queryData.orderType = 'desc'
+				}
+			} else {
+				this.queryData.orderKey = undefined
+				this.queryData.orderType = undefined
 			}
 			this.loadData()
 		},
