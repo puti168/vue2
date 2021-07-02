@@ -398,6 +398,7 @@ export default {
       }
       const sortIds = newArr.join(',')
       this.$api.setoperateConfigDiscountTagSort({ sortIds: sortIds }).then((res) => {
+        this.sortLabel = false
         if (res.code === 200) {
           this.$message({
             message: '操作成功！',
