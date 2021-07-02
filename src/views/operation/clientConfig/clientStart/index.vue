@@ -614,10 +614,10 @@ export default {
 		},
 		_changeTableSort({ column, prop, order }) {
 			if (prop === 'createdAt') {
-				prop = 1
+				prop = 0
 			}
 			if (prop === 'updatedAt') {
-				prop = 2
+				prop = 1
 			}
 			this.queryData.orderKey = prop
 			if (order === 'ascending') {
