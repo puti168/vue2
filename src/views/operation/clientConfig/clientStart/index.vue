@@ -604,8 +604,9 @@ export default {
 						}
 					})
 					this.dialogFormVisible = false
-
-					this.loadData()
+					setTimeout(() => {
+						this.loadData()
+					}, 1000)
 				}
 			})
 		},
@@ -613,21 +614,26 @@ export default {
 			// const { value } = e.target
 		},
 		_changeTableSort({ column, prop, order }) {
-			if (prop === 'createdAt') {
-				prop = 0
+			if (order) {
+				if (prop === 'createdAt') {
+					prop = 0
+				}
+				if (prop === 'updatedAt') {
+					prop = 1
+				}
+				this.queryData.orderKey = prop
+				if (order === 'ascending') {
+					// 升序
+					this.queryData.orderType = 'asc'
+				} else if (column.order === 'descending') {
+					// 降序
+					this.queryData.orderType = 'desc'
+				}
+			} else {
+				this.queryData.orderKey = undefined
+				this.queryData.orderType = undefined
 			}
-			if (prop === 'updatedAt') {
-				prop = 1
-			}
-			this.queryData.orderKey = prop
-			if (order === 'ascending') {
-				// 升序
-				this.queryData.orderType = 'asc'
-			} else if (column.order === 'descending') {
-				// 降序
-				this.queryData.orderType = 'desc'
-			}
-			this.loadData()
+            this.loadData()
 		},
 		clear() {
 			this.$refs.formSub.resetFields()
