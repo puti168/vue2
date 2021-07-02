@@ -1,17 +1,11 @@
 <template>
-  <gameHomeRecommendEdit
-    v-if="isEdit"
-    :recommendDetails="recommendDetails"
-    @back="back"
-  />
-
-  <div v-else class="game-container report-container">
+  <div class="game-container report-container">
     <el-tabs v-model="activeName" @tab-click="handleClick">
       <el-tab-pane label="APP端" name="first"></el-tab-pane>
       <el-tab-pane label="H5端" name="second"></el-tab-pane>
       <el-tab-pane label="PC端" name="third"></el-tab-pane>
       <div class="params">
-        <el-form ref="form" :inline="true" :model="queryData">
+        <el-form :inline="true" :model="queryData">
           <el-form-item label="轮播图区域:">
             <el-select
               v-model="queryData.areaType"
@@ -158,7 +152,7 @@
               icon="el-icon-sort"
               :disabled="loading"
               size="medium"
-              @click="sortLabel"
+              @click="subSort"
             >
               排序
             </el-button>
@@ -168,21 +162,20 @@
       <el-dialog
         title="轮播图区域排序"
         :visible.sync="sortLabel"
-        :model="carouselData"
+        :model="QueryareaList"
         width="970px"
         :destroy-on-close="true"
       >
-        <draggable v-model="carouselData.QueryareaList" @start="onStart" @end="onEnd">
+        <draggable v-model="QueryareaList" @start="onStart" @end="onEnd">
           <transition-group>
             <div v-for="tiem in QueryareaList" :key="tiem.value" class="reach">
-              {{ tiem.label }}
+              {{ tiem.value }}
             </div>
           </transition-group>
         </draggable>
         <el-button @click="sortLabel = false">取消</el-button>
-        <el-button type="primary" @click="Eidt">确定</el-button>
+        <el-button type="primary" @click="setoperateConfigBannerSort">确定</el-button>
       </el-dialog>
-
       <div class="view-container dealer-container">
         <div class="content">
           <el-table
@@ -202,7 +195,6 @@
               width="100px"
             >
               <template slot-scope="scope">
-                <!-- {{ scope.row.areaType }} -->
                 <span v-for="item in QueryareaList" :key="item.code">
                   {{ scope.row.areaType === item.code ? item.value : "" }}
                 </span>
@@ -222,7 +214,7 @@
             >
               <template slot-scope="scope">
                 <!-- {{ typeFilter(scope.row.bannerValidity, "operateValidityType") }} -->
-                   {{ scope.row.bannerValidity === 1 ? "限时" : "永久" }}
+                {{ scope.row.bannerValidity === 1 ? "限时" : "永久" }}
               </template>
             </el-table-column>
             <el-table-column
@@ -241,7 +233,6 @@
             ></el-table-column>
             <el-table-column prop="isLink" align="center" label="是否跳转" width="120px">
               <template slot-scope="scope">
-                <!-- {{ typeFilter(scope.row.isLink, "operateYesNo") }} -->
                 {{ scope.row.isLink === 1 ? "是" : "否" }}
               </template>
             </el-table-column>
@@ -296,14 +287,6 @@
             ></el-table-column>
             <el-table-column prop="operating" align="center" label="操作" width="270px">
               <template slot-scope="scope">
-                <!-- <el-button
-                  :type="scope.row.assortStatus ? 'danger' : 'success'"
-                  size="medium"
-                  @click="recycle(scope.row)"
-                >
-                  <div v-if="scope.row.assortStatus">禁用</div>
-                  <div v-else>开启</div>
-                </el-button> -->
                 <el-button
                   v-if="scope.row.status === 0"
                   :disabled="loading"
@@ -373,7 +356,10 @@
           <el-form ref="formSub" :inline="true" :model="dialogForm" label-width="135px">
             <el-form-item
               label="轮播图区域:"
-              :rules="[{ required: true, message: '请输入轮播图名称', trigger: 'blur' }]"
+              prop="areaType"
+              :rules="[
+                { required: true, message: '请选择轮播图名称', trigger: 'change' },
+              ]"
             >
               <el-select
                 v-model="dialogForm.areaType"
@@ -391,7 +377,11 @@
                 *首页轮播图从左至右排列依次为：1.2.3.4.5.6.7.8.9.10区
               </span>
             </el-form-item>
-            <el-form-item label="轮播图名称:" :rules="[{ required: true }]">
+            <el-form-item
+              label="轮播图名称:"
+              prop="bannerName"
+              :rules="[{ required: true, message: '请输入轮播图名称', trigger: 'blur' }]"
+            >
               <el-input
                 v-model="dialogForm.bannerName"
                 class="region"
@@ -401,16 +391,17 @@
             </el-form-item>
             <el-form-item
               label="轮播图时效:"
+              prop="bannerValidity"
               :rules="[
                 {
                   required: true,
                   message: '请选择轮播图时效',
-                  trigger: 'blur',
+                  trigger: 'change',
                 },
               ]"
             >
               <el-select v-model="dialogForm.bannerValidity" class="region">
-                 <el-option label="限时" :value="0"></el-option>
+                <el-option label="限时" :value="0"></el-option>
                 <el-option label="永久" :value="1"></el-option>
               </el-select>
             </el-form-item>
@@ -431,7 +422,7 @@
               ></el-date-picker>
             </el-form-item>
             <el-form-item
-            v-if="dialogForm.bannerValidity === 1"
+              v-if="dialogForm.bannerValidity === 1"
               label="下架时间:"
               label-width="112px"
               :rules="[{ required: true }]"
@@ -446,32 +437,46 @@
                 :clearable="false"
               ></el-date-picker>
             </el-form-item>
-            <el-form-item label="是否跳转:" :rules="[{ required: true }]">
+            <el-form-item
+              label="是否跳转:"
+              prop="isLink"
+              :rules="[
+                {
+                  required: true,
+                  message: '请输入',
+                  trigger: 'blur',
+                },
+              ]"
+            >
               <el-select
                 v-model="dialogForm.isLink"
                 :popper-append-to-body="false"
                 class="region"
               >
-                <el-option label="是" :value="1"></el-option>
-                <el-option label="否" :value="0"></el-option>
+                <el-option label="跳转" :value="1"></el-option>
+                <el-option label="不跳转" :value="0"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item
               v-if="dialogForm.isLink === 1"
               label="跳转目标:"
-              :rules="[{ required: true }]"
+              prop="linkTarget"
+              :rules="[
+                {
+                  required: true,
+                  message: '请输入跳转目标',
+                  trigger: 'blur',
+                },
+              ]"
             >
               <el-select v-model="dialogForm.linkTarget" class="region">
                 <el-option label="游戏" :value="0"></el-option>
-                <el-option v-if="dialogForm.isLink === 1" label="现金网内部" :value="1"></el-option>
-                <el-option v-if="dialogForm.isLink === 1" label="外部地址" :value="2"></el-option>
+                <el-option label="现金网内部" :value="1"></el-option>
+                <el-option label="外部地址" :value="2"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item v-if="dialogForm.isLink === 1" label="游戏:" :rules="[]">
-              <el-select
-                v-model="dialogForm.mregionAging"
-                class="region"
-              >
+            <el-form-item v-if="dialogForm.linkTarget === 0" label="游戏:" :rules="[]">
+              <el-select v-model="dialogForm.mregionAging" class="region">
                 <el-option
                   v-for="item in QueryGameList"
                   :key="item.gameId"
@@ -481,8 +486,9 @@
               </el-select>
             </el-form-item>
             <el-form-item
-              v-if="dialogForm.linkTarget === 2 "
+              v-else
               label="URL链接:"
+              prop="targetUrl"
               :rules="[{ required: true }]"
             >
               <el-input
@@ -492,30 +498,25 @@
                 show-word-limit
               ></el-input>
             </el-form-item>
-             <el-form-item
-              v-if="dialogForm.linkTarget === 1 "
-              label="URL链接:"
-              :rules="[{ required: true }]"
+            <el-form-item
+              label="图片上传"
+              prop="pictureUrl"
+              :rules="[{ required: true, message: '请上传图片', trigger: 'change' }]"
             >
-              <el-input
-                v-model="dialogForm.targetUrl"
-                class="region"
-                placeholder="请输入"
-                show-word-limit
-              ></el-input>
-            </el-form-item>
-            <el-form-item label="图片上传" prop="pictureUrl">
               <UploadItem
                 ref="imgUpload1"
                 :upload-file-type="'image'"
                 :platform="'PC'"
-                :img-urls="dialogForm.activitySharePicture"
+                :img-urls="dialogForm.pictureUrl"
                 @upoladItemSucess="handleUploadSucessShare"
                 @startUpoladItem="handleStartUploadShare"
                 @deleteUpoladItem="handleDeleteUploadShare"
                 @upoladItemDefeat="handleUploadDefeatShare"
               ></UploadItem>
-              <p class="imgTip">请上传图片！图片格式仅支持png,jpg 图片大小不超过2MB</p>
+              <div class="remakeBox">
+                <span class="danger">*</span>图片格式仅支持png，jpg <br />
+                <span class="danger">*</span>图片大小不能超过2MB
+              </div>
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
@@ -540,7 +541,7 @@ export default {
   mixins: [list],
   data() {
     return {
-      carouselData: {},
+      QueryareaList: [],
       upTime: Date.now(),
       downTime: endTime,
       dateNow: {
@@ -549,74 +550,30 @@ export default {
         }
       },
       dateEnd: {},
-      QueryareaList: [],
       QueryGameList: [],
       tableData: [],
       drag: false,
       sortLabel: false,
-      form: {
-        status: '1'
-      },
       imgVisible: false,
-      nowImage: '',
       dialogFormVisible: false,
-      dialogForm: { pictureUrl: null, upTime: '', downTime: ''},
       isEdit: false,
-      dataList: [],
-      title: '',
-      // 终端类型
-      clientType: 1,
-      recommendDetails: {},
+      clientType: 0,
       addOrEdit: 'add',
-      queryData: {
-        clientType: 1
+      queryData: {},
+      dialogForm: {
+        areaType: 0,
+        bannerValidity: 1,
+        isLink: 1,
+        linkTarget: 0,
+        status: 0,
+        pictureUrl: null
       },
       activeName: 'first'
     }
   },
   computed: {
-    imageSize() {
-      return {
-        width: 1920,
-        height: 400
-      }
-    },
-    rules() {
-      const valiIMG = (rule, value, callback) => {
-        // 图片验证
-        callback()
-      }
-      return {
-        pictureUrl: [
-          {
-            required: true,
-            validator: valiIMG,
-            message: '请选择图片上传',
-            trigger: ['blur', 'change']
-          }
-        ]
-      }
-    },
-    // errTime() {
-    //   if (
-    //     this.dialogForm.bannerValidity === '0' &&
-    //     this.upTime < this.upTime
-    //   ) {
-    //     console.log(this.dialogForm, '00000')
-    //     return false
-    //   } else if (this.dialogForm.bannerValidity === '1') {
-    //     console.log(this.dialogForm, '11111')
-    //     return false
-    //   } else {
-    //     return true
-    //   }
-    // },
-
     operateValidityType() {
       return this.globalDics.operateValidityType
-    },
-    accountType() {
-      return this.globalDics.accountType
     },
     operateYesNo() {
       return this.globalDics.operateYesNo
@@ -646,160 +603,14 @@ export default {
   },
   mounted() {},
   methods: {
-    // 开始拖拽事件
-    onStart() {
-      this.drag = true
-    },
-    // 拖拽结束事件
-    onEnd() {
-      this.drag = false
-    },
-    uploadSuccess(data) {
-      this.$set(this.form, 'imageAddress', data)
-    },
-    addLabel(val) {
-      this.dialogForm = {
-        status: 0,
-        isLink: 1,
-        areaType: 0,
-        bannerName: '',
-        bannerValidity: 1,
-        pictureUrl: null,
-        clientType: 0,
-        upTime: '',
-        linkTarget: 0,
-        downTime: ''
-
-       }
-       this.upTime = Date.now()
-       this.downTime = endTime
-      this.dialogFormVisible = true
-    },
-    changeTime(val) {
-      const Timestamp = new Date(new Date(val).toLocaleDateString()).getTime()
-      if (Timestamp === startTime) {
-        this.upTime = Date.now()
-      } else {
-        this.upTime = Timestamp
-      }
-    },
-    clear() {
-      this.upTime = Date.now()
-      this.downTime = endTime
-    },
-    getQueryarea() {
-      this.$api.operateConfigBannerQueryBannerAreaAPI().then((res) => {
-        if (res.code === 200) {
-          this.QueryareaList = res.data
-        }
-      })
-    },
-    // 获取所有游戏
-     getQueryGameList() {
-      this.$api.operateConfigBannerQueryGameList().then((res) => {
-        if (res.code === 200) {
-          this.QueryGameList = res.data
-        }
-      })
-    },
-     subAddOrEidt() {
-      if (this.dialogForm.isLink === '0') {
-        this.dialogForm.upTime = dayjs(this.upTime).format(
-          'YYYY-MM-DD HH:mm:ss'
-        )
-        this.dialogForm.downTime = dayjs(this.downTime).format(
-          'YYYY-MM-DD HH:mm:ss'
-        )
-      } else {
-        this.dialogForm.upTime = dayjs(this.downTime).format(
-          'YYYY-MM-DD HH:mm:ss'
-        )
-        delete this.dialogForm.downTime
-      }
-      this.$refs.formSub.validate(() => {
-        const params = { ...this.dialogForm }
-         console.log(params, '0000')
-          if (this.addOrEdit === 'add') {
-            this.setOperateConfigBannerAdd(params)
-          } else {
-            this.setBannerUpdate(params)
-          }
-      })
-    },
-    setOperateConfigBannerAdd(val) {
-          this.$api.getOperateConfigBannerAdd(val).then((res) => {
-            if (res.code === 200) {
-              console.log(res)
-              this.$message.success('新增成功!')
-              this.loadData()
-            }
-            this.dialogFormVisible = false
-          })
-
-        .catch(() => {})
-    },
-    setBannerUpdate(val) {
-      this.$api.getPperateConfigBannerUpdate(val).then((res) => {
-        if (res.code === 200) {
-          this.$message({
-            message: '编辑成功！',
-            type: 'success'
-          })
-          this.dialogFormVisible = false
-          this.loadData()
-        }
-      })
-    },
-    Eidt() {},
-    // subAddOrEidt() {
-    //         this.getOperateConfigBannerAdd(params)
-    //         if (this.dialogForm.announcementAging === 2) {
-    //         this.errTime = false
-    //         const params = {
-    //           ...this.dialogForm,
-    //           downTime: '',
-    //           upTime: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : ''
-    //         }
-    //         console.log(params, '111')
-    //         this.getOperateConfigBannerAdd(params)
-    //       } else {
-    //         this.errTime = true
-    //       }
-
-    // },
-    //  getOperateConfigBannerAdd(val) {
-    //   this.loading = true
-    //   this.$api.getOperateConfigBannerAdd(val).then((res) => {
-    //     this.loading = false
-    //     if (res.code === 200) {
-    //       this.$message({
-    //         message: this.flag === '新增' ? '新增成功！' : '编辑成功！',
-    //         type: 'success'
-    //       })
-    //       this.loadData()
-    //     }
-    //     this.dialogFormVisible = false
-    //   })
-    // },
-
-    // 切换导航
-    handleClick(tab) {
-      const name = tab.name
-      if (name === 'first') {
-        this.queryData.clientType = 1
-      } else if (name === 'second') {
-        this.queryData.clientType = 2
-      } else {
-        this.queryData.clientType = 2
-      }
-      this.loadData()
-    },
     loadData() {
       this.loading = true
       const params = {
-        ...this.getParams(params)
+        clientType: this.clientType,
+        ...this.queryData,
+        ...this.getParams()
       }
-
+      console.log(params)
       this.$api
         .getQperateConfigBannerQueryBannerList(params)
         .then((res) => {
@@ -815,20 +626,122 @@ export default {
           this.loading = false
         })
     },
-    // deleteBtn(row) {
-    //   this.$confirm(
-    //     `<strong>是否删除该条配置?</strong></br><span style='font-size:12px;color:#c1c1c1'>请谨慎操作</span>`,
-    //     "确认提示",
-    //     {
-    //       dangerouslyUseHTMLString: true,
-    //       confirmButtonText: "确定",
-    //       cancelButtonText: "取消",
-    //       type: "warning",
-    //     }
-    //   )
-    //     .then(() => {})
-    //     .catch(() => {});
-    // },
+    getQueryarea() {
+      this.$api.operateConfigBannerQueryBannerAreaAPI().then((res) => {
+        if (res.code === 200) {
+          this.QueryareaList = res.data
+        }
+      })
+    },
+    // 获取所有游戏
+    getQueryGameList() {
+      this.$api.operateConfigBannerQueryGameList().then((res) => {
+        if (res.code === 200) {
+          this.QueryGameList = res.data
+        }
+      })
+    },
+    addLabel(val) {
+      this.dialogForm = {
+        areaType: 0,
+        bannerValidity: 1,
+        isLink: 1,
+        linkTarget: 0,
+        status: 0,
+        pictureUrl: null
+      }
+      this.upTime = Date.now()
+      this.downTime = endTime
+      this.dialogFormVisible = true
+    },
+
+    clear() {
+      this.upTime = Date.now()
+      this.downTime = endTime
+    },
+
+    openEdit(row) {
+      this.addOrEdit = 'edit'
+      this.dialogForm = { ...row }
+      console.log(this.dialogForm, '编辑的事')
+      this.dialogForm.upTime = row.upTime
+      this.dialogForm.downTime = row.downTime
+      this.dialogForm.isLink = row.isLink
+      this.dialogFormVisible = true
+      this.$nextTick(() => {
+        this.$refs.imgUpload1.state = 'image'
+        this.$refs.imgUpload1.fileUrl = row.pictureUrl
+      })
+    },
+    subAddOrEidt() {
+      if (this.dialogForm.isLink === '0') {
+        this.dialogForm.upTime = dayjs(this.upTime).format('YYYY-MM-DD HH:mm:ss')
+        this.dialogForm.downTime = dayjs(this.downTime).format('YYYY-MM-DD HH:mm:ss')
+      } else {
+        this.dialogForm.upTime = dayjs(this.downTime).format('YYYY-MM-DD HH:mm:ss')
+        delete this.dialogForm.downTime
+      }
+      this.$refs.formSub.validate((valid) => {
+        if (valid) {
+          const params = { ...this.dialogForm, clientType: this.clientType }
+          console.log(params, '0000')
+          if (this.addOrEdit === 'add') {
+            this.setOperateConfigBannerAdd(params)
+          } else {
+            this.setBannerUpdate(params)
+          }
+        }
+      })
+    },
+    setOperateConfigBannerAdd(val) {
+      this.$api
+        .getOperateConfigBannerAdd(val)
+        .then((res) => {
+          if (res.code === 200) {
+            console.log(res)
+            this.$message.success('新增成功!')
+            this.loadData()
+          }
+          this.dialogFormVisible = false
+        })
+
+        .catch(() => {})
+    },
+
+    // 切换导航
+    handleClick(tab) {
+      const name = tab.name
+      if (name === 'first') {
+        this.clientType = 0
+      } else if (name === 'second') {
+        this.clientType = 1
+      } else {
+        this.clientType = 2
+      }
+      console.log(this.clientType)
+      this.loadData()
+    },
+
+    changeTime(val) {
+      const Timestamp = new Date(new Date(val).toLocaleDateString()).getTime()
+      if (Timestamp === startTime) {
+        this.upTime = Date.now()
+      } else {
+        this.upTime = Timestamp
+      }
+    },
+    setBannerUpdate(val) {
+      this.$api.getPperateConfigBannerUpdate(val).then((res) => {
+        if (res.code === 200) {
+          this.$message({
+            message: '编辑成功！',
+            type: 'success'
+          })
+          this.dialogFormVisible = false
+          this.loadData()
+        }
+      })
+    },
     deleteBtn(val) {
       const { id } = val
       this.$confirm(
@@ -897,25 +810,25 @@ export default {
         })
         .catch(() => {})
     },
-    openEdit(row) {
-      this.addOrEdit = 'edit'
-     this.dialogForm = { ...row }
-     console.log(this.dialogForm, '编辑的事')
-     this.dialogForm.upTime = row.upTime + ''
-     this.dialogForm.downTime = row.downTime + ''
-      this.dialogForm.isLink = row.isLink + ''
-      this.dialogFormVisible = true
-      this.$nextTick(() => {
-        this.$refs.imgUpload1.state = 'image'
-        this.$refs.imgUpload1.fileUrl = row.pictureUrl
+
+    // 开始拖拽事件
+    onStart() {
+      this.drag = true
+    },
+    // 拖拽结束事件
+    onEnd() {
+      this.drag = false
+    },
+    subSort() {
+      this.sortLabel = true
+    },
+    setoperateConfigBannerSort() {
+      console.log(this.QueryareaList)
+      this.$api.setoperateConfigBannerSort(this.QueryareaList).then((res) => {
+        if (res.code === 200) {
+          console.log(res)
+        }
       })
-      // this.$api.getPperateConfigBannerUpdate({ clientType: 1 }).then((res) => {
-      //   if (res.code === 200) {
-      //     console.log(res)
-      //     this.dialogForm = res.data
-      //     this.dialogFormVisible = true
-      //   }
-      // })
     },
     closeImage() {
       this.imgVisible = false
@@ -924,18 +837,18 @@ export default {
       this.imgVisible = true
       this.bigImage = val
     },
-     handleUploadDefeatShare() {
+    handleUploadDefeatShare() {
       this.dialogForm.activitySharePicture = ''
       this.$message.error('图片上传失败')
     },
-     handleDeleteUploadShare() {
+    handleDeleteUploadShare() {
       this.dialogForm.activitySharePicture = ''
       this.$message.warning('图片已被移除')
     },
-     handleStartUploadShare() {
+    handleStartUploadShare() {
       this.$message.info('图片开始上传')
     },
-     handleUploadSucessShare({ index, file, id }) {
+    handleUploadSucessShare({ index, file, id }) {
       this.dialogForm.pictureUrl = file.imgUrl
       this.$refs['formSub'].validateField('pictureUrl')
     },
@@ -954,19 +867,21 @@ export default {
         prop = 4
       }
       this.pageNum = 1
-      this.queryData.orderProperty = prop
+      this.queryData.orderKey = prop
       if (order === 'ascending') {
         // 升序
         this.queryData.orderType = 'asc'
       } else if (column.order === 'descending') {
         // 降序
         this.queryData.orderType = 'desc'
+      } else {
+        delete this.queryData.orderType
+        delete this.queryData.orderType
       }
       this.loadData()
     },
     reset() {
       this.pageNum = 1
-      this.dialogForm = { clientType: 1 }
       this.loadData()
     }
   }
@@ -995,5 +910,12 @@ export default {
   text-align: center;
   color: #909399;
   font-weight: 700;
+}
+.remakeBox {
+  width: 164px;
+  position: absolute;
+  left: 200px;
+  bottom: 0;
+  line-height: 20px;
 }
 </style>

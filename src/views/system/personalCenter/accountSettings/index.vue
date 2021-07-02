@@ -5,7 +5,7 @@
       <div class="form-header">
         <span>账户设置</span>
       </div>
-      <el-form ref="form" :model="form" :rules="rules" label-width="124px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="135px">
         <div class="ctbox">
           <!-- <el-avatar icon="el-icon-user-solid" :size="150" class="fit"></el-avatar> -->
           <div class="block">
@@ -15,12 +15,12 @@
 
         <el-form-item class="pding" label="角色名称：">
           <el-input
-            v-model="form.agentCode"
+            v-model="form.nickName"
             class="text"
             readonly
+            disabled
             unselectable="on"
             size="medium"
-            clearable
             type="text"
             maxlength="6"
             style="width: 365px"
@@ -33,7 +33,7 @@
             class="text"
             size="medium"
             readonly="readonly"
-            clearable
+            disabled
             maxlength="6"
             style="width: 365px"
           ></el-input>
@@ -48,28 +48,26 @@
             style="width: 365px"
           ></el-input>
         </el-form-item>
-        <el-form-item label="旧登录密码：">
+        <el-form-item label="旧登录密码：" prop="pwd">
           <el-input
             v-model="form.pwd"
             :type="passwordType"
             name="password"
             size="medium"
             placeholder="请输入原登录密码"
-            clearable
             style="width: 365px"
           ></el-input>
           <span class="show-pwd" @click="showPwd">
             <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
           </span>
         </el-form-item>
-        <el-form-item label="新登录密码：">
+        <el-form-item label="新登录密码：" prop="newPwd">
           <el-input
             v-model="form.newPwd"
             :type="passwordType"
             name="password"
             size="medium"
             placeholder="请输入新登录密码"
-            clearable
             maxlength="6"
             style="width: 365px"
           ></el-input>
@@ -77,14 +75,13 @@
             <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
           </span>
         </el-form-item>
-        <el-form-item label="确认新登录密码：">
+        <el-form-item label="确认新登录密码：" prop="reNewPwd">
           <el-input
             v-model="form.reNewPwd"
             :type="passwordType"
             name="password"
             size="medium"
             placeholder="请确认新登录密码"
-            clearable
             maxlength="6"
             style="width: 365px"
           ></el-input>
@@ -121,89 +118,41 @@ export default {
       loading: false,
       id: '',
       form: {
-        agentCode: '',
+        nickName: '',
         newPwd: '',
         phone: '',
         pwd: '',
         reNewPwd: '',
-        type: '',
-        id: 0,
+        type: '1',
         userName: ''
       }
     }
   },
   computed: {
-    // genderType() {
-    //    const equalToPassword = (rule, value, callback) => {
-    //   if (this.user.newPassword !== value) {
-    //     callback(new Error("两次输入的密码不一致"));
-    //   } else {
-    //     callback();
-    //   }
-    //   const arr = [];
-    //   if (this.globalDics.genderType && this.globalDics.genderType.length) {
-    //     this.globalDics.genderType.forEach((item) => {
-    //       arr.unshift(item);
-    //     });
-    //   }
-    //   return arr;
-    // },
-    // rules() {
-    //   const reg2 = /^([a-zA-Z0-9]*[a-zA-Z]+[0-9]+[a-zA-Z0-9]*|[a-zA-Z0-9]*[0-9]+[a-zA-Z]+[a-zA-Z0-9]*)$/;
-
-    //   const testPassword = (rule, value, callback) => {
-    //     const isSpecial = !notSpecial2(String(value));
-    //     const isRmoji = isHaveEmoji(String(value));
-    //     if (isSpecial) {
-    //       callback(new Error("不支持空格及特殊字符"));
-    //     } else if (isRmoji) {
-    //       callback(new Error("不支持表情"));
-    //     } else if (!reg2.test(value)) {
-    //       callback(new Error("请输入8-12位，字母+数字组合"));
-    //     } else {
-    //       callback();
-    //     }
-    //   };
-
-    //   // const testMobile = (rule, value, callback) => {
-    //   // 	if (!!value && !MOBILE_PATTERN.test(value)) {
-    //   // 		callback(new Error('请输入有效的手机号码'))
-    //   // 	} else {
-    //   // 		callback()
-    //   // 	}
-    //   // }
-
-    //   return {
-    //     password: [
-    //       {
-    //         required: true,
-    //         validator: testPassword,
-    //         trigger: "blur",
-    //       },
-    //       {
-    //         min: 8,
-    //         max: 12,
-    //         message: "请输入8-12位，字母+数字组合",
-    //         trigger: "blur",
-    //       },
-    //     ],
-    //     // mobile: [
-    //     // 	{
-    //     // 		required: false,
-    //     // 		validator: testMobile,
-    //     // 		trigger: 'blur'
-    //     // 	}
-    //     // ],
-    //   };
-    // },
     rules() {
-      const pwd = [{ required: true, trigger: 'blur' }]
-      const reNewPwd = [{ required: true, trigger: 'blur' }]
-      const newPwd = [{ required: true, trigger: 'blur' }]
+      const reNewPwds = (rule, value, callback) => {
+        console.log(value, '密码')
+        if (!value) {
+          callback(new Error('请输入确认密码'))
+        } else if (value !== this.form.newPwd) {
+          callback(new Error('两次输入不一致'))
+        } else {
+          callback()
+        }
+      }
+      const pwd = [{ required: true, message: '请输入旧密码', trigger: 'blur' }]
+      const newPwd = [{ required: true, message: '请输入新密码', trigger: 'blur' }]
+      const reNewPwd = [
+        {
+          required: true,
+          validator: reNewPwds,
+          trigger: 'blur'
+        }
+      ]
       return {
         pwd,
-        reNewPwd,
-        newPwd
+        newPwd,
+        reNewPwd
       }
     }
   },
@@ -221,33 +170,32 @@ export default {
       const id = localStorage.getItem('id')
       this.$api.getuserInfolist({ id }).then((res) => {
         if (res.code === 200) {
-          this.form = res.data
+          const { id, userName, nickName, phone } = { ...res.data }
+          this.form.userId = id
+          this.form.phone = phone
+          this.form.userName = userName
+          this.form.nickName = nickName
           this.dialogGameVisible = true
         }
         this.loading = false
       })
     },
     onUpdateUser(form) {
-      const id = localStorage.getItem('id')
-      const userName = localStorage.getItem('username')
-      const rePwd = localStorage.getItem('password')
-      console.log(id, userName, '334')
-      this.$api
-        .setUserInfoupdatePwdAdmin({
-          pwd: form.pwd,
-          phone: form.phone,
-          newPwd: form.newPwd,
-          rePwd,
-          id,
-          userName
-        })
-        .then((_) => {
-          if (_.code === 200) {
-            this.$message.success('修改成功')
-            'success'
-          }
-          this.dialogFormVisible = false
-        })
+      console.log(this.form)
+      const params = {
+        ...this.form
+      }
+      this.$refs.form.validate((valid) => {
+        if (valid) {
+          delete params.nickName
+          this.$api.setUserInfoupdatePwdAdmin(params).then((res) => {
+            if (res.code === 200) {
+              this.$message.success('修改成功');
+              ('success')
+            }
+          })
+        }
+      })
     },
     reset() {
       this.$refs['form'].resetFields()
