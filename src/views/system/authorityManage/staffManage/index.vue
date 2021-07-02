@@ -239,6 +239,7 @@ import list from '@/mixins/list'
 import { sleep } from '@/utils/sleep'
 import { message } from '@/utils/message'
 import { getUsername } from '@/utils/auth' // get token from cookie
+
 export default {
 	name: 'Account',
 	components: { EditAccount, AccountUpdatePass },
