@@ -365,7 +365,13 @@ export default {
 				{ required: true, message: '请输入合营ID', trigger: 'blur' }
 			]
 			const remark = [
-				{ required: true, message: '请输入备注', trigger: 'blur' }
+				{ required: true, message: '请输入备注', trigger: 'blur' },
+				{
+					min: 2,
+					max: 50,
+					message: '长度在 2 到 50 个字符',
+					trigger: 'blur'
+				}
 			]
 			return {
 				operateType,
