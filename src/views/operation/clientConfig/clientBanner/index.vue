@@ -840,12 +840,14 @@ export default {
       console.log(sortIds, '21321')
       this.$api.setoperateConfigBannerSort({sortIds: sortIds}).then((res) => {
         if (res.code === 200) {
+         this.sortLabel = false
          this.$message({
             message: '操作成功！',
             type: 'success'
           })
         }
       })
+
       this.loadData()
     },
     closeImage() {
