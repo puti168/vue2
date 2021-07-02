@@ -198,9 +198,13 @@
 						label="注册手机号"
 					>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.registerPhone">
+							<Copy
+								v-if="!!scope.row.registerPhone"
+								:title="scope.row.registerPhone"
+								:copy="copy"
+							>
 								{{ scope.row.registerPhone }}
-							</span>
+							</Copy>
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
