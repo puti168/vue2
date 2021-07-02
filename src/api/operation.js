@@ -550,6 +550,22 @@ export function setoperateConfigDiscountTagSort(data) {
 		data
 	})
 }
+// 查询排序后banner区域
+export function operatecCnfigBannerQuerySortedBannerArea(params) {
+	return request({
+		url: '/operate/configBanner/querySortedBannerArea',
+		method: 'get',
+		params
+	})
+}
+// 创建页签
+export function operateConfigDiscountTagQuerySortedNames(params) {
+	return request({
+		url: '/operate/configDiscountTag/querySortedNames',
+		method: 'get',
+		params
+	})
+}
 export default {
 	queryDiscountTagList,
 	queryVipActivityList,
@@ -617,5 +633,8 @@ export default {
 	setOperateDiscountActivitySort,
 	setOperateDiscountActivityUpdate,
 	setOperateDiscountActivityUse,
-	setoperateConfigDiscountTagSort
+	setoperateConfigDiscountTagSort,
+	operatecCnfigBannerQuerySortedBannerArea,
+	operateConfigDiscountTagQuerySortedNames
+
 }

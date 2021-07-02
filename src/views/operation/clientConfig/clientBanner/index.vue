@@ -899,6 +899,7 @@ export default {
       this.loadData()
     },
     reset() {
+      this.queryData = {}
       this.pageNum = 1
       this.loadData()
     }
