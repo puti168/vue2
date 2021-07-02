@@ -386,7 +386,7 @@ export default {
 		},
 		rules() {
 			const pageName = [
-				{ required: true, message: '请填入启动页名称', trigger: 'blur' }
+				{ required: true, message: '请填入loading名称', trigger: 'blur' }
 			]
 			const clientType = [
 				{ required: true, message: '请选择显示终端', trigger: 'change' }
