@@ -350,9 +350,25 @@
             </template>
           </el-table-column>
           <el-table-column
+            prop="changeBefore"
+            align="center"
+            label="账变前金额"
+            width="120px"
+            sortable="custom"
+          >
+          </el-table-column>
+          <el-table-column
             prop="amount"
             align="center"
             label="账变金额"
+            width="120px"
+            sortable="custom"
+          >
+          </el-table-column>
+          <el-table-column
+            prop="changeAfter"
+            align="center"
+            label="账变后金额"
             width="120px"
             sortable="custom"
           >
@@ -642,7 +658,7 @@ export default {
           )
           sums[index] = el
           return
-        } else if (index === 10 && this.summary !== null) {
+        } else if (index === 11 && this.summary !== null) {
           const el = (
             <div class='count_row'>
               <p>{this.summary.subtotal}</p>

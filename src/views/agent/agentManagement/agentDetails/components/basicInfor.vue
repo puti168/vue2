@@ -503,6 +503,7 @@ export default {
       this.getProxyDetailQueryDetail(val)
     },
     editFn(val) {
+      this.initGetDics()
       this.moduleBox = val
       this.editData = { code: '', windControlId: '', labelId: '' }
       switch (val) {
