@@ -438,7 +438,7 @@ export default {
 		},
 		rules() {
 			const pageName = [
-				{ required: true, message: '请填入风控层级', trigger: 'blur' }
+				{ required: true, message: '请输入启动页名称', trigger: 'blur' }
 			]
 			const clientType = [
 				{ required: true, message: '请选择显示终端', trigger: 'change' }
