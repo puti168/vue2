@@ -43,7 +43,7 @@
 			<div class="content-part3">
 				<p class="part-title">角色权限</p>
 				<div class="role-container">
-					<div class="tree-content">
+					<div v-loading="loading" class="tree-content">
 						<el-tree
 							ref="tree"
 							:data="rolePermissions"
@@ -156,10 +156,9 @@ export default {
 	},
 	watch: {
 		editData: {
-			handler(newData) {
-				if (newData && Object.keys(newData).length) {
+			handler(newData, oldData) {
+				if (newData) {
 					this.updateStatus = true
-					console.log('newData', newData)
 					const { id, roleName, remark, chooseIds } = newData
 					this.queryData = {
 						roleName,
@@ -167,9 +166,9 @@ export default {
 						id
 					}
 					this.chooseIds = chooseIds
-					if (this.$refs.tree) {
-						this.$refs.tree.setCheckedKeys(chooseIds)
-					}
+					this.$nextTick(() => {
+						this.$refs.tree && this.$refs.tree.setCheckedKeys(chooseIds)
+					})
 				} else {
 					this.updateStatus = false
 					this.queryData = {
@@ -200,12 +199,16 @@ export default {
 			this.$emit('back')
 		},
 		async getRoleList() {
+            this.loading = true
 			const { code, data } = await this.$api.getRolePermissionsAPI()
 			if (code === 200) {
+                this.loading = false
 				this.permissions = JSON.parse(JSON.stringify(data))
 				this.allChooseLen = data.length
 				this.filterData(data)
-			}
+			} else {
+                this.loading = false
+            }
 		},
 
 		filterData(data) {
@@ -355,6 +358,10 @@ export default {
 
 /deep/ .el-tree-node__content > label.el-checkbox {
 	margin-right: 8px;
+}
+
+/deep/ .el-tree-node__content {
+	height: 36px;
 }
 
 .editRolePage-container {

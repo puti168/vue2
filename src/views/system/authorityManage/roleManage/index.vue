@@ -135,7 +135,7 @@
 				</div>
 			</div>
 		</div>
-		<editPage v-else :editData="rowData" @back="back"></editPage>
+		<editPage v-else :editData.sync="rowData" @back="back"></editPage>
 	</transition>
 </template>
 
@@ -248,7 +248,6 @@ export default {
 			if (val) {
 				const { id } = val
 				id && this.getRoleList(id, val)
-				console.log(val)
 			}
 			this.editPage = true
 		},
@@ -257,16 +256,16 @@ export default {
 				roleId: id
 			})
 			if (code === 200) {
-				const arr = JSON.parse(JSON.stringify(data)) || []
 				const _arr = []
-				arr.forEach((item) => {
-					if (item.isExist === '1') {
-						_arr.push(item.id)
-					}
-				})
+				data &&
+					data.length &&
+					data.forEach((item) => {
+						if (item.isExist === '1') {
+							_arr.push(item.id)
+						}
+					})
 				// console.log('_arr', _arr)
-				// console.log('value', value)
-				this.rowData = Object.assign({ chooseIds: _arr }, value)
+				this.rowData = { ...value, chooseIds: _arr }
 			}
 		},
 		back() {
