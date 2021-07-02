@@ -221,7 +221,7 @@ export default {
 		drawer(val) {
 			this.elDrawer = val
 			val && (this.ps = this.accountRoles)
-
+			val && this.getGoogleAuth()
 			if (val && this.isCreated) {
 				this.$api
 					.getRoleList({
@@ -279,14 +279,14 @@ export default {
 		this.listLoading = true
 	},
 	methods: {
-	    getGoogleAuth() {
-            this.$api.googleAuth().then((res) => {
-                const { code, data } = res
-                if (code === 200) {
-                    this.form.googleAuthCode = data
-                }
-            })
-        },
+		getGoogleAuth() {
+			this.$api.googleAuth().then((res) => {
+				const { code, data } = res
+				if (code === 200) {
+					this.form.googleAuthCode = data
+				}
+			})
+		},
 		handleChoose() {
 			this.dialogTableVisible = true
 			this.$refs['form'].resetFields()
