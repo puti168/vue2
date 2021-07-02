@@ -53,44 +53,69 @@
 					:label="$t('system_component_account_275')"
 					width="120"
 				></el-table-column>
-				<el-table-column
-					align="center"
-					prop="userName"
-					label="用户名称"
-				></el-table-column>
-				<el-table-column
-					align="center"
-					prop="nickName"
-					label="姓名"
-				></el-table-column>
-				<el-table-column
-					align="center"
-					prop="userName"
-					label="性别"
-				></el-table-column>
+				<el-table-column align="center" prop="userName" label="用户名称">
+					<template slot-scope="scope">
+						<span v-if="!!scope.row.userName">
+							{{ scope.row.userName }}
+						</span>
+						<span v-else>-</span>
+					</template>
+				</el-table-column>
+				<el-table-column align="center" prop="nickName" label="姓名">
+					<template slot-scope="scope">
+						<span v-if="!!scope.row.nickName">
+							{{ scope.row.nickName }}
+						</span>
+						<span v-else>-</span>
+					</template>
+				</el-table-column>
 				<el-table-column
 					align="center"
 					prop="googleAuthCode"
 					label="谷歌验证秘钥"
 					width="200"
-				></el-table-column>
+				>
+					<template slot-scope="scope">
+						<span v-if="!!scope.row.googleAuthCode">
+							{{ scope.row.googleAuthCode }}
+						</span>
+						<span v-else>-</span>
+					</template>
+				</el-table-column>
 				<el-table-column
 					align="center"
 					prop="createAt"
 					label="添加时间"
-					width="160"
-				></el-table-column>
+					width="180"
+				>
+					<template slot-scope="scope">
+						<span v-if="!!scope.row.createAt">
+							{{ scope.row.createAt }}
+						</span>
+						<span v-else>-</span>
+					</template>
+				</el-table-column>
+				<el-table-column align="center" prop="createBy" label="创建人">
+					<template slot-scope="scope">
+						<span v-if="!!scope.row.createBy">
+							{{ scope.row.createBy }}
+						</span>
+						<span v-else>-</span>
+					</template>
+				</el-table-column>
 				<el-table-column
 					align="center"
-					prop="createBy"
-					label="创建人"
-				></el-table-column>
-				<el-table-column
-					align="center"
-					prop="lastLoginTime"
+					prop="lastLoginAt"
 					label="最后登录"
-					width="160"
-				></el-table-column>
+					width="180"
+				>
+                    <template slot-scope="scope">
+						<span v-if="!!scope.row.lastLoginAt">
+							{{ scope.row.lastLoginAt }}
+						</span>
+                        <span v-else>-</span>
+                    </template>
+                </el-table-column>
 				<el-table-column label="状态">
 					<template slot-scope="scope">
 						<el-switch
@@ -102,7 +127,6 @@
 						></el-switch>
 					</template>
 				</el-table-column>
-
 				<!-- 操作，编辑 -->
 				<el-table-column
 					align="center"
@@ -116,7 +140,7 @@
 							size="medium"
 							@click.native.prevent="popupPwdDialog(scope.row)"
 						>
-                            重置密码
+							重置密码
 						</el-button>
 						<el-button
 							type="primary"
