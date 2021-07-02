@@ -177,7 +177,7 @@
 					>
 						提交
 					</el-button>
-					<el-button icon="el-icon-refresh-left" size="medium" @click="reset">
+					<el-button icon="el-icon-refresh-left" size="medium" @click.native="reset('')">
 						重置
 					</el-button>
 				</el-form-item>
