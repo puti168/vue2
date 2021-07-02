@@ -22,7 +22,7 @@
             <el-input
               v-model="queryData.id"
               clearable
-              :maxlength="10"
+              :maxlength="20"
               size="medium"
               placeholder="请输入"
               @keyup.enter.native="enterSearch"
@@ -175,18 +175,26 @@
               }}</span>
             </template>
           </el-table-column>
-          <el-table-column align="center" label="活动ID" prop="id"> </el-table-column>
+          <el-table-column align="center" label="活动ID" prop="id" width="200px">
+          </el-table-column>
           <el-table-column
             prop="activityName"
             align="center"
+            width="120px"
             label="活动名称"
           ></el-table-column>
-          <el-table-column align="center" prop="activityTitle" label="活动主标题">
-          </el-table-column>
-          <el-table-column align="center" prop="activityAppTypeName" label="活动支持终端">
+          <el-table-column align="center" prop="activityTitle" label="活动主标题" width="120px">
           </el-table-column>
           <el-table-column
             align="center"
+            prop="activityAppTypeName"
+            label="活动支持终端"
+            width="155px"
+          >
+          </el-table-column>
+          <el-table-column
+            align="center"
+            width="155px"
             prop="activityUserTypeName"
             label="活动生效账户类型"
           >
@@ -198,7 +206,12 @@
               }}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="activityUpAt" align="center" label="活动图时间">
+          <el-table-column
+            prop="activityUpAt"
+            align="center"
+            label="活动图时间"
+            width="155px"
+          >
             <template slot-scope="scope">
               <span v-if="scope.row.activityPrescription === 0">
                 {{ scope.row.activityUpAt }}
@@ -249,6 +262,7 @@
             prop="createdAt"
             align="center"
             label="创建时间"
+            width="155px"
             sortable="custom"
           ></el-table-column>
           <el-table-column
@@ -260,9 +274,10 @@
             prop="updatedAt"
             align="center"
             label="最近操作时间"
+            width="155px"
             sortable="custom"
           ></el-table-column>
-          <el-table-column prop="operating" align="center" label="操作">
+          <el-table-column prop="operating" align="center" label="操作" width="240px">
             <template slot-scope="scope">
               <el-button
                 v-if="scope.row.status === 0"

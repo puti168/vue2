@@ -7,7 +7,7 @@
             <el-input
               v-model="queryData.id"
               clearable
-              :maxlength="10"
+              :maxlength="20"
               size="medium"
               placeholder="请输入"
               @keyup.enter.native="enterSearch"
@@ -27,6 +27,7 @@
             <el-select
               v-model="queryData.discountTagId"
               multiple
+              style="width: 300px"
               placeholder="默认选择全部"
               :popper-append-to-body="false"
             >
@@ -67,7 +68,7 @@
             <el-input-number
               v-model="queryData.activityWashCodeTimes"
               clearable
-              :max="4"
+              :max="999.99"
               :precision="2"
               size="medium"
               placeholder="请输入"
@@ -208,33 +209,60 @@
           :header-cell-style="getRowClass"
           @sort-change="changeTableSort"
         >
-          <el-table-column align="center" label="活动ID" prop="id"> </el-table-column>
-          <el-table-column prop="activityName" align="center" label="活动名称">
+          <el-table-column align="center" label="活动ID" prop="id" width="200px">
           </el-table-column>
-          <el-table-column prop="discountTagId" align="center" label="活动页签">
+          <el-table-column
+            prop="activityName"
+            align="center"
+            label="活动名称"
+            width="150px"
+          >
+          </el-table-column>
+          <el-table-column
+            prop="discountTagId"
+            align="center"
+            label="活动页签"
+            width="120px"
+          >
             <template slot-scope="scope">
               <span v-for="item in activityList" :key="item.id">
                 {{ scope.row.discountTagId === item.id + "" ? item.activityName : "" }}
               </span>
             </template>
           </el-table-column>
-          <el-table-column prop="activityType" align="center" label="活动模板">
+          <el-table-column
+            prop="activityType"
+            align="center"
+            label="活动模板"
+            width="120px"
+          >
             <template slot-scope="scope">
               <span>{{
                 typeFilter(scope.row.activityType, "operateDiscountActivityType")
               }}</span>
             </template>
           </el-table-column>
-          <el-table-column align="center" prop="activityTitle" label="活动主标题">
+          <el-table-column
+            align="center"
+            prop="activityTitle"
+            label="活动主标题"
+            width="155px"
+          >
           </el-table-column>
           <el-table-column align="center" prop="activityWashCodeTimes" label="洗码倍率">
           </el-table-column>
-          <el-table-column align="center" prop="activityAppTypeName" label="活动支持终端">
+          <el-table-column
+            align="center"
+            prop="activityAppTypeName"
+            label="活动支持终端"
+            width="155px"
+          >
           </el-table-column>
           <el-table-column
             align="center"
             prop="activityUserTypeName"
             label="活动支持账户类型"
+            width="155px"
           >
           </el-table-column>
           <el-table-column align="center" prop="activityPrescription" label="活动时效">
@@ -244,7 +272,12 @@
               }}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="activityPictureUpAt" align="center" label="活动图时间">
+          <el-table-column
+            prop="activityPictureUpAt"
+            align="center"
+            label="活动图时间"
+            width="155px"
+          >
             <template slot-scope="scope">
               <span v-if="scope.row.activityPrescription === 0">
                 {{ scope.row.activityPictureUpAt }}
@@ -262,7 +295,12 @@
               </span>
             </template>
           </el-table-column>
-          <el-table-column prop="activityStartAt" align="center" label="活动时间">
+          <el-table-column
+            prop="activityStartAt"
+            align="center"
+            label="活动时间"
+            width="155px"
+          >
             <template slot-scope="scope">
               <span v-if="scope.row.activityPrescription === 0">
                 {{ scope.row.activityStartAt }}
@@ -313,6 +351,7 @@
             prop="createdAt"
             align="center"
             label="创建时间"
+            width="155px"
             sortable="custom"
           ></el-table-column>
           <el-table-column
@@ -324,9 +363,15 @@
             prop="updatedAt"
             align="center"
             label="最近操作时间"
+            width="155px"
             sortable="custom"
           ></el-table-column>
-          <el-table-column prop="operating" align="center" label="操作">
+          <el-table-column
+            prop="operating"
+            align="center"
+            label="操作"
+            width="240px"
+          >
             <template slot-scope="scope">
               <el-button
                 v-if="scope.row.status === 0"
@@ -779,10 +824,10 @@
                 :popper-append-to-body="false"
               >
                 <el-option
-                  v-for="item in gameTypeList"
-                  :key="item.gameCode"
-                  :label="item.gameName"
-                  :value="item.gameCode"
+                  v-for="item in enumPaymentDepositType"
+                  :key="item.code"
+                  :label="item.description"
+                  :value="item.code"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -816,7 +861,7 @@
                 placeholder="请选择"
                 :popper-append-to-body="false"
               >
-                <el-option label="百分比" value="0"></el-option>
+                <el-option label="百分比" :value="0"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item
@@ -965,7 +1010,7 @@ export default {
         activityAppType: ['1'],
         activityUserType: ['0'],
         activityPrescription: '0',
-        activityDiscountType: '0',
+        activityDiscountType: 0,
         activityEnterPicture: null,
         activitySharePicture: null,
         venueOrPayType: ['qp']
@@ -1022,6 +1067,9 @@ export default {
     },
     operateDiscountActivityType() {
       return this.globalDics.operateDiscountActivityType
+    },
+    enumPaymentDepositType() {
+      return this.globalDics.enumPaymentDepositType
     },
 
     imageUpTime() {
@@ -1124,7 +1172,7 @@ export default {
       const params = {
         ...this.getParams(this.queryData)
       }
-      // this.loading = true;
+      this.loading = true
       this.$api
         .getOperateDiscountActivityQueryList(params)
         .then((res) => {
@@ -1382,7 +1430,7 @@ export default {
         venueOrPayType: ['qp'],
         activityAppType: ['1'],
         activityUserType: ['0'],
-        activityDiscountType: '0',
+        activityDiscountType: 0,
         activityPrescription: '0',
         activityEnterPicture: null,
         activitySharePicture: null
@@ -1394,9 +1442,9 @@ export default {
     },
     activityTemplate(val) {
       if (val === '0') {
-        this.dialogForm.venueOrPayType = ['dj']
-      } else {
         this.dialogForm.venueOrPayType = ['qp']
+      } else {
+        this.dialogForm.venueOrPayType = ['1']
       }
     },
     lookImg(val) {
