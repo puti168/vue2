@@ -259,7 +259,7 @@
           <el-col :span="7" class="textR">
             <i v-if="activeL" class="el-icon-loading"></i>
             <span v-else>
-              {{ vipMsgList.validBetsCurr }}/{{ vipMsgList.bjValidBetsTotal }}
+              {{ vipMsgList.bjValidBetsCurr }}/{{ vipMsgList.bjValidBetsTotal }}
             </span>
           </el-col>
         </el-row>
@@ -636,10 +636,10 @@ export default {
               ? (this.percentageb = p2)
               : (this.percentageb = 100)
           }
-          if (newV.validBetsCurr === 0 && newV.bjValidBetsTotal === 0) {
+          if (newV.bjValidBetsCurr === 0 && newV.bjValidBetsTotal === 0) {
             this.percentagec = 100
           } else {
-            const p3 = (newV.validBetsCurr / newV.bjValidBetsTotal) * 100
+            const p3 = (newV.bjValidBetsCurr / newV.bjValidBetsTotal) * 100
             p3 >= 100
               ? (this.percentagec = 100)
               : p3 >= 0
@@ -756,10 +756,10 @@ export default {
               ? (this.percentageb = p2)
               : (this.percentageb = 100)
           }
-          if (newV.validBetsCurr === 0 && newV.bjValidBetsTotal === 0) {
+          if (newV.bjValidBetsCurr === 0 && newV.bjValidBetsTotal === 0) {
             this.percentagec = 100
           } else {
-            const p3 = (newV.validBetsCurr / newV.bjValidBetsTotal) * 100
+            const p3 = (newV.bjValidBetsCurr / newV.bjValidBetsTotal) * 100
             p3 >= 100
               ? (this.percentagec = 100)
               : p3 >= 0
@@ -811,11 +811,13 @@ export default {
       for (let j = 0; j < this.editMsgList.length; j++) {
         this.editMsgList[j].applyStatus = ''
       }
+
       this.$nextTick(() => {
         this.getOutlineInfo(val)
       })
     },
     editFn(val) {
+      this.initGetDics()
       this.moduleBox = val
       switch (val) {
         case '账号状态':

@@ -117,18 +117,16 @@
               align="center"
               label="代理账号"
             ></el-table-column>
-            <el-table-column
-              prop="realName"
-              align="center"
-              label="代理姓名"
-            ></el-table-column>
-            <el-table-column
-prop="applyTime"
-align="center"
-label="申请类型"
-><template slot-scope="scope">
-                {{ typeFilter(scope.row.adjustType, "memberPatchAddAdjustType") }}
-              </template></el-table-column>
+            <el-table-column prop="realName" align="center" label="代理姓名">
+              <template slot-scope="scope">
+                {{ scope.row.realName ? scope.row.realName : "-" }}
+              </template>
+            </el-table-column>
+            <el-table-column prop="applyTime" align="center" label="申请类型">
+              <template slot-scope="scope">
+                {{ typeFilter(scope.row.adjustType, "proxyPatchAddAdjustType") }}
+              </template>
+            </el-table-column>
             <el-table-column
               prop="adjustAmount"
               align="center"
@@ -188,7 +186,6 @@ import { getUsername } from '@/utils/auth'
 const end = dayjs().endOf('day').valueOf()
 const start = dayjs().startOf('day').valueOf()
 export default {
-  name: 'MemberWithdrawalReview',
   components: { detail },
   mixins: [list],
   data() {
