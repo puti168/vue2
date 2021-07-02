@@ -264,7 +264,7 @@ export default {
 						_arr.push(item.id)
 					}
 				})
-				console.log('_arr', _arr)
+				// console.log('_arr', _arr)
 				// console.log('value', value)
 				this.rowData = Object.assign({ chooseIds: _arr }, value)
 			}
