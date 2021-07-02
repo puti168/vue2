@@ -206,11 +206,11 @@ export default {
         if (valid) {
           console.log(params, '000')
           this.$api.setUserInfoupdatePwdAdmin({
-            pwd: md5(params.userName.trim() + params.pwd.trim()),
+          pwd: md5(params.userName.trim() + params.pwd.trim()),
           reNewPwd: md5(params.userName.trim() + params.reNewPwd.trim()),
+          newPwd: md5(params.userName.trim() + params.newPwd.trim()),
           userId: params.userId,
           userName: params.userName,
-          newPwd: params.newPwd,
           phone: params.phone,
           type: 1
 

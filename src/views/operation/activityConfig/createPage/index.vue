@@ -381,7 +381,7 @@ export default {
         })
     },
     activepage() {
-      this.$api.configDiscountTagQueryNames().then((res) => {
+      this.$api.operateConfigDiscountTagQuerySortedNames().then((res) => {
         if (res.code === 200) {
           console.log(res)
           this.carouselData = res.data
