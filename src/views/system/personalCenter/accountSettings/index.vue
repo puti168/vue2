@@ -108,14 +108,17 @@
 
 <script>
 import list from '@/mixins/list'
+import md5 from 'js-md5'
+import validate from '@/mixins/validate'
 
 export default {
-  mixins: [list],
+  mixins: [list, validate],
   data() {
     return {
       circleUrl: 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png',
       passwordType: 'password',
       loading: false,
+      password: '',
       id: '',
       form: {
         nickName: '',
@@ -140,7 +143,20 @@ export default {
           callback()
         }
       }
-      const pwd = [{ required: true, message: '请输入旧密码', trigger: 'blur' }]
+      const pwds = (rule, value, callback) => {
+         const password = localStorage.getItem('password')
+        console.log(password, '密码12')
+        if (!value) {
+          callback(new Error('请输入确认密码'))
+        } else if (value !== password) {
+          callback(new Error('请输入旧密码'))
+        } else {
+          callback()
+        }
+      }
+
+      const pwd = [{ required: true, validator: pwds, message: '请输入旧密码', trigger: 'blur' }]
+      const phone = [{ required: true, message: '请输入手机号', trigger: 'blur' }]
       const newPwd = [{ required: true, message: '请输入新密码', trigger: 'blur' }]
       const reNewPwd = [
         {
@@ -152,6 +168,7 @@ export default {
       return {
         pwd,
         newPwd,
+        phone,
         reNewPwd
       }
     }
@@ -181,14 +198,23 @@ export default {
       })
     },
     onUpdateUser(form) {
-      console.log(this.form)
       const params = {
         ...this.form
       }
+
       this.$refs.form.validate((valid) => {
         if (valid) {
-          delete params.nickName
-          this.$api.setUserInfoupdatePwdAdmin(params).then((res) => {
+          console.log(params, '000')
+          this.$api.setUserInfoupdatePwdAdmin({
+            pwd: md5(params.userName.trim() + params.pwd.trim()),
+          reNewPwd: md5(params.userName.trim() + params.reNewPwd.trim()),
+          userId: params.userId,
+          userName: params.userName,
+          newPwd: params.newPwd,
+          phone: params.phone,
+          type: 1
+
+          }).then((res) => {
             if (res.code === 200) {
               this.$message.success('修改成功');
               ('success')

@@ -244,7 +244,6 @@ import { getUsername } from '@/utils/auth'
 const end = dayjs().endOf('day').valueOf()
 const start = dayjs().startOf('day').valueOf()
 export default {
-  name: 'MemberWithdrawalReview',
   components: { detail },
   mixins: [list],
   data() {

@@ -160,12 +160,12 @@
         </el-form>
       </div>
       <el-dialog
-        title="轮播图区域排序"
+        title="设置排序"
         :visible.sync="sortLabel"
-        :model="QueryareaList"
         width="970px"
         :destroy-on-close="true"
       >
+
         <draggable v-model="QueryareaList" @start="onStart" @end="onEnd">
           <transition-group>
             <div v-for="tiem in QueryareaList" :key="tiem.value" class="reach">
@@ -173,8 +173,10 @@
             </div>
           </transition-group>
         </draggable>
+         <div slot="footer" class="dialog-footer">
         <el-button @click="sortLabel = false">取消</el-button>
         <el-button type="primary" @click="setoperateConfigBannerSort">确定</el-button>
+       </div>
       </el-dialog>
       <div class="view-container dealer-container">
         <div class="content">
@@ -422,7 +424,7 @@
               ></el-date-picker>
             </el-form-item>
             <el-form-item
-              v-if="dialogForm.bannerValidity === 1"
+              v-if="dialogForm.bannerValidity === 0"
               label="下架时间:"
               label-width="112px"
               :rules="[{ required: true }]"
@@ -475,8 +477,8 @@
                 <el-option label="外部地址" :value="2"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item v-if="dialogForm.linkTarget === 0" label="游戏:" :rules="[]">
-              <el-select v-model="dialogForm.mregionAging" class="region">
+            <el-form-item v-if="dialogForm.linkTarget === 0 && dialogForm.isLink === 1" label="游戏:" :rules="[]">
+              <el-select v-model="dialogForm.targetUrl" class="region">
                 <el-option
                   v-for="item in QueryGameList"
                   :key="item.gameId"
@@ -566,7 +568,8 @@ export default {
         isLink: 1,
         linkTarget: 0,
         status: 0,
-        pictureUrl: null
+        pictureUrl: null,
+        gameName: ''
       },
       activeName: 'first'
     }
@@ -648,7 +651,9 @@ export default {
         isLink: 1,
         linkTarget: 0,
         status: 0,
-        pictureUrl: null
+        pictureUrl: null,
+        gameName: ''
+
       }
       this.upTime = Date.now()
       this.downTime = endTime
@@ -674,7 +679,7 @@ export default {
       })
     },
     subAddOrEidt() {
-      if (this.dialogForm.isLink === '0') {
+      if (this.dialogForm.bannerValidity === 0) {
         this.dialogForm.upTime = dayjs(this.upTime).format('YYYY-MM-DD HH:mm:ss')
         this.dialogForm.downTime = dayjs(this.downTime).format('YYYY-MM-DD HH:mm:ss')
       } else {
@@ -822,13 +827,26 @@ export default {
     subSort() {
       this.sortLabel = true
     },
+
     setoperateConfigBannerSort() {
+       const arr = this.QueryareaList
+      const newArr = []
+      for (let i = 0; i < arr.length; i++) {
+        const ele = arr[i]
+        newArr.push(ele.code)
+      }
       console.log(this.QueryareaList)
-      this.$api.setoperateConfigBannerSort(this.QueryareaList).then((res) => {
+      const sortIds = newArr.join(',')
+      console.log(sortIds, '21321')
+      this.$api.setoperateConfigBannerSort({sortIds: sortIds}).then((res) => {
         if (res.code === 200) {
-          console.log(res)
+         this.$message({
+            message: '操作成功！',
+            type: 'success'
+          })
         }
       })
+      this.loadData()
     },
     closeImage() {
       this.imgVisible = false

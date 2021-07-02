@@ -225,11 +225,11 @@ class="redColor"
             label="设备版本"
             width="280"
           ></el-table-column>
-          <el-table-column
-            prop="loginError"
-            align="center"
-            label="备注"
-          ></el-table-column>
+          <el-table-column prop="loginError" align="center" label="备注">
+            <template slot-scope="scope">
+              {{ scope.row.loginError ? scope.row.loginError : "-" }}
+            </template>
+          </el-table-column>
         </el-table>
         <!-- 分页 -->
         <el-pagination

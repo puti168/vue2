@@ -122,11 +122,11 @@
             label="备注"
           ></el-table-column>
           <el-table-column prop="status" align="center" label="状态">
-           <template slot-scope="scope">
-                <div v-if="scope.row.status === 0" class="disableRgba">已禁用</div>
-                <div v-else-if="scope.row.status === 1" class="normalRgba">开启中</div>
-                <span v-else>-</span>
-              </template>
+            <template slot-scope="scope">
+              <div v-if="scope.row.status === 0" class="disableRgba">已禁用</div>
+              <div v-else-if="scope.row.status === 1" class="normalRgba">开启中</div>
+              <span v-else>-</span>
+            </template>
           </el-table-column>
           <el-table-column
             prop="createdBy"
@@ -259,7 +259,7 @@
         </div>
       </el-dialog>
       <el-dialog
-        title="轮播图区域排序"
+        title="活动页签区域排序"
         :visible.sync="sortLabel"
         width="970px"
         :destroy-on-close="true"
@@ -275,11 +275,13 @@
             </div>
           </transition-group>
         </draggable>
-        <el-button @click="sortLabel = false">取消</el-button>
-        <el-button
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="sortLabel = false">取消</el-button>
+          <el-button
 type="primary"
 @click="setoperateConfigDiscountTagSort"
 >确定</el-button>
+        </div>
       </el-dialog>
     </div>
   </div>
@@ -325,7 +327,7 @@ export default {
     }
   },
   computed: {
-	  operateStatus() {
+    operateStatus() {
       return this.globalDics.operateStatus
     }
   },
@@ -388,10 +390,19 @@ export default {
       this.sortLabel = true
     },
     setoperateConfigDiscountTagSort() {
-      console.log(this.carouselData)
-      this.$api.setoperateConfigDiscountTagSort(this.carouselData).then((res) => {
+      const arr = this.carouselData
+      const newArr = []
+      for (let i = 0; i < arr.length; i++) {
+        const ele = arr[i]
+        newArr.push(ele.id)
+      }
+      const sortIds = newArr.join(',')
+      this.$api.setoperateConfigDiscountTagSort({ sortIds: sortIds }).then((res) => {
         if (res.code === 200) {
-          console.log(res)
+          this.$message({
+            message: '操作成功！',
+            type: 'success'
+          })
         }
       })
     },
