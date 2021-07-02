@@ -96,7 +96,7 @@
               :popper-append-to-body="false"
             >
               <el-option
-                v-for="item in memberAccountBizType"
+                v-for="item in proxyAccountBizType"
                 :key="item.code"
                 :label="item.description"
                 :value="item.code"
@@ -360,6 +360,9 @@ export default {
     }
   },
   computed: {
+    proxyAccountBizType() {
+      return this.globalDics.proxyAccountBizType
+    },
     accountType() {
       return this.globalDics.accountType
     },
