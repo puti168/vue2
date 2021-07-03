@@ -27,7 +27,6 @@
 							clearable
 							style="width: 200px"
 							maxlength="20"
-							oninput="value=value.replace(/[\u4E00-\u9FA5]/g ,'')"
 						></el-input>
 					</el-form-item>
 					<el-form-item label="状态:">
