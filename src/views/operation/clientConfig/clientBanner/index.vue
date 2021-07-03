@@ -837,8 +837,8 @@ export default {
       }
       console.log(this.QueryareaList)
       const sortIds = newArr.join(',')
-      console.log(sortIds, '21321')
-      this.$api.setoperateConfigBannerSort({sortIds: sortIds}).then((res) => {
+      const clientType = this.clientType
+      this.$api.setoperateConfigBannerSort({sortIds: sortIds, clientType}).then((res) => {
         if (res.code === 200) {
          this.sortLabel = false
          this.$message({

@@ -28,7 +28,7 @@
 						v-model="queryData.realName"
 						size="medium"
 						maxlength="6"
-						placeholder="请输入会员姓名"
+						placeholder="载入会员姓名"
 						clearable
 						disabled
 						autocomplete="off"
@@ -74,11 +74,11 @@
 						></el-option>
 					</el-select>
 				</el-form-item>
-				<el-form-item label="操作金额:" prop="lessMoney">
+				<el-form-item label="调整金额:" prop="lessMoney">
 					<el-input
 						v-model="queryData.lessMoney"
 						size="medium"
-						placeholder="请输入"
+						placeholder="请输入金额"
 						clearable
 						onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
 						maxlength="11"
@@ -91,7 +91,7 @@
 						v-model="queryData.remark"
 						size="medium"
 						type="textarea"
-						placeholder="请输入"
+						placeholder="请输入申请原因，50字以内"
 						clearable
 						show-word-limit
 						maxlength="50"

@@ -301,7 +301,7 @@ export default {
 			tableData: [],
 			dialogFormVisible: false,
 			dialogForm: {
-				windControlType: undefined,
+				windControlType: '1',
 				windControlLevelName: undefined,
 				description: undefined
 			},
@@ -430,7 +430,7 @@ export default {
             this.$refs['form'].resetFields()
 			this.title = '新增'
 			this.dialogForm = {
-				windControlType: undefined,
+				windControlType: '1',
 				windControlLevelName: undefined,
 				info: undefined
 			}

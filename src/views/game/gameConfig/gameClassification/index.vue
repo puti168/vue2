@@ -118,7 +118,7 @@
 								type="warning"
 								icon="el-icon-folder-add"
 								size="medium"
-								@click="openEdit"
+								@click.native="openEdit('')"
 							>
 								创建
 							</el-button>
@@ -351,7 +351,7 @@
 				:visible.sync="dialogGameVisible"
 				:destroy-on-close="true"
 				width="650px"
-                class="classify"
+				class="classify"
 			>
 				<p class="headerBox">
 					<span>游戏名称</span>
@@ -372,7 +372,7 @@
 					:current-page.sync="pageChildNum"
 					background
 					class="pagePopValue"
-                    :pager-count="5"
+					:pager-count="5"
 					layout="total, sizes,prev, pager, next, jumper"
 					:page-size="pageChildSize"
 					:page-sizes="[5, 10, 15]"
@@ -433,7 +433,7 @@ export default {
 			return this.globalDics.gameStatusType
 		},
 		terminalTypeArr() {
-            return this.globalDics.betDeviceType
+			return this.globalDics.betDeviceType
 		},
 		gameDisplayArr() {
 			return this.globalDics.gameDisplayType
@@ -554,9 +554,12 @@ export default {
 		},
 
 		openEdit(val) {
-			const { id } = val
-			this.rowData = val
-			this.rowAssortId = id
+			if (val) {
+				const { id } = val
+				this.rowData = val
+				this.rowAssortId = id
+			}
+			console.log('this.rowData', this.rowData)
 			this.createPage = true
 		},
 		back() {
@@ -683,7 +686,7 @@ export default {
 		},
 		// 改变列表条数
 		handleChildSizeChange(value) {
-		    console.log('value', value)
+			console.log('value', value)
 			this.pageChildNum = 1
 			this.pageChildSize = value
 			const params = {

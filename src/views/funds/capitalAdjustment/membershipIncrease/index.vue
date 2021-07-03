@@ -28,7 +28,7 @@
 						v-model="queryData.realName"
 						size="medium"
 						maxlength="6"
-						placeholder="请输入会员姓名"
+						placeholder="载入会员姓名"
 						clearable
 						disabled
 						autocomplete="off"
@@ -56,7 +56,7 @@
 						查询
 					</el-button>
 				</el-form-item>
-				<el-form-item label="操作类型:" prop="adjustType">
+				<el-form-item label="调整类型:" prop="adjustType">
 					<el-select
 						v-model="queryData.adjustType"
 						size="medium"
@@ -83,7 +83,7 @@
 						v-model="queryData.activityId"
 						size="medium"
 						maxlength="11"
-						placeholder="请输入"
+						placeholder="请输入活动ID"
 						clearable
 						oninput="value=value.replace(/[\u4E00-\u9FA5]/g ,'')"
 						style="width: 365px"
@@ -100,14 +100,14 @@
 						v-model="queryData.validmultiple"
 						size="medium"
 						maxlength="6"
-						placeholder="请输入"
+						placeholder="请输入提款流水倍数"
 						clearable
 						onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
 						style="width: 365px"
 						@blur="checkValue"
 					></el-input>
 				</el-form-item>
-				<el-form-item label="操作金额:" prop="amount">
+				<el-form-item label="调整金额:" prop="amount">
 					<el-input
 						v-model="queryData.amount"
 						size="medium"
@@ -124,7 +124,7 @@
 						v-model="queryData.remark"
 						size="medium"
 						type="textarea"
-						placeholder="请输入"
+						placeholder="请输入申请原因，50字以内"
 						clearable
 						show-word-limit
 						maxlength="50"

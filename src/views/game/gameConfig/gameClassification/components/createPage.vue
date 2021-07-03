@@ -33,10 +33,10 @@
 							v-model="queryData.assortSort"
 							size="medium"
 							maxlength="5"
-							onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
 							placeholder="请输入"
 							clearable
 							style="width: 180px"
+							@keyup.native="checkValue"
 						></el-input>
 					</el-form-item>
 					<el-form-item label="支持终端:">
@@ -76,8 +76,6 @@
 						<el-select
 							v-model="queryData.clientDisplay"
 							size="medium"
-							placeholder="全部"
-							clearable
 							style="width: 180px"
 						>
 							<el-option
@@ -214,7 +212,7 @@ export default {
 			type: String,
 			default: ''
 		},
-		rowData: { type: Object, default: () => ({}) }
+		rowData: { type: Object, default: () => {} }
 	},
 	data() {
 		return {
@@ -242,7 +240,7 @@ export default {
 	},
 	computed: {
 		terminalTypeArr() {
-            return this.globalDics.betDeviceType
+			return this.globalDics.betDeviceType
 		},
 		gameDisplayArr() {
 			return this.globalDics.gameDisplayType
@@ -276,14 +274,17 @@ export default {
 	watch: {
 		rowData: {
 			handler(val) {
-				let arr = {}
-				arr = JSON.parse(JSON.stringify(val))
-				if (arr.assortName) {
-					this.queryData.assortName = arr.assortName
-					this.queryData.assortSort = arr.assortSort
-					this.queryData.remark = arr.remark
-					this.queryData.clientDisplay = arr.clientDisplay === false ? '0' : '1'
-					this.queryData.supportTerminal = arr.supportTerminal.split(',')
+				if (val) {
+					let arr = {}
+					arr = JSON.parse(JSON.stringify(val))
+					if (arr.assortName) {
+						this.queryData.assortName = arr.assortName
+						this.queryData.assortSort = arr.assortSort
+						this.queryData.remark = arr.remark
+						this.queryData.clientDisplay =
+							arr.clientDisplay === false ? '0' : '1'
+						this.queryData.supportTerminal = arr.supportTerminal.split(',')
+					}
 				}
 			},
 			immediate: true,
@@ -299,6 +300,12 @@ export default {
 	mounted() {},
 	updated() {},
 	methods: {
+		checkValue() {
+			this.queryData.assortSort = this.queryData.assortSort.replace(
+				/^(0+)|[^\d]+/g,
+				''
+			)
+		},
 		back() {
 			this.$emit('back')
 		},
@@ -718,8 +725,8 @@ export default {
 		.content-part3 {
 			width: 100%;
 			padding: 25px 35px 20px;
-            overflow-x: scroll;
-            overflow-y: hidden;
+			overflow-x: scroll;
+			overflow-y: hidden;
 			.content {
 				position: relative;
 				margin: 0 auto;
