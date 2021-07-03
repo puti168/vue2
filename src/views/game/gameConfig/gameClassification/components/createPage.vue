@@ -33,10 +33,10 @@
 							v-model="queryData.assortSort"
 							size="medium"
 							maxlength="5"
-							onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
 							placeholder="请输入"
 							clearable
 							style="width: 180px"
+							@keyup.native="checkValue"
 						></el-input>
 					</el-form-item>
 					<el-form-item label="支持终端:">
@@ -302,6 +302,12 @@ export default {
 	mounted() {},
 	updated() {},
 	methods: {
+		checkValue() {
+			this.queryData.assortSort = this.queryData.assortSort.replace(
+				/^(0+)|[^\d]+/g,
+				''
+			)
+		},
 		back() {
 			this.$emit('back')
 		},
