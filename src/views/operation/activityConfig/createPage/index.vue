@@ -406,6 +406,7 @@ export default {
           })
         }
       })
+      this.loadData()
     },
     reset() {
       this.queryData = {
