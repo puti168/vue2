@@ -142,7 +142,7 @@
               placeholder="最小数值"
               style="width: 100px"
               :maxlength="10"
-              name="netAmountMin"
+              name="amountMin"
               oninput="value=value.replace(/[^\d]/g,'')"
               @blur="checkValue($event)"
             ></el-input>
@@ -153,7 +153,7 @@
               placeholder="最大数值"
               style="width: 100px"
               :maxlength="10"
-              name="netAmountMax"
+              name="amountMax"
               oninput="value=value.replace(/[^\d]/g,'')"
               @blur="checkValue($event)"
             ></el-input>
@@ -368,9 +368,6 @@ export default {
     },
     accountStatusType() {
       return this.globalDics.accountStatusType
-    },
-    memberAccountBizType() {
-      return this.globalDics.memberAccountBizType
     },
     proxyAccountChangeType() {
       return this.globalDics.proxyAccountChangeType

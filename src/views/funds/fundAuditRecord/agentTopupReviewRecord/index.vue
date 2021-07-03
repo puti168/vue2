@@ -126,10 +126,10 @@
                 <span v-else>-</span>
               </template>
             </el-table-column>
-            <el-table-column align="center" label="调整类型">
+            <el-table-column align="center" label="申请类型">
               <template slot-scope="scope">
                 <span v-if="!!scope.row.adjustType">
-                  {{ typeFilter(scope.row.adjustType, "memberPatchAddAdjustType") }}
+                  {{ typeFilter(scope.row.adjustType, "proxyPatchAddAdjustType") }}
                 </span>
                 <span v-else>-</span>
               </template>

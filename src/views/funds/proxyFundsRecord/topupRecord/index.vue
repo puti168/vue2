@@ -80,7 +80,7 @@
               :popper-append-to-body="false"
             >
               <el-option
-                v-for="item in proxyPatchSubAdjustType"
+                v-for="item in proxyPatchAddAdjustType"
                 :key="item.code"
                 :label="item.description"
                 :value="item.code"
@@ -203,7 +203,7 @@
             width="130px"
           >
            <template slot-scope="scope">
-              {{ typeFilter(scope.row.adjustType, "proxyPatchSubAdjustType") }}
+              {{ typeFilter(scope.row.adjustType, "proxyPatchAddAdjustType") }}
             </template>
           </el-table-column>
           <el-table-column
@@ -294,8 +294,8 @@ export default {
     accountType() {
       return this.globalDics.accountType
     },
-    proxyPatchSubAdjustType() {
-      return this.globalDics.proxyPatchSubAdjustType
+    proxyPatchAddAdjustType() {
+      return this.globalDics.proxyPatchAddAdjustType
     },
     patchAdjustOrderStatus() {
       return this.globalDics.patchAdjustOrderStatus

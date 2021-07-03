@@ -17,6 +17,17 @@
               :default-time="defaultTime"
             ></el-date-picker>
           </el-form-item>
+          <el-form-item label="订单号:">
+            <el-input
+              v-model="queryData.orderNo"
+              clearable
+              size="medium"
+              :maxlength="50"
+              style="width: 180px"
+              placeholder="请输入"
+              @keyup.enter.native="enterSearch"
+            ></el-input>
+          </el-form-item>
           <el-form-item label="锁单状态:">
             <el-select
               v-model="queryData.lockStatus"
@@ -31,17 +42,6 @@
                 :value="Number(item.code)"
               ></el-option>
             </el-select>
-          </el-form-item>
-          <el-form-item label="订单号:">
-            <el-input
-              v-model="queryData.orderNo"
-              clearable
-              size="medium"
-              :maxlength="50"
-              style="width: 180px"
-              placeholder="请输入"
-              @keyup.enter.native="enterSearch"
-            ></el-input>
           </el-form-item>
           <el-form-item style="margin-left: 30px">
             <el-button

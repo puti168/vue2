@@ -6,6 +6,7 @@
         <el-form-item label="日期:">
 						<el-date-picker
 							v-model="onlineTime"
+                :clearable="false"
 								size="medium"
 								format="yyyy-MM"
 								type="month"
@@ -273,8 +274,6 @@
 <script>
 import list from '@/mixins/list'
 import dayjs from 'dayjs'
-const startTime = dayjs().startOf('day').valueOf()
-const endTime = dayjs().endOf('day').valueOf()
 
 export default {
   components: {},
@@ -283,7 +282,6 @@ export default {
     return {
       queryData: {},
       onlineTime: Date.now(),
-      searchTime: [startTime, endTime],
       tableData: [],
       dataList: {},
       isIndeterminate: true,
@@ -305,12 +303,9 @@ export default {
   methods: {
     loadData() {
       this.loading = true
-      const create = this.searchTime || []
-      const [startTime, endTime] = create
       let params = {
         ...this.queryData,
-        createAtStart: startTime ? dayjs(startTime).format('YYYY-MM-DD') : '',
-        createAtEnd: endTime ? dayjs(endTime).format('YYYY-MM-DD') : ''
+        createAtEnd: dayjs(this.onlineTime).format('YYYY-MM-DD')
       }
       params = {
         ...this.getParams(params)
@@ -344,18 +339,15 @@ export default {
 
     reset() {
       this.queryData = {}
-      this.searchTime = [startTime, endTime]
       this.pageNum = 1
+      this.onlineTime = Date.now()
       this.loadData()
     },
 
     exportExcel() {
-      const create = this.searchTime || []
-      const [startTime, endTime] = create
       let params = {
         ...this.queryData,
-        createAtStart: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : '',
-        createAtEnd: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
+        createAtEnd: dayjs(this.onlineTime).format('YYYY-MM-DD')
       }
       params = {
         ...this.getParams(params)
@@ -455,7 +447,7 @@ export default {
           )
           sums[index] = el
           return
-        } else if (index === 8 && this.summary !== null) {
+        } else if (index === 8 && this.tableData.length > 0) {
           const el = (
             <div class='count_row'>
               <p>{this.summary.proxyCommissionRecordPageTotal.totalNetAmount}</p>
@@ -464,7 +456,7 @@ export default {
           )
           sums[index] = el
           return
-        } else if (index === 11 && this.summary !== null) {
+        } else if (index === 11 && this.tableData.length > 0) {
           const el = (
             <div class='count_row'>
               <p>{this.summary.proxyCommissionRecordPageTotal.totalRebateAmount}</p>
@@ -473,7 +465,7 @@ export default {
           )
           sums[index] = el
           return
-        } else if (index === 12 && this.summary !== null) {
+        } else if (index === 12 && this.tableData.length > 0) {
           const el = (
             <div class='count_row'>
               <p>{this.summary.proxyCommissionRecordPageTotal.totalAdjustAmount}</p>
@@ -482,7 +474,7 @@ export default {
           )
           sums[index] = el
           return
-        } else if (index === 14 && this.summary !== null) {
+        } else if (index === 14 && this.tableData.length > 0) {
           const el = (
             <div class='count_row'>
               <p>{this.summary.proxyCommissionRecordPageTotal.totalPureAmount}</p>
@@ -491,7 +483,7 @@ export default {
           )
           sums[index] = el
           return
-        } else if (index === 15 && this.summary !== null) {
+        } else if (index === 15 && this.tableData.length > 0) {
           const el = (
             <div class='count_row'>
               <p>{this.summary.proxyCommissionRecordPageTotal.totalLastAmount}</p>
@@ -500,7 +492,7 @@ export default {
           )
           sums[index] = el
           return
-        } else if (index === 16 && this.summary !== null) {
+        } else if (index === 16 && this.tableData.length > 0) {
           const el = (
             <div class='count_row'>
               <p>{this.summary.proxyCommissionRecordPageTotal.totalRushAmount}</p>
@@ -509,7 +501,7 @@ export default {
           )
           sums[index] = el
           return
-        } else if (index === 18 && this.summary !== null) {
+        } else if (index === 18 && this.tableData.length > 0) {
           const el = (
             <div class='count_row'>
               <p>{this.summary.proxyCommissionRecordPageTotal.rewardAmount}</p>
@@ -518,7 +510,7 @@ export default {
           )
           sums[index] = el
           return
-        } else if (index === 19 && this.summary !== null) {
+        } else if (index === 19 && this.tableData.length > 0) {
           const el = (
             <div class='count_row'>
               <p>{this.summary.proxyCommissionRecordPageTotal.commissionAmount}</p>
