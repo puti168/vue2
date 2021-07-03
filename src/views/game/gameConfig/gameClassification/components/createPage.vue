@@ -76,8 +76,6 @@
 						<el-select
 							v-model="queryData.clientDisplay"
 							size="medium"
-							placeholder="全部"
-							clearable
 							style="width: 180px"
 						>
 							<el-option
