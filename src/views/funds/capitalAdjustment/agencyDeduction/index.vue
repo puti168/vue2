@@ -357,7 +357,9 @@ export default {
 			}
 		},
 		checkRiskValue(val) {
-			// console.log('val', val)
+            val === '2'
+                ? (this.queryData.userType = '6')
+                : (this.queryData.userType = '7')
 		},
 		checkValue() {
 			// this.tipsShow = null
