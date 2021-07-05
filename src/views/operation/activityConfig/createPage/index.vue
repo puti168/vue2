@@ -241,15 +241,10 @@
             prop="activityTagRemark"
             :rules="[
               { required: true, message: '请输入备注内容', trigger: 'blur' },
-              {
-                min: 1,
-                max: 50,
-                message: '长度在 1 到 50 个字符',
-                trigger: 'blur',
-              },
+              { min: 1,max: 50,message: '长度在 1 到 50 个字符', trigger: 'blur', },
             ]"
           >
-            <el-input v-model="dialogForm.activityTagRemark" type="textarea"></el-input>
+            <el-input v-model="dialogForm.activityTagRemark" placeholder="请输入" maxlength="50" show-word-limit clearable type="textarea"></el-input>
           </el-form-item>
         </el-form>
         <el-divider></el-divider>

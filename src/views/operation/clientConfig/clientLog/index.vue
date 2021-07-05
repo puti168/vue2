@@ -124,26 +124,34 @@
           :header-cell-style="getRowClass"
           @sort-change="changeTableSort"
         >
-          <el-table-column prop="operatePage" align="center" label="操作页面">
+          <el-table-column prop="pageName" align="center" label="操作页面">
             <template slot-scope="scope">
-             <span v-for="item in operatePage" :key="item.value">
-                {{ scope.row.clientType === item.code ? item.value : "" }}
+              <span v-for="item in operatePage" :key="item.value">
+                {{ scope.row.pageName === item.code ? item.value : "" }}
               </span>
             </template>
+
           </el-table-column>
           <el-table-column prop="client" align="center" label="显示终端">
-             <template slot-scope="scope">
-             <span v-for="item in client" :key="item.value">
-                {{ scope.row.clientType === item.code ? item.value : "" }}
-              </span>
-            </template>
+            <template slot-scope="scope">
+							<span
+								v-if="
+									!!scope.row.clientType || scope.row.clientType + '' === '0'
+								"
+							>
+								{{ typeFilter(scope.row.clientType, 'operateClient') }}
+							</span>
+							<span v-else></span>
+						</template>
+
           </el-table-column>
           <el-table-column prop="fieldName" align="center" label="名称">
           </el-table-column>
           <el-table-column prop="changeType" align="center" label="变更类型">
-           <template slot-scope="scope">
-             <span v-for="item in changeType" :key="item.value">
-                {{ scope.row.clientType === item.code ? item.value : "" }}
+
+            <template slot-scope="scope">
+              <span v-for="item in changeType" :key="item.value">
+                {{ scope.row.changeType === item.code ? item.value : "" }}
               </span>
             </template>
           </el-table-column>
@@ -151,8 +159,7 @@
           </el-table-column>
           <el-table-column align="center" prop="afterValue" label="变更后">
           </el-table-column>
-          <el-table-column prop="remark" align="center" label="备注">
-          </el-table-column>
+          <el-table-column prop="remark" align="center" label="备注"> </el-table-column>
           <el-table-column prop="createdBy" align="center" width="100" label="操作人">
             <template slot-scope="scope">
               <p>{{ scope.row.createdBy }}</p>
@@ -160,6 +167,7 @@
           </el-table-column>
           <el-table-column
             prop="createdAt"
+            width="200"
             align="center"
             label="操作时间"
             sortable="custom"
@@ -198,9 +206,9 @@ export default {
         time: [start, end]
       },
       dataList: [],
-	  changeType: [],
-	  client: [],
-	  operatePage: [],
+      changeType: [],
+      client: [],
+      operatePage: [],
       title: ''
     }
   },
@@ -266,13 +274,19 @@ export default {
         if (res.code === 200) {
           this.changeType = res.data.changeType
           this.client = res.data.client
+          console.log(this.client, '显示')
           this.operatePage = res.data.operatePage
         }
       })
     },
     changeTableSort({ column, prop, order }) {
+      if (prop === 'createdAt') {
+        prop = 1
+      }
       this.pageNum = 1
-      console.log(prop)
+
+      this.queryData.orderKey = prop
+      console.log(this.queryData.orderKey, '排序')
       if (order === 'ascending') {
         // 升序
         this.queryData.orderType = 'asc'
