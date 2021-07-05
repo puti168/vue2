@@ -146,7 +146,7 @@
             :header-cell-style="getRowClass"
           >
             <el-table-column align="center" label="风险代理">
-              <template>
+              <template slot-scope="scope">
               <span v-if="!!scope.row.orderNo">
 									{{ scope.row.orderNo }}
 								</span>
@@ -361,6 +361,7 @@ export default {
       userLabel: [],
       accountsVo: {},
       commissionRecordVo: {},
+      proxyRiskControlLevelVo: {},
       proxyCommissionDetaiVoList: {},
       registerVo: {},
       visible: false,
