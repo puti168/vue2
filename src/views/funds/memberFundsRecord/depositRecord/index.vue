@@ -105,7 +105,7 @@
               :popper-append-to-body="false"
             >
               <el-option
-                v-for="item in payType"
+                v-for="item in enumPaymentDepositType"
                 :key="item.code"
                 :label="item.description"
                 :value="item.code"
@@ -232,9 +232,8 @@ class="redColor"
           <el-table-column prop="payType" align="center" label="支付方式">
             <template slot-scope="scope">
               {{
-                typeFilter(scope.row.payType, "payType")
-                  ? typeFilter(scope.row.payType, "payType")
-                  : "-"
+                typeFilter(scope.row.payType, "enumPaymentDepositType")
+
               }}
             </template>
           </el-table-column>
@@ -294,8 +293,8 @@ export default {
     depositStatus() {
       return this.globalDics.depositStatus
     },
-    payType() {
-      return this.globalDics.payType
+    enumPaymentDepositType() {
+      return this.globalDics.enumPaymentDepositType
     }
   },
   created() {},
