@@ -17,10 +17,13 @@
 						prop="vipSerialNum"
 						width="120"
 					></el-table-column>
-					<el-table-column prop="dayWithdrawalNum" align="center" label="日提款次数">
+					<el-table-column
+						prop="dayWithdrawalNum"
+						align="center"
+						label="日提款次数"
+					>
 						<template slot-scope="scope">
 							<span>
-
 								<el-input-number
 									v-model="scope.row.dayWithdrawalNum"
 									size="medium"
@@ -29,9 +32,7 @@
 									placeholder="请输入"
 									clearable
 									style="width: 150px"
-									@blur="
-										checkTransferValue(scope.row,'dayWithdrawalNum')
-									"
+									@blur="checkTransferValue(scope.row, 'dayWithdrawalNum')"
 								></el-input-number>
 							</span>
 						</template>
@@ -51,16 +52,14 @@
 									placeholder="请输入"
 									clearable
 									style="width: 150px"
-									@blur="
-										checkTransferValue(scope.row,'dayWithdrawalQuota')
-									"
+									@blur="checkTransferValue(scope.row, 'dayWithdrawalQuota')"
 								></el-input-number>
 							</span>
 						</template>
 					</el-table-column>
 					<el-table-column prop="upgradeBonus" align="center" label="升级礼金">
 						<template slot-scope="scope">
-							<span>
+							<span v-if="scope.row.upgradeBonus * 1">
 								<el-input-number
 									v-model="scope.row.upgradeBonus"
 									size="medium"
@@ -70,27 +69,35 @@
 									clearable
 									:precision="0"
 									style="width: 150px"
-									@blur="
-										checkTransferValue(scope.row,'upgradeBonus')
-									"
+									@blur="checkTransferValue(scope.row, 'upgradeBonus')"
 								></el-input-number>
 							</span>
+							<span v-else>0</span>
 						</template>
 					</el-table-column>
 					<el-table-column prop="birthdayBonus" align="center" label="生日礼金">
 						<template slot="header" slot-scope="scope">
-                            <el-popover placement="top-start" title="提示" width="280" trigger="hover">
-                                <div v-if="!scope.row">
-                                    <p>会员生日时，系统根据当前的vip等级在24点触发日那天发出生日礼金。 </p>
-                                    <p>账号注册时间和会员生日时间一定要相差3个月，小于时系统将不派发生日礼金 </p>
-                                </div>
-                                <div slot="reference" class="el-icon-question">
-                                    <span class="other-class">生日礼金</span>
-                                </div>
-                            </el-popover>
-                        </template>
+							<el-popover
+								placement="top-start"
+								title="提示"
+								width="280"
+								trigger="hover"
+							>
+								<div v-if="!scope.row">
+									<p>
+										会员生日时，系统根据当前的vip等级在24点触发日那天发出生日礼金。
+									</p>
+									<p>
+										账号注册时间和会员生日时间一定要相差3个月，小于时系统将不派发生日礼金
+									</p>
+								</div>
+								<div slot="reference" class="el-icon-question">
+									<span class="other-class">生日礼金</span>
+								</div>
+							</el-popover>
+						</template>
 						<template slot-scope="scope">
-							<span>
+							<span v-if="scope.row.birthdayBonus * 1">
 								<el-input-number
 									v-model="scope.row.birthdayBonus"
 									size="medium"
@@ -99,26 +106,34 @@
 									placeholder="请输入"
 									clearable
 									style="width: 150px"
-									@blur="
-										checkTransferValue(scope.row,'birthdayBonus')
-									"
+									@blur="checkTransferValue(scope.row, 'birthdayBonus')"
 								></el-input-number>
 							</span>
+							<span v-else>0</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="aboveMonthRedEnvelope" align="center" label="上半月红包">
+					<el-table-column
+						prop="aboveMonthRedEnvelope"
+						align="center"
+						label="上半月红包"
+					>
 						<template slot="header" slot-scope="scope">
-                            <el-popover placement="top-start" title="提示" width="280" trigger="hover">
-                                <div v-if="!scope.row">
-                                    <p>每月1号，固定发放的奖励金额</p>
-                                </div>
-                                <div slot="reference" class="el-icon-question">
-                                    <span class="other-class">上半月红包</span>
-                                </div>
-                            </el-popover>
-                        </template>
+							<el-popover
+								placement="top-start"
+								title="提示"
+								width="280"
+								trigger="hover"
+							>
+								<div v-if="!scope.row">
+									<p>每月1号，固定发放的奖励金额</p>
+								</div>
+								<div slot="reference" class="el-icon-question">
+									<span class="other-class">上半月红包</span>
+								</div>
+							</el-popover>
+						</template>
 						<template slot-scope="scope">
-							<span>
+							<span v-if="scope.row.aboveMonthRedEnvelope * 1">
 								<el-input-number
 									v-model="scope.row.aboveMonthRedEnvelope"
 									size="medium"
@@ -127,26 +142,30 @@
 									placeholder="请输入"
 									clearable
 									style="width: 150px"
-									@blur="
-										checkTransferValue(scope.row,'aboveMonthRedEnvelope')
-									"
+									@blur="checkTransferValue(scope.row, 'aboveMonthRedEnvelope')"
 								></el-input-number>
 							</span>
+							<span v-else>0</span>
 						</template>
 					</el-table-column>
 					<el-table-column align="center" label="下半月红包" width="300">
 						<template slot="header" slot-scope="scope">
-                            <el-popover placement="top-start" title="提示" width="280" trigger="hover">
-                                <div v-if="!scope.row">
-                                    <p>每月15号，固定发放的奖励金额</p>
-                                </div>
-                                <div slot="reference" class="el-icon-question">
-                                    <span class="other-class">下半月红包</span>
-                                </div>
-                            </el-popover>
-                        </template>
+							<el-popover
+								placement="top-start"
+								title="提示"
+								width="280"
+								trigger="hover"
+							>
+								<div v-if="!scope.row">
+									<p>每月15号，固定发放的奖励金额</p>
+								</div>
+								<div slot="reference" class="el-icon-question">
+									<span class="other-class">下半月红包</span>
+								</div>
+							</el-popover>
+						</template>
 						<template slot-scope="scope">
-							<span>
+							<span v-if="scope.row.belowMonthRedEnvelope * 1">
 								<el-input-number
 									v-model="scope.row.belowMonthRedEnvelope"
 									size="medium"
@@ -155,11 +174,10 @@
 									placeholder="请输入"
 									clearable
 									style="width: 150px"
-									@blur="
-										checkTransferValue(scope.row,'belowMonthRedEnvelope')
-									"
+									@blur="checkTransferValue(scope.row, 'belowMonthRedEnvelope')"
 								></el-input-number>
 							</span>
+							<span v-else>0</span>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -247,8 +265,7 @@ export default {
 						})
 					}
 				})
-				.catch(() => {
-				})
+				.catch(() => {})
 		},
 		resetData() {
 			this.$api
@@ -266,8 +283,7 @@ export default {
 						})
 					}
 				})
-				.catch(() => {
-				})
+				.catch(() => {})
 		}
 	}
 }
