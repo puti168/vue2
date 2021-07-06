@@ -17,49 +17,45 @@
           >
             <el-table-column align="center" label="注册时间">
               <template>
-                   {{ registerVo.createDt ? registerVo.createDt : '-' }}
+                {{ registerVo.createDt ? registerVo.createDt : "-" }}
               </template>
             </el-table-column>
             <el-table-column align="center" label="最后登录时间">
               <template>
-               {{ registerVo.lastLoginTime ? registerVo.lastLoginTime : '-' }}
+                {{ registerVo.lastLoginTime ? registerVo.lastLoginTime : "-" }}
               </template>
             </el-table-column>
             <el-table-column align="center" label="注册端">
               <template>
                 {{
-									registerVo.deviceType
-										? typeFilter(registerVo.deviceType, 'deviceType')
-										: '-'
-								}}
+                  registerVo.deviceType
+                    ? typeFilter(registerVo.deviceType, "deviceType")
+                    : "-"
+                }}
               </template>
             </el-table-column>
             <el-table-column align="center" label="注册IP">
               <template>
-                {{ registerVo.registerIp ? registerVo.registerIp : '-' }}
+                {{ registerVo.registerIp ? registerVo.registerIp : "-" }}
               </template>
             </el-table-column>
             <el-table-column align="center" label="注册端设备编号">
               <template>
-                {{ registerVo.deviceNo ? registerVo.deviceNo : '-' }}
+                {{ registerVo.deviceNo ? registerVo.deviceNo : "-" }}
               </template>
             </el-table-column>
             <el-table-column align="center" label="账号类型">
               <template>
-               {{
-									registerVo.accountType
-										? typeFilter(registerVo.accountType, 'accountType')
-										: '-'
-								}}
+                {{
+                  registerVo.accountType
+                    ? typeFilter(registerVo.accountType, "accountType")
+                    : "-"
+                }}
               </template>
             </el-table-column>
             <el-table-column align="center" label="注册域名">
               <template>
-               {{
-									registerVo.registerReference
-										? registerVo.registerReference
-										: '-'
-								}}
+                {{ registerVo.registerReference ? registerVo.registerReference : "-" }}
               </template>
             </el-table-column>
           </el-table>
@@ -77,59 +73,53 @@
           >
             <el-table-column align="center" label="代理账号">
               <template>
-                {{ accountsVo.userName ? accountsVo.userName : '-' }}
+                {{ accountsVo.userName ? accountsVo.userName : "-" }}
               </template>
             </el-table-column>
             <el-table-column align="center" label="代理姓名">
               <template>
-                  {{ accountsVo.realName ? accountsVo.realName : '-' }}
+                {{ accountsVo.realName ? accountsVo.realName : "-" }}
               </template>
             </el-table-column>
             <el-table-column align="center" label="账号状态">
-               <template>
-              {{
-									accountsVo.accountStatus
-										? typeFilter(accountsVo.accountStatus, 'accountStatusType')
-										: '-'
-								}}
+              <template>
+                {{
+                  accountsVo.accountStatus
+                    ? typeFilter(accountsVo.accountStatus, "accountStatusType")
+                    : "-"
+                }}
               </template>
             </el-table-column>
             <el-table-column align="center" label="代理标签">
               <template>
-                {{ accountsVo.labelId ? accountsVo.labelId : '-' }}
+                {{ accountsVo.labelId ? accountsVo.labelId : "-" }}
               </template>
             </el-table-column>
             <el-table-column align="center" label="代理等级">
               <template>
-                 {{ accountsVo.currentLevel ? accountsVo.currentLevel : '-' }}
+                {{ accountsVo.currentLevel ? accountsVo.currentLevel : "-" }}
               </template>
             </el-table-column>
             <el-table-column align="center" label="绑定银行卡数量">
               <template>
-                 {{ accountsVo.bankCount ? accountsVo.bankCount : '-' }}
+                {{ accountsVo.bankCount ? accountsVo.bankCount : "-" }}
               </template>
             </el-table-column>
             <el-table-column align="center" label="虚拟币账号数量">
               <template>
-                  {{ accountsVo.virtualCount ? accountsVo.virtualCount : '-' }}
+                {{ accountsVo.virtualCount ? accountsVo.virtualCount : "-" }}
               </template>
             </el-table-column>
             <el-table-column align="center" label="累计提款次数">
               <template>
                 {{
-									accountsVo.commonWithdrawTimes
-										? accountsVo.commonWithdrawTimes
-										: '-'
-								}}
+                  accountsVo.commonWithdrawTimes ? accountsVo.commonWithdrawTimes : "-"
+                }}
               </template>
             </el-table-column>
             <el-table-column align="center" label="累计提款总额（万元）">
               <template>
-               {{
-									accountsVo.sumWithdrawAmount
-										? accountsVo.sumWithdrawAmount
-										: '-'
-								}}
+                {{ accountsVo.sumWithdrawAmount ? accountsVo.sumWithdrawAmount : "-" }}
               </template>
             </el-table-column>
           </el-table>
@@ -147,31 +137,44 @@
           >
             <el-table-column align="center" label="风险代理">
               <template slot-scope="scope">
-              <span v-if="!!scope.row.orderNo">
-									{{ scope.row.orderNo }}
-								</span>
-								<span v-else>-</span>
+                <span v-if="!!scope.row.orderNo">
+                  {{ scope.row.orderNo }}
+                </span>
+                <span v-else>-</span>
               </template>
             </el-table-column>
             <el-table-column align="center" label="风险银行卡">
               <template>
-               {{ proxyRiskControlLevelVo.riskyBankCard ? proxyRiskControlLevelVo.riskyBankCard : '-' }}
+                {{
+                  proxyRiskControlLevelVo.riskyBankCard
+                    ? proxyRiskControlLevelVo.riskyBankCard
+                    : "-"
+                }}
               </template>
             </el-table-column>
             <el-table-column align="center" label="风险虚拟币">
               <template>
-              {{ proxyRiskControlLevelVo.riskyVirtualCurrency ? proxyRiskControlLevelVo.riskyVirtualCurrency : '-' }}
-
+                {{
+                  proxyRiskControlLevelVo.riskyVirtualCurrency
+                    ? proxyRiskControlLevelVo.riskyVirtualCurrency
+                    : "-"
+                }}
               </template>
             </el-table-column>
             <el-table-column align="center" label="风险IP">
               <template>
-                {{ proxyRiskControlLevelVo.riskyIP ? proxyRiskControlLevelVo.riskyIP : '-' }}
+                {{
+                  proxyRiskControlLevelVo.riskyIP ? proxyRiskControlLevelVo.riskyIP : "-"
+                }}
               </template>
             </el-table-column>
             <el-table-column align="center" label="风险终端设备号">
               <template>
-                {{ proxyRiskControlLevelVo.riskTerminalDeviceNumber ? proxyRiskControlLevelVo.riskTerminalDeviceNumber : '-' }}
+                {{
+                  proxyRiskControlLevelVo.riskTerminalDeviceNumber
+                    ? proxyRiskControlLevelVo.riskTerminalDeviceNumber
+                    : "-"
+                }}
               </template>
             </el-table-column>
           </el-table>
@@ -185,137 +188,135 @@
               <tr>
                 <td class="td-title">日期</td>
                 <td>
-                   {{
-										commissionRecordVo.reportDate
-											? commissionRecordVo.reportDate
-											: '-'
-									}}
+                  {{
+                    commissionRecordVo.reportDate ? commissionRecordVo.reportDate : "-"
+                  }}
                 </td>
                 <td class="td-title">佣金比例</td>
                 <td>
-                   {{
-										commissionRecordVo.commissionRate
-											? commissionRecordVo.commissionRate
-											: '-'
-									}}
+                  {{
+                    commissionRecordVo.commissionRate
+                      ? commissionRecordVo.commissionRate
+                      : "-"
+                  }}
                 </td>
                 <td class="td-title">佣金金额</td>
                 <td>
                   {{
-										commissionRecordVo.totalRebateAmount
-											? commissionRecordVo.totalRebateAmount
-											: '-'
-									}}
-                </td>
-                <td class="td-title">等级专享</td>
+                    commissionRecordVo.totalRebateAmount
+                      ? commissionRecordVo.totalRebateAmount
+                      : "-"
+                  }}
+                </td><td class="td-title">等级专享</td>
                 <td>
                   {{
-										commissionRecordVo.rewardAmount
-											? commissionRecordVo.rewardAmount
-											: '-'
-									}}
+                    commissionRecordVo.totalRushAmount
+                      ? commissionRecordVo.totalRushAmount
+                      : "-"
+                  }}
                 </td>
               </tr>
               <tr>
                 <td class="td-title">活跃下级</td>
-                <td @click="active()">
-                   {{
-										commissionRecordVo.activeSubordinate
-											? commissionRecordVo.activeSubordinate
-											: '-'
-									}}
+                <td class="disColor" @click="active()">
+                  {{
+                    commissionRecordVo.activeSubordinate
+                      ? commissionRecordVo.activeSubordinate
+                      : "-"
+                  }}
                 </td>
                 <td class="td-title">有效活跃下级</td>
-                <td>
-                    {{
-										commissionRecordVo.effectivelyActiveSubordinates
-											? commissionRecordVo.effectivelyActiveSubordinates
-											: '-'
-									}}
+                <td class="disColor" @click="effective()">
+                  {{
+                    commissionRecordVo.effectivelyActiveSubordinates
+                      ? commissionRecordVo.effectivelyActiveSubordinates
+                      : "-"
+                  }}
                 </td>
                 <td class="td-title">新增活跃下级</td>
-                <td>
-                   {{
-										commissionRecordVo.addActiveSubordinates
-											? commissionRecordVo.addActiveSubordinates
-											: '-'
-									}}
+                <td class="disColor">
+                  {{
+                    commissionRecordVo.addActiveSubordinates
+                      ? commissionRecordVo.addActiveSubordinates
+                      : "-"
+                  }}
                 </td>
                 <td class="td-title">新增有效活跃下级</td>
-                <td>
-                   {{
-										commissionRecordVo.addEffectiveActiveSubordinates
-											? commissionRecordVo.addEffectiveActiveSubordinates
-											: '-'
-									}}
+                <td class="disColor">
+                  {{
+                    commissionRecordVo.addEffectiveActiveSubordinates
+                      ? commissionRecordVo.addEffectiveActiveSubordinates
+                      : "-"
+                  }}
                 </td>
+
               </tr>
               <tr>
                 <td class="td-title">总输赢</td>
-                <td>
-                   {{
-										commissionRecordVo.totalNetAmount
-											? commissionRecordVo.totalNetAmount
-											: '-'
-									}}
+                <td class="disColor" @click="totalNet()">
+                  {{
+                    commissionRecordVo.totalNetAmount
+                      ? commissionRecordVo.totalNetAmount
+                      : "-"
+                  }}
                 </td>
                 <td class="td-title">场馆费</td>
-                <td>
-                 {{
-										commissionRecordVo.totalPlatformAmount
-											? commissionRecordVo.totalPlatformAmount
-											: '-'
-									}}
+                <td class="disColor" @click="VenuefeeNet()">
+                  {{
+                    commissionRecordVo.totalPlatformAmount
+                      ? commissionRecordVo.totalPlatformAmount
+                      : "-"
+                  }}
                 </td>
                 <td class="td-title">总优惠</td>
-                <td>
+                <td class="disColor">
                   {{
-										commissionRecordVo.totalActivityAmount
-											? commissionRecordVo.totalActivityAmount
-											: '-'
-									}}
+                    commissionRecordVo.totalActivityAmount
+                      ? commissionRecordVo.totalActivityAmount
+                      : "-"
+                  }}
                 </td>
                 <td class="td-title">总返水</td>
-                <td>
-                {{
-										commissionRecordVo.commissionAmount
-											? commissionRecordVo.commissionAmount
-											: '-'
-									}}
+                <td class="disColor">
+                  {{
+                    commissionRecordVo.commissionAmount
+                      ? commissionRecordVo.commissionAmount
+                      : "-"
+                  }}
                 </td>
               </tr>
               <tr>
                 <td class="td-title">补单输赢</td>
                 <td>
                   {{
-										commissionRecordVo.totalPatchNetAmount
-											? commissionRecordVo.totalPatchNetAmount
-											: '-'
-									}}
+                    commissionRecordVo.totalPatchNetAmount
+                      ? commissionRecordVo.totalPatchNetAmount
+                      : "-"
+                  }}
                 </td>
                 <td class="td-title">净输赢</td>
                 <td>
                   {{
-										commissionRecordVo.totalPureAmount
-											? commissionRecordVo.totalPureAmount
-											: '-'
-									}}
+                    commissionRecordVo.totalPureAmount
+                      ? commissionRecordVo.totalPureAmount
+                      : "-"
+                  }}
                 </td>
                 <td class="td-title">上月结余</td>
                 <td>
-                 {{
-										commissionRecordVo.totalLastAmount
-											? commissionRecordVo.totalLastAmount
-											: '-'
-									}}
+                  {{
+                    commissionRecordVo.totalLastAmount
+                      ? commissionRecordVo.totalLastAmount
+                      : "-"
+                  }}
                 </td>
                 <td class="td-title">冲正后净输赢</td>
                 <td>
-                 {{
-										commissionRecordVo.totalRushAmount
-											? commissionRecordVo.totalRushAmount
-											: '-'
-									}}
+                  {{
+                    commissionRecordVo.totalRushAmount
+                      ? commissionRecordVo.totalRushAmount
+                      : "-"
+                  }}
                 </td>
               </tr>
             </tbody>
@@ -325,17 +326,193 @@
       <div class="review-content">
         <p class="name">审核信息</p>
         <div class="review-flex">
-					<div>一审人: {{ proxyCommissionDetaiVoList[0] ? proxyCommissionDetaiVoList[0].lockOperator : '-' }}</div>
-					<div>一审时间: {{ proxyCommissionDetaiVoList[0] ? proxyCommissionDetaiVoList[0].auditTime : '-' }}</div>
-					<div>一审备注: {{ proxyCommissionDetaiVoList[0] ? proxyCommissionDetaiVoList[0].auditDesc : '-' }}</div>
-				</div>
-				<div class="review-flex">
-					<div>二审人: {{ proxyCommissionDetaiVoList[1] ? proxyCommissionDetaiVoList[1].lockOperator : '-' }}</div>
-					<div>二审时间: {{ proxyCommissionDetaiVoList[1] ? proxyCommissionDetaiVoList[1].auditTime : '-' }}</div>
-					<div>二审备注: {{ proxyCommissionDetaiVoList[1] ? proxyCommissionDetaiVoList[1].auditDesc : '-' }}</div>
-				</div>
+          <div>
+            一审人:
+            {{
+              proxyCommissionDetaiVoList[0]
+                ? proxyCommissionDetaiVoList[0].lockOperator
+                : "-"
+            }}
+          </div>
+          <div>
+            一审时间:
+            {{
+              proxyCommissionDetaiVoList[0]
+                ? proxyCommissionDetaiVoList[0].auditTime
+                : "-"
+            }}
+          </div>
+          <div>
+            一审备注:
+            {{
+              proxyCommissionDetaiVoList[0]
+                ? proxyCommissionDetaiVoList[0].auditDesc
+                : "-"
+            }}
+          </div>
+        </div>
+        <div class="review-flex">
+          <div>
+            二审人:
+            {{
+              proxyCommissionDetaiVoList[1]
+                ? proxyCommissionDetaiVoList[1].lockOperator
+                : "-"
+            }}
+          </div>
+          <div>
+            二审时间:
+            {{
+              proxyCommissionDetaiVoList[1]
+                ? proxyCommissionDetaiVoList[1].auditTime
+                : "-"
+            }}
+          </div>
+          <div>
+            二审备注:
+            {{
+              proxyCommissionDetaiVoList[1]
+                ? proxyCommissionDetaiVoList[1].auditDesc
+                : "-"
+            }}
+          </div>
+        </div>
       </div>
     </div>
+    <!-- 活跃下级 -->
+    <el-dialog
+      :visible.sync="dialogVisible"
+      :destroy-on-close="true"
+      width="880px"
+      class="rempadding"
+    >
+      <div class="contentBox">
+        活跃下级<span class="disColor">{{ activeSubordinate }}</span>
+      </div>
+      <el-table
+        v-loading="loading"
+        size="mini"
+        class="small-size-table"
+        :data="gameList"
+        :header-cell-style="getRowClass"
+      >
+        <el-table-column prop="playerId" align="center" label="会员账号">
+          <template slot-scope="scope">
+            <Copy v-if="!!scope.row.playerId" :title="scope.row.playerId" :copy="copy">
+              {{ scope.row.playerId }}
+            </Copy>
+          </template>
+        </el-table-column>
+        <el-table-column prop="playerName" align="center" label="姓名"></el-table-column>
+        <el-table-column
+          prop="depositAmount"
+          align="center"
+          label="存款金额"
+        ></el-table-column>
+        <el-table-column
+          prop="accountTypeName"
+          align="center"
+          label="存款时间"
+        ></el-table-column>
+        <el-table-column
+          prop="validBetAmount"
+          align="center"
+          label="有效投注"
+        ></el-table-column>
+      </el-table>
+      <div slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="dialogVisible = false">关闭</el-button>
+        </div>
+      <!-- 分页 -->
+      <el-pagination
+        :current-page.sync="page"
+        background
+        class="fenye"
+        layout="total, sizes,prev, pager, next, jumper"
+        :page-size="size"
+        :page-sizes="[5, 10, 15]"
+      ></el-pagination>
+    </el-dialog>
+      <!-- 总输赢 -->
+    <el-dialog
+      :visible.sync="dialogTotal"
+      :destroy-on-close="true"
+      width="880px"
+      class="rempadding"
+    >
+      <div class="contentBox">
+        总输赢<span class="disColor">{{ totalNetAmount }}</span>
+      </div>
+      <el-table
+        v-loading="loading"
+        size="mini"
+        class="small-size-table"
+        :data="gameList"
+        :header-cell-style="getRowClass"
+      >
+        <el-table-column prop="playerId" align="center" label="场馆">
+        </el-table-column>
+        <el-table-column prop="playerName" align="center" label="总输赢">
+        </el-table-column>
+        <el-table-column
+          prop="depositAmount"
+          align="center"
+          label="有效投注"
+        ></el-table-column>
+      </el-table>
+      <div slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="dialogTotal = false">关闭</el-button>
+        </div>
+      <!-- 分页 -->
+      <el-pagination
+        :current-page.sync="page"
+        background
+        class="fenye"
+        layout="total, sizes,prev, pager, next, jumper"
+        :page-size="size"
+        :page-sizes="[5, 10, 15]"
+      ></el-pagination>
+    </el-dialog>
+      <!-- 场馆费-->
+    <el-dialog
+      :visible.sync="dialogVenuefee"
+      :destroy-on-close="true"
+      width="880px"
+      class="rempadding"
+    >
+      <div class="contentBox">
+        总输赢<span class="disColor">{{ totalPlatformAmount }}</span>
+      </div>
+      <el-table
+        v-loading="loading"
+        size="mini"
+        class="small-size-table"
+        :data="gameList"
+        :header-cell-style="getRowClass"
+      >
+        <el-table-column prop="playerId" align="center" label="场馆">
+        </el-table-column>
+        <el-table-column prop="playerName" align="center" label="场馆费率">
+        </el-table-column>
+        <el-table-column
+          prop="depositAmount"
+          align="center"
+          label="场馆费"
+        ></el-table-column>
+      </el-table>
+      <div slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="dialogVenuefee = false">关闭</el-button>
+        </div>
+      <!-- 分页 -->
+      <el-pagination
+        :current-page.sync="page"
+        background
+        class="fenye"
+        layout="total, sizes,prev, pager, next, jumper"
+        :page-size="size"
+        :page-sizes="[5, 10, 15]"
+      ></el-pagination>
+    </el-dialog>
   </div>
 </template>
 
@@ -363,6 +540,13 @@ export default {
       commissionRecordVo: {},
       proxyRiskControlLevelVo: {},
       proxyCommissionDetaiVoList: {},
+      dialogVisible: false,
+      dialogTotal: false,
+      dialogVenuefee: false,
+      createPage: false,
+      activeSubordinate: '',
+      totalPlatformAmount: '',
+      totalNetAmount: '',
       registerVo: {},
       visible: false,
       action: false
@@ -377,40 +561,70 @@ export default {
     goBack() {
       this.$emit('goBack')
     },
-   getInfo() {
-			const params = {
-				id: this.rowData.id,
-				proxyAccount: this.rowData.proxyAccount,
-				userId: this.rowData.proxyId
-			}
-			this.$api.proxyCommissionRecordQueryDetail(params).then((res) => {
-				if (res.code === 200) {
-					const response = res.data
-					this.loading = false
-					console.log('respon')
-					console.log(response)
-					this.accountsVo = response.accountsVo
-					this.commissionRecordVo = response.commissionRecordVo
-					this.proxyRiskControlLevelVo = response.proxyRiskControlLevelVo
-					this.proxyCommissionDetaiVoList = response.proxyCommissionDetaiVoList
-					this.registerVo = response.registerVo
-				} else {
-					this.loading = false
-					this.$message({
-						message: res.msg,
-						type: 'error'
-					})
-				}
-			})
-		},
+    getInfo() {
+      const params = {
+        id: this.rowData.id,
+        proxyAccount: this.rowData.proxyAccount,
+        userId: this.rowData.proxyId
+      }
+      this.$api.proxyCommissionRecordQueryDetail(params).then((res) => {
+        if (res.code === 200) {
+          const response = res.data
+          this.loading = false
+          console.log('respon')
+          this.accountsVo = response.accountsVo
+          this.commissionRecordVo = response.commissionRecordVo
+          this.proxyRiskControlLevelVo = response.proxyRiskControlLevelVo
+          this.proxyCommissionDetaiVoList = response.proxyCommissionDetaiVoList
+          this.activeSubordinate = response.commissionRecordVo.activeSubordinate
+          this.totalNetAmount = response.commissionRecordVo.totalNetAmount
+          this.totalPlatformAmount = response.commissionRecordVo.totalPlatformAmount
+
+          this.registerVo = response.registerVo
+        } else {
+          this.loading = false
+          this.$message({
+            message: res.msg,
+            type: 'error'
+          })
+        }
+      })
+    },
+    // 活跃下级
     active() {
-      console.log('12321')
+      this.dialogVisible = true
+      this.$api.ProxyCommissionRecordSubordinate().then((res) => {
+        console.log(res, '11111')
+        if (res.code === 200) {
+          this.gameList = res.data.record
+        }
+      })
+    },
+    // 有效活跃下级
+    effective() {
+
+    },
+    // 总输赢
+    totalNet() {
+       this.dialogTotal = true
+    },
+     // 场馆费
+    VenuefeeNet() {
+       this.dialogVenuefee = true
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
+.disColor {
+  padding-left: 9px;
+  color: rgb(75, 88, 211);
+}
+.contentBox {
+  font-size: 20px;
+  padding-block: 9px;
+}
 /deep/.el-dialog__header {
   text-align: center;
   color: #909399;

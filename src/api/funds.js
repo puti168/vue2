@@ -368,6 +368,14 @@ export function memberWithDrawProxyselectMemberWithDrawAuthEsPageThree(data) {
 		data
 	})
 }
+// 活跃下级
+export function ProxyCommissionRecordSubordinate(data) {
+	return request({
+		url: '/proxyCommissionRecord/subordinate',
+		method: 'post',
+		data
+	})
+}
 export default {
 	memberWithDrawProxyselectMemberWithDrawAuthEsPageThree,
 	memberWithDrawProxyselectMemberWithDrawAuthEsPageTwo,
@@ -416,5 +424,6 @@ export default {
 	agentWithdrawRecordAPI,
 	agentWithdrawDetailsAPI,
 	memberIncreaseSearchAPI,
-	getImageIdAPI
+	getImageIdAPI,
+	ProxyCommissionRecordSubordinate
 }
