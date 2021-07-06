@@ -199,7 +199,7 @@ class="disableRgba"
               placeholder=""
             >
               <el-option
-                v-for="item in accountType"
+                v-for="item in accountStatusType"
                 :key="item.description"
                 :label="item.description"
                 :value="item.code"
@@ -215,7 +215,7 @@ class="disableRgba"
               placeholder=""
             >
               <el-option
-                v-for="item in accountStatusType"
+                v-for="item in accountType"
                 :key="item.description"
                 :label="item.description"
                 :value="item.code"
