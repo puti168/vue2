@@ -189,7 +189,17 @@
 					:header-cell-style="getRowClass"
 					@sort-change="changeTableSort"
 				>
-					<el-table-column align="center" label="锁单" width="60">
+					<el-table-column align="center" label="锁单" width="100">
+                        <template slot="header" slot-scope="scope">
+                            <el-popover placement="top-start" title="提示" width="280" trigger="hover">
+                                <div v-if="!scope.row">
+                                    <p>只有待审核的订单前才能进行锁单操作，点击为锁定。锁定状态下再次点击为解锁</p>
+                                </div>
+                                <div slot="reference" class="el-icon-question">
+                                    <span class="other-class">锁单</span>
+                                </div>
+                            </el-popover>
+                        </template>
 						<template slot-scope="scope">
 							<el-checkbox
 								v-if="
