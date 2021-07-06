@@ -14,7 +14,7 @@
               start-placeholder="开始日期"
               end-placeholder="结束日期"
               align="right"
-              clearable
+              :clearable="false"
               :default-time="defaultTime"
               style="width: 375px"
             ></el-date-picker>
@@ -369,7 +369,7 @@ export default {
           const el = (
             <div class='count_row'>
               <p>{this.summary.validBetSubtotal}</p>
-              <p>{this.summary.validBetSubtotal}</p>
+              <p>{this.summary.validBetTotal}</p>
             </div>
           )
           sums[index] = el

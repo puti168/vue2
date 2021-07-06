@@ -194,12 +194,12 @@ class="disableRgba"
           <el-form-item label="代理类型：" class="proxyItem">
             <el-select
               v-model="queryData.accountType"
-              class="proxyInput"
               disabled
+              class="proxyInput"
               placeholder=""
             >
               <el-option
-                v-for="item in accountStatusType"
+                v-for="item in accountType"
                 :key="item.description"
                 :label="item.description"
                 :value="item.code"
@@ -215,7 +215,7 @@ class="disableRgba"
               placeholder=""
             >
               <el-option
-                v-for="item in accountType"
+                v-for="item in accountStatusType"
                 :key="item.description"
                 :label="item.description"
                 :value="item.code"
@@ -451,7 +451,7 @@ export default {
   },
   computed: {
     accountType() {
-      return this.globalDics.accountStatusType
+      return this.globalDics.accountType
     },
     accountStatusType() {
       return this.globalDics.accountStatusType
