@@ -29,7 +29,7 @@
           <el-input-number
             v-model.number="scope.row.vip0"
             class="inputBox"
-            :max="99.99"
+            :max="100"
             :precision="2"
             @blur="checkTransferValue(scope.row, 'vip0')"
           ></el-input-number>
@@ -46,7 +46,7 @@
           <el-input-number
             v-model.number="scope.row.vip1"
             class="inputBox"
-            :max="99.99"
+            :max="100"
             :precision="2"
             @blur="checkTransferValue(scope.row, 'vip1')"
           ></el-input-number>
@@ -63,7 +63,7 @@
           <el-input-number
             v-model.number="scope.row.vip2"
             class="inputBox"
-            :max="99.99"
+            :max="100"
             :precision="2"
             @blur="checkTransferValue(scope.row, 'vip2')"
           ></el-input-number>
@@ -80,7 +80,7 @@
           <el-input-number
             v-model.number="scope.row.vip3"
             class="inputBox"
-            :max="99.99"
+            :max="100"
             :precision="2"
             @blur="checkTransferValue(scope.row, 'vip3')"
           ></el-input-number>
@@ -97,7 +97,7 @@
           <el-input-number
             v-model.number="scope.row.vip4"
             class="inputBox"
-            :max="99.99"
+            :max="100"
             :precision="2"
             @blur="checkTransferValue(scope.row, 'vip4')"
           ></el-input-number>
@@ -114,7 +114,7 @@
           <el-input-number
             v-model.number="scope.row.vip5"
             class="inputBox"
-            :max="99.99"
+            :max="100"
             :precision="2"
             @blur="checkTransferValue(scope.row, 'vip5')"
           ></el-input-number>
@@ -131,7 +131,7 @@
           <el-input-number
             v-model.number="scope.row.vip6"
             class="inputBox"
-            :max="99.99"
+            :max="100"
             :precision="2"
             @blur="checkTransferValue(scope.row, 'vip6')"
           ></el-input-number>
@@ -148,7 +148,7 @@
           <el-input-number
             v-model.number="scope.row.vip7"
             class="inputBox"
-            :max="99.99"
+            :max="100"
             :precision="2"
             @blur="checkTransferValue(scope.row, 'vip7')"
           ></el-input-number>
@@ -165,7 +165,7 @@
           <el-input-number
             v-model.number="scope.row.vip8"
             class="inputBox"
-            :max="99.99"
+            :max="100"
             :precision="2"
             @blur="checkTransferValue(scope.row, 'vip8')"
           ></el-input-number>
@@ -182,7 +182,7 @@
           <el-input-number
             v-model.number="scope.row.vip9"
             class="inputBox"
-            :max="99.99"
+            :max="100"
             :precision="2"
             @blur="checkTransferValue(scope.row, 'vip9')"
           ></el-input-number>
@@ -199,7 +199,7 @@
           <el-input-number
             v-model.number="scope.row.vip10"
             class="inputBox"
-            :max="99.99"
+            :max="100"
             :precision="2"
             @blur="checkTransferValue(scope.row, 'vip10')"
           ></el-input-number>
