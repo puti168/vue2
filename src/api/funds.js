@@ -376,6 +376,39 @@ export function ProxyCommissionRecordSubordinate(data) {
 		data
 	})
 }
+// 总优惠
+export function ProxyCommissionRecordTotalDiscount(data) {
+	return request({
+		url: '/proxyCommissionRecord/totalDiscount',
+		method: 'post',
+		data
+	})
+}
+// 总返水
+export function ProxyCommissionRecordTotalRebate(data) {
+	return request({
+		url: '/proxyCommissionRecord/totalRebate',
+		method: 'post',
+		data
+	})
+}
+// 总输赢
+export function ProxyCommissionRecordTotalWinOrLose(data) {
+	return request({
+		url: '/proxyCommissionRecord/totalWinOrLose',
+		method: 'post',
+		data
+	})
+}
+// 新增活跃下级
+export function ProxyCommissionRecordAddsSubordinate(data) {
+	return request({
+		url: '/proxyCommissionRecord/addsSubordinate',
+		method: 'post',
+		data
+	})
+}
+
 export default {
 	memberWithDrawProxyselectMemberWithDrawAuthEsPageThree,
 	memberWithDrawProxyselectMemberWithDrawAuthEsPageTwo,
@@ -425,5 +458,9 @@ export default {
 	agentWithdrawDetailsAPI,
 	memberIncreaseSearchAPI,
 	getImageIdAPI,
-	ProxyCommissionRecordSubordinate
+	ProxyCommissionRecordSubordinate,
+	ProxyCommissionRecordTotalDiscount,
+	ProxyCommissionRecordTotalRebate,
+	ProxyCommissionRecordTotalWinOrLose,
+	ProxyCommissionRecordAddsSubordinate
 }

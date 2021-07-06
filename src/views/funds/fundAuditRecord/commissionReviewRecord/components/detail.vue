@@ -234,7 +234,7 @@
                   }}
                 </td>
                 <td class="td-title">新增活跃下级</td>
-                <td class="disColor">
+                <td class="disColor" @click="addactive()">
                   {{
                     commissionRecordVo.addActiveSubordinates
                       ? commissionRecordVo.addActiveSubordinates
@@ -269,7 +269,7 @@
                   }}
                 </td>
                 <td class="td-title">总优惠</td>
-                <td class="disColor">
+                <td class="disColor" @click="totalDiscount()">
                   {{
                     commissionRecordVo.totalActivityAmount
                       ? commissionRecordVo.totalActivityAmount
@@ -277,7 +277,7 @@
                   }}
                 </td>
                 <td class="td-title">总返水</td>
-                <td class="disColor">
+                <td class="disColor" @click="totalBackwater()">
                   {{
                     commissionRecordVo.commissionAmount
                       ? commissionRecordVo.commissionAmount
@@ -387,7 +387,7 @@
       class="rempadding"
     >
       <div class="contentBox">
-        活跃下级<span class="disColor">{{ activeSubordinate }}</span>
+        活跃下级<span class="disColor">{{ activeSubordinate }}人</span>
       </div>
       <el-table
         v-loading="loading"
@@ -410,11 +410,6 @@
           label="存款金额"
         ></el-table-column>
         <el-table-column
-          prop="accountTypeName"
-          align="center"
-          label="存款时间"
-        ></el-table-column>
-        <el-table-column
           prop="validBetAmount"
           align="center"
           label="有效投注"
@@ -422,8 +417,9 @@
       </el-table>
       <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="dialogVisible = false">关闭</el-button>
-        </div>
+      </div>
       <!-- 分页 -->
+       <div slot="footer" class="dialog-footer">
       <el-pagination
         :current-page.sync="page"
         background
@@ -432,22 +428,79 @@
         :page-size="size"
         :page-sizes="[5, 10, 15]"
       ></el-pagination>
+       </div>
     </el-dialog>
-      <!-- 总输赢 -->
+      <!-- 新增活跃下级 -->
     <el-dialog
-      :visible.sync="dialogTotal"
+      :visible.sync="dialogaddactive"
       :destroy-on-close="true"
       width="880px"
       class="rempadding"
     >
       <div class="contentBox">
-        总输赢<span class="disColor">{{ totalNetAmount }}</span>
+        新增活跃下级<span class="disColor">{{ addActiveSubordinates }}人</span>
       </div>
       <el-table
         v-loading="loading"
         size="mini"
         class="small-size-table"
         :data="gameList"
+        :header-cell-style="getRowClass"
+      >
+        <el-table-column prop="playerId" align="center" label="会员账号">
+          <template slot-scope="scope">
+            <Copy v-if="!!scope.row.playerId" :title="scope.row.playerId" :copy="copy">
+              {{ scope.row.playerId }}
+            </Copy>
+          </template>
+        </el-table-column>
+        <el-table-column prop="playerName" align="center" label="姓名"></el-table-column>
+        <el-table-column
+          prop="depositAmount"
+          align="center"
+          label="存款金额"
+        ></el-table-column>
+        <el-table-column
+          prop="validBetAmount"
+          align="center"
+          label="有效投注"
+        ></el-table-column>
+        <el-table-column
+          prop="bindDate"
+          align="center"
+          label="绑定时间"
+        ></el-table-column>
+      </el-table>
+      <div slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="dialogaddactive = false">关闭</el-button>
+      </div>
+      <!-- 分页 -->
+       <div slot="footer" class="dialog-footer">
+      <el-pagination
+        :current-page.sync="page"
+        background
+        class="fenye"
+        layout="total, sizes,prev, pager, next, jumper"
+        :page-size="size"
+        :page-sizes="[5, 10, 15]"
+      ></el-pagination>
+       </div>
+    </el-dialog>
+      <!-- 总输赢 -->
+    <el-dialog
+      :visible.sync="diawinOrLoseList"
+      :destroy-on-close="true"
+      width="880px"
+      class="rempadding"
+    >
+      <div class="contentBox">
+        总输赢<span class="disColor">{{ totalNetAmount }}元</span>
+      </div>
+      <el-table
+        v-loading="loading"
+        size="mini"
+        class="small-size-table"
+        :data="winOrLoseList"
         :header-cell-style="getRowClass"
       >
         <el-table-column prop="playerId" align="center" label="场馆">
@@ -461,9 +514,10 @@
         ></el-table-column>
       </el-table>
       <div slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="dialogTotal = false">关闭</el-button>
+          <el-button type="primary" @click="diawinOrLoseList = false">关闭</el-button>
         </div>
       <!-- 分页 -->
+       <div slot="footer" class="dialog-footer">
       <el-pagination
         :current-page.sync="page"
         background
@@ -472,6 +526,7 @@
         :page-size="size"
         :page-sizes="[5, 10, 15]"
       ></el-pagination>
+      </div>
     </el-dialog>
       <!-- 场馆费-->
     <el-dialog
@@ -481,7 +536,7 @@
       class="rempadding"
     >
       <div class="contentBox">
-        总输赢<span class="disColor">{{ totalPlatformAmount }}</span>
+        总输赢<span class="disColor">{{ totalPlatformAmount }}元</span>
       </div>
       <el-table
         v-loading="loading"
@@ -504,6 +559,7 @@
           <el-button type="primary" @click="dialogVenuefee = false">关闭</el-button>
         </div>
       <!-- 分页 -->
+      <div slot="footer" class="dialog-footer">
       <el-pagination
         :current-page.sync="page"
         background
@@ -512,6 +568,91 @@
         :page-size="size"
         :page-sizes="[5, 10, 15]"
       ></el-pagination>
+       </div>
+    </el-dialog>
+     <!-- 总优惠-->
+    <el-dialog
+      :visible.sync="dialogDiscount"
+      :destroy-on-close="true"
+      width="880px"
+      class="rempadding"
+    >
+      <div class="contentBox">
+        活动优惠<span class="disColor">{{ totalActivityAmount }}元</span>
+      </div>
+      <el-table
+        v-loading="loading"
+        size="mini"
+        class="small-size-table"
+        :data="discountList"
+        :header-cell-style="getRowClass"
+      >
+        <el-table-column prop="provideName" align="center" label="优惠类型">
+        </el-table-column>
+        <el-table-column prop="userCount" align="center" label="人数">
+        </el-table-column>
+        <el-table-column
+          prop="amount"
+          align="center"
+          label="金额"
+        ></el-table-column>
+      </el-table>
+      <div slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="dialogDiscount = false">关闭</el-button>
+        </div>
+      <!-- 分页 -->
+       <div slot="footer" class="dialog-footer">
+      <el-pagination
+        :current-page.sync="page"
+        background
+        class="fenye"
+        layout="total, sizes,prev, pager, next, jumper"
+        :page-size="size"
+        :page-sizes="[5, 10, 15]"
+      ></el-pagination>
+       </div>
+    </el-dialog>
+      <!-- 总返水-->
+    <el-dialog
+      :visible.sync="dialogBackwater"
+      :destroy-on-close="true"
+      width="880px"
+      class="rempadding"
+    >
+      <div class="contentBox">
+        返水<span class="disColor">{{ commissionAmount }}元</span>
+      </div>
+      <el-table
+        v-loading="loading"
+        size="mini"
+        class="small-size-table"
+        :data="backwaterList"
+        :header-cell-style="getRowClass"
+      >
+        <el-table-column prop="provideName" align="center" label="返水项目">
+        </el-table-column>
+        <el-table-column prop="userCount" align="center" label="人数">
+        </el-table-column>
+        <el-table-column
+          prop="rebateAmount"
+          align="center"
+          label="金额"
+        ></el-table-column>
+      </el-table>
+      <div slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="dialogBackwater = false">关闭</el-button>
+        </div>
+      <!-- 分页 -->
+       <div slot="footer" class="dialog-footer">
+      <el-pagination
+        :current-page.sync="page"
+        background
+        class="fenye"
+        layout="total, sizes,prev, pager, next, jumper"
+        :page-size="size"
+        :page-sizes="[5, 10, 15]"
+      ></el-pagination>
+       </div>
     </el-dialog>
   </div>
 </template>
@@ -536,18 +677,34 @@ export default {
         remark: ''
       },
       userLabel: [],
+      addactiveList: [],
+      winOrLoseList: [],
+      discountList: [],
+      backwaterList: [],
+      gameList: [],
       accountsVo: {},
       commissionRecordVo: {},
       proxyRiskControlLevelVo: {},
       proxyCommissionDetaiVoList: {},
       dialogVisible: false,
+      diawinOrLoseList: false,
       dialogTotal: false,
       dialogVenuefee: false,
+      dialogaddactive: false,
+      dialogDiscount: false,
       createPage: false,
+      dialogBackwater: false,
       activeSubordinate: '',
       totalPlatformAmount: '',
+      totalActivityAmount: '',
+      commissionAmount: '',
+      addActiveSubordinates: '',
       totalNetAmount: '',
       registerVo: {},
+      reportMonth: '',
+      proxyId: '',
+      page: 1,
+      size: 5,
       visible: false,
       action: false
     }
@@ -565,13 +722,16 @@ export default {
       const params = {
         id: this.rowData.id,
         proxyAccount: this.rowData.proxyAccount,
+        proxyId: this.rowData.proxyId,
         userId: this.rowData.proxyId
       }
+
       this.$api.proxyCommissionRecordQueryDetail(params).then((res) => {
         if (res.code === 200) {
           const response = res.data
           this.loading = false
-          console.log('respon')
+          this.reportMonth = response.commissionRecordVo.reportDate
+           console.log(this.reportMonth, '小明')
           this.accountsVo = response.accountsVo
           this.commissionRecordVo = response.commissionRecordVo
           this.proxyRiskControlLevelVo = response.proxyRiskControlLevelVo
@@ -579,7 +739,11 @@ export default {
           this.activeSubordinate = response.commissionRecordVo.activeSubordinate
           this.totalNetAmount = response.commissionRecordVo.totalNetAmount
           this.totalPlatformAmount = response.commissionRecordVo.totalPlatformAmount
+          this.totalActivityAmount = response.commissionRecordVo.totalActivityAmount
+          this.commissionAmount = response.commissionRecordVo.commissionAmount
+          this.addActiveSubordinates = response.commissionRecordVo.addActiveSubordinates
 
+          console.log(response, '111123')
           this.registerVo = response.registerVo
         } else {
           this.loading = false
@@ -592,11 +756,35 @@ export default {
     },
     // 活跃下级
     active() {
+      const params = {
+        ...this.gameList
+      }
+      params.reportMonth = this.reportMonth
+      params.pageNum = this.page
+      params.proxyId = this.rowData.proxyId
+      params.pageSize = this.size
       this.dialogVisible = true
-      this.$api.ProxyCommissionRecordSubordinate().then((res) => {
-        console.log(res, '11111')
+      this.$api.ProxyCommissionRecordSubordinate(params).then((res) => {
+         console.log(params, '11111')
         if (res.code === 200) {
           this.gameList = res.data.record
+        }
+      })
+    },
+    // 新增活跃下级
+    addactive() {
+     const params = {
+        ...this.addactiveList
+      }
+      params.reportMonth = this.reportMonth
+      params.pageNum = this.page
+      params.proxyId = this.rowData.proxyId
+      params.pageSize = this.size
+      this.dialogaddactive = true
+      this.$api.ProxyCommissionRecordAddsSubordinate(params).then((res) => {
+         console.log(params, '11111')
+        if (res.code === 200) {
+          this.addactiveList = res.data.record
         }
       })
     },
@@ -606,11 +794,58 @@ export default {
     },
     // 总输赢
     totalNet() {
-       this.dialogTotal = true
+       const params = {
+        ...this.winOrLoseList
+      }
+      params.reportMonth = this.reportMonth
+      params.pageNum = this.page
+      params.proxyId = this.rowData.proxyId
+      params.pageSize = this.size
+       this.diawinOrLoseList = true
+       this.$api.ProxyCommissionRecordTotalWinOrLose(params).then((res) => {
+         console.log(params, '11111')
+        if (res.code === 200) {
+          this.winOrLoseList = res.data.record
+        }
+      })
     },
      // 场馆费
     VenuefeeNet() {
        this.dialogVenuefee = true
+    },
+    // 总优惠
+    totalDiscount() {
+      const params = {
+        ...this.discountList
+      }
+      params.reportMonth = this.reportMonth
+      params.pageNum = this.page
+      params.proxyId = this.rowData.proxyId
+      params.pageSize = this.size
+      this.dialogDiscount = true
+      this.$api.ProxyCommissionRecordTotalDiscount(params).then((res) => {
+         console.log(params, '11111')
+        if (res.code === 200) {
+          this.discountList = res.data.record
+        }
+      })
+    },
+    // 总返水
+    totalBackwater() {
+      const params = {
+        ...this.backwaterList
+      }
+      params.reportMonth = this.reportMonth
+      params.pageNum = this.page
+      params.proxyId = this.rowData.proxyId
+      params.pageSize = this.size
+      this.$api.ProxyCommissionRecordTotalRebate(params).then((res) => {
+         console.log(params, '11111')
+        if (res.code === 200) {
+          this.backwaterList = res.data.record
+          this.dialogBackwater = true
+        }
+      })
     }
   }
 }
