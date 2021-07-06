@@ -385,7 +385,17 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="transforNum" align="center" label="转代次数">
+					<el-table-column prop="transforNum" align="center" label="转代次数" width="180">
+                        <template slot="header" slot-scope="scope">
+                            <el-popover placement="top-start" title="提示" width="280" trigger="hover">
+                                <div v-if="!scope.row">
+                                    <p>会员转代理的次数信息，每次转代成功数字+1，初始数字为0 </p>
+                                </div>
+                                <div slot="reference" class="el-icon-question">
+                                    <span class="other-class">转代次数</span>
+                                </div>
+                            </el-popover>
+                        </template>
 						<template slot-scope="scope">
 							<span
 								v-if="
