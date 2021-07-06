@@ -14,7 +14,7 @@
               start-placeholder="开始日期"
               end-placeholder="结束日期"
               align="right"
-              clearable
+              :clearable="false"
               :default-time="defaultTime"
               style="width: 375px"
             ></el-date-picker>
@@ -486,14 +486,22 @@ export default {
       this.loadData()
     },
     _changeTableSort({ column, prop, order }) {
-      if (prop === 'vipIdName') {
-        prop = 1
-      }
-      if (prop === 'amount') {
-        prop = 2
-      }
-      if (prop === 'occurDt') {
-        prop = 3
+      switch (prop) {
+        case 'vipIdName':
+          prop = 1
+          break
+        case 'changeBefore':
+          prop = 2
+          break
+        case 'amount':
+          prop = 3
+          break
+        case 'changeAfter':
+          prop = 4
+          break
+        case 'occurDt':
+          prop = 5
+          break
       }
       this.pageNum = 1
       this.queryData.orderKey = prop
@@ -658,11 +666,29 @@ export default {
           )
           sums[index] = el
           return
+        } else if (index === 10 && this.summary !== null) {
+          const el = (
+            <div class='count_row'>
+              <p>{this.summary.subChangeBefore}</p>
+              <p>{this.summary.totalChangeBefore}</p>
+            </div>
+          )
+          sums[index] = el
+          return
         } else if (index === 11 && this.summary !== null) {
           const el = (
             <div class='count_row'>
-              <p>{this.summary.subtotal}</p>
-              <p>{this.summary.total}</p>
+              <p>{this.summary.subChange}</p>
+              <p>{this.summary.totalChange}</p>
+            </div>
+          )
+          sums[index] = el
+          return
+        } else if (index === 12 && this.summary !== null) {
+          const el = (
+            <div class='count_row'>
+              <p>{this.summary.subChangeAfter}</p>
+              <p>{this.summary.totalChangeAfter}</p>
             </div>
           )
           sums[index] = el
