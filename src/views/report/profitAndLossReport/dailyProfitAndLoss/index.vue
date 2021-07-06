@@ -6,16 +6,12 @@
           <el-form-item label="日期:">
             <el-date-picker
               v-model="searchTime"
-              size="medium"
-              :picker-options="pickerOptions"
-              format="yyyy-MM-dd"
               type="daterange"
               range-separator="-"
+              :clearable="false"
               start-placeholder="开始日期"
               end-placeholder="结束日期"
-              align="right"
-              clearable
-              style="width: 240px"
+              :picker-options="timeControl"
             ></el-date-picker>
           </el-form-item>
 
@@ -72,8 +68,18 @@
           :header-cell-style="getRowClass"
           @sort-change="_changeTableSort"
         >
-          <el-table-column prop="gameName" align="center" label="日期"></el-table-column>
-          <el-table-column prop="gameRebateRate" align="center" label="总优惠">
+          <el-table-column
+            v-if="settingList['日期']"
+            prop="staticsDate"
+            align="center"
+            label="日期"
+          ></el-table-column>
+          <el-table-column
+            v-if="settingList['总优惠']"
+            prop="discountAmount"
+            align="center"
+            label="总优惠"
+          >
             <template slot="header">
               <span>总优惠</span>
               <el-tooltip class="item" effect="dark">
@@ -88,7 +94,12 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column prop="gameRebateRate" align="center" label="总返水">
+          <el-table-column
+            v-if="settingList['总返水']"
+            prop="rebateAmount"
+            align="center"
+            label="总返水"
+          >
             <template slot="header">
               <span>总返水</span>
               <el-tooltip class="item" effect="dark">
@@ -101,7 +112,12 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column prop="gameRebateRate" align="center" label="其他调整">
+          <el-table-column
+            v-if="settingList['其他调整']"
+            prop="artificialPatchAmount"
+            align="center"
+            label="其他调整"
+          >
             <template slot="header">
               <span>其他调整</span>
               <el-tooltip class="item" effect="dark">
@@ -118,26 +134,28 @@
           </el-table-column>
           <el-table-column
             v-if="settingList['投注人数']"
-            prop="gameRebateRate"
+            prop="memberCount"
             align="center"
             label="投注人数"
           ></el-table-column>
           <el-table-column
-            prop="gameRebateRate"
+            prop="betCount"
             align="center"
             label="投注量"
           ></el-table-column>
           <el-table-column
-            prop="gameRebateRate"
+            v-if="settingList['投注金额']"
+            prop="betAmount"
             align="center"
             label="投注金额"
           ></el-table-column>
           <el-table-column
-            prop="gameRebateRate"
+            v-if="settingList['有效投注']"
+            prop="validBetAmount"
             align="center"
             label="有效投注 "
           ></el-table-column>
-          <el-table-column prop="gameRebateRate" align="center" label="投注盈亏">
+          <el-table-column prop="netAmount" align="center" label="投注盈亏">
             <template slot="header">
               <span>投注盈亏</span>
               <el-tooltip class="item" effect="dark">
@@ -149,8 +167,24 @@
                 </div>
               </el-tooltip>
             </template>
+            <template slot-scope="scope">
+              <span
+                v-if="!!scope.row.netAmount && scope.row.netAmount > 0"
+                class="enableColor"
+              >
+                {{ scope.row.netAmount }}
+              </span>
+              <span
+                v-else-if="!!scope.row.netAmount && scope.row.netAmount < 0"
+                class="redColor"
+              >
+                {{ scope.row.netAmount }}
+              </span>
+              <span v-else-if="!!scope.row.netAmount && scope.row.netAmount === 0"></span>
+              <span v-else>-</span>
+            </template>
           </el-table-column>
-          <el-table-column prop="gameRebateRate" align="center" label="净盈亏">
+          <el-table-column prop="net" align="center" label="净盈亏">
             <template slot="header">
               <span>净盈亏</span>
               <el-tooltip class="item" effect="dark">
@@ -158,8 +192,17 @@
                 <div slot="content">净盈亏：投注盈亏+总优惠+总返水+其他调整</div>
               </el-tooltip>
             </template>
+            <template slot-scope="scope">
+              <span v-if="!!scope.row.net && scope.row.net > 0" class="enableColor">
+                {{ scope.row.net }}
+              </span>
+              <span v-else-if="!!scope.row.net && scope.row.net < 0" class="redColor">
+                {{ scope.row.net }}
+              </span>
+              <span v-else-if="!!scope.row.net && scope.row.net === 0"></span>
+              <span v-else>-</span>
+            </template>
           </el-table-column>
-
         </el-table>
         <!-- 分页 -->
         <el-pagination
@@ -178,10 +221,10 @@
         title="列设置"
         center
         :visible.sync="visible"
-        width="610px"
+        width="300px"
         class="col-setting"
       >
-        <el-button type="primary" @click="setAll">复原缺省</el-button>
+        <el-link type="primary" @click="setAll">复原缺省</el-link>
         <div v-for="(value, name) in settingList" :key="name" class="setting-div">
           <el-checkbox v-model="newList[name]">{{ name }}</el-checkbox>
         </div>
@@ -207,6 +250,27 @@ export default {
     return {
       queryData: {},
       searchTime: [startTime, endTime],
+      timeControl: {
+        onPick: ({ maxDate, minDate }) => {
+          this.choiceDate = minDate.getTime()
+          if (maxDate) {
+            this.choiceDate = ''
+          }
+        },
+        disabledDate: (time) => {
+          const self = this
+          if (self.choiceDate) {
+            const startDay = self.choiceDate
+            let endDay = startDay + 24 * 3600 * 1000 * 31
+            if (endDay > Date.now() - 8.64e6) {
+              endDay = Date.now() - 8.64e6
+            }
+            return time.getTime() < startDay || time.getTime() > endDay
+          } else {
+            return time.getTime() > Date.now() - 8.64e6
+          }
+        }
+      },
       queryText: '查询',
       tableData: [],
       dataList: {},
@@ -214,20 +278,25 @@ export default {
       gameList: [],
       page: 1,
       size: 10,
-      summary: 0,
+      summary: {},
       visible: false,
       tableVisible: false,
       settingList: {
-        项目: true,
-        投注人数: true
+        日期: true,
+        总优惠: true,
+        总返水: true,
+        其他调整: true,
+        投注人数: true,
+        投注金额: true,
+        有效投注: true
       },
       newList: []
     }
   },
   computed: {},
   mounted() {
-    if (localStorage.getItem('venueProfitAndLoss')) {
-      this.settingList = JSON.parse(localStorage.getItem('venueProfitAndLoss'))
+    if (localStorage.getItem('dailyProfitAndLoss')) {
+      this.settingList = JSON.parse(localStorage.getItem('dailyProfitAndLoss'))
     }
   },
 
@@ -238,18 +307,30 @@ export default {
       const [startTime, endTime] = create
       let params = {
         ...this.queryData,
-        createAtStart: startTime ? dayjs(startTime).format('YYYY-MM-DD') : '',
-        createAtEnd: endTime ? dayjs(endTime).format('YYYY-MM-DD') : ''
+        startTime: startTime ? dayjs(startTime).format('YYYY-MM-DD') : '',
+        endTime: endTime ? dayjs(endTime).format('YYYY-MM-DD') : ''
       }
       params = {
         ...this.getParams(params)
       }
       this.$api
-        .gameList(params)
+        .getReportDaynetamountList(params)
         .then((res) => {
           if (res.code === 200) {
             this.tableData = res.data.record
             this.total = res.data.totalRecord
+            console.log(res)
+          }
+          this.loading = false
+        })
+        .catch(() => {
+          this.loading = false
+        })
+      this.$api
+        .getReportDaynetamountAggregation(params)
+        .then((res) => {
+          if (res.code === 200) {
+            this.summary = res.data
           }
           this.loading = false
         })
@@ -276,22 +357,188 @@ export default {
       this.loadData()
     },
 
+    // 列设置
+    openSetting() {
+      this.visible = true
+      this.newList = JSON.parse(JSON.stringify(this.settingList))
+    },
+    confirm() {
+      localStorage.setItem('dailyProfitAndLoss', JSON.stringify(this.newList))
+      this.settingList = this.newList
+      this.visible = false
+    },
+    setAll() {
+      Object.keys(this.newList).forEach((item) => {
+        this.newList[item] = true
+      })
+    },
+    getSummaries(param) {
+      const { columns, data } = param
+      const sums = []
+      columns.forEach((column, index) => {
+        if (index === 0) {
+          const el = (
+            <div class='count_row'>
+              <p>本页合计</p>
+              <p>全部合计</p>
+            </div>
+          )
+          sums[index] = el
+          return
+        } else {
+          const values = data.map((item) => Number(item[column.property]))
+          if (!values.every((value) => isNaN(value))) {
+            sums[index] = values.reduce((prev, curr) => {
+              const value = Number(curr)
+              if (!isNaN(value)) {
+                return prev + curr
+              } else {
+                return prev
+              }
+            }, 0)
+            const num = sums[index]
+            switch (index) {
+              case 1:
+                sums[index] = (
+                  <div class='count_row'>
+                    <p>{num.toFixed(2)}</p>
+                    <p>{this.summary.discountAmount}</p>
+                  </div>
+                )
+                break
+              case 2:
+                sums[index] = (
+                  <div class='count_row'>
+                    <p>{num.toFixed(2)}</p>
+                    <p>{this.summary.rebateAmount}</p>
+                  </div>
+                )
+                break
+              case 3:
+                sums[index] = (
+                  <div class='count_row'>
+                    <p>{num.toFixed(2)}</p>
+                    <p>{this.summary.artificialPatchAmount}</p>
+                  </div>
+                )
+                break
+              case 4:
+                sums[index] = (
+                  <div class='count_row'>
+                    <p>{num.toFixed(2)}</p>
+                    <p>{this.summary.memberCount}</p>
+                  </div>
+                )
+                break
+              case 5:
+                sums[index] = (
+                  <div class='count_row'>
+                    <p>{num.toFixed(2)}</p>
+                    <p>{this.summary.betCount}</p>
+                  </div>
+                )
+                break
+              case 6:
+                sums[index] = (
+                  <div class='count_row'>
+                    <p>{num.toFixed(2)}</p>
+                    <p>{this.summary.betAmount}</p>
+                  </div>
+                )
+
+                break
+              case 7:
+                sums[index] = (
+                  <div class='count_row'>
+                    <p>{num.toFixed(2)}</p>
+                    <p>{this.summary.validBetAmount}</p>
+                  </div>
+                )
+                break
+              case 8:
+                sums[index] = (
+                  <div class='count_row'>
+                    {num > 0 ? (
+                      <p class='enableColor'>{num.toFixed(2)}</p>
+                    ) : (
+                      <p class='redColor'>{num.toFixed(2)}</p>
+                    )}
+                    {this.summary.netAmount > 0 ? (
+                      <p class='enableColor'>{this.summary.netAmount}</p>
+                    ) : (
+                      <p class='redColor'>{this.summary.netAmount}</p>
+                    )}
+                  </div>
+                )
+                break
+              case 9:
+                sums[index] = (
+                  <div class='count_row'>
+                    {num > 0 ? (
+                      <p class='enableColor'>{num.toFixed(2)}</p>
+                    ) : (
+                      <p class='redColor'>{num.toFixed(2)}</p>
+                    )}
+                    {this.summary.net > 0 ? (
+                      <p class='enableColor'>{this.summary.net}</p>
+                    ) : (
+                      <p class='redColor'>{this.summary.net}</p>
+                    )}
+                  </div>
+                )
+                break
+            }
+          } else {
+            sums[index] = ''
+          }
+        }
+      })
+
+      return sums
+    },
+    _changeTableSort({ column, prop, order }) {
+      switch (prop) {
+        case 'memberCount':
+          prop = 1
+          break
+        case 'betCount':
+          prop = 2
+          break
+        case 'betAmount':
+          prop = 3
+          break
+        case 'validBetAmount':
+          prop = 4
+          break
+        case 'netAmount':
+          prop = 5
+          break
+      }
+      this.queryData.orderKey = prop
+      if (order === 'ascending') {
+        // 升序
+        this.queryData.orderType = 'asc'
+      } else if (column.order === 'descending') {
+        // 降序
+        this.queryData.orderType = 'desc'
+      } else {
+        delete this.queryData.orderKey
+        delete this.queryData.orderType
+      }
+      this.loadData()
+    },
     exportExcel() {
+      this.loading = true
       const create = this.searchTime || []
       const [startTime, endTime] = create
       let params = {
         ...this.queryData,
-        createAtStart: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : '',
-        createAtEnd: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
+        startTime: startTime ? dayjs(startTime).format('YYYY-MM-DD') : '',
+        endTime: endTime ? dayjs(endTime).format('YYYY-MM-DD') : ''
       }
       params = {
         ...this.getParams(params)
       }
-      delete params.registerTime
-      delete params.lastLoginTime
-      delete params.firstSaveTime
-      delete params.accountStatus
-      delete params.deviceType
       this.$confirm(
         `<strong>是否导出?</strong></br><span style='font-size:12px;color:#c1c1c1'>数据过大时，请耐心等待</span>`,
         '确认提示',
@@ -367,131 +614,12 @@ export default {
             })
         })
         .catch(() => {})
-    },
-    _changeTableSort({ column, prop, order }) {
-      if (prop === 'betAmount') {
-        prop = 1
-      }
-      if (prop === 'netAmount') {
-        prop = 2
-      }
-      if (prop === 'createAt') {
-        prop = 3
-      }
-      if (prop === 'netAt') {
-        prop = 4
-      }
-      this.queryData.orderKey = prop
-      if (order === 'ascending') {
-        // 升序
-        this.queryData.orderType = 'asc'
-      } else if (column.order === 'descending') {
-        // 降序
-        this.queryData.orderType = 'desc'
-      }
-      this.loadData()
-    },
-    handleCurrentChangeDialog(val) {
-      console.log(111, val)
-      this.page = val
-      // this.getMemberMemberInfoByLabelId(this.id)
-    },
-    handleSizeChangeDialog(val) {
-      console.log(222, val)
-      this.size = val
-      // this.getMemberMemberInfoByLabelId(this.id)
-    },
-    // 列设置
-    openSetting() {
-      this.visible = true
-      this.newList = JSON.parse(JSON.stringify(this.settingList))
-    },
-    confirm() {
-      localStorage.setItem('venueProfitAndLoss', JSON.stringify(this.newList))
-      this.settingList = this.newList
-      this.visible = false
-    },
-    setAll() {
-      Object.keys(this.newList).forEach((item) => {
-        this.newList[item] = true
-      })
-    },
-     getSummaries(param) {
-      const { columns, data } = param
-      const sums = []
-      columns.forEach((column, index) => {
-        if (index === 0) {
-          const el = (
-            <div class='count_row'>
-              <p>本页合计</p>
-              <p>全部合计</p>
-            </div>
-          )
-          sums[index] = el
-          return
-        }
-        const values = data.map((item) => Number(item[column.property]))
-        if (!values.every((value) => isNaN(value))) {
-          sums[index] = values.reduce((prev, curr) => {
-            const value = Number(curr)
-            if (!isNaN(value)) {
-              return prev + curr
-            } else {
-              return prev
-            }
-          }, 0)
-          sums[index] = (
-            <div class='count_row'>
-              <p>{sums[index]}</p>
-              <p>2000</p>
-            </div>
-          )
-        } else {
-          sums[index] = ''
-        }
-      })
-
-      return sums
     }
-
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.count_row {
-  height: 80px;
-  p {
-    height: 40px;
-    line-height: 40px;
-    span {
-      display: inline-block;
-      width: 20px;
-      height: 20px;
-    }
-  }
-}
-.sum_footer {
-  display: flex;
-  display: -webkit-flex;
-  justify-content: space-around;
-  line-height: 45px;
-  background: #f5f7fa;
-  text-align: center;
-  width: 100%;
-  font-size: 14px;
-  // flex-direction: row;
-  color: #5c5c5c;
-  font-weight: 700;
-  border-bottom: 1px solid #ebeef5;
-  border-left: 1px solid #ebeef5;
-}
-.sum_footer_unit {
-  flex-grow: 1;
-  -webkit-flex-grow: 1;
-  box-sizing: border-box;
-  border-right: 1px solid #ebeef5;
-}
 /deep/.el-dialog__header {
   color: #5c5c5c;
   font-weight: 700;
@@ -499,7 +627,37 @@ export default {
 .params {
   padding-bottom: 15px;
 }
+/deep/ .el-table__footer-wrapper .cell::after {
+  border: 1px solid #ebeef5;
+  content: "";
+  position: absolute;
+  top: 41px;
+  left: 0;
+  width: 100%;
+}
 
+/deep/ .el-table__fixed-footer-wrapper tr::after {
+  border: 1px solid #ebeef5;
+  content: "";
+  position: absolute;
+  top: 41px;
+  left: 0;
+  width: 100%;
+}
+.count_row {
+  height: 80px;
+  color: #5c5c5c;
+  p {
+    height: 40px;
+    line-height: 40px;
+    font-weight: 700;
+    span {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+    }
+  }
+}
 .fenye {
   text-align: center;
 }

@@ -1,1074 +1,1195 @@
 <template>
-	<div class="game-container report-container">
-		<div class="view-container dealer-container">
-			<div class="params">
-				<el-form
-					ref="form"
-					:inline="true"
-					:model="queryData"
-				>
-					<el-form-item label="时间:" prop="registerTime">
-						<el-date-picker
-							v-model="queryData.registerTime"
-							size="medium"
-							:picker-options="pickerOptions"
-							format="yyyy-MM-dd HH:mm:ss"
-							type="datetimerange"
-							range-separator="-"
-							start-placeholder="开始日期"
-							end-placeholder="结束日期"
-							align="right"
-							:clearable="true"
-							value-format="timestamp"
-							style="width: 388px"
-							:default-time="defaultTime"
-						></el-date-picker>
-					</el-form-item>
-					<el-form-item label="会员账号:" prop="userName">
-						<el-input
-							v-model="queryData.userName"
-							size="medium"
-							placeholder="请输入"
-							clearable
-							style="width: 180px"
-							maxlength="11"
-						></el-input>
-					</el-form-item>
-					<el-form-item label="姓名:" prop="realName">
-						<el-input
-							v-model="queryData.realName"
-							size="medium"
-							placeholder="请输入"
-							clearable
-							style="width: 180px"
-							maxlength="6"
-						></el-input>
-					</el-form-item>
-					<el-form-item label="上级代理:" prop="realName">
-						<el-input
-							v-model="queryData.realName"
-							size="medium"
-							placeholder="请输入"
-							clearable
-							style="width: 180px"
-							maxlength="11"
-						></el-input>
-					</el-form-item>
-					<el-form-item label="账号类型:">
-						<el-select
-							v-model="queryData.accountType"
-							size="medium"
-							placeholder="默认选择全部"
-							clearable
-							multiple
-							style="width: 300px"
-						>
-							<el-option
-								v-for="item in accountTypeArr"
-								:key="item.code"
-								:label="item.description"
-								:value="item.code"
-							></el-option>
-						</el-select>
-					</el-form-item>
-					<el-form-item label="账号状态:">
-						<el-select
-							v-model="queryData.accountStatus"
-							size="medium"
-							placeholder="默认选择全部"
-							clearable
-							multiple
-							style="width: 300px"
-						>
-							<el-option
-								v-for="item in accountStatusArr"
-								:key="item.code"
-								:label="item.description"
-								:value="item.code"
-							></el-option>
-						</el-select>
-					</el-form-item>
-					<el-form-item label="风控层级:">
-						<el-select
-							v-model="queryData.windControlId"
-							size="medium"
-							placeholder="全部"
-							clearable
-							style="width: 180px"
-						>
-							<el-option
-								v-for="item in vipDict"
-								:key="item.windControlId"
-								:label="item.windControlName"
-								:value="item.windControlId"
-							></el-option>
-						</el-select>
-					</el-form-item>
-					<el-form-item label="会员标签:">
-						<el-select
-							v-model="queryData.labelId"
-							size="medium"
-							placeholder="全部"
-							clearable
-							style="width: 180px"
-						>
-							<el-option
-								v-for="item in userLabel"
-								:key="item.labelId"
-								:label="item.labelName"
-								:value="item.labelId"
-							></el-option>
-						</el-select>
-					</el-form-item>
-					<el-form-item label="VIP等级:">
-						<el-input
-							v-model="queryData.vipSerialNumMin"
-							size="medium"
-							placeholder="最小数值"
-							style="width: 100px"
-							maxlength="3"
-							name="vipSerialNumMin"
-							oninput="value=value.replace(/[^\d]/g,'')"
-							@blur="checkValue($event)"
-						></el-input>
-						-
-						<el-input
-							v-model="queryData.vipSerialNumMax"
-							size="medium"
-							placeholder="最大数值"
-							style="width: 100px"
-							maxlength="3"
-							oninput="value=value.replace(/[^\d]/g,'')"
-							name="vipSerialNumMax"
-							@blur="checkValue($event)"
-						></el-input>
-					</el-form-item>
-					<el-form-item label="注单量:">
-						<el-input
-							v-model="queryData.vipSerialNumMin"
-							size="medium"
-							placeholder="最小数值"
-							style="width: 100px"
-							maxlength="3"
-							name="vipSerialNumMin"
-							oninput="value=value.replace(/[^\d]/g,'')"
-							@blur="checkValue($event)"
-						></el-input>
-						-
-						<el-input
-							v-model="queryData.vipSerialNumMax"
-							size="medium"
-							placeholder="最大数值"
-							style="width: 100px"
-							maxlength="3"
-							oninput="value=value.replace(/[^\d]/g,'')"
-							name="vipSerialNumMax"
-							@blur="checkValue($event)"
-						></el-input>
-					</el-form-item>
-					<el-form-item label="投注金额:">
-						<el-input
-							v-model="queryData.vipSerialNumMin"
-							size="medium"
-							placeholder="最小数值"
-							style="width: 100px"
-							maxlength="3"
-							name="vipSerialNumMin"
-							oninput="value=value.replace(/[^\d]/g,'')"
-							@blur="checkValue($event)"
-						></el-input>
-						-
-						<el-input
-							v-model="queryData.vipSerialNumMax"
-							size="medium"
-							placeholder="最大数值"
-							style="width: 100px"
-							maxlength="3"
-							oninput="value=value.replace(/[^\d]/g,'')"
-							name="vipSerialNumMax"
-							@blur="checkValue($event)"
-						></el-input>
-					</el-form-item>
-					<el-form-item>
-						<el-button
-							type="primary"
-							icon="el-icon-search"
-							:disabled="loading"
-							size="medium"
-							@click="search"
-						>
-							查询
-						</el-button>
-						<el-button
-							icon="el-icon-refresh-left"
-							:disabled="loading"
-							size="medium"
-							@click="reset"
-						>
-							重置
-						</el-button>
-						<el-button
-							type="warning"
-							icon="el-icon-folder-add"
-							size="medium"
-							:disabled="loading"
-							@click="exportExcel"
-						>
-							导出
-						</el-button>
-						<el-button
-							type="success"
-							size="medium"
-							:disabled="loading"
-							@click="openSetting"
-						>
-							列设置
-						</el-button>
-					</el-form-item>
-				</el-form>
-			</div>
+  <div class="game-container report-container">
+    <div class="view-container dealer-container">
+      <div class="params">
+        <el-form ref="form" :inline="true" :model="queryData">
+          <el-form-item label="时间:" prop="registerTime">
+            <el-date-picker
+              v-model="searchTime"
+              type="daterange"
+              range-separator="-"
+              :clearable="false"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+              :picker-options="timeControl"
+            ></el-date-picker>
+          </el-form-item>
+          <el-form-item label="会员账号:" prop="userName">
+            <el-input
+              v-model="queryData.userName"
+              size="medium"
+              placeholder="请输入"
+              clearable
+              style="width: 180px"
+              maxlength="11"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="姓名:" prop="realName">
+            <el-input
+              v-model="queryData.realName"
+              size="medium"
+              placeholder="请输入"
+              clearable
+              style="width: 180px"
+              maxlength="8"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="上级代理:" prop="parentProxyName">
+            <el-input
+              v-model="queryData.parentProxyName"
+              size="medium"
+              placeholder="请输入"
+              clearable
+              style="width: 180px"
+              maxlength="11"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="账号类型:">
+            <el-select
+              v-model="queryData.accountTypeList"
+              size="medium"
+              placeholder="默认选择全部"
+              clearable
+              multiple
+              style="width: 300px"
+            >
+              <el-option
+                v-for="item in accountTypeArr"
+                :key="item.code"
+                :label="item.description"
+                :value="item.code"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="账号状态:">
+            <el-select
+              v-model="queryData.accountStatusList"
+              size="medium"
+              placeholder="默认选择全部"
+              clearable
+              multiple
+              style="width: 300px"
+            >
+              <el-option
+                v-for="item in accountStatusArr"
+                :key="item.code"
+                :label="item.description"
+                :value="item.code"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="风控层级:">
+            <el-select
+              v-model="queryData.windControlId"
+              size="medium"
+              placeholder="全部"
+              clearable
+              style="width: 180px"
+            >
+              <el-option
+                v-for="item in windControlList"
+                :key="item.windControlId"
+                :label="item.windControlName"
+                :value="item.windControlId"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="会员标签:">
+            <el-select
+              v-model="queryData.labelId"
+              size="medium"
+              placeholder="全部"
+              clearable
+              style="width: 180px"
+            >
+              <el-option
+                v-for="item in userLabel"
+                :key="item.labelId"
+                :label="item.labelName"
+                :value="item.labelId"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="VIP等级:">
+            <el-input
+              v-model="queryData.vipSerialNumMin"
+              size="medium"
+              placeholder="最小数值"
+              style="width: 100px"
+              name="vipSerialNumMin"
+              maxlength="3"
+              oninput="value=value.replace(/[^\d]/g,'')"
+              @blur="checkValue($event)"
+            ></el-input>
+            -
+            <el-input
+              v-model="queryData.vipSerialNumMax"
+              size="medium"
+              placeholder="最大数值"
+              style="width: 100px"
+              maxlength="3"
+              oninput="value=value.replace(/[^\d]/g,'')"
+              name="vipSerialNumMax"
+              @blur="checkValue($event)"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="注单量:">
+            <el-input
+              v-model="queryData.betCountMin"
+              size="medium"
+              placeholder="最小数值"
+              style="width: 100px"
+              maxlength="10"
+              name="betCountMin"
+              oninput="value=value.replace(/[^\d]/g,'')"
+              @blur="checkValue($event)"
+            ></el-input>
+            -
+            <el-input
+              v-model="queryData.betCountMax"
+              size="medium"
+              placeholder="最大数值"
+              style="width: 100px"
+              maxlength="10"
+              oninput="value=value.replace(/[^\d]/g,'')"
+              name="betCountMax"
+              @blur="checkValue($event)"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="投注金额:">
+            <el-input
+              v-model="queryData.betAmountMin"
+              size="medium"
+              placeholder="最小数值"
+              style="width: 100px"
+              maxlength="15"
+              name="betAmountMin"
+              oninput="value=value.replace(/[^\d]/g,'')"
+              @blur="checkValue($event)"
+            ></el-input>
+            -
+            <el-input
+              v-model="queryData.betAmountMax"
+              size="medium"
+              placeholder="最大数值"
+              style="width: 100px"
+              maxlength="15"
+              oninput="value=value.replace(/[^\d]/g,'')"
+              name="betAmountMax"
+              @blur="checkValue($event)"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="有效投注:">
+            <el-input
+              v-model="queryData.validBetAmountMin"
+              size="medium"
+              placeholder="最小数值"
+              style="width: 100px"
+              maxlength="15"
+              name="validBetAmountMin"
+              oninput="value=value.replace(/[^\d]/g,'')"
+              @blur="checkValue($event)"
+            ></el-input>
+            -
+            <el-input
+              v-model="queryData.validBetAmountMax"
+              size="medium"
+              placeholder="最大数值"
+              style="width: 100px"
+              maxlength="15"
+              oninput="value=value.replace(/[^\d]/g,'')"
+              name="validBetAmountMax"
+              @blur="checkValue($event)"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="投注盈亏:">
+            <el-input
+              v-model="queryData.netAmountMin"
+              size="medium"
+              placeholder="最小数值"
+              style="width: 100px"
+              maxlength="15"
+              name="netAmountMin"
+              oninput="value=value.replace(/[^\d]/g,'')"
+              @blur="checkValue($event)"
+            ></el-input>
+            -
+            <el-input
+              v-model="queryData.netAmountMax"
+              size="medium"
+              placeholder="最大数值"
+              style="width: 100px"
+              maxlength="15"
+              oninput="value=value.replace(/[^\d]/g,'')"
+              name="netAmountMax"
+              @blur="checkValue($event)"
+            ></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button
+              type="primary"
+              icon="el-icon-search"
+              :disabled="queryText !== '查询'"
+              size="medium"
+              @click="search"
+            >
+              {{ queryText }}
+            </el-button>
+            <el-button
+              icon="el-icon-refresh-left"
+              :disabled="loading"
+              size="medium"
+              @click="reset"
+            >
+              重置
+            </el-button>
+            <el-button
+              type="warning"
+              icon="el-icon-folder-add"
+              size="medium"
+              :disabled="loading"
+              @click="exportExcel"
+            >
+              导出
+            </el-button>
+            <el-button
+              type="success"
+              size="medium"
+              :disabled="loading"
+              @click="openSetting"
+            >
+              列设置
+            </el-button>
+          </el-form-item>
+        </el-form>
+      </div>
 
-			<div class="content">
-				<el-table
-					v-loading="loading"
-					border
-					size="mini"
-					class="small-size-table"
-					:data="dataList"
-					style="width: 100%"
-					:header-cell-style="getRowClass"
-					@sort-change="_changeTableSort"
-				>
-					<el-table-column
-						v-if="settingList['会员账号']"
-						prop="userName"
-						align="center"
-						label="会员账号"
-						width="150px"
-					>
-						<template slot-scope="scope">
-							<Copy
-								v-if="!!scope.row.userName"
-								:title="scope.row.userName"
-								:copy="copy"
-							>
-								<el-link
-									class="lightBlueColor"
-									type="primary"
-									@click="dialogData(scope.row)"
-								>
-									{{ scope.row.userName }}
-								</el-link>
-							</Copy>
-							<span v-else>-</span>
-						</template>
-					</el-table-column>
-					<el-table-column
-						v-if="settingList['姓名']"
-						prop="realName"
-						align="center"
-						label="姓名"
-						width="150px"
-					>
-						<template slot-scope="scope">
-							<Copy
-								v-if="!!scope.row.realName"
-								:title="scope.row.realName"
-								:copy="copy"
-							>
-								{{ scope.row.realName }}
-							</Copy>
-							<span v-else>-</span>
-						</template>
-					</el-table-column>
-					<el-table-column prop="accountType" align="center" label="账号类型">
-						<template slot-scope="scope">
-							<span v-if="!!scope.row.accountType">
-								{{ typeFilter(scope.row.accountType, 'accountType') }}
-							</span>
-							<span v-else>-</span>
-						</template>
-					</el-table-column>
-					<el-table-column
-						prop="parentProxyName"
-						align="center"
-						label="上级代理"
-						width="150px"
-					>
-						<template slot-scope="scope">
-							<Copy
-								v-if="!!scope.row.parentProxyName"
-								:title="scope.row.parentProxyName"
-								:copy="copy"
-							>
-								{{ scope.row.parentProxyName }}
-							</Copy>
-							<span v-else>-</span>
-						</template>
-					</el-table-column>
-					<el-table-column
-						prop="vipSerialNum"
-						align="center"
-						label="VIP等级"
-						width="100px"
-						sortable="custom"
-					>
-						<template slot-scope="scope">
-							<span
-								v-if="!!scope.row.vipSerialNum || scope.row.vipSerialNum === 0"
-							>
-								{{ scope.row.vipSerialNum }}
-							</span>
-							<span v-else>-</span>
-						</template>
-					</el-table-column>
-					<el-table-column
-						prop="accountStatus"
-						align="center"
-						label="账号状态"
-						width="100px"
-					>
-						<template slot-scope="scope">
-							<span
-								v-if="
-									!!scope.row.accountStatus && scope.row.accountStatus * 1 === 1
-								"
-								class="normalRgba"
-							>
-								{{ typeFilter(scope.row.accountStatus, 'accountStatusType') }}
-							</span>
-							<span
-								v-else-if="
-									!!scope.row.accountStatus && scope.row.accountStatus * 1 === 2
-								"
-								class="disableRgba"
-							>
-								{{ typeFilter(scope.row.accountStatus, 'accountStatusType') }}
-							</span>
-							<span
-								v-else-if="
-									!!scope.row.accountStatus && scope.row.accountStatus * 1 === 3
-								"
-								class="lockingRgba"
-							>
-								{{ typeFilter(scope.row.accountStatus, 'accountStatusType') }}
-							</span>
-							<span
-								v-else-if="
-									!!scope.row.accountStatus && scope.row.accountStatus * 1 === 4
-								"
-								class="deleteRgba"
-							>
-								{{ typeFilter(scope.row.accountStatus, 'accountStatusType') }}
-							</span>
-							<span v-else>-</span>
-						</template>
-					</el-table-column>
-					<el-table-column prop="labelName" align="center" label="会员标签">
-						<template slot-scope="scope">
-							<span v-if="!!scope.row.labelName">
-								{{ scope.row.labelName }}
-							</span>
-							<span v-else>-</span>
-						</template>
-					</el-table-column>
-
-					<el-table-column
-						prop="windControlName"
-						align="center"
-						label="风控层级"
-					>
-						<template slot-scope="scope">
-							<span v-if="!!scope.row.windControlName">
-								{{ scope.row.windControlName }}
-							</span>
-							<span v-else>-</span>
-						</template>
-					</el-table-column>
-					<el-table-column prop="transforNum" align="center" label="转代次数">
-						<template slot-scope="scope">
-							<span
-								v-if="
-									!!scope.row.transforNum || scope.row.transforNum * 1 === 0
-								"
-							>
-								{{ scope.row.transforNum }}
-							</span>
-							<span v-else>-</span>
-						</template>
-					</el-table-column>
-					<el-table-column
-						prop="firstDepositAmount"
-						align="center"
-						label="注单量"
-						sortable="custom"
-						width="100px"
-					>
-						<template slot-scope="scope">
-							<span
-								v-if="
-									!!scope.row.firstDepositAmount ||
-										scope.row.firstDepositAmount === 0
-								"
-							>
-								{{ scope.row.firstDepositAmount }}
-							</span>
-							<span v-else>-</span>
-						</template>
-					</el-table-column>
-					<el-table-column
-						prop="firstDepositAmount"
-						align="center"
-						label="投注金额"
-						sortable="custom"
-						width="100px"
-					>
-						<template slot-scope="scope">
-							<span
-								v-if="
-									!!scope.row.firstDepositAmount ||
-										scope.row.firstDepositAmount === 0
-								"
-							>
-								{{ scope.row.firstDepositAmount }}
-							</span>
-							<span v-else>-</span>
-						</template>
-					</el-table-column>
-					<el-table-column
-						prop="firstDepositAmount"
-						align="center"
-						label="有效投注"
-						sortable="custom"
-						width="100px"
-					>
-						<template slot-scope="scope">
-							<span
-								v-if="
-									!!scope.row.firstDepositAmount ||
-										scope.row.firstDepositAmount === 0
-								"
-							>
-								{{ scope.row.firstDepositAmount }}
-							</span>
-							<span v-else>-</span>
-						</template>
-					</el-table-column>
-					<el-table-column
-						prop="firstDepositAmount"
-						align="center"
-						label="投注盈亏"
-						sortable="custom"
-						width="150"
-					>
-						<template slot="header" slot-scope="scope">
-							<el-popover
-								placement="top-start"
-								title=""
-								width="280"
-								trigger="hover"
-							>
-								<div v-if="!scope.row">
-									<div>盈亏金额指会员游戏输赢</div>
-									<div>金额：负数代表会员输</div>
-								</div>
-								<div slot="reference" class="el-icon-question">
-									投注盈亏
-								</div>
-							</el-popover>
-						</template>
-						<template slot-scope="scope">
-							<span
-								v-if="
-									!!scope.row.firstDepositAmount ||
-										scope.row.firstDepositAmount === 0
-								"
-							>
-								{{ scope.row.firstDepositAmount }}
-							</span>
-							<span v-else>-</span>
-						</template>
-					</el-table-column>
-				</el-table>
-				<!-- 分页 -->
-				<el-pagination
-					v-show="!!total"
-					class="pageValue"
-					:current-page.sync="pageNum"
-					background
-					layout="total, sizes,prev, pager, next, jumper"
-					:page-size="pageSize"
-					:page-sizes="$store.getters.pageSizes"
-					:total="total"
-					@current-change="handleCurrentChange"
-					@size-change="handleSizeChange"
-				></el-pagination>
-			</div>
-		</div>
-		 <el-dialog :visible.sync="tableVisible" :destroy-on-close="true" class="rempadding">
-        <div slot="title" class="dialog-title">
-          <span class="title-text" style="margin-right: 15px">会员账号:{{ userName }}</span>
-        </div>
+      <div class="content">
         <el-table
           v-loading="loading"
-          size="mini"
           border
+          size="mini"
           class="small-size-table"
-          :data="gameList"
-          style="margin-bottom: 15px"
+          :data="dataList"
+          style="width: 100%"
+          show-summary
+          :summary-method="getSummaries"
           :header-cell-style="getRowClass"
+          @sort-change="_changeTableSort"
         >
-          <el-table-column prop="userName" align="center" label="日期"> </el-table-column>
           <el-table-column
-            prop="accountTypeName"
+            v-if="settingList['会员账号']"
+            prop="userName"
+            align="center"
+            label="会员账号"
+          >
+            <template slot-scope="scope">
+              <el-link
+                class="lightBlueColor"
+                type="primary"
+                @click="dialogData(scope.row)"
+              >
+                {{ scope.row.userName }}
+              </el-link>
+              <i class="el-icon-document-copy" @click="copy(scope.row.userName)" />
+            </template>
+          </el-table-column>
+          <el-table-column
+            v-if="settingList['姓名']"
+            prop="realName"
+            align="center"
+            label="姓名"
+          >
+            <template slot-scope="scope">
+              <Copy v-if="!!scope.row.realName" :title="scope.row.realName" :copy="copy">
+                {{ scope.row.realName }}
+              </Copy>
+              <span v-else>-</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            v-if="settingList['账号类型']"
+            prop="accountType"
+            align="center"
+            label="账号类型"
+          >
+            <template slot-scope="scope">
+              <span v-if="!!scope.row.accountType">
+                {{ typeFilter(scope.row.accountType, "accountType") }}
+              </span>
+              <span v-else>-</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            v-if="settingList['上级代理']"
+            prop="parentProxyName"
+            align="center"
+            label="上级代理"
+          >
+            <template slot-scope="scope">
+              <Copy
+                v-if="!!scope.row.parentProxyName"
+                :title="scope.row.parentProxyName"
+                :copy="copy"
+              >
+                {{ scope.row.parentProxyName }}
+              </Copy>
+              <span v-else>-</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            v-if="settingList['VIP等级']"
+            prop="vipSerialNum"
+            align="center"
+            label="VIP等级"
+          >
+            <template slot-scope="scope">
+              <span v-if="!!scope.row.vipSerialNum || scope.row.vipSerialNum === 0">
+                {{ scope.row.vipSerialNum }}
+              </span>
+              <span v-else>-</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            v-if="settingList['账号状态']"
+            prop="accountStatus"
+            align="center"
+            label="账号状态"
+          >
+            <template slot-scope="scope">
+              <span
+                v-if="!!scope.row.accountStatus && scope.row.accountStatus * 1 === 2"
+                class="yellowColor"
+              >
+                {{ typeFilter(scope.row.accountStatus, "accountStatusType") }}
+              </span>
+              <span
+                v-else-if="!!scope.row.accountStatus && scope.row.accountStatus * 1 === 4"
+                class="disableColor"
+              >
+                {{ typeFilter(scope.row.accountStatus, "accountStatusType") }}
+              </span>
+              <span v-else-if="!!scope.row.accountStatus">
+                {{ typeFilter(scope.row.accountStatus, "accountStatusType") }}
+              </span>
+              <span v-else>-</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            v-if="settingList['会员标签']"
+            prop="labelName"
+            align="center"
+            label="会员标签"
+          >
+            <template slot-scope="scope">
+              <span v-if="!!scope.row.labelName">
+                {{ scope.row.labelName }}
+              </span>
+              <span v-else>-</span>
+            </template>
+          </el-table-column>
+
+          <el-table-column prop="windControlName" align="center" label="风控层级">
+            <template slot-scope="scope">
+              <span v-if="!!scope.row.windControlName">
+                {{ scope.row.windControlName }}
+              </span>
+              <span v-else>-</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            prop="betCount"
             align="center"
             label="注单量"
-          ></el-table-column>
+            sortable="custom"
+          >
+            <template slot-scope="scope">
+              <span v-if="!!scope.row.betCount">
+                {{ scope.row.betCount }}
+              </span>
+              <span v-else>-</span>
+            </template>
+          </el-table-column>
           <el-table-column
-            prop="accountTypeName"
+            prop="betAmount"
             align="center"
             label="投注金额"
-          ></el-table-column>
+            sortable="custom"
+          >
+            <template slot-scope="scope">
+              <span v-if="!!scope.row.betAmount">
+                {{ scope.row.betAmount }}
+              </span>
+              <span v-else>-</span>
+            </template>
+          </el-table-column>
           <el-table-column
-            prop="accountTypeName"
+            prop="validBetAmount"
             align="center"
             label="有效投注"
-          ></el-table-column>
+            sortable="custom"
+          >
+            <template slot-scope="scope">
+              <span v-if="!!scope.row.validBetAmount">
+                {{ scope.row.validBetAmount }}
+              </span>
+              <span v-else>-</span>
+            </template>
+          </el-table-column>
           <el-table-column
-            prop="accountTypeName"
+            prop="netAmount"
             align="center"
             label="投注盈亏"
-          ></el-table-column>
+            sortable="custom"
+          >
+            <template slot="header">
+              <span>投注盈亏</span>
+              <el-tooltip class="item" effect="dark">
+                <i class="el-icon-question" style="position: absolute; right: 10px"></i>
+                <div slot="content">盈亏金额指游戏输赢金额<br />负数表示会员输</div>
+              </el-tooltip>
+            </template>
+            <template slot-scope="scope">
+              <span
+                v-if="!!scope.row.netAmount && scope.row.netAmount > 0"
+                class="enableColor"
+              >
+                {{ scope.row.netAmount }}
+              </span>
+              <span
+                v-else-if="!!scope.row.netAmount && scope.row.netAmount < 0"
+                class="redColor"
+              >
+                {{ scope.row.netAmount }}
+              </span>
+              <span v-else-if="!!scope.row.netAmount && scope.row.netAmount === 0"></span>
+              <span v-else>-</span>
+            </template>
+          </el-table-column>
         </el-table>
         <!-- 分页 -->
         <el-pagination
-          :current-page.sync="page"
+          v-show="!!total"
+          class="pageValue"
+          :current-page.sync="pageNum"
           background
-          class="fenye"
           layout="total, sizes,prev, pager, next, jumper"
-          :page-size="size"
-          :page-sizes="[10, 20, 50]"
-          :total="summary"
-          @current-change="handleCurrentChangeDialog"
-          @size-change="handleSizeChangeDialog"
+          :page-size="pageSize"
+          :page-sizes="$store.getters.pageSizes"
+          :total="total"
+          @current-change="handleCurrentChange"
+          @size-change="handleSizeChange"
         ></el-pagination>
-        <div slot="footer" class="dialog-footer" style="text-align: center">
-          <el-button @click="tableVisible = false">关闭</el-button>
-        </div>
-      </el-dialog>
-		<el-dialog
-			title="列设置"
-			center
-			:visible.sync="visible"
-			width="610px"
-			class="col-setting"
-		>
-			<el-button type="primary" @click="setAll">复原缺省</el-button>
-			<div v-for="(value, name) in settingList" :key="name" class="setting-div">
-				<el-checkbox v-model="newList[name]">{{ name }}</el-checkbox>
-			</div>
-			<div slot="footer" class="dialog-footer">
-				<el-button @click="visible = false">取 消</el-button>
-				<el-button type="primary" @click="confirm">
-					提交
-				</el-button>
-			</div>
-		</el-dialog>
-	</div>
+      </div>
+    </div>
+    <el-dialog :visible.sync="tableVisible" :destroy-on-close="true" class="rempadding">
+      <div slot="title" class="dialog-title">
+        <span class="title-text" style="margin-right: 15px">会员账号:{{ userName }}</span>
+      </div>
+      <el-table
+        v-loading="loading"
+        size="mini"
+        border
+        class="small-size-table"
+        :data="memberDetails"
+        style="margin-bottom: 15px"
+        :header-cell-style="getRowClass"
+      >
+        <el-table-column prop="staticsDate" align="center" label="日期">
+        </el-table-column>
+        <el-table-column prop="betCount" align="center" label="注单量"></el-table-column>
+        <el-table-column
+          prop="betAmount"
+          align="center"
+          label="投注金额"
+        ></el-table-column>
+        <el-table-column
+          prop="validBetAmount"
+          align="center"
+          label="有效投注"
+        ></el-table-column>
+        <el-table-column prop="netAmount" align="center" label="投注盈亏">
+          <template slot-scope="scope">
+            <span
+              v-if="!!scope.row.netAmount && scope.row.netAmount > 0"
+              class="enableColor"
+            >
+              {{ scope.row.netAmount }}
+            </span>
+            <span
+              v-else-if="!!scope.row.netAmount && scope.row.netAmount < 0"
+              class="redColor"
+            >
+              {{ scope.row.netAmount }}
+            </span>
+            <span v-else-if="!!scope.row.netAmount && scope.row.netAmount === 0"></span>
+            <span v-else>-</span>
+          </template>
+        </el-table-column>
+      </el-table>
+      <!-- 分页 -->
+      <el-pagination
+        :current-page.sync="page"
+        background
+        class="fenye"
+        layout="total, sizes,prev, pager, next, jumper"
+        :page-size="size"
+        :page-sizes="[10, 20, 50]"
+        :total="dialogTotal"
+        @current-change="handleCurrentChangeDialog"
+        @size-change="handleSizeChangeDialog"
+      ></el-pagination>
+      <div slot="footer" class="dialog-footer" style="text-align: center">
+        <el-button @click="tableVisible = false">关闭</el-button>
+      </div>
+    </el-dialog>
+    <el-dialog
+      title="列设置"
+      center
+      :visible.sync="visible"
+      width="300px"
+      class="col-setting"
+    >
+      <el-link type="primary" @click="setAll">复原缺省</el-link>
+      <div v-for="(value, name) in settingList" :key="name" class="setting-div">
+        <el-checkbox v-model="newList[name]">{{ name }}</el-checkbox>
+      </div>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="visible = false">取 消</el-button>
+        <el-button type="primary" @click="confirm"> 提交 </el-button>
+      </div>
+    </el-dialog>
+  </div>
 </template>
 
 <script>
 import list from '@/mixins/list'
 import dayjs from 'dayjs'
-// import { mapGetters } from 'vuex'
-// import { UTable } from 'umy-ui'
-import { routerNames } from '@/utils/consts'
-const start = dayjs()
-	.startOf('day')
-	.valueOf()
-const end = dayjs()
-	.endOf('day')
-	.valueOf()
+const startTime = dayjs().startOf('day').valueOf()
+const endTime = dayjs().endOf('day').valueOf()
 
 export default {
-	name: routerNames.memberList,
-	mixins: [list],
-	data() {
-		return {
-			queryData: {
-				registerTime: [start, end],
-				userName: undefined,
-				realName: undefined,
-				accountStatus: [],
-				windControlId: undefined,
-				offLineDaysStart: undefined,
-				offLineDaysEnd: undefined,
-				lastLoginTime: [],
-				vipSerialNumMax: undefined,
-				vipSerialNumMin: undefined,
-				transforNumMin: undefined,
-				transforNumMax: undefined,
-				accountType: [],
-				deviceType: [],
-				firstDepositAmountMin: undefined,
-				firstDepositAmountMax: undefined,
-				firstSaveTime: [],
-				labelId: undefined,
-				parentProxyName: undefined,
-				orderKey: undefined,
-				orderType: undefined
-			},
-			settingList: {
-				会员账号: true,
-				姓名: true
-			},
-			tableVisible: false,
-			newList: [],
-			visible: false,
-			userName: '',
-			dataList: [],
-			total: 0,
-			vipDict: [],
-			userLabel: []
-		}
-	},
-	computed: {
-		// ...mapGetters(['vipDict', 'userLabel']),
-		accountStatusArr() {
-			return this.globalDics.accountStatusType
-		},
-		accountTypeArr() {
-			return this.globalDics.accountType
-		},
-		deviceTypeArr() {
-			return this.globalDics.deviceType
-		}
-	},
-	created() {
-		this.getMemberLabelDict()
-	},
-	mounted() {
-		if (localStorage.getItem('memberProfitAndLoss')) {
-			this.settingList = JSON.parse(localStorage.getItem('memberProfitAndLoss'))
-		}
-		this.getWindControllerLevelDict()
-	},
-	methods: {
-		dialogData(val) {
+  mixins: [list],
+  data() {
+    return {
+      queryData: {},
+      searchTime: [startTime, endTime],
+      timeControl: {
+        onPick: ({ maxDate, minDate }) => {
+          this.choiceDate = minDate.getTime()
+          if (maxDate) {
+            this.choiceDate = ''
+          }
+        },
+        disabledDate: (time) => {
+          const self = this
+          if (self.choiceDate) {
+            const startDay = self.choiceDate
+            let endDay = startDay + 24 * 3600 * 1000 * 31
+            if (endDay > Date.now() - 8.64e6) {
+              endDay = Date.now() - 8.64e6
+            }
+            return time.getTime() < startDay || time.getTime() > endDay
+          } else {
+            return time.getTime() > Date.now() - 8.64e6
+          }
+        }
+      },
+      settingList: {
+        会员账号: true,
+        姓名: true,
+        账号类型: true,
+        上级代理: true,
+        VIP等级: true,
+        账号状态: true,
+        会员标签: true
+      },
+      queryText: '查询',
+      tableVisible: false,
+      visible: false,
+      newList: [],
+      userName: '',
+      dataList: [],
+      windControlList: [],
+      userLabel: [],
+      memberDetails: [],
+      playerId: '',
+      page: 1,
+      size: 10,
+      dialogTotal: 0,
+      summary: {}
+    }
+  },
+  computed: {
+    accountStatusArr() {
+      return this.globalDics.accountStatusType
+    },
+    accountTypeArr() {
+      return this.globalDics.accountType
+    },
+    deviceTypeArr() {
+      return this.globalDics.deviceType
+    }
+  },
+  created() {
+    this.getWindControllerLevelDict()
+    this.getMemberLabelDict()
+  },
+  mounted() {
+    if (localStorage.getItem('memberProfitAndLoss')) {
+      this.settingList = JSON.parse(localStorage.getItem('memberProfitAndLoss'))
+    }
+  },
+  methods: {
+    // 列设置
+    openSetting() {
+      this.visible = true
+      this.newList = JSON.parse(JSON.stringify(this.settingList))
+    },
+    confirm() {
+      localStorage.setItem('memberProfitAndLoss', JSON.stringify(this.newList))
+      this.settingList = this.newList
+      this.visible = false
+    },
+    setAll() {
+      Object.keys(this.newList).forEach((item) => {
+        this.newList[item] = true
+      })
+    },
+    loadData() {
+      this.loading = true
+      const create = this.searchTime || []
+      const [startTime, endTime] = create
+      let params = {
+        ...this.queryData,
+        startTime: startTime ? dayjs(startTime).format('YYYY-MM-DD') : '',
+        endTime: endTime ? dayjs(endTime).format('YYYY-MM-DD') : ''
+      }
+      params = {
+        ...this.getParams(params)
+      }
+      this.$api
+        .getReportMembernetamountList(params)
+        .then((res) => {
+          const {
+            code,
+            data: { record, totalRecord },
+            msg
+          } = res
+          if (code === 200) {
+            this.loading = false
+            this.dataList = record
+            this.total = totalRecord
+          } else {
+            this.loading = false
+            this.$message({
+              message: msg,
+              type: 'error'
+            })
+          }
+        })
+        .catch(() => (this.loading = false))
+      this.$api
+        .getReportMembernetamountAggregation(params)
+        .then((res) => {
+          const { code, msg } = res
+          if (code === 200) {
+            this.loading = false
+            this.summary = res.data
+            console.log(res)
+          } else {
+            this.loading = false
+            this.$message({
+              message: msg,
+              type: 'error'
+            })
+          }
+        })
+        .catch(() => (this.loading = false))
+
+      setTimeout(() => {
+        this.loading = false
+      }, 1000)
+    },
+    search() {
+      let t = 10
+      const timecount = setInterval(() => {
+        t--
+        this.queryText = t + 's'
+        if (t < 0) {
+          clearInterval(timecount)
+          this.queryText = '查询'
+        }
+      }, 1000)
+      this.loadData()
+    },
+    // 获取会员标签
+    getMemberLabelDict() {
+      this.$api.getMemberLabelDict().then((res) => {
+        const { code, data, msg } = res
+        if (code === 200) {
+          this.userLabel = data || []
+        } else {
+          this.$message({
+            message: msg,
+            type: 'error'
+          })
+        }
+      })
+    },
+    // 获取风控层级
+    getWindControllerLevelDict() {
+      this.$api.getWindControllerLevelDict({ windControlType: 1 }).then((res) => {
+        if (res.code === 200) {
+          this.windControlList = res.data
+        }
+      })
+    },
+    dialogData(val) {
+      this.userName = val.userName
+      this.playerId = val.playerId
+      this.getReportMembernetamountDetail(val.playerId)
       this.tableVisible = true
     },
-		// 列设置
-		openSetting() {
-			this.visible = true
-			this.newList = JSON.parse(JSON.stringify(this.settingList))
-		},
-		confirm() {
-			localStorage.setItem('memberProfitAndLoss', JSON.stringify(this.newList))
-			this.settingList = this.newList
-			this.visible = false
-		},
-		setAll() {
-			Object.keys(this.newList).forEach((item) => {
-				this.newList[item] = true
-			})
-		},
-		loadData() {
-			const create = this.queryData.registerTime || []
-			const lastLoginTime = this.queryData.lastLoginTime || []
-			const firstSaveTime = this.queryData.firstSaveTime || []
-			const [startTime, endTime] = create
-			const [loginTimeStart, loginTimeEnd] = lastLoginTime
-			const [firstDepositTimeStart, firstDepositTimeEnd] = firstSaveTime
-			let params = {
-				...this.queryData,
-				createDtStart: startTime
-					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
-					: undefined,
-				createDtEnd: endTime
-					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
-					: undefined,
-				lastLoginTimeStart: loginTimeStart
-					? dayjs(loginTimeStart).format('YYYY-MM-DD HH:mm:ss')
-					: undefined,
-				lastLoginTimeEnd: loginTimeEnd
-					? dayjs(loginTimeEnd).format('YYYY-MM-DD HH:mm:ss')
-					: undefined,
-				firstDepositTimeStart: firstDepositTimeStart
-					? dayjs(firstDepositTimeStart).format('YYYY-MM-DD HH:mm:ss')
-					: undefined,
-				firstDepositTimeEnd: firstDepositTimeEnd
-					? dayjs(firstDepositTimeEnd).format('YYYY-MM-DD HH:mm:ss')
-					: undefined
-			}
-			params = {
-				...this.getParams(params)
-			}
-			if (
-				!startTime &&
-				!endTime &&
-				!loginTimeStart &&
-				!loginTimeEnd &&
-				!firstDepositTimeStart &&
-				!firstDepositTimeEnd
-			) {
-				this.$message({
-					type: 'warning',
-					message: `请选择注册时间, 最后登录时间,首存时间任意其中一个时间维度`
-				})
-				return false
-			}
-			this.dataList = []
-			this.loading = true
-			delete params.registerTime
-			delete params.lastLoginTime
-			delete params.firstSaveTime
-			this.$api
-				.memberListAPI(params)
-				.then((res) => {
-					const {
-						code,
-						data: { record, totalRecord },
-						msg
-					} = res
-					if (code === 200) {
-						this.loading = false
-						this.dataList = record
-						this.total = totalRecord
-					} else {
-						this.loading = false
-						this.$message({
-							message: msg,
-							type: 'error'
-						})
-					}
-				})
-				.catch(() => (this.loading = false))
+    getReportMembernetamountDetail(val) {
+      this.loading = true
+      const create = this.searchTime || []
+      const [startTime, endTime] = create
+      const params = {
+        pageNum: this.page,
+        pageSize: this.size,
+        playerId: val,
+        startTime: startTime ? dayjs(startTime).format('YYYY-MM-DD') : '',
+        endTime: endTime ? dayjs(endTime).format('YYYY-MM-DD') : ''
+      }
+      this.$api
+        .getReportMembernetamountDetail(params)
+        .then((res) => {
+          if (res.code === 200) {
+            console.log(res)
+            this.memberDetails = res.data.record
+            this.dialogTotal = res.data.totalRecord
+          }
+          this.loading = false
+        })
+        .catch(() => {
+          this.loading = false
+        })
+    },
+    getSummaries(param) {
+      const { columns, data } = param
+      const sums = []
+      columns.forEach((column, index) => {
+        if (index === 0) {
+          const el = (
+            <div class='count_row'>
+              <p>本页合计</p>
+              <p>全部合计</p>
+            </div>
+          )
+          sums[index] = el
+          return
+        } else if (index >= 8) {
+          const values = data.map((item) => Number(item[column.property]))
+          if (!values.every((value) => isNaN(value))) {
+            sums[index] = values.reduce((prev, curr) => {
+              const value = Number(curr)
+              if (!isNaN(value)) {
+                return prev + curr
+              } else {
+                return prev
+              }
+            }, 0)
+            const num = sums[index]
+            switch (index) {
+              case 8:
+                sums[index] = (
+                  <div class='count_row'>
+                    <p>{num.toFixed(2)}</p>
+                    <p>{this.summary.betCountTotal}</p>
+                  </div>
+                )
+                break
+              case 9:
+                sums[index] = (
+                  <div class='count_row'>
+                    <p>{num.toFixed(2)}</p>
+                    <p>{this.summary.betAmountTotal}</p>
+                  </div>
+                )
+                break
+              case 10:
+                sums[index] = (
+                  <div class='count_row'>
+                    <p>{num.toFixed(2)}</p>
+                    <p>{this.summary.validBetAmountTotal}</p>
+                  </div>
+                )
+                break
+              case 11:
+                sums[index] = (
+                  <div class='count_row'>
+                    {num > 0 ? (
+                      <p class='enableColor'>{num.toFixed(2)}</p>
+                    ) : (
+                      <p class='redColor'>{num.toFixed(2)}</p>
+                    )}
+                    {this.summary.netAmountTotal > 0 ? (
+                      <p class='enableColor'>{this.summary.netAmountTotal}</p>
+                    ) : (
+                      <p class='redColor'>{this.summary.netAmountTotal}</p>
+                    )}
+                  </div>
+                )
+                break
+            }
+          } else {
+            sums[index] = ''
+          }
+        }
+      })
 
-			setTimeout(() => {
-				this.loading = false
-			}, 1000)
-		},
-		// 获取会员标签
-		getMemberLabelDict() {
-			this.$api.getMemberLabelDict().then((res) => {
-				const { code, data, msg } = res
-				if (code === 200) {
-					this.userLabel = data || []
-				} else {
-					this.$message({
-						message: msg,
-						type: 'error'
-					})
-				}
-			})
-		},
-		// 获取风控层级
-		getWindControllerLevelDict() {
-			this.$api
-				.getWindControllerLevelDict({ windControlType: 1 })
-				.then((res) => {
-					if (res.code === 200) {
-						this.vipDict = res.data
-					}
-				})
-		},
-		reset() {
-			this.pageNum = 1
-			this.queryData = {
-				registerTime: [start, end],
-				userName: undefined,
-				realName: undefined,
-				accountStatus: undefined,
-				windControlId: undefined,
-				offLineDaysStart: undefined,
-				offLineDaysEnd: undefined,
-				lastLoginTime: [],
-				vipSerialNumMax: undefined,
-				vipSerialNumMin: undefined,
-				transforNumMin: undefined,
-				transforNumMax: undefined,
-				accountType: undefined,
-				deviceType: undefined,
-				firstDepositAmountMin: undefined,
-				firstDepositAmountMax: undefined,
-				firstSaveTime: [],
-				labelId: undefined,
-				parentProxyName: undefined,
-				orderKey: undefined,
-				orderType: undefined
-			}
-			this.$refs['form'].resetFields()
-			this.loadData()
-		},
-		_changeTableSort({ column, prop, order }) {
-			if (prop === 'vipSerialNum') {
-				prop = 1
-			}
-			if (prop === 'createDt') {
-				prop = 2
-			}
-			if (prop === 'firstDepositTime') {
-				prop = 3
-			}
-			if (prop === 'firstDepositAmount') {
-				prop = 4
-			}
-			if (prop === 'lastLoginTime') {
-				prop = 5
-			}
-			if (prop === 'offLineDays') {
-				prop = 6
-			}
-			this.queryData.orderKey = prop
-			if (order === 'ascending') {
-				// 升序
-				this.queryData.orderType = 'asc'
-			} else if (column.order === 'descending') {
-				// 降序
-				this.queryData.orderType = 'desc'
-			}
-			this.loadData()
-		},
+      return sums
+    },
+    reset() {
+      this.pageNum = 1
+      this.queryData = {}
+      this.searchTime = [startTime, endTime]
+      this.$refs['form'].resetFields()
+      this.loadData()
+    },
+    _changeTableSort({ column, prop, order }) {
+      switch (prop) {
+        case 'betCount':
+          prop = 1
+          break
+        case 'betAmount':
+          prop = 2
+          break
+        case 'validBetAmount':
+          prop = 3
+          break
+        case 'netAmount':
+          prop = 4
+          break
+      }
+      this.queryData.orderKey = prop
+      if (order === 'ascending') {
+        // 升序
+        this.queryData.orderType = 'asc'
+      } else if (column.order === 'descending') {
+        // 降序
+        this.queryData.orderType = 'desc'
+      } else {
+        delete this.queryData.orderKey
+        delete this.queryData.orderType
+      }
+      this.loadData()
+    },
+    handleCurrentChangeDialog(val) {
+      console.log(111, val)
+      this.page = val
+      this.getReportMembernetamountDetail(this.playerId)
+    },
+    handleSizeChangeDialog(val) {
+      console.log(222, val)
+      this.size = val
+      this.getReportMembernetamountDetail(this.playerId)
+    },
+    checkValue(e) {
+      const { name, value } = e.target
+      console.log(value)
+      switch (name) {
+        case 'vipSerialNumMin':
+          if (
+            !!this.queryData.vipSerialNumMax &&
+            value &&
+            value * 1 > this.queryData.vipSerialNumMax * 1
+          ) {
+            this.$message({
+              type: 'warning',
+              message: `VIP等级最小值不能大于最大值`
+            })
+            this.queryData.vipSerialNumMin = ''
+          } else {
+            this.queryData.vipSerialNumMin = value
+          }
+          break
+        case 'vipSerialNumMax':
+          if (
+            !!this.queryData.vipSerialNumMin &&
+            value &&
+            value * 1 < this.queryData.vipSerialNumMin * 1
+          ) {
+            this.$message({
+              type: 'warning',
+              message: `VIP等级最大值不能小于最小值`
+            })
+            this.queryData.vipSerialNumMax = ''
+          } else {
+            this.queryData.vipSerialNumMax = value
+          }
+          break
+        case 'betCountMin':
+          if (
+            !!this.queryData.betCountMax &&
+            value &&
+            value * 1 > this.queryData.betCountMax * 1
+          ) {
+            this.$message({
+              type: 'warning',
+              message: `注单量最小值不能大于最大值`
+            })
+            this.queryData.betCountMin = ''
+          } else {
+            this.queryData.betCountMin = value
+          }
+          break
+        case 'betCountMax':
+          if (
+            !!this.queryData.betCountMin &&
+            value &&
+            value * 1 < this.queryData.betCountMin * 1
+          ) {
+            this.$message({
+              type: 'warning',
+              message: `注单量最大值不能小于最小值`
+            })
+            this.queryData.betCountMax = ''
+          } else {
+            this.queryData.betCountMax = value
+          }
+          break
+        case 'betAmountMin':
+          if (
+            !!this.queryData.betAmountMax &&
+            value &&
+            value * 1 > this.queryData.betAmountMax * 1
+          ) {
+            this.$message({
+              type: 'warning',
+              message: `投注金额最小值不能大于最大值`
+            })
+            this.queryData.betAmountMin = ''
+          } else {
+            this.queryData.betAmountMin = value
+          }
+          break
+        case 'betAmountMax':
+          if (
+            !!this.queryData.betAmountMin &&
+            value &&
+            value * 1 < this.queryData.betAmountMin * 1
+          ) {
+            this.$message({
+              type: 'warning',
+              message: `投注金额最大值不能小于最小值`
+            })
+            this.queryData.betAmountMax = ''
+          } else {
+            this.queryData.betAmountMax = value
+          }
+          break
 
-		checkValue(e) {
-			const { name, value } = e.target
-			switch (name) {
-				case 'offLineDaysStart':
-					if (
-						!!this.queryData.offLineDaysEnd &&
-						value &&
-						value * 1 > this.queryData.offLineDaysEnd * 1
-					) {
-						this.$message({
-							type: 'warning',
-							message: `请输入小于${this.queryData.offLineDaysEnd}天数`
-						})
-					} else {
-						this.queryData.offLineDaysStart = value
-					}
-					break
-				case 'offLineDaysEnd':
-					if (
-						!!this.queryData.offLineDaysStart &&
-						value &&
-						value * 1 < this.queryData.offLineDaysStart * 1
-					) {
-						this.$message({
-							type: 'warning',
-							message: `请输入大于${this.queryData.offLineDaysStart}天数`
-						})
-					} else {
-						this.queryData.offLineDaysEnd = value
-					}
-					break
-				case 'vipSerialNumMin':
-					if (
-						!!this.queryData.vipSerialNumMax &&
-						value &&
-						value * 1 > this.queryData.vipSerialNumMax * 1
-					) {
-						this.$message({
-							type: 'warning',
-							message: `请输入小于${this.queryData.vipSerialNumMax}等级`
-						})
-					} else {
-						this.queryData.vipSerialNumMin = value
-					}
-					break
-				case 'vipSerialNumMax':
-					if (
-						!!this.queryData.vipSerialNumMin &&
-						value &&
-						value * 1 < this.queryData.vipSerialNumMin * 1
-					) {
-						this.$message({
-							type: 'warning',
-							message: `请输入大于${this.queryData.vipSerialNumMin}等级`
-						})
-					} else {
-						this.queryData.vipSerialNumMax = value
-					}
-					break
-				case 'firstDepositAmountMin':
-					if (
-						!!this.queryData.firstDepositAmountMax &&
-						value &&
-						value * 1 > this.queryData.firstDepositAmountMax * 1
-					) {
-						this.$message({
-							type: 'warning',
-							message: `请输入小于${this.queryData.firstDepositAmountMax}金额`
-						})
-					} else {
-						this.queryData.firstDepositAmountMin = value
-					}
-					break
-				case 'firstDepositAmountMax':
-					if (
-						!!this.queryData.firstDepositAmountMin &&
-						value &&
-						value * 1 < this.queryData.firstDepositAmountMin * 1
-					) {
-						this.$message({
-							type: 'warning',
-							message: `请输入大于${this.queryData.firstDepositAmountMin}金额`
-						})
-					} else {
-						this.queryData.firstDepositAmountMax = value
-					}
-					break
-				case 'transforNumMin':
-					if (
-						!!this.queryData.transforNumMax &&
-						value &&
-						value * 1 > this.queryData.transforNumMax * 1
-					) {
-						this.$message({
-							type: 'warning',
-							message: `请输入小于${this.queryData.transforNumMax}次数`
-						})
-					} else {
-						this.queryData.transforNumMin = value
-					}
-					break
-				case 'transforNumMax':
-					if (
-						!!this.queryData.transforNumMin &&
-						value &&
-						value * 1 < this.queryData.transforNumMin * 1
-					) {
-						this.$message({
-							type: 'warning',
-							message: `请输入大于${this.queryData.transforNumMin}次数`
-						})
-					} else {
-						this.queryData.transforNumMin = value
-					}
-					break
-			}
-		},
-		exportExcel() {
-			const create = this.queryData.registerTime || []
-			const lastLoginTime = this.queryData.lastLoginTime || []
-			const firstSaveTime = this.queryData.firstSaveTime || []
-			const [startTime, endTime] = create
-			const [loginTimeStart, loginTimeEnd] = lastLoginTime
-			const [firstDepositTimeStart, firstDepositTimeEnd] = firstSaveTime
-			this.loading = true
-			let params = {
-				...this.queryData,
-				createDtStart: startTime
-					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
-					: undefined,
-				createDtEnd: endTime
-					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
-					: undefined,
-				lastLoginTimeStart: loginTimeStart
-					? dayjs(loginTimeStart).format('YYYY-MM-DD HH:mm:ss')
-					: undefined,
-				lastLoginTimeEnd: loginTimeEnd
-					? dayjs(loginTimeEnd).format('YYYY-MM-DD HH:mm:ss')
-					: undefined,
-				firstDepositTimeStart: firstDepositTimeStart
-					? dayjs(firstDepositTimeStart).format('YYYY-MM-DD HH:mm:ss')
-					: undefined,
-				firstDepositTimeEnd: firstDepositTimeEnd
-					? dayjs(firstDepositTimeEnd).format('YYYY-MM-DD HH:mm:ss')
-					: undefined
-			}
-			params = {
-				...this.getParams(params)
-			}
-			delete params.registerTime
-			delete params.lastLoginTime
-			delete params.firstSaveTime
-			params.accountStatus =
-				params.accountStatus && params.accountStatus.length
-					? params.accountStatus
-					: undefined
-			params.deviceType =
-				params.deviceType && params.deviceType.length
-					? params.deviceType
-					: undefined
-			params.accountType =
-				params.accountType && params.accountType.length
-					? params.accountType
-					: undefined
-			this.$api
-				.exportExcelAPI(params)
-				.then((res) => {
-					this.loading = false
-					const { data, status } = res
-					if (res && status === 200) {
-						const { type } = data
-						if (type.includes('application/json')) {
-							const reader = new FileReader()
-							reader.onload = (evt) => {
-								if (evt.target.readyState === 2) {
-									const {
-										target: { result }
-									} = evt
-									const ret = JSON.parse(result)
-									if (ret.code !== 200) {
-										this.$message({
-											type: 'error',
-											message: ret.msg,
-											duration: 1500
-										})
-									}
-								}
-							}
-							reader.readAsText(data)
-						} else {
-							const result = res.data
-							const disposition = res.headers['content-disposition']
-							const fileNames = disposition && disposition.split("''")
-							let fileName = fileNames[1]
-							fileName = decodeURIComponent(fileName)
-							const blob = new Blob([result], {
-								type: 'application/octet-stream'
-							})
-							if ('download' in document.createElement('a')) {
-								const downloadLink = document.createElement('a')
-								downloadLink.download = fileName || ''
-								downloadLink.style.display = 'none'
-								downloadLink.href = URL.createObjectURL(blob)
-								document.body.appendChild(downloadLink)
-								downloadLink.click()
-								URL.revokeObjectURL(downloadLink.href)
-								document.body.removeChild(downloadLink)
-							} else {
-								window.navigator.msSaveBlob(blob, fileName)
-							}
-							this.$message({
-								type: 'success',
-								message: '导出成功',
-								duration: 1500
-							})
-						}
-					}
-				})
-				.catch(() => {
-					this.loading = false
-					this.$message({
-						type: 'error',
-						message: '导出失败',
-						duration: 1500
-					})
-				})
-
-			setTimeout(() => {
-				this.loading = false
-			}, 1500)
-		}
-	}
+        case 'validBetAmountMin':
+          if (
+            !!this.queryData.validBetAmountMax &&
+            value &&
+            value * 1 > this.queryData.validBetAmountMax * 1
+          ) {
+            this.$message({
+              type: 'warning',
+              message: `有效投注最小值不能大于最大值`
+            })
+            this.queryData.validBetAmountMin = ''
+          } else {
+            this.queryData.validBetAmountMin = value
+          }
+          break
+        case 'validBetAmountMax':
+          if (
+            !!this.queryData.validBetAmountMin &&
+            value &&
+            value * 1 < this.queryData.validBetAmountMin * 1
+          ) {
+            this.$message({
+              type: 'warning',
+              message: `有效投注最大值不能小于最小值`
+            })
+            this.queryData.validBetAmountMax = ''
+          } else {
+            this.queryData.validBetAmountMax = value
+          }
+          break
+        case 'netAmountMin':
+          if (
+            !!this.queryData.netAmountMax &&
+            value &&
+            value * 1 > this.queryData.netAmountMax * 1
+          ) {
+            this.$message({
+              type: 'warning',
+              message: `投注盈亏最小值不能大于最大值`
+            })
+            this.queryData.netAmountMin = ''
+          } else {
+            this.queryData.netAmountMin = value
+          }
+          break
+        case 'netAmountMax':
+          if (
+            !!this.queryData.netAmountMin &&
+            value &&
+            value * 1 < this.queryData.netAmountMin * 1
+          ) {
+            this.$message({
+              type: 'warning',
+              message: `投注盈亏最大值不能小于最小值`
+            })
+            this.queryData.netAmountMax = ''
+          } else {
+            this.queryData.netAmountMax = value
+          }
+          break
+      }
+    },
+    exportExcel() {
+      this.loading = true
+      const create = this.searchTime || []
+      const [startTime, endTime] = create
+      let params = {
+        ...this.queryData,
+        startTime: startTime ? dayjs(startTime).format('YYYY-MM-DD') : '',
+        endTime: endTime ? dayjs(endTime).format('YYYY-MM-DD') : ''
+      }
+      params = {
+        ...this.getParams(params)
+      }
+      this.$confirm(
+        `<strong>是否导出?</strong></br><span style='font-size:12px;color:#c1c1c1'>数据过大时，请耐心等待</span>`,
+        '确认提示',
+        {
+          dangerouslyUseHTMLString: true,
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }
+      )
+        .then(() => {
+          this.$api
+            .getGameRecordDownload(params)
+            .then((res) => {
+              this.loading = false
+              const { data, status } = res
+              if (res && status === 200) {
+                const { type } = data
+                if (type.includes('application/json')) {
+                  const reader = new FileReader()
+                  reader.onload = (evt) => {
+                    if (evt.target.readyState === 2) {
+                      const {
+                        target: { result }
+                      } = evt
+                      const ret = JSON.parse(result)
+                      if (ret.code !== 200) {
+                        this.$message({
+                          type: 'error',
+                          message: ret.msg,
+                          duration: 1500
+                        })
+                      }
+                    }
+                  }
+                  reader.readAsText(data)
+                } else {
+                  const result = res.data
+                  const disposition = res.headers['content-disposition']
+                  const fileNames = disposition && disposition.split("''")
+                  let fileName = fileNames[1]
+                  fileName = decodeURIComponent(fileName)
+                  const blob = new Blob([result], {
+                    type: 'application/octet-stream'
+                  })
+                  if ('download' in document.createElement('a')) {
+                    const downloadLink = document.createElement('a')
+                    downloadLink.download = fileName || ''
+                    downloadLink.style.display = 'none'
+                    downloadLink.href = URL.createObjectURL(blob)
+                    document.body.appendChild(downloadLink)
+                    downloadLink.click()
+                    URL.revokeObjectURL(downloadLink.href)
+                    document.body.removeChild(downloadLink)
+                  } else {
+                    window.navigator.msSaveBlob(blob, fileName)
+                  }
+                  this.$message({
+                    type: 'success',
+                    message: '导出成功',
+                    duration: 1500
+                  })
+                }
+              }
+            })
+            .catch(() => {
+              this.loading = false
+              this.$message({
+                type: 'error',
+                message: '导出失败',
+                duration: 1500
+              })
+            })
+        })
+        .catch(() => {})
+    }
+  }
 }
 </script>
 
 <style lang="scss" scoped>
 /deep/.el-dialog__header {
-	text-align: center;
-	color: #909399;
-	font-weight: 700;
+  color: #909399;
+  font-weight: 700;
+}
+.numberBox /deep/.el-input-number__decrease,
+.numberBox /deep/.el-input-number__increase {
+  display: none;
+}
+.numberBox /deep/.el-input__inner {
+  padding: 0 15px;
+  text-align: left;
+}
+/deep/ .el-table__footer-wrapper .cell::after {
+  border: 1px solid #ebeef5;
+  content: "";
+  position: absolute;
+  top: 41px;
+  left: 0;
+  width: 100%;
+}
+
+/deep/ .el-table__fixed-footer-wrapper tr::after {
+  border: 1px solid #ebeef5;
+  content: "";
+  position: absolute;
+  top: 41px;
+  left: 0;
+  width: 100%;
+}
+.count_row {
+  height: 80px;
+  color: #5c5c5c;
+  p {
+    height: 40px;
+    line-height: 40px;
+    font-weight: 700;
+    span {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+    }
+  }
+}
+.fenye {
+  text-align: center;
 }
 </style>

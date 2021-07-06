@@ -13,6 +13,7 @@ import memberFunds from './memberFunds'
 import funds from './funds'
 import operation from './operation'
 import agencyfunds from './agencyfunds'
+import report from './report'
 import system from './system'
 
 export default {
@@ -31,5 +32,6 @@ export default {
 	...funds,
 	...operation,
 	...agencyfunds,
+	...report,
 	...system
 }

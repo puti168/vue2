@@ -6,18 +6,14 @@
           <el-form-item label="日期:">
             <el-date-picker
               v-model="searchTime"
-              size="medium"
-              format="yyyy-MM-dd"
               type="daterange"
               range-separator="-"
+              :clearable="false"
               start-placeholder="开始日期"
               end-placeholder="结束日期"
-              align="right"
-              clearable
-              style="width: 240px"
+              :picker-options="timeControl"
             ></el-date-picker>
           </el-form-item>
-
           <el-form-item>
             <el-button
               type="primary"
@@ -66,12 +62,12 @@
                 @change="handleCheckAllChange"
                 >全选</el-checkbox>
             </div>
-            <el-checkbox-group v-model="checkedVenue" @change="handleCheckedCitiesChange">
+            <el-checkbox-group v-model="gameCodeList" @change="handleCheckedCitiesChange">
               <el-checkbox
-                v-for="itme in venueList"
-                :key="itme.value"
-                :label="itme.value"
-                >{{ itme.label }}</el-checkbox>
+                v-for="itme in gameTypeList"
+                :key="itme.gameCode"
+                :label="itme.gameCode"
+                >{{ itme.gameName }}</el-checkbox>
             </el-checkbox-group>
           </div>
         </div>
@@ -90,53 +86,67 @@
           :header-cell-style="getRowClass"
           @sort-change="_changeTableSort"
         >
-          <el-table-column prop="gameName" align="center" label="场馆">
+          <el-table-column
+            v-if="settingList['场馆']"
+            prop="venueName"
+            align="center"
+            label="场馆"
+          >
             <template slot-scope="scope">
               <el-link
                 class="lightBlueColor"
                 type="primary"
+                :disabled="scope.row.projectType === 2"
                 @click="dialogData(scope.row)"
-                >{{ scope.row.gameName }}</el-link>
+                >{{ scope.row.venueName }}</el-link>
             </template>
           </el-table-column>
           <el-table-column
             v-if="settingList['项目']"
-            prop="gameName"
+            prop="projectType"
             align="center"
             label="项目"
           >
+            <template slot-scope="scope">
+              <span v-if="scope.row.projectType === 1">游戏</span>
+              <span v-else>打赏</span>
+            </template>
           </el-table-column>
           <el-table-column
             v-if="settingList['投注人数']"
-            prop="gameRebateRate"
+            prop="memberCount"
             align="center"
             sortable="custom"
             label="投注人数"
           >
           </el-table-column>
           <el-table-column
-            prop="gameRebateRate"
+            v-if="settingList['注单量']"
+            prop="betCount"
             align="center"
             sortable="custom"
             label="注单量"
           >
           </el-table-column>
           <el-table-column
-            prop="gameRebateRate"
+            v-if="settingList['投注金额']"
+            prop="betAmount"
             align="center"
             sortable="custom"
             label="投注金额"
           >
           </el-table-column>
           <el-table-column
-            prop="gameRebateRate"
+            v-if="settingList['有效投注']"
+            prop="validBetAmount"
             align="center"
             sortable="custom"
             label="有效投注 "
           >
           </el-table-column>
           <el-table-column
-            prop="gameRebateRate"
+            v-if="settingList['投注盈亏']"
+            prop="netAmount"
             align="center"
             sortable="custom"
             label="投注盈亏"
@@ -147,6 +157,22 @@
                 <i class="el-icon-question" style="position: absolute; right: 10px"></i>
                 <div slot="content">盈亏金额指游戏输赢金额<br />负数表示会员输</div>
               </el-tooltip>
+            </template>
+            <template slot-scope="scope">
+              <span
+                v-if="!!scope.row.netAmount && scope.row.netAmount > 0"
+                class="enableColor"
+              >
+                {{ scope.row.netAmount }}
+              </span>
+              <span
+                v-else-if="!!scope.row.netAmount && scope.row.netAmount < 0"
+                class="redColor"
+              >
+                {{ scope.row.netAmount }}
+              </span>
+              <span v-else-if="!!scope.row.netAmount && scope.row.netAmount === 0"></span>
+              <span v-else>-</span>
             </template>
           </el-table-column>
         </el-table>
@@ -165,8 +191,11 @@
       </div>
       <el-dialog :visible.sync="tableVisible" :destroy-on-close="true" class="rempadding">
         <div slot="title" class="dialog-title">
-          <span class="title-text" style="margin-right: 15px">场馆名称:{{ title }}</span>
-          <span class="title-text">项目名称:{{ title1 }}</span>
+          <span
+class="title-text"
+style="margin-right: 15px"
+>场馆名称:{{ venueName }}</span>
+          <!-- <span class="title-text">项目名称:{{ title1 }}</span> -->
         </div>
         <el-table
           v-loading="loading"
@@ -177,32 +206,46 @@
           style="margin-bottom: 15px"
           :header-cell-style="getRowClass"
         >
-          <el-table-column prop="userName" align="center" label="日期"> </el-table-column>
+          <el-table-column prop="staticsDate" align="center" label="日期">
+          </el-table-column>
           <el-table-column
-            prop="accountTypeName"
+            prop="memberCount"
             align="center"
             label="投注人数"
           ></el-table-column>
           <el-table-column
-            prop="accountTypeName"
+            prop="betCount"
             align="center"
             label="注单量"
           ></el-table-column>
           <el-table-column
-            prop="accountTypeName"
+            prop="betAmount"
             align="center"
             label="投注金额"
           ></el-table-column>
           <el-table-column
-            prop="accountTypeName"
+            prop="validBetAmount"
             align="center"
             label="有效投注"
           ></el-table-column>
-          <el-table-column
-            prop="accountTypeName"
-            align="center"
-            label="投注盈亏"
-          ></el-table-column>
+          <el-table-column prop="netAmount" align="center" label="投注盈亏">
+            <template slot-scope="scope">
+              <span
+                v-if="!!scope.row.netAmount && scope.row.netAmount > 0"
+                class="enableColor"
+              >
+                {{ scope.row.netAmount }}
+              </span>
+              <span
+                v-else-if="!!scope.row.netAmount && scope.row.netAmount < 0"
+                class="redColor"
+              >
+                {{ scope.row.netAmount }}
+              </span>
+              <span v-else-if="!!scope.row.netAmount && scope.row.netAmount === 0"></span>
+              <span v-else>-</span>
+            </template>
+          </el-table-column>
         </el-table>
         <!-- 分页 -->
         <el-pagination
@@ -212,7 +255,7 @@
           layout="total, sizes,prev, pager, next, jumper"
           :page-size="size"
           :page-sizes="[10, 20, 50]"
-          :total="summary"
+          :total="dialogTotal"
           @current-change="handleCurrentChangeDialog"
           @size-change="handleSizeChangeDialog"
         ></el-pagination>
@@ -224,10 +267,10 @@
         title="列设置"
         center
         :visible.sync="visible"
-        width="610px"
+        width="300px"
         class="col-setting"
       >
-        <el-button type="primary" @click="setAll">复原缺省</el-button>
+        <el-link type="primary" @click="setAll">复原缺省</el-link>
         <div v-for="(value, name) in settingList" :key="name" class="setting-div">
           <el-checkbox v-model="newList[name]">{{ name }}</el-checkbox>
         </div>
@@ -253,34 +296,58 @@ export default {
     return {
       queryData: {},
       searchTime: [startTime, endTime],
+      timeControl: {
+        onPick: ({ maxDate, minDate }) => {
+          this.choiceDate = minDate.getTime()
+          if (maxDate) {
+            this.choiceDate = ''
+          }
+        },
+        disabledDate: (time) => {
+          const self = this
+          if (self.choiceDate) {
+            const startDay = self.choiceDate
+            let endDay = startDay + 24 * 3600 * 1000 * 31
+            if (endDay > Date.now() - 8.64e6) {
+              endDay = Date.now() - 8.64e6
+            }
+            return time.getTime() < startDay || time.getTime() > endDay
+          } else {
+            return time.getTime() > Date.now() - 8.64e6
+          }
+        }
+      },
       queryText: '查询',
       tableData: [],
-      dataList: {},
-      checkAll: false,
-      checkedVenue: ['1', '2'],
-      venueList: [
-        { value: '1', label: '上海' },
-        { value: '2', label: '北京' },
-        { value: '3', label: '广州' },
-        { value: '4', label: '深圳' }
-      ],
-      isIndeterminate: true,
+      checkAll: true,
+      gameCodeList: [],
+      gameTypeList: [],
+      isIndeterminate: false,
       gameList: [],
       page: 1,
       size: 10,
-      summary: 0,
-      title: 'OB体育',
-      title1: '游戏',
+      gameCode: '',
+      dialogTotal: 0,
+      summary: {},
+      venueName: '',
       visible: false,
       tableVisible: false,
       settingList: {
+        场馆: true,
         项目: true,
-        投注人数: true
+        投注人数: true,
+        注单量: true,
+        投注金额: true,
+        有效投注: true,
+        投注盈亏: true
       },
       newList: []
     }
   },
   computed: {},
+  created() {
+    this.seleceInit()
+  },
   mounted() {
     if (localStorage.getItem('venueProfitAndLoss')) {
       this.settingList = JSON.parse(localStorage.getItem('venueProfitAndLoss'))
@@ -288,24 +355,49 @@ export default {
   },
 
   methods: {
-    loadData() {
+    seleceInit() {
+      this.$api.getMerchantGameGamePlant().then((res) => {
+        if (res.code === 200) {
+          this.gameTypeList = res.data
+          for (let i = 0; i < res.data.length; i++) {
+            const ele = res.data[i]
+            this.gameCodeList.push(ele.gameCode)
+          }
+          this.initData()
+        }
+      })
+    },
+    initData() {
       this.loading = true
       const create = this.searchTime || []
       const [startTime, endTime] = create
       let params = {
         ...this.queryData,
-        createAtStart: startTime ? dayjs(startTime).format('YYYY-MM-DD') : '',
-        createAtEnd: endTime ? dayjs(endTime).format('YYYY-MM-DD') : ''
+        gameCodeList: this.gameCodeList,
+        startTime: startTime ? dayjs(startTime).format('YYYY-MM-DD') : '',
+        endTime: endTime ? dayjs(endTime).format('YYYY-MM-DD') : ''
       }
       params = {
         ...this.getParams(params)
       }
       this.$api
-        .gameList(params)
+        .getReportVenueNetAmountDayListPage(params)
         .then((res) => {
           if (res.code === 200) {
             this.tableData = res.data.record
             this.total = res.data.totalRecord
+          }
+          this.loading = false
+        })
+        .catch(() => {
+          this.loading = false
+        })
+      this.$api
+        .getReportVenueNetAmountDaySummary(params)
+        .then((res) => {
+          if (res.code === 200) {
+            console.log(res)
+            this.summary = res.data
           }
           this.loading = false
         })
@@ -323,48 +415,211 @@ export default {
           this.queryText = '查询'
         }
       }, 1000)
-      this.loadData()
+      this.initData()
     },
     handleCheckAllChange(val) {
       console.log(val)
       const arr = []
-      for (let i = 0; i < this.venueList.length; i++) {
-        const ele = this.venueList[i].value
+      for (let i = 0; i < this.gameTypeList.length; i++) {
+        const ele = this.gameTypeList[i].gameCode
         arr.push(ele)
       }
-      this.checkedVenue = val ? arr : []
+      this.gameCodeList = val ? arr : []
       this.isIndeterminate = false
     },
     handleCheckedCitiesChange(val) {
+      console.log(val)
       const checkedCount = val.length
-      this.checkAll = checkedCount === this.venueList.length
-      this.isIndeterminate = checkedCount > 0 && checkedCount < this.venueList.length
+      this.checkAll = checkedCount === this.gameTypeList.length
+      this.isIndeterminate = checkedCount > 0 && checkedCount < this.gameTypeList.length
     },
     reset() {
       this.queryData = {}
       this.searchTime = [startTime, endTime]
       this.pageNum = 1
-      this.loadData()
+      this.initData()
     },
     dialogData(val) {
+      this.venueName = val.venueName
+      this.gameCode = val.gameCode
+      this.getReportVenueNetAmountDayDetailListPage(val.gameCode)
       this.tableVisible = true
     },
+    getReportVenueNetAmountDayDetailListPage(val) {
+      this.loading = true
+      const create = this.searchTime || []
+      const [startTime, endTime] = create
+      const params = {
+        pageNum: this.page,
+        pageSize: this.size,
+        gameCode: val,
+        startTime: startTime ? dayjs(startTime).format('YYYY-MM-DD') : '',
+        endTime: endTime ? dayjs(endTime).format('YYYY-MM-DD') : ''
+      }
+      this.$api
+        .getReportVenueNetAmountDayDetailListPage(params)
+        .then((res) => {
+          if (res.code === 200) {
+            console.log(res)
+            this.gameList = res.data.records
+            this.dialogTotal = res.data.total
+          }
+          this.loading = false
+        })
+        .catch(() => {
+          this.loading = false
+        })
+    },
+    handleCurrentChangeDialog(val) {
+      this.page = val
+      this.getReportVenueNetAmountDayDetailListPage(this.gameCode)
+    },
+    handleSizeChangeDialog(val) {
+      this.size = val
+      this.getReportVenueNetAmountDayDetailListPage(this.gameCode)
+    },
+    // 列设置
+    openSetting() {
+      this.visible = true
+      this.newList = JSON.parse(JSON.stringify(this.settingList))
+    },
+    confirm() {
+      localStorage.setItem('venueProfitAndLoss', JSON.stringify(this.newList))
+      this.settingList = this.newList
+      this.visible = false
+    },
+    setAll() {
+      Object.keys(this.newList).forEach((item) => {
+        this.newList[item] = true
+      })
+    },
+    getSummaries(param) {
+      const { columns, data } = param
+      const sums = []
+      columns.forEach((column, index) => {
+        if (index === 0) {
+          const el = (
+            <div class='count_row'>
+              <p>本页合计</p>
+              <p>全部合计</p>
+            </div>
+          )
+          sums[index] = el
+          return
+        } else if (index >= 2) {
+          const values = data.map((item) => Number(item[column.property]))
+          if (!values.every((value) => isNaN(value))) {
+            sums[index] = values.reduce((prev, curr) => {
+              const value = Number(curr)
+              if (!isNaN(value)) {
+                return prev + curr
+              } else {
+                return prev
+              }
+            }, 0)
+            const num = sums[index]
+            switch (index) {
+              case 2:
+                sums[index] = (
+                  <div class='count_row'>
+                    <p>{num.toFixed(2)}</p>
+                    <p>{this.summary.memberCountTotal}</p>
+                  </div>
+                )
+                break
+              case 3:
+                sums[index] = (
+                  <div class='count_row'>
+                    <p>{num.toFixed(2)}</p>
+                    <p>{this.summary.betCountTotal}</p>
+                  </div>
+                )
+                break
+              case 4:
+                sums[index] = (
+                  <div class='count_row'>
+                    <p>{num.toFixed(2)}</p>
+                    <p>{this.summary.betAmountTotal}</p>
+                  </div>
+                )
+                break
+              case 5:
+                sums[index] = (
+                  <div class='count_row'>
+                    <p>{num.toFixed(2)}</p>
+                    <p>{this.summary.validBetAmountTotal}</p>
+                  </div>
+                )
+                break
+              case 6:
+                sums[index] = (
+                  <div class='count_row'>
+                    {num > 0 ? (
+                      <p class='enableColor'>{num.toFixed(2)}</p>
+                    ) : (
+                      <p class='redColor'>{num.toFixed(2)}</p>
+                    )}
+                    {this.summary.netAmountTotal > 0 ? (
+                      <p class='enableColor'>{this.summary.netAmountTotal}</p>
+                    ) : (
+                      <p class='redColor'>{this.summary.netAmountTotal}</p>
+                    )}
+                  </div>
+                )
+                break
+            }
+          } else {
+            sums[index] = ''
+          }
+        }
+      })
+
+      return sums
+    },
+    _changeTableSort({ column, prop, order }) {
+      switch (prop) {
+        case 'memberCount':
+          prop = 1
+          break
+        case 'betCount':
+          prop = 2
+          break
+        case 'betAmount':
+          prop = 3
+          break
+        case 'validBetAmount':
+          prop = 4
+          break
+        case 'netAmount':
+          prop = 5
+          break
+      }
+      this.queryData.orderKey = prop
+      if (order === 'ascending') {
+        // 升序
+        this.queryData.orderType = 'asc'
+      } else if (column.order === 'descending') {
+        // 降序
+        this.queryData.orderType = 'desc'
+      } else {
+        delete this.queryData.orderKey
+        delete this.queryData.orderType
+      }
+      this.initData()
+    },
     exportExcel() {
+      this.loading = true
       const create = this.searchTime || []
       const [startTime, endTime] = create
       let params = {
         ...this.queryData,
-        createAtStart: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : '',
-        createAtEnd: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
+        gameCodeList: this.gameCodeList,
+        startTime: startTime ? dayjs(startTime).format('YYYY-MM-DD') : '',
+        endTime: endTime ? dayjs(endTime).format('YYYY-MM-DD') : ''
       }
       params = {
         ...this.getParams(params)
       }
-      delete params.registerTime
-      delete params.lastLoginTime
-      delete params.firstSaveTime
-      delete params.accountStatus
-      delete params.deviceType
       this.$confirm(
         `<strong>是否导出?</strong></br><span style='font-size:12px;color:#c1c1c1'>数据过大时，请耐心等待</span>`,
         '确认提示',
@@ -441,90 +696,14 @@ export default {
         })
         .catch(() => {})
     },
-    _changeTableSort({ column, prop, order }) {
-      if (prop === 'betAmount') {
-        prop = 1
-      }
-      if (prop === 'netAmount') {
-        prop = 2
-      }
-      if (prop === 'createAt') {
-        prop = 3
-      }
-      if (prop === 'netAt') {
-        prop = 4
-      }
-      this.queryData.orderKey = prop
-      if (order === 'ascending') {
-        // 升序
-        this.queryData.orderType = 'asc'
-      } else if (column.order === 'descending') {
-        // 降序
-        this.queryData.orderType = 'desc'
-      }
-      this.loadData()
+    handleSizeChange(value) {
+      this.pageNum = 1
+      this.pageSize = value
+      this.initData()
     },
-    handleCurrentChangeDialog(val) {
-      console.log(111, val)
-      this.page = val
-      // this.getMemberMemberInfoByLabelId(this.id)
-    },
-    handleSizeChangeDialog(val) {
-      console.log(222, val)
-      this.size = val
-      // this.getMemberMemberInfoByLabelId(this.id)
-    },
-    // 列设置
-    openSetting() {
-      this.visible = true
-      this.newList = JSON.parse(JSON.stringify(this.settingList))
-    },
-    confirm() {
-      localStorage.setItem('venueProfitAndLoss', JSON.stringify(this.newList))
-      this.settingList = this.newList
-      this.visible = false
-    },
-    setAll() {
-      Object.keys(this.newList).forEach((item) => {
-        this.newList[item] = true
-      })
-    },
-    getSummaries(param) {
-      const { columns, data } = param
-      const sums = []
-      columns.forEach((column, index) => {
-        if (index === 0) {
-          const el = (
-            <div class='count_row'>
-              <p>本页合计</p>
-              <p>全部合计</p>
-            </div>
-          )
-          sums[index] = el
-          return
-        }
-        const values = data.map((item) => Number(item[column.property]))
-        if (!values.every((value) => isNaN(value))) {
-          sums[index] = values.reduce((prev, curr) => {
-            const value = Number(curr)
-            if (!isNaN(value)) {
-              return prev + curr
-            } else {
-              return prev
-            }
-          }, 0)
-          sums[index] = (
-            <div class='count_row'>
-              <p>{sums[index]}</p>
-              <p>2000</p>
-            </div>
-          )
-        } else {
-          sums[index] = ''
-        }
-      })
-
-      return sums
+    handleCurrentChange(value) {
+      this.pageNum = value
+      this.initData()
     }
   }
 }
@@ -571,11 +750,10 @@ export default {
 }
 .count_row {
   height: 80px;
-
+  color: #5c5c5c;
   p {
     height: 40px;
     line-height: 40px;
-    color: #5c5c5c;
     font-weight: 700;
     span {
       display: inline-block;
