@@ -44,7 +44,7 @@
 								<el-form-item label="姓名：" prop="nickName">
 									<el-input
 										v-model="form.nickName"
-										maxlength="10"
+										maxlength="15"
 										style="width:300px;"
 										placeholder="请输入"
 									></el-input>
