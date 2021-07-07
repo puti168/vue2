@@ -41,7 +41,7 @@
 							placeholder="请输入"
 							clearable
 							style="width: 180px"
-							maxlength="6"
+							maxlength="15"
 						></el-input>
 					</el-form-item>
 					<el-form-item label="上级代理:">
