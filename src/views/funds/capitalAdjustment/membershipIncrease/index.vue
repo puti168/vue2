@@ -27,7 +27,7 @@
 					<el-input
 						v-model="queryData.realName"
 						size="medium"
-						maxlength="6"
+						maxlength="15"
 						placeholder="载入会员姓名"
 						clearable
 						disabled
