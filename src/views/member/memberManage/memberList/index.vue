@@ -42,7 +42,7 @@
 							placeholder="请输入"
 							clearable
 							style="width: 180px"
-							maxlength="6"
+							maxlength="15"
 						></el-input>
 					</el-form-item>
 					<el-form-item label="账号状态:">
