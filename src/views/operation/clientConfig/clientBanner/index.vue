@@ -110,7 +110,7 @@
           </el-form-item>
           <el-form-item label="最近操作人:">
             <el-input
-              v-model="queryData.gameName"
+              v-model="queryData.updatedBy"
               clearable
               :maxlength="15"
               size="medium"
@@ -910,6 +910,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.game-container .params{
+  padding-block: 22px;
+}
+.content{
+      margin-top: 65px;
+}
 .reach {
   padding: 6px;
   background-color: #1abc9c;
