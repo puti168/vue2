@@ -9,7 +9,7 @@
 					为必填项
 				</span>
 			</div>
-			<el-form ref="form" :model="queryData" :rules="rules" label-width="120px">
+			<el-form ref="form" :model="queryData" :rules="rules" label-width="145px">
 				<el-form-item label="场馆:" prop="gameName">
 					<el-select
 						v-model="queryData.gameName"
@@ -27,7 +27,21 @@
 						></el-option>
 					</el-select>
 				</el-form-item>
-				<el-form-item label="费率" prop="feeRate">
+				<el-form-item prop="feeRate">
+                    <label slot="label">费率:&nbsp;&nbsp;&nbsp;&nbsp;</label>
+					<el-popover
+						placement="top-start"
+						title="提示"
+						width="280"
+						trigger="hover"
+					>
+						<div>
+							<p>根据负盈利额计算给场馆的金额</p>
+						</div>
+						<div slot="reference" class="el-icon-question">
+							<span class="other-class"></span>
+						</div>
+					</el-popover>
 					<el-input
 						v-model="queryData.feeRate"
 						size="medium"
@@ -126,7 +140,7 @@
 				</el-row>
 			</div>
 		</div>
-        <div v-else class="info-show"></div>
+		<div v-else class="info-show"></div>
 	</div>
 </template>
 
@@ -143,7 +157,7 @@ export default {
 			loadingT: false,
 			queryData: {
 				gameName: undefined,
-                feeRate: undefined,
+				feeRate: undefined,
 				remark: undefined,
 				id: undefined,
 				merchantId: undefined
@@ -171,8 +185,8 @@ export default {
 		}
 	},
 	created() {
-        this.getMemberVipMerchantGame()
-    },
+		this.getMemberVipMerchantGame()
+	},
 	mounted() {},
 	methods: {
 		// 查询详情
@@ -197,7 +211,7 @@ export default {
 				...this.queryData
 			}
 			let lock = true
-            params.feeRate = params.feeRate / 100
+			params.feeRate = params.feeRate / 100
 			this.$refs['form'].validate((valid) => {
 				if (valid && lock) {
 					lock = false
@@ -236,11 +250,11 @@ export default {
 		reset() {
 			this.$refs['form'] && this.$refs['form'].resetFields()
 			this.queryData = {
-                gameName: undefined,
-                feeRate: undefined,
-                remark: undefined,
-                id: undefined,
-                merchantId: undefined
+				gameName: undefined,
+				feeRate: undefined,
+				remark: undefined,
+				id: undefined,
+				merchantId: undefined
 			}
 			this.showInfoData = undefined
 		},
@@ -249,10 +263,10 @@ export default {
 			this.showInfoData = undefined
 			this.queryData = {
 				gameName: evt.gameName,
-                feeRate: undefined,
-                remark: undefined,
-                id: undefined,
-                merchantId: undefined
+				feeRate: undefined,
+				remark: undefined,
+				id: undefined,
+				merchantId: undefined
 			}
 			this.queryDetails(evt.id)
 		},
@@ -366,5 +380,10 @@ export default {
 		top: 100%;
 		left: 0;
 	}
+}
+.el-icon-question {
+	position: absolute;
+	z-index: 10;
+    left: -30px;
 }
 </style>
