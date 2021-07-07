@@ -401,9 +401,41 @@ export function ProxyCommissionRecordTotalWinOrLose(data) {
 	})
 }
 // 新增活跃下级
-export function ProxyCommissionRecordAddsSubordinate(data) {
+export function ProxyCommissionRecordAddSubordinate(data) {
 	return request({
-		url: '/proxyCommissionRecord/addsSubordinate',
+		url: '/proxyCommissionRecord/addSubordinate',
+		method: 'post',
+		data
+	})
+}
+// 场馆费
+export function ProxyCommissionRecordVenueFee(data) {
+	return request({
+		url: '/proxyCommissionRecord/venueFee',
+		method: 'post',
+		data
+	})
+}
+// 有效活跃下级
+export function ProxyCommissionRecordValidSubordinate(data) {
+	return request({
+		url: '/proxyCommissionRecord/validSubordinate',
+		method: 'post',
+		data
+	})
+}
+// 新增有效活跃下级
+export function ProxyCommissionRecordValidAddSubordinate(data) {
+	return request({
+		url: '/proxyCommissionRecord/validAddSubordinate',
+		method: 'post',
+		data
+	})
+}
+// 上月结余
+export function ProxyCommissionRecordLastMonthBalance(data) {
+	return request({
+		url: '/proxyCommissionRecord/lastMonthBalance',
 		method: 'post',
 		data
 	})
@@ -462,5 +494,9 @@ export default {
 	ProxyCommissionRecordTotalDiscount,
 	ProxyCommissionRecordTotalRebate,
 	ProxyCommissionRecordTotalWinOrLose,
-	ProxyCommissionRecordAddsSubordinate
+	ProxyCommissionRecordAddSubordinate,
+	ProxyCommissionRecordVenueFee,
+	ProxyCommissionRecordValidSubordinate,
+	ProxyCommissionRecordValidAddSubordinate,
+	ProxyCommissionRecordLastMonthBalance
 }

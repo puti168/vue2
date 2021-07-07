@@ -910,6 +910,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.content{
+  margin-top: 67px;
+}
 .reach {
   padding: 6px;
   background-color: #1abc9c;

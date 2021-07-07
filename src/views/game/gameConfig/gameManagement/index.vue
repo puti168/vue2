@@ -19,7 +19,7 @@
 						<el-input
 							v-model="queryData.gameName"
 							clearable
-							:maxlength="6"
+							:maxlength="15"
 							size="medium"
 							style="width: 180px; margin-right: 20px"
 							placeholder="请输入"
