@@ -23,7 +23,6 @@
             <el-input
               v-model="queryData.orderId"
               clearable
-              :maxlength="50"
               size="medium"
               style="width: 200px"
               placeholder="请输入"

@@ -22,7 +22,6 @@
 							v-model="queryData.thirdOrderNo"
 							clearable
 							size="medium"
-							:maxlength="50"
 							style="width: 180px"
 							placeholder="请输入"
 							oninput="value=value.replace(/[\u4E00-\u9FA5]/g ,'')"
