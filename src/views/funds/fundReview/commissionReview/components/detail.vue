@@ -897,6 +897,7 @@ export default {
 	  totalLastAmount: '',
 	  totalActivityAmount: '',
 	  addEffectiveActiveSubordinates: '',
+	  effectivelyActiveSubordinates: '',
 	  totalPlatformAmount: '',
 	  commissionAmount: '',
 	  totalNetAmount: '',
