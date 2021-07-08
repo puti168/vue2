@@ -385,17 +385,27 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="transforNum" align="center" label="转代次数" width="180">
-                        <template slot="header" slot-scope="scope">
-                            <el-popover placement="top-start" title="提示" width="280" trigger="hover">
-                                <div v-if="!scope.row">
-                                    <p>会员转代理的次数信息，每次转代成功数字+1，初始数字为0 </p>
-                                </div>
-                                <div slot="reference" class="el-icon-question">
-                                    <span class="other-class">转代次数</span>
-                                </div>
-                            </el-popover>
-                        </template>
+					<el-table-column
+						prop="transforNum"
+						align="center"
+						label="转代次数"
+						width="180"
+					>
+						<template slot="header" slot-scope="scope">
+							<el-popover
+								placement="top-start"
+								title="提示"
+								width="280"
+								trigger="hover"
+							>
+								<div v-if="!scope.row">
+									<p>会员转代理的次数信息，每次转代成功数字+1，初始数字为0</p>
+								</div>
+								<div slot="reference" class="el-icon-question">
+									<span class="other-class">转代次数</span>
+								</div>
+							</el-popover>
+						</template>
 						<template slot-scope="scope">
 							<span
 								v-if="
@@ -727,13 +737,9 @@ export default {
 			}, 1000)
 		},
 		// 获取会员标签
-        getMemberLabelDict() {
+		getMemberLabelDict() {
 			this.$api.getMemberLabelDict().then((res) => {
-				const {
-					code,
-					data,
-					msg
-				} = res
+				const { code, data, msg } = res
 				if (code === 200) {
 					this.userLabel = data || []
 				} else {
@@ -783,25 +789,15 @@ export default {
 			this.loadData()
 		},
 		_changeTableSort({ column, prop, order }) {
-			if (prop === 'vipSerialNum') {
-				prop = 1
+			const obj = {
+                vipSerialNum: 1,
+                createDt: 2,
+                firstDepositTime: 3,
+                firstDepositAmount: 4,
+                lastLoginTime: 5,
+                offLineDays: 6
 			}
-			if (prop === 'createDt') {
-				prop = 2
-			}
-			if (prop === 'firstDepositTime') {
-				prop = 3
-			}
-			if (prop === 'firstDepositAmount') {
-				prop = 4
-			}
-			if (prop === 'lastLoginTime') {
-				prop = 5
-			}
-			if (prop === 'offLineDays') {
-				prop = 6
-			}
-			this.queryData.orderKey = prop
+			this.queryData.orderKey = prop && obj[prop]
 			if (order === 'ascending') {
 				// 升序
 				this.queryData.orderType = 'asc'
@@ -809,9 +805,9 @@ export default {
 				// 降序
 				this.queryData.orderType = 'desc'
 			} else {
-                delete this.queryData.orderKey
-                delete this.queryData.orderType
-            }
+				delete this.queryData.orderKey
+				delete this.queryData.orderType
+			}
 			this.loadData()
 		},
 
