@@ -401,7 +401,6 @@ export default {
 
 		// 列拖动
 		columnDrop() {
-			console.log('旧数据', this.dataList)
 			const wrapperTr = document.querySelector('.el-table__body-wrapper tbody')
 			const _this = this
 			this.sortable =
@@ -441,19 +440,20 @@ export default {
 		},
 
 		_changeTableSort({ column, prop, order }) {
-			if (prop === 'createdAt') {
-				prop = 1
+			const obj = {
+				createdAt: 1,
+				updatedAt: 2
 			}
-			if (prop === 'updatedAt') {
-				prop = 2
-			}
-			this.queryData.orderKey = prop
+			this.queryData.orderKey = prop && obj[prop]
 			if (order === 'ascending') {
 				// 升序
 				this.queryData.orderType = 'asc'
 			} else if (column.order === 'descending') {
 				// 降序
 				this.queryData.orderType = 'desc'
+			} else {
+				delete this.queryData.orderKey
+				delete this.queryData.orderType
 			}
 			this.loadData()
 		}
