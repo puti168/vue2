@@ -59,8 +59,8 @@
 										size="medium"
 										:max="9999999999"
 										placeholder="请输入"
-                                        :precision="0"
-                                        :min="0"
+										:precision="0"
+										:min="0"
 										style="width: 180px"
 										@blur="checkTransferValue(scope.row, 'totalDeposit')"
 									></el-input-number>
@@ -80,8 +80,8 @@
 										v-model="scope.row.tatalValidWater"
 										size="medium"
 										:max="9999999999"
-                                        :precision="0"
-                                        :min="0"
+										:precision="0"
+										:min="0"
 										placeholder="请输入"
 										style="width: 180px"
 										@blur="checkTransferValue(scope.row, 'tatalValidWater')"
@@ -101,8 +101,8 @@
 										v-model="scope.row.relegationWater"
 										size="medium"
 										:max="9999999999"
-                                        :precision="0"
-                                        :min="0"
+										:precision="0"
+										:min="0"
 										placeholder="请输入"
 										style="width: 180px"
 										@blur="checkTransferValue(scope.row, 'relegationWater')"
@@ -117,19 +117,8 @@
 							label="保级有效期（天）"
 						>
 							<template slot-scope="scope">
-								<span v-if="scope.row.vipSerialNum * 1">
-									<el-input-number
-										v-model="scope.row.relegationValidPeriod"
-										size="medium"
-										:max="9999999999"
-                                        :precision="0"
-                                        :min="0"
-										placeholder="请输入"
-										style="width: 180px"
-										@blur="
-											checkTransferValue(scope.row, 'relegationValidPeriod')
-										"
-									></el-input-number>
+								<span v-if="scope.row.relegationValidPeriod * 1">
+									{{ scope.row.relegationValidPeriod }}
 								</span>
 								<span v-else>0</span>
 							</template>
