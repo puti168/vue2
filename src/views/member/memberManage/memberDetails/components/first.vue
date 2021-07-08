@@ -28,6 +28,7 @@
           @click="editFn(item.label)"
           >{{ item.label }}</el-button>
         <el-button type="primary" @click="editFn('账号备注')">账号备注</el-button>
+        <el-button type="primary" @click="expLain('解除充值限制')">解除充值限制</el-button>
       </el-col>
     </el-row>
     <div class="titelBox">概要信息</div>
@@ -855,6 +856,30 @@ export default {
           break
       }
       this.editVisible = true
+    },
+     // 备注信息
+    expLain() {
+      this.$confirm(
+        `<strong>是否解除该会员充值限制？</strong></br><span style='font-size:12px;color:#c1c1c1'>请谨慎操作</span>`,
+        '确认提示',
+        {
+        dangerouslyUseHTMLString: true,
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          this.$api.getWithdrawSettingMemberreset().then((res) => {
+            console.log(res, '90')
+             if (res.code === 200) {
+               console.log(res)
+               this.$message.success('初始化会员提款设置成功!')
+                    this.loadData()
+             }
+               this.dialogFormVisible = false
+          })
+        })
+        .catch(() => {})
     },
     changeAccountStatus(val) {
       this.editData.code = val

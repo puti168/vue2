@@ -8,6 +8,7 @@
 						size="medium"
 						style="width: 280px"
 						placeholder="请输入"
+						maxlength="10"
 						clearable
 					></el-input>
 				</el-form-item>

@@ -172,6 +172,13 @@
           {{ outlineInfoList.payPassword }}
         </span>
       </el-col>
+      <el-col
+:span="5"
+>flygram：<i v-if="activeL" class="el-icon-loading"></i>
+        <span v-else>
+          {{ outlineInfoList.flygram }}
+        </span>
+      </el-col>
     </el-row>
     <el-divider></el-divider>
     <div class="titelBox">备注信息</div>
