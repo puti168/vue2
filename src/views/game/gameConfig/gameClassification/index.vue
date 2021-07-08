@@ -502,22 +502,21 @@ export default {
 			this.loadData()
 		},
 		_changeTableSort({ column, prop, order }) {
-			if (prop === 'assortSort') {
-				prop = 1
+			const obj = {
+				assortSort: '1',
+				createdAt: '2',
+				updatedAt: '3'
 			}
-			if (prop === 'createdAt') {
-				prop = 2
-			}
-			if (prop === 'updatedAt') {
-				prop = 3
-			}
-			this.queryData.orderKey = prop
+			this.queryData.orderKey = prop && obj[prop]
 			if (order === 'ascending') {
 				// 升序
 				this.queryData.orderType = 'asc'
 			} else if (column.order === 'descending') {
 				// 降序
 				this.queryData.orderType = 'desc'
+			} else {
+				delete this.queryData.orderKey
+				delete this.queryData.orderType
 			}
 			this.loadData()
 		},
