@@ -72,7 +72,7 @@
           class="small-size-table"
           :data="list"
           :header-cell-style="getRowClass"
-          @sort-change="changeTableSort"
+          @sort-change="_changeTableSort"
         >
           <el-table-column
             prop="noticeTitle"
@@ -477,7 +477,7 @@ export default {
       this.size = val
       this.getOperateConfigNoticeSelectDetail(this.id)
     },
-    changeTableSort({ column, prop, order }) {
+    _changeTableSort({ column, prop, order }) {
       if (prop === 'createdAt') {
         prop = 1
       }
