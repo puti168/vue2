@@ -33,7 +33,7 @@ const game = [
 	{
 		id: '1020101',
 		parentId: '1020100',
-		path: '/game/gameConfig/gameManagement',
+		path: '/game/gameConfig/gameManage',
 		title: '游戏管理'
 	},
 	{

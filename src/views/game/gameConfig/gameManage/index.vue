@@ -162,7 +162,7 @@
 					:data="list"
 					style="width: 100%"
 					:header-cell-style="getRowClass"
-					@sort-change="changeTableSort"
+					@sort-change="_changeTableSort"
 				>
 					<el-table-column
 						prop="gameId"
@@ -534,7 +534,7 @@ export default {
 			})
 			return name.slice(0, -1)
 		},
-		changeTableSort({ column, prop, order }) {
+		_changeTableSort({ column, prop, order }) {
 			this.pageNum = 1
 			this.queryData.orderProperty = prop
 			const orderParams = this.checkOrderParams.get(prop)
@@ -545,7 +545,9 @@ export default {
 				} else if (column.order === 'descending') {
 					// 降序
 					this.queryData.orderType = 'desc'
-				}
+				} else {
+                    delete this.queryData.orderType
+                }
 				this.loadData()
 			}
 		},
