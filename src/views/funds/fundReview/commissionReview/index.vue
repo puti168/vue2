@@ -22,7 +22,6 @@
               v-model="queryData.orderNo"
               clearable
               size="medium"
-              :maxlength="50"
               style="width: 180px"
               placeholder="请输入"
               @keyup.enter.native="enterSearch"

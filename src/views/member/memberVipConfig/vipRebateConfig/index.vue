@@ -18,7 +18,7 @@
       style="width: 100%"
       :header-cell-style="getRowClass"
     >
-      <el-table-column prop="gameName" align="center" label="游戏类型"> </el-table-column>
+      <el-table-column prop="gameName" align="center" label="游戏名称"> </el-table-column>
       <el-table-column prop="vip0" align="center" label="vip0">
         <template slot="header">
           vip0

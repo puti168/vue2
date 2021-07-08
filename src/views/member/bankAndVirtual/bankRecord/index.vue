@@ -59,7 +59,7 @@
 							placeholder="请输入"
 							clearable
 							style="width: 180px"
-							maxlength="6"
+							maxlength="15"
 							@keyup.enter.native="enterSearch"
 						></el-input>
 					</el-form-item>

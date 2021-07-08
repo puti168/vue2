@@ -23,7 +23,6 @@
             <el-input
               v-model="queryData.orderNo"
               clearable
-              :maxlength="50"
               size="medium"
               style="width: 200px"
               placeholder="请输入"
@@ -47,7 +46,7 @@
             <el-input
               v-model="queryData.realName"
               clearable
-              :maxlength="6"
+              :maxlength="15"
               size="medium"
               style="width: 200px"
               placeholder="请输入"

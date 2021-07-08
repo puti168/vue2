@@ -116,7 +116,7 @@
 						size="medium"
 						placeholder="请输入"
 						clearable
-						maxlength="6"
+						maxlength="15"
 						style="width: 365px"
 					></el-input>
 				</el-form-item>

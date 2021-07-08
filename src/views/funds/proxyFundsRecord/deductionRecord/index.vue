@@ -22,7 +22,6 @@
           <el-form-item label="订单号:">
             <el-input
               v-model="queryData.id"
-              :maxlength="50"
               clearable
               size="medium"
               style="width: 200px"
@@ -47,7 +46,7 @@
             <el-input
               v-model="queryData.memberName"
               clearable
-              :maxlength="6"
+              :maxlength="15"
               size="medium"
               style="width: 200px"
               placeholder="请输入"

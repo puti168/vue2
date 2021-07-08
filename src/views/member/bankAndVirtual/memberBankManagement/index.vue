@@ -102,7 +102,7 @@
 						<el-input
 							v-model="queryData.userName"
 							clearable
-							maxlength="6"
+							maxlength="15"
 							size="medium"
 							style="width: 200px"
 							placeholder="请输入"

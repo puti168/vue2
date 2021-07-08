@@ -432,14 +432,14 @@ class="textC"
           v-if="moduleBox === '姓名'"
           label="姓名："
           prop="realName"
-          :maxlength="6"
+          :maxlength="15"
         >
           <el-input
             v-model="editData.realName"
             clearable
             type="text"
             size="medium"
-            :maxlength="6"
+            :maxlength="15"
             placeholder="请输入姓名"
             :disabled="loading"
             @keyup.enter.native="enterSearch"

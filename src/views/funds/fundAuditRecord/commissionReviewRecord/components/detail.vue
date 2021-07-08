@@ -242,7 +242,7 @@
                   }}
                 </td>
                 <td class="td-title">新增有效活跃下级</td>
-                <td class="disColor">
+                <td class="disColor" @click="addSubordinate()">
                   {{
                     commissionRecordVo.addEffectiveActiveSubordinates
                       ? commissionRecordVo.addEffectiveActiveSubordinates
@@ -303,7 +303,7 @@
                   }}
                 </td>
                 <td class="td-title">上月结余</td>
-                <td>
+                <td class="disColor" @click="Balance()">
                   {{
                     commissionRecordVo.totalLastAmount
                       ? commissionRecordVo.totalLastAmount
@@ -536,21 +536,21 @@
       class="rempadding"
     >
       <div class="contentBox">
-        总输赢<span class="disColor">{{ totalPlatformAmount }}元</span>
+        场馆费<span class="disColor">{{ totalPlatformAmount }}元</span>
       </div>
       <el-table
         v-loading="loading"
         size="mini"
         class="small-size-table"
-        :data="gameList"
+        :data="venueFeeList"
         :header-cell-style="getRowClass"
       >
-        <el-table-column prop="playerId" align="center" label="场馆">
+        <el-table-column prop="venueName" align="center" label="场馆">
         </el-table-column>
-        <el-table-column prop="playerName" align="center" label="场馆费率">
+        <el-table-column prop="venueRate" align="center" label="场馆费率">
         </el-table-column>
         <el-table-column
-          prop="depositAmount"
+          prop="amount"
           align="center"
           label="场馆费"
         ></el-table-column>
@@ -654,6 +654,153 @@
       ></el-pagination>
        </div>
     </el-dialog>
+     <!-- 有效活跃下级 -->
+    <el-dialog
+      :visible.sync="dialogEffVisible"
+      :destroy-on-close="true"
+      width="880px"
+      class="rempadding"
+    >
+      <div class="contentBox">
+        有效活跃下级<span class="disColor">{{ effectivelyActiveSubordinates }}人</span>
+      </div>
+      <el-table
+        v-loading="loading"
+        size="mini"
+        class="small-size-table"
+        :data="gameList"
+        :header-cell-style="getRowClass"
+      >
+        <el-table-column prop="playerId" align="center" label="会员账号">
+          <template slot-scope="scope">
+            <Copy v-if="!!scope.row.playerId" :title="scope.row.playerId" :copy="copy">
+              {{ scope.row.playerId }}
+            </Copy>
+          </template>
+        </el-table-column>
+        <el-table-column prop="playerName" align="center" label="姓名"></el-table-column>
+        <el-table-column
+          prop="depositAmount"
+          align="center"
+          label="存款金额"
+        ></el-table-column>
+        <el-table-column
+          prop="validBetAmount"
+          align="center"
+          label="有效投注"
+        ></el-table-column>
+      </el-table>
+      <div slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="dialogEffVisible = false">关闭</el-button>
+      </div>
+      <!-- 分页 -->
+       <div slot="footer" class="dialog-footer">
+      <el-pagination
+        :current-page.sync="page"
+        background
+        class="fenye"
+        layout="total, sizes,prev, pager, next, jumper"
+        :page-size="size"
+        :page-sizes="[5, 10, 15]"
+      ></el-pagination>
+       </div>
+    </el-dialog>
+    <!-- 新增有效活跃下级 -->
+    <el-dialog
+      :visible.sync="dialogDinate"
+      :destroy-on-close="true"
+      width="880px"
+      class="rempadding"
+    >
+      <div class="contentBox">
+        新增有效活跃下级<span class="disColor">{{ addEffectiveActiveSubordinates }}人</span>
+      </div>
+      <el-table
+        v-loading="loading"
+        size="mini"
+        class="small-size-table"
+        :data="dinateList"
+        :header-cell-style="getRowClass"
+      >
+        <el-table-column prop="playerId" align="center" label="会员账号">
+          <template slot-scope="scope">
+            <Copy v-if="!!scope.row.playerId" :title="scope.row.playerId" :copy="copy">
+              {{ scope.row.playerId }}
+            </Copy>
+          </template>
+        </el-table-column>
+        <el-table-column prop="playerName" align="center" label="姓名"></el-table-column>
+        <el-table-column
+          prop="depositAmount"
+          align="center"
+          label="存款金额"
+        ></el-table-column>
+        <el-table-column
+          prop="validBetAmount"
+          align="center"
+          label="有效投注"
+        ></el-table-column>
+      </el-table>
+      <div slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="dialogDinate = false">关闭</el-button>
+      </div>
+      <!-- 分页 -->
+       <div slot="footer" class="dialog-footer">
+      <el-pagination
+        :current-page.sync="page"
+        background
+        class="fenye"
+        layout="total, sizes,prev, pager, next, jumper"
+        :page-size="size"
+        :page-sizes="[5, 10, 15]"
+      ></el-pagination>
+       </div>
+    </el-dialog>
+      <!-- 上月结余 -->
+    <el-dialog
+      :visible.sync="dialogBalance"
+      :destroy-on-close="true"
+      width="880px"
+      class="rempadding"
+    >
+      <div class="contentBox">
+        上月结余<span class="disColor">{{ totalLastAmount }}元</span>
+      </div>
+      <el-table
+        v-loading="loading"
+        size="mini"
+        class="small-size-table"
+        :data="balanceList"
+        :header-cell-style="getRowClass"
+      >
+        <el-table-column prop="reportDate" align="center" label="历史月份">
+        </el-table-column>
+        <el-table-column
+          prop="totalPureAmount"
+          align="center"
+          label="净输赢"
+        ></el-table-column>
+        <el-table-column
+          prop="totalLastAmount"
+          align="center"
+          label="结余金额"
+        ></el-table-column>
+      </el-table>
+      <div slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="dialogBalance = false">关闭</el-button>
+      </div>
+      <!-- 分页 -->
+       <div slot="footer" class="dialog-footer">
+      <el-pagination
+        :current-page.sync="page"
+        background
+        class="fenye"
+        layout="total, sizes,prev, pager, next, jumper"
+        :page-size="size"
+        :page-sizes="[5, 10, 15]"
+      ></el-pagination>
+       </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -678,8 +825,12 @@ export default {
       },
       userLabel: [],
       addactiveList: [],
+      dinateList: [],
+      balanceList: [],
       winOrLoseList: [],
+      effectiveList: [],
       discountList: [],
+      venueFeeList: [],
       backwaterList: [],
       gameList: [],
       accountsVo: {},
@@ -691,7 +842,10 @@ export default {
       dialogTotal: false,
       dialogVenuefee: false,
       dialogaddactive: false,
+      dialogEffVisible: false,
+      dialogDinate: false,
       dialogDiscount: false,
+      dialogBalance: false,
       createPage: false,
       dialogBackwater: false,
       activeSubordinate: '',
@@ -699,12 +853,15 @@ export default {
       totalActivityAmount: '',
       commissionAmount: '',
       addActiveSubordinates: '',
+      addEffectiveActiveSubordinates: '',
+      effectivelyActiveSubordinates: '',
+      totalLastAmount: '',
       totalNetAmount: '',
       registerVo: {},
       reportMonth: '',
       proxyId: '',
       page: 1,
-      size: 5,
+      size: 10,
       visible: false,
       action: false
     }
@@ -731,7 +888,6 @@ export default {
           const response = res.data
           this.loading = false
           this.reportMonth = response.commissionRecordVo.reportDate
-           console.log(this.reportMonth, '小明')
           this.accountsVo = response.accountsVo
           this.commissionRecordVo = response.commissionRecordVo
           this.proxyRiskControlLevelVo = response.proxyRiskControlLevelVo
@@ -742,6 +898,9 @@ export default {
           this.totalActivityAmount = response.commissionRecordVo.totalActivityAmount
           this.commissionAmount = response.commissionRecordVo.commissionAmount
           this.addActiveSubordinates = response.commissionRecordVo.addActiveSubordinates
+          this.effectivelyActiveSubordinates = response.commissionRecordVo.effectivelyActiveSubordinates
+          this.addEffectiveActiveSubordinates = response.commissionRecordVo.addEffectiveActiveSubordinates
+          this.totalLastAmount = response.commissionRecordVo.totalLastAmount
 
           console.log(response, '111123')
           this.registerVo = response.registerVo
@@ -765,7 +924,6 @@ export default {
       params.pageSize = this.size
       this.dialogVisible = true
       this.$api.ProxyCommissionRecordSubordinate(params).then((res) => {
-         console.log(params, '11111')
         if (res.code === 200) {
           this.gameList = res.data.record
         }
@@ -781,8 +939,7 @@ export default {
       params.proxyId = this.rowData.proxyId
       params.pageSize = this.size
       this.dialogaddactive = true
-      this.$api.ProxyCommissionRecordAddsSubordinate(params).then((res) => {
-         console.log(params, '11111')
+      this.$api.ProxyCommissionRecordAddSubordinate(params).then((res) => {
         if (res.code === 200) {
           this.addactiveList = res.data.record
         }
@@ -790,7 +947,19 @@ export default {
     },
     // 有效活跃下级
     effective() {
-
+      const params = {
+        ...this.effectiveList
+      }
+      params.reportMonth = this.reportMonth
+      params.pageNum = this.page
+      params.proxyId = this.rowData.proxyId
+      params.pageSize = this.size
+      this.dialogEffVisible = true
+       this.$api.ProxyCommissionRecordVenueFee(params).then((res) => {
+        if (res.code === 200) {
+          this.effectiveList = res.data.record
+        }
+      })
     },
     // 总输赢
     totalNet() {
@@ -803,7 +972,6 @@ export default {
       params.pageSize = this.size
        this.diawinOrLoseList = true
        this.$api.ProxyCommissionRecordTotalWinOrLose(params).then((res) => {
-         console.log(params, '11111')
         if (res.code === 200) {
           this.winOrLoseList = res.data.record
         }
@@ -811,7 +979,19 @@ export default {
     },
      // 场馆费
     VenuefeeNet() {
+      const params = {
+        ...this.venueFeeList
+      }
+      params.reportMonth = this.reportMonth
+      params.pageNum = this.page
+      params.proxyId = this.rowData.proxyId
+      params.pageSize = this.size
        this.dialogVenuefee = true
+       this.$api.ProxyCommissionRecordVenueFee(params).then((res) => {
+        if (res.code === 200) {
+          this.venueFeeList = res.data.record
+        }
+      })
     },
     // 总优惠
     totalDiscount() {
@@ -824,7 +1004,6 @@ export default {
       params.pageSize = this.size
       this.dialogDiscount = true
       this.$api.ProxyCommissionRecordTotalDiscount(params).then((res) => {
-         console.log(params, '11111')
         if (res.code === 200) {
           this.discountList = res.data.record
         }
@@ -840,10 +1019,41 @@ export default {
       params.proxyId = this.rowData.proxyId
       params.pageSize = this.size
       this.$api.ProxyCommissionRecordTotalRebate(params).then((res) => {
-         console.log(params, '11111')
         if (res.code === 200) {
           this.backwaterList = res.data.record
           this.dialogBackwater = true
+        }
+      })
+    },
+    // 新增有效活跃下级
+    addSubordinate() {
+      const params = {
+        ...this.dinateList
+      }
+      params.reportMonth = this.reportMonth
+      params.pageNum = this.page
+      params.proxyId = this.rowData.proxyId
+      params.pageSize = this.size
+      this.$api.ProxyCommissionRecordValidAddSubordinate(params).then((res) => {
+        if (res.code === 200) {
+          this.dinateList = res.data.record
+          this.dialogDinate = true
+        }
+      })
+    },
+    // 上月结余
+    Balance() {
+      const params = {
+        ...this.balanceList
+      }
+      params.reportMonth = this.reportMonth
+      params.pageNum = this.page
+      params.proxyId = this.rowData.proxyId
+      params.pageSize = this.size
+      this.$api.ProxyCommissionRecordLastMonthBalance(params).then((res) => {
+        if (res.code === 200) {
+          this.balanceList = res.data.record
+          this.dialogBalance = true
         }
       })
     }
