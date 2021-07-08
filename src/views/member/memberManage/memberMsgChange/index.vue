@@ -277,14 +277,15 @@ export default {
 		},
 		changeTableSort({ column, prop, order }) {
 			this.pageNum = 1
-			console.log(prop)
 			if (order === 'ascending') {
 				// 升序
 				this.queryData.orderType = 'asc'
 			} else if (column.order === 'descending') {
 				// 降序
 				this.queryData.orderType = 'desc'
-			}
+			} else {
+                delete this.queryData.orderType
+            }
 			this.loadData()
 		},
 		reset() {
