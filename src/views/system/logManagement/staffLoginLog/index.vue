@@ -6,7 +6,7 @@
           <el-input
             v-model="queryData.userName"
             clearable
-            :maxlength="11"
+            :maxlength="10"
             size="medium"
             style="width: 180px"
             placeholder="请输入"

@@ -71,6 +71,22 @@
               ></el-option>
             </el-select>
           </el-form-item>
+          <el-form-item label="域名类型:" class="tagheight">
+            <el-select
+              v-model="queryData.status"
+              style="width: 180px"
+              clearable
+              placeholder="默认选择全部"
+              :popper-append-to-body="false"
+            >
+              <el-option
+                v-for="item in enumProxyDomainTypeOperate"
+                :key="item.code"
+                :label="item.description"
+                :value="item.code"
+              ></el-option>
+            </el-select>
+          </el-form-item>
           <el-form-item label="最近修改时间:">
             <el-date-picker
               v-model="editTime"
@@ -154,6 +170,11 @@
                 {{ typeFilter(scope.row.status, "domainStatusType") }}
               </div>
             </template>
+          </el-table-column>
+          <el-table-column prop="remark" align="center" label="域名类型">
+             <template slot-scope="scope">
+               {{ typeFilter(scope.row.status, "enumProxyDomainTypeOperate") }}
+              </template>
           </el-table-column>
           <el-table-column prop="remark" align="center" label="备注"></el-table-column>
           <el-table-column prop="createdBy" align="center" label="创建人" width="120px">
@@ -306,7 +327,11 @@ export default {
   computed: {
     domainStatusType() {
       return this.globalDics.domainStatusType
+    },
+   enumProxyDomainTypeOperate() {
+      return this.globalDics.enumProxyDomainTypeOperate
     }
+
   },
   mounted() {},
   methods: {

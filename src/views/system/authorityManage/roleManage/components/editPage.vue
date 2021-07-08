@@ -33,7 +33,7 @@
 							type="textarea"
 							placeholder="请输入"
 							clearable
-							maxlength="300"
+							maxlength="50"
 							show-word-limit
 							style="width: 365px"
 						></el-input>
