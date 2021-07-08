@@ -90,14 +90,14 @@ const member = [
 	{
 		id: '125',
 		parentId: '124',
-		path: '/member/bankAndVirtual/memberBankManagement',
+		path: '/member/bankAndVirtual/memberBankManage',
 		title: '会员银行卡管理',
 		name: 'memberBankManagement'
 	},
 	{
 		id: '126',
 		parentId: '124',
-		path: '/member/bankAndVirtual/memberVirtualManagement',
+		path: '/member/bankAndVirtual/memberVirtualManage',
 		title: '会员虚拟币账号管理',
 		name: 'memberVirtualManagement'
 	},
