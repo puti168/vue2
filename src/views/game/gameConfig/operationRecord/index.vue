@@ -36,6 +36,8 @@
             :maxlength="5"
             style="width: 180px"
             placeholder="请输入"
+            oninput="value=value.replace(/[^\d]/g,'')"
+            @blur="checkValue($event)"
             @keyup.enter.native="enterSearch"
           ></el-input>
         </el-form-item>
@@ -202,11 +204,17 @@ export default {
       }
       this.loadData()
     },
+
     reset() {
       this.pageNum = 1
       this.queryData = {}
       this.searchTime = [start, end]
       this.loadData()
+    },
+    checkValue(e) {
+      const { value } = e.target
+      console.log(value)
+      this.queryData.announcementTitel = value
     }
   }
 }

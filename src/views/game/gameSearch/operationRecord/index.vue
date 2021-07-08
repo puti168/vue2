@@ -17,28 +17,6 @@
             :default-time="defaultTime"
           ></el-date-picker>
         </el-form-item>
-        <el-form-item label="操作页面:">
-          <el-select
-            v-model="queryData.changeType"
-            style="width: 300px"
-            multiple
-            placeholder="默认选择全部"
-            :popper-append-to-body="false"
-          >
-            <el-option label="游戏管理" value="0"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="ID:">
-          <el-input
-            v-model="queryData.announcementTitel"
-            clearable
-            size="medium"
-            :maxlength="5"
-            style="width: 180px"
-            placeholder="请输入"
-            @keyup.enter.native="enterSearch"
-          ></el-input>
-        </el-form-item>
         <el-form-item label="变更类型:">
           <el-select
             v-model="queryData.changeType"
@@ -96,15 +74,11 @@
         >
           <el-table-column prop="announcementTitle" align="center" label="操作页面">
           </el-table-column>
-          <el-table-column prop="announcementTitle" align="center" label="ID">
-          </el-table-column>
           <el-table-column prop="changeType" align="center" label="变更类型">
           </el-table-column>
           <el-table-column align="center" label="变更前" prop="beforeValue">
           </el-table-column>
           <el-table-column align="center" label="变更后" prop="afterValue">
-          </el-table-column>
-          <el-table-column align="center" label="备注" prop="afterValue">
           </el-table-column>
           <el-table-column prop="createdBy" align="center" width="120" label="操作人">
           </el-table-column>

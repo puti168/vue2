@@ -127,10 +127,46 @@ const agent = [
 		title: '推广图片管理'
 	},
 	{
+		id: '204',
+		parentId: '47',
+		path: '/agent/promotionManagement/domainChangeRecord',
+		title: '推广域名变更记录'
+	},
+	{
+		id: '205',
+		parentId: '47',
+		path: '/agent/promotionManagement/pictureChangeRecord',
+		title: '推广图片变更记录'
+	},
+	{
 		id: '120',
 		parentId: '48',
 		path: '/agent/agentConfig/levelWelfareCnfig',
 		title: '等级福利配置'
+	},
+	{
+		id: '206',
+		parentId: '48',
+		path: '/agent/agentConfig/agentLabelConfig',
+		title: '代理标签配置'
+	},
+	{
+		id: '207',
+		parentId: '48',
+		path: '/agent/agentConfig/agentLabelChangeRecord',
+		title: '代理标签变更记录'
+	},
+	{
+		id: '208',
+		parentId: '48',
+		path: '/agent/agentConfig/agentLevelConfigRecord',
+		title: '代理等级变更记录'
+	},
+	{
+		id: '209',
+		parentId: '48',
+		path: '/agent/agentConfig/rebateLevelRecord',
+		title: '返佣等级变更记录'
 	}
 ]
 export default agent

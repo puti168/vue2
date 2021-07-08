@@ -65,6 +65,12 @@ const system = [
 		parentId: '110',
 		path: '/system/parameterConfiguration/parameterDictionary',
 		title: '参数字典'
+	},
+	{
+		id: '203',
+		parentId: '110',
+		path: '/system/parameterConfiguration/parameterDictionaryRecord',
+		title: '参数字典修改记录'
 	}
 ]
 export default system
