@@ -230,7 +230,6 @@ export default {
       this.loadData()
     },
     _changeTableSort({ column, prop, order }) {
-      console.log(column, prop, order)
       if (prop === 'createDt') {
         prop = 1
       }

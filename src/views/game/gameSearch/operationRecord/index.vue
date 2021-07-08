@@ -171,7 +171,6 @@ export default {
         // 降序
         this.queryData.orderType = 'desc'
       } else {
-        delete this.queryData.orderKey
         delete this.queryData.orderType
       }
       this.loadData()
