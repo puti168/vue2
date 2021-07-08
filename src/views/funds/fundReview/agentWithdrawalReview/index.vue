@@ -117,7 +117,9 @@
                   <el-button
                     type="success"
                     size="medium"
-                    :disabled="scope.row.lockStatus === 0"
+                    :disabled="
+                      scope.row.lockStatus !== 0 && scope.row.lockAccount !== name
+                    "
                     @click="confirm(scope.row, true)"
                   >
                     出款通过
@@ -125,7 +127,9 @@
                   <el-button
                     type="danger"
                     size="medium"
-                    :disabled="scope.row.lockStatus === 0"
+                    :disabled="
+                      scope.row.lockStatus !== 0 && scope.row.lockAccount !== name
+                    "
                     @click="confirm(scope.row, false)"
                   >
                     出款拒绝
