@@ -59,7 +59,7 @@
 					</el-table-column>
 					<el-table-column prop="upgradeBonus" align="center" label="升级礼金">
 						<template slot-scope="scope">
-							<span v-if="scope.row.upgradeBonus * 1">
+							<span v-if="scope.row.vipSerialNum!=='VIP0'">
 								<el-input-number
 									v-model="scope.row.upgradeBonus"
 									size="medium"
@@ -97,7 +97,7 @@
 							</el-popover>
 						</template>
 						<template slot-scope="scope">
-							<span v-if="scope.row.birthdayBonus * 1">
+							<span v-if="scope.row.vipSerialNum!=='VIP0'">
 								<el-input-number
 									v-model="scope.row.birthdayBonus"
 									size="medium"
@@ -133,7 +133,7 @@
 							</el-popover>
 						</template>
 						<template slot-scope="scope">
-							<span v-if="scope.row.aboveMonthRedEnvelope * 1">
+							<span v-if="scope.row.vipSerialNum!=='VIP0'">
 								<el-input-number
 									v-model="scope.row.aboveMonthRedEnvelope"
 									size="medium"
@@ -165,7 +165,7 @@
 							</el-popover>
 						</template>
 						<template slot-scope="scope">
-							<span v-if="scope.row.belowMonthRedEnvelope * 1">
+							<span v-if="scope.row.vipSerialNum!=='VIP0'">
 								<el-input-number
 									v-model="scope.row.belowMonthRedEnvelope"
 									size="medium"
