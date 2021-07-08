@@ -17,7 +17,7 @@
 							:data="dataList"
 							style="width: 100%"
 							:header-cell-style="getRowClass"
-							@sort-change="changeTableSort"
+							@sort-change="_changeTableSort"
 						>
 							<el-table-column
 								prop="moduleId"
@@ -428,7 +428,7 @@ export default {
 				loading.close()
 			}, 1000)
 		},
-		changeTableSort({ column, prop, order }) {
+		_changeTableSort({ column, prop, order }) {
 			this.pageNum = 1
 			const orderParams = this.checkOrderParams.get(prop)
 			this.queryData.orderProperty = prop
@@ -439,7 +439,10 @@ export default {
 				} else if (column.order === 'descending') {
 					// 降序
 					this.queryData.orderType = 'desc'
-				}
+				} else {
+				    delete this.queryData.orderType
+				    delete this.queryData.orderProperty
+                }
 				this.loadData()
 			}
 		},
