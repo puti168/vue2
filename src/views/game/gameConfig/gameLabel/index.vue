@@ -450,9 +450,9 @@ export default {
 		},
 		_changeTableSort({ column, prop, order }) {
 			const obj = {
-				gameLabelId: '1',
-				createdAt: '2',
-				updatedAt: '3'
+				gameLabelId: 1,
+				createdAt: 2,
+				updatedAt: 3
 			}
 			this.pageNum = 1
 			this.queryData.orderKey = prop && obj[prop]

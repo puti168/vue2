@@ -503,9 +503,9 @@ export default {
 		},
 		_changeTableSort({ column, prop, order }) {
 			const obj = {
-				assortSort: '1',
-				createdAt: '2',
-				updatedAt: '3'
+				assortSort: 1,
+				createdAt: 2,
+				updatedAt: 3
 			}
 			this.queryData.orderKey = prop && obj[prop]
 			if (order === 'ascending') {
