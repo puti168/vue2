@@ -316,10 +316,13 @@ export default {
       this.$api
         .getReportDaynetamountList(params)
         .then((res) => {
-          if (res.code === 200) {
+          if (res.code === 200 && res.data !== null) {
             this.tableData = res.data.record
             this.total = res.data.totalRecord
             console.log(res)
+          } else {
+            this.tableData = []
+            this.total = 0
           }
           this.loading = false
         })

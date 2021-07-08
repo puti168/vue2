@@ -671,38 +671,24 @@ export default {
       this.$api
         .getReportMembernetamountList(params)
         .then((res) => {
-          const {
-            code,
-            data: { record, totalRecord },
-            msg
-          } = res
-          if (code === 200) {
+          if (res.code === 200 && res.data !== null) {
             this.loading = false
-            this.dataList = record
-            this.total = totalRecord
+            this.dataList = res.data.record
+            this.total = res.data.totalRecord
           } else {
+            this.dataList = []
+            this.total = 0
             this.loading = false
-            this.$message({
-              message: msg,
-              type: 'error'
-            })
           }
         })
         .catch(() => (this.loading = false))
       this.$api
         .getReportMembernetamountAggregation(params)
         .then((res) => {
-          const { code, msg } = res
-          if (code === 200) {
+          if (res.code === 200) {
             this.loading = false
             this.summary = res.data
             console.log(res)
-          } else {
-            this.loading = false
-            this.$message({
-              message: msg,
-              type: 'error'
-            })
           }
         })
         .catch(() => (this.loading = false))
@@ -789,7 +775,7 @@ export default {
           )
           sums[index] = el
           return
-        } else if (index >= 8) {
+        } else if (index >= 8 && this.summary !== null) {
           const values = data.map((item) => Number(item[column.property]))
           if (!values.every((value) => isNaN(value))) {
             sums[index] = values.reduce((prev, curr) => {

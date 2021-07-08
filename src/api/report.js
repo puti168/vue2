@@ -96,6 +96,30 @@ export function getGameManagerSelectGameByPlatform(params) {
 		params
 	})
 }
+// 客户端盈亏报表==>客户端盈亏列表(分页)
+export function getDevicetypenetamountList(params) {
+	return request({
+		url: '/report/devicetypenetamount/list',
+		method: 'get',
+		params
+	})
+}
+// 客户端盈亏报表==>客户端盈亏详情(分页)
+export function getDevicetypenetamountDetail(params) {
+	return request({
+		url: '/report/devicetypenetamount/detail',
+		method: 'get',
+		params
+	})
+}
+// 客户端盈亏报表==>客户端盈亏总计
+export function getDevicetypenetamountAggregation(params) {
+	return request({
+		url: '/report/devicetypenetamount/aggregation',
+		method: 'get',
+		params
+	})
+}
 
 export default {
 	getReportMembernetamountList,
@@ -109,5 +133,8 @@ export default {
 	getReportGameProfitDetailListPage,
 	getReportDaynetamountList,
 	getReportDaynetamountAggregation,
-	getGameManagerSelectGameByPlatform
+	getGameManagerSelectGameByPlatform,
+	getDevicetypenetamountList,
+	getDevicetypenetamountDetail,
+	getDevicetypenetamountAggregation
 }

@@ -6,20 +6,17 @@
           <el-form-item label="日期:">
             <el-date-picker
               v-model="searchTime"
-              size="medium"
-              format="yyyy-MM-dd"
               type="daterange"
               range-separator="-"
+              :clearable="false"
               start-placeholder="开始日期"
               end-placeholder="结束日期"
-              align="right"
-              clearable
-              style="width: 240px"
+              :picker-options="timeControl"
             ></el-date-picker>
           </el-form-item>
           <el-form-item label="客户端:">
             <el-select
-              v-model="queryData.aaaaa"
+              v-model="queryData.deviceType"
               clearable
               placeholder="默认选择全部"
               :popper-append-to-body="false"
@@ -78,53 +75,62 @@
           border
           size="mini"
           show-summary
-          sum-text="全部合计"
+          :summary-method="getSummaries"
           class="small-size-table"
           :data="tableData"
           style="width: 100%"
           :header-cell-style="getRowClass"
           @sort-change="_changeTableSort"
         >
-          <el-table-column prop="gameName" align="center" label="客户端">
+          <el-table-column
+            v-if="settingList['客户端']"
+            prop="deviceTypeDesc"
+            align="center"
+            label="客户端"
+          >
             <template slot-scope="scope">
               <el-link
                 class="lightBlueColor"
                 type="primary"
                 @click="dialogData(scope.row)"
-                >{{ scope.row.gameName }}</el-link>
+                >{{ scope.row.deviceTypeDesc }}</el-link>
             </template>
           </el-table-column>
           <el-table-column
             v-if="settingList['投注人数']"
-            prop="gameRebateRate"
+            prop="memberCount"
             align="center"
             sortable="custom"
             label="投注人数"
           >
           </el-table-column>
           <el-table-column
-            prop="gameRebateRate"
+            v-if="settingList['注单量']"
+            prop="betCount"
             align="center"
             sortable="custom"
             label="注单量"
           >
           </el-table-column>
           <el-table-column
-            prop="gameRebateRate"
+            v-if="settingList['投注金额']"
+            prop="betAmount"
             align="center"
             sortable="custom"
             label="投注金额"
           >
           </el-table-column>
           <el-table-column
-            prop="gameRebateRate"
+            v-if="settingList['有效投注']"
+            prop="validBetAmount"
             align="center"
             sortable="custom"
             label="有效投注 "
           >
           </el-table-column>
           <el-table-column
-            prop="gameRebateRate"
+            v-if="settingList['投注盈亏']"
+            prop="netAmount"
             align="center"
             sortable="custom"
             label="投注盈亏"
@@ -135,6 +141,22 @@
                 <i class="el-icon-question" style="position: absolute; right: 10px"></i>
                 <div slot="content">盈亏金额指游戏输赢金额<br />负数表示会员输</div>
               </el-tooltip>
+            </template>
+            <template slot-scope="scope">
+              <span
+                v-if="!!scope.row.netAmount && scope.row.netAmount > 0"
+                class="enableColor"
+              >
+                {{ scope.row.netAmount }}
+              </span>
+              <span
+                v-else-if="!!scope.row.netAmount && scope.row.netAmount < 0"
+                class="redColor"
+              >
+                {{ scope.row.netAmount }}
+              </span>
+              <span v-else-if="!!scope.row.netAmount && scope.row.netAmount === 0"></span>
+              <span v-else>-</span>
             </template>
           </el-table-column>
         </el-table>
@@ -148,36 +170,50 @@
           size="mini"
           border
           class="small-size-table"
-          :data="gameList"
+          :data="dialogList"
           style="margin-bottom: 15px"
           :header-cell-style="getRowClass"
         >
-          <el-table-column prop="userName" align="center" label="日期"> </el-table-column>
+          <el-table-column prop="staticsDate" align="center" label="日期">
+          </el-table-column>
           <el-table-column
-            prop="accountTypeName"
+            prop="memberCount"
             align="center"
             label="投注人数"
           ></el-table-column>
           <el-table-column
-            prop="accountTypeName"
+            prop="betCount"
             align="center"
             label="注单量"
           ></el-table-column>
           <el-table-column
-            prop="accountTypeName"
+            prop="betAmount"
             align="center"
             label="投注金额"
           ></el-table-column>
           <el-table-column
-            prop="accountTypeName"
+            prop="validBetAmount"
             align="center"
             label="有效投注"
           ></el-table-column>
-          <el-table-column
-            prop="accountTypeName"
-            align="center"
-            label="投注盈亏"
-          ></el-table-column>
+          <el-table-column prop="netAmount" align="center" label="投注盈亏">
+            <template slot-scope="scope">
+              <span
+                v-if="!!scope.row.netAmount && scope.row.netAmount > 0"
+                class="enableColor"
+              >
+                {{ scope.row.netAmount }}
+              </span>
+              <span
+                v-else-if="!!scope.row.netAmount && scope.row.netAmount < 0"
+                class="redColor"
+              >
+                {{ scope.row.netAmount }}
+              </span>
+              <span v-else-if="!!scope.row.netAmount && scope.row.netAmount === 0"></span>
+              <span v-else>-</span>
+            </template>
+          </el-table-column>
         </el-table>
         <!-- 分页 -->
         <el-pagination
@@ -187,7 +223,7 @@
           layout="total, sizes,prev, pager, next, jumper"
           :page-size="size"
           :page-sizes="[10, 20, 50]"
-          :total="summary"
+          :total="dialogTotal"
           @current-change="handleCurrentChangeDialog"
           @size-change="handleSizeChangeDialog"
         ></el-pagination>
@@ -199,10 +235,10 @@
         title="列设置"
         center
         :visible.sync="visible"
-        width="610px"
+        width="300px"
         class="col-setting"
       >
-        <el-button type="primary" @click="setAll">复原缺省</el-button>
+        <el-link type="primary" @click="setAll">复原缺省</el-link>
         <div v-for="(value, name) in settingList" :key="name" class="setting-div">
           <el-checkbox v-model="newList[name]">{{ name }}</el-checkbox>
         </div>
@@ -228,21 +264,45 @@ export default {
     return {
       queryData: {},
       searchTime: [startTime, endTime],
+      timeControl: {
+        onPick: ({ maxDate, minDate }) => {
+          this.choiceDate = minDate.getTime()
+          if (maxDate) {
+            this.choiceDate = ''
+          }
+        },
+        disabledDate: (time) => {
+          const self = this
+          if (self.choiceDate) {
+            const startDay = self.choiceDate
+            let endDay = startDay + 24 * 3600 * 1000 * 31
+            if (endDay > Date.now() - 8.64e6) {
+              endDay = Date.now() - 8.64e6
+            }
+            return time.getTime() < startDay || time.getTime() > endDay
+          } else {
+            return time.getTime() > Date.now() - 8.64e6
+          }
+        }
+      },
       queryText: '查询',
-      t: 10,
       tableData: [],
-      dataList: {},
-
-      gameList: [],
+      dialogList: [],
       page: 1,
       size: 10,
-      summary: 0,
-      title: 'OB体育',
-      title1: '游戏',
+      dialogTotal: 0,
+      deviceTypeCode: '',
+      summary: {},
+      title: '',
       visible: false,
       tableVisible: false,
       settingList: {
-        投注人数: true
+        客户端: true,
+        投注人数: true,
+        注单量: true,
+        投注金额: true,
+        有效投注: true,
+        投注盈亏: true
       },
       newList: []
     }
@@ -265,18 +325,30 @@ export default {
       const [startTime, endTime] = create
       let params = {
         ...this.queryData,
-        createAtStart: startTime ? dayjs(startTime).format('YYYY-MM-DD') : '',
-        createAtEnd: endTime ? dayjs(endTime).format('YYYY-MM-DD') : ''
+        startTime: startTime ? dayjs(startTime).format('YYYY-MM-DD') : '',
+        endTime: endTime ? dayjs(endTime).format('YYYY-MM-DD') : ''
       }
       params = {
         ...this.getParams(params)
       }
       this.$api
-        .gameList(params)
+        .getDevicetypenetamountList(params)
+        .then((res) => {
+          if (res.code === 200 && res.data !== null) {
+            this.tableData = res.data.record
+          } else {
+            this.tableData = []
+          }
+          this.loading = false
+        })
+        .catch(() => {
+          this.loading = false
+        })
+      this.$api
+        .getDevicetypenetamountAggregation(params)
         .then((res) => {
           if (res.code === 200) {
-            this.tableData = res.data.record
-            this.total = res.data.totalRecord
+            this.summary = res.data
           }
           this.loading = false
         })
@@ -303,24 +375,144 @@ export default {
       this.loadData()
     },
     dialogData(val) {
+      this.title = val.deviceTypeDesc
+      this.getDevicetypenetamountDetail(val.deviceTypeCode)
       this.tableVisible = true
     },
+    getDevicetypenetamountDetail(val) {
+      this.loading = true
+      const create = this.searchTime || []
+      const [startTime, endTime] = create
+      const params = {
+        pageNum: this.page,
+        pageSize: this.size,
+        deviceTypeCode: val,
+        startTime: startTime ? dayjs(startTime).format('YYYY-MM-DD') : '',
+        endTime: endTime ? dayjs(endTime).format('YYYY-MM-DD') : ''
+      }
+      this.$api
+        .getDevicetypenetamountDetail(params)
+        .then((res) => {
+          if (res.code === 200) {
+            console.log(res)
+            this.dialogList = res.data.record
+            this.dialogTotal = res.data.totalRecord
+          }
+          this.loading = false
+        })
+        .catch(() => {
+          this.loading = false
+        })
+    },
+    handleCurrentChangeDialog(val) {
+      this.page = val
+      this.getDevicetypenetamountDetail(this.deviceTypeCode)
+    },
+    handleSizeChangeDialog(val) {
+      this.size = val
+      this.getDevicetypenetamountDetail(this.deviceTypeCode)
+    },
+    getSummaries(param) {
+      const { columns } = param
+      const sums = []
+      columns.forEach((column, index) => {
+        if (index === 0) {
+          const el = (
+            <div class='count_row'>
+              <p>全部合计</p>
+            </div>
+          )
+          sums[index] = el
+          return
+        } else if (index === 1 && this.summary !== null) {
+          sums[index] = (
+            <div class='count_row'>
+              <p>{this.summary.memberCountTotal}</p>
+            </div>
+          )
+          return
+        } else if (index === 2 && this.summary !== null) {
+          sums[index] = (
+            <div class='count_row'>
+              <p>{this.summary.betCountTotal}</p>
+            </div>
+          )
+          return
+        } else if (index === 3 && this.summary !== null) {
+          sums[index] = (
+            <div class='count_row'>
+              <p>{this.summary.betAmountTotal}</p>
+            </div>
+          )
+          return
+        } else if (index === 4 && this.summary !== null) {
+          sums[index] = (
+            <div class='count_row'>
+              <p>{this.summary.validBetAmountTotal}</p>
+            </div>
+          )
+          return
+        } else if (index === 5 && this.summary !== null) {
+          sums[index] = (
+            <div class='count_row'>
+              {this.summary.netAmountTotal > 0 ? (
+                <p class='enableColor'>{this.summary.netAmountTotal}</p>
+              ) : (
+                <p class='redColor'>{this.summary.netAmountTotal}</p>
+              )}
+            </div>
+          )
+          return
+        } else {
+          sums[index] = ''
+        }
+      })
+
+      return sums
+    },
+    _changeTableSort({ column, prop, order }) {
+      switch (prop) {
+        case 'memberCount':
+          prop = 1
+          break
+        case 'betCount':
+          prop = 2
+          break
+        case 'betAmount':
+          prop = 3
+          break
+        case 'validBetAmount':
+          prop = 4
+          break
+        case 'netAmount':
+          prop = 5
+          break
+      }
+      this.queryData.orderKey = prop
+      if (order === 'ascending') {
+        // 升序
+        this.queryData.orderType = 'asc'
+      } else if (column.order === 'descending') {
+        // 降序
+        this.queryData.orderType = 'desc'
+      } else {
+        delete this.queryData.orderKey
+        delete this.queryData.orderType
+      }
+      this.loadData()
+    },
     exportExcel() {
+      this.loading = true
       const create = this.searchTime || []
       const [startTime, endTime] = create
       let params = {
         ...this.queryData,
-        createAtStart: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : '',
-        createAtEnd: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
+        startTime: startTime ? dayjs(startTime).format('YYYY-MM-DD') : '',
+        endTime: endTime ? dayjs(endTime).format('YYYY-MM-DD') : ''
       }
       params = {
         ...this.getParams(params)
       }
-      delete params.registerTime
-      delete params.lastLoginTime
-      delete params.firstSaveTime
-      delete params.accountStatus
-      delete params.deviceType
       this.$confirm(
         `<strong>是否导出?</strong></br><span style='font-size:12px;color:#c1c1c1'>数据过大时，请耐心等待</span>`,
         '确认提示',
@@ -397,39 +589,6 @@ export default {
         })
         .catch(() => {})
     },
-    _changeTableSort({ column, prop, order }) {
-      if (prop === 'betAmount') {
-        prop = 1
-      }
-      if (prop === 'netAmount') {
-        prop = 2
-      }
-      if (prop === 'createAt') {
-        prop = 3
-      }
-      if (prop === 'netAt') {
-        prop = 4
-      }
-      this.queryData.orderKey = prop
-      if (order === 'ascending') {
-        // 升序
-        this.queryData.orderType = 'asc'
-      } else if (column.order === 'descending') {
-        // 降序
-        this.queryData.orderType = 'desc'
-      }
-      this.loadData()
-    },
-    handleCurrentChangeDialog(val) {
-      console.log(111, val)
-      this.page = val
-      // this.getMemberMemberInfoByLabelId(this.id)
-    },
-    handleSizeChangeDialog(val) {
-      console.log(222, val)
-      this.size = val
-      // this.getMemberMemberInfoByLabelId(this.id)
-    },
     // 列设置
     openSetting() {
       this.visible = true
@@ -453,6 +612,19 @@ export default {
 /deep/.el-dialog__header {
   color: #5c5c5c;
   font-weight: 700;
+}
+.count_row {
+  color: #5c5c5c;
+  p {
+    height: 40px;
+    line-height: 40px;
+    font-weight: 700;
+    span {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+    }
+  }
 }
 .fenye {
   text-align: center;
