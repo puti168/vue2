@@ -183,6 +183,10 @@ export default {
 				} else if (column.order === 'descending') {
 					// 降序
 					this.queryData.orderType = 'desc'
+				} else {
+					delete this.queryData.orderKey
+					delete this.queryData.orderType
+					delete this.queryData.orderProperties
 				}
 				this.loadData()
 			}
