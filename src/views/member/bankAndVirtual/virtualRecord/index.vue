@@ -142,7 +142,7 @@
 					:data="dataList"
 					style="width: 100%"
 					:header-cell-style="getRowClass"
-					@sort-change="changeTableSort"
+					@sort-change="_changeTableSort"
 				>
 					<el-table-column
 						v-slot="scope"
@@ -343,7 +343,7 @@ export default {
 					this.loading = false
 				})
 		},
-		changeTableSort({ column, prop, order }) {
+		_changeTableSort({ column, prop, order }) {
 			this.pageNum = 1
 			const orderParams = this.checkOrderParams.get(prop)
 			if (orderParams) {

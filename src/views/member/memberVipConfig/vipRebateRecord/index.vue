@@ -292,6 +292,7 @@ export default {
 				this.queryData.orderType = 'desc'
 			} else {
 				delete this.queryData.orderType
+				delete this.queryData.orderKey
 			}
 			this.loadData()
 		},
