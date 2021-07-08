@@ -182,7 +182,7 @@ width="120px"
               class="chief"
               placeholder="请输入金额，为0不限制"
             ></el-input-number>
-            <span style="w">元</span>
+            <span>元</span>
           </el-form-item>
           <el-form-item label="单日免费提款总额：" prop="dateFreeAmount">
             <el-input-number
