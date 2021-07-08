@@ -103,7 +103,7 @@
 					:data="dataList"
 					style="width: 100%"
 					:header-cell-style="getRowClass"
-					@sort-change="changeTableSort"
+					@sort-change="_changeTableSort"
 				>
 					<el-table-column
 						prop="applyTime"
@@ -275,7 +275,7 @@ export default {
 					this.loading = false
 				})
 		},
-		changeTableSort({ column, prop, order }) {
+		_changeTableSort({ column, prop, order }) {
 			this.pageNum = 1
 			if (order === 'ascending') {
 				// 升序
