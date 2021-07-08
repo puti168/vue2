@@ -49,10 +49,22 @@ const game = [
 		title: '游戏标签管理'
 	},
 	{
+		id: '1020104',
+		parentId: '1020100',
+		path: '/game/gameConfig/operationRecord',
+		title: '操作记录'
+	},
+	{
 		id: '1020201',
 		parentId: '1020200',
 		path: '/game/gameRecommend/gameHomeRecommend',
 		title: '首页推荐位管理'
+	},
+	{
+		id: '1020202',
+		parentId: '1020200',
+		path: '/game/gameRecommend/operationRecord',
+		title: '操作记录'
 	},
 	{
 		id: '1020301',
@@ -71,6 +83,12 @@ const game = [
 		parentId: '1020400',
 		path: '/game/gameSearch/gameSearchManage',
 		title: '游戏搜索管理'
+	},
+	{
+		id: '1020403',
+		parentId: '1020400',
+		path: '/game/gameSearch/operationRecord',
+		title: '操作记录'
 	}
 ]
 export default game
