@@ -126,7 +126,7 @@
           class="small-size-table"
           :data="list"
           :header-cell-style="getRowClass"
-          @sort-change="changeTableSort"
+          @sort-change="_changeTableSort"
         >
           <el-table-column
             prop="announcementTitle"
@@ -659,8 +659,7 @@ export default {
         })
         .catch(() => {})
     },
-    changeTableSort({ column, prop, order }) {
-      console.log(column, prop, order)
+    _changeTableSort({ column, prop, order }) {
       if (prop === 'upTime') {
         prop = 1
       }

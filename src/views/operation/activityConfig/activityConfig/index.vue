@@ -207,7 +207,7 @@
           class="small-size-table"
           :data="list"
           :header-cell-style="getRowClass"
-          @sort-change="changeTableSort"
+          @sort-change="_changeTableSort"
         >
           <el-table-column align="center" label="活动ID" prop="id" width="200px">
           </el-table-column>
@@ -1484,7 +1484,7 @@ export default {
       this.dialogForm.activitySharePicture = ''
       this.$message.warning('图片已被移除')
     },
-    changeTableSort({ column, prop, order }) {
+    _changeTableSort({ column, prop, order }) {
       if (prop === 'createdAt') {
         prop = 0
       } else {

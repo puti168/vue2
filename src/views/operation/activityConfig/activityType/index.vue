@@ -235,7 +235,6 @@ export default {
 			let lock = true
 			params.activityType = params.activityCode * 1
 			delete params.activityCode
-			console.log('params', params)
 			this.$refs['form'].validate((valid) => {
 				if (valid && lock) {
 					lock = false
