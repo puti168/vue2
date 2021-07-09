@@ -300,7 +300,7 @@
 							></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="启动页上传:" prop="pictureUrl">
+					<el-form-item label="loading上传:" prop="pictureUrl">
 						<UploadItem
 							ref="imgUpload"
 							:upload-file-type="'image'"
