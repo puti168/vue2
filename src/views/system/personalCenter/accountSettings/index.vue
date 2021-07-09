@@ -158,10 +158,20 @@ export default {
           callback()
         }
       }
+       const newPwds = (rule, value, callback) => {
+        console.log(value, '密码')
+        if (!value) {
+          callback(new Error('请输入确认密码'))
+        } else if (value === this.form.pwd) {
+          callback(new Error('请输入新密码'))
+        } else {
+          callback()
+        }
+      }
 
       const pwd = [{ required: true, validator: pwds, message: '请输入旧密码', trigger: 'blur' }]
       const phone = [{ required: true, message: '请输入手机号', trigger: 'blur' }]
-      const newPwd = [{ required: true, message: '请输入新密码', trigger: 'blur' }]
+      const newPwd = [{ required: true, validator: newPwds, message: '请输入新密码', trigger: 'blur' }]
       const reNewPwd = [
         {
           required: true,
