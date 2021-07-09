@@ -98,7 +98,11 @@
 						>
 							<template slot-scope="scope">
 								<el-button
-									:class="scope.row.lockAccount !== name && scope.row.lockAccount ? 'dis' : ''"
+									:class="
+										scope.row.lockAccount !== name && scope.row.lockAccount
+											? 'dis'
+											: ''
+									"
 									type="primary"
 									size="medium"
 									@click="goDetail(scope.row)"
@@ -107,50 +111,78 @@
 								</el-button>
 							</template>
 						</el-table-column>
-						<el-table-column
-							prop="orderNo"
-							align="center"
-							label="审核订单号"
-						></el-table-column>
-						<el-table-column
-							prop="userName"
-							align="center"
-							label="会员账号"
-						></el-table-column>
-						<el-table-column
-							prop="realName"
-							align="center"
-							label="会员姓名"
-						></el-table-column>
-						<el-table-column
-							prop="applyTime"
-							align="center"
-							label="调整类型"
-						><template slot-scope="scope">
-								{{ typeFilter(scope.row.adjustType, 'memberPatchAddAdjustType') }}
-							</template></el-table-column>
+						<el-table-column prop="orderNo" align="center" label="审核订单号">
+							<template slot-scope="scope">
+								<span v-if="!!scope.row.orderNo">
+									{{ scope.row.orderNo }}
+								</span>
+								<span v-else>-</span>
+							</template>
+						</el-table-column>
+						<el-table-column prop="userName" align="center" label="会员账号">
+							<template slot-scope="scope">
+								<span v-if="!!scope.row.userName">
+									{{ scope.row.userName }}
+								</span>
+								<span v-else>-</span>
+							</template>
+						</el-table-column>
+						<el-table-column prop="realName" align="center" label="会员姓名">
+							<template slot-scope="scope">
+								<span v-if="!!scope.row.realName">
+									{{ scope.row.realName }}
+								</span>
+								<span v-else>-</span>
+							</template>
+						</el-table-column>
+						<el-table-column prop="applyTime" align="center" label="调整类型">
+							<template slot-scope="scope">
+								{{
+									typeFilter(scope.row.adjustType, 'memberPatchAddAdjustType')
+								}}
+							</template>
+						</el-table-column>
 						<el-table-column
 							prop="adjustAmount"
 							align="center"
 							label="增加金额"
-						></el-table-column>
+						>
+							<template slot-scope="scope">
+								<span
+									v-if="
+										!!scope.row.adjustAmount ||
+											scope.row.adjustAmount + '' === '0'
+									"
+								>
+									{{ scope.row.adjustAmount }}
+								</span>
+								<span v-else>-</span>
+							</template>
+						</el-table-column>
 						<el-table-column
 							prop="operatorTime"
 							align="center"
 							label="申请时间"
-						></el-table-column>
+						>
+							<template slot-scope="scope">
+								<span v-if="!!scope.row.operatorTime">
+									{{ scope.row.operatorTime }}
+								</span>
+								<span v-else>-</span>
+							</template>
+						</el-table-column>
 						<el-table-column align="center" label="审核状态">
 							<template slot-scope="scope">
 								<span
-								:class="
-									Number(scope.row.orderStatus) === 7
-										? 'normalRgba'
-										: '24'.includes(Number(scope.row.orderStatus))
-										? 'lockingRgba'
-										: 'disableRgba'
-								"
-							>
-								{{ typeFilter(scope.row.orderStatus, 'patchAdjustStatus') }}
+									:class="
+										Number(scope.row.orderStatus) === 7
+											? 'normalRgba'
+											: '24'.includes(Number(scope.row.orderStatus))
+											? 'lockingRgba'
+											: 'disableRgba'
+									"
+								>
+									{{ typeFilter(scope.row.orderStatus, 'patchAdjustStatus') }}
 								</span>
 							</template>
 						</el-table-column>
@@ -170,7 +202,13 @@
 				</div>
 			</div>
 		</template>
-		<detail v-else :type="type" :rowData="rowData" :activeName="activeName" @goBack="goBack"></detail>
+		<detail
+			v-else
+			:type="type"
+			:rowData="rowData"
+			:activeName="activeName"
+			@goBack="goBack"
+		></detail>
 	</div>
 </template>
 
