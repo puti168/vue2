@@ -26,12 +26,12 @@
 							style="width: 365px"
 						></el-input>
 					</el-form-item>
-					<el-form-item label="备注:" prop="remark">
+					<el-form-item label="角色描述:" prop="remark">
 						<el-input
 							v-model="queryData.remark"
 							size="medium"
 							type="textarea"
-							placeholder="请输入"
+							placeholder="请输入内容"
 							clearable
 							maxlength="300"
 							show-word-limit
