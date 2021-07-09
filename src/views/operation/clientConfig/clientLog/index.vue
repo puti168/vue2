@@ -43,11 +43,10 @@
             placeholder="默认选择全部"
             :popper-append-to-body="false"
           >
-            <el-option label="全部" value></el-option>
             <el-option
-              v-for="item in client"
+              v-for="item in operateClient"
               :key="item.codes"
-              :label="item.value"
+              :label="item.description"
               :value="item.code"
             ></el-option>
           </el-select>
@@ -224,7 +223,11 @@ export default {
     },
     applyType() {
       return this.globalDics.applyType
+    },
+    operateClient() {
+      return this.globalDics.operateClient
     }
+
   },
   created() {
     this.getEnums()
