@@ -295,7 +295,6 @@
         title="查看"
         :visible.sync="lookVisible"
         :destroy-on-close="true"
-        width="480px"
         class="rempadding"
       >
         <el-table
@@ -322,6 +321,7 @@
           :page-size="size"
           :page-sizes="[5, 10, 15]"
           :total="summary"
+          :pager-count="5"
           @current-change="handleCurrentChangeDialog"
           @size-change="handleSizeChangeDialog"
         ></el-pagination>
@@ -395,9 +395,13 @@ export default {
     },
     sendObj(val) {
       if (val === '1') {
-        this.dialogForm = { sendObj: '1', deviceType: [], userType: '0' }
+        this.dialogForm.sendObj = '1'
+        this.dialogForm.deviceType = []
+        this.dialogForm.userType = '0'
       } else {
-        this.dialogForm = { sendObj: '2', deviceType: [], userType: '0' }
+        this.dialogForm.sendObj = '2'
+        this.dialogForm.deviceType = []
+        this.dialogForm.userType = '0'
       }
       console.log(val)
     },
@@ -458,6 +462,7 @@ export default {
       this.$api.getOperateConfigNoticeSelectDetail(params).then((res) => {
         if (res.code === 200) {
           this.userList = res.data.records
+          this.summary = res.data.total
           this.lookVisible = true
         }
       })
@@ -529,4 +534,7 @@ export default {
 //     padding: 0 20px;
 //   }
 // }
+.fenye{
+  text-align: center;
+}
 </style>

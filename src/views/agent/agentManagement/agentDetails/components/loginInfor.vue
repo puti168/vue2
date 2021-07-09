@@ -143,12 +143,17 @@ export default {
   },
   computed: {
     lonRecordData() {
-      return this.lonRecord
+      if (this.lonRecord) {
+        return this.lonRecord
+      } else {
+        return {}
+      }
     }
   },
   watch: {
     lonRecordData: {
       handler(newV) {
+        console.log(newV, 465456)
         if (newV.totalRecord) {
           this.total = newV.totalRecord
           this.dataList = newV.record
