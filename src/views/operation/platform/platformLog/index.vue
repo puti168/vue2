@@ -38,7 +38,7 @@
           </el-form-item>
           <el-form-item label="操作人:">
             <el-input
-              v-model="queryData.createdBy"
+              v-model="queryData.updateBy"
               clearable
               :maxlength="12"
               size="medium"

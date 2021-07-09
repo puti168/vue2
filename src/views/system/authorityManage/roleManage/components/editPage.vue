@@ -178,9 +178,9 @@ export default {
 					}
 					this.chooseIds = []
 					this.getRoleList()
-					if (this.$refs.tree) {
-						this.$refs.tree.setCheckedKeys([])
-					}
+                    this.$nextTick(() => {
+                        this.$refs.tree && this.$refs.tree.setCheckedKeys([])
+                    })
 				}
 			},
 			deep: true,

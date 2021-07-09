@@ -87,7 +87,7 @@
           </el-table-column>
         </el-table>
         <!-- 分页 -->
-        <el-pagination
+       <el-pagination
           :current-page.sync="pageNum"
           class="pageValue"
           background

@@ -21,9 +21,9 @@
           </el-form-item>
           <el-form-item label="会员账号:">
             <el-input
-              v-model="queryData.createdBy"
+              v-model="queryData.userName"
               clearable
-              :maxlength="12"
+              :maxlength="11"
               size="medium"
               style="width: 180px"
               placeholder="请输入"
@@ -54,7 +54,7 @@
               :popper-append-to-body="false"
             >
               <el-option
-                v-for="item in BackEnumsList"
+                v-for="item in backEnumsList"
                 :key="item.code"
                 :label="item.value"
                 :value="item.code"
@@ -113,7 +113,10 @@
 
           <el-table-column prop="accountType " align="center" label="账号类型">
              <template slot-scope="scope">
-              {{ typeFilter(scope.row.accountType, 'auditStepType') }}
+              <span v-if="!!scope.row.accountType">
+								{{ typeFilter(scope.row.accountType, 'accountType') }}
+							</span>
+							<span v-else>-</span>
             </template>
           </el-table-column>
 
@@ -130,12 +133,17 @@
             label="VIP等级"
           >
             <template slot-scope="scope">
-              <span>{{ scope.row.levelId }}</span>
+             <span
+								v-if="!!scope.row.levelId || scope.row.levelId === 0"
+							>
+								{{ scope.row.levelId }}
+							</span>
+							<span v-else>-</span>
             </template>
           </el-table-column>
           <el-table-column align="center" label="反馈类型">
             <template slot-scope="scope">
-             <span v-for="item in BackEnumsList" :key="item.value">
+             <span v-for="item in backEnumsList" :key="item.value">
                 {{ scope.row.problemType === item.code ? item.value : "" }}
               </span>
             </template>
@@ -192,7 +200,7 @@ export default {
       foundIn: false,
       rowAssortId: '',
       rowData: {},
-      BackEnumsList: [],
+      backEnumsList: [],
       queryData: {},
       searchTime: [startTime, endTime],
       now: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
@@ -254,7 +262,7 @@ export default {
     getBackEnums() {
       this.$api.OperateObConfigAnnouncementRecordQueryFeedBackEnums().then((res) => {
         if (res.code === 200) {
-          this.BackEnumsList = res.data.problemType
+          this.backEnumsList = res.data.problemType
         }
       })
     },

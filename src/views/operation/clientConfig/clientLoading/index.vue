@@ -378,7 +378,7 @@ export default {
 	},
 	computed: {
 		terminalTypeArr() {
-			return this.globalDics.operateClient
+			return this.globalDics.operateLoadingClient
 		},
 		statusArr() {
 			return this.globalDics.operateStatus

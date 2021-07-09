@@ -35,103 +35,104 @@
 					</el-select>
 				</el-form-item>
 
-				<el-form-item label="显示终端:">
-					<el-select
-						v-model="queryData.clientType"
-						style="width: 300px"
-						multiple
-						placeholder="默认选择全部"
-						:popper-append-to-body="false"
-					>
-						<el-option
-							v-for="item in operateClient"
-							:key="item.code"
-							:label="item.description"
-							:value="item.code"
-						></el-option>
-					</el-select>
-				</el-form-item>
-				<el-form-item label="名称:">
-					<el-input
-						v-model="queryData.fieldName"
-						clearable
-						size="medium"
-						:maxlength="20"
-						style="width: 180px"
-						placeholder="请输入"
-						@keyup.enter.native="enterSearch"
-					></el-input>
-				</el-form-item>
-				<el-form-item label="变更类型:">
-					<el-select
-						v-model="queryData.changeType"
-						style="width: 300px"
-						multiple
-						placeholder="默认选择全部"
-						:popper-append-to-body="false"
-					>
-						<el-option label="全部" value></el-option>
-						<el-option
-							v-for="item in changeType"
-							:key="item.codein"
-							:label="item.value"
-							:value="item.code"
-						></el-option>
-					</el-select>
-				</el-form-item>
-				<el-form-item label="操作人:">
-					<el-input
-						v-model="queryData.createdBy"
-						clearable
-						size="medium"
-						:maxlength="12"
-						style="width: 180px"
-						placeholder="请输入"
-						@keyup.enter.native="enterSearch"
-					></el-input>
-				</el-form-item>
-				<el-form-item style="margin-left: 30px">
-					<el-button
-						type="primary"
-						icon="el-icon-search"
-						:disabled="loading"
-						size="medium"
-						@click="search"
-					>
-						查询
-					</el-button>
-					<el-button
-						icon="el-icon-refresh-left"
-						:disabled="loading"
-						size="medium"
-						@click="reset"
-					>
-						重置
-					</el-button>
-				</el-form-item>
-			</el-form>
-		</div>
-		<div class="view-container dealer-container">
-			<div class="content">
-				<el-table
-					v-loading="loading"
-					border
-					size="mini"
-					class="small-size-table"
-					:data="dataList"
-					style="width: 100%"
-					:header-cell-style="getRowClass"
-					@sort-change="changeTableSort"
-				>
-					<el-table-column prop="pageName" align="center" label="操作页面">
-						<template slot-scope="scope">
-							<span v-for="item in operatePage" :key="item.value">
-								{{ scope.row.pageName === item.code ? item.value : '' }}
-							</span>
-						</template>
-					</el-table-column>
-					<el-table-column prop="client" align="center" label="显示终端">
-						<template slot-scope="scope">
+        <el-form-item label="显示终端:">
+          <el-select
+            v-model="queryData.clientType"
+            style="width: 300px"
+            multiple
+            placeholder="默认选择全部"
+            :popper-append-to-body="false"
+          >
+            <el-option
+              v-for="item in operateClient"
+              :key="item.codes"
+              :label="item.description"
+              :value="item.code"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="名称:">
+          <el-input
+            v-model="queryData.fieldName"
+            clearable
+            size="medium"
+            :maxlength="20"
+            style="width: 180px"
+            placeholder="请输入"
+            @keyup.enter.native="enterSearch"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="变更类型:">
+          <el-select
+            v-model="queryData.changeType"
+            style="width: 300px"
+            multiple
+            placeholder="默认选择全部"
+            :popper-append-to-body="false"
+          >
+            <el-option label="全部" value></el-option>
+            <el-option
+              v-for="item in changeType"
+              :key="item.codein"
+              :label="item.value"
+              :value="item.code"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="操作人:">
+          <el-input
+            v-model="queryData.createdBy"
+            clearable
+            size="medium"
+            :maxlength="12"
+            style="width: 180px"
+            placeholder="请输入"
+            @keyup.enter.native="enterSearch"
+          ></el-input>
+        </el-form-item>
+        <el-form-item style="margin-left: 30px">
+          <el-button
+            type="primary"
+            icon="el-icon-search"
+            :disabled="loading"
+            size="medium"
+            @click="search"
+          >
+            查询
+          </el-button>
+          <el-button
+            icon="el-icon-refresh-left"
+            :disabled="loading"
+            size="medium"
+            @click="reset"
+          >
+            重置
+          </el-button>
+        </el-form-item>
+      </el-form>
+    </div>
+    <div class="view-container dealer-container">
+      <div class="content">
+        <el-table
+          v-loading="loading"
+          border
+          size="mini"
+          class="small-size-table"
+          :data="dataList"
+          style="width: 100%"
+          :header-cell-style="getRowClass"
+          @sort-change="changeTableSort"
+        >
+          <el-table-column prop="pageName" align="center" label="操作页面">
+            <template slot-scope="scope">
+              <span v-for="item in operatePage" :key="item.value">
+                {{ scope.row.pageName === item.code ? item.value : "" }}
+              </span>
+            </template>
+
+          </el-table-column>
+          <el-table-column prop="client" align="center" label="显示终端">
+            <template slot-scope="scope">
 							<span
 								v-if="
 									!!scope.row.clientType || scope.row.clientType + '' === '0'
@@ -214,64 +215,63 @@ const start = dayjs()
 	.startOf('day')
 	.valueOf()
 export default {
-	name: 'MemberMsgChange',
-	components: {},
-	mixins: [list],
-	data() {
-		return {
-			queryData: {},
-			formTime: {
-				time: [start, end]
-			},
-			dataList: [],
-			changeType: [],
-			client: [],
-			operatePage: [],
-			title: ''
-		}
-	},
-	computed: {
-		accountType() {
-			return this.globalDics.accountType
-		},
-		virtualType() {
-			return this.globalDics.virtualType
-		},
-		virtualProtocolType() {
-			return this.globalDics.virtualProtocolType
-		},
-		applyType() {
-			return this.globalDics.applyType
-		},
-		operateClient() {
-			return this.globalDics.operateClient
-		}
-	},
-	created() {
-		this.getEnums()
-	},
-	mounted() {},
-	methods: {
-		loadData() {
-			const [startTime, endTime] = this.formTime.time || []
-			let params = {
-				...this.queryData,
-				startAt: startTime
-					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
-					: '',
-				endAt: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
-			}
-			if (!params.startAt || !params.endAt) {
-				this.$message({
-					message: '操作时间参数必传',
-					type: 'info'
-				})
-				return
-			}
-			params = {
-				...this.getParams(params)
-			}
-			this.loading = true
+  name: 'MemberMsgChange',
+  components: {},
+  mixins: [list],
+  data() {
+    return {
+      queryData: {},
+      formTime: {
+        time: [start, end]
+      },
+      dataList: [],
+      changeType: [],
+      client: [],
+      operatePage: [],
+      title: ''
+    }
+  },
+  computed: {
+    accountType() {
+      return this.globalDics.accountType
+    },
+    virtualType() {
+      return this.globalDics.virtualType
+    },
+    virtualProtocolType() {
+      return this.globalDics.virtualProtocolType
+    },
+    applyType() {
+      return this.globalDics.applyType
+    },
+    operateClient() {
+      return this.globalDics.operateClient
+    }
+
+  },
+  created() {
+    this.getEnums()
+  },
+  mounted() {},
+  methods: {
+    loadData() {
+      const [startTime, endTime] = this.formTime.time || []
+      let params = {
+        ...this.queryData,
+        startAt: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : '',
+        endAt: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
+      }
+      if (!params.startAt || !params.endAt) {
+        this.$message({
+          message: '操作时间参数必传',
+          type: 'info'
+        })
+        return
+      }
+      params = {
+        ...this.getParams(params)
+      }
+      this.loading = true
 
 			this.$api
 				.getOperateConfigClientRecordQueryRecordList(params)
