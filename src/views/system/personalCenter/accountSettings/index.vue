@@ -40,18 +40,20 @@
         </el-form-item>
         <el-form-item label="联系电话：">
           <el-input
-            v-model="form.phone"
+            v-model.trim="form.phone"
             size="medium"
             placeholder="请输入联系电话"
             clearable
             maxlength="11"
             style="width: 365px"
+            @change="confirmTelephone"
           ></el-input>
         </el-form-item>
         <el-form-item label="旧登录密码：" prop="pwd">
           <el-input
-            v-model="form.pwd"
+            v-model.trim="form.pwd"
             :type="passwordType"
+            maxlength="10"
             name="password"
             size="medium"
             placeholder="请输入原登录密码"
@@ -63,30 +65,30 @@
         </el-form-item>
         <el-form-item label="新登录密码：" prop="newPwd">
           <el-input
-            v-model="form.newPwd"
-            :type="passwordType"
-            name="password"
+            v-model.trim="form.newPwd"
+            :type="newPwdType"
+            name="newPwd"
             size="medium"
             placeholder="请输入新登录密码"
-            maxlength="6"
+            maxlength="10"
             style="width: 365px"
           ></el-input>
-          <span class="show-pwd" @click="showPwd">
-            <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
+          <span class="show-pwd" @click="shownewPwd">
+            <svg-icon :icon-class="newPwdType === 'password' ? 'eye' : 'eye-open'" />
           </span>
         </el-form-item>
         <el-form-item label="确认新登录密码：" prop="reNewPwd">
           <el-input
-            v-model="form.reNewPwd"
-            :type="passwordType"
-            name="password"
+            v-model.trim="form.reNewPwd"
+            :type="reNewPwdType"
+            name="reNewPwd"
             size="medium"
             placeholder="请确认新登录密码"
-            maxlength="6"
+            maxlength="10"
             style="width: 365px"
           ></el-input>
-          <span class="show-pwd" @click="showPwd">
-            <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
+          <span class="show-pwd" @click="showreNewPwd">
+            <svg-icon :icon-class="reNewPwdType === 'password' ? 'eye' : 'eye-open'" />
           </span>
         </el-form-item>
 
@@ -117,6 +119,8 @@ export default {
     return {
       circleUrl: 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png',
       passwordType: 'password',
+      newPwdType: 'newPwd',
+      reNewPwdType: 'reNewPwd',
       loading: false,
       password: '',
       id: '',
@@ -183,6 +187,23 @@ export default {
         this.passwordType = 'password'
       }
     },
+    shownewPwd() {
+      if (this.newPwdType === 'password') {
+        this.newPwdType = ''
+      } else {
+        this.newPwdType = 'password'
+      }
+    },
+    showreNewPwd() {
+       if (this.reNewPwdType === 'password') {
+        this.reNewPwdType = ''
+      } else {
+        this.reNewPwdType = 'password'
+      }
+    },
+    confirmTelephone() {
+     if (!/^1[0-9]{10}$/.test(this.form.phone)) { this.form.phone = '' }
+    },
     loadData() {
       const id = localStorage.getItem('id')
       this.$api.getuserInfolist({ id }).then((res) => {
@@ -216,8 +237,13 @@ export default {
 
           }).then((res) => {
             if (res.code === 200) {
-              this.$message.success('修改成功');
-              ('success')
+              this.$message.success('修改成功')
+              this.$store
+              .dispatch('user/logout')
+              .then((_) => {
+                location.reload()
+              })
+              .catch()('success')
             }
           })
         }

@@ -112,7 +112,7 @@ import teamInfor from './components/teamInfor'
 import loginInfor from './components/loginInfor'
 import { routerNames } from '@/utils/consts'
 export default {
-  name: routerNames.memberDetails,
+  name: routerNames.agentDetails,
   components: { basicInfor, financialInfor, teamInfor, loginInfor },
   mixins: [list],
   data() {
