@@ -790,12 +790,12 @@ export default {
 		},
 		_changeTableSort({ column, prop, order }) {
 			const obj = {
-                vipSerialNum: 1,
-                createDt: 2,
-                firstDepositTime: 3,
-                firstDepositAmount: 4,
-                lastLoginTime: 5,
-                offLineDays: 6
+				vipSerialNum: 1,
+				createDt: 2,
+				firstDepositTime: 3,
+				firstDepositAmount: 4,
+				lastLoginTime: 5,
+				offLineDays: 6
 			}
 			this.queryData.orderKey = prop && obj[prop]
 			if (order === 'ascending') {
@@ -975,68 +975,81 @@ export default {
 				params.accountType && params.accountType.length
 					? params.accountType
 					: undefined
-			this.$api
-				.exportExcelAPI(params)
-				.then((res) => {
-					this.loading = false
-					const { data, status } = res
-					if (res && status === 200) {
-						const { type } = data
-						if (type.includes('application/json')) {
-							const reader = new FileReader()
-							reader.onload = (evt) => {
-								if (evt.target.readyState === 2) {
-									const {
-										target: { result }
-									} = evt
-									const ret = JSON.parse(result)
-									if (ret.code !== 200) {
-										this.$message({
-											type: 'error',
-											message: ret.msg,
-											duration: 1500
-										})
+			this.$confirm(
+				`<strong>是否导出?</strong></br><span style='font-size:12px;color:#c1c1c1'>数据过大时，请耐心等待</span>`,
+				'确认提示',
+				{
+					dangerouslyUseHTMLString: true,
+					confirmButtonText: '确定',
+					cancelButtonText: '取消',
+					type: 'warning'
+				}
+			)
+				.then(() => {
+					this.$api
+						.exportExcelAPI(params)
+						.then((res) => {
+							this.loading = false
+							const { data, status } = res
+							if (res && status === 200) {
+								const { type } = data
+								if (type.includes('application/json')) {
+									const reader = new FileReader()
+									reader.onload = (evt) => {
+										if (evt.target.readyState === 2) {
+											const {
+												target: { result }
+											} = evt
+											const ret = JSON.parse(result)
+											if (ret.code !== 200) {
+												this.$message({
+													type: 'error',
+													message: ret.msg,
+													duration: 1500
+												})
+											}
+										}
 									}
+									reader.readAsText(data)
+								} else {
+									const result = res.data
+									const disposition = res.headers['content-disposition']
+									const fileNames = disposition && disposition.split("''")
+									let fileName = fileNames[1]
+									fileName = decodeURIComponent(fileName)
+									const blob = new Blob([result], {
+										type: 'application/octet-stream'
+									})
+									if ('download' in document.createElement('a')) {
+										const downloadLink = document.createElement('a')
+										downloadLink.download = fileName || ''
+										downloadLink.style.display = 'none'
+										downloadLink.href = URL.createObjectURL(blob)
+										document.body.appendChild(downloadLink)
+										downloadLink.click()
+										URL.revokeObjectURL(downloadLink.href)
+										document.body.removeChild(downloadLink)
+									} else {
+										window.navigator.msSaveBlob(blob, fileName)
+									}
+									this.$message({
+										type: 'success',
+										message: '导出成功',
+										duration: 1500
+									})
 								}
 							}
-							reader.readAsText(data)
-						} else {
-							const result = res.data
-							const disposition = res.headers['content-disposition']
-							const fileNames = disposition && disposition.split("''")
-							let fileName = fileNames[1]
-							fileName = decodeURIComponent(fileName)
-							const blob = new Blob([result], {
-								type: 'application/octet-stream'
-							})
-							if ('download' in document.createElement('a')) {
-								const downloadLink = document.createElement('a')
-								downloadLink.download = fileName || ''
-								downloadLink.style.display = 'none'
-								downloadLink.href = URL.createObjectURL(blob)
-								document.body.appendChild(downloadLink)
-								downloadLink.click()
-								URL.revokeObjectURL(downloadLink.href)
-								document.body.removeChild(downloadLink)
-							} else {
-								window.navigator.msSaveBlob(blob, fileName)
-							}
+						})
+						.catch(() => {
+							this.loading = false
 							this.$message({
-								type: 'success',
-								message: '导出成功',
+								type: 'error',
+								message: '导出失败',
 								duration: 1500
 							})
-						}
-					}
+						})
 				})
-				.catch(() => {
-					this.loading = false
-					this.$message({
-						type: 'error',
-						message: '导出失败',
-						duration: 1500
-					})
-				})
+				.catch(() => {})
 
 			setTimeout(() => {
 				this.loading = false
