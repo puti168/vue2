@@ -366,12 +366,7 @@
             width="155px"
             sortable="custom"
           ></el-table-column>
-          <el-table-column
-            prop="operating"
-            align="center"
-            label="操作"
-            width="240px"
-          >
+          <el-table-column prop="operating" align="center" label="操作" width="240px">
             <template slot-scope="scope">
               <el-button
                 v-if="scope.row.status === 0"
@@ -879,7 +874,7 @@
               <el-input-number
                 v-model="dialogForm.activityDiscountScale"
                 clearable
-                :max="99.99"
+                :max="100"
                 :precision="2"
                 size="medium"
                 placeholder="请输入"
@@ -1101,20 +1096,33 @@ export default {
     activityPictureUpAt: {
       handler(newV, oldV) {
         const DownAt = this.activityPictureDownAt
+        const HMS = dayjs(newV).format('HH:mm:ss')
         this.dateEnd = {
+          selectableRange: [HMS + ' - 23:59:59'],
           disabledDate(time) {
             return time.getTime() < newV - 24 * 60 * 60 * 1000 + 1000
           }
         }
-        this.activityNow = {
-          disabledDate(time) {
-            return (
-              time.getTime() < newV - 24 * 60 * 60 * 1000 + 1000 ||
-              time.getTime() > DownAt
-            )
+        if (this.dialogForm.activityPrescription === '0') {
+          this.activityNow = {
+            selectableRange: [HMS + ' - 23:59:59'],
+            disabledDate(time) {
+              return (
+                time.getTime() < newV - 24 * 60 * 60 * 1000 + 1000 ||
+                time.getTime() > DownAt
+              )
+            }
+          }
+        } else {
+          this.activityNow = {
+            selectableRange: [HMS + ' - 23:59:59'],
+            disabledDate(time) {
+              return time.getTime() < newV - 24 * 60 * 60 * 1000 + 1000
+            }
           }
         }
         this.activityEnd = {
+          selectableRange: [HMS + ' - 23:59:59'],
           disabledDate(time) {
             console.log(
               time.getTime() < newV - 24 * 60 * 60 * 1000 + 1000,
@@ -1132,7 +1140,9 @@ export default {
     activityPictureDownAt: {
       handler(newV, oldV) {
         const UpAt = this.activityPictureUpAt
+        const HMS = dayjs(newV).format('HH:mm:ss')
         this.activityNow = {
+          selectableRange: [HMS + ' - 23:59:59'],
           disabledDate(time) {
             return (
               time.getTime() > newV || time.getTime() < UpAt - 24 * 60 * 60 * 1000 + 1000
@@ -1140,6 +1150,7 @@ export default {
           }
         }
         this.activityEnd = {
+          selectableRange: [HMS + ' - 23:59:59'],
           disabledDate(time) {
             return (
               time.getTime() > newV || time.getTime() < UpAt - 24 * 60 * 60 * 1000 + 1000
@@ -1152,7 +1163,9 @@ export default {
     activityStartAt: {
       handler(newV, oldV) {
         const DownAt = this.activityPictureDownAt
+        const HMS = dayjs(newV).format('HH:mm:ss')
         this.activityEnd = {
+          selectableRange: [HMS + ' - 23:59:59'],
           disabledDate(time) {
             return (
               time.getTime() < newV - 24 * 60 * 60 * 1000 + 1000 ||
@@ -1313,10 +1326,11 @@ export default {
       })
     },
     changeUpAtTime(val) {
+      console.log(val, Date.now(), startTime)
       const Timestamp = new Date(new Date(val).toLocaleDateString()).getTime()
       if (Timestamp === startTime) {
-        this.activityPictureUpAt = Date.now()
-        this.activityStartAt = Date.now()
+        this.activityPictureUpAt = val
+        this.activityStartAt = val
       } else {
         this.activityPictureUpAt = Timestamp
         this.activityStartAt = Timestamp

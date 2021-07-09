@@ -476,7 +476,9 @@ export default {
   watch: {
     onlineTime: {
       handler(newV, oldV) {
+        const HMS = dayjs(newV).format('HH:mm:ss')
         this.dateEnd = {
+          selectableRange: [HMS + ' - 23:59:59'],
           disabledDate(time) {
             return time.getTime() < newV
           }
@@ -515,7 +517,7 @@ export default {
     changeTime(val) {
       const Timestamp = new Date(new Date(val).toLocaleDateString()).getTime()
       if (Timestamp === startTime) {
-        this.onlineTime = Date.now()
+        this.onlineTime = val
       } else {
         this.onlineTime = Timestamp
       }
