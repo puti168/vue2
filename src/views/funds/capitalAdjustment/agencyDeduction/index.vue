@@ -355,6 +355,9 @@ export default {
 				relationId: undefined,
 				imageAddress: undefined
 			}
+            this.$nextTick(() => {
+                this.$refs.imgUpload && this.$refs.imgUpload.handleDeleteImgUrl()
+            })
 		},
 		checkRiskValue(val) {
             val === '2'
@@ -376,7 +379,6 @@ export default {
 		},
 		handleDeleteUpload() {
 			this.queryData.imageAddress = ''
-			this.$message.warning('图片已被移除')
 		}
 	}
 }
