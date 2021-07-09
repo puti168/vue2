@@ -28,6 +28,7 @@ export const routerNames = {
 	agentList: 'agentList',
 	addAgent: 'addAgent',
 	agentBankCard: 'agentBankCard',
+	agentDetails: 'agentDetails',
 	agentVirtualRecord: 'agentVirtualRecord',
 	agentTrans: 'agentTrans',
 	pictureManagement: 'pictureManagement',

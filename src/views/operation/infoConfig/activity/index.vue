@@ -395,9 +395,13 @@ export default {
     },
     sendObj(val) {
       if (val === '1') {
-        this.dialogForm = { sendObj: '1', deviceType: [], userType: '0' }
+        this.dialogForm.sendObj = '1'
+        this.dialogForm.deviceType = []
+        this.dialogForm.userType = '0'
       } else {
-        this.dialogForm = { sendObj: '2', deviceType: [], userType: '0' }
+        this.dialogForm.sendObj = '2'
+        this.dialogForm.deviceType = []
+        this.dialogForm.userType = '0'
       }
       console.log(val)
     },
