@@ -80,7 +80,7 @@
 <script>
 import list from '@/mixins/list'
 import { isHaveEmoji, notSpecial2 } from '@/utils/validate'
-const storeDatas = []
+// const storeDatas = []
 
 export default {
 	name: 'EditPage',
@@ -138,7 +138,7 @@ export default {
 					message: '请填入备注',
 					trigger: 'blur'
 				},
-				{ min: 2, max: 50, message: '长度在 2 到 50 个字符', trigger: 'blur' }
+				{ min: 2, max: 300, message: '长度在 2 到 300 个字符', trigger: 'blur' }
 			]
 			return {
 				roleName,
@@ -157,7 +157,9 @@ export default {
 	watch: {
 		editData: {
 			handler(newData, oldData) {
-				if (newData) {
+				const _newData = newData && JSON.parse(JSON.stringify(newData))
+				const _oldData = oldData && JSON.parse(JSON.stringify(oldData))
+				if (_newData !== _oldData) {
 					this.updateStatus = true
 					const { id, roleName, remark, chooseIds } = newData
 					this.queryData = {
@@ -177,10 +179,9 @@ export default {
 						id: undefined
 					}
 					this.chooseIds = []
-					this.getRoleList()
-                    this.$nextTick(() => {
-                        this.$refs.tree && this.$refs.tree.setCheckedKeys([])
-                    })
+					this.$nextTick(() => {
+						this.$refs.tree && this.$refs.tree.setCheckedKeys([])
+					})
 				}
 			},
 			deep: true,
@@ -188,10 +189,10 @@ export default {
 		}
 	},
 	created() {
-		this.rolePermissions = storeDatas
+		this.getRoleList()
 	},
 	mounted() {
-		// this.getRoleList()
+		// this.rolePermissions = storeDatas
 	},
 	updated() {},
 	methods: {
@@ -199,16 +200,17 @@ export default {
 			this.$emit('back')
 		},
 		async getRoleList() {
-            this.loading = true
+			this.loading = true
 			const { code, data } = await this.$api.getRolePermissionsAPI()
 			if (code === 200) {
-                this.loading = false
+				this.loading = false
 				this.permissions = JSON.parse(JSON.stringify(data))
 				this.allChooseLen = data.length
+				this.rolePermissions = []
 				this.filterData(data)
 			} else {
-                this.loading = false
-            }
+				this.loading = false
+			}
 		},
 
 		filterData(data) {
@@ -216,7 +218,7 @@ export default {
 			_data.forEach((ele, i) => {
 				const index = data.findIndex((val) => val.id === ele.parentId)
 				if (index < 0) {
-					storeDatas.push({
+					this.rolePermissions.push({
 						id: ele.id,
 						label: ele.permissionName,
 						children: [],
@@ -225,7 +227,7 @@ export default {
 					_data.splice(i, 1)
 				}
 			})
-			this.generateData(_data, storeDatas)
+			this.generateData(_data, this.rolePermissions)
 		},
 		generateData(data, tree) {
 			const data_s = [...data]
