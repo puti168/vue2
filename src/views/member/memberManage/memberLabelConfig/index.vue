@@ -196,7 +196,6 @@
         title="标签添加人数"
         :visible.sync="dialogGameVisible"
         :destroy-on-close="true"
-        width="480px"
         class="rempadding"
       >
         <el-divider></el-divider>
@@ -231,6 +230,7 @@
           :page-size="size"
           :page-sizes="[5, 10, 15]"
           :total="summary"
+          :pager-count="5"
           @current-change="handleCurrentChangeDialog"
           @size-change="handleSizeChangeDialog"
         ></el-pagination>

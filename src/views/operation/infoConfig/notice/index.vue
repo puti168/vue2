@@ -163,7 +163,6 @@
         :destroy-on-close="true"
         width="738px"
         center
-        class="rempadding"
         @close="clear"
       >
         <el-form ref="formSub" :inline="true" :model="dialogForm" label-width="140px">
