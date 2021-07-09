@@ -44,7 +44,7 @@
 								<el-form-item label="姓名：" prop="nickName">
 									<el-input
 										v-model="form.nickName"
-										maxlength="15"
+										maxlength="10"
 										style="width:300px;"
 										placeholder="请输入"
 									></el-input>
@@ -190,12 +190,12 @@ export default {
 					{
 						required: true,
 						trigger: 'change',
-						validator: this.validateAcount
+						validator: this.validateNickName
 					},
 					{
 						required: true,
 						trigger: 'blur',
-						validator: this.validateAcount
+						validator: this.validateNickName
 					}
 				],
 				nickName: [
