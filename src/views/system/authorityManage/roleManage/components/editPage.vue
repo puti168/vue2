@@ -23,6 +23,7 @@
 							maxlength="20"
 							placeholder="请输入"
 							clearable
+                            :disabled="updateStatus"
 							style="width: 365px"
 						></el-input>
 					</el-form-item>
@@ -33,6 +34,7 @@
 							type="textarea"
 							placeholder="请输入内容"
 							clearable
+                            :disabled="updateStatus"
 							maxlength="300"
 							show-word-limit
 							style="width: 365px"
