@@ -232,7 +232,7 @@
 									scope.row.activityType || scope.row.activityType + '' === '0'
 								"
 							>
-								{{ typeFilter(scope.row.activityType, 'operateActivityType') }}
+								{{ typeFilter(scope.row.activityType, 'operateVipActivityType') }}
 							</span>
 							<span v-else>-</span>
 						</template>
