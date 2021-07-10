@@ -258,6 +258,18 @@
 						width="160px"
 					></el-table-column>
 					<el-table-column
+						prop="initFavoritesNum"
+						align="center"
+						label="初始收藏数额"
+						width="160px"
+					></el-table-column>
+					<el-table-column
+						prop="increaseAmountOneTime"
+						align="center"
+						label="随机增加收藏数"
+						width="160px"
+					></el-table-column>
+					<el-table-column
 						prop="createdBy"
 						align="center"
 						label="创建人"

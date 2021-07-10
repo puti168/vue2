@@ -163,6 +163,42 @@
 							</el-form-item>
 						</el-col>
 						<el-col :span="12">
+							<el-form-item label="初始收藏数额:" prop="initFavoritesNum">
+								<el-input
+									v-model="form.initFavoritesNum"
+									size="medium"
+									:precision="1"
+									:maxlength="6"
+									clearable
+									style="width: 365px"
+									@keyup.native="NumValue"
+								></el-input>
+							</el-form-item>
+						</el-col>
+						<el-col :span="12">
+							<el-form-item label="随机增加收藏数:">
+						<el-input
+							v-model="form.increaseAmountStart"
+							size="medium"
+							style="width: 100px"
+							maxlength="3"
+							oninput="value=value.replace(/^[1-9]d*$/)"
+							name="increaseAmountStart"
+							@blur="checkValue($event)"
+						></el-input>
+						-
+						<el-input
+							v-model="form.increaseAmountEnd"
+							size="medium"
+							style="width: 100px"
+							maxlength="3"
+							oninput="value=value.replace(/^[1-9]d*$/)"
+							name="increaseAmountEnd"
+							@blur="checkValue($event)"
+						></el-input>
+					</el-form-item>
+						</el-col>
+						<el-col :span="12">
 							<el-form-item label="1级标签:">
 								<el-select
 									v-model="gameLabelParam1"
@@ -317,6 +353,13 @@ export default {
 				callback()
 			}
 			return {
+				initFavoritesNum: [
+					{
+						required: true,
+						message: '请输入大于0的整数',
+						trigger: 'blur'
+					}
+				],
 				gameRebateRate: [
 					{
 						required: false,
@@ -404,6 +447,8 @@ export default {
 				this.nowImage = arr.imageAddress
 				if (!arr.gameRebateRate) {
 					delete arr.gameRebateRate
+				} if (!arr.initFavoritesNum) {
+					delete arr.initFavoritesNum
 				}
 				this.form = JSON.parse(JSON.stringify(arr))
 				console.log(this.form)
@@ -416,6 +461,12 @@ export default {
 	created() {},
 	mounted() {},
 	methods: {
+		NumValue() {
+			this.form.initFavoritesNum = this.form.initFavoritesNum.replace(
+				/^(0+)|[^\d]+/g,
+				''
+			)
+		},
 		uploadSuccess(data) {
 			this.$set(this.form, 'imageAddress', data)
 		},
@@ -509,6 +560,38 @@ export default {
 		change(value) {
 			return value + ''
 		},
+		checkValue(e) {
+			const { name, value } = e.target
+			switch (name) {
+				case 'increaseAmountStart':
+					if (
+						!!this.form.increaseAmountEnd &&
+						(value && value * 1 > this.form.increaseAmountEnd * 1)
+					) {
+						this.$message({
+							type: 'number',
+							message: `请输入小于${this.form.increaseAmountEnd}天数`
+						})
+					} else {
+						this.form.increaseAmountStart = value
+					}
+					break
+				case 'increaseAmountEnd':
+					if (
+						!!this.form.increaseAmountStart &&
+						(value && value * 1 < this.form.increaseAmountStart * 1)
+					) {
+						this.$message({
+							type: 'number',
+							message: `请输入大于${this.form.increaseAmountStart}天数`
+						})
+					} else {
+						this.form.increaseAmountEnd = value
+					}
+					break
+			}
+		},
+
 		goBack() {
 			this.form = {
 				id: '',
