@@ -186,8 +186,8 @@
               style="width: 100px"
             ></el-input>
           </el-form-item>
-          <el-form-item> — </el-form-item>
-          <el-form-item prop="increaseAmountEnd">
+          <span class="spass"> — </span>
+          <el-form-item class="randomStart" prop="increaseAmountEnd">
             <el-input
               v-model="form.increaseAmountEnd"
               size="medium"
@@ -370,9 +370,8 @@ export default {
         // 图片验证
         callback()
       }
-	  const increaseStarts = (rule, value, callback) => {
+	  const increaseAmountStarts = (rule, value, callback) => {
         if (value < 1) {
-          console.log(value, '西红')
           callback(new Error('请输入大于0的数'))
         } else if (value > 999) {
           callback(new Error('输入值最多为999'))
@@ -385,7 +384,7 @@ export default {
         if (value < 1) {
           callback(new Error('请输入大于0的数字'))
         } else if (value <= this.form.increaseAmountStart) {
-          callback(new Error('输入值必须大于前面的值'))
+          callback(new Error('输入值大于前面值'))
         } else if (value > 999) {
           callback(new Error('输入值最多为999'))
         } else {
@@ -394,7 +393,7 @@ export default {
       }
       return {
 		increaseAmountStart: [
-          {required: true, validator: increaseStarts, trigger: 'blur'}
+          {required: true, validator: increaseAmountStarts, trigger: 'blur'}
 		],
 		increaseAmountEnd: [
           {required: true, validator: increaseAmountEnds, trigger: 'blur'}
@@ -582,7 +581,6 @@ export default {
             relationGameModuleName: relationGameModuleName.join(','),
             relationGameModuleId: this.form.relationGameModuleId.join(',')
           }
-          console.log(params, '小明')
           const url = this.editType === 'add' ? 'addGame' : 'editGame'
           this.$api[url](params)
             .then((res) => {
@@ -634,14 +632,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.el-form-item__content{
-	margin-left: 0px;
+.spass{
+	line-height: 30px;
 }
-
-.randomStart{
-	margin-left: 0px;
+.randomStart /deep/.el-form-item__content{
+	margin-left: 0px !important
 }
 .random{
+
 	display: flex;
 }
 .el-tag--small {
