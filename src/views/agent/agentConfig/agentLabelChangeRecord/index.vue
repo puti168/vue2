@@ -19,7 +19,7 @@
               style="width: 375px"
             ></el-date-picker>
           </el-form-item>
-          <el-form-item label="会员账号:">
+          <el-form-item label="代理账号:">
             <el-input
               v-model="queryData.userName"
               clearable
@@ -97,7 +97,7 @@
               <span v-else>-</span>
             </template>
           </el-table-column>
-          <el-table-column prop="userName" align="center" label="会员账号">
+          <el-table-column prop="userName" align="center" label="代理账号">
             <template slot-scope="scope">
               <Copy v-if="!!scope.row.userName" :title="scope.row.userName" :copy="copy">
                 {{ scope.row.userName }}

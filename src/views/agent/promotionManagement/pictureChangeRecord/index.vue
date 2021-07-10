@@ -2,7 +2,7 @@
   <div class="game-container report-container">
     <div class="params">
       <el-form ref="form" :inline="true" :model="queryData">
-        <el-form-item label="操作时间:">
+        <el-form-item label="变更时间:">
           <el-date-picker
             v-model="searchTime"
             size="medium"
@@ -16,28 +16,6 @@
             :clearable="false"
             :default-time="defaultTime"
           ></el-date-picker>
-        </el-form-item>
-        <el-form-item label="操作页面:">
-          <el-select
-            v-model="queryData.changeType"
-            style="width: 300px"
-            multiple
-            placeholder="默认选择全部"
-            :popper-append-to-body="false"
-          >
-            <el-option label="游戏管理" value="0"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="ID:">
-          <el-input
-            v-model="queryData.announcementTitel"
-            clearable
-            size="medium"
-            :maxlength="5"
-            style="width: 180px"
-            placeholder="请输入"
-            @keyup.enter.native="enterSearch"
-          ></el-input>
         </el-form-item>
         <el-form-item label="变更类型:">
           <el-select
@@ -94,9 +72,12 @@
           :header-cell-style="getRowClass"
           @sort-change="_changeTableSort"
         >
-          <el-table-column prop="announcementTitle" align="center" label="操作页面">
-          </el-table-column>
-          <el-table-column prop="announcementTitle" align="center" label="ID">
+          <el-table-column
+            prop="createdAt"
+            align="center"
+            label="操作时间"
+            sortable="custom"
+          >
           </el-table-column>
           <el-table-column prop="changeType" align="center" label="变更类型">
           </el-table-column>
@@ -104,16 +85,9 @@
           </el-table-column>
           <el-table-column align="center" label="变更后" prop="afterValue">
           </el-table-column>
-          <el-table-column align="center" label="备注" prop="afterValue">
-          </el-table-column>
           <el-table-column prop="createdBy" align="center" width="120" label="操作人">
           </el-table-column>
-          <el-table-column
-            prop="createdAt"
-            align="center"
-            label="操作时间"
-            sortable="custom"
-          >
+          <el-table-column align="center" label="备注" prop="afterValue">
           </el-table-column>
         </el-table>
         <!-- 分页 -->
@@ -129,6 +103,9 @@
           @size-change="handleSizeChange"
         ></el-pagination>
       </div>
+    </div>
+    <div v-if="imgVisible" class="imgCenter" @click="closeImage">
+      <img :src="bigImage" />
     </div>
   </div>
 </template>
@@ -146,7 +123,9 @@ export default {
     return {
       queryData: {},
       searchTime: [start, end],
-      dataList: []
+      dataList: [],
+      bigImage: '',
+      imgVisible: false
     }
   },
   computed: {},
@@ -187,6 +166,13 @@ export default {
         .catch(() => {
           this.loading = false
         })
+    },
+    lookImg(val) {
+      this.imgVisible = true
+      this.bigImage = val
+    },
+    closeImage() {
+      this.imgVisible = false
     },
     _changeTableSort({ column, prop, order }) {
       this.pageNum = 1
