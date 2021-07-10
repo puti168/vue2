@@ -882,7 +882,7 @@
             </el-form-item>
             <el-form-item
               v-if="dialogForm.activityType === '0'"
-              label="最高赠送总金额:"
+              label="单日最高赠送总金额:"
               class="numberBox tagheight"
               prop="activityGiveMaxMoney"
               :rules="[
