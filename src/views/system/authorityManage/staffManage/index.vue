@@ -380,7 +380,8 @@ export default {
 			return this.$api
 				.modifyPassword({
 					pwd: form.pwd,
-					rePwd: form.rePwd,
+                    newPwd: form.newPwd,
+                    resPwd: form.resPwd,
 					id: form.id,
 					userName: this.userName
 				})
