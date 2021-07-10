@@ -61,7 +61,7 @@ class="disableRgba"
           </el-table-column>
           <el-table-column prop="proxyName" align="center" label="代理姓名">
             <template slot-scope="scope">
-              <span v-if="scope.row.proxyAccount === '0'">-</span>
+              <span v-if="scope.row.proxyName === '0'">-</span>
               <span v-else>{{ scope.row.proxyName }}</span>
             </template>
           </el-table-column>

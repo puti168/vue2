@@ -329,6 +329,9 @@ export default {
 				activityId: undefined,
 				validmultiple: undefined
 			}
+			this.$nextTick(() => {
+				this.$refs.imgUpload && this.$refs.imgUpload.handleDeleteImgUrl()
+			})
 		},
 		checkRiskValue(val) {
 			// console.log('val', val)
@@ -398,7 +401,6 @@ export default {
 		},
 		handleDeleteUpload() {
 			this.queryData.imageAddress = ''
-			this.$message.warning('图片已被移除')
 		}
 	}
 }
