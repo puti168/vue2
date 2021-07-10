@@ -123,6 +123,15 @@ export function addMemberAPI(data) {
 	})
 }
 
+// 会员管理==> 新增 ===> 获取会员等级
+export function getMemberRiskAPI(data) {
+	return request({
+		url: '/memberVip/rebateRecord/getVipGrade',
+		method: 'post',
+		data
+	})
+}
+
 // 会员管理==> 会员注册信息 ==> 列表
 export function memberRegisterInfoListAPI(data) {
 	return request({
@@ -246,6 +255,7 @@ export default {
 	merchantDictAPI,
 	exportExcelAPI,
 	addMemberAPI,
+	getMemberRiskAPI,
 	memberRegisterInfoListAPI,
 	bankRecordListAPI,
 	getListUserBankAndVirtual,
