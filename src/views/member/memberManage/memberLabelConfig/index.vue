@@ -212,7 +212,6 @@
 				title="标签添加人数"
 				:visible.sync="dialogGameVisible"
 				:destroy-on-close="true"
-				width="480px"
 				class="rempadding"
 			>
 				<el-divider></el-divider>
