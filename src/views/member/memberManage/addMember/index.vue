@@ -88,16 +88,20 @@
 						></el-option>
 					</el-select>
 				</el-form-item>
-				<el-form-item label="VIP经验:">
-					<el-input
-						v-model="form.vipExperenceValue"
+				<el-form-item label="VIP等级:">
+					<el-select
+						v-model="form.vipId"
 						size="medium"
-						placeholder="请输入数字，不支持负数和小数点"
-						onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
-						clearable
-						maxlength="12"
+						placeholder="请选择vip等级"
 						style="width: 365px"
-					></el-input>
+					>
+						<el-option
+							v-for="item in vipRiskList"
+							:key="item.code"
+							:label="'vip' + item.gradeNum"
+							:value="item.id"
+						></el-option>
+					</el-select>
 				</el-form-item>
 				<el-form-item label="邮箱:" prop="email">
 					<el-input
@@ -177,12 +181,13 @@ export default {
 				mobile: undefined,
 				parentProxyName: undefined,
 				gender: '1',
-				vipExperenceValue: undefined,
+                vipId: undefined,
 				email: undefined,
 				realName: undefined,
 				applyInfo: undefined,
 				deviceNo: Finger.get()
-			}
+			},
+			vipRiskList: []
 		}
 	},
 	computed: {
@@ -287,9 +292,19 @@ export default {
 			}
 		}
 	},
-	async created() {},
+	async created() {
+		this.getVipRisk()
+	},
 	mounted() {},
 	methods: {
+		getVipRisk() {
+			this.$api.getMemberRiskAPI().then((res) => {
+				const { code, data } = res
+				if (code === 200) {
+					this.vipRiskList = data || []
+				}
+			})
+		},
 		add() {
 			this.loading = true
 			const params = {
@@ -336,17 +351,17 @@ export default {
 		reset() {
 			this.$refs['form'].resetFields()
 			this.form = {
-                accountType: '4',
-                username: undefined,
-                password: undefined,
-                mobile: undefined,
-                parentProxyName: undefined,
-                gender: '1',
-                vipExperenceValue: undefined,
-                email: undefined,
-                realName: undefined,
-                applyInfo: undefined,
-                deviceNo: Finger.get()
+				accountType: '4',
+				username: undefined,
+				password: undefined,
+				mobile: undefined,
+				parentProxyName: undefined,
+				gender: '1',
+                vipId: undefined,
+				email: undefined,
+				realName: undefined,
+				applyInfo: undefined,
+				deviceNo: Finger.get()
 			}
 		},
 		checkValue(val) {}

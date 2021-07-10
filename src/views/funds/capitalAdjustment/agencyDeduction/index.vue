@@ -214,11 +214,11 @@ export default {
 			]
 
 			const adjustType = [
-				{ required: true, message: '请选择操作类型', trigger: 'change' }
+				{ required: true, message: '请选择调整类型', trigger: 'change' }
 			]
 
 			const lessMoney = [
-				{ required: true, message: '请输入操作金额', trigger: 'blur' }
+				{ required: true, message: '请输入调整金额', trigger: 'blur' }
 			]
 
 			const balance = [
