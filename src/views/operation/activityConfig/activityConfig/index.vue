@@ -580,6 +580,7 @@
                 v-model="dialogForm.activityPrescription"
                 placeholder="请选择"
                 :popper-append-to-body="false"
+                @change="changePrescription"
               >
                 <el-option
                   v-for="item in operateValidityType"
@@ -1343,7 +1344,16 @@ export default {
       this.endAt = false
       this.dialogFormVisible = false
     },
-
+    changePrescription(val) {
+      this.activityPictureUpAt = Date.now()
+      this.activityPictureDownAt = endTime
+      this.activityStartAt = Date.now()
+      this.activityEndAt = endTime
+      this.upAt = false
+      this.downAt = false
+      this.startAt = false
+      this.endAt = false
+    },
     openEdit(row) {
       this.addOrEdit = 'edit'
       this.dialogForm = { ...row }
