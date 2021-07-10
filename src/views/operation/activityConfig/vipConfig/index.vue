@@ -183,7 +183,12 @@
             width="120px"
             label="活动名称"
           ></el-table-column>
-          <el-table-column align="center" prop="activityTitle" label="活动主标题" width="120px">
+          <el-table-column
+            align="center"
+            prop="activityTitle"
+            label="活动主标题"
+            width="120px"
+          >
           </el-table-column>
           <el-table-column
             align="center"
@@ -304,6 +309,7 @@
                 type="primary"
                 icon="el-icon-edit"
                 size="medium"
+                :disabled="scope.row.status === 1"
                 @click="openEdit(scope.row)"
               >
                 编辑信息

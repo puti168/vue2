@@ -393,6 +393,7 @@
                 type="primary"
                 icon="el-icon-edit"
                 size="medium"
+                :disabled="scope.row.status === 1"
                 @click="openEdit(scope.row)"
               >
                 编辑信息
@@ -591,6 +592,7 @@
             <el-form-item
               label="活动图上架时间:"
               label-width="125px"
+              style="margin-bottom: 25px"
               :rules="[
                 {
                   required: true,
@@ -605,10 +607,14 @@
                 type="datetime"
                 align="right"
                 :clearable="false"
-                @change="changeUpAtTime"
+                @change="changeUpAt"
               ></el-date-picker>
-              <span v-show="imageUpTime" class="el-form-item__error">
-                活动图上架时间不能大于活动图下架时间
+              <span v-show="upAt" class="el-form-item__error">
+                {{
+                  dialogForm.activityPrescription === "0"
+                    ? " 活动图上架时间不能大于活动图下架时间,活动开始时间和活动结束时间"
+                    : "活动图上架时间不能大于活动开始时间"
+                }}
               </span>
             </el-form-item>
             <el-form-item
@@ -625,16 +631,17 @@
                 type="datetime"
                 align="right"
                 :clearable="false"
-                @change="changeDownAtTime"
+                @change="changeDownAt"
               ></el-date-picker>
-              <span v-show="imageUpTime" class="el-form-item__error">
-                活动图下架时间不能小于活动图上架时间
+              <span v-show="downAt" class="el-form-item__error">
+                活动图下架时间不能小于活动图上架时间,活动开始时间和活动结束时间
               </span>
             </el-form-item>
             <br />
             <el-form-item
               label="活动开始时间:"
               label-width="125px"
+              style="margin-bottom: 25px"
               :rules="[
                 {
                   required: true,
@@ -649,9 +656,14 @@
                 type="datetime"
                 align="right"
                 :clearable="false"
+                @change="changeStartAt"
               ></el-date-picker>
-              <span v-show="activityTime" class="el-form-item__error">
-                活动开始时间不能大于活动结束时间
+              <span v-show="startAt" class="el-form-item__error">
+                {{
+                  dialogForm.activityPrescription === "0"
+                    ? " 活动开始时间不能小于活动图上架时间且不能大于活动图下架时间和活动结束时间"
+                    : "活动开始时间不能小于活动图上架时间"
+                }}
               </span>
             </el-form-item>
             <el-form-item
@@ -668,9 +680,10 @@
                 type="datetime"
                 align="right"
                 :clearable="false"
+                @change="changeEndAt"
               ></el-date-picker>
-              <span v-show="activityTime" class="el-form-item__error">
-                活动开始时间不能小于活动结束时间
+              <span v-show="endAt" class="el-form-item__error">
+                活动结束时间不能大于活动图下架时间且不能小于活动图上架时间和活动开始时间
               </span>
             </el-form-item>
             <el-form-item
@@ -991,7 +1004,6 @@ import list from '@/mixins/list'
 import dayjs from 'dayjs'
 import UploadItem from '@/components/UploadItem'
 import draggable from 'vuedraggable'
-const startTime = dayjs().startOf('day').valueOf()
 const endTime = dayjs().endOf('day').valueOf()
 export default {
   components: { UploadItem, draggable },
@@ -1025,7 +1037,7 @@ export default {
       },
       dateEnd: {
         disabledDate(time) {
-          return time.getTime() > Date.now() - 24 * 60 * 60 * 1000
+          return time.getTime() < Date.now() - 24 * 60 * 60 * 1000
         }
       },
       activityNow: {
@@ -1041,7 +1053,11 @@ export default {
       bigImage: '',
       imgVisible: false,
       sortVisible: false,
-      addOrEdit: 'add'
+      addOrEdit: 'add',
+      upAt: false,
+      downAt: false,
+      startAt: false,
+      endAt: false
     }
   },
   computed: {
@@ -1065,116 +1081,6 @@ export default {
     },
     enumPaymentDepositType() {
       return this.globalDics.enumPaymentDepositType
-    },
-
-    imageUpTime() {
-      if (
-        this.dialogForm.activityPrescription === '0' &&
-        this.activityPictureUpAt < this.activityPictureDownAt
-      ) {
-        return false
-      } else if (this.dialogForm.activityPrescription === '1') {
-        return false
-      } else {
-        return true
-      }
-    },
-    activityTime() {
-      if (
-        this.dialogForm.activityPrescription === '0' &&
-        this.activityStartAt < this.activityEndAt
-      ) {
-        return false
-      } else if (this.dialogForm.activityPrescription === '1') {
-        return false
-      } else {
-        return true
-      }
-    }
-  },
-  watch: {
-    activityPictureUpAt: {
-      handler(newV, oldV) {
-        const DownAt = this.activityPictureDownAt
-        const HMS = dayjs(newV).format('HH:mm:ss')
-        this.dateEnd = {
-          selectableRange: [HMS + ' - 23:59:59'],
-          disabledDate(time) {
-            return time.getTime() < newV - 24 * 60 * 60 * 1000 + 1000
-          }
-        }
-        if (this.dialogForm.activityPrescription === '0') {
-          this.activityNow = {
-            selectableRange: [HMS + ' - 23:59:59'],
-            disabledDate(time) {
-              return (
-                time.getTime() < newV - 24 * 60 * 60 * 1000 + 1000 ||
-                time.getTime() > DownAt
-              )
-            }
-          }
-        } else {
-          this.activityNow = {
-            selectableRange: [HMS + ' - 23:59:59'],
-            disabledDate(time) {
-              return time.getTime() < newV - 24 * 60 * 60 * 1000 + 1000
-            }
-          }
-        }
-        this.activityEnd = {
-          selectableRange: [HMS + ' - 23:59:59'],
-          disabledDate(time) {
-            console.log(
-              time.getTime() < newV - 24 * 60 * 60 * 1000 + 1000,
-              time.getTime() > DownAt
-            )
-            return (
-              time.getTime() < newV - 24 * 60 * 60 * 1000 + 1000 ||
-              time.getTime() > DownAt
-            )
-          }
-        }
-      },
-      deep: true
-    },
-    activityPictureDownAt: {
-      handler(newV, oldV) {
-        const UpAt = this.activityPictureUpAt
-        const HMS = dayjs(newV).format('HH:mm:ss')
-        this.activityNow = {
-          selectableRange: [HMS + ' - 23:59:59'],
-          disabledDate(time) {
-            return (
-              time.getTime() > newV || time.getTime() < UpAt - 24 * 60 * 60 * 1000 + 1000
-            )
-          }
-        }
-        this.activityEnd = {
-          selectableRange: [HMS + ' - 23:59:59'],
-          disabledDate(time) {
-            return (
-              time.getTime() > newV || time.getTime() < UpAt - 24 * 60 * 60 * 1000 + 1000
-            )
-          }
-        }
-      },
-      deep: true
-    },
-    activityStartAt: {
-      handler(newV, oldV) {
-        const DownAt = this.activityPictureDownAt
-        const HMS = dayjs(newV).format('HH:mm:ss')
-        this.activityEnd = {
-          selectableRange: [HMS + ' - 23:59:59'],
-          disabledDate(time) {
-            return (
-              time.getTime() < newV - 24 * 60 * 60 * 1000 + 1000 ||
-              time.getTime() > DownAt
-            )
-          }
-        }
-      },
-      deep: true
     }
   },
   created() {
@@ -1260,6 +1166,33 @@ export default {
       })
     },
     subAddOrEdit() {
+      if (
+        this.dialogForm.activityPrescription === '0' &&
+        this.activityPictureUpAt <= this.activityPictureDownAt &&
+        this.activityPictureUpAt <= this.activityStartAt &&
+        this.activityPictureUpAt <= this.activityEndAt &&
+        this.activityPictureDownAt >= this.activityStartAt &&
+        this.activityPictureDownAt >= this.activityEndAt &&
+        this.activityStartAt <= this.activityEndAt
+      ) {
+        this.upAt = false
+        this.downAt = false
+        this.startAt = false
+        this.endAt = false
+      } else if (
+        this.dialogForm.activityPrescription === '1' &&
+        this.activityPictureUpAt <= this.activityStartAt
+      ) {
+        this.upAt = false
+        this.downAt = false
+        this.startAt = false
+        this.endAt = false
+      } else {
+        this.upAt = true
+        this.downAt = true
+        this.startAt = true
+        this.endAt = true
+      }
       if (this.dialogForm.activityPrescription === '0') {
         this.dialogForm.activityPictureUpAt = dayjs(this.activityPictureUpAt).format(
           'YYYY-MM-DD HH:mm:ss'
@@ -1285,7 +1218,7 @@ export default {
       }
       console.log(this.dialogForm)
       this.$refs.formSub.validate((valid) => {
-        if (valid && !this.imageUpTime && !this.activityTime) {
+        if (valid && !this.upAt && !this.downAt && !this.startAt && !this.endAt) {
           const params = { ...this.dialogForm }
           params.venueOrPayType = params.venueOrPayType.join(',')
           params.activityAppType = params.activityAppType.join(',')
@@ -1325,25 +1258,89 @@ export default {
         }
       })
     },
-    changeUpAtTime(val) {
-      console.log(val, Date.now(), startTime)
-      const Timestamp = new Date(new Date(val).toLocaleDateString()).getTime()
-      if (Timestamp === startTime) {
-        this.activityPictureUpAt = val
-        this.activityStartAt = val
+    changeUpAt(val) {
+      this.activityPictureUpAt = val
+      this.activityStartAt = val
+      if (
+        this.dialogForm.activityPrescription === '0' &&
+        (val > this.activityPictureDownAt ||
+          val > this.activityStartAt ||
+          val > this.activityEndAt)
+      ) {
+        this.upAt = true
+      } else if (
+        this.dialogForm.activityPrescription === '1' &&
+        val > this.activityStartAt
+      ) {
+        this.upAt = true
       } else {
-        this.activityPictureUpAt = Timestamp
-        this.activityStartAt = Timestamp
+        this.upAt = false
+        this.downAt = false
+        this.startAt = false
+        this.endAt = false
       }
     },
-    changeDownAtTime(val) {
+    changeDownAt(val) {
       this.activityPictureDownAt = val
       this.activityEndAt = val
+      if (
+        val < this.activityPictureUpAt ||
+        val < this.activityStartAt ||
+        val < this.activityEndAt
+      ) {
+        this.downAt = true
+      } else {
+        this.upAt = false
+        this.downAt = false
+        this.startAt = false
+        this.endAt = false
+      }
+    },
+    changeStartAt(val) {
+      if (
+        this.dialogForm.activityPrescription === '0' &&
+        (val < this.activityPictureUpAt ||
+          val > this.activityPictureDownAt ||
+          val > this.activityEndAt)
+      ) {
+        this.startAt = true
+      } else if (
+        this.dialogForm.activityPrescription === '1' &&
+        val < this.activityPictureUpAt
+      ) {
+        console.log(11111)
+        this.startAt = true
+      } else {
+        this.upAt = false
+        this.downAt = false
+        this.startAt = false
+        this.endAt = false
+      }
+    },
+    changeEndAt(val) {
+      if (
+        val < this.activityPictureUpAt ||
+        val > this.activityPictureDownAt ||
+        val < this.activityStartAt
+      ) {
+        this.endAt = true
+      } else {
+        this.upAt = false
+        this.downAt = false
+        this.startAt = false
+        this.endAt = false
+      }
     },
     clear() {
       this.$refs.formSub.resetFields()
       this.activityPictureUpAt = Date.now()
       this.activityPictureDownAt = endTime
+      this.activityStartAt = Date.now()
+      this.activityEndAt = endTime
+      this.upAt = false
+      this.downAt = false
+      this.startAt = false
+      this.endAt = false
       this.dialogFormVisible = false
     },
 
@@ -1452,6 +1449,12 @@ export default {
       console.log(this.dialogForm)
       this.activityPictureUpAt = Date.now()
       this.activityPictureDownAt = endTime
+      this.activityStartAt = Date.now()
+      this.activityEndAt = endTime
+      this.upAt = false
+      this.downAt = false
+      this.startAt = false
+      this.endAt = false
       this.dialogFormVisible = true
     },
     activityTemplate(val) {

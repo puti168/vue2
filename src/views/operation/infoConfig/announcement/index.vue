@@ -253,11 +253,13 @@
                 type="primary"
                 icon="el-icon-edit"
                 size="medium"
+                :disabled="scope.row.status === 1"
                 @click="openEdit('编辑', scope.row)"
               >
                 编辑信息
               </el-button>
               <el-button
+                v-if="scope.row.status === 0"
                 type="danger"
                 icon="el-icon-delete"
                 size="medium"
