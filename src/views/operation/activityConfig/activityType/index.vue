@@ -206,21 +206,15 @@ export default {
 			this.$api.activityQueryTypeListAPI({ type }).then((res) => {
 				const { code, data } = res
 				const arr = JSON.stringify(this.globalDics.operateActivityNameType)
-                console.log('arr', arr)
 				const newArr = JSON.parse(arr)
+				console.log('newArr', newArr)
+				console.log('data', data)
 				if (code === 200) {
 					newArr.forEach((item, idx) => {
-						let isExist = false
-						const itemId = item.code * 1
-						if (itemId === data[idx]) {
-							isExist = true
-						}
-						if (!isExist) {
-							this.newActivityTypeArr.push({
-								code: data[idx] + '',
-								description: newArr[data[idx]].description
-							})
-						}
+						this.newActivityTypeArr.push({
+							code: data[idx] + '',
+							description: newArr[data[idx]].description
+						})
 					})
 				} else {
 					this.newActivityTypeArr = []
