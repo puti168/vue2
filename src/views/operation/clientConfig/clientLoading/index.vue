@@ -228,7 +228,7 @@
 							<el-button
 								type="primary"
 								icon="el-icon-edit"
-								:disabled="loading"
+                                :disabled="scope.row.status === 1"
 								size="medium"
 								@click="edit(scope.row)"
 							>
@@ -237,7 +237,7 @@
 							<el-button
 								type="danger"
 								icon="el-icon-delete"
-								:disabled="loading"
+                                :disabled="scope.row.status === 1"
 								size="medium"
 								@click="deleteLabel(scope.row)"
 							>

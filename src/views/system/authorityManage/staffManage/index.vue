@@ -154,7 +154,7 @@
 						<el-button
 							type="danger"
 							icon="el-icon-delete"
-							:disabled="loading"
+                            :disabled="scope.row.status === '1'"
 							size="medium"
 							@click="deleteUser(scope.row)"
 						>
