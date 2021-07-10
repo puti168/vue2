@@ -295,7 +295,6 @@
         title="查看"
         :visible.sync="lookVisible"
         :destroy-on-close="true"
-        width="480px"
         class="rempadding"
       >
         <el-table
@@ -462,6 +461,7 @@ export default {
       this.$api.getOperateConfigNoticeSelectDetail(params).then((res) => {
         if (res.code === 200) {
           this.userList = res.data.records
+          this.summary = res.data.total
           this.lookVisible = true
         }
       })
@@ -525,12 +525,7 @@ export default {
   cursor: pointer;
   color: #4b7902;
 }
-// /deep/ .rempadding .el-dialog__body {
-//   padding: 0;
-//   padding-bottom: 30px;
-//   .contentBox,
-//   form {
-//     padding: 0 20px;
-//   }
-// }
+.fenye{
+  text-align: center;
+}
 </style>
