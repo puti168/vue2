@@ -16,6 +16,7 @@
 								size="medium"
 								style="width: 180px"
 								placeholder="请输入"
+                                :maxlength="20"
 								:disabled="loading"
 								@keyup.enter.native="enterSearch"
 							></el-input>
