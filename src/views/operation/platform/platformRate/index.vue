@@ -42,14 +42,16 @@
 							<span class="other-class"></span>
 						</div>
 					</el-popover>
-					<el-input
+					<el-input-number
 						v-model="queryData.feeRate"
 						size="medium"
-						maxlength="4"
+                        :max="100"
+                        :precision="2"
 						placeholder="请输入"
 						clearable
 						style="width: 365px"
-					></el-input>
+					></el-input-number>
+                    %
 				</el-form-item>
 				<el-form-item label="备注:" prop="remark">
 					<el-input
@@ -175,7 +177,13 @@ export default {
 				{ required: true, message: '请输入费率', trigger: 'blur' }
 			]
 			const remark = [
-				{ required: true, message: '请输入备注', trigger: 'blur' }
+				{ required: true, message: '请输入备注', trigger: 'blur' },
+                {
+                    min: 2,
+                    max: 50,
+                    message: '长度在 2 到 50 个字符',
+                    trigger: 'blur'
+                }
 			]
 			return {
 				gameName,
@@ -211,7 +219,7 @@ export default {
 				...this.queryData
 			}
 			let lock = true
-			params.feeRate = params.feeRate / 100
+			params.feeRate = (params.feeRate / 100) + ''
 			this.$refs['form'].validate((valid) => {
 				if (valid && lock) {
 					lock = false
@@ -291,6 +299,16 @@ export default {
 	text-align: center;
 	color: #909399;
 	font-weight: 700;
+}
+
+/deep/.el-input-number__decrease,
+/deep/.el-input-number__increase {
+    display: none;
+}
+
+/deep/.el-input-number .el-input__inner {
+    padding: 0 15px;
+    text-align: left;
 }
 .addAgent-container {
 	background-color: #f5f5f5;
