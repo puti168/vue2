@@ -77,7 +77,7 @@
               :popper-append-to-body="false"
             >
               <el-option
-                v-for="item in memberPatchSubAdjustType"
+                v-for="item in memberPatchAddAdjustType"
                 :key="item.code"
                 :label="item.description"
                 :value="item.code"
@@ -183,7 +183,7 @@
           </el-table-column>
           <el-table-column prop="adjustType" align="center" label="调整类型">
             <template slot-scope="scope">
-              {{ typeFilter(scope.row.adjustType, "memberPatchSubAdjustType") }}
+              {{ typeFilter(scope.row.adjustType, "memberPatchAddAdjustType") }}
             </template>
           </el-table-column>
           <el-table-column prop="adjustAmount" align="center" label="调整金额 ">
@@ -237,8 +237,8 @@ export default {
     patchAdjustOrderStatus() {
       return this.globalDics.patchAdjustOrderStatus
     },
-    memberPatchSubAdjustType() {
-      return this.globalDics.memberPatchSubAdjustType
+    memberPatchAddAdjustType() {
+      return this.globalDics.memberPatchAddAdjustType
     }
   },
   created() {},
