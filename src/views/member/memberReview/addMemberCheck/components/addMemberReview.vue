@@ -25,7 +25,7 @@
 					</div>
 					<div class="review-flex">
 						<div>性别: {{ typeFilter(list.gender, 'genderType') }}</div>
-						<div>VIP经验: {{ list.vipExperienceVal }}</div>
+						<div>VIP等级: {{ 'VIP'+list.vipGradeName }}</div>
 						<div>邮箱: {{ list.email }}</div>
 						<div>姓名: {{ list.realName }}</div>
 					</div>
