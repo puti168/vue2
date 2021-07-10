@@ -267,6 +267,9 @@ export default {
       })
     },
     _changeTableSort({ column, prop, order }) {
+      if (prop === 'createDt') {
+				prop = 1
+			}
       this.queryData.orderKey = prop
       if (order === 'ascending') {
         // 升序

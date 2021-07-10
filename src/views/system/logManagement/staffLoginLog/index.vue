@@ -1,6 +1,6 @@
 <template>
   <div class="game-container report-container">
-    <div class="params">
+     <div class="params">
       <el-form ref="form" :inline="true" :model="queryData">
         <el-form-item label="用户名称:">
           <el-input
@@ -15,7 +15,7 @@
         </el-form-item>
         <el-form-item label="登录IP:">
           <el-input
-            v-model="queryData.loginIp"
+            v-model="queryData.ip"
             clearable
             size="medium"
             :maxlength="20"
@@ -45,7 +45,6 @@
           :data="dataList"
           style="width: 100%"
           :header-cell-style="getRowClass"
-          @sort-change="changeTableSort"
         >
           <el-table-column prop="userName" align="center" label="用户名" width="150px">
           </el-table-column>
@@ -73,7 +72,7 @@
               <span v-else>-</span>
             </template>
           </el-table-column>
-          <el-table-column
+         <el-table-column
             prop="loginRegion"
             align="center"
             label="登录地区"
@@ -87,17 +86,18 @@
           </el-table-column>
         </el-table>
         <!-- 分页 -->
-       <el-pagination
+        <el-pagination
+          v-show="dataList.length > 0"
           :current-page.sync="pageNum"
-          class="pageValue"
           background
           layout="total, sizes,prev, pager, next, jumper"
           :page-size="pageSize"
-          :page-sizes="pageSizes"
-          :total="total"
+          :page-sizes="$store.getters.pageSizes"
+          :total="15"
           @current-change="handleCurrentChange"
           @size-change="handleSizeChange"
         ></el-pagination>
+
       </div>
     </div>
   </div>
@@ -171,6 +171,9 @@ export default {
       this.accountType1 = []
       this.deviceType1 = []
       this.formTime.time = [start, end]
+      this.loadData()
+    },
+    handleCurrentChange() {
       this.loadData()
     }
   }
