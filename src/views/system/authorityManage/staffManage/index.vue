@@ -9,7 +9,7 @@
 						style="width: 280px"
 						placeholder="请输入"
 						clearable
-                        maxlength="10"
+						maxlength="10"
 					></el-input>
 				</el-form-item>
 				<el-form-item style="margin-left: 30px">
@@ -110,13 +110,13 @@
 					label="最后登录"
 					width="180"
 				>
-                    <template slot-scope="scope">
+					<template slot-scope="scope">
 						<span v-if="!!scope.row.lastLoginAt">
 							{{ scope.row.lastLoginAt }}
 						</span>
-                        <span v-else>-</span>
-                    </template>
-                </el-table-column>
+						<span v-else>-</span>
+					</template>
+				</el-table-column>
 				<el-table-column label="状态">
 					<template slot-scope="scope">
 						<el-switch
@@ -154,7 +154,7 @@
 						<el-button
 							type="danger"
 							icon="el-icon-delete"
-                            :disabled="scope.row.status === '1'"
+							:disabled="scope.row.status === '1'"
 							size="medium"
 							@click="deleteUser(scope.row)"
 						>
@@ -381,9 +381,9 @@ export default {
 			return this.$api
 				.modifyPassword({
 					pwd: form.pwd,
-                    newPwd: form.newPwd,
-                    resPwd: form.resPwd,
-					id: form.id,
+					newPwd: form.newPwd,
+					resPwd: form.resPwd,
+					userId: form.id,
 					userName: this.userName
 				})
 				.then((_) => {
