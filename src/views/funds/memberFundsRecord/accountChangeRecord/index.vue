@@ -317,6 +317,9 @@
             width="90px"
             sortable="custom"
           >
+            <template slot-scope="scope">
+              {{ scope.row.vipIdName ? "VIP" + scope.row.vipIdName : "-" }}
+            </template>
           </el-table-column>
           <!-- <el-table-column
             prop="parentProxyName"
