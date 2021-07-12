@@ -19,7 +19,7 @@
 					</el-form-item>
 					<el-form-item label="锁单状态:">
 						<el-select
-							v-model="queryData.lockOrder"
+							v-model="queryData.lockStatus"
 							style="width: 180px"
 							:popper-append-to-body="false"
 						>
@@ -230,8 +230,8 @@ export default {
 	data() {
 		return {
 			queryData: {
-				lockOrder: '',
-				orderNo: ''
+                lockStatus: '',
+				orderNo: undefined
 			},
 			type: true,
 			showDetail: false,
@@ -314,8 +314,8 @@ export default {
 		},
 		reset() {
 			this.queryData = {
-				lockOrder: '',
-				orderNo: ''
+                lockStatus: '',
+				orderNo: undefined
 			}
 			this.formTime = {
 				time: [start, end]
