@@ -120,7 +120,7 @@
 										type="success"
 										size="medium"
 										:disabled="scope.row.lockStatus === 0"
-                                        @click="confirm(scope.row, true)"
+										@click="confirm(scope.row, true)"
 									>
 										出款通过
 									</el-button>
@@ -128,7 +128,7 @@
 										type="danger"
 										size="medium"
 										:disabled="scope.row.lockStatus === 0"
-                                        @click="confirm(scope.row, false)"
+										@click="confirm(scope.row, false)"
 									>
 										出款拒绝
 									</el-button>
@@ -421,6 +421,7 @@ export default {
 					this.$api
 						.memberWithDrawUserupdateWithdraw(params)
 						.then((res) => {
+							this.visible = false
 							if (res.code === 200) {
 								this.$message({
 									message: '操作成功',
@@ -433,6 +434,7 @@ export default {
 							}
 						})
 						.catch(() => {
+							this.visible = false
 							loading.close()
 						})
 				}
@@ -440,7 +442,7 @@ export default {
 		},
 		reset() {
 			this.queryData = {
-                thirdOrderNo: '',
+				thirdOrderNo: '',
 				lockStatus: ''
 			}
 			this.formTime = {
