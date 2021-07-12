@@ -582,8 +582,11 @@ export default {
           if (maxDate - minDate > this.day31) {
             this.flag = true
             this.$message.warning('请缩小搜索范围至31天')
-          } else {
+          }
+          if (maxDate !== null && minDate !== null && maxDate - minDate <= this.day31) {
             this.flag = false
+          } else {
+            this.flag = true
           }
         },
         disabledDate: (time) => {
