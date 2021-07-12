@@ -201,7 +201,7 @@
           background
           layout="total, sizes,prev, pager, next, jumper"
           :page-size="pageSize"
-          :page-sizes="$store.getters.pageSizes"
+          :page-sizes="[5, 10, 20]"
           :total="15"
           @current-change="handleCurrentChange"
           @size-change="handleSizeChange"
