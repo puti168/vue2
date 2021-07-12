@@ -435,10 +435,10 @@ export default {
   mounted() {},
   methods: {
     initGetDics() {
-      this.$api.agentDictAPI().then((res) => {
+      this.$api.getProxyLabelDict().then((res) => {
         if (res.code === 200) {
           // this.riskLevelList = res.data.windControl;
-          this.memberLabelList = res.data.userLabel
+          this.memberLabelList = res.data
           console.log('风控，标签', res)
         }
       })

@@ -391,6 +391,23 @@ export function setProxyDeleteLabel(params) {
 		params
 	})
 }
+//  代理标签==>标签人数
+export function getProxyProxyInfoByLabelId(data) {
+	return request({
+		url: '/proxy/proxyInfoByLabelId',
+		method: 'post',
+		data
+	})
+}
+//  代理标签==>代理详情下拉框
+export function getProxyLabelDict(params) {
+	return request({
+		url: '/proxy/labelDict',
+		method: 'get',
+		params
+	})
+}
+
 export default {
 	updateMemberOverflowRecord,
 	overflowMemberInfo,
@@ -438,5 +455,7 @@ export default {
 	getProxyGetLabelChangeRecordPage,
 	getProxyPageLabel,
 	getProxyAddLabel,
-	setProxyDeleteLabel
+	setProxyDeleteLabel,
+	getProxyProxyInfoByLabelId,
+	getProxyLabelDict
 }

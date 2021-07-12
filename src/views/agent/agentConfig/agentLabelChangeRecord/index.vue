@@ -204,7 +204,7 @@ export default {
         ...this.getParams(params)
       }
       this.$api
-        .getMemberLabelChangeRecordPage(params)
+        .getProxyGetLabelChangeRecordPage(params)
         .then((res) => {
           if (res.code === 200) {
             this.tableData = res.data.record
