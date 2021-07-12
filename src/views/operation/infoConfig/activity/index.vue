@@ -79,10 +79,10 @@
             align="center"
             label="活动消息标题"
           ></el-table-column>
-          <el-table-column align="center" label="活动消息内容" prop="noticeContent">
+          <el-table-column align="center" label="活动消息内容" prop="noticeContentPage">
             <template slot-scope="scope">
               <el-tooltip :content="scope.row.noticeContent" placement="top">
-                <p>{{ scope.row.noticeContent }}</p>
+                <p>{{ scope.row.noticeContentPage }}</p>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -525,7 +525,12 @@ export default {
   cursor: pointer;
   color: #4b7902;
 }
-.fenye{
+.fenye {
   text-align: center;
+}
+</style>
+<style>
+.el-tooltip__popper {
+  max-width: 300px !important;
 }
 </style>

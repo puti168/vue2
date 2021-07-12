@@ -33,7 +33,7 @@
             <el-button
               type="primary"
               icon="el-icon-search"
-              :disabled="queryText !== '查询'"
+              :disabled="flag"
               size="medium"
               @click="search"
             >
@@ -264,27 +264,26 @@ export default {
     return {
       queryData: {},
       searchTime: [startTime, endTime],
+      day31: 30 * 24 * 3600 * 1000,
+      // 日期使用
       timeControl: {
         onPick: ({ maxDate, minDate }) => {
-          this.choiceDate = minDate.getTime()
-          if (maxDate) {
-            this.choiceDate = ''
+          console.log(maxDate, minDate)
+          if (maxDate - minDate > this.day31) {
+            this.flag = true
+            this.$message.warning('请缩小搜索范围至31天')
+          }
+          if (maxDate !== null && minDate !== null && maxDate - minDate <= this.day31) {
+            this.flag = false
+          } else {
+            this.flag = true
           }
         },
         disabledDate: (time) => {
-          const self = this
-          if (self.choiceDate) {
-            const startDay = self.choiceDate
-            let endDay = startDay + 24 * 3600 * 1000 * 31
-            if (endDay > Date.now() - 8.64e6) {
-              endDay = Date.now() - 8.64e6
-            }
-            return time.getTime() < startDay || time.getTime() > endDay
-          } else {
-            return time.getTime() > Date.now() - 8.64e6
-          }
+          return time.getTime() > Date.now()
         }
       },
+      flag: false,
       queryText: '查询',
       tableData: [],
       dialogList: [],
@@ -320,7 +319,6 @@ export default {
 
   methods: {
     loadData() {
-      this.loading = true
       const create = this.searchTime || []
       const [startTime, endTime] = create
       let params = {
@@ -331,32 +329,38 @@ export default {
       params = {
         ...this.getParams(params)
       }
-      this.$api
-        .getDevicetypenetamountList(params)
-        .then((res) => {
-          if (res.code === 200 && res.data !== null) {
-            this.tableData = res.data.record
-          } else {
-            this.tableData = []
-          }
-          this.loading = false
-        })
-        .catch(() => {
-          this.loading = false
-        })
-      this.$api
-        .getDevicetypenetamountAggregation(params)
-        .then((res) => {
-          if (res.code === 200) {
-            this.summary = res.data
-          }
-          this.loading = false
-        })
-        .catch(() => {
-          this.loading = false
-        })
+      if (endTime - startTime > this.day31) {
+        this.$message.warning('请缩小搜索范围至31天')
+      } else {
+        this.loading = true
+        this.$api
+          .getDevicetypenetamountList(params)
+          .then((res) => {
+            if (res.code === 200 && res.data !== null) {
+              this.tableData = res.data.record
+            } else {
+              this.tableData = []
+            }
+            this.loading = false
+          })
+          .catch(() => {
+            this.loading = false
+          })
+        this.$api
+          .getDevicetypenetamountAggregation(params)
+          .then((res) => {
+            if (res.code === 200) {
+              this.summary = res.data
+            }
+            this.loading = false
+          })
+          .catch(() => {
+            this.loading = false
+          })
+      }
     },
     search() {
+      this.flag = true
       let t = 10
       const timecount = setInterval(() => {
         t--
@@ -364,6 +368,7 @@ export default {
         if (t < 0) {
           clearInterval(timecount)
           this.queryText = '查询'
+          this.flag = false
         }
       }, 1000)
       this.loadData()

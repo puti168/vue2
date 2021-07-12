@@ -281,7 +281,7 @@ class="textC"
         <div>
           VIP等级：<i v-if="activeL" class="el-icon-loading"></i>
           <span v-else>
-            {{ vipMsgList.grade }}
+            {{ vipMsgList.grade ? "VIP" + vipMsgList.grade : "" }}
           </span>
         </div>
         <div>
