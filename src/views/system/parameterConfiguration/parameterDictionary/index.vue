@@ -6,7 +6,7 @@
           <el-form-item label="标签名称:">
             <el-input
               v-model="queryData.size"
-              maxlength="10"
+              maxlength="20"
               clearable
               size="medium"
               style="width: 180px"
@@ -19,7 +19,7 @@
             <el-input
               v-model="queryData.createdBy"
               clearable
-              maxlength="10"
+              maxlength="20"
               size="medium"
               style="width: 180px; margin-right: 20px"
               placeholder="请输入"
@@ -129,7 +129,8 @@
         <el-form ref="formSub" :model="dialogForm" label-width="90px">
           <el-form-item label="字典code:" prop="k">
             <el-input
-              v-model="dialogForm.k"
+             v-model="dialogForm.k"
+              disabled
               placeholder="请输入开发字段"
               maxlength="10"
               autocomplete="off"
@@ -139,8 +140,9 @@
             <el-input
               v-model="dialogForm.tag"
               placeholder="请定义标签"
-              maxlength="10"
+              maxlength="20"
               autocomplete="off"
+              @keyup.native="inputChange($event)"
             ></el-input>
           </el-form-item>
           <el-form-item label="类型:" prop="valueType">
@@ -290,6 +292,11 @@ export default {
     },
     clear() {
       this.$refs.formSub.resetFields()
+    },
+    inputChange(e) {
+      const o = e.target
+      o.value = o.value.replace(/[^\u4E00-\u9FA5]/g, '')
+      this.name = o.value
     }
   }
 }
