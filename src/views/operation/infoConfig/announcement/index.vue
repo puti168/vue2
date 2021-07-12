@@ -445,7 +445,6 @@
 <script>
 import list from '@/mixins/list'
 import dayjs from 'dayjs'
-const startTime = dayjs().startOf('day').valueOf()
 const endTime = dayjs().endOf('day').valueOf()
 export default {
   components: {},
@@ -517,12 +516,7 @@ export default {
         })
     },
     changeTime(val) {
-      const Timestamp = new Date(new Date(val).toLocaleDateString()).getTime()
-      if (Timestamp === startTime) {
-        this.onlineTime = val
-      } else {
-        this.onlineTime = Timestamp
-      }
+      this.onlineTime = val
     },
     Add(val) {
       this.flag = val
@@ -533,7 +527,6 @@ export default {
       this.flag = val
       this.$api.getOperateConfigAnnouncementSelect({ id: row.id }).then((res) => {
         if (res.code === 200) {
-          console.log(res)
           this.dialogForm = res.data
           if (res.data.terminal.length === 0) {
             for (let i = 0; i < this.loginDeviceType.length; i++) {
@@ -541,23 +534,19 @@ export default {
               this.dialogForm.terminal.push(ele.code)
             }
           }
+          this.onlineTime = res.data.upTime
+          this.offlineTime = res.data.downTime
           this.dialogFormVisible = true
         }
       })
     },
     subAddOrEidt() {
-      const startTime =
-        typeof this.onlineTime === 'number'
-          ? this.onlineTime
-          : new Date(new Date(this.onlineTime).toLocaleDateString()).getTime()
-      const endTime =
-        typeof this.offlineTime === 'number'
-          ? this.offlineTime
-          : new Date(new Date(this.offlineTime).toLocaleDateString()).getTime()
-      console.log(startTime, endTime)
+      const startTime = this.onlineTime
+      const endTime = this.offlineTime
+
       this.$refs.formSub.validate((valid) => {
         if (valid) {
-          if (this.dialogForm.announcementAging === 1 && startTime < endTime) {
+          if (this.dialogForm.announcementAging === 1 && startTime <= endTime) {
             this.errTime = false
             const params = {
               ...this.dialogForm,
@@ -599,6 +588,7 @@ export default {
       this.$refs.formSub.resetFields()
       this.onlineTime = Date.now()
       this.offlineTime = endTime
+      this.errTime = false
     },
     deleteBtn(row) {
       this.$confirm(

@@ -896,6 +896,8 @@ export default {
     openEdit(row) {
       this.addOrEdit = 'edit'
       this.dialogForm = { ...row }
+      this.activityUpAt = row.activityUpAt
+      this.activityDownAt = row.activityDownAt
       this.dialogForm.activityType = row.activityType + ''
       this.dialogForm.activityAppType = row.activityAppType.split(',')
       this.dialogForm.activityUserType = row.activityUserType.split(',')
