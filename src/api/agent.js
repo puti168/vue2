@@ -359,6 +359,14 @@ export function setProxyCommissionUpdate(data) {
 		data
 	})
 }
+//  代理标签变更记录
+export function getProxyGetLabelChangeRecordPage(data) {
+	return request({
+		url: '/proxy/getLabelChangeRecordPage',
+		method: 'post',
+		data
+	})
+}
 
 export default {
 	updateMemberOverflowRecord,
@@ -403,5 +411,6 @@ export default {
 	getProxyCommissionSelect,
 	setProxyCommissionDelete,
 	setProxyCommissionInsert,
-	setProxyCommissionUpdate
+	setProxyCommissionUpdate,
+	getProxyGetLabelChangeRecordPage
 }
