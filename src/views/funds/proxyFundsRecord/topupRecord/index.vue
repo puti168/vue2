@@ -153,10 +153,10 @@
           :header-cell-style="getRowClass"
           @sort-change="_changeTableSort"
         >
-          <el-table-column prop="id" align="center" label="订单号">
+          <el-table-column prop="orderNo" align="center" label="订单号">
             <template slot-scope="scope">
-              <Copy v-if="!!scope.row.id" :title="scope.row.id" :copy="copy">
-                {{ scope.row.id }}
+              <Copy v-if="!!scope.row.orderNo" :title="scope.row.orderNo" :copy="copy">
+                {{ scope.row.orderNo }}
               </Copy>
               <span v-else>-</span>
             </template>
