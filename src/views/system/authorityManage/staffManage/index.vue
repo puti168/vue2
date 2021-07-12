@@ -10,7 +10,6 @@
 						placeholder="请输入"
 						maxlength="10"
 						clearable
-                        maxlength="10"
 					></el-input>
 				</el-form-item>
 				<el-form-item style="margin-left: 30px">
