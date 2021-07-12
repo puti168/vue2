@@ -826,8 +826,7 @@ export default {
 			},
 			dataList: [],
 			gameList: [],
-			activeName: '0',
-			title: ''
+			activeName: '0'
 		}
 	},
 	computed: {
