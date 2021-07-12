@@ -584,24 +584,7 @@
 								:default-time="defaultTime"
 							></el-date-picker>
 						</el-form-item>
-
-						<el-form-item v-if="activeName === '1'" label="活动页签:">
-							<el-select
-								v-model="queryData.tagIds"
-								style="width: 300px"
-								multiple
-								placeholder="默认选择全部"
-								:popper-append-to-body="false"
-							>
-								<el-option
-									v-for="item in gameList"
-									:key="item.id"
-									:label="item.activityName"
-									:value="item.id"
-								></el-option>
-							</el-select>
-						</el-form-item>
-						<el-form-item v-if="activeName === '3'" label="活动类型:">
+						<el-form-item label="活动类型:">
 							<el-select
 								v-model="queryData.activityType"
 								style="width: 300px"
@@ -617,12 +600,9 @@
 								></el-option>
 							</el-select>
 						</el-form-item>
-						<el-form-item
-							v-if="activeName === '2' || activeName === '3'"
-							label="活动ID:"
-						>
+						<el-form-item label="活动ID:">
 							<el-input
-								v-model="queryData.applyName"
+								v-model="queryData.activityId"
 								clearable
 								size="medium"
 								:maxlength="10"
@@ -633,52 +613,6 @@
 						</el-form-item>
 						<el-form-item label="变更类型:">
 							<el-select
-								v-if="activeName === '0'"
-								v-model="queryData.changeType"
-								style="width: 300px"
-								multiple
-								placeholder="默认选择全部"
-								:popper-append-to-body="false"
-							>
-								<el-option
-									v-for="item in operateChangeTypeName"
-									:key="item.code"
-									:label="item.description"
-									:value="item.code"
-								></el-option>
-							</el-select>
-							<el-select
-								v-else-if="activeName === '1'"
-								v-model="queryData.changeType"
-								style="width: 300px"
-								multiple
-								placeholder="默认选择全部"
-								:popper-append-to-body="false"
-							>
-								<el-option
-									v-for="item in operateChangeTypeTag"
-									:key="item.code"
-									:label="item.description"
-									:value="item.code"
-								></el-option>
-							</el-select>
-							<el-select
-								v-else-if="activeName === '2'"
-								v-model="queryData.changeType"
-								style="width: 300px"
-								multiple
-								placeholder="默认选择全部"
-								:popper-append-to-body="false"
-							>
-								<el-option
-									v-for="item in operateChangeTypeDis"
-									:key="item.code"
-									:label="item.description"
-									:value="item.code"
-								></el-option>
-							</el-select>
-							<el-select
-								v-else
 								v-model="queryData.changeType"
 								style="width: 300px"
 								multiple
@@ -695,7 +629,7 @@
 						</el-form-item>
 						<el-form-item label="操作人:">
 							<el-input
-								v-model="queryData.applyName"
+								v-model="queryData.operatorBy"
 								clearable
 								size="medium"
 								:maxlength="12"
@@ -741,48 +675,15 @@
 								prop="operationPage"
 								align="center"
 								label="操作页面"
-							></el-table-column>
-							<el-table-column
-								v-if="activeName === '1'"
-								prop="operationPageName"
-								align="center"
-								label="活动页签名称"
 							>
 								<template slot-scope="scope">
-									<span v-if="scope.row.operationPageName">
-										{{ scope.row.operationPageName }}
+									<span v-if="!!scope.row.operationPage">
+										{{ scope.row.operationPage }}
 									</span>
 									<span v-else>-</span>
 								</template>
 							</el-table-column>
 							<el-table-column
-								v-if="activeName === '2'"
-								prop="activityType"
-								align="center"
-								label="活动类型"
-							>
-								<template slot-scope="scope">
-									<span v-if="scope.row.activityType">
-										{{ scope.row.activityType }}
-									</span>
-									<span v-else>-</span>
-								</template>
-							</el-table-column>
-							<el-table-column
-								v-if="activeName === '2'"
-								prop="activityId"
-								align="center"
-								label="活动ID"
-							>
-								<template slot-scope="scope">
-									<span v-if="scope.row.activityId">
-										{{ scope.row.activityId }}
-									</span>
-									<span v-else>-</span>
-								</template>
-							</el-table-column>
-							<el-table-column
-								v-if="activeName === '3'"
 								prop="activityType"
 								align="center"
 								label="活动类型"
@@ -804,12 +705,7 @@
 									<span v-else>-</span>
 								</template>
 							</el-table-column>
-							<el-table-column
-								v-if="activeName === '3'"
-								prop="activityId"
-								align="center"
-								label="活动ID"
-							>
+							<el-table-column prop="activityId" align="center" label="活动ID">
 								<template slot-scope="scope">
 									<span
 										v-if="
@@ -822,90 +718,65 @@
 								</template>
 							</el-table-column>
 							<el-table-column
-								v-if="activeName === '0'"
 								prop="changeType"
 								align="center"
 								label="变更类型"
 							>
 								<template slot-scope="scope">
-									<p>
-										{{
-											typeFilter(scope.row.changeType, 'operateChangeTypeName')
-										}}
-									</p>
-								</template>
-							</el-table-column>
-							<el-table-column
-								v-else-if="activeName === '1'"
-								prop="changeType"
-								align="center"
-								label="变更类型"
-							>
-								<template slot-scope="scope">
-									<p>
-										{{
-											typeFilter(scope.row.changeType, 'operateChangeTypeTag')
-										}}
-									</p>
-								</template>
-							</el-table-column>
-							<el-table-column
-								v-else-if="activeName === '2'"
-								prop="changeType"
-								align="center"
-								label="变更类型"
-							>
-								<template slot-scope="scope">
-									<p>
-										{{
-											typeFilter(scope.row.changeType, 'operateChangeTypeDis')
-										}}
-									</p>
-								</template>
-							</el-table-column>
-							<el-table-column
-								v-else
-								prop="changeType"
-								align="center"
-								label="变更类型"
-							>
-								<template slot-scope="scope">
-									<p>
+									<span
+										v-if="
+											scope.row.changeType || scope.row.changeType + '' === '0'
+										"
+									>
 										{{
 											typeFilter(scope.row.changeType, 'operateChangeTypeVip')
 										}}
-									</p>
+									</span>
 								</template>
 							</el-table-column>
-							<el-table-column
-								prop="changeFront"
-								align="center"
-								label="变更前"
-							></el-table-column>
-							<el-table-column
-								prop="changeAfter"
-								align="center"
-								label="变更后"
-							></el-table-column>
-							<el-table-column
-								v-if="activeName && activeName === '1'"
-								prop="remark"
-								align="center"
-								label="备注"
-							></el-table-column>
+							<el-table-column prop="changeFront" align="center" label="变更前">
+								<template slot-scope="scope">
+									<span v-if="!!scope.row.changeFront">
+										{{ scope.row.changeFront }}
+									</span>
+									<span v-else>-</span>
+								</template>
+							</el-table-column>
+							<el-table-column prop="changeAfter" align="center" label="变更后">
+								<template slot-scope="scope">
+									<span v-if="!!scope.row.changeAfter">
+										{{ scope.row.changeAfter }}
+									</span>
+									<span v-else>-</span>
+								</template>
+							</el-table-column>
 							<el-table-column
 								prop="operatorBy"
 								align="center"
 								width="120"
 								label="操作人"
-							></el-table-column>
+							>
+								<template slot-scope="scope">
+									<span v-if="!!scope.row.operatorBy">
+										{{ scope.row.operatorBy }}
+									</span>
+									<span v-else>-</span>
+								</template>
+							</el-table-column>
 							<el-table-column
 								prop="operatorAt"
 								align="center"
 								width="210"
 								sortable="custom"
 								label="操作时间"
-							></el-table-column>
+							>
+								<template slot-scope="scope">
+									<span v-if="!!scope.row.operatorAt">
+										{{ scope.row.operatorAt }}
+									</span>
+									<span v-else>-</span>
+								</template>
+							</el-table-column>
 						</el-table>
 						<!-- 分页 -->
 						<el-pagination
@@ -1018,6 +889,8 @@ export default {
 					changeType: this.queryData.changeType,
 					operatorBy: this.queryData.operatorBy,
 					tagIds: this.queryData.tagIds,
+					orderKey: this.queryData.orderKey,
+					orderType: this.queryData.orderType,
 					startAt: startTime
 						? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
 						: '',
@@ -1029,6 +902,8 @@ export default {
 					changeType: this.queryData.changeType,
 					operatorBy: this.queryData.operatorBy,
 					activityId: this.queryData.activityId,
+					orderKey: this.queryData.orderKey,
+					orderType: this.queryData.orderType,
 					startAt: startTime
 						? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
 						: '',
@@ -1040,6 +915,9 @@ export default {
 					activityType: this.queryData.activityType,
 					changeType: this.queryData.changeType,
 					operatorBy: this.queryData.operatorBy,
+					activityId: this.queryData.activityId,
+					orderKey: this.queryData.orderKey,
+					orderType: this.queryData.orderType,
 					startAt: startTime
 						? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
 						: '',
@@ -1088,12 +966,13 @@ export default {
 			this.queryData = {
 				operatorBy: undefined,
 				changeType: [],
-				activityType: []
+				activityType: [],
+				tagIds: [],
+				activityId: undefined,
+				orderKey: undefined,
+				orderType: undefined
 			}
 			this.formTime.time = [start, end]
-			this.loadData()
-		},
-		handleCurrentChange() {
 			this.loadData()
 		}
 	}
