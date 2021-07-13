@@ -73,7 +73,7 @@
           </el-form-item>
           <el-form-item label="域名类型:" class="tagheight">
             <el-select
-              v-model="queryData.status"
+              v-model="queryData.domainType"
               style="width: 180px"
               clearable
               placeholder="默认选择全部"
@@ -171,9 +171,9 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column prop="remark" align="center" label="域名类型">
+          <el-table-column prop="domainType" align="center" label="域名类型">
              <template slot-scope="scope">
-               {{ typeFilter(scope.row.status, "enumProxyDomainTypeOperate") }}
+               {{ typeFilter(scope.row.domainType, "enumProxyDomainTypeOperate") }}
               </template>
           </el-table-column>
           <el-table-column prop="remark" align="center" label="备注"></el-table-column>
