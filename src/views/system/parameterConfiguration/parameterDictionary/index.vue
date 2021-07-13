@@ -57,7 +57,6 @@
           :data="tableData"
           style="width: 100%"
           :header-cell-style="getRowClass"
-          @sort-change="_changeTableSort"
         >
           <el-table-column
             prop="memberLabelName"
@@ -105,7 +104,6 @@
         </el-table>
         <!-- 分页 -->
         <el-pagination
-          v-show="!!total"
           :current-page.sync="pageNum"
           class="pageValue"
           background
@@ -124,7 +122,6 @@
         width="480px"
         center
         class="rempadding"
-        @close="clear"
       >
         <el-divider></el-divider>
         <el-form ref="formSub" :model="dialogForm" label-width="90px">
@@ -134,16 +131,17 @@
               disabled
               placeholder="请输入开发字段"
               maxlength="10"
-              autocomplete="off"
             ></el-input>
           </el-form-item>
-          <el-form-item label="标签:" prop="tag">
+          <el-form-item
+          label="标签:"
+          prop="tag"
+            >
             <el-input
               v-model="dialogForm.tag"
               placeholder="请定义标签"
               maxlength="20"
-              autocomplete="off"
-              @keyup.native="inputChange($event)"
+              type="“text”"
             ></el-input>
           </el-form-item>
           <el-form-item label="类型:" prop="valueType">
@@ -152,7 +150,8 @@
               placeholder="请定义类型"
               maxlength="10"
               autocomplete="off"
-            ></el-input>
+              type="“text”"
+></el-input>
           </el-form-item>
           <el-form-item label="注释:" prop="description">
             <el-input
@@ -161,15 +160,16 @@
               maxlength="50"
               type="textarea"
               show-word-limit
-            ></el-input>
+></el-input>
           </el-form-item>
           <el-form-item label="值:" prop="v">
             <el-input
               v-model="dialogForm.v"
-              placeholder="请输入开发字段"
+              placeholder="请输入值"
               maxlength="10"
               autocomplete="off"
-            ></el-input>
+              type="“text”"
+></el-input>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -211,8 +211,27 @@ export default {
       summary: 0
     }
   },
-  computed: {},
+  computed: {
+  //  rules() {
+  //      const tags = (rule, value, callback) => {
+
+  //      }
+
+  //     const tag = [{ required: true, validator: tags, message: '请输入标签', trigger: 'blur' }]
+  //     const valueType = [{ required: true, message: '请输入类型', trigger: 'blur' }]
+  //     const description = [{ required: true, message: '请输入注释', trigger: 'blur' }]
+  //     const v = [{ required: true, message: '请输入值', trigger: 'blur' }]
+
+  //     return {
+  //       tag,
+  //       valueType,
+  //       description,
+  //       v
+  //     }
+  //   }
+  },
   mounted() {},
+
   methods: {
     loadData() {
       this.loading = true
@@ -227,7 +246,7 @@ export default {
         .then((res) => {
           if (res.code === 200) {
             this.tableData = res.data.records
-            this.total = res.data.totalRecord
+            this.total = res.data.total
             this.loading = false
           } else {
             this.loading = false
@@ -246,9 +265,9 @@ export default {
       data.valueType = this.dialogForm.valueType
       data.v = this.dialogForm.v
       this.$refs.formSub.validate((valid) => {
+          console.log(valid, '编辑')
         if (valid) {
           if (this.title === '编辑') {
-            console.log('编辑')
             data.id = this.dialogForm.id
             this.$api.getkvconfigUpdate(data).then((res) => {
               if (res.code === 200) {
@@ -268,34 +287,11 @@ export default {
     },
     edit(val) {
       this.title = '编辑'
-      this.dialogForm = { ...val }
+      this.dialogForm.k = val.k
+
       this.dialogFormVisible = true
-    },
-    _changeTableSort({ column, prop, order }) {
-      if (prop === 'createdAt') {
-        prop = 1
-      }
-      if (prop === 'updatedAt') {
-        prop = 2
-      }
-      this.queryData.orderKey = prop
-      if (order === 'ascending') {
-        // 升序
-        this.queryData.orderType = 'asc'
-      } else if (column.order === 'descending') {
-        // 降序
-        this.queryData.orderType = 'desc'
-      }
-      this.loadData()
-    },
-    clear() {
-      this.$refs.formSub.resetFields()
-    },
-    inputChange(e) {
-      const o = e.target
-      o.value = o.value.replace(/[^\u4E00-\u9FA5]/g, '')
-      this.name = o.value
     }
+
   }
 }
 </script>

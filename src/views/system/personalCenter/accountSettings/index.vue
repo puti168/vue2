@@ -41,6 +41,7 @@
         <el-form-item label="联系电话：">
           <el-input
             v-model.trim="form.phone"
+            autocomplete="off"
             size="medium"
             placeholder="请输入联系电话"
             clearable
@@ -219,9 +220,8 @@ export default {
       const id = localStorage.getItem('id')
       this.$api.getuserInfolist({ id }).then((res) => {
         if (res.code === 200) {
-          const { id, userName, nickName, phone } = { ...res.data }
+          const { id, userName, nickName} = { ...res.data }
           this.form.userId = id
-          this.form.phone = phone
           this.form.userName = userName
           this.form.nickName = nickName
           this.dialogGameVisible = true
@@ -235,6 +235,7 @@ export default {
       }
 
       this.$refs.form.validate((valid) => {
+        console.log(valid, '编辑')
         if (valid) {
           console.log(params, '000')
           this.$api.setUserInfoupdatePwdAdmin({
