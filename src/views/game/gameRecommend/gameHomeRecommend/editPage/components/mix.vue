@@ -1,7 +1,7 @@
 <template>
 	<div class="mix-container">
 		<div class="head">
-			<span class="title">{{ gameDetails.moduleName }}</span>
+			<span class="title">{{ gameDetails.moduleName }}模块</span>
 			<div class="right-btn">
 				<el-button plain @click="back">取消</el-button>
 				<el-button type="success" @click="confirm(true)">保存</el-button>
@@ -33,8 +33,32 @@
 								></el-input>
 							</el-form-item>
 						</el-col>
+                        <el-col :span="12">
+                            <el-form-item label="滚动数量限制:" prop="scrollingNum">
+                                <el-input
+                                    v-model="formData.scrollingNum"
+                                    size="medium"
+                                    maxlength="10"
+                                    clearable
+                                    style="width: 365px"
+                                    @keyup.native="checkValue($event)"
+                                ></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="12">
+                            <el-form-item label="全部游戏数量:" prop="allGameNum">
+                                <el-input
+                                    v-model="formData.allGameNum"
+                                    size="medium"
+                                    maxlength="10"
+                                    clearable
+                                    style="width: 365px"
+                                    @keyup.native="checkValue($event)"
+                                ></el-input>
+                            </el-form-item>
+                        </el-col>
 						<el-col :span="12">
-							<el-form-item label="模块描述:" prop="moduleDesc">
+							<el-form-item label="模块描述:">
 								<el-input
 									v-model="formData.moduleDesc"
 									type="textarea"
@@ -63,6 +87,8 @@ export default {
 			formData: {
 				mainTitleInfo: undefined,
 				subTitleInfo: undefined,
+                scrollingNum: undefined,
+                allGameNum: undefined,
 				moduleDesc: undefined
 			}
 		}
@@ -132,6 +158,11 @@ export default {
 		back() {
 			this.$emit('back')
 		},
+        checkValue(e) {
+            // const { value } = e.target
+            // console.log(e.target.value)
+            e.target.value = e.target.value.replace(/[^\d]/g, '')
+        },
 		confirm(action) {
 			const { moduleId } = this.gameDetails
 			const params = {
@@ -147,6 +178,7 @@ export default {
 						message: '保存成功',
 						type: 'success'
 					})
+					this.$parent.back()
 				} else {
 					this.$message({
 						message: msg,
