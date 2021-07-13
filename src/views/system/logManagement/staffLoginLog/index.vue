@@ -52,7 +52,6 @@
             prop="loginTime"
             align="center"
             label="登录时间"
-            sortable="custom"
           ></el-table-column>
           <el-table-column prop="ip" align="center" label="登录IP" width="120">
             <template slot="header"> 登录IP </template>
