@@ -52,6 +52,7 @@
         <el-form-item label="旧登录密码：" prop="pwd">
           <el-input
             v-model.trim="form.pwd"
+            autocomplete="new-password"
             :type="passwordType"
             maxlength="10"
             name="password"
