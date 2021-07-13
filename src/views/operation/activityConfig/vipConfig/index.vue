@@ -674,7 +674,6 @@ import list from '@/mixins/list'
 import dayjs from 'dayjs'
 import UploadItem from '@/components/UploadItem'
 import draggable from 'vuedraggable'
-const startTime = dayjs().startOf('day').valueOf()
 const endTime = dayjs().endOf('day').valueOf()
 export default {
   components: { UploadItem, draggable },
@@ -833,7 +832,7 @@ export default {
           'YYYY-MM-DD HH:mm:ss'
         )
       } else {
-        this.dialogForm.activityUpAt = dayjs(this.activityDownAt).format(
+        this.dialogForm.activityUpAt = dayjs(this.activityUpAt).format(
           'YYYY-MM-DD HH:mm:ss'
         )
         delete this.dialogForm.activityDownAt
@@ -879,12 +878,13 @@ export default {
       })
     },
     changeTime(val) {
-      const Timestamp = new Date(new Date(val).toLocaleDateString()).getTime()
-      if (Timestamp === startTime) {
-        this.activityUpAt = Date.now()
-      } else {
-        this.activityUpAt = Timestamp
-      }
+      this.activityUpAt = val
+      console.log(val)
+      // const Timestamp = new Date(new Date(val).toLocaleDateString()).getTime()
+      // if (Timestamp === startTime) {
+      // } else {
+      //   this.activityUpAt = Timestamp
+      // }
     },
     clear() {
       this.$refs.formSub.resetFields()
@@ -896,6 +896,7 @@ export default {
     openEdit(row) {
       this.addOrEdit = 'edit'
       this.dialogForm = { ...row }
+      console.log(row.activityUpAt)
       this.activityUpAt = row.activityUpAt
       this.activityDownAt = row.activityDownAt
       this.dialogForm.activityType = row.activityType + ''
