@@ -56,8 +56,8 @@
 								label="模块描述"
 							>
 								<template slot-scope="scope">
-									<span v-if="!!scope.row.description">
-										{{ scope.row.description }}
+									<span v-if="!!scope.row.moduleDesc">
+										{{ scope.row.moduleDesc }}
 									</span>
 									<span v-else>-</span>
 								</template>
@@ -174,8 +174,8 @@
 								label="模块描述"
 							>
 								<template slot-scope="scope">
-									<span v-if="!!scope.row.description">
-										{{ scope.row.description }}
+									<span v-if="!!scope.row.moduleDesc">
+										{{ scope.row.moduleDesc }}
 									</span>
 									<span v-else>-</span>
 								</template>
@@ -286,8 +286,8 @@
 								label="模块描述"
 							>
                                 <template slot-scope="scope">
-									<span v-if="!!scope.row.description">
-										{{ scope.row.description }}
+									<span v-if="!!scope.row.moduleDesc">
+										{{ scope.row.moduleDesc }}
 									</span>
                                     <span v-else>-</span>
                                 </template>
@@ -436,7 +436,8 @@ export default {
 		// },
 		// 禁用
 		disable(val) {
-			const { commonId, status, id } = val
+		    //  commonId,
+			const { status, id } = val
 			const key = status === 1 ? 0 : 1
 			const loading = this.$loading({
 				lock: true,
@@ -456,7 +457,7 @@ export default {
 			)
 				.then(() => {
 					this.$api
-						.recommendStatusChangeAPI({ id, commonId, moduleStatus: key })
+						.recommendStatusChangeAPI({ id, moduleStatus: key })
 						.then((res) => {
 							const { code } = res
 							loading.close()

@@ -34,9 +34,9 @@
 							</el-form-item>
 						</el-col>
 						<el-col :span="12">
-							<el-form-item label="模块描述:" prop="description">
+							<el-form-item label="模块描述:" prop="moduleDesc">
 								<el-input
-									v-model="formData.description"
+									v-model="formData.moduleDesc"
 									type="textarea"
 									size="medium"
 									maxlength="100"
@@ -63,7 +63,7 @@ export default {
 			formData: {
 				mainTitleInfo: undefined,
 				subTitleInfo: undefined,
-				description: undefined
+				moduleDesc: undefined
 			}
 		}
 	},
@@ -96,7 +96,7 @@ export default {
 						trigger: 'blur'
 					}
 				],
-				description: [
+				moduleDesc: [
 					{
 						min: 2,
 						max: 100,
@@ -108,14 +108,23 @@ export default {
 		}
 	},
 	watch: {
-		// addGameDetails: {
-		//   handler(newV, old) {
-		//     console.log(66666, newV)
-		//     this.formData = { ...newV }
-		//     console.log('formData', this.formData)
-		//   },
-		//   deep: true
-		// }
+		gameDetails: {
+			handler(newVal, oldVal) {
+				console.log(66666, newVal)
+				if (newVal) {
+					this.formData = { ...newVal }
+				} else {
+					this.formData = {
+						mainTitleInfo: undefined,
+						subTitleInfo: undefined,
+						moduleDesc: undefined
+					}
+				}
+				console.log('formData', this.formData)
+			},
+			deep: true,
+			immediate: true
+		}
 	},
 	created() {},
 	mounted() {},
@@ -129,13 +138,16 @@ export default {
 				...this.formData,
 				moduleId
 			}
+			delete params.updatedAt
 			this.$api.gameHomeRecommendDetailsEditAPI(params).then((res) => {
-				const { code, data, msg } = res
+				this.loading = false
+				const { code, msg } = res
 				if (code === 200) {
-					this.loading = false
-					console.log('请求到值了', data)
+					this.$message({
+						message: '保存成功',
+						type: 'success'
+					})
 				} else {
-					this.loading = false
 					this.$message({
 						message: msg,
 						type: 'error'
