@@ -3,9 +3,9 @@
     <div class="view-container dealer-container">
       <div class="params">
         <el-form ref="form" :inline="true" :model="queryData">
-          <el-form-item label="标签名称:">
+          <el-form-item label="标签:">
             <el-input
-              v-model="queryData.size"
+              v-model="queryData.tag"
               maxlength="20"
               clearable
               size="medium"
@@ -105,6 +105,7 @@
         </el-table>
         <!-- 分页 -->
         <el-pagination
+          v-show="!!total"
           :current-page.sync="pageNum"
           class="pageValue"
           background
