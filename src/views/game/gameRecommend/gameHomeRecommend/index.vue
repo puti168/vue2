@@ -19,16 +19,26 @@
 							:header-cell-style="getRowClass"
 							@sort-change="_changeTableSort"
 						>
-							<el-table-column
-								prop="moduleId"
-								align="center"
-								label="模块顺序"
-							></el-table-column>
+							<el-table-column prop="moduleId" align="center" label="模块顺序">
+								<template slot-scope="scope">
+									<span v-if="!!scope.row.moduleId">
+										{{ scope.row.moduleId }}
+									</span>
+									<span v-else>-</span>
+								</template>
+							</el-table-column>
 							<el-table-column
 								prop="moduleName"
 								align="center"
 								label="模块名称"
-							></el-table-column>
+							>
+								<template slot-scope="scope">
+									<span v-if="!!scope.row.moduleName">
+										{{ scope.row.moduleName }}
+									</span>
+									<span v-else>-</span>
+								</template>
+							</el-table-column>
 							<el-table-column prop="status" align="center" label="状态">
 								<template slot-scope="scope">
 									<p
@@ -44,18 +54,39 @@
 								prop="description"
 								align="center"
 								label="模块描述"
-							></el-table-column>
+							>
+								<template slot-scope="scope">
+									<span v-if="!!scope.row.description">
+										{{ scope.row.description }}
+									</span>
+									<span v-else>-</span>
+								</template>
+							</el-table-column>
 							<el-table-column
 								prop="updatedBy"
 								align="center"
 								label="最近操作人"
-							></el-table-column>
+							>
+								<template slot-scope="scope">
+									<span v-if="!!scope.row.updatedBy">
+										{{ scope.row.updatedBy }}
+									</span>
+									<span v-else>-</span>
+								</template>
+							</el-table-column>
 							<el-table-column
 								prop="updatedAt"
 								align="center"
 								label="最近操作时间"
 								sortable="custom"
-							></el-table-column>
+							>
+								<template slot-scope="scope">
+									<span v-if="!!scope.row.updatedAt">
+										{{ scope.row.updatedAt }}
+									</span>
+									<span v-else>-</span>
+								</template>
+							</el-table-column>
 							<el-table-column
 								prop="operating"
 								align="center"
@@ -77,7 +108,6 @@
 										{{ scope.row.status === 0 ? '启用' : '禁用' }}
 									</el-button>
 									<el-button
-                                        v-if="false"
 										type="primary"
 										icon="el-icon-edit"
 										:disabled="loading"
@@ -89,18 +119,6 @@
 								</template>
 							</el-table-column>
 						</el-table>
-						<!-- 分页 -->
-<!--						<el-pagination-->
-<!--							:current-page.sync="pageNum"-->
-<!--							class="pageValue"-->
-<!--							background-->
-<!--							layout="total, sizes,prev, pager, next, jumper"-->
-<!--							:page-size="pageSize"-->
-<!--							:page-sizes="pageSizes"-->
-<!--							:total="total"-->
-<!--							@current-change="handleCurrentChange"-->
-<!--							@size-change="handleSizeChange"-->
-<!--						></el-pagination>-->
 					</div>
 				</div>
 			</el-tab-pane>
@@ -117,16 +135,26 @@
 							:header-cell-style="getRowClass"
 							@sort-change="changeTableSort"
 						>
-							<el-table-column
-								prop="moduleId"
-								align="center"
-								label="模块顺序"
-							></el-table-column>
+							<el-table-column prop="moduleId" align="center" label="模块顺序">
+								<template slot-scope="scope">
+									<span v-if="!!scope.row.moduleId">
+										{{ scope.row.moduleId }}
+									</span>
+									<span v-else>-</span>
+								</template>
+							</el-table-column>
 							<el-table-column
 								prop="moduleName"
 								align="center"
 								label="模块名称"
-							></el-table-column>
+							>
+								<template slot-scope="scope">
+									<span v-if="!!scope.row.moduleName">
+										{{ scope.row.moduleName }}
+									</span>
+									<span v-else>-</span>
+								</template>
+							</el-table-column>
 							<el-table-column prop="moduleStatus" align="center" label="状态">
 								<template slot-scope="scope">
 									<p
@@ -144,18 +172,39 @@
 								prop="description"
 								align="center"
 								label="模块描述"
-							></el-table-column>
+							>
+								<template slot-scope="scope">
+									<span v-if="!!scope.row.description">
+										{{ scope.row.description }}
+									</span>
+									<span v-else>-</span>
+								</template>
+							</el-table-column>
 							<el-table-column
 								prop="updatedBy"
 								align="center"
 								label="最近操作人"
-							></el-table-column>
+							>
+								<template slot-scope="scope">
+									<span v-if="!!scope.row.updatedBy">
+										{{ scope.row.updatedBy }}
+									</span>
+									<span v-else>-</span>
+								</template>
+							</el-table-column>
 							<el-table-column
 								prop="updatedAt"
 								align="center"
 								label="最近操作时间"
 								sortable="custom"
-							></el-table-column>
+							>
+								<template slot-scope="scope">
+									<span v-if="!!scope.row.updatedAt">
+										{{ scope.row.updatedAt }}
+									</span>
+									<span v-else>-</span>
+								</template>
+							</el-table-column>
 							<el-table-column
 								prop="operating"
 								align="center"
@@ -173,7 +222,6 @@
 										禁用
 									</el-button>
 									<el-button
-										v-if="false"
 										type="primary"
 										icon="el-icon-edit"
 										:disabled="loading"
@@ -185,18 +233,6 @@
 								</template>
 							</el-table-column>
 						</el-table>
-						<!-- 分页 -->
-<!--						<el-pagination-->
-<!--							:current-page.sync="pageNum"-->
-<!--							class="pageValue"-->
-<!--							background-->
-<!--							layout="total, sizes,prev, pager, next, jumper"-->
-<!--							:page-size="pageSize"-->
-<!--							:page-sizes="pageSizes"-->
-<!--							:total="total"-->
-<!--							@current-change="handleCurrentChange"-->
-<!--							@size-change="handleSizeChange"-->
-<!--						></el-pagination>-->
 					</div>
 				</div>
 			</el-tab-pane>
@@ -213,16 +249,26 @@
 							:header-cell-style="getRowClass"
 							@sort-change="changeTableSort"
 						>
-							<el-table-column
-								prop="moduleId"
-								align="center"
-								label="模块顺序"
-							></el-table-column>
+							<el-table-column prop="moduleId" align="center" label="模块顺序">
+								<template slot-scope="scope">
+									<span v-if="!!scope.row.moduleId">
+										{{ scope.row.moduleId }}
+									</span>
+									<span v-else>-</span>
+								</template>
+							</el-table-column>
 							<el-table-column
 								prop="moduleName"
 								align="center"
 								label="模块名称"
-							></el-table-column>
+							>
+								<template slot-scope="scope">
+									<span v-if="!!scope.row.moduleName">
+										{{ scope.row.moduleName }}
+									</span>
+									<span v-else>-</span>
+								</template>
+							</el-table-column>
 							<el-table-column prop="status" align="center" label="状态">
 								<template slot-scope="scope">
 									<p
@@ -238,18 +284,39 @@
 								prop="description"
 								align="center"
 								label="模块描述"
-							></el-table-column>
+							>
+                                <template slot-scope="scope">
+									<span v-if="!!scope.row.description">
+										{{ scope.row.description }}
+									</span>
+                                    <span v-else>-</span>
+                                </template>
+                            </el-table-column>
 							<el-table-column
 								prop="updatedBy"
 								align="center"
 								label="最近操作人"
-							></el-table-column>
+							>
+                                <template slot-scope="scope">
+									<span v-if="!!scope.row.updatedBy">
+										{{ scope.row.updatedBy }}
+									</span>
+                                    <span v-else>-</span>
+                                </template>
+                            </el-table-column>
 							<el-table-column
 								prop="updatedAt"
 								align="center"
 								label="最近操作时间"
 								sortable="custom"
-							></el-table-column>
+							>
+                                <template slot-scope="scope">
+									<span v-if="!!scope.row.updatedAt">
+										{{ scope.row.updatedAt }}
+									</span>
+                                    <span v-else>-</span>
+                                </template>
+                            </el-table-column>
 							<el-table-column
 								prop="operating"
 								align="center"
@@ -267,7 +334,6 @@
 										禁用
 									</el-button>
 									<el-button
-										v-if="true"
 										type="primary"
 										icon="el-icon-edit"
 										:disabled="loading"
@@ -279,18 +345,6 @@
 								</template>
 							</el-table-column>
 						</el-table>
-						<!-- 分页 -->
-<!--						<el-pagination-->
-<!--							:current-page.sync="pageNum"-->
-<!--							class="pageValue"-->
-<!--							background-->
-<!--							layout="total, sizes,prev, pager, next, jumper"-->
-<!--							:page-size="pageSize"-->
-<!--							:page-sizes="pageSizes"-->
-<!--							:total="total"-->
-<!--							@current-change="handleCurrentChange"-->
-<!--							@size-change="handleSizeChange"-->
-<!--						></el-pagination>-->
 					</div>
 				</div>
 			</el-tab-pane>
@@ -325,7 +379,7 @@ export default {
 	mounted() {},
 	methods: {
 		openDetails(val) {
-		    console.log('val', val)
+			console.log('val', val)
 			this.recommendDetails = val
 			this.isEdit = true
 		},
@@ -440,9 +494,9 @@ export default {
 					// 降序
 					this.queryData.orderType = 'desc'
 				} else {
-				    delete this.queryData.orderType
-				    delete this.queryData.orderProperty
-                }
+					delete this.queryData.orderType
+					delete this.queryData.orderProperty
+				}
 				this.loadData()
 			}
 		},
