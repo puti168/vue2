@@ -53,6 +53,22 @@
             placeholder="请输入"
           ></el-input>
         </el-form-item>
+        <el-form-item label="终端:">
+						<el-select
+							v-model="formData.domainType"
+							size="medium"
+							placeholder="全部"
+							clearable
+							style="width: 180px"
+						>
+							<el-option
+								v-for="item in enumProxyDomainTypeOperate"
+								:key="item.code"
+								:label="item.description"
+								:value="item.code"
+							></el-option>
+						</el-select>
+					</el-form-item>
         <el-form-item v-if="control" label="排序:" prop="displayOrder">
           <el-input v-model.number="formData.displayOrder"></el-input>
         </el-form-item>
@@ -112,6 +128,9 @@ export default {
   computed: {
     domainStatusType() {
       return this.globalDics.domainStatusType
+    },
+     enumProxyDomainTypeOperate() {
+      return this.globalDics.enumProxyDomainTypeOperate
     },
     rules() {
       const checkAge = (rule, value, callback) => {
