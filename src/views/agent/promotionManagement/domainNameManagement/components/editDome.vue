@@ -53,13 +53,13 @@
             placeholder="请输入"
           ></el-input>
         </el-form-item>
-        <el-form-item label="终端:">
+        <el-form-item label="域名类型:">
 						<el-select
 							v-model="formData.domainType"
 							size="medium"
 							placeholder="全部"
 							clearable
-							style="width: 180px"
+							style="width: 430px"
 						>
 							<el-option
 								v-for="item in enumProxyDomainTypeOperate"
