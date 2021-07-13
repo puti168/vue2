@@ -152,6 +152,8 @@ function filterAsyncRouter(asyncRouterMap) {
 						const filePath = fullPath.substr(pos + 1)
 						route.name = filePath
 						// 按钮id
+					}
+					if (route.level === 4) {
 						userBtns.push(route.id)
 					}
 				}

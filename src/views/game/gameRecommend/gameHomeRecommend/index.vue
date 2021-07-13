@@ -499,13 +499,6 @@ export default {
 				}
 				this.loadData()
 			}
-		},
-		reset() {
-			this.pageNum = 1
-			this.queryData = {
-				terminalType: 1
-			}
-			this.loadData()
 		}
 	}
 }
