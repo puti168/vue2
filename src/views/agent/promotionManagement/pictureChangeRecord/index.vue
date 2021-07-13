@@ -19,13 +19,18 @@
         </el-form-item>
         <el-form-item label="变更类型:">
           <el-select
-            v-model="queryData.changeType"
-            style="width: 300px"
-            multiple
-            placeholder="默认选择全部"
-            :popper-append-to-body="false"
+								v-model="queryData.operateField"
+								size="medium"
+								placeholder="默认选择全部"
+								clearable
+								style="width: 300px"
           >
-            <el-option label="游戏管理" value="0"></el-option>
+            <el-option
+              v-for="item in enumProxyGradeOperateArr"
+              :key="item.code"
+              :label="item.description"
+              :value="item.code"
+            ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="操作人:">
@@ -79,7 +84,7 @@
             sortable="custom"
           >
           </el-table-column>
-          <el-table-column prop="changeType" align="center" label="变更类型">
+          <el-table-column prop="operateField" align="center" label="变更类型">
           </el-table-column>
           <el-table-column align="center" label="变更前" prop="beforeValue">
           </el-table-column>
@@ -87,7 +92,7 @@
           </el-table-column>
           <el-table-column prop="createdBy" align="center" width="120" label="操作人">
           </el-table-column>
-          <el-table-column align="center" label="备注" prop="afterValue">
+          <el-table-column align="center" label="备注" prop="rebate_level">
           </el-table-column>
         </el-table>
         <!-- 分页 -->
@@ -115,20 +120,30 @@ import list from '@/mixins/list'
 import dayjs from 'dayjs'
 const end = dayjs().endOf('day').valueOf()
 const start = dayjs().startOf('day').valueOf()
-
+// 操作类型(0=代理等级配置变更,1=返佣等级变更 2=推广域名管理 3=推广图片管理)
+const operateType = 3
 export default {
   components: {},
   mixins: [list],
   data() {
     return {
-      queryData: {},
+      queryData: {
+        operateType: operateType,
+        orderType: undefined,
+        operateField: undefined,
+        createdBy: undefined
+      },
       searchTime: [start, end],
       dataList: [],
       bigImage: '',
       imgVisible: false
     }
   },
-  computed: {},
+	computed: {
+		enumProxyGradeOperateArr() {
+			return this.globalDics.enumProxyGradeOperate
+		}
+	},
   mounted() {},
   methods: {
     loadData() {
@@ -145,7 +160,7 @@ export default {
       this.loading = true
 
       this.$api
-        .activityInfoLogListAPI(params)
+        .proxyOperate(params)
         .then((res) => {
           this.loading = false
           const {

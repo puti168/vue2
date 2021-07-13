@@ -566,6 +566,14 @@ export function operateConfigDiscountTagQuerySortedNames(params) {
 		params
 	})
 }
+// 分页查询代理操作记录
+export function proxyOperate(data) {
+	return request({
+		url: '/proxyOperate/select',
+		method: 'post',
+		data
+	})
+}
 export default {
 	queryDiscountTagList,
 	queryVipActivityList,
@@ -635,6 +643,7 @@ export default {
 	setOperateDiscountActivityUse,
 	setoperateConfigDiscountTagSort,
 	operatecCnfigBannerQuerySortedBannerArea,
-	operateConfigDiscountTagQuerySortedNames
+	operateConfigDiscountTagQuerySortedNames,
+	proxyOperate
 
 }
