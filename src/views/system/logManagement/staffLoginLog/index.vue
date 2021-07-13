@@ -93,7 +93,7 @@
           layout="total, sizes,prev, pager, next, jumper"
           :page-size="pageSize"
           :page-sizes="$store.getters.pageSizes"
-          :total="15"
+          :total="total"
           @current-change="handleCurrentChange"
           @size-change="handleSizeChange"
         ></el-pagination>
@@ -149,7 +149,7 @@ export default {
         .then((res) => {
           if (res.code === 200) {
             this.dataList = res.data.records
-            this.total = res.data.totalRecord
+            this.total = res.data.total
             this.loading = false
           } else {
             this.loading = false
@@ -174,6 +174,21 @@ export default {
       this.loadData()
     },
     handleCurrentChange() {
+      this.loadData()
+    },
+     _changeTableSort({ column, prop, order }) {
+      if (prop === 'loginTime') {
+				prop = 1
+			}
+      this.queryData.orderKey = prop
+      console.log(this.queryData.orderKey, '小明')
+      if (order === 'ascending') {
+        // 升序
+        this.queryData.orderType = 'asc'
+      } else if (column.order === 'descending') {
+        // 降序
+        this.queryData.orderType = 'desc'
+      }
       this.loadData()
     }
   }

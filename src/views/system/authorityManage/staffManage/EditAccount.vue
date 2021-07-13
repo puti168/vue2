@@ -221,7 +221,6 @@ export default {
 		drawer(val) {
 			this.elDrawer = val
 			val && (this.ps = this.accountRoles)
-			val && this.getGoogleAuth()
 			if (val && this.isCreated) {
 				this.$api
 					.getRoleList({
@@ -236,6 +235,7 @@ export default {
 							this.$parent.notHasRoles = true
 						}
 					})
+                this.getGoogleAuth()
 			}
 		},
 		isCreated(val) {

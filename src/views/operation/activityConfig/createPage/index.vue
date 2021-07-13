@@ -201,8 +201,8 @@
           background
           layout="total, sizes,prev, pager, next, jumper"
           :page-size="pageSize"
-          :page-sizes="$store.getters.pageSizes"
-          :total="15"
+          :page-sizes="[5, 10, 20]"
+          :total="total"
           @current-change="handleCurrentChange"
           @size-change="handleSizeChange"
         ></el-pagination>
@@ -306,7 +306,8 @@ export default {
       gameList: [],
       dialogFormVisible: false,
       dialogForm: {},
-      title: ''
+      title: '',
+        total: 0
     }
   },
   computed: {
@@ -353,7 +354,7 @@ export default {
         .then((res) => {
           if (res.code === 200) {
             this.tableData = res.data.records
-            this.total = res.data.totalRecord
+            this.total = res.data.total
             this.loading = false
           } else {
             this.loading = false

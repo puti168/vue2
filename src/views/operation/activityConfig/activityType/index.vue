@@ -207,8 +207,6 @@ export default {
 				const { code, data } = res
 				const arr = JSON.stringify(this.globalDics.operateActivityNameType)
 				const newArr = JSON.parse(arr)
-				console.log('newArr', newArr)
-				console.log('data', data)
 				if (code === 200) {
 					newArr.forEach((item, idx) => {
 						this.newActivityTypeArr.push({

@@ -1363,6 +1363,10 @@ export default {
       this.dialogForm.activityAppType = row.activityAppType.split(',')
       this.dialogForm.activityUserType = row.activityUserType.split(',')
       this.dialogForm.activityPrescription = row.activityPrescription + ''
+      this.activityPictureUpAt = row.activityPictureUpAt
+      this.activityPictureDownAt = row.activityPictureDownAt
+      this.activityStartAt = row.activityStartAt
+      this.activityEndAt = row.activityEndAt
       this.dialogFormVisible = true
       console.log(this.dialogForm)
       this.$nextTick(() => {

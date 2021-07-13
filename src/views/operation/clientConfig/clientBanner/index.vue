@@ -477,8 +477,8 @@
                 <el-option label="外部地址" :value="2"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item v-if="dialogForm.linkTarget === 0 && dialogForm.isLink === 1" label="游戏:" :rules="[]">
-              <el-select v-model="dialogForm.targetUrl" class="region">
+            <el-form-item v-if="dialogForm.linkTarget === 0 && dialogForm.isLink === 1" label="游戏:" :rules="[ {required: true,}]">
+              <el-select v-model="dialogForm.targetUrl" placeholder="获取创建的游戏" class="region">
                 <el-option
                   v-for="item in QueryGameList"
                   :key="item.gameId"
