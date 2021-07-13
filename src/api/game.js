@@ -317,7 +317,14 @@ export function gameHomeRecommendDetailsEditAPI(data) {
 		data
 	})
 }
-
+// 游戏推荐==> 操作记录
+export function GameCommonModuleOperateRecord(data) {
+	return request({
+		url: '/gameCommonModule/operateRecord',
+		method: 'post',
+		data
+	})
+}
 export default {
 	gameAssortListAPI,
 	gameList,
@@ -356,5 +363,6 @@ export default {
 	gameHomeRecommendListAPI,
 	recommendStatusChangeAPI,
 	gameHomeRecommendDetailsAPI,
-	gameHomeRecommendDetailsEditAPI
+	gameHomeRecommendDetailsEditAPI,
+	GameCommonModuleOperateRecord
 }
