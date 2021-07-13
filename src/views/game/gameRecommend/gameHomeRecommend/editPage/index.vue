@@ -8,7 +8,7 @@
 		<!--		<live v-if="isGame" :gemeDetails="gameDetails" @back="back"></live>-->
 		<component
 			:is="content"
-			:gameDetails="gameDetails"
+			:gameDetails="recommendDetails"
 			@back="back"
 		></component>
 	</div>
@@ -56,17 +56,20 @@ export default {
 		moduleId() {
 			return this.recommendDetails.id
 		},
-		// eslint-disable-next-line vue/return-in-computed-property
 		content() {
 			const obj = ['mix', 'common', 'live']
 			const { id } = this.recommendDetails
-			if (['1', '2', '3', '5'].includes(id)) {
-				return obj[0]
-			} else if (['6', '7', '8'].includes(id)) {
-				return obj[1]
-			} else if (['4'].includes(id)) {
-				return obj[2]
-			}
+			const ModuleUI = new Map([
+				['1', obj[0]],
+				['2', obj[0]],
+				['3', obj[0]],
+				['4', obj[2]],
+				['5', obj[0]],
+				['6', obj[1]],
+				['7', obj[1]],
+				['8', obj[1]]
+			])
+			return id && ModuleUI.get(id)
 		}
 	},
 	watch: {
@@ -80,33 +83,34 @@ export default {
 	created() {},
 	mounted() {
 		// this.initShowDetailsModule();
-		this.getDetailsInfo()
+		// this.getDetailsInfo()
 	},
 	updated() {},
 	methods: {
 		back() {
 			this.$emit('back')
-		},
-		// 获取详情信息
-		getDetailsInfo() {
-			const params = {
-				moduleId: this.moduleId
-			}
-			this.$api.gameHomeRecommendDetailsAPI(params).then((res) => {
-				const { code, data, msg } = res
-				if (code === 200) {
-					this.loading = false
-					console.log('请求到值了', data)
-					this.gameDetails = data
-				} else {
-					this.loading = false
-					this.$message({
-						message: msg,
-						type: 'error'
-					})
-				}
-			})
 		}
+		// 获取详情信息
+		// getDetailsInfo() {
+		//     console.log('recommendDetails', this.recommendDetails)
+		// 	const params = {
+		//         ...this.recommendDetails
+		// 	}
+		// 	this.$api.gameHomeRecommendDetailsEditAPI(params).then((res) => {
+		// 		const { code, data, msg } = res
+		// 		if (code === 200) {
+		// 			this.loading = false
+		// 			console.log('请求到值了', data)
+		// 			this.gameDetails = data
+		// 		} else {
+		// 			this.loading = false
+		// 			this.$message({
+		// 				message: msg,
+		// 				type: 'error'
+		// 			})
+		// 		}
+		// 	})
+		// }
 	}
 }
 </script>

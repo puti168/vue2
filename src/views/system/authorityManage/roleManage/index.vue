@@ -249,7 +249,9 @@ export default {
 			if (val) {
 				const { id } = val
 				id && this.getRoleList(id, val)
-			}
+			} else {
+                this.rowData = undefined
+            }
 			this.editPage = true
 		},
 		async getRoleList(id, value) {

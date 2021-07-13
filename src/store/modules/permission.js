@@ -128,8 +128,10 @@ function filterAsyncRouter(asyncRouterMap) {
 						? (route.component = Layout)
 						: (route.component = Layout2)
 				} else {
-					route.component = (resolve) =>
-						require(['@/views' + route.path + '/index'], resolve)
+					route.level !== 4
+						? (route.component = (resolve) =>
+								require(['@/views' + route.path + '/index'], resolve))
+						: null
 				}
 			}
 			serviceMap.forEach((item) => {
@@ -150,6 +152,8 @@ function filterAsyncRouter(asyncRouterMap) {
 						const filePath = fullPath.substr(pos + 1)
 						route.name = filePath
 						// 按钮id
+					}
+					if (route.level === 4) {
 						userBtns.push(route.id)
 					}
 				}
