@@ -128,8 +128,10 @@ function filterAsyncRouter(asyncRouterMap) {
 						? (route.component = Layout)
 						: (route.component = Layout2)
 				} else {
-					route.component = (resolve) =>
-						require(['@/views' + route.path + '/index'], resolve)
+					route.level !== 4
+						? (route.component = (resolve) =>
+								require(['@/views' + route.path + '/index'], resolve))
+						: null
 				}
 			}
 			serviceMap.forEach((item) => {
