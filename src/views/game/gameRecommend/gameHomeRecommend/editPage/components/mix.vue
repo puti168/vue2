@@ -33,30 +33,30 @@
 								></el-input>
 							</el-form-item>
 						</el-col>
-                        <el-col :span="12">
-                            <el-form-item label="滚动数量限制:" prop="scrollingNum">
-                                <el-input
-                                    v-model="formData.scrollingNum"
-                                    size="medium"
-                                    maxlength="10"
-                                    clearable
-                                    style="width: 365px"
-                                    @keyup.native="checkValue($event)"
-                                ></el-input>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="12">
-                            <el-form-item label="全部游戏数量:" prop="allGameNum">
-                                <el-input
-                                    v-model="formData.allGameNum"
-                                    size="medium"
-                                    maxlength="10"
-                                    clearable
-                                    style="width: 365px"
-                                    @keyup.native="checkValue($event)"
-                                ></el-input>
-                            </el-form-item>
-                        </el-col>
+						<el-col v-if="'23'.includes(moduleId)" :span="12">
+							<el-form-item label="滚动数量限制:" prop="scrollingNum">
+								<el-input
+									v-model="formData.scrollingNum"
+									size="medium"
+									maxlength="10"
+									clearable
+									style="width: 365px"
+									@keyup.native="checkValue($event)"
+								></el-input>
+							</el-form-item>
+						</el-col>
+						<el-col v-if="'23'.includes(moduleId)" :span="12">
+							<el-form-item label="全部游戏数量:" prop="allGameNum">
+								<el-input
+									v-model="formData.allGameNum"
+									size="medium"
+									maxlength="10"
+									clearable
+									style="width: 365px"
+									@keyup.native="checkValue($event)"
+								></el-input>
+							</el-form-item>
+						</el-col>
 						<el-col :span="12">
 							<el-form-item label="模块描述:">
 								<el-input
@@ -87,13 +87,16 @@ export default {
 			formData: {
 				mainTitleInfo: undefined,
 				subTitleInfo: undefined,
-                scrollingNum: undefined,
-                allGameNum: undefined,
+				scrollingNum: undefined,
+				allGameNum: undefined,
 				moduleDesc: undefined
 			}
 		}
 	},
 	computed: {
+		moduleId() {
+			return this.gameDetails.id
+		},
 		rules() {
 			return {
 				mainTitleInfo: [
@@ -119,6 +122,20 @@ export default {
 						min: 2,
 						max: 10,
 						message: '长度在 2 到 10 个字符',
+						trigger: 'blur'
+					}
+				],
+				scrollingNum: [
+					{
+						required: true,
+						message: '请输入数字',
+						trigger: 'blur'
+					}
+				],
+				allGameNum: [
+					{
+						required: true,
+						message: '请输入数字',
 						trigger: 'blur'
 					}
 				],
@@ -158,11 +175,11 @@ export default {
 		back() {
 			this.$emit('back')
 		},
-        checkValue(e) {
-            // const { value } = e.target
-            // console.log(e.target.value)
-            e.target.value = e.target.value.replace(/[^\d]/g, '')
-        },
+		checkValue(e) {
+			// const { value } = e.target
+			// console.log(e.target.value)
+			e.target.value = e.target.value.replace(/[^\d]/g, '')
+		},
 		confirm(action) {
 			const { moduleId } = this.gameDetails
 			const params = {
@@ -170,6 +187,7 @@ export default {
 				moduleId
 			}
 			delete params.updatedAt
+			delete params.updatedBy
 			this.$api.gameHomeRecommendDetailsEditAPI(params).then((res) => {
 				this.loading = false
 				const { code, msg } = res
