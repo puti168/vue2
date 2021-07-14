@@ -169,6 +169,7 @@
 				</el-form-item>
 				<el-form-item>
 					<el-button
+						v-if="hasPermission('329')"
 						type="primary"
 						icon="el-icon-search"
 						:disabled="loadingT"

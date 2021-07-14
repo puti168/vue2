@@ -53,6 +53,7 @@
               重置
             </el-button>
             <el-button
+              v-if="hasPermission('301')"
               type="warning"
               icon="el-icon-folder"
               :disabled="loading"
@@ -134,6 +135,7 @@
           <el-table-column prop="operating" align="center" label="操作">
             <template slot-scope="scope">
               <el-button
+                v-if="hasPermission('302')"
                 :disabled="scope.row.retract === 1"
                 type="primary"
                 size="medium"

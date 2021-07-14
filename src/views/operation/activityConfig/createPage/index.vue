@@ -80,6 +80,7 @@
               重置
             </el-button>
             <el-button
+              v-if="hasPermission('308')"
               type="warning"
               icon="el-icon-folder"
               :disabled="loading"
@@ -89,6 +90,7 @@
               新增
             </el-button>
             <el-button
+              v-if="hasPermission('312')"
               type="warning"
               icon="el-icon-sort"
               :disabled="loading"
@@ -153,7 +155,7 @@
           <el-table-column prop="operating" align="center" label="操作" width="240px">
             <template slot-scope="scope">
               <el-button
-                v-if="scope.row.status === 0"
+                v-if="hasPermission('311')&&scope.row.status === 0"
                 :disabled="loading"
                 type="success"
                 size="medium"
@@ -163,7 +165,7 @@
                 开启
               </el-button>
               <el-button
-                v-else
+                v-if="hasPermission('311')&&scope.row.status !== 0"
                 :disabled="loading"
                 type="danger"
                 size="medium"
@@ -173,6 +175,7 @@
                 禁用
               </el-button>
               <el-button
+                v-if="hasPermission('309')"
                 type="primary"
                 icon="el-icon-edit"
                 :disabled="scope.row.status === 1"
@@ -183,6 +186,7 @@
               </el-button>
 
               <el-button
+                v-if="hasPermission('310')"
                 type="danger"
                 icon="el-icon-delete"
                 :disabled="scope.row.status === 1"

@@ -102,6 +102,7 @@
 							重置
 						</el-button>
 						<el-button
+							v-if="hasPermission('330')"
 							type="warning"
 							icon="el-icon-folder"
 							:disabled="loading"
@@ -249,14 +250,15 @@
 								size="medium"
 								@click="recycle(scope.row)"
 							>
-								<div v-if="scope.row.status + '' === '1'">
+								<div v-if="hasPermission('333')&&scope.row.status + '' === '1'">
 									禁用
 								</div>
-								<div v-else>
+								<div v-if="hasPermission('333')&&scope.row.status + '' !== '1'">
 									开启
 								</div>
 							</el-button>
 							<el-button
+								v-if="hasPermission('331')"
 								type="primary"
 								icon="el-icon-edit"
                                 :disabled="scope.row.status === 1"
@@ -266,6 +268,7 @@
 								编辑信息
 							</el-button>
 							<el-button
+								v-if="hasPermission('332')"
 								type="danger"
 								icon="el-icon-delete"
 								size="medium"
