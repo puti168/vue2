@@ -407,6 +407,14 @@ export function getProxyLabelDict(params) {
 		params
 	})
 }
+//  代理标签==>分页查询代理操作记录
+export function getProxyOperateSelect(data) {
+	return request({
+		url: '/proxyOperate/select',
+		method: 'post',
+		data
+	})
+}
 
 export default {
 	updateMemberOverflowRecord,
@@ -457,5 +465,6 @@ export default {
 	getProxyAddLabel,
 	setProxyDeleteLabel,
 	getProxyProxyInfoByLabelId,
-	getProxyLabelDict
+	getProxyLabelDict,
+	getProxyOperateSelect
 }

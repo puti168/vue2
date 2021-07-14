@@ -19,13 +19,17 @@
         </el-form-item>
         <el-form-item label="变更类型:">
           <el-select
-            v-model="queryData.changeType"
-            style="width: 300px"
-            multiple
+            v-model="queryData.operateField"
+            clearable
             placeholder="默认选择全部"
             :popper-append-to-body="false"
           >
-            <el-option label="游戏管理" value="0"></el-option>
+            <el-option
+              v-for="item in enumProxyDomainoperate"
+              :key="item.code"
+              :label="item.description"
+              :value="item.code"
+            ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="操作人:">
@@ -79,15 +83,21 @@
             sortable="custom"
           >
           </el-table-column>
-          <el-table-column prop="changeType" align="center" label="变更类型">
+          <el-table-column prop="operateField" align="center" label="变更类型">
+            <template slot-scope="scope">
+              {{ typeFilter(scope.row.operateField, "enumProxyDomainoperate") }}
+            </template>
           </el-table-column>
-          <el-table-column align="center" label="变更前" prop="beforeValue">
+          <el-table-column align="center" label="变更前" prop="beforeModify">
           </el-table-column>
-          <el-table-column align="center" label="变更后" prop="afterValue">
+          <el-table-column align="center" label="变更后" prop="afterModify">
           </el-table-column>
           <el-table-column prop="createdBy" align="center" width="120" label="操作人">
           </el-table-column>
-          <el-table-column align="center" label="备注" prop="afterValue">
+          <el-table-column align="center" label="备注" prop="remark">
+            <template slot-scope="scope">
+              {{ scope.row.remark ? scope.row.remark : "-" }}
+            </template>
           </el-table-column>
         </el-table>
         <!-- 分页 -->
@@ -123,14 +133,19 @@ export default {
       dataList: []
     }
   },
-  computed: {},
+  computed: {
+    enumProxyDomainoperate() {
+      return this.globalDics.enumProxyDomainoperate
+    }
+  },
   mounted() {},
   methods: {
     loadData() {
       const [startTime, endTime] = this.searchTime || []
       let params = {
         ...this.queryData,
-        startTime: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : '',
+        operateType: 2,
+        beginTime: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : '',
         endTime: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
       }
       params = {
@@ -140,7 +155,7 @@ export default {
       this.loading = true
 
       this.$api
-        .activityInfoLogListAPI(params)
+        .getProxyOperateSelect(params)
         .then((res) => {
           this.loading = false
           const {

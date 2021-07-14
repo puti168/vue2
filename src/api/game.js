@@ -317,6 +317,14 @@ export function gameHomeRecommendDetailsEditAPI(data) {
 		data
 	})
 }
+// 游戏==> 分页查询游戏搜索管理操作记录
+export function getSearchConfigOperateSelect(data) {
+	return request({
+		url: '/searchConfigOperate/select',
+		method: 'post',
+		data
+	})
+}
 
 export default {
 	gameAssortListAPI,
@@ -356,5 +364,6 @@ export default {
 	gameHomeRecommendListAPI,
 	recommendStatusChangeAPI,
 	gameHomeRecommendDetailsAPI,
-	gameHomeRecommendDetailsEditAPI
+	gameHomeRecommendDetailsEditAPI,
+	getSearchConfigOperateSelect
 }
