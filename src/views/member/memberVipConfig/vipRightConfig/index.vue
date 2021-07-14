@@ -184,6 +184,7 @@
 			</div>
 			<div class="btn_footer">
 				<el-button
+                    v-if="hasPermission('247')"
 					type="primary"
 					icon="el-icon-search"
 					size="medium"
