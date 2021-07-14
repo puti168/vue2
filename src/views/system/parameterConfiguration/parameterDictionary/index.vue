@@ -127,7 +127,8 @@
               disabled
               placeholder="请输入开发字段"
               maxlength="10"
-            ></el-input>
+            >
+            </el-input>
           </el-form-item>
           <el-form-item
           label="标签:"
@@ -206,13 +207,42 @@ export default {
   },
   computed: {
      rules() {
-         const tags = (rule, value, callback) => {
-
+         const tagszn = (rule, value, callback) => {
+            var reg = /^[\u4E00-\u9FA5]+$/
+           if (reg.test(value)) {
+             callback()
+           } else {
+              callback(new Error('只能输入中文'))
+           }
          }
-        const tag = [{ required: true, validator: tags, message: '请输入标签', trigger: 'blur' }]
-        const valueType = [{ required: true, message: '请输入类型', trigger: 'blur' }]
-        const description = [{ required: true, message: '请输入注释', trigger: 'blur' }]
-        const v = [{ required: true, message: '请输入值', trigger: 'blur' }]
+         const valueTypezn = (rule, value, callback) => {
+            var reg = /^[\u4E00-\u9FA5]+$/
+           if (reg.test(value)) {
+             callback()
+           } else {
+              callback(new Error('只能输入中文'))
+           }
+         }
+          const descriptionzn = (rule, value, callback) => {
+            var reg = /^[\u4E00-\u9FA5]+$/
+           if (reg.test(value)) {
+             callback()
+           } else {
+              callback(new Error('只能输入中文'))
+           }
+         }
+          const vzn = (rule, value, callback) => {
+            var reg = /^[\u4E00-\u9FA5]+$/
+           if (reg.test(value)) {
+             callback()
+           } else {
+              callback(new Error('只能输入中文'))
+           }
+         }
+        const tag = [{ required: true, validator: tagszn, trigger: 'blur' }]
+        const valueType = [{ required: true, validator: valueTypezn, trigger: 'blur' }]
+        const description = [{ required: true, validator: descriptionzn, trigger: 'blur' }]
+        const v = [{ required: true, validator: vzn, trigger: 'blur' }]
         return {
           tag,
           valueType,
@@ -248,17 +278,12 @@ export default {
         })
     },
     subAddOrEidt() {
-      const data = {}
-      data.description = this.dialogForm.description
-      data.k = this.dialogForm.k
-      data.tag = this.dialogForm.tag
-      data.valueType = this.dialogForm.valueType
-      data.v = this.dialogForm.v
+      const data = {...this.dialogForm}
+      data.id = this.dialogForm.id
+     console.log(this.dialogForm.id, '小明')
       this.$refs.formSub.validate((valid) => {
         if (valid) {
-            data.id = this.dialogForm.id
             this.$api.getkvconfigUpdate(data).then((res) => {
-               console.log(data, '小明')
               if (res.code === 200) {
                 this.$message.success('修改成功')
                 this.loadData()
@@ -274,9 +299,11 @@ export default {
       this.loadData()
     },
     edit(val) {
+      console.log(val)
       this.title = '编辑'
       this.dialogForm.k = val.k
       this.dialogFormVisible = true
+      this.dialogForm.id = val.id
     }
   }
 }
