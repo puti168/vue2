@@ -17,20 +17,9 @@
             :default-time="defaultTime"
           ></el-date-picker>
         </el-form-item>
-        <el-form-item label="操作页面:">
-          <el-select
-            v-model="queryData.changeType"
-            style="width: 300px"
-            multiple
-            placeholder="默认选择全部"
-            :popper-append-to-body="false"
-          >
-            <el-option label="游戏管理" value="0"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="ID:">
+        <el-form-item label="操作账号：">
           <el-input
-            v-model="queryData.announcementTitel"
+            v-model="queryData.createdby"
             clearable
             size="medium"
             :maxlength="5"
@@ -39,20 +28,9 @@
             @keyup.enter.native="enterSearch"
           ></el-input>
         </el-form-item>
-        <el-form-item label="变更类型:">
-          <el-select
-            v-model="queryData.changeType"
-            style="width: 300px"
-            multiple
-            placeholder="默认选择全部"
-            :popper-append-to-body="false"
-          >
-            <el-option label="游戏管理" value="0"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="操作人:">
+        <el-form-item label="操作IP：">
           <el-input
-            v-model="queryData.createdBy"
+            v-model="queryData.operateIp"
             clearable
             size="medium"
             :maxlength="12"
@@ -92,29 +70,61 @@
           :data="dataList"
           style="width: 100%"
           :header-cell-style="getRowClass"
-          @sort-change="_changeTableSort"
         >
-          <el-table-column prop="announcementTitle" align="center" label="操作页面">
-          </el-table-column>
-          <el-table-column prop="announcementTitle" align="center" label="ID">
-          </el-table-column>
-          <el-table-column prop="changeType" align="center" label="变更类型">
-          </el-table-column>
-          <el-table-column align="center" label="变更前" prop="beforeValue">
-          </el-table-column>
-          <el-table-column align="center" label="变更后" prop="afterValue">
-          </el-table-column>
-          <el-table-column align="center" label="备注" prop="afterValue">
-          </el-table-column>
-          <el-table-column prop="createdBy" align="center" width="120" label="操作人">
-          </el-table-column>
+          <el-table-column type="index" align="center" label="序号"> </el-table-column>
           <el-table-column
             prop="createdAt"
             align="center"
             label="操作时间"
-            sortable="custom"
           >
+            <template slot-scope="scope">
+              <span v-if="!!(scope.row.createdAt+'')">
+                {{ scope.row.createdAt }}
+              </span>
+              <span v-else>-</span>
+            </template>
           </el-table-column>
+          <el-table-column prop="createdBy" align="center" label="操作账号">
+            <template slot-scope="scope">
+              <span v-if="!!(scope.row.createdBy+'')">
+                {{ scope.row.createdBy }}
+              </span>
+              <span v-else>-</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="operateIp" align="center" label="操作IP">
+            <template slot-scope="scope">
+              <span v-if="!!(scope.row.operateIp+'')">
+                {{ scope.row.operateIp }}
+              </span>
+              <span v-else>-</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="changeType" align="center" label="操作类型">
+            <template slot-scope="scope">
+              <span v-if="!!(scope.row.changeType+'')">
+                {{ scope.row.changeType }}
+              </span>
+              <span v-else>-</span>
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="变更前" prop="beforeValue">
+            <template slot-scope="scope">
+              <span v-if="!!(scope.row.beforeValue+'')">
+                {{ scope.row.beforeValue }}
+              </span>
+              <span v-else>-</span>
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="变更后" prop="afterValue">
+            <template slot-scope="scope">
+              <span v-if="!!(scope.row.afterValue+'')">
+                {{ scope.row.afterValue }}
+              </span>
+              <span v-else>-</span>
+            </template>
+          </el-table-column>
+
         </el-table>
         <!-- 分页 -->
         <el-pagination
@@ -144,7 +154,10 @@ export default {
   mixins: [list],
   data() {
     return {
-      queryData: {},
+      queryData: {
+        createdby: undefined,
+        operateIp: undefined
+      },
       searchTime: [start, end],
       dataList: []
     }
@@ -166,17 +179,17 @@ export default {
       this.loading = true
 
       this.$api
-        .activityInfoLogListAPI(params)
+        .getQueryRecordList(params)
         .then((res) => {
           this.loading = false
           const {
             code,
-            data: { record, totalRecord },
+            data: { records, total },
             msg
           } = res
           if (code === 200) {
-            this.dataList = record || []
-            this.total = totalRecord || 0
+            this.dataList = records || []
+            this.total = total || 0
           } else {
             this.$message({
               message: msg,
@@ -187,20 +200,6 @@ export default {
         .catch(() => {
           this.loading = false
         })
-    },
-    _changeTableSort({ column, prop, order }) {
-      this.pageNum = 1
-      if (order === 'ascending') {
-        // 升序
-        this.queryData.orderType = 'asc'
-      } else if (column.order === 'descending') {
-        // 降序
-        this.queryData.orderType = 'desc'
-      } else {
-        delete this.queryData.orderKey
-        delete this.queryData.orderType
-      }
-      this.loadData()
     },
     reset() {
       this.pageNum = 1
