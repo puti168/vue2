@@ -96,6 +96,7 @@
 
         <el-form-item>
           <el-button
+              v-if="hasPermission('358')"
             type="primary"
             class="dut"
             :disabled="loading"
