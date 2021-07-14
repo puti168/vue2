@@ -44,6 +44,7 @@
               重置
             </el-button>
             <el-button
+              v-if="hasPermission('346')"
               icon="el-icon-download"
               type="warning"
               :disabled="loading"

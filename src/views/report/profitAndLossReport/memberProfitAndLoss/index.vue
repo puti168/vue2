@@ -244,6 +244,7 @@
               重置
             </el-button>
             <el-button
+              v-if="hasPermission('342')"
               type="warning"
               icon="el-icon-folder-add"
               size="medium"
