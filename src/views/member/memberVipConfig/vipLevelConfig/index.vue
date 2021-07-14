@@ -128,6 +128,7 @@
 			</div>
 			<div class="btn_footer">
 				<el-button
+                    v-if="hasPermission('246')"
 					type="primary"
 					icon="el-icon-search"
 					size="medium"

@@ -433,24 +433,24 @@
 						label="绑定账号次数"
 						width="180"
 					>
-                        <template slot="header" slot-scope="scope">
-                            <el-popover
-                                placement="top-start"
-                                title="提示"
-                                width="280"
-                                trigger="hover"
-                            >
-                                <div v-if="!scope.row">
-                                    <p>
-                                        绑定的用户数量，去重计算
-                                    </p>
-                                </div>
-                                <div slot="reference" class="el-icon-question">
-                                    <span class="other-class">绑定账号次数</span>
-                                </div>
-                            </el-popover>
-                        </template>
-                    </el-table-column>
+						<template slot="header" slot-scope="scope">
+							<el-popover
+								placement="top-start"
+								title="提示"
+								width="280"
+								trigger="hover"
+							>
+								<div v-if="!scope.row">
+									<p>
+										绑定的用户数量，去重计算
+									</p>
+								</div>
+								<div slot="reference" class="el-icon-question">
+									<span class="other-class">绑定账号次数</span>
+								</div>
+							</el-popover>
+						</template>
+					</el-table-column>
 					<el-table-column prop="bindUserName" align="center" width="120px">
 						<template slot="header">
 							当前绑定会员账号
@@ -581,23 +581,21 @@
 					>
 						<template slot-scope="scope">
 							<el-button
-								v-if="scope.row.blacklistStatus === 0"
-								type="success"
+                                v-if="hasPermission('243')"
+								:type="scope.row.blacklistStatus === 0 ? 'success' : 'danger'"
 								size="medium"
-								@click="eidtDialog('开启', scope.row)"
+								@click="
+									eidtDialog(
+										scope.row.blacklistStatus === 0 ? '开启' : '禁用',
+										scope.row
+									)
+								"
 							>
-								开启
-							</el-button>
-							<el-button
-								v-else
-								type="danger"
-								size="medium"
-								@click="eidtDialog('禁用', scope.row)"
-							>
-								禁用
+								{{ scope.row.blacklistStatus === 0 ? '开启' : '禁用' }}
 							</el-button>
 							<el-button
 								v-show="scope.row.bindStatus === 1"
+                                v-if="hasPermission('244')"
 								type="warning"
 								size="medium"
 								@click="eidtDialog('解绑', scope.row)"

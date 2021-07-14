@@ -300,6 +300,7 @@
 							重置
 						</el-button>
 						<el-button
+							v-if="hasPermission('349')"
 							type="warning"
 							icon="el-icon-folder-add"
 							size="medium"

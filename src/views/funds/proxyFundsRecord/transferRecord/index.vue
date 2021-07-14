@@ -101,6 +101,7 @@
 							重置
 						</el-button>
 						<el-button
+						    v-if="hasPermission('271')"
 							icon="el-icon-download"
 							type="warning"
 							:disabled="loading"
