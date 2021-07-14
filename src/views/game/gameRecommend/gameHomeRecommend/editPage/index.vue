@@ -67,7 +67,7 @@ export default {
 				['5', obj[0]],
 				['6', obj[1]],
 				['7', obj[1]],
-				['8', obj[1]]
+				['9', obj[1]]
 			])
 			return id && ModuleUI.get(id)
 		}
