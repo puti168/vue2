@@ -12,9 +12,9 @@
 				<el-form ref="form" :model="formData" label-width="auto" :rules="rules">
 					<el-row>
 						<el-col :span="12">
-							<el-form-item label="模块描述:" prop="description">
+							<el-form-item label="模块描述:">
 								<el-input
-									v-model="formData.description"
+									v-model="formData.moduleDesc"
 									type="textarea"
 									size="medium"
 									maxlength="100"
@@ -36,18 +36,18 @@
 import list from '@/mixins/list'
 export default {
 	mixins: [list],
-	props: { recommendDetails: { type: Object, default: () => {} } },
+	props: { gameDetails: { type: Object, default: () => {} } },
 	data() {
 		return {
 			formData: {
-				description: undefined
+				moduleDesc: undefined
 			}
 		}
 	},
 	computed: {
 		rules() {
 			return {
-				description: [
+				moduleDesc: [
 					{
 						min: 2,
 						max: 100,
@@ -59,15 +59,22 @@ export default {
 		}
 	},
 	watch: {
-		// addGameDetails: {
-		//   handler(newV, old) {
-		//     console.log(66666, newV)
-		//     this.formData = { ...newV }
-		//     console.log('formData', this.formData)
-		//   },
-		//   deep: true
-		// }
+		gameDetails: {
+			handler(newVal, oldVal) {
+				if (newVal) {
+					this.formData = { ...newVal }
+				} else {
+					this.formData = {
+						moduleDesc: undefined
+					}
+				}
+				console.log('formData', this.formData)
+			},
+			deep: true,
+			immediate: true
+		}
 	},
+
 	created() {},
 	mounted() {},
 	methods: {
@@ -75,24 +82,29 @@ export default {
 			this.$emit('back')
 		},
 		confirm(action) {
-            const { moduleId } = this.gameDetails
-            const params = {
-                ...this.formData,
-                moduleId
-            }
-            this.$api.gameHomeRecommendDetailsEditAPI(params).then((res) => {
-                const { code, data, msg } = res
-                if (code === 200) {
-                    this.loading = false
-                    console.log('请求到值了', data)
-                } else {
-                    this.loading = false
-                    this.$message({
-                        message: msg,
-                        type: 'error'
-                    })
-                }
-            })
+			const { moduleId } = this.gameDetails
+			const params = {
+				...this.formData,
+				moduleId
+			}
+			delete params.updatedAt
+			delete params.updatedBy
+			this.$api.gameHomeRecommendDetailsEditAPI(params).then((res) => {
+				this.loading = false
+				const { code, msg } = res
+				if (code === 200) {
+					this.$message({
+						message: '保存成功',
+						type: 'success'
+					})
+					this.$parent.back()
+				} else {
+					this.$message({
+						message: msg,
+						type: 'error'
+					})
+				}
+			})
 		}
 	}
 }

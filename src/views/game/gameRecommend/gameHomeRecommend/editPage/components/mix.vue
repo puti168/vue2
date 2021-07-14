@@ -33,7 +33,7 @@
 								></el-input>
 							</el-form-item>
 						</el-col>
-						<el-col v-if="'23'.includes(moduleId)" :span="12">
+						<el-col v-if="'9'.includes(moduleId)" :span="12">
 							<el-form-item label="滚动数量限制:" prop="scrollingNum">
 								<el-input
 									v-model="formData.scrollingNum"
@@ -45,7 +45,7 @@
 								></el-input>
 							</el-form-item>
 						</el-col>
-						<el-col v-if="'23'.includes(moduleId)" :span="12">
+						<el-col v-if="'9'.includes(moduleId)" :span="12">
 							<el-form-item label="全部游戏数量:" prop="allGameNum">
 								<el-input
 									v-model="formData.allGameNum"
