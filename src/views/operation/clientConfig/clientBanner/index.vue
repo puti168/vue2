@@ -216,7 +216,7 @@
             >
               <template slot-scope="scope">
                 <!-- {{ typeFilter(scope.row.bannerValidity, "operateValidityType") }} -->
-                {{ scope.row.bannerValidity === 1 ? "限时" : "永久" }}
+                {{ scope.row.bannerValidity === 0 ? "限时" : "永久" }}
               </template>
             </el-table-column>
             <el-table-column

@@ -15,7 +15,7 @@
               @keyup.enter.native="enterSearch"
             ></el-input>
           </el-form-item>
-          <el-form-item label="创建人:">
+          <el-form-item label="字典名称:">
             <el-input
               v-model="queryData.createdBy"
               clearable
@@ -58,15 +58,11 @@
           style="width: 100%"
           :header-cell-style="getRowClass"
         >
-          <el-table-column
-            prop="memberLabelName"
-            align="center"
-            label="序号"
-          >
-		  <template slot-scope="scopes">
-          {{ scopes.$index+1 }}
-        </template>
-		  </el-table-column>
+          <el-table-column prop="memberLabelName" align="center" label="序号">
+            <template slot-scope="scopes">
+              {{ scopes.$index + 1 }}
+            </template>
+          </el-table-column>
           <el-table-column prop="k" align="center" label="字典code"></el-table-column>
           <el-table-column prop="tag" align="center" label="标签"></el-table-column>
           <el-table-column prop="valueType" align="center" label="控制类型">
@@ -124,10 +120,10 @@
         class="rempadding"
       >
         <el-divider></el-divider>
-        <el-form ref="formSub" :model="dialogForm" label-width="90px">
+        <el-form ref="formSub" :rules="rules" :model="dialogForm" label-width="90px">
           <el-form-item label="字典code:" prop="k">
             <el-input
-             v-model="dialogForm.k"
+              v-model="dialogForm.k"
               disabled
               placeholder="请输入开发字段"
               maxlength="10"
@@ -136,12 +132,11 @@
           <el-form-item
           label="标签:"
           prop="tag"
-            >
+          >
             <el-input
               v-model="dialogForm.tag"
               placeholder="请定义标签"
               maxlength="20"
-              type="“text”"
             ></el-input>
           </el-form-item>
           <el-form-item label="类型:" prop="valueType">
@@ -150,7 +145,6 @@
               placeholder="请定义类型"
               maxlength="10"
               autocomplete="off"
-              type="“text”"
 ></el-input>
           </el-form-item>
           <el-form-item label="注释:" prop="description">
@@ -160,7 +154,7 @@
               maxlength="50"
               type="textarea"
               show-word-limit
-></el-input>
+            ></el-input>
           </el-form-item>
           <el-form-item label="值:" prop="v">
             <el-input
@@ -168,7 +162,6 @@
               placeholder="请输入值"
               maxlength="10"
               autocomplete="off"
-              type="“text”"
 ></el-input>
           </el-form-item>
         </el-form>
@@ -212,23 +205,21 @@ export default {
     }
   },
   computed: {
-  //  rules() {
-  //      const tags = (rule, value, callback) => {
+     rules() {
+         const tags = (rule, value, callback) => {
 
-  //      }
-
-  //     const tag = [{ required: true, validator: tags, message: '请输入标签', trigger: 'blur' }]
-  //     const valueType = [{ required: true, message: '请输入类型', trigger: 'blur' }]
-  //     const description = [{ required: true, message: '请输入注释', trigger: 'blur' }]
-  //     const v = [{ required: true, message: '请输入值', trigger: 'blur' }]
-
-  //     return {
-  //       tag,
-  //       valueType,
-  //       description,
-  //       v
-  //     }
-  //   }
+         }
+        const tag = [{ required: true, validator: tags, message: '请输入标签', trigger: 'blur' }]
+        const valueType = [{ required: true, message: '请输入类型', trigger: 'blur' }]
+        const description = [{ required: true, message: '请输入注释', trigger: 'blur' }]
+        const v = [{ required: true, message: '请输入值', trigger: 'blur' }]
+        return {
+          tag,
+          valueType,
+          description,
+          v
+        }
+      }
   },
   mounted() {},
 
@@ -257,7 +248,6 @@ export default {
         })
     },
     subAddOrEidt() {
-      console.log(this.title)
       const data = {}
       data.description = this.dialogForm.description
       data.k = this.dialogForm.k
@@ -265,18 +255,16 @@ export default {
       data.valueType = this.dialogForm.valueType
       data.v = this.dialogForm.v
       this.$refs.formSub.validate((valid) => {
-          console.log(valid, '编辑')
         if (valid) {
-          if (this.title === '编辑') {
             data.id = this.dialogForm.id
             this.$api.getkvconfigUpdate(data).then((res) => {
+               console.log(data, '小明')
               if (res.code === 200) {
                 this.$message.success('修改成功')
                 this.loadData()
               }
               this.dialogFormVisible = false
             })
-          }
         }
       })
     },
@@ -288,10 +276,8 @@ export default {
     edit(val) {
       this.title = '编辑'
       this.dialogForm.k = val.k
-
       this.dialogFormVisible = true
     }
-
   }
 }
 </script>
