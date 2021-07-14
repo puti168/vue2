@@ -85,14 +85,44 @@
           >
           </el-table-column>
           <el-table-column prop="operateField" align="center" label="变更类型">
+            <template slot-scope="scope">
+              <span v-if="!!(scope.row.operateField+'')">
+                {{ typeFilter(scope.row.operateField, 'enumProxyGradeOperate') }}
+              </span>
+              <span v-else>-</span>
+            </template>
           </el-table-column>
-          <el-table-column align="center" label="变更前" prop="beforeValue">
+          <el-table-column align="center" label="变更前" prop="beforeModify">
+            <template slot-scope="scope">
+              <span v-if="!!(scope.row.beforeModify+'')">
+                {{ scope.row.beforeModify }}
+              </span>
+              <span v-else>-</span>
+            </template>
           </el-table-column>
-          <el-table-column align="center" label="变更后" prop="afterValue">
+          <el-table-column align="center" label="变更后" prop="afterModify">
+            <template slot-scope="scope">
+              <span v-if="!!(scope.row.afterModify+'')">
+                {{ scope.row.afterModify }}
+              </span>
+              <span v-else>-</span>
+            </template>
           </el-table-column>
           <el-table-column prop="createdBy" align="center" width="120" label="操作人">
+            <template slot-scope="scope">
+              <span v-if="!!(scope.row.createdBy+'')">
+                {{ scope.row.createdBy }}
+              </span>
+              <span v-else>-</span>
+            </template>
           </el-table-column>
-          <el-table-column align="center" label="备注" prop="rebate_level">
+          <el-table-column align="center" label="备注" prop="remark">
+            <template slot-scope="scope">
+              <span v-if="!!(scope.row.remark+'')">
+                {{ scope.row.remark }}
+              </span>
+              <span v-else>-</span>
+            </template>
           </el-table-column>
         </el-table>
         <!-- 分页 -->
@@ -147,10 +177,10 @@ export default {
   mounted() {},
   methods: {
     loadData() {
-      const [startTime, endTime] = this.searchTime || []
+      const [beginTime, endTime] = this.searchTime || []
       let params = {
         ...this.queryData,
-        startTime: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : '',
+        beginTime: beginTime ? dayjs(beginTime).format('YYYY-MM-DD HH:mm:ss') : '',
         endTime: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
       }
       params = {

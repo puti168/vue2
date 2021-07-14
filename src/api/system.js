@@ -39,10 +39,19 @@ export function getuserInfolist(data) {
 		data
 	})
 }
+// 系统管理-查询参数字典修改记录列表
+export function getQueryRecordList(data) {
+	return request({
+		url: '/kvconfig/queryRecordList',
+		method: 'post',
+		data
+	})
+}
+//
 export default {
     getkvconfigQueryList,
 	getkvconfigUpdate,
 	getSystemUserLoginRecordQueryLoginLog,
-	getuserInfolist
-
+	getuserInfolist,
+	getQueryRecordList
 }

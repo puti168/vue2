@@ -78,15 +78,45 @@
           @sort-change="_changeTableSort"
         >
           <el-table-column type="index" align="center" label="序号"> </el-table-column>
-          <el-table-column prop="rebate_level" align="center" label="VIP等级">
+          <el-table-column prop="rebateLevel" align="center" label="VIP等级">
+            <template slot-scope="scope">
+              <span v-if="!!(scope.row.rebateLevel+'')">
+                {{ scope.row.rebateLevel }}
+              </span>
+              <span v-else>-</span>
+            </template>
           </el-table-column>
           <el-table-column prop="operateField" align="center" label="变更类型">
+            <template slot-scope="scope">
+              <span v-if="!!(scope.row.operateField+'')">
+                {{ typeFilter(scope.row.operateField, 'enumProxyGradeOperate') }}
+              </span>
+              <span v-else>-</span>
+            </template>
           </el-table-column>
           <el-table-column align="center" label="变更前" prop="beforeValue">
+            <template slot-scope="scope">
+              <span v-if="!!(scope.row.beforeModify+'')">
+                {{ scope.row.beforeModify }}
+              </span>
+              <span v-else>-</span>
+            </template>
           </el-table-column>
           <el-table-column align="center" label="变更后" prop="afterValue">
+            <template slot-scope="scope">
+              <span v-if="!!(scope.row.afterModify+'')">
+                {{ scope.row.afterModify }}
+              </span>
+              <span v-else>-</span>
+            </template>
           </el-table-column>
           <el-table-column prop="createdBy" align="center" width="120" label="操作人">
+            <template slot-scope="scope">
+              <span v-if="!!(scope.row.createdBy+'')">
+                {{ scope.row.createdBy }}
+              </span>
+              <span v-else>-</span>
+            </template>
           </el-table-column>
           <el-table-column
             prop="createdAt"
@@ -143,10 +173,10 @@ export default {
   mounted() {},
   methods: {
     loadData() {
-      const [startTime, endTime] = this.searchTime || []
+      const [beginTime, endTime] = this.searchTime || []
       let params = {
         ...this.queryData,
-        startTime: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : '',
+        beginTime: beginTime ? dayjs(beginTime).format('YYYY-MM-DD HH:mm:ss') : '',
         endTime: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
       }
       params = {
