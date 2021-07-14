@@ -285,38 +285,38 @@
 								align="center"
 								label="模块描述"
 							>
-                                <template slot-scope="scope">
+								<template slot-scope="scope">
 									<span v-if="!!scope.row.moduleDesc">
 										{{ scope.row.moduleDesc }}
 									</span>
-                                    <span v-else>-</span>
-                                </template>
-                            </el-table-column>
+									<span v-else>-</span>
+								</template>
+							</el-table-column>
 							<el-table-column
 								prop="updatedBy"
 								align="center"
 								label="最近操作人"
 							>
-                                <template slot-scope="scope">
+								<template slot-scope="scope">
 									<span v-if="!!scope.row.updatedBy">
 										{{ scope.row.updatedBy }}
 									</span>
-                                    <span v-else>-</span>
-                                </template>
-                            </el-table-column>
+									<span v-else>-</span>
+								</template>
+							</el-table-column>
 							<el-table-column
 								prop="updatedAt"
 								align="center"
 								label="最近操作时间"
 								sortable="custom"
 							>
-                                <template slot-scope="scope">
+								<template slot-scope="scope">
 									<span v-if="!!scope.row.updatedAt">
 										{{ scope.row.updatedAt }}
 									</span>
-                                    <span v-else>-</span>
-                                </template>
-                            </el-table-column>
+									<span v-else>-</span>
+								</template>
+							</el-table-column>
 							<el-table-column
 								prop="operating"
 								align="center"
@@ -354,11 +354,11 @@
 
 <script>
 import list from '@/mixins/list'
-import { routerNames } from '@/utils/consts'
+// import { routerNames } from '@/utils/consts'
 import gameHomeRecommendEdit from './editPage/index'
 
 export default {
-	name: routerNames.gameHomeRecommend,
+	name: 'GameHomeRecommend',
 	components: { gameHomeRecommendEdit },
 	mixins: [list],
 	data() {
@@ -436,7 +436,7 @@ export default {
 		// },
 		// 禁用
 		disable(val) {
-		    //  commonId,
+			//  commonId,
 			const { status, id } = val
 			const key = status === 1 ? 0 : 1
 			const loading = this.$loading({

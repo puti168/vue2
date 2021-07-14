@@ -1,11 +1,5 @@
 <template>
 	<div class="game-container report-container">
-		<!--		&lt;!&ndash;        体育、真人荷官、电竞、彩票&ndash;&gt;-->
-		<!--		<mix v-if="isSport" :recommendDetails="recommendDetails" @back="back"></mix>-->
-		<!--		&lt;!&ndash; 派奖排行榜、电子、棋牌 &ndash;&gt;-->
-		<!--		<common v-if="isLive" :gemeDetails="gameDetails" @back="back"></common>-->
-		<!--		&lt;!&ndash; 直播 &ndash;&gt;-->
-		<!--		<live v-if="isGame" :gemeDetails="gameDetails" @back="back"></live>-->
 		<component
 			:is="content"
 			:gameDetails="recommendDetails"
@@ -19,12 +13,14 @@ import list from '@/mixins/list'
 import mix from './components/mix'
 import common from './components/common'
 import live from './components/live'
+import game from './components/game'
 
 export default {
 	components: {
 		mix,
 		common,
-		live
+		live,
+		game
 	},
 	mixins: [list],
 	props: {
@@ -43,12 +39,7 @@ export default {
 			searchData: {
 				moduleId: this.recommendDetails.id
 			},
-			visible: false,
 			type: true,
-			isSport: false,
-			isLive: false,
-			isGame: true,
-			isLastGame: false,
 			component: mix
 		}
 	},
@@ -57,7 +48,7 @@ export default {
 			return this.recommendDetails.id
 		},
 		content() {
-			const obj = ['mix', 'common', 'live']
+			const obj = ['mix', 'common', 'live', 'game']
 			const { id } = this.recommendDetails
 			const ModuleUI = new Map([
 				['1', obj[0]],
@@ -67,7 +58,8 @@ export default {
 				['5', obj[0]],
 				['6', obj[1]],
 				['7', obj[1]],
-				['8', obj[1]]
+				['9', obj[1]],
+				['10', obj[3]]
 			])
 			return id && ModuleUI.get(id)
 		}

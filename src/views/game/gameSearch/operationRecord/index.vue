@@ -19,13 +19,18 @@
         </el-form-item>
         <el-form-item label="变更类型:">
           <el-select
-            v-model="queryData.changeType"
+            v-model="queryData.operateType"
             style="width: 300px"
             multiple
             placeholder="默认选择全部"
             :popper-append-to-body="false"
           >
-            <el-option label="游戏管理" value="0"></el-option>
+            <el-option
+              v-for="item in enumSearchConfigOperate"
+              :key="item.code"
+              :label="item.description"
+              :value="item.code"
+            ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="操作人:">
@@ -72,13 +77,19 @@
           :header-cell-style="getRowClass"
           @sort-change="_changeTableSort"
         >
-          <el-table-column prop="announcementTitle" align="center" label="操作页面">
+          <el-table-column prop="operateEnum" align="center" label="操作页面">
+            <template slot-scope="scope">
+              {{ scope.row.operateEnum === 1 ? "游戏搜索管理" : "-" }}
+            </template>
           </el-table-column>
-          <el-table-column prop="changeType" align="center" label="变更类型">
+          <el-table-column prop="operateType" align="center" label="变更类型">
+            <template slot-scope="scope">
+              {{ typeFilter(scope.row.operateType, "enumSearchConfigOperate") }}
+            </template>
           </el-table-column>
-          <el-table-column align="center" label="变更前" prop="beforeValue">
+          <el-table-column align="center" label="变更前" prop="beforeModify">
           </el-table-column>
-          <el-table-column align="center" label="变更后" prop="afterValue">
+          <el-table-column align="center" label="变更后" prop="afterModify">
           </el-table-column>
           <el-table-column prop="createdBy" align="center" width="120" label="操作人">
           </el-table-column>
@@ -123,14 +134,18 @@ export default {
       dataList: []
     }
   },
-  computed: {},
+  computed: {
+    enumSearchConfigOperate() {
+      return this.globalDics.enumSearchConfigOperate
+    }
+  },
   mounted() {},
   methods: {
     loadData() {
       const [startTime, endTime] = this.searchTime || []
       let params = {
         ...this.queryData,
-        startTime: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : '',
+        beginTime: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : '',
         endTime: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
       }
       params = {
@@ -140,7 +155,7 @@ export default {
       this.loading = true
 
       this.$api
-        .activityInfoLogListAPI(params)
+        .getSearchConfigOperateSelect(params)
         .then((res) => {
           this.loading = false
           const {

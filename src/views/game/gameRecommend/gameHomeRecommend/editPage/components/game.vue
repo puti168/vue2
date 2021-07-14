@@ -18,8 +18,8 @@
 										v-model="form.description"
 										size="medium"
 										maxlength="100"
-                    minlength="2"
-                    placeholder="2~100字符"
+										minlength="2"
+										placeholder="2~100字符"
 										clearable
 										style="width: 365px"
 									></el-input>
@@ -204,7 +204,7 @@ import Sortable from 'sortablejs'
 export default {
 	components: {},
 	mixins: [list],
-    props: {gameDetails: {type: Object, default: () => {}}},
+	props: { gameDetails: { type: Object, default: () => {} } },
 	// props: { editFormData: { type: Object, default: () => ({}) } },
 	data() {
 		return {
@@ -237,9 +237,9 @@ export default {
 	},
 	mounted() {},
 	methods: {
-        back() {
-            this.$emit('back')
-        },
+		back() {
+			this.$emit('back')
+		},
 		// goBack() {
 		// 	this.$router.go(-1)
 		// },

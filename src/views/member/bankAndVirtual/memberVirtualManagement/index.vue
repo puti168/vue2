@@ -751,8 +751,8 @@ export default {
             if (this.checked) {
               params.blacklistStatus = 0
             } else {
-				params.blacklistStatus = 1
-			}
+              params.blacklistStatus = 1
+            }
             this.$api.setUpdateUserBankAndVirtualBindStatus(params).then((res) => {
               if (res.code === 200) {
                 this.$message.success('解绑成功')

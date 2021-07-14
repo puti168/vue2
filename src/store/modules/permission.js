@@ -27,8 +27,6 @@ export function filterAsyncRoutes(routes, roles) {
 	return res
 }
 
-// console.log('serviceMap', serviceMap)
-
 const state = {
 	routes: [],
 	addRoutes: [],
@@ -42,7 +40,7 @@ const mutations = {
 	SET_ROUTES: (state, value) => {
 		state.addRoutes = value.asyncRouterMap
 		state.routes = constantRoutes.concat(value.asyncRouterMap)
-		state.userBtns = value.userBtns
+		state.userBtns = value._newUserBtns
 	},
 	CLEAR_ROUTES: (state) => {
 		state.addRoutes = []
@@ -63,6 +61,14 @@ const sortRoutes = (routes) => {
 		}
 		return true
 	})
+}
+const res = []
+const filterBtns = (routes) => {
+	routes.forEach((route) => {
+		route.id && res.push(route.id)
+		route.length && filterBtns(route)
+	})
+	return res
 }
 
 const actions = {
@@ -90,9 +96,12 @@ const actions = {
 			asyncRouterMap = asyncRouterMap.concat(rootRoutes)
 			const id = window.sessionStorage.getItem('activeId')
 			id ? store.dispatch('permission/setNowroute', id) : ''
+			// console.log('userBtns', userBtns)
+			const _newUserBtns = filterBtns(userBtns)
+			// console.log('_newUserBtns', _newUserBtns)
 			commit('SET_ROUTES', {
 				asyncRouterMap,
-				userBtns
+				_newUserBtns
 			})
 			resolve(asyncRouterMap)
 		})
@@ -121,17 +130,16 @@ const actions = {
 // 路由鉴权
 function filterAsyncRouter(asyncRouterMap) {
 	return asyncRouterMap.filter((route) => {
-		if (route.type !== 0) {
+		if (route.type === '0') {
 			if (!route.component) {
 				if (route.level !== 3) {
 					route.level === 1
 						? (route.component = Layout)
 						: (route.component = Layout2)
 				} else {
-					route.level !== 4
-						? (route.component = (resolve) =>
-								require(['@/views' + route.path + '/index'], resolve))
-						: null
+					route.component = (resolve) =>
+						require(['@/views' + route.path + '/index'], resolve)
+					route.bottom && route.bottom.length && userBtns.push(route.bottom)
 				}
 			}
 			serviceMap.forEach((item) => {
@@ -152,9 +160,6 @@ function filterAsyncRouter(asyncRouterMap) {
 						const filePath = fullPath.substr(pos + 1)
 						route.name = filePath
 						// 按钮id
-					}
-					if (route.level === 4) {
-						userBtns.push(route.id)
 					}
 				}
 			})
