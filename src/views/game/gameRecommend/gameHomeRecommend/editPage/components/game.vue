@@ -15,7 +15,7 @@
 							<el-col :span="12">
 								<el-form-item label="模块描述:">
 									<el-input
-										v-model="form.description"
+										v-model="form.moduleDesc"
 										size="medium"
 										maxlength="100"
 										minlength="2"
@@ -210,8 +210,7 @@ export default {
 		return {
 			list: {},
 			form: {
-				icon: '',
-				gameName: ''
+                moduleDesc: undefined
 			},
 			loading: false,
 			queryData: {
@@ -222,11 +221,22 @@ export default {
 		}
 	},
 	computed: {},
-	watch: {
-		editFormData(val) {
-			this.editData = { ...val }
-		}
-	},
+    watch: {
+        gameDetails: {
+            handler(newVal, oldVal) {
+                if (newVal) {
+                    this.form = { ...newVal }
+                } else {
+                    this.form = {
+                        moduleDesc: undefined
+                    }
+                }
+                console.log('formData', this.form)
+            },
+            deep: true,
+            immediate: true
+        }
+    },
 	created() {
 		// 拖动排序
 		document.body.ondrop = function(event) {
