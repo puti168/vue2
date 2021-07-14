@@ -1,7 +1,7 @@
 <template>
 	<div class="mix-container">
 		<div class="head">
-			<span class="title">{{ gameDetails.moduleName }}</span>
+			<span class="title">{{ gameDetails.moduleName }}模块</span>
 			<div class="right-btn">
 				<el-button plain @click="back">取消</el-button>
 				<el-button type="success" @click="confirm(true)">保存</el-button>
@@ -33,10 +33,34 @@
 								></el-input>
 							</el-form-item>
 						</el-col>
+                        <el-col :span="12">
+                            <el-form-item label="滚动数量限制:" prop="scrollingNum">
+                                <el-input
+                                    v-model="formData.scrollingNum"
+                                    size="medium"
+                                    maxlength="10"
+                                    clearable
+                                    style="width: 365px"
+                                    @keyup.native="checkValue($event)"
+                                ></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="12">
+                            <el-form-item label="全部游戏数量:" prop="allGameNum">
+                                <el-input
+                                    v-model="formData.allGameNum"
+                                    size="medium"
+                                    maxlength="10"
+                                    clearable
+                                    style="width: 365px"
+                                    @keyup.native="checkValue($event)"
+                                ></el-input>
+                            </el-form-item>
+                        </el-col>
 						<el-col :span="12">
-							<el-form-item label="模块描述:" prop="description">
+							<el-form-item label="模块描述:">
 								<el-input
-									v-model="formData.description"
+									v-model="formData.moduleDesc"
 									type="textarea"
 									size="medium"
 									maxlength="100"
@@ -63,7 +87,9 @@ export default {
 			formData: {
 				mainTitleInfo: undefined,
 				subTitleInfo: undefined,
-				description: undefined
+                scrollingNum: undefined,
+                allGameNum: undefined,
+				moduleDesc: undefined
 			}
 		}
 	},
@@ -96,7 +122,7 @@ export default {
 						trigger: 'blur'
 					}
 				],
-				description: [
+				moduleDesc: [
 					{
 						min: 2,
 						max: 100,
@@ -108,14 +134,23 @@ export default {
 		}
 	},
 	watch: {
-		// addGameDetails: {
-		//   handler(newV, old) {
-		//     console.log(66666, newV)
-		//     this.formData = { ...newV }
-		//     console.log('formData', this.formData)
-		//   },
-		//   deep: true
-		// }
+		gameDetails: {
+			handler(newVal, oldVal) {
+				console.log(66666, newVal)
+				if (newVal) {
+					this.formData = { ...newVal }
+				} else {
+					this.formData = {
+						mainTitleInfo: undefined,
+						subTitleInfo: undefined,
+						moduleDesc: undefined
+					}
+				}
+				console.log('formData', this.formData)
+			},
+			deep: true,
+			immediate: true
+		}
 	},
 	created() {},
 	mounted() {},
@@ -123,19 +158,28 @@ export default {
 		back() {
 			this.$emit('back')
 		},
+        checkValue(e) {
+            // const { value } = e.target
+            // console.log(e.target.value)
+            e.target.value = e.target.value.replace(/[^\d]/g, '')
+        },
 		confirm(action) {
 			const { moduleId } = this.gameDetails
 			const params = {
 				...this.formData,
 				moduleId
 			}
+			delete params.updatedAt
 			this.$api.gameHomeRecommendDetailsEditAPI(params).then((res) => {
-				const { code, data, msg } = res
+				this.loading = false
+				const { code, msg } = res
 				if (code === 200) {
-					this.loading = false
-					console.log('请求到值了', data)
+					this.$message({
+						message: '保存成功',
+						type: 'success'
+					})
+					this.$parent.back()
 				} else {
-					this.loading = false
 					this.$message({
 						message: msg,
 						type: 'error'

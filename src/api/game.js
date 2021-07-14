@@ -291,6 +291,15 @@ export function gameHomeRecommendListAPI(data) {
 	})
 }
 
+// 游戏==> 首页推荐位 ==> 列表拖动
+export function gameHomeRecommendListSortAPI(data) {
+	return request({
+		url: '/gameCommonModule/gameModuleSort',
+		method: 'post',
+		data
+	})
+}
+
 // 游戏==> 首页推荐位 ==> 列表状态变更
 export function recommendStatusChangeAPI(data) {
 	return request({
@@ -317,6 +326,14 @@ export function gameHomeRecommendDetailsEditAPI(data) {
 		data
 	})
 }
+// 游戏推荐==> 操作记录
+export function GameCommonModuleOperateRecord(data) {
+	return request({
+		url: '/gameCommonModule/operateRecord',
+		method: 'post',
+		data
+	})
+}
 // 游戏==> 分页查询游戏搜索管理操作记录
 export function getSearchConfigOperateSelect(data) {
 	return request({
@@ -325,7 +342,6 @@ export function getSearchConfigOperateSelect(data) {
 		data
 	})
 }
-
 export default {
 	gameAssortListAPI,
 	gameList,
@@ -362,8 +378,10 @@ export default {
 	gameSearchUpdateAPI,
 	gameSearchDeleteAPI,
 	gameHomeRecommendListAPI,
+	gameHomeRecommendListSortAPI,
 	recommendStatusChangeAPI,
 	gameHomeRecommendDetailsAPI,
 	gameHomeRecommendDetailsEditAPI,
+	GameCommonModuleOperateRecord,
 	getSearchConfigOperateSelect
 }
