@@ -31,6 +31,7 @@
 						重置
 					</el-button>
 					<el-button
+                        v-if="hasPermission('369')"
 						type="success"
 						icon="el-icon-folder-add"
 						size="medium"
@@ -137,6 +138,7 @@
 				>
 					<template slot-scope="scope">
 						<el-button
+                            v-if="hasPermission('365')"
 							type="primary"
 							size="medium"
 							@click.native.prevent="popupPwdDialog(scope.row)"
@@ -144,6 +146,7 @@
 							重置密码
 						</el-button>
 						<el-button
+                            v-if="hasPermission('363')"
 							type="primary"
 							icon="el-icon-edit"
 							size="medium"
@@ -152,6 +155,7 @@
 							编辑
 						</el-button>
 						<el-button
+                            v-if="hasPermission('364')"
 							type="danger"
 							icon="el-icon-delete"
 							:disabled="scope.row.status === '1'"
