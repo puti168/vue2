@@ -355,7 +355,7 @@
             prop="changeBefore"
             align="center"
             label="账变前金额"
-            width="120px"
+            width="200px"
             sortable="custom"
           >
           </el-table-column>
@@ -363,7 +363,7 @@
             prop="amount"
             align="center"
             label="账变金额"
-            width="120px"
+            width="200px"
             sortable="custom"
           >
           </el-table-column>
@@ -371,7 +371,7 @@
             prop="changeAfter"
             align="center"
             label="账变后金额"
-            width="120px"
+            width="200px"
             sortable="custom"
           >
           </el-table-column>

@@ -370,7 +370,7 @@
             <template slot-scope="scope">
               <el-button
                 v-if="scope.row.status === 0"
-                :disabled="loading"
+                :disabled="scope.row.tagStatus === 0"
                 type="success"
                 size="medium"
                 class="noicon"
@@ -380,7 +380,6 @@
               </el-button>
               <el-button
                 v-else
-                :disabled="loading"
                 type="danger"
                 size="medium"
                 class="noicon"

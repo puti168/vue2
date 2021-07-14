@@ -173,7 +173,7 @@
             width="180px"
           >
             <template slot-scope="scope">
-              {{ scope.row.windControlName !== null ? scope.row.windControlName : "-" }}
+              {{ scope.row.windControlName ? scope.row.windControlName : "-" }}
             </template>
           </el-table-column>
           <el-table-column prop="transferOut" align="center" label="转出钱包">
@@ -189,7 +189,7 @@
               }}
             </template>
           </el-table-column>
-          <el-table-column prop="amount" align="center" label="转账金额">
+          <el-table-column prop="amount" align="center" label="转账金额" width="200px">
           </el-table-column>
           <el-table-column
             prop="createDt"

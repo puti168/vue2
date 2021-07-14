@@ -208,7 +208,7 @@
               <span
 class="redColor"
 >风控层级：{{
-                  scope.row.ipControlName !== "" ? scope.row.ipControlName : "-"
+                  scope.row.ipControlName ? scope.row.ipControlName : "-"
                 }}</span>
             </template>
           </el-table-column>
@@ -222,24 +222,20 @@ class="redColor"
               <span
 class="redColor"
 >风控层级：{{
-                  scope.row.deviceNoControlName !== null
-                    ? scope.row.deviceNoControlName
-                    : "-"
+                  scope.row.deviceNoControlName ? scope.row.deviceNoControlName : "-"
                 }}</span>
             </template>
           </el-table-column>
           <el-table-column prop="payType" align="center" label="支付方式">
             <template slot-scope="scope">
-              {{
-                typeFilter(scope.row.payType, "enumPaymentDepositType")
-
-              }}
+              {{ typeFilter(scope.row.payType, "enumPaymentDepositType") }}
             </template>
           </el-table-column>
           <el-table-column
             prop="orderAmount"
             align="center"
             sortable="custom"
+            width="200px"
             label="存款金额"
           >
           </el-table-column>

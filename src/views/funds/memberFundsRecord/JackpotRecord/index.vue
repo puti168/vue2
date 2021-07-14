@@ -184,6 +184,7 @@
             prop="amount"
             align="center"
             label="彩金金额"
+            width="200px"
             sortable="custom"
           >
           </el-table-column>

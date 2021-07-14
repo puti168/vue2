@@ -255,7 +255,7 @@
               <span
 class="redColor"
 >风控层级：{{
-                  scope.row.ipControlName !== null ? scope.row.ipControlName : "-"
+                  scope.row.ipControlName ? scope.row.ipControlName : "-"
                 }}</span>
             </template>
           </el-table-column>
@@ -269,7 +269,7 @@ class="redColor"
               <span
 class="redColor"
 >风控层级：{{
-                  scope.row.deviceNoControlName !== null
+                  scope.row.deviceNoControlName
                     ? scope.row.deviceNoControlName
                     : "-"
                 }}</span>
@@ -292,6 +292,7 @@ class="redColor"
           <el-table-column
             prop="orderAmount"
             align="center"
+            width="200px"
             label="提款金额"
             sortable="custom"
           >
