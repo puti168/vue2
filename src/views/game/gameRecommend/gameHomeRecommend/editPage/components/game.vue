@@ -208,35 +208,31 @@ export default {
 	// props: { editFormData: { type: Object, default: () => ({}) } },
 	data() {
 		return {
+            loading: false,
 			list: {},
 			form: {
-                moduleDesc: undefined
-			},
-			loading: false,
-			queryData: {
-				historyGameLimit: undefined,
-				hotSearch: undefined
+				moduleDesc: undefined
 			},
 			dataList: []
 		}
 	},
 	computed: {},
-    watch: {
-        gameDetails: {
-            handler(newVal, oldVal) {
-                if (newVal) {
-                    this.form = { ...newVal }
-                } else {
-                    this.form = {
-                        moduleDesc: undefined
-                    }
-                }
-                console.log('formData', this.form)
-            },
-            deep: true,
-            immediate: true
-        }
-    },
+	watch: {
+		gameDetails: {
+			handler(newVal, oldVal) {
+				if (newVal) {
+					this.form = { ...newVal }
+				} else {
+					this.form = {
+						moduleDesc: undefined
+					}
+				}
+				console.log('formData', this.form)
+			},
+			deep: true,
+			immediate: true
+		}
+	},
 	created() {
 		// 拖动排序
 		document.body.ondrop = function(event) {
@@ -244,15 +240,22 @@ export default {
 			event.stopPropagation()
 		}
 		this.columnDrop()
+		this.getDetails()
 	},
 	mounted() {},
 	methods: {
 		back() {
 			this.$emit('back')
 		},
-		// goBack() {
-		// 	this.$router.go(-1)
-		// },
+		getDetails() {
+			this.$api.gameSpecialDetailsAPI().then((res) => {
+				const { code, data } = res
+				if (code === 200) {
+                    this.dataList = data
+				}
+				console.log('res', res)
+			})
+		},
 		confirm() {},
 		deleteRow(row) {
 			console.log(row)
@@ -344,10 +347,6 @@ export default {
 		},
 		reset() {
 			this.$refs['form'].resetFields()
-			this.queryData = {
-				historyGameLimit: undefined,
-				hotSearch: undefined
-			}
 		},
 		changeStatus(row) {
 			console.log(row)
