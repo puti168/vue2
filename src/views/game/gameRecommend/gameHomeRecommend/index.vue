@@ -439,7 +439,7 @@ export default {
 		disable(val) {
 			//  commonId,
 			const { status, id } = val
-			const key = status === 1 ? 0 : 1
+			// const key = status === 1 ? 0 : 1
 			const loading = this.$loading({
 				lock: true,
 				text: 'Loading',
@@ -458,7 +458,7 @@ export default {
 			)
 				.then(() => {
 					this.$api
-						.recommendStatusChangeAPI({ id, moduleStatus: key })
+						.recommendStatusChangeAPI({ id, moduleStatus: status === 1 ? 0 : 1 })
 						.then((res) => {
 							const { code } = res
 							loading.close()

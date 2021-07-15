@@ -151,7 +151,7 @@
 							<el-table-column align="center" label="操作">
 								<template slot-scope="scope">
 									<el-button
-										:disabled="loading"
+										:disabled="scope.row.status === '0'"
 										:type="scope.row.status === 1 ? 'danger' : 'success'"
 										size="medium"
 										class="noicon"
@@ -210,7 +210,8 @@ export default {
 			},
 			dataList: [],
 			idArray: [],
-			gameAssortDicList: []
+			gameAssortDicList: [],
+			copyArr: []
 		}
 	},
 	computed: {},
@@ -249,7 +250,7 @@ export default {
 		checkValue(e) {
 			e.target.value = e.target.value.replace(/[^\d]/g, '')
 		},
-		getDetails() {
+		getDetails(arr) {
 			this.dataList = []
 			this.loading = true
 			this.$api
@@ -329,7 +330,7 @@ export default {
 										message: '删除失败!'
 									})
 								}
-								this.loadData()
+								this.getDetails()
 							})
 							.catch(() => {
 								loading.close()
@@ -403,9 +404,20 @@ export default {
 				assortId: undefined,
 				mainTitleInfo: undefined,
 				moduleId: undefined,
-				status: 0,
+				status: '0',
 				subTitleInfo: undefined
 			})
+			// this.copyArr.push({
+			// 	createdAt: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
+			// 	createdBy: getUsername(),
+			// 	displayOrder,
+			// 	allGameNum: undefined,
+			// 	assortId: undefined,
+			// 	mainTitleInfo: undefined,
+			// 	moduleId: undefined,
+			// 	status: '0',
+			// 	subTitleInfo: undefined
+			// })
 		},
 
 		// 列拖动
@@ -417,14 +429,22 @@ export default {
 				Sortable.create(wrapperTr, {
 					animation: 300,
 					delay: 0,
-					onEnd: ({ newIndex, oldIndex }) => {
-						console.log('newIndex', newIndex)
-						console.log('oldIndex', oldIndex)
-						const currRow = _this.dataList.splice(oldIndex, 1)[0]
-						_this.dataList.splice(newIndex, 0, currRow)
-						if (newIndex !== oldIndex) {
-							_this.dataList.forEach((item, idx) => {
-								item.displayOrder = idx + 1
+					onEnd: (evt) => {
+						// console.log('newIndex', newIndex)
+						// console.log('oldIndex', oldIndex)
+						console.log('_this.dataList', _this.dataList)
+						// console.log('_this.dataList', _this.dataList[newIndex])
+						// const currRow = _this.dataList.splice(oldIndex, 1)[0]
+						// _this.dataList.splice(newIndex, 0, currRow)
+                        const oldItem = _this.dataList[evt.oldIndex]
+                        _this.dataList.splice(evt.oldIndex, 1)
+                        _this.dataList.splice(evt.newIndex, 0, oldItem)
+						if (evt.newIndex !== evt.oldIndex) {
+							_this.dataList.map((item, idx) => {
+							    item.displayOrder = idx + 1
+							})
+                            _this.dataList = _this.dataList.sort((a, b) => {
+								return a.displayOrder - b.displayOrder
 							})
 						}
 					}
