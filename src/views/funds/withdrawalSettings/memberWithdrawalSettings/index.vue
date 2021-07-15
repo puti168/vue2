@@ -5,6 +5,7 @@
         <el-form ref="form" :inline="true" :model="queryData">
           <el-form-item>
             <el-button
+              v-if="hasPermission('256')"
               type="primary"
               :disabled="loading"
               size="medium"
@@ -15,6 +16,7 @@
             </el-button>
 
             <el-button
+              v-if="hasPermission('254')"
               type="primary"
               class="pattern"
               :disabled="loading"
@@ -38,7 +40,7 @@
         >
           <el-table-column prop="operating" align="center" label="操作" width="140px">
             <template slot-scope="scope">
-              <el-link type="primary" size="medium" @click="edit(scope.row)">
+              <el-link v-if="hasPermission('255')" type="primary" size="medium" @click="edit(scope.row)">
                 修改
               </el-link>
             </template>

@@ -3,6 +3,7 @@
     <div class="view-container dealer-container">
       <div class="head flex-h-end">
         <el-button
+           v-if="hasPermission('257')"
           type="primary"
           style="padding: 0 15px"
           :disabled="loading"
@@ -30,11 +31,11 @@
           ></el-table-column>
           <el-table-column prop="operating" align="center" label="操作">
             <template slot-scope="scope">
-              <el-link type="primary" size="medium" @click="edit(scope.row)">
+              <el-link v-if="hasPermission('258')" type="primary" size="medium" @click="edit(scope.row)">
                 修改
               </el-link>
               <el-link
-                v-if="scope.row.withdrawStatus !== 0 && scope.row.proxyAccount !== '0'"
+                v-if="scope.row.withdrawStatus !== 0 && scope.row.proxyAccount !== '0' && hasPermission('259')"
                 type="primary"
                 size="medium"
                 @click="deleteLabel(scope.row)"

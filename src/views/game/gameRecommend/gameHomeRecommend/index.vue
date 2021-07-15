@@ -95,6 +95,7 @@
 							>
 								<template slot-scope="scope">
 									<el-button
+									    v-if="hasPermission('1020211')"
 										:disabled="loading"
 										type="danger"
 										size="medium"

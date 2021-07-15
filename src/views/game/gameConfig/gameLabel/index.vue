@@ -61,6 +61,7 @@
 							重置
 						</el-button>
 						<el-button
+						    v-if="hasPermission('1020119')"
 							type="warning"
 							icon="el-icon-folder"
 							:disabled="loading"
@@ -163,26 +164,22 @@
 					>
 						<template slot-scope="scope">
 							<el-button
-								v-if="scope.row.labelStatus === 0"
+							     v-if="hasPermission('1020120')"
 								:disabled="loading"
-								type="success"
+								:type="scope.row.labelStatus ? 'danger' : 'success'"
 								size="medium"
 								class="noicon"
 								@click="switchClick(scope.row)"
 							>
-								开启
+								<div v-if="scope.row.labelStatus">
+										禁用
+									</div>
+									<div v-else>
+										开启
+									</div>
 							</el-button>
 							<el-button
-								v-else
-								:disabled="loading"
-								type="danger"
-								size="medium"
-								class="noicon"
-								@click="switchClick(scope.row)"
-							>
-								禁用
-							</el-button>
-							<el-button
+							    v-if="hasPermission('1020121')"
 								type="primary"
 								icon="el-icon-edit"
 								:disabled="scope.row.labelStatus === 1"
@@ -193,6 +190,7 @@
 							</el-button>
 
 							<el-button
+							    v-if="hasPermission('1020122')"
 								type="warning"
 								icon="el-icon-delete"
 								:disabled="scope.row.labelStatus === 1"

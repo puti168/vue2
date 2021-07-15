@@ -451,6 +451,7 @@
 					>
 						<template slot-scope="scope">
 							<el-button
+							    v-if="hasPermission('1020312')"
 								type="primary"
 								icon="el-icon-view"
 								size="medium"
