@@ -1378,9 +1378,9 @@ export default {
 
     changeStatus(val) {
       this.$confirm(
-        `<strong>是否对该配置进行${val === 0 ? '开启' : '禁用'}操作?</strong></br><span>${
-          val.activityAppTypeName
-        }</span>`,
+        `<strong>是否对该配置进行${
+          val === 0 ? '开启' : '禁用'
+        }操作?</strong></br><span style='font-size:12px;color:#c1c1c1'>一旦操作将会立即生效</span>`,
         '确认提示',
         {
           dangerouslyUseHTMLString: true,
