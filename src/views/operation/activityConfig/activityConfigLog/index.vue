@@ -396,8 +396,8 @@
 								v-model="queryData.activityId"
 								clearable
 								size="medium"
-								:maxlength="10"
-								style="width: 180px"
+								:maxlength="20"
+								style="width: 210px"
 								placeholder="请输入"
 								@keyup.enter.native="enterSearch"
 							></el-input>
@@ -605,8 +605,8 @@
 								v-model="queryData.activityId"
 								clearable
 								size="medium"
-								:maxlength="10"
-								style="width: 180px"
+								:maxlength="20"
+								style="width: 210px"
 								placeholder="请输入"
 								@keyup.enter.native="enterSearch"
 							></el-input>

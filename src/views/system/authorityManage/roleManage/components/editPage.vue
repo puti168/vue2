@@ -34,6 +34,7 @@
 							type="textarea"
 							placeholder="请输入内容"
 							clearable
+                            :disabled="updateStatus"
 							maxlength="50"
 							show-word-limit
 							style="width: 365px"
@@ -139,7 +140,7 @@ export default {
 					message: '请填入备注',
 					trigger: 'blur'
 				},
-				{ min: 2, max: 300, message: '长度在 2 到 300 个字符', trigger: 'blur' }
+				{ min: 2, max: 50, message: '长度在 2 到 50 个字符', trigger: 'blur' }
 			]
 			return {
 				roleName,
