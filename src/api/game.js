@@ -318,6 +318,15 @@ export function gameHomeRecommendDetailsAPI(data) {
 	})
 }
 
+// 游戏==> 首页推荐位 ==> 游戏专题 ===> 详情
+export function gameSpecialDetailsAPI(params) {
+	return request({
+		url: '/gameCommonModule/gameTopicModuleDetail',
+		method: 'get',
+		params
+	})
+}
+
 // 游戏==> 首页推荐位 ==> 列表 ===> 子模块编辑
 export function gameHomeRecommendDetailsEditAPI(data) {
 	return request({
@@ -378,6 +387,7 @@ export default {
 	gameSearchUpdateAPI,
 	gameSearchDeleteAPI,
 	gameHomeRecommendListAPI,
+	gameSpecialDetailsAPI,
 	gameHomeRecommendListSortAPI,
 	recommendStatusChangeAPI,
 	gameHomeRecommendDetailsAPI,
