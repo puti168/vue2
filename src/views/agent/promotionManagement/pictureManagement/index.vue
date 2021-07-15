@@ -127,6 +127,7 @@
 								重置
 							</el-button>
 							<el-button
+								v-if="hasPermission('285')"
 								type="warning"
 								icon="el-icon-folder-add"
 								size="medium"
@@ -244,6 +245,7 @@
 									预览
 								</el-button>
 								<el-button
+									v-if="hasPermission('286')"
 									type="primary"
 									icon="el-icon-edit"
 									:disabled="loading"
@@ -253,6 +255,7 @@
 									编辑信息
 								</el-button>
 								<el-button
+									v-if="hasPermission('287')"
 									:disabled="loading"
 									type="danger"
 									size="medium"

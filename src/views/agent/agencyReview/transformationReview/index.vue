@@ -187,6 +187,7 @@
 						>
 							<template slot-scope="scope">
 								<el-button
+								v-if="hasPermission('281')"
 									:class="
 										Number(scope.row.auditStep) === 1 &&
 										scope.row.auditName !== name

@@ -1,10 +1,10 @@
 <template>
   <div class="game-container report-container">
     <el-tabs v-model="activeName" @tab-click="handleClick">
-      <el-tab-pane label="代理等级配置" name="agentLevelConfig">
+      <el-tab-pane v-if="hasPermission('220')" label="代理等级配置" name="agentLevelConfig">
         <agent-level-config />
       </el-tab-pane>
-      <el-tab-pane label="返佣等级配置" name="backCommissionLevelConfig">
+      <el-tab-pane v-if="hasPermission('221')" label="返佣等级配置" name="backCommissionLevelConfig">
         <back-commission-level-config />
       </el-tab-pane>
     </el-tabs>

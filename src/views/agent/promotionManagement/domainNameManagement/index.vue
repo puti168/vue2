@@ -122,6 +122,7 @@
               重置
             </el-button>
             <el-button
+              v-if="hasPermission('282')"
               type="warning"
               icon="el-icon-folder"
               :disabled="loading"
@@ -172,9 +173,9 @@
             </template>
           </el-table-column>
           <el-table-column prop="domainType" align="center" label="域名类型">
-             <template slot-scope="scope">
-               {{ typeFilter(scope.row.domainType, "enumProxyDomainTypeOperate") }}
-              </template>
+            <template slot-scope="scope">
+              {{ typeFilter(scope.row.domainType, "enumProxyDomainTypeOperate") }}
+            </template>
           </el-table-column>
           <el-table-column prop="remark" align="center" label="备注"></el-table-column>
           <el-table-column prop="createdBy" align="center" label="创建人" width="120px">
@@ -219,6 +220,7 @@
                 短链接
               </el-button>
               <el-button
+                v-if="hasPermission('283')"
                 type="primary"
                 icon="el-icon-edit"
                 :disabled="loading"
@@ -229,6 +231,7 @@
               </el-button>
 
               <el-button
+                v-if="hasPermission('284')"
                 :disabled="scope.row.status === '1'"
                 type="danger"
                 size="medium"
@@ -328,10 +331,9 @@ export default {
     domainStatusType() {
       return this.globalDics.domainStatusType
     },
-   enumProxyDomainTypeOperate() {
+    enumProxyDomainTypeOperate() {
       return this.globalDics.enumProxyDomainTypeOperate
     }
-
   },
   mounted() {},
   methods: {
