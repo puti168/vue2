@@ -169,24 +169,15 @@
               {{ typeFilter(scope.row.rebateStatus, "rebateType") }}
             </template>
           </el-table-column>
-          <el-table-column
-            prop="validBetAmount"
-            align="center"
-            label="有效金额 "
-          ></el-table-column>
+          <el-table-column prop="validBetAmount" align="center" label="有效金额 " width="200px">
+          </el-table-column>
           <el-table-column prop="rebateRatio" align="center" label="返水比例">
             <template slot-scope="scope"> {{ scope.row.rebateRatio }}% </template>
           </el-table-column>
-          <el-table-column
-            prop="rebateAmount"
-            align="center"
-            label="返水金额"
-          ></el-table-column>
-          <el-table-column
-            prop="rebateAt"
-            align="center"
-            label="返水时间"
-          ></el-table-column>
+          <el-table-column prop="rebateAmount" align="center" label="返水金额" width="200px">
+          </el-table-column>
+          <el-table-column prop="rebateAt" align="center" label="返水时间" width="156px">
+          </el-table-column>
         </el-table>
         <!-- 分页 -->
         <el-pagination

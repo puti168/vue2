@@ -142,6 +142,7 @@
 							重置
 						</el-button>
 						<el-button
+						    v-if="hasPermission('1020111')"
 							type="warning"
 							icon="el-icon-folder"
 							:disabled="loading"
@@ -302,7 +303,7 @@
 					>
 						<template slot-scope="scope">
 							<el-button
-								v-if="Number(scope.row.gameStatus) !== 0"
+								v-if="Number(scope.row.gameStatus) !== 0 && hasPermission('1020113')"
 								:disabled="loading"
 								type="danger"
 								size="medium"
@@ -312,7 +313,7 @@
 								禁用
 							</el-button>
 							<el-button
-								v-if="Number(scope.row.gameStatus) !== 1"
+								v-if="Number(scope.row.gameStatus) !== 1 && hasPermission('1020112')"
 								:disabled="loading"
 								type="success"
 								size="medium"
@@ -322,7 +323,7 @@
 								开启
 							</el-button>
 							<el-button
-								v-if="Number(scope.row.gameStatus) !== 2"
+								v-if="Number(scope.row.gameStatus) !== 2 && hasPermission('1020112')"
 								:disabled="loading"
 								type="warning"
 								size="medium"
@@ -332,6 +333,7 @@
 								维护
 							</el-button>
 							<el-button
+							    v-if="hasPermission('1020114')"
 								type="primary"
 								icon="el-icon-edit"
 								:disabled="loading || Number(scope.row.gameStatus) === 1"

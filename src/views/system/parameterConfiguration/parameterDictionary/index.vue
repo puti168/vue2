@@ -15,7 +15,7 @@
 							@keyup.enter.native="enterSearch"
 						></el-input>
 					</el-form-item>
-					<el-form-item label="创建人:">
+					<el-form-item label="字典名称:">
 						<el-input
 							v-model="queryData.createdBy"
 							clearable
@@ -203,106 +203,130 @@ const endTime = dayjs()
 	.endOf('day')
 	.valueOf()
 export default {
-	name: routerNames.memberLabelConfig,
-	components: {},
-	mixins: [list],
-	data() {
-		return {
-			form: {
-				name: ''
-			},
-			searchTime: [startTime, endTime],
-			queryData: {},
-			tableData: [],
-			dialogFormVisible: false,
-			dialogForm: {},
-			gameList: [],
-			dialogGameVisible: false,
-			title: '',
-			labelName: '',
-			id: '',
-			page: 1,
-			size: 5,
-			summary: 0
-		}
-	},
-	computed: {
-		//  rules() {
-		//      const tags = (rule, value, callback) => {
-		//      }
-		//     const tag = [{ required: true, validator: tags, message: '请输入标签', trigger: 'blur' }]
-		//     const valueType = [{ required: true, message: '请输入类型', trigger: 'blur' }]
-		//     const description = [{ required: true, message: '请输入注释', trigger: 'blur' }]
-		//     const v = [{ required: true, message: '请输入值', trigger: 'blur' }]
-		//     return {
-		//       tag,
-		//       valueType,
-		//       description,
-		//       v
-		//     }
-		//   }
-	},
-	mounted() {},
+  name: routerNames.memberLabelConfig,
+  components: {},
+  mixins: [list],
+  data() {
+    return {
+      form: {
+        name: ''
+      },
+      searchTime: [startTime, endTime],
+      queryData: {},
+      tableData: [],
+      dialogFormVisible: false,
+      dialogForm: {},
+      gameList: [],
+      dialogGameVisible: false,
+      title: '',
+      labelName: '',
+      id: '',
+      page: 1,
+      size: 5,
+      summary: 0
+    }
+  },
+  computed: {
+     rules() {
+         const tagszn = (rule, value, callback) => {
+            var reg = /^[\u4E00-\u9FA5]+$/
+           if (reg.test(value)) {
+             callback()
+           } else {
+              callback(new Error('只能输入中文'))
+           }
+         }
+         const valueTypezn = (rule, value, callback) => {
+            var reg = /^[\u4E00-\u9FA5]+$/
+           if (reg.test(value)) {
+             callback()
+           } else {
+              callback(new Error('只能输入中文'))
+           }
+         }
+          const descriptionzn = (rule, value, callback) => {
+            var reg = /^[\u4E00-\u9FA5]+$/
+           if (reg.test(value)) {
+             callback()
+           } else {
+              callback(new Error('只能输入中文'))
+           }
+         }
+          const vzn = (rule, value, callback) => {
+            var reg = /^[\u4E00-\u9FA5]+$/
+           if (reg.test(value)) {
+             callback()
+           } else {
+              callback(new Error('只能输入中文'))
+           }
+         }
+        const tag = [{ required: true, validator: tagszn, trigger: 'blur' }]
+        const valueType = [{ required: true, validator: valueTypezn, trigger: 'blur' }]
+        const description = [{ required: true, validator: descriptionzn, trigger: 'blur' }]
+        const v = [{ required: true, validator: vzn, trigger: 'blur' }]
+        return {
+          tag,
+          valueType,
+          description,
+          v
+        }
+      }
+  },
+  mounted() {},
 
-	methods: {
-		loadData() {
-			this.loading = true
-			let params = {
-				...this.queryData
-			}
-			params = {
-				...this.getParams(params)
-			}
-			this.$api
-				.getkvconfigQueryList(params)
-				.then((res) => {
-					if (res.code === 200) {
-						this.tableData = res.data.records
-						this.total = res.data.total
-						this.loading = false
-					} else {
-						this.loading = false
-					}
-				})
-				.catch(() => {
-					this.loading = false
-				})
-		},
-		subAddOrEidt() {
-			console.log(this.title)
-			const data = {}
-			data.description = this.dialogForm.description
-			data.k = this.dialogForm.k
-			data.tag = this.dialogForm.tag
-			data.valueType = this.dialogForm.valueType
-			data.v = this.dialogForm.v
-			this.$refs.formSub.validate((valid) => {
-				console.log(valid, '编辑')
-				if (valid) {
-					if (this.title === '编辑') {
-						data.id = this.dialogForm.id
-						this.$api.getkvconfigUpdate(data).then((res) => {
-							if (res.code === 200) {
-								this.$message.success('修改成功')
-								this.loadData()
-							}
-							this.dialogFormVisible = false
-						})
-					}
-				}
-			})
-		},
-		reset() {
-			this.queryData = {}
-			this.pageNum = 1
-			this.loadData()
-		},
-		edit(val) {
-			this.title = '编辑'
-			this.dialogForm.k = val.k
-			this.dialogFormVisible = true
-		}
-	}
+  methods: {
+    loadData() {
+      this.loading = true
+      let params = {
+        ...this.queryData
+      }
+      params = {
+        ...this.getParams(params)
+      }
+      this.$api
+        .getkvconfigQueryList(params)
+        .then((res) => {
+          if (res.code === 200) {
+            this.tableData = res.data.records
+            this.total = res.data.total
+            this.loading = false
+          } else {
+            this.loading = false
+          }
+        })
+        .catch(() => {
+          this.loading = false
+        })
+    },
+    subAddOrEidt() {
+      const data = {...this.dialogForm}
+      data.id = this.dialogForm.id
+     console.log(this.dialogForm.id, '小明')
+      this.$refs.formSub.validate((valid) => {
+        if (valid) {
+            this.$api.getkvconfigUpdate(data).then((res) => {
+              if (res.code === 200) {
+                this.$message.success('修改成功')
+                this.loadData()
+              }
+              this.dialogFormVisible = false
+            })
+        }
+      })
+    },
+    reset() {
+      this.queryData = {}
+      this.pageNum = 1
+      this.loadData()
+    },
+    edit(val) {
+      console.log(val)
+      this.title = '编辑'
+      this.dialogForm.k = val.k
+      this.dialogFormVisible = true
+      this.dialogForm.id = val.id
+    }
+  }
 }
 </script>
 

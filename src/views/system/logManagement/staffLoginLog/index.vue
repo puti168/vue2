@@ -86,12 +86,12 @@
         </el-table>
         <!-- 分页 -->
         <el-pagination
-          v-show="dataList.length > 0"
           :current-page.sync="pageNum"
+          class="pageValue"
           background
           layout="total, sizes,prev, pager, next, jumper"
           :page-size="pageSize"
-          :page-sizes="$store.getters.pageSizes"
+          :page-sizes="pageSizes"
           :total="total"
           @current-change="handleCurrentChange"
           @size-change="handleSizeChange"
@@ -140,9 +140,13 @@ export default {
   methods: {
     loadData() {
       this.loading = true
-      const params = {
+      let params = {
         ...this.queryData
       }
+      params = {
+        ...this.getParams(params)
+      }
+
       this.$api
         .getSystemUserLoginRecordQueryLoginLog(params)
         .then((res) => {
@@ -170,9 +174,6 @@ export default {
       this.accountType1 = []
       this.deviceType1 = []
       this.formTime.time = [start, end]
-      this.loadData()
-    },
-    handleCurrentChange() {
       this.loadData()
     },
      _changeTableSort({ column, prop, order }) {

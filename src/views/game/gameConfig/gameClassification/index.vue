@@ -115,6 +115,7 @@
 								重置
 							</el-button>
 							<el-button
+							     v-if="hasPermission('1020115')"
 								type="warning"
 								icon="el-icon-folder-add"
 								size="medium"
@@ -298,6 +299,7 @@
 						<el-table-column align="center" label="操作" width="300px">
 							<template slot-scope="scope">
 								<el-button
+								    v-if="hasPermission('1020116')"
 									:type="scope.row.assortStatus ? 'danger' : 'success'"
 									size="medium"
 									@click="recycle(scope.row)"
@@ -310,6 +312,7 @@
 									</div>
 								</el-button>
 								<el-button
+								    v-if="hasPermission('1020117')"
 									type="primary"
 									icon="el-icon-edit"
 									size="medium"
@@ -319,6 +322,7 @@
 									编辑信息
 								</el-button>
 								<el-button
+								    v-if="hasPermission('1020117')"
 									type="warning"
 									icon="el-icon-delete"
 									size="medium"

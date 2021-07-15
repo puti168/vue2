@@ -4,7 +4,7 @@
 			<div class="form-header">
 				<span>游戏搜索管理</span>
 				<span>
-					<el-button type="success" @click="save">保存</el-button>
+					<el-button v-if="hasPermission('1020411')" type="success" @click="save">保存</el-button>
 				</span>
 			</div>
 			<div class="content-part2">

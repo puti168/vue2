@@ -1,7 +1,7 @@
 <template>
   <div class="view-container dealer-container">
     <el-button
-      v-show="!edit"
+      v-show="!edit && hasPermission('288')"
       type="warning"
       icon="el-icon-folder"
       :disabled="loading"
@@ -11,7 +11,11 @@
     >
       创建
     </el-button>
-    <agentEditFrom v-if="edit" :editRowData="editRowData" @back="back" />
+    <agentEditFrom
+      v-if="edit && hasPermission('288')"
+      :editRowData="editRowData"
+      @back="back"
+    />
     <div v-else class="content">
       <el-table
         v-loading="loading"
@@ -72,6 +76,7 @@
         <el-table-column prop="operating" align="center" label="操作" width="150px">
           <template slot-scope="scope">
             <el-button
+              v-if="hasPermission('289')"
               type="primary"
               icon="el-icon-edit"
               :disabled="loading"
@@ -81,6 +86,7 @@
               编辑
             </el-button>
             <el-button
+              v-if="hasPermission('290')"
               :disabled="loading"
               type="danger"
               size="medium"

@@ -46,6 +46,7 @@
               重置
             </el-button>
             <el-button
+              v-if="hasPermission('294')"
               type="warning"
               icon="el-icon-folder"
               :disabled="loading"
@@ -114,6 +115,7 @@
           <el-table-column prop="operating" align="center" label="操作">
             <template slot-scope="scope">
               <el-button
+                v-if="hasPermission('295')"
                 type="primary"
                 icon="el-icon-edit"
                 size="medium"
@@ -123,6 +125,7 @@
               </el-button>
 
               <el-button
+                v-if="hasPermission('296')"
                 type="warning"
                 icon="el-icon-delete"
                 size="medium"

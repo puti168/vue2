@@ -187,7 +187,7 @@
               {{ typeFilter(scope.row.adjustType, "memberPatchAddAdjustType") }}
             </template>
           </el-table-column>
-          <el-table-column prop="adjustAmount" align="center" label="调整金额 ">
+          <el-table-column prop="adjustAmount" align="center" label="调整金额 " width="200px">
           </el-table-column>
           <el-table-column prop="operator" align="center" label="申请人">
           </el-table-column>

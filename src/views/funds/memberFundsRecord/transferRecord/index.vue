@@ -1,258 +1,221 @@
 <template>
-	<div class="game-container report-container">
-		<div class="view-container dealer-container">
-			<div class="params">
-				<el-form ref="form" :inline="true" :model="queryData">
-					<el-form-item label="转账时间:">
-						<el-date-picker
-							v-model="searchTime"
-							size="medium"
-							:picker-options="pickerOptions"
-							format="yyyy-MM-dd HH:mm:ss"
-							type="datetimerange"
-							range-separator="-"
-							start-placeholder="开始日期"
-							end-placeholder="结束日期"
-							align="right"
-							:clearable="false"
-							:default-time="defaultTime"
-							style="width: 375px"
-						></el-date-picker>
-					</el-form-item>
-					<el-form-item label="订单号:">
-						<el-input
-							v-model="queryData.orderId"
-							clearable
-							size="medium"
-							style="width: 200px"
-							placeholder="请输入"
-							:disabled="loading"
-							@keyup.enter.native="enterSearch"
-						></el-input>
-					</el-form-item>
-					<el-form-item label="会员账号:">
-						<el-input
-							v-model="queryData.userName"
-							clearable
-							:maxlength="11"
-							size="medium"
-							style="width: 200px"
-							placeholder="请输入"
-							:disabled="loading"
-							@keyup.enter.native="enterSearch"
-						></el-input>
-					</el-form-item>
-					<el-form-item label="会员姓名:">
-						<el-input
-							v-model="queryData.realName"
-							clearable
-							:maxlength="15"
-							size="medium"
-							style="width: 200px"
-							placeholder="请输入"
-							:disabled="loading"
-							@keyup.enter.native="enterSearch"
-						></el-input>
-					</el-form-item>
-					<el-form-item label="转出钱包：" class="tagheight">
-						<el-select
-							v-model="queryData.transferOutId"
-							clearable
-							placeholder="默认选择全部"
-							:popper-append-to-body="false"
-						>
-							<el-option
-								v-for="item in walletTypeList"
-								:key="item.gameId"
-								:label="item.gameName"
-								:value="item.gameId"
-							></el-option>
-						</el-select>
-					</el-form-item>
-					<el-form-item label="转入钱包：" class="tagheight">
-						<el-select
-							v-model="queryData.transferInId"
-							clearable
-							placeholder="默认选择全部"
-							:popper-append-to-body="false"
-						>
-							<el-option
-								v-for="item in walletTypeList"
-								:key="item.gameId"
-								:label="item.gameName"
-								:value="item.gameId"
-							></el-option>
-						</el-select>
-					</el-form-item>
-					<el-form-item label="订单状态：" class="tagheight">
-						<el-select
-							v-model="queryData.transferStatus"
-							clearable
-							placeholder="默认选择全部"
-							:popper-append-to-body="false"
-						>
-							<el-option
-								v-for="item in transferStatus"
-								:key="item.code"
-								:label="item.description"
-								:value="item.code"
-							></el-option>
-						</el-select>
-					</el-form-item>
-					<el-form-item>
-						<el-button
-							type="primary"
-							icon="el-icon-search"
-							:disabled="loading"
-							size="medium"
-							@click="search"
-						>
-							查询
-						</el-button>
-						<el-button
-							icon="el-icon-refresh-left"
-							:disabled="loading"
-							size="medium"
-							@click="reset"
-						>
-							重置
-						</el-button>
-						<el-button
-						    v-if="hasPermission('263')"
-							icon="el-icon-download"
-							type="warning"
-							:disabled="loading"
-							size="medium"
-							@click="exportExcel"
-						>
-							导出
-						</el-button>
-					</el-form-item>
-				</el-form>
-			</div>
-			<div class="content">
-				<el-table
-					v-loading="loading"
-					border
-					show-summary
-					:summary-method="getSummaries"
-					size="mini"
-					class="small-size-table"
-					:data="tableData"
-					style="width: 100%"
-					:header-cell-style="getRowClass"
-					@sort-change="_changeTableSort"
-				>
-					<el-table-column
-						prop="orderId"
-						align="center"
-						width="240px"
-						label="订单号"
-					>
-						<template slot-scope="scope">
-							<Copy
-								v-if="!!scope.row.orderId"
-								:title="scope.row.orderId"
-								:copy="copy"
-							>
-								{{ scope.row.orderId }}
-							</Copy>
-							<span v-else>-</span>
-						</template>
-					</el-table-column>
-					<el-table-column prop="userName" align="center" label="会员账号">
-						<template slot-scope="scope">
-							<Copy
-								v-if="!!scope.row.userName"
-								:title="scope.row.userName"
-								:copy="copy"
-							>
-								{{ scope.row.userName }}
-							</Copy>
-							<span v-else>-</span>
-						</template>
-					</el-table-column>
-					<el-table-column prop="realName" align="center" label="会员姓名">
-						<template slot-scope="scope">
-							<Copy
-								v-if="!!scope.row.realName"
-								:title="scope.row.realName"
-								:copy="copy"
-							>
-								{{ scope.row.realName }}
-							</Copy>
-							<span v-else>-</span>
-						</template>
-					</el-table-column>
-					<el-table-column
-						prop="windControlName"
-						align="center"
-						label="风控等级"
-						width="180px"
-					>
-						<template slot-scope="scope">
-							{{
-								scope.row.windControlName !== null
-									? scope.row.windControlName
-									: '-'
-							}}
-						</template>
-					</el-table-column>
-					<el-table-column
-						prop="transferOut"
-						align="center"
-						label="转出钱包"
-					></el-table-column>
-					<el-table-column
-						prop="transferIn"
-						align="center"
-						label="转入钱包"
-					></el-table-column>
-					<el-table-column
-						prop="transferStatus"
-						align="center"
-						label="订单状态"
-					>
-						<template slot-scope="scope">
-							{{
-								typeFilter(scope.row.transferStatus, 'transferStatus')
-									? typeFilter(scope.row.transferStatus, 'transferStatus')
-									: '-'
-							}}
-						</template>
-					</el-table-column>
-					<el-table-column
-						prop="amount"
-						align="center"
-						label="转账金额"
-					></el-table-column>
-					<el-table-column
-						prop="createDt"
-						align="center"
-						label="转账时间"
-						sortable="custom"
-					></el-table-column>
-					<el-table-column
-						prop="result"
-						align="center"
-						label="备注"
-					></el-table-column>
-				</el-table>
-				<!-- 分页 -->
-				<el-pagination
-					:current-page.sync="pageNum"
-					class="pageValue"
-					background
-					layout="total, sizes,prev, pager, next, jumper"
-					:page-size="pageSize"
-					:page-sizes="pageSizes"
-					:total="total"
-					@current-change="handleCurrentChange"
-					@size-change="handleSizeChange"
-				></el-pagination>
-			</div>
-		</div>
-	</div>
+  <div class="game-container report-container">
+    <div class="view-container dealer-container">
+      <div class="params">
+        <el-form ref="form" :inline="true" :model="queryData">
+          <el-form-item label="转账时间:">
+            <el-date-picker
+              v-model="searchTime"
+              size="medium"
+              :picker-options="pickerOptions"
+              format="yyyy-MM-dd HH:mm:ss"
+              type="datetimerange"
+              range-separator="-"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+              align="right"
+              :clearable="false"
+              :default-time="defaultTime"
+              style="width: 375px"
+            ></el-date-picker>
+          </el-form-item>
+          <el-form-item label="订单号:">
+            <el-input
+              v-model="queryData.orderId"
+              clearable
+              size="medium"
+              style="width: 200px"
+              placeholder="请输入"
+              :disabled="loading"
+              @keyup.enter.native="enterSearch"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="会员账号:">
+            <el-input
+              v-model="queryData.userName"
+              clearable
+              :maxlength="11"
+              size="medium"
+              style="width: 200px"
+              placeholder="请输入"
+              :disabled="loading"
+              @keyup.enter.native="enterSearch"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="会员姓名:">
+            <el-input
+              v-model="queryData.realName"
+              clearable
+              :maxlength="15"
+              size="medium"
+              style="width: 200px"
+              placeholder="请输入"
+              :disabled="loading"
+              @keyup.enter.native="enterSearch"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="转出钱包：" class="tagheight">
+            <el-select
+              v-model="queryData.transferOutId"
+              clearable
+              placeholder="默认选择全部"
+              :popper-append-to-body="false"
+            >
+              <el-option
+                v-for="item in walletTypeList"
+                :key="item.gameId"
+                :label="item.gameName"
+                :value="item.gameId"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="转入钱包：" class="tagheight">
+            <el-select
+              v-model="queryData.transferInId"
+              clearable
+              placeholder="默认选择全部"
+              :popper-append-to-body="false"
+            >
+              <el-option
+                v-for="item in walletTypeList"
+                :key="item.gameId"
+                :label="item.gameName"
+                :value="item.gameId"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="订单状态：" class="tagheight">
+            <el-select
+              v-model="queryData.transferStatus"
+              clearable
+              placeholder="默认选择全部"
+              :popper-append-to-body="false"
+            >
+              <el-option
+                v-for="item in transferStatus"
+                :key="item.code"
+                :label="item.description"
+                :value="item.code"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item>
+            <el-button
+              type="primary"
+              icon="el-icon-search"
+              :disabled="loading"
+              size="medium"
+              @click="search"
+            >
+              查询
+            </el-button>
+            <el-button
+              icon="el-icon-refresh-left"
+              :disabled="loading"
+              size="medium"
+              @click="reset"
+            >
+              重置
+            </el-button>
+            <el-button
+			  v-if="hasPermission('263')"
+              icon="el-icon-download"
+              type="warning"
+              :disabled="loading"
+              size="medium"
+              @click="exportExcel"
+            >
+              导出
+            </el-button>
+          </el-form-item>
+        </el-form>
+      </div>
+      <div class="content">
+        <el-table
+          v-loading="loading"
+          border
+          show-summary
+          :summary-method="getSummaries"
+          size="mini"
+          class="small-size-table"
+          :data="tableData"
+          style="width: 100%"
+          :header-cell-style="getRowClass"
+          @sort-change="_changeTableSort"
+        >
+          <el-table-column prop="orderId" align="center" width="240px" label="订单号">
+            <template slot-scope="scope">
+              <Copy v-if="!!scope.row.orderId" :title="scope.row.orderId" :copy="copy">
+                {{ scope.row.orderId }}
+              </Copy>
+              <span v-else>-</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="userName" align="center" label="会员账号">
+            <template slot-scope="scope">
+              <Copy v-if="!!scope.row.userName" :title="scope.row.userName" :copy="copy">
+                {{ scope.row.userName }}
+              </Copy>
+              <span v-else>-</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="realName" align="center" label="会员姓名">
+            <template slot-scope="scope">
+              <Copy v-if="!!scope.row.realName" :title="scope.row.realName" :copy="copy">
+                {{ scope.row.realName }}
+              </Copy>
+              <span v-else>-</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            prop="windControlName"
+            align="center"
+            label="风控等级"
+            width="180px"
+          >
+            <template slot-scope="scope">
+              {{ scope.row.windControlName ? scope.row.windControlName : "-" }}
+            </template>
+          </el-table-column>
+          <el-table-column prop="transferOut" align="center" label="转出钱包">
+          </el-table-column>
+          <el-table-column prop="transferIn" align="center" label="转入钱包">
+          </el-table-column>
+          <el-table-column prop="transferStatus" align="center" label="订单状态">
+            <template slot-scope="scope">
+              {{
+                typeFilter(scope.row.transferStatus, "transferStatus")
+                  ? typeFilter(scope.row.transferStatus, "transferStatus")
+                  : "-"
+              }}
+            </template>
+          </el-table-column>
+          <el-table-column prop="amount" align="center" label="转账金额" width="200px">
+          </el-table-column>
+          <el-table-column
+            prop="createDt"
+            align="center"
+            label="转账时间"
+            sortable="custom"
+          >
+          </el-table-column>
+          <el-table-column prop="result" align="center" label="备注"> </el-table-column>
+        </el-table>
+        <!-- 分页 -->
+        <el-pagination
+          :current-page.sync="pageNum"
+          class="pageValue"
+          background
+          layout="total, sizes,prev, pager, next, jumper"
+          :page-size="pageSize"
+          :page-sizes="pageSizes"
+          :total="total"
+          @current-change="handleCurrentChange"
+          @size-change="handleSizeChange"
+        ></el-pagination>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>

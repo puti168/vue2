@@ -154,191 +154,174 @@
 						</el-select>
 					</el-form-item>
 
-					<el-form-item>
-						<el-button
-							type="primary"
-							icon="el-icon-search"
-							:disabled="loading"
-							size="medium"
-							@click="search"
-						>
-							查询
-						</el-button>
-						<el-button
-							icon="el-icon-refresh-left"
-							:disabled="loading"
-							size="medium"
-							@click="reset"
-						>
-							重置
-						</el-button>
-						<el-button
-						    v-if="hasPermission('262')"
-							icon="el-icon-download"
-							type="warning"
-							:disabled="loading"
-							size="medium"
-							@click="exportExcel"
-						>
-							导出
-						</el-button>
-					</el-form-item>
-				</el-form>
-			</div>
-			<div class="content">
-				<el-table
-					v-loading="loading"
-					border
-					show-summary
-					:summary-method="getSummaries"
-					size="mini"
-					class="small-size-table"
-					:data="tableData"
-					style="width: 100%"
-					:header-cell-style="getRowClass"
-					@sort-change="_changeTableSort"
-				>
-					<el-table-column
-						prop="thirdOrderNo"
-						align="center"
-						width="240px"
-						label="订单号"
-					>
-						<template slot-scope="scope">
-							<Copy
-								v-if="!!scope.row.thirdOrderNo"
-								:title="scope.row.thirdOrderNo"
-								:copy="copy"
-							>
-								{{ scope.row.thirdOrderNo }}
-							</Copy>
-							<span v-else>-</span>
-						</template>
-					</el-table-column>
-					<el-table-column prop="userName" align="center" label="会员账号">
-						<template slot-scope="scope">
-							<Copy
-								v-if="!!scope.row.userName"
-								:title="scope.row.userName"
-								:copy="copy"
-							>
-								{{ scope.row.userName }}
-							</Copy>
-							<span v-else>-</span>
-						</template>
-					</el-table-column>
-					<el-table-column prop="realName" align="center" label="会员姓名">
-						<template slot-scope="scope">
-							<Copy
-								v-if="!!scope.row.realName"
-								:title="scope.row.realName"
-								:copy="copy"
-							>
-								{{ scope.row.realName }}
-							</Copy>
-							<span v-else>-</span>
-						</template>
-					</el-table-column>
-					<el-table-column prop="deviceType" align="center" label="订单来源">
-						<template slot-scope="scope">
-							{{ typeFilter(scope.row.deviceType, 'loginDeviceType') }}
-						</template>
-					</el-table-column>
-					<el-table-column prop="orderStatus" align="center" label="订单状态">
-						<template slot-scope="scope">
-							{{ typeFilter(scope.row.orderStatus, 'withdrawStatus') }}
-						</template>
-					</el-table-column>
-					<el-table-column
-						prop="clientStatus"
-						align="center"
-						label="客户端状态"
-					>
-						<template slot-scope="scope">
-							{{ typeFilter(scope.row.clientStatus, 'accessStatusType') }}
-						</template>
-					</el-table-column>
-					<el-table-column prop="customerIp" align="center" width="120px">
-						<template slot="header">
-							提款IP
-							<br />
-							风控层级
-						</template>
-						<template slot-scope="scope">
-							<span>{{ scope.row.customerIp }}</span>
-							<br />
-							<span class="redColor">
-								风控层级：{{
-									scope.row.ipControlName !== null
-										? scope.row.ipControlName
-										: '-'
-								}}
-							</span>
-						</template>
-					</el-table-column>
-					<el-table-column prop="playerName" align="center" width="120px">
-						<template slot="header">
-							提款终端设备号
-							<br />
-							风控层级
-						</template>
-						<template slot-scope="scope">
-							<span>{{ scope.row.deviceNo }}</span>
-							<br />
-							<span class="redColor">
-								风控层级：{{
-									scope.row.deviceNoControlName !== null
-										? scope.row.deviceNoControlName
-										: '-'
-								}}
-							</span>
-						</template>
-					</el-table-column>
-					<el-table-column prop="withdrawType" align="center" label="提款方式">
-						<template slot-scope="scope">
-							{{ typeFilter(scope.row.withdrawType, 'payDataType') }}
-						</template>
-					</el-table-column>
-					<el-table-column
-						prop="isBig"
-						align="center"
-						label="是否为大额提款"
-						width="120px"
-					></el-table-column>
-					<el-table-column
-						prop="isFirst"
-						align="center"
-						label="是否为首提"
-					></el-table-column>
-					<el-table-column
-						prop="orderAmount"
-						align="center"
-						label="提款金额"
-						sortable="custom"
-					></el-table-column>
-					<el-table-column
-						prop="createdAt"
-						align="center"
-						label="提款时间"
-						width="155px"
-						sortable="custom"
-					></el-table-column>
-				</el-table>
-				<!-- 分页 -->
-				<el-pagination
-					:current-page.sync="pageNum"
-					class="pageValue"
-					background
-					layout="total, sizes,prev, pager, next, jumper"
-					:page-size="pageSize"
-					:page-sizes="pageSizes"
-					:total="total"
-					@current-change="handleCurrentChange"
-					@size-change="handleSizeChange"
-				></el-pagination>
-			</div>
-		</div>
-	</div>
+          <el-form-item>
+            <el-button
+              type="primary"
+              icon="el-icon-search"
+              :disabled="loading"
+              size="medium"
+              @click="search"
+            >
+              查询
+            </el-button>
+            <el-button
+              icon="el-icon-refresh-left"
+              :disabled="loading"
+              size="medium"
+              @click="reset"
+            >
+              重置
+            </el-button>
+            <el-button
+			  v-if="hasPermission('262')"
+              icon="el-icon-download"
+              type="warning"
+              :disabled="loading"
+              size="medium"
+              @click="exportExcel"
+            >
+              导出
+            </el-button>
+          </el-form-item>
+        </el-form>
+      </div>
+      <div class="content">
+        <el-table
+          v-loading="loading"
+          border
+          show-summary
+          :summary-method="getSummaries"
+          size="mini"
+          class="small-size-table"
+          :data="tableData"
+          style="width: 100%"
+          :header-cell-style="getRowClass"
+          @sort-change="_changeTableSort"
+        >
+          <el-table-column
+            prop="thirdOrderNo"
+            align="center"
+            width="240px"
+            label="订单号"
+          >
+            <template slot-scope="scope">
+              <Copy
+                v-if="!!scope.row.thirdOrderNo"
+                :title="scope.row.thirdOrderNo"
+                :copy="copy"
+              >
+                {{ scope.row.thirdOrderNo }}
+              </Copy>
+              <span v-else>-</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="userName" align="center" label="会员账号">
+            <template slot-scope="scope">
+              <Copy v-if="!!scope.row.userName" :title="scope.row.userName" :copy="copy">
+                {{ scope.row.userName }}
+              </Copy>
+              <span v-else>-</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="realName" align="center" label="会员姓名">
+            <template slot-scope="scope">
+              <Copy v-if="!!scope.row.realName" :title="scope.row.realName" :copy="copy">
+                {{ scope.row.realName }}
+              </Copy>
+              <span v-else>-</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="deviceType" align="center" label="订单来源">
+            <template slot-scope="scope">
+              {{ typeFilter(scope.row.deviceType, "loginDeviceType") }}
+            </template>
+          </el-table-column>
+          <el-table-column prop="orderStatus" align="center" label="订单状态">
+            <template slot-scope="scope">
+              {{ typeFilter(scope.row.orderStatus, "withdrawStatus") }}
+            </template>
+          </el-table-column>
+          <el-table-column prop="clientStatus" align="center" label="客户端状态">
+            <template slot-scope="scope">
+              {{ typeFilter(scope.row.clientStatus, "accessStatusType") }}
+            </template>
+          </el-table-column>
+          <el-table-column prop="customerIp" align="center" width="120px">
+            <template slot="header">
+              提款IP <br />
+              风控层级
+            </template>
+            <template slot-scope="scope">
+              <span>{{ scope.row.customerIp }}</span><br />
+              <span
+class="redColor"
+>风控层级：{{
+                  scope.row.ipControlName ? scope.row.ipControlName : "-"
+                }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="playerName" align="center" width="120px">
+            <template slot="header">
+              提款终端设备号
+              <br />风控层级
+            </template>
+            <template slot-scope="scope">
+              <span>{{ scope.row.deviceNo }}</span><br />
+              <span
+class="redColor"
+>风控层级：{{
+                  scope.row.deviceNoControlName
+                    ? scope.row.deviceNoControlName
+                    : "-"
+                }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="withdrawType" align="center" label="提款方式">
+            <template slot-scope="scope">
+              {{ typeFilter(scope.row.withdrawType, "payDataType") }}
+            </template>
+          </el-table-column>
+          <el-table-column
+            prop="isBig"
+            align="center"
+            label="是否为大额提款"
+            width="120px"
+          >
+          </el-table-column>
+          <el-table-column prop="isFirst" align="center" label="是否为首提">
+          </el-table-column>
+          <el-table-column
+            prop="orderAmount"
+            align="center"
+            width="200px"
+            label="提款金额"
+            sortable="custom"
+          >
+          </el-table-column>
+          <el-table-column
+            prop="createdAt"
+            align="center"
+            label="提款时间"
+            width="155px"
+            sortable="custom"
+          >
+          </el-table-column>
+        </el-table>
+        <!-- 分页 -->
+        <el-pagination
+          :current-page.sync="pageNum"
+          class="pageValue"
+          background
+          layout="total, sizes,prev, pager, next, jumper"
+          :page-size="pageSize"
+          :page-sizes="pageSizes"
+          :total="total"
+          @current-change="handleCurrentChange"
+          @size-change="handleSizeChange"
+        ></el-pagination>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>

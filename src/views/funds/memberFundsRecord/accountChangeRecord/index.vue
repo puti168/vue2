@@ -213,7 +213,7 @@
               重置
             </el-button>
             <el-button
-             v-if="hasPermission('159')"
+             v-if="hasPermission('260')"
               icon="el-icon-download"
               type="warning"
               :disabled="loading"
@@ -356,21 +356,21 @@
             prop="changeBefore"
             align="center"
             label="账变前金额"
-            width="120px"
+            width="200px"
             sortable="custom"
           ></el-table-column>
           <el-table-column
             prop="amount"
             align="center"
             label="账变金额"
-            width="120px"
+            width="200px"
             sortable="custom"
           ></el-table-column>
           <el-table-column
             prop="changeAfter"
             align="center"
             label="账变后金额"
-            width="120px"
+            width="200px"
             sortable="custom"
           ></el-table-column>
           <el-table-column
