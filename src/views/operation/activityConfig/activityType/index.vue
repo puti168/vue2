@@ -72,7 +72,8 @@
 							<span>优惠活动：</span>
 							<span>
 								{{
-									showInfoData && showInfoData.activityType
+									showInfoData &&
+									(showInfoData.activityType || showInfoData.activityType === 0)
 										? typeFilter(
 												showInfoData.activityType,
 												'operateActivityNameType'
