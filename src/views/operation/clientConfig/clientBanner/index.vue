@@ -492,7 +492,7 @@
               </el-select>
             </el-form-item>
             <el-form-item
-              v-else
+            v-if="dialogForm.isLink === 0 && dialogForm.linkTarget === 2 && dialogForm.linkTarget === 1"
               label="URL链接:"
               prop="targetUrl"
               :rules="[{ required: true }]"
@@ -830,6 +830,7 @@ export default {
     },
     subSort() {
       this.sortLabel = true
+      this.$api.operatecCnfigBannerQuerySortedBannerArea()
     },
 
     setoperateConfigBannerSort() {
@@ -842,7 +843,7 @@ export default {
       console.log(this.QueryareaList)
       const sortIds = newArr.join(',')
       const clientType = this.clientType
-      this.$api.setoperateConfigBannerSort({sortIds: sortIds, clientType}).then((res) => {
+      this.$api.operatecCnfigBannerQuerySortedBannerArea({sortIds: sortIds, clientType}).then((res) => {
         if (res.code === 200) {
          this.sortLabel = false
          this.$message({
