@@ -58,41 +58,42 @@
 								</template>
 							</el-table-column>
 							<el-table-column
-								prop="accountType"
+								prop="status"
 								align="center"
 								label="状态"
 								width="220px"
 							>
 								<template slot-scope="scope">
 									<span
-										v-if="!!scope.row.status"
 										:class="
 											scope.row.status === 1 ? 'normalRgba' : 'disableRgba'
 										"
 									>
 										{{ scope.row.status + '' === '1' ? '开启中' : '禁用中' }}
 									</span>
-									<span v-else>-</span>
 								</template>
 							</el-table-column>
 							<el-table-column
-								prop="accountType"
+								prop="assortId"
 								align="center"
 								label="分类名称"
-								width="220"
+								width="300"
 							>
 								<template slot-scope="scope">
-									<span v-if="!!scope.row.assortId">
-										<el-input
-											v-model="scope.row.assortId"
-											size="medium"
-											maxlength="20"
-											placeholder="请输入"
-											clearable
-											style="width: 180px"
-										></el-input>
-									</span>
-									<span v-else>-</span>
+									<el-select
+										v-model="scope.row.assortId"
+										size="medium"
+										placeholder="请选择"
+										style="width: 245px"
+										@change="changeType($event)"
+									>
+										<el-option
+											v-for="item in gameAssortDicList"
+											:key="item.id"
+											:label="item.assortName"
+											:value="item.id"
+										></el-option>
+									</el-select>
 								</template>
 							</el-table-column>
 							<el-table-column
@@ -102,18 +103,15 @@
 								width="220"
 							>
 								<template slot-scope="scope">
-									<span v-if="!!scope.row.allGameNum">
-										<el-input
-											v-model="scope.row.allGameNum"
-											size="medium"
-											maxlength="3"
-											placeholder="请输入数字"
-											clearable
-                                            style="width: 180px"
-											@keyup.native="checkValue($event)"
-										></el-input>
-									</span>
-									<span v-else>-</span>
+									<el-input
+										v-model="scope.row.allGameNum"
+										size="medium"
+										maxlength="3"
+										placeholder="请输入数字"
+										clearable
+										style="width: 180px"
+										@keyup.native="checkValue($event)"
+									></el-input>
 								</template>
 							</el-table-column>
 							<el-table-column
@@ -123,17 +121,14 @@
 								width="220"
 							>
 								<template slot-scope="scope">
-									<span v-if="!!scope.row.mainTitleInfo">
-										<el-input
-											v-model="scope.row.mainTitleInfo"
-											size="medium"
-											maxlength="20"
-											placeholder="请输入"
-											clearable
-											style="width: 180px"
-										></el-input>
-									</span>
-									<span v-else>-</span>
+									<el-input
+										v-model="scope.row.mainTitleInfo"
+										size="medium"
+										maxlength="20"
+										placeholder="请输入"
+										clearable
+										style="width: 180px"
+									></el-input>
 								</template>
 							</el-table-column>
 							<el-table-column
@@ -143,29 +138,26 @@
 								width="220px"
 							>
 								<template slot-scope="scope">
-									<span v-if="!!scope.row.subTitleInfo">
-										<el-input
-											v-model="scope.row.subTitleInfo"
-											size="medium"
-											maxlength="20"
-											placeholder="请输入"
-											clearable
-											style="width: 180px"
-										></el-input>
-									</span>
-									<span v-else>-</span>
+									<el-input
+										v-model="scope.row.subTitleInfo"
+										size="medium"
+										maxlength="20"
+										placeholder="请输入"
+										clearable
+										style="width: 180px"
+									></el-input>
 								</template>
 							</el-table-column>
 							<el-table-column align="center" label="操作">
 								<template slot-scope="scope">
 									<el-button
 										:disabled="loading"
-										type="danger"
+										:type="scope.row.status === 1 ? 'danger' : 'success'"
 										size="medium"
 										class="noicon"
 										@click="deleteRow(scope.row)"
 									>
-										禁用
+										{{ scope.row.status === 1 ? '禁用' : '开启' }}
 									</el-button>
 									<el-button
 										type="danger"
@@ -201,6 +193,8 @@
 <script>
 import list from '@/mixins/list'
 import Sortable from 'sortablejs'
+import { getUsername } from '@/utils/auth'
+import dayjs from 'dayjs'
 
 export default {
 	components: {},
@@ -214,7 +208,8 @@ export default {
 			form: {
 				moduleDesc: undefined
 			},
-			dataList: []
+			dataList: [],
+			gameAssortDicList: []
 		}
 	},
 	computed: {},
@@ -244,15 +239,15 @@ export default {
 		this.getDetails()
 	},
 	mounted() {
-	    this.gameAssortDic()
-    },
+		this.gameAssortList()
+	},
 	methods: {
 		back() {
 			this.$emit('back')
 		},
-        checkValue(e) {
-            e.target.value = e.target.value.replace(/[^\d]/g, '')
-        },
+		checkValue(e) {
+			e.target.value = e.target.value.replace(/[^\d]/g, '')
+		},
 		getDetails() {
 			this.$api.gameSpecialDetailsAPI().then((res) => {
 				const { code, data } = res
@@ -264,16 +259,21 @@ export default {
 				console.log('res', res)
 			})
 		},
-		gameAssortDic() {
+		gameAssortList() {
 			this.$api.gameAssortDicAPI().then((res) => {
-				// const { code, data } = res
-				// if (code === 200) {
-				//     this.dataList = data['gameTopicModuleMetaVos']
-				//         ? data['gameTopicModuleMetaVos']
-				//         : []
-				// }
+				const { code, data } = res
+				if (code === 200) {
+					this.gameAssortDicList = data || []
+				}
 				console.log('res', res)
 			})
+		},
+		changeType(evt) {
+			// console.log('evt', evt)
+			// this.queryData = {
+			//     activityType: evt.description,
+			//     activityCode: evt.code
+			// }
 		},
 		confirm() {},
 		deleteRow(row) {
@@ -344,9 +344,22 @@ export default {
 			}, 1000)
 		},
 		addRow() {
-			const lastRow = this.dataList[this.dataList.length - 1]
-			const new_row = lastRow.id + 1
-			this.dataList.push({ id: new_row })
+			const lastRow = this.dataList.length
+				? this.dataList[this.dataList.length - 1]
+				: undefined
+			// const new_row = lastRow ? lastRow.id + 1 : 1
+			const displayOrder = lastRow ? lastRow.displayOrder + 1 : 1
+			this.dataList.push({
+				createdAt: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
+				createdBy: getUsername(),
+				displayOrder,
+				allGameNum: undefined,
+				assortId: undefined,
+				mainTitleInfo: undefined,
+				moduleId: undefined,
+				status: 0,
+				subTitleInfo: undefined
+			})
 		},
 
 		// 列拖动
