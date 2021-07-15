@@ -138,7 +138,7 @@
 				class="rempadding"
 			>
 				<el-divider></el-divider>
-				<el-form ref="formSub" :model="dialogForm" label-width="90px">
+				<el-form ref="formSub" :rules="rules" :model="dialogForm" label-width="90px">
 					<el-form-item label="字典code:" prop="k">
 						<el-input
 							v-model="dialogForm.k"
