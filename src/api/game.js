@@ -378,6 +378,22 @@ export function getSearchConfigOperateSelect(data) {
 		data
 	})
 }
+// 游戏==> 客户端配置管理==> 操作记录===>枚举
+export function OperateGameConfigOperateRecordQueryEnumsAPI(params) {
+	return request({
+		url: '/operate/gameConfigOperateRecord/queryEnums',
+		method: 'get',
+		params
+	})
+}
+// 游戏==> 客户端配置管理==> 操作记录===>分页
+export function getOperateGameConfigOperateRecordQueryRecordList(data) {
+	return request({
+		url: '/operate/gameConfigOperateRecord/queryRecordList',
+		method: 'post',
+		data
+	})
+}
 export default {
 	gameAssortListAPI,
 	gameList,
@@ -423,5 +439,7 @@ export default {
 	gameHomeRecommendDetailsAPI,
 	gameHomeRecommendDetailsEditAPI,
 	GameCommonModuleOperateRecord,
-	getSearchConfigOperateSelect
+	getSearchConfigOperateSelect,
+	OperateGameConfigOperateRecordQueryEnumsAPI,
+	getOperateGameConfigOperateRecordQueryRecordList
 }

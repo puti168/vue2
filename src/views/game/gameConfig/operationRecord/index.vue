@@ -19,18 +19,23 @@
         </el-form-item>
         <el-form-item label="操作页面:">
           <el-select
-            v-model="queryData.changeType"
+            v-model="queryData.pageName"
             style="width: 300px"
             multiple
             placeholder="默认选择全部"
             :popper-append-to-body="false"
           >
-            <el-option label="游戏管理" value="0"></el-option>
+            <el-option
+              v-for="item in operatePage"
+              :key="item.value"
+              :label="item.value"
+              :value="item.code"
+            ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="ID:">
           <el-input
-            v-model="queryData.announcementTitel"
+            v-model="queryData.pageId"
             clearable
             size="medium"
             :maxlength="5"
@@ -49,7 +54,12 @@
             placeholder="默认选择全部"
             :popper-append-to-body="false"
           >
-            <el-option label="游戏管理" value="0"></el-option>
+            <el-option
+              v-for="item in changeType"
+              :key="item.codein"
+              :label="item.value"
+              :value="item.code"
+            ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="操作人:">
@@ -96,17 +106,49 @@
           :header-cell-style="getRowClass"
           @sort-change="_changeTableSort"
         >
-          <el-table-column prop="announcementTitle" align="center" label="操作页面">
+          <el-table-column prop="pageName" align="center" label="操作页面">
+            <template slot-scope="scope">
+              <span v-for="item in operatePage" :key="item.value">
+                {{ scope.row.pageName === item.code ? item.value : "" }}
+              </span>
+            </template>
           </el-table-column>
-          <el-table-column prop="announcementTitle" align="center" label="ID">
+          <el-table-column prop="pageId" align="center" label="ID">
           </el-table-column>
           <el-table-column prop="changeType" align="center" label="变更类型">
+            <template slot-scope="scope">
+							<span v-for="item in changeType" :key="item.value">
+								{{ scope.row.changeType === item.code ? item.value : '' }}
+							</span>
+						</template>
           </el-table-column>
           <el-table-column align="center" label="变更前" prop="beforeValue">
+            <!-- <template slot-scope="scope">
+              <span v-if="scope.row.applyType === '1'">
+                {{ typeFilter(scope.row.beforeValue, "accountStatusType") }}
+              </span>
+              <span v-else-if="scope.row.changeType === '17'">
+                {{ typeFilter(scope.row.beforeValue, "gameStatusType") }}
+              </span>
+              <span v-else>
+                {{ scope.row.beforeValue }}
+              </span>
+            </template> -->
           </el-table-column>
           <el-table-column align="center" label="变更后" prop="afterValue">
+            <!-- <template slot-scope="scope">
+              <span v-if="scope.row.applyType === '1'">
+                {{ typeFilter(scope.row.afterValue, "accountStatusType") }}
+              </span>
+              <span v-else-if="scope.row.changeType === '17'">
+                {{ typeFilter(scope.row.afterValue, "gameStatusType") }}
+              </span>
+              <span v-else>
+                {{ scope.row.afterValue }}
+              </span>
+            </template> -->
           </el-table-column>
-          <el-table-column align="center" label="备注" prop="afterValue">
+          <el-table-column align="center" label="备注" prop="remark">
           </el-table-column>
           <el-table-column prop="createdBy" align="center" width="120" label="操作人">
           </el-table-column>
@@ -147,19 +189,23 @@ export default {
   data() {
     return {
       queryData: {},
+      changeType: [],
+      operatePage: [],
       searchTime: [start, end],
       dataList: []
     }
   },
-  computed: {},
+  created() {
+    this.getEnums()
+  },
   mounted() {},
   methods: {
     loadData() {
       const [startTime, endTime] = this.searchTime || []
       let params = {
         ...this.queryData,
-        startTime: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : '',
-        endTime: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
+        startAt: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : '',
+        endAt: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
       }
       params = {
         ...this.getParams(params)
@@ -168,29 +214,36 @@ export default {
       this.loading = true
 
       this.$api
-        .activityInfoLogListAPI(params)
-        .then((res) => {
-          this.loading = false
-          const {
-            code,
-            data: { record, totalRecord },
-            msg
-          } = res
-          if (code === 200) {
-            this.dataList = record || []
-            this.total = totalRecord || 0
-          } else {
-            this.$message({
-              message: msg,
-              type: 'error'
-            })
-          }
-        })
+				.getOperateGameConfigOperateRecordQueryRecordList(params)
+				.then((res) => {
+					if (res.code === 200) {
+						this.loading = false
+						this.dataList = res.data.records
+						this.total = res.data.total
+					} else {
+						this.loading = false
+						this.$message({
+							message: res.msg,
+							type: 'error'
+						})
+					}
+				})
         .catch(() => {
           this.loading = false
         })
     },
+    getEnums() {
+      this.$api.OperateGameConfigOperateRecordQueryEnumsAPI().then((res) => {
+        if (res.code === 200) {
+          this.changeType = res.data.changeType
+          this.operatePage = res.data.operatePage
+        }
+      })
+    },
     _changeTableSort({ column, prop, order }) {
+      if (prop === 'createdAt') {
+				prop = 1
+			}
       this.pageNum = 1
       if (order === 'ascending') {
         // 升序
@@ -199,6 +252,7 @@ export default {
         // 降序
         this.queryData.orderType = 'desc'
       } else {
+        delete this.queryData.orderKey
         delete this.queryData.orderType
       }
       this.loadData()
