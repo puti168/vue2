@@ -372,7 +372,7 @@
             <template slot-scope="scope">
               <el-button
                 v-if="hasPermission('316')&&scope.row.status === 0"
-                :disabled="loading"
+                :disabled="scope.row.tagStatus === 0"
                 type="success"
                 size="medium"
                 class="noicon"

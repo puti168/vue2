@@ -109,7 +109,7 @@
               {{ typeFilter(scope.row.provideType, "vipRewardType") }}
             </template>
           </el-table-column>
-          <el-table-column prop="provideAmount" align="center" label="发放金额">
+          <el-table-column prop="provideAmount" align="center" label="发放金额" width="200px">
           </el-table-column>
           <el-table-column prop="userName" align="center" label="会员账号">
             <template slot-scope="scope">
@@ -132,10 +132,13 @@
             </template>
           </el-table-column>
           <el-table-column prop="labelName" align="center" label="会员标签">
+             <template slot-scope="scope">
+              {{ scope.row.labelName ? scope.row.labelName : "-" }}
+            </template>
           </el-table-column>
           <el-table-column prop="windControlName" align="center" label="风控层级">
             <template slot-scope="scope">
-              {{ scope.row.windControlName !== null ? scope.row.windControlName : "-" }}
+              {{ scope.row.windControlName ? scope.row.windControlName : "-" }}
             </template>
           </el-table-column>
           <el-table-column prop="accountStatus" align="center" label="账号状态">
