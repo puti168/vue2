@@ -4,7 +4,7 @@
 			<span class="title">游戏专题模块</span>
 			<div class="right-btn">
 				<el-button plain @click="back">取消</el-button>
-				<el-button type="success" @click="confirm(true)">保存</el-button>
+				<el-button type="success" @click="save(true)">保存</el-button>
 			</div>
 		</div>
 		<div class="main-content">
@@ -155,7 +155,7 @@
 										:type="scope.row.status === 1 ? 'danger' : 'success'"
 										size="medium"
 										class="noicon"
-										@click="deleteRow(scope.row)"
+										@click="changeStatus(scope.row)"
 									>
 										{{ scope.row.status === 1 ? '禁用' : '开启' }}
 									</el-button>
@@ -209,7 +209,7 @@ export default {
 				moduleDesc: undefined
 			},
 			dataList: [],
-            idArray: [],
+			idArray: [],
 			gameAssortDicList: []
 		}
 	},
@@ -250,34 +250,37 @@ export default {
 			e.target.value = e.target.value.replace(/[^\d]/g, '')
 		},
 		getDetails() {
-            this.dataList = []
-            this.loading = true
-			this.$api.gameSpecialDetailsAPI().then((res) => {
-                this.loading = false
-				const {
-					code,
-					data: { gameTopicModuleMetaVos },
-                    msg
-				} = res
-				if (code === 200) {
-					this.dataList = gameTopicModuleMetaVos || []
-                    this.idArray =
-                        gameTopicModuleMetaVos &&
-                        gameTopicModuleMetaVos.length &&
-                        gameTopicModuleMetaVos.map((item) => item.id)
-				} else {
-                    this.loading = false
-                    this.$message({
-                        message: msg,
-                        type: 'error'
-                    })
-                }
-				console.log('res', res)
-			}).catch(() => (this.loading = false))
+			this.dataList = []
+			this.loading = true
+			this.$api
+				.gameSpecialDetailsAPI()
+				.then((res) => {
+					this.loading = false
+					const {
+						code,
+						data: { gameTopicModuleMetaVos },
+						msg
+					} = res
+					if (code === 200) {
+						this.dataList = gameTopicModuleMetaVos || []
+						this.idArray =
+							gameTopicModuleMetaVos &&
+							gameTopicModuleMetaVos.length &&
+							gameTopicModuleMetaVos.map((item) => item.id)
+					} else {
+						this.loading = false
+						this.$message({
+							message: msg,
+							type: 'error'
+						})
+					}
+					console.log('res', res)
+				})
+				.catch(() => (this.loading = false))
 
-            setTimeout(() => {
-                this.loading = false
-            }, 1500)
+			setTimeout(() => {
+				this.loading = false
+			}, 1500)
 		},
 		gameAssortList() {
 			this.$api.gameAssortDicAPI().then((res) => {
@@ -295,62 +298,61 @@ export default {
 			//     activityCode: evt.code
 			// }
 		},
-		confirm() {},
-        deleteRow(val) {
-            const { id } = val
-            this.$confirm('确定删除此游戏吗?', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-            })
-                .then(() => {
-                    const loading = this.$loading({
-                        lock: true,
-                        text: 'Loading',
-                        spinner: 'el-icon-loading',
-                        background: 'rgba(0, 0, 0, 0.7)'
-                    })
-                    if (this.idArray.includes(id)) {
-                        this.$api
-                            .gameDelTopicModuleAPI({ id })
-                            .then((res) => {
-                                loading.close()
-                                const { code } = res
-                                if (code === 200) {
-                                    this.$message({
-                                        type: 'success',
-                                        message: '删除成功!'
-                                    })
-                                } else {
-                                    this.$message({
-                                        type: 'error',
-                                        message: '删除失败!'
-                                    })
-                                }
-                                this.loadData()
-                            })
-                            .catch(() => {
-                                loading.close()
-                                this.$message({
-                                    type: 'error',
-                                    message: '删除失败!'
-                                })
-                            })
-                    } else {
-                        this.dataList = this.dataList.filter((item) => {
-                            return item.id !== id
-                        })
-                        // this.updateArr = this.updateArr.filter((item) => {
-                        // 	return item.id !== id
-                        // })
-                    }
-                    setTimeout(() => {
-                        loading.close()
-                    }, 1000)
-                })
-                .catch(() => {})
-        },
-		add() {
+		deleteRow(val) {
+			const { id } = val
+			this.$confirm('确定删除此游戏吗?', {
+				confirmButtonText: '确定',
+				cancelButtonText: '取消',
+				type: 'warning'
+			})
+				.then(() => {
+					const loading = this.$loading({
+						lock: true,
+						text: 'Loading',
+						spinner: 'el-icon-loading',
+						background: 'rgba(0, 0, 0, 0.7)'
+					})
+					if (this.idArray.includes(id)) {
+						this.$api
+							.gameDelTopicModuleAPI({ id })
+							.then((res) => {
+								loading.close()
+								const { code } = res
+								if (code === 200) {
+									this.$message({
+										type: 'success',
+										message: '删除成功!'
+									})
+								} else {
+									this.$message({
+										type: 'error',
+										message: '删除失败!'
+									})
+								}
+								this.loadData()
+							})
+							.catch(() => {
+								loading.close()
+								this.$message({
+									type: 'error',
+									message: '删除失败!'
+								})
+							})
+					} else {
+						this.dataList = this.dataList.filter((item) => {
+							return item.id !== id
+						})
+						// this.updateArr = this.updateArr.filter((item) => {
+						// 	return item.id !== id
+						// })
+					}
+					setTimeout(() => {
+						loading.close()
+					}, 1000)
+				})
+				.catch(() => {})
+		},
+		save() {
 			this.loading = true
 			const params = {
 				...this.form
@@ -409,30 +411,62 @@ export default {
 		// 列拖动
 		columnDrop() {
 			const wrapperTr = document.querySelector('.el-table__body-wrapper tbody')
-            const _this = this
-            this.sortable =
-                wrapperTr &&
-                Sortable.create(wrapperTr, {
-                    animation: 300,
-                    delay: 0,
-                    onEnd: ({ newIndex, oldIndex }) => {
-                        console.log('newIndex', newIndex)
-                        console.log('oldIndex', oldIndex)
-                        const currRow = _this.dataList.splice(oldIndex, 1)[0]
-                        _this.dataList.splice(newIndex, 0, currRow)
-                        if (newIndex !== oldIndex) {
-                            _this.dataList.forEach((item, idx) => {
-                                item.displayOrder = idx + 1
-                            })
-                        }
-                    }
-                })
+			const _this = this
+			this.sortable =
+				wrapperTr &&
+				Sortable.create(wrapperTr, {
+					animation: 300,
+					delay: 0,
+					onEnd: ({ newIndex, oldIndex }) => {
+						console.log('newIndex', newIndex)
+						console.log('oldIndex', oldIndex)
+						const currRow = _this.dataList.splice(oldIndex, 1)[0]
+						_this.dataList.splice(newIndex, 0, currRow)
+						if (newIndex !== oldIndex) {
+							_this.dataList.forEach((item, idx) => {
+								item.displayOrder = idx + 1
+							})
+						}
+					}
+				})
 		},
 		reset() {
 			this.$refs['form'].resetFields()
 		},
 		changeStatus(row) {
 			console.log(row)
+			const { id, status } = row
+			this.$confirm(
+				`<strong>是否对子游戏进行开启/禁用操作?</strong></br><span style='font-size:12px;color:#c1c1c1'>一旦操作将会立即生效</span>`,
+				'确认提示',
+				{
+					dangerouslyUseHTMLString: true,
+					confirmButtonText: '确定',
+					cancelButtonText: '取消',
+					type: 'warning'
+				}
+			).then(() => {
+				this.$api
+					.gameEitTopicModuleAPI({
+						id,
+						moduleStatus: status === 1 ? 0 : 1
+					})
+					.then((res) => {
+						const { code } = res
+						if (code === 200) {
+							this.$message({
+								type: 'success',
+								message: '操作成功!'
+							})
+						} else {
+							this.$message({
+								type: 'error',
+								message: '操作失败!'
+							})
+						}
+						this.getDetails()
+					})
+			})
 		}
 	}
 }
