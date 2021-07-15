@@ -35,7 +35,7 @@
               ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="游戏类型:" class="tagheight">
+          <el-form-item label="游戏名称:" class="tagheight">
             <el-select
               v-model="queryData.gameId"
               style="width: 300px"
@@ -125,7 +125,7 @@
               </span>
             </template>
           </el-table-column>
-          <el-table-column prop="gameName" align="center" label="游戏类型">
+          <el-table-column prop="gameName" align="center" label="游戏名称">
             <template slot-scope="scope">
               <span>{{ scope.row.gameName }}</span>
             </template>

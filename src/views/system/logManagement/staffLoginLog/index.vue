@@ -63,7 +63,6 @@
             </template>
           </el-table-column>
           <el-table-column prop="deviceNo" align="center" label="终端设备号">
-            <template slot="header"> 终端设备号 </template>
             <template slot-scope="scope">
               <span v-if="scope.row.deviceNo !== null">
                 {{ scope.row.deviceNo }}
