@@ -45,13 +45,15 @@
 							@sort-change="changeTableSort"
 						>
 							<el-table-column
-								prop="userName"
+								prop="displayOrder"
 								align="center"
 								label="展示顺序"
-								width="120px"
+								width="120"
 							>
 								<template slot-scope="scope">
-									<span v-if="!!scope.row.id">{{ scope.row.id }}</span>
+									<span v-if="!!scope.row.displayOrder">
+										{{ scope.row.displayOrder }}
+									</span>
 									<span v-else>-</span>
 								</template>
 							</el-table-column>
@@ -62,15 +64,13 @@
 								width="220px"
 							>
 								<template slot-scope="scope">
-									<span v-if="!!scope.row.moduleStatus">
-										<el-input
-											v-model="scope.row.moduleStatus"
-											size="medium"
-											maxlength="20"
-											placeholder="请输入"
-											clearable
-											style="width: 180px"
-										></el-input>
+									<span
+										v-if="!!scope.row.status"
+										:class="
+											scope.row.status === 1 ? 'normalRgba' : 'disableRgba'
+										"
+									>
+										{{ scope.row.status + '' === '1' ? '开启中' : '禁用中' }}
 									</span>
 									<span v-else>-</span>
 								</template>
@@ -79,7 +79,7 @@
 								prop="accountType"
 								align="center"
 								label="分类名称"
-								width="220px"
+								width="220"
 							>
 								<template slot-scope="scope">
 									<span v-if="!!scope.row.assortId">
@@ -96,35 +96,36 @@
 								</template>
 							</el-table-column>
 							<el-table-column
-								prop="accountType"
+								prop="allGameNum"
 								align="center"
 								label="全部游戏数量上限"
-								width="220px"
+								width="220"
 							>
 								<template slot-scope="scope">
-									<span v-if="!!scope.row.bankName">
+									<span v-if="!!scope.row.allGameNum">
 										<el-input
-											v-model="scope.row.bankName"
+											v-model="scope.row.allGameNum"
 											size="medium"
-											maxlength="20"
-											placeholder="请输入"
+											maxlength="3"
+											placeholder="请输入数字"
 											clearable
-											style="width: 180px"
+                                            style="width: 180px"
+											@keyup.native="checkValue($event)"
 										></el-input>
 									</span>
 									<span v-else>-</span>
 								</template>
 							</el-table-column>
 							<el-table-column
-								prop="accountType"
+								prop="mainTitleInfo"
 								align="center"
 								label="主标题信息"
-								width="220px"
+								width="220"
 							>
 								<template slot-scope="scope">
-									<span v-if="!!scope.row.bankName">
+									<span v-if="!!scope.row.mainTitleInfo">
 										<el-input
-											v-model="scope.row.bankName"
+											v-model="scope.row.mainTitleInfo"
 											size="medium"
 											maxlength="20"
 											placeholder="请输入"
@@ -136,15 +137,15 @@
 								</template>
 							</el-table-column>
 							<el-table-column
-								prop="accountType"
+								prop="subTitleInfo"
 								align="center"
 								label="副标题信息"
 								width="220px"
 							>
 								<template slot-scope="scope">
-									<span v-if="!!scope.row.bankName">
+									<span v-if="!!scope.row.subTitleInfo">
 										<el-input
-											v-model="scope.row.bankName"
+											v-model="scope.row.subTitleInfo"
 											size="medium"
 											maxlength="20"
 											placeholder="请输入"
@@ -208,7 +209,7 @@ export default {
 	// props: { editFormData: { type: Object, default: () => ({}) } },
 	data() {
 		return {
-            loading: false,
+			loading: false,
 			list: {},
 			form: {
 				moduleDesc: undefined
@@ -242,17 +243,35 @@ export default {
 		this.columnDrop()
 		this.getDetails()
 	},
-	mounted() {},
+	mounted() {
+	    this.gameAssortDic()
+    },
 	methods: {
 		back() {
 			this.$emit('back')
 		},
+        checkValue(e) {
+            e.target.value = e.target.value.replace(/[^\d]/g, '')
+        },
 		getDetails() {
 			this.$api.gameSpecialDetailsAPI().then((res) => {
 				const { code, data } = res
 				if (code === 200) {
-                    this.dataList = data
+					this.dataList = data['gameTopicModuleMetaVos']
+						? data['gameTopicModuleMetaVos']
+						: []
 				}
+				console.log('res', res)
+			})
+		},
+		gameAssortDic() {
+			this.$api.gameAssortDicAPI().then((res) => {
+				// const { code, data } = res
+				// if (code === 200) {
+				//     this.dataList = data['gameTopicModuleMetaVos']
+				//         ? data['gameTopicModuleMetaVos']
+				//         : []
+				// }
 				console.log('res', res)
 			})
 		},
@@ -324,7 +343,6 @@ export default {
 				this.loading = false
 			}, 1000)
 		},
-		checkValue() {},
 		addRow() {
 			const lastRow = this.dataList[this.dataList.length - 1]
 			const new_row = lastRow.id + 1

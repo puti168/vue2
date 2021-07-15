@@ -327,6 +327,33 @@ export function gameSpecialDetailsAPI(params) {
 	})
 }
 
+// 游戏==> 首页推荐位 ==> 游戏专题 ===> 详情分类名称下拉
+export function gameAssortDicAPI(params) {
+	return request({
+		url: '/gameCommonModule/gameAssortDic',
+		method: 'get',
+		params
+	})
+}
+
+// 游戏==> 首页推荐位 ==> 游戏专题 ===> 开启禁用
+export function gameEitTopicModuleAPI(data) {
+	return request({
+		url: '/gameCommonModule/editTopicModuleStatus',
+		method: 'post',
+		data
+	})
+}
+
+// 游戏==> 首页推荐位 ==> 游戏专题 ===> 删除
+export function gameDelTopicModuleAPI(data) {
+	return request({
+		url: '/gameCommonModule/delTopicModule',
+		method: 'post',
+		data
+	})
+}
+
 // 游戏==> 首页推荐位 ==> 列表 ===> 子模块编辑
 export function gameHomeRecommendDetailsEditAPI(data) {
 	return request({
@@ -388,6 +415,9 @@ export default {
 	gameSearchDeleteAPI,
 	gameHomeRecommendListAPI,
 	gameSpecialDetailsAPI,
+	gameAssortDicAPI,
+	gameEitTopicModuleAPI,
+	gameDelTopicModuleAPI,
 	gameHomeRecommendListSortAPI,
 	recommendStatusChangeAPI,
 	gameHomeRecommendDetailsAPI,
