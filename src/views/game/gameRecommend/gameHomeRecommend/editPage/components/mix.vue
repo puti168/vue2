@@ -17,6 +17,7 @@
 									v-model="formData.mainTitleInfo"
 									size="medium"
 									maxlength="10"
+                                    placeholder="请输入2-10位字符"
 									clearable
 									style="width: 365px"
 								></el-input>
@@ -27,6 +28,7 @@
 								<el-input
 									v-model="formData.subTitleInfo"
 									size="medium"
+                                    placeholder="请输入2-10位字符"
 									maxlength="10"
 									clearable
 									style="width: 365px"
@@ -39,6 +41,7 @@
 									v-model="formData.moduleDesc"
 									type="textarea"
 									size="medium"
+                                    placeholder="请输入2-100字符"
 									maxlength="100"
 									clearable
 									show-word-limit
