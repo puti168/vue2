@@ -4,7 +4,7 @@
 			<span class="title">最新游戏模块</span>
 			<div class="right-btn">
 				<el-button plain @click="back">取消</el-button>
-				<el-button type="success" @click="confirm(true)">保存</el-button>
+				<el-button type="success" @click="save(true)">保存</el-button>
 			</div>
 		</div>
 		<div class="main-content">
@@ -86,7 +86,7 @@
 					<div class="img-title">模块游戏截图</div>
 					<el-form-item
 						label="图片上传1:"
-						prop="image"
+						prop="pictureOne"
 						style="display:inline-block"
 					>
                         <UploadItem
@@ -94,16 +94,16 @@
                             :upload-file-type="'image'"
                             :platform="'PC'"
                             :img-urls="form.pictureOne"
-                            @upoladItemSucess="handleUploadSucess"
-                            @startUpoladItem="handleStartUpload"
-                            @deleteUpoladItem="handleDeleteUpload"
-                            @upoladItemDefeat="handleUploadDefeat"
+                            @upoladItemSucess="handleUploadSuccessOne"
+                            @startUpoladItem="handleStartUploadOne"
+                            @deleteUpoladItem="handleDeleteUploadOne"
+                            @upoladItemDefeat="handleUploadDefeatOne"
                         ></UploadItem>
 <!--                        <p>请上传图片！仅支持</p>-->
 					</el-form-item>
 					<el-form-item
 						label="图片上传2:"
-						prop="image"
+						prop="pictureTwo"
 						style="display:inline-block"
 					>
                         <UploadItem
@@ -111,16 +111,16 @@
                             :upload-file-type="'image'"
                             :platform="'PC'"
                             :img-urls="form.pictureTwo"
-                            @upoladItemSucess="handleUploadSucess"
-                            @startUpoladItem="handleStartUpload"
-                            @deleteUpoladItem="handleDeleteUpload"
-                            @upoladItemDefeat="handleUploadDefeat"
+                            @upoladItemSucess="handleUploadSuccess2"
+                            @startUpoladItem="handleStartUpload2"
+                            @deleteUpoladItem="handleDeleteUpload2"
+                            @upoladItemDefeat="handleUploadDefeat2"
                         ></UploadItem>
 <!--                        <p>请上传图片</p>-->
 					</el-form-item>
 					<el-form-item
 						label="首页大图上传:"
-						prop="image"
+						prop="pictureHome"
 						style="display:inline-block"
 					>
                         <UploadItem
@@ -128,10 +128,10 @@
                             :upload-file-type="'image'"
                             :platform="'PC'"
                             :img-urls="form.pictureHome"
-                            @upoladItemSucess="handleUploadSucess"
-                            @startUpoladItem="handleStartUpload"
-                            @deleteUpoladItem="handleDeleteUpload"
-                            @upoladItemDefeat="handleUploadDefeat"
+                            @upoladItemSucess="handleUploadSuccess3"
+                            @startUpoladItem="handleStartUpload3"
+                            @deleteUpoladItem="handleDeleteUpload3"
+                            @upoladItemDefeat="handleUploadDefeat3"
                         ></UploadItem>
 <!--                        <p>请上传图片</p>-->
 					</el-form-item>
@@ -254,13 +254,27 @@ export default {
 						trigger: 'change'
 					}
 				],
-				image: [
+                pictureOne: [
 					{
 						required: true,
 						message: '请选择图片上传',
 						trigger: ['blur', 'change']
 					}
 				],
+                pictureTwo: [
+                    {
+                        required: true,
+                        message: '请选择图片上传',
+                        trigger: ['blur', 'change']
+                    }
+                ],
+                pictureHome: [
+                    {
+                        required: true,
+                        message: '请选择图片上传',
+                        trigger: ['blur', 'change']
+                    }
+                ],
                 bodyTitle: [
                     {
                         required: true,
@@ -309,6 +323,41 @@ export default {
 			this.action = action
 			this.visible = true
 		},
+        save(action) {
+            this.loading = true
+            const params = {
+                ...this.form
+            }
+            this.$refs['form'].validate((valid) => {
+                if (valid) {
+                    this.$api
+                        .editGameLatestModuleAPI(params)
+                        .then((res) => {
+                            this.loading = false
+                            const { code, msg } = res
+                            if (code === 200) {
+                                this.$message({
+                                    message: '保存成功',
+                                    type: 'success'
+                                })
+                                this.$parent.back()
+                            } else {
+                                this.$message({
+                                    message: msg,
+                                    type: 'error'
+                                })
+                            }
+                        })
+                        .catch(() => {
+                            this.loading = false
+                        })
+                }
+            })
+
+            setTimeout(() => {
+                this.loading = false
+            }, 1000)
+        },
 		changeType(evt) {},
 		gameAssortList() {
 			this.$api.gameAssortDicAPI().then((res) => {
@@ -338,18 +387,44 @@ export default {
 				this.loading = false
 			}, 1500)
 		},
-        handleStartUpload() {
+        handleStartUploadOne() {
             this.$message.info('图片开始上传')
         },
-        handleUploadSucess({ index, file, id }) {
-            this.queryData.imageAddress = file.imgUrl
+        handleUploadSuccessOne(data) {
+            this.form.pictureOne = data.file.imgUrl
         },
-        handleUploadDefeat() {
-            this.queryData.imageAddress = ''
+        handleUploadDefeatOne() {
+            this.form.pictureOne = ''
             this.$message.error('图片上传失败')
         },
-        handleDeleteUpload() {
-            this.queryData.imageAddress = ''
+        handleDeleteUploadOne() {
+            this.form.pictureOne = ''
+        },
+        handleStartUpload2() {
+            this.$message.info('图片开始上传')
+        },
+        handleUploadSuccess2(data) {
+            this.form.pictureTwo = data.file.imgUrl
+        },
+        handleUploadDefeat2() {
+            this.form.pictureTwo = ''
+            this.$message.error('图片上传失败')
+        },
+        handleDeleteUpload2() {
+            this.form.pictureTwo = ''
+        },
+        handleStartUpload3() {
+            this.$message.info('图片开始上传')
+        },
+        handleUploadSuccess3(data) {
+            this.form.pictureHome = data.file.imgUrl
+        },
+        handleUploadDefeat3() {
+            this.form.pictureHome = ''
+            this.$message.error('图片上传失败')
+        },
+        handleDeleteUpload3() {
+            this.form.pictureHome = ''
         }
 	}
 }

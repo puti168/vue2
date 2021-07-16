@@ -355,6 +355,15 @@ export function gameEitTopicModuleAPI(data) {
 	})
 }
 
+// 游戏==> 首页推荐位 ==> 游戏专题 ===> 删除
+export function gameDelTopicModuleAPI(data) {
+	return request({
+		url: '/gameCommonModule/delTopicModule',
+		method: 'post',
+		data
+	})
+}
+
 // 游戏==> 首页推荐位 ==> 最新游戏 ===> 回显
 export function gameLatestModuleDetailAPI(params) {
 	return request({
@@ -364,10 +373,10 @@ export function gameLatestModuleDetailAPI(params) {
 	})
 }
 
-// 游戏==> 首页推荐位 ==> 游戏专题 ===> 删除
-export function gameDelTopicModuleAPI(data) {
+// 游戏==> 首页推荐位 ==> 最新游戏 ===> 保存
+export function editGameLatestModuleAPI(data) {
 	return request({
-		url: '/gameCommonModule/delTopicModule',
+		url: '/gameCommonModule/editGameLatestModule',
 		method: 'post',
 		data
 	})
@@ -455,6 +464,7 @@ export default {
 	gameEitTopicModuleAPI,
 	gameDelTopicModuleAPI,
 	gameLatestModuleDetailAPI,
+	editGameLatestModuleAPI,
 	gameHomeRecommendListSortAPI,
 	recommendStatusChangeAPI,
 	gameHomeRecommendDetailsAPI,

@@ -213,7 +213,6 @@ export default {
         },
         handleAvatarSuccess(url) {
             this.isUploading = false
-            console.log('this.curFile', url)
             this.curFile.imgUrl = url
             this.showProgress = false
             this.curType = this.curFile.type
@@ -383,6 +382,7 @@ export default {
             // 在父节点的所有子节点中查找自己所在的位置
             for (var i = 0, len = tags.length; i < len; i++) {
                 // 找到节点，返回下标
+                console.log('执行sss')
                 if (tags[i] === obj) {
                     return i
                 }
@@ -393,6 +393,7 @@ export default {
         uploadFile() {
             this.beforeAvatarUpload(this.curFile, () => {
                 this.isUploading = true
+                console.log('this.getIndex()', this.getIndex())
                 this.$emit('startUpoladItem', {
                     index: this.getIndex(),
                     file: this.curFile,
@@ -414,10 +415,7 @@ export default {
                                 type: 'success'
                             })
                         }
-                        console.log('res', res)
-                        res && res.data
-                            ? this.handleAvatarSuccess(res.data)
-                            : this.handleAvatarSuccess()
+                        this.handleAvatarSuccess(res.data)
                     })
                     .catch(() => {
                         if (this.isUploading) {
