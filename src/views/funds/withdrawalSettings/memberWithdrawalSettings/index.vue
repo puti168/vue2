@@ -129,12 +129,13 @@ width="128px"
           <el-select
             v-model="dialogForm.vipSerialNum"
             style="width: 600px"
+            value-key="vipSerialNum"
             placeholder="默认选择全部"
              @change="vipQuota($event)"
           >
             <el-option
               v-for="item in vipNumName"
-              :key="item.codein"
+              :key="item.vipSerialNum"
               :label="item.vipNumName"
               :value="item"
             ></el-option>
@@ -358,24 +359,18 @@ export default {
     // 下拉框
    vipQuota(evt) {
      this.$refs['formSub'] && this.$refs['formSub'].resetFields()
-     this.showInfoData = undefined
       this.dialogForm = {
-				activityType: evt.description,
-				activityCode: evt.code
+          vipSerialNum: evt.vipSerialNum,
+          vipNumName: evt.vipNumName
 			}
-			this.queryDetails(evt.code)
+			this.queryDetails(evt.vipSerialNum)
    },
    queryDetails(type) {
-			this.$api.getMemberWithdrawalGetWithdrawal({ type }).then((res) => {
-				const { code, data } = res
+			this.$api.getMemberWithdrawalGetWithdrawal({ vipSerialNum: type }).then((res) => {
+				const { code } = res
 				console.log('res', res)
 				if (code === 200) {
-					const { id } = data
-					this.showInfoData = data
-					this.queryData.id = id
-				} else {
-					this.showInfoData = undefined
-					this.queryData.id = undefined
+					// const { id } = data
 				}
 			})
 		},
