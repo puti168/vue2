@@ -165,7 +165,7 @@
 							</el-form-item>
 						</el-col>
 						<el-col :span="24">
-							<el-form-item label="内容信息:" prop="gameName">
+							<el-form-item label="内容信息:" prop="contentInfor">
 								<el-input
 									v-model="form.contentInfor"
 									clearable
@@ -173,7 +173,7 @@
 									show-word-limit
 									:maxlength="50"
 									:autosize="{ minRows: 4, maxRows: 4 }"
-									style="width: 75%"
+									style="width: 65%"
 								></el-input>
 							</el-form-item>
 						</el-col>
@@ -208,7 +208,7 @@ export default {
                 pictureOne: '',
                 pictureTwo: '',
                 bodyTitle: '',
-				contentInfor: ''
+                contentInfor: ''
 			},
 			gameAssortDicList: [],
 			editData: undefined,
@@ -276,12 +276,18 @@ export default {
                         required: true,
                         message: '请输入正文标题',
                         trigger: 'blur'
+                    },
+                    {
+                        min: 2,
+                        max: 100,
+                        message: '长度在 2 到 100 个字符',
+                        trigger: 'blur'
                     }
                 ],
-				gameName: [
+                contentInfor: [
 					{
 						required: true,
-						message: '请输入游戏名称',
+						message: '请输入内容信息',
 						trigger: 'blur'
 					}
 				]
