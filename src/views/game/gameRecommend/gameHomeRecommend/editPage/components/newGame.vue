@@ -171,7 +171,7 @@
 									clearable
 									type="textarea"
 									show-word-limit
-									:maxlength="50"
+									:maxlength="300"
 									:autosize="{ minRows: 4, maxRows: 4 }"
 									style="width: 65%"
 								></el-input>
@@ -289,7 +289,13 @@ export default {
 						required: true,
 						message: '请输入内容信息',
 						trigger: 'blur'
-					}
+					},
+                    {
+                        min: 2,
+                        max: 300,
+                        message: '长度在 2 到 300 个字符',
+                        trigger: 'blur'
+                    }
 				]
 			}
 		}

@@ -241,6 +241,7 @@ export function editGame(data) {
 		data
 	})
 }
+
 export function imageUpload(data) {
 	return request({
 		url: '/gameManager/upload',
@@ -249,6 +250,15 @@ export function imageUpload(data) {
 		headers: {
 			'Content-Type': 'multipart/form-data'
 		}
+	})
+}
+
+export function imageUploadAPI(data, cb) {
+	return request({
+		url: '/materialImage/upload',
+		method: 'post',
+		data,
+		cb
 	})
 }
 export function editGameStatus(data) {
@@ -410,6 +420,7 @@ export default {
 	addGame,
 	editGameStatus,
 	imageUpload,
+	imageUploadAPI,
 	gameManageList,
 	gameModuleNameList,
 	gamePlant,
