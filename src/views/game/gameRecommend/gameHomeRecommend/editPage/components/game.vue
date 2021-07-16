@@ -17,8 +17,9 @@
 									<el-input
 										v-model="form.moduleDesc"
 										size="medium"
+                                        show-word-limit
+                                        type="textarea"
 										maxlength="100"
-										minlength="2"
 										placeholder="2~100字符"
 										clearable
 										style="width: 365px"

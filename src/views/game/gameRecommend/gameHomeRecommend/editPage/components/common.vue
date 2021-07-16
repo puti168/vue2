@@ -61,8 +61,10 @@
 							<el-form-item label="模块描述:">
 								<el-input
 									v-model="formData.moduleDesc"
+									show-word-limit
+									type="textarea"
 									size="medium"
-									maxlength="20"
+									maxlength="100"
 									clearable
 									style="width: 365px"
 								></el-input>

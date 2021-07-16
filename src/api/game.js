@@ -345,6 +345,15 @@ export function gameEitTopicModuleAPI(data) {
 	})
 }
 
+// 游戏==> 首页推荐位 ==> 最新游戏 ===> 回显
+export function gameLatestModuleDetailAPI(params) {
+	return request({
+		url: '/gameCommonModule/gameLatestModuleDetail',
+		method: 'get',
+		params
+	})
+}
+
 // 游戏==> 首页推荐位 ==> 游戏专题 ===> 删除
 export function gameDelTopicModuleAPI(data) {
 	return request({
@@ -434,6 +443,7 @@ export default {
 	gameAssortDicAPI,
 	gameEitTopicModuleAPI,
 	gameDelTopicModuleAPI,
+	gameLatestModuleDetailAPI,
 	gameHomeRecommendListSortAPI,
 	recommendStatusChangeAPI,
 	gameHomeRecommendDetailsAPI,
