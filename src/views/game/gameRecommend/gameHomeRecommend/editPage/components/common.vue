@@ -18,6 +18,7 @@
 									size="medium"
 									maxlength="20"
 									clearable
+                                    placeholder="请输入2-10位字符"
 									style="width: 365px"
 								></el-input>
 							</el-form-item>
@@ -29,6 +30,7 @@
 									size="medium"
 									maxlength="20"
 									clearable
+                                    placeholder="请输入2-10位字符"
 									style="width: 365px"
 								></el-input>
 							</el-form-item>
@@ -40,6 +42,7 @@
 									size="medium"
 									maxlength="2"
 									clearable
+                                    placeholder="请输入数字"
 									style="width: 365px"
 									@keyup.native="checkValue($event)"
 								></el-input>
@@ -52,6 +55,7 @@
 									size="medium"
 									maxlength="3"
 									clearable
+                                    placeholder="请输入数字"
 									style="width: 365px"
 									@keyup.native="checkValue($event)"
 								></el-input>
@@ -64,6 +68,7 @@
 									show-word-limit
 									type="textarea"
 									size="medium"
+                                    placeholder="请输入2-100字符"
 									maxlength="100"
 									clearable
 									style="width: 365px"

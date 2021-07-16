@@ -18,6 +18,7 @@
 									type="textarea"
 									size="medium"
 									maxlength="100"
+                                    placeholder="请输入2-100位字符"
 									clearable
 									show-word-limit
 									style="width: 365px"

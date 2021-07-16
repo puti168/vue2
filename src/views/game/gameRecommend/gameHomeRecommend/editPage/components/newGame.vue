@@ -18,6 +18,7 @@
 									size="medium"
 									maxlength="20"
 									clearable
+                                    placeholder="请输入2-10位字符"
 									style="width: 365px"
 								></el-input>
 							</el-form-item>
@@ -29,8 +30,27 @@
 									size="medium"
 									maxlength="20"
 									clearable
+                                    placeholder="请输入2-10位字符"
 									style="width: 365px"
 								></el-input>
+							</el-form-item>
+						</el-col>
+						<el-col :span="12">
+							<el-form-item label="游戏选择:" prop="gameId">
+								<el-select
+									v-model="form.gameId"
+									size="medium"
+									placeholder="请选择"
+									style="width: 365px"
+									@change="changeType($event)"
+								>
+									<el-option
+										v-for="item in gameAssortDicList"
+										:key="item.id"
+										:label="item.assortName"
+										:value="item.id"
+									></el-option>
+								</el-select>
 							</el-form-item>
 						</el-col>
 						<el-col :span="12">
@@ -38,18 +58,10 @@
 								<el-input
 									v-model="form.moduleCaption"
 									size="medium"
-									maxlength="20"
-									clearable
-									style="width: 365px"
-								></el-input>
-							</el-form-item>
-						</el-col>
-						<el-col :span="12">
-							<el-form-item label="游戏选择:" prop="gameId">
-								<el-input
-									v-model="form.gameId"
-									size="medium"
-									maxlength="20"
+									show-word-limit
+                                    placeholder="请输入2-100字符"
+									type="textarea"
+									maxlength="100"
 									clearable
 									style="width: 365px"
 								></el-input>
@@ -59,8 +71,9 @@
 							<el-form-item label="模块描述:">
 								<el-input
 									v-model="form.moduleDesc"
-                                    show-word-limit
-                                    type="textarea"
+                                    placeholder="请输入2-100字符"
+									show-word-limit
+									type="textarea"
 									size="medium"
 									maxlength="100"
 									clearable
@@ -71,7 +84,6 @@
 					</el-row>
 					<el-divider></el-divider>
 					<div class="img-title">模块游戏截图</div>
-
 					<el-form-item
 						label="图片上传1"
 						prop="image"
@@ -91,6 +103,7 @@
 							/>
 							<i v-else class="el-icon-plus avatar-uploader-icon"></i>
 						</el-upload>
+<!--                        <p>请上传图片！仅支持</p>-->
 					</el-form-item>
 					<el-form-item
 						label="图片上传2"
@@ -111,6 +124,7 @@
 							/>
 							<i v-else class="el-icon-plus avatar-uploader-icon"></i>
 						</el-upload>
+<!--                        <p>请上传图片</p>-->
 					</el-form-item>
 					<el-form-item
 						label="图片上传3"
@@ -131,16 +145,20 @@
 							/>
 							<i v-else class="el-icon-plus avatar-uploader-icon"></i>
 						</el-upload>
+<!--                        <p>请上传图片</p>-->
 					</el-form-item>
 					<el-divider></el-divider>
 					<div class="img-title">模块游戏文本信息</div>
 					<el-row>
 						<el-col :span="24">
-							<el-form-item label="正文标题:" prop="gameName">
+							<el-form-item label="正文标题:" prop="bodyTitle">
 								<el-input
 									v-model="form.bodyTitle"
 									size="medium"
-									maxlength="20"
+									maxlength="100"
+                                    type="textarea"
+                                    show-word-limit
+                                    placeholder="请输入2-100字符"
 									clearable
 									style="width: 365px"
 								></el-input>
@@ -155,7 +173,7 @@
 									show-word-limit
 									:maxlength="50"
 									:autosize="{ minRows: 4, maxRows: 4 }"
-									style="width: 90%"
+									style="width: 75%"
 								></el-input>
 							</el-form-item>
 						</el-col>
@@ -183,15 +201,16 @@ export default {
 			form: {
 				mainTitleInfo: undefined,
 				subTitleInfo: undefined,
-                moduleCaption: undefined,
-                gameId: undefined,
+				moduleCaption: undefined,
+				gameId: undefined,
 				moduleDesc: undefined,
-				pictureOne: '',
-				pictureTwo: '',
-				pictureThree: '',
-				bodyTitle: '',
+                pictureHome: '',
+                pictureOne: '',
+                pictureTwo: '',
+                bodyTitle: '',
 				contentInfor: ''
 			},
+			gameAssortDicList: [],
 			editData: undefined,
 			imageUrl: ''
 		}
@@ -225,20 +244,20 @@ export default {
 						trigger: 'blur'
 					}
 				],
-                moduleCaption: [
+				moduleCaption: [
 					{
 						required: true,
 						message: '请输入模块说明',
 						trigger: 'blur'
 					},
-                    {
-                        min: 2,
-                        max: 100,
-                        message: '长度在 2 到 100 个字符',
-                        trigger: 'blur'
-                    }
+					{
+						min: 2,
+						max: 100,
+						message: '长度在 2 到 100 个字符',
+						trigger: 'blur'
+					}
 				],
-                gameId: [
+				gameId: [
 					{
 						required: true,
 						message: '请选择游戏',
@@ -252,6 +271,13 @@ export default {
 						trigger: ['blur', 'change']
 					}
 				],
+                bodyTitle: [
+                    {
+                        required: true,
+                        message: '请输入正文标题',
+                        trigger: 'blur'
+                    }
+                ],
 				gameName: [
 					{
 						required: true,
@@ -270,6 +296,7 @@ export default {
 	created() {},
 	mounted() {
 		this.getGameDetails()
+		this.gameAssortList()
 	},
 	methods: {
 		back() {
@@ -280,6 +307,15 @@ export default {
 			this.action = action
 			this.visible = true
 		},
+		changeType(evt) {},
+		gameAssortList() {
+			this.$api.gameAssortDicAPI().then((res) => {
+				const { code, data } = res
+				if (code === 200) {
+					this.gameAssortDicList = data || []
+				}
+			})
+		},
 		getGameDetails() {
 			this.loading = true
 			this.$api
@@ -289,7 +325,7 @@ export default {
 					console.log('最新游戏', res)
 					const { code, data } = res
 					if (code === 200) {
-						this.form = {...data}
+						this.form = { ...data }
 					} else {
 						// this.editData = undefined
 					}
@@ -375,7 +411,7 @@ export default {
 	.main-content {
 		.review-content {
 			border: 1px solid rgba(192, 190, 190, 0.5);
-			border-top: 0px;
+			border-top: 0;
 			padding: 30px;
 
 			.name {
