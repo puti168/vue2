@@ -85,66 +85,54 @@
 					<el-divider></el-divider>
 					<div class="img-title">模块游戏截图</div>
 					<el-form-item
-						label="图片上传1"
+						label="图片上传1:"
 						prop="image"
 						style="display:inline-block"
 					>
-						<el-upload
-							class="avatar-uploader"
-							action="https://jsonplaceholder.typicode.com/posts/"
-							:show-file-list="false"
-							:on-success="handleAvatarSuccess"
-							:before-upload="beforeAvatarUpload"
-						>
-							<img
-								v-if="form.pictureOne"
-								:src="form.pictureOne"
-								class="avatar"
-							/>
-							<i v-else class="el-icon-plus avatar-uploader-icon"></i>
-						</el-upload>
+                        <UploadItem
+                            ref="imgUpload1"
+                            :upload-file-type="'image'"
+                            :platform="'PC'"
+                            :img-urls="form.pictureOne"
+                            @upoladItemSucess="handleUploadSucess"
+                            @startUpoladItem="handleStartUpload"
+                            @deleteUpoladItem="handleDeleteUpload"
+                            @upoladItemDefeat="handleUploadDefeat"
+                        ></UploadItem>
 <!--                        <p>请上传图片！仅支持</p>-->
 					</el-form-item>
 					<el-form-item
-						label="图片上传2"
+						label="图片上传2:"
 						prop="image"
 						style="display:inline-block"
 					>
-						<el-upload
-							class="avatar-uploader"
-							action="https://jsonplaceholder.typicode.com/posts/"
-							:show-file-list="false"
-							:on-success="handleAvatarSuccess"
-							:before-upload="beforeAvatarUpload"
-						>
-							<img
-								v-if="form.pictureTwo"
-								:src="form.pictureTwo"
-								class="avatar"
-							/>
-							<i v-else class="el-icon-plus avatar-uploader-icon"></i>
-						</el-upload>
+                        <UploadItem
+                            ref="imgUpload2"
+                            :upload-file-type="'image'"
+                            :platform="'PC'"
+                            :img-urls="form.pictureTwo"
+                            @upoladItemSucess="handleUploadSucess"
+                            @startUpoladItem="handleStartUpload"
+                            @deleteUpoladItem="handleDeleteUpload"
+                            @upoladItemDefeat="handleUploadDefeat"
+                        ></UploadItem>
 <!--                        <p>请上传图片</p>-->
 					</el-form-item>
 					<el-form-item
-						label="图片上传3"
+						label="首页大图上传:"
 						prop="image"
 						style="display:inline-block"
 					>
-						<el-upload
-							class="avatar-uploader"
-							action="https://jsonplaceholder.typicode.com/posts/"
-							:show-file-list="false"
-							:on-success="handleAvatarSuccess"
-							:before-upload="beforeAvatarUpload"
-						>
-							<img
-								v-if="form.pictureThree"
-								:src="form.pictureThree"
-								class="avatar"
-							/>
-							<i v-else class="el-icon-plus avatar-uploader-icon"></i>
-						</el-upload>
+                        <UploadItem
+                            ref="imgUpload3"
+                            :upload-file-type="'image'"
+                            :platform="'PC'"
+                            :img-urls="form.pictureHome"
+                            @upoladItemSucess="handleUploadSucess"
+                            @startUpoladItem="handleStartUpload"
+                            @deleteUpoladItem="handleDeleteUpload"
+                            @upoladItemDefeat="handleUploadDefeat"
+                        ></UploadItem>
 <!--                        <p>请上传图片</p>-->
 					</el-form-item>
 					<el-divider></el-divider>
@@ -186,8 +174,10 @@
 
 <script>
 import list from '@/mixins/list'
+import UploadItem from '../../components/UploadItem'
 
 export default {
+    components: { UploadItem },
 	mixins: [list],
 	props: {
 		gameDetails: {
@@ -204,11 +194,11 @@ export default {
 				moduleCaption: undefined,
 				gameId: undefined,
 				moduleDesc: undefined,
-                pictureHome: '',
-                pictureOne: '',
-                pictureTwo: '',
-                bodyTitle: '',
-                contentInfor: ''
+                pictureHome: undefined,
+                pictureOne: undefined,
+                pictureTwo: undefined,
+                bodyTitle: undefined,
+                contentInfor: undefined
 			},
 			gameAssortDicList: [],
 			editData: undefined,
@@ -348,52 +338,19 @@ export default {
 				this.loading = false
 			}, 1500)
 		},
-		beforeAvatarUpload() {
-			// const isPNG = file.type === 'image/png'
-			// if (!isPNG) {
-			// 	this.$message.error(this.$t('new_2771'))
-			// }
-			// const isSize = new Promise(function(resolve, reject) {
-			// 	const _URL = window.URL || window.webkitURL
-			// 	const image = new Image()
-			// 	// image.src = file.url
-			// 	image.onload = () => {
-			// 		const valid = image.width === 240 && image.height === 72
-			// 		valid ? resolve() : reject()
-			// 	}
-			// 	image.src = _URL.createObjectURL(file)
-			// }).then(
-			// 	() => {
-			// 		return file
-			// 	},
-			// 	() => {
-			// 		this.$message({
-			// 			message: this.$t('new_2771'),
-			// 			type: 'error'
-			// 		})
-			// 		return Promise.reject()
-			// 	}
-			// )
-			// this.dataList = {
-			// 	textType: 4,
-			// 	agentId: row.agentId.split('_')[1]
-			// }
-			// return isPNG && isSize
-		},
-		handleAvatarSuccess() {
-			// if (response.code !== 200) {
-			// 	this.$message({
-			// 		message: this.$i18n.t(`backstage_${response.code}`),
-			// 		type: 'error'
-			// 	})
-			// } else {
-			// 	row.blogo = response.data
-			// 	this.$message({
-			// 		message: this.$t(`new_1111`),
-			// 		type: 'success'
-			// 	})
-			// }
-		}
+        handleStartUpload() {
+            this.$message.info('图片开始上传')
+        },
+        handleUploadSucess({ index, file, id }) {
+            this.queryData.imageAddress = file.imgUrl
+        },
+        handleUploadDefeat() {
+            this.queryData.imageAddress = ''
+            this.$message.error('图片上传失败')
+        },
+        handleDeleteUpload() {
+            this.queryData.imageAddress = ''
+        }
 	}
 }
 </script>
