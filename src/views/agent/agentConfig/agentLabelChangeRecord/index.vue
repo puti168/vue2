@@ -99,19 +99,19 @@
 					></el-table-column>
 					<el-table-column prop="labelName" align="center" label="标签名称">
 						<template slot-scope="scope">
-							<span v-if="scope.row.beforeModify !== null">
-								{{ scope.row.beforeModify }}
+							<span v-if="scope.row.labelName !== null">
+								{{ scope.row.labelName }}
 							</span>
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="labelName" align="center" label="变更类型">
+					<el-table-column prop="applyType" align="center" label="变更类型">
 						<template slot-scope="scope">
-							<span v-if="scope.row.beforeModify !== null">
-								{{ scope.row.beforeModify }}
-							</span>
-							<span v-else>-</span>
-						</template>
+              <span v-if="!!(scope.row.applyType+'')">
+                {{ typeFilter(scope.row.applyType, 'labelApplyType') }}
+              </span>
+              <span v-else>-</span>
+            </template>
 					</el-table-column>
 					<el-table-column prop="beforeModify" align="center" label="变更前">
 						<template slot-scope="scope">
@@ -181,7 +181,7 @@ export default {
   },
   computed: {
 		applyTypeArr() {
-			return this.globalDics.applyType
+			return this.globalDics.labelApplyType
 		}
   },
   mounted() {},
