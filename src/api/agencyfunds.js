@@ -1,24 +1,40 @@
 import request from '@/utils/request'
 // 代理提款设置-所有会员提款设置
-export function getWithdrawSettingMemberSelectAll(params) {
+export function getMemberWithdrawalSelectAll(params) {
 	return request({
-		url: '/withdrawSettingMember/selectAll',
+		url: '/memberWithdrawal/selectAll',
 		method: 'get',
 		params
 	})
 }
-// 代理提款设置-新增会员理提款设置
-export function getWithdrawSettingMemberAdd(data) {
+// 代理提款设置-会员提款设置-新增vip下拉框
+export function getMemberWithdrawalSelect(params) {
 	return request({
-		url: '/withdrawSettingMember/add',
+		url: '/memberWithdrawal/select',
+		method: 'get',
+		params
+	})
+}
+// 代理提款设置-新增会员理提款设置==额度
+export function getMemberWithdrawalGetWithdrawal(data) {
+	return request({
+		url: '/memberWithdrawal/getWithdrawal',
+		method: 'post',
+		data
+	})
+}
+// 代理提款设置-新增会员理提款设置
+export function getMemberWithdrawalAdd(data) {
+	return request({
+		url: '/memberWithdrawal/add',
 		method: 'post',
 		data
 	})
 }
 // 代理提款设置-修改员理提款设置
-export function getWithdrawSettingMemberUpdate(data) {
+export function getAemberWithdrawalUpdate(data) {
 	return request({
-		url: '/withdrawSettingMember/update',
+		url: '/memberWithdrawal/update',
 		method: 'post',
 		data
 	})
@@ -209,11 +225,13 @@ export default {
 	getProxyFundsRecordsArtificialAccountAddDownload,
 	getProxyFundsRecordsArtificialAccountSub,
 	getProxyCommissionRecordSelect,
-	getWithdrawSettingMemberSelectAll,
-	getWithdrawSettingMemberAdd,
-	getWithdrawSettingMemberUpdate,
+	getMemberWithdrawalSelectAll,
+	getMemberWithdrawalAdd,
+	getAemberWithdrawalUpdate,
 	getProxyFundsRecordsArtificialAccountSubDownload,
 	getProxyCommissionRecordProxyCommissionExport,
 	setwithdrawSettingMemberUpdate,
-	getWithdrawSettingMemberreset
+	getWithdrawSettingMemberreset,
+	getMemberWithdrawalSelect,
+	getMemberWithdrawalGetWithdrawal
 }
