@@ -24,9 +24,9 @@ export function getWithdrawSettingMemberUpdate(data) {
 	})
 }
 // 代理提款设置-分页代理提款设置
-export function getWithdrawSettingProxySelectPage(data) {
+export function getProxyWithdrawalSelectPage(data) {
 	return request({
-		url: '/withdrawSettingProxy/selectPage',
+		url: '/proxyWithdrawal/selectPage',
 		method: 'post',
 		data
 	})
@@ -193,7 +193,7 @@ export function getWithdrawSettingMemberreset(data) {
 	})
 }
 export default {
-    getWithdrawSettingProxySelectPage,
+	getProxyWithdrawalSelectPage,
 	getProxyFundsRecordsAccountChange,
 	getDictgetAllDictList,
 	getProxyFundsRecordsAccountChangeDownload,

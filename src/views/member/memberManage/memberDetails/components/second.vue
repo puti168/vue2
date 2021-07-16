@@ -107,27 +107,27 @@ icon="el-icon-refresh"
       <el-col :span="4">
         存款总额： <i v-if="activeL" class="el-icon-loading"></i>
         <span v-else>
-          {{ playerList.sumDepositAmount }}
+          {{ playerList.totalDepositAmount }}
         </span>
       </el-col>
       <el-col :span="20">
         取款总额： <i v-if="activeL" class="el-icon-loading"></i>
         <span v-else>
-          {{ playerList.sumWithdrawAmount }}
+          {{ playerList.totalWithdrawAmount }}
         </span>
       </el-col>
       <el-col :span="4">
         存款次数： <i v-if="activeL" class="el-icon-loading"></i>
         <span v-else>
-          {{ playerList.depositTimes }}
+          {{ playerList.totalDepositNum }}
         </span>
       </el-col>
       <el-col :span="20">
         取款次数： <i v-if="activeL" class="el-icon-loading"></i>
         <span v-else>
-          {{ playerList.withdrawTimes }} (普通{{
-            playerList.commonWithdrawTimes
-          }}次，大额{{ playerList.bigWithdrawTimes }}次)
+          {{ playerList.totalWithdrawNum }} (普通{{ playerList.generalCount }}次，大额{{
+            playerList.bigCount
+          }}次)
         </span>
       </el-col>
     </el-row>

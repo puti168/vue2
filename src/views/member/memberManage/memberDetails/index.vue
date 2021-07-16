@@ -153,6 +153,22 @@ export default {
           if (res.code === 200 && res.data !== null) {
             this.isShow = true
             this.outlineInfo = res.data
+            const {
+              totalDepositAmount,
+              totalDepositNum,
+              totalWithdrawAmount,
+              totalWithdrawNum,
+              generalCount,
+              bigCount
+            } = res.data
+            this.playerList = {
+              totalDepositAmount,
+              totalDepositNum,
+              totalWithdrawAmount,
+              totalWithdrawNum,
+              generalCount,
+              bigCount
+            }
             this.parentData.userName = res.data.userName
             this.parentData.userId = res.data.id
             this.getVipInfo(res.data.id)
@@ -160,7 +176,7 @@ export default {
             this.getAccountCashAccount(res.data.id)
             this.getWithdrawalFreeze(res.data.id)
             this.getWithdrawWater(res.data.id)
-            this.getPlayerOrderSumInfo(res.data.id)
+            // this.getPlayerOrderSumInfo(res.data.id)
             this.getPlayerBetHistorySum(res.data.id)
             this.getPlayerTop3(res.data.id)
             this.getLogMemberLoginLog(res.data.id)
@@ -242,14 +258,14 @@ export default {
         }
       })
     },
-    // 会员充提信息
-    getPlayerOrderSumInfo(val) {
-      this.$api.getPlayerOrderSumInfo({ userId: val }).then((res) => {
-        if (res.code === 200) {
-          this.playerList = res.data
-        }
-      })
-    },
+    // // 会员充提信息
+    // getPlayerOrderSumInfo(val) {
+    //   this.$api.getPlayerOrderSumInfo({ userId: val }).then((res) => {
+    //     if (res.code === 200) {
+    //       this.playerList = res.data
+    //     }
+    //   })
+    // },
     // 会员投注信息
     getPlayerBetHistorySum(val) {
       this.$api.getPlayerBetHistorySum({ userId: val }).then((res) => {

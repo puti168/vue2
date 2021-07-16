@@ -3,7 +3,7 @@
     <div class="view-container dealer-container">
       <div class="head flex-h-end">
         <el-button
-           v-if="hasPermission('257')"
+          v-if="hasPermission('257')"
           type="primary"
           style="padding: 0 15px"
           :disabled="loading"
@@ -31,11 +31,20 @@
           ></el-table-column>
           <el-table-column prop="operating" align="center" label="操作">
             <template slot-scope="scope">
-              <el-link v-if="hasPermission('258')" type="primary" size="medium" @click="edit(scope.row)">
+              <el-link
+                v-if="hasPermission('258')"
+                type="primary"
+                size="medium"
+                @click="edit(scope.row)"
+              >
                 修改
               </el-link>
               <el-link
-                v-if="scope.row.withdrawStatus !== 0 && scope.row.proxyAccount !== '0' && hasPermission('259')"
+                v-if="
+                  scope.row.withdrawStatus !== 0 &&
+                  scope.row.proxyAccount !== '0' &&
+                  hasPermission('259')
+                "
                 type="primary"
                 size="medium"
                 @click="deleteLabel(scope.row)"
@@ -46,11 +55,8 @@
           </el-table-column>
           <el-table-column prop="withdrawStatus" align="center" label="状态">
             <template slot-scope="scope">
-              <span v-if="scope.row.withdrawStatus === 0" class="normalRgba">开启</span>
-              <span
-v-else-if="scope.row.withdrawStatus === 1"
-class="disableRgba"
->关闭</span>
+              <span v-if="scope.row.withdrawStatus === 0">开启</span>
+              <span v-else-if="scope.row.withdrawStatus === 1">关闭</span>
               <span v-else>-</span>
             </template>
           </el-table-column>
@@ -92,52 +98,40 @@ class="disableRgba"
             label="风控层级"
           ></el-table-column>
           <el-table-column
-            prop="singleMinAmount"
+            prop="bankCardMinAmount"
             align="center"
-            label="单次提现最低限额"
+            label="银行卡单次提款最低限额"
           ></el-table-column>
           <el-table-column
-            prop="singleMaxAmount"
+            prop="bankCardMaxAmount"
             align="center"
-            label="单次提现最高限额"
+            label="银行卡单次提款最高限额"
           ></el-table-column>
           <el-table-column
-            prop="dateFreeNum"
+            prop="virtualCardMinAmount"
             align="center"
-            label="单日免费提现次数"
+            label="虚拟币单次提款最低限额"
+          ></el-table-column>
+          <el-table-column
+            prop="virtualCardMaxAmount"
+            align="center"
+            label="虚拟币单次提款最高限额"
           ></el-table-column>
           <el-table-column
             prop="dateTotalNum"
             align="center"
-            label="单日最高提款次数"
-          ></el-table-column>
-          <el-table-column
-            prop="dateFreeAmount"
-            align="center"
-            label="单日免费提款总额限制"
+            label="单日提款总次数"
           ></el-table-column>
           <el-table-column
             prop="dateMaxAmount"
             align="center"
-            label="单日最高提款总额度"
+            label="单日提款总额度"
           ></el-table-column>
           <el-table-column
             prop="bigAmount"
             align="center"
             label="大额提现标记金额"
           ></el-table-column>
-          <el-table-column
-            prop="rateDateFree"
-            align="center"
-            label="超出单日免费次数手续费"
-          >
-          </el-table-column>
-          <el-table-column
-            prop="rateDateTotal"
-            align="center"
-            label="超出单日提款总额手续费"
-          >
-          </el-table-column>
         </el-table>
         <!-- 分页 -->
         <el-pagination
@@ -154,7 +148,7 @@ class="disableRgba"
       </div>
       <el-dialog :visible.sync="dialogFormVisible" :destroy-on-close="true" width="870px">
         <div class="form-header">
-          <span class="fontSize">新增代理提款设置</span>
+          <span class="fontSize">{{ titel }}代理提款设置</span>
           <span>
             <code style="color: #ff3b30">*</code>
             为必填项
@@ -183,6 +177,7 @@ class="disableRgba"
               :disabled="isDisabled"
               class="proxyInput"
               @keyup.enter.native="enterSearch"
+              @blur="enterSearch"
             ></el-input>
           </el-form-item>
           <el-form-item label="代理姓名：" class="proxyItem">
@@ -241,161 +236,122 @@ class="disableRgba"
         >
           <h3>提款配置</h3>
           <el-form-item
-            label="单次提款最低额度："
-            prop="singleMinAmount"
+            label="银行卡单次提款最低限额："
+            prop="bankCardMinAmount"
             class="proxyItem"
+            label-width="190px"
           >
             <el-input-number
-              v-model="dialogForm.singleMinAmount"
+              v-model="dialogForm.bankCardMinAmount"
               class="setInput"
               :min="0"
               :precision="0"
-              placeholder="请输入金额，0为不限制"
+              placeholder="请输入，0为不限制"
             ></el-input-number>
             <span>元</span>
           </el-form-item>
           <el-form-item
-            label="单次提款最高额度："
-            prop="singleMaxAmount"
+            label="银行卡单次提款最高限额："
+            prop="bankCardMaxAmount"
             class="proxyItem"
+            label-width="190px"
           >
             <el-input-number
-              v-model="dialogForm.singleMaxAmount"
+              v-model="dialogForm.bankCardMaxAmount"
               class="setInput"
               :min="0"
               :precision="0"
-              placeholder="请输入金额，0为不限制"
+              placeholder="请输入，0为不限制"
             ></el-input-number>
             <span>元</span>
           </el-form-item>
-          <el-form-item label="单日免费提款次数：" prop="dateFreeNum" class="proxyItem">
+          <el-form-item
+            label="虚拟币单次提款最低限额："
+            prop="virtualCardMinAmount"
+            class="proxyItem"
+            label-width="190px"
+          >
             <el-input-number
-              v-model="dialogForm.dateFreeNum"
+              v-model="dialogForm.virtualCardMinAmount"
               class="setInput"
               :min="0"
               :precision="0"
-              placeholder="请输入次数，0为不限制"
+              placeholder="请输入，0为不限制"
             ></el-input-number>
             <span>次</span>
           </el-form-item>
           <el-form-item
-            label="单日免费提款总额："
-            prop="dateFreeAmount"
+            label="虚拟币单次提款最高限额："
+            prop="virtualCardMaxAmount"
             class="proxyItem"
+            label-width="190px"
           >
             <el-input-number
-              v-model="dialogForm.dateFreeAmount"
+              v-model="dialogForm.virtualCardMaxAmount"
               class="setInput"
               :min="0"
               :precision="0"
-              placeholder="请输入金额，0为不限制"
+              placeholder="请输入，0为不限制"
             ></el-input-number>
             <span>元</span>
           </el-form-item>
-          <el-form-item label="单日最高提款次数：" prop="dateTotalNum" class="proxyItem">
+          <el-form-item
+            label="最高提款次数："
+            prop="dateTotalNum"
+            class="proxyItem"
+            label-width="190px"
+          >
             <el-input-number
               v-model="dialogForm.dateTotalNum"
               class="setInput"
               :min="0"
               :precision="0"
-              placeholder="请输入次数，0为不限制"
+              placeholder="请输入，0为不限制"
             ></el-input-number>
             <span>次</span>
           </el-form-item>
-          <el-form-item label="单日最高提款总额：" prop="dateMaxAmount" class="proxyItem">
+          <el-form-item
+            label="单日最高提款总额："
+            prop="dateMaxAmount"
+            class="proxyItem"
+            label-width="190px"
+          >
             <el-input-number
               v-model="dialogForm.dateMaxAmount"
               class="setInput"
               :min="0"
               :precision="0"
-              placeholder="请输入金额，0为不限制"
+              placeholder="请输入，0为不限制"
             ></el-input-number>
             <span>元</span>
           </el-form-item>
-          <el-form-item label="大额提款标记金额：" prop="bigAmount" class="proxyItem">
+          <el-form-item
+            label="大额提款标记金额："
+            prop="bigAmount"
+            class="proxyItem"
+            label-width="190px"
+          >
             <el-input-number
               v-model="dialogForm.bigAmount"
               class="setInput"
               :min="0"
               :precision="0"
-              placeholder="请输入金额，0为不限制"
+              placeholder="请输入，0为不限制"
             ></el-input-number>
             <span>元</span>
           </el-form-item>
-          <h3>提款手续费配置</h3>
-          <el-form-item label="超出单日免费次数：" prop="rateDateFree">
+          <el-form-item
+            label="状态："
+            prop="withdrawStatus"
+            style="width: 100%; padding-left: 15px"
+            label-width="190px"
+          >
             <el-select
-              v-model="dialogForm.rateDateFreeType"
-              placeholder="请选择"
-              class="selectW"
+              v-model="dialogForm.withdrawStatus"
+              class="setInput"
+              :disabled="dialogForm.proxyAccount==='0'"
+              :popper-append-to-body="false"
             >
-              <el-option label="固定金额(元)" :value="1"></el-option>
-              <el-option label="百分比(%)" :value="2"></el-option>
-            </el-select>
-            <el-input-number
-              v-if="dialogForm.rateDateFreeType === 2"
-              v-model="dialogForm.rateDateFree"
-              style="width: 100px"
-              :min="0"
-              :precision="0"
-              placeholder="请输入"
-            ></el-input-number>
-            <el-input-number
-              v-else
-              v-model="dialogForm.rateDateFree"
-              style="width: 100px"
-              :min="0"
-              :precision="0"
-              placeholder="请输入"
-            ></el-input-number>
-          </el-form-item>
-          <el-form-item label="超出单日免费次数总额：" prop="rateDateTotal">
-            <el-select
-              v-model="dialogForm.rateDateTotalType"
-              placeholder="请选择"
-              class="selectW"
-            >
-              <el-option label="固定金额(元)" :value="1"></el-option>
-              <el-option label="百分比(%)" :value="2"></el-option>
-            </el-select>
-            <el-input-number
-              v-if="dialogForm.rateDateTotalType === 2"
-              v-model="dialogForm.rateDateTotal"
-              style="width: 100px"
-              :min="0"
-              :precision="0"
-              placeholder="请输入"
-            ></el-input-number>
-            <el-input-number
-              v-else
-              v-model="dialogForm.rateDateTotal"
-              style="width: 100px"
-              :min="0"
-              :precision="0"
-              placeholder="请输入"
-            ></el-input-number>
-          </el-form-item>
-          <h3>提款提示语配置</h3>
-          <div class="disp">
-            <p>超出单日最高次数提示语：</p>
-            <p>超出单日最高提款总额提示语：</p>
-          </div>
-          <el-form-item label="" prop="dateTotalNumRemark">
-            <el-input
-              v-model="dialogForm.dateTotalNumRemark"
-              style="width: 385px"
-              placeholder="游戏前端提示语，限制25字以内"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="" prop="dateMaxAmountRemark">
-            <el-input
-              v-model="dialogForm.dateMaxAmountRemark"
-              style="width: 385px"
-              placeholder="游戏前端提示语，限制25字以内"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="状态" prop="withdrawStatus">
-            <el-select v-model="dialogForm.withdrawStatus" :popper-append-to-body="false">
               <el-option label="开启" :value="0"></el-option>
               <el-option label="关闭" :value="1"></el-option>
             </el-select>
@@ -431,20 +387,16 @@ export default {
       tableData: [],
       dialogFormVisible: false,
       dialogForm: {
-        singleMinAmount: 0,
-        singleMaxAmount: 0,
-        dateFreeNum: 0,
-        dateFreeAmount: 0,
+        bankCardMinAmount: 0,
+        bankCardMaxAmount: 0,
+        virtualCardMinAmount: 0,
+        virtualCardMaxAmount: 0,
         dateTotalNum: 0,
         dateMaxAmount: 0,
         bigAmount: 0,
-        rateDateFree: 0,
-        rateDateTotal: 0,
-        rateDateFreeType: 2,
-        rateDateTotalType: 2,
         withdrawStatus: 0
       },
-      title: '',
+      titel: '',
       isDisabled: true,
       isUniversal: true,
       withdrawStatus: ''
@@ -459,7 +411,73 @@ export default {
     },
 
     rules() {
-      const minRules = (rule, value, callback) => {
+      const bankCardMinAmountRules = (rule, value, callback) => {
+        console.log(value)
+        if (!Number.isInteger(value) || value < 0) {
+          callback(new Error('请输入金额'))
+        } else if (value > this.dialogForm.bankCardMaxAmount) {
+          callback(new Error('不能大于银行卡单次提款最高额度，请重新输入'))
+        } else if (value > this.dialogForm.dateMaxAmount) {
+          callback(new Error('不能大于单日最高提款总额，请重新输入'))
+        } else {
+          callback()
+        }
+      }
+      const bankCardMaxAmountRules = (rule, value, callback) => {
+        console.log(value)
+        if (!Number.isInteger(value) || value < 0) {
+          callback(new Error('请输入金额'))
+        } else if (value < this.dialogForm.bankCardMinAmount) {
+          callback(new Error('不能小于银行卡单次提款最低额度，请重新输入'))
+        } else if (value > this.dialogForm.dateMaxAmount) {
+          callback(new Error('不能大于单日最高提款总额，请重新输入'))
+        } else {
+          callback()
+        }
+      }
+      const virtualCardMinAmountRules = (rule, value, callback) => {
+        console.log(value)
+        if (!Number.isInteger(value) || value < 0) {
+          callback(new Error('请输入金额'))
+        } else if (value > this.dialogForm.virtualCardMaxAmount) {
+          callback(new Error('不能大于虚拟币单次提款最高额度，请重新输入'))
+        } else if (value > this.dialogForm.dateMaxAmount) {
+          callback(new Error('不能大于单日最高提款总额，请重新输入'))
+        } else {
+          callback()
+        }
+      }
+      const virtualCardMaxAmountRules = (rule, value, callback) => {
+        console.log(value)
+        if (!Number.isInteger(value) || value < 0) {
+          callback(new Error('请输入金额'))
+        } else if (value < this.dialogForm.virtualCardMinAmount) {
+          callback(new Error('不能小于虚拟币单次提款最低额度，请重新输入'))
+        } else if (value > this.dialogForm.dateMaxAmount) {
+          callback(new Error('不能大于单日最高提款总额，请重新输入'))
+        } else {
+          callback()
+        }
+      }
+      const dateMaxAmountRules = (rule, value, callback) => {
+        console.log(value)
+        if (!Number.isInteger(value) || value < 0) {
+          callback(new Error('请输入金额'))
+        } else if (value < this.dialogForm.bankCardMinAmount) {
+          callback(new Error('不能小于银行卡单次提款最低限额，请重新输入'))
+        } else if (value < this.dialogForm.bankCardMaxAmount) {
+          callback(new Error('不能小于银行卡单次提款最高限额，请重新输入'))
+        } else if (value < this.dialogForm.virtualCardMinAmount) {
+          callback(new Error('不能小于虚拟币单次提款最低限额，请重新输入'))
+        } else if (value < this.dialogForm.virtualCardMaxAmount) {
+          callback(new Error('不能小于虚拟币单次提款最高限额，请重新输入'))
+        } else if (value < this.dialogForm.bigAmount) {
+          callback(new Error('不能小于大额提款标记金额，请重新输入'))
+        } else {
+          callback()
+        }
+      }
+      const bigAmountRules = (rule, value, callback) => {
         console.log(value)
         if (!Number.isInteger(value) || value < 0) {
           callback(new Error('请输入金额'))
@@ -469,76 +487,32 @@ export default {
           callback()
         }
       }
-      const freeRules = (rule, value, callback) => {
-        console.log(value)
-        if (!Number.isInteger(value) || value < 0) {
-          callback(new Error('请输入次数'))
-        } else if (value > this.dialogForm.dateTotalNum) {
-          callback(new Error('不能大于单日最高提款次数，请重新输入'))
-        } else {
-          callback()
-        }
-      }
-      const maxRules = (rule, value, callback) => {
-        console.log(value)
-        if (!Number.isInteger(value) || value < 0) {
-          callback(new Error('请输入金额'))
-        } else if (value < this.dialogForm.singleMinAmount) {
-          callback(new Error('不能小于单次提款最低额度，请重新输入'))
-        } else if (value < this.dialogForm.singleMaxAmount) {
-          callback(new Error('不能小于单次提款最高额度，请重新输入'))
-        } else if (value < this.dialogForm.dateFreeAmount) {
-          callback(new Error('不能小于单日免费提款总额，请重新输入'))
-        } else if (value < this.dialogForm.bigAmount) {
-          callback(new Error('不能小于大额提款标记金额，请重新输入'))
-        } else {
-          callback()
-        }
-      }
-      const totalRules = (rule, value, callback) => {
-        console.log(value)
-        if (!Number.isInteger(value) || value < 0) {
-          callback(new Error('请输入次数'))
-        } else if (value < this.dialogForm.dateFreeNum) {
-          callback(new Error('不能小于单日免费提款次数，请重新输入'))
-        } else {
-          callback()
-        }
-      }
-      const singleMinAmount = [{ required: true, validator: minRules, trigger: 'blur' }]
-      const singleMaxAmount = [{ required: true, validator: minRules, trigger: 'blur' }]
-      const dateFreeNum = [{ required: true, validator: freeRules, trigger: 'blur' }]
-      const dateFreeAmount = [{ required: true, validator: minRules, trigger: 'blur' }]
-      const dateTotalNum = [{ required: true, validator: totalRules, trigger: 'blur' }]
-      const dateMaxAmount = [{ required: true, validator: maxRules, trigger: 'blur' }]
-      const bigAmount = [{ required: true, validator: minRules, trigger: 'blur' }]
-      const rateDateFree = [
-        {
-          required: true,
-          message: '请输入超出次数手续费收取金额或百分比',
-          trigger: 'blur'
-        }
+      const bankCardMinAmount = [
+        { required: true, validator: bankCardMinAmountRules, trigger: 'blur' }
       ]
-      const rateDateTotal = [
-        {
-          required: true,
-          message: '请输入超出金额手续费收取金额或百分比',
-          trigger: 'blur'
-        }
+      const bankCardMaxAmount = [
+        { required: true, validator: bankCardMaxAmountRules, trigger: 'blur' }
       ]
+      const virtualCardMinAmount = [
+        { required: true, validator: virtualCardMinAmountRules, trigger: 'blur' }
+      ]
+      const virtualCardMaxAmount = [
+        { required: true, validator: virtualCardMaxAmountRules, trigger: 'blur' }
+      ]
+      const dateTotalNum = [{ required: true, message: '请输入', trigger: 'blur' }]
+      const dateMaxAmount = [
+        { required: true, validator: dateMaxAmountRules, trigger: 'blur' }
+      ]
+      const bigAmount = [{ required: true, validator: bigAmountRules, trigger: 'blur' }]
       const withdrawStatus = [{ required: true, message: '请选择状态', trigger: 'blur' }]
-
-      // const oneFree = [{ required: true, validator: oneFreeRules, trigger: 'blur' }]grady2dev
       return {
-        singleMinAmount,
-        singleMaxAmount,
-        dateFreeNum,
-        dateFreeAmount,
+        bankCardMinAmount,
+        bankCardMaxAmount,
+        virtualCardMinAmount,
+        virtualCardMaxAmount,
         dateTotalNum,
         dateMaxAmount,
         bigAmount,
-        rateDateFree,
-        rateDateTotal,
         withdrawStatus
       }
     }
@@ -552,7 +526,7 @@ export default {
       }
 
       this.$api
-        .getWithdrawSettingProxySelectPage(params)
+        .getProxyWithdrawalSelectPage(params)
         .then((res) => {
           if (res.code === 200) {
             this.tableData = res.data.records
@@ -587,48 +561,38 @@ export default {
 
     reset() {
       this.dialogForm = {
-        singleMinAmount: 0,
-        singleMaxAmount: 0,
-        dateFreeNum: 0,
-        dateFreeAmount: 0,
+        bankCardMinAmount: 0,
+        bankCardMaxAmount: 0,
+        virtualCardMinAmount: 0,
+        virtualCardMaxAmount: 0,
         dateTotalNum: 0,
         dateMaxAmount: 0,
         bigAmount: 0,
-        rateDateFree: 0,
-        rateDateTotal: 0,
-        rateDateFreeType: 2,
-        rateDateTotalType: 2,
         withdrawStatus: 1
       }
-      if (this.title === '新增') {
-        this.queryData = {}
-      } else if (this.title === '编辑' && !this.isUniversal) {
+      if (this.titel === '编辑' && !this.isUniversal) {
         this.dialogForm.withdrawStatus = this.withdrawStatus
       }
     },
     addLabel() {
-      this.title = '新增'
+      this.titel = '新增'
       this.isDisabled = false
       this.isUniversal = true
       this.queryData = {}
       this.dialogForm = {
-        singleMinAmount: 0,
-        singleMaxAmount: 0,
-        dateFreeNum: 0,
-        dateFreeAmount: 0,
+        bankCardMinAmount: 0,
+        bankCardMaxAmount: 0,
+        virtualCardMinAmount: 0,
+        virtualCardMaxAmount: 0,
         dateTotalNum: 0,
         dateMaxAmount: 0,
         bigAmount: 0,
-        rateDateFree: 0,
-        rateDateTotal: 0,
-        rateDateFreeType: 2,
-        rateDateTotalType: 2,
         withdrawStatus: 1
       }
       this.dialogFormVisible = true
     },
     edit(val) {
-      this.title = '编辑'
+      this.titel = '编辑'
       console.log('编辑', val)
       this.isDisabled = true
       this.isUniversal = val.proxyAccount !== '0'
@@ -666,7 +630,7 @@ export default {
         type: 'warning'
       })
         .then(() => {
-          this.$api.setWithdrawSettingProxyDelete({ id: val.id }).then((res) => {
+          this.$api.setProxyWithdrawalDelete(val.id).then((res) => {
             if (res.code === 200) {
               this.$message.success('删除成功')
               this.loadData()
@@ -676,14 +640,12 @@ export default {
         .catch(() => {})
     },
     subAddOrEidt() {
-      if (this.title === '新增') {
+      if (this.titel === '新增') {
         this.$refs.formProxy.validate((valid) => {
           if (valid) {
             const params = {
               ...this.dialogForm,
-              proxyId: this.queryData.proxyId,
-              proxyName: this.queryData.proxyName,
-              proxyAccount: this.queryData.proxyAccount
+              proxyId: this.queryData.proxyId
             }
             this.$refs.formSub.validate((valid) => {
               if (valid) {
@@ -699,7 +661,7 @@ export default {
                   }
                 )
                   .then(() => {
-                    this.$api.setWithdrawSettingProxyAdd(params).then((res) => {
+                    this.$api.setProxyWithdrawalAdd(params).then((res) => {
                       if (res.code === 200) {
                         console.log(res)
                         this.$message.success('新增成功!')
@@ -735,7 +697,7 @@ export default {
             )
               .then(() => {
                 console.log(params)
-                this.$api.setWithdrawSettingProxyUpdate(params).then((res) => {
+                this.$api.setproxyWithdrawalUpdate(params).then((res) => {
                   if (res.code === 200) {
                     console.log(res)
                     this.$message.success('修改成功!')
@@ -782,23 +744,13 @@ export default {
     }
   }
   .proxyInput {
-    width: 145px;
+    width: 140px;
   }
   .setInput {
-    width: 205px;
+    width: 160px;
   }
   /deep/label {
     font-weight: 500;
-  }
-  .selectW {
-    width: 120px;
-  }
-}
-.disp {
-  display: flex;
-  p {
-    width: 50%;
-    margin-bottom: 10px;
   }
 }
 /deep/.el-input-number__decrease,
@@ -808,5 +760,8 @@ export default {
 /deep/.el-input__inner {
   padding: 0 15px;
   text-align: left;
+}
+/deep/.el-form-item__error {
+  width: 260px;
 }
 </style>

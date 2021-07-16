@@ -1,24 +1,24 @@
 import request from '@/utils/request'
 // 代理提款设置==>新增代理提款设置
-export function setWithdrawSettingProxyAdd(data) {
+export function setProxyWithdrawalAdd(data) {
 	return request({
-		url: '/withdrawSettingProxy/add',
+		url: '/proxyWithdrawal/add',
 		method: 'post',
 		data
 	})
 }
 // 代理提款设置==>删除代理提款设置
-export function setWithdrawSettingProxyDelete(data) {
+export function setProxyWithdrawalDelete(data) {
 	return request({
-		url: '/withdrawSettingProxy/delete',
+		url: '/proxyWithdrawal/delete',
 		method: 'post',
 		data
 	})
 }
 // 代理提款设置==>修改代理提款设置
-export function setWithdrawSettingProxyUpdate(data) {
+export function setproxyWithdrawalUpdate(data) {
 	return request({
-		url: '/withdrawSettingProxy/update',
+		url: '/proxyWithdrawal/update',
 		method: 'post',
 		data
 	})
@@ -176,9 +176,9 @@ export function getMemberFundsRecordsVipReward(data) {
 	})
 }
 export default {
-	setWithdrawSettingProxyAdd,
-	setWithdrawSettingProxyDelete,
-	setWithdrawSettingProxyUpdate,
+	setProxyWithdrawalAdd,
+	setProxyWithdrawalDelete,
+	setproxyWithdrawalUpdate,
 	getMerchantGameWalletDic,
 	getMemberFundsRecordsAccountChange,
 	getMemberFundsRecordsAccountChangeDownload,
