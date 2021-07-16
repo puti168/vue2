@@ -99,8 +99,8 @@
 					></el-table-column>
 					<el-table-column prop="labelName" align="center" label="标签名称">
 						<template slot-scope="scope">
-							<span v-if="scope.row.beforeModify !== null">
-								{{ scope.row.beforeModify }}
+							<span v-if="scope.row.labelName !== null">
+								{{ scope.row.labelName }}
 							</span>
 							<span v-else>-</span>
 						</template>
