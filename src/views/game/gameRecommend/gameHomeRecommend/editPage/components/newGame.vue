@@ -58,7 +58,7 @@
                         <el-col :span="12">
                             <el-form-item label="模块描述:">
                                 <el-input
-                                    v-model="form.description"
+                                    v-model="form.moduleDesc"
                                     size="medium"
                                     maxlength="20"
                                     clearable

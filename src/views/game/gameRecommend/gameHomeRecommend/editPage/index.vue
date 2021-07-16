@@ -14,13 +14,15 @@ import mix from './components/mix'
 import common from './components/common'
 import live from './components/live'
 import game from './components/game'
+import newGame from './components/newGame'
 
 export default {
 	components: {
 		mix,
 		common,
 		live,
-		game
+		game,
+        newGame
 	},
 	mixins: [list],
 	props: {
@@ -48,7 +50,7 @@ export default {
 			return this.recommendDetails.id
 		},
 		content() {
-			const obj = ['mix', 'common', 'live', 'game']
+			const obj = ['mix', 'common', 'live', 'game', 'newGame']
 			const { id } = this.recommendDetails
 			const ModuleUI = new Map([
 				['1', obj[0]],
@@ -58,6 +60,7 @@ export default {
 				['5', obj[0]],
 				['6', obj[1]],
 				['7', obj[1]],
+				['8', obj[4]],
 				['9', obj[1]],
 				['10', obj[3]]
 			])
