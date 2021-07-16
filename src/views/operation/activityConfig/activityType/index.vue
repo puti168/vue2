@@ -16,13 +16,14 @@
 						size="medium"
 						placeholder="请选择"
 						clearable
+						value-key="code"
 						style="width: 365px"
 						@change="changeType($event)"
 					>
 						<el-option
 							v-for="item in activityTypeArr"
 							:key="item.code"
-							:label="item.description"
+                            :label="item.description"
 							:value="item"
 						></el-option>
 					</el-select>
