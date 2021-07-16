@@ -123,30 +123,24 @@
 						</template>
           </el-table-column>
           <el-table-column align="center" label="变更前" prop="beforeValue">
-            <!-- <template slot-scope="scope">
-              <span v-if="scope.row.applyType === '1'">
-                {{ typeFilter(scope.row.beforeValue, "accountStatusType") }}
-              </span>
-              <span v-else-if="scope.row.changeType === '17'">
+            <template slot-scope="scope">
+              <span v-if="scope.row.changeType === 16">
                 {{ typeFilter(scope.row.beforeValue, "gameStatusType") }}
               </span>
               <span v-else>
                 {{ scope.row.beforeValue }}
               </span>
-            </template> -->
+            </template>
           </el-table-column>
           <el-table-column align="center" label="变更后" prop="afterValue">
-            <!-- <template slot-scope="scope">
-              <span v-if="scope.row.applyType === '1'">
-                {{ typeFilter(scope.row.afterValue, "accountStatusType") }}
-              </span>
-              <span v-else-if="scope.row.changeType === '17'">
+            <template slot-scope="scope">
+              <span v-if="scope.row.changeType === 16 ">
                 {{ typeFilter(scope.row.afterValue, "gameStatusType") }}
               </span>
               <span v-else>
                 {{ scope.row.afterValue }}
               </span>
-            </template> -->
+            </template>
           </el-table-column>
           <el-table-column align="center" label="备注" prop="remark">
           </el-table-column>

@@ -140,7 +140,7 @@
           </el-table-column>
           <el-table-column align="center" label="变更前" prop="beforeModify">
 			  <template slot-scope="scope">
-              <span v-if="scope.row.applyType === '4'">
+              <span v-if="scope.row.applyType === 4 ">
                 {{ typeFilter(scope.row.beforeModify, "gameStatusType") }}
               </span>
               <span v-else>
@@ -150,7 +150,7 @@
           </el-table-column>
           <el-table-column align="center" label="变更后" prop="afterModify">
 			  <template slot-scope="scope">
-              <span v-if="scope.row.applyType === '4'">
+              <span v-if="scope.row.applyType === 4 ">
                 {{ typeFilter(scope.row.afterModify, "gameStatusType") }}
               </span>
               <span v-else>

@@ -38,25 +38,23 @@
           style="width: 100%"
           :header-cell-style="getRowClass"
         >
-          <el-table-column prop="operating" align="center" label="操作" width="140px">
+          <el-table-column prop="operating" align="center" label="操作" width="240px">
             <template slot-scope="scope">
-              <el-link v-if="hasPermission('255')" type="primary" size="medium" @click="edit(scope.row)">
+              <el-link
+                v-if="hasPermission('255')"
+                type="primary"
+                size="medium"
+                @click="edit(scope.row)"
+              >
                 修改
               </el-link>
-            </template>
-          </el-table-column>
-          <el-table-column prop="withdrawStatus" align="center" label="状态" width="100px">
-            <template slot-scope="scope">
-              <div v-if="scope.row.withdrawStatus === 1" class="disableRgba">关闭</div>
-              <div v-else-if="scope.row.withdrawStatus === 0" class="normalRgba">开启</div>
-              <span v-else>-</span>
             </template>
           </el-table-column>
           <el-table-column
 prop="vipNum"
 align="center"
 label="VIP等级"
-width="120px"
+width="128px"
 ><template slot-scope="scope">
               <span v-if="!!scope.row.vipNum || scope.row.vipNum === 0">
                 {{ scope.row.vipNum }}
@@ -65,58 +63,46 @@ width="120px"
             </template>
           </el-table-column>
           <el-table-column
-            prop="singleMinAmount"
-            align="center"
-            label="单次提款最低限额"
-            width="170px"
-          ></el-table-column>
-          <el-table-column
-            prop="singleMaxAmount"
-            align="center"
-            label="单次提款最高限额"
-            width="170px"
-          ></el-table-column>
-          <el-table-column
-            prop="dateFreeNum"
-            align="center"
-            label="单日免费提款次数"
-            width="170px"
-          ></el-table-column>
-          <el-table-column
             prop="dateTotalNum"
             align="center"
             label="单日提款总次数"
-            width="170px"
-          ></el-table-column>
-          <el-table-column
-            prop="dateFreeAmount"
-            align="center"
-            width="170px"
-            label="单日免费提款总额限制"
+            width="240px"
           ></el-table-column>
           <el-table-column
             prop="dateMaxAmount"
-            width="170px"
             align="center"
             label="单日最高提款总额"
+            width="240px"
+          ></el-table-column>
+          <el-table-column
+            prop="bankCardMinAmount"
+            align="center"
+            label="银行卡单次提款最低限额"
+            width="240px"
+          ></el-table-column>
+          <el-table-column
+            prop="bankCardMaxAmount"
+            align="center"
+            label="银行卡单次提款最高限额"
+            width="240px"
+          ></el-table-column>
+          <el-table-column
+            prop="virtualCardMinAmount"
+            align="center"
+            width="240px"
+            label="虚拟币单次提款最低限额"
+          ></el-table-column>
+          <el-table-column
+            prop="virtualCardMaxAmount"
+            width="240px"
+            align="center"
+            label="虚拟币单次提款最高限额"
           ></el-table-column>
           <el-table-column
             prop="bigAmount"
             align="center"
-            width="170px"
+            width="240px"
             label="大额提款标记金额"
-          ></el-table-column>
-          <el-table-column
-            prop="rateDateFree"
-            align="center"
-            width="170px"
-            label="超出单日免费次数手续费"
-          ></el-table-column>
-          <el-table-column
-            prop="rateDateTotal"
-            align="center"
-            width="170px"
-            label="超出单日提款总额手续费"
           ></el-table-column>
         </el-table>
         <!-- 分页 -->
@@ -129,137 +115,92 @@ width="120px"
             为必填项
           </span>
         </div>
-        <h2>提款配置</h2>
         <el-form
           v-if="isUniversal"
           ref="formSub"
           :rules="rules"
-          :inline="true"
           class="demo-form-inline"
           :model="dialogForm"
         >
           <el-form-item
-            prop="vipNum"
-            label-width="147px"
+            prop="vipSerialNum"
             label="VIP等级："
-            class="configure"
           >
-            <el-input-number
-              v-model="dialogForm.vipNum"
-              :disabled="isDisabled"
-              placeholder=""
-            ></el-input-number>
-          </el-form-item>
-          <el-form-item label="单次提款最低额度：" prop="singleMinAmount">
-            <el-input-number
-              v-model="dialogForm.singleMinAmount"
-              class="chief"
-              placeholder="请输入金额，为0不限制"
-            ></el-input-number>
-            <span>元</span>
-          </el-form-item>
-          <el-form-item
-            label="单次提款最高额度："
-            class="configure"
-            prop="singleMaxAmount"
+          <el-select
+            v-model="dialogForm.vipSerialNum"
+            style="width: 600px"
+            placeholder="默认选择全部"
+             @change="vipQuota($event)"
           >
-            <el-input-number
-              v-model="dialogForm.singleMaxAmount"
-              class="chief"
-              placeholder="请输入金额，为0不限制"
-            ></el-input-number>
-            <span>元</span>
+            <el-option
+              v-for="item in vipNumName"
+              :key="item.codein"
+              :label="item.vipNumName"
+              :value="item"
+            ></el-option>
+          </el-select>
           </el-form-item>
-          <el-form-item label="单日免费提款次数：" prop="dateFreeNum">
+          <el-form-item label="单日提款次数：" prop="dateTotalNum">
             <el-input-number
-              v-model="dialogForm.dateFreeNum"
+              v-model="dialogForm.dateTotalNum"
+              disabled
+              style="width: 556px"
               class="chief"
               placeholder="请输入金额，为0不限制"
             ></el-input-number>
             <span>次</span>
           </el-form-item>
-          <el-form-item label="大额提款标记金额：" class="configure" prop="bigAmount">
+          <el-form-item label="单日提款总额：" prop="dateFreeNum">
+            <el-input-number
+              v-model="dialogForm.dateFreeNum"
+              disabled
+               name="dateFreeNum"
+              style="width: 556px"
+              class="chief"
+            ></el-input-number>
+            <span>元</span>
+          </el-form-item>
+          <el-form-item label="大额提款标记金额：" prop="bigAmount">
             <el-input-number
               v-model="dialogForm.bigAmount"
-              class="chief"
-              placeholder="请输入金额，为0不限制"
+              style="width: 526px"
+              placeholder="请输入金额"
             ></el-input-number>
             <span>元</span>
           </el-form-item>
-          <el-form-item label="单日免费提款总额：" prop="dateFreeAmount">
+          <el-form-item label="银行卡单次提款最低额度：" prop="bankCardMinAmount">
             <el-input-number
-              v-model="dialogForm.dateFreeAmount"
-              class="chief"
-              placeholder="请输入金额，为0不限制"
+              v-model="dialogForm.bankCardMinAmount"
+              style="width: 486px"
+              placeholder="请输入金额"
             ></el-input-number>
             <span>元</span>
           </el-form-item>
-          <h2>提款手续费配置</h2>
-          <el-form-item
-            label="超出单日免费次数："
-            class="configure"
-            prop="rateDateFreeType"
-          >
-            <el-select
-              v-model="dialogForm.rateDateFreeType"
-              class="sun"
-              placeholder="请选择"
-            >
-              <el-option label="固定金额(元)" :value="1"></el-option>
-              <el-option label="百分比(%)" :value="2"></el-option>
-            </el-select>
+           <el-form-item label="银行卡单次提款最高额度：" prop="bankCardMaxAmount">
             <el-input-number
-            v-if="dialogForm.rateDateFreeType === 2"
-              v-model="dialogForm.rateDateFree"
-              :min="0"
-              :precision="0"
-              placeholder="请输入"
-              class="sun"
+              v-model="dialogForm.bankCardMaxAmount"
+               name="bankCardMaxAmount"
+              style="width: 486px"
+              placeholder="请输入金额"
             ></el-input-number>
-            <el-input-number
-              v-else
-              v-model="dialogForm.rateDateFree"
-              class="sun"
-              :min="0"
-              :precision="0"
-              placeholder="请输入"
-            ></el-input-number>
+            <span>元</span>
           </el-form-item>
-          <el-form-item label="超出单日免费次数总额：" prop="rateDateTotalType">
-            <el-select
-              v-model="dialogForm.rateDateTotalType"
-              class="sun"
-              placeholder="请选择"
-            >
-              <el-option label="固定金额(元)" :value="1"></el-option>
-              <el-option label="百分比(%)" :value="2"></el-option>
-            </el-select>
+          <el-form-item label="虚拟币单次提款最低额度：" prop="virtualCardMinAmount">
             <el-input-number
-             v-if="dialogForm.rateDateTotalType === 2"
-              v-model="dialogForm.rateDateTotal"
-              :min="0"
-              :precision="0"
-              placeholder="请输入"
-              class="sun"
+              v-model="dialogForm.virtualCardMinAmount"
+              style="width: 486px"
+              placeholder="请输入金额"
             ></el-input-number>
-            <el-input-number
-              v-else
-              v-model="dialogForm.rateDateTotal"
-              class="sun"
-              :min="0"
-              :precision="0"
-              placeholder="请输入"
-            ></el-input-number>
+            <span>元</span>
           </el-form-item>
-          <el-form-item label="状态" prop="withdrawStatus">
-            <el-select
-              v-model="dialogForm.withdrawStatus"
-              clearable
-              :popper-append-to-body="false"
-            >
-              <el-option label="开启" :value="0"></el-option>
-              <el-option label="关闭" :value="1"></el-option>
-            </el-select>
+          <el-form-item label="虚拟币单次提款最高额度：" prop="virtualCardMaxAmount">
+            <el-input-number
+              v-model="dialogForm.virtualCardMaxAmount"
+               name="virtualCardMaxAmount"
+              style="width: 486px"
+              placeholder="请输入金额"
+            ></el-input-number>
+            <span>元</span>
           </el-form-item>
         </el-form>
         <el-divider></el-divider>
@@ -289,23 +230,22 @@ export default {
   mixins: [list],
   data() {
     return {
+      vipNumName: [],
       vipExclusive: [],
       vipadd: {},
       queryData: {},
+      dialogFormQuota: {},
       tableData: [],
       dialogFormVisible: false,
       dialogForm: {
-        vipNum: 0,
-        singleMinAmount: 0,
-        singleMaxAmount: 0,
-        dateFreeNum: 0,
-        bigAmount: 0,
-        dateFreeAmount: 0,
-        rateDateFreeType: 2,
-        rateDateFree: 0,
-        rateDateTotalType: 2,
-        rateDateTotal: 0,
-        withdrawStatus: 1
+        dateTotalNum: '',
+        bankCardMaxAmount: '',
+        bankCardMinAmount: '',
+        dateFreeNum: '',
+        bigAmount: '',
+        vipSerialNum: '',
+        virtualCardMaxAmount: '',
+        virtualCardMinAmount: ''
       },
       title: '',
       isDisabled: true,
@@ -314,86 +254,131 @@ export default {
   },
   computed: {
     rules() {
-      // 单日免费提款次数
-      const withdrawaltimes = (rule, value, callback) => {
-        let vip = ''
-        const num = this.dialogForm.vipNum
+      // 银行卡单次提款最高额度
+      const bankCardMaxlimit = (rule, value, callback) => {
+         let vip = ''
+        const num = this.dialogForm.vipSerialNum
         for (let i = 0; i < this.vipExclusive.length; i++) {
           const ele = this.vipExclusive[i]
-          if (num === ele.vipLevel) {
-            vip = ele.maxFrequency
+          if (num === ele.vipele) {
+        console.log(ele.vipele, '111')
+            vip = ele.dayWithdrawalQuotaele
           }
         }
-
-        if (typeof num !== 'number') {
-          callback(new Error('请输入vip等级'))
-        } else if (value <= vip) {
-          callback(new Error('输入大于单日最高提款次数，请重新输入'))
+        console.log(num, '111')
+        if (value > vip) {
+          callback(new Error('输入不能大于单日最高提款总额，请重新输入'))
         } else {
           callback()
         }
       }
-      // 单日免费提款总额
-      const withdrawallimit = (rule, value, callback) => {
-        let vip = ''
-        const num = this.dialogForm.vipNum
+
+       // 2.银行卡单次最低提款额度
+      const bankCardMinlimit = (rule, value, callback) => {
+       if (value > this.dialogForm.bankCardMaxAmount) {
+          callback(new Error('输入不能大于银行卡单次最高额度，请重新输入'))
+        } else {
+          callback()
+        }
+      }
+      // 虚拟币单次提款最高额度
+      const virtualCardMaxlimit = (rule, value, callback) => {
+         let vip = ''
+        const num = this.dialogForm.vipSerialNum
         for (let i = 0; i < this.vipExclusive.length; i++) {
           const ele = this.vipExclusive[i]
-          if (num === ele.maxTotal) {
-            vip = ele.maxFrequency
+          if (num === ele.vipele) {
+        console.log(ele.vipele, '111')
+            vip = ele.dayWithdrawalQuotaele
           }
         }
-        if (typeof num !== 'number') {
-          callback(new Error('请输入vip等级'))
-        } else if (value <= vip) {
-          callback(new Error('输入大于单日最高提款总额，请重新输入'))
+       if (value > vip) {
+          callback(new Error('输入不能大于单日最高提款总额，请重新输入'))
+        } else {
+          callback()
+        }
+      }
+        // 2.虚拟币单次最低额度
+      const virtualCardMinlimit = (rule, value, callback) => {
+       if (value > this.dialogForm.virtualCardMaxAmount) {
+          callback(new Error('输入不能大于虚拟币单次最高额度，请重新输入'))
+        } else {
+          callback()
+        }
+      }
+      // 大额标记
+      const bigAmountlimit = (rule, value, callback) => {
+        let vip = ''
+        const num = this.dialogForm.vipSerialNum
+        for (let i = 0; i < this.vipExclusive.length; i++) {
+          const ele = this.vipExclusive[i]
+          if (num === ele.vipele) {
+        console.log(ele.vipele, '111')
+            vip = ele.dayWithdrawalQuotaele
+          }
+        }
+       if (value > vip) {
+          callback(new Error('输入不能大于单日最高提款总额，请重新输入'))
         } else {
           callback()
         }
       }
       const dateFreeNum = [
-        { required: true, validator: withdrawaltimes, trigger: 'blur' }
+        { required: false, trigger: 'blur' }
       ]
-      const dateFreeAmount = [
-        { required: true, validator: withdrawallimit, trigger: 'blur' }
+      const bankCardMaxAmount = [
+        { required: true, validator: bankCardMaxlimit, trigger: 'blur' }
       ]
+      const bankCardMinAmount = [{ required: true, validator: bankCardMinlimit, trigger: 'blur' }]
 
-      const singleMinAmount = [
-        { required: true, message: '请输入金额', trigger: 'blur' }
+      const virtualCardMaxAmount = [
+        { required: true, validator: virtualCardMaxlimit, trigger: 'change' }
       ]
-      const singleMaxAmount = [
-        { required: true, message: '请输入金额', trigger: 'blur' }
+      const virtualCardMinAmount = [
+        { required: true, validator: virtualCardMinlimit, trigger: 'change' }
       ]
-      const bigAmount = [{ required: true, message: '请输入金额', trigger: 'blur' }]
-
-      const rateDateFreeType = [
-        { required: true, message: '百分比（%）', trigger: 'change' }
+      const bigAmount = [
+        { required: true, validator: bigAmountlimit, trigger: 'blur' }
       ]
-      const rateDateTotalType = [
-        { required: true, message: '百分比（%）', trigger: 'change' }
-      ]
-      const beyondfrequency = [
-        { required: true, message: '请输入提示语', trigger: 'blur' }
-      ]
-      const beyondtotal = [{ required: true, message: '请输入提示语', trigger: 'blur' }]
-      const withdrawStatus = [{ required: true, message: '请选择状态', trigger: 'blur' }]
       return {
+        bankCardMinAmount,
         dateFreeNum,
-        singleMinAmount,
-        singleMaxAmount,
-        bigAmount,
-        dateFreeAmount,
-        rateDateFreeType,
-        rateDateTotalType,
-        beyondfrequency,
-        beyondtotal,
-        withdrawStatus
+        bankCardMaxAmount,
+        virtualCardMaxAmount,
+        virtualCardMinAmount,
+        bigAmount
       }
     }
   },
-
+  created() {
+    this.getEnums()
+  },
   mounted() {},
   methods: {
+    // 下拉框
+   vipQuota(evt) {
+     this.$refs['formSub'] && this.$refs['formSub'].resetFields()
+     this.showInfoData = undefined
+      this.dialogForm = {
+				activityType: evt.description,
+				activityCode: evt.code
+			}
+			this.queryDetails(evt.code)
+   },
+   queryDetails(type) {
+			this.$api.getMemberWithdrawalGetWithdrawal({ type }).then((res) => {
+				const { code, data } = res
+				console.log('res', res)
+				if (code === 200) {
+					const { id } = data
+					this.showInfoData = data
+					this.queryData.id = id
+				} else {
+					this.showInfoData = undefined
+					this.queryData.id = undefined
+				}
+			})
+		},
     add() {
       const params = {
         ...this.dialogForm
@@ -414,7 +399,7 @@ export default {
               }
             )
               .then(() => {
-                this.$api.getWithdrawSettingMemberAdd(params).then((res) => {
+                this.$api.getMemberWithdrawalAdd(params).then((res) => {
                   if (res.code === 200) {
                     console.log(res)
                     this.$message.success('新增成功!')
@@ -468,45 +453,40 @@ export default {
         .then(() => {
           this.$api.getWithdrawSettingMemberreset().then((res) => {
             console.log(res, '90')
-             if (res.code === 200) {
-               console.log(res)
-               this.$message.success('初始化会员提款设置成功!')
-                    this.loadData()
-             }
-               this.dialogFormVisible = false
+            if (res.code === 200) {
+              console.log(res)
+              this.$message.success('初始化会员提款设置成功!')
+              this.loadData()
+            }
+            this.dialogFormVisible = false
           })
         })
         .catch(() => {})
     },
     reset() {
-        this.queryData = {}
-        debugger
-        if (this.title === '新增') {
+      this.queryData = {}
+
+      if (this.title === '新增') {
         this.dialogForm = {
-          vipNum: 0,
-          singleMinAmount: 0,
-          singleMaxAmount: 0,
-          dateFreeNum: 0,
-          bigAmount: 0,
-          dateFreeAmount: 0,
-          rateDateFreeType: 2,
-          rateDateFree: 0,
-          rateDateTotalType: 2,
-          rateDateTotal: 0,
-          withdrawStatus: 1
+           dateTotalNum: '',
+        bankCardMaxAmount: '',
+        bankCardMinAmount: '',
+        dateFreeNum: '',
+        bigAmount: '',
+        vipSerialNum: '',
+        virtualCardMaxAmount: '',
+        virtualCardMinAmount: ''
         }
       } else {
         this.dialogForm = {
-          singleMinAmount: 0,
-          singleMaxAmount: 0,
-          dateFreeNum: 0,
-          bigAmount: 0,
-          dateFreeAmount: 0,
-          rateDateFreeType: 2,
-          rateDateFree: 0,
-          rateDateTotalType: 2,
-          rateDateTotal: 0,
-          withdrawStatus: 1
+          dateTotalNum: '',
+        bankCardMaxAmount: '',
+        bankCardMinAmount: '',
+        dateFreeNum: '',
+        bigAmount: '',
+        vipSerialNum: '',
+        virtualCardMaxAmount: '',
+        virtualCardMinAmount: ''
         }
       }
     },
@@ -519,17 +499,9 @@ export default {
         ...this.getParams(params)
       }
       this.$api
-        .getWithdrawSettingMemberSelectAll(params)
+        .getMemberWithdrawalSelectAll(params)
         .then((res) => {
           if (res.code === 200) {
-            for (let i = 0; i < res.data.length; i++) {
-              const obj = {}
-              const ele = res.data[i]
-              obj.vipLevel = ele.vipNum
-              obj.maxFrequency = ele.dateTotalNum
-              obj.maxTotal = ele.dateMaxAmount
-              this.vipExclusive.push(obj)
-            }
             this.tableData = res.data
             this.total = res.data.totalRecord
             this.loading = false
@@ -541,32 +513,44 @@ export default {
           this.loading = false
         })
     },
+     getEnums() {
+      this.$api.getMemberWithdrawalSelect().then((res) => {
+        if (res.code === 200) {
+        //  for (let i = 0; i < res.data.length; i++) {
+        //       const obj = {}
+        //       const ele = res.data[i]
+        //       obj.vipele= ele.vipSerialNum
+        //       obj.dayWithdrawalQuotaele = ele.dayWithdrawalQuota
+        //       this.vipExclusive.push(obj)
+        //        console.log(obj,"222");
+        //     }
+          this.vipNumName = res.data
+          console.log(this.vipNumName, '234')
+        }
+      })
+    },
 
     addLabel() {
-      console.log(11111)
       this.title = '新增'
       this.isDisabled = false
       this.isUniversal = true
       this.queryData = {}
       this.dialogForm = {
-        vipNum: 0,
-        singleMinAmount: 0,
-        singleMaxAmount: 0,
-        dateFreeNum: 0,
-        bigAmount: 0,
-        dateFreeAmount: 0,
-        rateDateFreeType: 2,
-        rateDateFree: 0,
-        rateDateTotalType: 2,
-        rateDateTotal: 0,
-        withdrawStatus: 1
+         dateTotalNum: '',
+        bankCardMaxAmount: '',
+        bankCardMinAmount: '',
+        dateMaxAmount: '',
+        dateFreeNum: '',
+        bigAmount: '',
+        vipSerialNum: '',
+        virtualCardMaxAmount: '',
+        virtualCardMinAmount: ''
       }
       this.dialogFormVisible = true
     },
     edit(val) {
       this.title = '修改'
       this.dialogForm = { ...val }
-
       this.dialogFormVisible = true
       this.isDisabled = true
     }
@@ -575,14 +559,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.demo-form-inline{
+  padding-left: 150px;
+  padding-top: 30px;
+}
 .el-form--inline {
   line-height: 4;
 }
 .sun {
   width: 120px;
-}
-.configure {
-  width: 420px;
 }
 .chief {
   width: 180px;
