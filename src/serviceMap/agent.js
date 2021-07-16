@@ -154,7 +154,7 @@ const agent = [
 		id: '207',
 		parentId: '48',
 		path: '/agent/agentConfig/agentLabelChangeRecord',
-		title: '代理标签变更记录'
+		title: '代理标签配置记录'
 	},
 	{
 		id: '208',
