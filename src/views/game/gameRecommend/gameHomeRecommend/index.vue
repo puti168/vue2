@@ -16,13 +16,14 @@
 							class="small-size-table"
 							:data="dataList"
 							style="width: 100%"
+                            row-key="moduleId"
 							:header-cell-style="getRowClass"
 							@sort-change="_changeTableSort"
 						>
 							<el-table-column prop="moduleId" align="center" label="模块顺序">
 								<template slot-scope="scope">
-									<span v-if="!!scope.row.moduleId">
-										{{ scope.row.moduleId }}
+									<span v-if="!!scope.row.displayOrder">
+										{{ scope.row.displayOrder }}
 									</span>
 									<span v-else>-</span>
 								</template>
@@ -134,12 +135,12 @@
 							:data="dataList"
 							style="width: 100%"
 							:header-cell-style="getRowClass"
-							@sort-change="changeTableSort"
+							@sort-change="_changeTableSort"
 						>
 							<el-table-column prop="moduleId" align="center" label="模块顺序">
 								<template slot-scope="scope">
-									<span v-if="!!scope.row.moduleId">
-										{{ scope.row.moduleId }}
+									<span v-if="!!scope.row.displayOrder">
+										{{ scope.row.displayOrder }}
 									</span>
 									<span v-else>-</span>
 								</template>
@@ -248,12 +249,12 @@
 							:data="dataList"
 							style="width: 100%"
 							:header-cell-style="getRowClass"
-							@sort-change="changeTableSort"
+							@sort-change="_changeTableSort"
 						>
 							<el-table-column prop="moduleId" align="center" label="模块顺序">
 								<template slot-scope="scope">
-									<span v-if="!!scope.row.moduleId">
-										{{ scope.row.moduleId }}
+									<span v-if="!!scope.row.displayOrder">
+										{{ scope.row.displayOrder }}
 									</span>
 									<span v-else>-</span>
 								</template>
@@ -357,6 +358,7 @@
 import list from '@/mixins/list'
 // import { routerNames } from '@/utils/consts'
 import gameHomeRecommendEdit from './editPage/index'
+import Sortable from 'sortablejs'
 
 export default {
 	name: 'GameHomeRecommend',
@@ -377,7 +379,13 @@ export default {
 		}
 	},
 	computed: {},
-	mounted() {},
+	mounted() {
+        document.body.ondrop = function(event) {
+            event.preventDefault()
+            event.stopPropagation()
+        }
+        this.columnDrop()
+    },
 	methods: {
 		openDetails(val) {
 			console.log('val', val)
@@ -501,7 +509,30 @@ export default {
 				}
 				this.loadData()
 			}
-		}
+		},
+        // 列拖动
+        columnDrop() {
+            const wrapperTr = document.querySelector('.el-table__body-wrapper tbody')
+            const _this = this
+            this.sortable =
+                wrapperTr &&
+                Sortable.create(wrapperTr, {
+                    ghostClass: 'droppable-area',
+                    animation: 300,
+                    delay: 0,
+                    onEnd: ({ newIndex, oldIndex }) => {
+                        console.log('newIndex', newIndex)
+                        console.log('oldIndex', oldIndex)
+                        const currRow = _this.dataList.splice(oldIndex, 1)[0]
+                        _this.dataList.splice(newIndex, 0, currRow)
+                        if (newIndex !== oldIndex) {
+                            _this.dataList.forEach((item, idx) => {
+                                item.displayOrder = idx + 1
+                            })
+                        }
+                    }
+                })
+        }
 	}
 }
 </script>
@@ -511,5 +542,9 @@ export default {
 	text-align: center;
 	color: #909399;
 	font-weight: 700;
+}
+.droppable-area {
+    background-color: #cb8727;
+    opacity: 0.4;
 }
 </style>

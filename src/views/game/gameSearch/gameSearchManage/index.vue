@@ -56,7 +56,7 @@
 						:data="dataList"
 						style="width: 100%"
 						:header-cell-style="getRowClass"
-						row-key="id"
+						row-key="displayOrder"
 						:row-style="{ height: '45px' }"
 						@sort-change="_changeTableSort"
 					>

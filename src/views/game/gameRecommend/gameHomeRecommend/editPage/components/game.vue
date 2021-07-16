@@ -41,7 +41,7 @@
 							:data="dataList"
 							style="width: 100%"
 							:header-cell-style="getRowClass"
-							row-key="id"
+							row-key="displayOrder"
 							:row-style="{ height: '45px' }"
 							@sort-change="changeTableSort"
 						>
@@ -428,25 +428,23 @@ export default {
 			this.sortable =
 				wrapperTr &&
 				Sortable.create(wrapperTr, {
+                    ghostClass: 'sortable-ghost',
 					animation: 300,
 					delay: 0,
-					onEnd: (evt) => {
+					onEnd: ({ newIndex, oldIndex }) => {
 						// console.log('newIndex', newIndex)
 						// console.log('oldIndex', oldIndex)
 						console.log('_this.dataList', _this.dataList)
 						// console.log('_this.dataList', _this.dataList[newIndex])
-						// const currRow = _this.dataList.splice(oldIndex, 1)[0]
-						// _this.dataList.splice(newIndex, 0, currRow)
-                        const oldItem = _this.dataList[evt.oldIndex]
-                        _this.dataList.splice(evt.oldIndex, 1)
-                        _this.dataList.splice(evt.newIndex, 0, oldItem)
-						if (evt.newIndex !== evt.oldIndex) {
+                        const currRow = _this.dataList.splice(oldIndex, 1)[0]
+                        _this.dataList.splice(newIndex, 0, currRow)
+						if (newIndex !== oldIndex) {
 							_this.dataList.map((item, idx) => {
 							    item.displayOrder = idx + 1
 							})
-                            _this.dataList = _this.dataList.sort((a, b) => {
-								return a.displayOrder - b.displayOrder
-							})
+                            // _this.dataList = _this.dataList.sort((a, b) => {
+							// 	return a.displayOrder - b.displayOrder
+							// })
 						}
 					}
 				})
