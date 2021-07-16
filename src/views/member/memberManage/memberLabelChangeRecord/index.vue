@@ -19,9 +19,9 @@
 							style="width: 375px"
 						></el-date-picker>
 					</el-form-item>
-					<el-form-item label="会员账号:">
+					<el-form-item label="标签名称:">
 						<el-input
-							v-model="queryData.userName"
+							v-model="queryData.labelName"
 							clearable
 							:maxlength="11"
 							size="medium"
@@ -30,6 +30,22 @@
 							:disabled="loading"
 							@keyup.enter.native="enterSearch"
 						></el-input>
+					</el-form-item>
+					<el-form-item label="变更类型:">
+						<el-select
+							v-model="queryData.applyType"
+							style="width: 300px"
+							multiple
+							placeholder="默认选择全部"
+							:popper-append-to-body="false"
+						>
+							<el-option
+								v-for="item in applyTypeArr"
+								:key="item.code"
+								:label="item.description"
+								:value="item.code"
+							></el-option>
+						</el-select>
 					</el-form-item>
 					<el-form-item label="操作人:">
 						<el-input
@@ -79,8 +95,24 @@
 						prop="createdAt"
 						align="center"
 						sortable="custom"
-						label="变更时间"
+						label="操作时间"
 					></el-table-column>
+					<el-table-column prop="labelName" align="center" label="标签名称">
+						<template slot-scope="scope">
+							<span v-if="scope.row.beforeModify !== null">
+								{{ scope.row.beforeModify }}
+							</span>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
+					<el-table-column prop="labelName" align="center" label="变更类型">
+						<template slot-scope="scope">
+							<span v-if="scope.row.beforeModify !== null">
+								{{ scope.row.beforeModify }}
+							</span>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
 					<el-table-column prop="beforeModify" align="center" label="变更前">
 						<template slot-scope="scope">
 							<span v-if="scope.row.beforeModify !== null">
@@ -93,61 +125,6 @@
 						<template slot-scope="scope">
 							<span v-if="scope.row.afterModify !== null">
 								{{ scope.row.afterModify }}
-							</span>
-							<span v-else>-</span>
-						</template>
-					</el-table-column>
-					<el-table-column prop="userName" align="center" label="会员账号">
-						<template slot-scope="scope">
-							<Copy
-								v-if="!!scope.row.userName"
-								:title="scope.row.userName"
-								:copy="copy"
-							>
-								{{ scope.row.userName }}
-							</Copy>
-							<span v-else>-</span>
-						</template>
-					</el-table-column>
-					<el-table-column prop="accountType" align="center" label="账号类型">
-						<template slot-scope="scope">
-							{{ typeFilter(scope.row.accountType, 'accountType') }}
-						</template>
-					</el-table-column>
-					<el-table-column
-						prop="windControlName"
-						align="center"
-						label="风控层级"
-					>
-						<template slot-scope="scope">
-							<span v-if="scope.row.windControlName !== null">
-								{{ scope.row.windControlName }}
-							</span>
-							<span v-else>-</span>
-						</template>
-					</el-table-column>
-					<el-table-column prop="accountStatus" align="center" label="账号状态">
-						<template slot-scope="scope">
-							<span v-if="scope.row.accountStatus === 1" class="normalRgba">
-								{{ typeFilter(scope.row.accountStatus, 'accountStatusType') }}
-							</span>
-							<span
-								v-else-if="scope.row.accountStatus === 2"
-								class="disableRgba"
-							>
-								{{ typeFilter(scope.row.accountStatus, 'accountStatusType') }}
-							</span>
-							<span
-								v-else-if="scope.row.accountStatus === 3"
-								class="lockingRgba"
-							>
-								{{ typeFilter(scope.row.accountStatus, 'accountStatusType') }}
-							</span>
-							<span
-								v-else-if="scope.row.accountStatus === 4"
-								class="deleteRgba"
-							>
-								{{ typeFilter(scope.row.accountStatus, 'accountStatusType') }}
 							</span>
 							<span v-else>-</span>
 						</template>
@@ -190,7 +167,12 @@ export default {
 	mixins: [list],
 	data() {
 		return {
-			queryData: {},
+			queryData: {
+				createdBy: undefined,
+				labelName: undefined,
+				orderType: undefined,
+				applyType: undefined
+			},
 			searchTime: [startTime, endTime],
 			now: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
 			summary: {
@@ -202,12 +184,8 @@ export default {
 		}
 	},
 	computed: {
-		accountType() {
-			// eslint-disable-next-line semi
-			return this.globalDics.accountType
-		},
-		porxyApplyType() {
-			return this.globalDics.porxyApplyType
+		applyTypeArr() {
+			return this.globalDics.applyType
 		}
 	},
 	mounted() {},
