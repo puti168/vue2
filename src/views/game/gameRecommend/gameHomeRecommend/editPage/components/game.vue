@@ -201,7 +201,6 @@ export default {
 	components: {},
 	mixins: [list],
 	props: { gameDetails: { type: Object, default: () => {} } },
-	// props: { editFormData: { type: Object, default: () => ({}) } },
 	data() {
 		return {
 			loading: false,
@@ -216,22 +215,7 @@ export default {
 		}
 	},
 	computed: {},
-	watch: {
-		// gameDetails: {
-		// 	handler(newVal, oldVal) {
-		// 		if (newVal) {
-		// 			this.form = { ...newVal }
-		// 		} else {
-		// 			this.form = {
-		// 				moduleDesc: undefined
-		// 			}
-		// 		}
-		// 		console.log('formData', this.form)
-		// 	},
-		// 	deep: true,
-		// 	immediate: true
-		// }
-	},
+	watch: {},
 	created() {
 		this.getDetails()
 	},
@@ -265,6 +249,7 @@ export default {
 					} = res
 					if (code === 200) {
 						this.dataList = gameTopicModuleMetaVos || []
+						this.dataList = [...this.dataList, ...this.copyArr]
 						this.form.moduleDesc = moduleDesc
 						this.form.id = id
 						this.idArray =
@@ -390,6 +375,7 @@ export default {
 									message: '保存成功',
 									type: 'success'
 								})
+								this.copyArr = []
 							} else {
 								this.$message({
 									message: msg,
@@ -426,17 +412,7 @@ export default {
 				subTitleInfo: undefined
 			})
 			this.dataList = [...this.dataList, ...arr]
-			// this.copyArr.push({
-			// 	createdAt: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
-			// 	createdBy: getUsername(),
-			// 	displayOrder,
-			// 	allGameNum: undefined,
-			// 	assortId: undefined,
-			// 	mainTitleInfo: undefined,
-			// 	moduleId: undefined,
-			// 	status: '0',
-			// 	subTitleInfo: undefined
-			// })
+			this.copyArr = [...arr]
 		},
 
 		// 列拖动
@@ -453,11 +429,11 @@ export default {
 						const currRow = _this.dataList.splice(oldIndex, 1)[0]
 						_this.dataList.splice(newIndex, 0, currRow)
 						if (newIndex !== oldIndex) {
-                            this.$nextTick(() => {
-                                _this.dataList.forEach((item, idx) => {
-                                    item.displayOrder = idx + 1
-                                })
-                            })
+							this.$nextTick(() => {
+								_this.dataList.forEach((item, idx) => {
+									item.displayOrder = idx + 1
+								})
+							})
 						}
 					}
 				})
@@ -557,6 +533,6 @@ export default {
 }
 
 .sortable-ghost {
-    background-color: #0b7dfa;
+	background-color: #0b7dfa;
 }
 </style>
