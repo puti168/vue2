@@ -210,7 +210,9 @@
               >
                 {{ scope.row.netAmount }}
               </span>
-              <span v-else-if="!!scope.row.netAmount && scope.row.netAmount === 0"></span>
+              <span v-else-if="!!scope.row.netAmount && scope.row.netAmount === 0">{{
+                scope.row.netAmount
+              }}</span>
               <span v-else>-</span>
             </template>
           </el-table-column>
@@ -273,7 +275,12 @@ export default {
             this.flag = true
             this.$message.warning('请缩小搜索范围至31天')
           }
-          if (maxDate !== null && minDate !== null && maxDate - minDate <= this.day31) {
+          if (
+            maxDate !== null &&
+            minDate !== null &&
+            maxDate - minDate <= this.day31 &&
+            this.queryText === '查询'
+          ) {
             this.flag = false
           } else {
             this.flag = true
@@ -391,7 +398,7 @@ export default {
       const params = {
         pageNum: this.page,
         pageSize: this.size,
-        deviceTypeCode: val,
+        deviceType: val,
         startTime: startTime ? dayjs(startTime).format('YYYY-MM-DD') : '',
         endTime: endTime ? dayjs(endTime).format('YYYY-MM-DD') : ''
       }
