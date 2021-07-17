@@ -92,7 +92,7 @@
 				<div class="content">
 					<div class="game-page left-page">
 						<p class="hotConfig">分类包含游戏</p>
-						<p class="left-word">已包含： {{ oldLeftList.length }}</p>
+						<p class="left-word">已包含： {{ leftSelectList.length }}</p>
 						<p class="left-word" style="margin-top: 20px">
 							游戏名称
 							<el-input
@@ -101,23 +101,22 @@
 								placeholder="请输入"
 								clearable
 								style="width: 180px"
-								@input="changeLeft"
+								@input="leftFilterByQuery"
 							></el-input>
 						</p>
 						<el-button type="primary" class="clear-list" @click="deleteAll">
 							列表清空
 						</el-button>
 						<div class="page-main">
-							<div v-for="item in leftList" :key="item.id" class="page-data">
+							<div v-for="(item,index) in showLeftList" :key="item.id" class="page-data">
 								<el-input
-									v-model="item.assortSort"
+									:value="item.assortSort||index+1"
 									:maxlength="12"
 									size="medium"
 									style="width: 90px"
 									class="left-input"
 									placeholder="序号"
-									@focus="getOld(item.assortSort)"
-									@change="changeInput(item.assortSort)"
+									@change="changeInput(index,item)"
 								></el-input>
 								{{ item.gameName }}
 								<span
@@ -167,11 +166,11 @@
 								placeholder="请输入"
 								clearable
 								style="width: 180px"
-								@input="changeRight"
+								@input="rightFilterByQuery"
 							></el-input>
 						</p>
 						<div class="page-main">
-							<div v-for="item in gameList" :key="item.id" class="page-data">
+							<div v-for="item in ShowRightList" :key="item.id" class="page-data">
 								<el-checkbox
 									v-model="item.check"
 									class="page-check"
@@ -224,14 +223,18 @@ export default {
 				remark: undefined,
 				clientDisplay: '1'
 			},
+			// 所有游戏平台
 			gamePlantList: [],
 			queryLeft: '',
 			queryRight: '',
-			// 原始数据
-			oldRightList: [],
-			oldLeftList: [],
-			gameList: [],
-			leftList: [],
+			// 原始游戏玩法数据
+			sourceRightList: [],
+			// 过滤筛选后的显示游戏玩法数据
+			ShowRightList: [],
+			// 选择的游戏数据
+			leftSelectList: [],
+			// 过滤后的选择游戏数据
+			showLeftList: [],
 			data: {},
 			oldValue: '',
 			gameCode: '',
@@ -309,70 +312,43 @@ export default {
 		back() {
 			this.$emit('back')
 		},
-		sortLeft() {
-			// 顺序先改为由小到大
-			for (let i = 0; i < this.oldLeftList.length; i++) {
-				for (let j = 0; j < this.oldLeftList.length - 1 - i; j++) {
-					const temp = this.oldLeftList[j]
-					if (
-						this.oldLeftList[j].assortSort > this.oldLeftList[j + 1].assortSort
-					) {
-						this.oldLeftList[j] = this.oldLeftList[j + 1]
-						this.oldLeftList[j + 1] = temp
-					}
-				}
-			}
-			setTimeout(() => {
-				this.oldLeftList.forEach((item, index) => {
-					item.assortSort = index + 1
-					if (this.oldLeftList.length - 1 === index) {
-						this.changeLeft()
-					}
-				})
-			}, 100)
-		},
-		changeRight() {
-			this.gameList = this.oldRightList.filter((item) =>
+		// 右边过滤后的显示数据
+		rightFilterByQuery() {
+			this.ShowRightList = this.sourceRightList.filter(item =>
 				item.gameName.includes(this.queryRight)
 			)
 		},
-		changeLeft() {
-			this.leftList = this.oldLeftList.filter((item) =>
-				item.gameName.includes(this.queryLeft)
+		// 左边过滤后的显示数据
+		leftFilterByQuery() {
+			this.showLeftList = this.leftSelectList.filter((item,index) =>{
+					if(item.gameName.includes(this.queryLeft)){
+						return Object.assign(item,{assortSort: index+1})
+					}
+				}
 			)
 		},
-		changeInput(value) {
-			// 与旧值相同就互换
-			this.oldLeftList.forEach((item, index) => {
-				if (item.assortSort === Number(value)) {
-					item.assortSort = this.oldValue
-				}
-				if (this.oldLeftList.length - 1 === index) {
-					this.sortLeft()
-				}
-			})
+		// sortNanber 输入的序号
+		changeInput(sortNanber,item) {
+			// 与旧值相同就互换，输入多少号就与该号互换
 		},
 		deleteItem(item) {
-			const index = this.oldLeftList.indexOf(item)
+			const index = this.leftSelectList.indexOf(item)
 			if (index > -1) {
-				this.oldLeftList.splice(index, 1)
-				this.changeLeft()
+				this.leftSelectList.splice(index, 1)
+				this.leftFilterByQuery()
 			}
-			this.oldRightList.forEach((val) => {
+			// 修改右边显示数据
+			this.sourceRightList.forEach((val) => {
 				if (val.id === item.id) {
 					val.check = false
 				}
 			})
-			this.sortLeft()
-			this.changeRight()
-		},
-		getOld(oldValue) {
-			this.oldValue = oldValue
+			this.rightFilterByQuery()
 		},
 		lockChange(item) {
 			let includes = false
 			let indexLeft = -1
-			this.oldLeftList.forEach((data, index) => {
+			this.leftSelectList.forEach((data, index) => {
 				if (data.id === item.id) {
 					includes = true
 					// 包含时所在下标
@@ -381,16 +357,16 @@ export default {
 			})
 			// 勾选并且左边不包含。插入一个
 			if (item.check && !includes) {
-				this.oldLeftList.push(item)
+				this.leftSelectList.push(item)
 			} else {
 				// 否则删除一个
 				if (indexLeft > -1) {
-					this.oldLeftList.splice(indexLeft, 1)
+					this.leftSelectList.splice(indexLeft, 1)
 				}
 			}
-			this.sortLeft()
+			this.leftFilterByQuery()
 		},
-		// 游戏平台
+		// 查所有游戏平台
 		getPlatform() {
 			this.$api
 				.gamePlant()
@@ -399,6 +375,7 @@ export default {
 						this.gamePlantList = res.data
 						this.gameCode = res.data[0].gameCode
 						this.gameName = res.data[0].gameName
+						// 默认选择第一个游戏平台
 						this.queryGame()
 					} else {
 						this.$message({
@@ -409,9 +386,10 @@ export default {
 				})
 				.catch(() => {})
 		},
+		// 更换游戏平台
 		changeSelect() {
 			// 更换后为check重新赋值
-			this.oldRightList = []
+			this.sourceRightList = []
 			const params = {
 				gameCode: this.gameCode
 			}
@@ -420,19 +398,19 @@ export default {
 				if (code === 200) {
 					data.forEach((item, index) => {
 						item.check = false
-						item.assortSort = Number(index + 1)
 						item.gameCode = this.gameCode
 					})
-					this.oldRightList = data
+					this.sourceRightList = data
 					// 判断右边是否勾选
-					this.oldRightList.forEach((item) => {
-						this.oldLeftList.forEach((val) => {
+					this.sourceRightList.forEach((item) => {
+						this.leftSelectList.forEach((val) => {
 							if (val.id === item.id) {
 								item.check = true
 							}
 						})
 					})
-					this.changeRight()
+					this.rightFilterByQuery()
+					this.leftFilterByQuery()
 				} else {
 					this.loading = false
 					this.$message({
@@ -442,9 +420,9 @@ export default {
 				}
 			})
 		},
-		// 游戏平台对应玩法查询
+		// 查询游戏平台对应玩法查询
 		queryGame() {
-			this.oldRightList = []
+			this.sourceRightList = []
 			const params = {
 				gameCode: this.gameCode
 			}
@@ -453,11 +431,11 @@ export default {
 				if (code === 200) {
 					data.forEach((item, index) => {
 						item.check = false
-						item.assortSort = Number(index + 1)
 						item.gameCode = this.gameCode
 					})
-					this.oldRightList = data
-					this.changeRight()
+					this.sourceRightList = data
+					this.rightFilterByQuery()
+					this.leftFilterByQuery()
 				} else {
 					this.loading = false
 					this.$message({
@@ -470,24 +448,24 @@ export default {
 
 		// 子游戏查询
 		queryChildGame() {
-			this.oldLeftList = []
+			this.leftSelectList = []
 			const params = {
 				assortId: this.rowAssortId
 			}
 			this.$api.queryChildGameAPI(params).then((res) => {
 				const { code, data, msg } = res
 				if (code === 200) {
-					this.oldLeftList = data
+					this.leftSelectList = data
 					// 判断右边是否勾选
-					this.oldRightList.forEach((item) => {
-						this.oldLeftList.forEach((val) => {
+					this.sourceRightList.forEach((item) => {
+						this.leftSelectList.forEach((val) => {
 							if (val.id === item.id) {
 								item.check = true
 							}
 						})
 					})
-					this.changeLeft()
-					this.changeRight()
+					this.leftFilterByQuery()
+					this.rightFilterByQuery()
 				} else {
 					this.loading = false
 					this.$message({
@@ -502,9 +480,9 @@ export default {
 			this.$refs.form.validate((valid) => {
 				if (valid) {
 					const arr = []
-					this.oldLeftList.forEach((item) => {
+					this.leftSelectList.forEach((item,index) => {
 						arr.push({
-							assortSort: item.assortSort,
+							assortSort: index+1,
 							gameId: item.id,
 							gameName: item.gameName
 						})
@@ -541,13 +519,12 @@ export default {
 			})
 		},
 		deleteAll() {
-			this.oldLeftList = []
-			this.oldRightList = []
-			this.oldRightList.forEach((val) => {
+			this.leftSelectList = []
+			this.sourceRightList.forEach((val) => {
 				val.check = false
 			})
-			this.changeLeft()
-			this.changeRight()
+			this.leftFilterByQuery()
+			this.rightFilterByQuery()
 		},
 		reset() {
 			this.$refs['form'].resetFields()
