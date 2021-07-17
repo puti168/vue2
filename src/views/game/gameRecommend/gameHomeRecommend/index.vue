@@ -426,10 +426,9 @@ export default {
                     const { code, msg } = res
                     if (code === 200) {
                         this.$message({
-                            message: '保存成功',
+                            message: '排序成功',
                             type: 'success'
                         })
-                        this.reset()
                     } else {
                         this.$message({
                             message: msg,

@@ -17,8 +17,8 @@
 									<el-input
 										v-model="form.moduleDesc"
 										size="medium"
-                                        show-word-limit
-                                        type="textarea"
+										show-word-limit
+										type="textarea"
 										maxlength="100"
 										placeholder="2~100字符"
 										clearable
@@ -152,7 +152,7 @@
 							<el-table-column align="center" label="操作">
 								<template slot-scope="scope">
 									<el-button
-										:disabled="scope.row.status === '0'"
+										:disabled="scope.row.status === 0"
 										:type="scope.row.status === 1 ? 'danger' : 'success'"
 										size="medium"
 										class="noicon"
@@ -217,20 +217,20 @@ export default {
 	},
 	computed: {},
 	watch: {
-		gameDetails: {
-			handler(newVal, oldVal) {
-				if (newVal) {
-					this.form = { ...newVal }
-				} else {
-					this.form = {
-						moduleDesc: undefined
-					}
-				}
-				console.log('formData', this.form)
-			},
-			deep: true,
-			immediate: true
-		}
+		// gameDetails: {
+		// 	handler(newVal, oldVal) {
+		// 		if (newVal) {
+		// 			this.form = { ...newVal }
+		// 		} else {
+		// 			this.form = {
+		// 				moduleDesc: undefined
+		// 			}
+		// 		}
+		// 		console.log('formData', this.form)
+		// 	},
+		// 	deep: true,
+		// 	immediate: true
+		// }
 	},
 	created() {
 		this.getDetails()
@@ -260,11 +260,13 @@ export default {
 					this.loading = false
 					const {
 						code,
-						data: { gameTopicModuleMetaVos },
+						data: { gameTopicModuleMetaVos, moduleDesc, id },
 						msg
 					} = res
 					if (code === 200) {
 						this.dataList = gameTopicModuleMetaVos || []
+                        this.form.moduleDesc = moduleDesc
+                        this.form.id = id
 						this.idArray =
 							gameTopicModuleMetaVos &&
 							gameTopicModuleMetaVos.length &&
@@ -356,24 +358,39 @@ export default {
 		},
 		save() {
 			this.loading = true
-			const params = {
-				...this.form
-			}
+            const gameTopicModuleMetaVos =
+                this.dataList.map((item) => {
+                    return {
+                        allGameNum: item.allGameNum * 1,
+                        assortId: item.assortId,
+                        createdAt: item.createdAt,
+                        createdBy: item.createdBy,
+                        displayOrder: item.displayOrder,
+                        id: item.id,
+                        mainTitleInfo: item.mainTitleInfo,
+                        moduleId: item.moduleId,
+                        status: item.status,
+                        subTitleInfo: item.subTitleInfo
+                    }
+                }) || []
+            const { moduleDesc, id } = this.form
+            const params = {
+                gameTopicModuleMetaVos,
+                moduleDesc,
+                id
+            }
 			this.$refs['form'].validate((valid) => {
-				console.log('valid', valid)
 				if (valid) {
 					this.$api
-						.addMemberAPI(params)
+						.editGameTopicModuleAPI(params)
 						.then((res) => {
 							this.loading = false
-							const { code, data, msg } = res
+							const { code, msg } = res
 							if (code === 200) {
-								this.$confirm(`会员${data}资料提交成功`, {
-									confirmButtonText: '确定',
-									type: 'success',
-									showCancelButton: false
-								})
-								this.reset()
+                                this.$message({
+                                    message: '保存成功',
+                                    type: 'success'
+                                })
 							} else {
 								this.$message({
 									message: msg,
@@ -405,7 +422,8 @@ export default {
 				assortId: undefined,
 				mainTitleInfo: undefined,
 				moduleId: undefined,
-				status: '0',
+				status: 0,
+                id: this.form.id,
 				subTitleInfo: undefined
 			})
 			// this.copyArr.push({
@@ -428,7 +446,7 @@ export default {
 			this.sortable =
 				wrapperTr &&
 				Sortable.create(wrapperTr, {
-                    ghostClass: 'sortable-ghost',
+					ghostClass: 'sortable-ghost',
 					animation: 300,
 					delay: 0,
 					onEnd: ({ newIndex, oldIndex }) => {
@@ -436,21 +454,18 @@ export default {
 						// console.log('oldIndex', oldIndex)
 						console.log('_this.dataList', _this.dataList)
 						// console.log('_this.dataList', _this.dataList[newIndex])
-                        const currRow = _this.dataList.splice(oldIndex, 1)[0]
-                        _this.dataList.splice(newIndex, 0, currRow)
+						const currRow = _this.dataList.splice(oldIndex, 1)[0]
+						_this.dataList.splice(newIndex, 0, currRow)
 						if (newIndex !== oldIndex) {
 							_this.dataList.map((item, idx) => {
-							    item.displayOrder = idx + 1
+								item.displayOrder = idx + 1
 							})
-                            // _this.dataList = _this.dataList.sort((a, b) => {
+							// _this.dataList = _this.dataList.sort((a, b) => {
 							// 	return a.displayOrder - b.displayOrder
 							// })
 						}
 					}
 				})
-		},
-		reset() {
-			this.$refs['form'].resetFields()
 		},
 		changeStatus(row) {
 			console.log(row)

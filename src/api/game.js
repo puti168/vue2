@@ -364,6 +364,15 @@ export function gameDelTopicModuleAPI(data) {
 	})
 }
 
+// 游戏==> 首页推荐位 ==> 游戏专题 ===> 保存
+export function editGameTopicModuleAPI(data) {
+	return request({
+		url: '/gameCommonModule/editGameTopicModule',
+		method: 'post',
+		data
+	})
+}
+
 // 游戏==> 首页推荐位 ==> 最新游戏 ===> 回显
 export function gameLatestModuleDetailAPI(params) {
 	return request({
@@ -475,6 +484,7 @@ export default {
 	gameLatestModuleDetailAPI,
 	editGameLatestModuleAPI,
 	gameModuleSortAPI,
+	editGameTopicModuleAPI,
 	gameHomeRecommendListSortAPI,
 	recommendStatusChangeAPI,
 	gameHomeRecommendDetailsAPI,
