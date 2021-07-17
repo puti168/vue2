@@ -626,7 +626,6 @@ export default {
       size: 10,
       dialogTotal: 0,
       summary: {},
-      db: '',
       myName: ''
     }
   },
@@ -751,7 +750,7 @@ export default {
       request.onsuccess = (event) => {
         this.visible = false
         this.getList()
-         console.log('数据更新成功')
+        console.log('数据更新成功')
       }
 
       request.onerror = (event) => {
@@ -761,6 +760,7 @@ export default {
     clickDel(id) {
       this.newList = []
       this.newList.push({
+        id: this.myName,
         会员账号: true,
         姓名: true,
         账号类型: true,

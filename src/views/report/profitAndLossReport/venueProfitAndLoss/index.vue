@@ -413,6 +413,7 @@ export default {
       }
     },
     confirm() {
+      console.log(this.newList, 446464)
       const arr = []
       for (let i = 0; i < this.newList.length; i++) {
         const ele = this.newList[i]
@@ -446,6 +447,7 @@ export default {
     clickDel(id) {
       this.newList = []
       this.newList.push({
+        id: this.myName,
         场馆: true,
         项目: true,
         投注人数: true,

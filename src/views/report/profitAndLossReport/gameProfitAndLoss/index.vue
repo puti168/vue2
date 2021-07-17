@@ -90,7 +90,7 @@
           @sort-change="_changeTableSort"
         >
           <el-table-column
-            v-if="settingList['游戏']"
+            v-if="gameProfitAndLoss['游戏']"
             prop="gameTypeName"
             align="center"
             label="游戏"
@@ -104,14 +104,14 @@
             </template>
           </el-table-column>
           <el-table-column
-            v-if="settingList['场馆']"
+            v-if="gameProfitAndLoss['场馆']"
             prop="venueName"
             align="center"
             label="场馆"
           >
           </el-table-column>
           <el-table-column
-            v-if="settingList['投注人数']"
+            v-if="gameProfitAndLoss['投注人数']"
             prop="memberCount"
             align="center"
             sortable="custom"
@@ -119,7 +119,7 @@
           >
           </el-table-column>
           <el-table-column
-            v-if="settingList['注单量']"
+            v-if="gameProfitAndLoss['注单量']"
             prop="betCount"
             align="center"
             sortable="custom"
@@ -127,7 +127,7 @@
           >
           </el-table-column>
           <el-table-column
-            v-if="settingList['投注金额']"
+            v-if="gameProfitAndLoss['投注金额']"
             prop="betAmount"
             align="center"
             sortable="custom"
@@ -135,7 +135,7 @@
           >
           </el-table-column>
           <el-table-column
-            v-if="settingList['有效投注']"
+            v-if="gameProfitAndLoss['有效投注']"
             prop="validBetAmount"
             align="center"
             sortable="custom"
@@ -143,7 +143,7 @@
           >
           </el-table-column>
           <el-table-column
-            v-if="settingList['投注盈亏']"
+            v-if="gameProfitAndLoss['投注盈亏']"
             prop="netAmount"
             align="center"
             sortable="custom"
@@ -307,9 +307,11 @@ style="margin-right: 15px"
         width="300px"
         class="col-setting"
       >
-        <el-link type="primary" @click="setAll">复原缺省</el-link>
-        <div v-for="(value, name) in settingList" :key="name" class="setting-div">
-          <el-checkbox v-model="newList[name]">{{ name }}</el-checkbox>
+        <el-link type="primary" @click="clickDel">复原缺省</el-link>
+        <div v-for="(value, name) in gameProfitAndLoss" :key="name" class="setting-div">
+          <el-checkbox v-if="newList.length > 0" v-model="newList[0][name]">{{
+            name
+          }}</el-checkbox>
         </div>
         <div slot="footer" class="dialog-footer">
           <el-button @click="visible = false">取 消</el-button>
@@ -383,7 +385,7 @@ export default {
       gameTypeId: '',
       visible: false,
       tableVisible: false,
-      settingList: {
+      gameProfitAndLoss: {
         游戏: true,
         场馆: true,
         投注人数: true,
@@ -392,6 +394,7 @@ export default {
         有效投注: true,
         投注盈亏: true
       },
+      myName: '',
       newList: []
     }
   },
@@ -400,12 +403,120 @@ export default {
     this.seleceInit()
   },
   mounted() {
-    if (localStorage.getItem('gameProfitAndLoss')) {
-      this.settingList = JSON.parse(localStorage.getItem('gameProfitAndLoss'))
-    }
+    this.myName = localStorage.getItem('username')
+    this.initDB()
   },
 
   methods: {
+    // 列设置
+    openSetting() {
+      this.getList()
+      this.visible = true
+    },
+    initDB() {
+      const request = indexedDB.open('gameProfitAndLoss')
+      request.onupgradeneeded = (event) => {
+        const db = event.target.result
+        this.db = db
+        // 建表 名为person,主键为id
+        db.createObjectStore('gameProfitAndLoss', {
+          keyPath: 'id',
+          autoIncrement: true
+        })
+      }
+
+      request.onsuccess = (event) => {
+        this.db = event.target.result
+        console.log('数据库打开/创建成功', event)
+        this.clickAdd()
+        this.getList()
+      }
+    },
+    clickAdd() {
+      const request = this.db
+        .transaction(['gameProfitAndLoss'], 'readwrite')
+        .objectStore('gameProfitAndLoss')
+        .add({
+          id: this.myName,
+          游戏: true,
+          场馆: true,
+          投注人数: true,
+          注单量: true,
+          投注金额: true,
+          有效投注: true,
+          投注盈亏: true
+        })
+      request.onsuccess = (event) => {
+        this.getList()
+      }
+    },
+    getList() {
+      this.newList = []
+      var transaction = this.db.transaction(['gameProfitAndLoss'])
+      const objectStore = transaction.objectStore('gameProfitAndLoss')
+      const list = []
+      objectStore.openCursor().onsuccess = (event) => {
+        const cursor = event.target.result
+        if (cursor) {
+          list.push(cursor.value)
+          cursor.continue()
+        } else {
+          for (let i = 0; i < list.length; i++) {
+            const ele = list[i]
+            if (ele.id === this.myName) {
+              this.newList.push(ele)
+              this.gameProfitAndLoss = { ...ele }
+              delete this.gameProfitAndLoss.id
+            }
+          }
+        }
+      }
+    },
+    confirm() {
+      console.log(this.newList, 446464)
+      const arr = []
+      for (let i = 0; i < this.newList.length; i++) {
+        const ele = this.newList[i]
+        if (ele.id === this.myName) {
+          arr.push(ele)
+        }
+      }
+      const request = this.db
+        .transaction(['gameProfitAndLoss'], 'readwrite')
+        .objectStore('gameProfitAndLoss')
+        .put({
+          id: this.myName,
+          游戏: arr[0]['游戏'],
+          场馆: arr[0]['场馆'],
+          投注人数: arr[0]['投注人数'],
+          注单量: arr[0]['注单量'],
+          投注金额: arr[0]['投注金额'],
+          有效投注: arr[0]['有效投注'],
+          投注盈亏: arr[0]['投注盈亏']
+        })
+      request.onsuccess = (event) => {
+        this.visible = false
+        this.getList()
+        console.log('数据更新成功')
+      }
+
+      request.onerror = (event) => {
+        console.log('数据更新失败')
+      }
+    },
+    clickDel(id) {
+      this.newList = []
+      this.newList.push({
+        id: this.myName,
+        游戏: true,
+        场馆: true,
+        投注人数: true,
+        注单量: true,
+        投注金额: true,
+        有效投注: true,
+        投注盈亏: true
+      })
+    },
     seleceInit() {
       this.$api.getMerchantGameGamePlant().then((res) => {
         if (res.code === 200) {
@@ -666,21 +777,7 @@ export default {
       this.size = val
       this.getReportGameProfitDetailListPage(this.gameTypeId)
     },
-    // 列设置
-    openSetting() {
-      this.visible = true
-      this.newList = JSON.parse(JSON.stringify(this.settingList))
-    },
-    confirm() {
-      localStorage.setItem('gameProfitAndLoss', JSON.stringify(this.newList))
-      this.settingList = this.newList
-      this.visible = false
-    },
-    setAll() {
-      Object.keys(this.newList).forEach((item) => {
-        this.newList[item] = true
-      })
-    },
+
     getSummaries(param) {
       const { columns, data } = param
       const sums = []
