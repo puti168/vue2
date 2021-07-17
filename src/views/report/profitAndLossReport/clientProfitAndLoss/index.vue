@@ -135,13 +135,6 @@
             sortable="custom"
             label="投注盈亏"
           >
-            <template slot="header">
-              <span>投注盈亏</span>
-              <el-tooltip class="item" effect="dark">
-                <i class="el-icon-question" style="position: absolute; right: 10px"></i>
-                <div slot="content">盈亏金额指游戏输赢金额<br />负数表示会员输</div>
-              </el-tooltip>
-            </template>
             <template slot-scope="scope">
               <span
                 v-if="!!scope.row.netAmount && scope.row.netAmount > 0"
@@ -547,28 +540,28 @@ export default {
         } else if (index === 1 && this.summary !== null) {
           sums[index] = (
             <div class='count_row'>
-              <p>{this.summary.memberCountTotal}</p>
+              <p>{Math.floor(this.summary.memberCountTotal * 100) / 100}</p>
             </div>
           )
           return
         } else if (index === 2 && this.summary !== null) {
           sums[index] = (
             <div class='count_row'>
-              <p>{this.summary.betCountTotal}</p>
+              <p>{Math.floor(this.summary.betCountTotal * 100) / 100}</p>
             </div>
           )
           return
         } else if (index === 3 && this.summary !== null) {
           sums[index] = (
             <div class='count_row'>
-              <p>{this.summary.betAmountTotal}</p>
+              <p>{Math.floor(this.summary.betAmountTotal * 100) / 100}</p>
             </div>
           )
           return
         } else if (index === 4 && this.summary !== null) {
           sums[index] = (
             <div class='count_row'>
-              <p>{this.summary.validBetAmountTotal}</p>
+              <p>{Math.floor(this.summary.validBetAmountTotal * 100) / 100}</p>
             </div>
           )
           return
@@ -576,9 +569,15 @@ export default {
           sums[index] = (
             <div class='count_row'>
               {this.summary.netAmountTotal > 0 ? (
-                <p class='enableColor'>{this.summary.netAmountTotal}</p>
+                <p class='enableColor'>
+                  {Math.floor(this.summary.netAmountTotal * 100) / 100}
+                </p>
+              ) : this.summary.netAmountTotal === 0 ? (
+                <p>{Math.floor(this.summary.netAmountTotal * 100) / 100}</p>
               ) : (
-                <p class='redColor'>{this.summary.netAmountTotal}</p>
+                <p class='redColor'>
+                  {Math.floor(this.summary.netAmountTotal * 100) / 100}
+                </p>
               )}
             </div>
           )

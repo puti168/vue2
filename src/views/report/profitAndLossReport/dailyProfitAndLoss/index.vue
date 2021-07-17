@@ -527,24 +527,24 @@ export default {
               case 1:
                 sums[index] = (
                   <div class='count_row'>
-                    <p>{num.toFixed(2)}</p>
-                    <p>{this.summary.discountAmount}</p>
+                    <p>{Math.floor(num * 100) / 100}</p>
+                    <p>{Math.floor(this.summary.discountAmount * 100) / 100}</p>
                   </div>
                 )
                 break
               case 2:
                 sums[index] = (
                   <div class='count_row'>
-                    <p>{num.toFixed(2)}</p>
-                    <p>{this.summary.rebateAmount}</p>
+                    <p>{Math.floor(num * 100) / 100}</p>
+                    <p>{Math.floor(this.summary.rebateAmount * 100) / 100}</p>
                   </div>
                 )
                 break
               case 3:
                 sums[index] = (
                   <div class='count_row'>
-                    <p>{num.toFixed(2)}</p>
-                    <p>{this.summary.artificialPatchAmount}</p>
+                    <p>{Math.floor(num * 100) / 100}</p>
+                    <p>{Math.floor(this.summary.artificialPatchAmount * 100) / 100}</p>
                   </div>
                 )
                 break
@@ -567,8 +567,8 @@ export default {
               case 6:
                 sums[index] = (
                   <div class='count_row'>
-                    <p>{num.toFixed(2)}</p>
-                    <p>{this.summary.betAmount}</p>
+                    <p>{Math.floor(num * 100) / 100}</p>
+                    <p>{Math.floor(this.summary.betAmount * 100) / 100}</p>
                   </div>
                 )
 
@@ -576,8 +576,8 @@ export default {
               case 7:
                 sums[index] = (
                   <div class='count_row'>
-                    <p>{num.toFixed(2)}</p>
-                    <p>{this.summary.validBetAmount}</p>
+                    <p>{Math.floor(num * 100) / 100}</p>
+                    <p>{Math.floor(this.summary.validBetAmount * 100) / 100}</p>
                   </div>
                 )
                 break
@@ -585,14 +585,20 @@ export default {
                 sums[index] = (
                   <div class='count_row'>
                     {num > 0 ? (
-                      <p class='enableColor'>{num.toFixed(2)}</p>
+                      <p class='enableColor'>{Math.floor(num * 100) / 100}</p>
                     ) : (
-                      <p class='redColor'>{num.toFixed(2)}</p>
+                      <p class='redColor'>{Math.floor(num * 100) / 100}</p>
                     )}
                     {this.summary.netAmount > 0 ? (
-                      <p class='enableColor'>{this.summary.netAmount}</p>
+                      <p class='enableColor'>
+                        {Math.floor(this.summary.netAmount * 100) / 100}
+                      </p>
+                    ) : this.summary.netAmount === 0 ? (
+                      <p>{Math.floor(this.summary.netAmount * 100) / 100}</p>
                     ) : (
-                      <p class='redColor'>{this.summary.netAmount}</p>
+                      <p class='redColor'>
+                        {Math.floor(this.summary.netAmount * 100) / 100}
+                      </p>
                     )}
                   </div>
                 )
@@ -601,14 +607,18 @@ export default {
                 sums[index] = (
                   <div class='count_row'>
                     {num > 0 ? (
-                      <p class='enableColor'>{num.toFixed(2)}</p>
+                      <p class='enableColor'>{Math.floor(num * 100) / 100}</p>
                     ) : (
-                      <p class='redColor'>{num.toFixed(2)}</p>
+                      <p class='redColor'>{Math.floor(num * 100) / 100}</p>
                     )}
                     {this.summary.net > 0 ? (
-                      <p class='enableColor'>{this.summary.net}</p>
+                      <p class='enableColor'>
+                        {Math.floor(this.summary.net * 100) / 100}
+                      </p>
+                    ) : this.summary.net === 0 ? (
+                      <p>{Math.floor(this.summary.net * 100) / 100}</p>
                     ) : (
-                      <p class='redColor'>{this.summary.net}</p>
+                      <p class='redColor'>{Math.floor(this.summary.net * 100) / 100}</p>
                     )}
                   </div>
                 )

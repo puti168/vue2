@@ -633,16 +633,16 @@ export default {
               case 4:
                 sums[index] = (
                   <div class='count_row'>
-                    <p>{num.toFixed(2)}</p>
-                    <p>{this.summary.betAmountTotal}</p>
+                    <p>{Math.floor(num * 100) / 100}</p>
+                    <p>{Math.floor(this.summary.betAmountTotal * 100) / 100}</p>
                   </div>
                 )
                 break
               case 5:
                 sums[index] = (
                   <div class='count_row'>
-                    <p>{num.toFixed(2)}</p>
-                    <p>{this.summary.validBetAmountTotal}</p>
+                    <p>{Math.floor(num * 100) / 100}</p>
+                    <p>{Math.floor(this.summary.validBetAmountTotal * 100) / 100}</p>
                   </div>
                 )
                 break
@@ -650,14 +650,20 @@ export default {
                 sums[index] = (
                   <div class='count_row'>
                     {num > 0 ? (
-                      <p class='enableColor'>{num.toFixed(2)}</p>
+                      <p class='enableColor'>{Math.floor(num * 100) / 100}</p>
                     ) : (
-                      <p class='redColor'>{num.toFixed(2)}</p>
+                      <p class='redColor'>{Math.floor(num * 100) / 100}</p>
                     )}
                     {this.summary.netAmountTotal > 0 ? (
-                      <p class='enableColor'>{this.summary.netAmountTotal}</p>
+                      <p class='enableColor'>
+                        {Math.floor(this.summary.netAmountTotal * 100) / 100}
+                      </p>
+                    ) : this.summary.netAmountTotal === 0 ? (
+                      <p>{Math.floor(this.summary.netAmountTotal * 100) / 100}</p>
                     ) : (
-                      <p class='redColor'>{this.summary.netAmountTotal}</p>
+                      <p class='redColor'>
+                        {Math.floor(this.summary.netAmountTotal * 100) / 100}
+                      </p>
                     )}
                   </div>
                 )

@@ -3,7 +3,7 @@
     <div class="view-container dealer-container">
       <div class="params">
         <el-form ref="form" :inline="true" :model="queryData">
-          <el-form-item label="时间:" prop="registerTime">
+          <el-form-item label="日期:" prop="registerTime">
             <el-date-picker
               v-model="searchTime"
               type="daterange"
@@ -780,12 +780,15 @@ export default {
       const [startTime, endTime] = create
       let params = {
         ...this.queryData,
+        accountTypeList: this.queryData.accountTypeList.join(','),
+        accountStatusList: this.queryData.accountStatusList.join(','),
         startTime: startTime ? dayjs(startTime).format('YYYY-MM-DD') : '',
         endTime: endTime ? dayjs(endTime).format('YYYY-MM-DD') : ''
       }
       params = {
         ...this.getParams(params)
       }
+      console.log(params)
       if (endTime - startTime > this.day31) {
         this.$message.warning('请缩小搜索范围至31天')
       } else {
@@ -920,16 +923,16 @@ export default {
               case 9:
                 sums[index] = (
                   <div class='count_row'>
-                    <p>{num.toFixed(2)}</p>
-                    <p>{this.summary.betAmountTotal}</p>
+                    <p>{Math.floor(num * 100) / 100}</p>
+                    <p>{Math.floor(this.summary.betAmountTotal * 100) / 100}</p>
                   </div>
                 )
                 break
               case 10:
                 sums[index] = (
                   <div class='count_row'>
-                    <p>{num.toFixed(2)}</p>
-                    <p>{this.summary.validBetAmountTotal}</p>
+                    <p>{Math.floor(num * 100) / 100}</p>
+                    <p>{Math.floor(this.summary.validBetAmountTotal * 100) / 100}</p>
                   </div>
                 )
                 break
@@ -937,14 +940,20 @@ export default {
                 sums[index] = (
                   <div class='count_row'>
                     {num > 0 ? (
-                      <p class='enableColor'>{num.toFixed(2)}</p>
+                      <p class='enableColor'>{Math.floor(num * 100) / 100}</p>
                     ) : (
-                      <p class='redColor'>{num.toFixed(2)}</p>
+                      <p class='redColor'>{Math.floor(num * 100) / 100}</p>
                     )}
                     {this.summary.netAmountTotal > 0 ? (
-                      <p class='enableColor'>{this.summary.netAmountTotal}</p>
+                      <p class='enableColor'>
+                        {Math.floor(this.summary.netAmountTotal * 100) / 100}
+                      </p>
+                    ) : this.summary.netAmountTotal === 0 ? (
+                      <p>{Math.floor(this.summary.netAmountTotal * 100) / 100}</p>
                     ) : (
-                      <p class='redColor'>{this.summary.netAmountTotal}</p>
+                      <p class='redColor'>
+                        {Math.floor(this.summary.netAmountTotal * 100) / 100}
+                      </p>
                     )}
                   </div>
                 )
@@ -960,7 +969,7 @@ export default {
     },
     reset() {
       this.pageNum = 1
-      this.queryData = {}
+      this.queryData = { accountTypeList: [] }
       this.searchTime = [startTime, endTime]
       this.$refs['form'].resetFields()
       this.loadData()

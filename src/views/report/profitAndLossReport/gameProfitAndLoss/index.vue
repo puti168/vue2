@@ -549,8 +549,8 @@ export default {
       const [startTime, endTime] = create
       let params = {
         ...this.queryData,
-        gameCodeList: this.gameCodeList,
-        gameTypeIdList: this.gameTypeIdList,
+        gameCodeList: this.checkAll ? [] : this.gameCodeList,
+        gameTypeIdList: this.checkAll ? [] : this.gameTypeIdList,
         startTime: startTime ? dayjs(startTime).format('YYYY-MM-DD') : '',
         endTime: endTime ? dayjs(endTime).format('YYYY-MM-DD') : ''
       }
@@ -707,7 +707,7 @@ export default {
       this.gameTypeName = val.gameTypeName
       this.gameTypeName = val.gameTypeName
       this.gameTypeId = val.gameTypeId
-      this.getReportGameProfitDetailListPage(val.gameTypeId)
+      this.getReportGameProfitDetailListPage(val)
       this.tableVisible = true
     },
     getReportGameProfitDetailListPage(val) {
@@ -717,7 +717,9 @@ export default {
       const params = {
         pageNum: this.page,
         pageSize: this.size,
-        gameTypeId: val,
+        gameTypeId: val.gameTypeId,
+        gameCode: val.gameCode,
+        gameTypeName: val.gameTypeName,
         startTime: startTime ? dayjs(startTime).format('YYYY-MM-DD') : '',
         endTime: endTime ? dayjs(endTime).format('YYYY-MM-DD') : ''
       }
@@ -823,16 +825,16 @@ export default {
               case 4:
                 sums[index] = (
                   <div class='count_row'>
-                    <p>{num.toFixed(2)}</p>
-                    <p>{this.summary.totalBetAmount}</p>
+                    <p>{Math.floor(num * 100) / 100}</p>
+                    <p>{Math.floor(this.summary.totalBetAmount * 100) / 100}</p>
                   </div>
                 )
                 break
               case 5:
                 sums[index] = (
                   <div class='count_row'>
-                    <p>{num.toFixed(2)}</p>
-                    <p>{this.summary.totalValidBetAmount}</p>
+                    <p>{Math.floor(num * 100) / 100}</p>
+                    <p>{Math.floor(this.summary.totalValidBetAmount * 100) / 100}</p>
                   </div>
                 )
                 break
@@ -840,14 +842,20 @@ export default {
                 sums[index] = (
                   <div class='count_row'>
                     {num > 0 ? (
-                      <p class='enableColor'>{num.toFixed(2)}</p>
+                      <p class='enableColor'>{Math.floor(num * 100) / 100}</p>
                     ) : (
-                      <p class='redColor'>{num.toFixed(2)}</p>
+                      <p class='redColor'>{Math.floor(num * 100) / 100}</p>
                     )}
                     {this.summary.totalNetAmount > 0 ? (
-                      <p class='enableColor'>{this.summary.totalNetAmount}</p>
+                      <p class='enableColor'>
+                        {Math.floor(this.summary.totalNetAmount * 100) / 100}
+                      </p>
+                    ) : this.summary.totalNetAmount === 0 ? (
+                      <p>{Math.floor(this.summary.totalNetAmount * 100) / 100}</p>
                     ) : (
-                      <p class='redColor'>{this.summary.totalNetAmount}</p>
+                      <p class='redColor'>
+                        {Math.floor(this.summary.totalNetAmount * 100) / 100}
+                      </p>
                     )}
                   </div>
                 )
