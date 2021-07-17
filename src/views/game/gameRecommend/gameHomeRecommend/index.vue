@@ -16,7 +16,7 @@
 							class="small-size-table"
 							:data="dataList"
 							style="width: 100%"
-                            row-key="moduleId"
+							row-key="moduleId"
 							:header-cell-style="getRowClass"
 							@sort-change="_changeTableSort"
 						>
@@ -44,7 +44,9 @@
 								<template slot-scope="scope">
 									<p
 										:class="
-											scope.row.moduleStatus === 1 ? 'normalRgba' : 'disableRgba'
+											scope.row.moduleStatus === 1
+												? 'normalRgba'
+												: 'disableRgba'
 										"
 									>
 										{{ scope.row.moduleStatus === 1 ? '开启中' : '已禁用' }}
@@ -96,7 +98,7 @@
 							>
 								<template slot-scope="scope">
 									<el-button
-									    v-if="hasPermission('1020211')"
+										v-if="hasPermission('1020211')"
 										:disabled="loading"
 										type="danger"
 										size="medium"
@@ -380,21 +382,23 @@ export default {
 	},
 	computed: {},
 	mounted() {
-        document.body.ondrop = function(event) {
-            event.preventDefault()
-            event.stopPropagation()
-        }
-        this.columnDrop()
-    },
+		document.body.ondrop = function(event) {
+			event.preventDefault()
+			event.stopPropagation()
+		}
+		this.columnDrop()
+	},
 	methods: {
 		openDetails(val) {
-			console.log('val', val)
 			this.recommendDetails = val
 			this.isEdit = true
 		},
 		back() {
 			this.isEdit = false
 			this.loadData()
+			this.$nextTick(() => {
+				this.columnDrop()
+			})
 		},
 		// 切换导航
 		handleClick(tab) {
@@ -408,43 +412,43 @@ export default {
 			}
 			this.loadData()
 		},
-        save() {
-            const gameModuleVos =
-                this.dataList.map((item) => {
-                    return {
-                        displayOrder: item.displayOrder,
-                        id: item.id
-                    }
-                }) || []
-            const params = {
-                gameModuleVos
-            }
-            this.$api
-                .gameModuleSortAPI(params)
-                .then((res) => {
-                    this.loading = false
-                    const { code, msg } = res
-                    if (code === 200) {
-                        this.$message({
-                            message: '排序成功',
-                            type: 'success'
-                        })
-                    } else {
-                        this.$message({
-                            message: msg,
-                            type: 'error'
-                        })
-                    }
-                    this.loadData()
-                })
-                .catch(() => {
-                    this.loading = false
-                })
+		save() {
+			const gameModuleVos =
+				this.dataList.map((item) => {
+					return {
+						displayOrder: item.displayOrder,
+						id: item.id
+					}
+				}) || []
+			const params = {
+				gameModuleVos
+			}
+			this.$api
+				.gameModuleSortAPI(params)
+				.then((res) => {
+					this.loading = false
+					const { code, msg } = res
+					if (code === 200) {
+						this.$message({
+							message: '排序成功',
+							type: 'success'
+						})
+					} else {
+						this.$message({
+							message: msg,
+							type: 'error'
+						})
+					}
+					this.loadData()
+				})
+				.catch(() => {
+					this.loading = false
+				})
 
-            setTimeout(() => {
-                this.loading = false
-            }, 1000)
-        },
+			setTimeout(() => {
+				this.loading = false
+			}, 1000)
+		},
 		loadData() {
 			let params = {
 				...this.queryData
@@ -495,14 +499,17 @@ export default {
 				}
 			)
 				.then(() => {
-                    const loading = this.$loading({
-                        lock: true,
-                        text: 'Loading',
-                        spinner: 'el-icon-loading',
-                        background: 'rgba(0, 0, 0, 0.7)'
-                    })
+					const loading = this.$loading({
+						lock: true,
+						text: 'Loading',
+						spinner: 'el-icon-loading',
+						background: 'rgba(0, 0, 0, 0.7)'
+					})
 					this.$api
-						.recommendStatusChangeAPI({ id, moduleStatus: moduleStatus === 1 ? 0 : 1 })
+						.recommendStatusChangeAPI({
+							id,
+							moduleStatus: moduleStatus === 1 ? 0 : 1
+						})
 						.then((res) => {
 							const { code } = res
 							loading.close()
@@ -520,9 +527,9 @@ export default {
 							this.loadData()
 						}) // 一键下分
 
-                    setTimeout(() => {
-                        loading.close()
-                    }, 1000)
+					setTimeout(() => {
+						loading.close()
+					}, 1000)
 				})
 				.catch(() => {})
 		},
@@ -544,30 +551,30 @@ export default {
 				this.loadData()
 			}
 		},
-        // 列拖动
-        columnDrop() {
-            const wrapperTr = document.querySelector('.el-table__body-wrapper tbody')
-            const _this = this
-            this.sortable =
-                wrapperTr &&
-                Sortable.create(wrapperTr, {
-                    ghostClass: 'droppable-area',
-                    animation: 300,
-                    delay: 0,
-                    onEnd: ({ newIndex, oldIndex }) => {
-                        console.log('newIndex', newIndex)
-                        console.log('oldIndex', oldIndex)
-                        const currRow = _this.dataList.splice(oldIndex, 1)[0]
-                        _this.dataList.splice(newIndex, 0, currRow)
-                        if (newIndex !== oldIndex) {
-                            _this.dataList.forEach((item, idx) => {
-                                item.displayOrder = idx + 1
-                            })
-                        }
-                        _this.save()
-                    }
-                })
-        }
+		// 列拖动
+		columnDrop() {
+			const wrapperTr = document.querySelector('.el-table__body-wrapper tbody')
+			const _this = this
+			this.sortable =
+				wrapperTr &&
+				Sortable.create(wrapperTr, {
+					ghostClass: 'droppable-area',
+					animation: 300,
+					delay: 0,
+					onEnd: ({ newIndex, oldIndex }) => {
+						console.log('newIndex', newIndex)
+						console.log('oldIndex', oldIndex)
+						const currRow = _this.dataList.splice(oldIndex, 1)[0]
+						_this.dataList.splice(newIndex, 0, currRow)
+						if (newIndex !== oldIndex) {
+							_this.dataList.forEach((item, idx) => {
+								item.displayOrder = idx + 1
+							})
+						}
+						_this.save()
+					}
+				})
+		}
 	}
 }
 </script>
@@ -579,7 +586,7 @@ export default {
 	font-weight: 700;
 }
 .droppable-area {
-    background-color: #cb8727;
-    opacity: 0.4;
+	background-color: #cb8727;
+	opacity: 0.4;
 }
 </style>

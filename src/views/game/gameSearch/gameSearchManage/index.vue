@@ -56,7 +56,7 @@
 						:data="dataList"
 						style="width: 100%"
 						:header-cell-style="getRowClass"
-						row-key="displayOrder"
+						row-key="id"
 						:row-style="{ height: '45px' }"
 						@sort-change="_changeTableSort"
 					>
@@ -274,7 +274,8 @@ export default {
 				this.dataList.map((item) => {
 					return {
 						displayOrder: item.displayOrder,
-						searchInfo: item.searchInfo
+						searchInfo: item.searchInfo,
+                        id: item.id
 					}
 				}) || []
 			const { historySearchGameLimit, hotSearchGameLimit } = this.queryData
@@ -330,7 +331,7 @@ export default {
 				createdAt: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
 				updatedAt: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
 				displayOrder,
-				searchInfo: ''
+				searchInfo: undefined
 			})
 			// this.updateArr.push({
 			// 	id: new_row,

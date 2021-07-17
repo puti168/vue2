@@ -423,7 +423,6 @@ export default {
 				mainTitleInfo: undefined,
 				moduleId: undefined,
 				status: 0,
-                id: this.form.id,
 				subTitleInfo: undefined
 			})
 			// this.copyArr.push({
