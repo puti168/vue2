@@ -451,19 +451,13 @@
               </el-tooltip>
             </template>
             <template slot-scope="scope">
-              <span
-                v-if="!!scope.row.netAmount && scope.row.netAmount > 0"
-                class="enableColor"
-              >
+              <span v-if="scope.row.netAmount > 0" class="enableColor">
                 {{ scope.row.netAmount }}
               </span>
-              <span
-                v-else-if="!!scope.row.netAmount && scope.row.netAmount < 0"
-                class="redColor"
-              >
+              <span v-else-if="scope.row.netAmount < 0" class="redColor">
                 {{ scope.row.netAmount }}
               </span>
-              <span v-else-if="!!scope.row.netAmount && scope.row.netAmount === 0"></span>
+              <span v-else-if="scope.row.netAmount === 0">{{ scope.row.netAmount }}</span>
               <span v-else>-</span>
             </template>
           </el-table-column>
@@ -511,19 +505,13 @@
         ></el-table-column>
         <el-table-column prop="netAmount" align="center" label="投注盈亏">
           <template slot-scope="scope">
-            <span
-              v-if="!!scope.row.netAmount && scope.row.netAmount > 0"
-              class="enableColor"
-            >
+            <span v-if="scope.row.netAmount > 0" class="enableColor">
               {{ scope.row.netAmount }}
             </span>
-            <span
-              v-else-if="!!scope.row.netAmount && scope.row.netAmount < 0"
-              class="redColor"
-            >
+            <span v-else-if="scope.row.netAmount < 0" class="redColor">
               {{ scope.row.netAmount }}
             </span>
-            <span v-else-if="!!scope.row.netAmount && scope.row.netAmount === 0"></span>
+            <span v-else-if="scope.row.netAmount === 0">{{ scope.row.netAmount }}</span>
             <span v-else>-</span>
           </template>
         </el-table-column>
@@ -584,7 +572,12 @@ export default {
             this.flag = true
             this.$message.warning('请缩小搜索范围至31天')
           }
-          if (maxDate !== null && minDate !== null && maxDate - minDate <= this.day31) {
+          if (
+            maxDate !== null &&
+            minDate !== null &&
+            maxDate - minDate <= this.day31 &&
+            this.queryText === '查询'
+          ) {
             this.flag = false
           } else {
             this.flag = true
@@ -793,7 +786,7 @@ export default {
               case 8:
                 sums[index] = (
                   <div class='count_row'>
-                    <p>{num.toFixed(2)}</p>
+                    <p>{num}</p>
                     <p>{this.summary.betCountTotal}</p>
                   </div>
                 )

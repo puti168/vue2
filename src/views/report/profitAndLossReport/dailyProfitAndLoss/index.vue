@@ -169,19 +169,13 @@
               </el-tooltip>
             </template>
             <template slot-scope="scope">
-              <span
-                v-if="!!scope.row.netAmount && scope.row.netAmount > 0"
-                class="enableColor"
-              >
+              <span v-if="scope.row.netAmount > 0" class="enableColor">
                 {{ scope.row.netAmount }}
               </span>
-              <span
-                v-else-if="!!scope.row.netAmount && scope.row.netAmount < 0"
-                class="redColor"
-              >
+              <span v-else-if="scope.row.netAmount < 0" class="redColor">
                 {{ scope.row.netAmount }}
               </span>
-              <span v-else-if="!!scope.row.netAmount && scope.row.netAmount === 0"></span>
+              <span v-else-if="scope.row.netAmount === 0">{{ scope.row.netAmount }}</span>
               <span v-else>-</span>
             </template>
           </el-table-column>
@@ -194,13 +188,13 @@
               </el-tooltip>
             </template>
             <template slot-scope="scope">
-              <span v-if="!!scope.row.net && scope.row.net > 0" class="enableColor">
+              <span v-if="scope.row.net > 0" class="enableColor">
                 {{ scope.row.net }}
               </span>
-              <span v-else-if="!!scope.row.net && scope.row.net < 0" class="redColor">
+              <span v-else-if="scope.row.net < 0" class="redColor">
                 {{ scope.row.net }}
               </span>
-              <span v-else-if="!!scope.row.net && scope.row.net === 0"></span>
+              <span v-else-if="scope.row.net === 0">{{ scope.row.net }}</span>
               <span v-else>-</span>
             </template>
           </el-table-column>
@@ -241,7 +235,7 @@
 <script>
 import list from '@/mixins/list'
 import dayjs from 'dayjs'
-const startTime = dayjs().startOf('day').valueOf()
+const startTime = dayjs().subtract(6, 'day').format()
 const endTime = dayjs().endOf('day').valueOf()
 
 export default {
@@ -260,7 +254,12 @@ export default {
             this.flag = true
             this.$message.warning('请缩小搜索范围至31天')
           }
-          if (maxDate !== null && minDate !== null && maxDate - minDate <= this.day31) {
+          if (
+            maxDate !== null &&
+            minDate !== null &&
+            maxDate - minDate <= this.day31 &&
+            this.queryText === '查询'
+          ) {
             this.flag = false
           } else {
             this.flag = true
@@ -435,7 +434,7 @@ export default {
               case 4:
                 sums[index] = (
                   <div class='count_row'>
-                    <p>{num.toFixed(2)}</p>
+                    <p>{num}</p>
                     <p>{this.summary.memberCount}</p>
                   </div>
                 )
@@ -443,7 +442,7 @@ export default {
               case 5:
                 sums[index] = (
                   <div class='count_row'>
-                    <p>{num.toFixed(2)}</p>
+                    <p>{num}</p>
                     <p>{this.summary.betCount}</p>
                   </div>
                 )
