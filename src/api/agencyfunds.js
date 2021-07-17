@@ -31,6 +31,14 @@ export function getMemberWithdrawalAdd(data) {
 		data
 	})
 }
+// 代理提款设置-新增会员理提款设置==>修改
+export function getMemberWithdrawalUpdate(data) {
+	return request({
+		url: '/memberWithdrawal/update',
+		method: 'post',
+		data
+	})
+}
 // 代理提款设置-修改员理提款设置
 export function getAemberWithdrawalUpdate(data) {
 	return request({
@@ -233,5 +241,6 @@ export default {
 	setwithdrawSettingMemberUpdate,
 	getWithdrawSettingMemberreset,
 	getMemberWithdrawalSelect,
-	getMemberWithdrawalGetWithdrawal
+	getMemberWithdrawalGetWithdrawal,
+	getMemberWithdrawalUpdate
 }
