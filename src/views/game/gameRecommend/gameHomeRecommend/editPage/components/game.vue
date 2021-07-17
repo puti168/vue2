@@ -33,13 +33,13 @@
 						<el-button type="primary" @click="addRow">新增</el-button>
 					</div>
 					<div class="content">
-						<el-form ref="form">
+						<el-form ref="queryData" :model="queryData" :rules="rules">
 							<el-table
 								v-loading="loading"
 								border
 								size="mini"
 								class="small-size-table"
-								:data="dataList"
+								:data="queryData.dataList"
 								style="width: 100%"
 								:header-cell-style="getRowClass"
 								row-key="displayOrder"
@@ -82,7 +82,11 @@
 									width="300"
 								>
 									<template slot-scope="scope">
-										<el-form-item :error="scope.row.errorAssortId">
+										<el-form-item
+											label=" "
+											:prop="'dataList.' + scope.$index + '.assortId'"
+											:rules="rules.assortId"
+										>
 											<el-select
 												v-model="scope.row.assortId"
 												size="medium"
@@ -104,10 +108,14 @@
 									prop="allGameNum"
 									align="center"
 									label="全部游戏数量上限"
-									width="220"
+									width="230"
 								>
 									<template slot-scope="scope">
-										<el-form-item :error="scope.row.errorAllGameNum">
+										<el-form-item
+											label=" "
+											:prop="'dataList.' + scope.$index + '.allGameNum'"
+											:rules="rules.allGameNum"
+										>
 											<el-input
 												v-model="scope.row.allGameNum"
 												size="medium"
@@ -124,14 +132,18 @@
 									prop="mainTitleInfo"
 									align="center"
 									label="主标题信息"
-									width="220"
+									width="230"
 								>
 									<template slot-scope="scope">
-										<el-form-item :error="scope.row.errorMainTitleInfo">
+										<el-form-item
+											label=" "
+											:prop="'dataList.' + scope.$index + '.mainTitleInfo'"
+											:rules="rules.mainTitleInfo"
+										>
 											<el-input
 												v-model="scope.row.mainTitleInfo"
 												size="medium"
-												maxlength="20"
+												maxlength="10"
 												placeholder="请输入"
 												clearable
 												style="width: 180px"
@@ -143,14 +155,18 @@
 									prop="subTitleInfo"
 									align="center"
 									label="副标题信息"
-									width="220px"
+									width="230"
 								>
 									<template slot-scope="scope">
-										<el-form-item :error="scope.row.errorSubTitleInfo">
+										<el-form-item
+											label=" "
+											:prop="'dataList.' + scope.$index + '.subTitleInfo'"
+											:rules="rules.subTitleInfo"
+										>
 											<el-input
 												v-model="scope.row.subTitleInfo"
 												size="medium"
-												maxlength="20"
+												maxlength="10"
 												placeholder="请输入"
 												clearable
 												style="width: 180px"
@@ -205,13 +221,60 @@ export default {
 			form: {
 				moduleDesc: undefined
 			},
-			dataList: [],
+			queryData: {
+				dataList: []
+			},
 			idArray: [],
 			gameAssortDicList: [],
 			copyArr: []
 		}
 	},
-	computed: {},
+	computed: {
+		rules() {
+			const assortId = [
+				{ required: true, message: '请选择分类名称', trigger: 'change' }
+			]
+			const mainTitleInfo = [
+				{
+					required: true,
+					message: '请输入主标题信息',
+					trigger: 'blur'
+				},
+				{
+					min: 2,
+					max: 10,
+					message: '长度在 2 到 10 个字符',
+					trigger: 'blur'
+				}
+			]
+			const subTitleInfo = [
+				{
+					required: true,
+					message: '请输入副标题信息',
+					trigger: 'blur'
+				},
+				{
+					min: 2,
+					max: 10,
+					message: '长度在 2 到 10 个字符',
+					trigger: 'blur'
+				}
+			]
+			const allGameNum = [
+				{
+					required: true,
+					message: '请输入数字',
+					trigger: 'blur'
+				}
+			]
+			return {
+				assortId,
+				mainTitleInfo,
+				subTitleInfo,
+				allGameNum
+			}
+		}
+	},
 	watch: {},
 	created() {
 		this.getDetails()
@@ -232,8 +295,8 @@ export default {
 		checkValue(e) {
 			e.target.value = e.target.value.replace(/[^\d]/g, '')
 		},
-		getDetails(arr) {
-			this.dataList = []
+		getDetails(status) {
+			this.queryData.dataList = []
 			this.loading = true
 			this.$api
 				.gameSpecialDetailsAPI()
@@ -245,8 +308,14 @@ export default {
 						msg
 					} = res
 					if (code === 200) {
-						this.dataList = gameTopicModuleMetaVos || []
-						this.dataList = [...this.dataList, ...this.copyArr]
+						this.queryData.dataList = gameTopicModuleMetaVos || []
+						status &&
+							this.$nextTick(() => {
+								this.queryData.dataList = [
+									...this.queryData.dataList,
+									...this.copyArr
+								]
+							})
 						this.form.moduleDesc = moduleDesc
 						this.form.id = id
 						this.idArray =
@@ -314,7 +383,7 @@ export default {
 										message: '删除失败!'
 									})
 								}
-								this.getDetails()
+								this.getDetails(true)
 							})
 							.catch(() => {
 								loading.close()
@@ -324,7 +393,7 @@ export default {
 								})
 							})
 					} else {
-						this.dataList = this.dataList.filter((item) => {
+						this.queryData.dataList = this.queryData.dataList.filter((item) => {
 							return item.id !== id
 						})
 						// this.updateArr = this.updateArr.filter((item) => {
@@ -340,7 +409,7 @@ export default {
 		save() {
 			this.loading = true
 			const gameTopicModuleMetaVos =
-				this.dataList.map((item) => {
+				this.queryData.dataList.map((item) => {
 					return {
 						allGameNum: item.allGameNum * 1,
 						assortId: item.assortId,
@@ -373,6 +442,7 @@ export default {
 									type: 'success'
 								})
 								this.copyArr = []
+								this.$parent.back()
 							} else {
 								this.$message({
 									message: msg,
@@ -391,8 +461,8 @@ export default {
 			}, 1000)
 		},
 		addRow() {
-			const lastRow = this.dataList.length
-				? this.dataList[this.dataList.length - 1]
+			const lastRow = this.queryData.dataList.length
+				? this.queryData.dataList[this.queryData.dataList.length - 1]
 				: undefined
 			// const new_row = lastRow ? lastRow.id + 1 : 1
 			const displayOrder = lastRow ? lastRow.displayOrder + 1 : 1
@@ -408,7 +478,7 @@ export default {
 				status: '0',
 				subTitleInfo: undefined
 			})
-			this.dataList = [...this.dataList, ...arr]
+			this.queryData.dataList = [...this.queryData.dataList, ...arr]
 			this.copyArr = [...arr]
 		},
 
@@ -423,11 +493,11 @@ export default {
 					animation: 300,
 					delay: 0,
 					onEnd: ({ newIndex, oldIndex }) => {
-						const currRow = _this.dataList.splice(oldIndex, 1)[0]
-						_this.dataList.splice(newIndex, 0, currRow)
+						const currRow = _this.queryData.dataList.splice(oldIndex, 1)[0]
+						_this.queryData.dataList.splice(newIndex, 0, currRow)
 						if (newIndex !== oldIndex) {
 							this.$nextTick(() => {
-								_this.dataList.forEach((item, idx) => {
+								_this.queryData.dataList.forEach((item, idx) => {
 									item.displayOrder = idx + 1
 								})
 							})
@@ -465,7 +535,7 @@ export default {
 								message: '操作失败!'
 							})
 						}
-						this.getDetails()
+						this.getDetails(true)
 					})
 			})
 		}
