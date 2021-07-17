@@ -383,7 +383,7 @@ export default {
 										message: '删除失败!'
 									})
 								}
-								this.getDetails(true)
+								this.getDetails()
 							})
 							.catch(() => {
 								loading.close()
