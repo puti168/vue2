@@ -70,7 +70,6 @@
             placeholder="默认选择全部"
             :popper-append-to-body="false"
           >
-            <el-option label="全部" value=""></el-option>
             <el-option
               v-for="item in changeType"
               :key="item.codein"

@@ -26,6 +26,7 @@
               multiple
               placeholder="全部"
               :popper-append-to-body="false"
+              @change="changeSelect($event)"
             >
               <el-option
                 v-for="item in gameTypeList"
@@ -44,7 +45,7 @@
               :popper-append-to-body="false"
             >
               <el-option
-                v-for="item in gameId"
+                v-for="item in gameIdList"
                 :key="item.gameId"
                 :label="item.gameName"
                 :value="item.gameId"
@@ -184,10 +185,12 @@ export default {
   data() {
     return {
       queryData: {
+        typeOptions: [],
         venueId: [],
         vipSerialNum: [],
         gameId: []
       },
+      gameIdList: [],
       VipGradeList: [],
       gameTypeList: [],
       gameId: [],
@@ -217,10 +220,22 @@ export default {
   },
   mounted() {},
   methods: {
+    changeSelect(val) {
+      console.log(val, 'val')
+      this.queryData.gameId = []
+     this.$api.getMerchantGameGamePlant().then((res) => {
+        if (res.code === 200) {
+          this.gameTypeList = res.data
+           console.log(this.gameTypeList, 'this.gameTypeList')
+        }
+      })
+    },
+
     geiVipBackwaterGrade() {
       this.$api.getBackwaterGameType().then((res) => {
         if (res.code === 200) {
-          this.gameId = res.data
+          this.gameIdList = res.data
+          console.log(this.gameId, 'this.gameId ')
         }
       })
     },
@@ -228,6 +243,7 @@ export default {
       this.$api.getRebateRecordGetVipGrade().then((res) => {
         if (res.code === 200) {
           this.VipGradeList = res.data
+          console.log(this.VipGradeList, 'this.VipGradeList ')
         }
       })
     },
@@ -235,6 +251,7 @@ export default {
       this.$api.getMerchantGameGamePlant().then((res) => {
         if (res.code === 200) {
           this.gameTypeList = res.data
+           console.log(this.gameTypeList, 'this.gameTypeList')
         }
       })
     },

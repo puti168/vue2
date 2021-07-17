@@ -17,7 +17,7 @@
           </el-form-item>
           <el-form-item label="字典名称:">
             <el-input
-              v-model="queryData.createdBy"
+              v-model="queryData.k"
               clearable
               maxlength="20"
               size="medium"
@@ -130,23 +130,20 @@
             >
             </el-input>
           </el-form-item>
-          <el-form-item
-          label="标签:"
-          prop="tag"
-          >
+          <el-form-item label="标签:" prop="tag">
             <el-input
               v-model="dialogForm.tag"
               placeholder="请定义标签"
               maxlength="20"
             ></el-input>
           </el-form-item>
-          <el-form-item label="类型:" prop="valueType">
+          <el-form-item label="控制类型:" prop="valueType">
             <el-input
               v-model="dialogForm.valueType"
               placeholder="请定义类型"
-              maxlength="10"
+              maxlength="20"
               autocomplete="off"
-></el-input>
+            ></el-input>
           </el-form-item>
           <el-form-item label="注释:" prop="description">
             <el-input
@@ -163,7 +160,7 @@
               placeholder="请输入值"
               maxlength="10"
               autocomplete="off"
-></el-input>
+            ></el-input>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -206,50 +203,50 @@ export default {
     }
   },
   computed: {
-     rules() {
-         const tagszn = (rule, value, callback) => {
-            var reg = /^[\u4E00-\u9FA5]+$/
-           if (reg.test(value)) {
-             callback()
-           } else {
-              callback(new Error('只能输入中文'))
-           }
-         }
-         const valueTypezn = (rule, value, callback) => {
-            var reg = /^[\u4E00-\u9FA5]+$/
-           if (reg.test(value)) {
-             callback()
-           } else {
-              callback(new Error('只能输入中文'))
-           }
-         }
-          const descriptionzn = (rule, value, callback) => {
-            var reg = /^[\u4E00-\u9FA5]+$/
-           if (reg.test(value)) {
-             callback()
-           } else {
-              callback(new Error('只能输入中文'))
-           }
-         }
-          const vzn = (rule, value, callback) => {
-            var reg = /^[\u4E00-\u9FA5]+$/
-           if (reg.test(value)) {
-             callback()
-           } else {
-              callback(new Error('只能输入中文'))
-           }
-         }
-        const tag = [{ required: true, validator: tagszn, trigger: 'blur' }]
-        const valueType = [{ required: true, validator: valueTypezn, trigger: 'blur' }]
-        const description = [{ required: true, validator: descriptionzn, trigger: 'blur' }]
-        const v = [{ required: true, validator: vzn, trigger: 'blur' }]
-        return {
-          tag,
-          valueType,
-          description,
-          v
+    rules() {
+      const tagszn = (rule, value, callback) => {
+        var reg = /^[\u4E00-\u9FA5]+$/
+        if (reg.test(value)) {
+          callback()
+        } else {
+          callback(new Error('只能输入中文'))
         }
       }
+      const valueTypezn = (rule, value, callback) => {
+        var reg = /^[\u4E00-\u9FA5]+$/
+        if (reg.test(value)) {
+          callback()
+        } else {
+          callback(new Error('只能输入中文'))
+        }
+      }
+      const descriptionzn = (rule, value, callback) => {
+        var reg = /^[\u4E00-\u9FA5]+$/
+        if (reg.test(value)) {
+          callback()
+        } else {
+          callback(new Error('只能输入中文'))
+        }
+      }
+      const vzn = (rule, value, callback) => {
+        var reg = /^[\u4E00-\u9FA5]+$/
+        if (reg.test(value)) {
+          callback()
+        } else {
+          callback(new Error('只能输入中文'))
+        }
+      }
+      const tag = [{ required: true, validator: tagszn, trigger: 'blur' }]
+      const valueType = [{ required: true, validator: valueTypezn, trigger: 'blur' }]
+      const description = [{ required: true, validator: descriptionzn, trigger: 'blur' }]
+      const v = [{ required: true, validator: vzn, trigger: 'blur' }]
+      return {
+        tag,
+        valueType,
+        description,
+        v
+      }
+    }
   },
   mounted() {},
 
@@ -278,18 +275,18 @@ export default {
         })
     },
     subAddOrEidt() {
-      const data = {...this.dialogForm}
+      const data = { ...this.dialogForm }
       data.id = this.dialogForm.id
-     console.log(this.dialogForm.id, '小明')
+      console.log(this.dialogForm.id, '小明')
       this.$refs.formSub.validate((valid) => {
         if (valid) {
-            this.$api.getkvconfigUpdate(data).then((res) => {
-              if (res.code === 200) {
-                this.$message.success('修改成功')
-                this.loadData()
-              }
-              this.dialogFormVisible = false
-            })
+          this.$api.getkvconfigUpdate(data).then((res) => {
+            if (res.code === 200) {
+              this.$message.success('修改成功')
+              this.loadData()
+            }
+            this.dialogFormVisible = false
+          })
         }
       })
     },

@@ -77,7 +77,7 @@
           ></el-table-column>
           <el-table-column prop="loginStatus" align="center" label="登录状态" width="200">
             <template slot-scope="scope">
-              <span :class="scope.row.loginStatus === '1' ? 'danger' : 'success'">
+              <span :class="scope.row.loginStatus === '0' ? 'danger' : 'success'">
                 {{ typeFilter(scope.row.loginStatus, "loginStatusType") }}
               </span>
             </template>
