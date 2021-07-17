@@ -738,6 +738,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.el-table--border::after, .el-table--group::after {
+	width: 0;
+}
 .count_row {
 	height: 80px;
 	p {
