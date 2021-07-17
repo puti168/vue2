@@ -567,9 +567,11 @@ export default {
 						const currRow = _this.dataList.splice(oldIndex, 1)[0]
 						_this.dataList.splice(newIndex, 0, currRow)
 						if (newIndex !== oldIndex) {
-							_this.dataList.forEach((item, idx) => {
-								item.displayOrder = idx + 1
-							})
+                            this.$nextTick(() => {
+                                _this.dataList.forEach((item, idx) => {
+                                    item.displayOrder = idx + 1
+                                })
+                            })
 						}
 						_this.save()
 					}

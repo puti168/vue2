@@ -4,7 +4,13 @@
 			<div class="form-header">
 				<span>游戏搜索管理</span>
 				<span>
-					<el-button v-if="hasPermission('1020411')" type="success" @click="save">保存</el-button>
+					<el-button
+						v-if="hasPermission('1020411')"
+						type="success"
+						@click="save"
+					>
+						保存
+					</el-button>
 				</span>
 			</div>
 			<div class="content-part2">
@@ -275,7 +281,7 @@ export default {
 					return {
 						displayOrder: item.displayOrder,
 						searchInfo: item.searchInfo,
-                        id: item.id
+						id: item.id
 					}
 				}) || []
 			const { historySearchGameLimit, hotSearchGameLimit } = this.queryData
@@ -410,13 +416,13 @@ export default {
 					animation: 300,
 					delay: 0,
 					onEnd: ({ newIndex, oldIndex }) => {
-						console.log('newIndex', newIndex)
-						console.log('oldIndex', oldIndex)
 						const currRow = _this.dataList.splice(oldIndex, 1)[0]
 						_this.dataList.splice(newIndex, 0, currRow)
 						if (newIndex !== oldIndex) {
-							_this.dataList.forEach((item, idx) => {
-								item.displayOrder = idx + 1
+							this.$nextTick(() => {
+								_this.dataList.forEach((item, idx) => {
+									item.displayOrder = idx + 1
+								})
 							})
 						}
 					}
