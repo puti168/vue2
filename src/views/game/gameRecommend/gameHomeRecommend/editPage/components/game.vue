@@ -33,157 +33,154 @@
 						<el-button type="primary" @click="addRow">新增</el-button>
 					</div>
 					<div class="content">
-						<el-table
-							v-loading="loading"
-							border
-							size="mini"
-							class="small-size-table"
-							:data="dataList"
-							style="width: 100%"
-							:header-cell-style="getRowClass"
-							row-key="displayOrder"
-							:row-style="{ height: '45px' }"
-							@sort-change="changeTableSort"
-						>
-							<el-table-column
-								prop="displayOrder"
-								align="center"
-								label="展示顺序"
-								width="120"
+						<el-form ref="form">
+							<el-table
+								v-loading="loading"
+								border
+								size="mini"
+								class="small-size-table"
+								:data="dataList"
+								style="width: 100%"
+								:header-cell-style="getRowClass"
+								row-key="displayOrder"
+								:row-style="{ height: '45px' }"
+								@sort-change="changeTableSort"
 							>
-								<template slot-scope="scope">
-									<span v-if="!!scope.row.displayOrder">
-										{{ scope.row.displayOrder }}
-									</span>
-									<span v-else>-</span>
-								</template>
-							</el-table-column>
-							<el-table-column
-								prop="status"
-								align="center"
-								label="状态"
-								width="220px"
-							>
-								<template slot-scope="scope">
-									<span
-										:class="
-											scope.row.status === 1 ? 'normalRgba' : 'disableRgba'
-										"
-									>
-										{{ scope.row.status + '' === '1' ? '开启中' : '禁用中' }}
-									</span>
-								</template>
-							</el-table-column>
-							<el-table-column
-								prop="assortId"
-								align="center"
-								label="分类名称"
-								width="300"
-							>
-								<template slot-scope="scope">
-									<el-select
-										v-model="scope.row.assortId"
-										size="medium"
-										placeholder="请选择"
-										style="width: 245px"
-										@change="changeType($event)"
-									>
-										<el-option
-											v-for="item in gameAssortDicList"
-											:key="item.id"
-											:label="item.assortName"
-											:value="item.id"
-										></el-option>
-									</el-select>
-								</template>
-							</el-table-column>
-							<el-table-column
-								prop="allGameNum"
-								align="center"
-								label="全部游戏数量上限"
-								width="220"
-							>
-								<template slot-scope="scope">
-									<el-input
-										v-model="scope.row.allGameNum"
-										size="medium"
-										maxlength="3"
-										placeholder="请输入数字"
-										clearable
-										style="width: 180px"
-										@keyup.native="checkValue($event)"
-									></el-input>
-								</template>
-							</el-table-column>
-							<el-table-column
-								prop="mainTitleInfo"
-								align="center"
-								label="主标题信息"
-								width="220"
-							>
-								<template slot-scope="scope">
-									<el-input
-										v-model="scope.row.mainTitleInfo"
-										size="medium"
-										maxlength="20"
-										placeholder="请输入"
-										clearable
-										style="width: 180px"
-									></el-input>
-								</template>
-							</el-table-column>
-							<el-table-column
-								prop="subTitleInfo"
-								align="center"
-								label="副标题信息"
-								width="220px"
-							>
-								<template slot-scope="scope">
-									<el-input
-										v-model="scope.row.subTitleInfo"
-										size="medium"
-										maxlength="20"
-										placeholder="请输入"
-										clearable
-										style="width: 180px"
-									></el-input>
-								</template>
-							</el-table-column>
-							<el-table-column align="center" label="操作">
-								<template slot-scope="scope">
-									<el-button
-										:disabled="scope.row.status === '0'"
-										:type="scope.row.status === 1 ? 'danger' : 'success'"
-										size="medium"
-										class="noicon"
-										@click="changeStatus(scope.row)"
-									>
-										{{ scope.row.status === 1 ? '禁用' : '开启' }}
-									</el-button>
-									<el-button
-										type="danger"
-										icon="el-icon-edit"
-										size="medium"
-										@click="deleteRow(scope.row)"
-									>
-										删除
-									</el-button>
-								</template>
-							</el-table-column>
-						</el-table>
-						<!-- 分页 -->
-						<el-pagination
-							v-show="!!total"
-							:current-page.sync="pageNum"
-							class="pageValue"
-							background
-							layout="total, sizes,prev, pager, next, jumper"
-							:page-size="pageSize"
-							:page-sizes="$store.getters.pageSizes"
-							:total="total"
-							@current-change="handleCurrentChange"
-							@size-change="handleSizeChange"
-						></el-pagination>
+								<el-table-column
+									prop="displayOrder"
+									align="center"
+									label="展示顺序"
+									width="120"
+								>
+									<template slot-scope="scope">
+										<span v-if="!!scope.row.displayOrder">
+											{{ scope.row.displayOrder }}
+										</span>
+										<span v-else>-</span>
+									</template>
+								</el-table-column>
+								<el-table-column
+									prop="status"
+									align="center"
+									label="状态"
+									width="220px"
+								>
+									<template slot-scope="scope">
+										<span
+											:class="
+												scope.row.status === 1 ? 'normalRgba' : 'disableRgba'
+											"
+										>
+											{{ scope.row.status + '' === '1' ? '开启中' : '禁用中' }}
+										</span>
+									</template>
+								</el-table-column>
+								<el-table-column
+									prop="assortId"
+									align="center"
+									label="分类名称"
+									width="300"
+								>
+									<template slot-scope="scope">
+										<el-form-item :error="scope.row.errorAssortId">
+											<el-select
+												v-model="scope.row.assortId"
+												size="medium"
+												placeholder="请选择"
+												style="width: 245px"
+												@change="changeType($event)"
+											>
+												<el-option
+													v-for="item in gameAssortDicList"
+													:key="item.id"
+													:label="item.assortName"
+													:value="item.id"
+												></el-option>
+											</el-select>
+										</el-form-item>
+									</template>
+								</el-table-column>
+								<el-table-column
+									prop="allGameNum"
+									align="center"
+									label="全部游戏数量上限"
+									width="220"
+								>
+									<template slot-scope="scope">
+										<el-form-item :error="scope.row.errorAllGameNum">
+											<el-input
+												v-model="scope.row.allGameNum"
+												size="medium"
+												maxlength="3"
+												placeholder="请输入数字"
+												clearable
+												style="width: 180px"
+												@keyup.native="checkValue($event)"
+											></el-input>
+										</el-form-item>
+									</template>
+								</el-table-column>
+								<el-table-column
+									prop="mainTitleInfo"
+									align="center"
+									label="主标题信息"
+									width="220"
+								>
+									<template slot-scope="scope">
+										<el-form-item :error="scope.row.errorMainTitleInfo">
+											<el-input
+												v-model="scope.row.mainTitleInfo"
+												size="medium"
+												maxlength="20"
+												placeholder="请输入"
+												clearable
+												style="width: 180px"
+											></el-input>
+										</el-form-item>
+									</template>
+								</el-table-column>
+								<el-table-column
+									prop="subTitleInfo"
+									align="center"
+									label="副标题信息"
+									width="220px"
+								>
+									<template slot-scope="scope">
+										<el-form-item :error="scope.row.errorSubTitleInfo">
+											<el-input
+												v-model="scope.row.subTitleInfo"
+												size="medium"
+												maxlength="20"
+												placeholder="请输入"
+												clearable
+												style="width: 180px"
+											></el-input>
+										</el-form-item>
+									</template>
+								</el-table-column>
+								<el-table-column align="center" label="操作">
+									<template slot-scope="scope">
+										<el-button
+											:disabled="scope.row.status === '0'"
+											:type="scope.row.status === 1 ? 'danger' : 'success'"
+											size="medium"
+											class="noicon"
+											@click="changeStatus(scope.row)"
+										>
+											{{ scope.row.status === 1 ? '禁用' : '开启' }}
+										</el-button>
+										<el-button
+											type="danger"
+											icon="el-icon-edit"
+											size="medium"
+											@click="deleteRow(scope.row)"
+										>
+											删除
+										</el-button>
+									</template>
+								</el-table-column>
+							</el-table>
+						</el-form>
 					</div>
 				</div>
 			</div>
@@ -201,7 +198,6 @@ export default {
 	components: {},
 	mixins: [list],
 	props: { gameDetails: { type: Object, default: () => {} } },
-	// props: { editFormData: { type: Object, default: () => ({}) } },
 	data() {
 		return {
 			loading: false,
@@ -216,22 +212,7 @@ export default {
 		}
 	},
 	computed: {},
-	watch: {
-		// gameDetails: {
-		// 	handler(newVal, oldVal) {
-		// 		if (newVal) {
-		// 			this.form = { ...newVal }
-		// 		} else {
-		// 			this.form = {
-		// 				moduleDesc: undefined
-		// 			}
-		// 		}
-		// 		console.log('formData', this.form)
-		// 	},
-		// 	deep: true,
-		// 	immediate: true
-		// }
-	},
+	watch: {},
 	created() {
 		this.getDetails()
 	},
@@ -265,6 +246,7 @@ export default {
 					} = res
 					if (code === 200) {
 						this.dataList = gameTopicModuleMetaVos || []
+						this.dataList = [...this.dataList, ...this.copyArr]
 						this.form.moduleDesc = moduleDesc
 						this.form.id = id
 						this.idArray =
@@ -390,6 +372,7 @@ export default {
 									message: '保存成功',
 									type: 'success'
 								})
+								this.copyArr = []
 							} else {
 								this.$message({
 									message: msg,
@@ -426,17 +409,7 @@ export default {
 				subTitleInfo: undefined
 			})
 			this.dataList = [...this.dataList, ...arr]
-			// this.copyArr.push({
-			// 	createdAt: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
-			// 	createdBy: getUsername(),
-			// 	displayOrder,
-			// 	allGameNum: undefined,
-			// 	assortId: undefined,
-			// 	mainTitleInfo: undefined,
-			// 	moduleId: undefined,
-			// 	status: '0',
-			// 	subTitleInfo: undefined
-			// })
+			this.copyArr = [...arr]
 		},
 
 		// 列拖动
@@ -453,11 +426,11 @@ export default {
 						const currRow = _this.dataList.splice(oldIndex, 1)[0]
 						_this.dataList.splice(newIndex, 0, currRow)
 						if (newIndex !== oldIndex) {
-                            this.$nextTick(() => {
-                                _this.dataList.forEach((item, idx) => {
-                                    item.displayOrder = idx + 1
-                                })
-                            })
+							this.$nextTick(() => {
+								_this.dataList.forEach((item, idx) => {
+									item.displayOrder = idx + 1
+								})
+							})
 						}
 					}
 				})
@@ -557,6 +530,6 @@ export default {
 }
 
 .sortable-ghost {
-    background-color: #0b7dfa;
+	background-color: #0b7dfa;
 }
 </style>

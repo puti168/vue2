@@ -197,27 +197,24 @@
 			  style="width: 100px"
             ></el-input>
           </el-form-item>
-              <!-- <el-form-item label="随机增加收藏数:" prop="increaseAmount">
-                <el-input
-                  v-model="form.increaseAmountStart"
+            </el-col>
+             <el-col :span="12">
+              <el-form-item label="配置返水:" prop="gamePlatform">
+                <el-select
+                  v-model="form.gamePlatform"
                   size="medium"
-                  style="width: 100px"
-                  maxlength="3"
-                  oninput="value=value.replace(/[^\d]/g,'')"
-                  name="increaseAmountStart"
-                  @blur="checkValue($event)"
-                ></el-input>
-                -
-                <el-input
-                  v-model="form.increaseAmountEnd"
-                  size="medium"
-                  style="width: 100px"
-                  maxlength="3"
-                  oninput="value=value.replace(/[^\d]/g,'')"
-                  name="increaseAmountEnd"
-                  @blur="checkValue($event)"
-                ></el-input>
-              </el-form-item> -->
+                  placeholder="请选择"
+                  clearable
+                  style="width: 365px"
+                >
+                  <el-option
+                    v-for="item in gamePlantList"
+                    :key="item.gameCode"
+                    :label="item.gameName"
+                    :value="item.gameCode"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item label="1级标签:">

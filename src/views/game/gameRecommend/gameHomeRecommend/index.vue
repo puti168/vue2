@@ -118,7 +118,6 @@
 									<el-button
 										type="primary"
 										icon="el-icon-edit"
-										:disabled="scope.row.moduleStatus === 1"
 										size="medium"
 										@click="openDetails(scope.row)"
 									>
@@ -576,8 +575,8 @@ export default {
 									item.displayOrder = idx + 1
 								})
 							})
+                            _this.save()
 						}
-						_this.save()
 					}
 				})
 		}

@@ -698,7 +698,7 @@
 										{{
 											typeFilter(
 												scope.row.activityType,
-												'operateVipActivityType'
+												'operateActivityType'
 											)
 										}}
 									</span>
