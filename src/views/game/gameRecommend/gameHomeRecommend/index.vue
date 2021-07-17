@@ -20,7 +20,11 @@
 							:header-cell-style="getRowClass"
 							@sort-change="_changeTableSort"
 						>
-							<el-table-column prop="moduleId" align="center" label="模块顺序">
+							<el-table-column
+								prop="displayOrder"
+								align="center"
+								label="模块顺序"
+							>
 								<template slot-scope="scope">
 									<span v-if="!!scope.row.displayOrder">
 										{{ scope.row.displayOrder }}
@@ -114,7 +118,7 @@
 									<el-button
 										type="primary"
 										icon="el-icon-edit"
-										:disabled="loading"
+										:disabled="scope.row.moduleStatus === 1"
 										size="medium"
 										@click="openDetails(scope.row)"
 									>
@@ -139,7 +143,7 @@
 							:header-cell-style="getRowClass"
 							@sort-change="_changeTableSort"
 						>
-							<el-table-column prop="moduleId" align="center" label="模块顺序">
+							<el-table-column prop="displayOrder" align="center" label="模块顺序">
 								<template slot-scope="scope">
 									<span v-if="!!scope.row.displayOrder">
 										{{ scope.row.displayOrder }}
@@ -228,7 +232,7 @@
 									<el-button
 										type="primary"
 										icon="el-icon-edit"
-										:disabled="loading"
+                                        :disabled="scope.row.moduleStatus === 1"
 										size="medium"
 										@click="openDetails(scope.row)"
 									>
@@ -253,7 +257,7 @@
 							:header-cell-style="getRowClass"
 							@sort-change="_changeTableSort"
 						>
-							<el-table-column prop="moduleId" align="center" label="模块顺序">
+							<el-table-column prop="displayOrder" align="center" label="模块顺序">
 								<template slot-scope="scope">
 									<span v-if="!!scope.row.displayOrder">
 										{{ scope.row.displayOrder }}
@@ -277,10 +281,10 @@
 								<template slot-scope="scope">
 									<p
 										:class="
-											scope.row.status === 1 ? 'normalRgba' : 'disableRgba'
+											scope.row.moduleStatus === 1 ? 'normalRgba' : 'disableRgba'
 										"
 									>
-										{{ scope.row.status === 1 ? '开启中' : '已禁用' }}
+										{{ scope.row.moduleStatus === 1 ? '开启中' : '已禁用' }}
 									</p>
 								</template>
 							</el-table-column>
@@ -340,7 +344,7 @@
 									<el-button
 										type="primary"
 										icon="el-icon-edit"
-										:disabled="loading"
+                                        :disabled="scope.row.moduleStatus === 1"
 										size="medium"
 										@click="openDetails(scope.row)"
 									>
@@ -567,11 +571,11 @@ export default {
 						const currRow = _this.dataList.splice(oldIndex, 1)[0]
 						_this.dataList.splice(newIndex, 0, currRow)
 						if (newIndex !== oldIndex) {
-                            this.$nextTick(() => {
-                                _this.dataList.forEach((item, idx) => {
-                                    item.displayOrder = idx + 1
-                                })
-                            })
+							this.$nextTick(() => {
+								_this.dataList.forEach((item, idx) => {
+									item.displayOrder = idx + 1
+								})
+							})
 						}
 						_this.save()
 					}
