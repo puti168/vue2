@@ -44,10 +44,10 @@
 								<template slot-scope="scope">
 									<p
 										:class="
-											scope.row.status === 1 ? 'normalRgba' : 'disableRgba'
+											scope.row.moduleStatus === 1 ? 'normalRgba' : 'disableRgba'
 										"
 									>
-										{{ scope.row.status === 1 ? '开启中' : '已禁用' }}
+										{{ scope.row.moduleStatus === 1 ? '开启中' : '已禁用' }}
 									</p>
 								</template>
 							</el-table-column>
@@ -101,13 +101,13 @@
 										type="danger"
 										size="medium"
 										:class="
-											scope.row.status === 0
+											scope.row.moduleStatus === 0
 												? 'normalRgba noicon'
 												: 'disableRgba noicon'
 										"
 										@click="disable(scope.row)"
 									>
-										{{ scope.row.status === 0 ? '启用' : '禁用' }}
+										{{ scope.row.moduleStatus === 0 ? '启用' : '禁用' }}
 									</el-button>
 									<el-button
 										type="primary"
@@ -483,15 +483,8 @@ export default {
 		// },
 		// 禁用
 		disable(val) {
-			//  commonId,
-			const { status, id } = val
+			const { moduleStatus, id } = val
 			// const key = status === 1 ? 0 : 1
-			const loading = this.$loading({
-				lock: true,
-				text: 'Loading',
-				spinner: 'el-icon-loading',
-				background: 'rgba(0, 0, 0, 0.7)'
-			})
 			this.$confirm(
 				`<strong>是否对子游戏进行开启/禁用操作?</strong></br><span style='font-size:12px;color:#c1c1c1'>一旦操作将会立即生效</span>`,
 				'确认提示',
@@ -503,8 +496,14 @@ export default {
 				}
 			)
 				.then(() => {
+                    const loading = this.$loading({
+                        lock: true,
+                        text: 'Loading',
+                        spinner: 'el-icon-loading',
+                        background: 'rgba(0, 0, 0, 0.7)'
+                    })
 					this.$api
-						.recommendStatusChangeAPI({ id, moduleStatus: status === 1 ? 0 : 1 })
+						.recommendStatusChangeAPI({ id, moduleStatus: moduleStatus === 1 ? 0 : 1 })
 						.then((res) => {
 							const { code } = res
 							loading.close()
@@ -521,14 +520,12 @@ export default {
 							}
 							this.loadData()
 						}) // 一键下分
-				})
-				.catch(() => {
-					loading.close()
-				})
 
-			setTimeout(() => {
-				loading.close()
-			}, 1000)
+                    setTimeout(() => {
+                        loading.close()
+                    }, 1000)
+				})
+				.catch(() => {})
 		},
 		_changeTableSort({ column, prop, order }) {
 			this.pageNum = 1
