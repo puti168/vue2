@@ -408,6 +408,44 @@ export default {
 			}
 			this.loadData()
 		},
+        save() {
+            const gameModuleVos =
+                this.dataList.map((item) => {
+                    return {
+                        displayOrder: item.displayOrder,
+                        id: item.id
+                    }
+                }) || []
+            const params = {
+                gameModuleVos
+            }
+            this.$api
+                .gameModuleSortAPI(params)
+                .then((res) => {
+                    this.loading = false
+                    const { code, msg } = res
+                    if (code === 200) {
+                        this.$message({
+                            message: '保存成功',
+                            type: 'success'
+                        })
+                        this.reset()
+                    } else {
+                        this.$message({
+                            message: msg,
+                            type: 'error'
+                        })
+                    }
+                    this.loadData()
+                })
+                .catch(() => {
+                    this.loading = false
+                })
+
+            setTimeout(() => {
+                this.loading = false
+            }, 1000)
+        },
 		loadData() {
 			let params = {
 				...this.queryData
@@ -530,6 +568,7 @@ export default {
                                 item.displayOrder = idx + 1
                             })
                         }
+                        _this.save()
                     }
                 })
         }

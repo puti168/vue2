@@ -373,6 +373,15 @@ export function gameLatestModuleDetailAPI(params) {
 	})
 }
 
+// 游戏==> 首页推荐位 ==> 最新游戏 ===> 回显
+export function gameModuleSortAPI(data) {
+	return request({
+		url: '/gameCommonModule/gameModuleSort',
+		method: 'post',
+		data
+	})
+}
+
 // 游戏==> 首页推荐位 ==> 最新游戏 ===> 保存
 export function editGameLatestModuleAPI(data) {
 	return request({
@@ -465,6 +474,7 @@ export default {
 	gameDelTopicModuleAPI,
 	gameLatestModuleDetailAPI,
 	editGameLatestModuleAPI,
+	gameModuleSortAPI,
 	gameHomeRecommendListSortAPI,
 	recommendStatusChangeAPI,
 	gameHomeRecommendDetailsAPI,
