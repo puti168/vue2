@@ -404,30 +404,38 @@ export default {
           for (let i = 0; i < list.length; i++) {
             const ele = list[i]
             if (ele.id === this.myName) {
-              delete ele.id
               this.newList.push(ele)
+              this.venueProfitAndLoss = { ...ele }
+              delete this.venueProfitAndLoss.id
             }
           }
         }
       }
     },
     confirm() {
+      const arr = []
+      for (let i = 0; i < this.newList.length; i++) {
+        const ele = this.newList[i]
+        if (ele.id === this.myName) {
+          arr.push(ele)
+        }
+      }
       const request = this.db
         .transaction(['venueProfitAndLoss'], 'readwrite')
         .objectStore('venueProfitAndLoss')
         .put({
           id: this.myName,
-          场馆: this.newList[0]['场馆'],
-          项目: this.newList[0]['项目'],
-          投注人数: this.newList[0]['投注人数'],
-          注单量: this.newList[0]['注单量'],
-          投注金额: this.newList[0]['投注金额'],
-          有效投注: this.newList[0]['有效投注'],
-          投注盈亏: this.newList[0]['投注盈亏']
+          场馆: arr[0]['场馆'],
+          项目: arr[0]['项目'],
+          投注人数: arr[0]['投注人数'],
+          注单量: arr[0]['注单量'],
+          投注金额: arr[0]['投注金额'],
+          有效投注: arr[0]['有效投注'],
+          投注盈亏: arr[0]['投注盈亏']
         })
       request.onsuccess = (event) => {
         this.visible = false
-        this.venueProfitAndLoss = this.newList[0]
+        this.getList()
         console.log('数据更新成功')
       }
 

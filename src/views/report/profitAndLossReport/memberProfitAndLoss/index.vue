@@ -712,8 +712,9 @@ export default {
           for (let i = 0; i < list.length; i++) {
             const ele = list[i]
             if (ele.id === this.myName) {
-              delete ele.id
               this.newList.push(ele)
+              this.memberProfitAndLoss = { ...ele }
+              delete this.memberProfitAndLoss.id
             }
           }
           console.log(this.newList, 4645655465)
@@ -721,28 +722,36 @@ export default {
       }
     },
     confirm() {
+      const arr = []
+      for (let i = 0; i < this.newList.length; i++) {
+        const ele = this.newList[i]
+        if (ele.id === this.myName) {
+          arr.push(ele)
+        }
+      }
+      console.log(arr, 'arr')
       const request = this.db
         .transaction(['memberProfitAndLoss'], 'readwrite')
         .objectStore('memberProfitAndLoss')
         .put({
           id: this.myName,
-          会员账号: this.newList[0]['会员账号'],
-          姓名: this.newList[0]['姓名'],
-          账号类型: this.newList[0]['账号类型'],
-          上级代理: this.newList[0]['上级代理'],
-          VIP等级: this.newList[0]['VIP等级'],
-          账号状态: this.newList[0]['账号状态'],
-          会员标签: this.newList[0]['会员标签'],
-          风控层级: this.newList[0]['风控层级'],
-          注单量: this.newList[0]['注单量'],
-          投注金额: this.newList[0]['投注金额'],
-          有效投注: this.newList[0]['有效投注'],
-          投注盈亏: this.newList[0]['投注盈亏']
+          会员账号: arr[0]['会员账号'],
+          姓名: arr[0]['姓名'],
+          账号类型: arr[0]['账号类型'],
+          上级代理: arr[0]['上级代理'],
+          VIP等级: arr[0]['VIP等级'],
+          账号状态: arr[0]['账号状态'],
+          会员标签: arr[0]['会员标签'],
+          风控层级: arr[0]['风控层级'],
+          注单量: arr[0]['注单量'],
+          投注金额: arr[0]['投注金额'],
+          有效投注: arr[0]['有效投注'],
+          投注盈亏: arr[0]['投注盈亏']
         })
       request.onsuccess = (event) => {
         this.visible = false
-        this.memberProfitAndLoss = this.newList[0]
-        console.log('数据更新成功')
+        this.getList()
+         console.log('数据更新成功')
       }
 
       request.onerror = (event) => {
