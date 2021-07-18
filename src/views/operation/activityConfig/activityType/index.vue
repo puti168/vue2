@@ -23,7 +23,7 @@
 							v-for="item in activityTypeArr"
 							:key="item.code"
 							:label="item.description"
-							:value="item"
+							:value="item.description"
 						></el-option>
 					</el-select>
 					<el-button
@@ -276,12 +276,12 @@ export default {
 		changeType(evt) {
 			this.$refs['form'] && this.$refs['form'].resetFields()
 			this.showInfoData = undefined
-			// console.log('evt', evt)
+            const item = this.activityTypeArr.find((item) => item.description === evt)
 			this.queryData = {
-				activityType: evt.description,
-				activityCode: evt.code
+				activityType: item.description,
+				activityCode: item.code
 			}
-			this.queryDetails(evt.code)
+			this.queryDetails(item.code)
 		},
 		// 开始拖拽事件
 		onStart() {
