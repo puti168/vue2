@@ -152,7 +152,7 @@
               icon="el-icon-sort"
               :disabled="loading"
               size="medium"
-              @click="subSort"
+              @click="subSort = true"
             >
               排序
             </el-button>
@@ -161,7 +161,7 @@
       </div>
       <el-dialog
         title="设置排序"
-        :visible.sync="sortLabel"
+        :visible.sync="subSort"
         width="970px"
         :destroy-on-close="true"
       >
@@ -174,7 +174,7 @@
           </transition-group>
         </draggable>
          <div slot="footer" class="dialog-footer">
-        <el-button @click="sortLabel = false">取消</el-button>
+        <el-button @click="subSort = false">取消</el-button>
         <el-button type="primary" @click="setoperateConfigBannerSort">确定</el-button>
        </div>
       </el-dialog>
@@ -245,7 +245,20 @@
               width="120px"
             >
               <template slot-scope="scope">
-                {{ typeFilter(scope.row.linkTarget, "operateTargetType") }}
+
+                <div v-if="scope.row.linkTarget === 0 ">
+                  <span v-for="(item, index) in QueryGameList" :key="index">
+                    <!-- {{ scope.row.linkTarget === item.gameName ? item.gameId : ''}} -->
+                    {{ scope.row.targetUrl === item.gameId+'' ? item.gameName : '' }}
+                  </span>
+                </div>
+                <div v-else-if="scope.row.linkTarget === 1 ">
+                  {{ typeFilter(scope.row.linkTarget, "operateTargetType") }}
+                </div>
+                <div v-else-if="scope.row.linkTarget === 2">
+                  {{ typeFilter(scope.row.linkTarget, "operateTargetType") }}
+                </div>
+                <div v-else>-</div>
               </template>
             </el-table-column>
             <el-table-column prop="status" align="center" label="状态">
@@ -488,7 +501,20 @@
               </el-select>
             </el-form-item>
             <el-form-item
-            v-if="dialogForm.isLink === 0 && dialogForm.linkTarget === 2 && dialogForm.linkTarget === 1"
+            v-if="dialogForm.linkTarget === 1"
+              label="URL链接:"
+              prop="targetUrl"
+              :rules="[{ required: true }]"
+            >
+              <el-input
+                v-model="dialogForm.targetUrl"
+                class="region"
+                placeholder="请输入"
+                show-word-limit
+              ></el-input>
+            </el-form-item>
+               <el-form-item
+            v-if="dialogForm.linkTarget === 2"
               label="URL链接:"
               prop="targetUrl"
               :rules="[{ required: true }]"
@@ -555,7 +581,7 @@ export default {
       QueryGameList: [],
       tableData: [],
       drag: false,
-      sortLabel: false,
+      subSort: false,
       imgVisible: false,
       dialogFormVisible: false,
       isEdit: false,
@@ -606,6 +632,7 @@ export default {
   },
   mounted() {},
   methods: {
+
     loadData() {
       this.loading = true
       const params = {
@@ -642,6 +669,7 @@ export default {
         if (res.code === 200) {
           this.QueryGameList = res.data
         }
+        console.log(this.QueryGameList, 'this.QueryGameList')
       })
     },
     addLabel(val) {
@@ -824,10 +852,6 @@ export default {
     onEnd() {
       this.drag = false
     },
-    subSort() {
-      this.sortLabel = true
-      this.$api.operatecCnfigBannerQuerySortedBannerArea()
-    },
 
     setoperateConfigBannerSort() {
        const arr = this.QueryareaList
@@ -841,11 +865,11 @@ export default {
       const clientType = this.clientType
       this.$api.operatecCnfigBannerQuerySortedBannerArea({sortIds: sortIds, clientType}).then((res) => {
         if (res.code === 200) {
-         this.sortLabel = false
          this.$message({
             message: '操作成功！',
             type: 'success'
           })
+          this.subSort = false
         }
       })
 
@@ -876,16 +900,16 @@ export default {
 
     changeTableSort({ column, prop, order }) {
       if (prop === 'upTime') {
-        prop = 1
+        prop = 0
       }
       if (prop === 'downTime') {
-        prop = 2
+        prop = 1
       }
       if (prop === 'createdAt') {
-        prop = 3
+        prop = 2
       }
       if (prop === 'updatedAt') {
-        prop = 4
+        prop = 3
       }
       this.pageNum = 1
       this.queryData.orderKey = prop

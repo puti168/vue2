@@ -283,7 +283,7 @@ export default {
     },
     changeTableSort({ column, prop, order }) {
       if (prop === 'createdAt') {
-        prop = 1
+        prop = 0
       }
       this.pageNum = 1
 

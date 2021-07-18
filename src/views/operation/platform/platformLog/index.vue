@@ -23,7 +23,7 @@
             <el-select
               v-model="queryData.gameName"
               style="width: 300px"
-               clearable
+              clearable
               multiple
               placeholder="全部"
               :popper-append-to-body="false"
@@ -82,12 +82,12 @@
           @sort-change="_changeTableSort"
         >
           <el-table-column prop="gameName" align="center" label="场馆名称">
-             <template slot-scope="scope">
+            <template slot-scope="scope">
               <span>{{ scope.row.gameName }}</span>
             </template>
           </el-table-column>
           <el-table-column prop="rateType" align="center" label="变更类型">
-           <!-- <template slot-scope="scope">
+            <!-- <template slot-scope="scope">
               <span v-for="item in gameTypeList" :key="item.id">
                 {{ scope.row.gameName === item.id ? item.gameName : "" }}
               </span>
@@ -142,8 +142,8 @@ export default {
   data() {
     return {
       queryData: {
-		  gameName: ''
-	  },
+        gameName: ''
+      },
       VipGradeList: [],
       gameTypeList: [],
       gameId: [],
@@ -171,7 +171,6 @@ export default {
   },
   mounted() {},
   methods: {
-
     getGameTypeList() {
       this.$api.getMerchantGameGamePlant().then((res) => {
         if (res.code === 200) {
@@ -216,6 +215,7 @@ export default {
       if (prop === 'updateAt') {
         prop = 1
       }
+      this.pageNum = 1
       this.queryData.orderKey = prop
       if (order === 'ascending') {
         // 升序
@@ -223,6 +223,9 @@ export default {
       } else if (column.order === 'descending') {
         // 降序
         this.queryData.orderType = 'desc'
+      } else {
+        delete this.queryData.orderKey
+        delete this.queryData.orderType
       }
       this.loadData()
     },

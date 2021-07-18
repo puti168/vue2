@@ -77,9 +77,13 @@
           ></el-table-column>
           <el-table-column prop="loginStatus" align="center" label="登录状态" width="200">
             <template slot-scope="scope">
-              <span :class="scope.row.loginStatus === '0' ? 'danger' : 'success'">
+              <span v-if="scope.row.loginStatus === 0 " class="redColor">
                 {{ typeFilter(scope.row.loginStatus, "loginStatusType") }}
               </span>
+              <span v-else-if="scope.row.loginStatus > 0 " class="enableColor">
+                {{ typeFilter(scope.row.loginStatus, "loginStatusType") }}
+              </span>
+              <span v-else>-</span>
             </template>
           </el-table-column>
         </el-table>
