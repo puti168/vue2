@@ -84,7 +84,7 @@
           @sort-change="_changeTableSort"
         >
           <el-table-column
-            v-if="settingList['客户端']"
+            v-if="clientProfitAndLoss['客户端']"
             prop="deviceTypeDesc"
             align="center"
             label="客户端"
@@ -98,7 +98,7 @@
             </template>
           </el-table-column>
           <el-table-column
-            v-if="settingList['投注人数']"
+            v-if="clientProfitAndLoss['投注人数']"
             prop="memberCount"
             align="center"
             sortable="custom"
@@ -106,7 +106,7 @@
           >
           </el-table-column>
           <el-table-column
-            v-if="settingList['注单量']"
+            v-if="clientProfitAndLoss['注单量']"
             prop="betCount"
             align="center"
             sortable="custom"
@@ -114,7 +114,7 @@
           >
           </el-table-column>
           <el-table-column
-            v-if="settingList['投注金额']"
+            v-if="clientProfitAndLoss['投注金额']"
             prop="betAmount"
             align="center"
             sortable="custom"
@@ -122,7 +122,7 @@
           >
           </el-table-column>
           <el-table-column
-            v-if="settingList['有效投注']"
+            v-if="clientProfitAndLoss['有效投注']"
             prop="validBetAmount"
             align="center"
             sortable="custom"
@@ -130,19 +130,12 @@
           >
           </el-table-column>
           <el-table-column
-            v-if="settingList['投注盈亏']"
+            v-if="clientProfitAndLoss['投注盈亏']"
             prop="netAmount"
             align="center"
             sortable="custom"
             label="投注盈亏"
           >
-            <template slot="header">
-              <span>投注盈亏</span>
-              <el-tooltip class="item" effect="dark">
-                <i class="el-icon-question" style="position: absolute; right: 10px"></i>
-                <div slot="content">盈亏金额指游戏输赢金额<br />负数表示会员输</div>
-              </el-tooltip>
-            </template>
             <template slot-scope="scope">
               <span
                 v-if="!!scope.row.netAmount && scope.row.netAmount > 0"
@@ -241,9 +234,11 @@
         width="300px"
         class="col-setting"
       >
-        <el-link type="primary" @click="setAll">复原缺省</el-link>
-        <div v-for="(value, name) in settingList" :key="name" class="setting-div">
-          <el-checkbox v-model="newList[name]">{{ name }}</el-checkbox>
+        <el-link type="primary" @click="clickDel">复原缺省</el-link>
+        <div v-for="(value, name) in clientProfitAndLoss" :key="name" class="setting-div">
+          <el-checkbox v-if="newList.length > 0" v-model="newList[0][name]">{{
+            name
+          }}</el-checkbox>
         </div>
         <div slot="footer" class="dialog-footer">
           <el-button @click="visible = false">取 消</el-button>
@@ -303,7 +298,7 @@ export default {
       title: '',
       visible: false,
       tableVisible: false,
-      settingList: {
+      clientProfitAndLoss: {
         客户端: true,
         投注人数: true,
         注单量: true,
@@ -311,6 +306,7 @@ export default {
         有效投注: true,
         投注盈亏: true
       },
+      myName: '',
       newList: []
     }
   },
@@ -320,12 +316,117 @@ export default {
     }
   },
   mounted() {
-    if (localStorage.getItem('clientProfitAndLoss')) {
-      this.settingList = JSON.parse(localStorage.getItem('clientProfitAndLoss'))
-    }
+    this.myName = localStorage.getItem('username')
+    this.initDB()
   },
 
   methods: {
+    // 列设置
+    openSetting() {
+      this.getList()
+      this.visible = true
+    },
+    initDB() {
+      const request = indexedDB.open('clientProfitAndLoss')
+      request.onupgradeneeded = (event) => {
+        const db = event.target.result
+        this.db = db
+        // 建表 名为person,主键为id
+        db.createObjectStore('clientProfitAndLoss', {
+          keyPath: 'id',
+          autoIncrement: true
+        })
+      }
+
+      request.onsuccess = (event) => {
+        this.db = event.target.result
+        console.log('数据库打开/创建成功', event)
+        this.clickAdd()
+        this.getList()
+      }
+    },
+    clickAdd() {
+      const request = this.db
+        .transaction(['clientProfitAndLoss'], 'readwrite')
+        .objectStore('clientProfitAndLoss')
+        .add({
+          id: this.myName,
+          客户端: true,
+          投注人数: true,
+          注单量: true,
+          投注金额: true,
+          有效投注: true,
+          投注盈亏: true
+        })
+      request.onsuccess = (event) => {
+        this.getList()
+      }
+    },
+    getList() {
+      this.newList = []
+      var transaction = this.db.transaction(['clientProfitAndLoss'])
+      const objectStore = transaction.objectStore('clientProfitAndLoss')
+      const list = []
+      objectStore.openCursor().onsuccess = (event) => {
+        const cursor = event.target.result
+        if (cursor) {
+          list.push(cursor.value)
+          cursor.continue()
+        } else {
+          for (let i = 0; i < list.length; i++) {
+            const ele = list[i]
+            if (ele.id === this.myName) {
+              this.newList.push(ele)
+              this.clientProfitAndLoss = { ...ele }
+              delete this.clientProfitAndLoss.id
+            }
+          }
+        }
+      }
+    },
+    confirm() {
+      console.log(this.newList, 446464)
+      const arr = []
+      for (let i = 0; i < this.newList.length; i++) {
+        const ele = this.newList[i]
+        if (ele.id === this.myName) {
+          arr.push(ele)
+        }
+      }
+      const request = this.db
+        .transaction(['clientProfitAndLoss'], 'readwrite')
+        .objectStore('clientProfitAndLoss')
+        .put({
+          id: this.myName,
+          客户端: arr[0]['客户端'],
+          投注人数: arr[0]['投注人数'],
+          注单量: arr[0]['注单量'],
+          投注金额: arr[0]['投注金额'],
+          有效投注: arr[0]['有效投注'],
+          投注盈亏: arr[0]['投注盈亏']
+        })
+      request.onsuccess = (event) => {
+        this.visible = false
+        this.getList()
+        console.log('数据更新成功')
+      }
+
+      request.onerror = (event) => {
+        console.log('数据更新失败')
+      }
+    },
+    clickDel(id) {
+      this.newList = []
+      this.newList.push({
+        id: this.myName,
+        客户端: true,
+        投注人数: true,
+        注单量: true,
+        投注金额: true,
+        有效投注: true,
+        投注盈亏: true
+      })
+    },
     loadData() {
       const create = this.searchTime || []
       const [startTime, endTime] = create
@@ -440,28 +541,28 @@ export default {
         } else if (index === 1 && this.summary !== null) {
           sums[index] = (
             <div class='count_row'>
-              <p>{this.summary.memberCountTotal}</p>
+              <p>{Math.floor(this.summary.memberCountTotal * 100) / 100}</p>
             </div>
           )
           return
         } else if (index === 2 && this.summary !== null) {
           sums[index] = (
             <div class='count_row'>
-              <p>{this.summary.betCountTotal}</p>
+              <p>{Math.floor(this.summary.betCountTotal * 100) / 100}</p>
             </div>
           )
           return
         } else if (index === 3 && this.summary !== null) {
           sums[index] = (
             <div class='count_row'>
-              <p>{this.summary.betAmountTotal}</p>
+              <p>{Math.floor(this.summary.betAmountTotal * 100) / 100}</p>
             </div>
           )
           return
         } else if (index === 4 && this.summary !== null) {
           sums[index] = (
             <div class='count_row'>
-              <p>{this.summary.validBetAmountTotal}</p>
+              <p>{Math.floor(this.summary.validBetAmountTotal * 100) / 100}</p>
             </div>
           )
           return
@@ -469,9 +570,15 @@ export default {
           sums[index] = (
             <div class='count_row'>
               {this.summary.netAmountTotal > 0 ? (
-                <p class='enableColor'>{this.summary.netAmountTotal}</p>
+                <p class='enableColor'>
+                  {Math.floor(this.summary.netAmountTotal * 100) / 100}
+                </p>
+              ) : this.summary.netAmountTotal === 0 ? (
+                <p>{Math.floor(this.summary.netAmountTotal * 100) / 100}</p>
               ) : (
-                <p class='redColor'>{this.summary.netAmountTotal}</p>
+                <p class='redColor'>
+                  {Math.floor(this.summary.netAmountTotal * 100) / 100}
+                </p>
               )}
             </div>
           )
@@ -601,21 +708,6 @@ export default {
             })
         })
         .catch(() => {})
-    },
-    // 列设置
-    openSetting() {
-      this.visible = true
-      this.newList = JSON.parse(JSON.stringify(this.settingList))
-    },
-    confirm() {
-      localStorage.setItem('clientProfitAndLoss', JSON.stringify(this.newList))
-      this.settingList = this.newList
-      this.visible = false
-    },
-    setAll() {
-      Object.keys(this.newList).forEach((item) => {
-        this.newList[item] = true
-      })
     }
   }
 }

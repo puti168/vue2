@@ -70,7 +70,6 @@
             placeholder="默认选择全部"
             :popper-append-to-body="false"
           >
-            <el-option label="全部" value=""></el-option>
             <el-option
               v-for="item in changeType"
               :key="item.codein"
@@ -273,40 +272,40 @@ export default {
       }
       this.loading = true
 
-			this.$api
-				.getOperateConfigClientRecordQueryRecordList(params)
-				.then((res) => {
-					if (res.code === 200) {
-						this.loading = false
-						this.dataList = res.data.records
-						this.total = res.data.total
-					} else {
-						this.loading = false
-						this.$message({
-							message: res.msg,
-							type: 'error'
-						})
-					}
-				})
-				.catch(() => {
-					this.loading = false
-				})
-		},
-		getEnums() {
-			this.$api.operateConfigClientRecordQueryEnumsAPI().then((res) => {
-				if (res.code === 200) {
-					this.changeType = res.data.changeType
-					this.client = res.data.client
-					console.log(this.client, '显示')
-					this.operatePage = res.data.operatePage
-				}
-			})
-		},
-		changeTableSort({ column, prop, order }) {
-			if (prop === 'createdAt') {
-				prop = 1
-			}
-			this.pageNum = 1
+      this.$api
+        .getOperateConfigClientRecordQueryRecordList(params)
+        .then((res) => {
+          if (res.code === 200) {
+            this.loading = false
+            this.dataList = res.data.records
+            this.total = res.data.total
+          } else {
+            this.loading = false
+            this.$message({
+              message: res.msg,
+              type: 'error'
+            })
+          }
+        })
+        .catch(() => {
+          this.loading = false
+        })
+    },
+    getEnums() {
+      this.$api.operateConfigClientRecordQueryEnumsAPI().then((res) => {
+        if (res.code === 200) {
+          this.changeType = res.data.changeType
+          this.client = res.data.client
+          console.log(this.client, '显示')
+          this.operatePage = res.data.operatePage
+        }
+      })
+    },
+    changeTableSort({ column, prop, order }) {
+      if (prop === 'createdAt') {
+        prop = 0
+      }
+      this.pageNum = 1
 
 			this.queryData.orderKey = prop
 			console.log(this.queryData.orderKey, '排序')

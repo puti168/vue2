@@ -88,7 +88,7 @@
           @sort-change="_changeTableSort"
         >
           <el-table-column
-            v-if="settingList['场馆']"
+            v-if="venueProfitAndLoss['场馆']"
             prop="venueName"
             align="center"
             label="场馆"
@@ -103,7 +103,7 @@
             </template>
           </el-table-column>
           <el-table-column
-            v-if="settingList['项目']"
+            v-if="venueProfitAndLoss['项目']"
             prop="projectType"
             align="center"
             label="项目"
@@ -114,7 +114,7 @@
             </template>
           </el-table-column>
           <el-table-column
-            v-if="settingList['投注人数']"
+            v-if="venueProfitAndLoss['投注人数']"
             prop="memberCount"
             align="center"
             sortable="custom"
@@ -122,7 +122,7 @@
           >
           </el-table-column>
           <el-table-column
-            v-if="settingList['注单量']"
+            v-if="venueProfitAndLoss['注单量']"
             prop="betCount"
             align="center"
             sortable="custom"
@@ -130,7 +130,7 @@
           >
           </el-table-column>
           <el-table-column
-            v-if="settingList['投注金额']"
+            v-if="venueProfitAndLoss['投注金额']"
             prop="betAmount"
             align="center"
             sortable="custom"
@@ -138,7 +138,7 @@
           >
           </el-table-column>
           <el-table-column
-            v-if="settingList['有效投注']"
+            v-if="venueProfitAndLoss['有效投注']"
             prop="validBetAmount"
             align="center"
             sortable="custom"
@@ -146,7 +146,7 @@
           >
           </el-table-column>
           <el-table-column
-            v-if="settingList['投注盈亏']"
+            v-if="venueProfitAndLoss['投注盈亏']"
             prop="netAmount"
             align="center"
             sortable="custom"
@@ -259,9 +259,11 @@ style="margin-right: 15px"
         width="300px"
         class="col-setting"
       >
-        <el-link type="primary" @click="setAll">复原缺省</el-link>
-        <div v-for="(value, name) in settingList" :key="name" class="setting-div">
-          <el-checkbox v-model="newList[name]">{{ name }}</el-checkbox>
+        <el-link type="primary" @click="clickDel">复原缺省</el-link>
+        <div v-for="(value, name) in venueProfitAndLoss" :key="name" class="setting-div">
+          <el-checkbox v-if="newList.length > 0" v-model="newList[0][name]">{{
+            name
+          }}</el-checkbox>
         </div>
         <div slot="footer" class="dialog-footer">
           <el-button @click="visible = false">取 消</el-button>
@@ -325,7 +327,7 @@ export default {
       venueName: '',
       visible: false,
       tableVisible: false,
-      settingList: {
+      venueProfitAndLoss: {
         场馆: true,
         项目: true,
         投注人数: true,
@@ -342,12 +344,120 @@ export default {
     this.seleceInit()
   },
   mounted() {
-    if (localStorage.getItem('venueProfitAndLoss')) {
-      this.settingList = JSON.parse(localStorage.getItem('venueProfitAndLoss'))
-    }
+    this.myName = localStorage.getItem('username')
+    this.initDB()
   },
 
   methods: {
+    // 列设置
+    openSetting() {
+      this.getList()
+      this.visible = true
+    },
+    initDB() {
+      const request = indexedDB.open('venueProfitAndLoss')
+      request.onupgradeneeded = (event) => {
+        const db = event.target.result
+        this.db = db
+        // 建表 名为person,主键为id
+        db.createObjectStore('venueProfitAndLoss', {
+          keyPath: 'id',
+          autoIncrement: true
+        })
+      }
+
+      request.onsuccess = (event) => {
+        this.db = event.target.result
+        console.log('数据库打开/创建成功', event)
+        this.clickAdd()
+        this.getList()
+      }
+    },
+    clickAdd() {
+      const request = this.db
+        .transaction(['venueProfitAndLoss'], 'readwrite')
+        .objectStore('venueProfitAndLoss')
+        .add({
+          id: this.myName,
+          场馆: true,
+          项目: true,
+          投注人数: true,
+          注单量: true,
+          投注金额: true,
+          有效投注: true,
+          投注盈亏: true
+        })
+      request.onsuccess = (event) => {
+        this.getList()
+      }
+    },
+    getList() {
+      this.newList = []
+      var transaction = this.db.transaction(['venueProfitAndLoss'])
+      const objectStore = transaction.objectStore('venueProfitAndLoss')
+      const list = []
+      objectStore.openCursor().onsuccess = (event) => {
+        const cursor = event.target.result
+        if (cursor) {
+          list.push(cursor.value)
+          cursor.continue()
+        } else {
+          for (let i = 0; i < list.length; i++) {
+            const ele = list[i]
+            if (ele.id === this.myName) {
+              this.newList.push(ele)
+              this.venueProfitAndLoss = { ...ele }
+              delete this.venueProfitAndLoss.id
+            }
+          }
+        }
+      }
+    },
+    confirm() {
+      console.log(this.newList, 446464)
+      const arr = []
+      for (let i = 0; i < this.newList.length; i++) {
+        const ele = this.newList[i]
+        if (ele.id === this.myName) {
+          arr.push(ele)
+        }
+      }
+      const request = this.db
+        .transaction(['venueProfitAndLoss'], 'readwrite')
+        .objectStore('venueProfitAndLoss')
+        .put({
+          id: this.myName,
+          场馆: arr[0]['场馆'],
+          项目: arr[0]['项目'],
+          投注人数: arr[0]['投注人数'],
+          注单量: arr[0]['注单量'],
+          投注金额: arr[0]['投注金额'],
+          有效投注: arr[0]['有效投注'],
+          投注盈亏: arr[0]['投注盈亏']
+        })
+      request.onsuccess = (event) => {
+        this.visible = false
+        this.getList()
+        console.log('数据更新成功')
+      }
+
+      request.onerror = (event) => {
+        console.log('数据更新失败')
+      }
+    },
+    clickDel(id) {
+      this.newList = []
+      this.newList.push({
+        id: this.myName,
+        场馆: true,
+        项目: true,
+        投注人数: true,
+        注单量: true,
+        投注金额: true,
+        有效投注: true,
+        投注盈亏: true
+      })
+    },
     seleceInit() {
       this.$api.getMerchantGameGamePlant().then((res) => {
         if (res.code === 200) {
@@ -478,21 +588,7 @@ export default {
       this.size = val
       this.getReportVenueNetAmountDayDetailListPage(this.gameCode)
     },
-    // 列设置
-    openSetting() {
-      this.visible = true
-      this.newList = JSON.parse(JSON.stringify(this.settingList))
-    },
-    confirm() {
-      localStorage.setItem('venueProfitAndLoss', JSON.stringify(this.newList))
-      this.settingList = this.newList
-      this.visible = false
-    },
-    setAll() {
-      Object.keys(this.newList).forEach((item) => {
-        this.newList[item] = true
-      })
-    },
+
     getSummaries(param) {
       const { columns, data } = param
       const sums = []
@@ -538,16 +634,16 @@ export default {
               case 4:
                 sums[index] = (
                   <div class='count_row'>
-                    <p>{num.toFixed(2)}</p>
-                    <p>{this.summary.betAmountTotal}</p>
+                    <p>{Math.floor(num * 100) / 100}</p>
+                    <p>{Math.floor(this.summary.betAmountTotal * 100) / 100}</p>
                   </div>
                 )
                 break
               case 5:
                 sums[index] = (
                   <div class='count_row'>
-                    <p>{num.toFixed(2)}</p>
-                    <p>{this.summary.validBetAmountTotal}</p>
+                    <p>{Math.floor(num * 100) / 100}</p>
+                    <p>{Math.floor(this.summary.validBetAmountTotal * 100) / 100}</p>
                   </div>
                 )
                 break
@@ -555,14 +651,20 @@ export default {
                 sums[index] = (
                   <div class='count_row'>
                     {num > 0 ? (
-                      <p class='enableColor'>{num.toFixed(2)}</p>
+                      <p class='enableColor'>{Math.floor(num * 100) / 100}</p>
                     ) : (
-                      <p class='redColor'>{num.toFixed(2)}</p>
+                      <p class='redColor'>{Math.floor(num * 100) / 100}</p>
                     )}
                     {this.summary.netAmountTotal > 0 ? (
-                      <p class='enableColor'>{this.summary.netAmountTotal}</p>
+                      <p class='enableColor'>
+                        {Math.floor(this.summary.netAmountTotal * 100) / 100}
+                      </p>
+                    ) : this.summary.netAmountTotal === 0 ? (
+                      <p>{Math.floor(this.summary.netAmountTotal * 100) / 100}</p>
                     ) : (
-                      <p class='redColor'>{this.summary.netAmountTotal}</p>
+                      <p class='redColor'>
+                        {Math.floor(this.summary.netAmountTotal * 100) / 100}
+                      </p>
                     )}
                   </div>
                 )

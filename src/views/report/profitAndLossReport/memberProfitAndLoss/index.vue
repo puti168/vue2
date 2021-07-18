@@ -3,7 +3,7 @@
     <div class="view-container dealer-container">
       <div class="params">
         <el-form ref="form" :inline="true" :model="queryData">
-          <el-form-item label="时间:" prop="registerTime">
+          <el-form-item label="日期:" prop="registerTime">
             <el-date-picker
               v-model="searchTime"
               type="daterange"
@@ -279,7 +279,7 @@
           @sort-change="_changeTableSort"
         >
           <el-table-column
-            v-if="settingList['会员账号']"
+            v-if="memberProfitAndLoss['会员账号']"
             prop="userName"
             align="center"
             label="会员账号"
@@ -296,7 +296,7 @@
             </template>
           </el-table-column>
           <el-table-column
-            v-if="settingList['姓名']"
+            v-if="memberProfitAndLoss['姓名']"
             prop="realName"
             align="center"
             label="姓名"
@@ -309,7 +309,7 @@
             </template>
           </el-table-column>
           <el-table-column
-            v-if="settingList['账号类型']"
+            v-if="memberProfitAndLoss['账号类型']"
             prop="accountType"
             align="center"
             label="账号类型"
@@ -322,7 +322,7 @@
             </template>
           </el-table-column>
           <el-table-column
-            v-if="settingList['上级代理']"
+            v-if="memberProfitAndLoss['上级代理']"
             prop="parentProxyName"
             align="center"
             label="上级代理"
@@ -339,7 +339,7 @@
             </template>
           </el-table-column>
           <el-table-column
-            v-if="settingList['VIP等级']"
+            v-if="memberProfitAndLoss['VIP等级']"
             prop="vipSerialNum"
             align="center"
             label="VIP等级"
@@ -352,7 +352,7 @@
             </template>
           </el-table-column>
           <el-table-column
-            v-if="settingList['账号状态']"
+            v-if="memberProfitAndLoss['账号状态']"
             prop="accountStatus"
             align="center"
             label="账号状态"
@@ -377,7 +377,7 @@
             </template>
           </el-table-column>
           <el-table-column
-            v-if="settingList['会员标签']"
+            v-if="memberProfitAndLoss['会员标签']"
             prop="labelName"
             align="center"
             label="会员标签"
@@ -390,7 +390,12 @@
             </template>
           </el-table-column>
 
-          <el-table-column prop="windControlName" align="center" label="风控层级">
+          <el-table-column
+            v-if="memberProfitAndLoss['风控层级']"
+            prop="windControlName"
+            align="center"
+            label="风控层级"
+          >
             <template slot-scope="scope">
               <span v-if="!!scope.row.windControlName">
                 {{ scope.row.windControlName }}
@@ -399,6 +404,7 @@
             </template>
           </el-table-column>
           <el-table-column
+            v-if="memberProfitAndLoss['注单量']"
             prop="betCount"
             align="center"
             label="注单量"
@@ -412,6 +418,7 @@
             </template>
           </el-table-column>
           <el-table-column
+            v-if="memberProfitAndLoss['投注金额']"
             prop="betAmount"
             align="center"
             label="投注金额"
@@ -425,6 +432,7 @@
             </template>
           </el-table-column>
           <el-table-column
+            v-if="memberProfitAndLoss['有效投注']"
             prop="validBetAmount"
             align="center"
             label="有效投注"
@@ -438,6 +446,7 @@
             </template>
           </el-table-column>
           <el-table-column
+            v-if="memberProfitAndLoss['投注盈亏']"
             prop="netAmount"
             align="center"
             label="投注盈亏"
@@ -539,9 +548,11 @@
       width="300px"
       class="col-setting"
     >
-      <el-link type="primary" @click="setAll">复原缺省</el-link>
-      <div v-for="(value, name) in settingList" :key="name" class="setting-div">
-        <el-checkbox v-model="newList[name]">{{ name }}</el-checkbox>
+      <el-link type="primary" @click="clickDel">复原缺省</el-link>
+      <div v-for="(value, name) in memberProfitAndLoss" :key="name" class="setting-div">
+        <el-checkbox v-if="newList.length > 0" v-model="newList[0][name]">{{
+          name
+        }}</el-checkbox>
       </div>
       <div slot="footer" class="dialog-footer">
         <el-button @click="visible = false">取 消</el-button>
@@ -587,14 +598,19 @@ export default {
           return time.getTime() > Date.now()
         }
       },
-      settingList: {
+      memberProfitAndLoss: {
         会员账号: true,
         姓名: true,
         账号类型: true,
         上级代理: true,
         VIP等级: true,
         账号状态: true,
-        会员标签: true
+        会员标签: true,
+        风控层级: true,
+        注单量: true,
+        投注金额: true,
+        有效投注: true,
+        投注盈亏: true
       },
       queryText: '查询',
       flag: false,
@@ -610,7 +626,8 @@ export default {
       page: 1,
       size: 10,
       dialogTotal: 0,
-      summary: {}
+      summary: {},
+      myName: ''
     }
   },
   computed: {
@@ -629,24 +646,134 @@ export default {
     this.getMemberLabelDict()
   },
   mounted() {
-    if (localStorage.getItem('memberProfitAndLoss')) {
-      this.settingList = JSON.parse(localStorage.getItem('memberProfitAndLoss'))
-    }
+    this.myName = localStorage.getItem('username')
+    this.initDB()
   },
   methods: {
     // 列设置
     openSetting() {
+      this.getList()
       this.visible = true
-      this.newList = JSON.parse(JSON.stringify(this.settingList))
+    },
+    initDB() {
+      const request = indexedDB.open('memberProfitAndLoss')
+      request.onupgradeneeded = (event) => {
+        const db = event.target.result
+        this.db = db
+        // 建表 名为person,主键为id
+        db.createObjectStore('memberProfitAndLoss', {
+          keyPath: 'id',
+          autoIncrement: true
+        })
+      }
+
+      request.onsuccess = (event) => {
+        this.db = event.target.result
+        console.log('数据库打开/创建成功', event)
+        this.clickAdd()
+        this.getList()
+      }
+    },
+    clickAdd() {
+      const request = this.db
+        .transaction(['memberProfitAndLoss'], 'readwrite')
+        .objectStore('memberProfitAndLoss')
+        .add({
+          id: this.myName,
+          会员账号: true,
+          姓名: true,
+          账号类型: true,
+          上级代理: true,
+          VIP等级: true,
+          账号状态: true,
+          会员标签: true,
+          风控层级: true,
+          注单量: true,
+          投注金额: true,
+          有效投注: true,
+          投注盈亏: true
+        })
+      request.onsuccess = (event) => {
+        this.getList()
+      }
+    },
+    getList() {
+      this.newList = []
+      var transaction = this.db.transaction(['memberProfitAndLoss'])
+      const objectStore = transaction.objectStore('memberProfitAndLoss')
+      const list = []
+      objectStore.openCursor().onsuccess = (event) => {
+        const cursor = event.target.result
+        if (cursor) {
+          list.push(cursor.value)
+          cursor.continue()
+        } else {
+          console.log(list, 4654564)
+          for (let i = 0; i < list.length; i++) {
+            const ele = list[i]
+            if (ele.id === this.myName) {
+              this.newList.push(ele)
+              this.memberProfitAndLoss = { ...ele }
+              delete this.memberProfitAndLoss.id
+            }
+          }
+          console.log(this.newList, 4645655465)
+        }
+      }
     },
     confirm() {
-      localStorage.setItem('memberProfitAndLoss', JSON.stringify(this.newList))
-      this.settingList = this.newList
-      this.visible = false
+      const arr = []
+      for (let i = 0; i < this.newList.length; i++) {
+        const ele = this.newList[i]
+        if (ele.id === this.myName) {
+          arr.push(ele)
+        }
+      }
+      console.log(arr, 'arr')
+      const request = this.db
+        .transaction(['memberProfitAndLoss'], 'readwrite')
+        .objectStore('memberProfitAndLoss')
+        .put({
+          id: this.myName,
+          会员账号: arr[0]['会员账号'],
+          姓名: arr[0]['姓名'],
+          账号类型: arr[0]['账号类型'],
+          上级代理: arr[0]['上级代理'],
+          VIP等级: arr[0]['VIP等级'],
+          账号状态: arr[0]['账号状态'],
+          会员标签: arr[0]['会员标签'],
+          风控层级: arr[0]['风控层级'],
+          注单量: arr[0]['注单量'],
+          投注金额: arr[0]['投注金额'],
+          有效投注: arr[0]['有效投注'],
+          投注盈亏: arr[0]['投注盈亏']
+        })
+      request.onsuccess = (event) => {
+        this.visible = false
+        this.getList()
+        console.log('数据更新成功')
+      }
+
+      request.onerror = (event) => {
+        console.log('数据更新失败')
+      }
     },
-    setAll() {
-      Object.keys(this.newList).forEach((item) => {
-        this.newList[item] = true
+    clickDel(id) {
+      this.newList = []
+      this.newList.push({
+        id: this.myName,
+        会员账号: true,
+        姓名: true,
+        账号类型: true,
+        上级代理: true,
+        VIP等级: true,
+        账号状态: true,
+        会员标签: true,
+        风控层级: true,
+        注单量: true,
+        投注金额: true,
+        有效投注: true,
+        投注盈亏: true
       })
     },
     loadData() {
@@ -654,12 +781,15 @@ export default {
       const [startTime, endTime] = create
       let params = {
         ...this.queryData,
+        accountTypeList: this.queryData.accountTypeList.join(','),
+        accountStatusList: this.queryData.accountStatusList.join(','),
         startTime: startTime ? dayjs(startTime).format('YYYY-MM-DD') : '',
         endTime: endTime ? dayjs(endTime).format('YYYY-MM-DD') : ''
       }
       params = {
         ...this.getParams(params)
       }
+      console.log(params)
       if (endTime - startTime > this.day31) {
         this.$message.warning('请缩小搜索范围至31天')
       } else {
@@ -794,16 +924,16 @@ export default {
               case 9:
                 sums[index] = (
                   <div class='count_row'>
-                    <p>{num.toFixed(2)}</p>
-                    <p>{this.summary.betAmountTotal}</p>
+                    <p>{Math.floor(num * 100) / 100}</p>
+                    <p>{Math.floor(this.summary.betAmountTotal * 100) / 100}</p>
                   </div>
                 )
                 break
               case 10:
                 sums[index] = (
                   <div class='count_row'>
-                    <p>{num.toFixed(2)}</p>
-                    <p>{this.summary.validBetAmountTotal}</p>
+                    <p>{Math.floor(num * 100) / 100}</p>
+                    <p>{Math.floor(this.summary.validBetAmountTotal * 100) / 100}</p>
                   </div>
                 )
                 break
@@ -811,14 +941,20 @@ export default {
                 sums[index] = (
                   <div class='count_row'>
                     {num > 0 ? (
-                      <p class='enableColor'>{num.toFixed(2)}</p>
+                      <p class='enableColor'>{Math.floor(num * 100) / 100}</p>
                     ) : (
-                      <p class='redColor'>{num.toFixed(2)}</p>
+                      <p class='redColor'>{Math.floor(num * 100) / 100}</p>
                     )}
                     {this.summary.netAmountTotal > 0 ? (
-                      <p class='enableColor'>{this.summary.netAmountTotal}</p>
+                      <p class='enableColor'>
+                        {Math.floor(this.summary.netAmountTotal * 100) / 100}
+                      </p>
+                    ) : this.summary.netAmountTotal === 0 ? (
+                      <p>{Math.floor(this.summary.netAmountTotal * 100) / 100}</p>
                     ) : (
-                      <p class='redColor'>{this.summary.netAmountTotal}</p>
+                      <p class='redColor'>
+                        {Math.floor(this.summary.netAmountTotal * 100) / 100}
+                      </p>
                     )}
                   </div>
                 )
@@ -834,7 +970,7 @@ export default {
     },
     reset() {
       this.pageNum = 1
-      this.queryData = {}
+      this.queryData = { accountTypeList: [] }
       this.searchTime = [startTime, endTime]
       this.$refs['form'].resetFields()
       this.loadData()

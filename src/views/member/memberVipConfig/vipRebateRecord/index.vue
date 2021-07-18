@@ -1,173 +1,176 @@
 <template>
-  <div class="game-container report-container">
-    <div class="view-container dealer-container">
-      <div class="params">
-        <el-form ref="form" :inline="true" :model="queryData">
-          <el-form-item label="操作时间:">
-            <el-date-picker
-              v-model="searchTime"
-              size="medium"
-              :picker-options="pickerOptions"
-              format="yyyy-MM-dd HH:mm:ss"
-              type="datetimerange"
-              range-separator="-"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-              align="right"
-              :clearable="false"
-              :default-time="defaultTime"
-              style="width: 375px"
-            ></el-date-picker>
-          </el-form-item>
-          <el-form-item label="场馆名称:" class="tagheight" prop="venueId">
-            <el-select
-              v-model="queryData.venueId"
-              style="width: 300px"
-              multiple
-              placeholder="全部"
-              :popper-append-to-body="false"
-            >
-              <el-option
-                v-for="item in gameTypeList"
-                :key="item.id"
-                :label="item.gameName"
-                :value="item.id"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="游戏名称:" class="tagheight">
-            <el-select
-              v-model="queryData.gameId"
-              style="width: 300px"
-              multiple
-              placeholder="全部"
-              :popper-append-to-body="false"
-            >
-              <el-option
-                v-for="item in gameId"
-                :key="item.gameId"
-                :label="item.gameName"
-                :value="item.gameId"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="VIP等级:" class="tagheight">
-            <el-select
-              v-model="queryData.vipSerialNum"
-              style="width: 300px"
-              multiple
-              placeholder="全部"
-              :popper-append-to-body="false"
-            >
-              <el-option
-                v-for="item in VipGradeList"
-                :key="item.gradeNum"
-                :label="item.gradeName"
-                :value="item.gradeNum"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="操作人:">
-            <el-input
-              v-model="queryData.createdBy"
-              clearable
-              :maxlength="12"
-              size="medium"
-              style="width: 180px"
-              placeholder="请输入"
-              :disabled="loading"
-              @keyup.enter.native="enterSearch"
-            ></el-input>
-          </el-form-item>
-          <el-form-item>
-            <el-button
-              type="primary"
-              icon="el-icon-search"
-              :disabled="loading"
-              size="medium"
-              @click="search"
-            >
-              查询
-            </el-button>
-            <el-button
-              icon="el-icon-refresh-left"
-              :disabled="loading"
-              size="medium"
-              @click="reset"
-            >
-              重置
-            </el-button>
-          </el-form-item>
-        </el-form>
-      </div>
+	<div class="game-container report-container">
+		<div class="view-container dealer-container">
+			<div class="params">
+				<el-form ref="form" :inline="true" :model="queryData">
+					<el-form-item label="操作时间:">
+						<el-date-picker
+							v-model="searchTime"
+							size="medium"
+							:picker-options="pickerOptions"
+							format="yyyy-MM-dd HH:mm:ss"
+							type="datetimerange"
+							range-separator="-"
+							start-placeholder="开始日期"
+							end-placeholder="结束日期"
+							align="right"
+							:clearable="false"
+							:default-time="defaultTime"
+							style="width: 375px"
+						></el-date-picker>
+					</el-form-item>
+					<el-form-item label="场馆名称:" class="tagheight" prop="venueId">
+						<el-select
+							v-model="queryData.venueId"
+							style="width: 300px"
+							multiple
+							placeholder="全部"
+							:popper-append-to-body="false"
+							@change="changeSelect($event)"
+						>
+							<el-option
+								v-for="item in gameTypeList"
+								:key="item.id"
+								:label="item.gameName"
+								:value="item.gameCode"
+							></el-option>
+						</el-select>
+					</el-form-item>
+					<el-form-item label="游戏名称:" class="tagheight">
+						<el-select
+							v-model="queryData.gameId"
+							style="width: 300px"
+							multiple
+							placeholder="全部"
+							:popper-append-to-body="false"
+						>
+							<el-option
+								v-for="item in gameIdList"
+								:key="item.gameId"
+								:label="item.gameName"
+								:value="item.gameId"
+							></el-option>
+						</el-select>
+					</el-form-item>
+					<el-form-item label="VIP等级:" class="tagheight">
+						<el-select
+							v-model="queryData.vipSerialNum"
+							style="width: 300px"
+							multiple
+							placeholder="全部"
+							:popper-append-to-body="false"
+						>
+							<el-option
+								v-for="item in VipGradeList"
+								:key="item.gradeNum"
+								:label="item.gradeName"
+								:value="item.gradeNum"
+							></el-option>
+						</el-select>
+					</el-form-item>
+					<el-form-item label="操作人:">
+						<el-input
+							v-model="queryData.createdBy"
+							clearable
+							:maxlength="12"
+							size="medium"
+							style="width: 180px"
+							placeholder="请输入"
+							:disabled="loading"
+							@keyup.enter.native="enterSearch"
+						></el-input>
+					</el-form-item>
+					<el-form-item>
+						<el-button
+							type="primary"
+							icon="el-icon-search"
+							:disabled="loading"
+							size="medium"
+							@click="search"
+						>
+							查询
+						</el-button>
+						<el-button
+							icon="el-icon-refresh-left"
+							:disabled="loading"
+							size="medium"
+							@click="reset"
+						>
+							重置
+						</el-button>
+					</el-form-item>
+				</el-form>
+			</div>
 
-      <div class="content">
-        <el-table
-          v-loading="loading"
-          border
-          size="mini"
-          class="small-size-table"
-          :data="tableData"
-          style="width: 100%"
-          :header-cell-style="getRowClass"
-          @sort-change="_changeTableSort"
-        >
-          <el-table-column
-            prop="createdAt"
-            align="center"
-            label="操作时间"
-            sortable="custom"
-          ></el-table-column>
-          <el-table-column prop="venueId" align="center" label="场馆名称">
-            <template slot-scope="scope">
-              <span v-for="item in gameTypeList" :key="item.gameName">
-                {{ scope.row.venueId === item.id ? item.gameName : "" }}
-              </span>
-            </template>
-          </el-table-column>
-          <el-table-column prop="gameName" align="center" label="游戏名称">
-            <template slot-scope="scope">
-              <span>{{ scope.row.gameName }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column prop="vipSerialNum" align="center" label="VIP等级">
-            <template slot-scope="scope">
-              <span v-for="item in VipGradeList" :key="item.gradeName">
-                {{ scope.row.vipSerialNum === item.gradeNum ? item.gradeName : "" }}
-              </span>
-            </template>
-          </el-table-column>
-          <el-table-column prop="beforeModify" align="center" label="操作前">
-            <template slot-scope="scope">
-              <span>{{ scope.row.beforeModify }}%</span>
-            </template>
-          </el-table-column>
-          <el-table-column prop="afterModify" align="center" label="操作后">
-            <template slot-scope="scope">
-              <span>{{ scope.row.afterModify }}%</span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            prop="createdBy"
-            align="center"
-            label="操作人"
-          ></el-table-column>
-        </el-table>
-        <!-- 分页 -->
-        <el-pagination
-          :current-page.sync="pageNum"
-          class="pageValue"
-          background
-          layout="total, sizes,prev, pager, next, jumper"
-          :page-size="pageSize"
-          :page-sizes="pageSizes"
-          :total="total"
-          @current-change="handleCurrentChange"
-          @size-change="handleSizeChange"
-        ></el-pagination>
-      </div>
-    </div>
-  </div>
+			<div class="content">
+				<el-table
+					v-loading="loading"
+					border
+					size="mini"
+					class="small-size-table"
+					:data="tableData"
+					style="width: 100%"
+					:header-cell-style="getRowClass"
+					@sort-change="_changeTableSort"
+				>
+					<el-table-column
+						prop="createdAt"
+						align="center"
+						label="操作时间"
+						sortable="custom"
+					></el-table-column>
+					<el-table-column prop="venueId" align="center" label="场馆名称">
+						<template slot-scope="scope">
+							<span v-for="item in gameTypeList" :key="item.gameName">
+								{{ scope.row.venueId === item.id ? item.gameName : '' }}
+							</span>
+						</template>
+					</el-table-column>
+					<el-table-column prop="gameName" align="center" label="游戏名称">
+						<template slot-scope="scope">
+							<span>{{ scope.row.gameName }}</span>
+						</template>
+					</el-table-column>
+					<el-table-column prop="vipSerialNum" align="center" label="VIP等级">
+						<template slot-scope="scope">
+							<span v-for="item in VipGradeList" :key="item.gradeName">
+								{{
+									scope.row.vipSerialNum === item.gradeNum ? item.gradeName : ''
+								}}
+							</span>
+						</template>
+					</el-table-column>
+					<el-table-column prop="beforeModify" align="center" label="操作前">
+						<template slot-scope="scope">
+							<span>{{ scope.row.beforeModify }}%</span>
+						</template>
+					</el-table-column>
+					<el-table-column prop="afterModify" align="center" label="操作后">
+						<template slot-scope="scope">
+							<span>{{ scope.row.afterModify }}%</span>
+						</template>
+					</el-table-column>
+					<el-table-column
+						prop="createdBy"
+						align="center"
+						label="操作人"
+					></el-table-column>
+				</el-table>
+				<!-- 分页 -->
+				<el-pagination
+					:current-page.sync="pageNum"
+					class="pageValue"
+					background
+					layout="total, sizes,prev, pager, next, jumper"
+					:page-size="pageSize"
+					:page-sizes="pageSizes"
+					:total="total"
+					@current-change="handleCurrentChange"
+					@size-change="handleSizeChange"
+				></el-pagination>
+			</div>
+		</div>
+	</div>
 </template>
 
 <script>
@@ -188,10 +191,12 @@ export default {
 	data() {
 		return {
 			queryData: {
+				typeOptions: [],
 				venueId: [],
 				vipSerialNum: [],
 				gameId: []
 			},
+			gameIdList: [],
 			VipGradeList: [],
 			gameTypeList: [],
 			gameId: [],
@@ -217,14 +222,23 @@ export default {
 	created() {
 		this.getGameTypeList()
 		this.geiVipGrade()
-		this.geiVipBackwaterGrade()
+		// this.geiVipBackwaterGrade()
 	},
 	mounted() {},
 	methods: {
-		geiVipBackwaterGrade() {
-			this.$api.getBackwaterGameType().then((res) => {
+		changeSelect(val) {
+			const arr = [...val]
+			console.log('arr', arr)
+			this.geiVipBackwaterGrade({
+				gameCode: arr.join(',')
+			})
+		},
+
+		geiVipBackwaterGrade(params) {
+			this.$api.getBackwaterGameType(params).then((res) => {
 				if (res.code === 200) {
-					this.gameId = res.data
+					this.gameIdList = res.data
+					console.log(this.gameId, 'this.gameId ')
 				}
 			})
 		},
@@ -232,6 +246,7 @@ export default {
 			this.$api.getRebateRecordGetVipGrade().then((res) => {
 				if (res.code === 200) {
 					this.VipGradeList = res.data
+					console.log(this.VipGradeList, 'this.VipGradeList ')
 				}
 			})
 		},
@@ -239,6 +254,7 @@ export default {
 			this.$api.getMerchantGameGamePlant().then((res) => {
 				if (res.code === 200) {
 					this.gameTypeList = res.data
+					console.log(this.gameTypeList, 'this.gameTypeList')
 				}
 			})
 		},
@@ -288,9 +304,6 @@ export default {
 			} else if (column.order === 'descending') {
 				// 降序
 				this.queryData.orderType = 'desc'
-			} else {
-				delete this.queryData.orderType
-				delete this.queryData.orderKey
 			}
 			this.loadData()
 		},
