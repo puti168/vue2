@@ -108,15 +108,15 @@
 							列表清空
 						</el-button>
 						<div class="page-main">
-							<div v-for="(item,index) in showLeftList" :key="item.id" class="page-data">
+							<div v-for="item in showLeftList" :key="item.id" class="page-data">
 								<el-input
-									:value="item.assortSort||index+1"
+									v-model="item.assortSort"
 									:maxlength="12"
 									size="medium"
 									style="width: 90px"
 									class="left-input"
 									placeholder="序号"
-									@change="changeInput(index,item)"
+									@input="changeInput($event,item)"
 								></el-input>
 								{{ item.gameName }}
 								<span
@@ -238,6 +238,7 @@ export default {
 			data: {},
 			oldValue: '',
 			gameCode: '',
+			noReq: true,
 			value: [4, 2, 1]
 		}
 	},
@@ -296,9 +297,6 @@ export default {
 	},
 	created() {
 		this.getPlatform()
-		if (this.rowAssortId) {
-			this.queryChildGame()
-		}
 	},
 	mounted() {},
 	updated() {},
@@ -320,16 +318,48 @@ export default {
 		},
 		// 左边过滤后的显示数据
 		leftFilterByQuery() {
-			this.showLeftList = this.leftSelectList.filter((item,index) =>{
-					if(item.gameName.includes(this.queryLeft)){
-						return Object.assign(item,{assortSort: index+1})
+			this.showLeftList = this.leftSelectList.filter((item, index) => {
+				item.assortSort = index + 1 + ''
+					if (item.gameName.includes(this.queryLeft)) {
+						return Object.assign(item)
 					}
 				}
 			)
 		},
-		// sortNanber 输入的序号
-		changeInput(sortNanber,item) {
+		// 输入的值
+		changeInput(val, item) {
+			// 在选中数组中的位置
+			let index = 0
+			this.leftSelectList.forEach((val, i) => {
+				if (val.id === item.id) {
+					index = i
+				}
+			})
+			if (index > -1) {
+				index++
+			}
 			// 与旧值相同就互换，输入多少号就与该号互换
+			const arr1 = JSON.parse(JSON.stringify(this.leftSelectList))
+			if (val) {
+				// 获得输入的所在序号值
+				const current = Object.assign({}, item)
+				let target = null
+				if (val > 0 && val <= arr1.length && parseInt(val) !== index) {
+					target = Object.assign({}, arr1[val - 1])
+					target.assortSort = index
+					current.assortSort = val
+					// 选中的数据位置互换
+					arr1[val - 1] = current
+					arr1[index - 1] = target
+				} else {
+					arr1[index - 1].assortSort = index
+					this.leftSelectList = arr1
+					this.leftFilterByQuery()
+					return false
+				}
+			}
+			this.leftSelectList = arr1
+			this.leftFilterByQuery()
 		},
 		deleteItem(item) {
 			const index = this.leftSelectList.indexOf(item)
@@ -398,19 +428,18 @@ export default {
 				if (code === 200) {
 					data.forEach((item, index) => {
 						item.check = false
+						item.assortSort = Number(index + 1)
 						item.gameCode = this.gameCode
 					})
 					this.sourceRightList = data
-					// 判断右边是否勾选
-					this.sourceRightList.forEach((item) => {
-						this.leftSelectList.forEach((val) => {
-							if (val.id === item.id) {
-								item.check = true
-							}
-						})
-					})
 					this.rightFilterByQuery()
 					this.leftFilterByQuery()
+					if (this.noReq) {
+						this.noReq = false
+						if (this.rowAssortId) {
+							this.queryChildGame()
+						}
+					}
 				} else {
 					this.loading = false
 					this.$message({
@@ -436,6 +465,12 @@ export default {
 					this.sourceRightList = data
 					this.rightFilterByQuery()
 					this.leftFilterByQuery()
+					if (this.noReq) {
+						this.noReq = false
+						if (this.rowAssortId) {
+							this.queryChildGame()
+						}
+					}
 				} else {
 					this.loading = false
 					this.$message({
@@ -480,9 +515,9 @@ export default {
 			this.$refs.form.validate((valid) => {
 				if (valid) {
 					const arr = []
-					this.leftSelectList.forEach((item,index) => {
+					this.leftSelectList.forEach((item, index) => {
 						arr.push({
-							assortSort: index+1,
+							assortSort: index + 1,
 							gameId: item.id,
 							gameName: item.gameName
 						})
@@ -500,7 +535,6 @@ export default {
 					// 后端说都用update const url = this.rowAssortId ? 'gameUpdateAPI' : 'gameCreateAPI'
 					this.$api.gameUpdateAPI(params).then((res) => {
 						const { code, msg } = res
-						console.log('res', res)
 						if (code === 200) {
 							this.$message({
 								message: '保存成功!',
