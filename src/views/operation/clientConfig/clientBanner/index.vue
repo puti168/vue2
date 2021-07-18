@@ -252,10 +252,7 @@
                     {{ scope.row.targetUrl === item.gameId+'' ? item.gameName : '' }}
                   </span>
                 </div>
-                <div v-else-if="scope.row.linkTarget === 1 ">
-                  {{ typeFilter(scope.row.linkTarget, "operateTargetType") }}
-                </div>
-                <div v-else-if="scope.row.linkTarget === 2">
+                <div v-else-if="scope.row.linkTarget === 1 || scope.row.linkTarget === 2">
                   {{ typeFilter(scope.row.linkTarget, "operateTargetType") }}
                 </div>
                 <div v-else>-</div>
@@ -696,7 +693,7 @@ export default {
     openEdit(row) {
       this.addOrEdit = 'edit'
       this.dialogForm = { ...row }
-      console.log(this.dialogForm, '编辑的事')
+      console.log(row, '编辑的事')
       this.dialogForm.upTime = row.upTime
       this.dialogForm.downTime = row.downTime
       this.dialogForm.isLink = row.isLink
