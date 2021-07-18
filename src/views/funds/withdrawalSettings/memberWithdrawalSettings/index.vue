@@ -5,17 +5,6 @@
         <el-form ref="form" :inline="true" :model="queryData">
           <el-form-item>
             <el-button
-              v-if="hasPermission('256')"
-              type="primary"
-              :disabled="loading"
-              size="medium"
-              class="pattern"
-              @click="open"
-            >
-              初始化提款设置
-            </el-button>
-
-            <el-button
               v-if="hasPermission('254')"
               type="primary"
               class="pattern"
@@ -103,7 +92,7 @@
         </el-table>
         <!-- 分页 -->
       </div>
-      <el-dialog :visible.sync="dialogFormVisible" :destroy-on-close="true" width="970px">
+      <el-dialog :visible.sync="dialogFormVisible" center :destroy-on-close="true" width="970px">
         <div class="form-header">
           <span>{{ title }}会员资提款设置</span>
           <span>
@@ -113,6 +102,7 @@
         </div>
         <el-form
           ref="formSub"
+          label-width="190px"
           :rules="rules"
           class="demo-form-inline"
           :model="dialogForm"
@@ -121,7 +111,7 @@
             <el-select
               v-model="dialogForm.vipNumName"
               :disabled="isDisabled"
-              style="width: 600px"
+              style="width:556px"
               value-key="vipSerialNum"
               placeholder="默认选择全部"
               @change="vipQuota($event)"
@@ -158,7 +148,7 @@
           <el-form-item label="大额提款标记金额：" prop="bigAmount">
             <el-input-number
               v-model="dialogForm.bigAmount"
-              style="width: 526px"
+              style="width: 556px"
               placeholder="请输入金额"
             ></el-input-number>
             <span>元</span>
@@ -166,7 +156,7 @@
           <el-form-item label="银行卡单次提款最低额度：" prop="bankCardMinAmount">
             <el-input-number
               v-model="dialogForm.bankCardMinAmount"
-              style="width: 486px"
+              style="width: 556px"
               placeholder="请输入金额"
             ></el-input-number>
             <span>元</span>
@@ -175,7 +165,7 @@
             <el-input-number
               v-model="dialogForm.bankCardMaxAmount"
               name="bankCardMaxAmount"
-              style="width: 486px"
+              style="width: 556px"
               placeholder="请输入金额"
             ></el-input-number>
             <span>元</span>
@@ -183,7 +173,7 @@
           <el-form-item label="虚拟币单次提款最低额度：" prop="virtualCardMinAmount">
             <el-input-number
               v-model="dialogForm.virtualCardMinAmount"
-              style="width: 486px"
+              style="width: 556px"
               placeholder="请输入金额"
             ></el-input-number>
             <span>元</span>
@@ -192,7 +182,7 @@
             <el-input-number
               v-model="dialogForm.virtualCardMaxAmount"
               name="virtualCardMaxAmount"
-              style="width: 486px"
+              style="width: 556px"
               placeholder="请输入金额"
             ></el-input-number>
             <span>元</span>
@@ -439,25 +429,6 @@ export default {
           }
         })
       }
-    },
-    open() {
-      this.$confirm('您确定要初始化会员提款设置？请谨慎操作！！！', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      })
-        .then(() => {
-          this.$api.getWithdrawSettingMemberreset().then((res) => {
-            console.log(res, '90')
-            if (res.code === 200) {
-              console.log(res)
-              this.$message.success('初始化会员提款设置成功!')
-              this.loadData()
-            }
-            this.dialogFormVisible = false
-          })
-        })
-        .catch(() => {})
     },
     reset() {
       this.queryData = {}
