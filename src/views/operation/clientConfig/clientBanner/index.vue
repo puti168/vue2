@@ -692,7 +692,10 @@ export default {
 
     openEdit(row) {
       this.addOrEdit = 'edit'
-      this.dialogForm = { ...row }
+      this.dialogForm =
+      { ...row,
+         targetUrl: row.targetUrl * 1
+       }
       console.log(row, '编辑的事')
       this.dialogForm.upTime = row.upTime
       this.dialogForm.downTime = row.downTime
