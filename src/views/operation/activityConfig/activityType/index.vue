@@ -228,7 +228,6 @@ export default {
 			let lock = true
 			params.activityType = params.activityCode * 1
 			delete params.activityCode
-			console.log('params', params)
 			this.$refs['form'].validate((valid) => {
 				if (valid && lock) {
 					lock = false
@@ -278,8 +277,8 @@ export default {
 			this.showInfoData = undefined
             const item = this.activityTypeArr.find((item) => item.description === evt)
 			this.queryData = {
-				activityType: item.description,
-				activityCode: item.code
+				activityType: item && item.description,
+				activityCode: item && item.code
 			}
 			this.queryDetails(item.code)
 		},

@@ -464,6 +464,7 @@
           :current-page.sync="page"
           background
           class="fenye"
+          :total="total"
           layout="total, sizes,prev, pager, next, jumper"
           :page-size="size"
           :page-sizes="[5, 10, 15]"
@@ -519,6 +520,7 @@
       <el-pagination
         :current-page.sync="page"
         background
+        :total="total"
         class="fenye"
         layout="total, sizes,prev, pager, next, jumper"
         :page-size="size"
@@ -560,6 +562,7 @@
        <div slot="footer" class="dialog-footer">
       <el-pagination
         :current-page.sync="page"
+        :total="total"
         background
         class="fenye"
         layout="total, sizes,prev, pager, next, jumper"
@@ -602,6 +605,7 @@
        <div slot="footer" class="dialog-footer">
       <el-pagination
         :current-page.sync="page"
+        :total="total"
         background
         class="fenye"
         layout="total, sizes,prev, pager, next, jumper"
@@ -645,6 +649,7 @@
       <el-pagination
         :current-page.sync="page"
         background
+        :total="total"
         class="fenye"
         layout="total, sizes,prev, pager, next, jumper"
         :page-size="size"
@@ -696,6 +701,7 @@
       <el-pagination
         :current-page.sync="page"
         background
+        :total="total"
         class="fenye"
         layout="total, sizes,prev, pager, next, jumper"
         :page-size="size"
@@ -748,6 +754,7 @@
         :current-page.sync="page"
         background
         class="fenye"
+        :total="total"
         layout="total, sizes,prev, pager, next, jumper"
         :page-size="size"
         :page-sizes="[5, 10, 15]"
@@ -789,6 +796,7 @@
       <el-pagination
         :current-page.sync="page"
         background
+        :total="total"
         class="fenye"
         layout="total, sizes,prev, pager, next, jumper"
         :page-size="size"
@@ -834,6 +842,7 @@
       <el-pagination
         :current-page.sync="page"
         background
+        :total="total"
         class="fenye"
         layout="total, sizes,prev, pager, next, jumper"
         :page-size="size"
@@ -1084,6 +1093,7 @@ export default {
         console.log(params, '11111')
         if (res.code === 200) {
           this.gameList = res.data.record
+          this.total = res.data.total
         }
       })
     },
@@ -1101,6 +1111,7 @@ export default {
          console.log(params, '11111')
         if (res.code === 200) {
           this.addactiveList = res.data.record
+          this.total = res.data.total
         }
       })
     },
@@ -1118,6 +1129,7 @@ export default {
          console.log(params, '11111')
         if (res.code === 200) {
           this.winOrLoseList = res.data.record
+          this.total = res.data.total
         }
       })
     },
@@ -1135,6 +1147,7 @@ export default {
          console.log(params, '11111')
         if (res.code === 200) {
           this.discountList = res.data.record
+          this.total = res.data.total
         }
       })
     },
@@ -1152,6 +1165,7 @@ export default {
         if (res.code === 200) {
           this.backwaterList = res.data.record
           this.dialogBackwater = true
+          this.total = res.data.total
         }
       })
     },
@@ -1168,6 +1182,7 @@ export default {
        this.$api.ProxyCommissionRecordVenueFee(params).then((res) => {
         if (res.code === 200) {
           this.effectiveList = res.data.record
+          this.total = res.data.total
         }
       })
     },
@@ -1183,6 +1198,7 @@ export default {
       this.$api.ProxyCommissionRecordValidAddSubordinate(params).then((res) => {
         if (res.code === 200) {
           this.dinateList = res.data.record
+          this.total = res.data.total
           this.dialogDinate = true
         }
       })
@@ -1199,6 +1215,7 @@ export default {
        this.dialogVenuefee = true
        this.$api.ProxyCommissionRecordVenueFee(params).then((res) => {
         if (res.code === 200) {
+          this.total = res.data.total
           this.venueFeeList = res.data.record
         }
       })
@@ -1214,6 +1231,7 @@ export default {
       params.pageSize = this.size
       this.$api.ProxyCommissionRecordLastMonthBalance(params).then((res) => {
         if (res.code === 200) {
+          this.total = res.data.total
           this.balanceList = res.data.record
           this.dialogBalance = true
         }

@@ -248,11 +248,11 @@ style="margin-right: 15px"
         </el-table>
         <!-- 分页 -->
         <el-pagination
-          :current-page.sync="page"
+          :current-page.sync="pageR"
           background
           class="fenye"
           layout="total, sizes,prev, pager, next, jumper"
-          :page-size="size"
+          :page-size="sizeR"
           :page-sizes="[10, 20, 50]"
           :total="dialogTotal"
           @current-change="handleCurrentChangeDialog"
@@ -339,8 +339,8 @@ export default {
       gameTypeList: [],
       isIndeterminate: false,
       gameList: [],
-      page: 1,
-      size: 10,
+      pageR: 1,
+      sizeR: 10,
       gameCode: '',
       dialogTotal: 0,
       summary: {},
@@ -570,7 +570,8 @@ export default {
       this.initData()
     },
     dialogData(val) {
-      this.page = 1
+      this.pageR = 1
+      this.sizeR = 10
       this.venueName = val.venueName
       this.gameCode = val.gameCode
       this.getReportVenueNetAmountDayDetailListPage(val.gameCode)
@@ -581,8 +582,8 @@ export default {
       const create = this.searchTime || []
       const [startTime, endTime] = create
       const params = {
-        pageNum: this.page,
-        pageSize: this.size,
+        pageNum: this.pageR,
+        pageSize: this.sizeR,
         gameCode: val,
         startTime: startTime ? dayjs(startTime).format('YYYY-MM-DD') : '',
         endTime: endTime ? dayjs(endTime).format('YYYY-MM-DD') : ''
@@ -602,11 +603,11 @@ export default {
         })
     },
     handleCurrentChangeDialog(val) {
-      this.page = val
+      this.pageR = val
       this.getReportVenueNetAmountDayDetailListPage(this.gameCode)
     },
     handleSizeChangeDialog(val) {
-      this.size = val
+      this.sizeR = val
       this.getReportVenueNetAmountDayDetailListPage(this.gameCode)
     },
     filterDecimals: function (val) {
