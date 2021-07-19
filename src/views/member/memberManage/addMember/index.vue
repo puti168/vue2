@@ -307,11 +307,12 @@ export default {
 		},
 		add() {
 			this.loading = true
-            const item = this.vipRiskList.filter((item) => item.id === this.form.vipId)
+            const item = this.vipRiskList.find((item) => item.id === this.form.vipId)
 			const params = {
 				...this.form,
                 vipSerialNum: item.gradeNum
 			}
+			console.log('params', params)
 			let lock = true
 			this.$refs['form'].validate((valid) => {
 				if (valid && lock) {
