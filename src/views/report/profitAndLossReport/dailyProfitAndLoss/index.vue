@@ -94,6 +94,9 @@
                 </div>
               </el-tooltip>
             </template>
+            <template slot-scope="scope">
+              {{ scope.row.discountAmount | filterDecimals }}
+            </template>
           </el-table-column>
           <el-table-column
             v-if="dailyProfitAndLoss['总返水']"
@@ -111,6 +114,9 @@
                   加额为正
                 </div>
               </el-tooltip>
+            </template>
+            <template slot-scope="scope">
+              {{ scope.row.rebateAmount | filterDecimals }}
             </template>
           </el-table-column>
           <el-table-column
@@ -132,6 +138,9 @@
                 </div>
               </el-tooltip>
             </template>
+            <template slot-scope="scope">
+              {{ scope.row.artificialPatchAmount | filterDecimals }}
+            </template>
           </el-table-column>
           <el-table-column
             v-if="dailyProfitAndLoss['投注人数']"
@@ -150,13 +159,21 @@
             prop="betAmount"
             align="center"
             label="投注金额"
-          ></el-table-column>
+          >
+            <template slot-scope="scope">
+              {{ scope.row.betAmount | filterDecimals }}
+            </template>
+          </el-table-column>
           <el-table-column
             v-if="dailyProfitAndLoss['有效投注']"
             prop="validBetAmount"
             align="center"
             label="有效投注 "
-          ></el-table-column>
+          >
+            <template slot-scope="scope">
+              {{ scope.row.validBetAmount | filterDecimals }}
+            </template>
+          </el-table-column>
           <el-table-column
             v-if="dailyProfitAndLoss['投注盈亏']"
             prop="netAmount"
@@ -176,12 +193,14 @@
             </template>
             <template slot-scope="scope">
               <span v-if="scope.row.netAmount > 0" class="enableColor">
-                {{ scope.row.netAmount }}
+                {{ scope.row.netAmount | filterDecimals }}
               </span>
               <span v-else-if="scope.row.netAmount < 0" class="redColor">
-                {{ scope.row.netAmount }}
+                {{ scope.row.netAmount | filterDecimals }}
               </span>
-              <span v-else-if="scope.row.netAmount === 0">{{ scope.row.netAmount }}</span>
+              <span v-else-if="scope.row.netAmount === 0">{{
+                scope.row.netAmount | filterDecimals
+              }}</span>
               <span v-else>-</span>
             </template>
           </el-table-column>
@@ -200,12 +219,14 @@
             </template>
             <template slot-scope="scope">
               <span v-if="scope.row.net > 0" class="enableColor">
-                {{ scope.row.net }}
+                {{ scope.row.net | filterDecimals }}
               </span>
               <span v-else-if="scope.row.net < 0" class="redColor">
-                {{ scope.row.net }}
+                {{ scope.row.net | filterDecimals }}
               </span>
-              <span v-else-if="scope.row.net === 0">{{ scope.row.net }}</span>
+              <span v-else-if="scope.row.net === 0">{{
+                scope.row.net | filterDecimals
+              }}</span>
               <span v-else>-</span>
             </template>
           </el-table-column>
@@ -253,6 +274,16 @@ const endTime = dayjs().endOf('day').valueOf()
 
 export default {
   components: {},
+  filters: {
+    filterDecimals: function (val) {
+      if (typeof val === 'number') {
+        const newVal = (Math.floor(val * 100) / 100).toFixed(2)
+        return newVal
+      } else {
+        return '-'
+      }
+    }
+  },
   mixins: [list],
   data() {
     return {
@@ -499,6 +530,14 @@ export default {
       this.pageNum = 1
       this.loadData()
     },
+    filterDecimals: function (val) {
+      if (typeof val === 'number') {
+        const newVal = (Math.floor(val * 100) / 100).toFixed(2)
+        return newVal
+      } else {
+        return '-'
+      }
+    },
     getSummaries(param) {
       const { columns, data } = param
       const sums = []
@@ -528,24 +567,24 @@ export default {
               case 1:
                 sums[index] = (
                   <div class='count_row'>
-                    <p>{Math.floor(num * 100) / 100}</p>
-                    <p>{Math.floor(this.summary.discountAmount * 100) / 100}</p>
+                    <p>{this.filterDecimals(num)}</p>
+                    <p>{this.filterDecimals(this.summary.discountAmount)}</p>
                   </div>
                 )
                 break
               case 2:
                 sums[index] = (
                   <div class='count_row'>
-                    <p>{Math.floor(num * 100) / 100}</p>
-                    <p>{Math.floor(this.summary.rebateAmount * 100) / 100}</p>
+                    <p>{this.filterDecimals(num)}</p>
+                    <p>{this.filterDecimals(this.summary.rebateAmount)}</p>
                   </div>
                 )
                 break
               case 3:
                 sums[index] = (
                   <div class='count_row'>
-                    <p>{Math.floor(num * 100) / 100}</p>
-                    <p>{Math.floor(this.summary.artificialPatchAmount * 100) / 100}</p>
+                    <p>{this.filterDecimals(num)}</p>
+                    <p>{this.filterDecimals(this.summary.artificialPatchAmount)}</p>
                   </div>
                 )
                 break
@@ -568,8 +607,8 @@ export default {
               case 6:
                 sums[index] = (
                   <div class='count_row'>
-                    <p>{Math.floor(num * 100) / 100}</p>
-                    <p>{Math.floor(this.summary.betAmount * 100) / 100}</p>
+                    <p>{this.filterDecimals(num)}</p>
+                    <p>{this.filterDecimals(this.summary.betAmount)}</p>
                   </div>
                 )
 
@@ -577,8 +616,8 @@ export default {
               case 7:
                 sums[index] = (
                   <div class='count_row'>
-                    <p>{Math.floor(num * 100) / 100}</p>
-                    <p>{Math.floor(this.summary.validBetAmount * 100) / 100}</p>
+                    <p>{this.filterDecimals(num)}</p>
+                    <p>{this.filterDecimals(this.summary.validBetAmount)}</p>
                   </div>
                 )
                 break
@@ -586,19 +625,19 @@ export default {
                 sums[index] = (
                   <div class='count_row'>
                     {num > 0 ? (
-                      <p class='enableColor'>{Math.floor(num * 100) / 100}</p>
+                      <p class='enableColor'>{this.filterDecimals(num)}</p>
                     ) : (
-                      <p class='redColor'>{Math.floor(num * 100) / 100}</p>
+                      <p class='redColor'>{this.filterDecimals(num)}</p>
                     )}
                     {this.summary.netAmount > 0 ? (
                       <p class='enableColor'>
-                        {Math.floor(this.summary.netAmount * 100) / 100}
+                        {this.filterDecimals(this.summary.netAmount)}
                       </p>
                     ) : this.summary.netAmount === 0 ? (
-                      <p>{Math.floor(this.summary.netAmount * 100) / 100}</p>
+                      <p>{this.filterDecimals(this.summary.netAmount)}</p>
                     ) : (
                       <p class='redColor'>
-                        {Math.floor(this.summary.netAmount * 100) / 100}
+                        {this.filterDecimals(this.summary.netAmount)}
                       </p>
                     )}
                   </div>
@@ -608,18 +647,16 @@ export default {
                 sums[index] = (
                   <div class='count_row'>
                     {num > 0 ? (
-                      <p class='enableColor'>{Math.floor(num * 100) / 100}</p>
+                      <p class='enableColor'>{this.filterDecimals(num)}</p>
                     ) : (
-                      <p class='redColor'>{Math.floor(num * 100) / 100}</p>
+                      <p class='redColor'>{this.filterDecimals(num)}</p>
                     )}
                     {this.summary.net > 0 ? (
-                      <p class='enableColor'>
-                        {Math.floor(this.summary.net * 100) / 100}
-                      </p>
+                      <p class='enableColor'>{this.filterDecimals(this.summary.net)}</p>
                     ) : this.summary.net === 0 ? (
-                      <p>{Math.floor(this.summary.net * 100) / 100}</p>
+                      <p>{this.filterDecimals(this.summary.net)}</p>
                     ) : (
-                      <p class='redColor'>{Math.floor(this.summary.net * 100) / 100}</p>
+                      <p class='redColor'>{this.filterDecimals(this.summary.net)}</p>
                     )}
                   </div>
                 )
