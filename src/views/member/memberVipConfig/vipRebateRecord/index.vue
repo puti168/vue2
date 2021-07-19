@@ -238,7 +238,7 @@ export default {
 			this.$api.getBackwaterGameType(params).then((res) => {
 				if (res.code === 200) {
 					this.gameIdList = res.data
-					console.log(this.gameId, 'this.gameId ')
+					console.log(this.gameIdList, 'this.gameIdList ')
 				}
 			})
 		},

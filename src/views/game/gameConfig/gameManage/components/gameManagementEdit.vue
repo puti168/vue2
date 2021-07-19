@@ -424,6 +424,13 @@ export default {
             type: 'array'
           }
         ],
+        configRebateStatus: [
+          {
+            required: true,
+            message: '是否配置返水',
+            trigger: 'blur'
+          }
+        ],
         gamePlatform: [
           {
             required: true,
