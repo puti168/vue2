@@ -452,7 +452,16 @@
 					>
 						<template slot-scope="scope">
 							<span v-if="!!scope.row.balance || scope.row.balance === 0">
-								{{ scope.row.balance.toFixed(2) }}
+								<el-tooltip placement="top" effect="light">
+									<div slot="content">
+										<p>代理余额：{{ scope.row.proxyBalance.toFixed(2) }}</p>
+										<p>
+											返佣余额：{{ scope.row.commissionBalance.toFixed(2) }}
+										</p>
+									</div>
+									<i class="ti-help-alt data-icon"></i>
+									<p>{{ scope.row.balance.toFixed(2) }}</p>
+								</el-tooltip>
 							</span>
 							<span v-else>-</span>
 						</template>
@@ -630,11 +639,7 @@ export default {
 		// 获取代理标签
 		getMerchantDict() {
 			this.$api.agentDictAPI().then((res) => {
-				const {
-					code,
-					data,
-					msg
-				} = res
+				const { code, data, msg } = res
 				if (code === 200) {
 					this.userLabel = data || []
 				} else {
