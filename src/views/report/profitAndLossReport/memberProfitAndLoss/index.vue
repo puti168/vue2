@@ -634,11 +634,19 @@ export default {
     accountStatusArr() {
       return this.globalDics.accountStatusType
     },
-    accountTypeArr() {
-      return this.globalDics.accountType
-    },
     deviceTypeArr() {
       return this.globalDics.deviceType
+    },
+    accountTypeArr() {
+      const arr = this.globalDics.accountType
+      const newArr = []
+      for (let i = 0; i < arr.length; i++) {
+        const ele = arr[i]
+        if (ele.code !== '1' && ele.code !== '4') {
+          newArr.push(ele)
+        }
+      }
+      return newArr
     }
   },
   created() {
