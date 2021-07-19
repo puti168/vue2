@@ -859,6 +859,7 @@ export default {
     },
      // 备注信息
     expLain() {
+      const userId = this.outlineInfoList.id
       this.$confirm(
         `<strong>是否解除该会员充值限制？</strong></br><span style='font-size:12px;color:#c1c1c1'>请谨慎操作</span>`,
         '确认提示',
@@ -869,11 +870,11 @@ export default {
         type: 'warning'
       })
         .then(() => {
-          this.$api.getWithdrawSettingMemberreset().then((res) => {
+          this.$api.getThirdPayWhiteDepositLimit({userId}).then((res) => {
             console.log(res, '90')
              if (res.code === 200) {
                console.log(res)
-               this.$message.success('初始化会员提款设置成功!')
+               this.$message.success('解除会员充值限制成功!')
                     this.loadData()
              }
                this.dialogFormVisible = false

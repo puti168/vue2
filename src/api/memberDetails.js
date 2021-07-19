@@ -39,6 +39,14 @@ export function getVipInfo(data) {
 		data
 	})
 }
+// 会员详情==>会员充值限制
+export function getThirdPayWhiteDepositLimit(data) {
+	return request({
+		url: '/thirdPayWhite/depositLimit',
+		method: 'post',
+		data
+	})
+}
 // 查询备注信息
 export function getMemberRemarkList(params) {
 	return request({
@@ -152,5 +160,6 @@ export default {
 	getPlayerBetHistorySum,
 	getPlayerTop3,
 	getLogMemberLoginLog,
-	getBankCardBank
+	getBankCardBank,
+	getThirdPayWhiteDepositLimit
 }
