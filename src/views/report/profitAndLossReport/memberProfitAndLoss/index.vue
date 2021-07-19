@@ -531,11 +531,11 @@
       </el-table>
       <!-- 分页 -->
       <el-pagination
-        :current-page.sync="page"
+        :current-page.sync="pageR"
         background
         class="fenye"
         layout="total, sizes,prev, pager, next, jumper"
-        :page-size="size"
+        :page-size="sizeR"
         :page-sizes="[10, 20, 50]"
         :total="dialogTotal"
         @current-change="handleCurrentChangeDialog"
@@ -637,8 +637,8 @@ export default {
       userLabel: [],
       memberDetails: [],
       playerId: '',
-      page: 1,
-      size: 10,
+      pageR: 1,
+      sizeR: 10,
       dialogTotal: 0,
       summary: {},
       myName: ''
@@ -880,6 +880,8 @@ export default {
     },
     dialogData(val) {
       this.userName = val.userName
+      this.pageR = 1
+      this.sizeR = 10
       this.playerId = val.playerId
       this.getReportMembernetamountDetail(val.playerId)
       this.tableVisible = true
@@ -889,8 +891,8 @@ export default {
       const create = this.searchTime || []
       const [startTime, endTime] = create
       const params = {
-        pageNum: this.page,
-        pageSize: this.size,
+        pageNum: this.pageR,
+        pageSize: this.sizeR,
         playerId: val,
         startTime: startTime ? dayjs(startTime).format('YYYY-MM-DD') : '',
         endTime: endTime ? dayjs(endTime).format('YYYY-MM-DD') : ''
@@ -1035,12 +1037,12 @@ export default {
     },
     handleCurrentChangeDialog(val) {
       console.log(111, val)
-      this.page = val
+      this.pageR = val
       this.getReportMembernetamountDetail(this.playerId)
     },
     handleSizeChangeDialog(val) {
       console.log(222, val)
-      this.size = val
+      this.sizeR = val
       this.getReportMembernetamountDetail(this.playerId)
     },
     checkValue(e) {

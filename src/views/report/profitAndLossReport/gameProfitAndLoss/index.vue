@@ -297,11 +297,11 @@ style="margin-right: 15px"
         </el-table>
         <!-- 分页 -->
         <el-pagination
-          :current-page.sync="page"
+          :current-page.sync="pageR"
           background
           class="fenye"
           layout="total, sizes,prev, pager, next, jumper"
-          :page-size="size"
+          :page-size="sizeR"
           :page-sizes="[10, 20, 50]"
           :total="dialogTotal"
           @current-change="handleCurrentChangeDialog"
@@ -397,13 +397,14 @@ export default {
       gameTypeIdList: [],
       gameVisible: false,
       gameList: [],
-      page: 1,
-      size: 10,
+      pageR: 1,
+      sizeR: 10,
       dialogTotal: 0,
       summary: {},
       gameTypeName: '',
       venueName: '',
       gameTypeId: '',
+      dialogp: {},
       visible: false,
       tableVisible: false,
       gameProfitAndLoss: {
@@ -724,8 +725,10 @@ export default {
       this.initData()
     },
     dialogData(val) {
+      this.pageR = 1
+      this.sizeR = 10
+      this.dialogp = { ...val }
       this.venueName = val.venueName
-      this.gameTypeName = val.gameTypeName
       this.gameTypeName = val.gameTypeName
       this.gameTypeId = val.gameTypeId
       this.getReportGameProfitDetailListPage(val)
@@ -736,8 +739,8 @@ export default {
       const create = this.searchTime || []
       const [startTime, endTime] = create
       const params = {
-        pageNum: this.page,
-        pageSize: this.size,
+        pageNum: this.pageR,
+        pageSize: this.sizeR,
         gameTypeId: val.gameTypeId,
         gameCode: val.gameCode,
         gameTypeName: val.gameTypeName,
@@ -792,13 +795,13 @@ export default {
     },
     handleCurrentChangeDialog(val) {
       console.log(111, val)
-      this.page = val
-      this.getReportGameProfitDetailListPage(this.gameTypeId)
+      this.pageR = val
+      this.getReportGameProfitDetailListPage(this.dialogp)
     },
     handleSizeChangeDialog(val) {
       console.log(222, val)
-      this.size = val
-      this.getReportGameProfitDetailListPage(this.gameTypeId)
+      this.sizeR = val
+      this.getReportGameProfitDetailListPage(this.dialogp)
     },
     filterDecimals: function (val) {
       if (typeof val === 'number') {
