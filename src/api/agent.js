@@ -22,7 +22,7 @@ export function agentListExportAPI(data) {
 // 代理管理==> 代理列表 ===> 风控层级
 export function agentDictAPI(params) {
 	return request({
-		url: '/proxyInformationRegistered/proxyDict',
+		url: '/proxy/labelDict',
 		method: 'get',
 		params
 	})

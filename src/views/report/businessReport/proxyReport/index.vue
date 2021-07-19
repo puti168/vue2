@@ -1118,11 +1118,11 @@ export default {
 			this.$api.agentDictAPI().then((res) => {
 				const {
 					code,
-					data: { userLabel },
+					data,
 					msg
 				} = res
 				if (code === 200) {
-					this.userLabel = userLabel || []
+					this.userLabel = data || []
 				} else {
 					this.$message({
 						message: msg,
