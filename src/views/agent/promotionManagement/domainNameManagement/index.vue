@@ -386,13 +386,22 @@ export default {
       }
       console.log({ id, description, displayOrder, domainName, remark, status })
       if (val === '创建') {
-        this.editData = { id, description, displayOrder, domainName, remark, status }
+        this.editData = {
+          id,
+          description,
+          displayOrder,
+          domainName,
+          remark,
+          status,
+          domainType: '0'
+        }
         this.editData.status = '0'
         this.$nextTick(() => {
           this.$refs.editDome.control = false
         })
       } else {
         this.editData = { id, description, displayOrder, domainName, remark, status }
+        this.editData.domainType = val.domainType + ''
         this.$nextTick(() => {
           this.$refs.editDome.control = true
         })
