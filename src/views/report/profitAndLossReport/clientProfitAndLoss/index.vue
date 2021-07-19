@@ -221,11 +221,11 @@
         </el-table>
         <!-- 分页 -->
         <el-pagination
-          :current-page.sync="page"
+          :current-page.sync="pageR"
           background
           class="fenye"
           layout="total, sizes,prev, pager, next, jumper"
-          :page-size="size"
+          :page-size="sizeR"
           :page-sizes="[10, 20, 50]"
           :total="dialogTotal"
           @current-change="handleCurrentChangeDialog"
@@ -308,8 +308,8 @@ export default {
       queryText: '查询',
       tableData: [],
       dialogList: [],
-      page: 1,
-      size: 10,
+      pageR: 1,
+      sizeR: 10,
       dialogTotal: 0,
       deviceTypeCode: '',
       summary: {},
@@ -507,7 +507,10 @@ export default {
       this.loadData()
     },
     dialogData(val) {
+      this.pageR = 1
+      this.sizeR = 10
       this.title = val.deviceTypeDesc
+      this.deviceTypeCode = val.deviceTypeCode
       this.getDevicetypenetamountDetail(val.deviceTypeCode)
       this.tableVisible = true
     },
@@ -516,8 +519,8 @@ export default {
       const create = this.searchTime || []
       const [startTime, endTime] = create
       const params = {
-        pageNum: this.page,
-        pageSize: this.size,
+        pageNum: this.pageR,
+        pageSize: this.sizeR,
         deviceType: val,
         startTime: startTime ? dayjs(startTime).format('YYYY-MM-DD') : '',
         endTime: endTime ? dayjs(endTime).format('YYYY-MM-DD') : ''
@@ -537,11 +540,11 @@ export default {
         })
     },
     handleCurrentChangeDialog(val) {
-      this.page = val
+      this.pageR = val
       this.getDevicetypenetamountDetail(this.deviceTypeCode)
     },
     handleSizeChangeDialog(val) {
-      this.size = val
+      this.sizeR = val
       this.getDevicetypenetamountDetail(this.deviceTypeCode)
     },
     filterDecimals: function (val) {
