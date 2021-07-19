@@ -550,6 +550,7 @@ export default {
       this.initData()
     },
     dialogData(val) {
+      this.page = 1
       this.venueName = val.venueName
       this.gameCode = val.gameCode
       this.getReportVenueNetAmountDayDetailListPage(val.gameCode)
