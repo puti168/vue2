@@ -124,8 +124,8 @@
           </el-table-column>
           <el-table-column prop="moduleId" align="center" label="模块名称">
             <template slot-scope="scope">
-              <span v-if="!!scope.row.terminalType">
-                {{ typeFilter(scope.row.terminalType, "moduleType") }}
+              <span v-if="!!scope.row.moduleId">
+                {{ typeFilter(scope.row.moduleId, "moduleType") }}
               </span>
               <span v-else>-</span>
             </template>

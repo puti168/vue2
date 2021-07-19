@@ -9,16 +9,6 @@
         <i class="el-icon-edit-outline"></i><br />
         编辑信息
       </el-col>
-      <!-- <el-col v-if="isshow" :span="16" class="btngroup">
-        <el-button
-          v-for="(item, index) in editMsgList"
-          :key="index"
-          disabled
-          type="primary"
-          >{{ item.label }}</el-button
-        >
-        <el-button disabled type="primary">账号备注</el-button>
-      </el-col> -->
       <el-col :span="16" class="btngroup aaaaa">
         <el-button
           v-for="(item, index) in editMsgList"
@@ -28,7 +18,10 @@
           @click="editFn(item.label)"
           >{{ item.label }}</el-button>
         <el-button type="primary" @click="editFn('账号备注')">账号备注</el-button>
-        <el-button type="primary" @click="expLain('解除充值限制')">解除充值限制</el-button>
+        <el-button
+type="primary"
+@click="expLain('解除充值限制')"
+>解除充值限制</el-button>
       </el-col>
     </el-row>
     <div class="titelBox">概要信息</div>
@@ -50,19 +43,6 @@
         <span v-else>{{
           typeFilter(outlineInfoList.accountStatus, "accountStatusType")
         }}</span>
-        <!-- <div v-else style="width: 80%; display: inline-block">
-          <p v-if="outlineInfoList.accountStatus === '1'">
-            <span>
-              {{ typeFilter(outlineInfoList.accountStatus, "accountStatusType") }}
-            </span>
-          </p>
-          <p v-else class="yellowColor">
-            <span>
-              {{ typeFilter(outlineInfoList.accountStatus, "accountStatusType") }}
-            </span>
-            <span>审核中</span>
-          </p>
-        </div> -->
       </el-col>
       <el-col
 :span="5"
@@ -362,7 +342,7 @@ class="textC"
       >
         <el-form-item v-if="moduleBox === '账号状态'" label="账号状态：" prop="code">
           <el-select
-            v-model="editData.code"
+            v-model="editData.accountStatus"
             placeholder="请选择"
             @change="changeAccountStatus"
           >
@@ -387,7 +367,7 @@ class="textC"
           >
             <el-option
               v-for="item in riskLevelList"
-              :key="item.windControlName"
+              :key="item.windControlId"
               :label="item.windControlName"
               :value="item.windControlId"
             >
@@ -470,8 +450,12 @@ class="textC"
             @keyup.enter.native="enterSearch"
           ></el-input>
         </el-form-item>
-        <el-form-item v-if="moduleBox === '性别'" label="性别：" prop="code">
-          <el-select v-model="editData.code" placeholder="请选择" @change="changeGender">
+        <el-form-item v-if="moduleBox === '性别'" label="性别：" prop="gender">
+          <el-select
+            v-model="editData.gender"
+            placeholder="请选择"
+            @change="changeGender"
+          >
             <el-option
               v-for="item in genderTypeList"
               :key="item.description"
@@ -574,7 +558,13 @@ export default {
       tableList: [],
       moduleBox: '',
       editVisible: false,
-      editData: { code: '', windControlId: '', labelId: '' },
+      editData: {
+        accountStatus: '',
+        windControlId: '',
+        labelId: '',
+        gender: '',
+        remark: ''
+      },
       page: 1,
       size: 3,
       rules: {
@@ -773,7 +763,6 @@ export default {
     // 添加会员备注
     getMemberRemarkAdd(val) {
       this.$api.getMemberRemarkAdd(val).then((res) => {
-        this.editData = { code: '', windControlId: '', labelId: '' }
         if (res.code === 200) {
           this.refresh()
           this.$message.success('添加成功')
@@ -786,8 +775,9 @@ export default {
       this.$api.setMemberInfoEdit(val).then((res) => {
         if (res.code === 200) {
           this.$message.success(res.msg)
-          this.getOutlineInfo(this.parentData)
-          this.editData = { code: '', windControlId: '', labelId: '' }
+          setTimeout(() => {
+            this.getOutlineInfo(this.parentData)
+          }, 1000)
         }
         this.editVisible = false
       })
@@ -820,10 +810,11 @@ export default {
     editFn(val) {
       this.initGetDics()
       this.moduleBox = val
+      this.editData.remark = ''
       switch (val) {
         case '账号状态':
           this.titel = '备注信息：'
-          this.editData.code = this.outlineInfoList.accountStatus + ''
+          this.editData.accountStatus = this.outlineInfoList.accountStatus + ''
           break
         case '风控层级':
           this.titel = '备注信息：'
@@ -848,6 +839,11 @@ export default {
             }
           }
           break
+        case '性别':
+          this.editData.gender = this.outlineInfoList.gender
+            ? this.outlineInfoList.gender
+            : ''
+          break
         case '账号备注':
           this.titel = '备注信息：'
           break
@@ -857,33 +853,34 @@ export default {
       }
       this.editVisible = true
     },
-     // 备注信息
+    // 备注信息
     expLain() {
       const userId = this.outlineInfoList.id
       this.$confirm(
         `<strong>是否解除该会员充值限制？</strong></br><span style='font-size:12px;color:#c1c1c1'>请谨慎操作</span>`,
         '确认提示',
         {
-        dangerouslyUseHTMLString: true,
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      })
+          dangerouslyUseHTMLString: true,
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }
+      )
         .then(() => {
-          this.$api.getThirdPayWhiteDepositLimit({userId}).then((res) => {
+          this.$api.getThirdPayWhiteDepositLimit({ userId }).then((res) => {
             console.log(res, '90')
-             if (res.code === 200) {
-               console.log(res)
-               this.$message.success('解除会员充值限制成功!')
-                    this.loadData()
-             }
-               this.dialogFormVisible = false
+            if (res.code === 200) {
+              console.log(res)
+              this.$message.success('解除会员充值限制成功!')
+              this.loadData()
+            }
+            this.dialogFormVisible = false
           })
         })
         .catch(() => {})
     },
     changeAccountStatus(val) {
-      this.editData.code = val
+      this.editData.accountStatus = val
     },
     changeWindControlId(val) {
       this.editData.windControlId = val
@@ -908,7 +905,6 @@ export default {
     },
     cancel() {
       this.$refs.editForm.resetFields()
-      this.editData = { code: '', windControlId: '', labelId: '' }
       this.editVisible = false
     },
     submitEdit() {
@@ -924,75 +920,63 @@ export default {
             background: 'rgba(0, 0, 0, 0.7)'
           })
           if (this.moduleBox === '账号状态') {
-            params.accountStatus = params.code
-            data.accountStatusAfter = params
-            delete params.code
-            delete params.labelId
-            delete params.windControlId
+            data.accountStatusAfter = {
+              accountStatus: params.accountStatus,
+              remark: params.remark
+            }
             this.setMemberInfoEdit(data)
             loading.close()
           }
           if (this.moduleBox === '风控层级') {
-            delete params.code
-            delete params.labelId
-            data.windControlAfter = params
+            data.windControlAfter = {
+              windControlId: params.windControlId,
+              windControlName: params.windControlName,
+              remark: params.remark
+            }
             this.setMemberInfoEdit(data)
             loading.close()
           }
           if (this.moduleBox === '会员标签') {
-            delete params.code
-            delete params.windControlId
-            data.labelAfter = params
+            data.labelAfter = {
+              labelId: params.labelId,
+              labelName: params.labelName,
+              remark: params.remark
+            }
             this.setMemberInfoEdit(data)
             loading.close()
           }
           if (this.moduleBox === '出生日期') {
-            delete params.code
-            delete params.labelId
-            delete params.windControlId
-            data.birthAfter = params
+            data.birthAfter = {
+              birth: params.birth,
+              remark: params.remark
+            }
             this.setMemberInfoEdit(data)
             loading.close()
           }
           if (this.moduleBox === '手机号码') {
-            delete params.code
-            delete params.labelId
-            delete params.windControlId
-            data.mobileAfter = params
+            data.mobileAfter = { mobile: params.mobile, remark: params.remark }
             this.setMemberInfoEdit(data)
             loading.close()
           }
           if (this.moduleBox === '姓名') {
-            delete params.code
-            delete params.labelId
-            delete params.windControlId
-            data.realNameAfter = params
+            data.realNameAfter = { realName: params.realName, remark: params.remark }
             this.setMemberInfoEdit(data)
             loading.close()
           }
           if (this.moduleBox === '性别') {
-            delete params.code
-            delete params.labelId
-            delete params.windControlId
-            data.genderAfter = params
+            data.genderAfter = { gender: params.gender, remark: params.remark }
             this.setMemberInfoEdit(data)
             loading.close()
           }
           if (this.moduleBox === '邮箱') {
-            delete params.code
-            delete params.labelId
-            delete params.windControlId
-            data.emailAfter = params
+            data.emailAfter = { email: params.email, remark: params.remark }
             this.setMemberInfoEdit(data)
             loading.close()
           }
           if (this.moduleBox === '账号备注') {
-            delete params.code
-            delete params.labelId
-            delete params.windControlId
-            params.userName = this.parentData.userName
-            params.userId = this.parentData.userId
-            this.getMemberRemarkAdd(params)
+            data.userId = this.parentData.userId
+            data.remark = params.remark
+            this.getMemberRemarkAdd(data)
             loading.close()
           }
         } else {
@@ -1002,7 +986,6 @@ export default {
     },
     closeFormDialog() {
       this.$refs.editForm.resetFields()
-      this.editData = { code: '', windControlId: '', labelId: '' }
       this.editVisible = false
     },
     handleCurrentChange(val) {

@@ -154,7 +154,7 @@
               icon="el-icon-sort"
               :disabled="loading"
               size="medium"
-              @click="subSort = true"
+              @click="subSortadd"
             >
               排序
             </el-button>
@@ -168,9 +168,9 @@
         :destroy-on-close="true"
       >
 
-        <draggable v-model="QueryareaList" @start="onStart" @end="onEnd">
+        <draggable v-model="sortareaList" @start="onStart" @end="onEnd">
           <transition-group>
-            <div v-for="tiem in QueryareaList" :key="tiem.value" class="reach">
+            <div v-for="tiem in sortareaList" :key="tiem.value" class="reach">
               {{ tiem.value }}
             </div>
           </transition-group>
@@ -570,6 +570,7 @@ export default {
   mixins: [list],
   data() {
     return {
+      sortareaList: [],
       QueryareaList: [],
       upTime: Date.now(),
       downTime: endTime,
@@ -633,7 +634,6 @@ export default {
   },
   mounted() {},
   methods: {
-
     loadData() {
       this.loading = true
       const params = {
@@ -856,18 +856,17 @@ export default {
     onEnd() {
       this.drag = false
     },
-
     setoperateConfigBannerSort() {
-       const arr = this.QueryareaList
+       const arr = this.sortareaList
       const newArr = []
       for (let i = 0; i < arr.length; i++) {
         const ele = arr[i]
         newArr.push(ele.code)
       }
-      console.log(this.QueryareaList)
+      console.log(this.sortareaList)
       const sortIds = newArr.join(',')
       const clientType = this.clientType
-      this.$api.operatecCnfigBannerQuerySortedBannerArea({sortIds: sortIds, clientType}).then((res) => {
+      this.$api.setoperateConfigBannerSort({sortIds: sortIds, clientType}).then((res) => {
         if (res.code === 200) {
          this.$message({
             message: '操作成功！',
@@ -878,6 +877,25 @@ export default {
       })
 
       this.loadData()
+    },
+    subSortadd() {
+      // const arr = this.QueryareaList
+      // const newArr = []
+      // for (let i = 0; i < arr.length; i++) {
+      //   const ele = arr[i]
+      //   newArr.push(ele.code)
+      // }
+      // console.log(this.QueryareaList)
+      // const sortIds = newArr.join(',')
+      const clientType = this.clientType
+       this.$api.operatecCnfigBannerQuerySortedBannerArea({clientType}).then((res) => {
+        if (res.code === 200) {
+          this.sortareaList = res.data
+          this.subSort = true
+        }
+      })
+      this.subSort = false
+      console.log('111111111')
     },
     closeImage() {
       this.imgVisible = false

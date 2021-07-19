@@ -14,6 +14,7 @@ import mix from './components/mix'
 import common from './components/common'
 import live from './components/live'
 import game from './components/game'
+import chess from './components/chess'
 import newGame from './components/newGame'
 
 export default {
@@ -22,7 +23,8 @@ export default {
 		common,
 		live,
 		game,
-        newGame
+		newGame,
+        chess
 	},
 	mixins: [list],
 	props: {
@@ -50,7 +52,7 @@ export default {
 			return this.recommendDetails.id
 		},
 		content() {
-			const obj = ['mix', 'common', 'live', 'game', 'newGame']
+			const obj = ['mix', 'common', 'live', 'game', 'newGame', 'chess']
 			const { id } = this.recommendDetails
 			const ModuleUI = new Map([
 				['1', obj[0]],
@@ -58,8 +60,8 @@ export default {
 				['3', obj[0]],
 				['4', obj[2]],
 				['5', obj[0]],
-				['6', obj[1]],
-				['7', obj[1]],
+				['6', obj[5]],
+				['7', obj[5]],
 				['8', obj[4]],
 				['9', obj[1]],
 				['10', obj[3]]

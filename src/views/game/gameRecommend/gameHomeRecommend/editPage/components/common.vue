@@ -1,7 +1,7 @@
 <template>
 	<div class="mix-container">
 		<div class="head">
-			<span class="title">体育模块</span>
+			<span class="title">{{ gameDetails.moduleName }}模块</span>
 			<div class="right-btn">
 				<el-button plain @click="back">取消</el-button>
 				<el-button type="success" @click="confirm(true)">保存</el-button>

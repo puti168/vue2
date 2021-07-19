@@ -434,7 +434,7 @@ export default {
 	},
 	computed: {
 		assortStatusArr() {
-			return this.globalDics.gameStatusType
+			return this.globalDics.gameAssortStatusType
 		},
 		terminalTypeArr() {
 			return this.globalDics.betDeviceType

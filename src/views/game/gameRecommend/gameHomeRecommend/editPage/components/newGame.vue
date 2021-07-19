@@ -18,7 +18,7 @@
 									size="medium"
 									maxlength="20"
 									clearable
-                                    placeholder="请输入2-10位字符"
+									placeholder="请输入2-10位字符"
 									style="width: 365px"
 								></el-input>
 							</el-form-item>
@@ -30,7 +30,7 @@
 									size="medium"
 									maxlength="20"
 									clearable
-                                    placeholder="请输入2-10位字符"
+									placeholder="请输入2-10位字符"
 									style="width: 365px"
 								></el-input>
 							</el-form-item>
@@ -59,7 +59,7 @@
 									v-model="form.moduleCaption"
 									size="medium"
 									show-word-limit
-                                    placeholder="请输入2-100字符"
+									placeholder="请输入2-100字符"
 									type="textarea"
 									maxlength="100"
 									clearable
@@ -71,7 +71,7 @@
 							<el-form-item label="模块描述:">
 								<el-input
 									v-model="form.moduleDesc"
-                                    placeholder="请输入2-100字符"
+									placeholder="请输入2-100字符"
 									show-word-limit
 									type="textarea"
 									size="medium"
@@ -89,51 +89,51 @@
 						prop="pictureOne"
 						style="display:inline-block"
 					>
-                        <UploadItem
-                            ref="imgUpload1"
-                            :upload-file-type="'image'"
-                            :platform="'PC'"
-                            :img-urls="form.pictureOne"
-                            @upoladItemSucess="handleUploadSuccessOne"
-                            @startUpoladItem="handleStartUploadOne"
-                            @deleteUpoladItem="handleDeleteUploadOne"
-                            @upoladItemDefeat="handleUploadDefeatOne"
-                        ></UploadItem>
-<!--                        <p>请上传图片！仅支持</p>-->
+						<UploadItem
+							ref="imgUpload1"
+							:upload-file-type="'image'"
+							:platform="'PC'"
+							:img-urls="form.pictureOne"
+							@upoladItemSucess="handleUploadSuccessOne"
+							@startUpoladItem="handleStartUploadOne"
+							@deleteUpoladItem="handleDeleteUploadOne"
+							@upoladItemDefeat="handleUploadDefeatOne"
+						></UploadItem>
+						<!--                        <p>请上传图片！仅支持</p>-->
 					</el-form-item>
 					<el-form-item
 						label="图片上传2:"
 						prop="pictureTwo"
 						style="display:inline-block"
 					>
-                        <UploadItem
-                            ref="imgUpload2"
-                            :upload-file-type="'image'"
-                            :platform="'PC'"
-                            :img-urls="form.pictureTwo"
-                            @upoladItemSucess="handleUploadSuccess2"
-                            @startUpoladItem="handleStartUpload2"
-                            @deleteUpoladItem="handleDeleteUpload2"
-                            @upoladItemDefeat="handleUploadDefeat2"
-                        ></UploadItem>
-<!--                        <p>请上传图片</p>-->
+						<UploadItem
+							ref="imgUpload2"
+							:upload-file-type="'image'"
+							:platform="'PC'"
+							:img-urls="form.pictureTwo"
+							@upoladItemSucess="handleUploadSuccess2"
+							@startUpoladItem="handleStartUpload2"
+							@deleteUpoladItem="handleDeleteUpload2"
+							@upoladItemDefeat="handleUploadDefeat2"
+						></UploadItem>
+						<!--                        <p>请上传图片</p>-->
 					</el-form-item>
 					<el-form-item
 						label="首页大图上传:"
 						prop="pictureHome"
 						style="display:inline-block"
 					>
-                        <UploadItem
-                            ref="imgUpload3"
-                            :upload-file-type="'image'"
-                            :platform="'PC'"
-                            :img-urls="form.pictureHome"
-                            @upoladItemSucess="handleUploadSuccess3"
-                            @startUpoladItem="handleStartUpload3"
-                            @deleteUpoladItem="handleDeleteUpload3"
-                            @upoladItemDefeat="handleUploadDefeat3"
-                        ></UploadItem>
-<!--                        <p>请上传图片</p>-->
+						<UploadItem
+							ref="imgUpload3"
+							:upload-file-type="'image'"
+							:platform="'PC'"
+							:img-urls="form.pictureHome"
+							@upoladItemSucess="handleUploadSuccess3"
+							@startUpoladItem="handleStartUpload3"
+							@deleteUpoladItem="handleDeleteUpload3"
+							@upoladItemDefeat="handleUploadDefeat3"
+						></UploadItem>
+						<!--                        <p>请上传图片</p>-->
 					</el-form-item>
 					<el-divider></el-divider>
 					<div class="img-title">模块游戏文本信息</div>
@@ -144,9 +144,9 @@
 									v-model="form.bodyTitle"
 									size="medium"
 									maxlength="100"
-                                    type="textarea"
-                                    show-word-limit
-                                    placeholder="请输入2-100字符"
+									type="textarea"
+									show-word-limit
+									placeholder="请输入2-100字符"
 									clearable
 									style="width: 365px"
 								></el-input>
@@ -177,7 +177,7 @@ import list from '@/mixins/list'
 import UploadItem from '../../components/UploadItem'
 
 export default {
-    components: { UploadItem },
+	components: { UploadItem },
 	mixins: [list],
 	props: {
 		gameDetails: {
@@ -194,11 +194,11 @@ export default {
 				moduleCaption: undefined,
 				gameId: undefined,
 				moduleDesc: undefined,
-                pictureHome: undefined,
-                pictureOne: undefined,
-                pictureTwo: undefined,
-                bodyTitle: undefined,
-                contentInfor: undefined
+				pictureHome: undefined,
+				pictureOne: undefined,
+				pictureTwo: undefined,
+				bodyTitle: undefined,
+				contentInfor: undefined
 			},
 			gameAssortDicList: [],
 			editData: undefined,
@@ -254,52 +254,52 @@ export default {
 						trigger: 'change'
 					}
 				],
-                pictureOne: [
+				pictureOne: [
 					{
 						required: true,
 						message: '请选择图片上传',
 						trigger: ['blur', 'change']
 					}
 				],
-                pictureTwo: [
-                    {
-                        required: true,
-                        message: '请选择图片上传',
-                        trigger: ['blur', 'change']
-                    }
-                ],
-                pictureHome: [
-                    {
-                        required: true,
-                        message: '请选择图片上传',
-                        trigger: ['blur', 'change']
-                    }
-                ],
-                bodyTitle: [
-                    {
-                        required: true,
-                        message: '请输入正文标题',
-                        trigger: 'blur'
-                    },
-                    {
-                        min: 2,
-                        max: 100,
-                        message: '长度在 2 到 100 个字符',
-                        trigger: 'blur'
-                    }
-                ],
-                contentInfor: [
+				pictureTwo: [
+					{
+						required: true,
+						message: '请选择图片上传',
+						trigger: ['blur', 'change']
+					}
+				],
+				pictureHome: [
+					{
+						required: true,
+						message: '请选择图片上传',
+						trigger: ['blur', 'change']
+					}
+				],
+				bodyTitle: [
+					{
+						required: true,
+						message: '请输入正文标题',
+						trigger: 'blur'
+					},
+					{
+						min: 2,
+						max: 100,
+						message: '长度在 2 到 100 个字符',
+						trigger: 'blur'
+					}
+				],
+				contentInfor: [
 					{
 						required: true,
 						message: '请输入内容信息',
 						trigger: 'blur'
 					},
-                    {
-                        min: 2,
-                        max: 300,
-                        message: '长度在 2 到 300 个字符',
-                        trigger: 'blur'
-                    }
+					{
+						min: 2,
+						max: 300,
+						message: '长度在 2 到 300 个字符',
+						trigger: 'blur'
+					}
 				]
 			}
 		}
@@ -323,41 +323,41 @@ export default {
 			this.action = action
 			this.visible = true
 		},
-        save(action) {
-            this.loading = true
-            const params = {
-                ...this.form
-            }
-            this.$refs['form'].validate((valid) => {
-                if (valid) {
-                    this.$api
-                        .editGameLatestModuleAPI(params)
-                        .then((res) => {
-                            this.loading = false
-                            const { code, msg } = res
-                            if (code === 200) {
-                                this.$message({
-                                    message: '保存成功',
-                                    type: 'success'
-                                })
-                                this.$parent.back()
-                            } else {
-                                this.$message({
-                                    message: msg,
-                                    type: 'error'
-                                })
-                            }
-                        })
-                        .catch(() => {
-                            this.loading = false
-                        })
-                }
-            })
+		save(action) {
+			this.loading = true
+			const params = {
+				...this.form
+			}
+			this.$refs['form'].validate((valid) => {
+				if (valid) {
+					this.$api
+						.editGameLatestModuleAPI(params)
+						.then((res) => {
+							this.loading = false
+							const { code, msg } = res
+							if (code === 200) {
+								this.$message({
+									message: '保存成功',
+									type: 'success'
+								})
+								this.$parent.back()
+							} else {
+								this.$message({
+									message: msg,
+									type: 'error'
+								})
+							}
+						})
+						.catch(() => {
+							this.loading = false
+						})
+				}
+			})
 
-            setTimeout(() => {
-                this.loading = false
-            }, 1000)
-        },
+			setTimeout(() => {
+				this.loading = false
+			}, 1000)
+		},
 		changeType(evt) {},
 		gameAssortList() {
 			this.$api.gameAssortDicAPI().then((res) => {
@@ -377,6 +377,14 @@ export default {
 					const { code, data } = res
 					if (code === 200) {
 						this.form = { ...data }
+						this.$nextTick(() => {
+							this.$refs.imgUpload1.state = 'image'
+							this.$refs.imgUpload2.state = 'image'
+							this.$refs.imgUpload3.state = 'image'
+							this.$refs.imgUpload1.fileUrl = data.pictureOne
+							this.$refs.imgUpload2.fileUrl = data.pictureTwo
+							this.$refs.imgUpload3.fileUrl = data.pictureHome
+						})
 					} else {
 						// this.editData = undefined
 					}
@@ -387,45 +395,45 @@ export default {
 				this.loading = false
 			}, 1500)
 		},
-        handleStartUploadOne() {
-            this.$message.info('图片开始上传')
-        },
-        handleUploadSuccessOne(data) {
-            this.form.pictureOne = data.file.imgUrl
-        },
-        handleUploadDefeatOne() {
-            this.form.pictureOne = ''
-            this.$message.error('图片上传失败')
-        },
-        handleDeleteUploadOne() {
-            this.form.pictureOne = ''
-        },
-        handleStartUpload2() {
-            this.$message.info('图片开始上传')
-        },
-        handleUploadSuccess2(data) {
-            this.form.pictureTwo = data.file.imgUrl
-        },
-        handleUploadDefeat2() {
-            this.form.pictureTwo = ''
-            this.$message.error('图片上传失败')
-        },
-        handleDeleteUpload2() {
-            this.form.pictureTwo = ''
-        },
-        handleStartUpload3() {
-            this.$message.info('图片开始上传')
-        },
-        handleUploadSuccess3(data) {
-            this.form.pictureHome = data.file.imgUrl
-        },
-        handleUploadDefeat3() {
-            this.form.pictureHome = ''
-            this.$message.error('图片上传失败')
-        },
-        handleDeleteUpload3() {
-            this.form.pictureHome = ''
-        }
+		handleStartUploadOne() {
+			this.$message.info('图片开始上传')
+		},
+		handleUploadSuccessOne(data) {
+			this.form.pictureOne = data.file.imgUrl
+		},
+		handleUploadDefeatOne() {
+			this.form.pictureOne = ''
+			this.$message.error('图片上传失败')
+		},
+		handleDeleteUploadOne() {
+			this.form.pictureOne = ''
+		},
+		handleStartUpload2() {
+			this.$message.info('图片开始上传')
+		},
+		handleUploadSuccess2(data) {
+			this.form.pictureTwo = data.file.imgUrl
+		},
+		handleUploadDefeat2() {
+			this.form.pictureTwo = ''
+			this.$message.error('图片上传失败')
+		},
+		handleDeleteUpload2() {
+			this.form.pictureTwo = ''
+		},
+		handleStartUpload3() {
+			this.$message.info('图片开始上传')
+		},
+		handleUploadSuccess3(data) {
+			this.form.pictureHome = data.file.imgUrl
+		},
+		handleUploadDefeat3() {
+			this.form.pictureHome = ''
+			this.$message.error('图片上传失败')
+		},
+		handleDeleteUpload3() {
+			this.form.pictureHome = ''
+		}
 	}
 }
 </script>
