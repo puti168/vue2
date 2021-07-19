@@ -310,9 +310,8 @@ export default {
             const item = this.vipRiskList.find((item) => item.id === this.form.vipId)
 			const params = {
 				...this.form,
-                vipSerialNum: item.gradeNum
+                vipSerialNum: item && item.gradeNum
 			}
-			console.log('params', params)
 			let lock = true
 			this.$refs['form'].validate((valid) => {
 				if (valid && lock) {
