@@ -164,6 +164,15 @@
 						>
 							删除
 						</el-button>
+						<el-button
+                            v-if="hasPermission('371')"
+							type="primary"
+							:disabled="scope.row.lockStatus === '0'"
+							size="medium"
+							@click="UnlockStatusUser(scope.row)"
+						>
+							解锁
+						</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
@@ -428,6 +437,49 @@ export default {
 				userName: ''
 			}
 			this.loadData()
+		},
+		UnlockStatusUser(item) {
+
+			const loading = this.$loading({
+				lock: true,
+				text: 'Loading',
+				spinner: 'el-icon-loading',
+				background: 'rgba(0, 0, 0, 0.7)'
+			})
+			const { id,  status} = item
+			this.$confirm(`<strong>确定解锁该账号吗?</strong>`, `确认提示`, {
+				dangerouslyUseHTMLString: true,
+				confirmButtonText: '确定',
+				cancelButtonText: '取消',
+				type: 'warning'
+			})
+				.then(() => {
+					this.$api.unLockUser({ id, status })
+							.then((res) => {
+								loading.close()
+								const { code } = res
+								if (code === 200) {
+									this.$message.success('解锁成功')
+								} else {
+									this.$message({
+										type: 'error',
+										message: '解锁失败!'
+									})
+								}
+
+								this.loadData()
+							})
+							.catch(() => {
+								loading.close()
+							})
+				})
+				.catch(() => {
+					loading.close()
+				})
+			setTimeout(() => {
+				loading.close()
+			}, 1000)
+			
 		}
 	}
 }

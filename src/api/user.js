@@ -53,6 +53,14 @@ export function getUsers(data) {
 		data
 	})
 }
+
+export function unLockUser(data) {
+	return request({
+		url: '/userInfo/unLockUser',
+		method: 'post',
+		data
+	})
+}
 // 字典列表选择框
 export function getSecurityDictList(params) {
 	return request({
@@ -266,5 +274,6 @@ export default {
 	getMemberMemberInfoByLabelId,
 	setMemberDeleteLabel,
 	getMemberLabelChangeRecordPage,
-	googleAuth
+	googleAuth,
+	unLockUser
 }
