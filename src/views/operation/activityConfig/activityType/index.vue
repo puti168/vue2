@@ -16,15 +16,14 @@
 						size="medium"
 						placeholder="请选择"
 						clearable
-						value-key="code"
 						style="width: 365px"
 						@change="changeType($event)"
 					>
 						<el-option
 							v-for="item in activityTypeArr"
 							:key="item.code"
-                            :label="item.description"
-							:value="item"
+							:label="item.description"
+							:value="item.description"
 						></el-option>
 					</el-select>
 					<el-button
@@ -229,6 +228,7 @@ export default {
 			let lock = true
 			params.activityType = params.activityCode * 1
 			delete params.activityCode
+			console.log('params', params)
 			this.$refs['form'].validate((valid) => {
 				if (valid && lock) {
 					lock = false
@@ -276,12 +276,12 @@ export default {
 		changeType(evt) {
 			this.$refs['form'] && this.$refs['form'].resetFields()
 			this.showInfoData = undefined
-			// console.log('evt', evt)
+            const item = this.activityTypeArr.find((item) => item.description === evt)
 			this.queryData = {
-				activityType: evt.description,
-				activityCode: evt.code
+				activityType: item.description,
+				activityCode: item.code
 			}
-			this.queryDetails(evt.code)
+			this.queryDetails(item.code)
 		},
 		// 开始拖拽事件
 		onStart() {
