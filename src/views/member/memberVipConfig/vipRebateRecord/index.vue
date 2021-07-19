@@ -221,10 +221,10 @@ export default {
   mounted() {},
   methods: {
     changeSelect(val) {
-      console.log(val)
+      console.log(val, 6546556)
       const arr = []
-      for (let i = 0; i < this.gameIdList.length; i++) {
-        const ele = this.gameIdList[i]
+      for (let i = 0; i < this.gameTypeList.length; i++) {
+        const ele = this.gameTypeList[i]
         for (let j = 0; j < val.length; j++) {
           const str = val[j]
           if (ele.id === str) {
