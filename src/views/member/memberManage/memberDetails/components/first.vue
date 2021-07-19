@@ -367,7 +367,7 @@ class="textC"
           >
             <el-option
               v-for="item in riskLevelList"
-              :key="item.windControlName"
+              :key="item.windControlId"
               :label="item.windControlName"
               :value="item.windControlId"
             >
