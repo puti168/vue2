@@ -39,11 +39,14 @@
 					<el-form-item label="游戏名称:" class="tagheight">
 						<el-select
 							v-model="queryData.gameId"
-							style="width: 300px"
-							multiple
-							placeholder="全部"
-							:popper-append-to-body="false"
+                            size="medium"
+                            placeholder="默认选择全部"
+                            clearable
+                            multiple
+                            :maxlength="10"
+                            style="width: 300px"
 						>
+							<el-option label="全部" value="all"></el-option>
 							<el-option
 								v-for="item in gameIdList"
 								:key="item.gameId"
@@ -194,13 +197,11 @@ export default {
 				typeOptions: [],
 				venueId: [],
 				vipSerialNum: [],
-				gameId: []
+				gameId: ['all']
 			},
 			gameIdList: [],
 			VipGradeList: [],
 			gameTypeList: [],
-			gameId: [],
-
 			searchTime: [startTime, endTime],
 			now: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
 			summary: {
@@ -217,6 +218,20 @@ export default {
 		},
 		memberVipOperateType() {
 			return this.globalDics.memberVipOperateType
+		},
+		gameId() {
+			return this.queryData.gameId
+		}
+	},
+	watch: {
+        gameId(newVal, oldVal) {
+			const newIdx = newVal.indexOf('all')
+			const oldIdx = oldVal.indexOf('all')
+			if (newIdx !== -1 && oldIdx === -1 && newVal.length > 1) {
+				this.queryData.gameId = ['all']
+			} else if (newIdx !== -1 && oldIdx !== -1 && newVal.length > 1) {
+				this.queryData.gameId.splice(newVal.indexOf('all'), 1)
+			}
 		}
 	},
 	created() {
@@ -224,7 +239,9 @@ export default {
 		this.geiVipGrade()
 		// this.geiVipBackwaterGrade()
 	},
-	mounted() {},
+	mounted() {
+	    this.geiVipBackwaterGrade()
+    },
 	methods: {
 		changeSelect(val) {
 			const arr = [...val]
@@ -272,6 +289,10 @@ export default {
 			params = {
 				...this.getParams(params)
 			}
+			params.gameId =
+				params.gameId && params.gameId.length && params.gameId[0] !== 'all'
+					? params.gameId
+					: undefined
 			this.$api
 				.getRebateRecordSelectRecords(params)
 				.then((res) => {

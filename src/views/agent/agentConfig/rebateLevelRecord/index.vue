@@ -26,7 +26,7 @@
 								style="width: 300px"
           >
             <el-option
-              v-for="item in enumProxyGradeOperateArr"
+              v-for="item in enumProxyCommissionOperateArr"
               :key="item.code"
               :label="item.description"
               :value="item.code"
@@ -89,7 +89,7 @@
           <el-table-column prop="operateField" align="center" label="变更类型">
             <template slot-scope="scope">
               <span v-if="!!(scope.row.operateField+'')">
-                {{ typeFilter(scope.row.operateField, 'enumProxyGradeOperate') }}
+                {{ typeFilter(scope.row.operateField, 'enumProxyCommissionOperate') }}
               </span>
               <span v-else>-</span>
             </template>
@@ -166,8 +166,8 @@ export default {
     }
   },
 	computed: {
-		enumProxyGradeOperateArr() {
-			return this.globalDics.enumProxyGradeOperate
+		enumProxyCommissionOperateArr() {
+			return this.globalDics.enumProxyCommissionOperate
 		}
 	},
   mounted() {},

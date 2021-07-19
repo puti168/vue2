@@ -48,7 +48,7 @@
 					<div>会员标签: {{ list.memberLabelName }}</div>
 				</div>
 				<div class="review-flex">
-					<div>VIP等级: {{ list.memberVipLevel }}</div>
+					<div>VIP等级: VIP{{ list.memberVipLevel }}</div>
 					<div>银行卡数量: {{ list.bankCardNum }}</div>
 					<div>虚拟账号数量: {{ list.virtureAccountNum }}</div>
 					<div>备注信息: {{ list.memberRemark }}</div>
