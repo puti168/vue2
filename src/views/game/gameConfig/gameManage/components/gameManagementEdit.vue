@@ -199,19 +199,19 @@
           </el-form-item>
             </el-col>
              <el-col :span="12">
-              <el-form-item label="配置返水:" prop="gamePlatform">
+              <el-form-item label="配置返水:" prop="configRebateStatus">
                 <el-select
-                  v-model="form.gamePlatform"
+                  v-model="form.configRebateStatus"
                   size="medium"
                   placeholder="请选择"
                   clearable
                   style="width: 365px"
                 >
                   <el-option
-                    v-for="item in gamePlantList"
-                    :key="item.gameCode"
-                    :label="item.gameName"
-                    :value="item.gameCode"
+                    v-for="item in configRebateStatus"
+                    :key="item.code"
+                    :label="item.description"
+                    :value="item.code"
                   ></el-option>
                 </el-select>
               </el-form-item>
@@ -335,6 +335,7 @@ export default {
         gameLabelParam2: {},
         gameLabelParam3: {},
         accessInfo: '',
+        configRebateStatus: '',
         description: '',
         remark: ''
       },
@@ -361,6 +362,9 @@ export default {
     },
     betDeviceType() {
       return this.globalDics.betDeviceType
+    },
+    configRebateStatus() {
+      return this.globalDics.configRebateStatus
     },
     rules() {
       const valiIMG = (rule, value, callback) => {

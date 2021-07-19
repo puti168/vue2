@@ -271,6 +271,15 @@
 						width="160px"
 					></el-table-column>
 					<el-table-column
+						prop="configRebateStatus"
+						align="center"
+						label="配置返水"
+					>
+					<template slot-scope="scope">
+							{{ moduleFilter(scope.row.configRebateStatus) }}
+						</template>
+					</el-table-column>
+					<el-table-column
 						prop="createdBy"
 						align="center"
 						label="创建人"
