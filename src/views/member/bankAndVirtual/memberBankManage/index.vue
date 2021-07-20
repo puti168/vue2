@@ -313,7 +313,7 @@
 					<el-table-column
 						prop="cardNumber"
 						align="center"
-						width="200px"
+						width="200"
 						label="银行卡号"
 					>
 						<template slot-scope="scope">
@@ -451,7 +451,7 @@
 							</el-popover>
 						</template>
 					</el-table-column>
-					<el-table-column prop="bindUserName" align="center" width="120px">
+					<el-table-column prop="bindUserName" align="center" width="120">
 						<template slot="header">
 							当前绑定会员账号
 							<br />
@@ -472,7 +472,7 @@
 					<el-table-column
 						prop="withdrawalSuccessNum"
 						align="center"
-						width="120px"
+						width="120"
 					>
 						<template slot="header">
 							会员提款成功次数
@@ -495,7 +495,7 @@
 						prop="withdrawalTotalAmount"
 						align="center"
 						label="会员提款总金额"
-						width="120px"
+						width="120"
 					>
 						<template slot-scope="scope">
 							<span v-if="scope.row.withdrawalTotalAmount !== null">
@@ -507,7 +507,7 @@
 					<el-table-column
 						prop="proxyWithdrawalSuccessNum"
 						align="center"
-						width="120px"
+						width="120"
 					>
 						<template slot="header">
 							代理提款成功次数
@@ -530,10 +530,10 @@
 						prop="proxyWithdrawalTotalAmount"
 						align="center"
 						label="代理提款总金额"
-						width="120px"
+						width="120"
 					>
 						<template slot-scope="scope">
-							<span v-if="scope.row.proxyWithdrawalTotalAmount !== null">
+							<span v-if="!!scope.row.proxyWithdrawalTotalAmount">
 								{{ scope.row.proxyWithdrawalTotalAmount }}
 							</span>
 							<span v-else>-</span>
@@ -544,17 +544,24 @@
 						align="center"
 						label="银行卡新增时间"
 						sortable="custom"
-						width="160px"
-					></el-table-column>
+						width="160"
+					>
+                        <template slot-scope="scope">
+							<span v-if="!!scope.row.createdAt">
+								{{ scope.row.createdAt }}
+							</span>
+                            <span v-else>-</span>
+                        </template>
+                    </el-table-column>
 					<el-table-column
 						prop="withdrawalTime"
 						align="center"
 						label="最近提款时间"
-						width="160px"
+						width="160"
 						sortable="custom"
 					>
 						<template slot-scope="scope">
-							<span v-if="scope.row.withdrawalTime !== null">
+							<span v-if="!!scope.row.withdrawalTime">
 								{{ scope.row.withdrawalTime }}
 							</span>
 							<span v-else>-</span>
@@ -564,20 +571,34 @@
 						prop="updatedBy"
 						align="center"
 						label="最近操作人"
-						width="120px"
-					></el-table-column>
+						width="120"
+					>
+                        <template slot-scope="scope">
+							<span v-if="!!scope.row.updatedBy">
+								{{ scope.row.updatedBy }}
+							</span>
+                            <span v-else>-</span>
+                        </template>
+                    </el-table-column>
 					<el-table-column
 						prop="updatedAt"
 						align="center"
 						label="最近操作时间"
-						width="160px"
+						width="160"
 						sortable="custom"
-					></el-table-column>
+					>
+                        <template slot-scope="scope">
+							<span v-if="!!scope.row.updatedAt">
+								{{ scope.row.updatedAt }}
+							</span>
+                            <span v-else>-</span>
+                        </template>
+                    </el-table-column>
 					<el-table-column
 						prop="operation"
 						align="center"
 						label="操作"
-						width="160px"
+						width="160"
 					>
 						<template slot-scope="scope">
 							<el-button
