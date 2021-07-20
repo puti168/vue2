@@ -117,8 +117,19 @@
 							label="保级有效期（天）"
 						>
 							<template slot-scope="scope">
-								<span v-if="scope.row.relegationValidPeriod * 1">
-									{{ scope.row.relegationValidPeriod }}
+								<span v-if="scope.row.vipSerialNum * 1">
+									<el-input-number
+										v-model="scope.row.relegationValidPeriod"
+										size="medium"
+										:max="9999999999"
+										:precision="0"
+										:min="0"
+										placeholder="请输入"
+										style="width: 180px"
+										@blur="
+											checkTransferValue(scope.row, 'relegationValidPeriod')
+										"
+									></el-input-number>
 								</span>
 								<span v-else>0</span>
 							</template>
@@ -128,7 +139,7 @@
 			</div>
 			<div class="btn_footer">
 				<el-button
-                    v-if="hasPermission('246')"
+					v-if="hasPermission('246')"
 					type="primary"
 					icon="el-icon-search"
 					size="medium"
