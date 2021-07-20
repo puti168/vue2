@@ -142,7 +142,7 @@
 							style="width: 100px"
 							:maxlength="10"
 							name="amountMin"
-							oninput="value=value.replace(/[^\d]/g,'')"
+							oninput="value=value.replace(/[^(\-?)\d+]/ig,'')"
 							@blur="checkValue($event)"
 						></el-input>
 						-
@@ -153,7 +153,7 @@
 							style="width: 100px"
 							:maxlength="10"
 							name="amountMax"
-							oninput="value=value.replace(/[^\d]/g,'')"
+							oninput="value=value.replace(/[^(\-?)\d+]/ig,'')"
 							@blur="checkValue($event)"
 						></el-input>
 					</el-form-item>
