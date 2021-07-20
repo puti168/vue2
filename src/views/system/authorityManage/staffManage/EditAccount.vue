@@ -368,6 +368,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+/deep/ .el-checkbox {
+   width: 80%;
+}
 .edit-drawer {
 	.card {
 		margin: 0 15px;
