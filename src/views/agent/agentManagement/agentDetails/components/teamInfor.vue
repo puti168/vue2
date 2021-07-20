@@ -103,53 +103,53 @@ icon="el-icon-refresh"
     <el-row class="msgList" style="margin-bottom: 30px">
       <el-col :span="4">
         今日活动： <i v-if="activeL" class="el-icon-loading"></i>
-        <span v-else> {{ resBettingList.todayActive }} </span>
+        <span v-else> {{ resBettingList.todayActivityAmount }} </span>
       </el-col>
       <el-col :span="4">
         今日返水： <i v-if="activeL" class="el-icon-loading"></i>
-        <span v-else> {{ resBettingList.todayCashRebate }} </span>
+        <span v-else> {{ resBettingList.todayReturnWaterAmount }} </span>
       </el-col>
       <el-col :span="16">
         今日总派彩： <i v-if="activeL" class="el-icon-loading"></i>
-        <span v-else> {{ resBettingList.todayPayout }} </span>
+        <span v-else> {{ resBettingList.todayPayAmount }} </span>
       </el-col>
       <el-col :span="4">
         今日总投注： <i v-if="activeL" class="el-icon-loading"></i>
-        <span v-else> {{ resBettingList.todayBet }} </span>
+        <span v-else> {{ resBettingList.todayBetAmount }} </span>
       </el-col>
       <el-col :span="4">
         今日总有效投注： <i v-if="activeL" class="el-icon-loading"></i>
-        <span v-else> {{ resBettingList.todayEffectiveBet }} </span>
+        <span v-else> {{ resBettingList.todayValidAmount }} </span>
       </el-col>
       <el-col :span="16">
         今日总输赢： <i v-if="activeL" class="el-icon-loading"></i>
-        <span v-else> {{ resBettingList.todayWinAndLose }} </span>
+        <span v-else> {{ resBettingList.todayNetAmount }} </span>
       </el-col>
     </el-row>
     <el-row class="msgList">
       <el-col :span="4">
         本月活动： <i v-if="activeL" class="el-icon-loading"></i>
-        <span v-else> {{ resBettingList.monthActive }} </span>
+        <span v-else> {{ resBettingList.monthActivityAmount }} </span>
       </el-col>
       <el-col :span="4">
         本月返水： <i v-if="activeL" class="el-icon-loading"></i>
-        <span v-else> {{ resBettingList.monthCashRebate }} </span>
+        <span v-else> {{ resBettingList.monthReturnWaterAmount }} </span>
       </el-col>
       <el-col :span="16">
         本月总派彩： <i v-if="activeL" class="el-icon-loading"></i>
-        <span v-else> {{ resBettingList.monthPayout }} </span>
+        <span v-else> {{ resBettingList.monthPayAmount }} </span>
       </el-col>
       <el-col :span="4">
         本月总投注： <i v-if="activeL" class="el-icon-loading"></i>
-        <span v-else> {{ resBettingList.monthBet }} </span>
+        <span v-else> {{ resBettingList.monthBetAmount }} </span>
       </el-col>
       <el-col :span="4">
         本月总有效投注： <i v-if="activeL" class="el-icon-loading"></i>
-        <span v-else> {{ resBettingList.monthEffectiveBet }} </span>
+        <span v-else> {{ resBettingList.monthValidAmount }} </span>
       </el-col>
       <el-col :span="16">
         本月总输赢： <i v-if="activeL" class="el-icon-loading"></i>
-        <span v-else> {{ resBettingList.monthWinAndLose }} </span>
+        <span v-else> {{ resBettingList.monthNetAmount }} </span>
       </el-col>
     </el-row>
     <el-divider></el-divider>
