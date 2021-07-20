@@ -96,7 +96,6 @@
 						size="medium"
 						placeholder="请输入金额"
 						clearable
-						onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
 						maxlength="11"
 						style="width: 365px"
 					></el-input>
@@ -218,7 +217,11 @@ export default {
 			]
 
 			const amount = [
-				{ required: true, message: '请输入调整金额', trigger: 'blur' }
+				{ required: true, message: '请输入调整金额', trigger: 'blur' },
+				{
+					pattern: /(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/,
+					message: '请输入正确的金额,可保留两位小数'
+				}
 			]
 
 			const accountBalance = [
@@ -269,10 +272,10 @@ export default {
 		},
 		searchBalance() {
 			const { userName, userType } = this.queryData
-            this.$refs.form.clearValidate('adjustType')
-            this.$refs.form.clearValidate('amount')
-            this.$refs.form.clearValidate('accountBalance')
-            this.$refs.form.clearValidate('remark')
+			this.$refs.form.clearValidate('adjustType')
+			this.$refs.form.clearValidate('amount')
+			this.$refs.form.clearValidate('accountBalance')
+			this.$refs.form.clearValidate('remark')
 			this.$refs.form.validateField('userName', (errMsg) => {
 				if (!errMsg) {
 					this.loading = true
@@ -355,9 +358,9 @@ export default {
 				imageAnnexId: undefined,
 				imageAddress: undefined
 			}
-            this.$nextTick(() => {
-                this.$refs.imgUpload && this.$refs.imgUpload.handleDeleteImgUrl()
-            })
+			this.$nextTick(() => {
+				this.$refs.imgUpload && this.$refs.imgUpload.handleDeleteImgUrl()
+			})
 		},
 		checkRiskValue(val) {
 			console.log('val', val)
