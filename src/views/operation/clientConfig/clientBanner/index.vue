@@ -491,7 +491,7 @@
                 <el-option label="外部地址" :value="2"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item v-if="dialogForm.linkTarget === 0 && dialogForm.isLink === 1" label="游戏:" :rules="[ {required: true,}]">
+            <el-form-item v-if="dialogForm.linkTarget === 0 && dialogForm.isLink === 1" prop="targetUrl" label="游戏:" :rules="[ {required: true,message: '请选择游戏'}]">
               <el-select v-model="dialogForm.targetUrl" placeholder="获取创建的游戏" class="region">
                 <el-option
                   v-for="item in QueryGameList"
