@@ -131,8 +131,11 @@
 					</el-table-column>
 					<el-table-column prop="client" align="center" label="显示终端">
 						<template slot-scope="scope">
+							<span v-if="scope.row.pageName === 1 ">
+                                 --
+							</span>
 							<span
-								v-if="
+								v-else-if="
 									!!scope.row.clientType || scope.row.clientType + '' === '0'
 								"
 							>
@@ -143,7 +146,10 @@
 					</el-table-column>
 					<el-table-column prop="fieldName" align="center" label="名称">
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.fieldName">
+							<span v-if="scope.row.pageName === 1 ">
+                                 --
+							</span>
+							<span v-else-if="!!scope.row.fieldName">
 								{{ scope.row.fieldName }}
 							</span>
 							<span v-else>-</span>
