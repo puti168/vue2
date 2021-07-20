@@ -445,7 +445,7 @@
         v-loading="loading"
         size="mini"
         class="small-size-table"
-        :data="gameList"
+        :data="addactiveList"
         :header-cell-style="getRowClass"
       >
         <el-table-column prop="playerId" align="center" label="会员账号">
@@ -505,9 +505,9 @@
         :data="winOrLoseList"
         :header-cell-style="getRowClass"
       >
-        <el-table-column prop="playerId" align="center" label="场馆">
+        <el-table-column prop="venueName" align="center" label="场馆">
         </el-table-column>
-        <el-table-column prop="playerName" align="center" label="总输赢">
+        <el-table-column prop="netAmount" align="center" label="总输赢">
         </el-table-column>
         <el-table-column
           prop="depositAmount"
@@ -634,7 +634,7 @@
         :data="backwaterList"
         :header-cell-style="getRowClass"
       >
-        <el-table-column prop="provideName" align="center" label="返水项目">
+        <el-table-column prop="venueName" align="center" label="返水项目">
         </el-table-column>
         <el-table-column prop="userCount" align="center" label="人数">
         </el-table-column>
@@ -674,7 +674,7 @@
         v-loading="loading"
         size="mini"
         class="small-size-table"
-        :data="gameList"
+        :data="effectiveList"
         :header-cell-style="getRowClass"
       >
         <el-table-column prop="playerId" align="center" label="会员账号">
@@ -746,6 +746,11 @@
           prop="validBetAmount"
           align="center"
           label="有效投注"
+        ></el-table-column>
+        <el-table-column
+          prop="bindDate"
+          align="center"
+          label="绑定时间"
         ></el-table-column>
       </el-table>
       <div slot="footer" class="dialog-footer">
