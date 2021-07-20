@@ -803,8 +803,12 @@ export default {
       const [startTime, endTime] = create
       let params = {
         ...this.queryData,
-        accountTypeList: this.queryData.accountTypeList.join(','),
-        accountStatusList: this.queryData.accountStatusList.join(','),
+        accountTypeList: this.queryData.accountTypeList
+          ? this.queryData.accountTypeList.join(',')
+          : [],
+        accountStatusList: this.queryData.accountStatusList
+          ? this.queryData.accountStatusList.join(',')
+          : [],
         startTime: startTime ? dayjs(startTime).format('YYYY-MM-DD') : '',
         endTime: endTime ? dayjs(endTime).format('YYYY-MM-DD') : ''
       }
@@ -1002,7 +1006,7 @@ export default {
     },
     reset() {
       this.pageNum = 1
-      this.queryData = { accountTypeList: [] }
+      this.queryData = {}
       this.searchTime = [startTime, endTime]
       this.$refs['form'].resetFields()
       this.loadData()
