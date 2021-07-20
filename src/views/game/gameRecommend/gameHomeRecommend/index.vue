@@ -116,6 +116,7 @@
 										{{ scope.row.moduleStatus === 0 ? '启用' : '禁用' }}
 									</el-button>
 									<el-button
+                                        :disabled="scope.row.moduleStatus === 1"
 										type="primary"
 										icon="el-icon-edit"
 										size="medium"
