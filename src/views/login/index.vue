@@ -88,6 +88,7 @@
 <script>
 // import { validUsername } from '@/utils/validate'
 import Cookies from 'js-cookie'
+import Finger from '@/utils/fingerprintjs2'
 
 const devLoginForm = {
 	username: 'admin',
@@ -189,18 +190,21 @@ export default {
 				if (valid && lock) {
 					this.loading = true
 					lock = false
-					this.$store
-						.dispatch('user/login', this.loginForm)
-						.then(() => {
-							console.log('push进入页面')
-							this.$router.push({ path: this.redirect || '/' })
-							this.loading = false
-						})
-						.catch(() => {
-							this.timestamp = +new Date()
-							this.loading = false
-							lock = false
-						})
+					Finger.load().then((res) => {
+					    this.loginForm.finger = res
+						this.$store
+							.dispatch('user/login', this.loginForm)
+							.then(() => {
+								console.log('push进入页面')
+								this.$router.push({ path: this.redirect || '/' })
+								this.loading = false
+							})
+							.catch(() => {
+								this.timestamp = +new Date()
+								this.loading = false
+								lock = false
+							})
+					})
 				} else {
 					console.log('error submit!!')
 					return false
