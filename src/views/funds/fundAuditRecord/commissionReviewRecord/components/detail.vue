@@ -510,7 +510,7 @@
         <el-table-column prop="netAmount" align="center" label="总输赢">
         </el-table-column>
         <el-table-column
-          prop="depositAmount"
+          prop="validBetAmount"
           align="center"
           label="有效投注"
         ></el-table-column>
@@ -939,7 +939,7 @@ export default {
       this.dialogVisible = true
       this.$api.ProxyCommissionRecordSubordinate(params).then((res) => {
         if (res.code === 200) {
-          this.total = res.data.total
+          this.total = res.data.totalRecord
           this.gameList = res.data.record
         }
       })
@@ -956,7 +956,7 @@ export default {
       this.dialogaddactive = true
       this.$api.ProxyCommissionRecordAddSubordinate(params).then((res) => {
         if (res.code === 200) {
-          this.total = res.data.total
+          this.total = res.data.totalRecord
           this.addactiveList = res.data.record
         }
       })
@@ -971,9 +971,9 @@ export default {
       params.proxyId = this.rowData.proxyId
       params.pageSize = this.size
       this.dialogEffVisible = true
-       this.$api.ProxyCommissionRecordVenueFee(params).then((res) => {
+       this.$api.ProxyCommissionRecordValidSubordinate(params).then((res) => {
         if (res.code === 200) {
-          this.total = res.data.total
+          this.total = res.data.totalRecord
           this.effectiveList = res.data.record
         }
       })
@@ -990,7 +990,7 @@ export default {
        this.diawinOrLoseList = true
        this.$api.ProxyCommissionRecordTotalWinOrLose(params).then((res) => {
         if (res.code === 200) {
-          this.total = res.data.total
+          this.total = res.data.totalRecord
           this.winOrLoseList = res.data.record
         }
       })
@@ -1007,7 +1007,7 @@ export default {
        this.dialogVenuefee = true
        this.$api.ProxyCommissionRecordVenueFee(params).then((res) => {
         if (res.code === 200) {
-          this.total = res.data.total
+          this.total = res.data.totalRecord
           this.venueFeeList = res.data.record
         }
       })
@@ -1024,7 +1024,7 @@ export default {
       this.dialogDiscount = true
       this.$api.ProxyCommissionRecordTotalDiscount(params).then((res) => {
         if (res.code === 200) {
-          this.total = res.data.total
+          this.total = res.data.totalRecord
           this.discountList = res.data.record
         }
       })
@@ -1040,7 +1040,7 @@ export default {
       params.pageSize = this.size
       this.$api.ProxyCommissionRecordTotalRebate(params).then((res) => {
         if (res.code === 200) {
-          this.total = res.data.total
+          this.total = res.data.totalRecord
           this.backwaterList = res.data.record
           this.dialogBackwater = true
         }
@@ -1057,7 +1057,7 @@ export default {
       params.pageSize = this.size
       this.$api.ProxyCommissionRecordValidAddSubordinate(params).then((res) => {
         if (res.code === 200) {
-          this.total = res.data.total
+          this.total = res.data.totalRecord
           this.dinateList = res.data.record
           this.dialogDinate = true
         }
@@ -1074,7 +1074,7 @@ export default {
       params.pageSize = this.size
       this.$api.ProxyCommissionRecordLastMonthBalance(params).then((res) => {
         if (res.code === 200) {
-          this.total = res.data.total
+          this.total = res.data.totalRecord
           this.balanceList = res.data.record
           this.dialogBalance = true
         }

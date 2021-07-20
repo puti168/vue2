@@ -1095,10 +1095,9 @@ export default {
       params.pageSize = this.size
       this.dialogVisible = true
       this.$api.ProxyCommissionRecordSubordinate(params).then((res) => {
-        console.log(params, '11111')
         if (res.code === 200) {
           this.gameList = res.data.record
-          this.total = res.data.total
+          this.total = res.data.totalRecord
         }
       })
     },
@@ -1116,7 +1115,7 @@ export default {
          console.log(params, '11111')
         if (res.code === 200) {
           this.addactiveList = res.data.record
-          this.total = res.data.total
+          this.total = res.data.totalRecord
         }
       })
     },
@@ -1133,7 +1132,7 @@ export default {
        this.$api.ProxyCommissionRecordTotalWinOrLose(params).then((res) => {
         if (res.code === 200) {
           this.winOrLoseList = res.data.record
-          this.total = res.data.total
+          this.total = res.data.totalRecord
         }
       })
     },
@@ -1151,7 +1150,7 @@ export default {
          console.log(params, '11111')
         if (res.code === 200) {
           this.discountList = res.data.record
-          this.total = res.data.total
+          this.total = res.data.totalRecord
         }
       })
     },
@@ -1169,7 +1168,7 @@ export default {
         if (res.code === 200) {
           this.backwaterList = res.data.record
           this.dialogBackwater = true
-          this.total = res.data.total
+          this.total = res.data.totalRecord
         }
       })
     },
@@ -1183,10 +1182,11 @@ export default {
       params.proxyId = this.rowData.proxyId
       params.pageSize = this.size
       this.dialogEffVisible = true
-       this.$api.ProxyCommissionRecordVenueFee(params).then((res) => {
+       this.$api.ProxyCommissionRecordValidSubordinate(params).then((res) => {
         if (res.code === 200) {
+          console.log(res, 'res')
           this.effectiveList = res.data.record
-          this.total = res.data.total
+          this.total = res.data.totalRecord
         }
       })
     },
@@ -1202,7 +1202,7 @@ export default {
       this.$api.ProxyCommissionRecordValidAddSubordinate(params).then((res) => {
         if (res.code === 200) {
           this.dinateList = res.data.record
-          this.total = res.data.total
+          this.total = res.data.totalRecord
           this.dialogDinate = true
         }
       })
@@ -1219,7 +1219,7 @@ export default {
        this.dialogVenuefee = true
        this.$api.ProxyCommissionRecordVenueFee(params).then((res) => {
         if (res.code === 200) {
-          this.total = res.data.total
+          this.total = res.data.totalRecord
           this.venueFeeList = res.data.record
         }
       })
@@ -1235,7 +1235,7 @@ export default {
       params.pageSize = this.size
       this.$api.ProxyCommissionRecordLastMonthBalance(params).then((res) => {
         if (res.code === 200) {
-          this.total = res.data.total
+          this.total = res.data.totalRecord
           this.balanceList = res.data.record
           this.dialogBalance = true
         }
