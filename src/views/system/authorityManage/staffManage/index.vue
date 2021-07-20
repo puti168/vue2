@@ -439,14 +439,13 @@ export default {
 			this.loadData()
 		},
 		UnlockStatusUser(item) {
-
 			const loading = this.$loading({
 				lock: true,
 				text: 'Loading',
 				spinner: 'el-icon-loading',
 				background: 'rgba(0, 0, 0, 0.7)'
 			})
-			const { id,  status} = item
+			const { id, status } = item
 			this.$confirm(`<strong>确定解锁该账号吗?</strong>`, `确认提示`, {
 				dangerouslyUseHTMLString: true,
 				confirmButtonText: '确定',
@@ -479,7 +478,6 @@ export default {
 			setTimeout(() => {
 				loading.close()
 			}, 1000)
-			
 		}
 	}
 }
