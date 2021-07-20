@@ -40,7 +40,6 @@ service.interceptors.request.use(
 			config.headers['X-Request-Sys'] = 1
 			config.headers['Content-Type'] = 'application/json;charset=UTF-8'
 		}
-		config.headers['X-Request-Browser'] = Finger.get()
 		config.headers['key_param'] =
 			process.env.VUE_APP_KEY_ID + '|platform|application|v0.9.0'
 		// get请求是否加密开关
@@ -53,6 +52,7 @@ service.interceptors.request.use(
 			config.headers['ob-nonce'] = nonce
 			config.headers['ob-timestamp'] = timestamp
 			config.headers['ob-sign'] = sign
+			config.headers['X-Request-Browser'] = Finger.get()
 			// config.headers['zr-encrypted'] = true
 			// if (config.data && !config.data.append) {
 			//     return encrypt.encryptData(config)
@@ -76,6 +76,7 @@ service.interceptors.request.use(
 			// }
 			config.headers['ob-timestamp'] = timestamp
 			config.headers['ob-sign'] = sign
+			config.headers['X-Request-Browser'] = Finger.get()
 			// config.headers['zr-encrypted'] = false
 		}
 		return config
