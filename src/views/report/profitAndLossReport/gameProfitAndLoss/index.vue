@@ -722,7 +722,8 @@ export default {
       this.queryData = {}
       this.searchTime = [startTime, endTime]
       this.pageNum = 1
-      this.initData()
+      this.handleCheckAllChange(true)
+      this.search()
     },
     dialogData(val) {
       this.pageR = 1

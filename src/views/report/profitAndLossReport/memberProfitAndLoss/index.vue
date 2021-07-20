@@ -1009,7 +1009,7 @@ export default {
       this.queryData = {}
       this.searchTime = [startTime, endTime]
       this.$refs['form'].resetFields()
-      this.loadData()
+      this.search()
     },
     _changeTableSort({ column, prop, order }) {
       switch (prop) {
