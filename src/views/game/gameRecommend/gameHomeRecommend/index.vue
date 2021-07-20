@@ -142,7 +142,11 @@
 							:header-cell-style="getRowClass"
 							@sort-change="_changeTableSort"
 						>
-							<el-table-column prop="displayOrder" align="center" label="模块顺序">
+							<el-table-column
+								prop="displayOrder"
+								align="center"
+								label="模块顺序"
+							>
 								<template slot-scope="scope">
 									<span v-if="!!scope.row.displayOrder">
 										{{ scope.row.displayOrder }}
@@ -231,7 +235,7 @@
 									<el-button
 										type="primary"
 										icon="el-icon-edit"
-                                        :disabled="scope.row.moduleStatus === 1"
+										:disabled="scope.row.moduleStatus === 1"
 										size="medium"
 										@click="openDetails(scope.row)"
 									>
@@ -256,7 +260,11 @@
 							:header-cell-style="getRowClass"
 							@sort-change="_changeTableSort"
 						>
-							<el-table-column prop="displayOrder" align="center" label="模块顺序">
+							<el-table-column
+								prop="displayOrder"
+								align="center"
+								label="模块顺序"
+							>
 								<template slot-scope="scope">
 									<span v-if="!!scope.row.displayOrder">
 										{{ scope.row.displayOrder }}
@@ -280,7 +288,9 @@
 								<template slot-scope="scope">
 									<p
 										:class="
-											scope.row.moduleStatus === 1 ? 'normalRgba' : 'disableRgba'
+											scope.row.moduleStatus === 1
+												? 'normalRgba'
+												: 'disableRgba'
 										"
 									>
 										{{ scope.row.moduleStatus === 1 ? '开启中' : '已禁用' }}
@@ -343,7 +353,7 @@
 									<el-button
 										type="primary"
 										icon="el-icon-edit"
-                                        :disabled="scope.row.moduleStatus === 1"
+										:disabled="scope.row.moduleStatus === 1"
 										size="medium"
 										@click="openDetails(scope.row)"
 									>
@@ -416,16 +426,18 @@ export default {
 			this.loadData()
 		},
 		save() {
-			const gameModuleVos =
+			let gameModuleVos =
 				this.dataList.map((item) => {
 					return {
 						displayOrder: item.displayOrder,
 						id: item.id
 					}
 				}) || []
+			gameModuleVos = JSON.parse(JSON.stringify(gameModuleVos))
 			const params = {
 				gameModuleVos
 			}
+			console.log('params', params)
 			this.$api
 				.gameModuleSortAPI(params)
 				.then((res) => {
@@ -561,12 +573,9 @@ export default {
 			this.sortable =
 				wrapperTr &&
 				Sortable.create(wrapperTr, {
-					ghostClass: 'droppable-area',
 					animation: 300,
 					delay: 0,
 					onEnd: ({ newIndex, oldIndex }) => {
-						console.log('newIndex', newIndex)
-						console.log('oldIndex', oldIndex)
 						const currRow = _this.dataList.splice(oldIndex, 1)[0]
 						_this.dataList.splice(newIndex, 0, currRow)
 						if (newIndex !== oldIndex) {
@@ -575,8 +584,10 @@ export default {
 									item.displayOrder = idx + 1
 								})
 							})
-                            _this.save()
 						}
+						setTimeout(() => {
+							_this.save()
+						}, 1000)
 					}
 				})
 		}
