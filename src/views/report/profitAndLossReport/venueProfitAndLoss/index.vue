@@ -555,6 +555,7 @@ export default {
         arr.push(ele)
       }
       this.gameCodeList = val ? arr : []
+      this.checkAll = val
       this.isIndeterminate = false
     },
     handleCheckedCitiesChange(val) {
@@ -567,7 +568,8 @@ export default {
       this.queryData = {}
       this.searchTime = [startTime, endTime]
       this.pageNum = 1
-      this.initData()
+      this.handleCheckAllChange(true)
+      this.search()
     },
     dialogData(val) {
       this.pageR = 1

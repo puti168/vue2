@@ -528,7 +528,7 @@ export default {
       this.queryData = {}
       this.searchTime = [startTime, endTime]
       this.pageNum = 1
-      this.loadData()
+      this.search()
     },
     filterDecimals: function (val) {
       if (typeof val === 'number') {
