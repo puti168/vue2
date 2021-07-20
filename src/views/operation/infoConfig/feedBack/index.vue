@@ -187,7 +187,7 @@
 <script>
 import list from '@/mixins/list'
 import dayjs from 'dayjs'
-import foundIn from './components/gameManagementEdit'
+import foundIn from './components/foundIn'
 const startTime = dayjs().startOf('day').valueOf()
 const endTime = dayjs().endOf('day').valueOf()
 
