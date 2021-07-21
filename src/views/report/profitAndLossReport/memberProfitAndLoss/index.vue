@@ -156,74 +156,80 @@
               @blur="checkValue($event)"
             ></el-input>
           </el-form-item>
-          <el-form-item label="投注金额:">
-            <el-input
+          <el-form-item label="投注金额:" class="numberBox">
+            <el-input-number
               v-model="queryData.betAmountMin"
               size="medium"
               placeholder="最小数值"
               style="width: 100px"
-              maxlength="15"
+              :min="0"
+              :max="999999999999999.99"
+              :precision="2"
               name="betAmountMin"
-              oninput="value=value.replace(/[^\d]/g,'')"
               @blur="checkValue($event)"
-            ></el-input>
+            ></el-input-number>
             -
-            <el-input
+            <el-input-number
               v-model="queryData.betAmountMax"
               size="medium"
               placeholder="最大数值"
               style="width: 100px"
-              maxlength="15"
-              oninput="value=value.replace(/[^\d]/g,'')"
+              :min="0"
+              :max="999999999999999.99"
+              :precision="2"
               name="betAmountMax"
               @blur="checkValue($event)"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
-          <el-form-item label="有效投注:">
-            <el-input
+          <el-form-item label="有效投注:" class="numberBox">
+            <el-input-number
               v-model="queryData.validBetAmountMin"
               size="medium"
               placeholder="最小数值"
               style="width: 100px"
-              maxlength="15"
+              :min="0"
+              :max="999999999999999.99"
+              :precision="2"
               name="validBetAmountMin"
-              oninput="value=value.replace(/[^\d]/g,'')"
               @blur="checkValue($event)"
-            ></el-input>
+            ></el-input-number>
             -
-            <el-input
+            <el-input-number
               v-model="queryData.validBetAmountMax"
               size="medium"
               placeholder="最大数值"
               style="width: 100px"
-              maxlength="15"
-              oninput="value=value.replace(/[^\d]/g,'')"
+              :min="0"
+              :max="999999999999999.99"
+              :precision="2"
               name="validBetAmountMax"
               @blur="checkValue($event)"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
-          <el-form-item label="投注盈亏:">
-            <el-input
+          <el-form-item label="投注盈亏:" class="numberBox">
+            <el-input-number
               v-model="queryData.netAmountMin"
               size="medium"
               placeholder="最小数值"
               style="width: 100px"
-              maxlength="15"
+              :min="-999999999999999.99"
+              :max="999999999999999.99"
+              :precision="2"
               name="netAmountMin"
-              oninput="value=value.replace(/[^\d]/g,'')"
               @blur="checkValue($event)"
-            ></el-input>
+            ></el-input-number>
             -
-            <el-input
+            <el-input-number
               v-model="queryData.netAmountMax"
               size="medium"
               placeholder="最大数值"
               style="width: 100px"
-              maxlength="15"
-              oninput="value=value.replace(/[^\d]/g,'')"
+              :min="-999999999999999.99"
+              :max="999999999999999.99"
+              :precision="2"
               name="netAmountMax"
               @blur="checkValue($event)"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
           <el-form-item>
             <el-button
@@ -1123,9 +1129,12 @@ export default {
               type: 'warning',
               message: `投注金额最小值不能大于最大值`
             })
-            this.queryData.betAmountMin = ''
-          } else {
+            this.queryData.betAmountMin = undefined
+          } else if (value !== '' && value * 1 > 0) {
+            console.log('6465456464', value * 1)
             this.queryData.betAmountMin = value
+          } else {
+            this.queryData.betAmountMin = undefined
           }
           break
         case 'betAmountMax':
@@ -1138,9 +1147,11 @@ export default {
               type: 'warning',
               message: `投注金额最大值不能小于最小值`
             })
-            this.queryData.betAmountMax = ''
-          } else {
+            this.queryData.betAmountMax = undefined
+          } else if (value !== '' && value * 1 > 0) {
             this.queryData.betAmountMax = value
+          } else {
+            this.queryData.betAmountMax = undefined
           }
           break
 
@@ -1154,9 +1165,11 @@ export default {
               type: 'warning',
               message: `有效投注最小值不能大于最大值`
             })
-            this.queryData.validBetAmountMin = ''
-          } else {
+            this.queryData.validBetAmountMin = undefined
+          } else if (value !== '' && value * 1 > 0) {
             this.queryData.validBetAmountMin = value
+          } else {
+            this.queryData.validBetAmountMin = undefined
           }
           break
         case 'validBetAmountMax':
@@ -1169,9 +1182,11 @@ export default {
               type: 'warning',
               message: `有效投注最大值不能小于最小值`
             })
-            this.queryData.validBetAmountMax = ''
-          } else {
+            this.queryData.validBetAmountMax = undefined
+          } else if (value !== '' && value * 1 > 0) {
             this.queryData.validBetAmountMax = value
+          } else {
+            this.queryData.validBetAmountMax = undefined
           }
           break
         case 'netAmountMin':
@@ -1184,9 +1199,11 @@ export default {
               type: 'warning',
               message: `投注盈亏最小值不能大于最大值`
             })
-            this.queryData.netAmountMin = ''
-          } else {
+            this.queryData.netAmountMin = undefined
+          } else if (value !== '') {
             this.queryData.netAmountMin = value
+          } else {
+            this.queryData.netAmountMin = undefined
           }
           break
         case 'netAmountMax':
@@ -1199,9 +1216,11 @@ export default {
               type: 'warning',
               message: `投注盈亏最大值不能小于最小值`
             })
-            this.queryData.netAmountMax = ''
-          } else {
+            this.queryData.netAmountMax = undefined
+          } else if (value !== '') {
             this.queryData.netAmountMax = value
+          } else {
+            this.queryData.netAmountMax = undefined
           }
           break
       }
