@@ -505,7 +505,7 @@
             v-if="dialogForm.linkTarget === 1"
               label="URL链接:"
               prop="targetUrl"
-              :rules="[{ required: true }]"
+              :rules="[{ required: true,message: '请输入链接' }]"
             >
               <el-input
                 v-model="dialogForm.targetUrl"
@@ -518,7 +518,7 @@
             v-if="dialogForm.linkTarget === 2"
               label="URL链接:"
               prop="targetUrl"
-              :rules="[{ required: true }]"
+              :rules="[{ required: true,message: '请输入链接' }]"
             >
               <el-input
                 v-model="dialogForm.targetUrl"
@@ -737,7 +737,6 @@ export default {
           if (res.code === 200) {
             console.log(res)
             this.$message.success('新增成功!')
-            this.loadData()
           }
           this.dialogFormVisible = false
         })
