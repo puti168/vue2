@@ -857,8 +857,6 @@ export default {
 			}
 			delete params.registerTime
 			delete params.lastLoginTime
-			delete params.pageNum
-			delete params.pageSize
 			this.$confirm(
 				`<strong>是否导出?</strong></br><span style='font-size:12px;color:#c1c1c1'>数据过大时，请耐心等待</span>`,
 				'确认提示',
