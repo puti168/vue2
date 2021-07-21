@@ -135,27 +135,25 @@
 						</el-select>
 					</el-form-item>
 					<el-form-item label="账变金额 :">
-						<el-input
+						<el-input-number
 							v-model="queryData.amountMin"
 							size="medium"
 							placeholder="最小数值"
 							style="width: 100px"
 							:maxlength="10"
 							name="amountMin"
-							oninput="value=value.replace(/[^(\-?)\d+]/ig,'')"
 							@blur="checkValue($event)"
-						></el-input>
+						></el-input-number>
 						-
-						<el-input
+						<el-input-number
 							v-model="queryData.amountMax"
 							size="medium"
 							placeholder="最大数值"
 							style="width: 100px"
 							:maxlength="10"
 							name="amountMax"
-							oninput="value=value.replace(/[^(\-?)\d+]/ig,'')"
 							@blur="checkValue($event)"
-						></el-input>
+						></el-input-number>
 					</el-form-item>
 
 					<el-form-item>
@@ -355,51 +353,21 @@
 						label="账变前金额"
 						width="120px"
 						sortable="custom"
-					>
-						<template slot-scope="scope">
-							<span
-								v-if="
-									!!scope.row.changeBefore ||
-										scope.row.changeBefore + '' === '0'
-								"
-							>
-								{{ scope.row.changeBefore }}
-							</span>
-							<span v-else>-</span>
-						</template>
-					</el-table-column>
+					></el-table-column>
 					<el-table-column
 						prop="amount"
 						align="center"
 						width="130"
 						sortable="custom"
 						label="账变金额"
-					>
-						<template slot-scope="scope">
-							<span v-if="!!scope.row.amount || scope.row.amount + '' === '0'">
-								{{ scope.row.amount }}
-							</span>
-							<span v-else>-</span>
-						</template>
-					</el-table-column>
+					></el-table-column>
 					<el-table-column
 						prop="changeAfter"
 						align="center"
 						label="账变后金额"
 						width="120"
 						sortable="custom"
-					>
-						<template slot-scope="scope">
-							<span
-								v-if="
-									!!scope.row.changeAfter || scope.row.changeAfter + '' === '0'
-								"
-							>
-								{{ scope.row.changeAfter }}
-							</span>
-							<span v-else>-</span>
-						</template>
-					</el-table-column>
+					></el-table-column>
 					<el-table-column
 						prop="occurDt"
 						align="center"
@@ -697,40 +665,101 @@ export default {
 			this.loadData()
 		}
 	},
-	checkValue(e) {
-		const { name, value } = e.target
-		switch (name) {
-			case 'netAmountMax':
-				if (
-					!!this.queryData.netAmountMin &&
-					value &&
-					value * 1 < this.queryData.netAmountMin * 1
-				) {
-					this.$message({
-						type: 'warning',
-						message: `账变金额输入最大值不能小于最小值`
-					})
-				} else {
-					this.queryData.netAmountMax = value
-				}
-				break
-			case 'netAmountMin':
-				if (
-					!!this.queryData.netAmountMax &&
-					value &&
-					value * 1 > this.queryData.netAmountMax * 1
-				) {
-					this.$message({
-						type: 'warning',
-						message: `账变金额输入最小值不能大于最大值`
-					})
-				} else {
-					this.queryData.netAmountMin = value
-				}
-				break
-		}
-	},
-
+	// checkValue(e) {
+	// 	console.log();
+	// 	const { name, value } = e.target
+	// 	switch (name) {
+	// 		case 'amountMax':
+	// 			if (
+	// 				!!this.queryData.amountMin &&
+	// 				value &&
+	// 				value * 1 < this.queryData.amountMin * 1
+	// 			) {
+	// 				this.$message({
+	// 					type: 'warning',
+	// 					message: `账变金额输入最大值不能小于最小值`
+	// 				})
+	// 			} else {
+	// 				this.queryData.amountMax = value
+	// 			}
+	// 			break
+	// 		case 'amountMin':
+	// 			if (
+	// 				!!this.queryData.amountMax &&
+	// 				value &&
+	// 				value * 1 > this.queryData.amountMax * 1
+	// 			) {
+	// 				this.$message({
+	// 					type: 'warning',
+	// 					message: `账变金额输入最小值不能大于最大值`
+	// 				})
+	// 			} else {
+	// 				this.queryData.amountMin = value
+	// 			}
+	// 			break
+	// 	}
+	// },
+checkValue(e) {
+      const { name, value } = e.target
+      switch (name) {
+        case 'vipSerialNumMax':
+          if (
+            !!this.queryData.vipSerialNumMin &&
+            value &&
+            value * 1 < this.queryData.vipSerialNumMin * 1
+          ) {
+            this.$message({
+              type: 'warning',
+              message: `VIP等级输入最大值不能小于最小值`
+            })
+          } else {
+            this.queryData.vipSerialNumMax = value
+          }
+          break
+        case 'vipSerialNumMin':
+          if (
+            !!this.queryData.vipSerialNumMax &&
+            value &&
+            value * 1 > this.queryData.vipSerialNumMax * 1
+          ) {
+            this.$message({
+              type: 'warning',
+              message: `VIP等级输入最小值不能大于最大值`
+            })
+          } else {
+            this.queryData.vipSerialNumMin = value
+          }
+          break
+        case 'amountMax':
+          if (
+            !!this.queryData.amountMin &&
+            value &&
+            value * 1 < this.queryData.amountMin * 1
+          ) {
+            this.$message({
+              type: 'warning',
+              message: `账变金额输入最大值不能小于最小值`
+            })
+          } else {
+            this.queryData.amountMax = value
+          }
+          break
+        case 'amountMin':
+          if (
+            !!this.queryData.amountMax &&
+            value &&
+            value * 1 > this.queryData.amountMax * 1
+          ) {
+            this.$message({
+              type: 'warning',
+              message: `账变金额输入最小值不能大于最大值`
+            })
+          } else {
+            this.queryData.amountMin = value
+          }
+          break
+      }
+    },
 	enterSearch() {
 		this.loadData()
 	}

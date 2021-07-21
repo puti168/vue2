@@ -171,27 +171,25 @@
             </el-select>
           </el-form-item>
           <el-form-item label="账变金额 :">
-            <el-input
+            <el-input-number
               v-model="queryData.amountMin"
               size="medium"
               placeholder="最小数值"
               style="width: 100px"
               :maxlength="10"
               name="amountMin"
-              oninput="value=value.replace(/[^\d]/g,'')"
               @blur="checkValue($event)"
-            ></el-input>
+            ></el-input-number>
             -
-            <el-input
+            <el-input-number
               v-model="queryData.amountMax"
               size="medium"
               placeholder="最大数值"
               style="width: 100px"
               :maxlength="10"
               name="amountMax"
-              oninput="value=value.replace(/[^\d]/g,'')"
               @blur="checkValue($event)"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
 
           <el-form-item>
