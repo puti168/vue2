@@ -170,28 +170,30 @@
               ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="账变金额 :">
-            <el-input
+          <el-form-item label="账变金额 :" class="numberBox">
+            <el-input-number
               v-model="queryData.amountMin"
               size="medium"
               placeholder="最小数值"
               style="width: 100px"
-              :maxlength="10"
+              :min="-9999999999.99"
+              :max="9999999999.99"
+              :precision="2"
               name="amountMin"
-              oninput="value=value.replace(/[^\d]/g,'')"
               @blur="checkValue($event)"
-            ></el-input>
+            ></el-input-number>
             -
-            <el-input
+            <el-input-number
               v-model="queryData.amountMax"
               size="medium"
               placeholder="最大数值"
               style="width: 100px"
-              :maxlength="10"
+              :min="-9999999999.99"
+              :max="9999999999.99"
+              :precision="2"
               name="amountMax"
-              oninput="value=value.replace(/[^\d]/g,'')"
               @blur="checkValue($event)"
-            ></el-input>
+            ></el-input-number>
           </el-form-item>
 
           <el-form-item>
@@ -213,7 +215,7 @@
               重置
             </el-button>
             <el-button
-             v-if="hasPermission('260')"
+              v-if="hasPermission('260')"
               icon="el-icon-download"
               type="warning"
               :disabled="loading"
@@ -547,20 +549,6 @@ export default {
             this.queryData.vipSerialNumMin = value
           }
           break
-        case 'amountMax':
-          if (
-            !!this.queryData.amountMin &&
-            value &&
-            value * 1 < this.queryData.amountMin * 1
-          ) {
-            this.$message({
-              type: 'warning',
-              message: `账变金额输入最大值不能小于最小值`
-            })
-          } else {
-            this.queryData.amountMax = value
-          }
-          break
         case 'amountMin':
           if (
             !!this.queryData.amountMax &&
@@ -571,8 +559,26 @@ export default {
               type: 'warning',
               message: `账变金额输入最小值不能大于最大值`
             })
-          } else {
+          } else if (value !== '') {
             this.queryData.amountMin = value
+          } else {
+            this.queryData.amountMin = undefined
+          }
+          break
+        case 'amountMax':
+          if (
+            !!this.queryData.amountMin &&
+            value &&
+            value * 1 < this.queryData.amountMin * 1
+          ) {
+            this.$message({
+              type: 'warning',
+              message: `账变金额输入最大值不能小于最小值`
+            })
+          } else if (value !== '') {
+            this.queryData.amountMax = value
+          } else {
+            this.queryData.amountMax = undefined
           }
           break
       }
@@ -766,5 +772,13 @@ export default {
 }
 /deep/.el-table::after {
   position: relative !important;
+}
+.numberBox /deep/.el-input-number__decrease,
+.numberBox /deep/.el-input-number__increase {
+  display: none;
+}
+.numberBox /deep/.el-input__inner {
+  padding: 0 15px;
+  text-align: left;
 }
 </style>
