@@ -97,7 +97,7 @@
 								<el-select
 									v-model="form.relationOtherGameId"
 									size="medium"
-									placeholder="默认选择全部"
+									placeholder="请选择"
 									multiple
 									clearable
 									style="width: 300px"
@@ -278,7 +278,8 @@
 							:nowImage="nowImage"
 							@uploadSuccess="uploadSuccess"
 						></Upload>
-						<p class="imgTip">
+						<p v-if="false" class="imgTip">
+							<!--  产品说：先不显示这个文字吧，后面我们给你们了支持格式，你们再显示  -->
 							请上传图片！图片格式仅支持png,图片尺寸： ？？ 图片大小不超过？？
 						</p>
 					</el-form-item>
