@@ -423,6 +423,7 @@
             </el-form-item>
             <el-form-item></el-form-item>
             <el-form-item
+              class="time"
               label="上架时间:"
               label-width="112px"
               :rules="[{ required: true }]"
@@ -687,6 +688,7 @@ export default {
       this.upTime = Date.now()
       this.downTime = endTime
       this.dialogFormVisible = true
+      this.addOrEdit = 'add'
     },
 
     clear() {
@@ -956,6 +958,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.time{
+  margin-left: 22px;
+}
 .game-container .params{
   padding-block: 22px;
 }
