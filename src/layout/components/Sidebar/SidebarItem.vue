@@ -1,7 +1,12 @@
 <template>
 	<div class="menu-wrapper">
 		<template
-			v-if="hasOneShowingChild(item.children,item) && (!onlyOneChild.children||onlyOneChild.noShowingChildren)&&!item.alwaysShow && !item.hidden"
+			v-if="
+				hasOneShowingChild(item.children, item) &&
+					(!onlyOneChild.children || onlyOneChild.noShowingChildren) &&
+					!item.alwaysShow &&
+					!item.hidden
+			"
 		>
 			<app-link v-if="onlyOneChild.meta" :to="resolvePath(onlyOneChild.path)">
 				<el-badge :value="showNumber(item.meta.title)" class="pop-star">
@@ -117,17 +122,27 @@ export default {
 		showNumber(name) {
 			switch (name) {
 				case '会员账户修改审核':
-					return this.$store.state.user.auditUpdateInfoUser > 0 ? this.$store.state.user.auditUpdateInfoUser : null
+					return this.$store.state.user.auditUpdateInfoUser || undefined
 				case '新增会员审核':
-					return this.$store.state.user.auditNewUser > 0 ? this.$store.state.user.auditNewUser : null
+					return this.$store.state.user.auditNewUser || undefined
 				case '代理账户修改审核':
-					return this.$store.state.user.auditUpdateInfoAgent > 0 ? this.$store.state.user.auditUpdateInfoAgent : null
+					return this.$store.state.user.auditUpdateInfoAgent || undefined
 				case '会员溢出审核':
-					return this.$store.state.user.auditPatchAgent > 0 ? this.$store.state.user.auditPatchAgent : null
+					return this.$store.state.user.auditPatchAgent || undefined
 				case '新增代理审核':
-					return this.$store.state.user.auditNewAgent > 0 ? this.$store.state.user.auditNewAgent : null
+					return this.$store.state.user.auditNewAgent || undefined
 				case '会员转代审核':
-					return this.$store.state.user.auditChangeAgent > 0 ? this.$store.state.user.auditChangeAgent : null
+					return this.$store.state.user.auditChangeAgent || undefined
+				case '会员提款审核':
+					return this.$store.state.user.auditMemberWithdrawUser || undefined
+				case '代理提款审核':
+					return this.$store.state.user.auditProxyWithdrawAgent || undefined
+				case '会员人工加额审核':
+					return this.$store.state.user.auditMemberArtificialAddUser || undefined
+				case '代理人工加额审核':
+					return this.$store.state.user.auditProxyArtificialAddAgent || undefined
+				case '佣金审核':
+					return this.$store.state.user.auditProxyCommissionAgent || undefined
 			}
 		},
 		resolvePath(routePath) {

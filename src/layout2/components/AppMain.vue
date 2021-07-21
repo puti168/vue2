@@ -100,14 +100,14 @@ export default {
 				this.$store.state.user.token
 			this.wss = new WebSocket(url)
 			this.wss.binaryType = 'arraybuffer'
-			const thiss = this
+			const _this = this
 			this.wss.onopen = function() {
 				// 成功后发起心跳
-				thiss.timer = window.setInterval(thiss.sendHeart, 5000)
+				_this.timer = window.setInterval(_this.sendHeart, 5000)
 			}
 			this.wss.onmessage = function(event) {
-				const msg = JSON.parse(thiss.decrypte(event.data))
-				const jsonStr = JSON.parse(JSON.parse(thiss.decrypte(event.data)).body)
+				const msg = JSON.parse(_this.decrypte(event.data))
+				const jsonStr = JSON.parse(JSON.parse(_this.decrypte(event.data)).body)
 				if (msg.commandId !== 1) {
 					console.log('有消息来了')
 					console.log(msg)
@@ -115,69 +115,90 @@ export default {
 				}
 
 				if (msg.commandId === 100) {
-					thiss.$store.dispatch('user/setAudit', {
+					_this.$store.dispatch('user/setAudit', {
 						value: jsonStr.auditNewUser,
 						type: 'auditNewUser'
 					})
-					thiss.$store.dispatch('user/setAudit', {
+					_this.$store.dispatch('user/setAudit', {
 						value: jsonStr.auditUpdateInfoUser,
 						type: 'auditUpdateInfoUser'
 					})
-					thiss.$store.dispatch('user/setAudit', {
+					_this.$store.dispatch('user/setAudit', {
 						value: jsonStr.auditNewAgent,
 						type: 'auditNewAgent'
 					})
-					thiss.$store.dispatch('user/setAudit', {
+					_this.$store.dispatch('user/setAudit', {
 						value: jsonStr.auditUpdateInfoAgent,
 						type: 'auditUpdateInfoAgent'
 					})
-					thiss.$store.dispatch('user/setAudit', {
+					_this.$store.dispatch('user/setAudit', {
 						value: jsonStr.auditChangeAgent,
 						type: 'auditChangeAgent'
 					})
-					thiss.$store.dispatch('user/setAudit', {
+					_this.$store.dispatch('user/setAudit', {
 						value: jsonStr.auditPatchAgent,
 						type: 'auditPatchAgent'
 					})
+                    // 资金模块
+                    _this.$store.dispatch('user/setAudit', {
+                        value: jsonStr.auditMemberWithdrawUser,
+                        type: 'auditMemberWithdrawUser'
+                    })
+                    _this.$store.dispatch('user/setAudit', {
+                        value: jsonStr.auditProxyWithdrawAgent,
+                        type: 'auditProxyWithdrawAgent'
+                    })
+                    _this.$store.dispatch('user/setAudit', {
+                        value: jsonStr.auditMemberArtificialAddUser,
+                        type: 'auditMemberArtificialAddUser'
+                    })
+                    _this.$store.dispatch('user/setAudit', {
+                        value: jsonStr.auditProxyArtificialAddAgent,
+                        type: 'auditProxyArtificialAddAgent'
+                    })
+                    _this.$store.dispatch('user/setAudit', {
+                        value: jsonStr.auditProxyCommissionAgent,
+                        type: 'auditProxyCommissionAgent'
+                    })
 				} else if (msg.commandId === 101) {
-					thiss.$store.dispatch('user/setAudit', {
+					_this.$store.dispatch('user/setAudit', {
 						value: jsonStr.count,
 						type: 'auditNewUser'
 					})
 				} else if (msg.commandId === 102) {
-					thiss.$store.dispatch('user/setAudit', {
+					_this.$store.dispatch('user/setAudit', {
 						value: jsonStr.count,
 						type: 'auditUpdateInfoUser'
 					})
 				} else if (msg.commandId === 103) {
-					thiss.$store.dispatch('user/setAudit', {
+					_this.$store.dispatch('user/setAudit', {
 						value: jsonStr.count,
 						type: 'auditNewAgent'
 					})
 				} else if (msg.commandId === 104) {
-					thiss.$store.dispatch('user/setAudit', {
+					_this.$store.dispatch('user/setAudit', {
 						value: jsonStr.count,
 						type: 'auditUpdateInfoAgent'
 					})
 				} else if (msg.commandId === 105) {
-					thiss.$store.dispatch('user/setAudit', {
+					_this.$store.dispatch('user/setAudit', {
 						value: jsonStr.count,
 						type: 'auditChangeAgent'
 					})
 				} else if (msg.commandId === 106) {
-					thiss.$store.dispatch('user/setAudit', {
+					_this.$store.dispatch('user/setAudit', {
 						value: jsonStr.count,
 						type: 'auditPatchAgent'
 					})
 				}
 			}
 			this.wss.onclose = function() {
-				window.clearInterval(thiss.timer)
+				window.clearInterval(_this.timer)
 				this.canWs = true
 				// TODO:暂时关闭重连机制
 				// setTimeout(() => {
 				// 	if (this.canWs) {
-				// 		thiss.ws()
+				// 		_this.ws()
 				// 	}
 				// }, 10000)
 			}
