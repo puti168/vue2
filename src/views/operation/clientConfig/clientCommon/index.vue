@@ -155,6 +155,22 @@
 						style="width: 365px"
 					></el-input>
 				</el-form-item>
+				<el-form-item
+					v-else-if="[8].includes(queryData.operateType)"
+					label="客服充值地址"
+					prop="Hospitality"
+				>
+					<!--                    客服充值地址-->
+					<el-input
+						v-model="queryData.Hospitality"
+						size="medium"
+						maxlength="70"
+						oninput="value=value.replace(/[\u4E00-\u9FA5]/g ,'')"
+						placeholder="请输入"
+						clearable
+						style="width: 365px"
+					></el-input>
+				</el-form-item>
 				<el-form-item label="备注:" prop="remark">
 					<el-input
 						v-model="queryData.remark"
@@ -178,7 +194,11 @@
 					>
 						提交
 					</el-button>
-					<el-button icon="el-icon-refresh-left" size="medium" @click.native="reset('')">
+					<el-button
+						icon="el-icon-refresh-left"
+						size="medium"
+						@click.native="reset('')"
+					>
 						重置
 					</el-button>
 				</el-form-item>
@@ -271,6 +291,16 @@
 								}}
 							</span>
 						</p>
+                        <p v-else>
+                            <span>客服充值地址：</span>
+                            <span>
+								{{
+                                    showInfoData && showInfoData.resourcesUrl
+                                        ? showInfoData.resourcesUrl
+                                        : '-'
+                                }}
+							</span>
+                        </p>
 					</el-col>
 					<el-col :span="6">
 						<span>备注：</span>
@@ -325,6 +355,7 @@ export default {
 				complainAddress: undefined,
 				serviceAddress: undefined,
 				IdAddress: undefined,
+				Hospitality: undefined,
 				remark: undefined
 			},
 			showInfoData: undefined,
@@ -365,6 +396,9 @@ export default {
 			const IdAddress = [
 				{ required: true, message: '请输入合营ID', trigger: 'blur' }
 			]
+			const Hospitality = [
+				{ required: true, message: '客服充值地址', trigger: 'blur' }
+			]
 			const remark = [
 				{ required: true, message: '请输入备注', trigger: 'blur' },
 				{
@@ -384,6 +418,7 @@ export default {
 				complainAddress,
 				serviceAddress,
 				IdAddress,
+				Hospitality,
 				remark
 			}
 		}
@@ -430,6 +465,7 @@ export default {
 				complainAddress,
 				serviceAddress,
 				IdAddress,
+                Hospitality,
 				remark
 			} = this.queryData
 			const params = {
@@ -443,7 +479,8 @@ export default {
 					pcAddress ||
 					complainAddress ||
 					serviceAddress ||
-					IdAddress
+					IdAddress ||
+					Hospitality
 			}
 			let lock = true
 			this.$refs['form'].validate((valid) => {
@@ -494,6 +531,7 @@ export default {
 				complainAddress: undefined,
 				serviceAddress: undefined,
 				IdAddress: undefined,
+				Hospitality: undefined,
 				remark: undefined
 			}
 		},
@@ -508,6 +546,7 @@ export default {
 				complainAddress: undefined,
 				serviceAddress: undefined,
 				IdAddress: undefined,
+				Hospitality: undefined,
 				remark: undefined,
 				operateType: evt
 			}
