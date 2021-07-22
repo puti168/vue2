@@ -89,8 +89,52 @@
             </template>
           </el-table-column>
           <el-table-column align="center" label="变更前" prop="beforeModify">
+            <template slot-scope="scope">
+              <div v-if="scope.row.operateField === 3 || scope.row.operateField === 4">
+                <span
+                  v-if="scope.row.operateField === 3 && scope.row.beforeModify === '0'"
+                  class="disableRgba"
+                >
+                  {{ typeFilter(scope.row.beforeModify, "domainStatusType") }}
+                </span>
+                <span
+                  v-else-if="
+                    scope.row.operateField === 3 && scope.row.beforeModify === '1'
+                  "
+                  class="normalRgba"
+                >
+                  {{ typeFilter(scope.row.beforeModify, "domainStatusType") }}
+                </span>
+                <span v-else>{{
+                  typeFilter(scope.row.beforeModify, "enumProxyDomainTypeOperate")
+                }}</span>
+              </div>
+              <div v-else>{{ scope.row.operateField }}</div>
+            </template>
           </el-table-column>
           <el-table-column align="center" label="变更后" prop="afterModify">
+            <template slot-scope="scope">
+              <div v-if="scope.row.operateField === 3 || scope.row.operateField === 4">
+                <span
+                  v-if="scope.row.operateField === 3 && scope.row.afterModify === '0'"
+                  class="disableRgba"
+                >
+                  {{ typeFilter(scope.row.afterModify, "domainStatusType") }}
+                </span>
+                <span
+                  v-else-if="
+                    scope.row.operateField === 3 && scope.row.afterModify === '1'
+                  "
+                  class="normalRgba"
+                >
+                  {{ typeFilter(scope.row.afterModify, "domainStatusType") }}
+                </span>
+                <span v-else>{{
+                  typeFilter(scope.row.afterModify, "enumProxyDomainTypeOperate")
+                }}</span>
+              </div>
+              <div v-else>{{ scope.row.operateField }}</div>
+            </template>
           </el-table-column>
           <el-table-column prop="createdBy" align="center" width="120" label="操作人">
           </el-table-column>
@@ -134,8 +178,14 @@ export default {
     }
   },
   computed: {
+    domainStatusType() {
+      return this.globalDics.domainStatusType
+    },
     enumProxyDomainoperate() {
       return this.globalDics.enumProxyDomainoperate
+    },
+    enumProxyDomainTypeOperate() {
+      return this.globalDics.enumProxyDomainTypeOperate
     }
   },
   mounted() {},
