@@ -86,6 +86,22 @@
               ></el-option>
             </el-select>
           </el-form-item>
+          <el-form-item label="代理钱包:" class="tagheight">
+            <el-select
+              v-model="queryData.accountType"
+              style="width: 300px"
+              clearable
+              placeholder="默认选择全部"
+              :popper-append-to-body="false"
+            >
+              <el-option
+                v-for="item in proxyWalletType"
+                :key="item.code"
+                :label="item.description"
+                :value="item.code"
+              ></el-option>
+            </el-select>
+          </el-form-item>
           <el-form-item label="业务类型:" class="tagheight">
             <el-select
               v-model="queryData.bizType"
@@ -278,6 +294,18 @@
               <span v-else>-</span>
             </template>
           </el-table-column>
+           <el-table-column
+            prop="accountType"
+            align="center"
+            label="代理钱包"
+            width="120px"
+          >
+          <template slot-scope="scope">
+              {{
+               typeFilter(scope.row.bizType, "proxyWalletType")
+              }}
+            </template>
+          </el-table-column>
           <el-table-column prop="bizType" align="center" label="业务类型" width="180">
             <template slot-scope="scope">
               {{
@@ -388,6 +416,9 @@ export default {
     },
     accountBizType() {
       return this.globalDics.accountBizType
+    },
+    proxyWalletType() {
+      return this.globalDics.proxyWalletType
     }
   },
   created() {
