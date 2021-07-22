@@ -15,7 +15,6 @@
 						v-model="queryData.gameName"
 						size="medium"
 						placeholder="请选择"
-						clearable
 						style="width: 365px"
 						@change="changeType($event)"
 					>
@@ -28,7 +27,7 @@
 					</el-select>
 				</el-form-item>
 				<el-form-item prop="feeRate">
-                    <label slot="label">费率:&nbsp;&nbsp;&nbsp;&nbsp;</label>
+					<label slot="label">费率:&nbsp;&nbsp;&nbsp;&nbsp;</label>
 					<el-popover
 						placement="top-start"
 						title="提示"
@@ -45,13 +44,13 @@
 					<el-input-number
 						v-model="queryData.feeRate"
 						size="medium"
-                        :max="100"
-                        :precision="2"
+						:max="100"
+						:precision="2"
 						placeholder="请输入"
 						clearable
 						style="width: 365px"
 					></el-input-number>
-                    %
+					%
 				</el-form-item>
 				<el-form-item label="备注:" prop="remark">
 					<el-input
@@ -178,12 +177,12 @@ export default {
 			]
 			const remark = [
 				{ required: true, message: '请输入备注', trigger: 'blur' },
-                {
-                    min: 2,
-                    max: 50,
-                    message: '长度在 2 到 50 个字符',
-                    trigger: 'blur'
-                }
+				{
+					min: 2,
+					max: 50,
+					message: '长度在 2 到 50 个字符',
+					trigger: 'blur'
+				}
 			]
 			return {
 				gameName,
@@ -219,7 +218,7 @@ export default {
 				...this.queryData
 			}
 			let lock = true
-			params.feeRate = (params.feeRate / 100) + ''
+			params.feeRate = params.feeRate / 100 + ''
 			this.$refs['form'].validate((valid) => {
 				if (valid && lock) {
 					lock = false
@@ -303,12 +302,12 @@ export default {
 
 /deep/.el-input-number__decrease,
 /deep/.el-input-number__increase {
-    display: none;
+	display: none;
 }
 
 /deep/.el-input-number .el-input__inner {
-    padding: 0 15px;
-    text-align: left;
+	padding: 0 15px;
+	text-align: left;
 }
 .addAgent-container {
 	background-color: #f5f5f5;
@@ -402,6 +401,6 @@ export default {
 .el-icon-question {
 	position: absolute;
 	z-index: 10;
-    left: -30px;
+	left: -30px;
 }
 </style>
