@@ -344,7 +344,7 @@ export default {
   filters: {
     filterDecimals: function (val) {
       if (typeof val === 'number') {
-        const newVal = (Math.floor(val * 100) / 100).toFixed(2)
+        const newVal = (Math.floor(val * 1000) / 1000).toFixed(2)
         return newVal
       } else {
         return '-'
@@ -804,9 +804,9 @@ export default {
       this.sizeR = val
       this.getReportGameProfitDetailListPage(this.dialogp)
     },
-    filterDecimals: function (val) {
+    filterSummar: function (val) {
       if (typeof val === 'number') {
-        const newVal = (Math.floor(val * 100) / 100).toFixed(2)
+        const newVal = (Math.floor(val * 1000) / 1000).toFixed(2)
         return newVal
       } else {
         return '-'
@@ -857,16 +857,16 @@ export default {
               case 4:
                 sums[index] = (
                   <div class='count_row'>
-                    <p>{this.filterDecimals(num)}</p>
-                    <p>{this.filterDecimals(this.summary.totalBetAmount)}</p>
+                    <p>{this.filterSummar(num)}</p>
+                    <p>{this.filterSummar(this.summary.totalBetAmount)}</p>
                   </div>
                 )
                 break
               case 5:
                 sums[index] = (
                   <div class='count_row'>
-                    <p>{this.filterDecimals(num)}</p>
-                    <p>{this.filterDecimals(this.summary.totalValidBetAmount)}</p>
+                    <p>{this.filterSummar(num)}</p>
+                    <p>{this.filterSummar(this.summary.totalValidBetAmount)}</p>
                   </div>
                 )
                 break
@@ -874,19 +874,19 @@ export default {
                 sums[index] = (
                   <div class='count_row'>
                     {num > 0 ? (
-                      <p class='enableColor'>{this.filterDecimals(num)}</p>
+                      <p class='enableColor'>{this.filterSummar(num)}</p>
                     ) : (
-                      <p class='redColor'>{this.filterDecimals(num)}</p>
+                      <p class='redColor'>{this.filterSummar(num)}</p>
                     )}
                     {this.summary.totalNetAmount > 0 ? (
                       <p class='enableColor'>
-                        {this.filterDecimals(this.summary.totalNetAmount)}
+                        {this.filterSummar(this.summary.totalNetAmount)}
                       </p>
                     ) : this.summary.totalNetAmount === 0 ? (
-                      <p>{this.filterDecimals(this.summary.totalNetAmount)}</p>
+                      <p>{this.filterSummar(this.summary.totalNetAmount)}</p>
                     ) : (
                       <p class='redColor'>
-                        {this.filterDecimals(this.summary.totalNetAmount)}
+                        {this.filterSummar(this.summary.totalNetAmount)}
                       </p>
                     )}
                   </div>

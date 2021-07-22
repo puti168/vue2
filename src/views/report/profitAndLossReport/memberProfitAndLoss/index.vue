@@ -321,7 +321,7 @@
             label="账号类型"
           >
             <template slot-scope="scope">
-              <span v-if="!!scope.row.accountType">
+              <span v-if="scope.row.accountType">
                 {{ typeFilter(scope.row.accountType, "accountType") }}
               </span>
               <span v-else>-</span>
@@ -351,10 +351,7 @@
             label="VIP等级"
           >
             <template slot-scope="scope">
-              <span v-if="!!scope.row.vipSerialNum || scope.row.vipSerialNum === 0">
-                {{ scope.row.vipSerialNum }}
-              </span>
-              <span v-else>-</span>
+              {{ scope.row.vipSerialNum }}
             </template>
           </el-table-column>
           <el-table-column
@@ -417,10 +414,7 @@
             sortable="custom"
           >
             <template slot-scope="scope">
-              <span v-if="!!scope.row.betCount">
-                {{ scope.row.betCount }}
-              </span>
-              <span v-else>-</span>
+              {{ scope.row.betCount }}
             </template>
           </el-table-column>
           <el-table-column
@@ -431,10 +425,7 @@
             sortable="custom"
           >
             <template slot-scope="scope">
-              <span v-if="!!scope.row.betAmount">
-                {{ scope.row.betAmount | filterDecimals }}
-              </span>
-              <span v-else>-</span>
+              {{ scope.row.betAmount | filterDecimals }}
             </template>
           </el-table-column>
           <el-table-column
@@ -445,10 +436,7 @@
             sortable="custom"
           >
             <template slot-scope="scope">
-              <span v-if="!!scope.row.validBetAmount">
-                {{ scope.row.validBetAmount | filterDecimals }}
-              </span>
-              <span v-else>-</span>
+              {{ scope.row.validBetAmount | filterDecimals }}
             </template>
           </el-table-column>
           <el-table-column
@@ -582,7 +570,7 @@ export default {
   filters: {
     filterDecimals: function (val) {
       if (typeof val === 'number') {
-        const newVal = (Math.floor(val * 100) / 100).toFixed(2)
+        const newVal = (Math.floor(val * 1000) / 1000).toFixed(2)
         return newVal
       } else {
         return '-'
@@ -923,7 +911,7 @@ export default {
     },
     filterDecimals: function (val) {
       if (typeof val === 'number') {
-        const newVal = (Math.floor(val * 100) / 100).toFixed(2)
+        const newVal = (Math.floor(val * 1000) / 1000).toFixed(2)
         return newVal
       } else {
         return '-'

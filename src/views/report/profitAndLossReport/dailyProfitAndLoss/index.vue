@@ -277,7 +277,7 @@ export default {
   filters: {
     filterDecimals: function (val) {
       if (typeof val === 'number') {
-        const newVal = (Math.floor(val * 100) / 100).toFixed(2)
+        const newVal = (Math.floor(val * 1000) / 1000).toFixed(2)
         return newVal
       } else {
         return '-'
@@ -532,7 +532,7 @@ export default {
     },
     filterDecimals: function (val) {
       if (typeof val === 'number') {
-        const newVal = (Math.floor(val * 100) / 100).toFixed(2)
+        const newVal = (Math.floor(val * 1000) / 1000).toFixed(2)
         return newVal
       } else {
         return '-'
