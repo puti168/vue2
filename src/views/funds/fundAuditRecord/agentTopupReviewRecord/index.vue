@@ -189,13 +189,26 @@
               </template>
             </el-table-column>
             <el-table-column prop="remark" align="center" label="备注">
-				<template slot-scope="scope">
+              <!-- <template slot-scope="scope">
 								<span v-if="!!scope.row.remark">
 									{{ scope.row.remark }}
 								</span>
 								<span v-else>-</span>
-							</template>
-			</el-table-column>
+							</template> -->
+              <template slot-scope="scope">
+                <div v-if="!!scope.row.details && scope.row.details.length">
+                  <p v-if="!!scope.row.details[0] && !!scope.row.details[0].remark">
+                    一审：{{ scope.row.details[0].remark }}
+                  </p>
+                  <p v-else>-</p>
+                  <p v-if="!!scope.row.details[1] && !!scope.row.details[1].remark">
+                    一审：{{ scope.row.details[1].remark }}
+                  </p>
+                  <p v-else>-</p>
+                </div>
+                <span v-else>-</span>
+              </template>
+            </el-table-column>
           </el-table>
           <!-- 分页 -->
           <el-pagination
