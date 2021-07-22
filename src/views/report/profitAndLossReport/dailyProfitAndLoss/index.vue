@@ -269,7 +269,7 @@
 <script>
 import list from '@/mixins/list'
 import dayjs from 'dayjs'
-const startTime = dayjs().subtract(6, 'day').format()
+const startTime = dayjs().startOf('day').valueOf() - 6 * 24 * 60 * 60 * 1000
 const endTime = dayjs().endOf('day').valueOf()
 
 export default {
@@ -277,7 +277,7 @@ export default {
   filters: {
     filterDecimals: function (val) {
       if (typeof val === 'number') {
-        const newVal = (Math.floor(val * 100) / 100).toFixed(2)
+        const newVal = (Math.floor(val * 1000) / 1000).toFixed(2)
         return newVal
       } else {
         return '-'
@@ -466,7 +466,6 @@ export default {
       })
     },
     loadData() {
-      this.loading = true
       const create = this.searchTime || []
       const [startTime, endTime] = create
       let params = {
@@ -511,18 +510,26 @@ export default {
       }
     },
     search() {
-      this.flag = true
-      let t = 10
-      const timecount = setInterval(() => {
-        t--
-        this.queryText = t + 's'
-        if (t < 0) {
-          clearInterval(timecount)
-          this.queryText = '查询'
-          this.flag = false
-        }
-      }, 1000)
-      this.loadData()
+      const create = this.searchTime || []
+      const [startTime, endTime] = create
+      console.log(create)
+      if (endTime - startTime < this.day31) {
+        this.flag = true
+        let t = 10
+        const timecount = setInterval(() => {
+          t--
+          this.queryText = t + 's'
+          if (t < 0) {
+            clearInterval(timecount)
+            this.queryText = '查询'
+            this.flag = false
+          }
+        }, 1000)
+        this.loadData()
+      } else {
+        this.flag = true
+        this.loadData()
+      }
     },
     reset() {
       this.queryData = {}
@@ -532,7 +539,7 @@ export default {
     },
     filterDecimals: function (val) {
       if (typeof val === 'number') {
-        const newVal = (Math.floor(val * 100) / 100).toFixed(2)
+        const newVal = (Math.floor(val * 1000) / 1000).toFixed(2)
         return newVal
       } else {
         return '-'

@@ -322,7 +322,7 @@
             label="账号类型"
           >
             <template slot-scope="scope">
-              <span v-if="!!scope.row.accountType">
+              <span v-if="scope.row.accountType">
                 {{ typeFilter(scope.row.accountType, "accountType") }}
               </span>
               <span v-else>-</span>
@@ -352,10 +352,7 @@
             label="VIP等级"
           >
             <template slot-scope="scope">
-              <span v-if="!!scope.row.vipSerialNum || scope.row.vipSerialNum === 0">
-                {{ scope.row.vipSerialNum }}
-              </span>
-              <span v-else>-</span>
+              {{ scope.row.vipSerialNum }}
             </template>
           </el-table-column>
           <el-table-column
@@ -418,10 +415,7 @@
             sortable="custom"
           >
             <template slot-scope="scope">
-              <span v-if="!!scope.row.betCount">
-                {{ scope.row.betCount }}
-              </span>
-              <span v-else>-</span>
+              {{ scope.row.betCount }}
             </template>
           </el-table-column>
           <el-table-column
@@ -432,10 +426,7 @@
             sortable="custom"
           >
             <template slot-scope="scope">
-              <span v-if="!!scope.row.betAmount">
-                {{ scope.row.betAmount | filterDecimals }}
-              </span>
-              <span v-else>-</span>
+              {{ scope.row.betAmount | filterDecimals }}
             </template>
           </el-table-column>
           <el-table-column
@@ -446,10 +437,7 @@
             sortable="custom"
           >
             <template slot-scope="scope">
-              <span v-if="!!scope.row.validBetAmount">
-                {{ scope.row.validBetAmount | filterDecimals }}
-              </span>
-              <span v-else>-</span>
+              {{ scope.row.validBetAmount | filterDecimals }}
             </template>
           </el-table-column>
           <el-table-column
@@ -583,7 +571,7 @@ export default {
   filters: {
     filterDecimals: function (val) {
       if (typeof val === 'number') {
-        const newVal = (Math.floor(val * 100) / 100).toFixed(2)
+        const newVal = (Math.floor(val * 1000) / 1000).toFixed(2)
         return newVal
       } else {
         return '-'
@@ -854,18 +842,25 @@ export default {
       }
     },
     search() {
-      this.flag = true
-      let t = 10
-      const timecount = setInterval(() => {
-        t--
-        this.queryText = t + 's'
-        if (t < 0) {
-          clearInterval(timecount)
-          this.queryText = '查询'
-          this.flag = false
-        }
-      }, 1000)
-      this.loadData()
+      const create = this.searchTime || []
+      const [startTime, endTime] = create
+      if (endTime - startTime < this.day31) {
+        this.flag = true
+        let t = 10
+        const timecount = setInterval(() => {
+          t--
+          this.queryText = t + 's'
+          if (t < 0) {
+            clearInterval(timecount)
+            this.queryText = '查询'
+            this.flag = false
+          }
+        }, 1000)
+        this.loadData()
+      } else {
+        this.flag = true
+        this.loadData()
+      }
     },
     // 获取会员标签
     getMemberLabelDict() {
@@ -924,7 +919,7 @@ export default {
     },
     filterDecimals: function (val) {
       if (typeof val === 'number') {
-        const newVal = (Math.floor(val * 100) / 100).toFixed(2)
+        const newVal = (Math.floor(val * 1000) / 1000).toFixed(2)
         return newVal
       } else {
         return '-'

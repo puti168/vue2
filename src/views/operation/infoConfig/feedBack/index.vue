@@ -35,6 +35,7 @@
             <el-select
               v-model="queryData.accountType"
               style="width: 300px"
+              clearable
               placeholder="全部"
               :popper-append-to-body="false"
             >
@@ -50,6 +51,7 @@
             <el-select
               v-model="queryData.problemType"
               style="width: 300px"
+              clearable
               placeholder="全部"
               :popper-append-to-body="false"
             >

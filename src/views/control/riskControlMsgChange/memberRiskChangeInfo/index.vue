@@ -55,7 +55,7 @@
               :maxlength="15"
               size="medium"
               style="width: 180px"
-              placeholder="请输入内容"
+              placeholder="请输入"
               :disabled="loading"
               @keyup.enter.native="enterSearch"
             ></el-input>

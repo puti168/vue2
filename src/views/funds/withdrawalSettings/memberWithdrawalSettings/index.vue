@@ -94,7 +94,7 @@
       </div>
       <el-dialog :visible.sync="dialogFormVisible" center :destroy-on-close="true" width="970px">
         <div class="form-header">
-          <span>{{ title }}会员资提款设置</span>
+          <span style="margin-block: -9px">{{ title }}会员资提款设置</span>
           <span>
             <code style="color: #ff3b30">*</code>
             为必填项
@@ -107,13 +107,12 @@
           class="demo-form-inline"
           :model="dialogForm"
         >
-          <el-form-item prop="vipSerialNum" label="VIP等级：">
+          <el-form-item prop="vipNumName" label="VIP等级：">
             <el-select
               v-model="dialogForm.vipNumName"
               :disabled="isDisabled"
               style="width:556px"
               value-key="vipSerialNum"
-              placeholder="默认选择全部"
               @change="vipQuota($event)"
             >
               <el-option
@@ -199,7 +198,7 @@
           >
             提交
           </el-button>
-          <el-button @click="reset">重置</el-button>
+          <el-button @click="reset">取消</el-button>
         </span>
       </el-dialog>
     </div>
@@ -250,8 +249,9 @@ export default {
             console.log(ele.vipele, '111')
           }
         }
-        console.log(num, '111')
-        if (value > this.dialogForm.dayWithdrawalQuota) {
+        if (value === undefined) {
+          callback(new Error('请输入金额'))
+        } else if (value > this.dialogForm.dayWithdrawalQuota) {
           callback(new Error('输入不能大于单日最高提款总额，请重新输入'))
         } else {
           callback()
@@ -260,7 +260,9 @@ export default {
 
       // 2.银行卡单次最低提款额度
       const bankCardMinlimit = (rule, value, callback) => {
-        if (value > this.dialogForm.bankCardMaxAmount) {
+        if (value === undefined) {
+          callback(new Error('请输入金额'))
+        } else if (value > this.dialogForm.bankCardMaxAmount) {
           callback(new Error('输入不能大于银行卡单次最高额度，请重新输入'))
         } else {
           callback()
@@ -275,7 +277,9 @@ export default {
             console.log(ele.vipele, '111')
           }
         }
-        if (value > this.dialogForm.dayWithdrawalQuota) {
+        if (value === undefined) {
+          callback(new Error('请输入金额'))
+        } else if (value > this.dialogForm.dayWithdrawalQuota) {
           callback(new Error('输入不能大于单日最高提款总额，请重新输入'))
         } else {
           callback()
@@ -283,7 +287,10 @@ export default {
       }
       // 2.虚拟币单次最低额度
       const virtualCardMinlimit = (rule, value, callback) => {
-        if (value > this.dialogForm.virtualCardMaxAmount) {
+         console.log(value, '112')
+        if (value === undefined) {
+          callback(new Error('请输入金额'))
+        } else if (value > this.dialogForm.virtualCardMaxAmount) {
           callback(new Error('输入不能大于虚拟币单次最高额度，请重新输入'))
         } else {
           callback()
@@ -300,7 +307,9 @@ export default {
             console.log(ele.vipele, '111')
           }
         }
-        if (value > this.dialogForm.dayWithdrawalQuota) {
+        if (value === undefined) {
+          callback(new Error('请输入金额'))
+        } else if (value > this.dialogForm.dayWithdrawalQuota) {
           callback(new Error('输入不能大于单日最高提款总额，请重新输入'))
         } else {
           callback()
@@ -315,10 +324,10 @@ export default {
       ]
 
       const virtualCardMaxAmount = [
-        { required: true, validator: virtualCardMaxlimit, trigger: 'change' }
+        { required: true, validator: virtualCardMaxlimit, trigger: 'blur' }
       ]
       const virtualCardMinAmount = [
-        { required: true, validator: virtualCardMinlimit, trigger: 'change' }
+        { required: true, validator: virtualCardMinlimit, trigger: 'blur' }
       ]
       const bigAmount = [{ required: true, validator: bigAmountlimit, trigger: 'blur' }]
       return {
@@ -327,7 +336,14 @@ export default {
         bankCardMaxAmount,
         virtualCardMaxAmount,
         virtualCardMinAmount,
-        bigAmount
+        bigAmount,
+        vipSerialNum: [
+					{
+						required: true,
+						message: '请选择vip等级',
+						trigger: 'blur'
+					}
+				]
       }
     }
   },
@@ -431,33 +447,8 @@ export default {
       }
     },
     reset() {
-      this.queryData = {}
-
-      if (this.title === '新增') {
-        this.isDisabled = true
-        this.dialogForm = {
-          dateTotalNum: '',
-          bankCardMaxAmount: '',
-          bankCardMinAmount: '',
-          dateFreeNum: '',
-          bigAmount: '',
-          vipSerialNum: '',
-          virtualCardMaxAmount: '',
-          virtualCardMinAmount: ''
-        }
-      } else {
-        this.isDisabled = false
-        this.dialogForm = {
-          dateTotalNum: '',
-          bankCardMaxAmount: '',
-          bankCardMinAmount: '',
-          dateFreeNum: '',
-          bigAmount: '',
-          vipSerialNum: '',
-          virtualCardMaxAmount: '',
-          virtualCardMinAmount: ''
-        }
-      }
+      this.loadData()
+      this.dialogFormVisible = false
     },
     loadData() {
       this.loading = true
@@ -502,17 +493,16 @@ export default {
     addLabel() {
       this.title = '新增'
       this.isDisabled = false
-      this.queryData = {}
       this.dialogForm = {
         dateTotalNum: '',
-        bankCardMaxAmount: '',
-        bankCardMinAmount: '',
+        bankCardMaxAmount: undefined,
+        bankCardMinAmount: undefined,
         dateMaxAmount: '',
-        dateFreeNum: '',
-        bigAmount: '',
+        dateFreeNum: undefined,
+        bigAmount: undefined,
         vipSerialNum: '',
-        virtualCardMaxAmount: '',
-        virtualCardMinAmount: ''
+        virtualCardMaxAmount: undefined,
+        virtualCardMinAmount: undefined
       }
       this.dialogFormVisible = true
     },
@@ -539,6 +529,7 @@ export default {
 }
 .el-form--inline {
   line-height: 4;
+
 }
 .sun {
   width: 120px;

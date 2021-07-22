@@ -295,7 +295,7 @@ export default {
   filters: {
     filterDecimals: function (val) {
       if (typeof val === 'number') {
-        const newVal = (Math.floor(val * 100) / 100).toFixed(2)
+        const newVal = (Math.floor(val * 1000) / 1000).toFixed(2)
         return newVal
       } else {
         return '-'
@@ -534,18 +534,25 @@ export default {
       }
     },
     search() {
-      this.flag = true
-      let t = 10
-      const timecount = setInterval(() => {
-        t--
-        this.queryText = t + 's'
-        if (t < 0) {
-          clearInterval(timecount)
-          this.queryText = '查询'
-          this.flag = false
-        }
-      }, 1000)
-      this.initData()
+      const create = this.searchTime || []
+      const [startTime, endTime] = create
+      if (endTime - startTime < this.day31) {
+        this.flag = true
+        let t = 10
+        const timecount = setInterval(() => {
+          t--
+          this.queryText = t + 's'
+          if (t < 0) {
+            clearInterval(timecount)
+            this.queryText = '查询'
+            this.flag = false
+          }
+        }, 1000)
+        this.initData()
+      } else {
+        this.flag = true
+        this.initData()
+      }
     },
     handleCheckAllChange(val) {
       console.log(val)
@@ -614,7 +621,7 @@ export default {
     },
     filterDecimals: function (val) {
       if (typeof val === 'number') {
-        const newVal = (Math.floor(val * 100) / 100).toFixed(2)
+        const newVal = (Math.floor(val * 1000) / 1000).toFixed(2)
         return newVal
       } else {
         return '-'

@@ -143,19 +143,13 @@
             label="投注盈亏"
           >
             <template slot-scope="scope">
-              <span
-                v-if="!!scope.row.netAmount && scope.row.netAmount > 0"
-                class="enableColor"
-              >
+              <span v-if="scope.row.netAmount > 0" class="enableColor">
                 {{ scope.row.netAmount | filterDecimals }}
               </span>
-              <span
-                v-else-if="!!scope.row.netAmount && scope.row.netAmount < 0"
-                class="redColor"
-              >
+              <span v-else-if="scope.row.netAmount < 0" class="redColor">
                 {{ scope.row.netAmount | filterDecimals }}
               </span>
-              <span v-else-if="!!scope.row.netAmount && scope.row.netAmount === 0">{{
+              <span v-else-if="scope.row.netAmount === 0">{{
                 scope.row.netAmount | filterDecimals
               }}</span>
               <span v-else>-</span>
@@ -200,19 +194,13 @@
           </el-table-column>
           <el-table-column prop="netAmount" align="center" label="投注盈亏">
             <template slot-scope="scope">
-              <span
-                v-if="!!scope.row.netAmount && scope.row.netAmount > 0"
-                class="enableColor"
-              >
+              <span v-if="scope.row.netAmount > 0" class="enableColor">
                 {{ scope.row.netAmount | filterDecimals }}
               </span>
-              <span
-                v-else-if="!!scope.row.netAmount && scope.row.netAmount < 0"
-                class="redColor"
-              >
+              <span v-else-if="scope.row.netAmount < 0" class="redColor">
                 {{ scope.row.netAmount | filterDecimals }}
               </span>
-              <span v-else-if="!!scope.row.netAmount && scope.row.netAmount === 0">
+              <span v-else-if="scope.row.netAmount === 0">
                 {{ scope.row.netAmount | filterDecimals }}
               </span>
               <span v-else>-</span>
@@ -268,7 +256,7 @@ export default {
   filters: {
     filterDecimals: function (val) {
       if (typeof val === 'number') {
-        const newVal = (Math.floor(val * 100) / 100).toFixed(2)
+        const newVal = (Math.floor(val * 1000) / 1000).toFixed(2)
         return newVal
       } else {
         return '-'
@@ -487,18 +475,25 @@ export default {
       }
     },
     search() {
-      this.flag = true
-      let t = 10
-      const timecount = setInterval(() => {
-        t--
-        this.queryText = t + 's'
-        if (t < 0) {
-          clearInterval(timecount)
-          this.queryText = '查询'
-          this.flag = false
-        }
-      }, 1000)
-      this.loadData()
+      const create = this.searchTime || []
+      const [startTime, endTime] = create
+      if (endTime - startTime < this.day31) {
+        this.flag = true
+        let t = 10
+        const timecount = setInterval(() => {
+          t--
+          this.queryText = t + 's'
+          if (t < 0) {
+            clearInterval(timecount)
+            this.queryText = '查询'
+            this.flag = false
+          }
+        }, 1000)
+        this.loadData()
+      } else {
+        this.flag = true
+        this.loadData()
+      }
     },
     reset() {
       this.queryData = {}
@@ -549,7 +544,7 @@ export default {
     },
     filterDecimals: function (val) {
       if (typeof val === 'number') {
-        const newVal = (Math.floor(val * 100) / 100).toFixed(2)
+        const newVal = (Math.floor(val * 1000) / 1000).toFixed(2)
         return newVal
       } else {
         return '-'

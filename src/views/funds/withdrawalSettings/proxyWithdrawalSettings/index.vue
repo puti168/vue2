@@ -146,7 +146,7 @@
           @size-change="handleSizeChange"
         ></el-pagination>
       </div>
-      <el-dialog :visible.sync="dialogFormVisible" :destroy-on-close="true" width="870px">
+      <el-dialog :visible.sync="dialogFormVisible" :destroy-on-close="true" width="915px">
         <div class="form-header">
           <span class="fontSize">{{ titel }}代理提款设置</span>
           <span>
@@ -176,6 +176,7 @@
               v-model="queryData.proxyAccount"
               :disabled="isDisabled"
               class="proxyInput"
+              maxlength="11"
               @keyup.enter.native="enterSearch"
               @blur="enterSearch"
             ></el-input>
@@ -278,7 +279,7 @@
               :precision="0"
               placeholder="请输入，0为不限制"
             ></el-input-number>
-            <span>次</span>
+            <span>元</span>
           </el-form-item>
           <el-form-item
             label="虚拟币单次提款最高限额："
@@ -296,7 +297,7 @@
             <span>元</span>
           </el-form-item>
           <el-form-item
-            label="最高提款次数："
+            label="单日最高提款次数："
             prop="dateTotalNum"
             class="proxyItem"
             label-width="190px"
