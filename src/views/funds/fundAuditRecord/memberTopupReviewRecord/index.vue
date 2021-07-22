@@ -144,7 +144,9 @@
 						>
 							<template slot-scope="scope">
 								<span v-if="!!scope.row.orderStatus">
-									{{ typeFilter(scope.row.orderStatus, 'patchAdjustStatusFinish') }}
+									{{
+										typeFilter(scope.row.orderStatus, 'patchAdjustStatusFinish')
+									}}
 								</span>
 								<span v-else>-</span>
 							</template>
@@ -250,9 +252,24 @@
 							width="120"
 						>
 							<template slot-scope="scope">
-								<span v-if="!!scope.row.remark">
-									{{ scope.row.remark }}
-								</span>
+								<div v-if="!!scope.row.details && scope.row.details.length">
+									<p
+										v-if="
+											!!scope.row.details[0] && !!scope.row.details[0].remark
+										"
+									>
+										一审：{{ scope.row.details[0].remark }}
+									</p>
+									<p v-else>-</p>
+									<p
+										v-if="
+											!!scope.row.details[1] && !!scope.row.details[1].remark
+										"
+									>
+                                        一审：{{ scope.row.details[1].remark }}
+									</p>
+									<p v-else>-</p>
+								</div>
 								<span v-else>-</span>
 							</template>
 						</el-table-column>
@@ -297,7 +314,7 @@ export default {
 		return {
 			queryData: {
 				time: [start, end],
-                orderNo: undefined,
+				orderNo: undefined,
 				userName: undefined,
 				orderStatus: ''
 			},
@@ -369,7 +386,7 @@ export default {
 		reset() {
 			this.queryData = {
 				time: [start, end],
-                orderNo: undefined,
+				orderNo: undefined,
 				userName: undefined,
 				orderStatus: ''
 			}
