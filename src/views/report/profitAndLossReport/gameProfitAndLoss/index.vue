@@ -609,18 +609,25 @@ export default {
       }
     },
     search() {
-      this.flag = true
-      let t = 10
-      const timecount = setInterval(() => {
-        t--
-        this.queryText = t + 's'
-        if (t < 0) {
-          clearInterval(timecount)
-          this.queryText = '查询'
-          this.flag = false
-        }
-      }, 1000)
-      this.initData()
+      const create = this.searchTime || []
+      const [startTime, endTime] = create
+      if (endTime - startTime < this.day31) {
+        this.flag = true
+        let t = 10
+        const timecount = setInterval(() => {
+          t--
+          this.queryText = t + 's'
+          if (t < 0) {
+            clearInterval(timecount)
+            this.queryText = '查询'
+            this.flag = false
+          }
+        }, 1000)
+        this.initData()
+      } else {
+        this.flag = true
+        this.initData()
+      }
     },
     handleCheckAllChange(val) {
       console.log(val)
