@@ -32,6 +32,16 @@ const state = {
 	auditChangeAgent: '',
 	// 溢出会员审核数量
 	auditPatchAgent: '',
+	// 会员提款审核
+	auditMemberWithdrawUser: '',
+	// 代理提款审核
+	auditProxyWithdrawAgent: '',
+	// 会员人工加额审核
+	auditMemberArtificialAddUser: '',
+	// 代理人工加额审核
+	auditProxyArtificialAddAgent: '',
+	// 佣金审核
+	auditProxyCommissionAgent: '',
 	nickName: '',
 	userInfo: getUserInfo(),
 	avatar: '',
