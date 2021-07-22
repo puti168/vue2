@@ -425,11 +425,12 @@
             <el-form-item
               class="time"
               label="上架时间:"
-              label-width="112px"
+              label-width="90px"
               :rules="[{ required: true }]"
             >
               <el-date-picker
-                v-model="upTime"
+              v-model="upTime"
+                style="width:204px"
                 size="medium"
                 format="yyyy-MM-dd HH:mm:ss"
                 :picker-options="dateNow"
@@ -441,11 +442,12 @@
             <el-form-item
               v-if="dialogForm.bannerValidity === 0"
               label="下架时间:"
-              label-width="112px"
+              label-width="90px"
               :rules="[{ required: true }]"
             >
               <el-date-picker
                 v-model="downTime"
+                style="width:204px"
                 size="medium"
                 format="yyyy-MM-dd HH:mm:ss"
                 :picker-options="dateEnd"
@@ -959,7 +961,7 @@ export default {
 
 <style lang="scss" scoped>
 .time{
-  margin-left: 22px;
+  margin-left: 45px;
 }
 .game-container .params{
   padding-block: 22px;
