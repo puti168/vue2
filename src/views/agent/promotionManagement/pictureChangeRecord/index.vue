@@ -94,7 +94,20 @@
           </el-table-column>
           <el-table-column align="center" label="变更前" prop="beforeModify">
             <template slot-scope="scope">
-              <span v-if="!!(scope.row.beforeModify+'')">
+              <span v-if="scope.row.operateField === 1">
+                {{ typeFilter(scope.row.beforeModify, 'materialPictureType') }}
+              </span>
+              <el-button
+                  v-else-if="scope.row.operateField === 3"
+									:disabled="loading"
+									type="success"
+									size="medium"
+									class="noicon"
+									@click="preViewPictureBefore(scope.row)"
+								>
+									预览
+								</el-button>
+              <span v-else-if="!!(scope.row.beforeModify+'')">
                 {{ scope.row.beforeModify }}
               </span>
               <span v-else>-</span>
@@ -102,7 +115,20 @@
           </el-table-column>
           <el-table-column align="center" label="变更后" prop="afterModify">
             <template slot-scope="scope">
-              <span v-if="!!(scope.row.afterModify+'')">
+              <span v-if="scope.row.operateField === 1">
+                {{ typeFilter(scope.row.beforeModify, 'materialPictureType') }}
+              </span>
+              <el-button
+                  v-else-if="scope.row.operateField === 3"
+									:disabled="loading"
+									type="success"
+									size="medium"
+									class="noicon"
+									@click="preViewPictureAfter(scope.row)"
+								>
+									预览
+								</el-button>
+              <span v-else-if="!!(scope.row.afterModify+'')">
                 {{ scope.row.afterModify }}
               </span>
               <span v-else>-</span>
@@ -139,9 +165,15 @@
         ></el-pagination>
       </div>
     </div>
-    <div v-if="imgVisible" class="imgCenter" @click="closeImage">
-      <img :src="bigImage" />
-    </div>
+    <el-dialog
+				title="图片"
+				:visible.sync="dialogPictureVisible"
+				:destroy-on-close="true"
+				width="650px"
+				class="imgCenter"
+			>
+				<img :src="imageAddress" />
+			</el-dialog>
   </div>
 </template>
 
@@ -161,12 +193,12 @@ export default {
         operateType: operateType,
         orderType: undefined,
         operateField: undefined,
-        createdBy: undefined
+        createdBy: undefined,
       },
       searchTime: [start, end],
       dataList: [],
-      bigImage: '',
-      imgVisible: false
+      dialogPictureVisible: false,
+      imageAddress: null
     }
   },
 	computed: {
@@ -212,13 +244,17 @@ export default {
           this.loading = false
         })
     },
-    lookImg(val) {
-      this.imgVisible = true
-      this.bigImage = val
-    },
-    closeImage() {
-      this.imgVisible = false
-    },
+    preViewPictureBefore(val) {
+			const { beforeModify } = val
+			this.imageAddress = beforeModify
+			this.dialogPictureVisible = true
+		},
+		preViewPictureAfter(val) {
+      debugger
+			const { afterModify } = val
+			this.imageAddress = afterModify
+			this.dialogPictureVisible = true
+		},
     _changeTableSort({ column, prop, order }) {
       this.pageNum = 1
       if (order === 'ascending') {
@@ -243,4 +279,10 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+  .imgCenter {
+    img {
+      max-width: 100%;
+    }
+  }
+</style>

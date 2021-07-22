@@ -16,7 +16,7 @@
 								<el-input
 									v-model="form.gameName"
 									size="medium"
-									:maxlength="6"
+									:maxlength="15"
 									clearable
 									style="width: 365px"
 								></el-input>
