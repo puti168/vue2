@@ -220,7 +220,7 @@
 							label="审核申请类型"
 						>
 							<template slot-scope="scope">
-								{{ typeFilter(scope.row.applyType, 'applyType') }}
+								{{ typeFilter(scope.row.applyType, 'porxyApplyType') }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="修改前">
@@ -379,7 +379,7 @@ export default {
 			showDetail: false,
 			formTime: {
 				time: [start, end],
-				time2: []
+				time2: [start, end]
 			},
 			rowData: {},
 			now: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),

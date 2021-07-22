@@ -84,7 +84,7 @@
 					<div>一审人: {{ list.auditName }}</div>
 					<div>一审时间: {{ list.auditTime }}</div>
 					<div>一审备注: {{ list.auditRemark }}</div>
-					<div>一审状态: {{ list.auditRemark }}</div>
+					<div>一审状态: {{ typeFilter(rowData.auditStatus, 'auditStatusType') }}</div>
 				</div>
 			</div>
 		</div>
