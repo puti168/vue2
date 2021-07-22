@@ -114,8 +114,10 @@
 					<!--             虚拟币      -->
 					<el-input
 						v-model="queryData.virtualAddress"
+                        show-word-limit
+                        type="textarea"
 						size="medium"
-						maxlength="50"
+						maxlength="100"
 						placeholder="请输入"
 						clearable
 						oninput="value=value.replace(/[\u4E00-\u9FA5]/g ,'')"
