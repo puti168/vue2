@@ -466,7 +466,6 @@ export default {
       })
     },
     loadData() {
-      this.loading = true
       const create = this.searchTime || []
       const [startTime, endTime] = create
       let params = {
