@@ -390,6 +390,7 @@
 			v-else
 			:rowData="rowData"
 			:rowAssortId="rowAssortId"
+			:editType="editType"
 			@back="back"
 		></createPage>
 	</transition>
@@ -429,6 +430,7 @@ export default {
 			dialogGameVisible: false,
 			createPage: false,
 			rowAssortId: '',
+			editType: 'add',
 			rowData: {}
 		}
 	},
@@ -561,8 +563,11 @@ export default {
 				const { id } = val
 				this.rowData = val
 				this.rowAssortId = id
+				this.editType = 'edit'
+			} else {
+				this.rowData = {}
+				this.editType = 'add'
 			}
-			console.log('this.rowData', this.rowData)
 			this.createPage = true
 		},
 		back() {
