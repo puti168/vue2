@@ -2,7 +2,7 @@
 	<div class="game-container report-container gameCreatePage-container">
 		<div class="gameCreatePage-content">
 			<div class="form-header">
-				<span>页签创建</span>
+				<span class="title">{{ editType === 'edit' ? '编辑' : '创建' }}</span>
 				<span>
 					<el-button type="info" @click="back">返回</el-button>
 					<el-button type="success" @click="save">保存</el-button>
@@ -207,6 +207,10 @@ export default {
 	components: {},
 	mixins: [list],
 	props: {
+		editType: {
+			type: String,
+			default: 'add'
+		},
 		rowAssortId: {
 			type: String,
 			default: ''
