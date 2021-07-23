@@ -22,7 +22,7 @@
 							v-for="item in gameVenueList"
 							:key="item.id"
 							:label="item.gameName"
-							:value="item"
+							:value="item.gameName"
 						></el-option>
 					</el-select>
 				</el-form-item>
@@ -267,18 +267,16 @@ export default {
 		},
 		changeType(evt) {
 			this.$refs['form'] && this.$refs['form'].resetFields()
+			const item = this.gameVenueList.find((item) => item.gameName === evt)
 			this.showInfoData = undefined
 			this.queryData = {
-				gameName: evt.gameName,
+				gameName: item && item.gameName,
 				feeRate: undefined,
 				remark: undefined,
 				id: undefined,
 				merchantId: undefined
 			}
-			this.queryDetails(evt.id)
-		},
-		checkRiskValue(val) {
-			// console.log('val', val)
+			this.queryDetails(item && item.id)
 		},
 		// 获取商户场馆
 		getMemberVipMerchantGame() {
@@ -386,8 +384,8 @@ export default {
 				padding-bottom: 20px;
 				> p {
 					display: inline-block;
-                    min-width: 165px;
-                    margin-right: 15px;
+					min-width: 165px;
+					margin-right: 15px;
 				}
 			}
 		}
