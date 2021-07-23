@@ -15,7 +15,6 @@
 						v-model="queryData.operateType"
 						size="medium"
 						placeholder="全部"
-						clearable
 						style="width: 365px"
 						@change="changeRiskType($event)"
 					>
