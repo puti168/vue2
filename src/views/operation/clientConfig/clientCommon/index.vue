@@ -157,7 +157,7 @@
 				</el-form-item>
 				<el-form-item
 					v-else-if="[8].includes(queryData.operateType)"
-					label="客服充值地址"
+					label="代客充值客服地址"
 					prop="Hospitality"
 				>
 					<!--                    客服充值地址-->
@@ -292,7 +292,7 @@
 							</span>
 						</p>
                         <p v-else>
-                            <span>客服充值地址：</span>
+                            <span>代客充值客服地址：</span>
                             <span>
 								{{
                                     showInfoData && showInfoData.resourcesUrl
