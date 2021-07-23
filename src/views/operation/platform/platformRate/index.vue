@@ -1,7 +1,7 @@
 <template>
 	<div class="game-container report-container addAgent-container">
 		<div class="line-member"></div>
-		<div class="addAgent-content">
+		<div class="addPlatformRate-content">
 			<div class="form-header">
 				<span>编辑</span>
 				<span>
@@ -86,37 +86,31 @@
 			</div>
 			<div class="info-content">
 				<el-row class="info-content-row">
-					<el-col :span="6">
-						<p>
-							<span>场馆：</span>
-							<span>
-								{{
-									showInfoData && showInfoData.gameName
-										? showInfoData.gameName
-										: '-'
-								}}
-							</span>
-						</p>
-					</el-col>
-					<el-col :span="6">
-						<span>费率：</span>
+					<p>
+						<span>场馆：</span>
 						<span>
 							{{
-								showInfoData && showInfoData.feeRate
-									? showInfoData.feeRate * 100 + '%'
+								showInfoData && showInfoData.gameName
+									? showInfoData.gameName
 									: '-'
 							}}
 						</span>
-					</el-col>
-					<el-col :span="6">
+					</p>
+					<p>
+						<span>费率：</span>
+						<span>
+							{{ getFeeRate }}
+						</span>
+					</p>
+					<p>
 						<span>备注：</span>
 						<span>
 							{{
 								showInfoData && showInfoData.remark ? showInfoData.remark : '-'
 							}}
 						</span>
-					</el-col>
-					<el-col :span="6">
+					</p>
+					<p>
 						<span>最近操作人：</span>
 						<span>
 							{{
@@ -125,7 +119,7 @@
 									: '-'
 							}}
 						</span>
-					</el-col>
+					</p>
 				</el-row>
 				<el-row class="info-content-row">
 					<el-col :span="8">
@@ -148,6 +142,7 @@
 <script>
 import { routerNames } from '@/utils/consts'
 import list from '@/mixins/list'
+import { Decimal } from 'decimal.js'
 // import { notSpecial2, isHaveEmoji } from '@/utils/validate'
 
 export default {
@@ -189,6 +184,11 @@ export default {
 				feeRate,
 				remark
 			}
+		},
+		getFeeRate() {
+			return this.showInfoData && this.showInfoData.feeRate
+				? new Decimal(this.showInfoData.feeRate).mul(100) + '%'
+				: '-'
 		}
 	},
 	created() {
@@ -316,8 +316,8 @@ export default {
 	.line-member {
 		height: 50px;
 	}
-	.addAgent-content {
-		width: 1000px;
+	.addPlatformRate-content {
+		width: 1100px;
 		margin: 0 auto;
 		display: flex;
 		justify-content: center;
@@ -347,7 +347,7 @@ export default {
 			}
 		}
 	}
-	.addAgent-content::after {
+	.addPlatformRate-content::after {
 		position: absolute;
 		top: 45px;
 		content: '';
@@ -356,7 +356,7 @@ export default {
 		height: 1px;
 	}
 	.info-show {
-		width: 1000px;
+		width: 1100px;
 		justify-content: center;
 		align-items: center;
 		background-color: #fff;
@@ -384,6 +384,11 @@ export default {
 			.info-content-row {
 				padding-top: 20px;
 				padding-bottom: 20px;
+				> p {
+					display: inline-block;
+                    min-width: 165px;
+                    margin-right: 15px;
+				}
 			}
 		}
 	}
