@@ -9,7 +9,7 @@
 					为必填项
 				</span>
 			</div>
-			<el-form ref="form" :model="queryData" :rules="rules" label-width="120px">
+			<el-form ref="form" :model="queryData" :rules="rules" label-width="145px">
 				<el-form-item label="类型:" prop="operateType">
 					<el-select
 						v-model="queryData.operateType"
@@ -156,7 +156,7 @@
 				</el-form-item>
 				<el-form-item
 					v-else-if="[8].includes(queryData.operateType)"
-					label="代客充值客服地址"
+					label="代客充值客服地址:"
 					prop="Hospitality"
 				>
 					<!--                    客服充值地址-->
