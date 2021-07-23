@@ -23,7 +23,7 @@
             <el-input
               v-model="queryData.labelName"
               clearable
-              :maxlength="11"
+              :maxlength="10"
               size="medium"
               style="width: 200px; margin-right: 20px"
               placeholder="请输入"
