@@ -37,6 +37,7 @@
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
 						>
+							<el-option label="全部"></el-option>
 							<el-option label="禁用中" :value="0"></el-option>
 							<el-option label="开启中" :value="1"></el-option>
 						</el-select>
