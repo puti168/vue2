@@ -47,11 +47,20 @@ export function getQueryRecordList(data) {
 		data
 	})
 }
+// 第三方回调IP白名单查询
+export function getCallbackIpWhiteList(data) {
+	return request({
+		url: '/callbackIpWhite/select',
+		method: 'post',
+		data
+	})
+}
 //
 export default {
     getkvconfigQueryList,
 	getkvconfigUpdate,
 	getSystemUserLoginRecordQueryLoginLog,
 	getuserInfolist,
-	getQueryRecordList
+	getQueryRecordList,
+	getCallbackIpWhiteList
 }
