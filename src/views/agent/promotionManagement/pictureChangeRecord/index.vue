@@ -116,7 +116,7 @@
           <el-table-column align="center" label="变更后" prop="afterModify">
             <template slot-scope="scope">
               <span v-if="scope.row.operateField === 1">
-                {{ typeFilter(scope.row.beforeModify, 'materialPictureType') }}
+                {{ typeFilter(scope.row.afterModify, 'materialPictureType') }}
               </span>
               <el-button
                   v-else-if="scope.row.operateField === 3"
@@ -193,7 +193,7 @@ export default {
         operateType: operateType,
         orderType: undefined,
         operateField: undefined,
-        createdBy: undefined,
+        createdBy: undefined
       },
       searchTime: [start, end],
       dataList: [],

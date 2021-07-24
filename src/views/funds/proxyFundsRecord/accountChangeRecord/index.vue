@@ -302,7 +302,7 @@
           >
           <template slot-scope="scope">
               {{
-               typeFilter(scope.row.bizType, "proxyWalletType")
+               typeFilter(scope.row.accountType, "proxyWalletType")
               }}
             </template>
           </el-table-column>
@@ -391,9 +391,12 @@ export default {
   mixins: [list],
   data() {
     return {
-      queryData: {},
+      queryData: {
+        accountType: '0'
+      },
       searchTime: [startTime, endTime],
-      tableData: [],
+      tableData: [
+      ],
       dataList: {},
       windControlLevelList: [],
       summary: {},

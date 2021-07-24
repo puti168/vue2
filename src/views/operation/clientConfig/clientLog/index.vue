@@ -166,7 +166,7 @@
 						<template slot-scope="scope">
 							<p v-if="!!scope.row.beforeValue">
 								<span v-if="[21].includes(scope.row.changeType)">
-									{{ scope.row.beforeValue === '0' ? '禁用' : '开启' }}
+									{{ scope.row.beforeValue === '0' ? '已禁用' : '开启中' }}
 								</span>
 								<span v-else>{{ scope.row.beforeValue }}</span>
 							</p>
@@ -177,7 +177,7 @@
 						<template slot-scope="scope">
                             <p v-if="!!scope.row.afterValue">
 								<span v-if="[21].includes(scope.row.changeType)">
-									{{ scope.row.afterValue === '0' ? '禁用' : '开启' }}
+									{{ scope.row.afterValue === '0' ? '已禁用' : '开启中' }}
 								</span>
                                 <span v-else>{{ scope.row.afterValue }}</span>
                             </p>

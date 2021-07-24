@@ -267,7 +267,7 @@
                 <span v-else>-</span>
               </template>
             </el-table-column>
-            <el-table-column align="center" label="游戏图片" width="80px">
+            <el-table-column align="center" label="图片" width="80px">
               <template slot-scope="scope">
                 <span class="text-link" @click="lookGame(scope.row.pictureUrl)">
                   点击预览
