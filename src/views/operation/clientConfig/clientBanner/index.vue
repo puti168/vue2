@@ -514,11 +514,11 @@
             <el-form-item
               v-if="dialogForm.linkTarget === 1 || dialogForm.linkTarget === 2"
               label="URL链接:"
-              prop="pictureUrl"
+              prop="targetUrl"
               :rules="[{ required: true, message: '请输入链接' }]"
             >
               <el-input
-                v-model="dialogForm.pictureUrl"
+                v-model="dialogForm.targetUrl"
                 class="region"
                 placeholder="请输入"
                 show-word-limit
@@ -693,10 +693,10 @@ export default {
 
     openEdit(row) {
       this.addOrEdit = 'edit'
-      this.dialogForm = { ...row, targetUrl: row.targetUrl * 1 }
+      this.dialogForm = { ...row }
       console.log(row, 'row')
       console.log(row, '编辑的事')
-
+      this.dialogForm.targetUrl = row.targetUrl
       this.dialogForm.upTime = row.upTime
       this.dialogForm.downTime = row.downTime
       this.dialogForm.isLink = row.isLink
