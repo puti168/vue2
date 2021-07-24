@@ -78,7 +78,7 @@
           </el-form-item>
           <el-form-item label="最近操作人:">
             <el-input
-              v-model="queryData.updateBy"
+              v-model="queryData.updatedBy"
               clearable
               :maxlength="15"
               size="medium"

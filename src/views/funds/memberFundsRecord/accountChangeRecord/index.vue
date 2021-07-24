@@ -227,9 +227,8 @@
           </el-form-item>
         </el-form>
       </div>
-      <div class="content">
+      <div v-loading="loading" class="content">
         <el-table
-          v-loading="loading"
           border
           show-summary
           :summary-method="getSummaries"
@@ -417,6 +416,7 @@ export default {
   data() {
     return {
       queryData: {},
+      loading: true,
       searchTime: [startTime, endTime],
       windControlLevelList: [],
       walletTypeList: [],
@@ -455,7 +455,6 @@ export default {
       // })
     },
     loadData() {
-      this.loading = true
       const create = this.searchTime || []
       const [startTime, endTime] = create
       let params = {
@@ -466,6 +465,7 @@ export default {
       params = {
         ...this.getParams(params)
       }
+      this.loading = true
       this.$api
         .getMemberFundsRecordsAccountChange(params)
         .then((res) => {
@@ -731,6 +731,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.content{
+  position: relative;
+}
 /deep/ .el-table__footer-wrapper .cell::after {
   border: 1px solid #ebeef5;
   content: "";
