@@ -219,13 +219,13 @@
 						</template>
 					</el-table-column>
 					<el-table-column
-						prop="windControlName"
+						prop="windControlLevelName"
 						align="center"
 						label="风控层级"
 					>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.windControlName">
-								{{ scope.row.windControlName }}
+							<span v-if="!!scope.row.windControlLevelName">
+								{{ scope.row.windControlLevelName }}
 							</span>
 							<span v-else>-</span>
 						</template>
