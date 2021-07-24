@@ -38,7 +38,7 @@
             v-model="queryData.pageId"
             clearable
             size="medium"
-            :maxlength="5"
+            :maxlength="20"
             style="width: 180px"
             placeholder="请输入"
             oninput="value=value.replace(/[^\d]/g,'')"
