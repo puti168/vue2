@@ -394,7 +394,7 @@ class="textC"
             v-model="editData.birth"
             type="date"
             placeholder="选择日期"
-            value-format="yyyy-MM-dd HH-mm-ss"
+            value-format="yyyy-MM-dd"
           >
           </el-date-picker>
         </el-form-item>
