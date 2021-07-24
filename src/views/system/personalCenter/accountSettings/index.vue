@@ -68,6 +68,7 @@
         <el-form-item label="新登录密码：" prop="newPwd">
           <el-input
             v-model.trim="form.newPwd"
+            onkeyup="value=value.replace(/[\u4e00-\u9fa5/\s+/]/ig,'')"
             :type="newPwdType"
             name="newPwd"
             size="medium"
