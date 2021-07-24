@@ -33,6 +33,7 @@
 						v-model="queryData.accountType"
 						style="width: 300px"
 						multiple
+                        collapse-tags
 						placeholder="默认选择全部"
 						:popper-append-to-body="false"
 					>
@@ -50,6 +51,7 @@
 						v-model="queryData.applyType"
 						style="width: 300px"
 						multiple
+                        collapse-tags
 						placeholder="默认选择全部"
 						:popper-append-to-body="false"
 					>

@@ -32,6 +32,7 @@
 					<el-select
 						v-model="accountType1"
 						multiple
+                        collapse-tags
 						placeholder="默认选择全部"
 						:popper-append-to-body="false"
 						style="width: 300px"
@@ -89,6 +90,7 @@
 						:popper-append-to-body="false"
 						placeholder="默认选择全部"
 						multiple
+                        collapse-tags
 					>
 						<el-option
 							v-for="item in deviceType"

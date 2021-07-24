@@ -35,8 +35,9 @@
 					<el-form-item label="审核状态:">
 						<el-select
 							v-model="queryData.auditStatus"
-							style="width: 300px"
+							style="width: 275px"
 							multiple
+                            collapse-tags
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
 						>

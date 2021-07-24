@@ -9,6 +9,7 @@
               style="width: 180px"
               multiple
               clearable
+              collapse-tags
               placeholder="默认选择全部"
               :popper-append-to-body="false"
             >

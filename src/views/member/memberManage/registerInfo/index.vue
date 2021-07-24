@@ -32,7 +32,8 @@
 							placeholder="默认选择全部"
 							clearable
 							multiple
-							style="width: 300px"
+                            collapse-tags
+							style="width: 250px"
 						>
 							<el-option
 								v-for="item in accountTypeArr"
@@ -100,7 +101,8 @@
 							placeholder="默认选择全部"
 							clearable
 							multiple
-							style="width: 300px"
+                            collapse-tags
+							style="width: 260px"
 						>
 							<el-option
 								v-for="item in deviceTypeArr"

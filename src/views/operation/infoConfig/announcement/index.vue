@@ -29,6 +29,7 @@
               v-model="queryData.terminal"
               style="width: 300px"
               multiple
+              collapse-tags
               placeholder="默认选择全部"
               :popper-append-to-body="false"
             >

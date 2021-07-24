@@ -20,8 +20,9 @@
         <el-form-item label="操作页面:">
           <el-select
             v-model="queryData.pageName"
-            style="width: 300px"
+            style="width: 350px"
             multiple
+            clearable
             placeholder="默认选择全部"
             :popper-append-to-body="false"
           >
@@ -51,6 +52,7 @@
             v-model="queryData.changeType"
             style="width: 300px"
             multiple
+            collapse-tags
             placeholder="默认选择全部"
             :popper-append-to-body="false"
           >

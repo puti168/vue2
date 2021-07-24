@@ -45,7 +45,7 @@
 					<el-form-item label="支持终端:" class="tagheight">
 						<el-select
 							v-model="queryData.supportTerminalList"
-							style="width: 300px"
+							style="width: 350px"
 							multiple
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
@@ -77,8 +77,9 @@
 					<el-form-item label="关联推荐游戏:" class="tagheight">
 						<el-select
 							v-model="queryData.relationOtherGameIdList"
-							style="width: 300px"
+							style="width: 230px"
 							multiple
+                            collapse-tags
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
 						>
@@ -93,8 +94,9 @@
 					<el-form-item label="游戏平台:" class="tagheight">
 						<el-select
 							v-model="queryData.gamePlatformList"
-							style="width: 300px"
+							style="width: 230px"
 							multiple
+                            collapse-tags
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
 						>
@@ -109,7 +111,7 @@
 					<el-form-item label="游戏标签:" class="tagheight">
 						<el-select
 							v-model="queryData.gameLabelIdList"
-							style="width: 300px"
+							style="width: 230px"
 							multiple
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"

@@ -24,6 +24,7 @@
               v-model="queryData.venueId"
               style="width: 300px"
               multiple
+              collapse-tags
               placeholder="全部"
               :popper-append-to-body="false"
               @change="changeSelect($event)"
@@ -41,6 +42,7 @@
               v-model="queryData.gameId"
               style="width: 300px"
               multiple
+              collapse-tags
               placeholder="全部"
               :popper-append-to-body="false"
             >
@@ -57,6 +59,7 @@
               v-model="queryData.vipSerialNum"
               style="width: 300px"
               multiple
+              collapse-tags
               placeholder="全部"
               :popper-append-to-body="false"
             >

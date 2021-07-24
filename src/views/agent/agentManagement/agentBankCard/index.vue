@@ -43,6 +43,7 @@
 							placeholder="默认选择全部"
 							clearable
 							multiple
+                            collapse-tags
 							style="width: 300px"
 						>
 							<el-option

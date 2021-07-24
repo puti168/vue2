@@ -33,6 +33,7 @@
 						v-model="queryData.changeType"
 						style="width: 300px"
 						multiple
+                        clearable
 						placeholder="默认选择全部"
 						:popper-append-to-body="false"
 					>

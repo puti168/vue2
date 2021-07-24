@@ -20,8 +20,9 @@
         <el-form-item label="变更类型:">
           <el-select
             v-model="queryData.operateType"
-            style="width: 300px"
+            style="width: 500px"
             multiple
+            clearable
             placeholder="默认选择全部"
             :popper-append-to-body="false"
           >

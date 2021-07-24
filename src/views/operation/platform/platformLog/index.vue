@@ -25,6 +25,7 @@
               style="width: 300px"
               clearable
               multiple
+              collapse-tags
               placeholder="全部"
               :popper-append-to-body="false"
             >

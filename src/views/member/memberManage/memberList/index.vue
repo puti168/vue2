@@ -52,7 +52,8 @@
 							placeholder="默认选择全部"
 							clearable
 							multiple
-							style="width: 300px"
+                            collapse-tags
+							style="width: 280px"
 						>
 							<el-option
 								v-for="item in accountStatusArr"
@@ -149,6 +150,7 @@
 							placeholder="默认选择全部"
 							clearable
 							multiple
+                            collapse-tags
 							style="width: 300px"
 						>
 							<el-option
@@ -166,6 +168,7 @@
 							placeholder="默认选择全部"
 							clearable
 							multiple
+                            collapse-tags
 							style="width: 300px"
 						>
 							<el-option

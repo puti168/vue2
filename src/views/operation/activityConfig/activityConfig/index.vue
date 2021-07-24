@@ -27,6 +27,7 @@
             <el-select
               v-model="queryData.discountTagId"
               multiple
+              collapse-tags
               style="width: 300px"
               placeholder="默认选择全部"
               :popper-append-to-body="false"
@@ -43,6 +44,7 @@
             <el-select
               v-model="queryData.activityType"
               multiple
+              style="width: 300px"
               placeholder="默认选择全部"
               :popper-append-to-body="false"
             >
@@ -80,6 +82,7 @@
               v-model="queryData.activityAppType"
               style="width: 300px"
               multiple
+              collapse-tags
               placeholder="默认选择全部"
               :popper-append-to-body="false"
             >
@@ -96,6 +99,7 @@
               v-model="queryData.activityUserType"
               style="width: 300px"
               multiple
+              collapse-tags
               placeholder="默认选择全部"
               :popper-append-to-body="false"
             >

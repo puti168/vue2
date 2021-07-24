@@ -62,8 +62,10 @@
 					<el-form-item label="游戏平台:" class="tagheight">
 						<el-select
 							v-model="queryData.gameCode"
-							style="width: 300px"
+							style="width: 230px"
 							multiple
+                            clearable
+                            collapse-tags
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
 						>
@@ -102,8 +104,10 @@
 					<el-form-item label="账号类型:" class="tagheight">
 						<el-select
 							v-model="queryData.accountType"
-							style="width: 300px"
+							style="width: 230px"
 							multiple
+                            clearable
+                            collapse-tags
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
 						>
@@ -212,8 +216,9 @@
 					<el-form-item label="投注终端:" class="tagheight">
 						<el-select
 							v-model="queryData.deviceType"
-							style="width: 300px; margin-right: 20px"
+							style="width: 350px; margin-right: 20px"
 							multiple
+                            clearable
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
 						>

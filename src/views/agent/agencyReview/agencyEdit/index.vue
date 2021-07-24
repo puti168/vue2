@@ -46,8 +46,10 @@
 					<el-form-item label="账号类型:" class="tagheight">
 						<el-select
 							v-model="queryData.accountType"
-							style="width: 300px"
+							style="width: 250px"
 							multiple
+                            clearable
+                            collapse-tags
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
 						>
@@ -77,8 +79,9 @@
 					<el-form-item label="审核状态:">
 						<el-select
 							v-model="queryData.auditStatus"
-							style="width: 300px"
+							style="width: 400px"
 							multiple
+                            clearable
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
 						>

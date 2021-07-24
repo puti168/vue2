@@ -72,8 +72,9 @@
 					<el-form-item label="审核状态:">
 						<el-select
 							v-model="queryData.auditStatusList"
-							style="width: 300px"
+							style="width: 400px"
 							multiple
+                            clearable
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
 						>
@@ -129,6 +130,7 @@
 							placeholder="默认选择全部"
 							clearable
 							multiple
+                            collapse-tags
 							style="width: 300px"
 						>
 							<el-option
