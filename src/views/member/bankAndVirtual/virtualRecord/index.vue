@@ -164,19 +164,33 @@
 						align="center"
 						label="上级代理"
 					>
-						<Copy :title="scope.row.parentProxyName" :copy="copy" />
+						<Copy
+							v-if="!!scope.row.parentProxyName"
+							:title="scope.row.parentProxyName"
+							:copy="copy"
+						/>
+						<span v-else>-</span>
 					</el-table-column>
 					<el-table-column
 						v-slot="scope"
 						prop="virtualAddress"
 						align="center"
 						label="虚拟币账户地址"
+						width="220"
 					>
-						<Copy :title="scope.row.virtualAddress" :copy="copy" />
+						<Copy
+							v-if="!!scope.row.virtualAddress"
+							:title="scope.row.virtualAddress"
+							:copy="copy"
+						/>
+						<span v-else>-</span>
 					</el-table-column>
 					<el-table-column prop="virtualKind" align="center" label="虚拟币种类">
 						<template slot-scope="scope">
-							<p>{{ typeFilter(scope.row.virtualKind, 'virtualType') }}</p>
+							<span v-if="!!scope.row.virtualKind">
+								{{ scope.row.virtualKind }}
+							</span>
+							<span v-else>-</span>
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -185,11 +199,10 @@
 						label="虚拟币协议"
 					>
 						<template slot-scope="scope">
-							<p>
-								{{
-									typeFilter(scope.row.virtualProtocol, 'virtualProtocolType')
-								}}
-							</p>
+							<span v-if="!!scope.row.virtualProtocol">
+								{{ scope.row.virtualProtocol }}
+							</span>
+							<span v-else>-</span>
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -208,8 +221,7 @@
 						prop="operator"
 						align="center"
 						label="操作人"
-					>
-					</el-table-column>
+					></el-table-column>
 					<el-table-column
 						prop="operateType"
 						align="center"
@@ -355,8 +367,8 @@ export default {
 					// 降序
 					this.queryData.orderType = 'desc'
 				} else {
-				    delete this.queryData.orderType
-                }
+					delete this.queryData.orderType
+				}
 				this.loadData()
 			}
 		},

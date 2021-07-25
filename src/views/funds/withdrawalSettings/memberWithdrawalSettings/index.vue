@@ -337,7 +337,7 @@ export default {
         virtualCardMaxAmount,
         virtualCardMinAmount,
         bigAmount,
-        vipSerialNum: [
+        vipNumName: [
 					{
 						required: true,
 						message: '请选择vip等级',

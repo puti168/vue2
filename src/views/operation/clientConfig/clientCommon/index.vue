@@ -9,13 +9,12 @@
 					为必填项
 				</span>
 			</div>
-			<el-form ref="form" :model="queryData" :rules="rules" label-width="120px">
+			<el-form ref="form" :model="queryData" :rules="rules" label-width="145px">
 				<el-form-item label="类型:" prop="operateType">
 					<el-select
 						v-model="queryData.operateType"
 						size="medium"
 						placeholder="全部"
-						clearable
 						style="width: 365px"
 						@change="changeRiskType($event)"
 					>
@@ -36,6 +35,8 @@
 					<el-input
 						v-model="queryData.userAddress"
 						size="medium"
+                        type="textarea"
+                        show-word-limit
 						maxlength="70"
 						placeholder="请输入"
 						clearable
@@ -53,6 +54,8 @@
 						v-model="queryData.agentAddress"
 						size="medium"
 						maxlength="70"
+                        type="textarea"
+                        show-word-limit
 						placeholder="请输入"
 						clearable
 						oninput="value=value.replace(/[\u4E00-\u9FA5]/g ,'')"
@@ -69,6 +72,8 @@
 						v-model="queryData.iosAddress"
 						size="medium"
 						maxlength="70"
+                        type="textarea"
+                        show-word-limit
 						oninput="value=value.replace(/[\u4E00-\u9FA5]/g ,'')"
 						placeholder="请输入"
 						clearable
@@ -85,6 +90,8 @@
 						v-model="queryData.androidAddress"
 						size="medium"
 						maxlength="70"
+                        type="textarea"
+                        show-word-limit
 						placeholder="请输入"
 						clearable
 						oninput="value=value.replace(/[\u4E00-\u9FA5]/g ,'')"
@@ -101,6 +108,8 @@
 						v-model="queryData.pcAddress"
 						size="medium"
 						maxlength="70"
+                        type="textarea"
+                        show-word-limit
 						placeholder="请输入"
 						clearable
 						oninput="value=value.replace(/[\u4E00-\u9FA5]/g ,'')"
@@ -117,6 +126,8 @@
 						v-model="queryData.complainAddress"
 						size="medium"
 						maxlength="70"
+                        type="textarea"
+                        show-word-limit
 						placeholder="请输入"
 						clearable
 						oninput="value=value.replace(/[\u4E00-\u9FA5]/g ,'')"
@@ -125,14 +136,16 @@
 				</el-form-item>
 				<el-form-item
 					v-else-if="[6].includes(queryData.operateType)"
-					label="客户邮箱"
+					label="客服邮箱"
 					prop="serviceAddress"
 				>
-					<!--       客户邮箱 -->
+					<!--       客服邮箱 -->
 					<el-input
 						v-model="queryData.serviceAddress"
 						size="medium"
 						maxlength="70"
+                        type="textarea"
+                        show-word-limit
 						placeholder="请输入"
 						clearable
 						oninput="value=value.replace(/[\u4E00-\u9FA5]/g ,'')"
@@ -149,6 +162,8 @@
 						v-model="queryData.IdAddress"
 						size="medium"
 						maxlength="70"
+                        type="textarea"
+                        show-word-limit
 						oninput="value=value.replace(/[\u4E00-\u9FA5]/g ,'')"
 						placeholder="请输入"
 						clearable
@@ -157,7 +172,7 @@
 				</el-form-item>
 				<el-form-item
 					v-else-if="[8].includes(queryData.operateType)"
-					label="客服充值地址"
+					label="代客充值客服地址:"
 					prop="Hospitality"
 				>
 					<!--                    客服充值地址-->
@@ -165,6 +180,8 @@
 						v-model="queryData.Hospitality"
 						size="medium"
 						maxlength="70"
+                        type="textarea"
+                        show-word-limit
 						oninput="value=value.replace(/[\u4E00-\u9FA5]/g ,'')"
 						placeholder="请输入"
 						clearable
@@ -210,7 +227,7 @@
 			</div>
 			<div class="info-content">
 				<el-row class="info-content-row">
-					<el-col :span="6">
+					<div>
 						<p v-if="[0].includes(queryData.operateType)">
 							<span>会员客服地址：</span>
 							<span>
@@ -282,7 +299,7 @@
 							</span>
 						</p>
 						<p v-else-if="[7].includes(queryData.operateType)">
-							<span>合营ID：</span>
+							<span>合营部ID：</span>
 							<span>
 								{{
 									showInfoData && showInfoData.resourcesUrl
@@ -292,7 +309,7 @@
 							</span>
 						</p>
                         <p v-else>
-                            <span>客服充值地址：</span>
+                            <span>代客充值客服地址：</span>
                             <span>
 								{{
                                     showInfoData && showInfoData.resourcesUrl
@@ -301,16 +318,16 @@
                                 }}
 							</span>
                         </p>
-					</el-col>
-					<el-col :span="6">
+					</div>
+					<div>
 						<span>备注：</span>
 						<span>
 							{{
 								showInfoData && showInfoData.remark ? showInfoData.remark : '-'
 							}}
 						</span>
-					</el-col>
-					<el-col :span="5">
+					</div>
+					<div>
 						<span>最近操作人：</span>
 						<span>
 							{{
@@ -319,13 +336,13 @@
 									: '-'
 							}}
 						</span>
-					</el-col>
-					<el-col :span="7">
+					</div>
+					<div>
 						<span>最近操作时间：</span>
 						<span>
 							{{ updateTime }}
 						</span>
-					</el-col>
+					</div>
 				</el-row>
 			</div>
 		</div>
@@ -391,7 +408,7 @@ export default {
 				{ required: true, message: '请输入投诉建议邮箱', trigger: 'blur' }
 			]
 			const serviceAddress = [
-				{ required: true, message: '请输入客户邮箱', trigger: 'blur' }
+				{ required: true, message: '请输入客服邮箱', trigger: 'blur' }
 			]
 			const IdAddress = [
 				{ required: true, message: '请输入合营ID', trigger: 'blur' }
@@ -638,9 +655,15 @@ export default {
 		.info-content {
 			margin-top: 30px;
 			font-size: 14px;
+            margin-left: 15px;
 			.info-content-row {
 				padding-top: 20px;
 				padding-bottom: 20px;
+                > div {
+                    min-width: 165px;
+                    padding-top: 6px;
+                    padding-bottom: 6px;
+                }
 			}
 		}
 	}

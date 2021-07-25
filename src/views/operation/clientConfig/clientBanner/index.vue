@@ -167,7 +167,6 @@
         width="970px"
         :destroy-on-close="true"
       >
-
         <draggable v-model="sortareaList" @start="onStart" @end="onEnd">
           <transition-group>
             <div v-for="tiem in sortareaList" :key="tiem.value" class="reach">
@@ -175,10 +174,10 @@
             </div>
           </transition-group>
         </draggable>
-         <div slot="footer" class="dialog-footer">
-        <el-button @click="subSort = false">取消</el-button>
-        <el-button type="primary" @click="setoperateConfigBannerSort">确定</el-button>
-       </div>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="subSort = false">取消</el-button>
+          <el-button type="primary" @click="setoperateConfigBannerSort">确定</el-button>
+        </div>
       </el-dialog>
       <div class="view-container dealer-container">
         <div class="content">
@@ -247,11 +246,10 @@
               width="120px"
             >
               <template slot-scope="scope">
-
-                <div v-if="scope.row.linkTarget === 0 ">
+                <div v-if="scope.row.linkTarget === 0">
                   <span v-for="(item, index) in QueryGameList" :key="index">
                     <!-- {{ scope.row.linkTarget === item.gameName ? item.gameId : ''}} -->
-                    {{ scope.row.targetUrl === item.gameId+'' ? item.gameName : '' }}
+                    {{ scope.row.targetUrl === item.gameId + "" ? item.gameName : "" }}
                   </span>
                 </div>
                 <div v-else-if="scope.row.linkTarget === 1 || scope.row.linkTarget === 2">
@@ -302,7 +300,7 @@
             <el-table-column prop="operating" align="center" label="操作" width="270px">
               <template slot-scope="scope">
                 <el-button
-                  v-if="hasPermission('327')&&scope.row.status === 0"
+                  v-if="hasPermission('327') && scope.row.status === 0"
                   :disabled="loading"
                   type="success"
                   size="medium"
@@ -312,7 +310,7 @@
                   开启
                 </el-button>
                 <el-button
-                  v-if="hasPermission('327')&&scope.row.status !== 0"
+                  v-if="hasPermission('327') && scope.row.status !== 0"
                   :disabled="loading"
                   type="danger"
                   size="medium"
@@ -429,8 +427,8 @@
               :rules="[{ required: true }]"
             >
               <el-date-picker
-              v-model="upTime"
-                style="width:204px"
+                v-model="upTime"
+                style="width: 204px"
                 size="medium"
                 format="yyyy-MM-dd HH:mm:ss"
                 :picker-options="dateNow"
@@ -447,7 +445,7 @@
             >
               <el-date-picker
                 v-model="downTime"
-                style="width:204px"
+                style="width: 204px"
                 size="medium"
                 format="yyyy-MM-dd HH:mm:ss"
                 :picker-options="dateEnd"
@@ -494,8 +492,17 @@
                 <el-option label="外部地址" :value="2"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item v-if="dialogForm.linkTarget === 0 && dialogForm.isLink === 1" prop="targetUrl" label="游戏:" :rules="[ {required: true,message: '请选择游戏'}]">
-              <el-select v-model="dialogForm.targetUrl" placeholder="获取创建的游戏" class="region">
+            <el-form-item
+              v-if="dialogForm.linkTarget === 0 && dialogForm.isLink === 1"
+              prop="targetUrl"
+              label="游戏:"
+              :rules="[{ required: true, message: '请选择游戏' }]"
+            >
+              <el-select
+                v-model="dialogForm.targetUrl"
+                placeholder="获取创建的游戏"
+                class="region"
+              >
                 <el-option
                   v-for="item in QueryGameList"
                   :key="item.gameId"
@@ -505,23 +512,10 @@
               </el-select>
             </el-form-item>
             <el-form-item
-            v-if="dialogForm.linkTarget === 1"
+              v-if="dialogForm.linkTarget === 1 || dialogForm.linkTarget === 2"
               label="URL链接:"
               prop="targetUrl"
-              :rules="[{ required: true,message: '请输入链接' }]"
-            >
-              <el-input
-                v-model="dialogForm.targetUrl"
-                class="region"
-                placeholder="请输入"
-                show-word-limit
-              ></el-input>
-            </el-form-item>
-               <el-form-item
-            v-if="dialogForm.linkTarget === 2"
-              label="URL链接:"
-              prop="targetUrl"
-              :rules="[{ required: true,message: '请输入链接' }]"
+              :rules="[{ required: true, message: '请输入链接' }]"
             >
               <el-input
                 v-model="dialogForm.targetUrl"
@@ -685,7 +679,6 @@ export default {
         status: 0,
         pictureUrl: null,
         gameName: ''
-
       }
       this.upTime = Date.now()
       this.downTime = endTime
@@ -700,11 +693,10 @@ export default {
 
     openEdit(row) {
       this.addOrEdit = 'edit'
-      this.dialogForm =
-      { ...row,
-         targetUrl: row.targetUrl * 1
-       }
+      this.dialogForm = { ...row }
+      console.log(row, 'row')
       console.log(row, '编辑的事')
+      this.dialogForm.targetUrl = row.targetUrl
       this.dialogForm.upTime = row.upTime
       this.dialogForm.downTime = row.downTime
       this.dialogForm.isLink = row.isLink
@@ -860,7 +852,7 @@ export default {
       this.drag = false
     },
     setoperateConfigBannerSort() {
-       const arr = this.sortareaList
+      const arr = this.sortareaList
       const newArr = []
       for (let i = 0; i < arr.length; i++) {
         const ele = arr[i]
@@ -869,15 +861,17 @@ export default {
       console.log(this.sortareaList)
       const sortIds = newArr.join(',')
       const clientType = this.clientType
-      this.$api.setoperateConfigBannerSort({sortIds: sortIds, clientType}).then((res) => {
-        if (res.code === 200) {
-         this.$message({
-            message: '操作成功！',
-            type: 'success'
-          })
-          this.subSort = false
-        }
-      })
+      this.$api
+        .setoperateConfigBannerSort({ sortIds: sortIds, clientType })
+        .then((res) => {
+          if (res.code === 200) {
+            this.$message({
+              message: '操作成功！',
+              type: 'success'
+            })
+            this.subSort = false
+          }
+        })
 
       this.loadData()
     },
@@ -891,7 +885,7 @@ export default {
       // console.log(this.QueryareaList)
       // const sortIds = newArr.join(',')
       const clientType = this.clientType
-       this.$api.operatecCnfigBannerQuerySortedBannerArea({clientType}).then((res) => {
+      this.$api.operatecCnfigBannerQuerySortedBannerArea({ clientType }).then((res) => {
         if (res.code === 200) {
           this.sortareaList = res.data
           this.subSort = true
@@ -960,14 +954,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.time{
+.time {
   margin-left: 45px;
 }
-.game-container .params{
+.game-container .params {
   padding-block: 22px;
 }
-.content{
-      margin-top: 65px;
+.content {
+  margin-top: 65px;
 }
 .reach {
   padding: 6px;

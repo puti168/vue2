@@ -47,11 +47,55 @@ export function getQueryRecordList(data) {
 		data
 	})
 }
-//
+// 第三方回调IP白名单查询
+export function getCallbackIpWhiteList(data) {
+	return request({
+		url: '/callbackIpWhite/select',
+		method: 'post',
+		data
+	})
+}
+// 新增第三方回调IP白名单
+export function addCallbackIpWhite(data) {
+	return request({
+		url: '/callbackIpWhite/insert',
+		method: 'post',
+		data
+	})
+}
+// 删除第三方回调IP白名单管理
+export function deleteCallbackIpWhite(data) {
+	return request({
+		url: '/callbackIpWhite/delete',
+		method: 'post',
+		data
+	})
+}
+// 修改第三方回调IP白名单管理
+export function updateCallbackIpWhite(data) {
+	return request({
+		url: '/callbackIpWhite/update',
+		method: 'post',
+		data
+	})
+}
+// 修改第三方回调IP白名单状态
+export function updateStatusCallbackIpWhite(data) {
+	return request({
+		url: '/callbackIpWhite/updateStatus',
+		method: 'post',
+		data
+	})
+}
 export default {
     getkvconfigQueryList,
 	getkvconfigUpdate,
 	getSystemUserLoginRecordQueryLoginLog,
 	getuserInfolist,
-	getQueryRecordList
+	getQueryRecordList,
+	getCallbackIpWhiteList,
+	addCallbackIpWhite,
+	deleteCallbackIpWhite,
+	updateCallbackIpWhite,
+	updateStatusCallbackIpWhite
 }
