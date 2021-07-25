@@ -155,7 +155,7 @@
 						<template slot-scope="scope">
 							<div
 								v-if="!!scope.row.pictureUrl"
-								class="blueColor pictureUrl"
+                                class="blueColor decoration"
 								@click="preViewPicture(scope.row)"
 							>
 								点击预览
