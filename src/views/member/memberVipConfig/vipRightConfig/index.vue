@@ -28,7 +28,7 @@
 									v-model="scope.row.dayWithdrawalNum"
 									size="medium"
 									:max="999999999"
-									:min="0"
+									:min="1"
 									placeholder="请输入"
 									clearable
 									style="width: 150px"
@@ -48,7 +48,7 @@
 									v-model.number="scope.row.dayWithdrawalQuota"
 									size="medium"
 									:max="999999999"
-									:min="0"
+									:min="1"
 									placeholder="请输入"
 									clearable
 									style="width: 150px"
