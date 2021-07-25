@@ -117,7 +117,7 @@
                 <span v-else>-</span>
               </template>
             </el-table-column>
-            <el-table-column align="center" label="修改时间" prop="updateDt">
+            <el-table-column align="center" label="变更时间" prop="updateDt">
               <template slot-scope="scope">
                 <span v-if="scope.row.updateDt">
                   {{ scope.row.updateDt }}
