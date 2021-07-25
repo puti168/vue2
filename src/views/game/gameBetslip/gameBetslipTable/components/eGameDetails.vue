@@ -29,7 +29,7 @@
           <el-col :span="6">投注金额：{{ dataList.betAmount }}</el-col>
           <el-col :span="6">有效投注：{{ dataList.validBetAmount }}</el-col>
           <el-col :span="6">输赢金额： {{ dataList.netAmount }}</el-col>
-          <el-col :span="6">注单状态： {{ dataList.betStatus }}</el-col>
+          <el-col :span="6">注单归类： {{ dataList.betStatus }}</el-col>
           <el-col :span="6">投注时间： {{ dataList.createAt }}</el-col>
           <el-col :span="6">结算时间：{{ dataList.netAt }}</el-col>
           <el-col :span="6">同步时间： {{ dataList.synchronizationTime }}</el-col>

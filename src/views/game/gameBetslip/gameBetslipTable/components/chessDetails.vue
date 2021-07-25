@@ -30,7 +30,7 @@
                 : typeFilter(dataList.deviceType, "betDeviceType")
             }}
           </el-col>
-          <el-col :span="6">注单状态： {{ dataList.betStatus }}</el-col>
+          <el-col :span="6">注单归类： {{ dataList.betStatus }}</el-col>
           <el-col :span="6">同步时间： {{ dataList.synchronizationTime }}</el-col>
         </el-row>
       </div>

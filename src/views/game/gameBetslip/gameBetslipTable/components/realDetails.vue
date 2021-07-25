@@ -22,7 +22,7 @@
             <el-col :span="6">投注金额： {{ dataList.betAmount }}</el-col>
             <el-col :span="6">有效投注： {{ dataList.validBetAmount }}</el-col>
             <el-col :span="6">输赢金额： {{ dataList.netAmount }}</el-col>
-            <el-col :span="6">注单状态： {{ dataList.betStatus }}</el-col>
+            <el-col :span="6">注单归类： {{ dataList.betStatus }}</el-col>
             <el-col :span="6">投注IP： {{ dataList.loginIp }}</el-col>
             <el-col :span="6">
               投注终端：

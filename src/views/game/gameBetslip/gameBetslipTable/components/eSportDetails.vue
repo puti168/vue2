@@ -28,7 +28,7 @@
           <el-col :span="6">投注时间： {{ dataList.createAt }}</el-col>
           <el-col :span="6">结算时间： {{ dataList.netAt }}</el-col>
           <el-col :span="6">同步时间： {{ dataList.synchronizationTime }}</el-col>
-          <el-col :span="6">注单状态： {{ dataList.betStatus }}</el-col>
+          <el-col :span="6">注单归类： {{ dataList.betStatus }}</el-col>
         </el-row>
       </div>
       <el-table

@@ -14,7 +14,7 @@
             </span>
           </el-col>
           <el-col :span="6">彩种名称： {{ dataList.seriesName }}</el-col>
-          <el-col :span="6">注单状态： {{ dataList.betStatus }}</el-col>
+          <el-col :span="6">注单归类： {{ dataList.betStatus }}</el-col>
           <el-col :span="6">期号： {{ dataList.ticketPlanNo }}</el-col>
           <el-col :span="6">模式： {{ dataList.betModel }}</el-col>
           <el-col :span="6">赔率： {{ dataList.oddsValue }}</el-col>

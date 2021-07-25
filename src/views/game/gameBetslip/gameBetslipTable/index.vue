@@ -64,8 +64,8 @@
 							v-model="queryData.gameCode"
 							style="width: 230px"
 							multiple
-                            clearable
-                            collapse-tags
+							clearable
+							collapse-tags
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
 						>
@@ -77,7 +77,7 @@
 							></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="游戏类型:">
+					<el-form-item label="游戏名称:">
 						<el-input
 							v-model="queryData.gameTypeName"
 							clearable
@@ -106,8 +106,8 @@
 							v-model="queryData.accountType"
 							style="width: 230px"
 							multiple
-                            clearable
-                            collapse-tags
+							clearable
+							collapse-tags
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
 						>
@@ -143,7 +143,7 @@
 							@keyup.enter.native="enterSearch"
 						></el-input>
 					</el-form-item>
-					<el-form-item label="注单状态:" class="tagheight">
+					<el-form-item label="状态归类:" class="tagheight">
 						<el-select
 							v-model="queryData.betStatus"
 							style="width: 180px"
@@ -153,6 +153,7 @@
 						>
 							<el-option label="已结算" value="1"></el-option>
 							<el-option label="未结算" value="2"></el-option>
+                            <el-option label="已取消" value="3"></el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item label="投注金额:">
@@ -216,9 +217,9 @@
 					<el-form-item label="投注终端:" class="tagheight">
 						<el-select
 							v-model="queryData.deviceType"
-							style="width: 350px; margin-right: 20px"
+							style="width: 400px; margin-right: 20px"
 							multiple
-                            clearable
+							clearable
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
 						>
@@ -249,7 +250,7 @@
 							重置
 						</el-button>
 						<el-button
-						    v-if="hasPermission('1020311')"
+							v-if="hasPermission('1020311')"
 							icon="el-icon-download"
 							type="warning"
 							:disabled="loading"
@@ -386,7 +387,7 @@
 					<el-table-column
 						prop="betStatus"
 						align="center"
-						label="注单状态"
+						label="状态归类"
 						width="100px"
 					>
 						<template slot-scope="scope">
@@ -394,6 +395,9 @@
 								已结算
 							</span>
 							<span v-else-if="scope.row.betStatus === 2" class="deleteRgba">
+								未结算
+							</span>
+							<span v-else-if="scope.row.betStatus === 3" class="lockingRgba">
 								未结算
 							</span>
 							<span v-else>-</span>
@@ -456,7 +460,7 @@
 					>
 						<template slot-scope="scope">
 							<el-button
-							    v-if="hasPermission('1020312')"
+								v-if="hasPermission('1020312')"
 								type="primary"
 								icon="el-icon-view"
 								size="medium"
