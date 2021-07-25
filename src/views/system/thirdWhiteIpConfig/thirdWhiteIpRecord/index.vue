@@ -26,9 +26,14 @@
                   clearable
                   style="width: 300px"
             >
+            
                 <el-option label="全部" value=""></el-option>
-                <el-option label="关闭" :value="0"></el-option>
-                <el-option label="开启" :value="1"></el-option>
+                <el-option
+                  v-for="item in entrAuthorityTypeArr"
+                  :key="item.code"
+                  :label="item.description"
+                  :value="item.code"
+                ></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="第三方支付渠道id:">
@@ -47,7 +52,7 @@
               v-model="queryData.ip"
               clearable
               size="medium"
-              :maxlength="12"
+              :maxlength="15"
               style="width: 180px"
               placeholder="请输入"
               @keyup.enter.native="enterSearch"
@@ -96,13 +101,6 @@
             :header-cell-style="getRowClass"
             @sort-change="_changeTableSort"
           >
-            <el-table-column
-              prop="createdAt"
-              align="center"
-              label="操作时间"
-              sortable="custom"
-            >
-            </el-table-column>
             <el-table-column prop="createDt" align="center" label="创建时间">
               <template slot-scope="scope">
                 <span v-if="!!(scope.row.createDt+'')">
@@ -127,6 +125,14 @@
                 <span v-else>-</span>
               </template>
             </el-table-column>
+            <el-table-column align="center" label="第三方回调ip" prop="ip">
+              <template slot-scope="scope">
+                <span v-if="scope.row.ip">
+                  {{ scope.row.ip }}
+                </span>
+                <span v-else>-</span>
+              </template>
+            </el-table-column>
             <el-table-column prop="operator" align="center" width="120" label="操作人">
               <template slot-scope="scope">
                 <span v-if="!!(scope.row.operator+'')">
@@ -138,7 +144,7 @@
             <el-table-column align="center" label="状态" prop="status">
               <template slot-scope="scope">
                 <span v-if="!!(scope.row.status+'')">
-                  {{ scope.row.status }}
+                  {{ typeFilter(scope.row.status, 'entrAuthorityType') }}
                 </span>
                 <span v-else>-</span>
               </template>
@@ -167,12 +173,35 @@
                 <span v-else>-</span>
               </template>
             </el-table-column>
-            <el-table-column align="center" label="操作">
+            <el-table-column align="center" label="操作" min-width="250">
               <template slot-scope="scope">
-                <span @click="dele(scope.row)">删除</span>
-                <span @click="openEdit(scope.row)">修改</span>
-                <span v-if="scope.row.status===0" @click="updateStatus(scope.row)">开启</span>
-                <span v-else @click="updateStatus(scope.row)">关闭</span>
+                <el-button
+                  v-if="hasPermission('361')"
+									type="danger"
+									icon="el-icon-delete"
+									size="medium"
+									@click="dele(scope.row)"
+								>
+									删除
+								</el-button>
+                <el-button
+                  v-if="hasPermission('360')"
+									type="warning"
+									icon="el-icon-edit"
+									size="medium"
+									@click.stop="openEdit(scope.row)"
+								>
+									编辑
+								</el-button>
+                <el-button
+                  v-if="hasPermission('360')"
+									type="warning"
+									icon="el-icon-edit"
+									size="medium"
+									@click.stop="updateStatus(scope.row)"
+								>
+									更改状态
+								</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -191,7 +220,7 @@
         </div>
       </div>
     </div>
-    <editForm v-else :editRowData="editRowData" @back="back"></editForm>
+    <editForm v-else :editRowData="editData" @back="back"></editForm>
   </transition>
 </template>
 
@@ -221,6 +250,9 @@ export default {
     }
   },
 	computed: {
+		entrAuthorityTypeArr() {
+			return this.globalDics.entrAuthorityType
+		}
 	},
   mounted() {},
   methods: {
@@ -284,52 +316,71 @@ export default {
 			this.loadData()
 		},
     dele(rowData) {
-      const { id } = rowData
-      this.$api.deleteCallbackIpWhite({id})
-      .then((res) => {
-          this.loading = false
-          const {
-            code,
-            data: { record, totalRecord },
-            msg
-          } = res
-          if (code === 200) {
-            this.dataList = record || []
-            this.total = totalRecord || 0
-          } else {
-            this.$message({
-              message: msg,
-              type: 'error'
-            })
-          }
+      this.$confirm(
+        `<strong>是否删除该条配置?</strong></br><span style='font-size:12px;color:#c1c1c1'>请谨慎操作</span>`,
+        '确认提示',
+        {
+          dangerouslyUseHTMLString: true,
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }
+      )
+        .then(() => {
+          this.$api.deleteCallbackIpWhite({ id: rowData.id }).then((res) => {
+            this.loading = false
+            if (res.code === 200) {
+              this.$message({
+                message: '操作成功！',
+                type: 'success'
+              })
+              this.loadData()
+            } else {
+              this.$message({
+                message: res.msg,
+                type: 'error'
+              })
+            }
+          })
         })
-        .catch(() => {
-          this.loading = false
-        })
+        .catch(() => { this.loading = false })
     },
     updateStatus(rowData) {
-      const { id } = rowData
-      this.$api.updateStatusCallbackIpWhite({id})
-      .then((res) => {
-          this.loading = false
-          const {
-            code,
-            data: { record, totalRecord },
-            msg
-          } = res
-          if (code === 200) {
-            this.dataList = record || []
-            this.total = totalRecord || 0
+      this.$confirm(
+        `<strong>是否更改状态?</strong></br><span style='font-size:12px;color:#c1c1c1'>请谨慎操作</span>`,
+        '确认提示',
+        {
+          dangerouslyUseHTMLString: true,
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }
+      )
+        .then(() => {
+          let { id, status } = rowData
+          if ( status === 0 ) {
+            status = 1
           } else {
-            this.$message({
-              message: msg,
-              type: 'error'
-            })
+            status = 0
           }
+          this.$api.updateStatusCallbackIpWhite({ id, status })
+          .then((res) => {
+            this.loading = false
+            if (res.code === 200) {
+              this.$message({
+                message: '操作成功！',
+                type: 'success'
+              })
+              this.loadData()
+            } else {
+              this.$message({
+                message: res.msg,
+                type: 'error'
+              })
+            }
+          })
         })
-        .catch(() => {
-          this.loading = false
-        })
+        .catch(() => { this.loading = false })
     },
     reset() {
       this.pageNum = 1

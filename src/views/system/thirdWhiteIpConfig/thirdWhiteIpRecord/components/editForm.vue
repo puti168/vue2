@@ -37,7 +37,16 @@
               style="width: 205px"
             ></el-input>
           </el-form-item>
-          <el-form-item label="状态:" class="tagheight">
+          <el-form-item prop="status" label="状态:" class="tagheight"
+            :rules="[
+              {
+                required: true,
+                min: 1,
+                message: '状态不能为空',
+                trigger: ['change'],
+              },
+            ]"
+          >
             <el-select
               v-model="queryData.status"
               style="width: 180px"
@@ -45,8 +54,8 @@
               placeholder="请选择"
               :popper-append-to-body="false"
             >
-              <el-option :value="0" label="关闭"></el-option>
-              <el-option :value="1" label="开启"></el-option>
+              <el-option :value="'0'" label="关闭"></el-option>
+              <el-option :value="'1'" label="开启"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item
@@ -64,7 +73,7 @@
             <el-input
               v-model="queryData.channelId"
               size="medium"
-              maxlength="8"
+              maxlength="10"
               placeholder="请输入"
               clearable
               style="width: 205px"
@@ -85,7 +94,7 @@
             <el-input
               v-model="queryData.ip"
               size="medium"
-              maxlength="8"
+              maxlength="15"
               placeholder="请输入"
               clearable
               style="width: 205px"
@@ -109,7 +118,28 @@ export default {
       queryData: { ...this.editRowData }
     }
   },
-  computed: {},
+  computed: {
+    rules() {
+			const applyBy = [
+				{ required: true, message: '请输入申请人', trigger: 'blur' }
+			]
+			const status = [
+				{ required: true, message: '请选择状态', trigger: 'change' }
+			]
+			const channelId = [
+				{ required: true, message: '请输入第三方支付渠道id', trigger: 'blur' }
+			]
+			const ip = [
+				{ required: true, message: '请输入第三方回调ip', trigger: 'blur' }
+			]
+			return {
+				applyBy,
+				status,
+				channelId,
+				ip
+			}
+		}
+  },
   watch: {},
   mounted() {},
   methods: {
