@@ -17,144 +17,79 @@
           class="agent-form"
         >
           <el-form-item
-            label="代理等级:"
-            prop="proxyGradeName"
+            label="申请人:"
+            prop="applyBy"
             :rules="[
               {
                 required: true,
                 min: 1,
-                message: '代理等级不能为空',
+                message: '申请人不能为空',
                 trigger: ['blur'],
               },
             ]"
           >
             <el-input
-              v-model="queryData.proxyGradeName"
+              v-model="queryData.applyBy"
               size="medium"
               maxlength="8"
               placeholder="请输入"
               clearable
-              style="width: 405px"
+              style="width: 205px"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="状态:" class="tagheight">
+            <el-select
+              v-model="queryData.status"
+              style="width: 180px"
+              clearable
+              placeholder="请选择"
+              :popper-append-to-body="false"
+            >
+              <el-option :value="0" label="关闭"></el-option>
+              <el-option :value="1" label="开启"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item
+            label="第三方支付渠道id:"
+            prop="channelId"
+            :rules="[
+              {
+                required: true,
+                min: 1,
+                message: '第三方支付渠道id不能为空',
+                trigger: ['blur'],
+              },
+            ]"
+          >
+            <el-input
+              v-model="queryData.channelId"
+              size="medium"
+              maxlength="8"
+              placeholder="请输入"
+              clearable
+              style="width: 205px"
             ></el-input>
           </el-form-item>
           <el-form-item
-            label="本月活跃人数≥:"
-            prop="monthActiveNum"
+            label="第三方回调ip:"
+            prop="ip"
             :rules="[
               {
                 required: true,
                 min: 1,
-                type: 'number',
-                message: '请输入最多7位且大于0的数字',
+                message: '第三方回调ip不能为空',
                 trigger: ['blur'],
               },
             ]"
           >
-            <el-input-number
-              v-model.number="queryData.monthActiveNum"
+            <el-input
+              v-model="queryData.ip"
               size="medium"
-              :max="9999999"
-              placeholder="请输入数字"
+              maxlength="8"
+              placeholder="请输入"
               clearable
-              style="width: 120px"
-              :precision="0"
-              autocomplete="off"
-            ></el-input-number>
-          </el-form-item>
-          <el-form-item
-            label="本月新增活跃人数≥:"
-            prop="monthNewNum"
-            :rules="[
-              {
-                required: true,
-                min: 1,
-                type: 'number',
-                message: '请输入大于0的数字',
-                trigger: ['blur'],
-              },
-            ]"
-          >
-            <el-input-number
-              v-model="queryData.monthNewNum"
-              size="medium"
-              :max="9999999"
-              placeholder="请输入数字"
-              clearable
-              style="width: 120px"
-              :precision="0"
-              autocomplete="off"
-            ></el-input-number>
-          </el-form-item>
-          <el-form-item
-            label="额外赠佣比例%:"
-            prop="additionalCommission"
-            :rules="[
-              {
-                required: true,
-                min: 0,
-                max: 100,
-                type: 'number',
-                message: '输入值不能小于0大于100，最多2位小数',
-                trigger: ['blur'],
-              },
-            ]"
-          >
-            <el-input-number
-              v-model.number="queryData.additionalCommission"
-              size="medium"
-              :max="100"
-              placeholder="请输入数字"
-              clearable
-              :precision="2"
-              style="width: 120px"
-              autocomplete="off"
-            ></el-input-number>
-          </el-form-item>
-          <el-form-item
-            label="赠佣上限:"
-            prop="additionalCommissionLimit"
-            :rules="[
-              {
-                required: true,
-                min: 1,
-                type: 'number',
-                message: '请输入大于0的数字',
-                trigger: ['blur'],
-              },
-            ]"
-          >
-            <el-input-number
-              v-model="queryData.additionalCommissionLimit"
-              size="medium"
-              :max="99999"
-              placeholder="请输入数字"
-              clearable
-              style="width: 120px"
-              autocomplete="off"
-            ></el-input-number>
-          </el-form-item>
-          <el-form-item
-            label="赠送彩金:"
-            prop="giveJackpot"
-            :rules="[
-              {
-                required: true,
-                min: 0,
-                type: 'number',
-                message: '请输入大于等于0的数字',
-                trigger: ['blur'],
-              },
-            ]"
-          >
-            <el-input-number
-              v-model="queryData.giveJackpot"
-              size="medium"
-              placeholder="请输入数字"
-              clearable
-              :max="9999999"
-              style="width: 405px"
-              autocomplete="off"
-            ></el-input-number>
+              style="width: 205px"
+            ></el-input>
           </el-form-item>
         </el-form>
       </div>
@@ -181,9 +116,9 @@ export default {
     back() {
       this.$emit('back')
     },
-    setProxyGradeInsert(val) {
+    setCallbackIpWhiteInsert(val) {
       this.$api
-        .setProxyGradeInsert(val)
+        .addCallbackIpWhite(val)
         .then((res) => {
           this.loading = false
           if (res.code === 200) {
@@ -199,9 +134,9 @@ export default {
           this.loading = false
         })
     },
-    setProxyGradeUpdate(val) {
+    setCallbackIpWhiteUpdate(val) {
       this.$api
-        .setProxyGradeUpdate(val)
+        .updateCallbackIpWhite(val)
         .then((res) => {
           this.loading = false
           if (res.code === 200) {
@@ -230,7 +165,7 @@ export default {
               type: 'warning'
             })
               .then(() => {
-                this.setProxyGradeUpdate(params)
+                this.setCallbackIpWhiteUpdate(params)
               })
               .catch(() => {})
           } else {
@@ -240,7 +175,7 @@ export default {
               type: 'success'
             })
               .then(() => {
-                this.setProxyGradeInsert(params)
+                this.setCallbackIpWhiteInsert(params)
               })
               .catch(() => {})
           }
