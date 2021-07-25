@@ -29,6 +29,12 @@ const system = [
 		icon: 'bb_list',
 		title: '参数配置'
 	},
+	{
+		id: '396',
+		parentId: '106',
+		icon: 'bb_list',
+		title: '第三方白名单配置'
+	},
 	// 第三级菜单
 	{
 		id: '111',
@@ -71,6 +77,12 @@ const system = [
 		parentId: '110',
 		path: '/system/parameterConfiguration/parameterDictionaryRecord',
 		title: '参数字典修改记录'
+	},
+	{
+		id: '397',
+		parentId: '396',
+		path: '/system/thirdWhiteIpConfig/thirdWhiteIpRecord',
+		title: '第三方白名单管理'
 	}
 ]
 export default system
