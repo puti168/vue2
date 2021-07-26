@@ -46,9 +46,7 @@ const state = {
 	userInfo: getUserInfo(),
 	avatar: '',
 	globalDics: {},
-	datas: {},
-	vipDict: [], // 风控层级
-	userLabel: [] // 用户标签
+	datas: {}
 }
 
 const mutations = {
@@ -58,7 +56,7 @@ const mutations = {
 	SET_TOKEN: (state, token) => {
 		state.token = token
 	},
-	SET_GLABALDICS: (state, dics) => {
+	SET_GLOBAL_DICT: (state, dics) => {
 		state.globalDics = dics
 	},
 	SET_USERINFO: (state, userInfo) => {
@@ -114,11 +112,6 @@ const mutations = {
 			})
 		}
 	}
-	// SETRISKRANKINFO(state, data) {
-	// 	const { windControl, userLabel } = data
-	// 	state.vipDict = windControl || []
-	// 	state.userLabel = userLabel || []
-	// }
 }
 
 const actions = {
@@ -166,13 +159,12 @@ const actions = {
 		})
 	},
 	getDictList({ commit, state }) {
-		return new Promise((resolve, reject) => {
-			getDics().then((_) => {
-				if (_.code === 200) {
-					commit('SET_GLABALDICS', _.data)
-				}
-			})
-			resolve()
+		getDics().then((_) => {
+			const { code, data } = _
+			if (code === 200) {
+				commit('SET_GLOBAL_DICT', data)
+				window.localStorage.setItem('globalDict', JSON.stringify(data))
+			}
 		})
 	},
 	// user logout
@@ -223,15 +215,6 @@ const actions = {
 			resolve()
 		})
 	}
-	//    会员的风控层级
-	// userRiskRank({ commit }) {
-	// 	return merchantDictAPI().then((res) => {
-	// 		const { code, data } = res
-	// 		if (code === 200 && data) {
-	// 			commit('SETRISKRANKINFO', data)
-	// 		}
-	// 	})
-	// }
 }
 
 function loop(data, result) {
