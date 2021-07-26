@@ -102,7 +102,7 @@
 								</el-button>
 							</template>
 						</el-table-column>
-						<el-table-column prop="id" align="center" label="订单号">
+						<el-table-column prop="id" align="center" label="订单号" width="240">
 							<template slot-scope="scope">
 								<span v-if="!!scope.row.orderNo">
 									{{ scope.row.orderNo }}
@@ -170,6 +170,7 @@
 							prop="adjustAmount"
 							align="center"
 							label="增加金额"
+                            width="120"
 						>
 							<template slot-scope="scope">
 								<span v-if="!!scope.row.adjustAmount">
@@ -231,7 +232,7 @@
 							prop="details"
 							align="center"
 							label="审核用时"
-							width="130"
+							width="180"
 						>
 							<template slot-scope="scope">
 								<div v-if="!!scope.row.details && scope.row.details.length">
@@ -249,7 +250,7 @@
 							prop="remark"
 							align="center"
 							label="备注"
-							width="120"
+							width="150"
 						>
 							<template slot-scope="scope">
 								<div v-if="!!scope.row.details && scope.row.details.length">
@@ -258,7 +259,7 @@
 											!!scope.row.details[0] && !!scope.row.details[0].remark
 										"
 									>
-										一审：{{ scope.row.details[0].remark }}
+										{{ scope.row.details[0].remark }}
 									</p>
 									<p v-else>-</p>
 									<p
@@ -266,7 +267,7 @@
 											!!scope.row.details[1] && !!scope.row.details[1].remark
 										"
 									>
-                                        一审：{{ scope.row.details[1].remark }}
+                                        {{ scope.row.details[1].remark }}
 									</p>
 									<p v-else>-</p>
 								</div>
