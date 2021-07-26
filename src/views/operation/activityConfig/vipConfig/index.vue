@@ -155,9 +155,20 @@
               :disabled="loading"
               size="medium"
               style="padding: 0 10px"
-              @click="getSortData"
+              @click="getSortData(0)"
             >
               赞助活动排序
+            </el-button>
+            <el-button
+              v-if="hasPermission('408')"
+              type="warning"
+              icon="el-icon-sort"
+              :disabled="loading"
+              size="medium"
+              style="padding: 0 10px"
+              @click="getSortData(1)"
+            >
+              VIP活动排序
             </el-button>
           </el-form-item>
         </el-form>
@@ -644,8 +655,8 @@
         :header-cell-style="getRowClass"
         @sort-change="changeTableSort"
       >
-        <el-table-column align="center" prop="remake" width="90px"></el-table-column>
-        <el-table-column align="center" prop="sortLabel" label="赞助活动区域排序">
+        <el-table-column align="center" :prop="sortActivityType ? 'remake.vip' : 'remake.sponsor'" width="90px"></el-table-column>
+        <el-table-column align="center" prop="sortLabel" :label="!sortActivityType ? '赞助活动区域排序' : 'vip活动区域排序'">
           <template slot-scope="scope">
             <draggable
               v-model="scope.row.sortLabel"
@@ -711,10 +722,14 @@ export default {
       bigImage: '',
       imgVisible: false,
       sortVisible: false,
+      sortActivityType: '',
       addOrEdit: 'add',
       sortList: [
         {
-          remake: '赞助活动',
+          remake: {
+            vip: 'vip活动',
+            sponsor: '赞助活动'
+          },
           sortLabel: []
         }
       ]
@@ -787,14 +802,15 @@ export default {
           this.loading = false
         })
     },
-    getSortData() {
+    getSortData(type) {
       const params = {
-        type: '0'
+        type
       }
       this.$api.getOperateActivityVipQueryActivityNameList(params).then((res) => {
         if (res.code === 200) {
           this.sortList[0].sortLabel = res.data
           this.sortVisible = true
+          this.sortActivityType = type
         }
       })
     },
