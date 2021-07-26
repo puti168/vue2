@@ -157,7 +157,7 @@
               </div>
               <div v-else>
                 <p v-for="(item, index) in scope.row.terminal" :key="index">
-                  <span v-for="(obj, index) in loginDeviceType" :key="index">
+                  <span v-for="(obj, j) in loginDeviceType" :key="j">
                     {{ item === obj.code ? obj.description + "，" : "" }}
                   </span>
                 </p>

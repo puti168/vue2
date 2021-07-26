@@ -46,13 +46,10 @@ const ifVersionCorrect = async (to, from, next) => {
 			next({ path: '/' })
 			NProgress.done()
 		} else {
-			const gloablDics = store.state.user.globalDics
-			if (checkNullObj(gloablDics)) {
-				// 如果请求失败 跳转会再次请求
-				// 请求数据字典
-				await store.dispatch('user/getDics')
+			const globalDictList = store.state.user.globalDics
+			if (checkNullObj(globalDictList)) {
+				await store.dispatch('user/getDictList')
 			}
-			// console.log(addRoutes)
 			if (addRoutes.length === 0) {
 				const roles = await store.dispatch('user/getRoles')
 				try {
