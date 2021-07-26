@@ -138,7 +138,7 @@
              <span
 								v-if="!!scope.row.levelId || scope.row.levelId === 0"
 							>
-								{{ scope.row.levelId }}
+								VIP{{ scope.row.levelId }}
 							</span>
 							<span v-else>-</span>
             </template>
