@@ -165,7 +165,7 @@ const actions = {
 				})
 		})
 	},
-	getDics({ commit, state }) {
+	getDictList({ commit, state }) {
 		return new Promise((resolve, reject) => {
 			getDics().then((_) => {
 				if (_.code === 200) {

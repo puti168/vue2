@@ -646,8 +646,12 @@ export default {
 		}
 	},
 	computed: {
-		// ...mapGetters(['vipDict', 'userLabel']),
-		accountStatusArr() {
+		accountStatusArr({$attrs, $route, $store, $listeners, $ref}) {
+		    // console.log('$attrs', $attrs)
+		    // console.log('$route', $route)
+		    // console.log('$store', $store)
+		    // console.log('$listeners', $listeners)
+		    // console.log('$ref', $ref)
 			return this.globalDics.accountStatusType
 		},
 		accountTypeArr() {
