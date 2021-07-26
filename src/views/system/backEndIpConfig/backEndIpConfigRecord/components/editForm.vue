@@ -37,10 +37,7 @@
               style="width: 205px"
             ></el-input>
           </el-form-item>
-          <el-form-item
-            prop="status"
-            label="状态:"
-            class="tagheight"
+          <el-form-item prop="status" label="状态:" class="tagheight"
             :rules="[
               {
                 required: true,
@@ -151,7 +148,7 @@ export default {
     },
     setCallbackIpWhiteInsert(val) {
       this.$api
-        .addCallbackIpWhite(val)
+        .addBackEndIpConfig(val)
         .then((res) => {
           this.loading = false
           if (res.code === 200) {
@@ -169,7 +166,7 @@ export default {
     },
     setCallbackIpWhiteUpdate(val) {
       this.$api
-        .updateCallbackIpWhite(val)
+        .updateBackEndIpConfig(val)
         .then((res) => {
           this.loading = false
           if (res.code === 200) {

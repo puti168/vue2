@@ -87,6 +87,38 @@ export function updateStatusCallbackIpWhite(data) {
 		data
 	})
 }
+// ip白名单列表分页查询
+export function queryBackEndIpConfigList(data) {
+	return request({
+		url: '/ipWhiteInfo/listPage',
+		method: 'post',
+		data
+	})
+}
+// 添加ip白名单
+export function addBackEndIpConfig(data) {
+	return request({
+		url: '/ipWhiteInfo/add',
+		method: 'post',
+		data
+	})
+}
+// 删除ip白名单
+export function deleteBackEndIpConfig(data) {
+	return request({
+		url: '/ipWhiteInfo/del',
+		method: 'post',
+		data
+	})
+}
+// 编辑ip白名单
+export function updateBackEndIpConfig(data) {
+	return request({
+		url: '/ipWhiteInfo/edit',
+		method: 'post',
+		data
+	})
+}
 export default {
     getkvconfigQueryList,
 	getkvconfigUpdate,
@@ -97,5 +129,9 @@ export default {
 	addCallbackIpWhite,
 	deleteCallbackIpWhite,
 	updateCallbackIpWhite,
-	updateStatusCallbackIpWhite
+	updateStatusCallbackIpWhite,
+	queryBackEndIpConfigList,
+	addBackEndIpConfig,
+	deleteBackEndIpConfig,
+	updateBackEndIpConfig
 }

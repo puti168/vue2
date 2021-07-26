@@ -1,6 +1,6 @@
 <template>
   <transition name="fade-transform" mode="out-in">
-    <div v-if="!editPage" class="game-container report-container">
+    <div v-if="!editPage"  class="game-container report-container">
       <div class="params">
         <el-form ref="form" :inline="true" :model="queryData">
           <el-form-item label="变更时间:">
@@ -20,12 +20,13 @@
           </el-form-item>
           <el-form-item label="状态:">
             <el-select
-              v-model="queryData.status"
-              size="medium"
-              placeholder="默认选择全部"
-              clearable
-              style="width: 300px"
+                  v-model="queryData.status"
+                  size="medium"
+                  placeholder="默认选择全部"
+                  clearable
+                  style="width: 300px"
             >
+            
                 <el-option label="全部" value=""></el-option>
                 <el-option
                   v-for="item in entrAuthorityTypeArr"
@@ -76,7 +77,7 @@
               重置
             </el-button>
             <el-button
-              v-if="hasPermission('398')"
+              v-if="hasPermission('405')"
               type="warning"
               icon="el-icon-folder"
               :disabled="loading"
@@ -176,7 +177,7 @@
             <el-table-column align="center" label="操作" min-width="250">
               <template slot-scope="scope">
                 <el-button
-                  v-if="hasPermission('400')"
+                  v-if="hasPermission('407')"
 									type="danger"
 									icon="el-icon-delete"
 									size="medium"
@@ -185,22 +186,13 @@
 									删除
 								</el-button>
                 <el-button
-                  v-if="hasPermission('399')"
+                  v-if="hasPermission('406')"
 									type="warning"
 									icon="el-icon-edit"
 									size="medium"
 									@click.stop="openEdit(scope.row)"
 								>
 									编辑
-								</el-button>
-                <el-button
-                  v-if="hasPermission('401')"
-									type="warning"
-									icon="el-icon-edit"
-									size="medium"
-									@click.stop="updateStatus(scope.row)"
-								>
-									更改状态
 								</el-button>
               </template>
             </el-table-column>
@@ -270,7 +262,7 @@ export default {
       this.loading = true
 
       this.$api
-        .getCallbackIpWhiteList(params)
+        .queryBackEndIpConfigList(params)
         .then((res) => {
           this.loading = false
           const {
@@ -327,45 +319,7 @@ export default {
         }
       )
         .then(() => {
-          this.$api.deleteCallbackIpWhite({ id: rowData.id }).then((res) => {
-            this.loading = false
-            if (res.code === 200) {
-              this.$message({
-                message: '操作成功！',
-                type: 'success'
-              })
-              this.loadData()
-            } else {
-              this.$message({
-                message: res.msg,
-                type: 'error'
-              })
-            }
-          })
-        })
-        .catch(() => { this.loading = false })
-    },
-    updateStatus(rowData) {
-      this.$confirm(
-        `<strong>是否更改状态?</strong></br><span style='font-size:12px;color:#c1c1c1'>请谨慎操作</span>`,
-        '确认提示',
-        {
-          dangerouslyUseHTMLString: true,
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }
-      )
-        .then(() => {
-          const { id } = rowData
-          let { status } = rowData
-          if (status === 0) {
-            status = 1
-          } else {
-            status = 0
-          }
-          this.$api.updateStatusCallbackIpWhite({ id, status })
-          .then((res) => {
+          this.$api.deleteBackEndIpConfig({ id: rowData.id }).then((res) => {
             this.loading = false
             if (res.code === 200) {
               this.$message({
