@@ -250,10 +250,14 @@
 								size="medium"
 								@click="recycle(scope.row)"
 							>
-								<div v-if="hasPermission('333')&&scope.row.status + '' === '1'">
+								<div
+									v-if="hasPermission('333') && scope.row.status + '' === '1'"
+								>
 									禁用
 								</div>
-								<div v-if="hasPermission('333')&&scope.row.status + '' !== '1'">
+								<div
+									v-if="hasPermission('333') && scope.row.status + '' !== '1'"
+								>
 									开启
 								</div>
 							</el-button>
@@ -261,7 +265,7 @@
 								v-if="hasPermission('331')"
 								type="primary"
 								icon="el-icon-edit"
-                                :disabled="scope.row.status === 1"
+								:disabled="scope.row.status === 1"
 								size="medium"
 								@click="edit(scope.row)"
 							>
@@ -272,7 +276,7 @@
 								type="danger"
 								icon="el-icon-delete"
 								size="medium"
-                                :disabled="scope.row.status === 1"
+								:disabled="scope.row.status === 1"
 								@click="deleteLabel(scope.row)"
 							>
 								删除
@@ -382,10 +386,12 @@
 				title="图片"
 				:visible.sync="dialogPictureVisible"
 				:destroy-on-close="true"
-				width="650px"
+				width="750px"
 				class="imgCenter"
 			>
-				<img :src="pictureUrl" />
+				<div class="img-box">
+					<img v-lazy="pictureUrl" />
+				</div>
 			</el-dialog>
 		</div>
 	</div>
@@ -635,7 +641,7 @@ export default {
 				this.queryData.orderKey = undefined
 				this.queryData.orderType = undefined
 			}
-            this.loadData()
+			this.loadData()
 		},
 		clear() {
 			this.$refs.formSub.resetFields()
@@ -754,8 +760,13 @@ p {
 	margin-top: 15px;
 }
 .imgCenter {
-	img {
-		width: 100%;
+	.img-box {
+		height: 500px;
+		overflow-y: scroll;
+		img {
+			width: 100%;
+			height: 650px;
+		}
 	}
 }
 </style>
