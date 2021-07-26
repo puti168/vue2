@@ -17,27 +17,32 @@
           class="agent-form"
         >
           <el-form-item
-            label="申请人:"
-            prop="applyBy"
+            prop="sourceType"
+            label="数据来源:"
+            class="tagheight"
             :rules="[
               {
                 required: true,
                 min: 1,
-                message: '申请人不能为空',
-                trigger: ['blur'],
+                message: '数据来源不能为空',
+                trigger: ['change'],
               },
             ]"
           >
-            <el-input
-              v-model="queryData.applyBy"
-              size="medium"
-              maxlength="8"
-              placeholder="请输入"
+            <el-select
+              v-model="queryData.sourceType"
+              style="width: 180px"
               clearable
-              style="width: 205px"
-            ></el-input>
+              placeholder="请选择"
+              :popper-append-to-body="false"
+            >
+              <el-option :value="'0'" label="商户后台"></el-option>
+            </el-select>
           </el-form-item>
-          <el-form-item prop="status" label="状态:" class="tagheight"
+          <el-form-item
+            prop="status"
+            label="状态:"
+            class="tagheight"
             :rules="[
               {
                 required: true,
@@ -59,34 +64,36 @@
             </el-select>
           </el-form-item>
           <el-form-item
-            label="第三方支付渠道id:"
-            prop="channelId"
+            prop="type"
+            label="类型:"
+            class="tagheight"
             :rules="[
               {
                 required: true,
                 min: 1,
-                message: '第三方支付渠道id不能为空',
-                trigger: ['blur'],
+                message: '类型不能为空',
+                trigger: ['change'],
               },
             ]"
           >
-            <el-input
-              v-model="queryData.channelId"
-              size="medium"
-              maxlength="10"
-              placeholder="请输入"
+            <el-select
+              v-model="queryData.type"
+              style="width: 180px"
               clearable
-              style="width: 205px"
-            ></el-input>
+              placeholder="请选择"
+              :popper-append-to-body="false"
+            >
+              <el-option :value="'2'" label="商户后台"></el-option>
+            </el-select>
           </el-form-item>
           <el-form-item
-            label="第三方回调ip:"
+            label="ip:"
             prop="ip"
             :rules="[
               {
                 required: true,
                 min: 1,
-                message: '第三方回调ip不能为空',
+                message: 'ip不能为空',
                 trigger: ['blur'],
               },
             ]"
@@ -95,6 +102,19 @@
               v-model="queryData.ip"
               size="medium"
               maxlength="15"
+              placeholder="请输入"
+              clearable
+              style="width: 205px"
+            ></el-input>
+          </el-form-item>
+          <el-form-item
+            label="备注:"
+            prop="remark"
+          >
+            <el-input
+              v-model="queryData.remark"
+              size="medium"
+              maxlength="8"
               placeholder="请输入"
               clearable
               style="width: 205px"
@@ -120,22 +140,22 @@ export default {
   },
   computed: {
     rules() {
-			const applyBy = [
-				{ required: true, message: '请输入申请人', trigger: 'blur' }
+			const sourceType = [
+				{ required: true, message: '请选择状态', trigger: 'change' }
 			]
 			const status = [
 				{ required: true, message: '请选择状态', trigger: 'change' }
 			]
-			const channelId = [
-				{ required: true, message: '请输入第三方支付渠道id', trigger: 'blur' }
+			const type = [
+				{ required: true, message: '请选择状态', trigger: 'change' }
 			]
 			const ip = [
 				{ required: true, message: '请输入第三方回调ip', trigger: 'blur' }
 			]
 			return {
-				applyBy,
+				sourceType,
 				status,
-				channelId,
+				type,
 				ip
 			}
 		}
@@ -185,7 +205,6 @@ export default {
       const params = {
         ...this.queryData
       }
-      console.log(params)
       this.$refs['form'].validate((valid) => {
         if (valid) {
           if (params.id) {
