@@ -513,7 +513,7 @@ export default {
       const create = this.searchTime || []
       const [startTime, endTime] = create
       console.log(create)
-      if (endTime - startTime < this.day31) {
+      if (endTime - startTime <= this.day31) {
         this.flag = true
         let t = 10
         const timecount = setInterval(() => {
