@@ -32,3 +32,28 @@ export function isHaveEmoji(str) {
 	const regex = emojiRegex()
 	return !!regex.exec(str)
 }
+
+// 防抖
+export const debounce = (func, wait = 60) => {
+	let timer = null
+	return function(...args) {
+		clearTimeout(timer)
+		timer = setTimeout(() => func.apply(this, args), wait)
+	}
+}
+
+// 节流函数
+export const throttle = (func, delay = 60) => {
+	let timer = null
+	let start = 0
+	return function(...args) {
+		const current = +new Date()
+		clearTimeout(timer)
+		if (current - start > delay) {
+			func.apply(this, args)
+			start = current
+		} else {
+			timer = setTimeout(() => func.apply(this, args), delay)
+		}
+	}
+}
