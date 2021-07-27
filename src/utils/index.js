@@ -172,10 +172,10 @@ export function colorNum(numberVal) {
  * @return {Boolean}
  */
 export function checkNullObj(obj) {
-	return Object.keys(obj).length === 0
+	return !Object.keys(obj).length
 }
 export function isEmptyObj(val) {
-	return Object.keys(val).length === 0 && val.constructor === Object
+	return !Object.keys(val).length && val.constructor === Object
 }
 
 /**

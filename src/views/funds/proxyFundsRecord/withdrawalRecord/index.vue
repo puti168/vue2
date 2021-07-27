@@ -306,6 +306,26 @@
 						</template>
 					</el-table-column>
 					<el-table-column
+						prop="withdrawType"
+						align="center"
+						label="提款信息"
+						width="150px"
+					>
+						<template slot-scope="scope">
+							{{ typeFilter(scope.row.withdrawType, 'payDataType') }}
+						</template>
+					</el-table-column>
+					<el-table-column
+						prop="withdrawType"
+						align="center"
+						label="提款账号"
+						width="150px"
+					>
+						<template slot-scope="scope">
+							{{ typeFilter(scope.row.withdrawType, 'payDataType') }}
+						</template>
+					</el-table-column>
+					<el-table-column
 						prop="isBig"
 						align="center"
 						label="是否为大额提款"

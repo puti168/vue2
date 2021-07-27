@@ -281,6 +281,16 @@ class="redColor"
               {{ typeFilter(scope.row.withdrawType, "payDataType") }}
             </template>
           </el-table-column>
+		  <el-table-column prop="withdrawType" align="center" label="提款信息">
+            <template slot-scope="scope">
+              {{ typeFilter(scope.row.withdrawType, "payDataType") }}
+            </template>
+          </el-table-column>
+		  <el-table-column prop="withdrawType" align="center" label="提款账号">
+            <template slot-scope="scope">
+              {{ typeFilter(scope.row.withdrawType, "payDataType") }}
+            </template>
+          </el-table-column>
           <el-table-column
             prop="isBig"
             align="center"

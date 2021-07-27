@@ -335,10 +335,12 @@
 				title="图片"
 				:visible.sync="dialogPictureVisible"
 				:destroy-on-close="true"
-				width="650px"
+                width="750px"
 				class="imgCenter"
 			>
-				<img :src="pictureUrl" />
+                <div class="img-box">
+                    <img v-lazy="pictureUrl" />
+                </div>
 			</el-dialog>
 		</div>
 	</div>
@@ -696,8 +698,12 @@ p {
 	margin-top: 15px;
 }
 .imgCenter {
-	img {
-		width: 100%;
-	}
+    .img-box{
+        height: 500px;
+        overflow-y: scroll;
+        img {
+            width: 100%;
+        }
+    }
 }
 </style>

@@ -26,18 +26,18 @@
               clearable
               style="width: 300px"
             >
-                <el-option label="全部" value=""></el-option>
-                <el-option
-                  v-for="item in entrAuthorityTypeArr"
-                  :key="item.code"
-                  :label="item.description"
-                  :value="item.code"
-                ></el-option>
+              <el-option label="全部" value=""></el-option>
+              <el-option
+                v-for="item in entrAuthorityTypeArr"
+                :key="item.code"
+                :label="item.description"
+                :value="item.code"
+              ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="第三方支付渠道id:">
+          <el-form-item label="创建人:">
             <el-input
-              v-model="queryData.channelId"
+              v-model="queryData.createdBy"
               clearable
               size="medium"
               :maxlength="12"
@@ -46,7 +46,7 @@
               @keyup.enter.native="enterSearch"
             ></el-input>
           </el-form-item>
-          <el-form-item label="第三方回调ip:">
+          <el-form-item label="ip:">
             <el-input
               v-model="queryData.ip"
               clearable
@@ -76,7 +76,7 @@
               重置
             </el-button>
             <el-button
-              v-if="hasPermission('398')"
+              v-if="hasPermission('405')"
               type="warning"
               icon="el-icon-folder"
               :disabled="loading"
@@ -101,31 +101,23 @@
             :header-cell-style="getRowClass"
             @sort-change="_changeTableSort"
           >
-            <el-table-column prop="createDt" align="center" label="创建时间">
+            <el-table-column prop="createdAt" align="center" label="创建时间">
               <template slot-scope="scope">
-                <span v-if="!!(scope.row.createDt+'')">
-                  {{ scope.row.createDt }}
+                <span v-if="!!(scope.row.createdAt+'')">
+                  {{ scope.row.createdAt }}
                 </span>
                 <span v-else>-</span>
               </template>
             </el-table-column>
-            <el-table-column align="center" label="申请人" prop="applyBy">
+            <el-table-column align="center" label="创建人" prop="createdBy">
               <template slot-scope="scope">
-                <span v-if="scope.row.applyBy">
-                  {{ scope.row.applyBy }}
+                <span v-if="scope.row.createdBy">
+                  {{ scope.row.createdBy }}
                 </span>
                 <span v-else>-</span>
               </template>
             </el-table-column>
-            <el-table-column align="center" label="变更时间" prop="updateDt">
-              <template slot-scope="scope">
-                <span v-if="scope.row.updateDt">
-                  {{ scope.row.updateDt }}
-                </span>
-                <span v-else>-</span>
-              </template>
-            </el-table-column>
-            <el-table-column align="center" label="第三方回调ip" prop="ip">
+            <el-table-column align="center" label="ip" prop="ip">
               <template slot-scope="scope">
                 <span v-if="scope.row.ip">
                   {{ scope.row.ip }}
@@ -133,10 +125,10 @@
                 <span v-else>-</span>
               </template>
             </el-table-column>
-            <el-table-column prop="operator" align="center" width="120" label="操作人">
+            <el-table-column align="center" label="备注" prop="remark">
               <template slot-scope="scope">
-                <span v-if="!!(scope.row.operator+'')">
-                  {{ scope.row.operator }}
+                <span v-if="scope.row.remark">
+                  {{ scope.row.remark }}
                 </span>
                 <span v-else>-</span>
               </template>
@@ -149,34 +141,10 @@
                 <span v-else>-</span>
               </template>
             </el-table-column>
-            <el-table-column align="center" label="第三方支付渠道id" prop="channelId">
-              <template slot-scope="scope">
-                <span v-if="!!(scope.row.channelId+'')">
-                  {{ scope.row.channelId }}
-                </span>
-                <span v-else>-</span>
-              </template>
-            </el-table-column>
-            <el-table-column align="center" label="三方回调IP白名单管理主键id" prop="id">
-              <template slot-scope="scope">
-                <span v-if="!!(scope.row.id+'')">
-                  {{ scope.row.id }}
-                </span>
-                <span v-else>-</span>
-              </template>
-            </el-table-column>
-            <el-table-column align="center" label="商户号id" prop="merchantId">
-              <template slot-scope="scope">
-                <span v-if="!!(scope.row.merchantId+'')">
-                  {{ scope.row.merchantId }}
-                </span>
-                <span v-else>-</span>
-              </template>
-            </el-table-column>
             <el-table-column align="center" label="操作" min-width="250">
               <template slot-scope="scope">
                 <el-button
-                  v-if="hasPermission('400')"
+                  v-if="hasPermission('407')"
 									type="danger"
 									icon="el-icon-delete"
 									size="medium"
@@ -185,22 +153,13 @@
 									删除
 								</el-button>
                 <el-button
-                  v-if="hasPermission('399')"
+                  v-if="hasPermission('406')"
 									type="warning"
 									icon="el-icon-edit"
 									size="medium"
 									@click.stop="openEdit(scope.row)"
 								>
 									编辑
-								</el-button>
-                <el-button
-                  v-if="hasPermission('401')"
-									type="warning"
-									icon="el-icon-edit"
-									size="medium"
-									@click.stop="updateStatus(scope.row)"
-								>
-									更改状态
 								</el-button>
               </template>
             </el-table-column>
@@ -270,7 +229,7 @@ export default {
       this.loading = true
 
       this.$api
-        .getCallbackIpWhiteList(params)
+        .queryBackEndIpConfigList(params)
         .then((res) => {
           this.loading = false
           const {
@@ -327,45 +286,7 @@ export default {
         }
       )
         .then(() => {
-          this.$api.deleteCallbackIpWhite({ id: rowData.id }).then((res) => {
-            this.loading = false
-            if (res.code === 200) {
-              this.$message({
-                message: '操作成功！',
-                type: 'success'
-              })
-              this.loadData()
-            } else {
-              this.$message({
-                message: res.msg,
-                type: 'error'
-              })
-            }
-          })
-        })
-        .catch(() => { this.loading = false })
-    },
-    updateStatus(rowData) {
-      this.$confirm(
-        `<strong>是否更改状态?</strong></br><span style='font-size:12px;color:#c1c1c1'>请谨慎操作</span>`,
-        '确认提示',
-        {
-          dangerouslyUseHTMLString: true,
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }
-      )
-        .then(() => {
-          const { id } = rowData
-          let { status } = rowData
-          if (status === 0) {
-            status = 1
-          } else {
-            status = 0
-          }
-          this.$api.updateStatusCallbackIpWhite({ id, status })
-          .then((res) => {
+          this.$api.deleteBackEndIpConfig({ id: rowData.id }).then((res) => {
             this.loading = false
             if (res.code === 200) {
               this.$message({
