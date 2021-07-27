@@ -26,7 +26,7 @@
               clearable
               style="width: 300px"
             >
-              <el-option label="全部" value=""></el-option>
+              <el-option label="全部"></el-option>
               <el-option
                 v-for="item in entrAuthorityTypeArr"
                 :key="item.code"
@@ -198,9 +198,10 @@ export default {
     return {
       queryData: {
         status: undefined,
-        channelId: undefined,
+        createdBy: undefined,
         ip: undefined,
-        orderType: undefined
+        sourceType: '0',
+        type: '2'
       },
       searchTime: [start, end],
       dataList: [],
@@ -234,12 +235,12 @@ export default {
           this.loading = false
           const {
             code,
-            data: { record, totalRecord },
+            data: { records, total },
             msg
           } = res
           if (code === 200) {
-            this.dataList = record || []
-            this.total = totalRecord || 0
+            this.dataList = records || []
+            this.total = total || 0
           } else {
             this.$message({
               message: msg,
@@ -306,7 +307,10 @@ export default {
     },
     reset() {
       this.pageNum = 1
-      this.queryData = {}
+      this.queryData = {
+        sourceType: '0',
+        type: '2'
+      }
       this.searchTime = [start, end]
       this.loadData()
     }
