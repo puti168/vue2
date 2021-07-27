@@ -698,12 +698,13 @@ p {
 	margin-top: 15px;
 }
 .imgCenter {
-    .img-box{
-        height: 500px;
-        overflow-y: scroll;
-        img {
-            width: 100%;
-        }
-    }
+	.img-box {
+		height: 500px;
+		img {
+			margin: 0;
+			width: 100%;
+			height: 100%;
+		}
+	}
 }
 </style>

@@ -356,9 +356,17 @@
             @size-change="handleSizeChange"
           ></el-pagination>
         </div>
-        <div v-if="imgVisible" class="imgCenter" @click="closeImage">
-          <img :src="bigImage" />
-        </div>
+		<el-dialog
+			title="图片"
+			:visible.sync="imgVisible"
+			:destroy-on-close="true"
+			width="750px"
+			class="imgCenter"
+		>
+			<div class="img-box">
+				<img v-lazy="bigImage" />
+			</div>
+		</el-dialog>
         <el-dialog
           title="新增/编辑"
           :visible.sync="dialogFormVisible"
@@ -894,9 +902,6 @@ export default {
       this.subSort = false
       console.log('111111111')
     },
-    closeImage() {
-      this.imgVisible = false
-    },
     lookGame(val) {
       this.imgVisible = true
       this.bigImage = val
@@ -991,5 +996,16 @@ export default {
   left: 200px;
   bottom: 0;
   line-height: 20px;
+}
+
+.imgCenter {
+	.img-box {
+		height: 500px;
+		img {
+			margin: 0;
+			width: 100%;
+			height: 100%;
+		}
+	}
 }
 </style>

@@ -79,7 +79,7 @@
 							v-model="queryData.relationOtherGameIdList"
 							style="width: 230px"
 							multiple
-                            collapse-tags
+							collapse-tags
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
 						>
@@ -96,7 +96,7 @@
 							v-model="queryData.gamePlatformList"
 							style="width: 230px"
 							multiple
-                            collapse-tags
+							collapse-tags
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
 						>
@@ -393,9 +393,17 @@
 					@size-change="handleSizeChange"
 				></el-pagination>
 			</div>
-			<div v-if="dialogGameVisible" class="imgCenter" @click="closeImage">
-				<img :src="bigImage" />
-			</div>
+			<el-dialog
+				title="图片"
+				:visible.sync="dialogGameVisible"
+				:destroy-on-close="true"
+				width="750px"
+				class="imgCenter"
+			>
+				<div class="img-box">
+					<img v-lazy="bigImage" />
+				</div>
+			</el-dialog>
 		</div>
 		<gameManagementEdit
 			v-else
@@ -633,9 +641,6 @@ export default {
 			this.dialogGameVisible = true
 			this.bigImage = val
 		},
-		closeImage() {
-			this.dialogGameVisible = false
-		},
 		openEdit(row) {
 			this.showDetail = true
 			if (row) {
@@ -755,5 +760,15 @@ p {
 	font-weight: 650;
 	border-top: 1px solid #e8e8e8;
 	margin-top: 15px;
+}
+.imgCenter {
+	.img-box {
+		height: 500px;
+		img {
+            margin:0;
+			width: 100%;
+			height: 100%;
+		}
+	}
 }
 </style>

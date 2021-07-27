@@ -762,10 +762,10 @@ p {
 .imgCenter {
 	.img-box {
 		height: 500px;
-		overflow-y: scroll;
 		img {
+			margin: 0;
 			width: 100%;
-			height: 650px;
+			height: 100%;
 		}
 	}
 }

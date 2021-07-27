@@ -286,10 +286,12 @@
 				title="图片"
 				:visible.sync="dialogPictureVisible"
 				:destroy-on-close="true"
-				width="650px"
+				width="750px"
 				class="imgCenter"
 			>
-				<img :src="imageAddress" />
+                <div class="img-box">
+                    <img v-lazy="imageAddress" />
+                </div>
 			</el-dialog>
 		</div>
 		<editPage v-else :editData="editData" @back="back"></editPage>
@@ -505,8 +507,13 @@ export default {
 	font-weight: 700;
 }
 .imgCenter {
-	img {
-		width: 100%;
+	.img-box {
+		height: 500px;
+		img {
+            margin:0;
+			width: 100%;
+			height: 100%;
+		}
 	}
 }
 </style>
