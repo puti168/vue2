@@ -202,6 +202,10 @@ export default {
     },
     add() {
       this.loading = true
+      delete this.queryData.agentCode
+      delete this.queryData.createdAt
+      delete this.queryData.createdBy
+      delete this.queryData.createdCode
       const params = {
         ...this.queryData
       }
