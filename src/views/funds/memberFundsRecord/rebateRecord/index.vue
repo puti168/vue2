@@ -3,9 +3,25 @@
     <div class="view-container dealer-container">
       <div class="params">
         <el-form ref="form" :inline="true" :model="queryData">
-          <el-form-item label="返水时间:">
+          <el-form-item label="领取时间:">
             <el-date-picker
-              v-model="searchTime"
+              v-model="receiveTime"
+              size="medium"
+              :picker-options="pickerOptions"
+              format="yyyy-MM-dd HH:mm:ss"
+              type="datetimerange"
+              range-separator="-"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+              align="right"
+              :clearable="false"
+              :default-time="defaultTime"
+              style="width: 375px"
+            ></el-date-picker>
+          </el-form-item>
+          <el-form-item label="订单生成时间:">
+            <el-date-picker
+              v-model="orderTime"
               size="medium"
               :picker-options="pickerOptions"
               format="yyyy-MM-dd HH:mm:ss"
@@ -54,22 +70,7 @@
               @keyup.enter.native="enterSearch"
             ></el-input>
           </el-form-item>
-          <el-form-item label="场馆名称:" class="tagheight">
-            <el-select
-              v-model="queryData.venueId"
-              clearable
-              placeholder="默认选择全部"
-              :popper-append-to-body="false"
-            >
-              <el-option
-                v-for="item in venueTypeList"
-                :key="item.gameCode"
-                :label="item.gameName"
-                :value="item.id"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="订单状态:" class="tagheight">
+          <el-form-item label="领取状态:" class="tagheight">
             <el-select
               v-model="queryData.rebateStatus"
               clearable
@@ -103,7 +104,7 @@
               重置
             </el-button>
             <el-button
-			        v-if="hasPermission('266')"
+              v-if="hasPermission('266')"
               icon="el-icon-download"
               type="warning"
               :disabled="loading"
@@ -152,31 +153,45 @@
               <span v-else>-</span>
             </template>
           </el-table-column>
-          <el-table-column prop="venueId" align="center" label="场馆名称">
-            <template slot-scope="scope">
-              <span v-for="item in venueTypeList" :key="item.gameCode">
-                {{ item.id === scope.row.venueId ? item.gameName : "" }}
-              </span>
-            </template>
-          </el-table-column>
-          <el-table-column prop="gameName" align="center" label="游戏名称">
-            <template slot-scope="scope">
-              {{ scope.row.gameName !== null ? scope.row.gameName : "-" }}
-            </template>
-          </el-table-column>
-          <el-table-column prop="rebateStatus" align="center" label="订单状态">
+          <el-table-column prop="rebateStatus" align="center" label="领取状态">
             <template slot-scope="scope">
               {{ typeFilter(scope.row.rebateStatus, "rebateType") }}
             </template>
           </el-table-column>
-          <el-table-column prop="validBetAmount" align="center" label="有效金额 " width="200px">
+          <el-table-column
+            prop="validBetAmount"
+            align="center"
+            label="有效投注金额 "
+            width="200px"
+          >
           </el-table-column>
-          <el-table-column prop="rebateRatio" align="center" label="返水比例">
-            <template slot-scope="scope"> {{ scope.row.rebateRatio }}% </template>
+          <el-table-column
+            prop="rebateAmount"
+            align="center"
+            label="返水金额"
+            width="200px"
+          >
+            <template slot-scope="scope">
+              <el-link type="primary" @click="dialogData(scope.row)">
+                {{ scope.row.rebateAmount }}
+              </el-link>
+            </template>
           </el-table-column>
-          <el-table-column prop="rebateAmount" align="center" label="返水金额" width="200px">
+          <el-table-column
+            prop="rebateAt"
+            align="center"
+            sortable="custom"
+            label="返水时间"
+            width="156px"
+          >
           </el-table-column>
-          <el-table-column prop="rebateAt" align="center" label="返水时间" width="156px">
+          <el-table-column
+            prop="rebateAt"
+            align="center"
+            sortable="custom"
+            label="订单生成时间"
+            width="156px"
+          >
           </el-table-column>
         </el-table>
         <!-- 分页 -->
@@ -193,6 +208,58 @@
         ></el-pagination>
       </div>
     </div>
+    <el-dialog :visible.sync="tableVisible" :destroy-on-close="true" class="rempadding">
+      <div slot="title" class="dialog-title">
+        <span class="title-text" style="margin-right: 15px">会员账号:{{ userName }}</span>
+      </div>
+      <el-table
+        v-loading="loading"
+        size="mini"
+        border
+        class="small-size-table"
+        :data="orderDetails"
+        style="margin-bottom: 15px"
+        :header-cell-style="getRowClass"
+      >
+        <el-table-column
+          prop="staticsDate"
+          align="center"
+          label="游戏平台"
+          sortable="custom"
+        >
+        </el-table-column>
+        <el-table-column
+          prop="betCount"
+          align="center"
+          label="游戏类型"
+          sortable="custom"
+        ></el-table-column>
+        <el-table-column
+          prop="validBetAmount"
+          align="center"
+          label="有效投注金额"
+        ></el-table-column>
+        <el-table-column prop="netAmount" align="center" label="返水比例">
+        </el-table-column>
+        <el-table-column prop="netAmount" align="center" label="返水金额">
+        </el-table-column>
+      </el-table>
+      <!-- 分页 -->
+      <el-pagination
+        :current-page.sync="pageR"
+        background
+        class="fenye"
+        layout="total, sizes,prev, pager, next, jumper"
+        :page-size="sizeR"
+        :page-sizes="[10, 20, 50]"
+        :total="dialogTotal"
+        @current-change="handleCurrentChangeDialog"
+        @size-change="handleSizeChangeDialog"
+      ></el-pagination>
+      <div slot="footer" class="dialog-footer" style="text-align: center">
+        <el-button @click="tableVisible = false">关闭</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -208,10 +275,17 @@ export default {
   data() {
     return {
       queryData: {},
-      searchTime: [startTime, endTime],
+      receiveTime: [startTime, endTime],
+      orderTime: [startTime, endTime],
       tableData: [],
       venueTypeList: [],
-      summary: {}
+      summary: {},
+      tableVisible: false,
+      userName: '',
+      orderDetails: [],
+      pageR: 1,
+      sizeR: 10,
+      dialogTotal: 0
     }
   },
   computed: {
@@ -232,8 +306,10 @@ export default {
     },
     loadData() {
       this.loading = true
-      const create = this.searchTime || []
-      const [startTime, endTime] = create
+      const receive = this.receiveTime || []
+      // const order = this.orderTime || []
+      const [startTime, endTime] = receive
+      // const [start, end] = order
       let params = {
         ...this.queryData,
         rebateAtStart: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : '',
@@ -258,8 +334,27 @@ export default {
     },
     reset() {
       this.queryData = {}
-      this.searchTime = [startTime, endTime]
+      this.receiveTime = [startTime, endTime]
+      this.orderTime = [startTime, endTime]
       this.pageNum = 1
+      this.loadData()
+    },
+    dialogData(val) {
+      this.userName = val.userName
+      this.pageR = 1
+      this.sizeR = 10
+      this.loadData()
+      this.orderDetails = this.tableData
+      this.tableVisible = true
+    },
+    handleCurrentChangeDialog(val) {
+      console.log(111, val)
+      this.pageR = val
+      this.loadData()
+    },
+    handleSizeChangeDialog(val) {
+      console.log(222, val)
+      this.sizeR = val
       this.loadData()
     },
     _changeTableSort({ column, prop, order }) {
@@ -279,8 +374,10 @@ export default {
     },
     exportExcel() {
       this.loading = true
-      const create = this.searchTime || []
-      const [startTime, endTime] = create
+      const receive = this.receiveTime || []
+      // const order = this.orderTime || []
+      const [startTime, endTime] = receive
+      // const [start, end] = order
       let params = {
         ...this.queryData,
         rebateAtStart: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : '',
@@ -378,7 +475,7 @@ export default {
           )
           sums[index] = el
           return
-        } else if (index === 6 && this.summary !== null) {
+        } else if (index === 4 && this.summary !== null) {
           const el = (
             <div class='count_row'>
               <p>{this.summary.validBetSubtotal}</p>
@@ -387,7 +484,7 @@ export default {
           )
           sums[index] = el
           return
-        } else if (index === 8 && this.summary !== null) {
+        } else if (index === 5 && this.summary !== null) {
           const el = (
             <div class='count_row'>
               <p>{this.summary.rebateSubtotal}</p>
@@ -457,5 +554,12 @@ export default {
 }
 /deep/.el-table::after {
   position: relative !important;
+}
+/deep/.el-dialog__header {
+  color: #909399;
+  font-weight: 700;
+}
+.fenye {
+  text-align: center;
 }
 </style>

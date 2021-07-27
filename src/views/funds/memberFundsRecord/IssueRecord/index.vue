@@ -3,9 +3,25 @@
     <div class="view-container dealer-container">
       <div class="params">
         <el-form ref="form" :inline="true" :model="queryData">
-          <el-form-item label="发放时间:">
+          <el-form-item label="领取时间:">
             <el-date-picker
-              v-model="searchTime"
+              v-model="receiveTime"
+              size="medium"
+              :picker-options="pickerOptions"
+              format="yyyy-MM-dd HH:mm:ss"
+              type="datetimerange"
+              range-separator="-"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+              align="right"
+              :clearable="false"
+              :default-time="defaultTime"
+              style="width: 375px"
+            ></el-date-picker>
+          </el-form-item>
+          <el-form-item label="领取时间:">
+            <el-date-picker
+              v-model="orderTime"
               size="medium"
               :picker-options="pickerOptions"
               format="yyyy-MM-dd HH:mm:ss"
@@ -30,7 +46,19 @@
               @keyup.enter.native="enterSearch"
             ></el-input>
           </el-form-item>
-          <el-form-item label="发放类型:" class="tagheight">
+          <el-form-item label="会员账号:">
+            <el-input
+              v-model="queryData.userName"
+              clearable
+              :maxlength="11"
+              size="medium"
+              style="width: 200px"
+              placeholder="请输入"
+              :disabled="loading"
+              @keyup.enter.native="enterSearch"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="奖励类型:" class="tagheight">
             <el-select
               v-model="queryData.provideType"
               clearable
@@ -45,18 +73,22 @@
               ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="会员账号:">
-            <el-input
-              v-model="queryData.userName"
+          <el-form-item label="领取状态:" class="tagheight">
+            <el-select
+              v-model="queryData.provideType"
               clearable
-              :maxlength="11"
-              size="medium"
-              style="width: 200px"
-              placeholder="请输入"
-              :disabled="loading"
-              @keyup.enter.native="enterSearch"
-            ></el-input>
+              placeholder="默认选择全部"
+              :popper-append-to-body="false"
+            >
+              <el-option
+                v-for="item in vipRewardType"
+                :key="item.code"
+                :label="item.description"
+                :value="item.code"
+              ></el-option>
+            </el-select>
           </el-form-item>
+
           <el-form-item>
             <el-button
               type="primary"
@@ -100,16 +132,36 @@
           <el-table-column
             prop="createdAt"
             align="center"
-            label="发放时间"
+            label="订单生成时间"
             sortable="custom"
           >
           </el-table-column>
-          <el-table-column prop="provideType" align="center" label="发放类型">
+          <el-table-column
+            prop="createdAt"
+            align="center"
+            label="领取时间"
+            sortable="custom"
+          >
+          </el-table-column>
+
+          <el-table-column prop="provideType" align="center" label="奖励类型">
             <template slot-scope="scope">
               {{ typeFilter(scope.row.provideType, "vipRewardType") }}
             </template>
           </el-table-column>
-          <el-table-column prop="provideAmount" align="center" label="发放金额" width="200px">
+          <el-table-column
+            prop="provideAmount"
+            align="center"
+            label="奖励金额"
+            width="200px"
+          >
+          </el-table-column>
+          <el-table-column
+            prop="provideAmount"
+            align="center"
+            label="领取状态"
+            width="200px"
+          >
           </el-table-column>
           <el-table-column prop="userName" align="center" label="会员账号">
             <template slot-scope="scope">
@@ -129,33 +181,6 @@
           <el-table-column prop="accountType" align="center" label="账号类型">
             <template slot-scope="scope">
               {{ typeFilter(scope.row.accountType, "accountType") }}
-            </template>
-          </el-table-column>
-          <el-table-column prop="labelName" align="center" label="会员标签">
-             <template slot-scope="scope">
-              {{ scope.row.labelName ? scope.row.labelName : "-" }}
-            </template>
-          </el-table-column>
-          <el-table-column prop="windControlName" align="center" label="风控层级">
-            <template slot-scope="scope">
-              {{ scope.row.windControlName ? scope.row.windControlName : "-" }}
-            </template>
-          </el-table-column>
-          <el-table-column prop="accountStatus" align="center" label="账号状态">
-            <template slot-scope="scope">
-              <span v-if="scope.row.accountStatus === 1" class="normalRgba">
-                {{ typeFilter(scope.row.accountStatus, "accountStatusType") }}
-              </span>
-              <span v-else-if="scope.row.accountStatus === 2" class="disableRgba">
-                {{ typeFilter(scope.row.accountStatus, "accountStatusType") }}
-              </span>
-              <span v-else-if="scope.row.accountStatus === 3" class="lockingRgba">
-                {{ typeFilter(scope.row.accountStatus, "accountStatusType") }}
-              </span>
-              <span v-else-if="scope.row.accountStatus === 4" class="deleteRgba">
-                {{ typeFilter(scope.row.accountStatus, "accountStatusType") }}
-              </span>
-              <span v-else>-</span>
             </template>
           </el-table-column>
         </el-table>
@@ -188,7 +213,8 @@ export default {
   data() {
     return {
       queryData: {},
-      searchTime: [startTime, endTime],
+      receiveTime: [startTime, endTime],
+      orderTime: [startTime, endTime],
       tableData: []
     }
   },
@@ -201,8 +227,10 @@ export default {
   methods: {
     loadData() {
       this.loading = true
-      const create = this.searchTime || []
-      const [startTime, endTime] = create
+      const receive = this.receiveTime || []
+      const [startTime, endTime] = receive
+      // const order = this.orderTime || []
+      // const [start, end] = order
       let params = {
         ...this.queryData,
         createdAtStart: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : '',
@@ -226,7 +254,8 @@ export default {
     },
     reset() {
       this.queryData = {}
-      this.searchTime = [startTime, endTime]
+      this.receiveTime = [startTime, endTime]
+      this.orderTime = [startTime, endTime]
       this.pageNum = 1
       this.loadData()
     },
