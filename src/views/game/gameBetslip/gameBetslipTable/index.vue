@@ -313,7 +313,7 @@
 						<template slot="header">
 							游戏平台
 							<br />
-							游戏类型
+							游戏名称
 						</template>
 						<template slot-scope="scope">
 							<span v-for="item in gameTypeList" :key="item.gameCode">
