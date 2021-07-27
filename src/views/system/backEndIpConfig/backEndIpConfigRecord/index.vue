@@ -307,7 +307,10 @@ export default {
     },
     reset() {
       this.pageNum = 1
-      this.queryData = {}
+      this.queryData = {
+        sourceType: '0',
+        type: '2'
+      }
       this.searchTime = [start, end]
       this.loadData()
     }
