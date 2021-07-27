@@ -155,16 +155,16 @@ label="调整类型"
           </el-table>
           <!-- 分页 -->
           <el-pagination
-            :current-page.sync="pageNum"
-            class="pageValue"
-            background
-            layout="total, sizes,prev, pager, next, jumper"
-            :page-size="pageSize"
-            :page-sizes="pageSizes"
-            :total="total"
-            @current-change="handleCurrentChange"
-            @size-change="handleSizeChange"
-          ></el-pagination>
+						:current-page.sync="pageNum"
+						class="pageValue"
+						background
+						layout="total, sizes,prev, pager, next, jumper"
+						:page-size="pageSize"
+						:page-sizes="pageSizes"
+						:total="total"
+						@current-change="handleCurrentChange"
+						@size-change="handleSizeChange"
+					></el-pagination>
         </div>
       </div>
     </template>
@@ -250,7 +250,7 @@ export default {
                 }
               })
             }
-            this.total = response.totalRecord
+             this.total = response.total
           } else {
             this.loading = false
             this.$message({
