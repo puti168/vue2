@@ -125,14 +125,6 @@
                 <span v-else>-</span>
               </template>
             </el-table-column>
-            <el-table-column align="center" label="备注" prop="remark">
-              <template slot-scope="scope">
-                <span v-if="scope.row.remark">
-                  {{ scope.row.remark }}
-                </span>
-                <span v-else>-</span>
-              </template>
-            </el-table-column>
             <el-table-column align="center" label="状态" prop="status">
               <template slot-scope="scope">
                 <span v-if="!!(scope.row.status+'')">
@@ -141,7 +133,15 @@
                 <span v-else>-</span>
               </template>
             </el-table-column>
-            <el-table-column align="center" label="操作" min-width="250">
+            <el-table-column align="center" label="备注" prop="remark" min-width="150">
+              <template slot-scope="scope">
+                <span v-if="scope.row.remark">
+                  {{ scope.row.remark }}
+                </span>
+                <span v-else>-</span>
+              </template>
+            </el-table-column>
+            <el-table-column align="center" label="操作" min-width="100">
               <template slot-scope="scope">
                 <el-button
                   v-if="hasPermission('407')"
