@@ -53,7 +53,7 @@ const ifVersionCorrect = async (to, from, next) => {
 			if (addRoutes.length === 0) {
 				const roles = await store.dispatch('user/getRoles')
 				try {
-					if (roles === '无效权限') {
+					if (!roles) {
 						await store.dispatch('user/resetToken')
 						next(`/login?redirect=nopermission`)
 						NProgress.done()
