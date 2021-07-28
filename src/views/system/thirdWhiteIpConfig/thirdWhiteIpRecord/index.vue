@@ -173,7 +173,7 @@
                 <span v-else>-</span>
               </template>
             </el-table-column>
-            <el-table-column align="center" label="操作" min-width="250">
+            <el-table-column v-if="hasPermission('400')||hasPermission('399')||hasPermission('401')" align="center" label="操作" min-width="250">
               <template slot-scope="scope">
                 <el-button
                   v-if="hasPermission('400')"
