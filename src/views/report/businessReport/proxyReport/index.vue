@@ -68,55 +68,6 @@
 							></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="账号状态:">
-						<el-select
-							v-model="queryData.accountStatus"
-							size="medium"
-							placeholder="默认选择全部"
-							clearable
-							multiple
-							style="width: 390px"
-						>
-							<el-option
-								v-for="item in accountStatusArr"
-								:key="item.code"
-								:label="item.description"
-								:value="item.code"
-							></el-option>
-						</el-select>
-					</el-form-item>
-					<el-form-item label="风控层级:">
-						<el-select
-							v-model="queryData.windControlId"
-							size="medium"
-							placeholder="全部"
-							clearable
-							style="width: 180px"
-						>
-							<el-option
-								v-for="item in vipDict"
-								:key="item.windControlId"
-								:label="item.windControlName"
-								:value="item.windControlId"
-							></el-option>
-						</el-select>
-					</el-form-item>
-					<el-form-item label="代理标签:">
-						<el-select
-							v-model="queryData.labelId"
-							size="medium"
-							placeholder="全部"
-							clearable
-							style="width: 180px"
-						>
-							<el-option
-								v-for="item in userLabel"
-								:key="item.labelId"
-								:label="item.labelName"
-								:value="item.labelId"
-							></el-option>
-						</el-select>
-					</el-form-item>
 					<el-form-item label="累计返佣:">
 						<el-input
 							v-model="queryData.totalRebateMin"
