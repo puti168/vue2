@@ -200,16 +200,13 @@ export default {
 		throttle(func, delay = 60) {
 			let timer = null
 			let start = 0
-			console.log('delay', delay)
 			return function(...args) {
 				const current = +new Date()
 				clearTimeout(timer)
-				if (current - start > delay) {
-					console.log('11')
+				if (current - start >= delay) {
 					func.apply(this, args)
 					start = current
 				} else {
-					console.log('22')
 					timer = setTimeout(() => func.apply(this, args), delay)
 				}
 			}
