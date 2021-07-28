@@ -82,7 +82,7 @@
 					<el-input
 						v-model="queryData.activityId"
 						size="medium"
-						maxlength="11"
+						maxlength="20"
 						placeholder="请输入活动ID"
 						clearable
 						oninput="value=value.replace(/[\u4E00-\u9FA5]/g ,'')"
