@@ -26,7 +26,7 @@
               clearable
               style="width: 300px"
             >
-              <el-option label="全部"></el-option>
+              <el-option label="全部" :value="undefined"></el-option>
               <el-option
                 v-for="item in entrAuthorityTypeArr"
                 :key="item.code"
