@@ -52,7 +52,7 @@
 							placeholder="默认选择全部"
 							clearable
 							multiple
-                            collapse-tags
+							collapse-tags
 							style="width: 280px"
 						>
 							<el-option
@@ -150,7 +150,7 @@
 							placeholder="默认选择全部"
 							clearable
 							multiple
-                            collapse-tags
+							collapse-tags
 							style="width: 300px"
 						>
 							<el-option
@@ -168,7 +168,7 @@
 							placeholder="默认选择全部"
 							clearable
 							multiple
-                            collapse-tags
+							collapse-tags
 							style="width: 300px"
 						>
 							<el-option
@@ -615,6 +615,8 @@ export default {
 	name: routerNames.memberList,
 	mixins: [list],
 	data() {
+        this.exportExcel = this.throttle(this.exportExcel, 1000)
+        this.loadData = this.throttle(this.loadData, 1000)
 		return {
 			queryData: {
 				registerTime: [start, end],
@@ -646,12 +648,12 @@ export default {
 		}
 	},
 	computed: {
-		accountStatusArr({$attrs, $route, $store, $listeners, $ref}) {
-		    // console.log('$attrs', $attrs)
-		    // console.log('$route', $route)
-		    // console.log('$store', $store)
-		    // console.log('$listeners', $listeners)
-		    // console.log('$ref', $ref)
+		accountStatusArr({ $attrs, $route, $store, $listeners, $ref }) {
+			// console.log('$attrs', $attrs)
+			// console.log('$route', $route)
+			// console.log('$store', $store)
+			// console.log('$listeners', $listeners)
+			// console.log('$ref', $ref)
 			return this.globalDics.accountStatusType
 		},
 		accountTypeArr() {
@@ -943,7 +945,6 @@ export default {
 			const [startTime, endTime] = create
 			const [loginTimeStart, loginTimeEnd] = lastLoginTime
 			const [firstDepositTimeStart, firstDepositTimeEnd] = firstSaveTime
-			this.loading = true
 			let params = {
 				...this.queryData,
 				createDtStart: startTime
@@ -997,7 +998,6 @@ export default {
 					this.$api
 						.exportExcelAPI(params)
 						.then((res) => {
-							this.loading = false
 							const { data, status } = res
 							if (res && status === 200) {
 								const { type } = data
@@ -1049,7 +1049,6 @@ export default {
 							}
 						})
 						.catch(() => {
-							this.loading = false
 							this.$message({
 								type: 'error',
 								message: '导出失败',
@@ -1059,9 +1058,9 @@ export default {
 				})
 				.catch(() => {})
 
-			setTimeout(() => {
-				this.loading = false
-			}, 1500)
+			// setTimeout(() => {
+			// 	this.loading = false
+			// }, 1500)
 		}
 	}
 }
