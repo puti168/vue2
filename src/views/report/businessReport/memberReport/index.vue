@@ -537,6 +537,68 @@
             sortable="custom"
             width="120"
           >
+          <template slot="header" slot-scope="scope">
+              <el-popover placement="top-start" title="提示" width="280" trigger="hover">
+                <div v-if="!scope.row">
+                  <div>汇总搜索时间内的会员的上级转入金额</div>
+                </div>
+                <div slot="reference" class="el-icon-question">
+                  <span class="other-class">上级转入</span>
+                </div>
+              </el-popover>
+            </template>
+            <template slot-scope="scope">
+              <span v-if="!!scope.row.depositAmount || scope.row.depositAmount === 0">
+                {{ scope.row.firstDepositAmount }}
+              </span>
+              <span v-else>-</span>
+            </template>
+          </el-table-column>
+            <el-table-column
+            prop="depositAmount"
+            align="center"
+            label="转入次数"
+            sortable="custom"
+            width="120"
+          >
+            <template slot-scope="scope">
+              <span v-if="!!scope.row.depositAmount || scope.row.depositAmount === 0">
+                {{ scope.row.firstDepositAmount }}
+              </span>
+              <span v-else>-</span>
+            </template>
+          </el-table-column>
+            <el-table-column
+            prop="depositAmount"
+            align="center"
+            label="转中心钱包"
+            sortable="custom"
+            width="120"
+          >
+          <template slot="header" slot-scope="scope">
+              <el-popover placement="top-start" title="提示" width="280" trigger="hover">
+                <div v-if="!scope.row">
+                  <div>汇总搜索时间内同账号代理转入中心钱包的金额</div>
+                </div>
+                <div slot="reference" class="el-icon-question">
+                  <span class="other-class">转中心钱包</span>
+                </div>
+              </el-popover>
+            </template>
+            <template slot-scope="scope">
+              <span v-if="!!scope.row.depositAmount || scope.row.depositAmount === 0">
+                {{ scope.row.firstDepositAmount }}
+              </span>
+              <span v-else>-</span>
+            </template>
+          </el-table-column>
+            <el-table-column
+            prop="depositAmount"
+            align="center"
+            label="转入次数"
+            sortable="custom"
+            width="120"
+          >
             <template slot-scope="scope">
               <span v-if="!!scope.row.depositAmount || scope.row.depositAmount === 0">
                 {{ scope.row.firstDepositAmount }}
