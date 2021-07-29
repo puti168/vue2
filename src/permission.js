@@ -51,7 +51,11 @@ const ifVersionCorrect = async (to, from, next) => {
 				await store.dispatch('user/getDictList')
 			}
 			if (addRoutes.length === 0) {
-				const roles = await store.dispatch('user/getRoles')
+				let roles = JSON.parse(window.localStorage.getItem('role'))
+				console.log('permission roles', roles)
+				if (!roles || !roles.length) {
+					roles = await store.dispatch('user/getRoles')
+				}
 				try {
 					if (!roles) {
 						await store.dispatch('user/resetToken')
