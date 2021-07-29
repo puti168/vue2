@@ -2,24 +2,30 @@
   <div class="game-container report-container">
     <div class="view-container dealer-container">
       <div class="params">
-        <el-form ref="form" :inline="true" :model="queryData" label-width="85px">
-          <el-form-item label="注册时间:" prop="registerTime">
+        <el-form ref="form" :inline="true" :model="queryData">
+          <el-form-item label="统计日期:" prop="statisticsTime">
             <el-date-picker
-              v-model="queryData.registerTime"
-              size="medium"
-              :picker-options="pickerOptions"
-              format="yyyy-MM-dd"
-              type="datetimerange"
+              v-model="statisticsTime"
+              type="daterange"
               range-separator="-"
+              :clearable="false"
               start-placeholder="开始日期"
               end-placeholder="结束日期"
-              align="right"
-              :clearable="true"
-              value-format="timestamp"
-              style="width: 300px"
+              :picker-options="timeControl"
             ></el-date-picker>
           </el-form-item>
-          <el-form-item label="会员账号:">
+          <el-form-item label="注册日期:" prop="registerTime">
+            <el-date-picker
+              v-model="registerTime"
+              type="daterange"
+              range-separator="-"
+              :clearable="false"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+              :picker-options="timeControl"
+            ></el-date-picker>
+          </el-form-item>
+          <el-form-item label="会员账号:" prop="userName">
             <el-input
               v-model="queryData.userName"
               size="medium"
@@ -29,17 +35,7 @@
               maxlength="11"
             ></el-input>
           </el-form-item>
-          <el-form-item label="姓名:">
-            <el-input
-              v-model="queryData.realName"
-              size="medium"
-              placeholder="请输入"
-              clearable
-              style="width: 180px"
-              maxlength="15"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="上级代理:">
+          <el-form-item label="上级代理:" prop="parentProxyName">
             <el-input
               v-model="queryData.parentProxyName"
               size="medium"
@@ -51,13 +47,12 @@
           </el-form-item>
           <el-form-item label="账号类型:">
             <el-select
-              v-model="queryData.accountType"
+              v-model="queryData.accountTypeList"
               size="medium"
               placeholder="默认选择全部"
               clearable
               multiple
-              collapse-tags
-              style="width: 220px"
+              style="width: 300px"
             >
               <el-option
                 v-for="item in accountTypeArr"
@@ -67,223 +62,161 @@
               ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="账号状态:">
-            <el-select
-              v-model="queryData.accountStatus"
-              size="medium"
-              placeholder="默认选择全部"
-              clearable
-              multiple
-              style="width: 400px"
-            >
-              <el-option
-                v-for="item in accountStatusArr"
-                :key="item.code"
-                :label="item.description"
-                :value="item.code"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="风控层级:">
-            <el-select
-              v-model="queryData.windControlId"
-              size="medium"
-              placeholder="全部"
-              clearable
-              style="width: 180px"
-            >
-              <el-option
-                v-for="item in vipDict"
-                :key="item.windControlId"
-                :label="item.windControlName"
-                :value="item.windControlId"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="会员标签:">
-            <el-select
-              v-model="queryData.labelId"
-              size="medium"
-              placeholder="全部"
-              clearable
-              style="width: 180px"
-            >
-              <el-option
-                v-for="item in userLabel"
-                :key="item.labelId"
-                :label="item.labelName"
-                :value="item.labelId"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="VIP等级:">
-            <el-input
-              v-model="queryData.vipSerialNumMin"
-              size="medium"
-              placeholder="最小数值"
-              style="width: 135px"
-              maxlength="3"
-              name="vipSerialNumMin"
-              oninput="value=value.replace(/[^\d]/g,'')"
-              @blur="checkValue($event)"
-            ></el-input>
-            -
-            <el-input
-              v-model="queryData.vipSerialNumMax"
-              size="medium"
-              placeholder="最大数值"
-              style="width: 135px"
-              maxlength="10"
-              oninput="value=value.replace(/[^\d]/g,'')"
-              name="vipSerialNumMax"
-              @blur="checkValue($event)"
-            ></el-input>
-          </el-form-item>
           <el-form-item label="注单量:">
             <el-input
-              v-model="queryData.betNumMin"
+              v-model="queryData.betCountMin"
               size="medium"
               placeholder="最小数值"
-              style="width: 135px"
+              style="width: 100px"
               maxlength="10"
-              name="betNumMin"
+              name="betCountMin"
               oninput="value=value.replace(/[^\d]/g,'')"
               @blur="checkValue($event)"
             ></el-input>
             -
             <el-input
-              v-model="queryData.betNumMax"
+              v-model="queryData.betCountMax"
               size="medium"
               placeholder="最大数值"
-              style="width: 135px"
-              maxlength="10"
-              oninput="value=value.replace(/[^\d]/g,'')"
-              name="betNumMax"
-              @blur="checkValue($event)"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="投注金额:">
-            <el-input
-              v-model="queryData.depositAmountMin"
-              size="medium"
-              placeholder="最小数值"
-              style="width: 135px"
-              maxlength="15"
-              oninput="value=value.replace(/[^\d]/g,'')"
-              name="depositAmountMin"
-              @blur="checkValue($event)"
-            ></el-input>
-            -
-            <el-input
-              v-model="queryData.depositAmountMax"
-              size="medium"
-              placeholder="最大数值"
-              style="width: 135px"
-              maxlength="15"
-              oninput="value=value.replace(/[^\d]/g,'')"
-              name="depositAmountMax"
-              @blur="checkValue($event)"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="有效投注:">
-            <el-input
-              v-model="queryData.depositAmountValidMin"
-              size="medium"
-              placeholder="最小数值"
-              style="width: 135px"
-              maxlength="15"
-              name="depositAmountValidMin"
-              oninput="value=value.replace(/[^\d]/g,'')"
-              @blur="checkValue($event)"
-            ></el-input>
-            -
-            <el-input
-              v-model="queryData.depositAmountValidMax"
-              size="medium"
-              placeholder="最大数值"
-              style="width: 135px"
-              maxlength="15"
-              name="depositAmountValidMax"
-              oninput="value=value.replace(/[^\d]/g,'')"
-              @blur="checkValue($event)"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="投注盈亏:">
-            <el-input
-              v-model="queryData.profitMin"
-              size="medium"
-              placeholder="最小数值"
-              style="width: 135px"
-              maxlength="15"
-              oninput="value=value.replace(/[^\d]/g,'')"
-              name="profitMin"
-              @blur="checkValue($event)"
-            ></el-input>
-            -
-            <el-input
-              v-model="queryData.profitMax"
-              size="medium"
-              placeholder="最大数值"
-              style="width: 135px"
-              maxlength="15"
-              oninput="value=value.replace(/[^\d]/g,'')"
-              name="profitMax"
-              @blur="checkValue($event)"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="总存款:">
-            <el-input
-              v-model="queryData.totalDepositMin"
-              size="medium"
-              placeholder="最小数值"
-              style="width: 135px"
+              style="width: 100px"
               maxlength="10"
               oninput="value=value.replace(/[^\d]/g,'')"
-              name="totalDepositMin"
-              @blur="checkValue($event)"
-            ></el-input>
-            -
-            <el-input
-              v-model="queryData.totalDepositMax"
-              size="medium"
-              placeholder="最大数值"
-              style="width: 135px"
-              maxlength="10"
-              oninput="value=value.replace(/[^\d]/g,'')"
-              name="totalDepositMax"
+              name="betCountMax"
               @blur="checkValue($event)"
             ></el-input>
           </el-form-item>
-          <el-form-item label="总取款:">
-            <el-input
-              v-model="queryData.withdrawalMin"
+          <el-form-item label="投注金额:" class="numberBox">
+            <el-input-number
+              v-model="queryData.betAmountMin"
               size="medium"
               placeholder="最小数值"
-              style="width: 135px"
-              maxlength="15"
-              oninput="value=value.replace(/[^\d]/g,'')"
-              name="withdrawalMin"
+              style="width: 100px"
+              :min="0"
+              :max="999999999999999.99"
+              :precision="2"
+              name="betAmountMin"
               @blur="checkValue($event)"
-            ></el-input>
+            ></el-input-number>
             -
-            <el-input
-              v-model="queryData.withdrawalMax"
+            <el-input-number
+              v-model="queryData.betAmountMax"
               size="medium"
               placeholder="最大数值"
-              style="width: 135px"
-              maxlength="15"
-              oninput="value=value.replace(/[^\d]/g,'')"
-              name="withdrawalMax"
+              style="width: 100px"
+              :min="0"
+              :max="999999999999999.99"
+              :precision="2"
+              name="betAmountMax"
               @blur="checkValue($event)"
-            ></el-input>
+            ></el-input-number>
+          </el-form-item>
+          <el-form-item label="有效投注:" class="numberBox">
+            <el-input-number
+              v-model="queryData.validBetAmountMin"
+              size="medium"
+              placeholder="最小数值"
+              style="width: 100px"
+              :min="0"
+              :max="999999999999999.99"
+              :precision="2"
+              name="validBetAmountMin"
+              @blur="checkValue($event)"
+            ></el-input-number>
+            -
+            <el-input-number
+              v-model="queryData.validBetAmountMax"
+              size="medium"
+              placeholder="最大数值"
+              style="width: 100px"
+              :min="0"
+              :max="999999999999999.99"
+              :precision="2"
+              name="validBetAmountMax"
+              @blur="checkValue($event)"
+            ></el-input-number>
+          </el-form-item>
+          <el-form-item label="投注盈亏:" class="numberBox">
+            <el-input-number
+              v-model="queryData.netAmountMin"
+              size="medium"
+              placeholder="最小数值"
+              style="width: 100px"
+              :min="-999999999999999.99"
+              :max="999999999999999.99"
+              :precision="2"
+              name="netAmountMin"
+              @blur="checkValue($event)"
+            ></el-input-number>
+            -
+            <el-input-number
+              v-model="queryData.netAmountMax"
+              size="medium"
+              placeholder="最大数值"
+              style="width: 100px"
+              :min="-999999999999999.99"
+              :max="999999999999999.99"
+              :precision="2"
+              name="netAmountMax"
+              @blur="checkValue($event)"
+            ></el-input-number>
+          </el-form-item>
+          <el-form-item label="总存款:" class="numberBox">
+            <el-input-number
+              v-model="queryData.zckMin"
+              size="medium"
+              placeholder="最小数值"
+              style="width: 100px"
+              :min="-999999999999999.99"
+              :max="999999999999999.99"
+              :precision="2"
+              name="zckMin"
+              @blur="checkValue($event)"
+            ></el-input-number>
+            -
+            <el-input-number
+              v-model="queryData.zckMax"
+              size="medium"
+              placeholder="最大数值"
+              style="width: 100px"
+              :min="-999999999999999.99"
+              :max="999999999999999.99"
+              :precision="2"
+              name="zckMax"
+              @blur="checkValue($event)"
+            ></el-input-number>
+          </el-form-item>
+          <el-form-item label="总取款:" class="numberBox">
+            <el-input-number
+              v-model="queryData.zqkMin"
+              size="medium"
+              placeholder="最小数值"
+              style="width: 100px"
+              :min="-999999999999999.99"
+              :max="999999999999999.99"
+              :precision="2"
+              name="zqkMin"
+              @blur="checkValue($event)"
+            ></el-input-number>
+            -
+            <el-input-number
+              v-model="queryData.zqkMax"
+              size="medium"
+              placeholder="最大数值"
+              style="width: 100px"
+              :min="-999999999999999.99"
+              :max="999999999999999.99"
+              :precision="2"
+              name="zqkMax"
+              @blur="checkValue($event)"
+            ></el-input-number>
           </el-form-item>
           <el-form-item>
             <el-button
               type="primary"
               icon="el-icon-search"
+              :disabled="flag"
               size="medium"
-              :disabled="queryText !== '查询'"
-              @click="_search"
+              @click="search"
             >
               {{ queryText }}
             </el-button>
@@ -296,7 +229,7 @@
               重置
             </el-button>
             <el-button
-              v-if="hasPermission('349')"
+              v-if="hasPermission('342')"
               type="warning"
               icon="el-icon-folder-add"
               size="medium"
@@ -307,9 +240,8 @@
             </el-button>
             <el-button
               type="success"
-              icon="el-icon-setting"
-              :disabled="loading"
               size="medium"
+              :disabled="loading"
               @click="openSetting"
             >
               列设置
@@ -320,39 +252,40 @@
 
       <div class="content">
         <el-table
-          ref="tables"
           v-loading="loading"
           border
           size="mini"
           class="small-size-table"
           :data="dataList"
           style="width: 100%"
-          :header-cell-style="getRowClass"
-          :summary-method="getSummaries"
           show-summary
+          :summary-method="getSummaries"
+          :header-cell-style="getRowClass"
           @sort-change="_changeTableSort"
         >
           <el-table-column
-            v-if="settingList['会员账号']"
+            v-if="memberReport['会员账号']"
             prop="userName"
             align="center"
             label="会员账号"
-            width="150"
             fixed
           >
             <template slot-scope="scope">
-              <Copy v-if="!!scope.row.userName" :title="scope.row.userName" :copy="copy">
+              <el-link
+                class="lightBlueColor"
+                type="primary"
+                @click="dialogData(scope.row)"
+              >
                 {{ scope.row.userName }}
-              </Copy>
-              <span v-else>-</span>
+              </el-link>
+              <i class="el-icon-document-copy" @click="copy(scope.row.userName)" />
             </template>
           </el-table-column>
           <el-table-column
-            v-if="settingList['姓名']"
+            v-if="memberReport['姓名']"
             prop="realName"
             align="center"
             label="姓名"
-            width="150"
           >
             <template slot-scope="scope">
               <Copy v-if="!!scope.row.realName" :title="scope.row.realName" :copy="copy">
@@ -362,25 +295,23 @@
             </template>
           </el-table-column>
           <el-table-column
-            v-if="settingList['账号类型']"
+            v-if="memberReport['账号类型']"
             prop="accountType"
             align="center"
             label="账号类型"
-            width="120"
           >
             <template slot-scope="scope">
-              <span v-if="!!scope.row.accountType">
+              <span v-if="scope.row.accountType">
                 {{ typeFilter(scope.row.accountType, "accountType") }}
               </span>
               <span v-else>-</span>
             </template>
           </el-table-column>
           <el-table-column
-            v-if="settingList['上级代理']"
+            v-if="memberReport['上级代理']"
             prop="parentProxyName"
             align="center"
             label="上级代理"
-            width="150"
           >
             <template slot-scope="scope">
               <Copy
@@ -394,61 +325,46 @@
             </template>
           </el-table-column>
           <el-table-column
-            v-if="settingList['VIP等级']"
+            v-if="memberReport['VIP等级']"
             prop="vipSerialNum"
             align="center"
             label="VIP等级"
-            width="100"
             sortable="custom"
           >
             <template slot-scope="scope">
-              <span v-if="!!scope.row.vipSerialNum || scope.row.vipSerialNum === 0">
-                {{ scope.row.vipSerialNum }}
-              </span>
-              <span v-else>-</span>
+              {{ scope.row.vipSerialNum }}
             </template>
           </el-table-column>
           <el-table-column
-            v-if="settingList['账号状态']"
+            v-if="memberReport['账号状态']"
             prop="accountStatus"
             align="center"
             label="账号状态"
-            width="120"
           >
             <template slot-scope="scope">
               <span
-                v-if="!!scope.row.accountStatus && scope.row.accountStatus * 1 === 1"
-                class="normalRgba"
-              >
-                {{ typeFilter(scope.row.accountStatus, "accountStatusType") }}
-              </span>
-              <span
-                v-else-if="!!scope.row.accountStatus && scope.row.accountStatus * 1 === 2"
-                class="disableRgba"
-              >
-                {{ typeFilter(scope.row.accountStatus, "accountStatusType") }}
-              </span>
-              <span
-                v-else-if="!!scope.row.accountStatus && scope.row.accountStatus * 1 === 3"
-                class="lockingRgba"
+                v-if="!!scope.row.accountStatus && scope.row.accountStatus * 1 === 2"
+                class="yellowColor"
               >
                 {{ typeFilter(scope.row.accountStatus, "accountStatusType") }}
               </span>
               <span
                 v-else-if="!!scope.row.accountStatus && scope.row.accountStatus * 1 === 4"
-                class="deleteRgba"
+                class="disableColor"
               >
+                {{ typeFilter(scope.row.accountStatus, "accountStatusType") }}
+              </span>
+              <span v-else-if="!!scope.row.accountStatus">
                 {{ typeFilter(scope.row.accountStatus, "accountStatusType") }}
               </span>
               <span v-else>-</span>
             </template>
           </el-table-column>
           <el-table-column
-            v-if="settingList['会员标签']"
+            v-if="memberReport['会员标签']"
             prop="labelName"
             align="center"
             label="会员标签"
-            width="120"
           >
             <template slot-scope="scope">
               <span v-if="!!scope.row.labelName">
@@ -457,11 +373,12 @@
               <span v-else>-</span>
             </template>
           </el-table-column>
+
           <el-table-column
+            v-if="memberReport['风控层级']"
             prop="windControlName"
             align="center"
             label="风控层级"
-            width="100"
           >
             <template slot-scope="scope">
               <span v-if="!!scope.row.windControlName">
@@ -471,323 +388,275 @@
             </template>
           </el-table-column>
           <el-table-column
-            prop="createDt"
+            v-if="memberReport['注册时间']"
+            prop="betCount"
             align="center"
             label="注册时间"
-            width="180"
             sortable="custom"
           >
             <template slot-scope="scope">
-              <span v-if="!!scope.row.createDt">
-                {{ scope.row.createDt }}
-              </span>
-              <span v-else>-</span>
+              {{ scope.row.betCount }}
             </template>
           </el-table-column>
           <el-table-column
-            prop="firstDepositAmount"
+            v-if="memberReport['首存金额']"
+            prop="betCount"
             align="center"
             label="首存金额"
             sortable="custom"
-            width="120"
           >
             <template slot-scope="scope">
-              <span
-                v-if="
-                  !!scope.row.firstDepositAmount || scope.row.firstDepositAmount === 0
-                "
-              >
-                {{ scope.row.firstDepositAmount }}
-              </span>
-              <span v-else>-</span>
+              {{ scope.row.betCount }}
             </template>
           </el-table-column>
           <el-table-column
-            prop="depositAmount"
+            v-if="memberReport['总存款']"
+            prop="betCount"
             align="center"
             label="总存款"
             sortable="custom"
-            width="120"
           >
             <template slot-scope="scope">
-              <span v-if="!!scope.row.depositAmount || scope.row.depositAmount === 0">
-                {{ scope.row.depositAmount }}
-              </span>
-              <span v-else>-</span>
+              {{ scope.row.betCount }}
             </template>
           </el-table-column>
           <el-table-column
-            prop="depositAmount"
+            v-if="memberReport['存款次数']"
+            prop="betCount"
             align="center"
             label="存款次数"
             sortable="custom"
-            width="100"
           >
             <template slot-scope="scope">
-              <span v-if="!!scope.row.depositAmount || scope.row.depositAmount === 0">
-                {{ scope.row.firstDepositAmount }}
-              </span>
-              <span v-else>-</span>
+              {{ scope.row.betCount }}
             </template>
           </el-table-column>
           <el-table-column
-            prop="depositAmount"
+            v-if="memberReport['上级转入']"
+            prop="betCount"
             align="center"
             label="上级转入"
             sortable="custom"
-            width="120"
           >
-          <template slot="header" slot-scope="scope">
-              <el-popover placement="top-start" title="提示" width="280" trigger="hover">
-                <div v-if="!scope.row">
-                  <div>汇总搜索时间内的会员的上级转入金额</div>
-                </div>
-                <div slot="reference" class="el-icon-question">
-                  <span class="other-class">上级转入</span>
-                </div>
-              </el-popover>
+            <template slot="header">
+              <span>上级转入</span>
+              <el-tooltip class="item" effect="dark">
+                <i class="el-icon-question" style="position: absolute; right: 10px"></i>
+                <div slot="content">上级转入指代理额度代存和<br />佣金代存金额之和</div>
+              </el-tooltip>
             </template>
             <template slot-scope="scope">
-              <span v-if="!!scope.row.depositAmount || scope.row.depositAmount === 0">
-                {{ scope.row.firstDepositAmount }}
-              </span>
-              <span v-else>-</span>
+              {{ scope.row.betCount }}
             </template>
           </el-table-column>
-            <el-table-column
-            prop="depositAmount"
+          <el-table-column
+            v-if="memberReport['转入次数']"
+            prop="betCount"
             align="center"
             label="转入次数"
             sortable="custom"
-            width="120"
           >
             <template slot-scope="scope">
-              <span v-if="!!scope.row.depositAmount || scope.row.depositAmount === 0">
-                {{ scope.row.firstDepositAmount }}
-              </span>
-              <span v-else>-</span>
+              {{ scope.row.betCount }}
             </template>
           </el-table-column>
-            <el-table-column
-            prop="depositAmount"
+          <el-table-column
+            v-if="memberReport['转中心钱包']"
+            prop="betCount"
             align="center"
             label="转中心钱包"
             sortable="custom"
-            width="120"
           >
-          <template slot="header" slot-scope="scope">
-              <el-popover placement="top-start" title="提示" width="280" trigger="hover">
-                <div v-if="!scope.row">
-                  <div>汇总搜索时间内同账号代理转入中心钱包的金额</div>
-                </div>
-                <div slot="reference" class="el-icon-question">
-                  <span class="other-class">转中心钱包</span>
-                </div>
-              </el-popover>
+           <template slot="header">
+              <span>转中心钱包</span>
+              <el-tooltip class="item" effect="dark">
+                <i class="el-icon-question" style="position: absolute; right: 10px"></i>
+                <div slot="content">转中心钱包指代理账号佣金<br />转回会员账号中心钱包金额之和</div>
+              </el-tooltip>
             </template>
             <template slot-scope="scope">
-              <span v-if="!!scope.row.depositAmount || scope.row.depositAmount === 0">
-                {{ scope.row.firstDepositAmount }}
-              </span>
-              <span v-else>-</span>
-            </template>
-          </el-table-column>
-            <el-table-column
-            prop="depositAmount"
-            align="center"
-            label="转入次数"
-            sortable="custom"
-            width="120"
-          >
-            <template slot-scope="scope">
-              <span v-if="!!scope.row.depositAmount || scope.row.depositAmount === 0">
-                {{ scope.row.firstDepositAmount }}
-              </span>
-              <span v-else>-</span>
+              {{ scope.row.betCount }}
             </template>
           </el-table-column>
           <el-table-column
-            prop="depositAmount"
+            v-if="memberReport['转回次数']"
+            prop="betCount"
             align="center"
-            label="总取数"
+            label="转回次数"
             sortable="custom"
-            width="100"
           >
             <template slot-scope="scope">
-              <span v-if="!!scope.row.depositAmount || scope.row.depositAmount === 0">
-                {{ scope.row.firstDepositAmount }}
-              </span>
-              <span v-else>-</span>
+              {{ scope.row.betCount }}
             </template>
           </el-table-column>
           <el-table-column
-            prop="depositAmount"
+            v-if="memberReport['总取款']"
+            prop="betCount"
+            align="center"
+            label="总取款"
+            sortable="custom"
+          >
+            <template slot-scope="scope">
+              {{ scope.row.betCount }}
+            </template>
+          </el-table-column>
+          <el-table-column
+            v-if="memberReport['取款次数']"
+            prop="betCount"
             align="center"
             label="取款次数"
             sortable="custom"
-            width="100"
           >
             <template slot-scope="scope">
-              <span v-if="!!scope.row.depositAmount || scope.row.depositAmount === 0">
-                {{ scope.row.firstDepositAmount }}
-              </span>
-              <span v-else>-</span>
+              {{ scope.row.betCount }}
             </template>
           </el-table-column>
           <el-table-column
-            prop="depositAmount"
+            v-if="memberReport['大额取款次数']"
+            prop="betCount"
             align="center"
             label="大额取款次数"
             sortable="custom"
-            width="120"
           >
             <template slot-scope="scope">
-              <span v-if="!!scope.row.depositAmount || scope.row.depositAmount === 0">
-                {{ scope.row.firstDepositAmount }}
-              </span>
-              <span v-else>-</span>
+              {{ scope.row.betCount }}
             </template>
           </el-table-column>
           <el-table-column
-            prop="depositAmount"
+            v-if="memberReport['存取差']"
+            prop="betCount"
             align="center"
-            label="取款差"
+            label="存取差"
             sortable="custom"
-            width="120"
           >
             <template slot-scope="scope">
-              <span v-if="!!scope.row.depositAmount || scope.row.depositAmount === 0">
-                {{ scope.row.firstDepositAmount }}
-              </span>
-              <span v-else>-</span>
+              {{ scope.row.betCount }}
             </template>
           </el-table-column>
           <el-table-column
-            prop="depositAmount"
+            v-if="memberReport['总优惠']"
+            prop="betCount"
             align="center"
-            label="总反水"
+            label="总优惠"
             sortable="custom"
-            width="120"
           >
             <template slot-scope="scope">
-              <span v-if="!!scope.row.depositAmount || scope.row.depositAmount === 0">
-                {{ scope.row.firstDepositAmount }}
-              </span>
-              <span v-else>-</span>
+              {{ scope.row.betCount }}
             </template>
           </el-table-column>
           <el-table-column
-            prop="depositAmount"
+            v-if="memberReport['总返水']"
+            prop="betCount"
+            align="center"
+            label="总返水"
+            sortable="custom"
+          >
+            <template slot-scope="scope">
+              {{ scope.row.betCount }}
+            </template>
+          </el-table-column>
+          <el-table-column
+            v-if="memberReport['其他调整']"
+            prop="betCount"
             align="center"
             label="其他调整"
             sortable="custom"
-            width="110"
           >
             <template slot-scope="scope">
-              <span v-if="!!scope.row.depositAmount || scope.row.depositAmount === 0">
-                {{ scope.row.firstDepositAmount }}
-              </span>
-              <span v-else>-</span>
+              {{ scope.row.betCount }}
             </template>
           </el-table-column>
           <el-table-column
-            prop="depositAmount"
+            v-if="memberReport['注单量']"
+            prop="betCount"
             align="center"
             label="注单量"
             sortable="custom"
-            width="120"
           >
             <template slot-scope="scope">
-              <span v-if="!!scope.row.depositAmount || scope.row.depositAmount === 0">
-                {{ scope.row.firstDepositAmount }}
-              </span>
-              <span v-else>-</span>
+              {{ scope.row.betCount }}
             </template>
           </el-table-column>
           <el-table-column
-            prop="depositAmount"
+            v-if="memberReport['投注金额']"
+            prop="betAmount"
             align="center"
             label="投注金额"
             sortable="custom"
-            width="120"
           >
             <template slot-scope="scope">
-              <span v-if="!!scope.row.depositAmount || scope.row.depositAmount === 0">
-                {{ scope.row.firstDepositAmount }}
-              </span>
-              <span v-else>-</span>
+              {{ scope.row.betAmount | filterDecimals }}
             </template>
           </el-table-column>
           <el-table-column
-            prop="depositAmount"
+            v-if="memberReport['有效投注']"
+            prop="validBetAmount"
             align="center"
             label="有效投注"
             sortable="custom"
-            width="120"
           >
             <template slot-scope="scope">
-              <span v-if="!!scope.row.depositAmount || scope.row.depositAmount === 0">
-                {{ scope.row.firstDepositAmount }}
-              </span>
-              <span v-else>-</span>
+              {{ scope.row.validBetAmount | filterDecimals }}
             </template>
           </el-table-column>
           <el-table-column
-            prop="depositAmount"
+            v-if="memberReport['投注盈亏']"
+            prop="netAmount"
             align="center"
             label="投注盈亏"
             sortable="custom"
-            width="150"
           >
-            <template slot="header" slot-scope="scope">
-              <el-popover placement="top-start" title="提示" width="280" trigger="hover">
-                <div v-if="!scope.row">
-                  <div>汇总会员搜索时间内的总输赢</div>
-                </div>
-                <div slot="reference" class="el-icon-question">
-                  <span class="other-class">投注盈亏</span>
-                </div>
-              </el-popover>
+            <template slot="header">
+              <span>投注盈亏</span>
+              <el-tooltip class="item" effect="dark">
+                <i class="el-icon-question" style="position: absolute; right: 10px"></i>
+                <div slot="content">盈亏金额指游戏输赢金额<br />负数表示会员输</div>
+              </el-tooltip>
             </template>
             <template slot-scope="scope">
-              <span v-if="!!scope.row.depositAmount || scope.row.depositAmount === 0">
-                {{ scope.row.firstDepositAmount }}
+              <span v-if="scope.row.netAmount > 0" class="enableColor">
+                {{ scope.row.netAmount | filterDecimals }}
               </span>
-              <span v-else>-</span>
-            </template>
-          </el-table-column>
-          <el-table-column prop="transforNum" align="center" label="转代次数">
-            <template slot-scope="scope">
-              <span v-if="!!scope.row.transforNum || scope.row.transforNum * 1 === 0">
-                {{ scope.row.transforNum }}
+              <span v-else-if="scope.row.netAmount < 0" class="redColor">
+                {{ scope.row.netAmount | filterDecimals }}
               </span>
+              <span v-else-if="scope.row.netAmount === 0">{{
+                scope.row.netAmount | filterDecimals
+              }}</span>
               <span v-else>-</span>
             </template>
           </el-table-column>
           <el-table-column
-            prop="userBalance"
+            v-if="memberReport['转代次数']"
+            prop="validBetAmount"
+            align="center"
+            label="转代次数"
+            sortable="custom"
+          >
+            <template slot-scope="scope">
+              {{ scope.row.validBetAmount | filterDecimals }}
+            </template>
+          </el-table-column>
+          <el-table-column
+            v-if="memberReport['中心钱包余额']"
+            prop="validBetAmount"
             align="center"
             label="中心钱包余额"
-            width="120"
+            sortable="custom"
           >
             <template slot-scope="scope">
-              <span v-if="!!scope.row.userBalance || scope.row.userBalance === 0">
-                {{ scope.row.userBalance }}
-              </span>
-              <span v-else>-</span>
+              {{ scope.row.validBetAmount | filterDecimals }}
             </template>
           </el-table-column>
           <el-table-column
-            prop="userBalance"
+            v-if="memberReport['钱包总余额']"
+            prop="validBetAmount"
             align="center"
             label="钱包总余额"
-            width="120"
+            sortable="custom"
           >
             <template slot-scope="scope">
-              <span v-if="!!scope.row.userBalance || scope.row.userBalance === 0">
-                {{ scope.row.userBalance }}
-              </span>
-              <span v-else>-</span>
+              {{ scope.row.validBetAmount | filterDecimals }}
             </template>
           </el-table-column>
         </el-table>
@@ -805,295 +674,494 @@
           @size-change="handleSizeChange"
         ></el-pagination>
       </div>
-      <el-dialog
-        title="列设置"
-        center
-        :visible.sync="visible"
-        width="610px"
-        class="col-setting"
-      >
-        <el-button type="primary" @click="setAll">复原缺省</el-button>
-        <div v-for="(value, name) in settingList" :key="name" class="setting-div">
-          <el-checkbox v-model="newList[name]">{{ name }}</el-checkbox>
-        </div>
-        <div slot="footer" class="dialog-footer">
-          <el-button @click="visible = false">取 消</el-button>
-          <el-button type="primary" @click="confirm">提交</el-button>
-        </div>
-      </el-dialog>
     </div>
+    <el-dialog :visible.sync="tableVisible" :destroy-on-close="true" class="rempadding">
+      <div slot="title" class="dialog-title">
+        <span class="title-text" style="margin-right: 15px">会员账号:{{ userName }}</span>
+      </div>
+      <el-table
+        v-loading="loading"
+        size="mini"
+        border
+        class="small-size-table"
+        :data="memberDetails"
+        style="margin-bottom: 15px"
+        :header-cell-style="getRowClass"
+      >
+        <el-table-column prop="staticsDate" align="center" label="日期">
+        </el-table-column>
+        <el-table-column prop="betAmount" align="center" label="上级代理">
+          <template slot-scope="scope">
+            {{ scope.row.betAmount | filterDecimals }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="betAmount" align="center" label="总存款">
+          <template slot-scope="scope">
+            {{ scope.row.betAmount | filterDecimals }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="betAmount" align="center" label="总取款">
+          <template slot-scope="scope">
+            {{ scope.row.betAmount | filterDecimals }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="betAmount" align="center" label="总优惠">
+          <template slot-scope="scope">
+            {{ scope.row.betAmount | filterDecimals }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="betAmount" align="center" label="总返水">
+          <template slot-scope="scope">
+            {{ scope.row.betAmount | filterDecimals }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="betAmount" align="center" label="其他调整">
+          <template slot-scope="scope">
+            {{ scope.row.betAmount | filterDecimals }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="betCount" align="center" label="注单量"></el-table-column>
+        <el-table-column prop="betAmount" align="center" label="投注金额">
+          <template slot-scope="scope">
+            {{ scope.row.betAmount | filterDecimals }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="validBetAmount" align="center" label="有效投注">
+          <template slot-scope="scope">
+            {{ scope.row.validBetAmount | filterDecimals }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="netAmount" align="center" label="投注盈亏">
+          <template slot-scope="scope">
+            <span v-if="scope.row.netAmount > 0" class="enableColor">
+              {{ scope.row.netAmount | filterDecimals }}
+            </span>
+            <span v-else-if="scope.row.netAmount < 0" class="redColor">
+              {{ scope.row.netAmount | filterDecimals }}
+            </span>
+            <span v-else-if="scope.row.netAmount === 0">{{
+              scope.row.netAmount | filterDecimals
+            }}</span>
+            <span v-else>-</span>
+          </template>
+        </el-table-column>
+      </el-table>
+      <!-- 分页 -->
+      <el-pagination
+        :current-page.sync="pageR"
+        background
+        class="fenye"
+        layout="total, sizes,prev, pager, next, jumper"
+        :page-size="sizeR"
+        :page-sizes="[10, 20, 50]"
+        :total="dialogTotal"
+        @current-change="handleCurrentChangeDialog"
+        @size-change="handleSizeChangeDialog"
+      ></el-pagination>
+      <div slot="footer" class="dialog-footer" style="text-align: center">
+        <el-button @click="tableVisible = false">关闭</el-button>
+      </div>
+    </el-dialog>
+    <el-dialog
+      title="列设置"
+      center
+      :visible.sync="visible"
+      width="500px"
+      class="col-setting"
+    >
+      <div>
+        <el-link type="primary" @click="clickDel">复原缺省</el-link>
+      </div>
+      <div v-for="(value, name) in memberReport" :key="name" class="setting-div">
+        <el-checkbox v-if="newList.length > 0" v-model="newList[0][name]">{{
+          name
+        }}</el-checkbox>
+      </div>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="visible = false">取 消</el-button>
+        <el-button type="primary" @click="confirm"> 确定 </el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import list from '@/mixins/list'
 import dayjs from 'dayjs'
-// import { UTable } from 'umy-ui'
-import { routerNames } from '@/utils/consts'
-const start = dayjs().startOf('day').valueOf()
-const end = dayjs().endOf('day').valueOf()
+const startTime = dayjs().startOf('day').valueOf()
+const endTime = dayjs().endOf('day').valueOf()
 
 export default {
-  name: routerNames.memberReport,
+  filters: {
+    filterDecimals: function (val) {
+      if (typeof val === 'number') {
+        const newVal = (Math.floor(val * 1000) / 1000).toFixed(2)
+        return newVal
+      } else {
+        return '-'
+      }
+    }
+  },
   mixins: [list],
   data() {
     return {
-      queryData: {
-        registerTime: [start, end],
-        userName: undefined,
-        realName: undefined,
-        parentProxyName: undefined,
-        accountType: [],
-        accountStatus: [],
-        windControlId: undefined,
-        labelId: undefined,
-        vipSerialNumMax: undefined,
-        vipSerialNumMin: undefined,
-        betNumMin: undefined,
-        betNumMax: undefined,
-        depositAmountMin: undefined,
-        depositAmountMax: undefined,
-        depositAmountValidMin: undefined,
-        depositAmountValidMax: undefined,
-        profitMin: undefined,
-        profitMax: undefined,
-        totalDepositMin: undefined,
-        totalDepositMax: undefined,
-        withdrawalMin: undefined,
-        withdrawalMax: undefined,
-        orderKey: undefined,
-        orderType: undefined
+      queryData: {},
+      statisticsTime: [startTime, endTime],
+      registerTime: [startTime, endTime],
+      day92: 91 * 24 * 3600 * 1000,
+      // 日期使用
+      timeControl: {
+        onPick: ({ maxDate, minDate }) => {
+          console.log(maxDate, minDate)
+          if (maxDate - minDate > this.day92) {
+            this.flag = true
+            this.$message.warning('请缩小搜索范围至92天')
+          }
+          if (
+            maxDate !== null &&
+            minDate !== null &&
+            maxDate - minDate <= this.day92 &&
+            this.queryText === '查询'
+          ) {
+            this.flag = false
+          } else {
+            this.flag = true
+          }
+        },
+        disabledDate: (time) => {
+          return time.getTime() > Date.now()
+        }
       },
-      dataList: [],
-      total: 0,
-      vipDict: [],
-      userLabel: [],
-      queryText: '查询',
-      visible: false,
-      settingList: {
+      memberReport: {
         会员账号: true,
         姓名: true,
         账号类型: true,
         上级代理: true,
         VIP等级: true,
         账号状态: true,
-        会员标签: true
+        会员标签: true,
+        风控层级: true,
+        注册时间: true,
+        首存金额: true,
+        总存款: true,
+        存款次数: true,
+        上级转入: true,
+        转入次数: true,
+        转中心钱包: true,
+        转回次数: true,
+        总取款: true,
+        取款次数: true,
+        大额取款次数: true,
+        存取差: true,
+        总优惠: true,
+        总返水: true,
+        其他调整: true,
+        注单量: true,
+        投注金额: true,
+        有效投注: true,
+        投注盈亏: true,
+        转代次数: true,
+        中心钱包余额: true,
+        钱包总余额: true
       },
+      queryText: '查询',
+      flag: false,
+      tableVisible: false,
+      visible: false,
       newList: [],
-      totalLoading: false,
-      summary: undefined // 总计
+      userName: '',
+      dataList: [],
+      windControlList: [],
+      userLabel: [],
+      memberDetails: [],
+      playerId: '',
+      pageR: 1,
+      sizeR: 10,
+      dialogTotal: 0,
+      summary: {},
+      myName: ''
     }
   },
   computed: {
     accountStatusArr() {
       return this.globalDics.accountStatusType
     },
+    deviceTypeArr() {
+      return this.globalDics.deviceType
+    },
     accountTypeArr() {
-      return this.globalDics.accountType
+      const arr = this.globalDics.accountType
+      const newArr = []
+      for (let i = 0; i < arr.length; i++) {
+        const ele = arr[i]
+        if (ele.code !== '1' && ele.code !== '4') {
+          newArr.push(ele)
+        }
+      }
+      return newArr
     }
   },
   created() {
+    this.getWindControllerLevelDict()
     this.getMemberLabelDict()
   },
   mounted() {
-    this.getWindControllerLevelDict()
-    if (localStorage.getItem('memberReport')) {
-      this.settingList = JSON.parse(localStorage.getItem('memberReport'))
-    }
-
-    setTimeout(() => {
-      this.totalLoading = true
-    }, 3000)
-
-    this.$nextTick(() => {
-      console.log('sss', this.$refs.tables.bodyWrapper)
-      this.$refs.tables.bodyWrapper.scrollTop = 1000
-      this.$refs.tables.doLayout()
-    })
+    this.myName = localStorage.getItem('username')
+    this.initDB()
   },
   methods: {
-    _search() {
-      let t = 10
-      const timeCount = setInterval(() => {
-        t--
-        this.queryText = t + 's'
-        if (t < 0) {
-          clearInterval(timeCount)
-          this.queryText = '查询'
-        }
-      }, 1000)
-      this.loadData()
-    },
     // 列设置
     openSetting() {
+      this.getList()
       this.visible = true
-      this.newList = JSON.parse(JSON.stringify(this.settingList))
     },
-    setAll() {
-      Object.keys(this.newList).forEach((item) => {
-        this.newList[item] = true
-      })
+    initDB() {
+      const request = indexedDB.open('memberReport')
+      request.onupgradeneeded = (event) => {
+        const db = event.target.result
+        this.db = db
+        // 建表 名为person,主键为id
+        db.createObjectStore('memberReport', {
+          keyPath: 'id',
+          autoIncrement: true
+        })
+      }
+
+      request.onsuccess = (event) => {
+        this.db = event.target.result
+        console.log('数据库打开/创建成功', event)
+        this.clickAdd()
+        this.getList()
+      }
+    },
+    clickAdd() {
+      const request = this.db
+        .transaction(['memberReport'], 'readwrite')
+        .objectStore('memberReport')
+        .add({
+          id: this.myName,
+          会员账号: true,
+          姓名: true,
+          账号类型: true,
+          上级代理: true,
+          VIP等级: true,
+          账号状态: true,
+          会员标签: true,
+          风控层级: true,
+          注册时间: true,
+          首存金额: true,
+          总存款: true,
+          存款次数: true,
+          上级转入: true,
+          转入次数: true,
+          转中心钱包: true,
+          转回次数: true,
+          总取款: true,
+          取款次数: true,
+          大额取款次数: true,
+          存取差: true,
+          总优惠: true,
+          总返水: true,
+          其他调整: true,
+          注单量: true,
+          投注金额: true,
+          有效投注: true,
+          投注盈亏: true,
+          转代次数: true,
+          中心钱包余额: true,
+          钱包总余额: true
+        })
+      request.onsuccess = (event) => {
+        this.getList()
+      }
+    },
+    getList() {
+      this.newList = []
+      var transaction = this.db.transaction(['memberReport'])
+      const objectStore = transaction.objectStore('memberReport')
+      const list = []
+      objectStore.openCursor().onsuccess = (event) => {
+        const cursor = event.target.result
+        if (cursor) {
+          list.push(cursor.value)
+          cursor.continue()
+        } else {
+          console.log(list, 4654564)
+          for (let i = 0; i < list.length; i++) {
+            const ele = list[i]
+            if (ele.id === this.myName) {
+              this.newList.push(ele)
+              this.memberReport = { ...ele }
+              delete this.memberReport.id
+            }
+          }
+          console.log(this.newList, 4645655465)
+        }
+      }
     },
     confirm() {
-      localStorage.setItem('memberReport', JSON.stringify(this.newList))
-      this.settingList = this.newList
-      this.visible = false
+      const arr = []
+      for (let i = 0; i < this.newList.length; i++) {
+        const ele = this.newList[i]
+        if (ele.id === this.myName) {
+          arr.push(ele)
+        }
+      }
+      console.log(arr, 'arr')
+      const request = this.db
+        .transaction(['memberReport'], 'readwrite')
+        .objectStore('memberReport')
+        .put({
+          id: this.myName,
+          会员账号: arr[0]['会员账号'],
+          姓名: arr[0]['姓名'],
+          账号类型: arr[0]['账号类型'],
+          上级代理: arr[0]['上级代理'],
+          VIP等级: arr[0]['VIP等级'],
+          账号状态: arr[0]['账号状态'],
+          会员标签: arr[0]['会员标签'],
+          风控层级: arr[0]['风控层级'],
+          注册时间: arr[0]['注册时间'],
+          首存金额: arr[0]['首存金额'],
+          总存款: arr[0]['总存款'],
+          存款次数: arr[0]['存款次数'],
+          上级转入: arr[0]['上级转入'],
+          转入次数: arr[0]['转入次数'],
+          转中心钱包: arr[0]['转中心钱包'],
+          转回次数: arr[0]['转回次数'],
+          总取款: arr[0]['总取款'],
+          取款次数: arr[0]['取款次数'],
+          大额取款次数: arr[0]['大额取款次数'],
+          存取差: arr[0]['存取差'],
+          总优惠: arr[0]['总优惠'],
+          总返水: arr[0]['总返水'],
+          其他调整: arr[0]['其他调整'],
+          注单量: arr[0]['注单量'],
+          投注金额: arr[0]['投注金额'],
+          有效投注: arr[0]['有效投注'],
+          投注盈亏: arr[0]['投注盈亏'],
+          转代次数: arr[0]['转代次数'],
+          中心钱包余额: arr[0]['中心钱包余额'],
+          钱包总余额: arr[0]['钱包总余额']
+        })
+      request.onsuccess = (event) => {
+        this.visible = false
+        this.getList()
+        console.log('数据更新成功')
+      }
+
+      request.onerror = (event) => {
+        console.log('数据更新失败')
+      }
     },
-    // 总计
-    getSummaries(param) {
-      const { columns, data } = param
-      const sums = []
-      columns.forEach((column, index) => {
-        if (index === 0) {
-          const el = (
-            <div class='count_row'>
-              <p>本页合计</p>
-              <p>全部合计</p>
-            </div>
-          )
-          sums[index] = el
-          return
-        }
-        const includeArr = new Map([
-          ['vipSerialNum', 'vipSerialNum'],
-          ['depositAmount', 'depositAmount'],
-          ['depositTotal', 'depositTotal'],
-          ['firstDepositAmount', 'firstDepositAmount'],
-          ['transforNum', 'transforNum'],
-          ['userBalance', 'userBalance']
-        ])
-
-        if (includeArr.get(column.property)) {
-          const values = data.map((item) => Number(item[column.property]))
-          if (!values.every((value) => isNaN(value))) {
-            sums[index] = values.reduce((prev, curr) => {
-              const value = Number(curr)
-              if (!isNaN(value)) {
-                return prev + curr
-              } else {
-                return prev
-              }
-            }, 0)
-            switch (column.property) {
-              case 'vipSerialNum':
-                // eslint-disable-next-line no-case-declarations
-                let vipTotal
-                if (!this.totalLoading) {
-                  vipTotal = (
-                    <div class='count_row'>
-                      <p>{sums[index]}</p>
-                      <p>
-                        <el-button icon='el-icon-loading' />
-                      </p>
-                    </div>
-                  )
-                } else {
-                  vipTotal = (
-                    <div class='count_row'>
-                      <p>{sums[index]}</p>
-                      <p>10000</p>
-                    </div>
-                  )
-                }
-                return (sums[index] = vipTotal)
-              case 'depositAmount':
-                // eslint-disable-next-line no-case-declarations
-                const depositTotal = (
-                  <div class='count_row'>
-                    <p>{sums[index]}</p>
-                    <p>200</p>
-                  </div>
-                )
-                return (sums[index] = depositTotal)
-              case 'firstDepositAmount':
-                // eslint-disable-next-line no-case-declarations
-                const firstDepositTotal = (
-                  <div class='count_row'>
-                    <p>{sums[index]}</p>
-                    <p>200</p>
-                  </div>
-                )
-                return (sums[index] = firstDepositTotal)
-              case 'transforNum':
-                // eslint-disable-next-line no-case-declarations
-                const transforTotal = (
-                  <div class='count_row'>
-                    <p>{sums[index]}</p>
-                    <p>200</p>
-                  </div>
-                )
-                return (sums[index] = transforTotal)
-              case 'userBalance':
-                // eslint-disable-next-line no-case-declarations
-                const userBalanceTotal = (
-                  <div class='count_row'>
-                    <p>{sums[index]}</p>
-                    <p>200</p>
-                  </div>
-                )
-                return (sums[index] = userBalanceTotal)
-            }
-          } else {
-            sums[index] = ''
-          }
-        }
+    clickDel(id) {
+      this.newList = []
+      this.newList.push({
+        id: this.myName,
+        会员账号: true,
+        姓名: true,
+        账号类型: true,
+        上级代理: true,
+        VIP等级: true,
+        账号状态: true,
+        会员标签: true,
+        风控层级: true,
+        注册时间: true,
+        首存金额: true,
+        总存款: true,
+        存款次数: true,
+        上级转入: true,
+        转入次数: true,
+        转中心钱包: true,
+        转回次数: true,
+        总取款: true,
+        取款次数: true,
+        大额取款次数: true,
+        存取差: true,
+        总优惠: true,
+        总返水: true,
+        其他调整: true,
+        注单量: true,
+        投注金额: true,
+        有效投注: true,
+        投注盈亏: true,
+        转代次数: true,
+        中心钱包余额: true,
+        钱包总余额: true
       })
-
-      return sums
     },
     loadData() {
-      const create = this.queryData.registerTime || []
-      const [startTime, endTime] = create
+      const statistics = this.statisticsTime || []
+      const [startTime, endTime] = statistics
+      // const register = this.registerTime || []
+      // const [start, end] = register
       let params = {
         ...this.queryData,
-        createDtStart: startTime
-          ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
-          : undefined,
-        createDtEnd: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : undefined
+        accountTypeList: this.queryData.accountTypeList
+          ? this.queryData.accountTypeList.join(',')
+          : [],
+        accountStatusList: this.queryData.accountStatusList
+          ? this.queryData.accountStatusList.join(',')
+          : [],
+        startTime: startTime ? dayjs(startTime).format('YYYY-MM-DD') : '',
+        endTime: endTime ? dayjs(endTime).format('YYYY-MM-DD') : ''
       }
       params = {
         ...this.getParams(params)
       }
-      if (!startTime && !endTime) {
-        this.$message({
-          type: 'warning',
-          message: `请选择注册时间`
-        })
-        return false
+      console.log(params)
+      if (endTime - startTime > this.day92) {
+        this.$message.warning('请缩小搜索范围至92天')
+      } else {
+        this.loading = true
+        this.$api
+          .getReportMembernetamountList(params)
+          .then((res) => {
+            if (res.code === 200 && res.data !== null) {
+              this.loading = false
+              this.dataList = res.data.record
+              this.total = res.data.totalRecord
+            } else {
+              this.dataList = []
+              this.total = 0
+              this.loading = false
+            }
+          })
+          .catch(() => (this.loading = false))
+        this.$api
+          .getReportMembernetamountAggregation(params)
+          .then((res) => {
+            if (res.code === 200) {
+              this.loading = false
+              this.summary = res.data
+              console.log(res)
+            }
+          })
+          .catch(() => (this.loading = false))
       }
-      this.dataList = []
-      this.loading = true
-      this.totalLoading = false
-      delete params.registerTime
-      this.$api
-        .memberListAPI(params)
-        .then((res) => {
-          const {
-            code,
-            data: { record, totalRecord },
-            msg
-          } = res
-          if (code === 200) {
-            this.loading = false
-            this.dataList = record
-            this.total = totalRecord
-          } else {
-            this.loading = false
-            this.$message({
-              message: msg,
-              type: 'error'
-            })
+    },
+    search() {
+      const statistics = this.statisticsTime || []
+      const [startTime, endTime] = statistics
+      // const register = this.registerTime || []
+      // const [start, end] = register
+      if (endTime - startTime <= this.day92) {
+        this.flag = true
+        let t = 10
+        const timecount = setInterval(() => {
+          t--
+          this.queryText = t + 's'
+          if (t < 0) {
+            clearInterval(timecount)
+            this.queryText = '查询'
+            this.flag = false
           }
-        })
-        .catch(() => (this.loading = false))
-
-      setTimeout(() => {
-        this.loading = false
-      }, 1000)
-
-      setTimeout(() => {
-        this.totalLoading = true
-      }, 1000)
+        }, 1000)
+        this.loadData()
+      } else {
+        this.flag = true
+        this.loadData()
+      }
     },
     // 获取会员标签
     getMemberLabelDict() {
@@ -1113,59 +1181,156 @@ export default {
     getWindControllerLevelDict() {
       this.$api.getWindControllerLevelDict({ windControlType: 1 }).then((res) => {
         if (res.code === 200) {
-          this.vipDict = res.data
+          this.windControlList = res.data
         }
       })
     },
+    dialogData(val) {
+      this.userName = val.userName
+      this.pageR = 1
+      this.sizeR = 10
+      this.playerId = val.playerId
+      this.getReportMembernetamountDetail(val.playerId)
+      this.tableVisible = true
+    },
+    getReportMembernetamountDetail(val) {
+      this.loading = true
+      const statistics = this.statisticsTime || []
+      const [startTime, endTime] = statistics
+      // const register = this.registerTime || []
+      // const [start, end] = register
+      const params = {
+        pageNum: this.pageR,
+        pageSize: this.sizeR,
+        playerId: val,
+        startTime: startTime ? dayjs(startTime).format('YYYY-MM-DD') : '',
+        endTime: endTime ? dayjs(endTime).format('YYYY-MM-DD') : ''
+      }
+      this.$api
+        .getReportMembernetamountDetail(params)
+        .then((res) => {
+          if (res.code === 200) {
+            console.log(res)
+            this.memberDetails = res.data.record
+            this.dialogTotal = res.data.totalRecord
+          }
+          this.loading = false
+        })
+        .catch(() => {
+          this.loading = false
+        })
+    },
+    filterDecimals: function (val) {
+      if (typeof val === 'number') {
+        const newVal = (Math.floor(val * 1000) / 1000).toFixed(2)
+        return newVal
+      } else {
+        return '-'
+      }
+    },
+    getSummaries(param) {
+      const { columns, data } = param
+      const sums = []
+      columns.forEach((column, index) => {
+        if (index === 0) {
+          const el = (
+            <div class='count_row'>
+              <p>本页合计</p>
+              <p>全部合计</p>
+            </div>
+          )
+          sums[index] = el
+          return
+        } else if (index >= 8 && this.summary !== null) {
+          const values = data.map((item) => Number(item[column.property]))
+          if (!values.every((value) => isNaN(value))) {
+            sums[index] = values.reduce((prev, curr) => {
+              const value = Number(curr)
+              if (!isNaN(value)) {
+                return prev + curr
+              } else {
+                return prev
+              }
+            }, 0)
+            const num = sums[index]
+            switch (index) {
+              case 8:
+                sums[index] = (
+                  <div class='count_row'>
+                    <p>{num}</p>
+                    <p>{this.summary.betCountTotal}</p>
+                  </div>
+                )
+                break
+              case 9:
+                sums[index] = (
+                  <div class='count_row'>
+                    <p>{this.filterDecimals(num)}</p>
+                    <p>{this.filterDecimals(this.summary.betAmountTotal)}</p>
+                  </div>
+                )
+                break
+              case 10:
+                sums[index] = (
+                  <div class='count_row'>
+                    <p>{this.filterDecimals(num)}</p>
+                    <p>{this.filterDecimals(this.summary.validBetAmountTotal)}</p>
+                  </div>
+                )
+                break
+              case 11:
+                sums[index] = (
+                  <div class='count_row'>
+                    {num > 0 ? (
+                      <p class='enableColor'>{this.filterDecimals(num)}</p>
+                    ) : (
+                      <p class='redColor'>{this.filterDecimals(num)}</p>
+                    )}
+                    {this.summary.netAmountTotal > 0 ? (
+                      <p class='enableColor'>
+                        {this.filterDecimals(this.summary.netAmountTotal)}
+                      </p>
+                    ) : this.summary.netAmountTotal === 0 ? (
+                      <p>{this.filterDecimals(this.summary.netAmountTotal)}</p>
+                    ) : (
+                      <p class='redColor'>
+                        {this.filterDecimals(this.summary.netAmountTotal)}
+                      </p>
+                    )}
+                  </div>
+                )
+                break
+            }
+          } else {
+            sums[index] = ''
+          }
+        }
+      })
+
+      return sums
+    },
     reset() {
       this.pageNum = 1
-      this.queryData = {
-        registerTime: [start, end],
-        userName: undefined,
-        realName: undefined,
-        parentProxyName: undefined,
-        accountType: [],
-        accountStatus: [],
-        windControlId: undefined,
-        labelId: undefined,
-        vipSerialNumMax: undefined,
-        vipSerialNumMin: undefined,
-        betNumMin: undefined,
-        betNumMax: undefined,
-        depositAmountMin: undefined,
-        depositAmountMax: undefined,
-        depositAmountValidMin: undefined,
-        depositAmountValidMax: undefined,
-        profitMin: undefined,
-        profitMax: undefined,
-        totalDepositMin: undefined,
-        totalDepositMax: undefined,
-        withdrawalMin: undefined,
-        withdrawalMax: undefined,
-        orderKey: undefined,
-        orderType: undefined
-      }
+      this.queryData = {}
+      this.statisticsTime = [startTime, endTime]
+      this.registerTime = [startTime, endTime]
       this.$refs['form'].resetFields()
-      this.loadData()
+      this.search()
     },
     _changeTableSort({ column, prop, order }) {
-      if (prop === 'vipSerialNum') {
-        prop = 1
-      }
-      if (prop === 'createDt') {
-        prop = 2
-      }
-      if (prop === 'firstDepositTime') {
-        prop = 3
-      }
-      if (prop === 'firstDepositAmount') {
-        prop = 4
-      }
-      if (prop === 'lastLoginTime') {
-        prop = 5
-      }
-      if (prop === 'offLineDays') {
-        prop = 6
+      switch (prop) {
+        case 'betCount':
+          prop = 1
+          break
+        case 'betAmount':
+          prop = 2
+          break
+        case 'validBetAmount':
+          prop = 3
+          break
+        case 'netAmount':
+          prop = 4
+          break
       }
       this.queryData.orderKey = prop
       if (order === 'ascending') {
@@ -1180,230 +1345,222 @@ export default {
       }
       this.loadData()
     },
-
+    handleCurrentChangeDialog(val) {
+      console.log(111, val)
+      this.pageR = val
+      this.getReportMembernetamountDetail(this.playerId)
+    },
+    handleSizeChangeDialog(val) {
+      console.log(222, val)
+      this.sizeR = val
+      this.getReportMembernetamountDetail(this.playerId)
+    },
     checkValue(e) {
       const { name, value } = e.target
+      console.log(value)
       switch (name) {
-        case 'vipSerialNumMin':
+        case 'betCountMin':
           if (
-            !!this.queryData.vipSerialNumMax &&
+            !!this.queryData.betCountMax &&
             value &&
-            value * 1 > this.queryData.vipSerialNumMax * 1
+            value * 1 > this.queryData.betCountMax * 1
           ) {
             this.$message({
               type: 'warning',
-              message: `请输入小于${this.queryData.vipSerialNumMax}等级`
+              message: `注单量最小值不能大于最大值`
             })
+            this.queryData.betCountMin = ''
           } else {
-            this.queryData.vipSerialNumMin = value
+            this.queryData.betCountMin = value
           }
           break
-        case 'vipSerialNumMax':
+        case 'betCountMax':
           if (
-            !!this.queryData.vipSerialNumMin &&
+            !!this.queryData.betCountMin &&
             value &&
-            value * 1 < this.queryData.vipSerialNumMin * 1
+            value * 1 < this.queryData.betCountMin * 1
           ) {
             this.$message({
               type: 'warning',
-              message: `请输入大于${this.queryData.vipSerialNumMin}等级`
+              message: `注单量最大值不能小于最小值`
             })
+            this.queryData.betCountMax = ''
           } else {
-            this.queryData.vipSerialNumMax = value
+            this.queryData.betCountMax = value
           }
           break
-        case 'betNumMin':
+        case 'betAmountMin':
           if (
-            !!this.queryData.betNumMax &&
+            !!this.queryData.betAmountMax &&
             value &&
-            value * 1 > this.queryData.betNumMax * 1
+            value * 1 > this.queryData.betAmountMax * 1
           ) {
             this.$message({
               type: 'warning',
-              message: `请输入小于${this.queryData.betNumMax}注单量`
+              message: `投注金额最小值不能大于最大值`
             })
+            this.queryData.betAmountMin = undefined
+          } else if (value !== '' && value * 1 > 0) {
+            console.log('6465456464', value * 1)
+            this.queryData.betAmountMin = value
           } else {
-            this.queryData.betNumMin = value
+            this.queryData.betAmountMin = undefined
           }
           break
-        case 'betNumMax':
+        case 'betAmountMax':
           if (
-            !!this.queryData.betNumMin &&
+            !!this.queryData.betAmountMin &&
             value &&
-            value * 1 < this.queryData.betNumMin * 1
+            value * 1 < this.queryData.betAmountMin * 1
           ) {
             this.$message({
               type: 'warning',
-              message: `请输入大于${this.queryData.betNumMin}注单量`
+              message: `投注金额最大值不能小于最小值`
             })
+            this.queryData.betAmountMax = undefined
+          } else if (value !== '' && value * 1 > 0) {
+            this.queryData.betAmountMax = value
           } else {
-            this.queryData.betNumMax = value
+            this.queryData.betAmountMax = undefined
           }
           break
-        case 'depositAmountMin':
+
+        case 'validBetAmountMin':
           if (
-            !!this.queryData.depositAmountMax &&
+            !!this.queryData.validBetAmountMax &&
             value &&
-            value * 1 > this.queryData.depositAmountMax * 1
+            value * 1 > this.queryData.validBetAmountMax * 1
           ) {
             this.$message({
               type: 'warning',
-              message: `请输入小于${this.queryData.depositAmountMax}金额`
+              message: `有效投注最小值不能大于最大值`
             })
+            this.queryData.validBetAmountMin = undefined
+          } else if (value !== '' && value * 1 > 0) {
+            this.queryData.validBetAmountMin = value
           } else {
-            this.queryData.depositAmountMin = value
+            this.queryData.validBetAmountMin = undefined
           }
           break
-        case 'depositAmountMax':
+        case 'validBetAmountMax':
           if (
-            !!this.queryData.depositAmountMin &&
+            !!this.queryData.validBetAmountMin &&
             value &&
-            value * 1 < this.queryData.depositAmountMin * 1
+            value * 1 < this.queryData.validBetAmountMin * 1
           ) {
             this.$message({
               type: 'warning',
-              message: `请输入大于${this.queryData.depositAmountMin}金额`
+              message: `有效投注最大值不能小于最小值`
             })
+            this.queryData.validBetAmountMax = undefined
+          } else if (value !== '' && value * 1 > 0) {
+            this.queryData.validBetAmountMax = value
           } else {
-            this.queryData.depositAmountMax = value
+            this.queryData.validBetAmountMax = undefined
           }
           break
-        case 'depositAmountValidMin':
+        case 'netAmountMin':
           if (
-            !!this.queryData.depositAmountValidMax &&
+            !!this.queryData.netAmountMax &&
             value &&
-            value * 1 > this.queryData.depositAmountValidMax * 1
+            value * 1 > this.queryData.netAmountMax * 1
           ) {
             this.$message({
               type: 'warning',
-              message: `请输入小于${this.queryData.depositAmountValidMax}金额`
+              message: `投注盈亏最小值不能大于最大值`
             })
+            this.queryData.netAmountMin = undefined
+          } else if (value !== '') {
+            this.queryData.netAmountMin = value
           } else {
-            this.queryData.depositAmountValidMin = value
+            this.queryData.netAmountMin = undefined
           }
           break
-        case 'depositAmountValidMax':
+        case 'netAmountMax':
           if (
-            !!this.queryData.depositAmountValidMin &&
+            !!this.queryData.netAmountMin &&
             value &&
-            value * 1 < this.queryData.depositAmountValidMin * 1
+            value * 1 < this.queryData.netAmountMin * 1
           ) {
             this.$message({
               type: 'warning',
-              message: `请输入大于${this.queryData.depositAmountValidMin}金额`
+              message: `投注盈亏最大值不能小于最小值`
             })
+            this.queryData.netAmountMax = undefined
+          } else if (value !== '') {
+            this.queryData.netAmountMax = value
           } else {
-            this.queryData.depositAmountValidMax = value
+            this.queryData.netAmountMax = undefined
           }
           break
-        case 'profitMin':
-          if (
-            !!this.queryData.profitMax &&
-            value &&
-            value * 1 > this.queryData.profitMax * 1
-          ) {
+        case 'zckMin':
+          if (!!this.queryData.zckMax && value && value * 1 > this.queryData.zckMax * 1) {
             this.$message({
               type: 'warning',
-              message: `请输入小于${this.queryData.profitMax}金额`
+              message: `总存款最小值不能大于最大值`
             })
+            this.queryData.zckMin = undefined
+          } else if (value !== '') {
+            this.queryData.zckMin = value
           } else {
-            this.queryData.profitMin = value
+            this.queryData.zckMin = undefined
           }
           break
-        case 'profitMax':
-          if (
-            !!this.queryData.profitMin &&
-            value &&
-            value * 1 < this.queryData.profitMin * 1
-          ) {
+        case 'zckMax':
+          if (!!this.queryData.zckMin && value && value * 1 < this.queryData.zckMin * 1) {
             this.$message({
               type: 'warning',
-              message: `请输入大于${this.queryData.profitMin}金额`
+              message: `总存款最大值不能小于最小值`
             })
+            this.queryData.zckMax = undefined
+          } else if (value !== '') {
+            this.queryData.zckMax = value
           } else {
-            this.queryData.profitMax = value
+            this.queryData.zckMax = undefined
           }
           break
-        case 'totalDepositMin':
-          if (
-            !!this.queryData.totalDepositMax &&
-            value &&
-            value * 1 > this.queryData.totalDepositMax * 1
-          ) {
+        case 'zqkMin':
+          if (!!this.queryData.zqkMax && value && value * 1 > this.queryData.zqkMax * 1) {
             this.$message({
               type: 'warning',
-              message: `请输入小于${this.queryData.totalDepositMax}金额`
+              message: `总取款最小值不能大于最大值`
             })
+            this.queryData.zqkMin = undefined
+          } else if (value !== '') {
+            this.queryData.zqkMin = value
           } else {
-            this.queryData.totalDepositMin = value
+            this.queryData.zqkMin = undefined
           }
           break
-        case 'totalDepositMax':
-          if (
-            !!this.queryData.totalDepositMin &&
-            value &&
-            value * 1 < this.queryData.totalDepositMin * 1
-          ) {
+        case 'zqkMax':
+          if (!!this.queryData.zqkMin && value && value * 1 < this.queryData.zqkMin * 1) {
             this.$message({
               type: 'warning',
-              message: `请输入大于${this.queryData.totalDepositMin}金额`
+              message: `总取款最大值不能小于最小值`
             })
+            this.queryData.zqkMax = undefined
+          } else if (value !== '') {
+            this.queryData.zqkMax = value
           } else {
-            this.queryData.totalDepositMax = value
-          }
-          break
-        case 'withdrawalMin':
-          if (
-            !!this.queryData.withdrawalMax &&
-            value &&
-            value * 1 > this.queryData.withdrawalMax * 1
-          ) {
-            this.$message({
-              type: 'warning',
-              message: `请输入小于${this.queryData.withdrawalMax}金额`
-            })
-          } else {
-            this.queryData.withdrawalMin = value
-          }
-          break
-        case 'withdrawalMax':
-          if (
-            !!this.queryData.withdrawalMin &&
-            value &&
-            value * 1 < this.queryData.withdrawalMin * 1
-          ) {
-            this.$message({
-              type: 'warning',
-              message: `请输入大于${this.queryData.withdrawalMin}金额`
-            })
-          } else {
-            this.queryData.withdrawalMax = value
+            this.queryData.zqkMax = undefined
           }
           break
       }
     },
     exportExcel() {
-      const create = this.queryData.registerTime || []
-      const [startTime, endTime] = create
+      this.loading = true
+      const statistics = this.statisticsTime || []
+      const [startTime, endTime] = statistics
+      // const register = this.registerTime || []
+      // const [start, end] = register
       let params = {
         ...this.queryData,
-        createDtStart: startTime
-          ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
-          : undefined,
-        createDtEnd: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : undefined
+        startTime: startTime ? dayjs(startTime).format('YYYY-MM-DD') : '',
+        endTime: endTime ? dayjs(endTime).format('YYYY-MM-DD') : ''
       }
       params = {
         ...this.getParams(params)
       }
-      delete params.registerTime
-      params.accountStatus =
-        params.accountStatus && params.accountStatus.length
-          ? params.accountStatus
-          : undefined
-      params.deviceType =
-        params.deviceType && params.deviceType.length ? params.deviceType : undefined
-      params.accountType =
-        params.accountType && params.accountType.length ? params.accountType : undefined
       this.$confirm(
         `<strong>是否导出?</strong></br><span style='font-size:12px;color:#c1c1c1'>数据过大时，请耐心等待</span>`,
         '确认提示',
@@ -1415,9 +1572,8 @@ export default {
         }
       )
         .then(() => {
-          this.loading = true
           this.$api
-            .exportExcelAPI(params)
+            .getGameRecordDownload(params)
             .then((res) => {
               this.loading = false
               const { data, status } = res
@@ -1480,10 +1636,6 @@ export default {
             })
         })
         .catch(() => {})
-
-      setTimeout(() => {
-        this.loading = false
-      }, 1500)
     }
   }
 }
@@ -1491,45 +1643,19 @@ export default {
 
 <style lang="scss" scoped>
 /deep/.el-dialog__header {
-  text-align: center;
   color: #909399;
   font-weight: 700;
 }
-///deep/ .el-table {
-//	overflow: auto;
-//	.el-table__fixed {
-//        height:auto !important;
-//		bottom: 17px;
-//	}
-//}
-
-///deep/ .el-table__header-wrapper,
-///deep/ .el-table__footer-wrapper {
-//	overflow: visible;
-//}
-
-/deep/ .el-table__body-wrapper {
-  z-index: 2;
+.numberBox /deep/.el-input-number__decrease,
+.numberBox /deep/.el-input-number__increase {
+  display: none;
 }
-///deep/ .el-table__body-wrapper::-webkit-scrollbar {
-//	height: 5px;
-//}
-
-///deep/ .el-table::after {
-//	position: relative !important;
-//}
-
-///deep/ .el-table__footer-wrapper::after {
-//	border: 1px solid #ebeef5;
-//	content: '';
-//	position: absolute;
-//	bottom: 41px;
-//	left: 0;
-//	width: 100%;
-//}
-
+.numberBox /deep/.el-input__inner {
+  padding: 0 15px;
+  text-align: left;
+}
 /deep/ .el-table__footer-wrapper .cell::after {
-  border: 0.5px solid #ebeef5;
+  border: 1px solid #ebeef5;
   content: "";
   position: absolute;
   top: 41px;
@@ -1538,7 +1664,7 @@ export default {
 }
 
 /deep/ .el-table__fixed-footer-wrapper tr::after {
-  border: 0.5px solid #ebeef5;
+  border: 1px solid #ebeef5;
   content: "";
   position: absolute;
   top: 41px;
@@ -1547,9 +1673,11 @@ export default {
 }
 .count_row {
   height: 80px;
+  color: #5c5c5c;
   p {
     height: 40px;
     line-height: 40px;
+    font-weight: 700;
     span {
       display: inline-block;
       width: 20px;
@@ -1557,18 +1685,11 @@ export default {
     }
   }
 }
-/deep/ .caret-wrapper {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
+.fenye {
+  text-align: center;
 }
-/deep/ .count_row p .el-button {
-  min-width: 0;
-  border: 0;
-  padding: 0;
-  width: 20px;
-}
-/deep/ .count_row p .el-button:hover {
-  background-color: unset;
+.setting-div {
+  display: inline-block;
+  min-width: 110px;
 }
 </style>
