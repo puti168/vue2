@@ -227,6 +227,8 @@ export default {
   components: {},
   mixins: [list],
   data() {
+    this.loadData = this.throttle(this.loadData, 1000)
+    this._changeTableSort = this.throttle(this._changeTableSort, 1000)
     return {
       queryData: {},
       searchTime: [startTime, endTime],
