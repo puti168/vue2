@@ -122,6 +122,8 @@ export default {
   components: { agentEditFrom },
   mixins: [list],
   data() {
+    this.loadData = this.throttle(this.loadData, 1000)
+    this.setProxyGradeDelete = this.throttle(this.setProxyGradeDelete, 1000)
     return {
       queryData: {},
       edit: false,
@@ -160,7 +162,6 @@ export default {
         })
     },
     addLevelConfig() {
-      console.log(1111111)
       this.editRowData = {}
       this.edit = true
     },

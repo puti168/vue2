@@ -21,6 +21,7 @@ export default {
   components: { BackCommissionLevelConfig, AgentLevelConfig },
   mixins: [list],
   data() {
+    this.handleClick = this.throttle(this.handleClick, 1000)
     return {
       activeName: 'agentLevelConfig',
       agentData: {},
@@ -32,7 +33,6 @@ export default {
   mounted() {},
   methods: {
     handleClick(tab) {
-      console.log(1111111111)
       this.loading = true
       const params = {
         ...this.getParams(params)

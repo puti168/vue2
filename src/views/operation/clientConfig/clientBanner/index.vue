@@ -574,6 +574,12 @@ export default {
   components: { draggable, UploadItem },
   mixins: [list],
   data() {
+    this.loadData = this.throttle(this.loadData, 1000)
+    this.subAddOrEidt = this.throttle(this.subAddOrEidt, 1000)
+    this.deleteBtn = this.throttle(this.deleteBtn, 1000)
+    this.changeStatus = this.throttle(this.changeStatus, 1000)
+    this.setoperateConfigBannerSort = this.throttle(this.setoperateConfigBannerSort, 1000)
+    this.subSortadd = this.throttle(this.subSortadd, 1000)
     return {
       sortareaList: [],
       QueryareaList: [],

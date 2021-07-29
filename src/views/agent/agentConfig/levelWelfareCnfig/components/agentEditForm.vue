@@ -169,6 +169,7 @@ export default {
   mixins: [list],
   props: { editRowData: { type: Object, default: () => {} } },
   data() {
+    this.add = this.throttle(this.add, 1000)
     return {
       loading: false,
       queryData: { ...this.editRowData }
@@ -220,7 +221,6 @@ export default {
       const params = {
         ...this.queryData
       }
-      console.log(params)
       this.$refs['form'].validate((valid) => {
         if (valid) {
           if (params.id) {

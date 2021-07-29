@@ -162,6 +162,7 @@ export default {
     surrogateList: { type: Object, default: () => ({}) }
   },
   data() {
+    this.refresh = this.throttle(this.refresh, 1000)
     return {
       activeL: true,
       resBalanceList: {}, // 代理余额

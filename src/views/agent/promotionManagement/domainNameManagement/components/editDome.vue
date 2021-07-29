@@ -116,6 +116,7 @@ export default {
     }
   },
   data() {
+    this.serve = this.throttle(this.serve, 1000)
     return {
       formData: this.editData,
       control: true

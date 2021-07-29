@@ -116,6 +116,8 @@ export default {
   components: { basicInfor, financialInfor, teamInfor, loginInfor },
   mixins: [list],
   data() {
+    this.enterSearch = this.throttle(this.enterSearch, 1000)
+    this.query = this.throttle(this.query, 1000)
     return {
       isShow: false,
       parentData: { userName: '', userId: '' },

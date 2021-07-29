@@ -264,6 +264,8 @@ export default {
     top3Sy: { type: Array, default: () => [] }
   },
   data() {
+    this.refresh = this.throttle(this.refresh, 1000)
+    this.tabHeaderFn = this.throttle(this.tabHeaderFn, 1000)
     return {
       activeL: true,
       resOverviewList: {}, // 成员概览

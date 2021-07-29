@@ -111,6 +111,8 @@ export default {
 	name: routerNames.agentTrans,
 	mixins: [list],
 	data() {
+		this.getOutlineInfo = this.throttle(this.getOutlineInfo, 1000)
+		this.add = this.throttle(this.add, 1000)
 		return {
 			loading: false,
 			loadingT: false,

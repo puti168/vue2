@@ -1108,6 +1108,11 @@ export default {
 	components: { UploadItem, draggable },
 	mixins: [list],
 	data() {
+		this.loadData = this.throttle(this.loadData, 1000)
+		this.getActivity = this.throttle(this.getActivity, 1000)
+		this.subSort = this.throttle(this.subSort, 1000)
+		this.changeStatus = this.throttle(this.changeStatus, 1000)
+		this.deleteBtn = this.throttle(this.deleteBtn, 1000)
 		return {
 			queryData: {},
 			dialogFormVisible: false,

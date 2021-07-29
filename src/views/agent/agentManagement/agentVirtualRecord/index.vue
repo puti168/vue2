@@ -256,6 +256,7 @@ export default {
 	name: routerNames.agentVirtualRecord,
 	mixins: [list],
 	data() {
+		this.loadData = this.throttle(this.loadData, 1000)
 		return {
 			queryData: {
 				createDt: [start, end],

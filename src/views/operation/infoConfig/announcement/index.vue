@@ -453,6 +453,10 @@ export default {
   components: {},
   mixins: [list],
   data() {
+    this.loadData = this.throttle(this.loadData, 1000)
+    this.subAddOrEidt = this.throttle(this.subAddOrEidt, 1000)
+    this.deleteBtn = this.throttle(this.deleteBtn, 1000)
+    this.changeStatus = this.throttle(this.changeStatus, 1000)
     return {
       queryData: { terminal: [] },
       dialogFormVisible: false,

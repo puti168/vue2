@@ -121,6 +121,7 @@ export default {
   mixins: [list],
   props: { editRowData: { type: Object, default: () => {} } },
   data() {
+    this.add = this.throttle(this.add, 1000)
     return {
       loading: false,
       queryData: { ...this.editRowData }

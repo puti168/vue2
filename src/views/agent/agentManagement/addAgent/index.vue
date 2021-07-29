@@ -97,6 +97,7 @@ export default {
 	name: routerNames.addAgent,
 	mixins: [list],
 	data() {
+		this.add = this.throttle(this.add, 1000)
 		return {
 			loading: false,
 			form: {

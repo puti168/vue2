@@ -532,6 +532,8 @@ export default {
 	name: routerNames.agentList,
 	mixins: [list],
 	data() {
+		this.loadData = this.throttle(this.loadData, 1000)
+        this._changeTableSort = this.throttle(this._changeTableSort, 1000)
 		return {
 			queryData: {
 				registerTime: [start, end],
@@ -937,7 +939,7 @@ export default {
 						this.loading = false
 					}, 1500)
 				})
-				.catch(() => {})
+				.catch(() => { this.loading = false })
 		}
 	}
 }

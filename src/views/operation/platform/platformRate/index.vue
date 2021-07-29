@@ -149,6 +149,8 @@ export default {
 	name: routerNames.platformRate,
 	mixins: [list],
 	data() {
+		this.add = this.throttle(this.add, 1000)
+		this.changeType = this.throttle(this.changeType, 1000)
 		return {
 			loadingT: false,
 			queryData: {

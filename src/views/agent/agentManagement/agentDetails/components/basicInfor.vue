@@ -356,6 +356,10 @@ export default {
     remarksTableData: { type: Object, default: () => ({}) }
   },
   data() {
+    this.refresh = this.throttle(this.refresh, 1000)
+    this.submitEdit = this.throttle(this.submitEdit, 1000)
+    this.handleCurrentChange = this.throttle(this.handleCurrentChange, 1000)
+    this.handleSizeChange = this.throttle(this.handleSizeChange, 1000)
     return {
       loading: false,
       activeL: true,

@@ -168,6 +168,9 @@ export default {
   name: routerNames.memberOverflow,
   mixins: [list],
   data() {
+    this.uploadFile = this.throttle(this.uploadFile, 1000)
+    this.searchMemeber = this.throttle(this.searchMemeber, 1000)
+    this.add = this.throttle(this.add, 1000)
     return {
       loading: false,
       memberForm: {

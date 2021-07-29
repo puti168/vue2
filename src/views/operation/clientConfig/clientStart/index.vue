@@ -408,6 +408,10 @@ export default {
 	components: { UploadItem },
 	mixins: [list],
 	data() {
+		this.loadData = this.throttle(this.loadData, 1000)
+		this.deleteLabel = this.throttle(this.deleteLabel, 1000)
+		this.subAddOrEdit = this.throttle(this.subAddOrEdit, 1000)
+		this.recycle = this.throttle(this.recycle, 1000)
 		return {
 			queryData: {
 				clientType: undefined,

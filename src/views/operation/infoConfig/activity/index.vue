@@ -337,6 +337,12 @@ export default {
   components: {},
   mixins: [list],
   data() {
+    this.loadData = this.throttle(this.loadData, 1000)
+    this.subAddOrEidt = this.throttle(this.subAddOrEidt, 1000)
+    this.lookGame = this.throttle(this.lookGame, 1000)
+    this.withdraw = this.throttle(this.withdraw, 1000)
+    this.handleCurrentChangeDialog = this.throttle(this.handleCurrentChangeDialog, 1000)
+    this.handleSizeChangeDialog = this.throttle(this.handleSizeChangeDialog, 1000)
     return {
       queryData: {},
       dialogFormVisible: false,

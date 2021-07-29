@@ -197,6 +197,7 @@ export default {
   components: { foundIn },
   mixins: [list],
   data() {
+    this.loadData = this.throttle(this.loadData, 1000)
     return {
       accountType: '',
       foundIn: false,

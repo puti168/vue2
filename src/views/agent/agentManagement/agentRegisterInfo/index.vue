@@ -244,6 +244,7 @@ export default {
     name: routerNames.registerInfo,
     mixins: [list],
     data() {
+        this.loadData = this.throttle(this.loadData, 1000)
         return {
             queryData: {
                 registerTime: [start, end],

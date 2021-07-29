@@ -115,6 +115,7 @@ export default {
 		}
 	},
 	data() {
+		this.uploadFile = this.throttle(this.uploadFile, 1000)
 		return {
 			dialogUrl: '',
 			dialogVisible: false,

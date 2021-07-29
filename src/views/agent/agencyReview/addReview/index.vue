@@ -266,6 +266,8 @@ export default {
   components: { addDetail },
   mixins: [list],
   data() {
+    this.loadData = this.throttle(this.loadData, 1000)
+    this.lockChange = this.throttle(this.lockChange, 1000)
     return {
       queryData: {
         auditStatusList: [],

@@ -316,6 +316,8 @@ export default {
 	components: { editPage },
 	mixins: [list],
 	data() {
+		this.loadData = this.throttle(this.loadData, 1000)
+		this.deleteRow = this.throttle(this.deleteRow, 1000)
 		return {
 			queryData: {
 				createDt: [start, end],

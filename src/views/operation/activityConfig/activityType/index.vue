@@ -138,6 +138,9 @@ export default {
 	components: { draggable },
 	mixins: [list],
 	data() {
+		this.changeType = this.throttle(this.changeType, 1000)
+		this.add = this.throttle(this.add, 1000)
+		this.handleClickSort = this.throttle(this.handleClickSort, 1000)
 		return {
 			loadingT: false,
 			queryData: {

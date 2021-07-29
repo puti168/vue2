@@ -337,6 +337,10 @@ export default {
   components: {},
   mixins: [list],
   data() {
+    this.loadData = this.throttle(this.loadData, 1000)
+    this.subAddOrEidt = this.throttle(this.subAddOrEidt, 1000)
+    this.withdraw = this.throttle(this.withdraw, 1000)
+    this.getOperateConfigNoticeSelectDetail = this.throttle(this.getOperateConfigNoticeSelectDetail, 1000)
     return {
       queryData: {},
       dialogFormVisible: false,

@@ -359,6 +359,8 @@ export default {
 	name: 'ClientCommon',
 	mixins: [list],
 	data() {
+		this.add = this.throttle(this.add, 1000)
+		this.changeRiskType = this.throttle(this.changeRiskType, 1000)
 		return {
 			loading: false,
 			loadingT: false,

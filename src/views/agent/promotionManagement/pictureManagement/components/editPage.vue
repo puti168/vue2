@@ -121,6 +121,7 @@ export default {
 		}
 	},
 	data() {
+		this.add = this.throttle(this.add, 1000)
 		return {
 			loading: false,
 			queryData: {

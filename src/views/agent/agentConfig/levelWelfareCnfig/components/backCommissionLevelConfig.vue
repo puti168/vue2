@@ -118,6 +118,8 @@ export default {
   components: { backCommissionEditForm },
   mixins: [list],
   data() {
+    this.loadData = this.throttle(this.loadData, 1000)
+    this.setProxyCommissionDelete = this.throttle(this.setProxyCommissionDelete, 1000)
     return {
       queryData: {},
       edit: false,
@@ -156,7 +158,6 @@ export default {
         })
     },
     addLevelConfig() {
-      console.log(1111111)
       this.editRowData = {}
       this.edit = true
     },

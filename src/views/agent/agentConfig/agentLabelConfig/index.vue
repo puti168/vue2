@@ -262,6 +262,11 @@ export default {
   components: {},
   mixins: [list],
   data() {
+    this.loadData = this.throttle(this.loadData, 1000)
+    this.lookGame = this.throttle(this.lookGame, 1000)
+    this.deleteLabel = this.throttle(this.deleteLabel, 1000)
+    this.subAddOrEidt = this.throttle(this.subAddOrEidt, 1000)
+    this.getProxyProxyInfoByLabelId = this.throttle(this.getProxyProxyInfoByLabelId, 1000)
     return {
       queryData: {},
       tableData: [],
@@ -415,12 +420,10 @@ export default {
       this.$refs.formSub.resetFields()
     },
     handleCurrentChangeDialog(val) {
-      console.log(111, val)
       this.page = val
       this.getProxyProxyInfoByLabelId(this.id)
     },
     handleSizeChangeDialog(val) {
-      console.log(222, val)
       this.size = val
       this.getProxyProxyInfoByLabelId(this.id)
     }

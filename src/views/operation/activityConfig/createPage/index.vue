@@ -296,6 +296,12 @@ export default {
   components: { draggable },
   mixins: [list],
   data() {
+    this.loadData = this.throttle(this.loadData, 1000)
+    this.activepage = this.throttle(this.activepage, 1000)
+    this.setoperateConfigDiscountTagSort = this.throttle(this.setoperateConfigDiscountTagSort, 1000)
+    this.switchClick = this.throttle(this.switchClick, 1000)
+    this.deleteLabel = this.throttle(this.deleteLabel, 1000)
+    this.subAddOrEidt = this.throttle(this.subAddOrEidt, 1000)
     return {
       carouselData: [],
       queryData: {

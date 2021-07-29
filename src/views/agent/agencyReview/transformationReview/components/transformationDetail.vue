@@ -131,6 +131,7 @@ export default {
 		}
 	},
 	data() {
+		this.auditOne = this.throttle(this.auditOne, 1000)
 		return {
 			list: {},
 			form: {

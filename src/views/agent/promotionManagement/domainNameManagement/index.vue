@@ -310,6 +310,8 @@ export default {
   components: { editDome },
   mixins: [list],
   data() {
+    this.loadData = this.throttle(this.loadData, 1000)
+    this.deleteLabel = this.throttle(this.deleteLabel, 1000)
     return {
       queryData: {},
       createTime: [startTime, endTime],
