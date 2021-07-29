@@ -190,6 +190,7 @@ export default {
   components: { detail },
   mixins: [list],
   data() {
+    this.loadData = this.throttle(this.loadData, 1000)
     return {
       queryData: {
         lockStatus: '',
