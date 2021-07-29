@@ -171,6 +171,7 @@ export default {
 	name: routerNames.gameSearchManage,
 	mixins: [list],
 	data() {
+		this.save = this.throttle(this.save, 1000)
 		return {
 			loading: false,
 			queryData: {
