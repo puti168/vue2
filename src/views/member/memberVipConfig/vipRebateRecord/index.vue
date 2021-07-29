@@ -224,7 +224,6 @@ export default {
   mounted() {},
   methods: {
     changeSelect(val) {
-      console.log(val, 6546556)
       const arr = []
       for (let i = 0; i < this.gameTypeList.length; i++) {
         const ele = this.gameTypeList[i]

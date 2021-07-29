@@ -110,6 +110,7 @@
               style="width: 300px"
               placeholder="默认选择全部"
               :popper-append-to-body="false"
+              @change="changeSelect($event)"
             >
               <el-option
                 v-for="item in proxyAccountBizType"
@@ -431,6 +432,9 @@ export default {
   mounted() {},
 
   methods: {
+    changeSelect(val) {
+        this.queryData.type = []
+    },
     loadData() {
       this.loading = true
       const create = this.searchTime || []
