@@ -723,17 +723,16 @@ export default {
 			this.$api
 				.memberListAPI(params)
 				.then((res) => {
+                    this.loading = false
 					const {
 						code,
 						data: { record, totalRecord },
 						msg
 					} = res
 					if (code === 200) {
-						this.loading = false
 						this.dataList = record
 						this.total = totalRecord
 					} else {
-						this.loading = false
 						this.$message({
 							message: msg,
 							type: 'error'
