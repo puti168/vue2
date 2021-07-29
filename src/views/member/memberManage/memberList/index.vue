@@ -615,8 +615,8 @@ export default {
 	name: routerNames.memberList,
 	mixins: [list],
 	data() {
-        this.exportExcel = this.throttle(this.exportExcel, 1000)
         this.loadData = this.throttle(this.loadData, 1000)
+        this._changeTableSort = this.throttle(this._changeTableSort, 1000)
 		return {
 			queryData: {
 				registerTime: [start, end],
