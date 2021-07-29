@@ -55,7 +55,7 @@ const ifVersionCorrect = async (to, from, next) => {
 				try {
 					if (!roles) {
 						await store.dispatch('user/resetToken')
-						next(`/login?redirect=nopermission`)
+						next(`/login?redirect=${to.path}`)
 						NProgress.done()
 					} else {
 						const accessRoutes = await store.dispatch(
