@@ -87,8 +87,6 @@
           </el-table-column>
           <el-table-column prop="gameRebateRate" align="center" label="会员存取差">
           </el-table-column>
-          <el-table-column prop="gameRebateRate" align="center" label="上级转入">
-          </el-table-column>
           <el-table-column prop="gameRebateRate" align="center" label="会员首存">
           </el-table-column>
           <el-table-column prop="gameRebateRate" align="center" label="会员有效投注">
