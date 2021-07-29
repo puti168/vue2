@@ -107,6 +107,7 @@ export default {
   components: { first, second, third, fourth },
   mixins: [list],
   data() {
+    this.query = this.throttle(this.query, 1000)
     return {
       isShow: false,
       parentData: { userName: '', userId: '' },

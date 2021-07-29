@@ -291,6 +291,9 @@ export default {
     sumList: { type: Object, default: () => ({}) }
   },
   data() {
+    this.refresh = this.throttle(this.refresh, 1000)
+    this.refreshTWithdrawWater = this.throttle(this.refreshTWithdrawWater, 1000)
+    this.tabHeaderFn = this.throttle(this.tabHeaderFn, 1000)
     return {
       activeL: true,
       moneyList: {

@@ -506,6 +506,7 @@ export default {
     remarksTableData: { type: Object, default: () => ({}) }
   },
   data() {
+    this.refresh = this.throttle(this.refresh, 1000)
     const checkPhone = (rule, value, callback) => {
       const phoneReg = /^1[3|4|5|7|8][0-9]{9}$/
       if (!value) {

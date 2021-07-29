@@ -140,6 +140,7 @@ export default {
     lonRecord: { type: Object, default: () => ({}) }
   },
   data() {
+    this.refresh = this.throttle(this.refresh, 1000)
     return {
       activeL: true,
       page: 1,

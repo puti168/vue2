@@ -208,7 +208,7 @@
 				</el-form>
 				<div slot="footer" class="dialog-footer">
 					<el-button @click="dialogFormVisible = false">取消</el-button>
-					<el-button type="primary" @click="subAddOrEidt">保存</el-button>
+					<el-button type="primary" :disabled="subAddOrEidtDisabled" @click="subAddOrEidt">保存</el-button>
 				</div>
 			</el-dialog>
 			<el-dialog
@@ -269,6 +269,8 @@ export default {
 	components: {},
 	mixins: [list],
 	data() {
+        this.search = this.throttle(this.search, 1000)
+        this.reset = this.throttle(this.reset, 1000)
 		return {
 			queryData: {},
 			tableData: [],
@@ -281,7 +283,8 @@ export default {
 			id: '',
 			page: 1,
 			size: 5,
-			summary: 0
+			summary: 0,
+            subAddOrEidtDisabled: false
 		}
 	},
 	computed: {},
@@ -367,12 +370,13 @@ export default {
 				.catch(() => {})
 		},
 		subAddOrEidt() {
-			console.log(this.title)
 			const data = {}
+            const delayer = this.disabledDelay('subAddOrEidtDisabled', false, 1000)
 			data.description = this.dialogForm.description
 			data.memberLabelName = this.dialogForm.memberLabelName
 			this.$refs.formSub.validate((valid) => {
 				if (valid) {
+                    this.subAddOrEidtDisabled = true
 					if (this.title === '新增') {
 						console.log('新增')
 
@@ -383,7 +387,10 @@ export default {
 								this.loadData()
 							}
 							this.dialogFormVisible = false
-						})
+                            delayer()
+						}).catch(() => {
+                            delayer()
+                        })
 					} else {
 						data.id = this.dialogForm.id
 						this.$api.setMemberAddOrEditMemberLabel(data).then((res) => {
@@ -392,7 +399,10 @@ export default {
 								this.loadData()
 							}
 							this.dialogFormVisible = false
-						})
+                            delayer()
+						}).catch(() => {
+                            delayer()
+                        })
 					}
 				}
 			})

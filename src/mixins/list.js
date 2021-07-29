@@ -210,6 +210,11 @@ export default {
 					timer = setTimeout(() => func.apply(this, args), delay)
 				}
 			}
+		},
+		disabledDelay(property, bool, delay = 1000) {
+			setTimeout(() => {
+				this[property] = bool
+			}, delay)
 		}
 	}
 }

@@ -279,6 +279,8 @@ export default {
 	components: {},
 	mixins: [list],
 	data() {
+        this.search = this.throttle(this.search, 1000)
+        this.reset = this.throttle(this.reset, 1000)
 		return {
 			queryData: {
 				accountType: '',

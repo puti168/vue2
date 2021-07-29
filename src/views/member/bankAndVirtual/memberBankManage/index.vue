@@ -630,7 +630,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="cancel">取 消</el-button>
-        <el-button type="primary" @click="submitEdit">确 定</el-button>
+        <el-button type="primary" :disabled="submitEditDisabled" @click="submitEdit">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -644,6 +644,8 @@ export default {
   components: {},
   mixins: [list],
   data() {
+    this.search = this.throttle(this.search, 1000)
+    this.reset = this.throttle(this.reset, 1000)
     return {
       queryData: {},
       tableData: [],
@@ -653,7 +655,8 @@ export default {
       editData: { status: '', remark: '' },
       checked: false,
       flag: false,
-      vipDict: []
+      vipDict: [],
+      submitEditDisabled: false
     }
   },
   computed: {
@@ -704,6 +707,7 @@ export default {
       this.loadData()
     },
     eidtDialog(text, val) {
+      this.submitEditDisabled = false
       this.editData.remark = ''
       if (text === '开启' || text === '禁用') {
         this.moduleBox = '状态变更'
@@ -730,9 +734,11 @@ export default {
       console.log(val)
     },
     submitEdit() {
+      const delayer = this.disabledDelay('submitEditDisabled', false, 2000)
       const params = { ...this.editData }
       this.$refs.editForm.validate((valid) => {
         if (valid) {
+          this.submitEditDisabled = true
           if (this.moduleBox === '状态变更') {
             params.status = params.status * 1
             this.$api.setUpdateUserBankAndVirtualStatus(params).then((res) => {
@@ -744,6 +750,8 @@ export default {
                   this.loadData()
                 }, 1000)
               }
+            }).catch(() => {
+                delayer()
             })
           } else {
             if (this.checked) {
@@ -762,6 +770,8 @@ export default {
                   this.loadData()
                 }, 500)
               }
+            }).catch(() => {
+                delayer()
             })
           }
         }
