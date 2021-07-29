@@ -172,6 +172,7 @@ export default {
 	mixins: [list],
 	data() {
 		this.save = this.throttle(this.save, 1000)
+		this._changeTableSort = this.throttle(this._changeTableSort, 1000)
 		return {
 			loading: false,
 			queryData: {

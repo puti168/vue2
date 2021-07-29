@@ -381,6 +381,7 @@ export default {
 	components: { gameHomeRecommendEdit },
 	mixins: [list],
 	data() {
+		this._changeTableSort = this.throttle(this._changeTableSort, 1000)
 		return {
 			isEdit: false,
 			dataList: [],
