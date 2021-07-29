@@ -136,8 +136,8 @@ img {
 	.content {
 		margin-top: 28px;
 		padding: 10px;
-		border-radius: 4px;
-		box-shadow: 0 2px 10px #ccc;
+		border-radius: 1px;
+		box-shadow: 0 2px 7px #ccc;
 
 		.el-pagination {
 			text-align: right;
@@ -219,4 +219,31 @@ img {
 }
 #nprogress .bar {
 	background: #24de72 !important; //颜色可修改
+}
+
+.dialog-fade-enter-active .el-dialog.way{
+    animation: anim-open .3s;
+}
+.dialog-fade-leave-active .el-dialog.way{
+    animation: anim-close .3s;
+}
+@keyframes anim-open {
+    0% {
+        transform: translate3d(100%, 0, 0);
+        opacity: 0;
+    }
+    100% {
+        transform: translate3d(0, 0, 0);
+        opacity: 1;
+    }
+}
+@keyframes anim-close {
+    0% {
+        transform: translate3d(0, 0, 0);
+        opacity: 1;
+    }
+    100% {
+        transform: translate3d(100%, 0, 0);
+        opacity: 0;
+    }
 }

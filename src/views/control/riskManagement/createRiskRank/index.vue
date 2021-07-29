@@ -227,7 +227,8 @@
 				:destroy-on-close="true"
 				width="520px"
 				class="rempadding"
-				@close="clear"
+				custom-class="way"
+                @close="clear"
 			>
 				<el-divider></el-divider>
 				<el-form
