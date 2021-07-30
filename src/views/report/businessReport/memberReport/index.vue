@@ -166,7 +166,7 @@
               size="medium"
               placeholder="最小数值"
               style="width: 100px"
-              :min="-999999999999999.99"
+              :min="0"
               :max="999999999999999.99"
               :precision="2"
               name="zckMin"
@@ -178,7 +178,7 @@
               size="medium"
               placeholder="最大数值"
               style="width: 100px"
-              :min="-999999999999999.99"
+              :min="0"
               :max="999999999999999.99"
               :precision="2"
               name="zckMax"
@@ -191,7 +191,7 @@
               size="medium"
               placeholder="最小数值"
               style="width: 100px"
-              :min="-999999999999999.99"
+              :min="0"
               :max="999999999999999.99"
               :precision="2"
               name="zqkMin"
@@ -203,7 +203,7 @@
               size="medium"
               placeholder="最大数值"
               style="width: 100px"
-              :min="-999999999999999.99"
+              :min="0"
               :max="999999999999999.99"
               :precision="2"
               name="zqkMax"
@@ -467,11 +467,13 @@
             label="转中心钱包"
             sortable="custom"
           >
-           <template slot="header">
+            <template slot="header">
               <span>转中心钱包</span>
               <el-tooltip class="item" effect="dark">
                 <i class="el-icon-question" style="position: absolute; right: 10px"></i>
-                <div slot="content">转中心钱包指代理账号佣金<br />转回会员账号中心钱包金额之和</div>
+                <div slot="content">
+                  转中心钱包指代理账号佣金<br />转回会员账号中心钱包金额之和
+                </div>
               </el-tooltip>
             </template>
             <template slot-scope="scope">
