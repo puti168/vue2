@@ -109,7 +109,7 @@
                   typeFilter(scope.row.beforeModify, "enumProxyDomainTypeOperate")
                 }}</span>
               </div>
-              <div v-else>{{ scope.row.operateField }}</div>
+              <div v-else>{{ scope.row.beforeModify }}</div>
             </template>
           </el-table-column>
           <el-table-column align="center" label="变更后" prop="afterModify">
@@ -133,7 +133,7 @@
                   typeFilter(scope.row.afterModify, "enumProxyDomainTypeOperate")
                 }}</span>
               </div>
-              <div v-else>{{ scope.row.operateField }}</div>
+              <div v-else>{{ scope.row.afterModify }}</div>
             </template>
           </el-table-column>
           <el-table-column prop="createdBy" align="center" width="120" label="操作人">
