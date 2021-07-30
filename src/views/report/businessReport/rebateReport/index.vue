@@ -181,7 +181,6 @@ export default {
     if (localStorage.getItem('venueProfitAndLoss')) {
       this.settingList = JSON.parse(localStorage.getItem('venueProfitAndLoss'))
     }
-    this.adjustWidth()
   },
 
   methods: {

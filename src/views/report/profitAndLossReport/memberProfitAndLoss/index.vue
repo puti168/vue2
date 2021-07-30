@@ -443,6 +443,7 @@
           <el-table-column
             v-if="memberProfitAndLoss['投注盈亏']"
             prop="netAmount"
+            min-width="150"
             align="center"
             label="投注盈亏"
             sortable="custom"
@@ -509,7 +510,7 @@
             {{ scope.row.validBetAmount | filterDecimals }}
           </template>
         </el-table-column>
-        <el-table-column prop="netAmount" align="center" label="投注盈亏">
+        <el-table-column prop="netAmount" align="center" label="投注盈亏" min-width="150">
           <template slot-scope="scope">
             <span v-if="scope.row.netAmount > 0" class="enableColor">
               {{ scope.row.netAmount | filterDecimals }}
