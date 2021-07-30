@@ -259,6 +259,8 @@ export default {
 	components: { EditAccount, AccountUpdatePass },
 	mixins: [list],
 	data() {
+        this.handleSearch = this.throttle(this.handleSearch, 1000)
+        this.handleReset = this.throttle(this.handleReset, 1000)
 		return {
 			curUsername: '',
 			username: getUsername(),

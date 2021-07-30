@@ -165,7 +165,7 @@
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取消</el-button>
-          <el-button type="primary" @click="subAddOrEidt">提交</el-button>
+          <el-button type="primary" :disabled="subAddOrEidtDisabled" @click="subAddOrEidt">提交</el-button>
         </div>
       </el-dialog>
     </div>
@@ -187,6 +187,8 @@ export default {
   components: {},
   mixins: [list],
   data() {
+    this.search = this.throttle(this.search, 1000)
+    this.reset = this.throttle(this.reset, 1000)
     return {
       form: {
         name: ''
@@ -203,7 +205,8 @@ export default {
       id: '',
       page: 1,
       size: 5,
-      summary: 0
+      summary: 0,
+      subAddOrEidtDisabled: false
     }
   },
   computed: {
@@ -279,17 +282,22 @@ export default {
         })
     },
     subAddOrEidt() {
+      const delayer = this.disabledDelay('subAddOrEidtDisabled', false, 1000)
       const data = { ...this.dialogForm }
       data.id = this.dialogForm.id
       console.log(this.dialogForm.id, '小明')
       this.$refs.formSub.validate((valid) => {
         if (valid) {
+          this.subAddOrEidtDisabled = true
           this.$api.getkvconfigUpdate(data).then((res) => {
             if (res.code === 200) {
               this.$message.success('修改成功')
               this.loadData()
             }
             this.dialogFormVisible = false
+            delayer()
+          }).catch(() => {
+              delayer()
           })
         }
       })

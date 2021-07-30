@@ -94,6 +94,7 @@ export default {
 		}
 	},
 	data() {
+        this.save = this.throttle(this.save, 2000)
 		return {
 			loading: false,
 			queryData: {

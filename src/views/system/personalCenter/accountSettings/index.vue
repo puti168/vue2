@@ -120,6 +120,7 @@ import validate from '@/mixins/validate'
 export default {
   mixins: [list, validate],
   data() {
+    this.onUpdateUser = this.throttle(this.onUpdateUser, 1000)
     return {
       circleUrl: 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png',
       passwordType: 'password',
