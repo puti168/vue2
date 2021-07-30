@@ -61,7 +61,7 @@
 									v-model.number="scope.row.bonusRatio"
 									size="medium"
 									maxlength="5"
-                                    :max="99999"
+                                    :max="100"
                                     :precision="0"
                                     :min="0"
 									placeholder="请输入"
