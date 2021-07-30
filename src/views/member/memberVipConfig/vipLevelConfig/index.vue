@@ -171,6 +171,7 @@ export default {
 	name: routerNames.vipLevelConfig,
 	mixins: [list],
 	data() {
+        this.saveData = this.throttle(this.saveData, 1000)
 		return {
 			dataList: [],
 			loading: false,

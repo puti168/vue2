@@ -215,6 +215,7 @@ export default {
 	components: {},
 	mixins: [list],
 	data() {
+        this.saveData = this.throttle(this.saveData, 1000)
 		return {
 			dataList: []
 		}

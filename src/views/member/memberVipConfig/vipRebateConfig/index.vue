@@ -237,6 +237,8 @@ export default {
 	components: {},
 	mixins: [list],
 	data() {
+        this.submitData = this.throttle(this.submitData, 1000)
+        this.resetData = this.throttle(this.resetData, 1000)
 		return {
 			tableData: [],
 			activeName: '',
