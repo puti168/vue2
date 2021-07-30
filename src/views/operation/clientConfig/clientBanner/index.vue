@@ -610,7 +610,8 @@ export default {
         pictureUrl: null,
         gameName: ''
       },
-      activeName: 'first'
+      activeName: 'first',
+      bigImage: ''
     }
   },
   computed: {
