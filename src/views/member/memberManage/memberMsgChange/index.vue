@@ -31,11 +31,12 @@
 				<el-form-item label="账号类型:">
 					<el-select
 						v-model="queryData.accountType"
-						style="width: 300px"
+						style="width: 260px"
 						multiple
                         collapse-tags
 						placeholder="默认选择全部"
 						:popper-append-to-body="false"
+                        clearable
 					>
 						<el-option
 							v-for="item in accountType"
@@ -49,11 +50,12 @@
 				<el-form-item label="变更类型:">
 					<el-select
 						v-model="queryData.applyType"
-						style="width: 300px"
+						style="width: 260px"
 						multiple
                         collapse-tags
 						placeholder="默认选择全部"
 						:popper-append-to-body="false"
+                        clearable
 					>
 						<el-option
 							v-for="item in applyType"
@@ -63,13 +65,13 @@
 						></el-option>
 					</el-select>
 				</el-form-item>
-				<el-form-item label="操作人:">
+				<el-form-item label="操作人:" label-width="72px">
 					<el-input
 						v-model="queryData.applyName"
 						clearable
 						size="medium"
 						:maxlength="15"
-						style="width: 180px"
+						style="width: 185px"
 						placeholder="请输入"
 						@keyup.enter.native="enterSearch"
 					></el-input>

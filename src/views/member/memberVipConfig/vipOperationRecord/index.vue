@@ -22,11 +22,12 @@
 					<el-form-item label="操作类型:" class="tagheight" prop="operateType">
 						<el-select
 							v-model="queryData.operateType"
-							style="width: 300px"
+							style="width: 230px"
 							multiple
-                            collapse-tags
 							placeholder="全部"
+                            collapse-tags
 							:popper-append-to-body="false"
+                            clearable
 						>
 							<el-option
 								v-for="item in memberVipOperateType"
@@ -39,11 +40,12 @@
 					<el-form-item label="操作项:" class="tagheight">
 						<el-select
 							v-model="queryData.operateField"
-							style="width: 300px"
+							style="width: 230px"
 							multiple
                             collapse-tags
 							placeholder="全部"
 							:popper-append-to-body="false"
+                            clearable
 						>
 							<el-option
 								v-for="item in memberVipOperateFieldType"

@@ -21,27 +21,9 @@
 							align="right"
 							:clearable="false"
 							value-format="timestamp"
-							style="width: 382px"
+							style="width: 450px"
 							:default-time="defaultTime"
 						></el-date-picker>
-					</el-form-item>
-					<el-form-item label="账号类型:">
-						<el-select
-							v-model="queryData.accountType"
-							size="medium"
-							placeholder="默认选择全部"
-							clearable
-							multiple
-                            collapse-tags
-							style="width: 250px"
-						>
-							<el-option
-								v-for="item in accountTypeArr"
-								:key="item.code"
-								:label="item.description"
-								:value="item.code"
-							></el-option>
-						</el-select>
 					</el-form-item>
 					<el-form-item label="会员账号:">
 						<el-input
@@ -53,6 +35,25 @@
 							style="width: 180px"
 						></el-input>
 					</el-form-item>
+					<el-form-item label="账号类型:">
+						<el-select
+							v-model="queryData.accountType"
+							size="medium"
+							placeholder="默认选择全部"
+							clearable
+							multiple
+							collapse-tags
+							style="width: 220px"
+						>
+							<el-option
+								v-for="item in accountTypeArr"
+								:key="item.code"
+								:label="item.description"
+								:value="item.code"
+							></el-option>
+						</el-select>
+					</el-form-item>
+
 					<el-form-item label="上级代理:">
 						<el-input
 							v-model="queryData.parentProxyName"
@@ -74,7 +75,7 @@
 							@keyup.native="checkValue"
 						></el-input>
 					</el-form-item>
-					<el-form-item label="注册IP:">
+					<el-form-item label="注册IP:" label-width="75px">
 						<el-input
 							v-model="queryData.registerIp"
 							size="medium"
@@ -101,8 +102,8 @@
 							placeholder="默认选择全部"
 							clearable
 							multiple
-                            collapse-tags
-							style="width: 260px"
+							collapse-tags
+							style="width: 220px"
 						>
 							<el-option
 								v-for="item in deviceTypeArr"
@@ -112,7 +113,7 @@
 							></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item>
+					<el-form-item label=" " label-width="30px">
 						<el-button
 							type="primary"
 							icon="el-icon-search"
@@ -303,8 +304,8 @@ export default {
 	name: routerNames.registerInfo,
 	mixins: [list],
 	data() {
-        this.search = this.throttle(this.search, 1000)
-        this.reset = this.throttle(this.reset, 1000)
+		this.search = this.throttle(this.search, 1000)
+		this.reset = this.throttle(this.reset, 1000)
 		return {
 			queryData: {
 				registerTime: [start, end],

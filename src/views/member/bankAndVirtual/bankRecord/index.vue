@@ -6,7 +6,6 @@
 					ref="form"
 					:inline="true"
 					:model="queryData"
-					label-width="100px"
 				>
 					<el-form-item label="操作类型:">
 						<el-select
@@ -37,7 +36,7 @@
 							align="right"
 							:clearable="false"
 							value-format="timestamp"
-							style="width: 382px"
+							style="width: 384px"
 							:default-time="defaultTime"
 						></el-date-picker>
 					</el-form-item>
@@ -71,7 +70,7 @@
 							clearable
 							multiple
                             collapse-tags
-							style="width: 250px"
+							style="width: 220px"
 						>
 							<el-option
 								v-for="item in accountTypeArr"
@@ -87,7 +86,7 @@
 							size="medium"
 							placeholder="请输入"
 							clearable
-							style="width: 180px"
+							style="width: 250px"
 							maxlength="10"
 							@keyup.enter.native="enterSearch"
 						></el-input>
@@ -98,7 +97,7 @@
 							size="medium"
 							placeholder="请输入"
 							clearable
-							style="width: 180px"
+							style="width: 313px"
 							maxlength="25"
 							oninput="value=value.replace(/[^\d]/g,'')"
 							@keyup.enter.native="enterSearch"
@@ -120,7 +119,7 @@
 							></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="上级代理:">
+					<el-form-item label="上级代理:" label-width="88px">
 						<el-input
 							v-model="queryData.parentProxyName"
 							size="medium"

@@ -14,6 +14,7 @@
 							start-placeholder="开始日期"
 							end-placeholder="结束日期"
 							align="right"
+                            style="width:447px"
 							:default-time="defaultTime"
 						></el-date-picker>
 					</el-form-item>
@@ -29,10 +30,11 @@
 							end-placeholder="结束日期"
 							align="right"
 							clearable
+                            style="width: 432px"
 							:default-time="defaultTime"
 						></el-date-picker>
 					</el-form-item>
-					<el-form-item label="审核状态:">
+					<el-form-item label="审核状态:" label-width="103px">
 						<el-select
 							v-model="queryData.auditStatus"
 							style="width: 300px"
@@ -80,7 +82,7 @@
 							></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="申请人:">
+					<el-form-item label="申请人:" label-width="100px">
 						<el-input
 							v-model="queryData.applyName"
 							clearable

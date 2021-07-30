@@ -5,7 +5,7 @@
 				<el-form-item label="操作类型:">
 					<el-select
 						v-model="queryData.operateType"
-						style="width: 180px"
+						style="width: 140px"
 						:popper-append-to-body="false"
 					>
 						<el-option label="全部" value></el-option>
@@ -32,7 +32,7 @@
 						:default-time="defaultTime"
 					></el-date-picker>
 				</el-form-item>
-				<el-form-item label="会员账号:">
+				<el-form-item label="会员账号:" label-width="116px">
 					<el-input
 						v-model="queryData.userName"
 						clearable
@@ -58,7 +58,7 @@
 					<el-select
 						v-model="queryData.virtualKind"
 						multiple
-						style="width: 300px"
+						style="width: 224px"
 						placeholder="默认选择全部"
 					>
 						<el-option
@@ -73,8 +73,10 @@
 					<el-select
 						v-model="queryData.virtualProtocol"
 						multiple
-						style="width: 300px"
+						style="width: 265px"
 						placeholder="默认选择全部"
+                        clearable
+                        collapse-tags
 					>
 						<el-option
 							v-for="item in virtualProtocolType"
@@ -87,11 +89,12 @@
 				<el-form-item label="账号类型:">
 					<el-select
 						v-model="queryData.accountType"
-						style="width: 300px"
+						style="width: 262px"
 						multiple
                         collapse-tags
 						placeholder="默认选择全部"
 						:popper-append-to-body="false"
+                        clearable
 					>
 						<el-option
 							v-for="item in accountType"
@@ -107,12 +110,12 @@
 						clearable
 						size="medium"
 						:maxlength="100"
-						style="width: 180px"
+						style="width: 448px"
 						placeholder="请输入"
 						@keyup.enter.native="enterSearch"
 					></el-input>
 				</el-form-item>
-				<el-form-item style="margin-left: 30px">
+				<el-form-item>
 					<el-button
 						type="primary"
 						icon="el-icon-search"

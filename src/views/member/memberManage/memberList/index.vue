@@ -41,7 +41,7 @@
 							size="medium"
 							placeholder="请输入"
 							clearable
-							style="width: 180px"
+							style="width: 213px"
 							maxlength="15"
 						></el-input>
 					</el-form-item>
@@ -53,7 +53,7 @@
 							clearable
 							multiple
 							collapse-tags
-							style="width: 280px"
+							style="width: 223px"
 						>
 							<el-option
 								v-for="item in accountStatusArr"
@@ -62,6 +62,24 @@
 								:value="item.code"
 							></el-option>
 						</el-select>
+					</el-form-item>
+					<el-form-item label="最后登录时间:" label-width="112px">
+						<el-date-picker
+							v-model="queryData.lastLoginTime"
+							prop="lastLoginTime"
+							size="medium"
+							:picker-options="pickerOptions"
+							format="yyyy-MM-dd HH:mm:ss"
+							type="datetimerange"
+							range-separator="-"
+							start-placeholder="开始日期"
+							end-placeholder="结束日期"
+							align="right"
+							clearable
+							value-format="timestamp"
+							style="width: 361px"
+							:default-time="defaultTime"
+						></el-date-picker>
 					</el-form-item>
 					<el-form-item label="风控层级:">
 						<el-select
@@ -102,30 +120,12 @@
 							@blur="checkValue($event)"
 						></el-input>
 					</el-form-item>
-					<el-form-item label="最后登录时间:" label-width="110px">
-						<el-date-picker
-							v-model="queryData.lastLoginTime"
-							prop="lastLoginTime"
-							size="medium"
-							:picker-options="pickerOptions"
-							format="yyyy-MM-dd HH:mm:ss"
-							type="datetimerange"
-							range-separator="-"
-							start-placeholder="开始日期"
-							end-placeholder="结束日期"
-							align="right"
-							clearable
-							value-format="timestamp"
-							style="width: 382px"
-							:default-time="defaultTime"
-						></el-date-picker>
-					</el-form-item>
-					<el-form-item label="VIP等级:">
+					<el-form-item label="VIP 等级:">
 						<el-input
 							v-model="queryData.vipSerialNumMin"
 							size="medium"
 							placeholder="最小数值"
-							style="width: 100px"
+							style="width: 105px"
 							maxlength="3"
 							name="vipSerialNumMin"
 							oninput="value=value.replace(/[^\d]/g,'')"
@@ -136,48 +136,38 @@
 							v-model="queryData.vipSerialNumMax"
 							size="medium"
 							placeholder="最大数值"
-							style="width: 100px"
+							style="width: 105px"
 							maxlength="3"
 							oninput="value=value.replace(/[^\d]/g,'')"
 							name="vipSerialNumMax"
 							@blur="checkValue($event)"
 						></el-input>
 					</el-form-item>
-					<el-form-item label="账号类型:">
-						<el-select
-							v-model="queryData.accountType"
+					<el-form-item label="首存时间:" label-width="85px">
+						<el-date-picker
+							v-model="queryData.firstSaveTime"
 							size="medium"
-							placeholder="默认选择全部"
+							:picker-options="pickerOptions"
+							format="yyyy-MM-dd HH:mm:ss"
+							type="datetimerange"
+							range-separator="-"
+							start-placeholder="开始日期"
+							end-placeholder="结束日期"
+							align="right"
 							clearable
-							multiple
-							collapse-tags
-							style="width: 300px"
-						>
-							<el-option
-								v-for="item in accountTypeArr"
-								:key="item.code"
-								:label="item.description"
-								:value="item.code"
-							></el-option>
-						</el-select>
+							value-format="timestamp"
+							style="width: 388px"
+						></el-date-picker>
 					</el-form-item>
-					<el-form-item label="注册终端:">
-						<el-select
-							v-model="queryData.deviceType"
+					<el-form-item label="上级代理:">
+						<el-input
+							v-model="queryData.parentProxyName"
 							size="medium"
-							placeholder="默认选择全部"
+							placeholder="请输入"
 							clearable
-							multiple
-							collapse-tags
-							style="width: 300px"
-						>
-							<el-option
-								v-for="item in deviceTypeArr"
-								:key="item.code"
-								:label="item.description"
-								:value="item.code"
-							></el-option>
-						</el-select>
+							style="width: 180px"
+							maxlength="11"
+						></el-input>
 					</el-form-item>
 					<el-form-item label="首存金额:">
 						<el-input
@@ -207,7 +197,7 @@
 							v-model="queryData.transforNumMin"
 							size="medium"
 							placeholder="最小数值"
-							style="width: 100px"
+							style="width: 105px"
 							maxlength="10"
 							oninput="value=value.replace(/[^\d]/g,'')"
 							name="transforNumMin"
@@ -218,36 +208,57 @@
 							v-model="queryData.transforNumMax"
 							size="medium"
 							placeholder="最大数值"
-							style="width: 100px"
+							style="width: 105px"
 							maxlength="10"
 							oninput="value=value.replace(/[^\d]/g,'')"
 							name="transforNumMax"
 							@blur="checkValue($event)"
 						></el-input>
 					</el-form-item>
-					<el-form-item label="首存时间:" label-width="100px">
-						<el-date-picker
-							v-model="queryData.firstSaveTime"
+					<el-form-item label="账号类型:">
+						<el-select
+							v-model="queryData.accountType"
 							size="medium"
-							:picker-options="pickerOptions"
-							format="yyyy-MM-dd HH:mm:ss"
-							type="datetimerange"
-							range-separator="-"
-							start-placeholder="开始日期"
-							end-placeholder="结束日期"
-							align="right"
+							placeholder="默认选择全部"
 							clearable
-							value-format="timestamp"
-							style="width: 382px"
-						></el-date-picker>
+							multiple
+							collapse-tags
+							style="width: 285px"
+						>
+							<el-option
+								v-for="item in accountTypeArr"
+								:key="item.code"
+								:label="item.description"
+								:value="item.code"
+							></el-option>
+						</el-select>
 					</el-form-item>
+					<el-form-item label="注册终端:">
+						<el-select
+							v-model="queryData.deviceType"
+							size="medium"
+							placeholder="默认选择全部"
+							clearable
+							multiple
+							collapse-tags
+							style="width: 282px"
+						>
+							<el-option
+								v-for="item in deviceTypeArr"
+								:key="item.code"
+								:label="item.description"
+								:value="item.code"
+							></el-option>
+						</el-select>
+					</el-form-item>
+
 					<el-form-item label="会员标签:">
 						<el-select
 							v-model="queryData.labelId"
 							size="medium"
 							placeholder="全部"
 							clearable
-							style="width: 180px"
+							style="width: 213px"
 						>
 							<el-option
 								v-for="item in userLabel"
@@ -257,17 +268,8 @@
 							></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="上级代理:">
-						<el-input
-							v-model="queryData.parentProxyName"
-							size="medium"
-							placeholder="请输入"
-							clearable
-							style="width: 180px"
-							maxlength="11"
-						></el-input>
-					</el-form-item>
-					<el-form-item>
+
+					<el-form-item label=" " label-width="15px">
 						<el-button
 							type="primary"
 							icon="el-icon-search"
@@ -615,8 +617,8 @@ export default {
 	name: routerNames.memberList,
 	mixins: [list],
 	data() {
-        this.loadData = this.throttle(this.loadData, 1000)
-        this._changeTableSort = this.throttle(this._changeTableSort, 1000)
+		this.loadData = this.throttle(this.loadData, 1000)
+		this._changeTableSort = this.throttle(this._changeTableSort, 1000)
 		return {
 			queryData: {
 				registerTime: [start, end],
@@ -723,7 +725,7 @@ export default {
 			this.$api
 				.memberListAPI(params)
 				.then((res) => {
-                    this.loading = false
+					this.loading = false
 					const {
 						code,
 						data: { record, totalRecord },

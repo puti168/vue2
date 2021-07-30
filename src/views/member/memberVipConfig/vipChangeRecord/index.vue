@@ -26,9 +26,10 @@
 					>
 						<el-select
 							v-model="queryData.changeType"
-							style="width: 300px"
+							style="width: 200px"
 							multiple
 							placeholder="全部"
+                            clearable
 							:popper-append-to-body="false"
 						>
 							<el-option

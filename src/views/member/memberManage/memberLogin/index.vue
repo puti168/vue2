@@ -2,128 +2,159 @@
 	<div class="game-container report-container">
 		<div class="params">
 			<el-form ref="form" :inline="true" :model="queryData">
-				<el-form-item label="登录时间:">
-					<el-date-picker
-						v-model="formTime.time"
-						size="medium"
-						:picker-options="pickerOptions"
-						format="yyyy-MM-dd HH:mm:ss"
-						type="datetimerange"
-						range-separator="-"
-						start-placeholder="开始日期"
-						end-placeholder="结束日期"
-						align="right"
-						:clearable="false"
-						:default-time="defaultTime"
-					></el-date-picker>
-				</el-form-item>
-				<el-form-item label="会员账号:">
-					<el-input
-						v-model="queryData.userName"
-						clearable
-						:maxlength="11"
-						size="medium"
-						style="width: 180px"
-						placeholder="请输入"
-						@keyup.enter.native="enterSearch"
-					></el-input>
-				</el-form-item>
-				<el-form-item label="账号类型:">
-					<el-select
-						v-model="accountType1"
-						multiple
-                        collapse-tags
-						placeholder="默认选择全部"
-						:popper-append-to-body="false"
-						style="width: 300px"
-					>
-						<el-option
-							v-for="item in accountType"
-							:key="item.code"
-							:label="item.description"
-							:value="item.code"
-						></el-option>
-					</el-select>
-				</el-form-item>
-				<el-form-item label="登录状态:">
-					<el-select
-						v-model="queryData.loginStatus"
-						style="width: 180px"
-						:popper-append-to-body="false"
-					>
-						<el-option label="全部" value=""></el-option>
-						<el-option
-							v-for="item in loginStatusType"
-							:key="item.code"
-							:label="item.description"
-							:value="item.code"
-						></el-option>
-					</el-select>
-				</el-form-item>
+				<el-row>
+					<el-col :span="8">
+						<el-form-item label="登录时间:">
+							<el-date-picker
+								v-model="formTime.time"
+								size="medium"
+								:picker-options="pickerOptions"
+								format="yyyy-MM-dd HH:mm:ss"
+								type="datetimerange"
+								range-separator="-"
+								start-placeholder="开始日期"
+								end-placeholder="结束日期"
+								align="right"
+								:clearable="false"
+								:default-time="defaultTime"
+								style="width: 452px"
+							></el-date-picker>
+						</el-form-item>
+					</el-col>
+					<el-col :span="5">
+						<el-form-item label="账号类型:">
+							<el-select
+								v-model="accountType1"
+								multiple
+								collapse-tags
+								placeholder="默认选择全部"
+								:popper-append-to-body="false"
+								style="width: 250px"
+								clearable
+							>
+								<el-option
+									v-for="item in accountType"
+									:key="item.code"
+									:label="item.description"
+									:value="item.code"
+								></el-option>
+							</el-select>
+						</el-form-item>
+					</el-col>
+					<el-col :span="5">
+						<el-form-item label="会员账号:">
+							<el-input
+								v-model="queryData.userName"
+								clearable
+								:maxlength="11"
+								size="medium"
+								style="width: 220px"
+								placeholder="请输入"
+								@keyup.enter.native="enterSearch"
+							></el-input>
+						</el-form-item>
+					</el-col>
 
-				<el-form-item label="登录IP:">
-					<el-input
-						v-model="queryData.loginIp"
-						clearable
-						size="medium"
-						:maxlength="15"
-						style="width: 180px"
-						placeholder="请输入"
-						@keyup.enter.native="enterSearch"
-					></el-input>
-				</el-form-item>
-				<el-form-item label="IP归属地:">
-					<el-input
-						v-model="queryData.ipAttribution"
-						clearable
-						size="medium"
-						:maxlength="10"
-						style="width: 180px"
-						placeholder="请输入"
-						@keyup.enter.native="enterSearch"
-					></el-input>
-				</el-form-item>
-				<el-form-item label="登录终端:">
-					<el-select
-						v-model="deviceType1"
-						style="width: 300px"
-						:popper-append-to-body="false"
-						placeholder="默认选择全部"
-						multiple
-                        collapse-tags
-					>
-						<el-option
-							v-for="item in deviceType"
-							:key="item.code"
-							:label="item.description"
-							:value="item.code"
-						></el-option>
-					</el-select>
-				</el-form-item>
-				<el-form-item label="终端设备号:">
-					<el-input
-						v-model="queryData.deviceNo"
-						clearable
-						size="medium"
-						:maxlength="50"
-						style="width: 180px"
-						placeholder="请输入"
-						@keyup.enter.native="enterSearch"
-					></el-input>
-				</el-form-item>
-				<el-form-item style="margin-left: 30px">
-					<el-button
-						type="primary"
-						icon="el-icon-search"
-						size="medium"
-						@click="search"
-					>
-						查询
-					</el-button>
-					<el-button icon="el-icon-refresh-left" size="medium" @click="reset">
-						重置
-					</el-button>
-				</el-form-item>
+					<el-col :span="4">
+						<el-form-item label="登录状态:">
+							<el-select
+								v-model="queryData.loginStatus"
+								style="width: 180px"
+								:popper-append-to-body="false"
+							>
+								<el-option label="全部" value=""></el-option>
+								<el-option
+									v-for="item in loginStatusType"
+									:key="item.code"
+									:label="item.description"
+									:value="item.code"
+								></el-option>
+							</el-select>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row>
+					<el-col :span="4">
+						<el-form-item label="IP归属地:">
+							<el-input
+								v-model="queryData.ipAttribution"
+								clearable
+								size="medium"
+								:maxlength="10"
+								style="width: 180px"
+								placeholder="请输入"
+								@keyup.enter.native="enterSearch"
+							></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="4">
+						<el-form-item label="登录 IP:" label-width="70px">
+							<el-input
+								v-model="queryData.loginIp"
+								clearable
+								size="medium"
+								:maxlength="15"
+								style="width: 180px"
+								placeholder="请输入"
+								@keyup.enter.native="enterSearch"
+							></el-input>
+						</el-form-item>
+					</el-col>
+
+					<el-col :span="5">
+						<el-form-item label="登录终端:">
+							<el-select
+								v-model="deviceType1"
+								style="width: 250px"
+								:popper-append-to-body="false"
+								placeholder="默认选择全部"
+								multiple
+								collapse-tags
+                                clearable
+							>
+								<el-option
+									v-for="item in deviceType"
+									:key="item.code"
+									:label="item.description"
+									:value="item.code"
+								></el-option>
+							</el-select>
+						</el-form-item>
+					</el-col>
+					<el-col :span="5">
+						<el-form-item label="终端设备号:">
+							<el-input
+								v-model="queryData.deviceNo"
+								clearable
+								size="medium"
+								:maxlength="50"
+								style="width: 206px"
+								placeholder="请输入"
+								@keyup.enter.native="enterSearch"
+							></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="4">
+						<el-form-item>
+							<el-button
+								type="primary"
+								icon="el-icon-search"
+								size="medium"
+								@click="search"
+							>
+								查询
+							</el-button>
+							<el-button
+								icon="el-icon-refresh-left"
+								size="medium"
+								@click="reset"
+							>
+								重置
+							</el-button>
+						</el-form-item>
+					</el-col>
+				</el-row>
+
 				<p class="login1">
 					数据更新时间：{{ now }}
 					<span>总登录次数：{{ summary.count }}次</span>
@@ -299,8 +330,8 @@ export default {
 	components: {},
 	mixins: [list],
 	data() {
-        this.search = this.throttle(this.search, 1000)
-        this.reset = this.throttle(this.reset, 1000)
+		this.search = this.throttle(this.search, 1000)
+		this.reset = this.throttle(this.reset, 1000)
 		return {
 			queryData: {
 				userName: '',

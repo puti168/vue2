@@ -3,180 +3,213 @@
 		<template v-if="!showDetail">
 			<div class="params">
 				<el-form ref="form" :inline="true" :model="queryData">
-					<el-form-item label="申请时间:">
-						<el-date-picker
-							v-model="formTime.time"
-							size="medium"
-							:picker-options="pickerOptions"
-							format="yyyy-MM-dd HH:mm:ss"
-							type="datetimerange"
-							range-separator="-"
-							start-placeholder="开始日期"
-							end-placeholder="结束日期"
-							align="right"
-							:default-time="defaultTime"
-						></el-date-picker>
-					</el-form-item>
-					<el-form-item label="一审完成时间:">
-						<el-date-picker
-							v-model="formTime.time2"
-							size="medium"
-							:picker-options="pickerOptions"
-							format="yyyy-MM-dd HH:mm:ss"
-							type="datetimerange"
-							range-separator="-"
-							start-placeholder="开始日期"
-							end-placeholder="结束日期"
-							align="right"
-							clearable
-							:default-time="defaultTime"
-						></el-date-picker>
-					</el-form-item>
-					<el-form-item label="会员账号:">
-						<el-input
-							v-model="queryData.userName"
-							clearable
-							size="medium"
-							:maxlength="11"
-							style="width: 180px"
-							placeholder="请输入"
-							@keyup.enter.native="enterSearch"
-						></el-input>
-					</el-form-item>
-					<el-form-item label="账号类型:">
-						<el-select
-							v-model="queryData.accountType"
-							style="width: 300px"
-							multiple
-                            collapse-tags
-							:popper-append-to-body="false"
-							placeholder="默认选择全部"
-						>
-							<el-option
-								v-for="item in accountType"
-								:key="item.code"
-								:label="item.description"
-								:value="item.code"
-							></el-option>
-						</el-select>
-					</el-form-item>
-					<el-form-item label="审核申请类型:">
-						<el-select
-							v-model="queryData.applyType"
-							style="width: 300px"
-							multiple
-                            collapse-tags
-							placeholder="默认选择全部"
-							:popper-append-to-body="false"
-						>
-							<el-option
-								v-for="item in applyType"
-								:key="item.code"
-								:label="item.description"
-								:value="item.code"
-							></el-option>
-						</el-select>
-					</el-form-item>
-					<el-form-item label="审核操作:">
-						<el-select
-							v-model="queryData.auditStep"
-							style="width: 300px"
-							:popper-append-to-body="false"
-						>
-							<el-option label="全部" value=""></el-option>
-							<el-option
-								v-for="item in auditStepType"
-								:key="item.code"
-								:label="item.description"
-								:value="item.code"
-							></el-option>
-						</el-select>
-					</el-form-item>
-					<el-form-item label="审核状态:">
-						<el-select
-							v-model="queryData.auditStatus"
-							style="width: 300px"
-							multiple
-                            collapse-tags
-							placeholder="默认选择全部"
-							:popper-append-to-body="false"
-						>
-							<el-option
-								v-for="item in auditStatus"
-								:key="item.code"
-								:label="item.description"
-								:value="item.code"
-							></el-option>
-						</el-select>
-					</el-form-item>
-					<el-form-item label="申请人:">
-						<el-input
-							v-model="queryData.applyName"
-							clearable
-							size="medium"
-							:maxlength="12"
-							style="width: 180px"
-							placeholder="请输入"
-							@keyup.enter.native="enterSearch"
-						></el-input>
-					</el-form-item>
-					<el-form-item label="一审人:">
-						<el-input
-							v-model="queryData.auditName"
-							clearable
-							size="medium"
-							:maxlength="12"
-							style="width: 180px"
-							placeholder="请输入"
-							@keyup.enter.native="enterSearch"
-						></el-input>
-					</el-form-item>
-					<el-form-item label="锁单状态:">
-						<el-select
-							v-model="queryData.lockOrder"
-							style="width: 180px"
-							:popper-append-to-body="false"
-						>
-							<el-option label="全部" value></el-option>
-							<el-option
-								v-for="item in lockOrderType"
-								:key="item.code"
-								:label="item.description"
-								:value="item.code"
-							></el-option>
-						</el-select>
-					</el-form-item>
-					<el-form-item label="审核单号:">
-						<el-input
-							v-model="queryData.auditNum"
-							clearable
-							size="medium"
-							:maxlength="19"
-							style="width: 180px"
-							placeholder="请输入"
-							@keyup.enter.native="enterSearch"
-						></el-input>
-					</el-form-item>
+					<el-row>
+						<el-col :span="8">
+							<el-form-item label="申请时间:">
+								<el-date-picker
+									v-model="formTime.time"
+									size="medium"
+									:picker-options="pickerOptions"
+									format="yyyy-MM-dd HH:mm:ss"
+									type="datetimerange"
+									range-separator="-"
+									start-placeholder="开始日期"
+									end-placeholder="结束日期"
+									align="right"
+									style="width: 428px"
+									:default-time="defaultTime"
+								></el-date-picker>
+							</el-form-item>
+						</el-col>
+						<el-col :span="4">
+							<el-form-item label="会员账号:">
+								<el-input
+									v-model="queryData.userName"
+									clearable
+									size="medium"
+									:maxlength="11"
+									style="width: 180px"
+									placeholder="请输入"
+									@keyup.enter.native="enterSearch"
+								></el-input>
+							</el-form-item>
+						</el-col>
+						<el-col :span="5">
+							<el-form-item label="账号类型:" label-width="80px">
+								<el-select
+									v-model="queryData.accountType"
+									style="width: 230px"
+									multiple
+									collapse-tags
+									:popper-append-to-body="false"
+									placeholder="默认选择全部"
+									clearable
+								>
+									<el-option
+										v-for="item in accountType"
+										:key="item.code"
+										:label="item.description"
+										:value="item.code"
+									></el-option>
+								</el-select>
+							</el-form-item>
+						</el-col>
+						<el-col :span="6">
+							<el-form-item label="审核申请类型:">
+								<el-select
+									v-model="queryData.applyType"
+									style="width: 230px"
+									multiple
+									collapse-tags
+									placeholder="默认选择全部"
+									:popper-append-to-body="false"
+									clearable
+								>
+									<el-option
+										v-for="item in applyType"
+										:key="item.code"
+										:label="item.description"
+										:value="item.code"
+									></el-option>
+								</el-select>
+							</el-form-item>
+						</el-col>
+					</el-row>
+					<el-row>
+						<el-col :span="8">
+							<el-form-item label="一审完成时间:">
+								<el-date-picker
+									v-model="formTime.time2"
+									size="medium"
+									:picker-options="pickerOptions"
+									format="yyyy-MM-dd HH:mm:ss"
+									type="datetimerange"
+									range-separator="-"
+									start-placeholder="开始日期"
+									end-placeholder="结束日期"
+									align="right"
+									style="width: 400px"
+									clearable
+									:default-time="defaultTime"
+								></el-date-picker>
+							</el-form-item>
+						</el-col>
+						<el-col :span="4">
+							<el-form-item label="申请人:" label-width="73px">
+								<el-input
+									v-model="queryData.applyName"
+									clearable
+									size="medium"
+									:maxlength="12"
+									style="width: 180px"
+									placeholder="请输入"
+									@keyup.enter.native="enterSearch"
+								></el-input>
+							</el-form-item>
+						</el-col>
+						<el-col :span="5">
+							<el-form-item label="一审人:" label-width="80px">
+								<el-input
+									v-model="queryData.auditName"
+									clearable
+									size="medium"
+									:maxlength="12"
+									style="width: 230px"
+									placeholder="请输入"
+									@keyup.enter.native="enterSearch"
+								></el-input>
+							</el-form-item>
+						</el-col>
+						<el-col :span="6">
+							<el-form-item label="审核状态:" label-width="100px">
+								<el-select
+									v-model="queryData.auditStatus"
+									style="width: 230px"
+									multiple
+									collapse-tags
+									placeholder="默认选择全部"
+									:popper-append-to-body="false"
+                                    clearable
+								>
+									<el-option
+										v-for="item in auditStatus"
+										:key="item.code"
+										:label="item.description"
+										:value="item.code"
+									></el-option>
+								</el-select>
+							</el-form-item>
+						</el-col>
+					</el-row>
+					<el-row>
+						<el-col :span="8">
+							<el-form-item label="审核操作:">
+								<el-select
+									v-model="queryData.auditStep"
+									style="width: 170px"
+									:popper-append-to-body="false"
+								>
+									<el-option label="全部" value=""></el-option>
+									<el-option
+										v-for="item in auditStepType"
+										:key="item.code"
+										:label="item.description"
+										:value="item.code"
+									></el-option>
+								</el-select>
+							</el-form-item>
+							<el-form-item label="锁单状态:">
+								<el-select
+									v-model="queryData.lockOrder"
+									style="width: 170px"
+									:popper-append-to-body="false"
+								>
+									<el-option label="全部" value></el-option>
+									<el-option
+										v-for="item in lockOrderType"
+										:key="item.code"
+										:label="item.description"
+										:value="item.code"
+									></el-option>
+								</el-select>
+							</el-form-item>
+						</el-col>
+						<el-col :span="4">
+							<el-form-item label="审核单号:">
+								<el-input
+									v-model="queryData.auditNum"
+									clearable
+									size="medium"
+									:maxlength="19"
+									style="width: 180px"
+									placeholder="请输入"
+									@keyup.enter.native="enterSearch"
+								></el-input>
+							</el-form-item>
+						</el-col>
+						<el-col :span="6">
+							<el-form-item style="margin-left: 10px">
+								<el-button
+									type="primary"
+									icon="el-icon-search"
+									:disabled="loading"
+									size="medium"
+									@click="search"
+								>
+									查询
+								</el-button>
+								<el-button
+									icon="el-icon-refresh-left"
+									:disabled="loading"
+									size="medium"
+									@click="reset"
+								>
+									重置
+								</el-button>
+							</el-form-item>
+						</el-col>
+					</el-row>
 
-					<el-form-item style="margin-left: 30px">
-						<el-button
-							type="primary"
-							icon="el-icon-search"
-							:disabled="loading"
-							size="medium"
-							@click="search"
-						>
-							查询
-						</el-button>
-						<el-button
-							icon="el-icon-refresh-left"
-							:disabled="loading"
-							size="medium"
-							@click="reset"
-						>
-							重置
-						</el-button>
-					</el-form-item>
 					<p class="danger data-refresh">数据更新时间： {{ now }}</p>
 				</el-form>
 			</div>
@@ -390,8 +423,8 @@ export default {
 	components: { memberChangeReview },
 	mixins: [list],
 	data() {
-        this.search = this.throttle(this.search, 1000)
-        this.reset = this.throttle(this.reset, 1000)
+		this.search = this.throttle(this.search, 1000)
+		this.reset = this.throttle(this.reset, 1000)
 		return {
 			queryData: {
 				userName: '',

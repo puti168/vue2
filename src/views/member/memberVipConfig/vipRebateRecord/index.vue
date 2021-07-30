@@ -26,6 +26,7 @@
               multiple
               collapse-tags
               placeholder="全部"
+              clearable
               :popper-append-to-body="false"
               @change="changeSelect($event)"
             >
@@ -44,6 +45,7 @@
               multiple
               collapse-tags
               placeholder="全部"
+              clearable
               :popper-append-to-body="false"
             >
               <el-option
@@ -61,6 +63,7 @@
               multiple
               collapse-tags
               placeholder="全部"
+              clearable
               :popper-append-to-body="false"
             >
               <el-option
@@ -71,7 +74,7 @@
               ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="操作人:">
+          <el-form-item label="操作人:" label-width="72px">
             <el-input
               v-model="queryData.createdBy"
               clearable
@@ -83,7 +86,7 @@
               @keyup.enter.native="enterSearch"
             ></el-input>
           </el-form-item>
-          <el-form-item>
+          <el-form-item style="margin-left: 8px">
             <el-button
               type="primary"
               icon="el-icon-search"

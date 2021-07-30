@@ -34,10 +34,11 @@
 					<el-form-item label="变更类型:">
 						<el-select
 							v-model="queryData.applyType"
-							style="width: 300px"
+							style="width: 240px"
 							multiple
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
+                            clearable
 						>
 							<el-option
 								v-for="item in applyTypeArr"

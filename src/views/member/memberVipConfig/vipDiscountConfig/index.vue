@@ -130,6 +130,7 @@
 									multiple
 									placeholder="请选择"
 									value-key="id"
+                                    collapse-tags
 								>
 									<el-option
 										v-for="item in gameVenueList"
