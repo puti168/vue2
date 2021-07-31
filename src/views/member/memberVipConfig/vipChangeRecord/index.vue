@@ -103,6 +103,7 @@
 						align="center"
 						label="变更时间"
 						sortable="custom"
+                        width="200"
 					></el-table-column>
 					<el-table-column prop="changeType" align="center" label="变更类型">
 						<template slot-scope="scope">

@@ -34,42 +34,49 @@
 								<el-input-number
 									v-model="scope.row.lowestTransferQuota"
 									size="medium"
-                                    :max="9999999999"
-                                    :precision="0"
-                                    :min="0"
+									:max="9999999999"
+									:precision="0"
+									:min="0"
 									placeholder="请输入"
-									style="width: 180px"
+									style="width: auto"
 									@blur="checkTransferValue(scope.row, 'lowestTransferQuota')"
 								></el-input-number>
 							</span>
 						</template>
 					</el-table-column>
 					<el-table-column prop="bonusRatio" align="center" label="红利比例">
-                        <template slot="header" slot-scope="scope">
-                            <el-popover placement="top-start" title="提示" width="280" trigger="hover">
-                                <div v-if="!scope.row">
-                                    <div>转账额度*红利比例=最终红利金额</div>
-                                </div>
-                                <div slot="reference" class="el-icon-question">
-                                    <span class="other-class">红利比例</span>
-                                </div>
-                            </el-popover>
-                        </template>
+						<template slot="header" slot-scope="scope">
+							<el-popover
+								placement="top-start"
+								title="提示"
+								width="280"
+								trigger="hover"
+							>
+								<div v-if="!scope.row">
+									<div>转账额度*红利比例=最终红利金额</div>
+								</div>
+								<div slot="reference" class="el-icon-question">
+									<span class="other-class">红利比例</span>
+								</div>
+							</el-popover>
+						</template>
 						<template slot-scope="scope">
-							<span>
-								<el-input-number
-									v-model.number="scope.row.bonusRatio"
-									size="medium"
-									maxlength="5"
-                                    :max="100"
-                                    :precision="0"
-                                    :min="0"
-									placeholder="请输入"
-									style="width: 180px"
-                                    @blur="checkTransferValue(scope.row, 'bonusRatio')"
-								></el-input-number>
-							</span>
-							<span>%</span>
+							<div>
+								<span style="display-inline-block">
+									<el-input-number
+										v-model.number="scope.row.bonusRatio"
+										size="medium"
+										maxlength="5"
+										:max="100"
+										:precision="0"
+										:min="0"
+										placeholder="请输入"
+										style="width: 85%"
+										@blur="checkTransferValue(scope.row, 'bonusRatio')"
+									></el-input-number>
+								</span>
+								<span style="display-inline-block">%</span>
+							</div>
 						</template>
 					</el-table-column>
 					<el-table-column prop="highestBonus" align="center" label="最高奖金">
@@ -78,12 +85,12 @@
 								<el-input-number
 									v-model="scope.row.highestBonus"
 									size="medium"
-                                    :max="9999999999"
-                                    :precision="0"
-                                    :min="0"
+									:max="9999999999"
+									:precision="0"
+									:min="0"
 									placeholder="请输入"
-									style="width: 180px"
-                                    @blur="checkTransferValue(scope.row, 'highestBonus')"
+									style="width: auto"
+									@blur="checkTransferValue(scope.row, 'highestBonus')"
 								></el-input-number>
 							</span>
 						</template>
@@ -94,23 +101,27 @@
 								<el-input-number
 									v-model="scope.row.waterMultiple"
 									size="medium"
-                                    :max="9999999999"
-                                    :precision="0"
-                                    :min="0"
+									:max="9999999999"
+									:precision="0"
+									:min="0"
 									placeholder="请输入"
-									style="width: 180px"
-                                    @blur="checkTransferValue(scope.row, 'waterMultiple')"
+									style="width: auto"
+									@blur="checkTransferValue(scope.row, 'waterMultiple')"
 								></el-input-number>
 							</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="participateNum" align="center" label="参与次数">
+					<el-table-column
+						prop="participateNum"
+						align="center"
+						label="参与次数"
+					>
 						<template slot-scope="scope">
 							<span>
 								<el-select
 									v-model="scope.row.participateNum"
 									placeholder="请选择"
-                                    style="width: 200px"
+									style="width: auto"
 								>
 									<el-option
 										v-for="item in participateTypeArr"
@@ -130,7 +141,7 @@
 									multiple
 									placeholder="请选择"
 									value-key="id"
-                                    collapse-tags
+									collapse-tags
 								>
 									<el-option
 										v-for="item in gameVenueList"
@@ -146,7 +157,7 @@
 			</div>
 			<div class="btn_footer">
 				<el-button
-                    v-if="hasPermission('248')"
+					v-if="hasPermission('248')"
 					type="primary"
 					icon="el-icon-search"
 					size="medium"
@@ -178,7 +189,7 @@ export default {
 	components: {},
 	mixins: [list],
 	data() {
-        this.saveData = this.throttle(this.saveData, 1000)
+		this.saveData = this.throttle(this.saveData, 1000)
 		return {
 			dataList: [],
 			gameVenueList: [],
@@ -202,11 +213,11 @@ export default {
 				return ''
 			}
 		},
-        checkTransferValue(row, type) {
-            if (!row[type]) {
-                row[type] = 0
-            }
-        },
+		checkTransferValue(row, type) {
+			if (!row[type]) {
+				row[type] = 0
+			}
+		},
 		loadData() {
 			this.loading = true
 			this.$api
@@ -306,14 +317,14 @@ export default {
 	margin-top: 50px;
 }
 .other-class {
-    color: rgba(0, 0, 0, 0.847058823529412);
-    font-weight: 700;
+	color: rgba(0, 0, 0, 0.847058823529412);
+	font-weight: 700;
 }
 /deep/ .el-icon-question:after {
-    content: '\E7A4';
-    font-size: 25px;
+	content: '\E7A4';
+	font-size: 25px;
 }
 /deep/ .el-icon-question::before {
-    content: '';
+	content: '';
 }
 </style>

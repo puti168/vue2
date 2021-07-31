@@ -6,7 +6,7 @@
 					ref="form"
 					:inline="true"
 					:model="queryData"
-					label-width="85px"
+					label-width="80px"
 				>
 					<el-form-item label="注册时间:" prop="registerTime">
 						<el-date-picker
@@ -21,7 +21,7 @@
 							align="right"
 							:clearable="true"
 							value-format="timestamp"
-							style="width: 388px"
+							style="width: 426px"
 							:default-time="defaultTime"
 						></el-date-picker>
 					</el-form-item>
@@ -31,7 +31,7 @@
 							size="medium"
 							placeholder="请输入"
 							clearable
-							style="width: 180px"
+							style="width: 278px"
 							maxlength="11"
 						></el-input>
 					</el-form-item>
@@ -41,7 +41,7 @@
 							size="medium"
 							placeholder="请输入"
 							clearable
-							style="width: 213px"
+							style="width: 278px"
 							maxlength="15"
 						></el-input>
 					</el-form-item>
@@ -53,7 +53,7 @@
 							clearable
 							multiple
 							collapse-tags
-							style="width: 223px"
+							style="width: 278px"
 						>
 							<el-option
 								v-for="item in accountStatusArr"
@@ -63,7 +63,7 @@
 							></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="最后登录时间:" label-width="112px">
+					<el-form-item label="最后登录时间:" label-width="110px">
 						<el-date-picker
 							v-model="queryData.lastLoginTime"
 							prop="lastLoginTime"
@@ -77,7 +77,7 @@
 							align="right"
 							clearable
 							value-format="timestamp"
-							style="width: 361px"
+							style="width: 395px"
 							:default-time="defaultTime"
 						></el-date-picker>
 					</el-form-item>
@@ -87,7 +87,7 @@
 							size="medium"
 							placeholder="全部"
 							clearable
-							style="width: 180px"
+							style="width: 278px"
 						>
 							<el-option
 								v-for="item in vipDict"
@@ -102,7 +102,7 @@
 							v-model="queryData.offLineDaysStart"
 							size="medium"
 							placeholder="最小数值"
-							style="width: 100px"
+							style="width: 133px"
 							maxlength="5"
 							name="offLineDaysStart"
 							oninput="value=value.replace(/[^\d]/g,'')"
@@ -113,7 +113,7 @@
 							v-model="queryData.offLineDaysEnd"
 							size="medium"
 							placeholder="最大数值"
-							style="width: 100px"
+							style="width: 133px"
 							maxlength="5"
 							name="offLineDaysEnd"
 							oninput="value=value.replace(/[^\d]/g,'')"
@@ -125,7 +125,7 @@
 							v-model="queryData.vipSerialNumMin"
 							size="medium"
 							placeholder="最小数值"
-							style="width: 105px"
+							style="width: 133px"
 							maxlength="3"
 							name="vipSerialNumMin"
 							oninput="value=value.replace(/[^\d]/g,'')"
@@ -136,14 +136,14 @@
 							v-model="queryData.vipSerialNumMax"
 							size="medium"
 							placeholder="最大数值"
-							style="width: 105px"
+							style="width: 133px"
 							maxlength="3"
 							oninput="value=value.replace(/[^\d]/g,'')"
 							name="vipSerialNumMax"
 							@blur="checkValue($event)"
 						></el-input>
 					</el-form-item>
-					<el-form-item label="首存时间:" label-width="85px">
+					<el-form-item label="首存时间:">
 						<el-date-picker
 							v-model="queryData.firstSaveTime"
 							size="medium"
@@ -156,7 +156,7 @@
 							align="right"
 							clearable
 							value-format="timestamp"
-							style="width: 388px"
+							style="width: 426px"
 						></el-date-picker>
 					</el-form-item>
 					<el-form-item label="上级代理:">
@@ -165,7 +165,7 @@
 							size="medium"
 							placeholder="请输入"
 							clearable
-							style="width: 180px"
+							style="width: 278px"
 							maxlength="11"
 						></el-input>
 					</el-form-item>
@@ -174,7 +174,7 @@
 							v-model="queryData.firstDepositAmountMin"
 							size="medium"
 							placeholder="最小数值"
-							style="width: 100px"
+							style="width: 133px"
 							maxlength="10"
 							oninput="value=value.replace(/[^\d]/g,'')"
 							name="firstDepositAmountMin"
@@ -185,7 +185,7 @@
 							v-model="queryData.firstDepositAmountMax"
 							size="medium"
 							placeholder="最大数值"
-							style="width: 100px"
+							style="width: 133px"
 							maxlength="10"
 							oninput="value=value.replace(/[^\d]/g,'')"
 							name="firstDepositAmountMax"
@@ -197,7 +197,7 @@
 							v-model="queryData.transforNumMin"
 							size="medium"
 							placeholder="最小数值"
-							style="width: 105px"
+							style="width: 133px"
 							maxlength="10"
 							oninput="value=value.replace(/[^\d]/g,'')"
 							name="transforNumMin"
@@ -208,7 +208,7 @@
 							v-model="queryData.transforNumMax"
 							size="medium"
 							placeholder="最大数值"
-							style="width: 105px"
+							style="width: 133px"
 							maxlength="10"
 							oninput="value=value.replace(/[^\d]/g,'')"
 							name="transforNumMax"
@@ -222,8 +222,8 @@
 							placeholder="默认选择全部"
 							clearable
 							multiple
-							collapse-tags
-							style="width: 285px"
+                            collapse-tags
+							style="width: 230px"
 						>
 							<el-option
 								v-for="item in accountTypeArr"
@@ -241,7 +241,7 @@
 							clearable
 							multiple
 							collapse-tags
-							style="width: 282px"
+							style="width: 230px"
 						>
 							<el-option
 								v-for="item in deviceTypeArr"
@@ -258,7 +258,7 @@
 							size="medium"
 							placeholder="全部"
 							clearable
-							style="width: 213px"
+							style="width: 230px"
 						>
 							<el-option
 								v-for="item in userLabel"
@@ -1073,4 +1073,5 @@ export default {
 	color: #909399;
 	font-weight: 700;
 }
+
 </style>

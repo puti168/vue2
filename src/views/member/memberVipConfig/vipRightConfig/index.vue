@@ -31,7 +31,7 @@
 									:min="1"
 									placeholder="请输入"
 									clearable
-									style="width: 150px"
+									style="width: auto"
 									@blur="checkTransferValue(scope.row, 'dayWithdrawalNum')"
 								></el-input-number>
 							</span>
@@ -51,7 +51,7 @@
 									:min="1"
 									placeholder="请输入"
 									clearable
-									style="width: 150px"
+									style="width: auto"
 									@blur="checkTransferValue(scope.row, 'dayWithdrawalQuota')"
 								></el-input-number>
 							</span>
@@ -68,7 +68,7 @@
 									placeholder="请输入"
 									clearable
 									:precision="0"
-									style="width: 150px"
+									style="width: auto"
 									@blur="checkTransferValue(scope.row, 'upgradeBonus')"
 								></el-input-number>
 							</span>
@@ -105,7 +105,7 @@
 									:min="0"
 									placeholder="请输入"
 									clearable
-									style="width: 150px"
+									style="width: auto"
 									@blur="checkTransferValue(scope.row, 'birthdayBonus')"
 								></el-input-number>
 							</span>
@@ -141,14 +141,14 @@
 									:min="0"
 									placeholder="请输入"
 									clearable
-									style="width: 150px"
-									@blur="checkTransferValue(scope.row, 'aboveMonthRedEnvelope')"
+									style="width: auto"
+									@blur="auto(scope.row, 'aboveMonthRedEnvelope')"
 								></el-input-number>
 							</span>
 							<span v-else>0</span>
 						</template>
 					</el-table-column>
-					<el-table-column align="center" label="下半月红包" width="300">
+					<el-table-column align="center" label="下半月红包">
 						<template slot="header" slot-scope="scope">
 							<el-popover
 								placement="top-start"
@@ -173,7 +173,7 @@
 									:min="0"
 									placeholder="请输入"
 									clearable
-									style="width: 150px"
+									style="width: auto"
 									@blur="checkTransferValue(scope.row, 'belowMonthRedEnvelope')"
 								></el-input-number>
 							</span>

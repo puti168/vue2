@@ -31,19 +31,15 @@
 							label="VIP等级名称"
 						>
 							<template slot-scope="scope">
-								<span class="span-row-style">
-									<el-form-item :error="scope.row.error">
-										<el-input
-											v-model="scope.row.vipGradeName"
-											size="medium"
-											placeholder="请输入"
-											maxlength="10"
-											clearable
-											style="width: 180px"
-											@input="tableVipGradeNameChange(scope.row)"
-										></el-input>
-									</el-form-item>
-								</span>
+								<el-input
+									v-model="scope.row.vipGradeName"
+									size="medium"
+									placeholder="请输入"
+									maxlength="10"
+									clearable
+                                    style="width: auto"
+									@input="tableVipGradeNameChange(scope.row)"
+								></el-input>
 							</template>
 						</el-table-column>
 						<el-table-column prop="totalDeposit" align="center">
@@ -61,7 +57,7 @@
 										placeholder="请输入"
 										:precision="0"
 										:min="0"
-										style="width: 180px"
+										style="width: auto"
 										@blur="checkTransferValue(scope.row, 'totalDeposit')"
 									></el-input-number>
 								</span>
@@ -83,7 +79,7 @@
 										:precision="0"
 										:min="0"
 										placeholder="请输入"
-										style="width: 180px"
+										style="width: auto"
 										@blur="checkTransferValue(scope.row, 'tatalValidWater')"
 									></el-input-number>
 								</span>
@@ -104,7 +100,7 @@
 										:precision="0"
 										:min="0"
 										placeholder="请输入"
-										style="width: 180px"
+										style="width: auto"
 										@blur="checkTransferValue(scope.row, 'relegationWater')"
 									></el-input-number>
 								</span>
@@ -125,7 +121,7 @@
 										:precision="0"
 										:min="0"
 										placeholder="请输入"
-										style="width: 180px"
+										style="width: auto"
 										@blur="
 											checkTransferValue(scope.row, 'relegationValidPeriod')
 										"
@@ -171,7 +167,7 @@ export default {
 	name: routerNames.vipLevelConfig,
 	mixins: [list],
 	data() {
-        this.saveData = this.throttle(this.saveData, 1000)
+		this.saveData = this.throttle(this.saveData, 1000)
 		return {
 			dataList: [],
 			loading: false,

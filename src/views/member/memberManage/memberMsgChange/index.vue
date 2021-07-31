@@ -1,7 +1,7 @@
 <template>
 	<div class="game-container report-container">
 		<div class="params">
-			<el-form ref="form" :inline="true" :model="queryData">
+			<el-form ref="form" :inline="true" :model="queryData" label-width="80px">
 				<el-form-item label="操作时间:">
 					<el-date-picker
 						v-model="formTime.time"
@@ -23,7 +23,7 @@
 						clearable
 						size="medium"
 						:maxlength="11"
-						style="width: 180px"
+						style="width: 280px"
 						placeholder="请输入"
 						@keyup.enter.native="enterSearch"
 					></el-input>
@@ -31,7 +31,7 @@
 				<el-form-item label="账号类型:">
 					<el-select
 						v-model="queryData.accountType"
-						style="width: 260px"
+						style="width: 280px"
 						multiple
                         collapse-tags
 						placeholder="默认选择全部"
@@ -50,7 +50,7 @@
 				<el-form-item label="变更类型:">
 					<el-select
 						v-model="queryData.applyType"
-						style="width: 260px"
+						style="width: 280px"
 						multiple
                         collapse-tags
 						placeholder="默认选择全部"
@@ -71,12 +71,12 @@
 						clearable
 						size="medium"
 						:maxlength="15"
-						style="width: 185px"
+						style="width: 210px"
 						placeholder="请输入"
 						@keyup.enter.native="enterSearch"
 					></el-input>
 				</el-form-item>
-				<el-form-item style="margin-left: 30px">
+				<el-form-item style="margin-left: 10px">
 					<el-button
 						type="primary"
 						icon="el-icon-search"
@@ -114,6 +114,7 @@
 						align="center"
 						label="操作时间"
 						sortable="custom"
+                        width="200"
 					></el-table-column>
 					<el-table-column
 						v-slot="scope"

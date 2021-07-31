@@ -6,7 +6,7 @@
 					ref="form"
 					:inline="true"
 					:model="queryData"
-					label-width="100px"
+					label-width="80px"
 				>
 					<el-form-item label="注册时间:">
 						<el-date-picker
@@ -21,7 +21,7 @@
 							align="right"
 							:clearable="false"
 							value-format="timestamp"
-							style="width: 450px"
+							style="width: 455px"
 							:default-time="defaultTime"
 						></el-date-picker>
 					</el-form-item>
@@ -32,7 +32,7 @@
 							placeholder="请输入"
 							clearable
 							maxlength="11"
-							style="width: 180px"
+							style="width: 270px"
 						></el-input>
 					</el-form-item>
 					<el-form-item label="账号类型:">
@@ -43,7 +43,7 @@
 							clearable
 							multiple
 							collapse-tags
-							style="width: 220px"
+							style="width: 270px"
 						>
 							<el-option
 								v-for="item in accountTypeArr"
@@ -61,10 +61,10 @@
 							placeholder="请输入"
 							clearable
 							maxlength="11"
-							style="width: 180px"
+							style="width: 270px"
 						></el-input>
 					</el-form-item>
-					<el-form-item label="注册手机号:">
+					<el-form-item label="注册手机号:" label-width="95px">
 						<el-input
 							v-model.number="queryData.registerPhone"
 							size="medium"
@@ -75,7 +75,7 @@
 							@keyup.native="checkValue"
 						></el-input>
 					</el-form-item>
-					<el-form-item label="注册IP:" label-width="75px">
+					<el-form-item label="注册IP:" label-width="66px">
 						<el-input
 							v-model="queryData.registerIp"
 							size="medium"
@@ -92,7 +92,7 @@
 							placeholder="请输入"
 							clearable
 							maxlength="10"
-							style="width: 180px"
+							style="width: 270px"
 						></el-input>
 					</el-form-item>
 					<el-form-item label="注册终端:">
@@ -103,7 +103,7 @@
 							clearable
 							multiple
 							collapse-tags
-							style="width: 220px"
+							style="width: 270px"
 						>
 							<el-option
 								v-for="item in deviceTypeArr"
@@ -113,7 +113,7 @@
 							></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label=" " label-width="30px">
+					<el-form-item style="margin-left: 10px">
 						<el-button
 							type="primary"
 							icon="el-icon-search"
@@ -151,6 +151,7 @@
 						align="center"
 						label="注册时间"
 						sortable="custom"
+                        width="210"
 					>
 						<template slot-scope="scope">
 							<span v-if="!!scope.row.createDt">

@@ -153,6 +153,7 @@
 						prop="userName"
 						align="center"
 						label="会员账号"
+                        min-width="110px"
 					>
 						<Copy :title="scope.row.userName" :copy="copy" />
 					</el-table-column>
@@ -166,6 +167,7 @@
 						prop="parentProxyName"
 						align="center"
 						label="上级代理"
+                        min-width="110px"
 					>
 						<Copy
 							v-if="!!scope.row.parentProxyName"
@@ -235,7 +237,7 @@
 							<p>{{ typeFilter(scope.row.operateType, 'bindType') }}</p>
 						</template>
 					</el-table-column>
-					<el-table-column prop="remark" align="center" label="备注信息">
+					<el-table-column prop="remark" align="center" label="备注信息" min-width="120px">
 						<template slot-scope="scope">
 							<span v-if="!!scope.row.remark">
 								{{ scope.row.remark }}
@@ -248,6 +250,7 @@
 						align="center"
 						label="操作时间"
 						sortable="custom"
+                        min-width="170px"
 					></el-table-column>
 				</el-table>
 				<!-- 分页 -->

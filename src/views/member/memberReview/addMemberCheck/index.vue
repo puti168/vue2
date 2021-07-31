@@ -2,7 +2,7 @@
 	<div class="game-container report-container">
 		<template v-if="!showDetail">
 			<div class="params">
-				<el-form ref="form" :inline="true" :model="queryData">
+				<el-form ref="form" :inline="true" :model="queryData" label-width="80px">
 					<el-form-item label="申请时间:">
 						<el-date-picker
 							v-model="formTime.time"
@@ -14,11 +14,11 @@
 							start-placeholder="开始日期"
 							end-placeholder="结束日期"
 							align="right"
-                            style="width:447px"
+                            style="width:455px"
 							:default-time="defaultTime"
 						></el-date-picker>
 					</el-form-item>
-					<el-form-item label="一审完成时间:">
+					<el-form-item label="一审完成时间:" label-width="110px">
 						<el-date-picker
 							v-model="formTime.time2"
 							size="medium"
@@ -34,12 +34,12 @@
 							:default-time="defaultTime"
 						></el-date-picker>
 					</el-form-item>
-					<el-form-item label="审核状态:" label-width="103px">
+					<el-form-item label="审核状态:">
 						<el-select
 							v-model="queryData.auditStatus"
-							style="width: 300px"
+							style="width: 420px"
 							multiple
-                            collapse-tags
+                            clearable
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
 						>
@@ -82,13 +82,13 @@
 							></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="申请人:" label-width="100px">
+					<el-form-item label="申请人:">
 						<el-input
 							v-model="queryData.applyName"
 							clearable
 							size="medium"
 							:maxlength="12"
-							style="width: 180px"
+							style="width: 183px"
 							placeholder="请输入"
 							@keyup.enter.native="enterSearch"
 						></el-input>
@@ -99,13 +99,13 @@
 							clearable
 							size="medium"
 							:maxlength="12"
-							style="width: 180px"
+							style="width: 183px"
 							placeholder="请输入"
 							@keyup.enter.native="enterSearch"
 						></el-input>
 					</el-form-item>
 
-					<el-form-item style="margin-left: 30px">
+					<el-form-item style="margin-left: 10px">
 						<el-button
 							type="primary"
 							icon="el-icon-search"

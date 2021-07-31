@@ -254,12 +254,12 @@
 							@blur="checkValue($event)"
 						></el-input>
 					</el-form-item>
-					<el-form-item label="代理提款总金额:" label-width="128px">
+					<el-form-item label="代理提款总金额:">
 						<el-input
 							v-model="queryData.proxyWithdrawMinAmount"
 							size="medium"
 							placeholder="最小数值"
-							style="width: 100px"
+							style="width: 107px"
 							maxlength="10"
 							name="proxyWithdrawMinAmount"
 							oninput="value=value.replace(/[^\d]/g,'')"
@@ -270,7 +270,7 @@
 							v-model="queryData.proxyWithdrawMaxAmount"
 							size="medium"
 							placeholder="最大数值"
-							style="width: 100px"
+							style="width: 107px"
 							maxlength="10"
 							name="proxyWithdrawMaxAmount"
 							oninput="value=value.replace(/[^\d]/g,'')"

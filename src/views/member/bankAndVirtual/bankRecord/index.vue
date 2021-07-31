@@ -163,7 +163,7 @@
 					:header-cell-style="getRowClass"
 					@sort-change="_changeTableSort"
 				>
-					<el-table-column prop="userName" align="center" label="会员账号">
+					<el-table-column prop="userName" align="center" label="会员账号" width="150px">
 						<template slot-scope="scope">
 							<Copy
 								v-if="!!scope.row.userName"
@@ -173,7 +173,7 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="accountType" align="center" label="账号类型">
+					<el-table-column prop="accountType" align="center" label="账号类型" width="100px">
 						<template slot-scope="scope">
 							<span v-if="!!scope.row.accountType">
 								{{ typeFilter(scope.row.accountType, 'accountType') }}
@@ -185,6 +185,7 @@
 						prop="parentProxyName"
 						align="center"
 						label="上级代理"
+                        width="100px"
 					>
 						<template slot-scope="scope">
 							<Copy
@@ -195,7 +196,7 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="cardNumber" align="center" label="银行卡号">
+					<el-table-column prop="cardNumber" align="center" label="银行卡号" min-width="170px">
 						<template slot-scope="scope">
 							<Copy
 								v-if="!!scope.row.cardNumber"
@@ -205,7 +206,7 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="bankName" align="center" label="银行名称">
+					<el-table-column prop="bankName" align="center" label="银行名称" min-width="120px">
 						<template slot="header">
 							银行名称
 							<br />
@@ -222,6 +223,7 @@
 						prop="windControlLevelName"
 						align="center"
 						label="风控层级"
+                        width="110px"
 					>
 						<template slot-scope="scope">
 							<span v-if="!!scope.row.windControlLevelName">
@@ -230,7 +232,7 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="cnName" align="center" label="持卡人">
+					<el-table-column prop="cnName" align="center" label="持卡人" width="120px">
 						<template slot-scope="scope">
 							<Copy
 								v-if="!!scope.row.cnName"
@@ -240,7 +242,7 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="operateType" align="center" label="操作类型">
+					<el-table-column prop="operateType" align="center" label="操作类型" width="100px">
 						<template slot-scope="scope">
 							<span v-if="!!scope.row.operateType">
 								{{ typeFilter(scope.row.operateType, 'bindType') }}
@@ -248,7 +250,7 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="operateType" align="center" label="备注信息">
+					<el-table-column prop="operateType" align="center" label="备注信息" width="150px">
 						<template slot-scope="scope">
 							<span v-if="!!scope.row.remark">
 								{{ scope.row.remark }}
@@ -256,7 +258,7 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="updatedBy" align="center" label="操作人">
+					<el-table-column prop="updatedBy" align="center" label="操作人" width="120px">
 						<template slot-scope="scope">
 							<span v-if="!!scope.row.updatedBy">
 								{{ scope.row.updatedBy }}
@@ -269,6 +271,7 @@
 						align="center"
 						label="操作时间"
 						sortable="custom"
+                        min-width="170px"
 					>
 						<template slot-scope="scope">
 							<span v-if="!!scope.row.createDt">
