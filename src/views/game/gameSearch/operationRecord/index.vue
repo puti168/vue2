@@ -1,7 +1,7 @@
 <template>
   <div class="game-container report-container">
     <div class="params">
-      <el-form ref="form" :inline="true" :model="queryData">
+      <el-form ref="form" :inline="true" :model="queryData" label-width="80px">
         <el-form-item label="操作时间:">
           <el-date-picker
             v-model="searchTime"
@@ -40,7 +40,7 @@
             clearable
             size="medium"
             :maxlength="12"
-            style="width: 180px"
+            style="width: 220px"
             placeholder="请输入"
             @keyup.enter.native="enterSearch"
           ></el-input>

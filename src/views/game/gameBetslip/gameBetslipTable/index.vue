@@ -2,26 +2,26 @@
 	<div class="game-container report-container">
 		<div v-if="gameType === 'init'" class="view-container dealer-container">
 			<div class="params">
-				<el-form ref="form" :inline="true" :model="queryData">
+				<el-form ref="form" :inline="true" :model="queryData" label-width="80px">
 					<el-form-item label="注单号:">
 						<el-input
 							v-model="queryData.id"
 							clearable
 							:maxlength="100"
 							size="medium"
-							style="width: 180px"
+							style="width: 230px"
 							placeholder="请输入"
 							:disabled="loading"
 							@keyup.enter.native="enterSearch"
 						></el-input>
 					</el-form-item>
-					<el-form-item label="三方注单号:">
+					<el-form-item label="三方注单号:" label-width="90px">
 						<el-input
 							v-model="queryData.thirdOrderId"
 							clearable
 							:maxlength="100"
 							size="medium"
-							style="width: 180px"
+							style="width: 220px"
 							placeholder="请输入"
 							:disabled="loading"
 							@keyup.enter.native="enterSearch"
@@ -40,7 +40,7 @@
 							align="right"
 							clearable
 							:default-time="defaultTime"
-							style="width: 375px"
+							style="width: 392px"
 						></el-date-picker>
 					</el-form-item>
 					<el-form-item label="结算时间:">
@@ -56,7 +56,7 @@
 							align="right"
 							clearable
 							:default-time="defaultTime"
-							style="width: 375px"
+							style="width: 392px"
 						></el-date-picker>
 					</el-form-item>
 					<el-form-item label="游戏平台:" class="tagheight">
@@ -83,7 +83,7 @@
 							clearable
 							:maxlength="100"
 							size="medium"
-							style="width: 180px"
+							style="width: 230px"
 							placeholder="请输入"
 							:disabled="loading"
 							@keyup.enter.native="enterSearch"
@@ -95,7 +95,7 @@
 							clearable
 							:maxlength="11"
 							size="medium"
-							style="width: 200px"
+							style="width: 230px"
 							placeholder="请输入"
 							:disabled="loading"
 							@keyup.enter.native="enterSearch"
@@ -125,7 +125,7 @@
 							clearable
 							:maxlength="11"
 							size="medium"
-							style="width: 200px"
+							style="width: 230px"
 							placeholder="请输入"
 							:disabled="loading"
 							@keyup.enter.native="enterSearch"
@@ -137,7 +137,7 @@
 							clearable
 							:maxlength="25"
 							size="medium"
-							style="width: 180px"
+							style="width: 230px"
 							placeholder="请输入"
 							:disabled="loading"
 							@keyup.enter.native="enterSearch"
@@ -146,7 +146,7 @@
 					<el-form-item label="状态归类:" class="tagheight">
 						<el-select
 							v-model="queryData.betStatus"
-							style="width: 180px"
+							style="width: 230px"
 							clearable
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
@@ -161,7 +161,7 @@
 							v-model="queryData.betAmountMin"
 							size="medium"
 							placeholder="最小数值"
-							style="width: 100px"
+							style="width: 109px"
 							:maxlength="10"
 							name="betAmountMin"
 							oninput="value=value.replace(/[^\d]/g,'')"
@@ -172,7 +172,7 @@
 							v-model="queryData.betAmountMax"
 							size="medium"
 							placeholder="最大数值"
-							style="width: 100px"
+							style="width: 109px"
 							:maxlength="10"
 							name="betAmountMax"
 							oninput="value=value.replace(/[^\d]/g,'')"
@@ -184,7 +184,7 @@
 							v-model="queryData.netAmountMin"
 							size="medium"
 							placeholder="最小数值"
-							style="width: 100px"
+							style="width: 109px"
 							:maxlength="10"
 							name="netAmountMin"
 							oninput="value=value.replace(/[^\d]/g,'')"
@@ -195,7 +195,7 @@
 							v-model="queryData.netAmountMax"
 							size="medium"
 							placeholder="最大数值"
-							style="width: 100px"
+							style="width: 109px"
 							:maxlength="10"
 							name="netAmountMax"
 							oninput="value=value.replace(/[^\d]/g,'')"
@@ -208,7 +208,7 @@
 							clearable
 							:maxlength="15"
 							size="medium"
-							style="width: 180px"
+							style="width: 230px"
 							placeholder="请输入"
 							:disabled="loading"
 							@keyup.enter.native="enterSearch"

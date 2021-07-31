@@ -2,14 +2,14 @@
 	<div class="game-container report-container">
 		<div class="view-container dealer-container">
 			<div class="params">
-				<el-form ref="form" :inline="true" :model="queryData">
+				<el-form ref="form" :inline="true" :model="queryData" label-width="100px">
 					<el-form-item label="游戏标签ID:">
 						<el-input
 							v-model="queryData.gameLabelId"
 							maxlength="3"
 							clearable
 							size="medium"
-							style="width: 180px"
+							style="width: 300px"
 							placeholder="请输入"
 							:disabled="loading"
 							oninput="value=value.replace(/[^\w\.\/]/ig ,'')"
@@ -23,7 +23,7 @@
 							clearable
 							:maxlength="10"
 							size="medium"
-							style="width: 180px; margin-right: 20px"
+							style="width: 300px"
 							placeholder="请输入"
 							:disabled="loading"
 							@keyup.enter.native="enterSearch"
@@ -32,7 +32,7 @@
 					<el-form-item label="状态:" class="tagheight">
 						<el-select
 							v-model="queryData.status"
-							style="width: 180px"
+							style="width: 300px"
 							clearable
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
@@ -43,7 +43,7 @@
 						</el-select>
 					</el-form-item>
 
-					<el-form-item>
+					<el-form-item style="margin-left: 28px">
 						<el-button
 							type="primary"
 							icon="el-icon-search"
@@ -118,6 +118,7 @@
 						prop="description"
 						align="center"
 						label="标签描述"
+                        min-width="200"
 					></el-table-column>
 					<el-table-column
 						prop="gameLabelCount"

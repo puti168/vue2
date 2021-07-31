@@ -2,7 +2,7 @@
 	<div class="game-container report-container">
 		<div v-if="!showDetail" class="view-container dealer-container">
 			<div class="params">
-				<el-form ref="form" :inline="true" :model="queryData">
+				<el-form ref="form" :inline="true" :model="queryData" label-width="80px">
 					<el-form-item label="游戏ID:">
 						<el-input
 							v-model="queryData.gameId"
@@ -10,7 +10,7 @@
 							:maxlength="5"
 							oninput="value=value.replace(/[^\d]/g,'')"
 							size="medium"
-							style="width: 180px"
+							style="width: 310px"
 							placeholder="请输入"
 							@keyup.enter.native="enterSearch"
 						></el-input>
@@ -21,7 +21,7 @@
 							clearable
 							:maxlength="15"
 							size="medium"
-							style="width: 180px; margin-right: 20px"
+							style="width: 310px;"
 							placeholder="请输入"
 							@keyup.enter.native="enterSearch"
 						></el-input>
@@ -29,8 +29,9 @@
 					<el-form-item label="显示状态:" class="tagheight">
 						<el-select
 							v-model="queryData.gameStatusList"
-							style="width: 300px"
+							style="width: 310px"
 							multiple
+                            clearable
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
 						>
@@ -45,8 +46,10 @@
 					<el-form-item label="支持终端:" class="tagheight">
 						<el-select
 							v-model="queryData.supportTerminalList"
-							style="width: 350px"
+							style="width: 310px"
 							multiple
+                            clearable
+                            collapse-tags
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
 						>
@@ -61,8 +64,9 @@
 					<el-form-item label="图标状态:" class="tagheight">
 						<el-select
 							v-model="queryData.gameIconList"
-							style="width: 300px"
+							style="width: 310px"
 							multiple
+                            clearable
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
 						>
@@ -74,12 +78,13 @@
 							></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="关联推荐游戏:" class="tagheight">
+					<el-form-item label="关联推荐游戏:" class="tagheight" label-width="108px">
 						<el-select
 							v-model="queryData.relationOtherGameIdList"
-							style="width: 230px"
+							style="width: 281px"
 							multiple
 							collapse-tags
+                            clearable
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
 						>
@@ -94,8 +99,9 @@
 					<el-form-item label="游戏平台:" class="tagheight">
 						<el-select
 							v-model="queryData.gamePlatformList"
-							style="width: 230px"
+							style="width: 310px"
 							multiple
+                            clearable
 							collapse-tags
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
@@ -111,8 +117,9 @@
 					<el-form-item label="游戏标签:" class="tagheight">
 						<el-select
 							v-model="queryData.gameLabelIdList"
-							style="width: 230px"
+							style="width: 310px"
 							multiple
+                            clearable
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
 						>
@@ -128,7 +135,7 @@
 						<el-select
 							v-model="queryData.configRebateStatus"
 							clearable
-							style="width: 300px"
+							style="width: 310px"
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
 						>
@@ -216,7 +223,7 @@
 							</span>
 						</template>
 					</el-table-column>
-					<el-table-column align="center" label="支持终端">
+					<el-table-column align="center" label="支持终端" width="200">
 						<template slot-scope="scope">
 							{{ supportTerminalFilter(scope.row.supportTerminal) }}
 						</template>
@@ -237,12 +244,13 @@
 						prop="description"
 						align="center"
 						label="游戏描述"
+                        width="160"
 					></el-table-column>
 					<el-table-column
 						prop="relationOtherGameId"
 						align="center"
 						label="关联推荐游戏"
-						width="160px"
+						width="200px"
 					>
 						<template slot-scope="scope">
 							{{ gameManageListFilter(scope.row.relationOtherGameId) }}

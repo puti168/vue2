@@ -113,7 +113,7 @@
 							width="180px"
 							sortable="custom"
 						></el-table-column>
-						<el-table-column prop="updatedBy" align="center" label="最新操作人">
+						<el-table-column prop="updatedBy" align="center" label="最新操作人" width="120">
 							<template slot-scope="scope">
 								<span v-if="!!scope.row.updatedBy">
 									{{ scope.row.updatedBy }}
@@ -128,7 +128,7 @@
 							width="180px"
 							sortable="custom"
 						></el-table-column>
-						<el-table-column align="center" label="操作">
+						<el-table-column align="center" label="操作" width="120">
 							<template slot-scope="scope">
 								<el-button
 									type="danger"
