@@ -24,16 +24,6 @@
               maxlength="11"
             ></el-input>
           </el-form-item>
-          <el-form-item label="姓名:" prop="realName">
-            <el-input
-              v-model="queryData.realName"
-              size="medium"
-              placeholder="请输入"
-              clearable
-              style="width: 180px"
-              maxlength="15"
-            ></el-input>
-          </el-form-item>
           <el-form-item label="上级代理:" prop="parentProxyName">
             <el-input
               v-model="queryData.parentProxyName"
@@ -60,79 +50,6 @@
                 :value="item.code"
               ></el-option>
             </el-select>
-          </el-form-item>
-          <el-form-item label="账号状态:">
-            <el-select
-              v-model="queryData.accountStatusList"
-              size="medium"
-              placeholder="默认选择全部"
-              clearable
-              multiple
-              collapse-tags
-              style="width: 220px"
-            >
-              <el-option
-                v-for="item in accountStatusArr"
-                :key="item.code"
-                :label="item.description"
-                :value="item.code"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="风控层级:">
-            <el-select
-              v-model="queryData.windControlId"
-              size="medium"
-              placeholder="全部"
-              clearable
-              style="width: 180px"
-            >
-              <el-option
-                v-for="item in windControlList"
-                :key="item.windControlId"
-                :label="item.windControlName"
-                :value="item.windControlId"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="会员标签:">
-            <el-select
-              v-model="queryData.labelId"
-              size="medium"
-              placeholder="全部"
-              clearable
-              style="width: 180px"
-            >
-              <el-option
-                v-for="item in userLabel"
-                :key="item.labelId"
-                :label="item.labelName"
-                :value="item.labelId"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="VIP等级:">
-            <el-input
-              v-model="queryData.vipSerialNumMin"
-              size="medium"
-              placeholder="最小数值"
-              style="width: 100px"
-              name="vipSerialNumMin"
-              maxlength="3"
-              oninput="value=value.replace(/[^\d]/g,'')"
-              @blur="checkValue($event)"
-            ></el-input>
-            -
-            <el-input
-              v-model="queryData.vipSerialNumMax"
-              size="medium"
-              placeholder="最大数值"
-              style="width: 100px"
-              maxlength="3"
-              oninput="value=value.replace(/[^\d]/g,'')"
-              name="vipSerialNumMax"
-              @blur="checkValue($event)"
-            ></el-input>
           </el-form-item>
           <el-form-item label="注单量:">
             <el-input
@@ -443,7 +360,6 @@
           <el-table-column
             v-if="memberProfitAndLoss['投注盈亏']"
             prop="netAmount"
-            min-width="150"
             align="center"
             label="投注盈亏"
             sortable="custom"
@@ -496,8 +412,11 @@
         :data="memberDetails"
         style="margin-bottom: 15px"
         :header-cell-style="getRowClass"
+        :span-method="spanMethod"
       >
         <el-table-column prop="staticsDate" align="center" label="日期">
+        </el-table-column>
+        <el-table-column prop="parentProxyName" align="center" label="上级代理">
         </el-table-column>
         <el-table-column prop="betCount" align="center" label="注单量"></el-table-column>
         <el-table-column prop="betAmount" align="center" label="投注金额">
@@ -510,7 +429,7 @@
             {{ scope.row.validBetAmount | filterDecimals }}
           </template>
         </el-table-column>
-        <el-table-column prop="netAmount" align="center" label="投注盈亏" min-width="150">
+        <el-table-column prop="netAmount" align="center" label="投注盈亏">
           <template slot-scope="scope">
             <span v-if="scope.row.netAmount > 0" class="enableColor">
               {{ scope.row.netAmount | filterDecimals }}
@@ -637,7 +556,10 @@ export default {
       sizeR: 10,
       dialogTotal: 0,
       summary: {},
-      myName: ''
+      myName: '',
+      spanArr: {
+          staticsDate: []
+      }
     }
   },
   computed: {
@@ -893,6 +815,34 @@ export default {
       this.getReportMembernetamountDetail(val.playerId)
       this.tableVisible = true
     },
+    _getSpanArr(data, spanArr, field) {
+        let spanArrIndex
+        if (data && data.length) {
+            for (var i = 0; i < data.length; i++) {
+                if (i === 0) {
+                    spanArr.push(1)
+                    spanArrIndex = 0
+                } else {
+                    if (data[i][field] === data[i - 1][field]) {
+                        spanArr[spanArrIndex] += 1
+                        spanArr.push(0)
+                    } else {
+                        spanArr.push(1)
+                        spanArrIndex = i
+                    }
+                }
+            }
+        }
+    },
+    spanMethod({ row, column, rowIndex, columnIndex}) {
+        if (columnIndex === 0) {
+            const rowspan = this.spanArr[column.property][rowIndex] || 0
+            return {
+                rowspan,
+                colspan: rowspan > 0 ? 1 : 0
+            }
+        }
+    },
     getReportMembernetamountDetail(val) {
       this.loading = true
       const create = this.searchTime || []
@@ -911,6 +861,7 @@ export default {
             console.log(res)
             this.memberDetails = res.data.record
             this.dialogTotal = res.data.totalRecord
+            this._getSpanArr(this.memberDetails, this.spanArr.staticsDate = [], 'staticsDate')
           }
           this.loading = false
         })
