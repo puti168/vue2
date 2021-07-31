@@ -1,5 +1,6 @@
 import { login, getDics, logout } from '@/api/user'
 import { getUserPermissions } from '@/api/role'
+import { Session } from '@/utils/compose'
 import Cookies from 'js-cookie'
 import {
 	getToken,
@@ -45,7 +46,7 @@ const state = {
 	nickName: '',
 	userInfo: getUserInfo(),
 	avatar: '',
-	globalDics: {},
+	globalDics: Session.get('globalDict') || {},
 	datas: {}
 }
 
@@ -163,7 +164,7 @@ const actions = {
 			const { code, data } = _
 			if (code === 200) {
 				commit('SET_GLOBAL_DICT', data)
-				window.localStorage.setItem('globalDict', JSON.stringify(data))
+				window.sessionStorage.setItem('globalDict', JSON.stringify(data))
 			}
 		})
 	},
