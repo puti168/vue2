@@ -1,7 +1,7 @@
 <template>
   <div class="game-container report-container">
     <div class="params">
-      <el-form ref="form" :inline="true" :model="queryData">
+      <el-form ref="form" :inline="true" :model="queryData" label-width="80px">
         <el-form-item label="操作时间:">
           <el-date-picker
             v-model="searchTime"
@@ -20,9 +20,10 @@
         <el-form-item label="操作页面:">
           <el-select
             v-model="queryData.pageName"
-            style="width: 350px"
+            style="width: 230px"
             multiple
             clearable
+            collapse-tags
             placeholder="默认选择全部"
             :popper-append-to-body="false"
           >
@@ -40,7 +41,7 @@
             clearable
             size="medium"
             :maxlength="20"
-            style="width: 180px"
+            style="width: 220px"
             placeholder="请输入"
             oninput="value=value.replace(/[^\d]/g,'')"
             @blur="checkValue($event)"
@@ -53,6 +54,7 @@
             style="width: 300px"
             multiple
             collapse-tags
+            clearable
             placeholder="默认选择全部"
             :popper-append-to-body="false"
           >
@@ -115,7 +117,7 @@
               </span>
             </template>
           </el-table-column>
-          <el-table-column prop="pageId" align="center" label="ID">
+          <el-table-column prop="pageId" align="center" label="ID" width="200">
           </el-table-column>
           <el-table-column prop="changeType" align="center" label="变更类型">
             <template slot-scope="scope">
@@ -153,6 +155,7 @@
             align="center"
             label="操作时间"
             sortable="custom"
+            width="200"
           >
           </el-table-column>
         </el-table>

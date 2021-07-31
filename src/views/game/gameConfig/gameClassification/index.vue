@@ -7,14 +7,14 @@
 						ref="form"
 						:inline="true"
 						:model="queryData"
-						label-width="85px"
+						label-width="80px"
 					>
 						<el-form-item label="分类顺序:">
 							<el-input
 								v-model="queryData.assortSortMin"
 								size="medium"
 								placeholder="最小数值"
-								style="width: 100px"
+								style="width: 110px"
 								maxlength="5"
 								name="assortSortMin"
 								oninput="value=value.replace(/[^\d]/g,'')"
@@ -25,7 +25,7 @@
 								v-model="queryData.assortSortMax"
 								size="medium"
 								placeholder="最大数值"
-								style="width: 100px"
+								style="width: 110px"
 								maxlength="5"
 								name="assortSortMax"
 								oninput="value=value.replace(/[^\d]/g,'')"
@@ -38,7 +38,7 @@
 								size="medium"
 								placeholder="请输入"
 								clearable
-								style="width: 180px"
+								style="width: 230px"
 								maxlength="10"
 							></el-input>
 						</el-form-item>
@@ -49,7 +49,7 @@
 								placeholder="默认选择全部"
 								clearable
 								multiple
-								style="width: 300px"
+								style="width: 230px"
 							>
 								<el-option
 									v-for="item in assortStatusArr"
@@ -66,7 +66,8 @@
 								placeholder="默认选择全部"
 								clearable
 								multiple
-								style="width: 400px"
+                                collapse-tags
+								style="width: 230px"
 							>
 								<el-option
 									v-for="item in terminalTypeArr"
@@ -86,7 +87,7 @@
 								size="medium"
 								placeholder="全部"
 								clearable
-								style="width: 180px"
+								style="width: 200px"
 							>
 								<el-option
 									v-for="item in gameDisplayArr"
@@ -96,7 +97,7 @@
 								></el-option>
 							</el-select>
 						</el-form-item>
-						<el-form-item>
+						<el-form-item style="margin-left: 5px">
 							<el-button
 								type="primary"
 								icon="el-icon-search"
