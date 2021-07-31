@@ -40,7 +40,6 @@
 							align="right"
 							clearable
 							:default-time="defaultTime"
-							style="width: 392px"
 						></el-date-picker>
 					</el-form-item>
 					<el-form-item label="结算时间:">
@@ -56,7 +55,6 @@
 							align="right"
 							clearable
 							:default-time="defaultTime"
-							style="width: 392px"
 						></el-date-picker>
 					</el-form-item>
 					<el-form-item label="游戏平台:" class="tagheight">
@@ -125,7 +123,7 @@
 							clearable
 							:maxlength="11"
 							size="medium"
-							style="width: 230px"
+							style="width: 245px"
 							placeholder="请输入"
 							:disabled="loading"
 							@keyup.enter.native="enterSearch"
@@ -208,7 +206,7 @@
 							clearable
 							:maxlength="15"
 							size="medium"
-							style="width: 230px"
+							style="width: 245px"
 							placeholder="请输入"
 							:disabled="loading"
 							@keyup.enter.native="enterSearch"

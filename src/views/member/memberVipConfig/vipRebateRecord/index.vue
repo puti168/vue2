@@ -16,7 +16,6 @@
               align="right"
               :clearable="false"
               :default-time="defaultTime"
-              style="width: 375px"
             ></el-date-picker>
           </el-form-item>
           <el-form-item label="场馆名称:" class="tagheight" prop="venueId">
@@ -80,7 +79,7 @@
               clearable
               :maxlength="12"
               size="medium"
-              style="width: 180px"
+              style="width: 205px"
               placeholder="请输入"
               :disabled="loading"
               @keyup.enter.native="enterSearch"

@@ -16,7 +16,6 @@
 							align="right"
 							:clearable="false"
 							:default-time="defaultTime"
-							style="width: 375px"
 						></el-date-picker>
 					</el-form-item>
 					<el-form-item

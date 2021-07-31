@@ -115,7 +115,7 @@
 						clearable
 						size="medium"
 						:maxlength="50"
-						style="width: 263px"
+						style="width: 261px"
 						placeholder="请输入"
 						@keyup.enter.native="enterSearch"
 					></el-input>

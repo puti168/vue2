@@ -16,7 +16,7 @@
 							align="right"
 							:clearable="false"
 							:default-time="defaultTime"
-							style="width: 375px"
+							style="width: 400px"
 						></el-date-picker>
 					</el-form-item>
 					<el-form-item label="操作类型:" class="tagheight" prop="operateType">

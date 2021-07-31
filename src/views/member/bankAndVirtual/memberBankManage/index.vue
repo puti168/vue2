@@ -104,7 +104,7 @@
 							clearable
 							maxlength="15"
 							size="medium"
-							style="width: 214px"
+							style="width: 212px"
 							placeholder="请输入"
 							:disabled="loading"
 							@keyup.enter.native="enterSearch"

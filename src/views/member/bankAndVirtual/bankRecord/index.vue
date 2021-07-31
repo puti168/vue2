@@ -36,7 +36,7 @@
 							align="right"
 							:clearable="false"
 							value-format="timestamp"
-							style="width: 384px"
+							style="width: 400px"
 							:default-time="defaultTime"
 						></el-date-picker>
 					</el-form-item>
@@ -97,7 +97,7 @@
 							size="medium"
 							placeholder="请输入"
 							clearable
-							style="width: 313px"
+							style="width: 330px"
 							maxlength="25"
 							oninput="value=value.replace(/[^\d]/g,'')"
 							@keyup.enter.native="enterSearch"

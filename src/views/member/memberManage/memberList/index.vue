@@ -21,7 +21,7 @@
 							align="right"
 							:clearable="true"
 							value-format="timestamp"
-							style="width: 426px"
+							style="width: 430px"
 							:default-time="defaultTime"
 						></el-date-picker>
 					</el-form-item>
@@ -77,7 +77,7 @@
 							align="right"
 							clearable
 							value-format="timestamp"
-							style="width: 395px"
+							style="width: 400px"
 							:default-time="defaultTime"
 						></el-date-picker>
 					</el-form-item>
@@ -156,7 +156,7 @@
 							align="right"
 							clearable
 							value-format="timestamp"
-							style="width: 426px"
+							style="width: 430px"
 						></el-date-picker>
 					</el-form-item>
 					<el-form-item label="上级代理:">
