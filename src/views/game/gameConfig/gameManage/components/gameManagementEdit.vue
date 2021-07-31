@@ -47,8 +47,9 @@
 									size="medium"
 									placeholder="请选择"
 									multiple
+                                    collapse-tags
 									clearable
-									style="width: 300px"
+									style="width: 365px"
 								>
 									<el-option
 										v-for="item in betDeviceType"
@@ -99,8 +100,9 @@
 									size="medium"
 									placeholder="请选择"
 									multiple
+                                    collapse-tags
 									clearable
-									style="width: 300px"
+									style="width: 365px"
 								>
 									<el-option
 										v-for="item in gameManageList"
@@ -119,7 +121,8 @@
 									placeholder="请选择"
 									multiple
 									clearable
-									style="width: 300px"
+                                    collapse-tags
+									style="width: 365px"
 								>
 									<el-option
 										v-for="item in gameModuleNameList"
@@ -183,7 +186,7 @@
 									size="medium"
 									maxlength="3"
 									clearable
-									style="width: 100px"
+									style="width: 175px"
 								></el-input>
 							</el-form-item>
 							<span class="spass">—</span>
@@ -194,7 +197,7 @@
 									maxlength="3"
 									oninput="value=value.replace(/[^\d]/g,'')"
 									clearable
-									style="width: 100px"
+									style="width: 175px"
 								></el-input>
 							</el-form-item>
 						</el-col>
@@ -647,7 +650,7 @@ export default {
 
 <style lang="scss" scoped>
 .spass {
-	line-height: 30px;
+	line-height: 40px;
 }
 .randomStart /deep/.el-form-item__content {
 	margin-left: 0px !important;
