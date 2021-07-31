@@ -3,18 +3,15 @@
     <div class="view-container dealer-container">
       <div class="params">
         <el-form ref="form" :inline="true" :model="queryData">
-          <el-form-item label="日期:">
+          <el-form-item label="日期:" prop="statisticsTime">
             <el-date-picker
-              v-model="searchTime"
-              size="medium"
-              format="yyyy-MM-dd"
+              v-model="statisticsTime"
               type="daterange"
               range-separator="-"
+              :clearable="false"
               start-placeholder="开始日期"
               end-placeholder="结束日期"
-              align="right"
-              clearable
-              style="width: 240px"
+              :picker-options="timeControl"
             ></el-date-picker>
           </el-form-item>
           <el-form-item label="类型:">
@@ -32,7 +29,7 @@
             <el-button
               type="primary"
               icon="el-icon-search"
-              :disabled="queryText !== '查询'"
+              :disabled="flag"
               size="medium"
               @click="search"
             >
@@ -40,27 +37,26 @@
             </el-button>
             <el-button
               icon="el-icon-refresh-left"
-              :disabled="loading"
               size="medium"
+              :disabled="flag"
               @click="reset"
             >
               重置
             </el-button>
             <el-button
-              v-if="hasPermission('351')"
-              icon="el-icon-download"
+              v-if="hasPermission('342')"
               type="warning"
-              :disabled="loading"
+              icon="el-icon-folder-add"
               size="medium"
+              :disabled="loading"
               @click="exportExcel"
             >
               导出
             </el-button>
             <el-button
               type="success"
-              icon="el-icon-setting"
-              :disabled="loading"
               size="medium"
+              :disabled="loading"
               @click="openSetting"
             >
               列设置
@@ -68,80 +64,156 @@
           </el-form-item>
         </el-form>
       </div>
+
       <div class="content">
         <el-table
-          ref="tables"
           v-loading="loading"
           border
+          size="mini"
           class="small-size-table"
-          :data="tableData"
+          :data="dataList"
           style="width: 100%"
           show-summary
           :summary-method="getSummaries"
-          :span-method="objectSpanMethod"
           :header-cell-style="getRowClass"
-          @sort-change="_changeTableSort"
         >
-          <el-table-column prop="createdAt" align="center" label="日期">
+          <el-table-column
+            v-if="depositWithdrawalReport['日期']"
+            prop="userName"
+            align="center"
+            label="日期"
+            width="160px"
+            fixed
+          >
           </el-table-column>
           <el-table-column
-            v-if="settingList['类型']"
-            prop="gameRebateRate"
+            v-if="depositWithdrawalReport['类型']"
+            prop="realName"
             align="center"
+            width="160px"
             label="类型"
           >
           </el-table-column>
-          <el-table-column prop="gameRebateRate" align="center" label="存款人数">
+          <el-table-column
+            v-if="depositWithdrawalReport['存款人数']"
+            prop="accountType"
+            align="center"
+            width="160px"
+            label="存款人数"
+          >
           </el-table-column>
-          <el-table-column prop="gameRebateRate" align="center" label="存款次数">
+          <el-table-column
+            v-if="depositWithdrawalReport['存款次数']"
+            prop="parentProxyName"
+            align="center"
+            width="160px"
+            label="存款次数"
+          >
           </el-table-column>
-          <el-table-column prop="gameRebateRate" align="center" label="存款总额 ">
+          <el-table-column
+            v-if="depositWithdrawalReport['存款总额']"
+            prop="vipSerialNum"
+            align="center"
+            width="160px"
+            label="存款总额"
+          >
           </el-table-column>
-          <el-table-column prop="gameRebateRate" align="center" label="取款人数">
+          <el-table-column
+            v-if="depositWithdrawalReport['取款人数']"
+            prop="accountStatus"
+            align="center"
+            width="160px"
+            label="取款人数"
+          >
           </el-table-column>
-          <el-table-column prop="gameRebateRate" align="center" label="大额取款人数">
+          <el-table-column
+            v-if="depositWithdrawalReport['大额取款人数']"
+            prop="labelName"
+            align="center"
+            width="160px"
+            label="大额取款人数"
+          >
           </el-table-column>
-          <el-table-column prop="gameRebateRate" align="center" label="取款次数">
+
+          <el-table-column
+            v-if="depositWithdrawalReport['取款次数']"
+            prop="windControlName"
+            align="center"
+            width="160px"
+            label="取款次数"
+          >
           </el-table-column>
-          <el-table-column prop="gameRebateRate" align="center" label="大额取款次数">
+          <el-table-column
+            v-if="depositWithdrawalReport['大额取款次数']"
+            prop="betCount"
+            align="center"
+            width="160px"
+            label="大额取款次数"
+          >
           </el-table-column>
-          <el-table-column prop="gameRebateRate" align="center" label="大额取款金额">
+          <el-table-column
+            v-if="depositWithdrawalReport['大额取款金额']"
+            prop="betCount"
+            align="center"
+            width="160px"
+            label="大额取款金额"
+          >
           </el-table-column>
-          <el-table-column prop="gameRebateRate" align="center" label="取款总额">
+          <el-table-column
+            v-if="depositWithdrawalReport['取款总额']"
+            prop="betCount"
+            align="center"
+            width="160px"
+            label="取款总额"
+          >
           </el-table-column>
-          <el-table-column prop="gameRebateRate" align="center" label="存取差">
+          <el-table-column
+            v-if="depositWithdrawalReport['存取差']"
+            prop="betCount"
+            align="center"
+            label="存取差"
+          >
           </el-table-column>
         </el-table>
         <!-- 分页 -->
         <el-pagination
-          :current-page.sync="pageNum"
+          v-show="!!total"
           class="pageValue"
+          :current-page.sync="pageNum"
           background
           layout="total, sizes,prev, pager, next, jumper"
           :page-size="pageSize"
-          :page-sizes="pageSizes"
+          :page-sizes="$store.getters.pageSizes"
           :total="total"
           @current-change="handleCurrentChange"
           @size-change="handleSizeChange"
         ></el-pagination>
       </div>
-      <el-dialog
-        title="列设置"
-        center
-        :visible.sync="visible"
-        width="610px"
-        class="col-setting"
-      >
-        <el-button type="primary" @click="setAll">复原缺省</el-button>
-        <div v-for="(value, name) in settingList" :key="name" class="setting-div">
-          <el-checkbox v-model="newList[name]">{{ name }}</el-checkbox>
-        </div>
-        <div slot="footer" class="dialog-footer">
-          <el-button @click="visible = false">取 消</el-button>
-          <el-button type="primary" @click="confirm"> 提交 </el-button>
-        </div>
-      </el-dialog>
     </div>
+    <el-dialog
+      title="列设置"
+      center
+      :visible.sync="visible"
+      width="500px"
+      class="col-setting"
+    >
+      <div>
+        <el-link type="primary" @click="clickDel">复原缺省</el-link>
+      </div>
+      <div
+        v-for="(value, name) in depositWithdrawalReport"
+        :key="name"
+        class="setting-div"
+      >
+        <el-checkbox v-if="newList.length > 0" v-model="newList[0][name]">{{
+          name
+        }}</el-checkbox>
+      </div>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="visible = false">取 消</el-button>
+        <el-button type="primary" @click="confirm"> 确定 </el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -152,90 +224,411 @@ const startTime = dayjs().startOf('day').valueOf()
 const endTime = dayjs().endOf('day').valueOf()
 
 export default {
-  components: {},
+  filters: {
+    filterDecimals: function (val) {
+      if (typeof val === 'number') {
+        const newVal = (Math.floor(val * 1000) / 1000).toFixed(2)
+        return newVal
+      } else {
+        return '-'
+      }
+    }
+  },
   mixins: [list],
   data() {
     return {
       queryData: {},
-      searchTime: [startTime, endTime],
-      queryText: '查询',
-      tableData: [],
-      visible: false,
-      settingList: {
-        类型: true
+      statisticsTime: [startTime, endTime],
+      day31: 30 * 24 * 3600 * 1000,
+      // 日期使用
+      timeControl: {
+        onPick: ({ maxDate, minDate }) => {
+          console.log(maxDate, minDate)
+          if (maxDate - minDate > this.day31) {
+            this.flag = true
+            this.$message.warning('请缩小搜索范围至31天')
+          }
+          if (
+            maxDate !== null &&
+            minDate !== null &&
+            maxDate - minDate <= this.day31 &&
+            this.queryText === '查询'
+          ) {
+            this.flag = false
+          } else {
+            this.flag = true
+          }
+        },
+        disabledDate: (time) => {
+          return time.getTime() > Date.now()
+        }
       },
+      depositWithdrawalReport: {
+        日期: true,
+        类型: true,
+        存款人数: true,
+        存款次数: true,
+        存款总额: true,
+        取款人数: true,
+        大额取款人数: true,
+        取款次数: true,
+        大额取款次数: true,
+        大额取款金额: true,
+        取款总额: true,
+        存取差: true
+      },
+      queryText: '查询',
+      flag: false,
+      visible: false,
       newList: [],
+      dataList: [],
+      summary: {},
+      myName: '',
+      timecount: null,
       dateArr: []
     }
   },
   computed: {},
+  created() {},
   mounted() {
-    if (localStorage.getItem('venueProfitAndLoss')) {
-      this.settingList = JSON.parse(localStorage.getItem('venueProfitAndLoss'))
-    }
+    this.myName = localStorage.getItem('username')
+    this.initDB()
   },
-
   methods: {
+    // 列设置
+    openSetting() {
+      this.getList()
+      this.visible = true
+    },
+    initDB() {
+      const request = indexedDB.open('depositWithdrawalReport')
+      request.onupgradeneeded = (event) => {
+        const db = event.target.result
+        this.db = db
+        // 建表 名为person,主键为id
+        db.createObjectStore('depositWithdrawalReport', {
+          keyPath: 'id',
+          autoIncrement: true
+        })
+      }
+
+      request.onsuccess = (event) => {
+        this.db = event.target.result
+        console.log('数据库打开/创建成功', event)
+        this.clickAdd()
+        this.getList()
+      }
+    },
+    clickAdd() {
+      const request = this.db
+        .transaction(['depositWithdrawalReport'], 'readwrite')
+        .objectStore('depositWithdrawalReport')
+        .add({
+          id: this.myName,
+          日期: true,
+          类型: true,
+          存款人数: true,
+          存款次数: true,
+          存款总额: true,
+          取款人数: true,
+          大额取款人数: true,
+          取款次数: true,
+          大额取款次数: true,
+          大额取款金额: true,
+          取款总额: true,
+          存取差: true
+        })
+      request.onsuccess = (event) => {
+        this.getList()
+      }
+    },
+    getList() {
+      this.newList = []
+      var transaction = this.db.transaction(['depositWithdrawalReport'])
+      const objectStore = transaction.objectStore('depositWithdrawalReport')
+      const list = []
+      objectStore.openCursor().onsuccess = (event) => {
+        const cursor = event.target.result
+        if (cursor) {
+          list.push(cursor.value)
+          cursor.continue()
+        } else {
+          console.log(list, 4654564)
+          for (let i = 0; i < list.length; i++) {
+            const ele = list[i]
+            if (ele.id === this.myName) {
+              this.newList.push(ele)
+              this.depositWithdrawalReport = { ...ele }
+              delete this.depositWithdrawalReport.id
+            }
+          }
+          console.log(this.newList, 4645655465)
+        }
+      }
+    },
+    confirm() {
+      const arr = []
+      for (let i = 0; i < this.newList.length; i++) {
+        const ele = this.newList[i]
+        if (ele.id === this.myName) {
+          arr.push(ele)
+        }
+      }
+      console.log(arr, 'arr')
+      const request = this.db
+        .transaction(['depositWithdrawalReport'], 'readwrite')
+        .objectStore('depositWithdrawalReport')
+        .put({
+          id: this.myName,
+          日期: arr[0]['日期'],
+          类型: arr[0]['类型'],
+          存款人数: arr[0]['存款人数'],
+          存款次数: arr[0]['存款次数'],
+          存款总额: arr[0]['存款总额'],
+          取款人数: arr[0]['取款人数'],
+          大额取款人数: arr[0]['大额取款人数'],
+          取款次数: arr[0]['取款次数'],
+          大额取款次数: arr[0]['大额取款次数'],
+          大额取款金额: arr[0]['大额取款金额'],
+          取款总额: arr[0]['取款总额'],
+          存取差: arr[0]['存取差']
+        })
+      request.onsuccess = (event) => {
+        this.visible = false
+        this.getList()
+        console.log('数据更新成功')
+      }
+
+      request.onerror = (event) => {
+        console.log('数据更新失败')
+      }
+    },
+    clickDel(id) {
+      this.newList = []
+      this.newList.push({
+        id: this.myName,
+        日期: true,
+        类型: true,
+        存款人数: true,
+        存款次数: true,
+        存款总额: true,
+        取款人数: true,
+        大额取款人数: true,
+        取款次数: true,
+        大额取款次数: true,
+        大额取款金额: true,
+        取款总额: true,
+        存取差: true
+      })
+    },
     loadData() {
-      this.loading = true
-      const create = this.searchTime || []
-      const [startTime, endTime] = create
+      const statistics = this.statisticsTime || []
+      const [startTime, endTime] = statistics
       let params = {
         ...this.queryData,
-        createAtStart: startTime ? dayjs(startTime).format('YYYY-MM-DD') : '',
-        createAtEnd: endTime ? dayjs(endTime).format('YYYY-MM-DD') : ''
+        accountTypeList: this.queryData.accountTypeList
+          ? this.queryData.accountTypeList.join(',')
+          : [],
+        accountStatusList: this.queryData.accountStatusList
+          ? this.queryData.accountStatusList.join(',')
+          : [],
+        startTime: startTime ? dayjs(startTime).format('YYYY-MM-DD') : '',
+        endTime: endTime ? dayjs(endTime).format('YYYY-MM-DD') : ''
       }
       params = {
         ...this.getParams(params)
       }
-      this.$api
-        .gameList(params)
-        .then((res) => {
-          if (res.code === 200) {
-            this.setdates(res.data.record)
-            this.tableData = res.data.record
-            this.total = res.data.totalRecord
-          }
-          this.loading = false
-        })
-        .catch(() => {
-          this.loading = false
-        })
+      console.log(params)
+      if (endTime - startTime > this.day31) {
+        this.$message.warning('请缩小搜索范围至31天')
+      } else {
+        this.loading = true
+        this.$api
+          .getReportMembernetamountList(params)
+          .then((res) => {
+            if (res.code === 200 && res.data !== null) {
+              this.loading = false
+              this.setdates(res.data.record)
+              this.dataList = res.data.record
+              this.total = res.data.totalRecord
+            } else {
+              this.dataList = []
+              this.total = 0
+              this.loading = false
+            }
+          })
+          .catch(() => (this.loading = false))
+        this.$api
+          .getReportMembernetamountAggregation(params)
+          .then((res) => {
+            if (res.code === 200) {
+              this.loading = false
+              this.summary = res.data
+              console.log(res)
+            }
+          })
+          .catch(() => (this.loading = false))
+      }
     },
     search() {
-      let t = 10
-      const timecount = setInterval(() => {
-        t--
-        this.queryText = t + 's'
-        if (t < 0) {
-          clearInterval(timecount)
-          this.queryText = '查询'
+      const statistics = this.statisticsTime || []
+      const [startTime, endTime] = statistics
+      if (endTime - startTime <= this.day31) {
+        this.flag = true
+        let t = 10
+        clearInterval(this.timecount)
+        this.timecount = setInterval(() => {
+          t--
+          this.queryText = t + 's'
+          if (t < 0) {
+            clearInterval(this.timecount)
+            this.queryText = '查询'
+            this.flag = false
+          }
+        }, 1000)
+        this.loadData()
+      } else {
+        this.flag = true
+        this.loadData()
+      }
+    },
+
+    filterDecimals: function (val) {
+      if (typeof val === 'number') {
+        const newVal = (Math.floor(val * 1000) / 1000).toFixed(2)
+        return newVal
+      } else {
+        return '-'
+      }
+    },
+    getSummaries(param) {
+      const { columns, data } = param
+      const sums = []
+      columns.forEach((column, index) => {
+        if (index === 0) {
+          const el = (
+            <div class='count_row'>
+              <p>本页合计</p>
+              <p>全部合计</p>
+            </div>
+          )
+          sums[index] = el
+          return
+        } else if (index >= 8 && this.summary !== null) {
+          const values = data.map((item) => Number(item[column.property]))
+          if (!values.every((value) => isNaN(value))) {
+            sums[index] = values.reduce((prev, curr) => {
+              const value = Number(curr)
+              if (!isNaN(value)) {
+                return prev + curr
+              } else {
+                return prev
+              }
+            }, 0)
+            const num = sums[index]
+            switch (index) {
+              case 8:
+                sums[index] = (
+                  <div class='count_row'>
+                    <p>{num}</p>
+                    <p>{this.summary.betCountTotal}</p>
+                  </div>
+                )
+                break
+              case 9:
+                sums[index] = (
+                  <div class='count_row'>
+                    <p>{this.filterDecimals(num)}</p>
+                    <p>{this.filterDecimals(this.summary.betAmountTotal)}</p>
+                  </div>
+                )
+                break
+              case 10:
+                sums[index] = (
+                  <div class='count_row'>
+                    <p>{this.filterDecimals(num)}</p>
+                    <p>{this.filterDecimals(this.summary.validBetAmountTotal)}</p>
+                  </div>
+                )
+                break
+              case 11:
+                sums[index] = (
+                  <div class='count_row'>
+                    <p>{this.filterDecimals(num)}</p>
+                    <p>{this.filterDecimals(this.summary.validBetAmountTotal)}</p>
+                  </div>
+                )
+                break
+            }
+          } else {
+            sums[index] = ''
+          }
         }
-      }, 1000)
-      this.loadData()
+      })
+
+      return sums
     },
     reset() {
-      this.queryData = {}
-      this.searchTime = [startTime, endTime]
       this.pageNum = 1
-      this.loadData()
+      this.queryData = {}
+      this.statisticsTime = [startTime, endTime]
+      this.$refs['form'].resetFields()
+      this.search()
+    },
+    setdates(val) {
+      const obj = {}
+      let k = ''
+      console.log(val)
+      for (let i = 0; i < val.length; i++) {
+        k = val[i].gamePlatform
+        console.log(k)
+        if (obj[k]) {
+          obj[k]++
+        } else {
+          obj[k] = 1
+        }
+      }
+      console.log(obj)
+      // 保存结果{el-'元素'，count-出现次数}
+      for (const o in obj) {
+        for (let i = 0; i < obj[o]; i++) {
+          if (i === 0) {
+            this.dateArr.push(obj[o])
+          } else {
+            this.dateArr.push(0)
+          }
+        }
+      }
+
+      console.log(this.arr)
+    },
+    objectSpanMethod({ row, column, rowIndex, columnIndex }) {
+      if (columnIndex === 0) {
+        if (this.dateArr[rowIndex]) {
+          return {
+            rowspan: this.dateArr[rowIndex],
+            colspan: 1
+          }
+        } else {
+          return {
+            rowspan: 0,
+            colspan: 0
+          }
+        }
+      }
     },
     exportExcel() {
-      const create = this.searchTime || []
-      const [startTime, endTime] = create
+      this.loading = true
+      const statistics = this.statisticsTime || []
+      const [startTime, endTime] = statistics
       let params = {
         ...this.queryData,
-        createAtStart: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : '',
-        createAtEnd: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
+        startTime: startTime ? dayjs(startTime).format('YYYY-MM-DD') : '',
+        endTime: endTime ? dayjs(endTime).format('YYYY-MM-DD') : ''
       }
       params = {
         ...this.getParams(params)
       }
-      delete params.registerTime
-      delete params.lastLoginTime
-      delete params.firstSaveTime
-      delete params.accountStatus
-      delete params.deviceType
       this.$confirm(
         `<strong>是否导出?</strong></br><span style='font-size:12px;color:#c1c1c1'>数据过大时，请耐心等待</span>`,
         '确认提示',
@@ -311,126 +704,6 @@ export default {
             })
         })
         .catch(() => {})
-    },
-    _changeTableSort({ column, prop, order }) {
-      if (prop === 'betAmount') {
-        prop = 1
-      }
-      if (prop === 'netAmount') {
-        prop = 2
-      }
-      if (prop === 'createAt') {
-        prop = 3
-      }
-      if (prop === 'netAt') {
-        prop = 4
-      }
-      this.queryData.orderKey = prop
-      if (order === 'ascending') {
-        // 升序
-        this.queryData.orderType = 'asc'
-      } else if (column.order === 'descending') {
-        // 降序
-        this.queryData.orderType = 'desc'
-      } else {
-          delete this.queryData.orderKey
-          delete this.queryData.orderType
-      }
-      this.loadData()
-    },
-    // 列设置
-    openSetting() {
-      this.visible = true
-      this.newList = JSON.parse(JSON.stringify(this.settingList))
-    },
-    confirm() {
-      localStorage.setItem('venueProfitAndLoss', JSON.stringify(this.newList))
-      this.settingList = this.newList
-      this.visible = false
-    },
-    setAll() {
-      Object.keys(this.newList).forEach((item) => {
-        this.newList[item] = true
-      })
-    },
-    setdates(val) {
-      const obj = {}
-      let k = ''
-      console.log(val)
-      for (let i = 0; i < val.length; i++) {
-        k = val[i].gamePlatform
-        console.log(k)
-        if (obj[k]) {
-          obj[k]++
-        } else {
-          obj[k] = 1
-        }
-      }
-      console.log(obj)
-      // 保存结果{el-'元素'，count-出现次数}
-      for (const o in obj) {
-        for (let i = 0; i < obj[o]; i++) {
-          if (i === 0) {
-            this.dateArr.push(obj[o])
-          } else {
-            this.dateArr.push(0)
-          }
-        }
-      }
-
-      console.log(this.arr)
-    },
-    objectSpanMethod({ row, column, rowIndex, columnIndex }) {
-      if (columnIndex === 0) {
-        if (this.dateArr[rowIndex]) {
-          return {
-            rowspan: this.dateArr[rowIndex],
-            colspan: 1
-          }
-        } else {
-          return {
-            rowspan: 0,
-            colspan: 0
-          }
-        }
-      }
-    },
-    getSummaries(param) {
-      const { columns, data } = param
-      const sums = []
-      columns.forEach((column, index) => {
-        if (index === 0) {
-          const el = (
-            <div class='count_row'>
-              <p>本页合计</p>
-              <p>全部合计</p>
-            </div>
-          )
-          sums[index] = el
-          return
-        }
-        const values = data.map((item) => Number(item[column.property]))
-        if (!values.every((value) => isNaN(value))) {
-          sums[index] = values.reduce((prev, curr) => {
-            const value = Number(curr)
-            if (!isNaN(value)) {
-              return prev + curr
-            } else {
-              return prev
-            }
-          }, 0)
-          sums[index] = (
-            <div class='count_row'>
-              <p>{sums[index]}</p>
-              <p>2000</p>
-            </div>
-          )
-        } else {
-          sums[index] = ''
-        }
-      })
-
-      return sums
     }
   }
 }
@@ -438,8 +711,16 @@ export default {
 
 <style lang="scss" scoped>
 /deep/.el-dialog__header {
-  color: #5c5c5c;
+  color: #909399;
   font-weight: 700;
+}
+.numberBox /deep/.el-input-number__decrease,
+.numberBox /deep/.el-input-number__increase {
+  display: none;
+}
+.numberBox /deep/.el-input__inner {
+  padding: 0 15px;
+  text-align: left;
 }
 /deep/ .el-table__footer-wrapper .cell::after {
   border: 1px solid #ebeef5;
@@ -460,9 +741,11 @@ export default {
 }
 .count_row {
   height: 80px;
+  color: #5c5c5c;
   p {
     height: 40px;
     line-height: 40px;
+    font-weight: 700;
     span {
       display: inline-block;
       width: 20px;
@@ -472,5 +755,9 @@ export default {
 }
 .fenye {
   text-align: center;
+}
+.setting-div {
+  display: inline-block;
+  min-width: 110px;
 }
 </style>
