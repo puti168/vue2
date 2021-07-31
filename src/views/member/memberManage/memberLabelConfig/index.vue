@@ -116,7 +116,7 @@
 						label="最近操作时间"
 						sortable="custom"
 					></el-table-column>
-					<el-table-column prop="operating" align="center" label="操作">
+					<el-table-column prop="operating" align="center" label="操作" width="210">
 						<template slot-scope="scope">
 							<el-button
                                 v-if="hasPermission('241')"
