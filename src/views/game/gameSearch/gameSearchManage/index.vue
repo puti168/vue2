@@ -353,12 +353,6 @@ export default {
 		},
 		deleteRow(val) {
 			const { id } = val
-			const loading = this.$loading({
-				lock: true,
-				text: 'Loading',
-				spinner: 'el-icon-loading',
-				background: 'rgba(0, 0, 0, 0.7)'
-			})
 			this.$confirm('确定删除此游戏吗?', {
 				confirmButtonText: '确定',
 				cancelButtonText: '取消',
@@ -369,7 +363,7 @@ export default {
 						this.$api
 							.gameSearchDeleteAPI({ id })
 							.then((res) => {
-								loading.close()
+								// loading.close()
 								const { code } = res
 								if (code === 200) {
 									this.$message({
@@ -385,7 +379,7 @@ export default {
 								this.loadData()
 							})
 							.catch(() => {
-								loading.close()
+								// loading.close()
 								this.$message({
 									type: 'error',
 									message: '删除失败!'
@@ -400,12 +394,6 @@ export default {
 						// })
 					}
 				})
-				.catch(() => {
-					loading.close()
-				})
-			setTimeout(() => {
-				loading.close()
-			}, 1500)
 		},
 
 		// 列拖动
