@@ -104,6 +104,7 @@
 						align="center"
 						label="创建时间"
 						sortable="custom"
+                        width="180"
 					></el-table-column>
 					<el-table-column
 						prop="updatedBy"
@@ -115,6 +116,7 @@
 						align="center"
 						label="最近操作时间"
 						sortable="custom"
+                        width="180"
 					></el-table-column>
 					<el-table-column prop="operating" align="center" label="操作" width="210">
 						<template slot-scope="scope">
