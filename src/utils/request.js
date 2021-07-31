@@ -43,12 +43,10 @@ service.interceptors.request.use(
 		config.headers['key_param'] =
 			process.env.VUE_APP_KEY_ID + '|platform|application|v0.9.0'
 		// get请求是否加密开关
-		// console.log(config)
 		if (config.method === 'get') {
 			const nonce = Math.round(Math.random() * Math.pow(2, 63)) + ''
 			const timestamp = new Date().getTime() + ''
 			const sign = md5(Finger.get() + nonce + timestamp)
-			// console.log('nonce, timestamp:', nonce, timestamp)
 			config.headers['ob-nonce'] = nonce
 			config.headers['ob-timestamp'] = timestamp
 			config.headers['ob-sign'] = sign
@@ -70,10 +68,6 @@ service.interceptors.request.use(
 				}
 			}
 			config.headers['ob-nonce'] = nonce
-			// 上传图片不处理
-			// if (!config.url.includes('/gameManager/upload')) {
-			// 	config.data = JSON.stringify(config.data)
-			// }
 			config.headers['ob-timestamp'] = timestamp
 			config.headers['ob-sign'] = sign
 			config.headers['X-Request-Browser'] = Finger.get()
