@@ -67,6 +67,7 @@
         :outlineInfo="outlineInfo"
         :vipMsg="vipMsg"
         :remarksTableData="remarksTableData"
+        :firstStautsSHow="firstStautsSHow"
       ></first>
       <second
         ref="second"
@@ -108,6 +109,7 @@ export default {
   mixins: [list],
   data() {
     return {
+      firstStautsSHow: false,
       isShow: false,
       parentData: { userName: '', userId: '' },
       queryData: { userName: '', userId: '' },
@@ -304,6 +306,7 @@ export default {
       this.$api.getBankCardBank(dataType2).then((res) => {
         if (res.code === 200) {
           this.bankList = res.data
+          console.log(this.bankList, 'this.bankList')
         }
       })
     },
@@ -314,6 +317,13 @@ export default {
           this.getOutlineInfo(params)
         }
       })
+        this.$api.getThirdPayWhiteCheckDepositLimit({userId: this.bankList[0].userId}).then((res) => {
+          if (res && res.code === 200) {
+            this.firstStautsSHow = true
+          } else {
+            this.firstStautsSHow = false
+          }
+        })
     },
     enterSearch() {
       this.query()

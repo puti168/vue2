@@ -19,6 +19,7 @@
           >{{ item.label }}</el-button>
         <el-button type="primary" @click="editFn('账号备注')">账号备注</el-button>
         <el-button
+v-if="firstStautsSHow"
 type="primary"
 @click="expLain('解除充值限制')"
 >解除充值限制</el-button>
@@ -500,6 +501,7 @@ import { getDics } from '@/api/user'
 export default {
   mixins: [list],
   props: {
+    firstStautsSHow: { type: Boolean, default: () => false },
     parentData: { type: Object, default: () => ({}) },
     outlineInfo: { type: Object, default: () => ({}) },
     vipMsg: { type: Object, default: () => ({}) },
@@ -660,6 +662,7 @@ export default {
   },
   created() {
     this.initGetDics()
+    this.$parent.query()
   },
   mounted() {},
   methods: {
