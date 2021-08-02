@@ -731,7 +731,7 @@ export default {
 						data: { record, totalRecord },
 						msg
 					} = res
-					if (code === 200) {
+					if (res && res.data && code && code === 200) {
 						this.dataList = record || []
 						this.total = totalRecord || 0
 					} else {
