@@ -471,7 +471,9 @@ export default {
       })
     },
     reset() {
-      this.queryData = {}
+      this.queryData = {
+        accountType: '0'
+      }
       this.searchTime = [startTime, endTime]
       this.pageNum = 1
       this.loadData()
