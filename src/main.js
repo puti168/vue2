@@ -44,6 +44,20 @@ Viewer.setDefaults({
 	url: 'data-source'
 })
 
+Vue.directive('filterSpecialChar', {
+	update: function(el, { value, modifiers }, vnode) {
+		try {
+			if (!el.value) {
+				return false
+			}
+			el.value = el.value.replace(/[^\u4e00-\u9fa5a-zA-Z0-9]/g, '')
+			el.dispatchEvent(new Event(modifiers.lazy ? 'change' : 'input'))
+		} catch (e) {
+			console.log(e)
+		}
+	}
+})
+
 // 多语言支持
 Vue.use(ElementUI, {
 	i18n: (key, value) => i18n.t(key, value)
