@@ -120,30 +120,26 @@ export default {
 			return false
 		},
 		showNumber(name) {
-			switch (name) {
-				case '会员账户修改审核':
-					return this.$store.state.user.auditUpdateInfoUser || undefined
-				case '新增会员审核':
-					return this.$store.state.user.auditNewUser || undefined
-				case '代理账户修改审核':
-					return this.$store.state.user.auditUpdateInfoAgent || undefined
-				case '会员溢出审核':
-					return this.$store.state.user.auditPatchAgent || undefined
-				case '新增代理审核':
-					return this.$store.state.user.auditNewAgent || undefined
-				case '会员转代审核':
-					return this.$store.state.user.auditChangeAgent || undefined
-				case '会员提款审核':
-					return this.$store.state.user.auditMemberWithdrawUser || undefined
-				case '代理提款审核':
-					return this.$store.state.user.auditProxyWithdrawAgent || undefined
-				case '会员人工加额审核':
-					return this.$store.state.user.auditMemberArtificialAddUser || undefined
-				case '代理人工加额审核':
-					return this.$store.state.user.auditProxyArtificialAddAgent || undefined
-				case '佣金审核':
-					return this.$store.state.user.auditProxyCommissionAgent || undefined
-			}
+			const ValueList = new Map([
+				['会员账户修改审核', this.$store.state.user.auditUpdateInfoUser],
+				['新增会员审核', this.$store.state.user.auditNewUser],
+				['代理账户修改审核', this.$store.state.user.auditUpdateInfoAgent],
+				['会员溢出审核', this.$store.state.user.auditPatchAgent],
+				['新增代理审核', this.$store.state.user.auditNewAgent],
+				['会员转代审核', this.$store.state.user.auditChangeAgent],
+				['会员提款审核', this.$store.state.user.auditMemberWithdrawUser],
+				['代理提款审核', this.$store.state.user.auditProxyWithdrawAgent],
+				[
+					'会员人工加额审核',
+					this.$store.state.user.auditMemberArtificialAddUser
+				],
+				[
+					'代理人工加额审核',
+					this.$store.state.user.auditProxyArtificialAddAgent
+				],
+				['佣金审核', this.$store.state.user.auditProxyCommissionAgent]
+			])
+            return ValueList.get(name) || undefined
 		},
 		resolvePath(routePath) {
 			if (isExternal(routePath)) {
