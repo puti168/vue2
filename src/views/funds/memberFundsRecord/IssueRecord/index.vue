@@ -19,7 +19,7 @@
               style="width: 375px"
             ></el-date-picker>
           </el-form-item>
-          <el-form-item label="领取时间:">
+          <el-form-item label="订单生成时间:">
             <el-date-picker
               v-model="orderTime"
               size="medium"

@@ -181,7 +181,7 @@
             prop="rebateAt"
             align="center"
             sortable="custom"
-            label="返水时间"
+            label="领取时间"
             width="156px"
           >
           </el-table-column>

@@ -19,7 +19,7 @@
               style="width: 375px"
             ></el-date-picker>
           </el-form-item>
-          <el-form-item label="领取时间:">
+          <el-form-item label="订单生成时间:">
             <el-date-picker
               v-model="orderTime"
               size="medium"
@@ -45,21 +45,6 @@
               :disabled="loading"
               @keyup.enter.native="enterSearch"
             ></el-input>
-          </el-form-item>
-          <el-form-item label="订单状态：" class="tagheight">
-            <el-select
-              v-model="queryData.auditStatus"
-              clearable
-              placeholder="默认选择全部"
-              :popper-append-to-body="false"
-            >
-              <el-option
-                v-for="item in activityPayoutStatus"
-                :key="item.code"
-                :label="item.description"
-                :value="item.code"
-              ></el-option>
-            </el-select>
           </el-form-item>
           <el-form-item label="会员账号:">
             <el-input
@@ -227,11 +212,6 @@
             </template>
           </el-table-column>
           <el-table-column prop="activityId" align="center" label="活动ID ">
-          </el-table-column>
-          <el-table-column prop="approveType" align="center" label="派彩方式">
-            <template slot-scope="scope">
-              {{ typeFilter(scope.row.approveType, "activityApproveType") }}
-            </template>
           </el-table-column>
           <el-table-column
             prop="amount"
