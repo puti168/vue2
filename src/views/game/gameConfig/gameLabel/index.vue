@@ -2,7 +2,12 @@
 	<div class="game-container report-container">
 		<div class="view-container dealer-container">
 			<div class="params">
-				<el-form ref="form" :inline="true" :model="queryData" label-width="100px">
+				<el-form
+					ref="form"
+					:inline="true"
+					:model="queryData"
+					label-width="100px"
+				>
 					<el-form-item label="游戏标签ID:">
 						<el-input
 							v-model="queryData.gameLabelId"
@@ -62,7 +67,7 @@
 							重置
 						</el-button>
 						<el-button
-						    v-if="hasPermission('1020119')"
+							v-if="hasPermission('1020119')"
 							type="warning"
 							icon="el-icon-folder"
 							:disabled="loading"
@@ -118,7 +123,7 @@
 						prop="description"
 						align="center"
 						label="标签描述"
-                        min-width="200"
+						min-width="200"
 					></el-table-column>
 					<el-table-column
 						prop="gameLabelCount"
@@ -127,9 +132,10 @@
 						width="120px"
 					>
 						<template slot-scope="scope">
-							<div class="blueColor decoration" @click="lookGame(scope.row)">
+							<div v-if="scope.row.gameLabelCount" class="blueColor decoration" @click="lookGame(scope.row)">
 								{{ scope.row.gameLabelCount }}
 							</div>
+                            <div v-else>{{ scope.row.gameLabelCount }}</div>
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -166,7 +172,7 @@
 					>
 						<template slot-scope="scope">
 							<el-button
-							     v-if="hasPermission('1020120')"
+								v-if="hasPermission('1020120')"
 								:disabled="loading"
 								:type="scope.row.labelStatus ? 'danger' : 'success'"
 								size="medium"
@@ -174,14 +180,14 @@
 								@click="switchClick(scope.row)"
 							>
 								<div v-if="scope.row.labelStatus">
-										禁用
-									</div>
-									<div v-else>
-										开启
-									</div>
+									禁用
+								</div>
+								<div v-else>
+									开启
+								</div>
 							</el-button>
 							<el-button
-							    v-if="hasPermission('1020121')"
+								v-if="hasPermission('1020121')"
 								type="primary"
 								icon="el-icon-edit"
 								:disabled="scope.row.labelStatus === 1"
@@ -192,7 +198,7 @@
 							</el-button>
 
 							<el-button
-							    v-if="hasPermission('1020122')"
+								v-if="hasPermission('1020122')"
 								type="warning"
 								icon="el-icon-delete"
 								:disabled="scope.row.labelStatus === 1"
@@ -285,7 +291,7 @@
 					<span>添加时间</span>
 				</p>
 				<div class="bodyBox">
-					<p v-for="item in gameList" :key="item.gameName">
+					<p v-for="(item, i) in gameList" :key="i">
 						<span>{{ item.gameName }}</span>
 						<span>{{ item.createdAt }}</span>
 					</p>
@@ -350,6 +356,7 @@ export default {
 			this.$api.getGameLabelRelation(data).then((res) => {
 				if (res.code === 200) {
 					this.gameList = res.data
+					console.log()
 					this.dialogGameVisible = true
 				}
 			})
