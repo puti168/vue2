@@ -143,6 +143,14 @@ export function getBankCardBank(data) {
 		data
 	})
 }
+// 会员详情的解除充值限制
+export function getThirdPayWhiteCheckDepositLimit(data) {
+	return request({
+		url: '/thirdPayWhite/checkDepositLimit',
+		method: 'post',
+		data
+	})
+}
 export default {
 	getOutlineInfo,
 	getMerchantDict,
@@ -161,5 +169,6 @@ export default {
 	getPlayerTop3,
 	getLogMemberLoginLog,
 	getBankCardBank,
-	getThirdPayWhiteDepositLimit
+	getThirdPayWhiteDepositLimit,
+	getThirdPayWhiteCheckDepositLimit
 }
