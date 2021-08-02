@@ -250,7 +250,6 @@ export default {
 			this.dialogPictureVisible = true
 		},
 		preViewPictureAfter(val) {
-      debugger
 			const { afterModify } = val
 			this.imageAddress = afterModify
 			this.dialogPictureVisible = true
