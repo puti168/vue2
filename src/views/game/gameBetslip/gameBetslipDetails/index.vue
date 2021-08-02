@@ -81,10 +81,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.view-container {
-  border: 1px solid #dcdfe6;
-  font-size: 14px;
-}
+// .view-container {
+//   border: 1px solid #dcdfe6;
+//   font-size: 14px;
+// }
 .review-content {
   line-height: 30px;
 }
