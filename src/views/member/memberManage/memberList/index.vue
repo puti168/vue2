@@ -656,13 +656,13 @@ export default {
 			// console.log('$store', $store)
 			// console.log('$listeners', $listeners)
 			// console.log('$ref', $ref)
-			return this.globalDics.accountStatusType
+			return this.globalDics.accountStatusType || []
 		},
 		accountTypeArr() {
-			return this.globalDics.accountType
+			return this.globalDics.accountType || []
 		},
 		deviceTypeArr() {
-			return this.globalDics.deviceType
+			return this.globalDics.deviceType || []
 		}
 	},
 	created() {
@@ -736,7 +736,7 @@ export default {
 						this.total = totalRecord || 0
 					} else {
 						this.$message({
-							message: msg,
+							message: res && msg,
 							type: 'error'
 						})
 					}
@@ -751,11 +751,11 @@ export default {
 		getMemberLabelDict() {
 			this.$api.getMemberLabelDict().then((res) => {
 				const { code, data, msg } = res
-				if (code === 200) {
+				if (res && code && code === 200) {
 					this.userLabel = data || []
 				} else {
 					this.$message({
-						message: msg,
+						message: res && msg,
 						type: 'error'
 					})
 				}
@@ -766,8 +766,8 @@ export default {
 			this.$api
 				.getWindControllerLevelDict({ windControlType: 1 })
 				.then((res) => {
-					if (res.code === 200) {
-						this.vipDict = res.data
+					if (res && res.code === 200) {
+						this.vipDict = res.data || []
 					}
 				})
 		},
@@ -1058,10 +1058,6 @@ export default {
 						})
 				})
 				.catch(() => {})
-
-			// setTimeout(() => {
-			// 	this.loading = false
-			// }, 1500)
 		}
 	}
 }
