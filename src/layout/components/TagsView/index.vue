@@ -18,6 +18,10 @@
 					class="el-icon-close"
 					@click.prevent.stop="closeSelectedTag(tag)"
 				/>
+                <el-badge
+                    :value="showNumber(tag.title)"
+                    class="pop-star"
+                ></el-badge>
 			</router-link>
 		</scroll-pane>
 		<!-- <ul v-show="visible" :style="{left:left+'px',top:top+'px'}" class="contextmenu">
@@ -73,6 +77,28 @@ export default {
 		this.addTags()
 	},
 	methods: {
+		showNumber(name) {
+			const ValueList = new Map([
+				['会员账户修改审核', this.$store.state.user.auditUpdateInfoUser],
+				['新增会员审核', this.$store.state.user.auditNewUser],
+				['代理账户修改审核', this.$store.state.user.auditUpdateInfoAgent],
+				['会员溢出审核', this.$store.state.user.auditPatchAgent],
+				['新增代理审核', this.$store.state.user.auditNewAgent],
+				['会员转代审核', this.$store.state.user.auditChangeAgent],
+				['会员提款审核', this.$store.state.user.auditMemberWithdrawUser],
+				['代理提款审核', this.$store.state.user.auditProxyWithdrawAgent],
+				[
+					'会员人工加额审核',
+					this.$store.state.user.auditMemberArtificialAddUser
+				],
+				[
+					'代理人工加额审核',
+					this.$store.state.user.auditProxyArtificialAddAgent
+				],
+				['佣金审核', this.$store.state.user.auditProxyCommissionAgent]
+			])
+			return ValueList.get(name) || undefined
+		},
 		isActive(route) {
 			return route.path === this.$route.path
 		},
@@ -206,7 +232,7 @@ export default {
 	border-bottom: 1px solid #d8dce5;
 	box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.12), 0 0 3px 0 rgba(0, 0, 0, 0.04);
 	.tags-view-wrapper {
-        padding-right: 60px;
+		padding-right: 60px;
 		.tags-view-item {
 			display: inline-block;
 			position: relative;
