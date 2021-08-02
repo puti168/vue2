@@ -498,19 +498,20 @@ export default {
       })
     },
     _changeTableSort({ column, prop, order }) {
-      this.pageNum = 1
-      if (prop === 'createdAt' && order === 'ascending') {
-        this.queryData.orderAsc = 'created_at'
-        this.queryData.orderDesc = ''
-      } else if (prop === 'createdAt' && order === 'descending') {
-        this.queryData.orderDesc = 'created_at'
-        this.queryData.orderAsc = ''
-      } else if (prop === 'updatedAt' && order === 'ascending') {
-        this.queryData.orderAsc = 'updated_at'
-        this.queryData.orderDesc = ''
+      const obj = {
+        createdAt: 0,
+        updatedAt: 1
+      }
+      this.queryData.orderKey = obj[prop]
+      if (order === 'ascending') {
+        // 升序
+        this.queryData.orderType = 'asc'
+      } else if (column.order === 'descending') {
+        // 降序
+        this.queryData.orderType = 'desc'
       } else {
-        this.queryData.orderAsc = ''
-        this.queryData.orderDesc = 'updated_at'
+        delete this.queryData.orderKey
+        delete this.queryData.orderType
       }
       this.loadData()
     },
