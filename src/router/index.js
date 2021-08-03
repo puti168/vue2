@@ -51,6 +51,30 @@ export const constantRoutes = [
 		hidden: true
 	},
 	{
+		path: '/operation/course/courseConfigChange',
+		name: 'courseConfigChange',
+		component: () => import('@/views/operation/course/courseConfigChange'),
+		hidden: true
+	},
+	{
+		path: '/operation/course/courseContentConfig',
+		name: 'courseContentConfig',
+		component: () => import('@/views/operation/course/courseContentConfig'),
+		hidden: true
+	},
+	{
+		path: '/operation/course/courseLabelConfig',
+		name: 'courseLabelConfig',
+		component: () => import('@/views/operation/course/courseLabelConfig'),
+		hidden: true
+	},
+	{
+		path: '/operation/course/courseNameConfig',
+		name: 'courseNameConfig',
+		component: () => import('@/views/operation/course/courseNameConfig'),
+		hidden: true
+	},
+	{
 		path: '/404',
 		component: () => import('@/views/404'),
 		hidden: true
