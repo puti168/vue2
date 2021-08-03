@@ -110,7 +110,6 @@
 							clearable
 							style="width: 300px"
 							placeholder="默认选择全部"
-							:popper-append-to-body="false"
 							@change="changeSelect($event)"
 						>
 							<el-option
@@ -335,7 +334,7 @@
 						prop="accountType"
 						align="center"
 						label="代理钱包"
-						width="120px"
+						width="120"
 					>
 						<template slot-scope="scope">
 							{{ typeFilter(scope.row.accountType, 'proxyWalletType') }}
@@ -383,7 +382,7 @@
 						prop="changeBefore"
 						align="center"
 						label="账变前金额"
-						width="120px"
+						width="120"
 						sortable="custom"
 					></el-table-column>
 					<el-table-column
@@ -411,7 +410,7 @@
 						prop="remark"
 						align="center"
 						label="备注"
-						width="150px"
+						width="150"
 					>
 						<template slot-scope="scope">
 							{{ scope.row.remark !== null ? scope.row.remark : '-' }}
@@ -476,16 +475,16 @@ export default {
 			return this.globalDics.accountType
 		},
 		accountStatusType() {
-			return this.globalDics.accountStatusType
+			return this.globalDics.accountStatusType || []
 		},
 		proxyAccountChangeType() {
 			return this.globalDics.proxyAccountChangeType
 		},
 		accountBizType() {
-			return this.globalDics.accountBizType
+			return this.globalDics.accountBizType || []
 		},
 		proxyWalletType() {
-			return this.globalDics.proxyWalletType
+			return this.globalDics.proxyWalletType || []
 		}
 	},
 	created() {
@@ -498,27 +497,26 @@ export default {
 
 	methods: {
 		getMerchantDict(val) {
-			console.log(val, 'val')
 			const walletCode = val
 			this.$api
 				.getProxyFundsRecordsAccountBizDic({ walletCode })
 				.then((res) => {
-					if (res.code === 200) {
+					const { code } = res
+					if (res && code === 200) {
 						this.accountBizDicList = res.data || []
 					}
 				})
 		},
 		changeSelect(val) {
-			this.queryData.type = []
 			const bizCode = val
 			this.$api
 				.getProxyFundsRecordsAccountChangeDic({ bizCode })
 				.then((res) => {
-					if (res.code === 200) {
+					const { code } = res
+					if (res && code === 200) {
 						this.accountChangeDic = res.data || []
 					}
 				})
-			console.log(val, 'val')
 		},
 		loadData() {
 			this.loading = true
@@ -539,12 +537,13 @@ export default {
 			this.$api
 				.getProxyFundsRecordsAccountChange(params)
 				.then((res) => {
-					if (res.code === 200) {
-						this.tableData = res.data.record
-						this.total = res.data.totalRecord
+                    this.loading = false
+					const { code } = res
+					if (res && code === 200) {
+						this.tableData = res.data.record || []
+						this.total = res.data.totalRecord || 0
 						this.summary = res.data.summary
 					}
-					this.loading = false
 				})
 				.catch(() => {
 					this.loading = false
@@ -555,24 +554,30 @@ export default {
 			this.$api
 				.getWindControllerLevelDict({ windControlType: 2 })
 				.then((res) => {
-					if (res.code === 200) {
-						this.windControlLevelList = res.data
+                    const { code } = res
+					if (res && code === 200) {
+						this.windControlLevelList = res.data || []
+					} else {
+						this.windControlLevelList = []
 					}
 				})
 		},
 		getDictgetAllDictList() {
 			this.$api.getDictgetAllDictList().then((res) => {
-				if (res.code === 200) {
-					this.accountStatusType = res.data
+                const { code } = res
+				if (res && code === 200) {
+					this.accountStatusType = res.data || []
+				} else {
+					this.accountStatusType = []
 				}
 			})
 		},
 		reset() {
+			this.pageNum = 1
 			this.queryData = {
 				accountType: '0'
 			}
 			this.searchTime = [startTime, endTime]
-			this.pageNum = 1
 			this.loadData()
 		},
 
