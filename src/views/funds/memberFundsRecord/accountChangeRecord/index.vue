@@ -419,8 +419,8 @@ export default {
     this._changeTableSort = this.throttle(this._changeTableSort, 1000)
     return {
       queryData: {
-        bizType: '0',
         type: ''
+
       },
       loading: true,
       searchTime: [startTime, endTime],
@@ -428,7 +428,9 @@ export default {
       AccountChangeDicList: '0',
       walletTypeList: [],
       tableData: [],
-      summary: {}
+      summary: {},
+      bizCode: '0',
+      bizType: '0'
     }
   },
   computed: {
@@ -447,8 +449,10 @@ export default {
   },
   created() {
     this.getWindControllerLevelDict()
-    this.getMerchantDict()
     this.getMemberFundsRecordsAccountChangeDic()
+  },
+  mounted() {
+    this.getMerchantDict(this.bizCode)
   },
   methods: {
     getWindControllerLevelDict() {
@@ -465,6 +469,7 @@ export default {
     },
     getMerchantDict(val) {
        const bizCode = val
+
      this.$api.getMemberFundsRecordsAccountChangeDic({bizCode}).then((res) => {
         if (res.code === 200) {
           this.AccountChangeDicList = res.data || []
@@ -493,7 +498,6 @@ export default {
         ...this.getParams(params)
       }
       this.loading = true
-      this.$api
         .getMemberFundsRecordsAccountChange(params)
         .then((res) => {
           if (res.code === 200) {
