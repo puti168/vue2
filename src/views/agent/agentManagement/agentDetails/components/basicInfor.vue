@@ -248,14 +248,10 @@
         @submit.native.prevent="enterSearch"
       >
         <el-form-item v-if="moduleBox === '账号状态'" label="账号状态：" prop="code">
-          <el-select
-            v-model="editData.code"
-            placeholder="请选择"
-            @change="changeAccountStatus"
-          >
+          <el-select v-model="editData.accountStatus" placeholder="请选择">
             <el-option
               v-for="item in accountStatusType"
-              :key="item.description"
+              :key="item.code"
               :label="item.description"
               :value="item.code"
             >
@@ -274,7 +270,7 @@
           >
             <el-option
               v-for="item in riskLevelList"
-              :key="item.windControlName"
+              :key="item.windControlId"
               :label="item.windControlName"
               :value="item.windControlId"
             >
@@ -289,7 +285,7 @@
           >
             <el-option
               v-for="item in memberLabelList"
-              :key="item.labelName"
+              :key="item.labelId"
               :label="item.labelName"
               :value="item.labelId"
             >
@@ -298,7 +294,7 @@
         </el-form-item>
         <el-form-item v-if="moduleBox === '入口权限'" label="入口权限：" prop="code">
           <el-select
-            v-model="editData.code"
+            v-model="editData.entryAuthority"
             placeholder="请选择"
             @change="changeEntrAuthorityType"
           >
@@ -377,7 +373,13 @@ export default {
       moduleBox: '',
       titel: '备注备注：',
       editVisible: false,
-      editData: { code: '', windControlId: '', labelId: '' },
+      editData: {
+        accountStatus: '',
+        windControlId: '',
+        labelId: '',
+        entryAuthority: '',
+        remark: ''
+      },
       page: 1,
       size: 3
     }
@@ -453,7 +455,7 @@ export default {
       this.$api.getProxyDetailQueryDetail({ userName: val.userName }).then((res) => {
         if (res.code === 200) {
           this.outlineInfoList = res.data
-          this.editData = { code: '', windControlId: '', labelId: '' }
+
           if (res.data.auditList && res.data.auditList !== null) {
             for (let i = 0; i < res.data.auditList.length; i++) {
               const ele = res.data.auditList[i]
@@ -485,8 +487,9 @@ export default {
       this.$api.setProxyDataInfoEdit(val).then((res) => {
         if (res.code === 200) {
           this.$message.success(res.msg)
+          setTimeout(() => {
           this.refresh()
-          this.editData = { code: '', windControlId: '', labelId: '' }
+					}, 1000)
         }
         this.editVisible = false
       })
@@ -512,10 +515,10 @@ export default {
     editFn(val) {
       this.initGetDics()
       this.moduleBox = val
-      this.editData = { code: '', windControlId: '', labelId: '' }
+      this.editData.remark = ''
       switch (val) {
         case '账号状态':
-          this.editData.code =
+          this.editData.accountStatus =
             this.outlineInfoList.accountStatus === null
               ? ''
               : this.outlineInfoList.accountStatus + ''
@@ -532,9 +535,9 @@ export default {
             }
           }
           break
-        case '会员标签':
+        case '代理标签':
           this.editData.labelId =
-            this.outlineInfoList.labelId === null
+            this.outlineInfoList.labelId === '0'
               ? ''
               : this.outlineInfoList.labelId + ''
           for (let i = 0; i < this.memberLabelList.length; i++) {
@@ -545,7 +548,7 @@ export default {
           }
           break
         case '入口权限':
-          this.editData.code = this.outlineInfoList.entryAuthority
+          this.editData.entryAuthority = this.outlineInfoList.entryAuthority
           break
         case '支付密码重置':
           this.titel = '审核备注'
@@ -556,9 +559,6 @@ export default {
           break
       }
       this.editVisible = true
-    },
-    changeAccountStatus(val) {
-      this.editData.code = val
     },
     changeWindControlId(val) {
       this.editData.windControlId = val
@@ -579,14 +579,10 @@ export default {
     },
     changeEntrAuthorityType(val) {
       console.log(val)
-      this.editData.entryAuthority = val
-    },
-    changeGender(val) {
-      this.editData.gender = val
+      // this.editData.entryAuthority = val;
     },
     cancel() {
       this.$refs.editForm.resetFields()
-      this.editData = { code: '', windControlId: '', labelId: '' }
       this.editVisible = false
     },
     submitEdit() {
@@ -602,49 +598,48 @@ export default {
             background: 'rgba(0, 0, 0, 0.7)'
           })
           if (this.moduleBox === '账号状态') {
-            params.accountStatus = params.code
-            delete params.code
-            delete params.labelId
-            delete params.windControlId
-            data.accountStatusAfter = params
+            data.accountStatusAfter = {
+              accountStatus: params.accountStatus,
+              remark: params.remark
+            }
             this.setProxyDataInfoEdit(data)
             loading.close()
           }
           if (this.moduleBox === '风控层级') {
-            delete params.code
-            delete params.labelId
-            data.windControlAfter = params
+            data.windControlAfter = {
+              windControlId: params.windControlId,
+              windControlName: params.windControlName,
+              remark: params.remark
+            }
             this.setProxyDataInfoEdit(data)
             loading.close()
           }
           if (this.moduleBox === '代理标签') {
-            delete params.code
-            delete params.windControlId
-            data.labelAfter = params
+            data.labelAfter = {
+              labelId: params.labelId,
+              labelName: params.labelName,
+              remark: params.remark
+            }
             this.setProxyDataInfoEdit(data)
             loading.close()
           }
           if (this.moduleBox === '账号备注') {
-            delete params.code
-            delete params.labelId
-            delete params.windControlId
             data.remarkAfter = params.remark
             this.setProxyDataInfoEdit(data)
             loading.close()
           }
           if (this.moduleBox === '入口权限') {
-            delete params.code
-            delete params.labelId
-            delete params.windControlId
-            data.entryAuthorityAfter = params
+            data.entryAuthorityAfter = {
+              entryAuthority: params.entryAuthority,
+              remark: params.remark
+            }
             this.setProxyDataInfoEdit(data)
             loading.close()
           }
           if (this.moduleBox === '支付密码重置') {
-            delete params.code
-            delete params.labelId
-            delete params.windControlId
-            data.payPasswordAfter = params
+            data.payPasswordAfter = {
+              remark: params.remark
+            }
             this.setProxyDataInfoEdit(data)
             loading.close()
           }
@@ -655,7 +650,6 @@ export default {
     },
     closeFormDialog() {
       this.$refs.editForm.resetFields()
-      this.editData = { code: '', windControlId: '', labelId: '' }
       this.editVisible = false
     },
     handleCurrentChange(val) {
