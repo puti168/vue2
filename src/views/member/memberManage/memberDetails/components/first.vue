@@ -26,7 +26,7 @@
 					账号备注
 				</el-button>
 				<el-button
-					v-if="firstStatusShow"
+					:disabled="!firstStatusShow"
 					type="primary"
 					@click="expLain('解除充值限制')"
 				>
