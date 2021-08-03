@@ -2,7 +2,7 @@
   <div class="game-container report-container">
     <div class="view-container dealer-container">
       <div class="params">
-        <el-form ref="form" :inline="true" :model="queryData" label-width="80px">
+        <el-form ref="form" :inline="true" :model="queryData">
           <el-form-item label="账变时间:">
             <el-date-picker
               v-model="searchTime"
@@ -16,14 +16,15 @@
               align="right"
               clearable
               :default-time="defaultTime"
+              style="width: 375px"
             ></el-date-picker>
           </el-form-item>
-          <el-form-item label="关联订单号:" label-width="95px">
+          <el-form-item label="关联订单号:">
             <el-input
               v-model="queryData.eventId"
               clearable
               size="medium"
-              style="width: 350px"
+              style="width: 200px"
               placeholder="请输入"
               :disabled="loading"
               @keyup.enter.native="enterSearch"
@@ -35,7 +36,7 @@
               clearable
               :maxlength="11"
               size="medium"
-              style="width: 247px"
+              style="width: 200px"
               placeholder="请输入"
               :disabled="loading"
               @keyup.enter.native="enterSearch"
@@ -47,7 +48,7 @@
               clearable
               :maxlength="15"
               size="medium"
-              style="width: 247px"
+              style="width: 200px"
               placeholder="请输入"
               :disabled="loading"
               @keyup.enter.native="enterSearch"
@@ -56,7 +57,7 @@
           <el-form-item label="账号状态:" class="tagheight">
             <el-select
               v-model="queryData.accountStatus"
-              style="width: 315px"
+              style="width: 300px"
               multiple
               clearable
               collapse-tags
@@ -75,7 +76,7 @@
             <el-select
               v-model="queryData.windControlId"
               clearable
-              style="width: 315px"
+              style="width: 300px"
               placeholder="默认选择全部"
               :popper-append-to-body="false"
             >
@@ -90,9 +91,10 @@
           <el-form-item label="代理钱包:" class="tagheight">
             <el-select
               v-model="queryData.accountType"
-              style="width: 315px"
+              style="width: 300px"
               placeholder="默认选择全部"
               :popper-append-to-body="false"
+              @change="getMerchantDict($event)"
             >
               <el-option
                 v-for="item in proxyWalletType"
@@ -106,13 +108,13 @@
             <el-select
               v-model="queryData.bizType"
               clearable
-              style="width: 315px"
+              style="width: 300px"
               placeholder="默认选择全部"
               :popper-append-to-body="false"
               @change="changeSelect($event)"
             >
               <el-option
-                v-for="item in proxyAccountBizType"
+                v-for="item in accountBizDicList"
                 :key="item.code"
                 :label="item.description"
                 :value="item.code"
@@ -123,12 +125,12 @@
             <el-select
               v-model="queryData.type"
               clearable
-              style="width: 315px"
+              style="width: 300px"
               placeholder="默认选择全部"
               :popper-append-to-body="false"
             >
               <el-option
-                v-for="item in proxyAccountChangeType"
+                v-for="item in accountChangeDic"
                 :key="item.code"
                 :label="item.description"
                 :value="item.code"
@@ -138,7 +140,7 @@
           <el-form-item label="收支类型:" class="tagheight">
             <el-select
               v-model="queryData.transType"
-              style="width: 315px"
+              style="width: 300px"
               clearable
               placeholder="默认选择全部"
               :popper-append-to-body="false"
@@ -151,12 +153,12 @@
               ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="账变金额:" class="numberBox">
+          <el-form-item label="账变金额 :" class="numberBox">
             <el-input-number
               v-model="queryData.amountMin"
               size="medium"
               placeholder="最小数值"
-              style="width: 151px"
+              style="width: 100px"
               :min="-9999999999.99"
               :max="9999999999.99"
               :precision="2"
@@ -168,7 +170,7 @@
               v-model="queryData.amountMax"
               size="medium"
               placeholder="最大数值"
-              style="width: 151px"
+              style="width: 100px"
               :min="-9999999999.99"
               :max="9999999999.99"
               :precision="2"
@@ -176,7 +178,7 @@
               @blur="checkValue($event)"
             ></el-input-number>
           </el-form-item>
-          <el-form-item style="margin-left: 8px">
+          <el-form-item>
             <el-button
               type="primary"
               icon="el-icon-search"
@@ -235,7 +237,7 @@
               <span v-else>-</span>
             </template>
           </el-table-column>
-          <el-table-column prop="userName" align="center" width="130" label="代理账号">
+          <el-table-column prop="userName" align="center" width="180" label="代理账号">
             <template slot-scope="scope">
               <Copy v-if="!!scope.row.userName" :title="scope.row.userName" :copy="copy">
                 {{ scope.row.userName }}
@@ -243,7 +245,7 @@
               <span v-else>-</span>
             </template>
           </el-table-column>
-          <el-table-column prop="realName" align="center" width="120" label="代理姓名">
+          <el-table-column prop="realName" align="center" width="180" label="代理姓名">
             <template slot-scope="scope">
               <Copy v-if="!!scope.row.realName" :title="scope.row.realName" :copy="copy">
                 {{ scope.row.realName }}
@@ -265,7 +267,7 @@
             prop="accountStatus"
             align="center"
             label="账号状态"
-            width="120"
+            width="100"
           >
             <template slot-scope="scope">
               <span
@@ -355,10 +357,10 @@
             prop="occurDt"
             align="center"
             label="账变时间"
-            width="200"
+            width="170"
             sortable="custom"
           ></el-table-column>
-          <el-table-column prop="remark" align="center" label="备注" width="220px">
+          <el-table-column prop="remark" align="center" label="备注" width="150px">
             <template slot-scope="scope">
               {{ scope.row.remark !== null ? scope.row.remark : "-" }}
             </template>
@@ -401,10 +403,14 @@ export default {
       tableData: [
       ],
       dataList: {},
+      accountBizDicList: 0,
+      accountChangeDic: 0,
       windControlLevelList: [],
       summary: {},
       visible: false,
-      tableVisible: false
+      tableVisible: false,
+      walletCode: 0,
+      bizCode: 0
     }
   },
   computed: {
@@ -430,11 +436,30 @@ export default {
   created() {
     this.getWindControllerLevelDict()
   },
-  mounted() {},
+  mounted() {
+    this.getMerchantDict(this.walletCode)
+    this.changeSelect(this.bizCode)
+  },
 
   methods: {
+     getMerchantDict(val) {
+       console.log(val, 'val')
+      const walletCode = val
+      this.$api.getProxyFundsRecordsAccountBizDic({ walletCode }).then((res) => {
+        if (res.code === 200) {
+          this.accountBizDicList = res.data || []
+        }
+      })
+    },
     changeSelect(val) {
         this.queryData.type = []
+        const bizCode = val
+      this.$api.getProxyFundsRecordsAccountChangeDic({ bizCode }).then((res) => {
+        if (res.code === 200) {
+          this.accountChangeDic = res.data || []
+        }
+      })
+      console.log(val, 'val')
     },
     loadData() {
       this.loading = true
@@ -442,6 +467,8 @@ export default {
       const [startTime, endTime] = create
       let params = {
         ...this.queryData,
+         bizType: this.bizType === '0' ? '' : this.bizType,
+         type: this.type === '0' ? '' : this.type,
         occurDtStart: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : '',
         occurDtEnd: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
       }
