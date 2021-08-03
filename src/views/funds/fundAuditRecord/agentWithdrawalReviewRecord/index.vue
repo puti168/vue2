@@ -22,7 +22,7 @@
 							v-model="queryData.thirdOrderNo"
 							clearable
 							size="medium"
-							style="width: 180px"
+							style="width: 330px"
 							placeholder="请输入"
 							@keyup.enter.native="enterSearch"
 						></el-input>
@@ -33,7 +33,7 @@
 							clearable
 							size="medium"
 							:maxlength="11"
-							style="width: 180px"
+							style="width: 260px"
 							placeholder="请输入"
 							@keyup.enter.native="enterSearch"
 						></el-input>
@@ -44,7 +44,7 @@
 							clearable
 							size="medium"
 							:maxlength="11"
-							style="width: 180px"
+							style="width: 260px"
 							placeholder="请输入"
 							@keyup.enter.native="enterSearch"
 						></el-input>
@@ -52,7 +52,7 @@
 					<el-form-item label="订单状态:">
 						<el-select
 							v-model="queryData.orderStatus"
-							style="width: 180px"
+							style="width: 260px"
 							:popper-append-to-body="false"
 						>
 							<el-option label="全部" value=""></el-option>
@@ -64,7 +64,7 @@
 							></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item style="margin-left: 30px">
+					<el-form-item style="margin-left: 8px">
 						<el-button
 							type="primary"
 							icon="el-icon-search"
@@ -112,7 +112,7 @@
 								</el-button>
 							</template>
 						</el-table-column>
-						<el-table-column prop="auditNum" align="center" label="订单号" width="180">
+						<el-table-column prop="auditNum" align="center" label="订单号" width="220">
 							<template slot-scope="scope">
 								<span v-if="!!scope.row.thirdOrderNo">
 									{{ scope.row.thirdOrderNo }}
@@ -120,7 +120,7 @@
 								<span v-else>-</span>
 							</template>
 						</el-table-column>
-						<el-table-column prop="userName" align="center" label="代理账号" width="125">
+						<el-table-column prop="userName" align="center" label="代理账号" width="130">
 							<template slot-scope="scope">
 								<span v-if="!!scope.row.userName">
 									{{ scope.row.userName }}
@@ -128,7 +128,7 @@
 								<span v-else>-</span>
 							</template>
 						</el-table-column>
-						<el-table-column prop="realName" align="center" label="代理姓名" width="125">
+						<el-table-column prop="realName" align="center" label="代理姓名" width="120">
 							<template slot-scope="scope">
 								<span v-if="!!scope.row.realName">
 									{{ scope.row.realName }}
@@ -156,7 +156,7 @@
                             prop="orderAmount"
                             align="center"
                             label="提款金额"
-                            width="120"
+                            width="150"
                         >
                             <template slot-scope="scope">
 								<span v-if="!!scope.row.orderAmount">
@@ -218,7 +218,7 @@
                             prop="details"
                             align="center"
                             label="审核时间"
-                            width="210"
+                            width="220"
                         >
                             <template slot-scope="scope">
                                 <div v-if="!!scope.row.details && scope.row.details.length">
@@ -236,7 +236,7 @@
                             prop="details"
                             align="center"
                             label="审核用时"
-                            width="130"
+                            width="150"
                         >
                             <template slot-scope="scope">
                                 <div v-if="!!scope.row.details && scope.row.details.length">
@@ -254,7 +254,7 @@
                             prop="remark"
                             align="center"
                             label="备注"
-                            width="120"
+                            width="180"
                         >
                             <template slot-scope="scope">
 								<span v-if="!!scope.row.remark">

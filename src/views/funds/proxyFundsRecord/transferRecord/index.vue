@@ -16,7 +16,6 @@
 							align="right"
 							clearable
 							:default-time="defaultTime"
-							style="width: 375px"
 						></el-date-picker>
 					</el-form-item>
 					<el-form-item label="代理账号:">
@@ -25,7 +24,7 @@
 							clearable
 							:maxlength="11"
 							size="medium"
-							style="width: 200px"
+							style="width:280px"
 							placeholder="请输入"
 							:disabled="loading"
 							@keyup.enter.native="enterSearch"
@@ -37,7 +36,7 @@
 							clearable
 							:maxlength="15"
 							size="medium"
-							style="width: 200px"
+							style="width: 280px"
 							placeholder="请输入"
 							:disabled="loading"
 							@keyup.enter.native="enterSearch"
@@ -46,7 +45,7 @@
 					<el-form-item label="订单状态：" class="tagheight">
 						<el-select
 							v-model="queryData.orderStatus"
-							style="width: 300px"
+							style="width: 280px"
 							clearable
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
@@ -64,7 +63,7 @@
 							v-model="queryData.amountMin"
 							size="medium"
 							placeholder="最小数值"
-							style="width: 100px"
+							style="width: 150px"
 							:maxlength="10"
 							name="betAmountMin"
 							oninput="value=value.replace(/[^\d]/g,'')"
@@ -75,7 +74,7 @@
 							v-model="queryData.amountMax"
 							size="medium"
 							placeholder="最大数值"
-							style="width: 100px"
+							style="width: 150px"
 							:maxlength="10"
 							name="betAmountMax"
 							oninput="value=value.replace(/[^\d]/g,'')"

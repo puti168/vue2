@@ -2,7 +2,7 @@
 	<div class="game-container report-container">
 		<div class="view-container dealer-container">
 			<div class="params">
-				<el-form ref="form" :inline="true" :model="queryData">
+				<el-form ref="form" :inline="true" :model="queryData" label-width="80px">
 					<el-form-item label="提款时间:">
 						<el-date-picker
 							v-model="searchTime"
@@ -16,7 +16,6 @@
 							align="right"
 							clearable
 							:default-time="defaultTime"
-							style="width: 375px"
 						></el-date-picker>
 					</el-form-item>
 					<el-form-item label="订单号:">
@@ -24,7 +23,7 @@
 							v-model="queryData.thirdOrderNo"
 							clearable
 							size="medium"
-							style="width: 200px"
+							style="width: 330px"
 							placeholder="请输入"
 							:disabled="loading"
 							@keyup.enter.native="enterSearch"
@@ -36,7 +35,7 @@
 							clearable
 							:maxlength="11"
 							size="medium"
-							style="width: 200px"
+							style="width: 260px"
 							placeholder="请输入"
 							:disabled="loading"
 							@keyup.enter.native="enterSearch"
@@ -48,16 +47,17 @@
 							clearable
 							:maxlength="15"
 							size="medium"
-							style="width: 200px"
+							style="width: 260px"
 							placeholder="请输入"
 							:disabled="loading"
 							@keyup.enter.native="enterSearch"
 						></el-input>
 					</el-form-item>
-					<el-form-item label="订单来源：" class="tagheight">
+					<el-form-item label="订单来源:" class="tagheight">
 						<el-select
 							v-model="queryData.deviceType"
 							clearable
+                            style="width: 400px"
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
 						>
@@ -73,7 +73,7 @@
 						<el-select
 							v-model="queryData.orderStatus"
 							clearable
-							style="width: 300px"
+							style="width: 330px"
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
 						>
@@ -89,7 +89,7 @@
 						<el-select
 							v-model="queryData.withdrawType"
 							clearable
-							style="width: 300px"
+							style="width: 260px"
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
 						>
@@ -101,10 +101,10 @@
 							></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="是否为大额提款:" class="tagheight">
+					<el-form-item label="是否为大额提款:" class="tagheight" label-width="122px">
 						<el-select
 							v-model="queryData.isBig"
-							style="width: 300px"
+							style="width: 218px"
 							placeholder="默认选择全部"
 							clearable
 							:popper-append-to-body="false"
@@ -117,11 +117,11 @@
 							></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="是否为首提:" class="tagheight">
+					<el-form-item label="是否为首提:" class="tagheight" label-width="94px">
 						<el-select
 							v-model="queryData.isFirst"
 							clearable
-							style="width: 300px"
+							style="width: 186px"
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
 						>
@@ -181,7 +181,7 @@
 					<el-table-column
 						prop="thirdOrderNo"
 						align="center"
-						width="180px"
+						width="200px"
 						label="订单号"
 					>
 						<template slot-scope="scope">
@@ -198,7 +198,7 @@
 					<el-table-column
 						prop="userName"
 						align="center"
-						width="160px"
+						width="130px"
 						label="代理账号"
 					>
 						<template slot-scope="scope">
@@ -215,7 +215,7 @@
 					<el-table-column
 						prop="realName"
 						align="center"
-						width="160px"
+						width="120px"
 						label="代理姓名"
 					>
 						<template slot-scope="scope">
@@ -243,7 +243,7 @@
 						prop="orderStatus"
 						align="center"
 						label="订单状态"
-						width="100px"
+						width="120px"
 					>
 						<template slot-scope="scope">
 							{{ typeFilter(scope.row.orderStatus, 'withdrawStatus') }}
@@ -319,7 +319,7 @@
 						prop="withdrawType"
 						align="center"
 						label="提款账号"
-						width="150px"
+						width="200px"
 					>
 						<template slot-scope="scope">
 							{{ typeFilter(scope.row.withdrawType, 'payDataType') }}
@@ -340,7 +340,7 @@
 					<el-table-column
 						prop="orderAmount"
 						align="center"
-						width="160px"
+						width="180px"
 						sortable="custom"
 						label="提款金额"
 					></el-table-column>
@@ -348,7 +348,7 @@
 						prop="createdAt"
 						align="center"
 						label="提款时间"
-						width="160px"
+						width="200px"
 						sortable="custom"
 					></el-table-column>
 				</el-table>

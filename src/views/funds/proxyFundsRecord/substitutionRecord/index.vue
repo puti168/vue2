@@ -2,7 +2,7 @@
 	<div class="game-container report-container">
 		<div class="view-container dealer-container">
 			<div class="params">
-				<el-form ref="form" :inline="true" :model="queryData">
+				<el-form ref="form" :inline="true" :model="queryData" label-width="80px">
 					<el-form-item label="代存时间:">
 						<el-date-picker
 							v-model="searchTime"
@@ -16,7 +16,6 @@
 							align="right"
 							clearable
 							:default-time="defaultTime"
-							style="width: 375px"
 						></el-date-picker>
 					</el-form-item>
 					<el-form-item label="代理账号:">
@@ -25,7 +24,7 @@
 							clearable
 							:maxlength="11"
 							size="medium"
-							style="width: 200px"
+							style="width: 280px"
 							placeholder="请输入"
 							:disabled="loading"
 							@keyup.enter.native="enterSearch"
@@ -37,32 +36,16 @@
 							clearable
 							:maxlength="15"
 							size="medium"
-							style="width: 200px"
+							style="width: 280px"
 							placeholder="请输入"
 							:disabled="loading"
 							@keyup.enter.native="enterSearch"
 						></el-input>
 					</el-form-item>
-					<el-form-item label="代存类型:" class="tagheight">
-						<el-select
-							v-model="queryData.bizType"
-							style="width: 300px"
-							clearable
-							placeholder="默认选择全部"
-							:popper-append-to-body="false"
-						>
-							<el-option
-								v-for="item in proxyAssistDepositType"
-								:key="item.code"
-								:label="item.description"
-								:value="item.code"
-							></el-option>
-						</el-select>
-					</el-form-item>
-					<el-form-item label="状态:" class="tagheight">
+                    <el-form-item label="状态:" class="tagheight">
 						<el-select
 							v-model="queryData.orderStatus"
-							style="width: 300px"
+							style="width: 280px"
 							clearable
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
@@ -75,12 +58,29 @@
 							></el-option>
 						</el-select>
 					</el-form-item>
+					<el-form-item label="代存类型:" class="tagheight">
+						<el-select
+							v-model="queryData.bizType"
+							style="width: 400px"
+							clearable
+							placeholder="默认选择全部"
+							:popper-append-to-body="false"
+						>
+							<el-option
+								v-for="item in proxyAssistDepositType"
+								:key="item.code"
+								:label="item.description"
+								:value="item.code"
+							></el-option>
+						</el-select>
+					</el-form-item>
+
 					<el-form-item label="代存金额:">
 						<el-input
 							v-model="queryData.amountMin"
 							size="medium"
 							placeholder="最小数值"
-							style="width: 100px"
+							style="width: 133px"
 							:maxlength="10"
 							name="betAmountMin"
 							oninput="value=value.replace(/[^\d]/g,'')"
@@ -91,7 +91,7 @@
 							v-model="queryData.amountMax"
 							size="medium"
 							placeholder="最大数值"
-							style="width: 100px"
+							style="width: 133px"
 							:maxlength="10"
 							name="betAmountMax"
 							oninput="value=value.replace(/[^\d]/g,'')"
@@ -99,7 +99,7 @@
 						></el-input>
 					</el-form-item>
 
-					<el-form-item>
+					<el-form-item style="margin-left: 8px">
 						<el-button
 							type="primary"
 							icon="el-icon-search"
@@ -143,7 +143,7 @@
 					:header-cell-style="getRowClass"
 					@sort-change="_changeTableSort"
 				>
-					<el-table-column prop="orderNo" align="center" label="订单号">
+					<el-table-column prop="orderNo" align="center" label="订单号" min-width="300">
 						<template slot-scope="scope">
 							<Copy
 								v-if="!!scope.row.orderNo"
@@ -236,7 +236,7 @@
 						prop="createdTime"
 						align="center"
 						label="代存时间"
-						width="300px"
+						min-width="220px"
 						sortable="custom"
 					></el-table-column>
 				</el-table>
