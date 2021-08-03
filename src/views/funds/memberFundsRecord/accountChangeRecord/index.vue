@@ -128,11 +128,11 @@
           </el-form-item> -->
           <el-form-item label="业务类型:" class="tagheight">
             <el-select
-              v-model="queryData.bizType"
+              v-model="bizType"
               placeholder="默认选择全部"
               :popper-append-to-body="false"
               @change="getMerchantDict($event)"
->
+            >
               <el-option
                 v-for="item in memberAccountBizType"
                 :key="item.code"
@@ -147,7 +147,7 @@
               clearable
               placeholder="默认选择全部"
               :popper-append-to-body="false"
->
+            >
               <el-option
                 v-for="item in AccountChangeDicList"
                 :key="item.code"
@@ -331,7 +331,12 @@
             width="150px"
           >
           </el-table-column> -->
-          <el-table-column prop="bizType" align="center" label="业务类型" width="120px">~
+          <el-table-column
+prop="bizType"
+align="center"
+label="业务类型"
+width="120px"
+>~
             <template slot-scope="scope">
               {{
                 scope.row.bizType === 0
@@ -420,7 +425,6 @@ export default {
     return {
       queryData: {
         type: ''
-
       },
       loading: true,
       searchTime: [startTime, endTime],
@@ -449,7 +453,6 @@ export default {
   },
   created() {
     this.getWindControllerLevelDict()
-    this.getMemberFundsRecordsAccountChangeDic()
   },
   mounted() {
     this.getMerchantDict(this.bizCode)
@@ -468,9 +471,8 @@ export default {
       // })
     },
     getMerchantDict(val) {
-       const bizCode = val
-
-     this.$api.getMemberFundsRecordsAccountChangeDic({bizCode}).then((res) => {
+      const bizCode = val
+      this.$api.getMemberFundsRecordsAccountChangeDic({ bizCode }).then((res) => {
         if (res.code === 200) {
           this.AccountChangeDicList = res.data || []
           console.log(this.AccountChangeDicList, '11')
@@ -478,19 +480,12 @@ export default {
       })
       console.log(val, 'val')
     },
-    getMemberFundsRecordsAccountChangeDic() {
-
-      // this.$api.getMerchantGameWalletDic({ windControlType: 3 }).then((res) => {
-      //   if (res.code === 200) {
-      //     this.walletTypeList = res.data
-      //   }
-      // })
-    },
     loadData() {
       const create = this.searchTime || []
       const [startTime, endTime] = create
       let params = {
         ...this.queryData,
+        bizType: this.bizType === '0' ? '' : this.bizType,
         occurDtStart: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : '',
         occurDtEnd: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
       }
@@ -498,6 +493,7 @@ export default {
         ...this.getParams(params)
       }
       this.loading = true
+      this.$api
         .getMemberFundsRecordsAccountChange(params)
         .then((res) => {
           if (res.code === 200) {
@@ -762,7 +758,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.content{
+.content {
   position: relative;
 }
 /deep/ .el-table__footer-wrapper .cell::after {
