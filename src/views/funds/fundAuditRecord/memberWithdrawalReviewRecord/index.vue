@@ -22,7 +22,7 @@
 							v-model="queryData.thirdOrderNo"
 							clearable
 							size="medium"
-							style="width: 180px"
+							style="width: 300px"
 							placeholder="请输入"
 							oninput="value=value.replace(/[\u4E00-\u9FA5]/g ,'')"
 							@keyup.enter.native="enterSearch"
@@ -55,7 +55,7 @@
 							></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item style="margin-left: 30px">
+					<el-form-item style="margin-left: 8px">
 						<el-button
 							type="primary"
 							icon="el-icon-search"
@@ -107,7 +107,7 @@
 							prop="thirdOrderNo"
 							align="center"
 							label="订单号"
-							width="180"
+							width="220"
 						>
 							<template slot-scope="scope">
 								<span v-if="!!scope.row.thirdOrderNo">
@@ -120,7 +120,7 @@
 							prop="userName"
 							align="center"
 							label="会员账号"
-							width="120"
+							width="130"
 						>
 							<template slot-scope="scope">
 								<span v-if="!!scope.row.userName">
@@ -185,7 +185,7 @@
 							prop="orderAmount"
 							align="center"
 							label="提款金额"
-							width="120"
+							width="150"
 						>
 							<template slot-scope="scope">
 								<span v-if="!!scope.row.orderAmount">
@@ -247,7 +247,7 @@
 							prop="details"
 							align="center"
 							label="审核时间"
-							width="210"
+							width="220"
 						>
 							<template slot-scope="scope">
 								<div v-if="!!scope.row.details && scope.row.details.length">
@@ -265,7 +265,7 @@
 							prop="details"
 							align="center"
 							label="审核用时"
-							width="130"
+							width="150"
 						>
 							<template slot-scope="scope">
 								<div v-if="!!scope.row.details && scope.row.details.length">
@@ -283,7 +283,7 @@
 							prop="remark"
 							align="center"
 							label="备注"
-							width="120"
+							width="180"
 						>
 							<template slot-scope="scope">
 								<span v-if="!!scope.row.remark">

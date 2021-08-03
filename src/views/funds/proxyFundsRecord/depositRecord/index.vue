@@ -2,7 +2,7 @@
 	<div class="game-container report-container">
 		<div class="view-container dealer-container">
 			<div class="params">
-				<el-form ref="form" :inline="true" :model="queryData">
+				<el-form ref="form" :inline="true" :model="queryData" label-width="80px">
 					<el-form-item label="存款时间:">
 						<el-date-picker
 							v-model="searchTime"
@@ -16,7 +16,6 @@
 							align="right"
 							clearable
 							:default-time="defaultTime"
-							style="width: 375px"
 						></el-date-picker>
 					</el-form-item>
 					<el-form-item label="订单号:">
@@ -24,7 +23,7 @@
 							v-model="queryData.thirdOrderNo"
 							clearable
 							size="medium"
-							style="width: 200px"
+							style="width: 330px"
 							placeholder="请输入"
 							:disabled="loading"
 							@keyup.enter.native="enterSearch"
@@ -36,7 +35,7 @@
 							clearable
 							:maxlength="11"
 							size="medium"
-							style="width: 200px"
+							style="width: 260px"
 							placeholder="请输入"
 							:disabled="loading"
 							@keyup.enter.native="enterSearch"
@@ -48,49 +47,17 @@
 							clearable
 							:maxlength="15"
 							size="medium"
-							style="width: 200px"
+							style="width: 260px"
 							placeholder="请输入"
 							:disabled="loading"
 							@keyup.enter.native="enterSearch"
 						></el-input>
 					</el-form-item>
-					<el-form-item label="订单来源:" class="tagheight">
-						<el-select
-							v-model="queryData.deviceType"
-							clearable
-							style="width: 300px"
-							placeholder="默认选择全部"
-							:popper-append-to-body="false"
-						>
-							<el-option
-								v-for="item in loginDeviceType"
-								:key="item.code"
-								:label="item.description"
-								:value="item.code"
-							></el-option>
-						</el-select>
-					</el-form-item>
-					<el-form-item label="订单状态:" class="tagheight">
-						<el-select
-							v-model="queryData.orderStatus"
-							clearable
-							style="width: 300px"
-							placeholder="默认选择全部"
-							:popper-append-to-body="false"
-						>
-							<el-option
-								v-for="item in depositStatus"
-								:key="item.code"
-								:label="item.description"
-								:value="item.code"
-							></el-option>
-						</el-select>
-					</el-form-item>
-					<el-form-item label="支付方式:" class="tagheight">
+                    <el-form-item label="支付方式:" class="tagheight">
 						<el-select
 							v-model="queryData.payType"
 							clearable
-							style="width: 300px"
+							style="width: 400px"
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
 						>
@@ -102,8 +69,40 @@
 							></el-option>
 						</el-select>
 					</el-form-item>
+					<el-form-item label="订单来源:" class="tagheight">
+						<el-select
+							v-model="queryData.deviceType"
+							clearable
+							style="width: 330px"
+							placeholder="默认选择全部"
+							:popper-append-to-body="false"
+						>
+							<el-option
+								v-for="item in loginDeviceType"
+								:key="item.code"
+								:label="item.description"
+								:value="item.code"
+							></el-option>
+						</el-select>
+					</el-form-item>
 
-					<el-form-item>
+					<el-form-item label="订单状态:" class="tagheight">
+						<el-select
+							v-model="queryData.orderStatus"
+							clearable
+							style="width: 260px"
+							placeholder="默认选择全部"
+							:popper-append-to-body="false"
+						>
+							<el-option
+								v-for="item in depositStatus"
+								:key="item.code"
+								:label="item.description"
+								:value="item.code"
+							></el-option>
+						</el-select>
+					</el-form-item>
+					<el-form-item style="margin-left: 8px">
 						<el-button
 							type="primary"
 							icon="el-icon-search"
@@ -147,7 +146,7 @@
 					:header-cell-style="getRowClass"
 					@sort-change="_changeTableSort"
 				>
-					<el-table-column prop="thirdOrderNo" align="center" label="订单号">
+					<el-table-column prop="thirdOrderNo" align="center" label="订单号" width="250">
 						<template slot-scope="scope">
 							<Copy
 								v-if="!!scope.row.thirdOrderNo"
@@ -159,7 +158,7 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="userName" align="center" label="代理账号">
+					<el-table-column prop="userName" align="center" label="代理账号" width="130">
 						<template slot-scope="scope">
 							<Copy
 								v-if="!!scope.row.userName"
@@ -171,7 +170,7 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="realName" align="center" label="代理姓名">
+					<el-table-column prop="realName" align="center" label="代理姓名" width="120">
 						<template slot-scope="scope">
 							<Copy
 								v-if="!!scope.row.realName"
@@ -211,7 +210,7 @@
 						prop="customerIp"
 						align="center"
 						label="存款IP"
-						width="150px"
+						width="180px"
 					>
 						<template slot="header">
 							登录IP
@@ -273,12 +272,13 @@
 						prop="orderAmount"
 						align="center"
 						label="存放金额"
+                        width="180px"
 					></el-table-column>
 					<el-table-column
 						prop="createdAt"
 						align="center"
 						label="存款时间"
-						width="150px"
+						min-width="200px"
 						sortable="custom"
 					></el-table-column>
 				</el-table>

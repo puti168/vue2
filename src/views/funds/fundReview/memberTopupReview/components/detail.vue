@@ -26,22 +26,22 @@
 						style="width: 100%"
 						:header-cell-style="getRowClass"
 					>
-						<el-table-column align="center" label="注册时间">
+						<el-table-column align="center" label="注册时间" min-width="160">
 							<template>
 								{{ list && list.createDt ? list.createDt : '-' }}
 							</template>
 						</el-table-column>
-						<el-table-column align="center" label="最后登录时间">
+						<el-table-column align="center" label="最后登录时间" min-width="160">
 							<template>
 								{{ list && list.lastLoginTime ? list.lastLoginTime : '-' }}
 							</template>
 						</el-table-column>
-						<el-table-column align="center" label="最后下注时间">
+						<el-table-column align="center" label="最后下注时间" min-width="160">
 							<template>
 								{{ list && list.lastBetTime ? list.lastBetTime : '-' }}
 							</template>
 						</el-table-column>
-						<el-table-column align="center" label="注册端">
+						<el-table-column align="center" label="注册端" min-width="100">
 							<template>
 								{{
 									list && list.deviceType
@@ -50,17 +50,17 @@
 								}}
 							</template>
 						</el-table-column>
-						<el-table-column align="center" label="注册IP">
+						<el-table-column align="center" label="注册IP" min-width="130">
 							<template>
 								{{ list && list.registerIp ? list.registerIp : '-' }}
 							</template>
 						</el-table-column>
-						<el-table-column align="center" label="注册端设备编号">
+						<el-table-column align="center" label="注册端设备编号" min-width="150">
 							<template>
 								{{ list && list.deviceNo ? list.deviceNo : '-' }}
 							</template>
 						</el-table-column>
-						<el-table-column align="center" label="账号类型">
+						<el-table-column align="center" label="账号类型" min-width="120">
 							<template>
 								{{
 									list && list.accountType
@@ -69,14 +69,14 @@
 								}}
 							</template>
 						</el-table-column>
-						<el-table-column align="center" label="注册域名">
+						<el-table-column align="center" label="注册域名" min-width="150">
 							<template>
 								{{
 									list && list.registerReference ? list.registerReference : '-'
 								}}
 							</template>
 						</el-table-column>
-						<el-table-column align="center" label="上级代理">
+						<el-table-column align="center" label="上级代理" min-width="120">
 							<template>
 								{{ list && list.parentProxyName ? list.parentProxyName : '-' }}
 							</template>

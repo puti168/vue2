@@ -37,12 +37,12 @@
               v-model="queryData.thirdOrderNo"
               clearable
               size="medium"
-              style="width: 185px"
+              style="width: 330px"
               placeholder="请输入"
               @keyup.enter.native="enterSearch"
             ></el-input>
           </el-form-item>
-          <el-form-item style="margin-left: 30px">
+          <el-form-item style="margin-left: 8px">
             <el-button
               type="primary"
               icon="el-icon-search"
@@ -141,18 +141,21 @@
               prop="thirdOrderNo"
               align="center"
               label="审核订单号"
+              width="260"
             ></el-table-column>
             <el-table-column
               prop="userName"
               align="center"
               label="代理账号"
+              width="150"
             ></el-table-column>
             <el-table-column
               prop="realName"
               align="center"
               label="代理姓名"
+              width="150"
             ></el-table-column>
-            <el-table-column prop="isBig" align="center" label="是否为大额提款">
+            <el-table-column prop="isBig" align="center" label="是否为大额提款" width="150">
               <template slot-scope="scope">
                 {{ Number(scope.row.isBig) === 1 ? "是" : "否" }}
               </template>
@@ -161,18 +164,21 @@
               prop="orderAmount"
               align="center"
               label="提款金额"
+              width="160"
             ></el-table-column>
             <el-table-column
               prop="orderRateAmount"
               align="center"
               label="提款手续费"
+              width="150"
             ></el-table-column>
             <el-table-column
               prop="createdAt"
               align="center"
               label="申请时间"
+              min-width="220"
             ></el-table-column>
-            <el-table-column align="center" label="审核状态">
+            <el-table-column align="center" label="审核状态" width="150">
               <template slot-scope="scope">
                 <span
                   :class="

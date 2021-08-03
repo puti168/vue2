@@ -2,7 +2,7 @@
   <div class="game-container report-container">
     <div class="view-container dealer-container">
       <div class="params">
-        <el-form ref="form" :inline="true" :model="queryData">
+        <el-form ref="form" :inline="true" :model="queryData" label-width="80px">
           <el-form-item label="申请时间:">
             <el-date-picker
               v-model="searchTime"
@@ -16,7 +16,6 @@
               align="right"
               clearable
               :default-time="defaultTime"
-              style="width: 375px"
             ></el-date-picker>
           </el-form-item>
           <el-form-item label="订单号:">
@@ -24,7 +23,7 @@
               v-model="queryData.id"
               clearable
               size="medium"
-              style="width: 200px"
+              style="width: 330px"
               placeholder="请输入"
               :disabled="loading"
               @keyup.enter.native="enterSearch"
@@ -36,7 +35,7 @@
               clearable
               :maxlength="11"
               size="medium"
-              style="width: 200px"
+              style="width: 260px"
               placeholder="请输入"
               :disabled="loading"
               @keyup.enter.native="enterSearch"
@@ -48,16 +47,16 @@
               clearable
               :maxlength="15"
               size="medium"
-              style="width: 200px"
+              style="width: 260px"
               placeholder="请输入"
               :disabled="loading"
               @keyup.enter.native="enterSearch"
             ></el-input>
           </el-form-item>
-          <el-form-item label="状态：" class="tagheight">
+          <el-form-item label="订单状态:" class="tagheight">
             <el-select
               v-model="queryData.orderStatus"
-              style="width: 300px"
+              style="width: 140px"
               clearable
               placeholder="默认选择全部"
               :popper-append-to-body="false"
@@ -70,10 +69,10 @@
               ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="调整类型：" class="tagheight">
+          <el-form-item label="调整类型:" class="tagheight">
             <el-select
               v-model="queryData.adjustType"
-              style="width: 300px"
+              style="width: 235px"
               clearable
               placeholder="默认选择全部"
               :popper-append-to-body="false"
@@ -91,7 +90,7 @@
               v-model="queryData.adjustAmountMin"
               size="medium"
               placeholder="最小数值"
-              style="width: 100px"
+              style="width: 124px"
               :maxlength="10"
               name="betAmountMin"
               oninput="value=value.replace(/[^\d]/g,'')"
@@ -102,7 +101,7 @@
               v-model="queryData.adjustAmountMax"
               size="medium"
               placeholder="最大数值"
-              style="width: 100px"
+              style="width: 124px"
               :maxlength="10"
               name="betAmountMax"
               oninput="value=value.replace(/[^\d]/g,'')"
@@ -110,7 +109,7 @@
             ></el-input>
           </el-form-item>
 
-          <el-form-item>
+          <el-form-item style="margin-left: 8px">
             <el-button type="primary" icon="el-icon-search" size="medium" @click="search">
               查询
             </el-button>
@@ -149,7 +148,7 @@
           :header-cell-style="getRowClass"
           @sort-change="_changeTableSort"
         >
-          <el-table-column prop="orderNo" align="center" label="订单号">
+          <el-table-column prop="orderNo" align="center" label="订单号" width="260">
             <template slot-scope="scope">
               <Copy v-if="!!scope.row.orderNo" :title="scope.row.orderNo" :copy="copy">
                 {{ scope.row.orderNo }}
@@ -157,7 +156,7 @@
               <span v-else>-</span>
             </template>
           </el-table-column>
-          <el-table-column prop="userName" align="center" label="代理账号">
+          <el-table-column prop="userName" align="center" label="代理账号" width="130">
             <template slot-scope="scope">
               <Copy v-if="!!scope.row.userName" :title="scope.row.userName" :copy="copy">
                 {{ scope.row.userName }}
@@ -165,7 +164,7 @@
               <span v-else>-</span>
             </template>
           </el-table-column>
-          <el-table-column prop="realName" align="center" label="代理姓名">
+          <el-table-column prop="realName" align="center" label="代理姓名" width="120">
             <template slot-scope="scope">
               <Copy v-if="!!scope.row.realName" :title="scope.row.realName" :copy="copy">
                 {{ scope.row.realName }}
@@ -197,7 +196,7 @@
           <el-table-column
             prop="adjustAmount"
             align="center"
-            width="130px"
+            width="180px"
             label="调整金额"
           ></el-table-column>
           <el-table-column prop="operator" align="center" label="申请人" width="150px">
@@ -210,11 +209,11 @@
             prop="operatorTime"
             align="center"
             label="申请时间"
-            width="160px"
+            min-width="200px"
             sortable="custom"
           >
           </el-table-column>
-          <el-table-column prop="remark" align="center" label="备注" width="160px">
+          <el-table-column prop="remark" align="center" label="备注" min-width="220px">
             <template slot-scope="scope">
               <span v-if="scope.row.remark">{{ scope.row.remark }}</span>
               <span v-else>-</span>

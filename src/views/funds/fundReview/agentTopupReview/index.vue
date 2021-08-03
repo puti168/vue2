@@ -37,12 +37,12 @@
               v-model="queryData.orderNo"
               clearable
               size="medium"
-              style="width: 180px"
+              style="width: 330px"
               placeholder="请输入"
               @keyup.enter.native="enterSearch"
             ></el-input>
           </el-form-item>
-          <el-form-item style="margin-left: 30px">
+          <el-form-item style="margin-left: 8px">
             <el-button
               type="primary"
               icon="el-icon-search"
@@ -92,7 +92,7 @@
                 ></el-checkbox>
               </template>
             </el-table-column>
-            <el-table-column prop="auditStep" align="center" label="操作" width="100">
+            <el-table-column prop="auditStep" align="center" label="操作" width="180">
               <template slot-scope="scope">
                 <el-button
                   :class="
@@ -110,18 +110,20 @@
               prop="orderNo"
               align="center"
               label="审核订单号"
+              width="260"
             ></el-table-column>
             <el-table-column
               prop="userName"
               align="center"
               label="代理账号"
+              width="180"
             ></el-table-column>
-            <el-table-column prop="realName" align="center" label="代理姓名">
+            <el-table-column prop="realName" align="center" label="代理姓名" width="180">
               <template slot-scope="scope">
                 {{ scope.row.realName ? scope.row.realName : "-" }}
               </template>
             </el-table-column>
-            <el-table-column prop="applyTime" align="center" label="调整类型">
+            <el-table-column prop="applyTime" align="center" label="调整类型" width="180">
               <template slot-scope="scope">
                 {{ typeFilter(scope.row.adjustType, "proxyPatchAddAdjustType") }}
               </template>
@@ -130,13 +132,15 @@
               prop="adjustAmount"
               align="center"
               label="增加金额"
+              width="200"
             ></el-table-column>
             <el-table-column
               prop="operatorTime"
               align="center"
               label="申请时间"
+              min-width="230"
             ></el-table-column>
-            <el-table-column align="center" label="审核状态">
+            <el-table-column align="center" label="审核状态" width="180">
               <template slot-scope="scope">
                 <span
                   :class="

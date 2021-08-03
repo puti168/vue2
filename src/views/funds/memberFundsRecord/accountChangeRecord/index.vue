@@ -1,116 +1,120 @@
 <template>
-  <div class="game-container report-container">
-    <div class="view-container dealer-container">
-      <div class="params">
-        <el-form ref="form" :inline="true" :model="queryData">
-          <el-form-item label="账变时间:">
-            <el-date-picker
-              v-model="searchTime"
-              size="medium"
-              :picker-options="pickerOptions"
-              format="yyyy-MM-dd HH:mm:ss"
-              type="datetimerange"
-              range-separator="-"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-              align="right"
-              :clearable="false"
-              :default-time="defaultTime"
-              style="width: 375px"
-            ></el-date-picker>
-          </el-form-item>
-          <el-form-item label="关联订单号:">
-            <el-input
-              v-model="queryData.eventId"
-              clearable
-              size="medium"
-              style="width: 200px"
-              placeholder="请输入"
-              :disabled="loading"
-              @keyup.enter.native="enterSearch"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="会员账号:">
-            <el-input
-              v-model="queryData.userName"
-              clearable
-              :maxlength="11"
-              size="medium"
-              style="width: 200px"
-              placeholder="请输入"
-              :disabled="loading"
-              @keyup.enter.native="enterSearch"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="会员姓名:">
-            <el-input
-              v-model="queryData.realName"
-              clearable
-              :maxlength="15"
-              size="medium"
-              style="width: 200px"
-              placeholder="请输入"
-              :disabled="loading"
-              @keyup.enter.native="enterSearch"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="账号状态:" class="tagheight">
-            <el-select
-              v-model="queryData.accountStatus"
-              style="width: 300px"
-              multiple
-              clearable
-              collapse-tags
-              placeholder="默认选择全部"
-              :popper-append-to-body="false"
-            >
-              <el-option
-                v-for="item in accountStatusType"
-                :key="item.code"
-                :label="item.description"
-                :value="item.code"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="风控层级:" class="tagheight">
-            <el-select
-              v-model="queryData.windControlId"
-              clearable
-              placeholder="默认选择全部"
-              :popper-append-to-body="false"
-            >
-              <el-option
-                v-for="item in windControlLevelList"
-                :key="item.windControlId"
-                :label="item.windControlName"
-                :value="item.windControlId"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="VIP等级:">
-            <el-input
-              v-model="queryData.vipSerialNumMin"
-              size="medium"
-              placeholder="最小数值"
-              style="width: 100px"
-              :maxlength="3"
-              name="vipSerialNumMin"
-              oninput="value=value.replace(/[^\d]/g,'')"
-              @blur="checkValue($event)"
-            ></el-input>
-            -
-            <el-input
-              v-model="queryData.vipSerialNumMax"
-              size="medium"
-              placeholder="最大数值"
-              style="width: 100px"
-              :maxlength="3"
-              name="vipSerialNumMax"
-              oninput="value=value.replace(/[^\d]/g,'')"
-              @blur="checkValue($event)"
-            ></el-input>
-          </el-form-item>
-          <!-- <el-form-item label="钱包类型:" class="tagheight">
+	<div class="game-container report-container">
+		<div class="view-container dealer-container">
+			<div class="params">
+				<el-form
+					ref="form"
+					:inline="true"
+					:model="queryData"
+					label-width="80px"
+				>
+					<el-form-item label="账变时间:">
+						<el-date-picker
+							v-model="searchTime"
+							size="medium"
+							:picker-options="pickerOptions"
+							format="yyyy-MM-dd HH:mm:ss"
+							type="datetimerange"
+							range-separator="-"
+							start-placeholder="开始日期"
+							end-placeholder="结束日期"
+							align="right"
+							:clearable="false"
+							:default-time="defaultTime"
+						></el-date-picker>
+					</el-form-item>
+					<el-form-item label="关联订单号:" label-width="90px">
+						<el-input
+							v-model="queryData.eventId"
+							clearable
+							size="medium"
+							style="width: 297px"
+							placeholder="请输入"
+							:disabled="loading"
+							@keyup.enter.native="enterSearch"
+						></el-input>
+					</el-form-item>
+					<el-form-item label="会员账号:">
+						<el-input
+							v-model="queryData.userName"
+							clearable
+							:maxlength="11"
+							size="medium"
+							style="width: 280px"
+							placeholder="请输入"
+							:disabled="loading"
+							@keyup.enter.native="enterSearch"
+						></el-input>
+					</el-form-item>
+					<el-form-item label="会员姓名:">
+						<el-input
+							v-model="queryData.realName"
+							clearable
+							:maxlength="15"
+							size="medium"
+							style="width: 280px"
+							placeholder="请输入"
+							:disabled="loading"
+							@keyup.enter.native="enterSearch"
+						></el-input>
+					</el-form-item>
+					<el-form-item label="账号状态:" class="tagheight">
+						<el-select
+							v-model="queryData.accountStatus"
+							style="width: 400px"
+							multiple
+							clearable
+							placeholder="默认选择全部"
+							:popper-append-to-body="false"
+						>
+							<el-option
+								v-for="item in accountStatusType"
+								:key="item.code"
+								:label="item.description"
+								:value="item.code"
+							></el-option>
+						</el-select>
+					</el-form-item>
+					<el-form-item label="风控层级:" class="tagheight">
+						<el-select
+							v-model="queryData.windControlId"
+							style="width: 306px"
+							clearable
+							placeholder="默认选择全部"
+							:popper-append-to-body="false"
+						>
+							<el-option
+								v-for="item in windControlLevelList"
+								:key="item.windControlId"
+								:label="item.windControlName"
+								:value="item.windControlId"
+							></el-option>
+						</el-select>
+					</el-form-item>
+					<el-form-item label="VIP 等级:">
+						<el-input
+							v-model="queryData.vipSerialNumMin"
+							size="medium"
+							placeholder="最小数值"
+							style="width: 135px"
+							:maxlength="3"
+							name="vipSerialNumMin"
+							oninput="value=value.replace(/[^\d]/g,'')"
+							@blur="checkValue($event)"
+						></el-input>
+						-
+						<el-input
+							v-model="queryData.vipSerialNumMax"
+							size="medium"
+							placeholder="最大数值"
+							style="width: 133px"
+							:maxlength="3"
+							name="vipSerialNumMax"
+							oninput="value=value.replace(/[^\d]/g,'')"
+							@blur="checkValue($event)"
+						></el-input>
+					</el-form-item>
+					<!-- <el-form-item label="钱包类型:" class="tagheight">
             <el-select
               v-model="queryData.walletType"
               style="width: 300px"
@@ -131,6 +135,7 @@
               v-model="bizType"
               placeholder="默认选择全部"
               :popper-append-to-body="false"
+              style="width: 280px"
               @change="getMerchantDict($event)"
             >
               <el-option
@@ -197,134 +202,174 @@
             ></el-input-number>
           </el-form-item>
 
-          <el-form-item>
-            <el-button
-              type="primary"
-              icon="el-icon-search"
-              :disabled="loading"
-              size="medium"
-              @click="search"
-            >
-              查询
-            </el-button>
-            <el-button
-              icon="el-icon-refresh-left"
-              :disabled="loading"
-              size="medium"
-              @click="reset"
-            >
-              重置
-            </el-button>
-            <el-button
-              v-if="hasPermission('260')"
-              icon="el-icon-download"
-              type="warning"
-              :disabled="loading"
-              size="medium"
-              @click="exportExcel"
-            >
-              导出
-            </el-button>
-          </el-form-item>
-        </el-form>
-      </div>
-      <div v-loading="loading" class="content">
-        <el-table
-          border
-          show-summary
-          :summary-method="getSummaries"
-          size="mini"
-          class="small-size-table"
-          :data="tableData"
-          style="width: 100%"
-          :header-cell-style="getRowClass"
-          @sort-change="_changeTableSort"
-        >
-          <el-table-column prop="eventId" align="center" width="240px" label="关联订单号">
-            <template slot-scope="scope">
-              <Copy v-if="!!scope.row.eventId" :title="scope.row.eventId" :copy="copy">
-                {{ scope.row.eventId }}
-              </Copy>
-              <span v-else>-</span>
-            </template>
-          </el-table-column>
-          <el-table-column prop="userName" align="center" label="会员账号" width="120px">
-            <template slot-scope="scope">
-              <Copy v-if="!!scope.row.userName" :title="scope.row.userName" :copy="copy">
-                {{ scope.row.userName }}
-              </Copy>
-              <span v-else>-</span>
-            </template>
-          </el-table-column>
-          <el-table-column prop="realName" align="center" label="会员姓名" width="120px">
-            <template slot-scope="scope">
-              <Copy v-if="!!scope.row.realName" :title="scope.row.realName" :copy="copy">
-                {{ scope.row.realName }}
-              </Copy>
-              <span v-else>-</span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            prop="parentProxyName"
-            align="center"
-            label="上级代理"
-            width="120px"
-          >
-            <template slot-scope="scope">
-              <Copy
-                v-if="!!scope.row.parentProxyName"
-                :title="scope.row.parentProxyName"
-                :copy="copy"
-              >
-                {{ scope.row.parentProxyName }}
-              </Copy>
-              <span v-else>-</span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            prop="windControlName"
-            align="center"
-            label="风控等级"
-            width="90px"
-          >
-            <template slot-scope="scope">
-              {{ scope.row.windControlName !== null ? scope.row.windControlName : "-" }}
-            </template>
-          </el-table-column>
-          <el-table-column
-            prop="accountStatus"
-            align="center"
-            label="账号状态"
-            width="100px"
-          >
-            <template slot-scope="scope">
-              <span v-if="scope.row.accountStatus === 1" class="normalRgba">
-                {{ typeFilter(scope.row.accountStatus, "accountStatusType") }}
-              </span>
-              <span v-else-if="scope.row.accountStatus === 2" class="disableRgba">
-                {{ typeFilter(scope.row.accountStatus, "accountStatusType") }}
-              </span>
-              <span v-else-if="scope.row.accountStatus === 3" class="lockingRgba">
-                {{ typeFilter(scope.row.accountStatus, "accountStatusType") }}
-              </span>
-              <span v-else-if="scope.row.accountStatus === 4" class="deleteRgba">
-                {{ typeFilter(scope.row.accountStatus, "accountStatusType") }}
-              </span>
-              <span v-else>-</span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            prop="vipIdName"
-            align="center"
-            label="VIP等级"
-            width="90px"
-            sortable="custom"
-          >
-            <template slot-scope="scope">
-              {{ scope.row.vipIdName ? "VIP" + scope.row.vipIdName : "-" }}
-            </template>
-          </el-table-column>
-          <!-- <el-table-column
+					<el-form-item style="margin-left:10px">
+						<el-button
+							type="primary"
+							icon="el-icon-search"
+							:disabled="loading"
+							size="medium"
+							@click="search"
+						>
+							查询
+						</el-button>
+						<el-button
+							icon="el-icon-refresh-left"
+							:disabled="loading"
+							size="medium"
+							@click="reset"
+						>
+							重置
+						</el-button>
+						<el-button
+							v-if="hasPermission('260')"
+							icon="el-icon-download"
+							type="warning"
+							:disabled="loading"
+							size="medium"
+							@click="exportExcel"
+						>
+							导出
+						</el-button>
+					</el-form-item>
+				</el-form>
+			</div>
+			<div v-loading="loading" class="content">
+				<el-table
+					border
+					show-summary
+					:summary-method="getSummaries"
+					size="mini"
+					class="small-size-table"
+					:data="tableData"
+					style="width: 100%"
+					:header-cell-style="getRowClass"
+					@sort-change="_changeTableSort"
+				>
+					<el-table-column
+						prop="eventId"
+						align="center"
+						width="240px"
+						label="关联订单号"
+					>
+						<template slot-scope="scope">
+							<Copy
+								v-if="!!scope.row.eventId"
+								:title="scope.row.eventId"
+								:copy="copy"
+							>
+								{{ scope.row.eventId }}
+							</Copy>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
+					<el-table-column
+						prop="userName"
+						align="center"
+						label="会员账号"
+						width="140px"
+					>
+						<template slot-scope="scope">
+							<Copy
+								v-if="!!scope.row.userName"
+								:title="scope.row.userName"
+								:copy="copy"
+							>
+								{{ scope.row.userName }}
+							</Copy>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
+					<el-table-column
+						prop="realName"
+						align="center"
+						label="会员姓名"
+						width="140px"
+					>
+						<template slot-scope="scope">
+							<Copy
+								v-if="!!scope.row.realName"
+								:title="scope.row.realName"
+								:copy="copy"
+							>
+								{{ scope.row.realName }}
+							</Copy>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
+					<el-table-column
+						prop="parentProxyName"
+						align="center"
+						label="上级代理"
+						width="140px"
+					>
+						<template slot-scope="scope">
+							<Copy
+								v-if="!!scope.row.parentProxyName"
+								:title="scope.row.parentProxyName"
+								:copy="copy"
+							>
+								{{ scope.row.parentProxyName }}
+							</Copy>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
+					<el-table-column
+						prop="windControlName"
+						align="center"
+						label="风控等级"
+						width="90px"
+					>
+						<template slot-scope="scope">
+							{{
+								scope.row.windControlName !== null
+									? scope.row.windControlName
+									: '-'
+							}}
+						</template>
+					</el-table-column>
+					<el-table-column
+						prop="accountStatus"
+						align="center"
+						label="账号状态"
+						width="100px"
+					>
+						<template slot-scope="scope">
+							<span v-if="scope.row.accountStatus === 1" class="normalRgba">
+								{{ typeFilter(scope.row.accountStatus, 'accountStatusType') }}
+							</span>
+							<span
+								v-else-if="scope.row.accountStatus === 2"
+								class="disableRgba"
+							>
+								{{ typeFilter(scope.row.accountStatus, 'accountStatusType') }}
+							</span>
+							<span
+								v-else-if="scope.row.accountStatus === 3"
+								class="lockingRgba"
+							>
+								{{ typeFilter(scope.row.accountStatus, 'accountStatusType') }}
+							</span>
+							<span
+								v-else-if="scope.row.accountStatus === 4"
+								class="deleteRgba"
+							>
+								{{ typeFilter(scope.row.accountStatus, 'accountStatusType') }}
+							</span>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
+					<el-table-column
+						prop="vipIdName"
+						align="center"
+						label="VIP等级"
+						width="100px"
+						sortable="custom"
+					>
+						<template slot-scope="scope">
+							{{ scope.row.vipIdName ? 'VIP' + scope.row.vipIdName : '-' }}
+						</template>
+					</el-table-column>
+					<!-- <el-table-column
             prop="parentProxyName"
             align="center"
             label="钱包类型"
@@ -345,7 +390,7 @@ width="120px"
               }}
             </template>
           </el-table-column>
-          <el-table-column prop="type" align="center" label="账变类型" width="120px">
+          <el-table-column prop="type" align="center" label="账变类型" width="180px">
             <template slot-scope="scope">
               {{ typeFilter(scope.row.type, "memberAccountChangeType") }}
             </template>
@@ -387,7 +432,7 @@ width="120px"
             width="155px"
             sortable="custom"
           ></el-table-column>
-          <el-table-column prop="remark" align="center" label="备注">
+          <el-table-column prop="remark" align="center" label="备注" width="150px">
             <template slot-scope="scope">
               {{ scope.row.remark !== null ? scope.row.remark : "-" }}
             </template>
@@ -413,8 +458,12 @@ width="120px"
 <script>
 import list from '@/mixins/list'
 import dayjs from 'dayjs'
-const startTime = dayjs().startOf('day').valueOf()
-const endTime = dayjs().endOf('day').valueOf()
+const startTime = dayjs()
+	.startOf('day')
+	.valueOf()
+const endTime = dayjs()
+	.endOf('day')
+	.valueOf()
 
 export default {
   components: {},
@@ -493,8 +542,7 @@ export default {
         ...this.getParams(params)
       }
       this.loading = true
-      this.$api
-        .getMemberFundsRecordsAccountChange(params)
+      this.$api.getMemberFundsRecordsAccountChange(params)
         .then((res) => {
           if (res.code === 200) {
             this.tableData = res.data.record
@@ -748,12 +796,12 @@ export default {
         }
       })
 
-      return sums
-    },
-    enterSearch() {
-      this.loadData()
-    }
-  }
+			return sums
+		},
+		enterSearch() {
+			this.loadData()
+		}
+	}
 }
 </script>
 
@@ -762,53 +810,53 @@ export default {
   position: relative;
 }
 /deep/ .el-table__footer-wrapper .cell::after {
-  border: 1px solid #ebeef5;
-  content: "";
-  position: absolute;
-  top: 41px;
-  left: 0;
-  width: 100%;
+	border: 1px solid #ebeef5;
+	content: '';
+	position: absolute;
+	top: 41px;
+	left: 0;
+	width: 100%;
 }
 
 /deep/ .el-table__fixed-footer-wrapper tr::after {
-  border: 1px solid #ebeef5;
-  content: "";
-  position: absolute;
-  top: 41px;
-  left: 0;
-  width: 100%;
+	border: 1px solid #ebeef5;
+	content: '';
+	position: absolute;
+	top: 41px;
+	left: 0;
+	width: 100%;
 }
 .count_row {
-  height: 80px;
-  p {
-    height: 40px;
-    line-height: 40px;
-    color: #5c5c5c;
-    font-weight: 700;
-    span {
-      display: inline-block;
-      width: 20px;
-      height: 20px;
-    }
-  }
+	height: 80px;
+	p {
+		height: 40px;
+		line-height: 40px;
+		color: #5c5c5c;
+		font-weight: 700;
+		span {
+			display: inline-block;
+			width: 20px;
+			height: 20px;
+		}
+	}
 }
 /deep/.el-table {
-  overflow: auto;
+	overflow: auto;
 }
-/deep/.el-table__body-wrapper,
-/deep/.el-table__header-wrapper,
-/deep/.el-table__footer-wrapper {
-  overflow: visible;
-}
+// /deep/.el-table__body-wrapper,
+// /deep/.el-table__header-wrapper,
+// /deep/.el-table__footer-wrapper {
+// 	overflow: visible;
+// }
 /deep/.el-table::after {
-  position: relative !important;
+	position: relative !important;
 }
 .numberBox /deep/.el-input-number__decrease,
 .numberBox /deep/.el-input-number__increase {
-  display: none;
+	display: none;
 }
 .numberBox /deep/.el-input__inner {
-  padding: 0 15px;
-  text-align: left;
+	padding: 0 15px;
+	text-align: left;
 }
 </style>

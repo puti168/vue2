@@ -28,8 +28,9 @@
             align="center"
             label="序号"
             type="index"
+            width="80"
           ></el-table-column>
-          <el-table-column prop="operating" align="center" label="操作">
+          <el-table-column prop="operating" align="center" label="操作" width="110">
             <template slot-scope="scope">
               <el-link
                 v-if="hasPermission('258')"
@@ -53,26 +54,26 @@
               </el-link>
             </template>
           </el-table-column>
-          <el-table-column prop="withdrawStatus" align="center" label="状态">
+          <el-table-column prop="withdrawStatus" align="center" label="状态" width="110">
             <template slot-scope="scope">
               <span v-if="scope.row.withdrawStatus === 0">开启</span>
               <span v-else-if="scope.row.withdrawStatus === 1">关闭</span>
               <span v-else>-</span>
             </template>
           </el-table-column>
-          <el-table-column prop="proxyAccount" align="center" label="代理账号">
+          <el-table-column prop="proxyAccount" align="center" label="代理账号" width="120">
             <template slot-scope="scope">
               <span v-if="scope.row.proxyAccount === '0'">通用</span>
               <span v-else>{{ scope.row.proxyAccount }}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="proxyName" align="center" label="代理姓名">
+          <el-table-column prop="proxyName" align="center" label="代理姓名" width="120">
             <template slot-scope="scope">
               <span v-if="scope.row.proxyName === '0'">-</span>
               <span v-else>{{ scope.row.proxyName }}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="proxyAccountType" align="center" label="代理类型">
+          <el-table-column prop="proxyAccountType" align="center" label="代理类型" width="120">
             <template slot-scope="scope">
               <span v-if="scope.row.proxyAccount === '0'">-</span>
               <span v-else>{{
@@ -82,7 +83,7 @@
               }}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="proxyAccountStatus" align="center" label="代理状态">
+          <el-table-column prop="proxyAccountStatus" align="center" label="代理状态" width="110">
             <template slot-scope="scope">
               <span v-if="scope.row.proxyAccount === '0'">-</span>
               <span v-else>{{
@@ -96,41 +97,49 @@
             prop="windControlName"
             align="center"
             label="风控层级"
+            width="110"
           ></el-table-column>
           <el-table-column
             prop="bankCardMinAmount"
             align="center"
             label="银行卡单次提款最低限额"
+            width="170"
           ></el-table-column>
           <el-table-column
             prop="bankCardMaxAmount"
             align="center"
             label="银行卡单次提款最高限额"
+            width="170"
           ></el-table-column>
           <el-table-column
             prop="virtualCardMinAmount"
             align="center"
             label="虚拟币单次提款最低限额"
+            width="170"
           ></el-table-column>
           <el-table-column
             prop="virtualCardMaxAmount"
             align="center"
             label="虚拟币单次提款最高限额"
+            width="170"
           ></el-table-column>
           <el-table-column
             prop="dateTotalNum"
             align="center"
             label="单日提款总次数"
+            width="130"
           ></el-table-column>
           <el-table-column
             prop="dateMaxAmount"
             align="center"
             label="单日提款总额度"
+            width="130"
           ></el-table-column>
           <el-table-column
             prop="bigAmount"
             align="center"
             label="大额提现标记金额"
+            width="140"
           ></el-table-column>
         </el-table>
         <!-- 分页 -->

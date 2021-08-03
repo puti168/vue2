@@ -2,7 +2,7 @@
   <div class="game-container report-container">
     <div class="view-container dealer-container">
       <div class="params">
-        <el-form ref="form" :inline="true" :model="queryData">
+        <el-form ref="form" :inline="true" :model="queryData" label-width="80px">
           <el-form-item label="领取时间:">
             <el-date-picker
               v-model="receiveTime"
@@ -16,10 +16,9 @@
               align="right"
               :clearable="false"
               :default-time="defaultTime"
-              style="width: 375px"
             ></el-date-picker>
           </el-form-item>
-          <el-form-item label="订单生成时间:">
+          <el-form-item label="订单生成时间:" label-width="116px">
             <el-date-picker
               v-model="orderTime"
               size="medium"
@@ -32,7 +31,6 @@
               align="right"
               :clearable="false"
               :default-time="defaultTime"
-              style="width: 375px"
             ></el-date-picker>
           </el-form-item>
           <el-form-item label="订单号:">
@@ -40,7 +38,7 @@
               v-model="queryData.id"
               clearable
               size="medium"
-              style="width: 200px"
+              style="width: 400px"
               placeholder="请输入"
               :disabled="loading"
               @keyup.enter.native="enterSearch"
@@ -52,7 +50,7 @@
               clearable
               :maxlength="11"
               size="medium"
-              style="width: 200px"
+              style="width: 247px"
               placeholder="请输入"
               :disabled="loading"
               @keyup.enter.native="enterSearch"
@@ -62,6 +60,7 @@
             <el-select
               v-model="queryData.provideType"
               clearable
+              style="width: 247px"
               placeholder="默认选择全部"
               :popper-append-to-body="false"
             >
@@ -77,6 +76,7 @@
             <el-select
               v-model="queryData.provideType"
               clearable
+              style="width: 247px"
               placeholder="默认选择全部"
               :popper-append-to-body="false"
             >
@@ -89,7 +89,7 @@
             </el-select>
           </el-form-item>
 
-          <el-form-item>
+          <el-form-item style="margin-left: 22px">
             <el-button
               type="primary"
               icon="el-icon-search"
@@ -121,7 +121,7 @@
           :header-cell-style="getRowClass"
           @sort-change="_changeTableSort"
         >
-          <el-table-column prop="id" align="center" label="订单号" width="240px">
+          <el-table-column prop="id" align="center" label="订单号" width="260px">
             <template slot-scope="scope">
               <Copy v-if="!!scope.row.id" :title="scope.row.id" :copy="copy">
                 {{ scope.row.id }}
@@ -134,6 +134,7 @@
             align="center"
             label="订单生成时间"
             sortable="custom"
+            min-width="200px"
           >
           </el-table-column>
           <el-table-column
@@ -141,10 +142,11 @@
             align="center"
             label="领取时间"
             sortable="custom"
+            min-width="200px"
           >
           </el-table-column>
 
-          <el-table-column prop="provideType" align="center" label="奖励类型">
+          <el-table-column prop="provideType" align="center" label="奖励类型" width="150px">
             <template slot-scope="scope">
               {{ typeFilter(scope.row.provideType, "vipRewardType") }}
             </template>
@@ -163,7 +165,7 @@
             width="200px"
           >
           </el-table-column>
-          <el-table-column prop="userName" align="center" label="会员账号">
+          <el-table-column prop="userName" align="center" label="会员账号" width="130px">
             <template slot-scope="scope">
               <Copy v-if="!!scope.row.userName" :title="scope.row.userName" :copy="copy">
                 {{ scope.row.userName }}
@@ -176,9 +178,10 @@
             align="center"
             label="VIP等级"
             sortable="custom"
+            width="130px"
           >
           </el-table-column>
-          <el-table-column prop="accountType" align="center" label="账号类型">
+          <el-table-column prop="accountType" align="center" label="账号类型" width="130px">
             <template slot-scope="scope">
               {{ typeFilter(scope.row.accountType, "accountType") }}
             </template>
