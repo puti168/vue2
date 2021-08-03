@@ -37,7 +37,7 @@
           </el-form-item>
           <el-form-item label="订单号:">
             <el-input
-              v-model="queryData.id"
+              v-model="queryData.businessId"
               clearable
               size="medium"
               style="width: 200px"
@@ -87,13 +87,13 @@
           </el-form-item>
           <el-form-item label="领取状态:" class="tagheight">
             <el-select
-              v-model="queryData.approveType"
+              v-model="queryData.auditStatus"
               clearable
               placeholder="默认选择全部"
               :popper-append-to-body="false"
             >
               <el-option
-                v-for="item in activityApproveType"
+                v-for="item in activityPayoutStatus"
                 :key="item.code"
                 :label="item.description"
                 :value="item.code"
@@ -102,13 +102,13 @@
           </el-form-item>
           <el-form-item label="活动类型:" class="tagheight">
             <el-select
-              v-model="queryData.approveType"
+              v-model="queryData.type"
               clearable
               placeholder="默认选择全部"
               :popper-append-to-body="false"
             >
               <el-option
-                v-for="item in activityApproveType"
+                v-for="item in activityType"
                 :key="item.code"
                 :label="item.description"
                 :value="item.code"
@@ -172,10 +172,14 @@
           :header-cell-style="getRowClass"
           @sort-change="_changeTableSort"
         >
-          <el-table-column prop="id" align="center" label="订单号" width="240px">
+          <el-table-column prop="businessId" align="center" label="订单号" width="240px">
             <template slot-scope="scope">
-              <Copy v-if="!!scope.row.id" :title="scope.row.id" :copy="copy">
-                {{ scope.row.id }}
+              <Copy
+                v-if="!!scope.row.businessId"
+                :title="scope.row.businessId"
+                :copy="copy"
+              >
+                {{ scope.row.businessId }}
               </Copy>
               <span v-else>-</span>
             </template>
@@ -196,9 +200,9 @@
               <span v-else>-</span>
             </template>
           </el-table-column>
-          <el-table-column prop="auditStatus" align="center" label="领取方式">
+          <el-table-column prop="approveType" align="center" label="领取方式">
             <template slot-scope="scope">
-              {{ typeFilter(scope.row.auditStatus, "activityPayoutStatus") }}
+              {{ typeFilter(scope.row.approveType, "activityApproveType") }}
             </template>
           </el-table-column>
           <el-table-column prop="auditStatus" align="center" label="领取状态">
@@ -222,7 +226,7 @@
           >
           </el-table-column>
           <el-table-column
-            prop="createdAt"
+            prop="approveTime"
             align="center"
             label="领取时间"
             sortable="custom"
@@ -274,11 +278,14 @@ export default {
     }
   },
   computed: {
+    activityApproveType() {
+      return this.globalDics.activityApproveType
+    },
     activityPayoutStatus() {
       return this.globalDics.activityPayoutStatus
     },
-    activityApproveType() {
-      return this.globalDics.activityApproveType
+    activityType() {
+      return this.globalDics.activityType
     }
   },
   created() {},
@@ -287,10 +294,12 @@ export default {
       this.loading = true
       const receive = this.receiveTime || []
       const [startTime, endTime] = receive
-    //   const order = this.orderTime || []
-    //   const [start, end] = order
+      const order = this.orderTime || []
+      const [start, end] = order
       let params = {
         ...this.queryData,
+        approveTimeStart: start ? dayjs(start).format('YYYY-MM-DD HH:mm:ss') : '',
+        approveTimeEnd: end ? dayjs(end).format('YYYY-MM-DD HH:mm:ss') : '',
         createdAtStart: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : '',
         createdAtEnd: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
       }
@@ -322,8 +331,11 @@ export default {
       if (prop === 'amount') {
         prop = 1
       }
-      if (prop === 'createdAt') {
+      if (prop === 'approveTime') {
         prop = 2
+      }
+      if (prop === 'createdAt') {
+        prop = 3
       }
       this.pageNum = 1
       this.queryData.orderKey = prop
@@ -343,10 +355,12 @@ export default {
       this.loading = true
       const receive = this.receiveTime || []
       const [startTime, endTime] = receive
-    //   const order = this.orderTime || []
-    //   const [start, end] = order
+      const order = this.orderTime || []
+      const [start, end] = order
       let params = {
         ...this.queryData,
+        approveTimeStart: start ? dayjs(start).format('YYYY-MM-DD HH:mm:ss') : '',
+        approveTimeEnd: end ? dayjs(end).format('YYYY-MM-DD HH:mm:ss') : '',
         createdAtStart: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : '',
         createdAtEnd: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
       }
