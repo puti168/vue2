@@ -129,10 +129,10 @@
           <el-form-item label="业务类型:" class="tagheight">
             <el-select
               v-model="queryData.bizType"
-              clearable
               placeholder="默认选择全部"
               :popper-append-to-body="false"
-            >
+              @change="getMerchantDict($event)"
+>
               <el-option
                 v-for="item in memberAccountBizType"
                 :key="item.code"
@@ -147,9 +147,9 @@
               clearable
               placeholder="默认选择全部"
               :popper-append-to-body="false"
-            >
+>
               <el-option
-                v-for="item in memberAccountChangeType"
+                v-for="item in AccountChangeDicList"
                 :key="item.code"
                 :label="item.description"
                 :value="item.code"
@@ -331,7 +331,7 @@
             width="150px"
           >
           </el-table-column> -->
-          <el-table-column prop="bizType" align="center" label="业务类型" width="120px">
+          <el-table-column prop="bizType" align="center" label="业务类型" width="120px">~
             <template slot-scope="scope">
               {{
                 scope.row.bizType === 0
@@ -418,10 +418,14 @@ export default {
     this.loadData = this.throttle(this.loadData, 1000)
     this._changeTableSort = this.throttle(this._changeTableSort, 1000)
     return {
-      queryData: {},
+      queryData: {
+        bizType: '0',
+        type: ''
+      },
       loading: true,
       searchTime: [startTime, endTime],
       windControlLevelList: [],
+      AccountChangeDicList: '0',
       walletTypeList: [],
       tableData: [],
       summary: {}
@@ -443,6 +447,8 @@ export default {
   },
   created() {
     this.getWindControllerLevelDict()
+    this.getMerchantDict()
+    this.getMemberFundsRecordsAccountChangeDic()
   },
   methods: {
     getWindControllerLevelDict() {
@@ -451,6 +457,24 @@ export default {
           this.windControlLevelList = res.data
         }
       })
+      // this.$api.getMerchantGameWalletDic({ windControlType: 3 }).then((res) => {
+      //   if (res.code === 200) {
+      //     this.walletTypeList = res.data
+      //   }
+      // })
+    },
+    getMerchantDict(val) {
+       const bizCode = val
+     this.$api.getMemberFundsRecordsAccountChangeDic({bizCode}).then((res) => {
+        if (res.code === 200) {
+          this.AccountChangeDicList = res.data || []
+          console.log(this.AccountChangeDicList, '11')
+        }
+      })
+      console.log(val, 'val')
+    },
+    getMemberFundsRecordsAccountChangeDic() {
+
       // this.$api.getMerchantGameWalletDic({ windControlType: 3 }).then((res) => {
       //   if (res.code === 200) {
       //     this.walletTypeList = res.data

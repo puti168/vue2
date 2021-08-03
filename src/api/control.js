@@ -100,6 +100,14 @@ export function riskEditAddAPI(data) {
 	})
 }
 
+export function getMemberFundsRecordsAccountChangeDic(params) {
+	return request({
+		url: '/memberFundsRecords/accountChangeDic',
+		method: 'get',
+		params
+	})
+}
+
 export default {
 	getSelectWindControlLevel,
 	getSelectWindControlLevelId,
@@ -112,5 +120,6 @@ export default {
 	deleteUser,
 	riskDictAPI,
 	riskEditInfoAPI,
-	riskEditAddAPI
+	riskEditAddAPI,
+	getMemberFundsRecordsAccountChangeDic
 }
