@@ -6,7 +6,7 @@
 					ref="form"
 					:inline="true"
 					:model="queryData"
-					label-width="100px"
+					label-width="80px"
 				>
 					<el-form-item label="使用时间:">
 						<el-date-picker
@@ -21,7 +21,6 @@
 							align="right"
 							:clearable="false"
 							value-format="timestamp"
-							style="width: 382px"
 							:default-time="defaultTime"
 						></el-date-picker>
 					</el-form-item>
@@ -32,7 +31,7 @@
 							placeholder="请输入"
 							clearable
 							maxlength="11"
-							style="width: 180px"
+							style="width: 280px"
 							@keyup.enter.native="enterSearch"
 						></el-input>
 					</el-form-item>
@@ -44,7 +43,7 @@
 							clearable
 							multiple
                             collapse-tags
-							style="width: 300px"
+							style="width: 280px"
 						>
 							<el-option
 								v-for="item in accountTypeArr"
@@ -54,26 +53,14 @@
 							></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="银行卡号:">
-						<el-input
-							v-model="queryData.cardNumber"
-							size="medium"
-							placeholder="请输入"
-							clearable
-							style="width: 180px"
-							maxlength="30"
-							onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
-							@keyup.enter.native="enterSearch"
-						></el-input>
-					</el-form-item>
-					<el-form-item label="风控层级:">
+                    <el-form-item label="风控层级:">
 						<el-select
 							v-model="queryData.windControlId"
 							size="medium"
 							placeholder="全部"
 							clearable
                             multiple
-                            style="width: 300px"
+                            style="width: 280px"
 						>
 							<el-option
 								v-for="item in vipDict"
@@ -83,29 +70,41 @@
 							></el-option>
 						</el-select>
 					</el-form-item>
+					<el-form-item label="银行卡号:">
+						<el-input
+							v-model="queryData.cardNumber"
+							size="medium"
+							placeholder="请输入"
+							clearable
+							style="width: 400px"
+							maxlength="30"
+							onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
+							@keyup.enter.native="enterSearch"
+						></el-input>
+					</el-form-item>
 					<el-form-item label="银行名称:">
 						<el-input
 							v-model="queryData.bankName"
 							size="medium"
 							placeholder="请输入"
 							clearable
-							style="width: 180px"
+							style="width: 280px"
 							maxlength="20"
 							@keyup.enter.native="enterSearch"
 						></el-input>
 					</el-form-item>
-					<el-form-item label="持卡人姓名:">
+					<el-form-item label="持卡人姓名:" label-width="95px">
 						<el-input
 							v-model="queryData.cnName"
 							size="medium"
 							placeholder="请输入"
 							clearable
-							style="width: 180px"
+							style="width: 265px"
 							maxlength="15"
 							@keyup.enter.native="enterSearch"
 						></el-input>
 					</el-form-item>
-					<el-form-item>
+					<el-form-item style="margin-left: 8px">
 						<el-button
 							type="primary"
 							icon="el-icon-search"
@@ -138,7 +137,7 @@
 					:header-cell-style="getRowClass"
 					@sort-change="changeTableSort"
 				>
-					<el-table-column prop="userName" align="center" label="代理账号">
+					<el-table-column prop="userName" align="center" label="代理账号" width="180">
 						<template slot-scope="scope">
 							<Copy
 								v-if="!!scope.row.userName"
@@ -148,7 +147,7 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="accountType" align="center" label="代理类型">
+					<el-table-column prop="accountType" align="center" label="代理类型" width="180">
 						<template slot-scope="scope">
 							<span v-if="!!scope.row.accountType">
 								{{ typeFilter(scope.row.accountType, 'accountType') }}
@@ -156,7 +155,7 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="cardNumber" align="center" label="银行卡号">
+					<el-table-column prop="cardNumber" align="center" label="银行卡号" width="260">
 						<template slot-scope="scope">
 							<Copy
 								v-if="!!scope.row.cardNumber"
@@ -166,7 +165,7 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="bankName" align="center" label="银行名称">
+					<el-table-column prop="bankName" align="center" label="银行名称" width="230">
 						<template slot="header">
 							银行名称
 							<br />
@@ -179,7 +178,7 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="cnName" align="center" label="持卡人">
+					<el-table-column prop="cnName" align="center" label="持卡人" width="160">
 						<template slot-scope="scope">
 							<Copy
 								v-if="!!scope.row.cnName"
@@ -189,7 +188,7 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="bankAddress" align="center" label="开户地址">
+					<el-table-column prop="bankAddress" align="center" label="开户地址" width="230">
 						<template slot-scope="scope">
 							<span v-if="!!scope.row.bankAddress">
 								{{ scope.row.bankAddress }}
@@ -197,7 +196,7 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="operateType" align="center" label="风控层级">
+					<el-table-column prop="operateType" align="center" label="风控层级" width="160">
 						<template slot-scope="scope">
 							<span v-if="!!scope.row.windControlName">
 								{{ scope.row.windControlName }}
@@ -210,6 +209,7 @@
 						align="center"
 						label="提款时间"
 						sortable="custom"
+                        min-width="200"
 					>
 						<template slot-scope="scope">
 							<span v-if="!!scope.row.createDt">

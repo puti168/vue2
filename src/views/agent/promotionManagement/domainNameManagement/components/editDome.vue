@@ -58,7 +58,7 @@
             v-model="formData.domainType"
             size="medium"
             placeholder="全部"
-            style="width: 430px"
+            style="width: 100%"
           >
             <el-option
               v-for="item in enumProxyDomainTypeOperate"
@@ -72,7 +72,7 @@
           <el-input v-model.number="formData.displayOrder"></el-input>
         </el-form-item>
         <el-form-item label="状态:">
-          <el-select v-model="formData.status" placeholder="请选择" :disabled="!control">
+          <el-select v-model="formData.status" placeholder="请选择" :disabled="!control" style="width: 100%">
             <el-option
               v-for="item in domainStatusType"
               :key="item.description"
@@ -244,7 +244,7 @@ export default {
   padding-bottom: 30px;
 }
 .formBox {
-  width: 50%;
+  width: 70%;
   margin: 100px auto;
 }
 </style>

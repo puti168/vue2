@@ -2,7 +2,7 @@
   <div class="game-container report-container">
     <div class="view-container dealer-container">
       <div class="params">
-        <el-form ref="form" :inline="true" :model="queryData">
+        <el-form ref="form" :inline="true" :model="queryData" label-width="80px">
           <el-form-item label="操作时间:">
             <el-date-picker
               v-model="searchTime"
@@ -16,7 +16,6 @@
               align="right"
               :clearable="false"
               :default-time="defaultTime"
-              style="width: 375px"
             ></el-date-picker>
           </el-form-item>
           <el-form-item label="代理账号:">
@@ -25,7 +24,7 @@
               clearable
               :maxlength="11"
               size="medium"
-              style="width: 200px; margin-right: 20px"
+              style="width: 280px"
               placeholder="请输入"
               :disabled="loading"
               @keyup.enter.native="enterSearch"
@@ -34,7 +33,7 @@
           <el-form-item label="代理类型:" class="tagheight" prop="accountType">
             <el-select
               v-model="queryData.accountType"
-              style="width: 300px"
+              style="width: 280px"
               multiple
               clearable
               collapse-tags
@@ -52,7 +51,7 @@
           <el-form-item label="变更类型:" class="tagheight">
             <el-select
               v-model="queryData.applyType"
-              style="width: 300px"
+              style="width: 280px"
               multiple
               clearable
               collapse-tags
@@ -73,7 +72,7 @@
               clearable
               :maxlength="12"
               size="medium"
-              style="width: 180px"
+              style="width: 211px"
               placeholder="请输入"
               :disabled="loading"
               @keyup.enter.native="enterSearch"
@@ -166,6 +165,7 @@
             align="center"
             label="操作时间"
             sortable="custom"
+            width="260"
           ></el-table-column>
         </el-table>
         <!-- 分页 -->

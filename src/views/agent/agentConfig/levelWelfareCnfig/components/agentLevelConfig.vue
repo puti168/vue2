@@ -31,16 +31,18 @@
           align="center"
           label="序号"
           prop="displayOrder"
+          width="100"
         ></el-table-column>
         <el-table-column
           prop="proxyGradeName"
           align="center"
           label="代理等级"
+          width="110"
         ></el-table-column>
-        <el-table-column prop="monthActiveNum" align="center" label="本月活跃人数">
+        <el-table-column prop="monthActiveNum" align="center" label="本月活跃人数" width="130">
           <template slot-scope="scope"> ≥ &nbsp;{{ scope.row.monthActiveNum }} </template>
         </el-table-column>
-        <el-table-column prop="monthNewNum" align="center" label="本月新增活跃人数">
+        <el-table-column prop="monthNewNum" align="center" label="本月新增活跃人数" width="130">
           <template slot-scope="scope"> ≥ &nbsp;{{ scope.row.monthNewNum }} </template>
         </el-table-column>
         <el-table-column align="center" label="等级福利" width="250px">
@@ -50,10 +52,10 @@
             }}元
           </template>
         </el-table-column>
-        <el-table-column prop="giveJackpot" align="center" label="游戏彩金">
+        <el-table-column prop="giveJackpot" align="center" label="游戏彩金" width="150">
           <template slot-scope="scope"> {{ scope.row.giveJackpot }}元 </template>
         </el-table-column>
-        <el-table-column prop="createdBy" align="center" label="创建人"></el-table-column>
+        <el-table-column prop="createdBy" align="center" label="创建人" width="120"></el-table-column>
         <el-table-column
           prop="createdAt"
           align="center"
@@ -65,6 +67,7 @@
           prop="updatedBy"
           align="center"
           label="最近操作人"
+          width="120"
         ></el-table-column>
         <el-table-column
           prop="updatedAt"
@@ -73,7 +76,7 @@
           label="最近操作时间"
           sortable="custom"
         ></el-table-column>
-        <el-table-column prop="operating" align="center" label="操作" width="150px">
+        <el-table-column prop="operating" align="center" label="操作" min-width="150px">
           <template slot-scope="scope">
             <el-button
               v-if="hasPermission('289')"

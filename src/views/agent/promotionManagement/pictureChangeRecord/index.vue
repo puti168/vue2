@@ -1,7 +1,7 @@
 <template>
 	<div class="game-container report-container">
 		<div class="params">
-			<el-form ref="form" :inline="true" :model="queryData">
+			<el-form ref="form" :inline="true" :model="queryData" label-width="80px">
 				<el-form-item label="变更时间:">
 					<el-date-picker
 						v-model="searchTime"
@@ -23,7 +23,7 @@
 						size="medium"
 						placeholder="默认选择全部"
 						clearable
-						style="width: 300px"
+						style="width: 280px"
 					>
 						<el-option
 							v-for="item in enumProxyMaterialImageOperateArr"
@@ -39,7 +39,7 @@
 						clearable
 						size="medium"
 						:maxlength="12"
-						style="width: 180px"
+						style="width: 280px"
 						placeholder="请输入"
 						@keyup.enter.native="enterSearch"
 					></el-input>

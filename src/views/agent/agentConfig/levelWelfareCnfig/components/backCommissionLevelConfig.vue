@@ -31,45 +31,48 @@
           align="center"
           label="序号"
           prop="displayOrder"
+          width="120"
         ></el-table-column>
         <el-table-column
           prop="rebateLevel"
           align="center"
           label="佣金等级"
+          width="150"
         ></el-table-column>
-        <el-table-column prop="totalMinNetAmount" align="center" label="本月总输赢">
+        <el-table-column prop="totalMinNetAmount" align="center" label="本月总输赢" width="200">
           <template slot-scope="scope">
             {{ scope.row.totalMinNetAmount }} ~
             {{ scope.row.totalMaxNetAmount }}
           </template>
         </el-table-column>
-        <el-table-column prop="monthActiveNum" align="center" label="本月活跃人数">
+        <el-table-column prop="monthActiveNum" align="center" label="本月活跃人数" width="120">
           <template slot-scope="scope"> ≥ &nbsp;{{ scope.row.monthActiveNum }} </template>
         </el-table-column>
-        <el-table-column prop="commissionRate" align="center" label="佣金比例">
+        <el-table-column prop="commissionRate" align="center" label="佣金比例" width="120">
           <template slot-scope="scope"> {{ scope.row.commissionRate }}% </template>
         </el-table-column>
-        <el-table-column prop="createdBy" align="center" label="创建人"></el-table-column>
+        <el-table-column prop="createdBy" align="center" label="创建人" width="120"></el-table-column>
         <el-table-column
           prop="createdAt"
           align="center"
           label="创建时间"
-          width="160px"
+          width="200px"
           sortable="custom"
         ></el-table-column>
         <el-table-column
           prop="updatedBy"
           align="center"
           label="最近操作人"
+          width="150"
         ></el-table-column>
         <el-table-column
           prop="updatedAt"
           align="center"
-          width="160px"
+          width="200px"
           label="最近操作时间"
           sortable="custom"
         ></el-table-column>
-        <el-table-column prop="operating" align="center" label="操作" width="150px">
+        <el-table-column prop="operating" align="center" label="操作" min-width="150px">
           <template slot-scope="scope">
             <el-button
               v-if="hasPermission('292')"

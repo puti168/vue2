@@ -2,7 +2,7 @@
   <div class="game-container report-container">
     <div class="view-container dealer-container">
       <div class="params">
-        <el-form ref="form" :inline="true" :model="queryData">
+        <el-form ref="form" :inline="true" :model="queryData" label-width="80px">
           <el-form-item label="登录时间:">
             <el-date-picker
               v-model="loginTime"
@@ -16,7 +16,6 @@
               align="right"
               :clearable="false"
               :default-time="defaultTime"
-              style="width: 375px"
             ></el-date-picker>
           </el-form-item>
           <el-form-item label="代理账号:">
@@ -25,7 +24,7 @@
               clearable
               maxlength="11"
               size="medium"
-              style="width: 200px; margin-right: 20px"
+              style="width: 280px"
               placeholder="请输入"
               :disabled="loading"
               @keyup.enter.native="enterSearch"
@@ -34,7 +33,7 @@
           <el-form-item label="代理类型:" class="tagheight" prop="accountType">
             <el-select
               v-model="queryData.accountType"
-              style="width: 300px"
+              style="width: 280px"
               multiple
               clearable
               collapse-tags
@@ -71,7 +70,7 @@
               clearable
               :maxlength="15"
               size="medium"
-              style="width: 180px"
+              style="width: 210px"
               placeholder="请输入内容"
               :disabled="loading"
               @keyup.enter.native="enterSearch"
@@ -83,7 +82,7 @@
               clearable
               :maxlength="10"
               size="medium"
-              style="width: 180px"
+              style="width: 210px"
               placeholder="请输入内容"
               :disabled="loading"
               @keyup.enter.native="enterSearch"
@@ -92,7 +91,7 @@
           <el-form-item label="登录终端:" class="tagheight" prop="deviceType">
             <el-select
               v-model="queryData.deviceType"
-              style="width: 300px"
+              style="width: 221px"
               multiple
               clearable
               collapse-tags
@@ -107,19 +106,19 @@
               ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="终端设备号:" prop="deviceNo">
+          <el-form-item label="终端设备号:" prop="deviceNo" label-width="90px">
             <el-input
               v-model="queryData.deviceNo"
               clearable
               :maxlength="50"
               size="medium"
-              style="width: 180px"
+              style="width: 215px"
               placeholder="请输入内容"
               :disabled="loading"
               @keyup.enter.native="enterSearch"
             ></el-input>
           </el-form-item>
-          <el-form-item>
+          <el-form-item style="margin-left: 8px">
             <el-button
               type="primary"
               icon="el-icon-search"
@@ -175,14 +174,15 @@
             prop="loginTime"
             align="center"
             label="登录时间"
+            width="180"
             sortable="custom"
           ></el-table-column>
-          <el-table-column prop="loginStatus" align="center" label="登录状态">
+          <el-table-column prop="loginStatus" align="center" label="登录状态" width="100">
             <template slot-scope="scope">
               {{ typeFilter(scope.row.loginStatus, "loginStatusType") }}
             </template>
           </el-table-column>
-          <el-table-column prop="userName" align="center" label="代理账号">
+          <el-table-column prop="userName" align="center" label="代理账号" width="120">
             <template slot-scope="scope">
               <Copy v-if="!!scope.row.userName" :title="scope.row.userName" :copy="copy">
                 {{ scope.row.userName }}
@@ -190,12 +190,12 @@
               <span v-else>-</span>
             </template>
           </el-table-column>
-          <el-table-column prop="accountType" align="center" label="代理类型">
+          <el-table-column prop="accountType" align="center" label="代理类型" width="120">
             <template slot-scope="scope">
               {{ typeFilter(scope.row.accountType, "accountType") }}
             </template>
           </el-table-column>
-          <el-table-column prop="loginIp" align="center" label="登录IP">
+          <el-table-column prop="loginIp" align="center" label="登录IP" width="150">
             <template slot="header">
               登录IP
               <br />
@@ -218,13 +218,14 @@ class="redColor"
             prop="ipAttribution"
             align="center"
             label="IP归属地"
+            width="150"
           ></el-table-column>
-          <el-table-column prop="deviceType" align="center" label="登录终端">
+          <el-table-column prop="deviceType" align="center" label="登录终端" width="150">
             <template slot-scope="scope">
               {{ typeFilter(scope.row.deviceType, "loginDeviceType") }}
             </template>
           </el-table-column>
-          <el-table-column prop="deviceNo" align="center" label="终端设备号">
+          <el-table-column prop="deviceNo" align="center" label="终端设备号" width="150">
             <template slot="header">
               终端设备号
               <br />
@@ -249,16 +250,19 @@ class="redColor"
             prop="loginReference"
             align="center"
             label="登录地址"
+            width="150"
           ></el-table-column>
           <el-table-column
             prop="browseContent"
             align="center"
             label="设备版本"
+            min-width="200"
           ></el-table-column>
           <el-table-column
             prop="loginError"
             align="center"
             label="备注"
+            width="150"
           ></el-table-column>
         </el-table>
         <!-- 分页 -->
