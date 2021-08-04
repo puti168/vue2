@@ -166,7 +166,7 @@
 						align="center"
 						label="登录时间"
 						sortable="custom"
-                        width="200"
+						width="200"
 					></el-table-column>
 					<el-table-column
 						prop="loginStatus"
@@ -187,7 +187,7 @@
 						prop="userName"
 						align="center"
 						label="会员账号"
-                        width="120"
+						width="120"
 					>
 						<Copy :title="scope.row.userName" :copy="copy" />
 					</el-table-column>
@@ -231,19 +231,24 @@
 						prop="ipAttribution"
 						align="center"
 						label="IP归属地"
-                        width="120"
+						width="120"
 					></el-table-column>
 					<el-table-column
 						prop="deviceType"
 						align="center"
 						label="登录终端"
-						width="80"
+						width="120"
 					>
 						<template slot-scope="scope">
-							{{ typeFilter(scope.row.deviceType, 'loginDeviceType') }}
+							{{ typeFilter(scope.row.deviceType, 'userType') }}
 						</template>
 					</el-table-column>
-					<el-table-column prop="deviceNo" align="center" label="终端设备号" width="200">
+					<el-table-column
+						prop="deviceNo"
+						align="center"
+						label="终端设备号"
+						width="200"
+					>
 						<template slot="header">
 							终端设备号
 							<br />
@@ -268,7 +273,7 @@
 						prop="loginReference"
 						align="center"
 						label="登录地址"
-                        width="200"
+						width="200"
 					></el-table-column>
 					<el-table-column
 						prop="browseContent"
@@ -318,13 +323,13 @@ export default {
 		this.reset = this.throttle(this.reset, 1000)
 		return {
 			queryData: {
-				userName: '',
+				userName: null,
 				accountType: [],
-				loginStatus: '',
-				loginIp: '',
-				ipAttribution: '',
+				loginStatus: null,
+				loginIp: null,
+				ipAttribution: null,
 				deviceType: [],
-				deviceNo: ''
+				deviceNo: null
 			},
 			accountType1: [],
 			deviceType1: [],
@@ -348,7 +353,7 @@ export default {
 			return this.globalDics.loginStatusType
 		},
 		deviceType() {
-			return this.globalDics.loginDeviceType
+			return this.globalDics.userType || []
 		}
 	},
 	mounted() {},
@@ -380,7 +385,8 @@ export default {
 			this.$api
 				.memberLoginLog(params)
 				.then((res) => {
-					if (res.code === 200) {
+					const { code } = res
+					if (res && code === 200) {
 						this.now = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
 						const response = res.data
 						this.loading = false
@@ -404,13 +410,13 @@ export default {
 		},
 		reset() {
 			this.queryData = {
-				userName: '',
+				userName: null,
 				accountType: [],
-				loginStatus: '',
-				loginIp: '',
-				ipAttribution: '',
+				loginStatus: null,
+				loginIp: null,
+				ipAttribution: null,
 				deviceType: [],
-				deviceNo: ''
+				deviceNo: null
 			}
 			this.pageNum = 1
 			this.accountType1 = []
