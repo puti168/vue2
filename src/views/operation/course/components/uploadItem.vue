@@ -55,6 +55,7 @@
 </template>
 
 <script>
+import list from '@/mixins/list'
 import Video from '@/components/Video'
 const FileTypeConst = {
 	ImageJpeg: 'image/jpeg',
@@ -80,6 +81,7 @@ const UploadStateConst = {
 }
 export default {
 	name: 'UploadItem',
+	mixins: [list],
 	components: {
 		Video
 	},

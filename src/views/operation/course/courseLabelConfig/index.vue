@@ -222,7 +222,7 @@
 				:title="title"
 				:visible.sync="dialogFormVisible"
 				:destroy-on-close="true"
-				width="520px"
+				width="820px"
 				class="rempadding"
 				@close="clear"
 			>
@@ -230,7 +230,7 @@
 				<el-form
 					ref="formSub"
 					:model="dialogForm"
-					label-width="120px"
+					label-width="220px"
 				>
 					<el-form-item
             label="教程名称:"
@@ -239,37 +239,24 @@
               { required: true, message: '教程名称不能为空', trigger: 'blur' },
             ]"
           >
-						<el-input
-							v-model="dialogForm.pageName"
-							:maxlength="20"
-							autocomplete="off"
-							style="width: 330px"
-							placeholder="请输入"
-							clearable
-						></el-input>
+						<el-select
+              v-model="queryData.status"
+              size="medium"
+              placeholder="请选择"
+              clearable
+              style="width: 500px"
+            >
+              <el-option
+                v-for="item in entrAuthorityTypeArr"
+                :key="item.code"
+                :label="item.description"
+                :value="item.code"
+              ></el-option>
+            </el-select>
 					</el-form-item>
 					<el-form-item
-            label="教程描述:"
-            prop="clientType"
-            :rules="[
-              { required: true, message: '教程描述不能为空', trigger: 'blur' },
-            ]"
-          >
-						<el-input
-							v-model="dialogForm.pagede"
-							:maxlength="20"
-							autocomplete="off"
-							style="width: 330px"
-							placeholder="请输入"
-							clearable
-						></el-input>
-					</el-form-item>
-					<el-form-item
-            label="教程图片:"
+            label="页签图标:"
             prop="pictureUrl"
-            :rules="[
-              { required: true, message: '教程图片不能为空', trigger: 'change' },
-            ]"
           >
 						<UploadItem
 							ref="imgUpload"
@@ -281,6 +268,26 @@
 							@deleteUpoladItem="handleDeleteUpload"
 							@upoladItemDefeat="handleUploadDefeat"
 						></UploadItem>
+            <div class="remakeBox">
+              <span class="danger">*</span>图片格式仅支持png，jpg <br />
+              <span class="danger">*</span>图片大小不能超过2MB
+            </div>
+					</el-form-item>
+          <el-form-item
+            label="页签名称:"
+            prop="clientType"
+            :rules="[
+              { required: true, message: '页签名称不能为空', trigger: 'blur' },
+            ]"
+          >
+						<el-input
+							v-model="dialogForm.pagede"
+							:maxlength="20"
+							autocomplete="off"
+							style="width: 500px"
+							placeholder="请输入"
+							clearable
+						></el-input>
 					</el-form-item>
 				</el-form>
 				<el-divider></el-divider>
@@ -526,6 +533,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.remakeBox {
+  width: 164px;
+  position: absolute;
+  left: 200px;
+  bottom: 0;
+  line-height: 20px;
+}
 /deep/.el-dialog__header {
   color: #909399;
   font-weight: 700;

@@ -205,7 +205,7 @@
 				:title="title"
 				:visible.sync="dialogFormVisible"
 				:destroy-on-close="true"
-				width="520px"
+				width="820px"
 				class="rempadding"
 				@close="clear"
 			>
@@ -213,7 +213,7 @@
 				<el-form
 					ref="formSub"
 					:model="dialogForm"
-					label-width="120px"
+					 label-width="220px"
 				>
 					<el-form-item
             label="教程名称:"
@@ -226,7 +226,7 @@
 							v-model="dialogForm.pageName"
 							:maxlength="20"
 							autocomplete="off"
-							style="width: 330px"
+							style="width: 500px"
 							placeholder="请输入"
 							clearable
 						></el-input>
@@ -242,7 +242,7 @@
 							v-model="dialogForm.pagede"
 							:maxlength="20"
 							autocomplete="off"
-							style="width: 330px"
+							style="width: 500px"
 							placeholder="请输入"
 							clearable
 						></el-input>
@@ -264,6 +264,10 @@
 							@deleteUpoladItem="handleDeleteUpload"
 							@upoladItemDefeat="handleUploadDefeat"
 						></UploadItem>
+            <div class="remakeBox">
+              <span class="danger">*</span>图片格式仅支持png，jpg <br />
+              <span class="danger">*</span>图片大小不能超过2MB
+            </div>
 					</el-form-item>
 				</el-form>
 				<el-divider></el-divider>
@@ -509,6 +513,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.remakeBox {
+  width: 164px;
+  position: absolute;
+  left: 200px;
+  bottom: 0;
+  line-height: 20px;
+}
 /deep/.el-dialog__header {
   color: #909399;
   font-weight: 700;
