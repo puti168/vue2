@@ -392,21 +392,24 @@ export default {
 			this.$api
 				.memberLoginLog(params)
 				.then((res) => {
-					const { code } = res
+					this.loading = false
+					const { code, msg } = res
 					if (res && code === 200) {
 						this.now = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
-						const response = res.data
-						this.loading = false
-						this.dataList = response !== null ? response.record : []
-						this.total = response !== null ? response.totalRecord : 0
-						this.summary =
-							response !== null
-								? response.summary
-								: { count: 0, failCount: 0, successCount: 0 }
+						const data = res.data
+						this.dataList =
+							(data &&
+								data.record &&
+								data.record.length &&
+								Object.freeze(data.record)) ||
+							[]
+						this.total = (data && data.totalRecord) || 0
+						this.summary = data
+							? data.summary
+							: { count: 0, failCount: 0, successCount: 0 }
 					} else {
-						this.loading = false
 						this.$message({
-							message: res.msg,
+							message: res && msg,
 							type: 'error'
 						})
 					}
