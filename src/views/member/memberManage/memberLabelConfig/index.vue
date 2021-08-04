@@ -46,7 +46,7 @@
 							重置
 						</el-button>
 						<el-button
-                            v-if="hasPermission('240')"
+							v-if="hasPermission('240')"
 							type="warning"
 							icon="el-icon-folder"
 							:disabled="loading"
@@ -76,52 +76,62 @@
 					></el-table-column>
 					<el-table-column prop="description" align="center" label="标签描述">
 						<template slot-scope="scope">
-							<span v-if="scope.row.description !== ''">
-								{{ scope.row.description }}
-							</span>
-							<span v-else>-</span>
+							{{ scope.row.description || '-' }}
 						</template>
 					</el-table-column>
 					<el-table-column prop="peopleNum" align="center" label="标签人数">
 						<template slot-scope="scope">
-							<span v-if="scope.row.peopleNum === null">-</span>
 							<div
-								v-else
+								v-if="!!scope.row.peopleNum || scope.row.peopleNum + '' === '0'"
 								class="blueColor decoration"
 								@click="lookGame(scope.row)"
 							>
 								{{ scope.row.peopleNum }}
 							</div>
+							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column
-						prop="createdBy"
-						align="center"
-						label="创建人"
-					></el-table-column>
+					<el-table-column prop="createdBy" align="center" label="创建人">
+						<template slot-scope="scope">
+							{{ scope.row.createdBy || '-' }}
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="createdAt"
 						align="center"
 						label="创建时间"
 						sortable="custom"
-                        width="180"
-					></el-table-column>
-					<el-table-column
-						prop="updatedBy"
-						align="center"
-						label="最近操作人"
-					></el-table-column>
+						width="180"
+					>
+						<template slot-scope="scope">
+							{{ scope.row.createdAt || '-' }}
+						</template>
+					</el-table-column>
+					<el-table-column prop="updatedBy" align="center" label="最近操作人">
+						<template slot-scope="scope">
+							{{ scope.row.updatedBy || '-' }}
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="updatedAt"
 						align="center"
 						label="最近操作时间"
 						sortable="custom"
-                        width="180"
-					></el-table-column>
-					<el-table-column prop="operating" align="center" label="操作" width="210">
+						width="180"
+					>
+						<template slot-scope="scope">
+							{{ scope.row.updatedAt || '-' }}
+						</template>
+					</el-table-column>
+					<el-table-column
+						prop="operating"
+						align="center"
+						label="操作"
+						width="210"
+					>
 						<template slot-scope="scope">
 							<el-button
-                                v-if="hasPermission('241')"
+								v-if="hasPermission('241')"
 								type="primary"
 								icon="el-icon-edit"
 								size="medium"
@@ -131,7 +141,7 @@
 							</el-button>
 
 							<el-button
-                                v-if="hasPermission('242')"
+								v-if="hasPermission('242')"
 								type="warning"
 								icon="el-icon-delete"
 								size="medium"
@@ -210,7 +220,13 @@
 				</el-form>
 				<div slot="footer" class="dialog-footer">
 					<el-button @click="dialogFormVisible = false">取消</el-button>
-					<el-button type="primary" :disabled="subAddOrEidtDisabled" @click="subAddOrEidt">保存</el-button>
+					<el-button
+						type="primary"
+						:disabled="subAddOrEidtDisabled"
+						@click="subAddOrEdit"
+					>
+						保存
+					</el-button>
 				</div>
 			</el-dialog>
 			<el-dialog
@@ -271,8 +287,8 @@ export default {
 	components: {},
 	mixins: [list],
 	data() {
-        this.search = this.throttle(this.search, 1000)
-        this.reset = this.throttle(this.reset, 1000)
+		this.search = this.throttle(this.search, 1000)
+		this.reset = this.throttle(this.reset, 1000)
 		return {
 			queryData: {},
 			tableData: [],
@@ -286,10 +302,9 @@ export default {
 			page: 1,
 			size: 5,
 			summary: 0,
-            subAddOrEidtDisabled: false
+			subAddOrEidtDisabled: false
 		}
 	},
-	computed: {},
 	mounted() {},
 	methods: {
 		loadData() {
@@ -303,12 +318,16 @@ export default {
 			this.$api
 				.getMemberPageLabel(params)
 				.then((res) => {
-					if (res.code === 200) {
-						this.tableData = res.data.record
-						this.total = res.data.totalRecord
-						this.loading = false
+					this.loading = false
+					const { code, msg } = res
+					if (res && code === 200) {
+						this.tableData = (res.data && res.data.record) || []
+						this.total = (res.data && res.data.totalRecord) || 0
 					} else {
-						this.loading = false
+						this.$message({
+							message: res && msg,
+							type: 'error'
+						})
 					}
 				})
 				.catch(() => {
@@ -323,7 +342,7 @@ export default {
 			params.pageSize = this.size
 			this.$api.getMemberMemberInfoByLabelId(params).then((res) => {
 				if (res.code === 200) {
-					this.gameList = res.data.record
+					this.gameList = res.data.record || []
 					this.dialogGameVisible = true
 				}
 			})
@@ -350,6 +369,7 @@ export default {
 			this.dialogFormVisible = true
 		},
 		deleteLabel(val) {
+			const { id } = val
 			this.$confirm(
 				`<strong>是否删除该条配置?</strong>
         </br><span style='font-size:12px;color:#c1c1c1'>请谨慎操作</span>`,
@@ -362,8 +382,9 @@ export default {
 				}
 			)
 				.then(() => {
-					this.$api.setMemberDeleteLabel({ id: val.id }).then((res) => {
-						if (res.code === 200) {
+					this.$api.setMemberDeleteLabel({ id }).then((res) => {
+						const { code } = res
+						if (res && code === 200) {
 							this.$message.success('删除成功')
 							this.loadData()
 						}
@@ -371,53 +392,57 @@ export default {
 				})
 				.catch(() => {})
 		},
-		subAddOrEidt() {
+		subAddOrEdit() {
 			const data = {}
-            const delayer = this.disabledDelay('subAddOrEidtDisabled', false, 1000)
+			const delayer = this.disabledDelay('subAddOrEidtDisabled', false, 1000)
 			data.description = this.dialogForm.description
 			data.memberLabelName = this.dialogForm.memberLabelName
 			this.$refs.formSub.validate((valid) => {
 				if (valid) {
-                    this.subAddOrEidtDisabled = true
+					this.subAddOrEidtDisabled = true
 					if (this.title === '新增') {
-						console.log('新增')
-
-						this.$api.setMemberAddOrEditMemberLabel(data).then((res) => {
-							if (res.code === 200) {
-								this.$message.success('新增成功')
-								this.pageNum = 1
-								this.loadData()
-							}
-							this.dialogFormVisible = false
-                            delayer()
-						}).catch(() => {
-                            delayer()
-                        })
+						this.$api
+							.setMemberAddOrEditMemberLabel(data)
+							.then((res) => {
+								const { code } = res
+								if (res && code === 200) {
+									this.$message.success('新增成功')
+									this.pageNum = 1
+									this.loadData()
+								}
+								this.dialogFormVisible = false
+								delayer()
+							})
+							.catch(() => {
+								delayer()
+							})
 					} else {
 						data.id = this.dialogForm.id
-						this.$api.setMemberAddOrEditMemberLabel(data).then((res) => {
-							if (res.code === 200) {
-								this.$message.success('修改成功')
-								this.loadData()
-							}
-							this.dialogFormVisible = false
-                            delayer()
-						}).catch(() => {
-                            delayer()
-                        })
+						this.$api
+							.setMemberAddOrEditMemberLabel(data)
+							.then((res) => {
+								const { code } = res
+								if (res && code === 200) {
+									this.$message.success('修改成功')
+									this.loadData()
+								}
+								this.dialogFormVisible = false
+								delayer()
+							})
+							.catch(() => {
+								delayer()
+							})
 					}
 				}
 			})
 		},
-		_changeTableSort({ column, prop, order }) {
-			if (prop === 'createdAt') {
-				prop = 1
-			}
-			if (prop === 'updatedAt') {
-				prop = 2
+		_changeTableSort({ prop, order }) {
+			const obj = {
+				createdAt: 1,
+				updatedAt: 2
 			}
 			this.pageNum = 1
-			this.queryData.orderKey = prop
+			this.queryData.orderKey = prop && obj[prop]
 			if (order === 'ascending') {
 				// 升序
 				this.queryData.orderType = 'asc'
@@ -434,12 +459,10 @@ export default {
 			this.$refs.formSub.resetFields()
 		},
 		handleCurrentChangeDialog(val) {
-			console.log(111, val)
 			this.page = val
 			this.getMemberMemberInfoByLabelId(this.id)
 		},
 		handleSizeChangeDialog(val) {
-			console.log(222, val)
 			this.size = val
 			this.getMemberMemberInfoByLabelId(this.id)
 		}
