@@ -371,10 +371,10 @@ export default {
 				...this.queryData,
 				loginStartTime: startTime
 					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
-					: '',
+					: undefined,
 				loginEndTime: endTime
 					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
-					: ''
+					: undefined
 			}
 			if (!params.loginStartTime || !params.loginEndTime) {
 				this.$message({
