@@ -42,20 +42,10 @@
 				class="common-align-center"
 			/>
 		</el-upload>
-		<el-dialog v-if="isImage" :visible.sync="dialogVisible" size="tiny">
-			<img width="100%" :src="dialogUrl" alt />
-		</el-dialog>
-		<Video
-			v-else
-			:src="dialogUrl"
-			:value="dialogVisible"
-			@input="handleClose"
-		/>
 	</div>
 </template>
 
 <script>
-import Video from '@/components/Video'
 const FileTypeConst = {
 	ImageJpeg: 'image/jpeg',
 	ImagePng: 'image/png',
@@ -80,9 +70,6 @@ const UploadStateConst = {
 }
 export default {
 	name: 'UploadItem',
-	components: {
-		Video
-	},
 	props: {
 		size: {
 			type: String,
@@ -115,7 +102,6 @@ export default {
 		}
 	},
 	data() {
-		this.uploadFile = this.throttle(this.uploadFile, 1000)
 		return {
 			dialogUrl: '',
 			dialogVisible: false,
@@ -491,8 +477,8 @@ $mini-size: 100px;
 }
 .delete-icon {
 	position: absolute;
-	right: 0px;
-	top: 0px;
+	right: 0;
+	top: 0;
 }
 .el-progress-circle {
 	width: 100px !important;

@@ -123,7 +123,7 @@ const agent = [
 	{
 		id: '119',
 		parentId: '47',
-		path: '/agent/promotionManagement/pictureManagement',
+		path: '/agent/promotionManagement/pictureManage',
 		title: '推广图片管理'
 	},
 	{

@@ -121,7 +121,7 @@ export default {
 		}
 	},
 	data() {
-		this.add = this.throttle(this.add, 1000)
+        this.add = this.throttle(this.add, 1000)
 		return {
 			loading: false,
 			queryData: {
@@ -138,10 +138,10 @@ export default {
 	},
 	computed: {
 		materialPictureTypeArr() {
-			return this.globalDics.materialPictureType
+			return this.globalDics.materialPictureType || []
 		},
 		pictureSizeTypeArr() {
-			return this.globalDics.pictureSizeType
+			return this.globalDics.pictureSizeType || []
 		},
 		imageSize() {
 			return {

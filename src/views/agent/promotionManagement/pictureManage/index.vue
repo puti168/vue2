@@ -146,9 +146,14 @@
 						:data="dataList"
 						style="width: 100%"
 						:header-cell-style="getRowClass"
-                        @sort-change="_changeTableSort"
+						@sort-change="_changeTableSort"
 					>
-						<el-table-column prop="displayOrder" align="center" label="排序" width="120">
+						<el-table-column
+							prop="displayOrder"
+							align="center"
+							label="排序"
+							width="120"
+						>
 							<template slot-scope="scope">
 								<span
 									v-if="
@@ -160,7 +165,12 @@
 								<span v-else>-</span>
 							</template>
 						</el-table-column>
-						<el-table-column prop="imageName" align="center" label="图片标题" width="200">
+						<el-table-column
+							prop="imageName"
+							align="center"
+							label="图片标题"
+							width="200"
+						>
 							<template slot-scope="scope">
 								<span v-if="!!scope.row.imageName">
 									{{ scope.row.imageName }}
@@ -168,7 +178,12 @@
 								<span v-else>-</span>
 							</template>
 						</el-table-column>
-						<el-table-column prop="imageType" align="center" label="图片类型" width="150">
+						<el-table-column
+							prop="imageType"
+							align="center"
+							label="图片类型"
+							width="150"
+						>
 							<template slot-scope="scope">
 								<span v-if="!!scope.row.imageType">
 									{{ typeFilter(scope.row.imageType, 'materialPictureType') }}
@@ -176,7 +191,12 @@
 								<span v-else>-</span>
 							</template>
 						</el-table-column>
-						<el-table-column prop="imageSize" align="center" label="图片尺寸" width="200">
+						<el-table-column
+							prop="imageSize"
+							align="center"
+							label="图片尺寸"
+							width="200"
+						>
 							<template slot-scope="scope">
 								<span v-if="!!scope.row.imageSize">
 									{{ typeFilter(scope.row.imageSize, 'pictureSizeType') }}
@@ -184,7 +204,12 @@
 								<span v-else>-</span>
 							</template>
 						</el-table-column>
-						<el-table-column prop="createdBy" align="center" label="创建人" width="150">
+						<el-table-column
+							prop="createdBy"
+							align="center"
+							label="创建人"
+							width="150"
+						>
 							<template slot-scope="scope">
 								<span v-if="!!scope.row.createdBy">
 									{{ scope.row.createdBy }}
@@ -197,7 +222,7 @@
 							align="center"
 							label="创建时间"
 							sortable="custom"
-                            width="200"
+							width="200"
 						>
 							<template slot-scope="scope">
 								<span v-if="!!scope.row.createdAt">
@@ -206,7 +231,12 @@
 								<span v-else>-</span>
 							</template>
 						</el-table-column>
-						<el-table-column prop="cnName" align="center" label="最近操作人" width="150">
+						<el-table-column
+							prop="cnName"
+							align="center"
+							label="最近操作人"
+							width="150"
+						>
 							<template slot-scope="scope">
 								<span v-if="!!scope.row.updatedBy">
 									{{ scope.row.updatedBy }}
@@ -219,7 +249,7 @@
 							align="center"
 							label="最近操作时间"
 							sortable="custom"
-                            width="220"
+							width="220"
 						>
 							<template slot-scope="scope">
 								<span v-if="!!scope.row.updatedAt">
@@ -289,9 +319,9 @@
 				width="750px"
 				class="imgCenter"
 			>
-                <div class="img-box">
-                    <img v-lazy="imageAddress" />
-                </div>
+				<div class="img-box">
+					<img v-lazy="imageAddress" />
+				</div>
 			</el-dialog>
 		</div>
 		<editPage v-else :editData="editData" @back="back"></editPage>
@@ -309,11 +339,12 @@ const start = dayjs()
 const end = dayjs()
 	.endOf('day')
 	.valueOf()
-import editPage from './components/editPage'
-// import { UTable } from 'umy-ui'
+
 export default {
 	name: routerNames.pictureManagement,
-	components: { editPage },
+	components: {
+        editPage: () => import('./components/editPage')
+	},
 	mixins: [list],
 	data() {
 		this.loadData = this.throttle(this.loadData, 1000)
@@ -339,10 +370,10 @@ export default {
 	},
 	computed: {
 		materialPictureTypeArr() {
-			return this.globalDics.materialPictureType
+			return this.globalDics.materialPictureType || []
 		},
 		pictureSizeTypeArr() {
-			return this.globalDics.pictureSizeType
+			return this.globalDics.pictureSizeType || []
 		}
 	},
 	mounted() {},
@@ -429,26 +460,26 @@ export default {
 			this.imageAddress = imageAddress
 			this.dialogPictureVisible = true
 		},
-        _changeTableSort({ column, prop, order }) {
-            if (prop === 'createdAt') {
-                prop = 1
-            }
-            if (prop === 'updatedAt') {
-                prop = 2
-            }
-            this.queryData.orderKey = prop
-            if (order === 'ascending') {
-                // 升序
-                this.queryData.orderType = 'asc'
-            } else if (column.order === 'descending') {
-                // 降序
-                this.queryData.orderType = 'desc'
-            } else {
-                delete this.queryData.orderKey
-                delete this.queryData.orderType
-            }
-            this.loadData()
-        },
+		_changeTableSort({ column, prop, order }) {
+			if (prop === 'createdAt') {
+				prop = 1
+			}
+			if (prop === 'updatedAt') {
+				prop = 2
+			}
+			this.queryData.orderKey = prop
+			if (order === 'ascending') {
+				// 升序
+				this.queryData.orderType = 'asc'
+			} else if (column.order === 'descending') {
+				// 降序
+				this.queryData.orderType = 'desc'
+			} else {
+				delete this.queryData.orderKey
+				delete this.queryData.orderType
+			}
+			this.loadData()
+		},
 		deleteRow(val) {
 			const { id } = val
 			const loading = this.$loading({
@@ -512,7 +543,7 @@ export default {
 	.img-box {
 		height: 500px;
 		img {
-            margin:0;
+			margin: 0;
 			width: 100%;
 			height: 100%;
 		}
