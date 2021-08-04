@@ -222,7 +222,7 @@
 							placeholder="默认选择全部"
 							clearable
 							multiple
-                            collapse-tags
+							collapse-tags
 							style="width: 230px"
 						>
 							<el-option
@@ -316,7 +316,7 @@
 						prop="userName"
 						align="center"
 						label="会员账号"
-						width="150px"
+						width="150"
 					>
 						<template slot-scope="scope">
 							<Copy
@@ -350,7 +350,7 @@
 						prop="parentProxyName"
 						align="center"
 						label="代理上级"
-						width="150px"
+						width="150"
 					>
 						<template slot-scope="scope">
 							<Copy
@@ -373,10 +373,7 @@
 					</el-table-column>
 					<el-table-column prop="labelName" align="center" label="会员标签">
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.labelName">
-								{{ scope.row.labelName }}
-							</span>
-							<span v-else>-</span>
+							{{ scope.row.labelName || '-' }}
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -385,10 +382,7 @@
 						label="风控层级"
 					>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.windControlName">
-								{{ scope.row.windControlName }}
-							</span>
-							<span v-else>-</span>
+							{{ scope.row.windControlName || '-' }}
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -415,7 +409,7 @@
 						<template slot-scope="scope">
 							<span
 								v-if="
-									!!scope.row.transforNum || scope.row.transforNum * 1 === 0
+									!!scope.row.transforNum || scope.row.transforNum + '' === '0'
 								"
 							>
 								{{ scope.row.transforNum }}
@@ -427,7 +421,7 @@
 						prop="accountStatus"
 						align="center"
 						label="账号状态"
-						width="100px"
+						width="100"
 					>
 						<template slot-scope="scope">
 							<span
@@ -469,12 +463,15 @@
 						prop="vipSerialNum"
 						align="center"
 						label="VIP等级"
-						width="100px"
+						width="100"
 						sortable="custom"
 					>
 						<template slot-scope="scope">
 							<span
-								v-if="!!scope.row.vipSerialNum || scope.row.vipSerialNum === 0"
+								v-if="
+									!!scope.row.vipSerialNum ||
+										scope.row.vipSerialNum + '' === '0'
+								"
 							>
 								{{ scope.row.vipSerialNum }}
 							</span>
@@ -485,14 +482,11 @@
 						prop="createDt"
 						align="center"
 						label="注册时间"
-						width="180px"
+						width="180"
 						sortable="custom"
 					>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.createDt">
-								{{ scope.row.createDt }}
-							</span>
-							<span v-else>-</span>
+							{{ scope.row.createDt || '-' }}
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -503,10 +497,7 @@
 						sortable="custom"
 					>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.firstDepositTime">
-								{{ scope.row.firstDepositTime }}
-							</span>
-							<span v-else>-</span>
+							{{ scope.row.firstDepositTime || '-' }}
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -514,13 +505,13 @@
 						align="center"
 						label="首存金额"
 						sortable="custom"
-						width="100px"
+						width="100"
 					>
 						<template slot-scope="scope">
 							<span
 								v-if="
 									!!scope.row.firstDepositAmount ||
-										scope.row.firstDepositAmount === 0
+										scope.row.firstDepositAmount + '' === '0'
 								"
 							>
 								{{ scope.row.firstDepositAmount }}
@@ -532,11 +523,13 @@
 						prop="userBalance"
 						align="center"
 						label="中心钱包"
-						width="100px"
+						width="100"
 					>
 						<template slot-scope="scope">
 							<span
-								v-if="!!scope.row.userBalance || scope.row.userBalance === 0"
+								v-if="
+									!!scope.row.userBalance || scope.row.userBalance + '' === '0'
+								"
 							>
 								{{ scope.row.userBalance }}
 							</span>
@@ -547,26 +540,25 @@
 						prop="lastLoginTime"
 						align="center"
 						label="最后登录时间"
-						width="180px"
+						width="180"
 						sortable="custom"
 					>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.lastLoginTime">
-								{{ scope.row.lastLoginTime }}
-							</span>
-							<span v-else>-</span>
+							{{ scope.row.lastLoginTime || '-' }}
 						</template>
 					</el-table-column>
 					<el-table-column
 						prop="offLineDays"
 						align="center"
 						label="离线天数"
-						width="150px"
+						width="150"
 						sortable="custom"
 					>
 						<template slot-scope="scope">
 							<span
-								v-if="!!scope.row.offLineDays || scope.row.offLineDays === 0"
+								v-if="
+									!!scope.row.offLineDays || scope.row.offLineDays + '' === '0'
+								"
 							>
 								{{ scope.row.offLineDays }}
 							</span>
@@ -603,8 +595,6 @@
 <script>
 import list from '@/mixins/list'
 import dayjs from 'dayjs'
-// import { mapGetters } from 'vuex'
-// import { UTable } from 'umy-ui'
 import { routerNames } from '@/utils/consts'
 const start = dayjs()
 	.startOf('day')
@@ -1069,5 +1059,4 @@ export default {
 	color: #909399;
 	font-weight: 700;
 }
-
 </style>
