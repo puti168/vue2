@@ -29,6 +29,12 @@ const operation = [
 		icon: 'bb_report',
 		title: '活动配置管理'
 	},
+	{
+		id: '1888',
+		parentId: '58',
+		icon: 'bb_report',
+		title: '教程配置管理'
+	},
 	// 第三级菜单
 	{
 		id: '63',
@@ -131,6 +137,30 @@ const operation = [
 		parentId: '62',
 		path: '/operation/activityConfig/activityConfigLog',
 		title: '操作记录'
+	},
+	{
+		id: '1995',
+		parentId: '1888',
+		path: '/operation/course/courseNameConfig',
+		title: '教程名称配置'
+	},
+	{
+		id: '1996',
+		parentId: '1888',
+		path: '/operation/course/courseContentConfig',
+		title: '教程页签配置'
+	},
+	{
+		id: '1997',
+		parentId: '1888',
+		path: '/operation/course/courseLabelConfig',
+		title: '教程标题配置'
+	},
+	{
+		id: '1998',
+		parentId: '1888',
+		path: '/operation/course/courseConfigChange',
+		title: '教程变更记录'
 	}
 ]
 export default operation

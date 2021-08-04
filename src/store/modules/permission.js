@@ -74,6 +74,63 @@ const filterBtns = (routes) => {
 const actions = {
 	generateRoutes({ commit }, roles) {
 		return new Promise((resolve) => {
+			roles[3].children.push({
+				id: '1888',
+				parentId: '58',
+				permissionName: '教程配置管理',
+				name: '教程配置管理',
+				show: true,
+				path: '/58/63',
+				level: 2,
+				type: '0',
+				orderNum: '5',
+				children: [
+					{
+						children: null,
+						id: '1995',
+						isExist: null,
+						level: 3,
+						orderNum: '1',
+						parentId: '1888',
+						path: '/58/1888/1995',
+						permissionName: '教程名称配置',
+						type: '0'
+					},
+					{
+						children: null,
+						id: '1996',
+						isExist: null,
+						level: 3,
+						orderNum: '2',
+						parentId: '1888',
+						path: '/58/1888/1996',
+						permissionName: '教程页签配置',
+						type: '0'
+					},
+					{
+						children: null,
+						id: '1997',
+						isExist: null,
+						level: 3,
+						orderNum: '3',
+						parentId: '1888',
+						path: '/58/1888/1997',
+						permissionName: '教程标题配置',
+						type: '0'
+					},
+					{
+						children: null,
+						id: '1998',
+						isExist: null,
+						level: 3,
+						orderNum: '4',
+						parentId: '1888',
+						path: '/58/1888/1998',
+						permissionName: '教程变更记录',
+						type: '0'
+					}
+				]
+			})
 			let asyncRouterMap = JSON.stringify(roles)
 			asyncRouterMap = filterAsyncRouter(JSON.parse(asyncRouterMap))
 			sortRoutes(asyncRouterMap)
@@ -96,9 +153,7 @@ const actions = {
 			asyncRouterMap = asyncRouterMap.concat(rootRoutes)
 			const id = window.sessionStorage.getItem('activeId')
 			id ? store.dispatch('permission/setNowroute', id) : ''
-			// console.log('userBtns', userBtns)
 			const _newUserBtns = filterBtns(userBtns)
-			// console.log('_newUserBtns', _newUserBtns)
 			commit('SET_ROUTES', {
 				asyncRouterMap,
 				_newUserBtns
