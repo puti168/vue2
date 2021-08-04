@@ -3,17 +3,7 @@
     <div class="view-container dealer-container">
       <div class="params">
         <el-form ref="form" :inline="true" :model="queryData">
-          <el-form-item label="统计日期:" prop="statisticsTime">
-            <el-date-picker
-              v-model="statisticsTime"
-              type="daterange"
-              range-separator="-"
-              :clearable="false"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-              :picker-options="timeControl"
-            ></el-date-picker>
-          </el-form-item>
+
           <el-form-item label="注册日期:" prop="registerTime">
             <el-date-picker
               v-model="registerTime"
@@ -31,7 +21,7 @@
               size="medium"
               placeholder="请输入"
               clearable
-              style="width: 180px"
+              style="width: 230px"
               maxlength="11"
             ></el-input>
           </el-form-item>
@@ -41,7 +31,7 @@
               size="medium"
               placeholder="请输入"
               clearable
-              style="width: 180px"
+              style="width: 230px"
               maxlength="11"
             ></el-input>
           </el-form-item>
@@ -62,12 +52,23 @@
               ></el-option>
             </el-select>
           </el-form-item>
+        <el-form-item label="统计日期:" prop="statisticsTime">
+            <el-date-picker
+              v-model="statisticsTime"
+              type="daterange"
+              range-separator="-"
+              :clearable="false"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+              :picker-options="timeControl"
+            ></el-date-picker>
+          </el-form-item>
           <el-form-item label="注单量:">
             <el-input
               v-model="queryData.betCountMin"
               size="medium"
               placeholder="最小数值"
-              style="width: 100px"
+              style="width: 116px"
               maxlength="10"
               name="betCountMin"
               oninput="value=value.replace(/[^\d]/g,'')"
@@ -78,7 +79,7 @@
               v-model="queryData.betCountMax"
               size="medium"
               placeholder="最大数值"
-              style="width: 100px"
+              style="width: 116px"
               maxlength="10"
               oninput="value=value.replace(/[^\d]/g,'')"
               name="betCountMax"
@@ -90,7 +91,7 @@
               v-model="queryData.betAmountMin"
               size="medium"
               placeholder="最小数值"
-              style="width: 100px"
+              style="width: 108px"
               :min="0"
               :max="999999999999999.99"
               :precision="2"
@@ -102,7 +103,7 @@
               v-model="queryData.betAmountMax"
               size="medium"
               placeholder="最大数值"
-              style="width: 100px"
+              style="width: 108px"
               :min="0"
               :max="999999999999999.99"
               :precision="2"
@@ -269,6 +270,7 @@
             align="center"
             label="会员账号"
             fixed
+            width="120"
           >
             <template slot-scope="scope">
               <el-link
@@ -286,6 +288,7 @@
             prop="realName"
             align="center"
             label="姓名"
+            width="110"
           >
             <template slot-scope="scope">
               <Copy v-if="!!scope.row.realName" :title="scope.row.realName" :copy="copy">
@@ -299,6 +302,7 @@
             prop="accountType"
             align="center"
             label="账号类型"
+            width="110"
           >
             <template slot-scope="scope">
               <span v-if="scope.row.accountType">
@@ -312,6 +316,7 @@
             prop="parentProxyName"
             align="center"
             label="上级代理"
+            width="110"
           >
             <template slot-scope="scope">
               <Copy
@@ -330,6 +335,7 @@
             align="center"
             label="VIP等级"
             sortable="custom"
+            width="110"
           >
             <template slot-scope="scope">
               {{ scope.row.vipSerialNum }}
@@ -340,6 +346,7 @@
             prop="accountStatus"
             align="center"
             label="账号状态"
+            width="110"
           >
             <template slot-scope="scope">
               <span
@@ -365,6 +372,7 @@
             prop="labelName"
             align="center"
             label="会员标签"
+            width="100"
           >
             <template slot-scope="scope">
               <span v-if="!!scope.row.labelName">
@@ -379,6 +387,7 @@
             prop="windControlName"
             align="center"
             label="风控层级"
+            width="100"
           >
             <template slot-scope="scope">
               <span v-if="!!scope.row.windControlName">
@@ -393,6 +402,7 @@
             align="center"
             label="注册时间"
             sortable="custom"
+            width="160"
           >
             <template slot-scope="scope">
               {{ scope.row.betCount }}
@@ -404,6 +414,7 @@
             align="center"
             label="首存金额"
             sortable="custom"
+            width="120"
           >
             <template slot-scope="scope">
               {{ scope.row.betCount }}
@@ -415,6 +426,7 @@
             align="center"
             label="总存款"
             sortable="custom"
+            width="160"
           >
             <template slot-scope="scope">
               {{ scope.row.betCount }}
@@ -426,6 +438,7 @@
             align="center"
             label="存款次数"
             sortable="custom"
+            width="100"
           >
             <template slot-scope="scope">
               {{ scope.row.betCount }}
@@ -437,6 +450,7 @@
             align="center"
             label="上级转入"
             sortable="custom"
+            width="160"
           >
             <template slot="header">
               <span>上级转入</span>
@@ -455,6 +469,7 @@
             align="center"
             label="转入次数"
             sortable="custom"
+            width="100"
           >
             <template slot-scope="scope">
               {{ scope.row.betCount }}
@@ -466,6 +481,7 @@
             align="center"
             label="转中心钱包"
             sortable="custom"
+            width="160"
           >
             <template slot="header">
               <span>转中心钱包</span>
@@ -486,6 +502,7 @@
             align="center"
             label="转回次数"
             sortable="custom"
+            width="100"
           >
             <template slot-scope="scope">
               {{ scope.row.betCount }}
@@ -497,6 +514,7 @@
             align="center"
             label="总取款"
             sortable="custom"
+            width="160"
           >
             <template slot-scope="scope">
               {{ scope.row.betCount }}
@@ -508,6 +526,7 @@
             align="center"
             label="取款次数"
             sortable="custom"
+            width="100"
           >
             <template slot-scope="scope">
               {{ scope.row.betCount }}
@@ -519,6 +538,7 @@
             align="center"
             label="大额取款次数"
             sortable="custom"
+            width="120"
           >
             <template slot-scope="scope">
               {{ scope.row.betCount }}
@@ -530,6 +550,7 @@
             align="center"
             label="存取差"
             sortable="custom"
+            width="150"
           >
             <template slot-scope="scope">
               {{ scope.row.betCount }}
@@ -541,6 +562,7 @@
             align="center"
             label="总优惠"
             sortable="custom"
+            width="150"
           >
             <template slot-scope="scope">
               {{ scope.row.betCount }}
@@ -552,6 +574,7 @@
             align="center"
             label="总返水"
             sortable="custom"
+            width="150"
           >
             <template slot-scope="scope">
               {{ scope.row.betCount }}
@@ -563,6 +586,7 @@
             align="center"
             label="其他调整"
             sortable="custom"
+            width="120"
           >
             <template slot-scope="scope">
               {{ scope.row.betCount }}
@@ -574,6 +598,7 @@
             align="center"
             label="注单量"
             sortable="custom"
+            width="110"
           >
             <template slot-scope="scope">
               {{ scope.row.betCount }}
@@ -585,6 +610,7 @@
             align="center"
             label="投注金额"
             sortable="custom"
+            width="160"
           >
             <template slot-scope="scope">
               {{ scope.row.betAmount | filterDecimals }}
@@ -596,6 +622,7 @@
             align="center"
             label="有效投注"
             sortable="custom"
+            width="160"
           >
             <template slot-scope="scope">
               {{ scope.row.validBetAmount | filterDecimals }}
@@ -607,6 +634,7 @@
             align="center"
             label="投注盈亏"
             sortable="custom"
+            width="160"
           >
             <template slot="header">
               <span>投注盈亏</span>
@@ -634,6 +662,7 @@
             align="center"
             label="转代次数"
             sortable="custom"
+            width="100"
           >
             <template slot-scope="scope">
               {{ scope.row.validBetAmount | filterDecimals }}
@@ -645,6 +674,7 @@
             align="center"
             label="中心钱包余额"
             sortable="custom"
+            width="160"
           >
             <template slot-scope="scope">
               {{ scope.row.validBetAmount | filterDecimals }}
@@ -656,6 +686,7 @@
             align="center"
             label="钱包总余额"
             sortable="custom"
+            width="160"
           >
             <template slot-scope="scope">
               {{ scope.row.validBetAmount | filterDecimals }}

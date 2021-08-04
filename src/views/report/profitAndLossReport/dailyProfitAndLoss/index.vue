@@ -74,12 +74,14 @@
             prop="staticsDate"
             align="center"
             label="日期"
+            width="180"
           ></el-table-column>
           <el-table-column
             v-if="dailyProfitAndLoss['总优惠']"
             prop="discountAmount"
             align="center"
             label="总优惠"
+            width="160"
           >
             <template slot="header">
               <span>总优惠</span>
@@ -103,6 +105,7 @@
             prop="rebateAmount"
             align="center"
             label="总返水"
+            width="160"
           >
             <template slot="header">
               <span>总返水</span>
@@ -124,6 +127,7 @@
             prop="artificialPatchAmount"
             align="center"
             label="其他调整"
+            width="150"
           >
             <template slot="header">
               <span>其他调整</span>
@@ -147,18 +151,21 @@
             prop="memberCount"
             align="center"
             label="投注人数"
+            width="120"
           ></el-table-column>
           <el-table-column
             v-if="dailyProfitAndLoss['投注量']"
             prop="betCount"
             align="center"
             label="投注量"
+            width="130"
           ></el-table-column>
           <el-table-column
             v-if="dailyProfitAndLoss['投注金额']"
             prop="betAmount"
             align="center"
             label="投注金额"
+            width="180"
           >
             <template slot-scope="scope">
               {{ scope.row.betAmount | filterDecimals }}
@@ -168,7 +175,8 @@
             v-if="dailyProfitAndLoss['有效投注']"
             prop="validBetAmount"
             align="center"
-            label="有效投注 "
+            label="有效投注"
+            width="180"
           >
             <template slot-scope="scope">
               {{ scope.row.validBetAmount | filterDecimals }}
@@ -179,6 +187,7 @@
             prop="netAmount"
             align="center"
             label="投注盈亏"
+            width="200"
           >
             <template slot="header">
               <span>投注盈亏</span>
@@ -209,6 +218,7 @@
             prop="net"
             align="center"
             label="净盈亏"
+            min-width="200"
           >
             <template slot="header">
               <span>净盈亏</span>

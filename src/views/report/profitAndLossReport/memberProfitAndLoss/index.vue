@@ -207,6 +207,7 @@
             prop="userName"
             align="center"
             label="会员账号"
+            width="130"
           >
             <template slot-scope="scope">
               <el-link
@@ -224,6 +225,7 @@
             prop="realName"
             align="center"
             label="姓名"
+            width="120"
           >
             <template slot-scope="scope">
               <Copy v-if="!!scope.row.realName" :title="scope.row.realName" :copy="copy">
@@ -237,6 +239,7 @@
             prop="accountType"
             align="center"
             label="账号类型"
+            width="110"
           >
             <template slot-scope="scope">
               <span v-if="scope.row.accountType">
@@ -250,6 +253,7 @@
             prop="parentProxyName"
             align="center"
             label="上级代理"
+            width="130"
           >
             <template slot-scope="scope">
               <Copy
@@ -267,6 +271,7 @@
             prop="vipSerialNum"
             align="center"
             label="VIP等级"
+            width="110"
           >
             <template slot-scope="scope">
               {{ scope.row.vipSerialNum }}
@@ -277,6 +282,7 @@
             prop="accountStatus"
             align="center"
             label="账号状态"
+            width="110"
           >
             <template slot-scope="scope">
               <span
@@ -302,6 +308,7 @@
             prop="labelName"
             align="center"
             label="会员标签"
+            width="130"
           >
             <template slot-scope="scope">
               <span v-if="!!scope.row.labelName">
@@ -316,6 +323,7 @@
             prop="windControlName"
             align="center"
             label="风控层级"
+            width="100"
           >
             <template slot-scope="scope">
               <span v-if="!!scope.row.windControlName">
@@ -330,6 +338,7 @@
             align="center"
             label="注单量"
             sortable="custom"
+            width="110"
           >
             <template slot-scope="scope">
               {{ scope.row.betCount }}
@@ -341,6 +350,7 @@
             align="center"
             label="投注金额"
             sortable="custom"
+            width="200"
           >
             <template slot-scope="scope">
               {{ scope.row.betAmount | filterDecimals }}
@@ -352,6 +362,7 @@
             align="center"
             label="有效投注"
             sortable="custom"
+            width="200"
           >
             <template slot-scope="scope">
               {{ scope.row.validBetAmount | filterDecimals }}
@@ -363,6 +374,7 @@
             align="center"
             label="投注盈亏"
             sortable="custom"
+            width="200"
           >
             <template slot="header">
               <span>投注盈亏</span>
