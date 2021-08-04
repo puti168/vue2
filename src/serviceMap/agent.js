@@ -33,61 +33,61 @@ const agent = [
 	{
 		id: '49',
 		parentId: '45',
-		path: '/agent/agentManagement/agentList',
+		path: '/agent/agentManage/agentList',
 		title: '代理列表'
 	},
 	{
 		id: '50',
 		parentId: '45',
-		path: '/agent/agentManagement/agentDetails',
+		path: '/agent/agentManage/agentDetails',
 		title: '代理详情'
 	},
 	{
 		id: '51',
 		parentId: '45',
-		path: '/agent/agentManagement/addAgent',
+		path: '/agent/agentManage/addAgent',
 		title: '新增代理'
 	},
 	{
 		id: '52',
 		parentId: '45',
-		path: '/agent/agentManagement/memberTransfer',
+		path: '/agent/agentManage/memberTransfer',
 		title: '会员转代申请'
 	},
 	{
 		id: '53',
 		parentId: '45',
-		path: '/agent/agentManagement/memberOverflow',
+		path: '/agent/agentManage/memberOverflow',
 		title: '会员溢出申请'
 	},
 	{
 		id: '54',
 		parentId: '45',
-		path: '/agent/agentManagement/agentLogin',
+		path: '/agent/agentManage/agentLogin',
 		title: '代理登录信息'
 	},
 	{
 		id: '55',
 		parentId: '45',
-		path: '/agent/agentManagement/agentRegisterInfo',
+		path: '/agent/agentManage/agentRegisterInfo',
 		title: '代理注册信息'
 	},
 	{
 		id: '56',
 		parentId: '45',
-		path: '/agent/agentManagement/agentBankCard',
+		path: '/agent/agentManage/agentBankCard',
 		title: '代理银行卡记录'
 	},
 	{
 		id: '121',
 		parentId: '45',
-		path: '/agent/agentManagement/agentVirtualRecord',
+		path: '/agent/agentManage/agentVirtualRecord',
 		title: '代理虚拟币账号记录'
 	},
 	{
 		id: '122',
 		parentId: '45',
-		path: '/agent/agentManagement/agentInfoChange',
+		path: '/agent/agentManage/agentInfoChange',
 		title: '代理信息变更记录'
 	},
 	{
