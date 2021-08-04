@@ -226,7 +226,7 @@
 					<el-button @click="dialogFormVisible = false">取消</el-button>
 					<el-button
 						type="primary"
-						:disabled="subAddOrEidtDisabled"
+						:disabled="subAddOrEditDisabled"
 						@click="subAddOrEdit"
 					>
 						保存
@@ -306,7 +306,7 @@ export default {
 			page: 1,
 			size: 5,
 			summary: 0,
-			subAddOrEidtDisabled: false
+			subAddOrEditDisabled: false
 		}
 	},
 	mounted() {},
@@ -398,12 +398,12 @@ export default {
 		},
 		subAddOrEdit() {
 			const data = {}
-			const delayer = this.disabledDelay('subAddOrEidtDisabled', false, 1000)
+			const delayer = this.disabledDelay('subAddOrEditDisabled', false, 1000)
 			data.description = this.dialogForm.description
 			data.memberLabelName = this.dialogForm.memberLabelName
 			this.$refs.formSub.validate((valid) => {
 				if (valid) {
-					this.subAddOrEidtDisabled = true
+					this.subAddOrEditDisabled = true
 					if (this.title === '新增') {
 						this.$api
 							.setMemberAddOrEditMemberLabel(data)
