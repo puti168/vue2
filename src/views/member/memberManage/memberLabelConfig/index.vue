@@ -73,7 +73,11 @@
 						prop="memberLabelName"
 						align="center"
 						label="标签名称"
-					></el-table-column>
+					>
+                        <template slot-scope="scope">
+                            {{ scope.row.memberLabelName || '-' }}
+                        </template>
+                    </el-table-column>
 					<el-table-column prop="description" align="center" label="标签描述">
 						<template slot-scope="scope">
 							{{ scope.row.description || '-' }}
