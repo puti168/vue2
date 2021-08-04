@@ -156,7 +156,6 @@ const endTime = dayjs()
 	.valueOf()
 
 export default {
-	components: {},
 	mixins: [list],
 	data() {
 		this.search = this.throttle(this.search, 1000)
@@ -183,7 +182,6 @@ export default {
 			return this.globalDics.labelApplyType || []
 		}
 	},
-	mounted() {},
 	methods: {
 		loadData() {
 			this.loading = true
@@ -226,7 +224,7 @@ export default {
 			this.searchTime = [startTime, endTime]
 			this.loadData()
 		},
-		_changeTableSort({ column, prop, order }) {
+		_changeTableSort({ prop, order }) {
 			this.pageNum = 1
 			this.queryData.orderKey = prop
 			if (order === 'ascending') {
