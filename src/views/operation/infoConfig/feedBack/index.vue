@@ -131,7 +131,6 @@
           <el-table-column
             prop="levelId"
             align="center"
-            sortable="custom"
             label="VIP等级"
           >
             <template slot-scope="scope">
