@@ -37,7 +37,7 @@
 							multiple
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
-                            clearable
+							clearable
 						>
 							<el-option
 								v-for="item in applyTypeArr"
@@ -99,15 +99,14 @@
 					></el-table-column>
 					<el-table-column prop="labelName" align="center" label="标签名称">
 						<template slot-scope="scope">
-							<span v-if="scope.row.labelName !== null">
-								{{ scope.row.labelName }}
-							</span>
-							<span v-else>-</span>
+							{{ scope.row.labelName || '-' }}
 						</template>
 					</el-table-column>
 					<el-table-column prop="applyType" align="center" label="变更类型">
 						<template slot-scope="scope">
-							<span v-if="!!(scope.row.applyType+'')">
+							<span
+								v-if="!!scope.row.applyType || scope.row.applyType + '' === '0'"
+							>
 								{{ typeFilter(scope.row.applyType, 'labelApplyType') }}
 							</span>
 							<span v-else>-</span>
@@ -115,25 +114,19 @@
 					</el-table-column>
 					<el-table-column prop="beforeModify" align="center" label="变更前">
 						<template slot-scope="scope">
-							<span v-if="scope.row.beforeModify !== null">
-								{{ scope.row.beforeModify }}
-							</span>
-							<span v-else>-</span>
+							{{ scope.row.beforeModify || '-' }}
 						</template>
 					</el-table-column>
 					<el-table-column prop="afterModify" align="center" label="变更后">
 						<template slot-scope="scope">
-							<span v-if="scope.row.afterModify !== null">
-								{{ scope.row.afterModify }}
-							</span>
-							<span v-else>-</span>
+							{{ scope.row.afterModify || '-' }}
 						</template>
 					</el-table-column>
-					<el-table-column
-						prop="createdBy"
-						align="center"
-						label="操作人"
-					></el-table-column>
+					<el-table-column prop="createdBy" align="center" label="操作人">
+						<template slot-scope="scope">
+							{{ scope.row.createdBy || '-' }}
+						</template>
+					</el-table-column>
 				</el-table>
 				<!-- 分页 -->
 				<el-pagination
@@ -166,8 +159,8 @@ export default {
 	components: {},
 	mixins: [list],
 	data() {
-        this.search = this.throttle(this.search, 1000)
-        this.reset = this.throttle(this.reset, 1000)
+		this.search = this.throttle(this.search, 1000)
+		this.reset = this.throttle(this.reset, 1000)
 		return {
 			queryData: {
 				createdBy: undefined,
@@ -187,7 +180,7 @@ export default {
 	},
 	computed: {
 		applyTypeArr() {
-			return this.globalDics.labelApplyType
+			return this.globalDics.labelApplyType || []
 		}
 	},
 	mounted() {},
@@ -211,12 +204,16 @@ export default {
 			this.$api
 				.getMemberLabelChangeRecordPage(params)
 				.then((res) => {
-					if (res.code === 200) {
-						this.tableData = res.data.record
-						this.total = res.data.totalRecord
-						this.loading = false
+					this.loading = false
+					const { code, msg } = res
+					if (res && code === 200) {
+						this.tableData = (res.data && res.data.record) || []
+						this.total = (res.data && res.data.totalRecord) || 0
 					} else {
-						this.loading = false
+                        this.$message({
+                            message: res && msg,
+                            type: 'error'
+                        })
 					}
 				})
 				.catch(() => {
