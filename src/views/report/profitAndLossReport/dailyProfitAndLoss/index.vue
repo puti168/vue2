@@ -27,7 +27,7 @@
             </el-button>
             <el-button
               icon="el-icon-refresh-left"
-              :disabled="loading"
+              :disabled="flag"
               size="medium"
               @click="reset"
             >
@@ -248,10 +248,12 @@
         title="列设置"
         center
         :visible.sync="visible"
-        width="300px"
+        width="500px"
         class="col-setting"
       >
-        <el-link type="primary" @click="clickDel">复原缺省</el-link>
+        <div>
+          <el-link type="primary" @click="clickDel">复原缺省</el-link>
+        </div>
         <div v-for="(value, name) in dailyProfitAndLoss" :key="name" class="setting-div">
           <el-checkbox v-if="newList.length > 0" v-model="newList[0][name]">{{
             name
@@ -269,6 +271,7 @@
 <script>
 import list from '@/mixins/list'
 import dayjs from 'dayjs'
+import { Decimal } from 'decimal.js'
 const startTime = dayjs().startOf('day').valueOf() - 6 * 24 * 60 * 60 * 1000
 const endTime = dayjs().endOf('day').valueOf()
 
@@ -277,7 +280,7 @@ export default {
   filters: {
     filterDecimals: function (val) {
       if (typeof val === 'number') {
-        const newVal = (Math.floor(val * 1000) / 1000).toFixed(2)
+        const newVal = val.toFixed(2, Decimal.ROUND_DOWN)
         return newVal
       } else {
         return '-'
@@ -337,7 +340,8 @@ export default {
         净盈亏: true
       },
       myName: '',
-      newList: []
+      newList: [],
+      timecount: null
     }
   },
   computed: {},
@@ -377,16 +381,7 @@ export default {
         .objectStore('dailyProfitAndLoss')
         .add({
           id: this.myName,
-          日期: true,
-          总优惠: true,
-          总返水: true,
-          其他调整: true,
-          投注人数: true,
-          投注量: true,
-          投注金额: true,
-          有效投注: true,
-          投注盈亏: true,
-          净盈亏: true
+          obj: this.dailyProfitAndLoss
         })
       request.onsuccess = (event) => {
         this.getList()
@@ -406,38 +401,20 @@ export default {
           for (let i = 0; i < list.length; i++) {
             const ele = list[i]
             if (ele.id === this.myName) {
-              this.newList.push(ele)
-              this.dailyProfitAndLoss = { ...ele }
-              delete this.dailyProfitAndLoss.id
+              this.newList.push(ele.obj)
+              this.dailyProfitAndLoss = { ...ele.obj }
             }
           }
         }
       }
     },
     confirm() {
-      console.log(this.newList, 446464)
-      const arr = []
-      for (let i = 0; i < this.newList.length; i++) {
-        const ele = this.newList[i]
-        if (ele.id === this.myName) {
-          arr.push(ele)
-        }
-      }
       const request = this.db
         .transaction(['dailyProfitAndLoss'], 'readwrite')
         .objectStore('dailyProfitAndLoss')
         .put({
           id: this.myName,
-          日期: arr[0]['日期'],
-          总优惠: arr[0]['总优惠'],
-          总返水: arr[0]['总返水'],
-          其他调整: arr[0]['其他调整'],
-          投注人数: arr[0]['投注人数'],
-          投注量: arr[0]['投注量'],
-          投注金额: arr[0]['投注金额'],
-          有效投注: arr[0]['有效投注'],
-          投注盈亏: arr[0]['投注盈亏'],
-          净盈亏: arr[0]['净盈亏']
+          obj: this.newList[0]
         })
       request.onsuccess = (event) => {
         this.visible = false
@@ -452,7 +429,6 @@ export default {
     clickDel(id) {
       this.newList = []
       this.newList.push({
-        id: this.myName,
         日期: true,
         总优惠: true,
         总返水: true,
@@ -516,11 +492,12 @@ export default {
       if (endTime - startTime <= this.day31) {
         this.flag = true
         let t = 10
-        const timecount = setInterval(() => {
+        clearInterval(this.timecount)
+        this.timecount = setInterval(() => {
           t--
           this.queryText = t + 's'
           if (t < 0) {
-            clearInterval(timecount)
+            clearInterval(this.timecount)
             this.queryText = '查询'
             this.flag = false
           }
@@ -539,7 +516,7 @@ export default {
     },
     filterDecimals: function (val) {
       if (typeof val === 'number') {
-        const newVal = (Math.floor(val * 1000) / 1000).toFixed(2)
+        const newVal = val.toFixed(2, Decimal.ROUND_DOWN)
         return newVal
       } else {
         return '-'
@@ -841,5 +818,9 @@ export default {
 }
 .fenye {
   text-align: center;
+}
+.setting-div {
+  display: inline-block;
+  min-width: 90px;
 }
 </style>

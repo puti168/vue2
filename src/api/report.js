@@ -120,6 +120,14 @@ export function getDevicetypenetamountAggregation(params) {
 		params
 	})
 }
+// 新增会员留存报表列表==>分页查询新增会员留存报表列表
+export function getReportNewMemberRetentionDay(data) {
+	return request({
+		url: '/report/newMemberRetentionDay/listPage',
+		method: 'post',
+		data
+	})
+}
 
 export default {
 	getReportMembernetamountList,
@@ -136,5 +144,6 @@ export default {
 	getGameManagerSelectGameByPlatform,
 	getDevicetypenetamountList,
 	getDevicetypenetamountDetail,
-	getDevicetypenetamountAggregation
+	getDevicetypenetamountAggregation,
+	getReportNewMemberRetentionDay
 }

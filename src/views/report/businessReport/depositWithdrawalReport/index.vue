@@ -82,7 +82,7 @@
             prop="userName"
             align="center"
             label="日期"
-            width="160px"
+            min-width="160px"
             fixed
           >
           </el-table-column>
@@ -90,7 +90,7 @@
             v-if="depositWithdrawalReport['类型']"
             prop="realName"
             align="center"
-            width="160px"
+            min-width="160px"
             label="类型"
           >
           </el-table-column>
@@ -98,7 +98,7 @@
             v-if="depositWithdrawalReport['存款人数']"
             prop="accountType"
             align="center"
-            width="160px"
+            min-width="160px"
             label="存款人数"
           >
           </el-table-column>
@@ -106,7 +106,7 @@
             v-if="depositWithdrawalReport['存款次数']"
             prop="parentProxyName"
             align="center"
-            width="160px"
+            min-width="160px"
             label="存款次数"
           >
           </el-table-column>
@@ -114,7 +114,7 @@
             v-if="depositWithdrawalReport['存款总额']"
             prop="vipSerialNum"
             align="center"
-            width="160px"
+            min-width="160px"
             label="存款总额"
           >
           </el-table-column>
@@ -122,7 +122,7 @@
             v-if="depositWithdrawalReport['取款人数']"
             prop="accountStatus"
             align="center"
-            width="160px"
+            min-width="160px"
             label="取款人数"
           >
           </el-table-column>
@@ -130,7 +130,7 @@
             v-if="depositWithdrawalReport['大额取款人数']"
             prop="labelName"
             align="center"
-            width="160px"
+            min-width="160px"
             label="大额取款人数"
           >
           </el-table-column>
@@ -139,7 +139,7 @@
             v-if="depositWithdrawalReport['取款次数']"
             prop="windControlName"
             align="center"
-            width="160px"
+            min-width="160px"
             label="取款次数"
           >
           </el-table-column>
@@ -147,7 +147,7 @@
             v-if="depositWithdrawalReport['大额取款次数']"
             prop="betCount"
             align="center"
-            width="160px"
+            min-width="160px"
             label="大额取款次数"
           >
           </el-table-column>
@@ -155,7 +155,7 @@
             v-if="depositWithdrawalReport['大额取款金额']"
             prop="betCount"
             align="center"
-            width="160px"
+            min-width="160px"
             label="大额取款金额"
           >
           </el-table-column>
@@ -163,7 +163,7 @@
             v-if="depositWithdrawalReport['取款总额']"
             prop="betCount"
             align="center"
-            width="160px"
+            min-width="160px"
             label="取款总额"
           >
           </el-table-column>
@@ -172,6 +172,7 @@
             prop="betCount"
             align="center"
             label="存取差"
+            min-width="160px"
           >
           </el-table-column>
         </el-table>
@@ -325,18 +326,7 @@ export default {
         .objectStore('depositWithdrawalReport')
         .add({
           id: this.myName,
-          日期: true,
-          类型: true,
-          存款人数: true,
-          存款次数: true,
-          存款总额: true,
-          取款人数: true,
-          大额取款人数: true,
-          取款次数: true,
-          大额取款次数: true,
-          大额取款金额: true,
-          取款总额: true,
-          存取差: true
+          obj: this.depositWithdrawalReport
         })
       request.onsuccess = (event) => {
         this.getList()
@@ -353,45 +343,23 @@ export default {
           list.push(cursor.value)
           cursor.continue()
         } else {
-          console.log(list, 4654564)
           for (let i = 0; i < list.length; i++) {
             const ele = list[i]
             if (ele.id === this.myName) {
-              this.newList.push(ele)
-              this.depositWithdrawalReport = { ...ele }
-              delete this.depositWithdrawalReport.id
+              this.newList.push(ele.obj)
+              this.depositWithdrawalReport = { ...ele.obj }
             }
           }
-          console.log(this.newList, 4645655465)
         }
       }
     },
     confirm() {
-      const arr = []
-      for (let i = 0; i < this.newList.length; i++) {
-        const ele = this.newList[i]
-        if (ele.id === this.myName) {
-          arr.push(ele)
-        }
-      }
-      console.log(arr, 'arr')
       const request = this.db
         .transaction(['depositWithdrawalReport'], 'readwrite')
         .objectStore('depositWithdrawalReport')
         .put({
           id: this.myName,
-          日期: arr[0]['日期'],
-          类型: arr[0]['类型'],
-          存款人数: arr[0]['存款人数'],
-          存款次数: arr[0]['存款次数'],
-          存款总额: arr[0]['存款总额'],
-          取款人数: arr[0]['取款人数'],
-          大额取款人数: arr[0]['大额取款人数'],
-          取款次数: arr[0]['取款次数'],
-          大额取款次数: arr[0]['大额取款次数'],
-          大额取款金额: arr[0]['大额取款金额'],
-          取款总额: arr[0]['取款总额'],
-          存取差: arr[0]['存取差']
+          obj: this.newList[0]
         })
       request.onsuccess = (event) => {
         this.visible = false
@@ -406,7 +374,6 @@ export default {
     clickDel(id) {
       this.newList = []
       this.newList.push({
-        id: this.myName,
         日期: true,
         类型: true,
         存款人数: true,
