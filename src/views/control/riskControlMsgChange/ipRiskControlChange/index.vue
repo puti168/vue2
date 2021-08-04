@@ -9,7 +9,7 @@
               clearable
               :maxlength="15"
               size="medium"
-              style="width: 180px"
+              style="width: 200px"
               placeholder="请输入"
               :disabled="loading"
               @keyup.enter.native="enterSearch"
@@ -18,7 +18,7 @@
           <el-form-item label="变更前风控层级:" class="tagheight">
             <el-select
               v-model="queryData.beforeWindControlId"
-              style="width: 180px"
+              style="width: 200px"
               placeholder="默认选择全部"
               :popper-append-to-body="false"
             >
@@ -34,7 +34,7 @@
           <el-form-item label="变更后风控层级:" class="tagheight">
             <el-select
               v-model="queryData.afterWindControlId"
-              style="width: 180px"
+              style="width: 200px"
               clearable
               placeholder="默认选择全部"
               :popper-append-to-body="false"
@@ -54,7 +54,7 @@
               clearable
               :maxlength="15"
               size="medium"
-              style="width: 180px"
+              style="width: 200px"
               placeholder="请输入"
               :disabled="loading"
               @keyup.enter.native="enterSearch"
