@@ -44,17 +44,17 @@
 				top: 73px;
 				position: absolute;
 			}
-			#first_object {
+			.first_object {
 				-webkit-animation: first_object_animate 1s infinite ease-in-out;
 				animation: first_object_animate 1s infinite ease-in-out;
 			}
-			#second_object {
+			.second_object {
 				-webkit-animation: second_object 1s forwards,
 					second_object_animate 1s infinite ease-in-out;
 				animation: second_object 1s forwards,
 					second_object_animate 1s infinite ease-in-out;
 			}
-			#third_object {
+			.third_object {
 				-webkit-animation: third_object 1s forwards,
 					third_object_animate 1s infinite ease-in-out;
 				animation: third_object 1s forwards,
@@ -173,16 +173,16 @@
 				}
 			}
             .load_title {
-                /*font-family: 'Open Sans';*/
-                /*color: #FFF;*/
-                /*font-size: 19px;*/
-                /*width: 100%;*/
-                /*text-align: center;*/
-                /*z-index: 9999999999999;*/
-                /*position: absolute;*/
-                /*top: 60%;*/
-                /*opacity: 1;*/
-                /*line-height: 30px;*/
+                font-family: 'Open Sans';
+                color: #007bf9;
+                font-size: 19px;
+                width: 100%;
+                text-align: center;
+                z-index: 999;
+                position: absolute;
+                top: 65%;
+                opacity: 1;
+                line-height: 30px;
             }
 		</style>
 	</head>
@@ -191,15 +191,15 @@
 			<div id="loading">
 				<div id="loading-center">
 					<div id="loading-center-absolute">
-						<div class="object" id="first_object"></div>
-						<div class="object" id="second_object"></div>
-						<div class="object" id="third_object"></div>
+						<div class="object first_object"></div>
+						<div class="object second_object"></div>
+						<div class="object third_object"></div>
 					</div>
 				</div>
                 <div class="load_title">
                     正在加载OB旗舰中控管理后台,请耐心等待
                     <br>
-                    <span>V1.0</span>
+                    <span>V1.0.0</span>
                 </div>
 			</div>
 		</div>

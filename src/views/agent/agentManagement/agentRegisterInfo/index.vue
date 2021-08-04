@@ -6,7 +6,7 @@
                     ref="form"
                     :inline="true"
                     :model="queryData"
-                    label-width="100px"
+                    label-width="80px"
                 >
                     <el-form-item label="注册时间:">
                         <el-date-picker
@@ -21,7 +21,6 @@
                             align="right"
                             :clearable="false"
                             value-format="timestamp"
-                            style="width: 382px"
                             :default-time="defaultTime"
                         ></el-date-picker>
                     </el-form-item>
@@ -33,7 +32,7 @@
                             clearable
                             multiple
                             collapse-tags
-                            style="width: 300px"
+                            style="width: 280px"
                         >
                             <el-option
                                 v-for="item in accountTypeArr"
@@ -50,7 +49,7 @@
                             placeholder="请输入"
                             clearable
                             :maxlength="11"
-                            style="width: 180px"
+                            style="width: 280px"
                         ></el-input>
                     </el-form-item>
                     <el-form-item label="注册IP:">
@@ -60,7 +59,7 @@
                             placeholder="请输入"
                             clearable
                             maxlength="15"
-                            style="width: 180px"
+                            style="width: 280px"
                         ></el-input>
                     </el-form-item>
                     <el-form-item label="IP归属地:">
@@ -70,7 +69,7 @@
                             placeholder="请输入"
                             clearable
                             maxlength="10"
-                            style="width: 180px"
+                            style="width: 245px"
                         ></el-input>
                     </el-form-item>
                     <el-form-item label="注册终端:">
@@ -81,7 +80,7 @@
                             clearable
                             multiple
                             collapse-tags
-                            style="width: 300px"
+                            style="width: 245px"
                         >
                             <el-option
                                 v-for="item in deviceTypeArr"

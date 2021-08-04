@@ -2,7 +2,7 @@
 	<div class="game-container report-container">
 		<div v-if="!dialogFormVisible" class="view-container dealer-container">
 			<div class="params">
-				<el-form ref="form" :inline="true" :model="queryData">
+				<el-form ref="form" :inline="true" :model="queryData" label-width="80px">
 					<el-form-item label="活动ID:">
 						<el-input
 							v-model="queryData.id"
@@ -19,6 +19,7 @@
 							clearable
 							:maxlength="20"
 							size="medium"
+                            style="width: 230px"
 							placeholder="请输入"
 							@keyup.enter.native="enterSearch"
 						></el-input>
@@ -28,7 +29,7 @@
 							v-model="queryData.discountTagId"
 							multiple
 							collapse-tags
-							style="width: 300px"
+							style="width: 260px"
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
 						>
@@ -44,7 +45,7 @@
 						<el-select
 							v-model="queryData.activityType"
 							multiple
-							style="width: 300px"
+							style="width: 260px"
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
 						>
@@ -56,7 +57,7 @@
 							></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="活动主标题:">
+					<el-form-item label="活动主标题:" label-width="90px">
 						<el-input
 							v-model="queryData.activityTitle"
 							clearable
@@ -77,10 +78,10 @@
 							@keyup.enter.native="enterSearch"
 						></el-input-number>
 					</el-form-item>
-					<el-form-item label="活动支持终端:">
+					<el-form-item label="活动支持终端:" label-width="106px">
 						<el-select
 							v-model="queryData.activityAppType"
-							style="width: 300px"
+							style="width: 260px"
 							multiple
 							collapse-tags
 							placeholder="默认选择全部"
@@ -94,10 +95,10 @@
 							></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="活动支持账户类型:">
+					<el-form-item label="活动支持账户类型:" label-width="138px">
 						<el-select
 							v-model="queryData.activityUserType"
-							style="width: 300px"
+							style="width: 260px"
 							multiple
 							collapse-tags
 							placeholder="默认选择全部"
@@ -147,17 +148,18 @@
 							clearable
 							:maxlength="15"
 							size="medium"
+                            style="width:230px"
 							placeholder="请输入"
 							@keyup.enter.native="enterSearch"
 						></el-input>
 					</el-form-item>
-					<el-form-item label="最近操作人:">
+					<el-form-item label="最近操作人:" label-width="94px">
 						<el-input
 							v-model="queryData.updatedBy"
 							clearable
 							:maxlength="15"
 							size="medium"
-							style="margin-right: 20px"
+							style="width:246px;margin-right: 8px"
 							placeholder="请输入"
 							@keyup.enter.native="enterSearch"
 						></el-input>
@@ -303,7 +305,7 @@
 						prop="activityPictureUpAt"
 						align="center"
 						label="活动图时间"
-						width="155px"
+						width="170px"
 					>
 						<template slot-scope="scope">
 							<span v-if="scope.row.activityPrescription === 0">
@@ -326,7 +328,7 @@
 						prop="activityStartAt"
 						align="center"
 						label="活动时间"
-						width="155px"
+						width="170px"
 					>
 						<template slot-scope="scope">
 							<span v-if="scope.row.activityPrescription === 0">
@@ -345,7 +347,7 @@
 							</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="status" align="center" label="状态">
+					<el-table-column prop="status" align="center" label="状态" width="120">
 						<template slot-scope="scope">
 							<span v-if="scope.row.status === 0" class="disableRgba">
 								{{ typeFilter(scope.row.status, 'operateStatus') }}
@@ -387,31 +389,33 @@
 						prop="createdBy"
 						align="center"
 						label="创建人"
+                        width="120"
 					></el-table-column>
 					<el-table-column
 						prop="createdAt"
 						align="center"
 						label="创建时间"
-						width="155px"
+						width="160"
 						sortable="custom"
 					></el-table-column>
 					<el-table-column
 						prop="updatedBy"
 						align="center"
 						label="最近操作人"
+                        width="120"
 					></el-table-column>
 					<el-table-column
 						prop="updatedAt"
 						align="center"
 						label="最近操作时间"
-						width="155px"
+						width="160"
 						sortable="custom"
 					></el-table-column>
 					<el-table-column
 						prop="operating"
 						align="center"
 						label="操作"
-						width="240px"
+						width="260"
 					>
 						<template slot-scope="scope">
 							<el-button

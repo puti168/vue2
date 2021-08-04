@@ -7,7 +7,7 @@
 						ref="form"
 						:inline="true"
 						:model="queryData"
-						label-width="100px"
+						label-width="80px"
 					>
 						<el-form-item label="创建时间:">
 							<el-date-picker
@@ -22,7 +22,6 @@
 								align="right"
 								:clearable="false"
 								value-format="timestamp"
-								style="width: 382px"
 								:default-time="defaultTime"
 							></el-date-picker>
 						</el-form-item>
@@ -33,7 +32,7 @@
 								placeholder="请输入"
 								clearable
 								maxlength="12"
-								style="width: 180px"
+								style="width: 270px"
 								@keyup.enter.native="enterSearch"
 							></el-input>
 						</el-form-item>
@@ -44,7 +43,7 @@
 								placeholder="请输入"
 								clearable
 								maxlength="50"
-								style="width: 300px"
+								style="width: 270px"
 								@keyup.enter.native="enterSearch"
 							></el-input>
 						</el-form-item>
@@ -54,7 +53,7 @@
 								size="medium"
 								placeholder="默认选择全部"
 								clearable
-								style="width: 180px"
+								style="width: 270px"
 							>
 								<el-option
 									v-for="item in materialPictureTypeArr"
@@ -70,7 +69,7 @@
 								size="medium"
 								placeholder="默认选择全部"
 								clearable
-								style="width: 180px"
+								style="width: 230px"
 							>
 								<el-option
 									v-for="item in pictureSizeTypeArr"
@@ -93,22 +92,21 @@
 								align="right"
 								:clearable="false"
 								value-format="timestamp"
-								style="width: 382px"
 								:default-time="defaultTime"
 							></el-date-picker>
 						</el-form-item>
-						<el-form-item label="最近操作人:">
+						<el-form-item label="最近操作人:" label-width="94px">
 							<el-input
 								v-model="queryData.updatedBy"
 								size="medium"
 								placeholder="请输入"
 								clearable
-								style="width: 180px"
+								style="width: 256px"
 								maxlength="12"
 								@keyup.enter.native="enterSearch"
 							></el-input>
 						</el-form-item>
-						<el-form-item>
+						<el-form-item style="margin-left: 8px">
 							<el-button
 								type="primary"
 								icon="el-icon-search"
@@ -150,7 +148,7 @@
 						:header-cell-style="getRowClass"
                         @sort-change="_changeTableSort"
 					>
-						<el-table-column prop="displayOrder" align="center" label="排序">
+						<el-table-column prop="displayOrder" align="center" label="排序" width="120">
 							<template slot-scope="scope">
 								<span
 									v-if="
@@ -162,7 +160,7 @@
 								<span v-else>-</span>
 							</template>
 						</el-table-column>
-						<el-table-column prop="imageName" align="center" label="图片标题">
+						<el-table-column prop="imageName" align="center" label="图片标题" width="200">
 							<template slot-scope="scope">
 								<span v-if="!!scope.row.imageName">
 									{{ scope.row.imageName }}
@@ -170,7 +168,7 @@
 								<span v-else>-</span>
 							</template>
 						</el-table-column>
-						<el-table-column prop="imageType" align="center" label="图片类型">
+						<el-table-column prop="imageType" align="center" label="图片类型" width="150">
 							<template slot-scope="scope">
 								<span v-if="!!scope.row.imageType">
 									{{ typeFilter(scope.row.imageType, 'materialPictureType') }}
@@ -178,7 +176,7 @@
 								<span v-else>-</span>
 							</template>
 						</el-table-column>
-						<el-table-column prop="imageSize" align="center" label="图片尺寸">
+						<el-table-column prop="imageSize" align="center" label="图片尺寸" width="200">
 							<template slot-scope="scope">
 								<span v-if="!!scope.row.imageSize">
 									{{ typeFilter(scope.row.imageSize, 'pictureSizeType') }}
@@ -186,7 +184,7 @@
 								<span v-else>-</span>
 							</template>
 						</el-table-column>
-						<el-table-column prop="createdBy" align="center" label="创建人">
+						<el-table-column prop="createdBy" align="center" label="创建人" width="150">
 							<template slot-scope="scope">
 								<span v-if="!!scope.row.createdBy">
 									{{ scope.row.createdBy }}
@@ -199,6 +197,7 @@
 							align="center"
 							label="创建时间"
 							sortable="custom"
+                            width="200"
 						>
 							<template slot-scope="scope">
 								<span v-if="!!scope.row.createdAt">
@@ -207,7 +206,7 @@
 								<span v-else>-</span>
 							</template>
 						</el-table-column>
-						<el-table-column prop="cnName" align="center" label="最近操作人">
+						<el-table-column prop="cnName" align="center" label="最近操作人" width="150">
 							<template slot-scope="scope">
 								<span v-if="!!scope.row.updatedBy">
 									{{ scope.row.updatedBy }}
@@ -220,6 +219,7 @@
 							align="center"
 							label="最近操作时间"
 							sortable="custom"
+                            width="220"
 						>
 							<template slot-scope="scope">
 								<span v-if="!!scope.row.updatedAt">
@@ -232,7 +232,7 @@
 							prop="operating"
 							align="center"
 							label="操作"
-							width="240px"
+							min-width="240px"
 						>
 							<template slot-scope="scope">
 								<el-button

@@ -23,7 +23,7 @@
 						clearable
 						size="medium"
 						:maxlength="20"
-						style="width: 180px"
+						style="width: 260px"
 						placeholder="请输入"
 						@keyup.enter.native="enterSearch"
 					></el-input>
@@ -31,9 +31,10 @@
 				<el-form-item label="变更类型:">
 					<el-select
 						v-model="queryData.changeType"
-						style="width: 300px"
+						style="width: 260px"
 						multiple
                         clearable
+                        collapse-tags
 						placeholder="默认选择全部"
 						:popper-append-to-body="false"
 					>
@@ -56,7 +57,7 @@
 						@keyup.enter.native="enterSearch"
 					></el-input>
 				</el-form-item>
-				<el-form-item style="margin-left: 30px">
+				<el-form-item style="margin-left: 8px">
 					<el-button
 						type="primary"
 						icon="el-icon-search"

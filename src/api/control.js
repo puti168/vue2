@@ -107,6 +107,20 @@ export function getMemberFundsRecordsAccountChangeDic(params) {
 		params
 	})
 }
+export function getProxyFundsRecordsAccountBizDic(params) {
+	return request({
+		url: '/proxyFundsRecords/accountBizDic',
+		method: 'get',
+		params
+	})
+}
+export function getProxyFundsRecordsAccountChangeDic(params) {
+	return request({
+		url: '/proxyFundsRecords/accountChangeDic',
+		method: 'get',
+		params
+	})
+}
 
 export default {
 	getSelectWindControlLevel,
@@ -121,5 +135,7 @@ export default {
 	riskDictAPI,
 	riskEditInfoAPI,
 	riskEditAddAPI,
-	getMemberFundsRecordsAccountChangeDic
+	getMemberFundsRecordsAccountChangeDic,
+	getProxyFundsRecordsAccountBizDic,
+	getProxyFundsRecordsAccountChangeDic
 }

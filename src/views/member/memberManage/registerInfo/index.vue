@@ -151,13 +151,10 @@
 						align="center"
 						label="注册时间"
 						sortable="custom"
-                        width="210"
+						width="210"
 					>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.createDt">
-								{{ scope.row.createDt }}
-							</span>
-							<span v-else>-</span>
+							{{ scope.row.createDt || '-' }}
 						</template>
 					</el-table-column>
 					<el-table-column prop="accountType" align="center" label="账号类型">
@@ -187,7 +184,10 @@
 					>
 						<template slot-scope="scope">
 							<Copy
-								v-if="!!scope.row.parentProxyName"
+								v-if="
+									!!scope.row.parentProxyName &&
+										scope.row.parentProxyName !== '-'
+								"
 								:title="scope.row.parentProxyName"
 								:copy="copy"
 							>
@@ -219,10 +219,7 @@
 							风控层级
 						</template>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.registerIp">
-								{{ scope.row.registerIp }}
-							</span>
-							<span v-else>-</span>
+							{{ scope.row.registerIp || '-' }}
 							<br />
 							<span
 								v-if="!!scope.row.ipWindControlLevelName"
@@ -235,10 +232,7 @@
 					</el-table-column>
 					<el-table-column prop="ipAttribution" align="center" label="IP归属地">
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.ipAttribution">
-								{{ scope.row.ipAttribution }}
-							</span>
-							<span v-else>-</span>
+							{{ scope.row.ipAttribution || '-' }}
 						</template>
 					</el-table-column>
 					<el-table-column prop="deviceType" align="center" label="注册终端">
@@ -299,8 +293,7 @@ const start = dayjs()
 const end = dayjs()
 	.endOf('day')
 	.valueOf()
-// import editForm from './components/editForm'
-// import { UTable } from 'umy-ui'
+
 export default {
 	name: routerNames.registerInfo,
 	mixins: [list],
@@ -325,10 +318,10 @@ export default {
 	},
 	computed: {
 		accountTypeArr() {
-			return this.globalDics.accountType
+			return this.globalDics.accountType || []
 		},
 		deviceTypeArr() {
-			return this.globalDics.deviceType
+			return this.globalDics.deviceType || []
 		}
 	},
 	mounted() {},
@@ -362,19 +355,18 @@ export default {
 			this.$api
 				.memberRegisterInfoListAPI(params)
 				.then((res) => {
+					this.loading = false
 					const {
 						code,
 						data: { record, totalRecord },
 						msg
 					} = res
-					if (code === 200) {
-						this.loading = false
+					if (res && res.data && code && code === 200) {
 						this.dataList = record || []
 						this.total = totalRecord || 0
 					} else {
-						this.loading = false
 						this.$message({
-							message: msg,
+							message: res && msg,
 							type: 'error'
 						})
 					}

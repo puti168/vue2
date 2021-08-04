@@ -2,7 +2,7 @@
   <div class="game-container report-container">
     <template v-if="!showDetail">
       <div class="params">
-        <el-form ref="form" :inline="true" :model="queryData">
+        <el-form ref="form" :inline="true" :model="queryData" label-width="80px">
           <el-form-item label="申请时间:">
             <el-date-picker
               v-model="formTime.time"
@@ -10,32 +10,18 @@
               :picker-options="pickerOptions"
               format="yyyy-MM-dd HH:mm:ss"
               type="datetimerange"
+              style="width: 428px"
               range-separator="-"
               start-placeholder="开始日期"
               end-placeholder="结束日期"
               align="right"
-              :default-time="defaultTime"
-            ></el-date-picker>
-          </el-form-item>
-          <el-form-item label="一审完成时间:">
-            <el-date-picker
-              v-model="formTime.time2"
-              size="medium"
-              :picker-options="pickerOptions"
-              format="yyyy-MM-dd HH:mm:ss"
-              type="datetimerange"
-              range-separator="-"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-              align="right"
-              clearable
               :default-time="defaultTime"
             ></el-date-picker>
           </el-form-item>
           <el-form-item label="审核状态:">
             <el-select
               v-model="queryData.auditStatusList"
-              style="width: 300px"
+              style="width: 270px"
               multiple
               clearable
               collapse-tags
@@ -53,7 +39,7 @@
           <el-form-item label="锁单状态:">
             <el-select
               v-model="queryData.lockOrder"
-              style="width: 180px"
+              style="width: 270px"
               :popper-append-to-body="false"
             >
               <el-option label="全部" value=""></el-option>
@@ -68,7 +54,7 @@
           <el-form-item label="审核操作:">
             <el-select
               v-model="queryData.auditStep"
-              style="width: 180px"
+              style="width: 270px"
               :popper-append-to-body="false"
             >
               <el-option label="全部" value=""></el-option>
@@ -80,24 +66,39 @@
               ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="申请人:">
+            <el-form-item label="一审完成时间:" label-width="108px">
+            <el-date-picker
+              v-model="formTime.time2"
+              size="medium"
+              :picker-options="pickerOptions"
+              format="yyyy-MM-dd HH:mm:ss"
+              type="datetimerange"
+              range-separator="-"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+              align="right"
+              clearable
+              :default-time="defaultTime"
+            ></el-date-picker>
+          </el-form-item>
+          <el-form-item label="申请人:" label-width="66px">
             <el-input
               v-model="queryData.applyName"
               clearable
               size="medium"
               :maxlength="12"
-              style="width: 180px"
+              style="width: 284px"
               placeholder="请输入"
               @keyup.enter.native="enterSearch"
             ></el-input>
           </el-form-item>
-          <el-form-item label="一审人:">
+          <el-form-item label="一审人:" label-width="66px">
             <el-input
               v-model="queryData.auditName"
               clearable
               size="medium"
               :maxlength="12"
-              style="width: 180px"
+              style="width: 284px"
               placeholder="请输入"
               @keyup.enter.native="enterSearch"
             ></el-input>
@@ -108,12 +109,12 @@
               clearable
               size="medium"
               :maxlength="19"
-              style="width: 180px"
+              style="width: 270px"
               placeholder="请输入"
               @keyup.enter.native="enterSearch"
             ></el-input>
           </el-form-item>
-          <el-form-item style="margin-left: 30px">
+          <el-form-item style="margin-left: 8px">
             <el-button
               type="primary"
               icon="el-icon-search"

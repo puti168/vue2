@@ -9,7 +9,7 @@
               maxlength="10"
               clearable
               size="medium"
-              style="width: 180px"
+              style="width: 360px"
               placeholder="请输入"
               :disabled="loading"
               @keyup.enter.native="enterSearch"
@@ -21,13 +21,13 @@
               clearable
               maxlength="10"
               size="medium"
-              style="width: 180px; margin-right: 20px"
+              style="width: 300px"
               placeholder="请输入"
               :disabled="loading"
               @keyup.enter.native="enterSearch"
             ></el-input>
           </el-form-item>
-          <el-form-item>
+          <el-form-item style="margin-left: 8px">
             <el-button
               type="primary"
               icon="el-icon-search"
@@ -73,8 +73,9 @@
             prop="memberLabelName"
             align="center"
             label="标签名称"
+            width="220"
           ></el-table-column>
-          <el-table-column prop="description" align="center" label="标签描述">
+          <el-table-column prop="description" align="center" label="标签描述" width="300">
             <template slot-scope="scope">
               <span v-if="scope.row.description !== ''">
                 {{ scope.row.description }}
@@ -82,7 +83,7 @@
               <span v-else>-</span>
             </template>
           </el-table-column>
-          <el-table-column prop="peopleNum" align="center" label="标签人数">
+          <el-table-column prop="peopleNum" align="center" label="标签人数" width="150">
             <template slot-scope="scope">
               <span v-if="scope.row.peopleNum === null">-</span>
               <div v-else class="blueColor decoration" @click="lookGame(scope.row)">
@@ -94,25 +95,29 @@
             prop="createdBy"
             align="center"
             label="创建人"
+            width="150"
           ></el-table-column>
           <el-table-column
             prop="createdAt"
             align="center"
             label="创建时间"
             sortable="custom"
+            width="200"
           ></el-table-column>
           <el-table-column
             prop="updatedBy"
             align="center"
             label="最近操作人"
+            width="180"
           ></el-table-column>
           <el-table-column
             prop="updatedAt"
             align="center"
             label="最近操作时间"
             sortable="custom"
+            width="200"
           ></el-table-column>
-          <el-table-column prop="operating" align="center" label="操作">
+          <el-table-column prop="operating" align="center" label="操作" min-width="200">
             <template slot-scope="scope">
               <el-button
                 v-if="hasPermission('295')"

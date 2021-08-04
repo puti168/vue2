@@ -10,6 +10,7 @@
               :maxlength="20"
               size="medium"
               placeholder="请输入"
+              style="width: 260px"
               @keyup.enter.native="enterSearch"
             ></el-input>
           </el-form-item>
@@ -17,6 +18,7 @@
             <el-select
               v-model="queryData.sendObj"
               clearable
+              style="width: 260px"
               placeholder="默认选择全部"
               :popper-append-to-body="false"
             >
@@ -29,6 +31,7 @@
               v-model="queryData.createdBy"
               clearable
               :maxlength="15"
+              style="width: 260px"
               size="medium"
               placeholder="请输入"
               @keyup.enter.native="enterSearch"

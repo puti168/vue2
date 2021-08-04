@@ -6,7 +6,7 @@
 					ref="form"
 					:inline="true"
 					:model="queryData"
-					label-width="85px"
+					label-width="80px"
 				>
 					<el-form-item label="注册时间:" prop="registerTime">
 						<el-date-picker
@@ -20,8 +20,8 @@
 							end-placeholder="结束日期"
 							align="right"
 							clearable
+							style="width: 427px"
 							value-format="timestamp"
-							style="width: 388px"
 							:default-time="defaultTime"
 						></el-date-picker>
 					</el-form-item>
@@ -31,7 +31,7 @@
 							size="medium"
 							placeholder="请输入"
 							clearable
-							style="width: 180px"
+							style="width: 275px"
 							:maxlength="11"
 						></el-input>
 					</el-form-item>
@@ -42,7 +42,7 @@
 							size="medium"
 							placeholder="请输入"
 							clearable
-							style="width: 180px"
+							style="width: 275px"
 							maxlength="7"
 						></el-input>
 					</el-form-item>
@@ -53,8 +53,8 @@
 							placeholder="默认选择全部"
 							clearable
 							multiple
-                            collapse-tags
-							style="width: 300px"
+							collapse-tags
+							style="width: 275px"
 						>
 							<el-option
 								v-for="item in accountTypeArr"
@@ -64,6 +64,23 @@
 							></el-option>
 						</el-select>
 					</el-form-item>
+					<el-form-item label="最后登录时间:" label-width="107px">
+						<el-date-picker
+							v-model="queryData.lastLoginTime"
+							prop="lastLoginTime"
+							size="medium"
+							:picker-options="pickerOptions"
+							format="yyyy-MM-dd HH:mm:ss"
+							type="datetimerange"
+							range-separator="-"
+							start-placeholder="开始日期"
+							end-placeholder="结束日期"
+							align="right"
+							clearable
+							value-format="timestamp"
+							:default-time="defaultTime"
+						></el-date-picker>
+					</el-form-item>
 					<el-form-item label="账号状态:">
 						<el-select
 							v-model="queryData.accountStatus"
@@ -71,8 +88,8 @@
 							placeholder="默认选择全部"
 							clearable
 							multiple
-                            collapse-tags
-							style="width: 300px"
+							collapse-tags
+							style="width: 275px"
 						>
 							<el-option
 								v-for="item in accountStatusArr"
@@ -88,7 +105,7 @@
 							size="medium"
 							placeholder="全部"
 							clearable
-							style="width: 180px"
+							style="width: 275px"
 						>
 							<el-option
 								v-for="item in vipDict"
@@ -98,31 +115,13 @@
 							></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="最后登录时间:" label-width="110px">
-						<el-date-picker
-							v-model="queryData.lastLoginTime"
-							prop="lastLoginTime"
-							size="medium"
-							:picker-options="pickerOptions"
-							format="yyyy-MM-dd HH:mm:ss"
-							type="datetimerange"
-							range-separator="-"
-							start-placeholder="开始日期"
-							end-placeholder="结束日期"
-							align="right"
-							clearable
-							value-format="timestamp"
-							style="width: 388px"
-							:default-time="defaultTime"
-						></el-date-picker>
-					</el-form-item>
 					<el-form-item label="代理标签:">
 						<el-select
 							v-model="queryData.labelId"
 							size="medium"
 							placeholder="全部"
 							clearable
-							style="width: 180px"
+							style="width: 275px"
 						>
 							<el-option
 								v-for="item in userLabel"
@@ -132,13 +131,13 @@
 							></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="入口权限:">
+					<el-form-item label="入口权限:" label-width="78px">
 						<el-select
 							v-model="queryData.entryAuthority"
 							size="medium"
 							placeholder="全部"
 							clearable
-							style="width: 180px"
+							style="width: 243px"
 						>
 							<el-option
 								v-for="item in entrAuthorityTypeArr"
@@ -153,7 +152,7 @@
 							v-model="queryData.subNumMin"
 							size="medium"
 							placeholder="最小数值"
-							style="width: 100px"
+							style="width: 101px"
 							maxlength="7"
 							name="subNumMin"
 							oninput="value=value.replace(/[^\d]/g,'')"
@@ -164,7 +163,7 @@
 							v-model="queryData.subNumMax"
 							size="medium"
 							placeholder="最大数值"
-							style="width: 100px"
+							style="width: 101px"
 							maxlength="7"
 							oninput="value=value.replace(/[^\d]/g,'')"
 							name="subNumMax"
@@ -176,7 +175,7 @@
 							v-model="queryData.validSubNumMin"
 							size="medium"
 							placeholder="最小数值"
-							style="width: 100px"
+							style="width: 101px"
 							maxlength="7"
 							oninput="value=value.replace(/[^\d]/g,'')"
 							name="validSubNumMin"
@@ -187,7 +186,7 @@
 							v-model="queryData.validSubNumMax"
 							size="medium"
 							placeholder="最大数值"
-							style="width: 100px"
+							style="width: 101px"
 							maxlength="7"
 							oninput="value=value.replace(/[^\d]/g,'')"
 							name="validSubNumMax"
@@ -240,7 +239,7 @@
 							@blur="checkValue($event)"
 						></el-input>
 					</el-form-item>
-					<el-form-item>
+					<el-form-item style="margin-left: 3px">
 						<el-button
 							type="primary"
 							icon="el-icon-search"
@@ -300,7 +299,7 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="accountType" align="center" label="代理类型">
+					<el-table-column prop="accountType" align="center" label="代理类型" width="100">
 						<template slot-scope="scope">
 							<span v-if="!!scope.row.accountType">
 								{{ typeFilter(scope.row.accountType, 'accountType') }}
@@ -326,7 +325,7 @@
 						prop="validSubNum"
 						align="center"
 						label="有效下级"
-						width="150px"
+						width="100"
 						sortable="custom"
 					>
 						<template slot-scope="scope">
@@ -340,6 +339,7 @@
 						prop="windControlName"
 						align="center"
 						label="风控层级"
+                        width="100"
 					>
 						<template slot-scope="scope">
 							<span v-if="!!scope.row.windControlName">
@@ -348,7 +348,7 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="labelName" align="center" label="代理标签">
+					<el-table-column prop="labelName" align="center" label="代理标签" width="180">
 						<template slot-scope="scope">
 							<span v-if="!!scope.row.labelName">
 								{{ scope.row.labelName }}
@@ -356,7 +356,7 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="accountStatus" align="center" label="账号状态">
+					<el-table-column prop="accountStatus" align="center" label="账号状态" width="120">
 						<template slot-scope="scope">
 							<span
 								v-if="
@@ -409,6 +409,7 @@
 						prop="invitationCode"
 						align="center"
 						label="合营代码"
+                        width="130"
 					>
 						<template slot-scope="scope">
 							<span v-if="!!scope.row.invitationCode">
@@ -421,7 +422,7 @@
 						prop="createDt"
 						align="center"
 						label="注册时间"
-						width="180px"
+						width="180"
 						sortable="custom"
 					>
 						<template slot-scope="scope">
@@ -435,7 +436,7 @@
 						prop="totalRebate"
 						align="center"
 						label="返佣"
-						width="100px"
+						width="120"
 					>
 						<template slot-scope="scope">
 							<span
@@ -450,7 +451,7 @@
 						prop="balance"
 						align="center"
 						label="余额"
-						width="100px"
+						width="150"
 					>
 						<template slot-scope="scope">
 							<span v-if="!!scope.row.balance || scope.row.balance === 0">
@@ -486,7 +487,7 @@
 						prop="offLineDays"
 						align="center"
 						label="离线天数"
-						width="150px"
+						width="100"
 						sortable="custom"
 					>
 						<template slot-scope="scope">
@@ -533,7 +534,7 @@ export default {
 	mixins: [list],
 	data() {
 		this.loadData = this.throttle(this.loadData, 1000)
-        this._changeTableSort = this.throttle(this._changeTableSort, 1000)
+		this._changeTableSort = this.throttle(this._changeTableSort, 1000)
 		return {
 			queryData: {
 				registerTime: [start, end],
@@ -939,7 +940,9 @@ export default {
 						this.loading = false
 					}, 1500)
 				})
-				.catch(() => { this.loading = false })
+				.catch(() => {
+					this.loading = false
+				})
 		}
 	}
 }

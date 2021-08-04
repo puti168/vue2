@@ -22,7 +22,7 @@
           <el-form-item label="场馆名称:" class="tagheight" prop="gameName">
             <el-select
               v-model="queryData.gameName"
-              style="width: 300px"
+              style="width: 280px"
               clearable
               multiple
               collapse-tags
@@ -43,7 +43,7 @@
               clearable
               :maxlength="12"
               size="medium"
-              style="width: 180px"
+              style="width: 280px"
               placeholder="请输入"
               :disabled="loading"
               @keyup.enter.native="enterSearch"

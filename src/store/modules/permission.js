@@ -152,7 +152,7 @@ const actions = {
 			}
 			asyncRouterMap = asyncRouterMap.concat(rootRoutes)
 			const id = window.sessionStorage.getItem('activeId')
-			id ? store.dispatch('permission/setNowroute', id) : ''
+			id && store.dispatch('permission/setNowroute', id)
 			const _newUserBtns = filterBtns(userBtns)
 			commit('SET_ROUTES', {
 				asyncRouterMap,

@@ -6,7 +6,7 @@
 					ref="form"
 					:inline="true"
 					:model="queryData"
-					label-width="100px"
+					label-width="80px"
 				>
 					<el-form-item label="使用时间:">
 						<el-date-picker
@@ -21,7 +21,6 @@
 							align="right"
 							:clearable="false"
 							value-format="timestamp"
-							style="width: 382px"
 							:default-time="defaultTime"
 						></el-date-picker>
 					</el-form-item>
@@ -32,7 +31,7 @@
 							placeholder="请输入"
 							clearable
 							maxlength="11"
-							style="width: 180px"
+							style="width: 270px"
 							@keyup.enter.native="enterSearch"
 						></el-input>
 					</el-form-item>
@@ -44,7 +43,7 @@
 							clearable
 							multiple
                             collapse-tags
-							style="width: 300px"
+							style="width: 270px"
 						>
 							<el-option
 								v-for="item in accountTypeArr"
@@ -54,17 +53,6 @@
 							></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="虚拟币账户地址:" label-width="120px">
-						<el-input
-							v-model="queryData.virtualAddress"
-							size="medium"
-							placeholder="请输入"
-							clearable
-							style="width: 300px"
-							maxlength="50"
-							@keyup.enter.native="enterSearch"
-						></el-input>
-					</el-form-item>
                     <el-form-item label="风控层级:">
                         <el-select
                             v-model="queryData.windControlId"
@@ -72,7 +60,7 @@
                             placeholder="全部"
                             clearable
                             multiple
-                            style="width: 300px"
+                            style="width: 270px"
                         >
                             <el-option
                                 v-for="item in vipDict"
@@ -82,13 +70,24 @@
                             ></el-option>
                         </el-select>
                     </el-form-item>
-					<el-form-item label="虚拟币类型:">
+					<el-form-item label="虚拟币账户地址:" label-width="120px">
+						<el-input
+							v-model="queryData.virtualAddress"
+							size="medium"
+							placeholder="请输入"
+							clearable
+							style="width: 360px"
+							maxlength="50"
+							@keyup.enter.native="enterSearch"
+						></el-input>
+					</el-form-item>
+					<el-form-item label="虚拟币类型:" label-width="95px">
 						<el-select
 							v-model="queryData.virtualKind"
 							size="medium"
 							placeholder="请选择"
 							clearable
-							style="width: 180px"
+							style="width: 255px"
 						>
 							<el-option
 								v-for="item in virtualTypeArr"
@@ -98,13 +97,13 @@
 							></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="虚拟币协议:">
+					<el-form-item label="虚拟币协议:" label-width="95px">
 						<el-select
 							v-model="queryData.virtualProtocol"
 							size="medium"
 							placeholder="请选择"
 							clearable
-							style="width: 180px"
+							style="width: 255px"
 						>
 							<el-option
 								v-for="item in virtualProtocolTypeArr"
@@ -114,7 +113,7 @@
 							></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item>
+					<el-form-item style="margin-left: 8px">
 						<el-button
 							type="primary"
 							icon="el-icon-search"

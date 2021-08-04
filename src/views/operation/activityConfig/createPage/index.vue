@@ -6,7 +6,7 @@
           <el-form-item label="活动页签:" class="tagheight">
             <el-select
               v-model="queryData.ids"
-              style="width: 180px"
+              style="width: 200px"
               multiple
               clearable
               collapse-tags
@@ -24,7 +24,7 @@
           <el-form-item label="状态:" class="tagheight">
             <el-select
               v-model="queryData.status"
-              style="width: 180px"
+              style="width: 200px"
               clearable
               placeholder="默认选择全部"
               :popper-append-to-body="false"
@@ -43,7 +43,7 @@
               clearable
               :maxlength="15"
               size="medium"
-              style="width: 180px; margin-right: 20px"
+              style="width: 200px"
               placeholder="请输入"
               :disabled="loading"
               @keyup.enter.native="enterSearch"
@@ -55,7 +55,7 @@
               clearable
               :maxlength="15"
               size="medium"
-              style="width: 180px; margin-right: 20px"
+              style="width: 200px"
               placeholder="请输入"
               :disabled="loading"
               @keyup.enter.native="enterSearch"
@@ -118,13 +118,15 @@
             prop="activityTagName"
             align="center"
             label="活动页签"
+            width="180"
           ></el-table-column>
           <el-table-column
             prop="activityTagRemark"
             align="center"
             label="备注"
+            width="220"
           ></el-table-column>
-          <el-table-column prop="status" align="center" label="状态">
+          <el-table-column prop="status" align="center" label="状态" width="160">
             <template slot-scope="scope">
               <div v-if="scope.row.status === 0" class="disableRgba">已禁用</div>
               <div v-else-if="scope.row.status === 1" class="normalRgba">开启中</div>
@@ -135,25 +137,29 @@
             prop="createdBy"
             align="center"
             label="创建人"
+            width="180"
           ></el-table-column>
           <el-table-column
             prop="createdAt"
             align="center"
             label="创建时间"
+            width="220"
             sortable="custom"
           ></el-table-column>
           <el-table-column
             prop="updatedBy"
             align="center"
             label="最近操作人"
+            width="180"
           ></el-table-column>
           <el-table-column
             prop="updatedAt"
             align="center"
             label="最近操作时间"
+            width="220"
             sortable="custom"
           ></el-table-column>
-          <el-table-column prop="operating" align="center" label="操作" width="240px">
+          <el-table-column prop="operating" align="center" label="操作" min-width="300">
             <template slot-scope="scope">
               <el-button
                 v-if="hasPermission('311')&&scope.row.status === 0"

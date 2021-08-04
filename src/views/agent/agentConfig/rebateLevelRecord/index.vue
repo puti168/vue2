@@ -39,7 +39,7 @@
             clearable
             size="medium"
             :maxlength="12"
-            style="width: 180px"
+            style="width: 300px"
             placeholder="请输入"
             @keyup.enter.native="enterSearch"
           ></el-input>
@@ -77,8 +77,8 @@
           :header-cell-style="getRowClass"
           @sort-change="_changeTableSort"
         >
-          <el-table-column type="index" align="center" label="序号"> </el-table-column>
-          <el-table-column prop="rebate_level" align="center" label="佣金等级">
+          <el-table-column type="index" align="center" label="序号" width="120"> </el-table-column>
+          <el-table-column prop="rebate_level" align="center" label="佣金等级" width="150">
             <template slot-scope="scope">
               <span v-if="!!(scope.row.rebateLevel+'')">
                 {{ scope.row.rebateLevel }}
@@ -110,7 +110,7 @@
               <span v-else>-</span>
             </template>
           </el-table-column>
-          <el-table-column prop="createdBy" align="center" width="120" label="操作人">
+          <el-table-column prop="createdBy" align="center" width="160" label="操作人">
             <template slot-scope="scope">
               <span v-if="!!(scope.row.createdBy+'')">
                 {{ scope.row.createdBy }}

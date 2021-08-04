@@ -2,7 +2,7 @@
   <div class="game-container report-container">
     <div v-if="editDomeShow" class="view-container dealer-container">
       <div class="params">
-        <el-form ref="form" :inline="true" :model="queryData">
+        <el-form ref="form" :inline="true" :model="queryData" label-width="80px">
           <el-form-item label="创建时间:">
             <el-date-picker
               v-model="createTime"
@@ -11,70 +11,30 @@
               format="yyyy-MM-dd HH:mm:ss"
               type="datetimerange"
               range-separator="-"
+              style="width: 402px"
               start-placeholder="开始日期"
               end-placeholder="结束日期"
               align="right"
               :clearable="false"
               :default-time="defaultTime"
-              style="width: 375px"
             ></el-date-picker>
           </el-form-item>
-          <el-form-item label="域名:">
+          <el-form-item label="域名:" label-width="55px">
             <el-input
               v-model="queryData.domainName"
               clearable
               :maxlength="50"
               size="medium"
-              style="width: 200px"
+              style="width: 280px"
               placeholder="请输入"
               :disabled="loading"
               @keyup.enter.native="enterSearch"
             ></el-input>
           </el-form-item>
-          <el-form-item label="创建人:">
-            <el-input
-              v-model="queryData.createdBy"
-              clearable
-              :maxlength="12"
-              size="medium"
-              style="width: 220px"
-              placeholder="请输入"
-              :disabled="loading"
-              @keyup.enter.native="enterSearch"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="最近操作人:">
-            <el-input
-              v-model="queryData.updatedBy"
-              clearable
-              :maxlength="12"
-              size="medium"
-              style="width: 220px"
-              placeholder="请输入"
-              :disabled="loading"
-              @keyup.enter.native="enterSearch"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="状态:" class="tagheight">
-            <el-select
-              v-model="queryData.status"
-              style="width: 180px"
-              clearable
-              placeholder="默认选择全部"
-              :popper-append-to-body="false"
-            >
-              <el-option
-                v-for="item in domainStatusType"
-                :key="item.description"
-                :label="item.description"
-                :value="item.code"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="域名类型:" class="tagheight">
+        <el-form-item label="域名类型:" class="tagheight">
             <el-select
               v-model="queryData.domainType"
-              style="width: 180px"
+              style="width: 280px"
               clearable
               placeholder="默认选择全部"
               :popper-append-to-body="false"
@@ -87,7 +47,19 @@
               ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="最近修改时间:">
+          <el-form-item label="创建人:" label-width="66px">
+            <el-input
+              v-model="queryData.createdBy"
+              clearable
+              :maxlength="12"
+              size="medium"
+              style="width: 280px"
+              placeholder="请输入"
+              :disabled="loading"
+              @keyup.enter.native="enterSearch"
+            ></el-input>
+          </el-form-item>
+            <el-form-item label="最近修改时间:" label-width="107px">
             <el-date-picker
               v-model="editTime"
               size="medium"
@@ -103,7 +75,35 @@
               style="width: 375px"
             ></el-date-picker>
           </el-form-item>
-          <el-form-item>
+          <el-form-item label="最近操作人:" label-width="96px">
+            <el-input
+              v-model="queryData.updatedBy"
+              clearable
+              :maxlength="12"
+              size="medium"
+              style="width: 238px"
+              placeholder="请输入"
+              :disabled="loading"
+              @keyup.enter.native="enterSearch"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="状态:" class="tagheight" label-width="53px">
+            <el-select
+              v-model="queryData.status"
+              style="width: 308px"
+              clearable
+              placeholder="默认选择全部"
+              :popper-append-to-body="false"
+            >
+              <el-option
+                v-for="item in domainStatusType"
+                :key="item.description"
+                :label="item.description"
+                :value="item.code"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item style="margin-left: 8px">
             <el-button
               type="primary"
               icon="el-icon-search"
@@ -149,20 +149,21 @@
             prop="displayOrder"
             align="center"
             label="排序"
-            width="50px"
+            width="100"
           ></el-table-column>
           <el-table-column
             prop="domainName"
             align="center"
             label="域名"
-            width="180px"
+            width="220"
           ></el-table-column>
           <el-table-column
             prop="description"
             align="center"
             label="描述"
+            width="200"
           ></el-table-column>
-          <el-table-column prop="status" align="center" label="状态" width="100px">
+          <el-table-column prop="status" align="center" label="状态" width="100">
             <template slot-scope="scope">
               <div v-if="scope.row.status === '1'" class="normalRgba">
                 {{ typeFilter(scope.row.status, "domainStatusType") }}
@@ -172,12 +173,12 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column prop="domainType" align="center" label="域名类型">
+          <el-table-column prop="domainType" align="center" label="域名类型" width="100">
             <template slot-scope="scope">
               {{ typeFilter(scope.row.domainType, "enumProxyDomainTypeOperate") }}
             </template>
           </el-table-column>
-          <el-table-column prop="remark" align="center" label="备注"></el-table-column>
+          <el-table-column prop="remark" align="center" label="备注" width="120"></el-table-column>
           <el-table-column prop="createdBy" align="center" label="创建人" width="120px">
           </el-table-column>
           <el-table-column
@@ -185,13 +186,13 @@
             align="center"
             label="创建时间"
             sortable="custom"
-            width="160px"
+            width="160"
           ></el-table-column>
           <el-table-column
             prop="updatedBy"
             align="center"
             label="最近操作人"
-            width="100px"
+            width="120"
           ></el-table-column>
           <el-table-column
             prop="updatedAt"
@@ -200,7 +201,7 @@
             sortable="custom"
             width="160px"
           ></el-table-column>
-          <el-table-column prop="operating" align="center" label="操作" width="300px">
+          <el-table-column prop="operating" align="center" label="操作" width="300">
             <template slot-scope="scope">
               <el-button
                 :disabled="loading"

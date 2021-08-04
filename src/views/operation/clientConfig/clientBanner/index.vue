@@ -5,12 +5,12 @@
       <el-tab-pane label="H5端" name="second"></el-tab-pane>
       <el-tab-pane label="PC端" name="third"></el-tab-pane>
       <div class="params">
-        <el-form :inline="true" :model="queryData">
+        <el-form :inline="true" :model="queryData" label-width="95px">
           <el-form-item label="轮播图区域:">
             <el-select
               v-model="queryData.areaType"
               clearable
-              style="width: 180px"
+              style="width: 210px"
               placeholder="默认选择全部"
               :popper-append-to-body="false"
             >
@@ -28,7 +28,7 @@
               clearable
               :maxlength="20"
               size="medium"
-              style="width: 180px; margin-right: 20px"
+              style="width: 280px"
               placeholder="请输入"
               @keyup.enter.native="enterSearch"
             ></el-input>
@@ -37,7 +37,7 @@
             <el-select
               v-model="queryData.bannerValidity"
               clearable
-              style="width: 180px"
+              style="width: 210px"
               placeholder="默认选择全部"
               :popper-append-to-body="false"
             >
@@ -49,10 +49,10 @@
               ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="是否跳转:" class="tagheight">
+          <el-form-item label="是否跳转:" class="tagheight" label-width="80px">
             <el-select
               v-model="queryData.isLink"
-              style="width: 180px"
+              style="width: 210px"
               clearable
               placeholder="默认选择全部"
               :popper-append-to-body="false"
@@ -65,11 +65,11 @@
               ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="跳转目标:" class="tagheight">
+          <el-form-item label="跳转目标:" class="tagheight" label-width="80px">
             <el-select
               v-model="queryData.linkTarget"
               clearable
-              style="width: 180px"
+              style="width: 210px"
               placeholder="默认选择全部"
               :popper-append-to-body="false"
             >
@@ -85,7 +85,7 @@
             <el-select
               v-model="queryData.status"
               clearable
-              style="width: 180px"
+              style="width: 210px"
               placeholder="默认选择全部"
               :popper-append-to-body="false"
             >
@@ -97,13 +97,13 @@
               ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="创建人:">
+          <el-form-item label="创建人:" label-width="67px">
             <el-input
               v-model="queryData.createdBy"
               clearable
               :maxlength="15"
               size="medium"
-              style="width: 180px; margin-right: 20px"
+              style="width: 308px"
               placeholder="请输入"
               @keyup.enter.native="enterSearch"
             ></el-input>
@@ -114,13 +114,13 @@
               clearable
               :maxlength="15"
               size="medium"
-              style="width: 180px; margin-right: 20px"
+              style="width: 210px"
               placeholder="请输入"
               @keyup.enter.native="enterSearch"
             ></el-input>
           </el-form-item>
 
-          <el-form-item>
+          <el-form-item style="margin-left: 8px">
             <el-button
               type="primary"
               icon="el-icon-search"
@@ -203,7 +203,7 @@
                 </span>
               </template>
             </el-table-column>
-            <el-table-column align="center" label="轮播图名称" width="120px">
+            <el-table-column align="center" label="轮播图名称" width="160px">
               <template slot-scope="scope">
                 <span v-if="scope.row.bannerName === '0'">-</span>
                 <span v-else>{{ scope.row.bannerName }}</span>
@@ -225,16 +225,16 @@
               align="center"
               label="轮播图上架时间"
               sortable="custom"
-              width="130px"
+              width="160px"
             ></el-table-column>
             <el-table-column
               prop="downTime"
               align="center"
               sortable="custom"
               label="轮播图下架时间"
-              width="130px"
+              width="160px"
             ></el-table-column>
-            <el-table-column prop="isLink" align="center" label="是否跳转" width="120px">
+            <el-table-column prop="isLink" align="center" label="是否跳转" width="100px">
               <template slot-scope="scope">
                 {{ scope.row.isLink === 1 ? "是" : "否" }}
               </template>
@@ -243,7 +243,7 @@
               prop="linkTarget"
               align="center"
               label="跳转目标"
-              width="120px"
+              width="150px"
             >
               <template slot-scope="scope">
                 <div v-if="scope.row.linkTarget === 0">
@@ -258,7 +258,7 @@
                 <div v-else>-</div>
               </template>
             </el-table-column>
-            <el-table-column prop="status" align="center" label="状态">
+            <el-table-column prop="status" align="center" label="状态" width="120px">
               <template slot-scope="scope">
                 <div v-if="scope.row.status === 0" class="disableRgba">已禁用</div>
                 <div v-else-if="scope.row.status === 1" class="normalRgba">开启中</div>
@@ -276,6 +276,7 @@
               prop="createdBy"
               align="center"
               label="创建人"
+              width="150px"
             ></el-table-column>
             <el-table-column
               prop="createdAt"
@@ -427,7 +428,6 @@
                 <el-option label="永久" :value="1"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item></el-form-item>
             <el-form-item
               class="time"
               label="上架时间:"
@@ -436,7 +436,7 @@
             >
               <el-date-picker
                 v-model="upTime"
-                style="width: 204px"
+                style="width: 507px"
                 size="medium"
                 format="yyyy-MM-dd HH:mm:ss"
                 :picker-options="dateNow"
@@ -447,13 +447,14 @@
             </el-form-item>
             <el-form-item
               v-if="dialogForm.bannerValidity === 0"
+              class="time"
               label="下架时间:"
               label-width="90px"
               :rules="[{ required: true }]"
             >
               <el-date-picker
                 v-model="downTime"
-                style="width: 204px"
+                style="width: 507px"
                 size="medium"
                 format="yyyy-MM-dd HH:mm:ss"
                 :picker-options="dateEnd"
