@@ -3,19 +3,41 @@
     <div class="view-container dealer-container">
       <div class="params">
         <el-form ref="form" :inline="true" :model="queryData">
-          <el-form-item label="标签名称:">
-            <el-input
-              v-model="queryData.memberLabelName"
-              maxlength="10"
-              clearable
+          <el-form-item label="教程名称:">
+            <el-select
+              v-model="queryData.status"
               size="medium"
-              style="width: 180px"
-              placeholder="请输入"
-              :disabled="loading"
-              @keyup.enter.native="enterSearch"
-            ></el-input>
+              placeholder="默认选择全部"
+              clearable
+              style="width: 300px"
+            >
+              <el-option label="全部" :value="undefined"></el-option>
+              <el-option
+                v-for="item in entrAuthorityTypeArr"
+                :key="item.code"
+                :label="item.description"
+                :value="item.code"
+              ></el-option>
+            </el-select>
           </el-form-item>
-          <el-form-item label="创建人:">
+          <el-form-item label="页签状态:">
+            <el-select
+              v-model="queryData.status"
+              size="medium"
+              placeholder="默认选择全部"
+              clearable
+              style="width: 300px"
+            >
+              <el-option label="全部" :value="undefined"></el-option>
+              <el-option
+                v-for="item in entrAuthorityTypeArr"
+                :key="item.code"
+                :label="item.description"
+                :value="item.code"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="页签名称:">
             <el-input
               v-model="queryData.createdBy"
               clearable
@@ -38,25 +60,43 @@
               查询
             </el-button>
             <el-button
-              icon="el-icon-refresh-left"
+              v-if="hasPermission('294')"
+              type="primary"
               :disabled="loading"
               size="medium"
-              @click="reset"
+              @click="edit"
             >
-              重置
+              新增页签
             </el-button>
             <el-button
               v-if="hasPermission('294')"
               type="warning"
-              icon="el-icon-folder"
               :disabled="loading"
               size="medium"
-              @click="addLabel"
+              @click="subSortadd"
             >
-              新增
+              排序
             </el-button>
           </el-form-item>
         </el-form>
+        <el-dialog
+          title="设置排序"
+          :visible.sync="subSort"
+          width="970px"
+          :destroy-on-close="true"
+        >
+          <draggable v-model="sortareaList" @start="onStart" @end="onEnd">
+            <transition-group>
+              <div v-for="tiem in sortareaList" :key="tiem.value" class="reach">
+                {{ tiem.value }}
+              </div>
+            </transition-group>
+          </draggable>
+          <div slot="footer" class="dialog-footer">
+            <el-button @click="subSort = false">取消</el-button>
+            <el-button type="primary" @click="setoperateConfigBannerSort">确定</el-button>
+          </div>
+        </el-dialog>
       </div>
       <div class="content">
         <el-table
@@ -72,9 +112,9 @@
           <el-table-column
             prop="memberLabelName"
             align="center"
-            label="标签名称"
+            label="教程名称"
           ></el-table-column>
-          <el-table-column prop="description" align="center" label="标签描述">
+          <el-table-column prop="description" align="center" label="创建人">
             <template slot-scope="scope">
               <span v-if="scope.row.description !== ''">
                 {{ scope.row.description }}
@@ -82,19 +122,6 @@
               <span v-else>-</span>
             </template>
           </el-table-column>
-          <el-table-column prop="peopleNum" align="center" label="标签人数">
-            <template slot-scope="scope">
-              <span v-if="scope.row.peopleNum === null">-</span>
-              <div v-else class="blueColor decoration" @click="lookGame(scope.row)">
-                {{ scope.row.peopleNum }}
-              </div>
-            </template>
-          </el-table-column>
-          <el-table-column
-            prop="createdBy"
-            align="center"
-            label="创建人"
-          ></el-table-column>
           <el-table-column
             prop="createdAt"
             align="center"
@@ -112,8 +139,51 @@
             label="最近操作时间"
             sortable="custom"
           ></el-table-column>
+          <el-table-column
+            prop="updatedAt"
+            align="center"
+            label="页签状态"
+            sortable="custom"
+          >
+            <template slot-scope="scope">
+              <el-button
+                v-if="hasPermission('295')"
+                type="primary"
+                size="medium"
+                @click="edit(scope.row)"
+              >
+                开启中
+              </el-button>
+
+              <el-button
+                v-if="hasPermission('296')"
+                type="warning"
+                size="medium"
+                @click="deleteLabel(scope.row)"
+              >
+                已禁止
+              </el-button>
+            </template>
+          </el-table-column>
           <el-table-column prop="operating" align="center" label="操作">
             <template slot-scope="scope">
+                            <el-button
+                v-if="hasPermission('295')"
+                type="primary"
+                size="medium"
+                @click="edit(scope.row)"
+              >
+                开启
+              </el-button>
+
+              <el-button
+                v-if="hasPermission('296')"
+                type="warning"
+                size="medium"
+                @click="deleteLabel(scope.row)"
+              >
+                禁止
+              </el-button>
               <el-button
                 v-if="hasPermission('295')"
                 type="primary"
@@ -148,108 +218,78 @@
           @current-change="handleCurrentChange"
           @size-change="handleSizeChange"
         ></el-pagination>
+      <el-dialog
+				:title="title"
+				:visible.sync="dialogFormVisible"
+				:destroy-on-close="true"
+				width="520px"
+				class="rempadding"
+				@close="clear"
+			>
+				<el-divider></el-divider>
+				<el-form
+					ref="formSub"
+					:model="dialogForm"
+					label-width="120px"
+				>
+					<el-form-item
+            label="教程名称:"
+            prop="pageName"
+            :rules="[
+              { required: true, message: '教程名称不能为空', trigger: 'blur' },
+            ]"
+          >
+						<el-input
+							v-model="dialogForm.pageName"
+							:maxlength="20"
+							autocomplete="off"
+							style="width: 330px"
+							placeholder="请输入"
+							clearable
+						></el-input>
+					</el-form-item>
+					<el-form-item
+            label="教程描述:"
+            prop="clientType"
+            :rules="[
+              { required: true, message: '教程描述不能为空', trigger: 'blur' },
+            ]"
+          >
+						<el-input
+							v-model="dialogForm.pagede"
+							:maxlength="20"
+							autocomplete="off"
+							style="width: 330px"
+							placeholder="请输入"
+							clearable
+						></el-input>
+					</el-form-item>
+					<el-form-item
+            label="教程图片:"
+            prop="pictureUrl"
+            :rules="[
+              { required: true, message: '教程图片不能为空', trigger: 'change' },
+            ]"
+          >
+						<UploadItem
+							ref="imgUpload"
+							:upload-file-type="'image'"
+							:platform="'PC'"
+							:img-urls="dialogForm.pictureUrl"
+							@upoladItemSucess="handleUploadSucess"
+							@startUpoladItem="handleStartUpload"
+							@deleteUpoladItem="handleDeleteUpload"
+							@upoladItemDefeat="handleUploadDefeat"
+						></UploadItem>
+					</el-form-item>
+				</el-form>
+				<el-divider></el-divider>
+				<div slot="footer" class="dialog-footer">
+					<el-button @click="dialogFormVisible = false">取消</el-button>
+					<el-button type="primary" @click="subAddOrEidt">保存</el-button>
+				</div>
+			</el-dialog>
       </div>
-      <el-dialog
-        title="新增/编辑"
-        :visible.sync="dialogFormVisible"
-        :destroy-on-close="true"
-        width="480px"
-        center
-        class="rempadding"
-        @close="clear"
-      >
-        <el-divider></el-divider>
-        <el-form ref="formSub" :model="dialogForm" label-width="90px">
-          <el-form-item
-            label="标签名称:"
-            prop="memberLabelName"
-            :rules="[
-              { required: true, message: '请输入2-10个字符', trigger: 'blur' },
-              {
-                min: 2,
-                max: 10,
-                message: '长度在 2 到 10 个字符',
-                trigger: 'blur',
-              },
-            ]"
-          >
-            <el-input
-              v-model="dialogForm.memberLabelName"
-              placeholder="请输入2-10个字符"
-              maxlength="10"
-              autocomplete="off"
-            ></el-input>
-          </el-form-item>
-          <el-form-item
-            label="标签描述:"
-            prop="description"
-            :rules="[
-              { required: true, message: '请输入描述内容', trigger: 'blur' },
-              {
-                min: 2,
-                max: 50,
-                message: '长度在 2 到 50 个字符',
-                trigger: 'blur',
-              },
-            ]"
-          >
-            <el-input
-              v-model="dialogForm.description"
-              placeholder="请输入 提交时至少2个字符"
-              maxlength="50"
-              type="textarea"
-              show-word-limit
-            ></el-input>
-          </el-form-item>
-        </el-form>
-        <div slot="footer" class="dialog-footer">
-          <el-button @click="dialogFormVisible = false">取消</el-button>
-          <el-button type="primary" @click="subAddOrEidt">保存</el-button>
-        </div>
-      </el-dialog>
-      <el-dialog
-        title="标签添加人数"
-        :visible.sync="dialogGameVisible"
-        :destroy-on-close="true"
-        width="480px"
-        class="rempadding"
-      >
-        <el-divider></el-divider>
-        <div class="contentBox disableColor">标签名称：{{ labelName }}</div>
-        <el-table
-          v-loading="loading"
-          size="mini"
-          class="small-size-table"
-          :data="gameList"
-          style="width: 100%; margin: 15px 0"
-          :header-cell-style="getRowClass"
-        >
-          <el-table-column prop="userName" align="center" label="会员账号">
-            <template slot-scope="scope">
-              <Copy v-if="!!scope.row.userName" :title="scope.row.userName" :copy="copy">
-                {{ scope.row.userName }}
-              </Copy>
-            </template>
-          </el-table-column>
-          <el-table-column
-            prop="accountTypeName"
-            align="center"
-            label="账号类型"
-          ></el-table-column>
-        </el-table>
-        <!-- 分页 -->
-        <el-pagination
-          :current-page.sync="page"
-          background
-          class="fenye"
-          layout="total, sizes,prev, pager, next, jumper"
-          :page-size="size"
-          :page-sizes="[5, 10, 15]"
-          :total="summary"
-          @current-change="handleCurrentChangeDialog"
-          @size-change="handleSizeChangeDialog"
-        ></el-pagination>
-      </el-dialog>
     </div>
   </div>
 </template>
@@ -257,9 +297,11 @@
 <script>
 import list from '@/mixins/list'
 import { routerNames } from '@/utils/consts'
+import draggable from 'vuedraggable'
+import UploadItem from '../components/uploadItem.vue'
 export default {
   name: routerNames.memberLabelConfig,
-  components: {},
+  components: {draggable, UploadItem},
   mixins: [list],
   data() {
     this.loadData = this.throttle(this.loadData, 1000)
@@ -279,10 +321,17 @@ export default {
       id: '',
       page: 1,
       size: 5,
-      summary: 0
+      summary: 0,
+      drag: false,
+      subSort: false,
+      sortareaList: []
     }
   },
-  computed: {},
+	computed: {
+		entrAuthorityTypeArr() {
+			return this.globalDics.entrAuthorityType
+		}
+	},
   mounted() {},
   methods: {
     loadData() {
@@ -327,19 +376,16 @@ export default {
       this.id = val.id
       this.getProxyProxyInfoByLabelId(val.id)
     },
-    reset() {
-      this.queryData = {}
-      this.pageNum = 1
-      this.loadData()
-    },
     addLabel() {
-      this.title = '新增'
-      this.dialogForm = {}
-      this.dialogFormVisible = true
+
     },
     edit(val) {
-      this.title = '编辑'
-      this.dialogForm = { ...val }
+      this.title = '新增'
+      this.dialogForm = {}
+      if (val) {
+        this.title = '编辑'
+        this.dialogForm = { ...val }
+      }
       this.dialogFormVisible = true
     },
     deleteLabel(val) {
@@ -416,17 +462,65 @@ export default {
       }
       this.loadData()
     },
+    subSortadd() {
+      const clientType = this.clientType
+      this.$api.operatecCnfigBannerQuerySortedBannerArea({ clientType }).then((res) => {
+        if (res.code === 200) {
+          this.sortareaList = res.data
+          this.subSort = true
+        }
+      })
+      this.subSort = false
+    },
+    // 开始拖拽事件
+    onStart() {
+      this.drag = true
+    },
+    // 拖拽结束事件
+    onEnd() {
+      this.drag = false
+    },
+    setoperateConfigBannerSort() {
+      const arr = this.sortareaList
+      const newArr = []
+      for (let i = 0; i < arr.length; i++) {
+        const ele = arr[i]
+        newArr.push(ele.code)
+      }
+      console.log(this.sortareaList)
+      const sortIds = newArr.join(',')
+      const clientType = this.clientType
+      this.$api
+        .setoperateConfigBannerSort({ sortIds: sortIds, clientType })
+        .then((res) => {
+          if (res.code === 200) {
+            this.$message({
+              message: '操作成功！',
+              type: 'success'
+            })
+            this.subSort = false
+          }
+        })
+
+      this.loadData()
+    },
     clear() {
       this.$refs.formSub.resetFields()
     },
-    handleCurrentChangeDialog(val) {
-      this.page = val
-      this.getProxyProxyInfoByLabelId(this.id)
-    },
-    handleSizeChangeDialog(val) {
-      this.size = val
-      this.getProxyProxyInfoByLabelId(this.id)
-    }
+    handleStartUpload() {
+			this.$message.info('图片开始上传')
+		},
+		handleUploadSucess({ index, file, id }) {
+			this.dialogForm.pictureUrl = file.imgUrl
+		},
+		handleUploadDefeat() {
+			this.dialogForm.pictureUrl = ''
+			this.$message.error('图片上传失败')
+		},
+		handleDeleteUpload() {
+			this.dialogForm.pictureUrl = ''
+			this.$message.warning('图片已被移除')
+		}
   }
 }
 </script>
@@ -464,6 +558,17 @@ export default {
   cursor: pointer;
 }
 .fenye {
+  text-align: center;
+}
+.reach {
+  padding: 6px;
+  background-color: #1abc9c;
+  border: solid 1px #eee;
+  margin-bottom: 10px;
+  cursor: move;
+  line-height: 20px;
+  width: 110px;
+  display: inline-block;
   text-align: center;
 }
 </style>

@@ -147,14 +147,14 @@ const operation = [
 	{
 		id: '1996',
 		parentId: '1888',
-		path: '/operation/course/courseContentConfig',
+		path: '/operation/course/courseLabelConfig',
 		title: '教程页签配置'
 	},
 	{
 		id: '1997',
 		parentId: '1888',
-		path: '/operation/course/courseLabelConfig',
-		title: '教程标题配置'
+		path: '/operation/course/courseContentConfig',
+		title: '教程内容配置'
 	},
 	{
 		id: '1998',
