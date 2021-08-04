@@ -167,7 +167,11 @@
 						label="登录时间"
 						sortable="custom"
 						width="200"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							{{ scope.row.loginTime || '-' }}
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="loginStatus"
 						align="center"
@@ -189,7 +193,12 @@
 						label="会员账号"
 						width="120"
 					>
-						<Copy :title="scope.row.userName" :copy="copy" />
+						<Copy
+							v-if="!!scope.row.userName"
+							:title="scope.row.userName"
+							:copy="copy"
+						/>
+						<span v-else>-</span>
 					</el-table-column>
 					<el-table-column
 						prop="accountType"
@@ -213,17 +222,10 @@
 							风控层级
 						</template>
 						<template slot-scope="scope">
-							<span v-if="scope.row.loginIp !== null">
-								{{ scope.row.loginIp }}
-							</span>
-							<span v-else>-</span>
+							{{ scope.row.loginIp || '-' }}
 							<br />
 							<span class="redColor">
-								风控层级：{{
-									scope.row.ipControlName === null
-										? '无'
-										: scope.row.ipControlName
-								}}
+								风控层级：{{ scope.row.deviceNoControlName || '无' }}
 							</span>
 						</template>
 					</el-table-column>
@@ -232,7 +234,11 @@
 						align="center"
 						label="IP归属地"
 						width="120"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							{{ scope.row.ipAttribution || '-' }}
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="deviceType"
 						align="center"
@@ -255,17 +261,10 @@
 							风控层级
 						</template>
 						<template slot-scope="scope">
-							<span v-if="scope.row.deviceNo !== null">
-								{{ scope.row.deviceNo }}
-							</span>
-							<span v-else>-</span>
+							{{ scope.row.deviceNo || '-' }}
 							<br />
 							<span class="redColor">
-								风控层级：{{
-									scope.row.deviceNoControlName === null
-										? '无'
-										: scope.row.deviceNoControlName
-								}}
+								风控层级：{{ scope.row.deviceNoControlName || '无' }}
 							</span>
 						</template>
 					</el-table-column>
@@ -274,16 +273,24 @@
 						align="center"
 						label="登录地址"
 						width="200"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							{{ scope.row.loginReference || '-' }}
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="browseContent"
 						align="center"
 						label="设备版本"
 						width="280"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							{{ scope.row.browseContent || '-' }}
+						</template>
+					</el-table-column>
 					<el-table-column prop="loginError" align="center" label="备注">
 						<template slot-scope="scope">
-							{{ scope.row.loginError ? scope.row.loginError : '-' }}
+							{{ scope.row.loginError || '-' }}
 						</template>
 					</el-table-column>
 				</el-table>
@@ -323,13 +330,13 @@ export default {
 		this.reset = this.throttle(this.reset, 1000)
 		return {
 			queryData: {
-				userName: null,
+				userName: undefined,
 				accountType: [],
-				loginStatus: null,
-				loginIp: null,
-				ipAttribution: null,
+				loginStatus: undefined,
+				loginIp: undefined,
+				ipAttribution: undefined,
 				deviceType: [],
-				deviceNo: null
+				deviceNo: undefined
 			},
 			accountType1: [],
 			deviceType1: [],
@@ -410,13 +417,13 @@ export default {
 		},
 		reset() {
 			this.queryData = {
-				userName: null,
+				userName: undefined,
 				accountType: [],
-				loginStatus: null,
-				loginIp: null,
-				ipAttribution: null,
+				loginStatus: undefined,
+				loginIp: undefined,
+				ipAttribution: undefined,
 				deviceType: [],
-				deviceNo: null
+				deviceNo: undefined
 			}
 			this.pageNum = 1
 			this.accountType1 = []

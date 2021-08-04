@@ -9,7 +9,7 @@
               size="medium"
               placeholder="默认选择全部"
               clearable
-              style="width: 180px"
+              style="width: 200px"
               @change="getMerchantDict($event)"
             >
               <el-option
@@ -27,8 +27,9 @@
               placeholder="默认选择全部"
               clearable
               multiple
+              collapse-tags
               :maxlength="10"
-              style="width: 300px"
+              style="width: 260px"
             >
               <el-option label="全部" value="all"></el-option>
               <el-option
@@ -45,7 +46,7 @@
               size="medium"
               placeholder="请输入"
               clearable
-              style="width: 180px"
+              style="width: 200px"
               maxlength="15"
             ></el-input>
           </el-form-item>
@@ -55,7 +56,7 @@
               size="medium"
               placeholder="请输入"
               clearable
-              style="width: 180px"
+              style="width: 200px"
               maxlength="15"
             ></el-input>
           </el-form-item>

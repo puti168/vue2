@@ -83,7 +83,7 @@ const member = [
 	{
 		id: '149',
 		parentId: '3',
-		path: '/member/memberManage/memberLabelChangeRecord',
+		path: '/member/memberManage/memberLabelRecord',
 		title: '会员标签配置记录',
 		name: 'memberLabelChangeRecord'
 	},
