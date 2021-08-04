@@ -167,7 +167,6 @@
             prop="updatedAt"
             align="center"
             label="内容状态"
-            sortable="custom"
           >
             <template slot-scope="scope">
               <span v-if="scope.row.status + '' === '0'" class="disableRgba">
