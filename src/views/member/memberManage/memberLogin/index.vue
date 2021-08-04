@@ -330,13 +330,13 @@ export default {
 		this.reset = this.throttle(this.reset, 1000)
 		return {
 			queryData: {
-				userName: null,
+				userName: undefined,
 				accountType: [],
-				loginStatus: null,
-				loginIp: null,
-				ipAttribution: null,
+				loginStatus: undefined,
+				loginIp: undefined,
+				ipAttribution: undefined,
 				deviceType: [],
-				deviceNo: null
+				deviceNo: undefined
 			},
 			accountType1: [],
 			deviceType1: [],
@@ -417,13 +417,13 @@ export default {
 		},
 		reset() {
 			this.queryData = {
-				userName: null,
+				userName: undefined,
 				accountType: [],
-				loginStatus: null,
-				loginIp: null,
-				ipAttribution: null,
+				loginStatus: undefined,
+				loginIp: undefined,
+				ipAttribution: undefined,
 				deviceType: [],
-				deviceNo: null
+				deviceNo: undefined
 			}
 			this.pageNum = 1
 			this.accountType1 = []

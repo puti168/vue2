@@ -33,10 +33,10 @@
 						v-model="queryData.accountType"
 						style="width: 280px"
 						multiple
-                        collapse-tags
+						collapse-tags
 						placeholder="默认选择全部"
 						:popper-append-to-body="false"
-                        clearable
+						clearable
 					>
 						<el-option
 							v-for="item in accountType"
@@ -52,10 +52,10 @@
 						v-model="queryData.applyType"
 						style="width: 280px"
 						multiple
-                        collapse-tags
+						collapse-tags
 						placeholder="默认选择全部"
 						:popper-append-to-body="false"
-                        clearable
+						clearable
 					>
 						<el-option
 							v-for="item in applyType"
@@ -114,15 +114,24 @@
 						align="center"
 						label="操作时间"
 						sortable="custom"
-                        width="200"
-					></el-table-column>
+						width="200"
+					>
+						<template slot-scope="scope">
+							{{ scope.row.applyTime || '-' }}
+						</template>
+					</el-table-column>
 					<el-table-column
 						v-slot="scope"
 						prop="userName"
 						align="center"
 						label="会员账号"
 					>
-						<Copy :title="scope.row.userName" :copy="copy" />
+						<Copy
+							v-if="!!scope.row.userName"
+							:title="scope.row.userName"
+							:copy="copy"
+						/>
+						<span v-else>-</span>
 					</el-table-column>
 					<el-table-column align="center" label="账号类型">
 						<template slot-scope="scope">
@@ -143,7 +152,7 @@
 								{{ typeFilter(scope.row.beforeModify, 'accountStatusType') }}
 							</template>
 							<template v-else>
-								{{ scope.row.beforeModify ? scope.row.beforeModify : '-' }}
+								{{ scope.row.beforeModify || '-' }}
 							</template>
 						</template>
 					</el-table-column>
@@ -156,13 +165,13 @@
 								{{ typeFilter(scope.row.afterModify, 'accountStatusType') }}
 							</template>
 							<template v-else>
-								{{ scope.row.afterModify ? scope.row.afterModify : '-' }}
+								{{ scope.row.afterModify || '-' }}
 							</template>
 						</template>
 					</el-table-column>
 					<el-table-column align="center" label="提交信息">
 						<template slot-scope="scope">
-							<p>{{ scope.row.applyInfo }}</p>
+							{{ scope.row.applyInfo || '-' }}
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -172,7 +181,7 @@
 						label="操作人"
 					>
 						<template slot-scope="scope">
-							<p>{{ scope.row.applyName }}</p>
+							{{ scope.row.applyName || '-' }}
 						</template>
 					</el-table-column>
 				</el-table>
@@ -207,12 +216,12 @@ export default {
 	components: {},
 	mixins: [list],
 	data() {
-        this.search = this.throttle(this.search, 1000)
-        this.reset = this.throttle(this.reset, 1000)
+		this.search = this.throttle(this.search, 1000)
+		this.reset = this.throttle(this.reset, 1000)
 		return {
 			queryData: {
-				userName: '',
-				applyName: '',
+				userName: undefined,
+				applyName: undefined,
 				accountType: [],
 				applyType: []
 			},
@@ -225,16 +234,10 @@ export default {
 	},
 	computed: {
 		accountType() {
-			return this.globalDics.accountType
-		},
-		virtualType() {
-			return this.globalDics.virtualType
-		},
-		virtualProtocolType() {
-			return this.globalDics.virtualProtocolType
+			return this.globalDics.accountType || []
 		},
 		applyType() {
-			return this.globalDics.applyType
+			return this.globalDics.applyType || []
 		}
 	},
 	mounted() {},
@@ -245,10 +248,10 @@ export default {
 				...this.queryData,
 				applyTimeStart: startTime
 					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
-					: '',
+					: undefined,
 				applyTimeEnd: endTime
 					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
-					: ''
+					: undefined
 			}
 			if (!params.applyTimeStart || !params.applyTimeEnd) {
 				this.$message({
@@ -265,15 +268,16 @@ export default {
 			this.$api
 				.memberDataInfoChangeRecord(params)
 				.then((res) => {
-					if (res.code === 200) {
+					this.loading = false
+					const { code, msg } = res
+					if (res && code === 200) {
 						const response = res.data
-						this.loading = false
-						this.dataList = response.record
-						this.total = response.totalRecord
+						this.dataList = response.record || []
+						this.total = response.totalRecord || 0
 					} else {
 						this.loading = false
 						this.$message({
-							message: res.msg,
+							message: res && msg,
 							type: 'error'
 						})
 					}
@@ -297,16 +301,13 @@ export default {
 		},
 		reset() {
 			this.queryData = {
-				userName: '',
-				applyName: '',
+                userName: undefined,
+                applyName: undefined,
 				accountType: [],
 				applyType: []
 			}
 			this.pageNum = 1
 			this.formTime.time = [start, end]
-			this.loadData()
-		},
-		handleCurrentChange() {
 			this.loadData()
 		}
 	}
