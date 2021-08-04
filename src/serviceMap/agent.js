@@ -117,25 +117,25 @@ const agent = [
 	{
 		id: '118',
 		parentId: '47',
-		path: '/agent/promotionManagement/domainNameManagement',
+		path: '/agent/promotionManage/domainNameManagement',
 		title: '推广域名管理'
 	},
 	{
 		id: '119',
 		parentId: '47',
-		path: '/agent/promotionManagement/pictureManage',
+		path: '/agent/promotionManage/pictureManage',
 		title: '推广图片管理'
 	},
 	{
 		id: '204',
 		parentId: '47',
-		path: '/agent/promotionManagement/domainChangeRecord',
+		path: '/agent/promotionManage/domainChangeRecord',
 		title: '推广域名变更记录'
 	},
 	{
 		id: '205',
 		parentId: '47',
-		path: '/agent/promotionManagement/pictureChangeRecord',
+		path: '/agent/promotionManage/pictureChangeRecord',
 		title: '推广图片变更记录'
 	},
 	{
