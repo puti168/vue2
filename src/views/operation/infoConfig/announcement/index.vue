@@ -2,7 +2,7 @@
   <div class="game-container report-container">
     <div class="view-container dealer-container">
       <div class="params">
-        <el-form ref="form" :inline="true" :model="queryData">
+        <el-form ref="form" :inline="true" :model="queryData" label-width="80px">
           <el-form-item label="公告标题:">
             <el-input
               v-model="queryData.announcementTitle"
@@ -13,21 +13,11 @@
               @keyup.enter.native="enterSearch"
             ></el-input>
           </el-form-item>
-          <el-form-item label="标识:">
-            <el-select
-              v-model="queryData.tag"
-              clearable
-              placeholder="默认选择全部"
-              :popper-append-to-body="false"
-            >
-              <el-option label="重要" :value="1"></el-option>
-              <el-option label="无" :value="0"></el-option>
-            </el-select>
-          </el-form-item>
+
           <el-form-item label="发送终端:">
             <el-select
               v-model="queryData.terminal"
-              style="width: 300px"
+              style="width: 251px"
               multiple
               collapse-tags
               placeholder="默认选择全部"
@@ -52,7 +42,18 @@
               <el-option label="永久" :value="2"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="状态:">
+         <el-form-item label="标识:" label-width="52px">
+            <el-select
+              v-model="queryData.tag"
+              clearable
+              placeholder="默认选择全部"
+              :popper-append-to-body="false"
+            >
+              <el-option label="重要" :value="1"></el-option>
+              <el-option label="无" :value="0"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="状态:" label-width="52px">
             <el-select
               v-model="queryData.status"
               clearable
@@ -83,7 +84,7 @@
               clearable
               :maxlength="15"
               size="medium"
-              style="margin-right: 20px"
+              style="width: 238px;margin-right: 8px"
               placeholder="请输入"
               @keyup.enter.native="enterSearch"
             ></el-input>
@@ -198,7 +199,7 @@
               }}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="createdBy" align="center" label="创建人">
+          <el-table-column prop="createdBy" align="center" label="创建人" width="120">
           </el-table-column>
           <el-table-column
             prop="createdAt"
@@ -212,7 +213,7 @@
             prop="updatedBy"
             align="center"
             label="最近操作人"
-            width="120px"
+            width="120"
           >
             <template slot-scope="scope">
               {{ scope.row.updatedBy ? scope.row.updatedBy : "-" }}

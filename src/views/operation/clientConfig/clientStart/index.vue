@@ -2,14 +2,14 @@
 	<div class="game-container report-container">
 		<div class="view-container dealer-container">
 			<div class="params">
-				<el-form ref="form" :inline="true" :model="queryData">
+				<el-form ref="form" :inline="true" :model="queryData" label-width="80px">
 					<el-form-item label="显示终端:">
 						<el-select
 							v-model="queryData.clientType"
 							size="medium"
 							placeholder="默认选择全部"
 							clearable
-							style="width: 180px"
+							style="width: 220px"
 						>
 							<el-option
 								v-for="item in terminalTypeArr"
@@ -19,23 +19,23 @@
 							></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="启动页名称:">
+					<el-form-item label="启动页名称:" label-width="98px">
 						<el-input
 							v-model="queryData.pageName"
 							size="medium"
 							placeholder="请输入"
 							clearable
-							style="width: 200px"
+							style="width: 280px"
 							maxlength="20"
 						></el-input>
 					</el-form-item>
-					<el-form-item label="是否预加载:">
+					<el-form-item label="是否预加载:" label-width="98px">
 						<el-select
 							v-model="queryData.loadStatus"
 							size="medium"
 							placeholder="默认选择全部"
 							clearable
-							style="width: 180px"
+							style="width: 220px"
 						>
 							<el-option label="全部" value=""></el-option>
 							<el-option
@@ -46,13 +46,13 @@
 							></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="状态:">
+					<el-form-item label="状态:" label-width="53px">
 						<el-select
 							v-model="queryData.status"
 							size="medium"
 							placeholder="默认选择全部"
 							clearable
-							style="width: 180px"
+							style="width: 220px"
 						>
 							<el-option label="全部" value=""></el-option>
 							<el-option
@@ -63,27 +63,27 @@
 							></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="创建人:">
+					<el-form-item label="创建人:" label-width="67px">
 						<el-input
 							v-model="queryData.createdBy"
 							size="medium"
 							placeholder="请输入"
 							clearable
-							style="width: 180px"
+							style="width: 220px"
 							maxlength="15"
 						></el-input>
 					</el-form-item>
-					<el-form-item label="最近操作人:">
+					<el-form-item label="最近操作人:" label-width="94px">
 						<el-input
 							v-model="queryData.updatedBy"
 							size="medium"
 							placeholder="请输入"
 							clearable
-							style="width: 180px"
+							style="width: 206px"
 							maxlength="15"
 						></el-input>
 					</el-form-item>
-					<el-form-item>
+					<el-form-item style="margin-left: 8px">
 						<el-button
 							type="primary"
 							icon="el-icon-search"
@@ -129,6 +129,7 @@
 						prop="supportTerminal"
 						align="center"
 						label="显示终端"
+                        width="120"
 					>
 						<template slot-scope="scope">
 							<span
@@ -141,7 +142,7 @@
 							<span v-else></span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="pageName" align="center" label="启动页名称">
+					<el-table-column prop="pageName" align="center" label="启动页名称" width="160">
 						<template slot-scope="scope">
 							<span v-if="!!scope.row.pageName">
 								{{ scope.row.pageName }}
@@ -149,7 +150,7 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="loadStatus" align="center" label="是否预加载">
+					<el-table-column prop="loadStatus" align="center" label="是否预加载" width="100">
 						<template slot-scope="scope">
 							<span v-if="scope.row.loadStatus + '' === '1'" class="normalRgba">
 								是
@@ -163,7 +164,7 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="remark" align="center" label="备注">
+					<el-table-column prop="remark" align="center" label="备注" width="160">
 						<template slot-scope="scope">
 							<span v-if="!!scope.row.remark">
 								{{ scope.row.remark }}
@@ -171,7 +172,7 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="status" align="center" label="状态">
+					<el-table-column prop="status" align="center" label="状态" width="110">
 						<template slot-scope="scope">
 							<span v-if="scope.row.status + '' === '0'" class="disableRgba">
 								{{ typeFilter(scope.row.status, 'operateStatus') }}
@@ -194,7 +195,7 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="createdBy" align="center" label="创建人">
+					<el-table-column prop="createdBy" align="center" label="创建人" width="120">
 						<template slot-scope="scope">
 							<span v-if="!!scope.row.createdBy">
 								{{ scope.row.createdBy }}
@@ -207,7 +208,7 @@
 						align="center"
 						label="创建时间"
 						sortable="custom"
-						width="160"
+						width="180"
 					>
 						<template slot-scope="scope">
 							<span v-if="!!scope.row.createdAt">
@@ -216,7 +217,7 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="updatedBy" align="center" label="最近操作人">
+					<el-table-column prop="updatedBy" align="center" label="最近操作人" width="120">
 						<template slot-scope="scope">
 							<span v-if="!!scope.row.updatedBy">
 								{{ scope.row.updatedBy }}
@@ -229,7 +230,7 @@
 						align="center"
 						label="最近操作时间"
 						sortable="custom"
-						width="160"
+						width="180"
 					>
 						<template slot-scope="scope">
 							<span v-if="!!scope.row.updatedAt">
@@ -242,7 +243,7 @@
 						prop="operating"
 						align="center"
 						label="操作"
-						width="300"
+						min-width="300"
 					>
 						<template slot-scope="scope">
 							<el-button

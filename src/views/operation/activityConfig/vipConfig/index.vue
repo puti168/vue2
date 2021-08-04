@@ -8,6 +8,7 @@
 							v-model="queryData.activityType"
 							clearable
 							placeholder="默认选择全部"
+                            style="width: 288px"
 							:popper-append-to-body="false"
 						>
 							<el-option
@@ -24,6 +25,7 @@
 							clearable
 							:maxlength="20"
 							size="medium"
+                            style="width: 310px"
 							placeholder="请输入"
 							@keyup.enter.native="enterSearch"
 						></el-input>
@@ -34,6 +36,7 @@
 							clearable
 							:maxlength="20"
 							size="medium"
+                            style="width: 300px"
 							placeholder="请输入"
 							@keyup.enter.native="enterSearch"
 						></el-input>
@@ -44,6 +47,7 @@
 							clearable
 							:maxlength="20"
 							size="medium"
+                            style="width: 300px"
 							placeholder="请输入"
 							@keyup.enter.native="enterSearch"
 						></el-input>
@@ -52,9 +56,10 @@
 					<el-form-item label="活动支持终端:">
 						<el-select
 							v-model="queryData.activityAppType"
-							style="width: 300px"
+							style="width: 260px"
 							multiple
 							collapse-tags
+                            clearable=""
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
 						>
@@ -69,7 +74,7 @@
 					<el-form-item label="活动生效账户类型:">
 						<el-select
 							v-model="queryData.activityUserType"
-							style="width: 300px"
+							style="width: 240px"
 							multiple
 							collapse-tags
 							placeholder="默认选择全部"
@@ -183,7 +188,7 @@
 					:header-cell-style="getRowClass"
 					@sort-change="changeTableSort"
 				>
-					<el-table-column prop="activityType" align="center" label="活动类型">
+					<el-table-column prop="activityType" align="center" label="活动类型" width="110">
 						<template slot-scope="scope">
 							<span>
 								{{
@@ -201,24 +206,24 @@
 					<el-table-column
 						prop="activityName"
 						align="center"
-						width="120px"
+						width="180px"
 						label="活动名称"
 					></el-table-column>
 					<el-table-column
 						align="center"
 						prop="activityTitle"
 						label="活动主标题"
-						width="120px"
+						width="180px"
 					></el-table-column>
 					<el-table-column
 						align="center"
 						prop="activityAppTypeName"
 						label="活动支持终端"
-						width="155px"
+						width="130px"
 					></el-table-column>
 					<el-table-column
 						align="center"
-						width="155px"
+						width="130px"
 						prop="activityUserTypeName"
 						label="活动生效账户类型"
 					></el-table-column>
@@ -226,6 +231,7 @@
 						align="center"
 						prop="activityPrescription"
 						label="活动时效"
+                        width="100px"
 					>
 						<template slot-scope="scope">
 							<span>
@@ -242,7 +248,7 @@
 						prop="activityUpAt"
 						align="center"
 						label="活动图时间"
-						width="155px"
+						width="170px"
 					>
 						<template slot-scope="scope">
 							<span v-if="scope.row.activityPrescription === 0">
@@ -261,7 +267,7 @@
 							</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="status" align="center" label="状态">
+					<el-table-column prop="status" align="center" label="状态" width="100px">
 						<template slot-scope="scope">
 							<span v-if="scope.row.status === 0" class="disableRgba">
 								{{ typeFilter(scope.row.status, 'operateStatus') }}
@@ -303,31 +309,33 @@
 						prop="createdBy"
 						align="center"
 						label="创建人"
+                        width="110"
 					></el-table-column>
 					<el-table-column
 						prop="createdAt"
 						align="center"
 						label="创建时间"
-						width="155px"
+						width="160"
 						sortable="custom"
 					></el-table-column>
 					<el-table-column
 						prop="updatedBy"
 						align="center"
 						label="最近操作人"
+                        width="110"
 					></el-table-column>
 					<el-table-column
 						prop="updatedAt"
 						align="center"
 						label="最近操作时间"
-						width="155px"
+						width="160"
 						sortable="custom"
 					></el-table-column>
 					<el-table-column
 						prop="operating"
 						align="center"
 						label="操作"
-						width="240px"
+						width="240"
 					>
 						<template slot-scope="scope">
 							<el-button

@@ -16,7 +16,6 @@
               align="right"
               :clearable="false"
               :default-time="defaultTime"
-              style="width: 375px"
             ></el-date-picker>
           </el-form-item>
           <el-form-item label="会员账号:">
@@ -25,7 +24,7 @@
               clearable
               :maxlength="11"
               size="medium"
-              style="width: 180px"
+              style="width: 260px"
               placeholder="请输入"
               :disabled="loading"
               @keyup.enter.native="enterSearch"
@@ -50,7 +49,7 @@
           <el-form-item label="反馈类型:" class="tagheight">
             <el-select
               v-model="queryData.problemType"
-              style="width: 300px"
+              style="width: 260px"
               clearable
               placeholder="全部"
               :popper-append-to-body="false"

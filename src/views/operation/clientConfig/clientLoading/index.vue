@@ -124,7 +124,7 @@
 							<span v-else></span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="pageName" align="center" label="loading名称">
+					<el-table-column prop="pageName" align="center" label="loading名称" width="160">
 						<template slot-scope="scope">
 							<span v-if="!!scope.row.pageName">
 								{{ scope.row.pageName }}
@@ -132,7 +132,7 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="remark" align="center" label="备注">
+					<el-table-column prop="remark" align="center" label="备注" width="160">
 						<template slot-scope="scope">
 							<span v-if="!!scope.row.remark">
 								{{ scope.row.remark }}
@@ -140,7 +140,7 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="status" align="center" label="状态">
+					<el-table-column prop="status" align="center" label="状态" width="100">
 						<template slot-scope="scope">
 							<span v-if="scope.row.status + '' === '0'" class="disableRgba">
 								{{ typeFilter(scope.row.status, 'operateStatus') }}
@@ -163,7 +163,7 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="createdBy" align="center" label="创建人">
+					<el-table-column prop="createdBy" align="center" label="创建人" width="120">
 						<template slot-scope="scope">
 							<span v-if="!!scope.row.createdBy">
 								{{ scope.row.createdBy }}
@@ -185,7 +185,7 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="updatedBy" align="center" label="最近操作人">
+					<el-table-column prop="updatedBy" align="center" label="最近操作人" width="120">
 						<template slot-scope="scope">
 							<span v-if="!!scope.row.updatedBy">
 								{{ scope.row.updatedBy }}

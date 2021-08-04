@@ -16,19 +16,7 @@
 							align="right"
 							clearable
 							:default-time="defaultTime"
-							style="width: 375px"
 						></el-date-picker>
-					</el-form-item>
-					<el-form-item label="关联订单号:">
-						<el-input
-							v-model="queryData.eventId"
-							clearable
-							size="medium"
-							style="width: 200px"
-							placeholder="请输入"
-							:disabled="loading"
-							@keyup.enter.native="enterSearch"
-						></el-input>
 					</el-form-item>
 					<el-form-item label="代理账号:">
 						<el-input
@@ -42,13 +30,24 @@
 							@keyup.enter.native="enterSearch"
 						></el-input>
 					</el-form-item>
+                    <el-form-item label="关联订单号:">
+						<el-input
+							v-model="queryData.eventId"
+							clearable
+							size="medium"
+							style="width: 286px"
+							placeholder="请输入"
+							:disabled="loading"
+							@keyup.enter.native="enterSearch"
+						></el-input>
+					</el-form-item>
 					<el-form-item label="代理姓名:">
 						<el-input
 							v-model="queryData.realName"
 							clearable
 							:maxlength="15"
 							size="medium"
-							style="width: 200px"
+							style="width: 300px"
 							placeholder="请输入"
 							:disabled="loading"
 							@keyup.enter.native="enterSearch"

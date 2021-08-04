@@ -9,6 +9,7 @@
               clearable
               :maxlength="20"
               size="medium"
+              style="width: 260px"
               placeholder="请输入"
               @keyup.enter.native="enterSearch"
             ></el-input>
@@ -17,6 +18,7 @@
             <el-select
               v-model="queryData.sendObj"
               clearable
+              style="width: 260px"
               placeholder="默认选择全部"
               :popper-append-to-body="false"
             >
@@ -30,6 +32,7 @@
               clearable
               :maxlength="15"
               size="medium"
+              style="width: 260px"
               placeholder="请输入"
               @keyup.enter.native="enterSearch"
             ></el-input>
