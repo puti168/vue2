@@ -327,7 +327,7 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="bankName" align="center" width="150px">
+					<el-table-column prop="bankName" align="center" width="150">
 						<template slot="header">
 							银行名称
 							<br />

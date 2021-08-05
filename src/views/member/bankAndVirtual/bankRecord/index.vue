@@ -181,7 +181,11 @@
 						width="100"
 					>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.accountType">
+							<span
+								v-if="
+									!!scope.row.accountType || scope.row.accountType + '' === '0'
+								"
+							>
 								{{ typeFilter(scope.row.accountType, 'accountType') }}
 							</span>
 							<span v-else>-</span>
@@ -229,10 +233,7 @@
 							银行支行
 						</template>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.bankName">
-								{{ scope.row.bankName }}
-							</span>
-							<span v-else>-</span>
+							{{ scope.row.bankName || '-' }}
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -267,7 +268,11 @@
 						width="100"
 					>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.operateType">
+							<span
+								v-if="
+									!!scope.row.operateType || scope.row.operateType + '' === '0'
+								"
+							>
 								{{ typeFilter(scope.row.operateType, 'bindType') }}
 							</span>
 							<span v-else>-</span>
