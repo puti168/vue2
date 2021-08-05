@@ -324,7 +324,7 @@
 					<el-table-column
 						prop="virtualAddress"
 						align="center"
-						width="240px"
+						width="240"
 						label="虚拟币账号地址"
 					>
 						<template slot-scope="scope">
@@ -338,16 +338,16 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="virtualKind" align="center" width="150px">
+					<el-table-column prop="virtualKind" align="center" width="150">
 						<template slot="header">
 							虚拟币种类
 							<br />
 							虚拟币协议
 						</template>
 						<template slot-scope="scope">
-							{{ scope.row.virtualKind }}
+							{{ scope.row.virtualKind || '-' }}
 							<br />
-							{{ scope.row.virtualProtocol }}
+							{{ scope.row.virtualProtocol || '-' }}
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -425,13 +425,10 @@
 						prop="windControlName"
 						align="center"
 						label="风控层级"
-						width="150px"
+						width="150"
 					>
 						<template slot-scope="scope">
-							<span v-if="scope.row.windControlName !== null">
-								{{ scope.row.windControlName }}
-							</span>
-							<span v-else>-</span>
+							{{ scope.row.windControlName || '-' }}
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -456,28 +453,26 @@
 							</el-popover>
 						</template>
 					</el-table-column>
-					<el-table-column prop="bindUserName" align="center" width="120px">
+					<el-table-column prop="bindUserName" align="center" width="120">
 						<template slot="header">
 							当前绑定会员账号
 							<br />
 							会员姓名
 						</template>
 						<template slot-scope="scope">
-							<span v-if="scope.row.bindUserName !== null">
-								{{ scope.row.bindUserName }}
+							<span>
+								{{ scope.row.bindUserName || '-' }}
 							</span>
-							<span v-else>-</span>
 							<br />
-							<span v-if="scope.row.realName !== null">
-								{{ scope.row.realName }}
+							<span>
+								{{ scope.row.realName || '-' }}
 							</span>
-							<span v-else>-</span>
 						</template>
 					</el-table-column>
 					<el-table-column
 						prop="withdrawalSuccessNum"
 						align="center"
-						width="120px"
+						width="120"
 					>
 						<template slot="header">
 							会员提款成功次数
@@ -485,15 +480,13 @@
 							会员提款被拒次数
 						</template>
 						<template slot-scope="scope">
-							<span v-if="scope.row.withdrawalSuccessNum !== null">
-								{{ scope.row.withdrawalSuccessNum }}
+							<span>
+								{{ scope.row.withdrawalSuccessNum || '-' }}
 							</span>
-							<span v-else>-</span>
 							<br />
-							<span v-if="scope.row.withdrawalFailNum !== null">
-								{{ scope.row.withdrawalFailNum }}
+							<span>
+								{{ scope.row.withdrawalFailNum || '-' }}
 							</span>
-							<span v-else>-</span>
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -503,16 +496,13 @@
 						width="120px"
 					>
 						<template slot-scope="scope">
-							<span v-if="scope.row.withdrawalTotalAmount !== null">
-								{{ scope.row.withdrawalTotalAmount }}
-							</span>
-							<span v-else>-</span>
+							{{ scope.row.withdrawalTotalAmount || '-' }}
 						</template>
 					</el-table-column>
 					<el-table-column
 						prop="proxyWithdrawalSuccessNum"
 						align="center"
-						width="120px"
+						width="120"
 					>
 						<template slot="header">
 							代理提款成功次数
@@ -520,28 +510,23 @@
 							代理提款被拒次数
 						</template>
 						<template slot-scope="scope">
-							<span v-if="scope.row.proxyWithdrawalSuccessNum !== null">
-								{{ scope.row.proxyWithdrawalSuccessNum }}
+							<span>
+								{{ scope.row.proxyWithdrawalSuccessNum || '-' }}
 							</span>
-							<span v-else>-</span>
 							<br />
-							<span v-if="scope.row.proxyWithdrawalFailNum !== null">
-								{{ scope.row.proxyWithdrawalFailNum }}
+							<span>
+								{{ scope.row.proxyWithdrawalFailNum || '-' }}
 							</span>
-							<span v-else>-</span>
 						</template>
 					</el-table-column>
 					<el-table-column
 						prop="proxyWithdrawalTotalAmount"
 						align="center"
 						label="代理提款总金额"
-						width="120px"
+						width="120"
 					>
 						<template slot-scope="scope">
-							<span v-if="scope.row.proxyWithdrawalTotalAmount !== null">
-								{{ scope.row.proxyWithdrawalTotalAmount }}
-							</span>
-							<span v-else>-</span>
+							{{ scope.row.proxyWithdrawalTotalAmount || '-' }}
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -549,33 +534,49 @@
 						align="center"
 						label="银行卡新增时间"
 						sortable="custom"
-						width="160px"
-					></el-table-column>
+						width="160"
+					>
+                        <template slot-scope="scope">
+                            {{ scope.row.createdAt || '-' }}
+                        </template>
+                    </el-table-column>
 					<el-table-column
 						prop="withdrawalTime"
 						align="center"
 						label="最近提款时间"
-						width="160px"
+						width="160"
 						sortable="custom"
-					></el-table-column>
+					>
+                        <template slot-scope="scope">
+                            {{ scope.row.withdrawalTime || '-' }}
+                        </template>
+                    </el-table-column>
 					<el-table-column
 						prop="updatedBy"
 						align="center"
 						label="最近操作人"
-						width="120px"
-					></el-table-column>
+						width="120"
+					>
+                        <template slot-scope="scope">
+                            {{ scope.row.updatedBy || '-' }}
+                        </template>
+                    </el-table-column>
 					<el-table-column
 						prop="updatedAt"
 						align="center"
 						label="最近操作时间"
-						width="160px"
+						width="160"
 						sortable="custom"
-					></el-table-column>
+					>
+                        <template slot-scope="scope">
+                            {{ scope.row.updatedAt || '-' }}
+                        </template>
+                    </el-table-column>
 					<el-table-column
 						prop="operation"
 						align="center"
 						label="操作"
-						width="160px"
+						width="160"
 					>
 						<template slot-scope="scope">
 							<el-button
