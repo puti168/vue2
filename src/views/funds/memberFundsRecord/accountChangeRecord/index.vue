@@ -488,16 +488,16 @@ export default {
   },
   computed: {
     accountStatusType() {
-      return this.globalDics.accountStatusType
+      return this.globalDics.accountStatusType || []
     },
     memberAccountBizType() {
-      return this.globalDics.memberAccountBizType
+      return this.globalDics.memberAccountBizType || []
     },
     memberAccountChangeType() {
-      return this.globalDics.memberAccountChangeType
+      return this.globalDics.memberAccountChangeType || []
     },
     accountBizType() {
-      return this.globalDics.accountBizType
+      return this.globalDics.accountBizType || []
     }
   },
   created() {
@@ -520,6 +520,7 @@ export default {
       // })
     },
     getMerchantDict(val) {
+      this.queryData.type = ''
       const bizCode = val
       this.$api.getMemberFundsRecordsAccountChangeDic({ bizCode }).then((res) => {
         if (res.code === 200) {

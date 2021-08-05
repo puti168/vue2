@@ -451,7 +451,8 @@ export default {
 		this._changeTableSort = this.throttle(this._changeTableSort, 1000)
 		return {
 			queryData: {
-				accountType: '0'
+				accountType: '0',
+                type: ''
 			},
 			searchTime: [startTime, endTime],
 			tableData: [],
@@ -468,16 +469,16 @@ export default {
 	},
 	computed: {
 		proxyAccountBizType() {
-			return this.globalDics.proxyAccountBizType
+			return this.globalDics.proxyAccountBizType || []
 		},
 		accountType() {
-			return this.globalDics.accountType
+			return this.globalDics.accountType || []
 		},
 		accountStatusType() {
 			return this.globalDics.accountStatusType || []
 		},
 		proxyAccountChangeType() {
-			return this.globalDics.proxyAccountChangeType
+			return this.globalDics.proxyAccountChangeType || []
 		},
 		accountBizType() {
 			return this.globalDics.accountBizType || []
@@ -507,7 +508,8 @@ export default {
 				})
 		},
 		changeSelect(val) {
-			const bizCode = val
+            this.queryData.type = ''
+			const bizCode = val || 0
 			this.$api
 				.getProxyFundsRecordsAccountChangeDic({ bizCode })
 				.then((res) => {
@@ -523,8 +525,6 @@ export default {
 			const [startTime, endTime] = create
 			let params = {
 				...this.queryData,
-				bizType: this.bizType === '0' ? '' : this.bizType,
-				type: this.type === '0' ? '' : this.type,
 				occurDtStart: startTime
 					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
 					: '',
