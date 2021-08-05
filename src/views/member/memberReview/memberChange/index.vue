@@ -2,7 +2,12 @@
 	<div class="game-container report-container">
 		<template v-if="!showDetail">
 			<div class="params">
-				<el-form ref="form" :inline="true" :model="queryData" label-width="80px">
+				<el-form
+					ref="form"
+					:inline="true"
+					:model="queryData"
+					label-width="80px"
+				>
 					<el-form-item label="申请时间:">
 						<el-date-picker
 							v-model="formTime.time"
@@ -265,12 +270,16 @@
 							align="center"
 							label="审核单号"
 							width="180"
-						></el-table-column>
+						>
+							<template slot-scope="scope">
+								{{ scope.row.auditNum || '-' }}
+							</template>
+						</el-table-column>
 						<el-table-column
 							prop="applyType"
 							align="center"
 							label="审核申请类型"
-                            width="160"
+							width="160"
 						>
 							<template slot-scope="scope">
 								{{ typeFilter(scope.row.applyType, 'applyType') }}
@@ -285,7 +294,7 @@
 									{{ typeFilter(scope.row.beforeModify, 'accountStatusType') }}
 								</template>
 								<template v-else>
-									{{ scope.row.beforeModify ? scope.row.beforeModify : '-' }}
+									{{ scope.row.beforeModify || '-' }}
 								</template>
 							</template>
 						</el-table-column>
@@ -298,7 +307,7 @@
 									{{ typeFilter(scope.row.afterModify, 'accountStatusType') }}
 								</template>
 								<template v-else>
-									{{ scope.row.afterModify ? scope.row.afterModify : '-' }}
+									{{ scope.row.afterModify || '-' }}
 								</template>
 							</template>
 						</el-table-column>
@@ -313,24 +322,32 @@
 								<p>{{ typeFilter(scope.row.accountType, 'accountType') }}</p>
 							</template>
 						</el-table-column>
-						<el-table-column
-							prop="applyName"
-							align="center"
-							label="申请人"
-						></el-table-column>
+						<el-table-column prop="applyName" align="center" label="申请人">
+							<template slot-scope="scope">
+								{{ scope.row.applyName || '-' }}
+							</template>
+						</el-table-column>
 						<el-table-column
 							prop="applyTime"
 							align="center"
 							sortable="custom"
 							width="180"
 							label="申请时间"
-						></el-table-column>
+						>
+							<template slot-scope="scope">
+								{{ scope.row.applyTime || '-' }}
+							</template>
+						</el-table-column>
 						<el-table-column
 							prop="applyInfo"
 							align="center"
 							label="申请信息"
-                            width="120"
-						></el-table-column>
+							width="120"
+						>
+							<template slot-scope="scope">
+								{{ scope.row.applyInfo || '-' }}
+							</template>
+						</el-table-column>
 						<el-table-column align="center" label="审核状态" width="100">
 							<template slot-scope="scope">
 								<span
@@ -351,7 +368,7 @@
 							prop="auditTime"
 							align="center"
 							sortable="custom"
-							width="200px"
+							width="200"
 						>
 							<template slot="header">
 								<span>
@@ -361,8 +378,8 @@
 								</span>
 							</template>
 							<template slot-scope="scope">
-								{{ scope.row.auditName ? scope.row.auditName : '-' }}
-								<p>{{ scope.row.auditTime ? scope.row.auditTime : '-' }}</p>
+								{{ scope.row.auditName || '-' }}
+								<p>{{ scope.row.auditTime || '-' }}</p>
 							</template>
 						</el-table-column>
 					</el-table>
@@ -402,6 +419,7 @@ const end = dayjs()
 const start = dayjs()
 	.startOf('day')
 	.valueOf()
+
 export default {
 	name: routerNames.memberChange,
 	components: { memberChangeReview },
@@ -411,17 +429,17 @@ export default {
 		this.reset = this.throttle(this.reset, 1000)
 		return {
 			queryData: {
-				userName: '',
+				userName: undefined,
 				accountType: [],
 				applyType: [],
 				auditStatus: [],
 				auditStep: '',
-				applyName: '',
-				auditName: '',
+				applyName: undefined,
+				auditName: undefined,
 				lockOrder: '',
-				auditNum: '',
-				orderType: '',
-				orderKey: ''
+				auditNum: undefined,
+				orderType: undefined,
+				orderKey: undefined
 			},
 			showDetail: false,
 			rowData: {},
@@ -437,19 +455,19 @@ export default {
 	},
 	computed: {
 		accountType() {
-			return this.globalDics.accountType
+			return this.globalDics.accountType || []
 		},
 		auditStatus() {
-			return this.globalDics.auditStatusType
+			return this.globalDics.auditStatusType || []
 		},
 		auditStepType() {
-			return this.globalDics.auditStepType
+			return this.globalDics.auditStepType || []
 		},
 		lockOrderType() {
-			return this.globalDics.lockOrderType
+			return this.globalDics.lockOrderType || []
 		},
 		applyType() {
-			return this.globalDics.applyType
+			return this.globalDics.applyType || []
 		}
 	},
 	mounted() {
@@ -464,16 +482,16 @@ export default {
 				...this.queryData,
 				applyTimeStart: startTime
 					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
-					: '',
+					: undefined,
 				applyTimeEnd: endTime
 					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
-					: '',
+					: undefined,
 				auditTimeStart: startTime2
 					? dayjs(startTime2).format('YYYY-MM-DD HH:mm:ss')
-					: '',
+					: undefined,
 				auditTimeEnd: endTime2
 					? dayjs(endTime2).format('YYYY-MM-DD HH:mm:ss')
-					: ''
+					: undefined
 			}
 			params = {
 				...this.getParams(params)
@@ -481,25 +499,20 @@ export default {
 			this.$api
 				.memberChange(params)
 				.then((res) => {
-					if (res.code === 200) {
+					this.loading = false
+					const { code, data, msg } = res
+					if (res && code === 200) {
 						this.now = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
-						const response = res.data
-						this.loading = false
-						this.dataList = response.record
+						this.dataList = (data && data.record) || []
+						this.total = (data && data.totalRecord) || 0
 						if (this.dataList) {
 							this.dataList.forEach((item) => {
-								if (Number(item.lockOrder) === 1) {
-									item.lockStatus = true
-								} else {
-									item.lockStatus = false
-								}
+								item.lockStatus = item.lockOrder * 1 === 1
 							})
 						}
-						this.total = response.totalRecord
 					} else {
-						this.loading = false
 						this.$message({
-							message: res.msg,
+							message: res && msg,
 							type: 'error'
 						})
 					}
@@ -518,19 +531,20 @@ export default {
 			this.loadData()
 		},
 		reset() {
+			this.pageNum = 1
 			this.queryData = {
-				userName: '',
+				userName: undefined,
 				accountType: [],
 				applyType: [],
+				auditStep: '',
 				auditStatus: [],
-				applyName: '',
-				auditName: '',
+				applyName: undefined,
+				auditName: undefined,
 				lockOrder: '',
-				auditNum: '',
-				orderType: '',
-				orderKey: ''
+				auditNum: undefined,
+				orderType: undefined,
+				orderKey: undefined
 			}
-			this.pageNum = 1
 			this.formTime = {
 				time: [start, end],
 				time2: []
