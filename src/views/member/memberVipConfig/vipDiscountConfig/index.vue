@@ -18,10 +18,7 @@
 						width="120"
 					>
 						<template slot-scope="scope">
-							<span v-if="scope.row.vipSerialNum">
-								{{ scope.row.vipSerialNum }}
-							</span>
-							<span v-else>-</span>
+							{{ scope.row.vipSerialNum || '-' }}
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -62,7 +59,7 @@
 						</template>
 						<template slot-scope="scope">
 							<div>
-								<span style="display-inline-block">
+								<span>
 									<el-input-number
 										v-model.number="scope.row.bonusRatio"
 										size="medium"
@@ -75,7 +72,7 @@
 										@blur="checkTransferValue(scope.row, 'bonusRatio')"
 									></el-input-number>
 								</span>
-								<span style="display-inline-block">%</span>
+								<span>%</span>
 							</div>
 						</template>
 					</el-table-column>
@@ -171,7 +168,6 @@
 					icon="el-icon-refresh-left"
 					size="medium"
 					style="padding: 0 8px"
-					@click="resetData()"
 				>
 					恢复上次配置
 				</el-button>
@@ -186,7 +182,6 @@ import { routerNames } from '@/utils/consts'
 
 export default {
 	name: routerNames.vipDiscountConfig,
-	components: {},
 	mixins: [list],
 	data() {
 		this.saveData = this.throttle(this.saveData, 1000)
@@ -198,7 +193,7 @@ export default {
 	},
 	computed: {
 		participateTypeArr() {
-			return this.globalDics.participateType
+			return this.globalDics.participateType || []
 		}
 	},
 	created() {
@@ -225,7 +220,7 @@ export default {
 				.then((res) => {
 					this.loading = false
 					const { code, data, msg } = res
-					if (code === 200) {
+					if (res && code && code === 200) {
 						const arr =
 							data.length &&
 							data.map((item) => {
@@ -237,7 +232,6 @@ export default {
 							})
 						this.dataList = arr || []
 						this.dataList.reverse()
-						console.log('ww', arr)
 					} else {
 						this.$message({
 							message: msg,
@@ -253,8 +247,10 @@ export default {
 		getMemberVipMerchantGame() {
 			this.$api.memberVipMerchantGameAPI().then((res) => {
 				const { code, data } = res
-				if (code === 200) {
+				if (res && code && code === 200) {
 					this.gameVenueList = data || []
+				} else {
+					this.gameVenueList = []
 				}
 			})
 		},
@@ -278,14 +274,14 @@ export default {
 				.then((res) => {
 					this.loadingT = false
 					const { code, msg } = res
-					if (code === 200) {
+					if (res && code && code === 200) {
 						this.$message({
 							message: '保存成功',
 							type: 'success'
 						})
 					} else {
 						this.$message({
-							message: msg,
+							message: res && msg,
 							type: 'error'
 						})
 					}
