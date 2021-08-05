@@ -365,7 +365,11 @@
 					</el-table-column>
 					<el-table-column prop="accountType" align="center" label="账号类型">
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.accountType">
+							<span
+								v-if="
+									!!scope.row.accountType || scope.row.accountType + '' === '0'
+								"
+							>
 								{{ typeFilter(scope.row.accountType, 'accountType') }}
 							</span>
 							<span v-else>-</span>

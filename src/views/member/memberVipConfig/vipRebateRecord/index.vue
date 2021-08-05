@@ -123,7 +123,11 @@
 						align="center"
 						label="操作时间"
 						sortable="custom"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							{{ scope.row.createdAt || '-' }}
+						</template>
+					</el-table-column>
 					<el-table-column prop="venueId" align="center" label="场馆名称">
 						<template slot-scope="scope">
 							<span v-for="item in gameTypeList" :key="item.gameName">
@@ -133,7 +137,7 @@
 					</el-table-column>
 					<el-table-column prop="gameName" align="center" label="游戏名称">
 						<template slot-scope="scope">
-							<span>{{ scope.row.gameName }}</span>
+							{{ scope.row.gameName || '-' }}
 						</template>
 					</el-table-column>
 					<el-table-column prop="vipSerialNum" align="center" label="VIP等级">
@@ -147,19 +151,19 @@
 					</el-table-column>
 					<el-table-column prop="beforeModify" align="center" label="操作前">
 						<template slot-scope="scope">
-							<span>{{ scope.row.beforeModify }}%</span>
+							{{ scope.row.beforeModify + '%' || '-' }}
 						</template>
 					</el-table-column>
 					<el-table-column prop="afterModify" align="center" label="操作后">
 						<template slot-scope="scope">
-							<span>{{ scope.row.afterModify }}%</span>
+							{{ scope.row.afterModify + '%' || '-' }}
 						</template>
 					</el-table-column>
-					<el-table-column
-						prop="createdBy"
-						align="center"
-						label="操作人"
-					></el-table-column>
+					<el-table-column prop="createdBy" align="center" label="操作人">
+						<template slot-scope="scope">
+							{{ scope.row.createdBy || '-' }}
+						</template>
+					</el-table-column>
 				</el-table>
 				<!-- 分页 -->
 				<el-pagination
