@@ -37,7 +37,7 @@
 									placeholder="请输入"
 									maxlength="10"
 									clearable
-                                    style="width: auto"
+									style="width: auto"
 									@input="tableVipGradeNameChange(scope.row)"
 								></el-input>
 							</template>
@@ -161,7 +161,6 @@
 <script>
 import list from '@/mixins/list'
 import { routerNames } from '@/utils/consts'
-// import { notSpecial2, isHaveEmoji } from '@/utils/validate'
 
 export default {
 	name: routerNames.vipLevelConfig,
@@ -197,12 +196,12 @@ export default {
 				.then((res) => {
 					this.loading = false
 					const { code, data, msg } = res
-					if (code === 200) {
+					if (res && code && code === 200) {
 						this.dataList = data || []
 						this.dataList.reverse()
 					} else {
 						this.$message({
-							message: msg,
+							message: res && msg,
 							type: 'error'
 						})
 					}
@@ -216,7 +215,7 @@ export default {
 			const errorArr = []
 			const listUpdateMemberVipGradeReqDto =
 				this.dataList.map((item) => {
-					item.error ? errorArr.push(item.error) : null
+					item.error && errorArr.push(item.error)
 					return {
 						id: item.id,
 						relegationValidPeriod: item.relegationValidPeriod,
@@ -227,21 +226,20 @@ export default {
 						tatalValidWater: item.tatalValidWater
 					}
 				}) || []
-			console.log('errorArr', errorArr, errorArr.length)
 			if (!errorArr.length) {
 				this.$api
 					.memberVipGradeUpDateAPI({ listUpdateMemberVipGradeReqDto })
 					.then((res) => {
 						this.loadingT = false
 						const { code, msg } = res
-						if (code === 200) {
+						if (res && code && code === 200) {
 							this.$message({
 								message: '保存成功',
 								type: 'success'
 							})
 						} else {
 							this.$message({
-								message: msg,
+								message: res && msg,
 								type: 'error'
 							})
 						}
