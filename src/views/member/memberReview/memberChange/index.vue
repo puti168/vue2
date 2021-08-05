@@ -410,7 +410,6 @@
 <script>
 import list from '@/mixins/list'
 import dayjs from 'dayjs'
-import memberChangeReview from './components/memberChangeReview'
 import { routerNames } from '@/utils/consts'
 import { getUsername } from '@/utils/auth'
 const end = dayjs()
@@ -422,7 +421,9 @@ const start = dayjs()
 
 export default {
 	name: routerNames.memberChange,
-	components: { memberChangeReview },
+	components: {
+		memberChangeReview: () => import('./components/memberChangeReview')
+	},
 	mixins: [list],
 	data() {
 		this.search = this.throttle(this.search, 1000)
@@ -583,17 +584,17 @@ export default {
 			this.$api
 				.lock({ id: val.id, lockFlag: Number(val.lockOrder) === 0 ? 0 : 1 })
 				.then((res) => {
-					if (res.code === 200) {
-						loading.close()
+					loading.close()
+					const { code, msg } = res
+					if (res && code === 200) {
 						this.$message({
 							type: 'success',
 							message: '操作成功!'
 						})
 						this.loadData()
 					} else {
-						loading.close()
 						this.$message({
-							message: res.msg,
+							message: res && msg,
 							type: 'error'
 						})
 					}
