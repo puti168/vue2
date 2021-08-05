@@ -573,7 +573,7 @@
 								:type="scope.row.blacklistStatus === 0 ? 'success' : 'danger'"
 								size="medium"
 								@click="
-									eidtDialog(
+									editDialog(
 										scope.row.blacklistStatus === 0 ? '开启' : '禁用',
 										scope.row
 									)
@@ -586,7 +586,7 @@
 								v-if="hasPermission('244')"
 								type="warning"
 								size="medium"
-								@click="eidtDialog('解绑', scope.row)"
+								@click="editDialog('解绑', scope.row)"
 							>
 								解绑
 							</el-button>
@@ -737,9 +737,20 @@ export default {
 				.getListUserBankAndVirtual(params)
 				.then((res) => {
 					this.loading = false
-					if (res.code === 200) {
-						this.tableData = res.data.record
-						this.total = res.data.totalRecord
+					const {
+						code,
+						data: { record, totalRecord },
+						msg
+					} = res
+					if (res && code && code === 200) {
+						this.tableData =
+							(res.data && record.length && Object.freeze(record)) || []
+						this.total = (res.data && totalRecord) || 0
+					} else {
+						this.$message({
+							message: res && msg,
+							type: 'error'
+						})
 					}
 				})
 				.catch(() => {
@@ -751,7 +762,7 @@ export default {
 			this.pageNum = 1
 			this.loadData()
 		},
-		eidtDialog(text, val) {
+		editDialog(text, val) {
 			this.submitEditDisabled = false
 			this.editData.remark = ''
 			if (text === '开启' || text === '禁用') {
@@ -772,7 +783,6 @@ export default {
 			this.$nextTick(() => {
 				this.editVisible = true
 			})
-			console.log(text, val)
 		},
 		changeAccountStatus(val) {
 			this.editData.status = val + ''
@@ -787,7 +797,8 @@ export default {
 						this.$api
 							.setUpdateUserBankAndVirtualStatus(params)
 							.then((res) => {
-								if (res.code === 200) {
+								const { code } = res
+								if (res && code === 200) {
 									this.$message.success('修改成功')
 									this.editVisible = false
 									this.pageNum = 1
@@ -807,7 +818,8 @@ export default {
 						this.$api
 							.setUpdateUserBankAndVirtualBindStatus(params)
 							.then((res) => {
-								if (res.code === 200) {
+								const { code } = res
+								if (res && code === 200) {
 									this.$message.success('解绑成功')
 									this.editVisible = false
 									this.pageNum = 1

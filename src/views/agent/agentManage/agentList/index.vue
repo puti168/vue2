@@ -626,7 +626,7 @@ export default {
 						msg
 					} = res
 					if (code === 200) {
-						this.dataList = Object.freeze(record) || []
+						this.dataList = `Object.freeze`(record) || []
 						this.total = totalRecord || 0
 					} else {
 						this.$message({
