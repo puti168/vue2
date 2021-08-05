@@ -14,6 +14,7 @@ export const routerNames = {
 	addMemberReview: 'addMemberReview',
 	memberChangeReview: 'memberChangeReview',
 	memberBankManage: 'memberBankManage',
+	VirtualManage: 'VirtualManage',
 	gameClassify: 'gameClassify',
 	gamePlatform: 'gamePlatform',
 	addMemberCheck: 'addMemberCheck',

@@ -22,7 +22,7 @@
 							multiple
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
-                            clearable
+							clearable
 						>
 							<el-option
 								v-for="item in virtualType"
@@ -39,8 +39,8 @@
 							multiple
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
-                            collapse-tags
-                            clearable
+							collapse-tags
+							clearable
 						>
 							<el-option
 								v-for="item in virtualProtocolType"
@@ -90,7 +90,7 @@
 							multiple
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
-                            clearable
+							clearable
 						>
 							<el-option
 								v-for="item in vipDict"
@@ -691,8 +691,7 @@
 import list from '@/mixins/list'
 import { routerNames } from '@/utils/consts'
 export default {
-	name: routerNames.memberBankManagement,
-	components: {},
+	name: routerNames.VirtualManage,
 	mixins: [list],
 	data() {
 		this.search = this.throttle(this.search, 1000)
@@ -711,16 +710,16 @@ export default {
 	},
 	computed: {
 		virtualProtocolType() {
-			return this.globalDics.virtualProtocolType
+			return this.globalDics.virtualProtocolType || []
 		},
 		virtualType() {
-			return this.globalDics.virtualType
+			return this.globalDics.virtualType || []
 		},
 		blackStatusType() {
-			return this.globalDics.blackStatusType
+			return this.globalDics.blackStatusType || []
 		},
 		bindStatusType() {
-			return this.globalDics.bindStatusType
+			return this.globalDics.bindStatusType || []
 		}
 	},
 	mounted() {
@@ -731,8 +730,10 @@ export default {
 			this.$api
 				.getWindControllerLevelDict({ windControlType: 4 })
 				.then((res) => {
-					if (res.code === 200) {
+					if (res && res.code === 200) {
 						this.vipDict = res.data
+					} else {
+						this.vipDict = []
 					}
 				})
 		},
@@ -745,15 +746,25 @@ export default {
 			params = {
 				...this.getParams(params)
 			}
-			console.log(params)
 			this.$api
 				.getListUserBankAndVirtual(params)
 				.then((res) => {
-					if (res.code === 200) {
-						this.tableData = res.data.record
-						this.total = res.data.totalRecord
-					}
 					this.loading = false
+					const {
+						code,
+						data: { record, totalRecord },
+						msg
+					} = res
+					if (res && code && code === 200) {
+						this.tableData =
+							(res.data && record.length && Object.freeze(record)) || []
+						this.total = (res.data && totalRecord) || 0
+					} else {
+						this.$message({
+							message: res && msg,
+							type: 'error'
+						})
+					}
 				})
 				.catch(() => {
 					this.loading = false
