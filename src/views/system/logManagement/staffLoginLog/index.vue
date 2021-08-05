@@ -8,7 +8,7 @@
             clearable
             :maxlength="10"
             size="medium"
-            style="width: 180px"
+            style="width: 200px"
             placeholder="请输入"
             @keyup.enter.native="enterSearch"
           ></el-input>
@@ -19,7 +19,7 @@
             clearable
             size="medium"
             :maxlength="20"
-            style="width: 180px"
+            style="width: 200px"
             placeholder="请输入"
             @keyup.enter.native="enterSearch"
           ></el-input>
@@ -46,14 +46,14 @@
           style="width: 100%"
           :header-cell-style="getRowClass"
         >
-          <el-table-column prop="userName" align="center" label="用户名" width="150px">
+          <el-table-column prop="userName" align="center" label="用户名">
           </el-table-column>
           <el-table-column
             prop="loginTime"
             align="center"
             label="登录时间"
           ></el-table-column>
-          <el-table-column prop="ip" align="center" label="登录IP" width="120">
+          <el-table-column prop="ip" align="center" label="登录IP">
             <template slot="header"> 登录IP </template>
             <template slot-scope="scope">
               <span v-if="scope.row.ip !== null">
@@ -62,7 +62,7 @@
               <span v-else>-</span>
             </template>
           </el-table-column>
-          <el-table-column prop="deviceNo" align="center" label="终端设备号">
+          <el-table-column prop="deviceNo" align="center" label="终端设备号" width="350">
             <template slot-scope="scope">
               <span v-if="scope.row.deviceNo !== null">
                 {{ scope.row.deviceNo }}
@@ -75,7 +75,7 @@
             align="center"
             label="登录地区"
           ></el-table-column>
-          <el-table-column prop="loginStatus" align="center" label="登录状态" width="200">
+          <el-table-column prop="loginStatus" align="center" label="登录状态">
             <template slot-scope="scope">
               <span v-if="scope.row.loginStatus === 0 " class="redColor">
                 {{ typeFilter(scope.row.loginStatus, "loginStatusType") }}

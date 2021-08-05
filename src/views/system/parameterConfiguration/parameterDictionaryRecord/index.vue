@@ -23,7 +23,7 @@
             clearable
             size="medium"
             :maxlength="5"
-            style="width: 180px"
+            style="width: 200px"
             placeholder="请输入"
             @keyup.enter.native="enterSearch"
           ></el-input>
@@ -34,7 +34,7 @@
             clearable
             size="medium"
             :maxlength="12"
-            style="width: 180px"
+            style="width: 200px"
             placeholder="请输入"
             @keyup.enter.native="enterSearch"
           ></el-input>
@@ -71,7 +71,7 @@
           style="width: 100%"
           :header-cell-style="getRowClass"
         >
-          <el-table-column type="index" align="center" label="序号"> </el-table-column>
+          <el-table-column type="index" align="center" label="序号" width="100"> </el-table-column>
           <el-table-column
             prop="createdAt"
             align="center"

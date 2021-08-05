@@ -24,7 +24,7 @@
               size="medium"
               placeholder="默认选择全部"
               clearable
-              style="width: 300px"
+              style="width: 200px"
             >
               <el-option label="全部" :value="undefined"></el-option>
               <el-option
@@ -41,7 +41,7 @@
               clearable
               size="medium"
               :maxlength="12"
-              style="width: 180px"
+              style="width: 200px"
               placeholder="请输入"
               @keyup.enter.native="enterSearch"
             ></el-input>
@@ -52,7 +52,7 @@
               clearable
               size="medium"
               :maxlength="15"
-              style="width: 180px"
+              style="width: 200px"
               placeholder="请输入"
               @keyup.enter.native="enterSearch"
             ></el-input>
