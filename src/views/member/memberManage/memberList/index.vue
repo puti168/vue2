@@ -722,7 +722,8 @@ export default {
 						msg
 					} = res
 					if (res && code && code === 200) {
-						this.dataList = (res.data && record) || []
+						this.dataList =
+							(res.data && record.length && Object.freeze(record)) || []
 						this.total = (res.data && totalRecord) || 0
 					} else {
 						this.$message({
@@ -732,10 +733,6 @@ export default {
 					}
 				})
 				.catch(() => (this.loading = false))
-
-			setTimeout(() => {
-				this.loading = false
-			}, 1000)
 		},
 		// 获取会员标签
 		getMemberLabelDict() {
