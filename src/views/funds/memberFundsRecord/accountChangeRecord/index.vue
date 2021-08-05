@@ -28,7 +28,7 @@
 							v-model="queryData.eventId"
 							clearable
 							size="medium"
-							style="width: 297px"
+							style="width: 280px"
 							placeholder="请输入"
 							:disabled="loading"
 							@keyup.enter.native="enterSearch"
@@ -40,7 +40,7 @@
 							clearable
 							:maxlength="11"
 							size="medium"
-							style="width: 280px"
+							style="width: 270px"
 							placeholder="请输入"
 							:disabled="loading"
 							@keyup.enter.native="enterSearch"
@@ -52,7 +52,7 @@
 							clearable
 							:maxlength="15"
 							size="medium"
-							style="width: 280px"
+							style="width: 270px"
 							placeholder="请输入"
 							:disabled="loading"
 							@keyup.enter.native="enterSearch"
@@ -75,28 +75,44 @@
 							></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="风控层级:" class="tagheight">
-						<el-select
-							v-model="queryData.windControlId"
-							style="width: 306px"
-							clearable
-							placeholder="默认选择全部"
-							:popper-append-to-body="false"
-						>
-							<el-option
-								v-for="item in windControlLevelList"
-								:key="item.windControlId"
-								:label="item.windControlName"
-								:value="item.windControlId"
-							></el-option>
-						</el-select>
-					</el-form-item>
+                    <el-form-item label="业务类型:" class="tagheight">
+                        <el-select
+                        v-model="bizType"
+                        placeholder="默认选择全部"
+                        :popper-append-to-body="false"
+                        style="width: 290px"
+                        @change="getMerchantDict($event)"
+                        >
+                        <el-option
+                            v-for="item in memberAccountBizType"
+                            :key="item.code"
+                            :label="item.description"
+                            :value="item.code"
+                        ></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="账变类型:" class="tagheight">
+                        <el-select
+                        v-model="queryData.type"
+                        clearable
+                        style="width: 270px"
+                        placeholder="默认选择全部"
+                        :popper-append-to-body="false"
+                        >
+                        <el-option
+                            v-for="item in AccountChangeDicList"
+                            :key="item.code"
+                            :label="item.description"
+                            :value="item.code"
+                        ></el-option>
+                        </el-select>
+                    </el-form-item>
 					<el-form-item label="VIP 等级:">
 						<el-input
 							v-model="queryData.vipSerialNumMin"
 							size="medium"
 							placeholder="最小数值"
-							style="width: 135px"
+							style="width: 129px"
 							:maxlength="3"
 							name="vipSerialNumMin"
 							oninput="value=value.replace(/[^\d]/g,'')"
@@ -107,7 +123,7 @@
 							v-model="queryData.vipSerialNumMax"
 							size="medium"
 							placeholder="最大数值"
-							style="width: 133px"
+							style="width: 129px"
 							:maxlength="3"
 							name="vipSerialNumMax"
 							oninput="value=value.replace(/[^\d]/g,'')"
@@ -130,37 +146,23 @@
               ></el-option>
             </el-select>
           </el-form-item> -->
-          <el-form-item label="业务类型:" class="tagheight">
-            <el-select
-              v-model="bizType"
-              placeholder="默认选择全部"
-              :popper-append-to-body="false"
-              style="width: 280px"
-              @change="getMerchantDict($event)"
-            >
-              <el-option
-                v-for="item in memberAccountBizType"
-                :key="item.code"
-                :label="item.description"
-                :value="item.code"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="账变类型:" class="tagheight">
-            <el-select
-              v-model="queryData.type"
-              clearable
-              placeholder="默认选择全部"
-              :popper-append-to-body="false"
-            >
-              <el-option
-                v-for="item in AccountChangeDicList"
-                :key="item.code"
-                :label="item.description"
-                :value="item.code"
-              ></el-option>
-            </el-select>
-          </el-form-item>
+
+          			<el-form-item label="风控层级:" class="tagheight">
+						<el-select
+							v-model="queryData.windControlId"
+							style="width: 183px"
+							clearable
+							placeholder="默认选择全部"
+							:popper-append-to-body="false"
+						>
+                        <el-option
+                            v-for="item in windControlLevelList"
+                            :key="item.windControlId"
+                            :label="item.windControlName"
+                            :value="item.windControlId"
+                        ></el-option>
+						</el-select>
+					</el-form-item>
           <el-form-item label="收支类型:" class="tagheight">
             <el-select
               v-model="queryData.transType"
@@ -377,11 +379,11 @@
           >
           </el-table-column> -->
           <el-table-column
-prop="bizType"
-align="center"
-label="业务类型"
-width="120px"
->~
+            prop="bizType"
+            align="center"
+            label="业务类型"
+            width="120"
+            >
             <template slot-scope="scope">
               {{
                 scope.row.bizType === 0

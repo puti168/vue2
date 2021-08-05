@@ -805,7 +805,6 @@ export default {
 			console.log(val)
 		},
 		submitEdit() {
-			const delayer = this.disabledDelay('submitEditDisabled', false, 2000)
 			const params = { ...this.editData }
 			this.$refs.editForm.validate((valid) => {
 				if (valid) {
@@ -824,9 +823,7 @@ export default {
 									}, 1000)
 								}
 							})
-							.catch(() => {
-								delayer()
-							})
+							.catch(() => {})
 					} else {
 						if (this.checked) {
 							params.status = 0
@@ -847,9 +844,7 @@ export default {
 									}, 500)
 								}
 							})
-							.catch(() => {
-								delayer()
-							})
+							.catch(() => {})
 					}
 				}
 			})

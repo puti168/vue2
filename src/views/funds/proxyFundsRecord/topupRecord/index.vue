@@ -35,7 +35,7 @@
               clearable
               :maxlength="11"
               size="medium"
-              style="width: 260px"
+              style="width: 230px"
               placeholder="请输入"
               :disabled="loading"
               @keyup.enter.native="enterSearch"
@@ -47,7 +47,7 @@
               clearable
               :maxlength="15"
               size="medium"
-              style="width: 260px"
+              style="width: 230px"
               placeholder="请输入"
               :disabled="loading"
               @keyup.enter.native="enterSearch"
@@ -56,7 +56,7 @@
           <el-form-item label="订单状态:" class="tagheight">
             <el-select
               v-model="queryData.orderStatus"
-              style="width: 140px"
+              style="width: 148px"
               clearable
               placeholder="默认选择全部"
               :popper-append-to-body="false"
@@ -90,7 +90,7 @@
               v-model="queryData.adjustAmountMin"
               size="medium"
               placeholder="最小数值"
-              style="width: 124px"
+              style="width: 120px"
               :maxlength="10"
               name="betAmountMin"
               oninput="value=value.replace(/[^\d]/g,'')"
@@ -101,7 +101,7 @@
               v-model="queryData.adjustAmountMax"
               size="medium"
               placeholder="最大数值"
-              style="width: 124px"
+              style="width: 120px"
               :maxlength="10"
               name="betAmountMax"
               oninput="value=value.replace(/[^\d]/g,'')"
@@ -176,10 +176,10 @@
             prop="adjustStyle"
             align="center"
             label="调整方式"
-            width="130px"
+            width="130"
           >
           </el-table-column>
-          <el-table-column prop="orderStatus" align="center" label="状态" width="100px">
+          <el-table-column prop="orderStatus" align="center" label="状态" width="100">
             <template slot-scope="scope">
               {{ typeFilter(scope.row.orderStatus, "patchAdjustOrderStatus") }} </template>>
           </el-table-column>
@@ -187,7 +187,7 @@
             prop="adjustType"
             align="center"
             label="调整类型"
-            width="130px"
+            width="130"
           >
             <template slot-scope="scope">
               {{ typeFilter(scope.row.adjustType, "proxyPatchAddAdjustType") }}
@@ -196,10 +196,10 @@
           <el-table-column
             prop="adjustAmount"
             align="center"
-            width="180px"
+            width="180"
             label="调整金额"
           ></el-table-column>
-          <el-table-column prop="operator" align="center" label="申请人" width="150px">
+          <el-table-column prop="operator" align="center" label="申请人" width="150">
             <template slot-scope="scope">
               <span v-if="scope.row.operator">{{ scope.row.operator }}</span>
               <span v-else>-</span>
@@ -209,11 +209,11 @@
             prop="operatorTime"
             align="center"
             label="申请时间"
-            min-width="200px"
+            min-width="200"
             sortable="custom"
           >
           </el-table-column>
-          <el-table-column prop="remark" align="center" label="备注" min-width="220px">
+          <el-table-column prop="remark" align="center" label="备注" min-width="220">
             <template slot-scope="scope">
               <span v-if="scope.row.remark">{{ scope.row.remark }}</span>
               <span v-else>-</span>

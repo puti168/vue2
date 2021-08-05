@@ -398,7 +398,6 @@ export default {
 		},
 		subAddOrEdit() {
 			const data = {}
-			const delayer = this.disabledDelay('subAddOrEditDisabled', false, 1000)
 			data.description = this.dialogForm.description
 			data.memberLabelName = this.dialogForm.memberLabelName
 			this.$refs.formSub.validate((valid) => {
@@ -415,11 +414,9 @@ export default {
 									this.loadData()
 								}
 								this.dialogFormVisible = false
-								delayer()
+								this.disabledDelay('subAddOrEditDisabled', false, 1000)
 							})
-							.catch(() => {
-								delayer()
-							})
+							.catch(() => {})
 					} else {
 						data.id = this.dialogForm.id
 						this.$api
@@ -431,11 +428,9 @@ export default {
 									this.loadData()
 								}
 								this.dialogFormVisible = false
-								delayer()
+								this.disabledDelay('subAddOrEditDisabled', false, 1000)
 							})
-							.catch(() => {
-								delayer()
-							})
+							.catch(() => {})
 					}
 				}
 			})

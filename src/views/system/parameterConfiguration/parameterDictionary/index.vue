@@ -282,7 +282,6 @@ export default {
         })
     },
     subAddOrEidt() {
-      const delayer = this.disabledDelay('subAddOrEidtDisabled', false, 1000)
       const data = { ...this.dialogForm }
       data.id = this.dialogForm.id
       console.log(this.dialogForm.id, '小明')
@@ -295,10 +294,8 @@ export default {
               this.loadData()
             }
             this.dialogFormVisible = false
-            delayer()
-          }).catch(() => {
-              delayer()
-          })
+            this.disabledDelay('subAddOrEidtDisabled', false, 1000)
+          }).catch(() => {})
         }
       })
     },

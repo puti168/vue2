@@ -40,7 +40,7 @@
 							clearable
 							:maxlength="11"
 							size="medium"
-							style="width: 280px"
+							style="width: 270px"
 							placeholder="请输入"
 							:disabled="loading"
 							@keyup.enter.native="enterSearch"
@@ -52,7 +52,7 @@
 							clearable
 							:maxlength="15"
 							size="medium"
-							style="width: 280px"
+							style="width: 270px"
 							placeholder="请输入"
 							:disabled="loading"
 							@keyup.enter.native="enterSearch"
@@ -159,7 +159,7 @@
 					<el-table-column
 						prop="orderNo"
 						align="center"
-						width="260px"
+						width="260"
 						label="订单号"
 					>
 						<template slot-scope="scope">
@@ -173,7 +173,7 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="userName" align="center" label="会员账号" width="130px">
+					<el-table-column prop="userName" align="center" label="会员账号" width="130">
 						<template slot-scope="scope">
 							<Copy
 								v-if="!!scope.row.userName"
@@ -185,7 +185,7 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="realName" align="center" label="会员姓名" width="120px">
+					<el-table-column prop="realName" align="center" label="会员姓名" width="120">
 						<template slot-scope="scope">
 							<Copy
 								v-if="!!scope.row.realName"
@@ -201,14 +201,14 @@
 						prop="adjustStyle"
 						align="center"
 						label="调整方式"
-                        width="130px"
+                        width="150"
 					></el-table-column>
-					<el-table-column prop="orderStatus" align="center" label="状态" width="100px">
+					<el-table-column prop="orderStatus" align="center" label="状态" width="100">
 						<template slot-scope="scope">
 							{{ typeFilter(scope.row.orderStatus, 'patchAdjustOrderStatus') }}
 						</template>
 					</el-table-column>
-					<el-table-column prop="adjustType" align="center" label="调整类型" width="150px">
+					<el-table-column prop="adjustType" align="center" label="调整类型" width="150">
 						<template slot-scope="scope">
 							{{ typeFilter(scope.row.adjustType, 'memberPatchAddAdjustType') }}
 						</template>
@@ -217,26 +217,26 @@
 						prop="adjustAmount"
 						align="center"
 						label="调整金额 "
-						width="200px"
+						width="200"
 					></el-table-column>
 					<el-table-column
 						prop="operator"
 						align="center"
 						label="申请人"
-                        width="130px"
+                        width="130"
 					></el-table-column>
 					<el-table-column
 						prop="operatorTime"
 						align="center"
 						label="申请时间"
 						sortable="custom"
-                        width="200px"
+                        min-width="200"
 					></el-table-column>
 					<el-table-column
 						prop="remark"
 						align="center"
 						label="备注"
-                        width="220px"
+                        width="200"
 					></el-table-column>
 				</el-table>
 				<!-- 分页 -->

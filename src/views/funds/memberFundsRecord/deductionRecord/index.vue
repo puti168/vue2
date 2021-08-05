@@ -23,7 +23,7 @@
               v-model="queryData.orderNo"
               clearable
               size="medium"
-              style="width: 320px"
+              style="width: 300px"
               placeholder="请输入"
               :disabled="loading"
               @keyup.enter.native="enterSearch"
