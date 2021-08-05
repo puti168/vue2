@@ -13,6 +13,7 @@ export const routerNames = {
 	virtualRecord: 'virtualRecord',
 	addMemberReview: 'addMemberReview',
 	memberChangeReview: 'memberChangeReview',
+	memberBankManage: 'memberBankManage',
 	gameClassify: 'gameClassify',
 	gamePlatform: 'gamePlatform',
 	addMemberCheck: 'addMemberCheck',
