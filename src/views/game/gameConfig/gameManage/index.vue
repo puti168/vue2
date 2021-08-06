@@ -524,7 +524,8 @@ export default {
 				.then((res) => {
 					const {
 						code,
-						data: { record, totalRecord }
+						data: { record, totalRecord },
+						msg
 					} = res || {}
 					if (code && code === 200) {
 						this.loading = false
@@ -533,7 +534,7 @@ export default {
 					} else {
 						this.loading = false
 						this.$message({
-							message: res.msg,
+							message: msg,
 							type: 'error'
 						})
 					}
