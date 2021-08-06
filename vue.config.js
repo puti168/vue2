@@ -3,6 +3,8 @@ const path = require('path')
 const VersionPlugin = require('./version-plugin')
 const defaultSettings = require('./src/settings.js')
 const chalk = require('chalk')
+const CompressionWebpackPlugin = require('compression-webpack-plugin')
+const productionGzipExtensions = ['js', 'css']
 
 function resolve(dir) {
 	return path.join(__dirname, dir)
@@ -80,7 +82,15 @@ module.exports = {
 		}
 		if (process.env.NODE_ENV === 'production') {
 			config.optimization.minimizer[0].options.terserOptions.compress.drop_console = false
-
+			config.plugins.push(
+				new CompressionWebpackPlugin({
+					filename: '[path].gz[query]',
+					algorithm: 'gzip',
+					test: new RegExp('\\.(' + productionGzipExtensions.join('|') + ')$'),
+					threshold: 10240,
+					minRatio: 0.8
+				})
+			)
 			// 加入生成版本插件
 			config.plugins.push(new VersionPlugin({}))
 		} else {
@@ -91,7 +101,6 @@ module.exports = {
 		// config.cache(true)
 		config.plugins.delete('preload') // TODO: need test
 		config.plugins.delete('prefetch') // TODO: need test
-
 		// set svg-sprite-loader
 		config.module
 			.rule('svg')
