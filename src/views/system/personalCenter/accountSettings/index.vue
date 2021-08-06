@@ -221,10 +221,11 @@ export default {
         this.loading = false
         const {
           code,
+          data,
           msg
         } = res
-        if (res && code && code === 200) {
-          const { id, userName, nickName} = { ...res.data }
+        if (code && code === 200) {
+          const { id, userName, nickName} = data
           this.form.userId = id
           this.form.userName = userName
           this.form.nickName = nickName
@@ -244,10 +245,11 @@ export default {
 
       this.$refs.form.validate((valid) => {
         if (valid) {
+          const userName = params.userName || ''
           this.$api.setUserInfoupdatePwdAdmin({
-            pwd: md5(params.userName.trim() + params.pwd.trim()),
-            reNewPwd: md5(params.userName.trim() + params.reNewPwd.trim()),
-            newPwd: md5(params.userName.trim() + params.newPwd.trim()),
+            pwd: md5(userName.trim() + params.pwd.trim()),
+            reNewPwd: md5(userName.trim() + params.reNewPwd.trim()),
+            newPwd: md5(userName.trim() + params.newPwd.trim()),
             userId: params.userId,
             userName: params.userName,
             phone: params.phone,
@@ -257,16 +259,16 @@ export default {
               code,
               msg
             } = res
-            if (res && code && code === 200) {
+            if (code && code === 200) {
               this.$message.success('修改成功')
-              setTimeout(()=>{
+              setTimeout(() => {
                 this.$store
                 .dispatch('user/logout')
                 .then((_) => {
                   location.reload()
                 })
                 .catch()('success')
-              },500)
+              }, 500)
             } else {
               this.$message({
                 message: res && msg,
