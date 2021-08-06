@@ -30,7 +30,7 @@
 							@keyup.enter.native="enterSearch"
 						></el-input>
 					</el-form-item>
-                    <el-form-item label="关联订单号:">
+					<el-form-item label="关联订单号:">
 						<el-input
 							v-model="queryData.eventId"
 							clearable
@@ -280,11 +280,7 @@
 						width="130"
 					>
 						<template slot-scope="scope">
-							{{
-								scope.row.windControlName !== null
-									? scope.row.windControlName
-									: '-'
-							}}
+							{{ scope.row.windControlName || '-' }}
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -383,28 +379,36 @@
 						label="账变前金额"
 						width="120"
 						sortable="custom"
-					></el-table-column>
+					>
+						{{ scope.row.changeBefore || '-' }}
+					</el-table-column>
 					<el-table-column
 						prop="amount"
 						align="center"
 						width="130"
 						sortable="custom"
 						label="账变金额"
-					></el-table-column>
+					>
+						{{ scope.row.amount || scope.row.amount + '' === '0' || '-' }}
+					</el-table-column>
 					<el-table-column
 						prop="changeAfter"
 						align="center"
 						label="账变后金额"
 						width="120"
 						sortable="custom"
-					></el-table-column>
+					>
+						{{ scope.row.changeAfter || '-' }}
+					</el-table-column>
 					<el-table-column
 						prop="occurDt"
 						align="center"
 						label="账变时间"
 						width="170"
 						sortable="custom"
-					></el-table-column>
+					>
+						{{ scope.row.occurDt || '-' }}
+					</el-table-column>
 					<el-table-column
 						prop="remark"
 						align="center"
@@ -412,7 +416,7 @@
 						width="150"
 					>
 						<template slot-scope="scope">
-							{{ scope.row.remark !== null ? scope.row.remark : '-' }}
+							{{ scope.row.remark || '-' }}
 						</template>
 					</el-table-column>
 				</el-table>
@@ -444,7 +448,6 @@ const endTime = dayjs()
 	.valueOf()
 
 export default {
-	components: {},
 	mixins: [list],
 	data() {
 		this.loadData = this.throttle(this.loadData, 1000)
@@ -452,7 +455,7 @@ export default {
 		return {
 			queryData: {
 				accountType: '0',
-                type: ''
+				type: ''
 			},
 			searchTime: [startTime, endTime],
 			tableData: [],
@@ -504,11 +507,13 @@ export default {
 					const { code } = res
 					if (res && code === 200) {
 						this.accountBizDicList = res.data || []
+					} else {
+						this.accountBizDicList = []
 					}
 				})
 		},
 		changeSelect(val) {
-            this.queryData.type = ''
+			this.queryData.type = ''
 			const bizCode = val || 0
 			this.$api
 				.getProxyFundsRecordsAccountChangeDic({ bizCode })
@@ -536,7 +541,7 @@ export default {
 			this.$api
 				.getProxyFundsRecordsAccountChange(params)
 				.then((res) => {
-                    this.loading = false
+					this.loading = false
 					const { code } = res
 					if (res && code === 200) {
 						this.tableData = res.data.record || []
@@ -551,9 +556,9 @@ export default {
 		// 获取风控层级
 		getWindControllerLevelDict() {
 			this.$api
-				.getWindControllerLevelDict({ windControlType: 2 })
+				.getWin2dControllerLevelDict({ windControlType: 2 })
 				.then((res) => {
-                    const { code } = res
+					const { code } = res
 					if (res && code === 200) {
 						this.windControlLevelList = res.data || []
 					} else {
@@ -563,7 +568,7 @@ export default {
 		},
 		getDictgetAllDictList() {
 			this.$api.getDictgetAllDictList().then((res) => {
-                const { code } = res
+				const { code } = res
 				if (res && code === 200) {
 					this.accountStatusType = res.data || []
 				} else {
