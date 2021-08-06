@@ -9,7 +9,7 @@
               maxlength="20"
               clearable
               size="medium"
-              style="width: 180px"
+              style="width: 220px"
               placeholder="请输入"
               :disabled="loading"
               @keyup.enter.native="enterSearch"
@@ -21,7 +21,7 @@
               clearable
               maxlength="20"
               size="medium"
-              style="width: 180px; margin-right: 20px"
+              style="width: 220px; margin-right: 8px"
               placeholder="请输入"
               :disabled="loading"
               @keyup.enter.native="enterSearch"
@@ -90,7 +90,7 @@
             </template>
           </el-table-column>
           <el-table-column prop="v" align="center" label="值"></el-table-column>
-          <el-table-column prop="operating" align="center" width="240px" label="操作">
+          <el-table-column prop="operating" align="center" width="200" label="操作">
             <template slot-scope="scope">
               <el-button type="primary" size="medium" @click="edit(scope.row)">
                 编辑
@@ -282,7 +282,6 @@ export default {
         })
     },
     subAddOrEidt() {
-      const delayer = this.disabledDelay('subAddOrEidtDisabled', false, 1000)
       const data = { ...this.dialogForm }
       data.id = this.dialogForm.id
       console.log(this.dialogForm.id, '小明')
@@ -295,10 +294,8 @@ export default {
               this.loadData()
             }
             this.dialogFormVisible = false
-            delayer()
-          }).catch(() => {
-              delayer()
-          })
+            this.disabledDelay('subAddOrEidtDisabled', false, 1000)
+          }).catch(() => {})
         }
       })
     },

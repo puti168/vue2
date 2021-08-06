@@ -529,6 +529,7 @@ const start = dayjs()
 const end = dayjs()
 	.endOf('day')
 	.valueOf()
+
 export default {
 	name: routerNames.agentList,
 	mixins: [list],
@@ -565,13 +566,13 @@ export default {
 	},
 	computed: {
 		accountStatusArr() {
-			return this.globalDics.accountStatusType
+			return this.globalDics.accountStatusType || []
 		},
 		accountTypeArr() {
-			return this.globalDics.accountType
+			return this.globalDics.accountType || []
 		},
 		entrAuthorityTypeArr() {
-			return this.globalDics.entrAuthorityType
+			return this.globalDics.entrAuthorityType || []
 		}
 	},
 	created() {
@@ -618,28 +619,27 @@ export default {
 			this.$api
 				.AgentListAPI(params)
 				.then((res) => {
+                    this.loading = false
 					const {
 						code,
 						data: { record, totalRecord },
 						msg
 					} = res
 					if (code === 200) {
-						this.loading = false
-						this.dataList = record || []
+						this.dataList = `Object.freeze`(record) || []
 						this.total = totalRecord || 0
 					} else {
-						this.loading = false
 						this.$message({
-							message: msg,
+							message: res && msg,
 							type: 'error'
 						})
 					}
 				})
 				.catch(() => (this.loading = false))
 
-			setTimeout(() => {
-				this.loading = false
-			}, 1000)
+			// setTimeout(() => {
+			// 	this.loading = false
+			// }, 1500)
 		},
 		// 获取代理标签
 		getMerchantDict() {

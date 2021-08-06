@@ -75,8 +75,8 @@
 						multiple
 						style="width: 265px"
 						placeholder="默认选择全部"
-                        clearable
-                        collapse-tags
+						clearable
+						collapse-tags
 					>
 						<el-option
 							v-for="item in virtualProtocolType"
@@ -91,10 +91,10 @@
 						v-model="queryData.accountType"
 						style="width: 262px"
 						multiple
-                        collapse-tags
+						collapse-tags
 						placeholder="默认选择全部"
 						:popper-append-to-body="false"
-                        clearable
+						clearable
 					>
 						<el-option
 							v-for="item in accountType"
@@ -153,13 +153,25 @@
 						prop="userName"
 						align="center"
 						label="会员账号"
-                        min-width="110px"
+						min-width="110"
 					>
-						<Copy :title="scope.row.userName" :copy="copy" />
+						<Copy
+							v-if="!!scope.row.userName"
+							:title="scope.row.userName"
+							:copy="copy"
+						/>
+						<span v-else>-</span>
 					</el-table-column>
 					<el-table-column align="center" label="账号类型" width="100">
 						<template slot-scope="scope">
-							<p>{{ typeFilter(scope.row.accountType, 'accountType') }}</p>
+							<span
+								v-if="
+									!!scope.row.accountType || scope.row.accountType + '' === '0'
+								"
+							>
+								{{ typeFilter(scope.row.accountType, 'accountType') }}
+							</span>
+							<span v-else>-</span>
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -167,7 +179,7 @@
 						prop="parentProxyName"
 						align="center"
 						label="上级代理"
-                        min-width="110px"
+						min-width="110"
 					>
 						<Copy
 							v-if="!!scope.row.parentProxyName"
@@ -192,10 +204,7 @@
 					</el-table-column>
 					<el-table-column prop="virtualKind" align="center" label="虚拟币种类">
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.virtualKind">
-								{{ scope.row.virtualKind }}
-							</span>
-							<span v-else>-</span>
+							{{ scope.row.virtualKind || '-' }}
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -204,10 +213,7 @@
 						label="虚拟币协议"
 					>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.virtualProtocol">
-								{{ scope.row.virtualProtocol }}
-							</span>
-							<span v-else>-</span>
+							{{ scope.row.virtualProtocol || '-' }}
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -216,17 +222,14 @@
 						label="风控层级"
 					>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.windControlLevelName">
-								{{ scope.row.windControlLevelName }}
-							</span>
-							<span v-else>-</span>
+							{{ scope.row.windControlLevelName || '-' }}
 						</template>
 					</el-table-column>
-					<el-table-column
-						prop="operator"
-						align="center"
-						label="操作人"
-					></el-table-column>
+					<el-table-column prop="operator" align="center" label="操作人">
+						<template slot-scope="scope">
+							{{ scope.row.operator || '-' }}
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="operateType"
 						align="center"
@@ -234,15 +237,24 @@
 						label="操作类型"
 					>
 						<template slot-scope="scope">
-							<p>{{ typeFilter(scope.row.operateType, 'bindType') }}</p>
-						</template>
-					</el-table-column>
-					<el-table-column prop="remark" align="center" label="备注信息" min-width="120px">
-						<template slot-scope="scope">
-							<span v-if="!!scope.row.remark">
-								{{ scope.row.remark }}
+							<span
+								v-if="
+									!!scope.row.operateType || scope.row.operateType + '' === '0'
+								"
+							>
+								{{ typeFilter(scope.row.operateType, 'bindType') }}
 							</span>
 							<span v-else>-</span>
+						</template>
+					</el-table-column>
+					<el-table-column
+						prop="remark"
+						align="center"
+						label="备注信息"
+						min-width="120"
+					>
+						<template slot-scope="scope">
+							{{ scope.row.remark || '-' }}
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -250,8 +262,12 @@
 						align="center"
 						label="操作时间"
 						sortable="custom"
-                        min-width="170px"
-					></el-table-column>
+						min-width="170"
+					>
+						<template slot-scope="scope">
+							{{ scope.row.createDt || '-' }}
+						</template>
+					</el-table-column>
 				</el-table>
 				<!-- 分页 -->
 				<el-pagination
@@ -280,23 +296,24 @@ const end = dayjs()
 const start = dayjs()
 	.startOf('day')
 	.valueOf()
+
 export default {
 	name: routerNames.virtualRecord,
 	components: {},
 	mixins: [list],
 	data() {
-        this.search = this.throttle(this.search, 1000)
-        this.reset = this.throttle(this.reset, 1000)
+		this.search = this.throttle(this.search, 1000)
+		this.reset = this.throttle(this.reset, 1000)
 		return {
 			queryData: {
 				accountType: '',
-				bankName: '',
+				bankName: undefined,
 				dataType: 2,
 				operateType: '',
 				orderType: undefined,
-				parentProxyName: '',
-				userName: '',
-				virtualAddress: '',
+				parentProxyName: undefined,
+				userName: undefined,
+				virtualAddress: undefined,
 				virtualKind: [],
 				virtualProtocol: []
 			},
@@ -309,13 +326,13 @@ export default {
 	},
 	computed: {
 		accountType() {
-			return this.globalDics.accountType
+			return this.globalDics.accountType || []
 		},
 		virtualType() {
-			return this.globalDics.virtualType
+			return this.globalDics.virtualType || []
 		},
 		virtualProtocolType() {
-			return this.globalDics.virtualProtocolType
+			return this.globalDics.virtualProtocolType || []
 		},
 		bindType() {
 			return this.globalDics.bindType
@@ -329,8 +346,10 @@ export default {
 				...this.queryData,
 				createDtStart: startTime
 					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
-					: '',
-				createDtEnd: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
+					: undefined,
+				createDtEnd: endTime
+					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
+					: undefined
 			}
 			if (!params.createDtStart || !params.createDtEnd) {
 				this.$message({
@@ -347,15 +366,19 @@ export default {
 			this.$api
 				.bankRecordListAPI(params)
 				.then((res) => {
-					if (res.code === 200) {
-						const response = res.data
-						this.loading = false
-						this.dataList = response.record
-						this.total = response.totalRecord
+					this.loading = false
+					const {
+						code,
+						data: { record, totalRecord },
+						msg
+					} = res
+					if (res && code && code === 200) {
+						this.dataList =
+							(res.data && record.length && Object.freeze(record)) || []
+						this.total = (res.data && totalRecord) || 0
 					} else {
-						this.loading = false
 						this.$message({
-							message: res.msg,
+							message: res && msg,
 							type: 'error'
 						})
 					}
@@ -382,22 +405,19 @@ export default {
 		},
 		reset() {
 			this.queryData = {
-				accountType: [],
-				bankName: '',
+				accountType: '',
+				bankName: undefined,
 				dataType: 2,
 				operateType: '',
-				orderType: '',
-				parentProxyName: '',
-				userName: '',
-				virtualAddress: '',
+				orderType: undefined,
+				parentProxyName: undefined,
+				userName: undefined,
+				virtualAddress: undefined,
 				virtualKind: [],
 				virtualProtocol: []
 			}
 			this.pageNum = 1
 			this.formTime.time = [start, end]
-			this.loadData()
-		},
-		handleCurrentChange() {
 			this.loadData()
 		}
 	}

@@ -37,7 +37,7 @@
             </el-button>
             <el-button
               icon="el-icon-refresh-left"
-              :disabled="loading"
+              :disabled="flag"
               size="medium"
               @click="reset"
             >
@@ -315,10 +315,12 @@ style="margin-right: 15px"
         title="列设置"
         center
         :visible.sync="visible"
-        width="300px"
+        width="500px"
         class="col-setting"
       >
-        <el-link type="primary" @click="clickDel">复原缺省</el-link>
+        <div>
+          <el-link type="primary" @click="clickDel">复原缺省</el-link>
+        </div>
         <div v-for="(value, name) in gameProfitAndLoss" :key="name" class="setting-div">
           <el-checkbox v-if="newList.length > 0" v-model="newList[0][name]">{{
             name
@@ -336,6 +338,7 @@ style="margin-right: 15px"
 <script>
 import list from '@/mixins/list'
 import dayjs from 'dayjs'
+import { Decimal } from 'decimal.js'
 const startTime = dayjs().startOf('day').valueOf()
 const endTime = dayjs().endOf('day').valueOf()
 
@@ -344,7 +347,7 @@ export default {
   filters: {
     filterDecimals: function (val) {
       if (typeof val === 'number') {
-        const newVal = (Math.floor(val * 1000) / 1000).toFixed(2)
+        const newVal = val.toFixed(2, Decimal.ROUND_DOWN)
         return newVal
       } else {
         return '-'
@@ -417,7 +420,8 @@ export default {
         投注盈亏: true
       },
       myName: '',
-      newList: []
+      newList: [],
+      timecount: null
     }
   },
   computed: {},
@@ -460,13 +464,7 @@ export default {
         .objectStore('gameProfitAndLoss')
         .add({
           id: this.myName,
-          游戏: true,
-          场馆: true,
-          投注人数: true,
-          注单量: true,
-          投注金额: true,
-          有效投注: true,
-          投注盈亏: true
+          obj: this.gameProfitAndLoss
         })
       request.onsuccess = (event) => {
         this.getList()
@@ -486,35 +484,20 @@ export default {
           for (let i = 0; i < list.length; i++) {
             const ele = list[i]
             if (ele.id === this.myName) {
-              this.newList.push(ele)
-              this.gameProfitAndLoss = { ...ele }
-              delete this.gameProfitAndLoss.id
+              this.newList.push(ele.obj)
+              this.gameProfitAndLoss = { ...ele.obj }
             }
           }
         }
       }
     },
     confirm() {
-      console.log(this.newList, 446464)
-      const arr = []
-      for (let i = 0; i < this.newList.length; i++) {
-        const ele = this.newList[i]
-        if (ele.id === this.myName) {
-          arr.push(ele)
-        }
-      }
       const request = this.db
         .transaction(['gameProfitAndLoss'], 'readwrite')
         .objectStore('gameProfitAndLoss')
         .put({
           id: this.myName,
-          游戏: arr[0]['游戏'],
-          场馆: arr[0]['场馆'],
-          投注人数: arr[0]['投注人数'],
-          注单量: arr[0]['注单量'],
-          投注金额: arr[0]['投注金额'],
-          有效投注: arr[0]['有效投注'],
-          投注盈亏: arr[0]['投注盈亏']
+          obj: this.newList[0]
         })
       request.onsuccess = (event) => {
         this.visible = false
@@ -529,7 +512,6 @@ export default {
     clickDel(id) {
       this.newList = []
       this.newList.push({
-        id: this.myName,
         游戏: true,
         场馆: true,
         投注人数: true,
@@ -614,11 +596,12 @@ export default {
       if (endTime - startTime <= this.day31) {
         this.flag = true
         let t = 10
-        const timecount = setInterval(() => {
+        clearInterval(this.timecount)
+        this.timecount = setInterval(() => {
           t--
           this.queryText = t + 's'
           if (t < 0) {
-            clearInterval(timecount)
+            clearInterval(this.timecount)
             this.queryText = '查询'
             this.flag = false
           }
@@ -813,7 +796,7 @@ export default {
     },
     filterSummar: function (val) {
       if (typeof val === 'number') {
-        const newVal = (Math.floor(val * 1000) / 1000).toFixed(2)
+        const newVal = val.toFixed(2, Decimal.ROUND_DOWN)
         return newVal
       } else {
         return '-'
@@ -1085,5 +1068,9 @@ export default {
 }
 .fenye {
   text-align: center;
+}
+.setting-div {
+  display: inline-block;
+  min-width: 90px;
 }
 </style>

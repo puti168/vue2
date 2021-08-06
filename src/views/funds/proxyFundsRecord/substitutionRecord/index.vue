@@ -24,7 +24,7 @@
 							clearable
 							:maxlength="11"
 							size="medium"
-							style="width: 280px"
+							style="width: 270px"
 							placeholder="请输入"
 							:disabled="loading"
 							@keyup.enter.native="enterSearch"
@@ -36,7 +36,7 @@
 							clearable
 							:maxlength="15"
 							size="medium"
-							style="width: 280px"
+							style="width: 270px"
 							placeholder="请输入"
 							:disabled="loading"
 							@keyup.enter.native="enterSearch"
@@ -45,7 +45,7 @@
                     <el-form-item label="状态:" class="tagheight">
 						<el-select
 							v-model="queryData.orderStatus"
-							style="width: 280px"
+							style="width: 270px"
 							clearable
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
@@ -61,7 +61,7 @@
 					<el-form-item label="代存类型:" class="tagheight">
 						<el-select
 							v-model="queryData.bizType"
-							style="width: 400px"
+							style="width: 255px"
 							clearable
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"

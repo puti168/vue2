@@ -35,7 +35,7 @@
               clearable
               :maxlength="11"
               size="medium"
-              style="width: 260px"
+              style="width: 230px"
               placeholder="请输入"
               :disabled="loading"
               @keyup.enter.native="realName"
@@ -47,7 +47,7 @@
               clearable
               :maxlength="15"
               size="medium"
-              style="width: 260px"
+              style="width: 230px"
               placeholder="请输入"
               :disabled="loading"
               @keyup.enter.native="enterSearch"
@@ -56,7 +56,7 @@
           <el-form-item label="状态：" class="tagheight">
             <el-select
               v-model="queryData.orderStatus"
-              style="width: 140px"
+              style="width: 148px"
               clearable
               placeholder="默认选择全部"
               :popper-append-to-body="false"
@@ -90,7 +90,7 @@
               v-model="queryData.adjustAmountMin"
               size="medium"
               placeholder="最小数值"
-              style="width: 124px"
+              style="width: 120px"
               :maxlength="10"
               name="betAmountMin"
               oninput="value=value.replace(/[^\d]/g,'')"
@@ -101,7 +101,7 @@
               v-model="queryData.adjustAmountMax"
               size="medium"
               placeholder="最大数值"
-              style="width: 124px"
+              style="width: 120px"
               :maxlength="10"
               name="betAmountMax"
               oninput="value=value.replace(/[^\d]/g,'')"

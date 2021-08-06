@@ -2,7 +2,12 @@
 	<div class="game-container report-container">
 		<template v-if="!showDetail">
 			<div class="params">
-				<el-form ref="form" :inline="true" :model="queryData" label-width="80px">
+				<el-form
+					ref="form"
+					:inline="true"
+					:model="queryData"
+					label-width="80px"
+				>
 					<el-form-item label="申请时间:">
 						<el-date-picker
 							v-model="formTime.time"
@@ -14,7 +19,7 @@
 							start-placeholder="开始日期"
 							end-placeholder="结束日期"
 							align="right"
-                            style="width:455px"
+							style="width:455px"
 							:default-time="defaultTime"
 						></el-date-picker>
 					</el-form-item>
@@ -30,7 +35,7 @@
 							end-placeholder="结束日期"
 							align="right"
 							clearable
-                            style="width: 432px"
+							style="width: 432px"
 							:default-time="defaultTime"
 						></el-date-picker>
 					</el-form-item>
@@ -39,7 +44,7 @@
 							v-model="queryData.auditStatus"
 							style="width: 420px"
 							multiple
-                            clearable
+							clearable
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
 						>
@@ -175,27 +180,31 @@
 								</el-button>
 							</template>
 						</el-table-column>
-						<el-table-column
-							prop="auditNum"
-							align="center"
-							label="审核单号"
-						></el-table-column>
-						<el-table-column
-							prop="applyName"
-							align="center"
-							label="申请人"
-						></el-table-column>
+						<el-table-column prop="auditNum" align="center" label="审核单号">
+							<template slot-scope="scope">
+								{{ scope.row.auditNum || '-' }}
+							</template>
+						</el-table-column>
+						<el-table-column prop="applyName" align="center" label="申请人">
+							<template slot-scope="scope">
+								{{ scope.row.applyName || '-' }}
+							</template>
+						</el-table-column>
 						<el-table-column
 							prop="applyTime"
 							align="center"
 							sortable="custom"
 							label="申请时间"
-						></el-table-column>
-						<el-table-column
-							prop="applyInfo"
-							align="center"
-							label="申请信息"
-						></el-table-column>
+						>
+							<template slot-scope="scope">
+								{{ scope.row.applyTime || '-' }}
+							</template>
+						</el-table-column>
+						<el-table-column prop="applyInfo" align="center" label="申请信息">
+							<template slot-scope="scope">
+								{{ scope.row.applyInfo || '-' }}
+							</template>
+						</el-table-column>
 						<el-table-column align="center" label="审核状态" width="100">
 							<template slot-scope="scope">
 								<span
@@ -216,7 +225,7 @@
 							prop="auditTime"
 							align="center"
 							sortable="custom"
-							width="200px"
+							width="200"
 						>
 							<template slot="header">
 								<span>
@@ -226,8 +235,8 @@
 								</span>
 							</template>
 							<template slot-scope="scope">
-								{{ scope.row.auditName ? scope.row.auditName : '-' }}
-								<p>{{ scope.row.auditTime ? scope.row.auditTime : '-' }}</p>
+								{{ scope.row.auditName || '-' }}
+								<p>{{ scope.row.auditTime || '-' }}</p>
 							</template>
 						</el-table-column>
 					</el-table>
@@ -258,7 +267,6 @@
 <script>
 import list from '@/mixins/list'
 import dayjs from 'dayjs'
-import addMemberReview from './components/addMemberReview'
 import { getUsername } from '@/utils/auth'
 import { routerNames } from '@/utils/consts'
 const end = dayjs()
@@ -267,27 +275,30 @@ const end = dayjs()
 const start = dayjs()
 	.startOf('day')
 	.valueOf()
+
 export default {
 	name: routerNames.addMemberCheck,
-	components: { addMemberReview },
+	components: {
+		addMemberReview: () => import('./components/addMemberReview')
+	},
 	mixins: [list],
 	data() {
-        this.search = this.throttle(this.search, 1000)
-        this.reset = this.throttle(this.reset, 1000)
+		this.search = this.throttle(this.search, 1000)
+		this.reset = this.throttle(this.reset, 1000)
 		return {
 			queryData: {
-				userName: '',
+				userName: undefined,
 				accountType: [],
 				applyType: '',
 				auditStatus: [],
 				auditStep: '',
-				orderProperties: '',
-				applyName: '',
-				auditName: '',
-                lockStatus: '',
-				auditNum: '',
-				orderType: '',
-				orderKey: ''
+				orderProperties: undefined,
+				applyName: undefined,
+				auditName: undefined,
+				lockStatus: '',
+				auditNum: undefined,
+				orderType: undefined,
+				orderKey: undefined
 			},
 			formTime: {
 				time: [start, end],
@@ -303,19 +314,19 @@ export default {
 	},
 	computed: {
 		accountType() {
-			return this.globalDics.accountType
+			return this.globalDics.accountType || []
 		},
 		auditStatus() {
-			return this.globalDics.auditStatusType
+			return this.globalDics.auditStatusType || []
 		},
 		auditStepType() {
-			return this.globalDics.auditStepType
+			return this.globalDics.auditStepType || []
 		},
 		lockOrderType() {
-			return this.globalDics.lockOrderType
+			return this.globalDics.lockOrderType || []
 		},
 		applyType() {
-			return this.globalDics.applyType
+			return this.globalDics.applyType || []
 		}
 	},
 	mounted() {
@@ -330,16 +341,16 @@ export default {
 				...this.queryData,
 				applyTimeStart: startTime
 					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
-					: '',
+					: undefined,
 				applyTimeEnd: endTime
 					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
-					: '',
+					: undefined,
 				auditTimeStart: startTime2
 					? dayjs(startTime2).format('YYYY-MM-DD HH:mm:ss')
-					: '',
+					: undefined,
 				auditTimeEnd: endTime2
 					? dayjs(endTime2).format('YYYY-MM-DD HH:mm:ss')
-					: ''
+					: undefined
 			}
 			params = {
 				...this.getParams(params)
@@ -347,25 +358,20 @@ export default {
 			this.$api
 				.playerAuditList(params)
 				.then((res) => {
-					if (res.code === 200) {
+					this.loading = false
+					const { code, data, msg } = res
+					if (res && code === 200) {
 						this.now = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
-						const response = res.data
-						this.loading = false
-						this.dataList = response.record
+						this.dataList = (data && data.record) || []
+						this.total = (data && data.totalRecord) || 0
 						if (this.dataList) {
 							this.dataList.forEach((item) => {
-								if (Number(item.lockOrder) === 1) {
-									item.lockStatus = true
-								} else {
-									item.lockStatus = false
-								}
+								item.lockStatus = item.lockOrder * 1 === 1
 							})
 						}
-						this.total = response.totalRecord
 					} else {
-						this.loading = false
 						this.$message({
-							message: res.msg,
+							message: res && msg,
 							type: 'error'
 						})
 					}
@@ -384,21 +390,21 @@ export default {
 			this.loadData()
 		},
 		reset() {
+			this.pageNum = 1
 			this.queryData = {
-				userName: '',
+				userName: undefined,
 				accountType: [],
 				applyType: '',
 				auditStatus: [],
-				applyName: '',
-				auditName: '',
-                lockStatus: '',
 				auditStep: '',
-				orderProperties: '',
-				auditNum: '',
-				orderType: '',
-				orderKey: ''
+				orderProperties: undefined,
+				applyName: undefined,
+				auditName: undefined,
+				lockStatus: '',
+				auditNum: undefined,
+				orderType: undefined,
+				orderKey: undefined
 			}
-			this.pageNum = 1
 			this.formTime = {
 				time: [start, end],
 				time2: []
@@ -418,17 +424,17 @@ export default {
 					lockFlag: Number(val.lockOrder) === 0 ? 0 : 1
 				})
 				.then((res) => {
-					if (res.code === 200) {
-						loading.close()
+					loading.close()
+					const { code, msg } = res
+					if (res && code === 200) {
 						this.$message({
 							type: 'success',
 							message: '操作成功!'
 						})
 						this.loadData()
 					} else {
-						loading.close()
 						this.$message({
-							message: res.msg,
+							message: res && msg,
 							type: 'error'
 						})
 					}

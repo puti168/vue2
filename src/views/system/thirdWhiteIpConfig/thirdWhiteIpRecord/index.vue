@@ -24,7 +24,7 @@
               size="medium"
               placeholder="默认选择全部"
               clearable
-              style="width: 300px"
+              style="width: 160px"
             >
                 <el-option label="全部" value=""></el-option>
                 <el-option
@@ -41,7 +41,7 @@
               clearable
               size="medium"
               :maxlength="12"
-              style="width: 180px"
+              style="width: 200px"
               placeholder="请输入"
               @keyup.enter.native="enterSearch"
             ></el-input>
@@ -57,7 +57,7 @@
               @keyup.enter.native="enterSearch"
             ></el-input>
           </el-form-item>
-          <el-form-item style="margin-left: 30px">
+          <el-form-item>
             <el-button
               type="primary"
               icon="el-icon-search"
@@ -101,7 +101,7 @@
             :header-cell-style="getRowClass"
             @sort-change="_changeTableSort"
           >
-            <el-table-column prop="createDt" align="center" label="创建时间">
+            <el-table-column prop="createDt" align="center" label="创建时间" width="160">
               <template slot-scope="scope">
                 <span v-if="!!(scope.row.createDt+'')">
                   {{ scope.row.createDt }}
@@ -109,7 +109,7 @@
                 <span v-else>-</span>
               </template>
             </el-table-column>
-            <el-table-column align="center" label="申请人" prop="applyBy">
+            <el-table-column align="center" label="申请人" prop="applyBy" width="130">
               <template slot-scope="scope">
                 <span v-if="scope.row.applyBy">
                   {{ scope.row.applyBy }}
@@ -117,7 +117,7 @@
                 <span v-else>-</span>
               </template>
             </el-table-column>
-            <el-table-column align="center" label="变更时间" prop="updateDt">
+            <el-table-column align="center" label="变更时间" prop="updateDt" width="160">
               <template slot-scope="scope">
                 <span v-if="scope.row.updateDt">
                   {{ scope.row.updateDt }}
@@ -125,7 +125,7 @@
                 <span v-else>-</span>
               </template>
             </el-table-column>
-            <el-table-column align="center" label="第三方回调ip" prop="ip">
+            <el-table-column align="center" label="第三方回调ip" prop="ip" width="160">
               <template slot-scope="scope">
                 <span v-if="scope.row.ip">
                   {{ scope.row.ip }}
@@ -133,7 +133,7 @@
                 <span v-else>-</span>
               </template>
             </el-table-column>
-            <el-table-column prop="operator" align="center" width="120" label="操作人">
+            <el-table-column prop="operator" align="center" width="130" label="操作人">
               <template slot-scope="scope">
                 <span v-if="!!(scope.row.operator+'')">
                   {{ scope.row.operator }}
@@ -141,7 +141,7 @@
                 <span v-else>-</span>
               </template>
             </el-table-column>
-            <el-table-column align="center" label="状态" prop="status">
+            <el-table-column align="center" label="状态" prop="status" width="110">
               <template slot-scope="scope">
                 <span v-if="!!(scope.row.status+'')">
                   {{ typeFilter(scope.row.status, 'entrAuthorityType') }}
@@ -149,7 +149,7 @@
                 <span v-else>-</span>
               </template>
             </el-table-column>
-            <el-table-column align="center" label="第三方支付渠道id" prop="channelId">
+            <el-table-column align="center" label="第三方支付渠道id" prop="channelId" width="150">
               <template slot-scope="scope">
                 <span v-if="!!(scope.row.channelId+'')">
                   {{ scope.row.channelId }}
@@ -157,7 +157,7 @@
                 <span v-else>-</span>
               </template>
             </el-table-column>
-            <el-table-column align="center" label="三方回调IP白名单管理主键id" prop="id">
+            <el-table-column align="center" label="三方回调IP白名单管理主键id" prop="id" width="180">
               <template slot-scope="scope">
                 <span v-if="!!(scope.row.id+'')">
                   {{ scope.row.id }}
@@ -165,7 +165,7 @@
                 <span v-else>-</span>
               </template>
             </el-table-column>
-            <el-table-column align="center" label="商户号id" prop="merchantId">
+            <el-table-column align="center" label="商户号id" prop="merchantId" width="180">
               <template slot-scope="scope">
                 <span v-if="!!(scope.row.merchantId+'')">
                   {{ scope.row.merchantId }}
@@ -173,7 +173,7 @@
                 <span v-else>-</span>
               </template>
             </el-table-column>
-            <el-table-column v-if="hasPermission('400')||hasPermission('399')||hasPermission('401')" align="center" label="操作" min-width="250">
+            <el-table-column v-if="hasPermission('400')||hasPermission('399')||hasPermission('401')" align="center" label="操作" min-width="300">
               <template slot-scope="scope">
                 <el-button
                   v-if="hasPermission('400')"

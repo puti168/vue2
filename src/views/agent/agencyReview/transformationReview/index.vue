@@ -39,7 +39,7 @@
 					<el-form-item label="锁单状态:">
 						<el-select
 							v-model="queryData.lockOrder"
-							style="width: 270px"
+							style="width: 260px"
 							:popper-append-to-body="false"
 						>
 							<el-option label="全部" value=""></el-option>
@@ -54,7 +54,7 @@
 					<el-form-item label="审核操作:">
 						<el-select
 							v-model="queryData.auditStep"
-							style="width: 270px"
+							style="width: 260px"
 							:popper-append-to-body="false"
 						>
 							<el-option label="全部" value=""></el-option>
@@ -98,18 +98,18 @@
 							clearable
 							size="medium"
 							:maxlength="12"
-							style="width: 284px"
+							style="width: 274px"
 							placeholder="请输入"
 							@keyup.enter.native="enterSearch"
 						></el-input>
 					</el-form-item>
-					<el-form-item label="转代会员账号:">
+					<el-form-item label="转代会员账号:" label-width="108px">
 						<el-input
 							v-model="queryData.userName"
 							clearable
 							size="medium"
 							:maxlength="11"
-							style="width: 180px"
+							style="width: 232px"
 							placeholder="请输入"
 							@keyup.enter.native="enterSearch"
 						></el-input>

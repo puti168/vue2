@@ -48,6 +48,7 @@
 				:data="list"
 				style="width: 100%"
 				:header-cell-style="getRowClass"
+                border
 			>
 				<el-table-column
 					align="center"
@@ -55,7 +56,7 @@
 					:label="$t('system_component_account_275')"
 					width="120"
 				></el-table-column>
-				<el-table-column align="center" prop="userName" label="用户名称">
+				<el-table-column align="center" prop="userName" label="用户名称" width="150">
 					<template slot-scope="scope">
 						<span v-if="!!scope.row.userName">
 							{{ scope.row.userName }}
@@ -63,7 +64,7 @@
 						<span v-else>-</span>
 					</template>
 				</el-table-column>
-				<el-table-column align="center" prop="nickName" label="姓名">
+				<el-table-column align="center" prop="nickName" label="姓名" width="120">
 					<template slot-scope="scope">
 						<span v-if="!!scope.row.nickName">
 							{{ scope.row.nickName }}
@@ -75,7 +76,7 @@
 					align="center"
 					prop="googleAuthCode"
 					label="谷歌验证秘钥"
-					width="200"
+					width="220"
 				>
 					<template slot-scope="scope">
 						<span v-if="!!scope.row.googleAuthCode">
@@ -97,7 +98,7 @@
 						<span v-else>-</span>
 					</template>
 				</el-table-column>
-				<el-table-column align="center" prop="createBy" label="创建人">
+				<el-table-column align="center" prop="createBy" label="创建人" width="150">
 					<template slot-scope="scope">
 						<span v-if="!!scope.row.createBy">
 							{{ scope.row.createBy }}
@@ -118,7 +119,7 @@
 						<span v-else>-</span>
 					</template>
 				</el-table-column>
-				<el-table-column label="状态">
+				<el-table-column label="状态" align="center" width="120">
 					<template slot-scope="scope">
 						<el-switch
 							:disabled="scope.row.userName === username"
@@ -134,7 +135,7 @@
 					align="center"
 					fixed="right"
 					:label="$t('system_component_account_280')"
-					min-width="250"
+					min-width="360"
 				>
 					<template slot-scope="scope">
 						<el-button

@@ -23,7 +23,7 @@
 							v-model="queryData.thirdOrderNo"
 							clearable
 							size="medium"
-							style="width: 330px"
+							style="width: 300px"
 							placeholder="请输入"
 							:disabled="loading"
 							@keyup.enter.native="enterSearch"
@@ -73,7 +73,7 @@
 						<el-select
 							v-model="queryData.orderStatus"
 							clearable
-							style="width: 330px"
+							style="width: 300px"
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
 						>

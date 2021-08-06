@@ -52,7 +52,7 @@
               clearable
               :maxlength="11"
               size="medium"
-              style="width: 299px"
+              style="width: 220px"
               placeholder="请输入"
               :disabled="loading"
               @keyup.enter.native="enterSearch"
@@ -64,7 +64,7 @@
               clearable
               :maxlength="15"
               size="medium"
-              style="width: 299px"
+              style="width: 220px"
               placeholder="请输入"
               :disabled="loading"
               @keyup.enter.native="enterSearch"
@@ -75,7 +75,7 @@
               v-model="queryData.approveType"
               clearable
               placeholder="默认选择全部"
-              style="width: 299px"
+              style="width: 220px"
               :popper-append-to-body="false"
             >
               <el-option
@@ -91,7 +91,7 @@
               v-model="queryData.auditStatus"
               clearable
               placeholder="默认选择全部"
-              style="width: 299px"
+              style="width: 220px"
               :popper-append-to-body="false"
             >
               <el-option
@@ -107,7 +107,7 @@
               v-model="queryData.type"
               clearable
               placeholder="默认选择全部"
-              style="width: 299px"
+              style="width: 222px"
               :popper-append-to-body="false"
             >
               <el-option
@@ -124,7 +124,7 @@
               clearable
               :maxlength="11"
               size="medium"
-              style="width: 299px"
+              style="width: 220px"
               placeholder="请输入"
               :disabled="loading"
               @keyup.enter.native="enterSearch"

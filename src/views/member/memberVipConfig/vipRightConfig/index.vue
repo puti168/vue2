@@ -59,7 +59,7 @@
 					</el-table-column>
 					<el-table-column prop="upgradeBonus" align="center" label="升级礼金">
 						<template slot-scope="scope">
-							<span v-if="scope.row.vipSerialNum!=='VIP0'">
+							<span v-if="scope.row.vipSerialNum !== 'VIP0'">
 								<el-input-number
 									v-model="scope.row.upgradeBonus"
 									size="medium"
@@ -97,7 +97,7 @@
 							</el-popover>
 						</template>
 						<template slot-scope="scope">
-							<span v-if="scope.row.vipSerialNum!=='VIP0'">
+							<span v-if="scope.row.vipSerialNum !== 'VIP0'">
 								<el-input-number
 									v-model="scope.row.birthdayBonus"
 									size="medium"
@@ -133,7 +133,7 @@
 							</el-popover>
 						</template>
 						<template slot-scope="scope">
-							<span v-if="scope.row.vipSerialNum!=='VIP0'">
+							<span v-if="scope.row.vipSerialNum !== 'VIP0'">
 								<el-input-number
 									v-model="scope.row.aboveMonthRedEnvelope"
 									size="medium"
@@ -165,7 +165,7 @@
 							</el-popover>
 						</template>
 						<template slot-scope="scope">
-							<span v-if="scope.row.vipSerialNum!=='VIP0'">
+							<span v-if="scope.row.vipSerialNum !== 'VIP0'">
 								<el-input-number
 									v-model="scope.row.belowMonthRedEnvelope"
 									size="medium"
@@ -184,7 +184,7 @@
 			</div>
 			<div class="btn_footer">
 				<el-button
-                    v-if="hasPermission('247')"
+					v-if="hasPermission('247')"
 					type="primary"
 					icon="el-icon-search"
 					size="medium"
@@ -212,10 +212,9 @@ import { routerNames } from '@/utils/consts'
 
 export default {
 	name: routerNames.vipDiscountConfig,
-	components: {},
 	mixins: [list],
 	data() {
-        this.saveData = this.throttle(this.saveData, 1000)
+		this.saveData = this.throttle(this.saveData, 1000)
 		return {
 			dataList: []
 		}
@@ -228,14 +227,13 @@ export default {
 			this.$api
 				.memberInComQuery()
 				.then((res) => {
-					if (res.code === 200) {
-						const response = res.data
-						this.loading = false
-						this.dataList = response
+					this.loading = false
+					const { code, data, msg } = res
+					if (res && code && code === 200) {
+						this.dataList = data || []
 					} else {
-						this.loading = false
 						this.$message({
-							message: res.msg,
+							message: res && msg,
 							type: 'error'
 						})
 					}
@@ -255,14 +253,15 @@ export default {
 					incomeList: this.dataList
 				})
 				.then((res) => {
-					if (res.code === 200) {
+					const { code, msg } = res
+					if (res && code === 200) {
 						this.$message({
 							message: '保存成功',
 							type: 'success'
 						})
 					} else {
 						this.$message({
-							message: res.msg,
+							message: res && msg,
 							type: 'error'
 						})
 					}
@@ -273,14 +272,15 @@ export default {
 			this.$api
 				.memberInComComback()
 				.then((res) => {
-					if (res.code === 200) {
+					const { code, msg } = res
+					if (res && code === 200) {
 						this.$message({
 							message: '重置成功',
 							type: 'success'
 						})
 					} else {
 						this.$message({
-							message: res.msg,
+							message: res && msg,
 							type: 'error'
 						})
 					}

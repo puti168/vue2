@@ -15,7 +15,7 @@ const name = defaultSettings.title // page title
 // }
 // All configuration item explanations can be find in https://cli.vuejs.org/config/
 const port = process.env.port || process.env.npm_config_port || 9999 // dev port
-// const IS_PROD = ['production', 'prod'].includes(process.env.NODE_ENV)
+const IS_PROD = ['production', 'prod'].includes(process.env.NODE_ENV)
 
 module.exports = {
 	/**
@@ -29,7 +29,7 @@ module.exports = {
 	outputDir: 'dist',
 	assetsDir: 'static',
 	lintOnSave: process.env.NODE_ENV === 'development',
-	productionSourceMap: false,
+	productionSourceMap: !IS_PROD,
 	devServer: {
 		port,
 		open: true,
@@ -65,7 +65,7 @@ module.exports = {
 			// 加入生成版本插件
 			config.plugins.push(new VersionPlugin({}))
 		} else {
-			// config.devtool = 'source-map'
+			config.devtool = 'source-map'
 		}
 	},
 	chainWebpack(config) {

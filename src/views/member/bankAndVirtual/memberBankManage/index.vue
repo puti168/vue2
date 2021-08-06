@@ -327,16 +327,16 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="bankName" align="center" width="150px">
+					<el-table-column prop="bankName" align="center" width="150">
 						<template slot="header">
 							银行名称
 							<br />
 							银行支行
 						</template>
 						<template slot-scope="scope">
-							{{ scope.row.bankName }}
+							{{ scope.row.bankName || '-' }}
 							<br />
-							{{ scope.row.bankBranch }}
+							{{ scope.row.bankBranch || '-' }}
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -417,10 +417,7 @@
 						width="150"
 					>
 						<template slot-scope="scope">
-							<span v-if="scope.row.windControlName !== null">
-								{{ scope.row.windControlName }}
-							</span>
-							<span v-else>-</span>
+							{{ scope.row.windControlName || '-' }}
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -452,15 +449,13 @@
 							会员姓名
 						</template>
 						<template slot-scope="scope">
-							<span v-if="scope.row.bindUserName !== null">
-								{{ scope.row.bindUserName }}
+							<span>
+								{{ scope.row.bindUserName || '-' }}
 							</span>
-							<span v-else>-</span>
 							<br />
-							<span v-if="scope.row.realName !== null">
-								{{ scope.row.realName }}
+							<span>
+								{{ scope.row.realName || '-' }}
 							</span>
-							<span v-else>-</span>
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -474,15 +469,13 @@
 							会员提款被拒次数
 						</template>
 						<template slot-scope="scope">
-							<span v-if="scope.row.withdrawalSuccessNum !== null">
-								{{ scope.row.withdrawalSuccessNum }}
+							<span>
+								{{ scope.row.withdrawalSuccessNum || '-' }}
 							</span>
-							<span v-else>-</span>
 							<br />
-							<span v-if="scope.row.withdrawalFailNum !== null">
-								{{ scope.row.withdrawalFailNum }}
+							<span>
+								{{ scope.row.withdrawalFailNum || '-' }}
 							</span>
-							<span v-else>-</span>
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -492,10 +485,7 @@
 						width="120"
 					>
 						<template slot-scope="scope">
-							<span v-if="scope.row.withdrawalTotalAmount !== null">
-								{{ scope.row.withdrawalTotalAmount }}
-							</span>
-							<span v-else>-</span>
+							{{ scope.row.withdrawalTotalAmount || '-' }}
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -509,15 +499,13 @@
 							代理提款被拒次数
 						</template>
 						<template slot-scope="scope">
-							<span v-if="scope.row.proxyWithdrawalSuccessNum !== null">
-								{{ scope.row.proxyWithdrawalSuccessNum }}
+							<span>
+								{{ scope.row.proxyWithdrawalSuccessNum || '-' }}
 							</span>
-							<span v-else>-</span>
 							<br />
-							<span v-if="scope.row.proxyWithdrawalFailNum !== null">
-								{{ scope.row.proxyWithdrawalFailNum }}
+							<span>
+								{{ scope.row.proxyWithdrawalFailNum || '-' }}
 							</span>
-							<span v-else>-</span>
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -527,10 +515,7 @@
 						width="120"
 					>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.proxyWithdrawalTotalAmount">
-								{{ scope.row.proxyWithdrawalTotalAmount }}
-							</span>
-							<span v-else>-</span>
+							{{ scope.row.proxyWithdrawalTotalAmount || '-' }}
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -541,10 +526,7 @@
 						width="160"
 					>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.createdAt">
-								{{ scope.row.createdAt }}
-							</span>
-							<span v-else>-</span>
+							{{ scope.row.createdAt || '-' }}
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -555,10 +537,7 @@
 						sortable="custom"
 					>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.withdrawalTime">
-								{{ scope.row.withdrawalTime }}
-							</span>
-							<span v-else>-</span>
+							{{ scope.row.withdrawalTime || '-' }}
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -568,10 +547,7 @@
 						width="120"
 					>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.updatedBy">
-								{{ scope.row.updatedBy }}
-							</span>
-							<span v-else>-</span>
+							{{ scope.row.updatedBy || '-' }}
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -582,10 +558,7 @@
 						sortable="custom"
 					>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.updatedAt">
-								{{ scope.row.updatedAt }}
-							</span>
-							<span v-else>-</span>
+							{{ scope.row.updatedAt || '-' }}
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -600,7 +573,7 @@
 								:type="scope.row.blacklistStatus === 0 ? 'success' : 'danger'"
 								size="medium"
 								@click="
-									eidtDialog(
+									editDialog(
 										scope.row.blacklistStatus === 0 ? '开启' : '禁用',
 										scope.row
 									)
@@ -613,7 +586,7 @@
 								v-if="hasPermission('244')"
 								type="warning"
 								size="medium"
-								@click="eidtDialog('解绑', scope.row)"
+								@click="editDialog('解绑', scope.row)"
 							>
 								解绑
 							</el-button>
@@ -709,8 +682,7 @@
 import list from '@/mixins/list'
 import { routerNames } from '@/utils/consts'
 export default {
-	name: routerNames.memberBankManagement,
-	components: {},
+	name: routerNames.memberBankManage,
 	mixins: [list],
 	data() {
 		this.search = this.throttle(this.search, 1000)
@@ -730,10 +702,10 @@ export default {
 	},
 	computed: {
 		blackStatusType() {
-			return this.globalDics.blackStatusType
+			return this.globalDics.blackStatusType || []
 		},
 		bindStatusType() {
-			return this.globalDics.bindStatusType
+			return this.globalDics.bindStatusType || []
 		}
 	},
 	mounted() {
@@ -744,8 +716,10 @@ export default {
 			this.$api
 				.getWindControllerLevelDict({ windControlType: 3 })
 				.then((res) => {
-					if (res.code === 200) {
-						this.vipDict = res.data
+					if (res && res.code === 200) {
+						this.vipDict = res.data || []
+					} else {
+						this.vipDict = []
 					}
 				})
 		},
@@ -762,11 +736,22 @@ export default {
 			this.$api
 				.getListUserBankAndVirtual(params)
 				.then((res) => {
-					if (res.code === 200) {
-						this.tableData = res.data.record
-						this.total = res.data.totalRecord
-					}
 					this.loading = false
+					const {
+						code,
+						data: { record, totalRecord },
+						msg
+					} = res
+					if (res && code && code === 200) {
+						this.tableData =
+							(res.data && record.length && Object.freeze(record)) || []
+						this.total = (res.data && totalRecord) || 0
+					} else {
+						this.$message({
+							message: res && msg,
+							type: 'error'
+						})
+					}
 				})
 				.catch(() => {
 					this.loading = false
@@ -777,7 +762,7 @@ export default {
 			this.pageNum = 1
 			this.loadData()
 		},
-		eidtDialog(text, val) {
+		editDialog(text, val) {
 			this.submitEditDisabled = false
 			this.editData.remark = ''
 			if (text === '开启' || text === '禁用') {
@@ -798,14 +783,11 @@ export default {
 			this.$nextTick(() => {
 				this.editVisible = true
 			})
-			console.log(text, val)
 		},
 		changeAccountStatus(val) {
 			this.editData.status = val + ''
-			console.log(val)
 		},
 		submitEdit() {
-			const delayer = this.disabledDelay('submitEditDisabled', false, 2000)
 			const params = { ...this.editData }
 			this.$refs.editForm.validate((valid) => {
 				if (valid) {
@@ -815,7 +797,8 @@ export default {
 						this.$api
 							.setUpdateUserBankAndVirtualStatus(params)
 							.then((res) => {
-								if (res.code === 200) {
+								const { code } = res
+								if (res && code === 200) {
 									this.$message.success('修改成功')
 									this.editVisible = false
 									this.pageNum = 1
@@ -824,9 +807,7 @@ export default {
 									}, 1000)
 								}
 							})
-							.catch(() => {
-								delayer()
-							})
+							.catch(() => {})
 					} else {
 						if (this.checked) {
 							params.status = 0
@@ -834,11 +815,11 @@ export default {
 							params.status = 1
 						}
 						params.bindStatus = 0
-						console.log(params, this.checked)
 						this.$api
 							.setUpdateUserBankAndVirtualBindStatus(params)
 							.then((res) => {
-								if (res.code === 200) {
+								const { code } = res
+								if (res && code === 200) {
 									this.$message.success('解绑成功')
 									this.editVisible = false
 									this.pageNum = 1
@@ -847,9 +828,7 @@ export default {
 									}, 500)
 								}
 							})
-							.catch(() => {
-								delayer()
-							})
+							.catch(() => {})
 					}
 				}
 			})
@@ -857,18 +836,14 @@ export default {
 		cancel() {
 			this.editVisible = false
 		},
-		_changeTableSort({ column, prop, order }) {
-			if (prop === 'createdAt') {
-				prop = 1
-			}
-			if (prop === 'withdrawalTime') {
-				prop = 2
-			}
-			if (prop === 'updatedAt') {
-				prop = 3
-			}
+		_changeTableSort({ prop, order }) {
 			this.pageNum = 1
-			this.queryData.orderKey = prop
+			const obj = {
+				createdAt: 1,
+				withdrawalTime: 2,
+				updatedAt: 3
+			}
+			this.queryData.orderKey = prop && obj[prop]
 			if (order === 'ascending') {
 				// 升序
 				this.queryData.orderType = 'asc'
