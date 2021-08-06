@@ -170,9 +170,9 @@ function filterAsyncRouter(asyncRouterMap) {
 	})
 }
 
-export const loadView = (view) => {
-	return () => import(`@/views/${view}`)
-}
+// export const loadView = (view) => {
+// 	return () => import(`@/views/${view}`)
+// }
 
 export default {
 	namespaced: true,
