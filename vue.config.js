@@ -2,6 +2,7 @@
 const path = require('path')
 const VersionPlugin = require('./version-plugin')
 const defaultSettings = require('./src/settings.js')
+const chalk = require('chalk')
 
 function resolve(dir) {
 	return path.join(__dirname, dir)
@@ -52,8 +53,33 @@ module.exports = {
 		// after: require('./mock/mock-server.js')
 	},
 	configureWebpack: (config) => {
-		// provide the app's title in webpack's name field, so that
 		// it can be accessed in index.html to inject the correct title.
+		console.log(
+			chalk.hex('FAC000')(
+				[
+					'                   _ooOoo_',
+					'                  o8888888o',
+					'                  88" . "88',
+					'                  (| -_- |)',
+					'                  O\\  =  /O',
+					"               ____/`---'\\____",
+					"             .'  \\\\|     |//  `.",
+					'            /  \\\\|||  :  |||//  \\',
+					'           /  _||||| -:- |||||-  \\',
+					'           |   | \\\\\\  -  /// |   |',
+					"           | \\_|  ''\\---/''  |   |",
+					'           \\  .-\\__  `-`  ___/-. /',
+					"         ___`. .'  /--.--\\  `. . __",
+					'      ."" \'<  `.___\\_<|>_/___.\'  >\'"".',
+					'     | | :  `- \\`.;`\\ _ /`;.`/ - ` : | |',
+					'     \\  \\ `-.   \\_ __\\ /__ _/   .-` /  /',
+					"======`-.____`-.___\\_____/___.-`____.-'======",
+					"                   `=---='",
+					'^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^',
+					'         佛祖保佑       永无BUG'
+				].join('\n')
+			)
+		)
 		config.name = name
 
 		config.resolve.alias = {
