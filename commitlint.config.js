@@ -16,9 +16,9 @@ module.exports = {
 				'chore' // 其他改动
 			]
 		],
-		'type-empty': [1, 'never'], // 提交不符合规范时,不可以提交
-		'subject-empty': [1, 'never'], // 提交不符合规范时
-		'subject-full-stop': [1, 'never'],
-		'subject-case': [1, 'never']
+		'type-empty': [2, 'never'], // 提交不符合规范时,不可以提交
+		'subject-empty': [2, 'never'], // 提交不符合规范时
+		'subject-full-stop': [2, 'never'],
+		'subject-case': [2, 'never']
 	}
 }
