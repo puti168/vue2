@@ -385,11 +385,11 @@ export default {
 						data: { record, totalRecord },
 						msg
 					} = res || {}
+					this.loading = false
 					if (code && code === 200) {
 						this.tableData =
 							(record && record.length && Object.freeze(record)) || []
 						this.total = totalRecord || 0
-						this.loading = false
 					} else {
 						this.loading = false
 						this.$message({
