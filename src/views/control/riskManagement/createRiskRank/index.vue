@@ -109,9 +109,10 @@
 					>
 						<template slot-scope="scope">
 							<span v-if="!!scope.row.windControlType">
-								{{ typeFilter(scope.row.windControlType, 'windLevelType') }}
+								{{
+									typeFilter(scope.row.windControlType || '-', 'windLevelType')
+								}}
 							</span>
-							<span v-else>-</span>
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -121,25 +122,22 @@
 					>
 						<template slot-scope="scope">
 							<span v-if="!!scope.row.windControlLevelName">
-								{{ scope.row.windControlLevelName }}
+								{{ scope.row.windControlLevelName || '-' }}
 							</span>
-							<span v-else>-</span>
 						</template>
 					</el-table-column>
 					<el-table-column prop="miaoShu" align="center" label="风控层级描述">
 						<template slot-scope="scope">
 							<span v-if="!!scope.row.description">
-								{{ scope.row.description }}
+								{{ scope.row.description || '-' }}
 							</span>
-							<span v-else>-</span>
 						</template>
 					</el-table-column>
 					<el-table-column prop="createdBy" align="center" label="创建人">
 						<template slot-scope="scope">
 							<span v-if="!!scope.row.createdBy">
-								{{ scope.row.createdBy }}
+								{{ scope.row.createdBy || '-' }}
 							</span>
-							<span v-else>-</span>
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -151,15 +149,14 @@
 					>
 						<template slot-scope="scope">
 							<span v-if="!!scope.row.createdAt">
-								{{ scope.row.createdAt }}
+								{{ scope.row.createdAt || '-' }}
 							</span>
-							<span v-else>-</span>
 						</template>
 					</el-table-column>
 					<el-table-column prop="updatedBy" align="center" label="最近操作人">
 						<template slot-scope="scope">
 							<span v-if="!!scope.row.updatedBy">
-								{{ scope.row.updatedBy }}
+								{{ scope.row.updatedBy || '-' }}
 							</span>
 							<span v-else>-</span>
 						</template>
@@ -173,9 +170,8 @@
 					>
 						<template slot-scope="scope">
 							<span v-if="!!scope.row.updatedAt">
-								{{ scope.row.updatedAt }}
+								{{ scope.row.updatedAt || '-' }}
 							</span>
-							<span v-else>-</span>
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -321,7 +317,7 @@ export default {
 	},
 	computed: {
 		windLevelTypeArr() {
-			return this.globalDics.windLevelType
+			return this.globalDics.windLevelType || []
 		},
 		rules() {
 			return {
