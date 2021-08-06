@@ -365,7 +365,6 @@ export default {
 			params = {
 				...this.getParams(params)
 			}
-			console.log(params, 'params')
 			// const idx = params.windControlLevelName.findIndex(
 			// 	(item) => item === 'all'
 			// )
@@ -381,13 +380,22 @@ export default {
 			this.$api
 				.riskRankListAPI(params)
 				.then((res) => {
-					const { code, data } = res
-					if (code === 200) {
-						this.tableData = data.record
-						this.total = data.totalRecord
+					const {
+						code,
+						data: { record, totalRecord },
+						msg
+					} = res || {}
+					if (code && code === 200) {
+						this.tableData =
+							(record && record.length && Object.freeze(record)) || []
+						this.total = totalRecord || 0
 						this.loading = false
 					} else {
 						this.loading = false
+						this.$message({
+							message: msg,
+							type: 'error'
+						})
 					}
 				})
 				.catch(() => {
