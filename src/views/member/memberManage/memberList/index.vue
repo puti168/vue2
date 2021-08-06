@@ -649,7 +649,6 @@ export default {
 			// console.log('$route', $route)
 			// console.log('$store', $store)
 			// console.log('$listeners', $listeners)
-			// console.log('$ref', $ref)
 			return this.globalDics.accountStatusType || []
 		},
 		accountTypeArr() {
