@@ -321,6 +321,7 @@ const end = dayjs()
 const start = dayjs()
 	.startOf('day')
 	.valueOf()
+
 export default {
 	name: routerNames.memberLogin,
 	components: {},
@@ -354,10 +355,10 @@ export default {
 	},
 	computed: {
 		accountType() {
-			return this.globalDics.accountType
+			return this.globalDics.accountType || []
 		},
 		loginStatusType() {
-			return this.globalDics.loginStatusType
+			return this.globalDics.loginStatusType || []
 		},
 		deviceType() {
 			return this.globalDics.userType || []
