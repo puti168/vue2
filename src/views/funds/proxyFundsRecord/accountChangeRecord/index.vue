@@ -380,7 +380,9 @@
 						width="120"
 						sortable="custom"
 					>
-						{{ scope.row.changeBefore || '-' }}
+						<template slot-scope="scope">
+							{{ scope.row.changeBefore || '-' }}
+						</template>
 					</el-table-column>
 					<el-table-column
 						prop="amount"
@@ -389,7 +391,9 @@
 						sortable="custom"
 						label="账变金额"
 					>
-						{{ scope.row.amount || scope.row.amount + '' === '0' || '-' }}
+						<template slot-scope="scope">
+							{{ scope.row.amount || '-' }}
+						</template>
 					</el-table-column>
 					<el-table-column
 						prop="changeAfter"
@@ -398,7 +402,9 @@
 						width="120"
 						sortable="custom"
 					>
-						{{ scope.row.changeAfter || '-' }}
+						<template slot-scope="scope">
+							{{ scope.row.changeAfter || '-' }}
+						</template>
 					</el-table-column>
 					<el-table-column
 						prop="occurDt"
@@ -407,7 +413,9 @@
 						width="170"
 						sortable="custom"
 					>
-						{{ scope.row.occurDt || '-' }}
+						<template slot-scope="scope">
+							{{ scope.row.occurDt || '-' }}
+						</template>
 					</el-table-column>
 					<el-table-column
 						prop="remark"

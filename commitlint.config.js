@@ -18,7 +18,7 @@ module.exports = {
 		],
 		'type-empty': [2, 'never'], // 提交不符合规范时,不可以提交
 		'subject-empty': [2, 'never'], // 提交不符合规范时
-		'subject-full-stop': [2, 'never'],
-		'subject-case': [2, 'never']
+		'subject-full-stop': [0, 'never'],
+		'subject-case': [0, 'never']
 	}
 }
