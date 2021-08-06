@@ -7,7 +7,6 @@
       </div>
       <el-form ref="form" :model="form" :rules="rules" label-width="135px">
         <div class="ctbox">
-          <!-- <el-avatar icon="el-icon-user-solid" :size="150" class="fit"></el-avatar> -->
           <div class="block">
             <el-avatar :size="150" class="fit" :src="circleUrl"></el-avatar>
           </div>
@@ -97,7 +96,7 @@
 
         <el-form-item>
           <el-button
-              v-if="hasPermission('358')"
+            v-if="hasPermission('358')"
             type="primary"
             class="dut"
             :disabled="loading"
@@ -130,20 +129,19 @@ export default {
       password: '',
       id: '',
       form: {
-        nickName: '',
-        newPwd: '',
-        phone: '',
-        pwd: '',
-        reNewPwd: '',
+        nickName: undefined,
+        newPwd: undefined,
+        phone: undefined,
+        pwd: undefined,
+        reNewPwd: undefined,
         type: '1',
-        userName: ''
+        userName: undefined
       }
     }
   },
   computed: {
     rules() {
       const reNewPwds = (rule, value, callback) => {
-        console.log(value, '密码')
         if (!value) {
           callback(new Error('请输入确认密码'))
         } else if (value !== this.form.newPwd) {
@@ -154,7 +152,6 @@ export default {
       }
       const pwds = (rule, value, callback) => {
          const password = localStorage.getItem('password')
-        console.log(password, '密码12')
         if (!value) {
           callback(new Error('请输入确认密码'))
         } else if (value !== password) {
@@ -164,7 +161,6 @@ export default {
         }
       }
        const newPwds = (rule, value, callback) => {
-        console.log(value, '密码')
         if (!value) {
           callback(new Error('请输入确认密码'))
         } else if (value === this.form.pwd) {
@@ -222,15 +218,24 @@ export default {
     loadData() {
       const id = localStorage.getItem('id')
       this.$api.getuserInfolist({ id }).then((res) => {
-        if (res.code === 200) {
+        this.loading = false
+        const {
+          code,
+          msg
+        } = res
+        if (res && code && code === 200) {
           const { id, userName, nickName} = { ...res.data }
           this.form.userId = id
           this.form.userName = userName
           this.form.nickName = nickName
           this.dialogGameVisible = true
+        } else {
+          this.$message({
+            message: res && msg,
+            type: 'error'
+          })
         }
-        this.loading = false
-      })
+      }).catch(() => (this.loading = false))
     },
     onUpdateUser(form) {
       const params = {
@@ -238,42 +243,50 @@ export default {
       }
 
       this.$refs.form.validate((valid) => {
-        console.log(valid, '编辑')
         if (valid) {
-          console.log(params, '000')
           this.$api.setUserInfoupdatePwdAdmin({
-          pwd: md5(params.userName.trim() + params.pwd.trim()),
-          reNewPwd: md5(params.userName.trim() + params.reNewPwd.trim()),
-          newPwd: md5(params.userName.trim() + params.newPwd.trim()),
-          userId: params.userId,
-          userName: params.userName,
-          phone: params.phone,
-          type: 1
-
+            pwd: md5(params.userName.trim() + params.pwd.trim()),
+            reNewPwd: md5(params.userName.trim() + params.reNewPwd.trim()),
+            newPwd: md5(params.userName.trim() + params.newPwd.trim()),
+            userId: params.userId,
+            userName: params.userName,
+            phone: params.phone,
+            type: 1
           }).then((res) => {
-            if (res.code === 200) {
+            const {
+              code,
+              msg
+            } = res
+            if (res && code && code === 200) {
               this.$message.success('修改成功')
-              this.$store
-              .dispatch('user/logout')
-              .then((_) => {
-                location.reload()
+              setTimeout(()=>{
+                this.$store
+                .dispatch('user/logout')
+                .then((_) => {
+                  location.reload()
+                })
+                .catch()('success')
+              },500)
+            } else {
+              this.$message({
+                message: res && msg,
+                type: 'error'
               })
-              .catch()('success')
             }
-          })
+          }).catch(() => (this.loading = false))
         }
       })
     },
     reset() {
       this.$refs['form'].resetFields()
       this.form = {
-        newPwd: '',
-        phone: '',
-        pwd: '',
-        reNewPwd: '',
+        newPwd: undefined,
+        phone: undefined,
+        pwd: undefined,
+        reNewPwd: undefined,
         type: '1',
-        userId: 0,
-        userName: ''
+        userId: undefined,
+        userName: undefined
       }
     },
     checkValue(val) {}
