@@ -556,7 +556,7 @@ export default {
 		// 获取风控层级
 		getWindControllerLevelDict() {
 			this.$api
-				.getWin2dControllerLevelDict({ windControlType: 2 })
+				.getWindControllerLevelDict({ windControlType: 2 })
 				.then((res) => {
 					const { code } = res
 					if (res && code === 200) {
