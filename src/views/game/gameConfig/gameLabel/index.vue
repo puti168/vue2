@@ -107,7 +107,7 @@
 						prop="labelStatus"
 						align="center"
 						label="状态"
-						width="100px"
+						width="100"
 					>
 						<template slot-scope="scope">
 							<div v-if="scope.row.labelStatus === 0" class="disableRgba">
@@ -129,46 +129,50 @@
 						prop="gameLabelCount"
 						align="center"
 						label="已标签游戏"
-						width="120px"
+						width="120"
 					>
 						<template slot-scope="scope">
-							<div v-if="scope.row.gameLabelCount" class="blueColor decoration" @click="lookGame(scope.row)">
+							<div
+								v-if="scope.row.gameLabelCount"
+								class="blueColor decoration"
+								@click="lookGame(scope.row)"
+							>
 								{{ scope.row.gameLabelCount }}
 							</div>
-                            <div v-else>{{ scope.row.gameLabelCount }}</div>
+							<div v-else>{{ scope.row.gameLabelCount }}</div>
 						</template>
 					</el-table-column>
 					<el-table-column
 						prop="createdBy"
 						align="center"
 						label="创建人"
-						width="100px"
+						width="100"
 					></el-table-column>
 					<el-table-column
 						prop="createdAt"
 						align="center"
 						label="创建时间"
 						sortable="custom"
-						width="160px"
+						width="160"
 					></el-table-column>
 					<el-table-column
 						prop="updatedBy"
 						align="center"
 						label="最近操作人"
-						width="100px"
+						width="100"
 					></el-table-column>
 					<el-table-column
 						prop="updatedAt"
 						align="center"
 						label="最近操作时间"
 						sortable="custom"
-						width="160px"
+						width="160"
 					></el-table-column>
 					<el-table-column
 						prop="operating"
 						align="center"
 						label="操作"
-						width="240px"
+						width="240"
 					>
 						<template slot-scope="scope">
 							<el-button
@@ -179,12 +183,7 @@
 								class="noicon"
 								@click="switchClick(scope.row)"
 							>
-								<div v-if="scope.row.labelStatus">
-									禁用
-								</div>
-								<div v-else>
-									开启
-								</div>
+								{{ scope.row.labelStatus ? '禁用' : '开启' }}
 							</el-button>
 							<el-button
 								v-if="hasPermission('1020121')"
@@ -274,7 +273,13 @@
 				<el-divider></el-divider>
 				<div slot="footer" class="dialog-footer">
 					<el-button @click="dialogFormVisible = false">取消</el-button>
-					<el-button type="primary" @click="subAddOrEidt">保存</el-button>
+					<el-button
+						:disabled="addOrEidtDisabled"
+						type="primary"
+						@click="subAddOrEidt"
+					>
+						保存
+					</el-button>
 				</div>
 			</el-dialog>
 			<el-dialog
@@ -318,8 +323,9 @@ export default {
 			dialogForm: {},
 			gameList: [],
 			dialogGameVisible: false,
-			title: '',
-			labelName: ''
+			title: undefined,
+			labelName: undefined,
+			addOrEidtDisabled: false
 		}
 	},
 	computed: {},
@@ -336,9 +342,14 @@ export default {
 			this.$api
 				.getTabelData(params)
 				.then((res) => {
-					if (res.code === 200) {
-						this.tableData = res.data.record
-						this.total = res.data.totalRecord
+					const {
+						code,
+						data: { record, totalRecord }
+					} = res || {}
+					if (code && code === 200) {
+						this.tableData =
+							(record && record.length && Object.freeze(record)) || []
+						this.total = totalRecord || 0
 						this.loading = false
 					} else {
 						this.loading = false
@@ -349,14 +360,15 @@ export default {
 				})
 		},
 		lookGame(val) {
+			this.loading = true
 			this.labelName = val.gameLabelName
 			const data = {}
 			data.gameLabelId = val.gameLabelId
 			data.gameLabelName = val.gameLabelName
 			this.$api.getGameLabelRelation(data).then((res) => {
-				if (res.code === 200) {
-					this.gameList = res.data
-					console.log()
+				if (res && res.code === 200) {
+					this.loading = false
+					this.gameList = res.data || []
 					this.dialogGameVisible = true
 				}
 			})
@@ -385,7 +397,7 @@ export default {
 					this.$api
 						.setUpdateStatus({ id: val.id, status: status })
 						.then((res) => {
-							if (res.code === 200) {
+							if (res && res.code === 200) {
 								this.loadData()
 							}
 						})
@@ -415,7 +427,7 @@ export default {
 			})
 				.then(() => {
 					this.$api.setUpdateDelete(data).then((res) => {
-						if (res.code === 200) {
+						if (res && res.code === 200) {
 							this.$message.success('删除成功')
 							this.loadData()
 						}
@@ -424,31 +436,33 @@ export default {
 				.catch(() => {})
 		},
 		subAddOrEidt() {
-			console.log(this.title)
 			const data = {}
 			data.id = this.dialogForm.id
 			data.description = this.dialogForm.description
 			data.gameLabelName = this.dialogForm.gameLabelName
 			this.$refs.formSub.validate((valid) => {
 				if (valid) {
+					this.addOrEidtDisabled = true
 					if (this.title === '新增') {
-						console.log('新增')
 						this.$api.addObGameLabel(data).then((res) => {
-							if (res.code === 200) {
+							if (res && res.code === 200) {
 								this.$message.success('创建成功')
 								this.pageNum = 1
+								this.dialogFormVisible = false
 								this.loadData()
+								this.disabledDelay('addOrEidtDisabled', false)
 							}
 						})
 					} else {
 						this.$api.setUpdateLabel(data).then((res) => {
-							if (res.code === 200) {
+							if (res && res.code === 200) {
 								this.$message.success('修改成功')
+								this.dialogFormVisible = false
 								this.loadData()
+								this.disabledDelay('addOrEidtDisabled', false)
 							}
 						})
 					}
-					this.dialogFormVisible = false
 				}
 			})
 		},

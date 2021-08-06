@@ -25,7 +25,7 @@
 							maxlength="10"
 							placeholder="请输入"
 							clearable
-							style="width: 180px"
+							style="width: 250px"
 						></el-input>
 					</el-form-item>
 					<el-form-item label="分类顺序:" prop="assortSort">
@@ -35,7 +35,7 @@
 							maxlength="5"
 							placeholder="请输入"
 							clearable
-							style="width: 180px"
+							style="width: 250px"
 							@keyup.native="checkValue"
 						></el-input>
 					</el-form-item>
@@ -46,7 +46,8 @@
 							placeholder="默认选择全部"
 							clearable
 							multiple
-							style="width: 300px"
+							collapse-tags
+							style="width: 250px"
 						>
 							<el-option
 								v-for="item in terminalTypeArr"
@@ -65,7 +66,7 @@
 							oninput="value=value.replace(/(^\s*)|(\s*$)/g ,'')"
 							placeholder="请输入"
 							clearable
-							style="width: 180px"
+							style="width: 250px"
 						></el-input>
 					</el-form-item>
 					<el-form-item
@@ -76,7 +77,7 @@
 						<el-select
 							v-model="queryData.clientDisplay"
 							size="medium"
-							style="width: 180px"
+							style="width: 220px"
 						>
 							<el-option
 								v-for="item in gameDisplayArr"
@@ -94,13 +95,13 @@
 						<p class="hotConfig">分类包含游戏</p>
 						<p class="left-word">已包含： {{ leftSelectList.length }}</p>
 						<p class="left-word" style="margin-top: 20px">
-							游戏名称
+							游戏名称：
 							<el-input
 								v-model="queryLeft"
 								size="medium"
 								placeholder="请输入"
 								clearable
-								style="width: 180px"
+								style="width: 191px"
 								@input="leftFilterByQuery"
 							></el-input>
 						</p>
@@ -108,7 +109,11 @@
 							列表清空
 						</el-button>
 						<div class="page-main">
-							<div v-for="item in showLeftList" :key="item.id" class="page-data">
+							<div
+								v-for="item in showLeftList"
+								:key="item.id"
+								class="page-data"
+							>
 								<el-input
 									v-model="item.assortSort"
 									:maxlength="12"
@@ -116,7 +121,7 @@
 									style="width: 90px"
 									class="left-input"
 									placeholder="序号"
-									@input="changeInput($event,item)"
+									@input="changeInput($event, item)"
 								></el-input>
 								{{ item.gameName }}
 								<span
@@ -159,7 +164,7 @@
 							</el-select>
 						</div>
 						<p class="platform" style="margin-top: 20px">
-							游戏名称
+							游戏名称：
 							<el-input
 								v-model="queryRight"
 								size="medium"
@@ -170,7 +175,11 @@
 							></el-input>
 						</p>
 						<div class="page-main">
-							<div v-for="item in ShowRightList" :key="item.id" class="page-data">
+							<div
+								v-for="item in ShowRightList"
+								:key="item.id"
+								class="page-data"
+							>
 								<el-checkbox
 									v-model="item.check"
 									class="page-check"
@@ -219,7 +228,6 @@ export default {
 	},
 	data() {
 		return {
-			loading: false,
 			queryData: {
 				assortName: undefined,
 				assortSort: undefined,
@@ -248,10 +256,10 @@ export default {
 	},
 	computed: {
 		terminalTypeArr() {
-			return this.globalDics.betDeviceType
+			return this.globalDics.betDeviceType || []
 		},
 		gameDisplayArr() {
-			return this.globalDics.gameDisplayType
+			return this.globalDics.gameDisplayType || []
 		},
 		rules() {
 			return {
@@ -316,7 +324,7 @@ export default {
 		},
 		// 右边过滤后的显示数据
 		rightFilterByQuery() {
-			this.ShowRightList = this.sourceRightList.filter(item =>
+			this.ShowRightList = this.sourceRightList.filter((item) =>
 				item.gameName.includes(this.queryRight)
 			)
 		},
@@ -324,11 +332,10 @@ export default {
 		leftFilterByQuery() {
 			this.showLeftList = this.leftSelectList.filter((item, index) => {
 				item.assortSort = index + 1 + ''
-					if (item.gameName.includes(this.queryLeft)) {
-						return Object.assign(item)
-					}
+				if (item.gameName.includes(this.queryLeft)) {
+					return Object.assign(item)
 				}
-			)
+			})
 		},
 		// 输入的值
 		changeInput(val, item) {
@@ -405,8 +412,8 @@ export default {
 			this.$api
 				.gamePlant()
 				.then((res) => {
-					if (res.code === 200) {
-						this.gamePlantList = res.data
+					if (res && res.code === 200) {
+						this.gamePlantList = res.data || []
 						this.gameCode = res.data[0].gameCode
 						this.gameName = res.data[0].gameName
 						// 默认选择第一个游戏平台
@@ -428,14 +435,14 @@ export default {
 				gameCode: this.gameCode
 			}
 			this.$api.queryGameAPI(params).then((res) => {
-				const { code, data, msg } = res
-				if (code === 200) {
+				const { code, data, msg } = res || {}
+				if (code && code === 200) {
 					data.forEach((item, index) => {
 						item.check = false
 						item.assortSort = Number(index + 1)
 						item.gameCode = this.gameCode
 					})
-					this.sourceRightList = data
+					this.sourceRightList = data || []
 					this.rightFilterByQuery()
 					this.leftFilterByQuery()
 					if (this.noReq) {
@@ -445,7 +452,6 @@ export default {
 						}
 					}
 				} else {
-					this.loading = false
 					this.$message({
 						message: msg,
 						type: 'error'
@@ -460,13 +466,13 @@ export default {
 				gameCode: this.gameCode
 			}
 			this.$api.queryGameAPI(params).then((res) => {
-				const { code, data, msg } = res
-				if (code === 200) {
+				const { code, data, msg } = res || {}
+				if (code && code === 200) {
 					data.forEach((item, index) => {
 						item.check = false
 						item.gameCode = this.gameCode
 					})
-					this.sourceRightList = data
+					this.sourceRightList = data || []
 					this.rightFilterByQuery()
 					this.leftFilterByQuery()
 					if (this.noReq) {
@@ -476,7 +482,6 @@ export default {
 						}
 					}
 				} else {
-					this.loading = false
 					this.$message({
 						message: msg,
 						type: 'error'
@@ -492,9 +497,9 @@ export default {
 				assortId: this.rowAssortId
 			}
 			this.$api.queryChildGameAPI(params).then((res) => {
-				const { code, data, msg } = res
-				if (code === 200) {
-					this.leftSelectList = data
+				const { code, data, msg } = res || {}
+				if (code && code === 200) {
+					this.leftSelectList = data || []
 					// 判断右边是否勾选
 					this.sourceRightList.forEach((item) => {
 						this.leftSelectList.forEach((val) => {
@@ -506,7 +511,6 @@ export default {
 					this.leftFilterByQuery()
 					this.rightFilterByQuery()
 				} else {
-					this.loading = false
 					this.$message({
 						message: msg,
 						type: 'error'
@@ -518,6 +522,12 @@ export default {
 		save() {
 			this.$refs.form.validate((valid) => {
 				if (valid) {
+					const loading = this.$loading({
+						lock: true,
+						text: 'Loading',
+						spinner: 'el-icon-loading',
+						background: 'rgba(0, 0, 0, 0.7)'
+					})
 					const arr = []
 					this.leftSelectList.forEach((item, index) => {
 						arr.push({
@@ -538,8 +548,9 @@ export default {
 							: undefined
 					// 后端说都用update const url = this.rowAssortId ? 'gameUpdateAPI' : 'gameCreateAPI'
 					this.$api.gameUpdateAPI(params).then((res) => {
-						const { code, msg } = res
-						if (code === 200) {
+						const { code, msg } = res || {}
+						if (code && code === 200) {
+							loading.close()
 							this.$message({
 								message: '保存成功!',
 								type: 'success'
@@ -547,6 +558,7 @@ export default {
 							this.back()
 							this.reset()
 						} else {
+							loading.close()
 							this.$message({
 								message: msg,
 								type: 'error'

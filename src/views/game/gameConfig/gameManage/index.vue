@@ -2,7 +2,12 @@
 	<div class="game-container report-container">
 		<div v-if="!showDetail" class="view-container dealer-container">
 			<div class="params">
-				<el-form ref="form" :inline="true" :model="queryData" label-width="80px">
+				<el-form
+					ref="form"
+					:inline="true"
+					:model="queryData"
+					label-width="80px"
+				>
 					<el-form-item label="游戏ID:">
 						<el-input
 							v-model="queryData.gameId"
@@ -31,7 +36,7 @@
 							v-model="queryData.gameStatusList"
 							style="width: 310px"
 							multiple
-                            clearable
+							clearable
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
 						>
@@ -48,8 +53,8 @@
 							v-model="queryData.supportTerminalList"
 							style="width: 310px"
 							multiple
-                            clearable
-                            collapse-tags
+							clearable
+							collapse-tags
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
 						>
@@ -66,7 +71,7 @@
 							v-model="queryData.gameIconList"
 							style="width: 310px"
 							multiple
-                            clearable
+							clearable
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
 						>
@@ -78,13 +83,17 @@
 							></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="关联推荐游戏:" class="tagheight" label-width="108px">
+					<el-form-item
+						label="关联推荐游戏:"
+						class="tagheight"
+						label-width="108px"
+					>
 						<el-select
 							v-model="queryData.relationOtherGameIdList"
 							style="width: 281px"
 							multiple
 							collapse-tags
-                            clearable
+							clearable
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
 						>
@@ -101,7 +110,7 @@
 							v-model="queryData.gamePlatformList"
 							style="width: 310px"
 							multiple
-                            clearable
+							clearable
 							collapse-tags
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
@@ -119,7 +128,7 @@
 							v-model="queryData.gameLabelIdList"
 							style="width: 310px"
 							multiple
-                            clearable
+							clearable
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
 						>
@@ -244,8 +253,12 @@
 						prop="description"
 						align="center"
 						label="游戏描述"
-                        width="160"
-					></el-table-column>
+						width="160"
+					>
+						<template slot-scope="scope">
+							{{ scope.row.description || '-' }}
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="relationOtherGameId"
 						align="center"
@@ -283,7 +296,11 @@
 						align="center"
 						label="备注信息"
 						width="160px"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							{{ scope.row.remark || '-' }}
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="initFavoritesNum"
 						align="center"
@@ -295,7 +312,11 @@
 						align="center"
 						label="随机增加收藏数"
 						width="160px"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							{{ scope.row.increaseAmountOneTime || '-' }}
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="configRebateStatus"
 						align="center"
@@ -307,31 +328,43 @@
 							}}
 						</template>
 					</el-table-column>
-					<el-table-column
-						prop="createdBy"
-						align="center"
-						label="创建人"
-					></el-table-column>
+					<el-table-column prop="createdBy" align="center" label="创建人">
+						<template slot-scope="scope">
+							{{ scope.row.createdBy || '-' }}
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="createdAt"
 						align="center"
 						label="创建时间"
 						sortable="custom"
 						width="160px"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							{{ scope.row.createdAt || '-' }}
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="updatedBy"
 						align="center"
 						label="最近操作人"
 						width="120px"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							{{ scope.row.updatedBy || '-' }}
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="updatedAt"
 						align="center"
 						label="最近操作时间"
 						sortable="custom"
 						width="160px"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							{{ scope.row.updatedAt || '-' }}
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="operating"
 						align="center"
@@ -441,8 +474,8 @@ export default {
 		this._changeTableSort = this.throttle(this._changeTableSort, 1000)
 		return {
 			queryData: {
-				gameId: '',
-				gameName: '',
+				gameId: undefined,
+				gameName: undefined,
 				accountType: [],
 				gameLabelIdList: [],
 				gamePlatformList: [],
@@ -465,19 +498,16 @@ export default {
 	},
 	computed: {
 		gameStatusType() {
-			return this.globalDics.gameStatusType
+			return this.globalDics.gameStatusType || []
 		},
 		betDeviceType() {
-			return this.globalDics.betDeviceType
-		},
-		terminalnType() {
-			return this.globalDics.terminalnType
+			return this.globalDics.betDeviceType || []
 		},
 		gameIconType() {
-			return this.globalDics.gameIconType
+			return this.globalDics.gameIconType || []
 		},
 		configRebateStatus() {
-			return this.globalDics.configRebateStatus
+			return this.globalDics.configRebateStatus || []
 		}
 	},
 	created() {
@@ -489,19 +519,22 @@ export default {
 				...this.getParams(this.queryData)
 			}
 			this.loading = true
-
 			this.$api
 				.gameList(params)
 				.then((res) => {
-					if (res.code === 200) {
-						const response = res.data
+					const {
+						code,
+						data: { record, totalRecord },
+						msg
+					} = res || {}
+					if (code && code === 200) {
 						this.loading = false
-						this.list = response.record
-						this.total = response.totalRecord
+						this.list = (record && record.length && Object.freeze(record)) || []
+						this.total = totalRecord || 0
 					} else {
 						this.loading = false
 						this.$message({
-							message: res.msg,
+							message: msg,
 							type: 'error'
 						})
 					}
@@ -515,8 +548,8 @@ export default {
 			this.$api
 				.gameLabelList()
 				.then((res) => {
-					if (res.code === 200) {
-						this.labelList = res.data
+					if (res && res.code === 200) {
+						this.labelList = res.data || []
 					} else {
 						this.$message({
 							message: res.msg,
@@ -529,8 +562,8 @@ export default {
 			this.$api
 				.gameModuleNameList()
 				.then((res) => {
-					if (res.code === 200) {
-						this.gameModuleNameList = res.data
+					if (res && res.code === 200) {
+						this.gameModuleNameList = res.data || []
 					} else {
 						this.$message({
 							message: res.msg,
@@ -543,8 +576,8 @@ export default {
 			this.$api
 				.gamePlant()
 				.then((res) => {
-					if (res.code === 200) {
-						this.gamePlantList = res.data
+					if (res && res.code === 200) {
+						this.gamePlantList = res.data || []
 					} else {
 						this.$message({
 							message: res.msg,
@@ -557,8 +590,8 @@ export default {
 			this.$api
 				.gameManageList()
 				.then((res) => {
-					if (res.code === 200) {
-						this.gameManageList = res.data
+					if (res && res.code === 200) {
+						this.gameManageList = res.data || []
 					} else {
 						this.$message({
 							message: res.msg,
@@ -569,8 +602,8 @@ export default {
 				.catch(() => {})
 		},
 		gamePlantFilter(val) {
-			if (!this.gamePlantList) return
-			let name = ''
+			if (!this.gamePlantList.length) return
+			let name = '-'
 			this.gamePlantList.forEach((item) => {
 				if (item.gameCode === val) {
 					name = item.gameName
@@ -579,7 +612,7 @@ export default {
 			return name
 		},
 		gameManageListFilter(val) {
-			if (!this.gameManageList) return
+			if (!this.gameManageList.length) return
 			const arr = val.split(',')
 			let name = ''
 			this.gameManageList.forEach((item) => {
@@ -589,10 +622,10 @@ export default {
 					}
 				})
 			})
-			return name.slice(0, -1)
+			return name.slice(0, -1) || '-'
 		},
 		supportTerminalFilter(val) {
-			if (!this.terminalnType) return
+			if (!this.betDeviceType.length) return
 			const arr = val.split(',')
 			let name = ''
 			this.betDeviceType.forEach((item) => {
@@ -602,7 +635,7 @@ export default {
 					}
 				})
 			})
-			return name.slice(0, -1)
+			return name.slice(0, -1) || '-'
 		},
 		_changeTableSort({ column, prop, order }) {
 			this.pageNum = 1
@@ -622,7 +655,7 @@ export default {
 			}
 		},
 		moduleFilter(val) {
-			if (!this.gameModuleNameList) return
+			if (!this.gameModuleNameList.length) return
 			const arr = val.split(',')
 			let name = ''
 			this.gameModuleNameList.forEach((item) => {
@@ -632,10 +665,10 @@ export default {
 					}
 				})
 			})
-			return name.slice(0, -1)
+			return name.slice(0, -1) || '-'
 		},
 		labelListFilter(val) {
-			if (!this.labelList) return
+			if (!this.labelList.length) return
 			const arr = val.split(',')
 			let name = ''
 			this.labelList.forEach((item) => {
@@ -645,7 +678,7 @@ export default {
 					}
 				})
 			})
-			return name.slice(0, -1)
+			return name.slice(0, -1) || '-'
 		},
 		lookGame(val) {
 			this.dialogGameVisible = true
@@ -684,7 +717,7 @@ export default {
 							gameStatus: type
 						})
 						.then((res) => {
-							if (res.code === 200) {
+							if (res && res.code === 200) {
 								this.$message({
 									message: '操作成功！',
 									type: 'success'
@@ -703,8 +736,8 @@ export default {
 		},
 		reset() {
 			this.queryData = {
-				gameId: '',
-				gameName: '',
+				gameId: undefined,
+				gameName: undefined,
 				accountType: [],
 				gameLabelIdList: [],
 				gamePlatformList: [],
@@ -775,7 +808,7 @@ p {
 	.img-box {
 		height: 500px;
 		img {
-            margin:0;
+			margin: 0;
 			width: 100%;
 			height: 100%;
 		}

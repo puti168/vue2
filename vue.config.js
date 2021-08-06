@@ -3,6 +3,8 @@ const path = require('path')
 const VersionPlugin = require('./version-plugin')
 const defaultSettings = require('./src/settings.js')
 const chalk = require('chalk')
+const CompressionWebpackPlugin = require('compression-webpack-plugin')
+const productionGzipExtensions = ['js', 'css']
 
 function resolve(dir) {
 	return path.join(__dirname, dir)
@@ -19,13 +21,6 @@ const port = process.env.port || process.env.npm_config_port || 9999 // dev port
 const IS_PROD = ['production', 'prod'].includes(process.env.NODE_ENV)
 
 module.exports = {
-	/**
-	 * You will need to set publicPath if you plan to deploy your site under a sub path,
-	 * for example GitHub Pages. If you plan to deploy your site to https://foo.github.io/bar/,
-	 * then publicPath should be set to "/bar/".
-	 * In most cases please use '/' !!!
-	 * Detail: https://cli.vuejs.org/config/#publicpath
-	 */
 	publicPath: '/',
 	outputDir: 'dist',
 	assetsDir: 'static',
@@ -87,7 +82,15 @@ module.exports = {
 		}
 		if (process.env.NODE_ENV === 'production') {
 			config.optimization.minimizer[0].options.terserOptions.compress.drop_console = false
-
+			config.plugins.push(
+				new CompressionWebpackPlugin({
+					filename: '[path].gz[query]',
+					algorithm: 'gzip',
+					test: new RegExp('\\.(' + productionGzipExtensions.join('|') + ')$'),
+					threshold: 10240,
+					minRatio: 0.8
+				})
+			)
 			// 加入生成版本插件
 			config.plugins.push(new VersionPlugin({}))
 		} else {
@@ -98,7 +101,6 @@ module.exports = {
 		// config.cache(true)
 		config.plugins.delete('preload') // TODO: need test
 		config.plugins.delete('prefetch') // TODO: need test
-
 		// set svg-sprite-loader
 		config.module
 			.rule('svg')

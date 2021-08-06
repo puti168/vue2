@@ -4,7 +4,9 @@
 			<span class="title">最新游戏模块</span>
 			<div class="right-btn">
 				<el-button plain @click="back">取消</el-button>
-				<el-button type="success" @click="save(true)">保存</el-button>
+				<el-button :disabled="saveDisabled" type="success" @click="save()">
+					保存
+				</el-button>
 			</div>
 		</div>
 		<div class="main-content">
@@ -187,7 +189,7 @@ export default {
 	},
 	data() {
 		return {
-			loading: false,
+			saveDisabled: false,
 			form: {
 				mainTitleInfo: undefined,
 				subTitleInfo: undefined,
@@ -318,24 +320,18 @@ export default {
 		back() {
 			this.$emit('back')
 		},
-		confirm(action) {
-			this.remark = ''
-			this.action = action
-			this.visible = true
-		},
-		save(action) {
-			this.loading = true
+		save() {
 			const params = {
 				...this.form
 			}
 			this.$refs['form'].validate((valid) => {
 				if (valid) {
+					this.saveDisabled = true
 					this.$api
 						.editGameLatestModuleAPI(params)
 						.then((res) => {
-							this.loading = false
-							const { code, msg } = res
-							if (code === 200) {
+							const { code, msg } = res || {}
+							if (code && code === 200) {
 								this.$message({
 									message: '保存成功',
 									type: 'success'
@@ -347,53 +343,44 @@ export default {
 									type: 'error'
 								})
 							}
+							this.disabledDelay('saveDisabled', false)
 						})
 						.catch(() => {
-							this.loading = false
+							this.disabledDelay('saveDisabled', false)
 						})
 				}
 			})
-
-			setTimeout(() => {
-				this.loading = false
-			}, 1000)
 		},
 		changeType(evt) {},
 		gameAssortList() {
 			this.$api.gameAssortDicAPI().then((res) => {
-				const { code, data } = res
-				if (code === 200) {
+				const { code, data } = res || {}
+				if (code && code === 200) {
 					this.gameAssortDicList = data || []
 				}
 			})
 		},
 		getGameDetails() {
-			this.loading = true
-			this.$api
-				.gameLatestModuleDetailAPI()
-				.then((res) => {
-					this.loading = false
-					console.log('最新游戏', res)
-					const { code, data } = res
-					if (code === 200) {
-						this.form = { ...data }
-						this.$nextTick(() => {
-							this.$refs.imgUpload1.state = 'image'
-							this.$refs.imgUpload2.state = 'image'
-							this.$refs.imgUpload3.state = 'image'
-							this.$refs.imgUpload1.fileUrl = data.pictureOne
-							this.$refs.imgUpload2.fileUrl = data.pictureTwo
-							this.$refs.imgUpload3.fileUrl = data.pictureHome
-						})
-					} else {
-						// this.editData = undefined
-					}
-				})
-				.catch(() => (this.loading = false))
-
-			setTimeout(() => {
+			this.$api.gameLatestModuleDetailAPI().then((res) => {
 				this.loading = false
-			}, 1500)
+				const { code, data, msg } = res || {}
+				if (code && code === 200) {
+					this.form = { ...data }
+					this.$nextTick(() => {
+						this.$refs.imgUpload1.state = 'image'
+						this.$refs.imgUpload2.state = 'image'
+						this.$refs.imgUpload3.state = 'image'
+						this.$refs.imgUpload1.fileUrl = data.pictureOne
+						this.$refs.imgUpload2.fileUrl = data.pictureTwo
+						this.$refs.imgUpload3.fileUrl = data.pictureHome
+					})
+				} else {
+					this.$message({
+						message: msg,
+						type: 'error'
+					})
+				}
+			})
 		},
 		handleStartUploadOne() {
 			this.$message.info('图片开始上传')

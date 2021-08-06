@@ -47,7 +47,7 @@
 									size="medium"
 									placeholder="请选择"
 									multiple
-                                    collapse-tags
+									collapse-tags
 									clearable
 									style="width: 365px"
 								>
@@ -100,7 +100,7 @@
 									size="medium"
 									placeholder="请选择"
 									multiple
-                                    collapse-tags
+									collapse-tags
 									clearable
 									style="width: 365px"
 								>
@@ -121,7 +121,7 @@
 									placeholder="请选择"
 									multiple
 									clearable
-                                    collapse-tags
+									collapse-tags
 									style="width: 365px"
 								>
 									<el-option
@@ -329,23 +329,7 @@ export default {
 	},
 	data() {
 		return {
-			form: {
-				id: '',
-				gameIcon: '',
-				gamePlatform: '',
-				gameName: '',
-				supportTerminal: [],
-				relationOtherGameId: [],
-				relationGameModuleId: [],
-				imageAddress: '',
-				gameLabelParam1: {},
-				gameLabelParam2: {},
-				gameLabelParam3: {},
-				accessInfo: '',
-				configRebateStatus: '',
-				description: '',
-				remark: ''
-			},
+			form: {},
 			datalist: {},
 			nowImage: '',
 			uploadUrl: process.env.VUE_APP_BASE_API + '/gameManager/imageUpload',
@@ -365,13 +349,13 @@ export default {
 			}
 		},
 		gameIconType() {
-			return this.globalDics.gameIconType
+			return this.globalDics.gameIconType || []
 		},
 		betDeviceType() {
-			return this.globalDics.betDeviceType
+			return this.globalDics.betDeviceType || []
 		},
 		configRebateStatus() {
-			return this.globalDics.configRebateStatus
+			return this.globalDics.configRebateStatus || []
 		},
 		rules() {
 			const valiIMG = (rule, value, callback) => {
@@ -388,7 +372,6 @@ export default {
 				}
 			}
 			const increaseAmountEnds = (rule, value, callback) => {
-				console.log(value)
 				if (value < 1) {
 					callback(new Error('请输入大于0的数字'))
 				} else if (value <= this.form.increaseAmountStart) {
@@ -512,8 +495,6 @@ export default {
 					delete arr.initFavoritesNum
 				}
 				this.form = JSON.parse(JSON.stringify(arr))
-				console.log(this.form)
-				console.log(arr)
 			},
 			immediate: true,
 			deep: true
@@ -601,8 +582,8 @@ export default {
 					const url = this.editType === 'add' ? 'addGame' : 'editGame'
 					this.$api[url](params)
 						.then((res) => {
-							loading.close()
-							if (res.code === 200) {
+							if (res && res.code === 200) {
+								loading.close()
 								this.$message({
 									type: 'success',
 									message: '操作成功!'
@@ -625,19 +606,7 @@ export default {
 			return value + ''
 		},
 		goBack() {
-			this.form = {
-				id: '',
-				gameIcon: '',
-				gamePlatform: '',
-				gameName: '',
-				imageAddress: '',
-				gameLabelParam1: '',
-				gameLabelParam2: '',
-				gameLabelParam3: '',
-				accessInfo: '',
-				description: '',
-				remark: ''
-			}
+			this.form = {}
 			this.supportTerminal = []
 			this.relationOtherGameId = []
 			this.relationGameModuleId = []

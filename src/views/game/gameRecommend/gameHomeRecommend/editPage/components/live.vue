@@ -4,7 +4,7 @@
 			<span class="title">直播模块</span>
 			<div class="right-btn">
 				<el-button plain @click="back">取消</el-button>
-				<el-button type="success" @click="confirm(true)">保存</el-button>
+				<el-button type="success" @click="confirm()">保存</el-button>
 			</div>
 		</div>
 		<div class="main-content">
@@ -18,7 +18,7 @@
 									type="textarea"
 									size="medium"
 									maxlength="100"
-                                    placeholder="请输入2-100位字符"
+									placeholder="请输入2-100位字符"
 									clearable
 									show-word-limit
 									style="width: 365px"
@@ -42,7 +42,8 @@ export default {
 		return {
 			formData: {
 				moduleDesc: undefined
-			}
+			},
+			saveDisabled: false
 		}
 	},
 	computed: {
@@ -82,7 +83,8 @@ export default {
 		back() {
 			this.$emit('back')
 		},
-		confirm(action) {
+		confirm() {
+			this.saveDisabled = true
 			const { moduleId } = this.gameDetails
 			const params = {
 				...this.formData,
@@ -90,22 +92,27 @@ export default {
 			}
 			delete params.updatedAt
 			delete params.updatedBy
-			this.$api.gameHomeRecommendDetailsEditAPI(params).then((res) => {
-				this.loading = false
-				const { code, msg } = res
-				if (code === 200) {
-					this.$message({
-						message: '保存成功',
-						type: 'success'
-					})
-					this.$parent.back()
-				} else {
-					this.$message({
-						message: msg,
-						type: 'error'
-					})
-				}
-			})
+			this.$api
+				.gameHomeRecommendDetailsEditAPI(params)
+				.then((res) => {
+					const { code, msg } = res
+					if (code === 200) {
+						this.$message({
+							message: '保存成功',
+							type: 'success'
+						})
+						this.$parent.back()
+					} else {
+						this.$message({
+							message: msg,
+							type: 'error'
+						})
+					}
+					this.disabledDelay('saveDisabled', false)
+				})
+				.catch(() => {
+					this.disabledDelay('saveDisabled', false)
+				})
 		}
 	}
 }

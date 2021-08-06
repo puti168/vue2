@@ -56,18 +56,16 @@
           <el-table-column prop="ip" align="center" label="登录IP">
             <template slot="header"> 登录IP </template>
             <template slot-scope="scope">
-              <span v-if="scope.row.ip !== null">
-                {{ scope.row.ip }}
+              <span>
+                {{ scope.row.ip || '-' }}
               </span>
-              <span v-else>-</span>
             </template>
           </el-table-column>
           <el-table-column prop="deviceNo" align="center" label="终端设备号" width="350">
             <template slot-scope="scope">
-              <span v-if="scope.row.deviceNo !== null">
-                {{ scope.row.deviceNo }}
+              <span>
+                {{ scope.row.deviceNo || '-' }}
               </span>
-              <span v-else>-</span>
             </template>
           </el-table-column>
          <el-table-column
@@ -78,10 +76,10 @@
           <el-table-column prop="loginStatus" align="center" label="登录状态">
             <template slot-scope="scope">
               <span v-if="scope.row.loginStatus === 0 " class="redColor">
-                {{ typeFilter(scope.row.loginStatus, "loginStatusType") }}
+                {{ typeFilter(scope.row.loginStatus, "loginStatusType") || '-' }}
               </span>
               <span v-else-if="scope.row.loginStatus > 0 " class="enableColor">
-                {{ typeFilter(scope.row.loginStatus, "loginStatusType") }}
+                {{ typeFilter(scope.row.loginStatus, "loginStatusType") || '-' }}
               </span>
               <span v-else>-</span>
             </template>
@@ -113,7 +111,6 @@ const end = dayjs().endOf('day').valueOf()
 const start = dayjs().startOf('day').valueOf()
 export default {
   name: routerNames.memberLogin,
-  components: {},
   mixins: [list],
   data() {
     this.search = this.throttle(this.search, 1000)
@@ -141,7 +138,6 @@ export default {
       return this.globalDics.loginStatusType
     }
   },
-  mounted() {},
   methods: {
     loadData() {
       this.loading = true
@@ -155,12 +151,20 @@ export default {
       this.$api
         .getSystemUserLoginRecordQueryLoginLog(params)
         .then((res) => {
-          if (res.code === 200) {
-            this.dataList = res.data.records
-            this.total = res.data.total
-            this.loading = false
+          this.loading = false
+          const {
+            code,
+            data: { record, totalRecord },
+            msg
+          } = res
+          if (code && code === 200) {
+            this.dataList = record || []
+            this.total = totalRecord || 0
           } else {
-            this.loading = false
+            this.$message({
+              message: msg,
+              type: 'error'
+            })
           }
         })
         .catch(() => {
