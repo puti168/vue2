@@ -58,18 +58,16 @@
 				></el-table-column>
 				<el-table-column align="center" prop="userName" label="用户名称" width="150">
 					<template slot-scope="scope">
-						<span v-if="!!scope.row.userName">
-							{{ scope.row.userName }}
+						<span>
+							{{ scope.row.userName || '-' }}
 						</span>
-						<span v-else>-</span>
 					</template>
 				</el-table-column>
 				<el-table-column align="center" prop="nickName" label="姓名" width="120">
 					<template slot-scope="scope">
-						<span v-if="!!scope.row.nickName">
-							{{ scope.row.nickName }}
+						<span>
+							{{ scope.row.nickName || '-' }}
 						</span>
-						<span v-else>-</span>
 					</template>
 				</el-table-column>
 				<el-table-column
@@ -79,10 +77,9 @@
 					width="220"
 				>
 					<template slot-scope="scope">
-						<span v-if="!!scope.row.googleAuthCode">
-							{{ scope.row.googleAuthCode }}
+						<span>
+							{{ scope.row.googleAuthCode || '-' }}
 						</span>
-						<span v-else>-</span>
 					</template>
 				</el-table-column>
 				<el-table-column
@@ -92,18 +89,16 @@
 					width="180"
 				>
 					<template slot-scope="scope">
-						<span v-if="!!scope.row.createAt">
-							{{ scope.row.createAt }}
+						<span>
+							{{ scope.row.createAt || '-' }}
 						</span>
-						<span v-else>-</span>
 					</template>
 				</el-table-column>
 				<el-table-column align="center" prop="createBy" label="创建人" width="150">
 					<template slot-scope="scope">
-						<span v-if="!!scope.row.createBy">
-							{{ scope.row.createBy }}
+						<span>
+							{{ scope.row.createBy || '-' }}
 						</span>
-						<span v-else>-</span>
 					</template>
 				</el-table-column>
 				<el-table-column
@@ -113,10 +108,9 @@
 					width="180"
 				>
 					<template slot-scope="scope">
-						<span v-if="!!scope.row.lastLoginAt">
-							{{ scope.row.lastLoginAt }}
+						<span>
+							{{ scope.row.lastLoginAt || '-' }}
 						</span>
-						<span v-else>-</span>
 					</template>
 				</el-table-column>
 				<el-table-column label="状态" align="center" width="120">
@@ -290,7 +284,6 @@ export default {
 			id: ''
 		}
 	},
-	computed: {},
 	methods: {
 		loadData() {
 			const [startTime, endTime] = this.listQuery.time || []
@@ -303,11 +296,23 @@ export default {
 				...this.getParams(params)
 			}
 
-			this.$api.getUsers(params).then((response) => {
+			this.$api.getUsers(params).then((res) => {
 				this.loading = false
-				this.list = response.data.records
-				this.total = response.data.total
-			})
+				const {
+					code,
+					data: { records, total },
+					msg
+				} = res
+				if (code && code === 200) {
+					this.list = records || []
+					this.total = total || 0
+				} else {
+					this.$message({
+						message: res && msg,
+						type: 'error'
+					})
+				}
+			}).catch(() => (this.loading = false))
 		},
 		deleteUser(val) {
 			const loading = this.$loading({
@@ -328,8 +333,10 @@ export default {
 						.deleteUser({ id })
 						.then((res) => {
 							loading.close()
-							const { code } = res
-							if (code === 200) {
+							const {
+								code
+							} = res
+							if (code && code === 200) {
 								this.$message.success('删除成功')
 							} else {
 								this.$message({
@@ -337,7 +344,6 @@ export default {
 									message: '删除失败!'
 								})
 							}
-
 							this.loadData()
 						})
 						.catch(() => {
@@ -347,10 +353,6 @@ export default {
 				.catch(() => {
 					loading.close()
 				})
-
-			setTimeout(() => {
-				loading.close()
-			}, 1000)
 		},
 		closeDialog() {
 			this.$refs.dialogForm.resetFields()
@@ -402,8 +404,11 @@ export default {
 					userId: form.id,
 					userName: this.userName
 				})
-				.then((_) => {
-					if (_.code === 200) {
+				.then((res) => {
+					const {
+						code
+					} = res
+					if (code && code === 200) {
 						this.$message({
 							message: '操作成功',
 							type: 'success'
@@ -460,7 +465,7 @@ export default {
 							.then((res) => {
 								loading.close()
 								const { code } = res
-								if (code === 200) {
+								if (code && code === 200) {
 									this.$message.success('解锁成功')
 								} else {
 									this.$message({
@@ -468,7 +473,6 @@ export default {
 										message: '解锁失败!'
 									})
 								}
-
 								this.loadData()
 							})
 							.catch(() => {
@@ -478,9 +482,6 @@ export default {
 				.catch(() => {
 					loading.close()
 				})
-			setTimeout(() => {
-				loading.close()
-			}, 1000)
 		}
 	}
 }
