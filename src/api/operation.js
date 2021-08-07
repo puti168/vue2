@@ -646,6 +646,31 @@ export function getConfigTutorContentSort(data) {
 		data
 	})
 }
+// 教程变更记录==>变更目录下拉框
+export function getOperateObConfigTutorRecordQueryTutorEnums(params) {
+	return request({
+		url: '/operate/obConfigTutorRecord/queryTutorEnums',
+		method: 'get',
+		params
+	})
+}
+// 教程变更记录==>变更类型下拉框
+export function getOperateObConfigTutorRecordQueryAllEnums(params) {
+	return request({
+		url: '/operate/obConfigTutorRecord/queryAllEnums',
+		method: 'get',
+		params
+	})
+}
+// 教程变更记录分页查询
+export function getOperateObConfigTutorRecordSelect(data) {
+	return request({
+		url: '/operate/obConfigTutorRecord/select',
+		method: 'post',
+		data
+	})
+}
+
 export default {
 	queryDiscountTagList,
 	queryVipActivityList,
@@ -725,5 +750,8 @@ export default {
 	getConfigTutorContentDelete,
 	getConfigTutorContentInsert,
 	getConfigTutorContentUpdate,
-	getConfigTutorContentSort
+	getConfigTutorContentSort,
+	getOperateObConfigTutorRecordQueryTutorEnums,
+	getOperateObConfigTutorRecordQueryAllEnums,
+	getOperateObConfigTutorRecordSelect
 }
