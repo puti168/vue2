@@ -88,16 +88,16 @@
 							{{ typeFilter(scope.row.operateType, 'enumSearchConfigOperate') }}
 						</template>
 					</el-table-column>
-					<el-table-column
-						align="center"
-						label="变更前"
-						prop="beforeModify"
-					></el-table-column>
-					<el-table-column
-						align="center"
-						label="变更后"
-						prop="afterModify"
-					></el-table-column>
+					<el-table-column align="center" label="变更前" prop="beforeModify">
+						<template slot-scope="scope">
+							{{ scope.row.beforeModify || '-' }}
+						</template>
+					</el-table-column>
+					<el-table-column align="center" label="变更后" prop="afterModify">
+						<template slot-scope="scope">
+							{{ scope.row.afterModify || '-' }}
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="createdBy"
 						align="center"
@@ -153,7 +153,7 @@ export default {
 	},
 	computed: {
 		enumSearchConfigOperate() {
-			return this.globalDics.enumSearchConfigOperate
+			return this.globalDics.enumSearchConfigOperate || []
 		}
 	},
 	mounted() {},
@@ -181,13 +181,14 @@ export default {
 						code,
 						data: { record, totalRecord },
 						msg
-					} = res
-					if (code === 200) {
-						this.dataList = record || []
+					} = res || {}
+					if (code && code === 200) {
+						this.dataList =
+							(record && record.length && Object.freeze(record)) || []
 						this.total = totalRecord || 0
 					} else {
 						this.$message({
-							message: msg,
+							message: msg || 'error',
 							type: 'error'
 						})
 					}
