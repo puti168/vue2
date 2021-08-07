@@ -27,7 +27,6 @@
 							placeholder="默认选择全部"
 							clearable
 							style="width: 300px"
-							@change="changeSelect($event)"
 						>
 							<el-option
 								v-for="item in bookmarkQueryList"
@@ -46,10 +45,10 @@
 							style="width: 300px"
 						>
 							<el-option
-								v-for="item in configTutorList"
+								v-for="item in gameAssortStatusType"
 								:key="item.code"
-								:label="item.contentName"
-								:value="item.id"
+								:label="item.description"
+								:value="item.code"
 							></el-option>
 						</el-select>
 					</el-form-item>
@@ -172,10 +171,14 @@
 								v-if="scope.row.contentStatus + '' === '0'"
 								class="disableRgba"
 							>
-								{{ typeFilter(scope.row.contentStatus, 'operateStatus') }}
+								{{
+									typeFilter(scope.row.contentStatus, 'gameAssortStatusType')
+								}}
 							</span>
 							<span v-else-if="!!scope.row.contentStatus" class="normalRgba">
-								{{ typeFilter(scope.row.contentStatus, 'operateStatus') }}
+								{{
+									typeFilter(scope.row.contentStatus, 'gameAssortStatusType')
+								}}
 							</span>
 							<span v-else>-</span>
 						</template>
@@ -400,8 +403,8 @@ export default {
 		}
 	},
 	computed: {
-		entrAuthorityTypeArr() {
-			return this.globalDics.entrAuthorityType
+		gameAssortStatusType() {
+			return this.globalDics.gameAssortStatusType || []
 		},
 		rules() {
 			const tutorId = [
@@ -421,7 +424,6 @@ export default {
 	},
 	mounted() {
 		this.getMerchantDict(this.tutorId)
-		this.changeSelect(this.id)
 	},
 	methods: {
 		getMerchantDict(val) {
@@ -431,18 +433,6 @@ export default {
 				console.log(res, 'res2')
 				if (res.code === 200) {
 					this.bookmarkQueryList = res.data
-				}
-			})
-		},
-		changeSelect(val) {
-			console.log(val, 'val')
-			this.queryData.type = ''
-			const { id } = val || 0
-			this.$api.configTutorContentQuerySortedNames({ id }).then((res) => {
-				const { code } = res
-				if (res && code === 200) {
-					this.configTutorList = res.data || []
-					console.log(this.configTutorList, 'this.configTutorList123')
 				}
 			})
 		},

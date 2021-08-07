@@ -21,7 +21,7 @@
 					</el-form-item>
 					<el-form-item label="变更目录:" class="tagheight" prop="gameName">
 						<el-select
-							v-model="queryData.gameName"
+							v-model="queryData.contentType"
 							style="width: 280px"
 							clearable
 							collapse-tags
@@ -29,16 +29,16 @@
 							:popper-append-to-body="false"
 						>
 							<el-option
-								v-for="item in gameTypeList"
+								v-for="item in tutorRecordList"
 								:key="item.id"
-								:label="item.gameName"
-								:value="item.gameName"
+								:label="item.value"
+								:value="item.code"
 							></el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item label="变更类型:" class="tagheight" prop="gameName">
 						<el-select
-							v-model="queryData.gameName"
+							v-model="queryData.changeType"
 							style="width: 280px"
 							clearable
 							collapse-tags
@@ -46,16 +46,16 @@
 							:popper-append-to-body="false"
 						>
 							<el-option
-								v-for="item in gameTypeList"
+								v-for="item in tutorRecordEnumsList"
 								:key="item.id"
-								:label="item.gameName"
-								:value="item.gameName"
+								:label="item.value"
+								:value="item.code"
 							></el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item label="操作人:">
 						<el-input
-							v-model="queryData.updateBy"
+							v-model="queryData.createdBy"
 							clearable
 							:maxlength="12"
 							size="medium"
@@ -99,39 +99,37 @@
 					@sort-change="_changeTableSort"
 				>
 					<el-table-column
-						prop="updateAt"
+						prop="createdAt"
 						align="center"
 						label="变更时间"
 						sortable="custom"
 					></el-table-column>
-					<el-table-column prop="rateType" align="center" label="变更目录">
-						<!-- <template slot-scope="scope">
-              <span v-for="item in gameTypeList" :key="item.id">
-                {{ scope.row.gameName === item.id ? item.gameName : "" }}
-              </span>
-            </template> -->
-						费率
+					<el-table-column prop="contentType" align="center" label="变更目录">
+						<template slot-scope="scope">
+							<span v-for="item in tutorRecordList" :key="item.id">
+								{{ scope.row.contentType === item.code ? item.value : '' }}
+							</span>
+						</template>
 					</el-table-column>
-					<el-table-column prop="rateType" align="center" label="变更类型">
-						<!-- <template slot-scope="scope">
-              <span v-for="item in gameTypeList" :key="item.id">
-                {{ scope.row.gameName === item.id ? item.gameName : "" }}
-              </span>
-            </template> -->
-						费率
+					<el-table-column prop="changeType" align="center" label="变更类型">
+						<template slot-scope="scope">
+							<span v-for="item in tutorRecordEnumsList" :key="item.id">
+								{{ scope.row.changeType === item.code ? item.value : '' }}
+							</span>
+						</template>
 					</el-table-column>
 					<el-table-column
-						prop="changeFront"
+						prop="beforeValue"
 						align="center"
 						label="变更前"
 					></el-table-column>
 					<el-table-column
-						prop="changeAfter"
+						prop="afterValue"
 						align="center"
 						label="变更后"
 					></el-table-column>
 					<el-table-column
-						prop="updateBy"
+						prop="createdBy"
 						align="center"
 						label="操作人"
 					></el-table-column>
@@ -175,7 +173,8 @@ export default {
 				gameName: ''
 			},
 			VipGradeList: [],
-			gameTypeList: [],
+			tutorRecordList: [],
+			tutorRecordEnumsList: [],
 			gameId: [],
 
 			searchTime: [startTime, endTime],
@@ -197,14 +196,24 @@ export default {
 		}
 	},
 	created() {
-		this.getGameTypeList()
+		this.getTutorRecordList()
+		this.getTutorRecordEnumsList()
 	},
 	mounted() {},
 	methods: {
-		getGameTypeList() {
-			this.$api.getMerchantGameGamePlant().then((res) => {
+		getTutorRecordList() {
+			this.$api.getOperateObConfigTutorRecordQueryTutorEnums().then((res) => {
 				if (res.code === 200) {
-					this.gameTypeList = res.data
+					console.log(res, 'res121')
+					this.tutorRecordList = res.data.contentType
+				}
+			})
+		},
+		getTutorRecordEnumsList() {
+			this.$api.getOperateObConfigTutorRecordQueryAllEnums().then((res) => {
+				if (res.code === 200) {
+					console.log(res, 'res1223')
+					this.tutorRecordEnumsList = res.data.changeType
 				}
 			})
 		},
@@ -223,7 +232,7 @@ export default {
 				...this.getParams(params)
 			}
 			this.$api
-				.getOperateObMerchantGameRecordSelect(params)
+				.getOperateObConfigTutorRecordSelect(params)
 				.then((res) => {
 					if (res.code === 200) {
 						this.tableData = res.data.record
@@ -272,6 +281,24 @@ export default {
 /deep/.el-dialog__header {
 	text-align: center;
 	color: #909399;
+	font-weight: 700;
+}
+/deep/ .tagheight .el-tag {
+	height: 24px;
+	line-height: 24px;
+	min-width: 60px;
+}
+.msgList {
+	font-size: 14px;
+	display: flex;
+	p {
+		margin-right: 20px;
+		line-height: 24px;
+	}
+	&:last-child p {
+		margin-bottom: 15px;
+	}
+
 	font-weight: 700;
 }
 /deep/ .tagheight .el-tag {
