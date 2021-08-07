@@ -4,23 +4,29 @@
 			<strong class="strong">注单信息</strong>
 			<div>
 				<el-row class="paddingLR paddingB">
-					<el-col :span="9">注单号： {{ dataList.id }}</el-col>
-					<el-col :span="9">三方注单号： {{ dataList.thirdOrderId }}</el-col>
-					<el-col :span="6">牌局ID： {{ dataList.roundId }}</el-col>
+					<el-col :span="9">注单号： {{ dataList.id || '-' }}</el-col>
+					<el-col :span="9">
+						三方注单号： {{ dataList.thirdOrderId || '-' }}
+					</el-col>
+					<el-col :span="6">牌局ID： {{ dataList.roundId || '-' }}</el-col>
 					<el-col :span="9">
 						游戏平台：
 						<span v-for="item in gameTypeList" :key="item.gameCode">
 							{{ dataList.gameCode === item.gameCode ? item.gameName : '' }}
 						</span>
 					</el-col>
-					<el-col :span="9">游戏名称： {{ dataList.gameTypeName }}</el-col>
-					<el-col :span="6">房间类型： {{ dataList.gameRoom }}</el-col>
-					<el-col :span="9">投注金额： {{ dataList.betAmount }}</el-col>
-					<el-col :span="9">有效投注： {{ dataList.validBetAmount }}</el-col>
-					<el-col :span="6">投注IP： {{ dataList.loginIp }}</el-col>
-					<el-col :span="9">输赢金额： {{ dataList.netAmount }}</el-col>
-					<el-col :span="9">投注时间： {{ dataList.createAt }}</el-col>
-					<el-col :span="6">结算时间： {{ dataList.netAt }}</el-col>
+					<el-col :span="9">
+						游戏名称： {{ dataList.gameTypeName || '-' }}
+					</el-col>
+					<el-col :span="6">房间类型： {{ dataList.gameRoom || '-' }}</el-col>
+					<el-col :span="9">投注金额： {{ dataList.betAmount || '-' }}</el-col>
+					<el-col :span="9">
+						有效投注： {{ dataList.validBetAmount || '-' }}
+					</el-col>
+					<el-col :span="6">投注IP： {{ dataList.loginIp || '-' }}</el-col>
+					<el-col :span="9">输赢金额： {{ dataList.netAmount || '-' }}</el-col>
+					<el-col :span="9">投注时间： {{ dataList.createAt || '-' }}</el-col>
+					<el-col :span="6">结算时间： {{ dataList.netAt || '-' }}</el-col>
 					<el-col :span="9">
 						投注终端：
 						{{
@@ -29,9 +35,9 @@
 								: typeFilter(dataList.deviceType, 'betDeviceType')
 						}}
 					</el-col>
-					<el-col :span="9">注单归类： {{ dataList.betStatus }}</el-col>
+					<el-col :span="9">注单归类： {{ dataList.betStatus || '-' }}</el-col>
 					<el-col :span="6">
-						同步时间： {{ dataList.synchronizationTime }}
+						同步时间： {{ dataList.synchronizationTime || '-' }}
 					</el-col>
 				</el-row>
 			</div>
@@ -65,8 +71,8 @@ export default {
 	methods: {
 		getGameTypeList() {
 			this.$api.getMerchantGameGamePlant().then((res) => {
-				if (res.code === 200) {
-					this.gameTypeList = res.data
+				if (res && res.code === 200) {
+					this.gameTypeList = res.data || []
 				}
 			})
 		}
