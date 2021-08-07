@@ -135,28 +135,23 @@
             label="教程状态"
           >
             <template slot-scope="scope">
-              <el-button
-                v-if="scope.row.tutorStatus===1"
-                type="primary"
-                size="medium"
-              >
-                开启中
-              </el-button>
-
-              <el-button
-                v-else
-                type="warning"
-                size="medium"
-              >
-                已禁止
-              </el-button>
+              <span v-if="scope.row.tutorStatus===1" class="normalRgba">
+                {{
+									typeFilter(scope.row.tutorStatus, 'gameAssortStatusType')
+								}}
+              </span>
+              <span v-else  class="disableRgba">
+                {{
+									typeFilter(scope.row.tutorStatus, 'gameAssortStatusType')
+								}}
+              </span>
             </template>
           </el-table-column>
           <el-table-column prop="operating" align="center" label="操作" min-width="260">
             <template slot-scope="scope">
                             <el-button
                 v-if="scope.row.tutorStatus===0"
-                type="primary"
+                type="warning"
                 size="medium"
                 @click="switchStatus(scope.row)"
               >
@@ -165,7 +160,7 @@
 
               <el-button
                 v-if="scope.row.tutorStatus===1"
-                type="warning"
+                type="danger"
                 size="medium"
                 @click="switchStatus(scope.row)"
               >

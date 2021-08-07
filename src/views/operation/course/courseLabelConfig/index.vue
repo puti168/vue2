@@ -107,10 +107,14 @@
           @sort-change="_changeTableSort"
         >
           <el-table-column
-            prop="memberLabelName"
+            prop="tutorName"
             align="center"
             label="教程名称"
-          ></el-table-column>
+          >
+            <template slot-scope="scope">
+              {{ scope.row.tutorName || '-' }}
+            </template>
+          </el-table-column>
           <el-table-column
             prop="bookmarkName"
             align="center"
@@ -156,28 +160,23 @@
             label="页签状态"
           >
             <template slot-scope="scope">
-              <el-button
-                v-if="scope.row.bookmarkStatus === 1"
-                type="primary"
-                size="medium"
-              >
-                开启中
-              </el-button>
-
-              <el-button
-                v-if="scope.row.bookmarkStatus === 0"
-                type="warning"
-                size="medium"
-              >
-                已禁止
-              </el-button>
+              <span v-if="scope.row.bookmarkStatus===1" class="normalRgba">
+                {{
+									typeFilter(scope.row.bookmarkStatus, 'gameAssortStatusType')
+								}}
+              </span>
+              <span v-else  class="disableRgba">
+                {{
+									typeFilter(scope.row.bookmarkStatus, 'gameAssortStatusType')
+								}}
+              </span>
             </template>
           </el-table-column>
           <el-table-column prop="operating" align="center" label="操作" min-width="260">
             <template slot-scope="scope">
               <el-button
                 v-if="scope.row.bookmarkStatus === 0"
-                type="primary"
+                type="warning"
                 size="medium"
                 @click="switchStatus(scope.row)"
               >
@@ -186,7 +185,7 @@
 
               <el-button
                 v-if="scope.row.bookmarkStatus === 1"
-                type="warning"
+                type="danger"
                 size="medium"
                 @click="switchStatus(scope.row)"
               >
