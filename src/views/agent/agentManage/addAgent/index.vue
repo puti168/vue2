@@ -111,7 +111,7 @@ export default {
 	},
 	computed: {
 		accountTypeArr() {
-			return this.globalDics.accountType
+			return this.globalDics.accountType || []
 		},
 		rules() {
 			const reg1 = /^[A-Za-z]{1}(?=(.*[a-zA-Z]){1,})(?=(.*[0-9]){1,})[0-9A-Za-z]{3,10}$/
@@ -175,7 +175,6 @@ export default {
 	mounted() {},
 	methods: {
 		add() {
-			this.loading = true
 			const params = {
 				...this.form
 			}
@@ -183,14 +182,15 @@ export default {
 			let lock = true
 			this.$refs['form'].validate((valid) => {
 				if (valid && lock) {
+					this.loading = true
 					lock = false
 					this.$api
 						.addAgentAPI(params)
 						.then((res) => {
 							this.loading = false
 							lock = true
-							const { code, data, msg } = res
-							if (code === 200) {
+							const { code, data, msg } = res || {}
+							if (code && code === 200) {
 								this.$confirm(`代理${data}资料提交成功`, {
 									confirmButtonText: '确定',
 									type: 'success',
@@ -219,11 +219,11 @@ export default {
 		reset() {
 			this.$refs['form'].resetFields()
 			this.form = {
-                accountType: '4',
-                userName: undefined,
-                password: undefined,
-                applyInfo: undefined,
-                deviceNo: Finger.get()
+				accountType: '4',
+				userName: undefined,
+				password: undefined,
+				applyInfo: undefined,
+				deviceNo: Finger.get()
 			}
 		},
 		checkValue(val) {}
