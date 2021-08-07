@@ -42,7 +42,6 @@
 		"sortablejs": "^1.13.0",
 		"storejs": "^1.0.25",
 		"umy-ui": "^1.1.6",
-		"v-viewer": "^1.4.2",
 		"vue": "2.6.10",
 		"vue-i18n": "^8.14.0",
 		"vue-multiselect": "^2.1.6",
