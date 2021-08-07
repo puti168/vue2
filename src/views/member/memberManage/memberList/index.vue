@@ -730,7 +730,7 @@ export default {
 						this.total = (res.data && totalRecord) || 0
 					} else {
 						this.$message({
-							message: res && msg,
+							message: (res && msg) || '接口异常',
 							type: 'error'
 						})
 					}

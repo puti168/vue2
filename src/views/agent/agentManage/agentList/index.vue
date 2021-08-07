@@ -414,10 +414,7 @@
 						label="入口权限"
 					>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.entryAuthority">
-								{{ typeFilter(scope.row.entryAuthority, 'entrAuthorityType') }}
-							</span>
-							<span v-else>-</span>
+							{{ typeFilter(scope.row.entryAuthority, 'entrAuthorityType') }}
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -427,10 +424,7 @@
 						width="130"
 					>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.invitationCode">
-								{{ scope.row.invitationCode }}
-							</span>
-							<span v-else>-</span>
+							{{ scope.row.invitationCode || '-' }}
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -441,10 +435,7 @@
 						sortable="custom"
 					>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.createDt">
-								{{ scope.row.createDt }}
-							</span>
-							<span v-else>-</span>
+							{{ scope.row.createDt || '-' }}
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -492,10 +483,7 @@
 						sortable="custom"
 					>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.lastLoginTime">
-								{{ scope.row.lastLoginTime }}
-							</span>
-							<span v-else>-</span>
+							{{ scope.row.lastLoginTime || '-' }}
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -639,13 +627,13 @@ export default {
 						code,
 						data: { record, totalRecord },
 						msg
-					} = res
-					if (res && code && code === 200) {
-						this.dataList = Object.freeze(record) || []
+					} = res || {}
+					if (code && code === 200) {
+						this.dataList = Array.isArray(record) ? Object.freeze(record) : []
 						this.total = totalRecord || 0
 					} else {
 						this.$message({
-							message: res && msg,
+							message: msg || 'error',
 							type: 'error'
 						})
 					}
@@ -659,12 +647,12 @@ export default {
 		// 获取代理标签
 		getMerchantDict() {
 			this.$api.agentDictAPI().then((res) => {
-				const { code, data, msg } = res
-				if (code === 200) {
-					this.userLabel = data || []
+				const { code, data, msg } = res || {}
+				if (code && code === 200) {
+					this.userLabel = Array.isArray(data) ? data : []
 				} else {
 					this.$message({
-						message: msg,
+						message: msg || 'error',
 						type: 'error'
 					})
 				}
@@ -846,8 +834,8 @@ export default {
 			this.$api
 				.getWindControllerLevelDict({ windControlType: 2 })
 				.then((res) => {
-					if (res.code === 200) {
-						this.vipDict = res.data
+					if (res && res.code === 200) {
+						this.vipDict = res.data || []
 					}
 				})
 		},
@@ -892,18 +880,18 @@ export default {
 						.agentListExportAPI(params)
 						.then((res) => {
 							this.loading = false
-							const { data, status } = res
-							if (res && status === 200) {
-								const { type } = data
+							const { data, status } = res || {}
+							if (res && status && status === 200) {
+								const { type = [] } = data || {}
 								if (type.includes('application/json')) {
 									const reader = new FileReader()
 									reader.onload = (evt) => {
-										if (evt.target.readyState === 2) {
+										if (evt && evt.target.readyState === 2) {
 											const {
 												target: { result }
 											} = evt
 											const ret = JSON.parse(result)
-											if (ret.code !== 200) {
+											if (ret && ret.code !== 200) {
 												this.$message({
 													type: 'error',
 													message: ret.msg,

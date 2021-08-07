@@ -4,25 +4,27 @@
 			<strong class="strong">注单信息</strong>
 			<div>
 				<el-row class="paddingLR paddingB">
-					<el-col :span="9">注单号： {{ dataList.id }}</el-col>
-					<el-col :span="9">三方注单号： {{ dataList.thirdOrderId }}</el-col>
+					<el-col :span="9">注单号： {{ dataList.id || '-' }}</el-col>
+					<el-col :span="9">
+						三方注单号： {{ dataList.thirdOrderId || '-' }}
+					</el-col>
 					<el-col :span="6">
 						游戏平台：
 						<span v-for="item in gameTypeList" :key="item.gameCode">
 							{{ dataList.gameCode === item.gameCode ? item.gameName : '' }}
 						</span>
 					</el-col>
-					<el-col :span="9">彩种名称： {{ dataList.seriesName }}</el-col>
-					<el-col :span="9">注单归类： {{ dataList.betStatus }}</el-col>
-					<el-col :span="6">期号： {{ dataList.ticketPlanNo }}</el-col>
-					<el-col :span="9">模式： {{ dataList.betModel }}</el-col>
-					<el-col :span="9">赔率： {{ dataList.oddsValue }}</el-col>
+					<el-col :span="9">彩种名称： {{ dataList.seriesName || '-' }}</el-col>
+					<el-col :span="9">注单归类： {{ dataList.betStatus || '-' }}</el-col>
+					<el-col :span="6">期号： {{ dataList.ticketPlanNo || '-' }}</el-col>
+					<el-col :span="9">模式： {{ dataList.betModel || '-' }}</el-col>
+					<el-col :span="9">赔率： {{ dataList.oddsValue || '-' }}</el-col>
 					<el-col :span="6" class="tipsBox">
 						<div class="tipsH">投注内容：</div>
 						<div class="tipsC">
 							<el-tooltip :content="dataList.betNum" placement="left-start">
 								<span>
-									{{ dataList.betNum }}
+									{{ dataList.betNum || '-' }}
 								</span>
 							</el-tooltip>
 						</div>
@@ -35,12 +37,12 @@
 								placement="left-start"
 							>
 								<span>
-									{{ dataList.judgeResultCn }}
+									{{ dataList.judgeResultCn || '-' }}
 								</span>
 							</el-tooltip>
 						</div>
 					</el-col>
-					<el-col :span="9">输赢金额： {{ dataList.netAmount }}</el-col>
+					<el-col :span="9">输赢金额： {{ dataList.netAmount || '-' }}</el-col>
 					<el-col :span="6">
 						终端：
 						{{
@@ -49,11 +51,11 @@
 								: typeFilter(dataList.deviceType, 'betDeviceType')
 						}}
 					</el-col>
-					<el-col :span="9">投注IP： {{ dataList.loginIp }}</el-col>
-					<el-col :span="9">投注时间： {{ dataList.createAt }}</el-col>
-					<el-col :span="6">结算时间： {{ dataList.netAt }}</el-col>
+					<el-col :span="9">投注IP： {{ dataList.loginIp || '-' }}</el-col>
+					<el-col :span="9">投注时间： {{ dataList.createAt || '-' }}</el-col>
+					<el-col :span="6">结算时间： {{ dataList.netAt || '-' }}</el-col>
 					<el-col :span="9">
-						同步时间： {{ dataList.synchronizationTime }}
+						同步时间： {{ dataList.synchronizationTime || '-' }}
 					</el-col>
 				</el-row>
 			</div>
@@ -134,8 +136,8 @@ export default {
 	methods: {
 		getGameTypeList() {
 			this.$api.getMerchantGameGamePlant().then((res) => {
-				if (res.code === 200) {
-					this.gameTypeList = res.data
+				if (res && res.code === 200) {
+					this.gameTypeList = res.data || []
 				}
 			})
 		}
