@@ -48,8 +48,8 @@
 							<el-option
 								v-for="item in configTutorList"
 								:key="item.code"
-								:label="item.description"
-								:value="item.code"
+								:label="item.contentName"
+								:value="item.id"
 							></el-option>
 						</el-select>
 					</el-form-item>
@@ -132,11 +132,13 @@
 						align="center"
 						label="教程名称"
 					></el-table-column>
-					<el-table-column
-						prop="bookmarkId"
-						align="center"
-						label="页签名称"
-					></el-table-column>
+					<el-table-column prop="bookmarkId" align="center" label="页签名称">
+						<template slot-scope="scope">
+							<span v-for="item in bookmarkQueryList" :key="item.id">
+								{{ scope.row.bookmarkId === item.id ? item.bookmarkName : '' }}
+							</span>
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="contentName"
 						align="center"
@@ -417,12 +419,15 @@ export default {
 	created() {
 		this.getTutorNameList()
 	},
-	mounted() {},
+	mounted() {
+		this.getMerchantDict(this.tutorId)
+		this.changeSelect(this.id)
+	},
 	methods: {
 		getMerchantDict(val) {
 			console.log(val, 'val')
-			const id = val
-			this.$api.bookmarkQuerySortedNames({ id }).then((res) => {
+			const tutorId = val
+			this.$api.bookmarkQuerySortedNames({ tutorId }).then((res) => {
 				console.log(res, 'res2')
 				if (res.code === 200) {
 					this.bookmarkQueryList = res.data
@@ -437,6 +442,7 @@ export default {
 				const { code } = res
 				if (res && code === 200) {
 					this.configTutorList = res.data || []
+					console.log(this.configTutorList, 'this.configTutorList123')
 				}
 			})
 		},
