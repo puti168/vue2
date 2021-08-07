@@ -71,34 +71,30 @@
 						></el-table-column>
 						<el-table-column prop="roleName" align="center" label="角色名称">
 							<template slot-scope="scope">
-								<span v-if="!!scope.row.roleName">
-									{{ scope.row.roleName }}
+								<span>
+									{{ scope.row.roleName || '-' }}
 								</span>
-								<span v-else>-</span>
 							</template>
 						</el-table-column>
 						<el-table-column prop="remark" align="center" label="角色描述">
 							<template slot-scope="scope">
-								<span v-if="!!scope.row.remark">
-									{{ scope.row.remark }}
+								<span>
+									{{ scope.row.remark || '-' }}
 								</span>
-								<span v-else>-</span>
 							</template>
 						</el-table-column>
 						<el-table-column prop="createdAt" align="center" label="添加时间">
 							<template slot-scope="scope">
-								<span v-if="!!scope.row.createdAt">
-									{{ formatTime(scope.row.createdAt) }}
+								<span>
+									{{ formatTime(scope.row.createdAt) || '-' }}
 								</span>
-								<span v-else>-</span>
 							</template>
 						</el-table-column>
 						<el-table-column prop="createBy" align="center" label="创建人">
 							<template slot-scope="scope">
-								<span v-if="!!scope.row.createBy">
-									{{ scope.row.createBy }}
+								<span>
+									{{ scope.row.createBy || '-' }}
 								</span>
-								<span v-else>-</span>
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="操作">
@@ -145,7 +141,6 @@
 
 <script>
 import list from '@/mixins/list'
-// import { routerNames } from '@/utils/consts'
 import editPage from './components/editPage'
 import dayjs from 'dayjs'
 
@@ -166,8 +161,6 @@ export default {
 			editPage: false
 		}
 	},
-	computed: {},
-	mounted() {},
 	methods: {
 		loadData() {
 			let params = {
@@ -186,21 +179,17 @@ export default {
 						msg
 					} = res
 					this.loading = false
-					if (code === 200) {
+                    if (code && code === 200) {
 						this.dataList = records || []
 						this.total = total || 0
 					} else {
 						this.$message({
-							message: msg,
+							message: res && msg,
 							type: 'error'
 						})
 					}
 				})
 				.catch(() => (this.loading = false))
-
-			setTimeout(() => {
-				this.loading = false
-			}, 1000)
 		},
 		reset() {
 			this.$refs['form'].resetFields()
@@ -216,39 +205,31 @@ export default {
 				cancelButtonText: '取消',
 				type: 'warning'
 			})
-				.then(() => {
+                .then(() => {
 					const loading = this.$loading({
 						lock: true,
 						text: 'Loading',
 						spinner: 'el-icon-loading',
 						background: 'rgba(0, 0, 0, 0.7)'
 					})
-					console.log('id', id)
 					this.$api.deleteRoleAPI({ id }).then((res) => {
-						console.log(res)
+                        loading.close()
 						const { code } = res
-						if (code === 200) {
-							loading.close()
+                        if (code && code === 200) {
 							this.$message({
 								type: 'success',
 								message: '删除成功!'
 							})
 						} else {
-							loading.close()
 							this.$message({
 								type: 'error',
 								message: '删除失败!'
 							})
 						}
-
 						this.reset()
 					})
-
-					setTimeout(() => {
-						loading.close()
-					}, 1500)
+                    .catch(() => loading.close())
 				})
-				.catch(() => {})
 		},
 		openEdit(val) {
 			if (val) {
@@ -262,8 +243,9 @@ export default {
 		async getRoleList(id, value) {
 			const { code, data } = await this.$api.getRolePermissionsAPI({
 				roleId: id
-			})
-			if (code === 200) {
+			}).catch(() => { this.loading = false })
+			this.loading = false
+            if (code && code === 200) {
 				const _arr = []
 				data &&
 					data.length &&
@@ -272,7 +254,6 @@ export default {
 							_arr.push(item.id)
 						}
 					})
-				// console.log('_arr', _arr)
 				this.rowData = { ...value, chooseIds: _arr }
 			}
 		},

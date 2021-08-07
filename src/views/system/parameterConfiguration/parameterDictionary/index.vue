@@ -63,30 +63,39 @@
               {{ scopes.$index + 1 }}
             </template>
           </el-table-column>
-          <el-table-column prop="k" align="center" label="字典code"></el-table-column>
-          <el-table-column prop="tag" align="center" label="标签"></el-table-column>
+          <el-table-column prop="k" align="center" label="字典code">
+            <template slot-scope="scope">
+              <span>
+                {{ scope.row.k || '-' }}
+              </span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="tag" align="center" label="标签">
+            <template slot-scope="scope">
+              <span>
+                {{ scope.row.tag || '-' }}
+              </span>
+            </template>
+          </el-table-column>
           <el-table-column prop="valueType" align="center" label="控制类型">
             <template slot-scope="scope">
-              <span v-if="scope.row.valueType !== ''">
-                {{ scope.row.valueType }}
+              <span>
+                {{ scope.row.valueType || '-' }}
               </span>
-              <span v-else>-</span>
             </template>
           </el-table-column>
           <el-table-column prop="module" align="center" label="模块">
             <template slot-scope="scope">
-              <span v-if="scope.row.module !== ''">
-                {{ scope.row.module }}
+              <span>
+                {{ scope.row.module || '-' }}
               </span>
-              <span v-else>-</span>
             </template>
           </el-table-column>
           <el-table-column prop="description" align="center" label="注释">
             <template slot-scope="scope">
-              <span v-if="scope.row.description !== ''">
-                {{ scope.row.description }}
+              <span>
+                {{ scope.row.description || '-' }}
               </span>
-              <span v-else>-</span>
             </template>
           </el-table-column>
           <el-table-column prop="v" align="center" label="值"></el-table-column>
@@ -255,8 +264,6 @@ export default {
       }
     }
   },
-  mounted() {},
-
   methods: {
     loadData() {
       this.loading = true
@@ -269,12 +276,20 @@ export default {
       this.$api
         .getkvconfigQueryList(params)
         .then((res) => {
-          if (res.code === 200) {
-            this.tableData = res.data.records
-            this.total = res.data.total
-            this.loading = false
+          this.loading = false
+          const {
+            code,
+            data: { records, total },
+            msg
+          } = res
+          if (code && code === 200) {
+            this.tableData = records || []
+            this.total = total || 0
           } else {
-            this.loading = false
+            this.$message({
+              message: res && msg,
+              type: 'error'
+            })
           }
         })
         .catch(() => {
@@ -284,14 +299,22 @@ export default {
     subAddOrEidt() {
       const data = { ...this.dialogForm }
       data.id = this.dialogForm.id
-      console.log(this.dialogForm.id, '小明')
       this.$refs.formSub.validate((valid) => {
         if (valid) {
           this.subAddOrEidtDisabled = true
           this.$api.getkvconfigUpdate(data).then((res) => {
-            if (res.code === 200) {
+            const {
+              code,
+              msg
+            } = res
+            if (code && code === 200) {
               this.$message.success('修改成功')
               this.loadData()
+            } else {
+              this.$message({
+                message: res && msg,
+                type: 'error'
+              })
             }
             this.dialogFormVisible = false
             this.disabledDelay('subAddOrEidtDisabled', false, 1000)

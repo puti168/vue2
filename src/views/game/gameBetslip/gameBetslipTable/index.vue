@@ -2,7 +2,12 @@
 	<div class="game-container report-container">
 		<div v-if="gameType === 'init'" class="view-container dealer-container">
 			<div class="params">
-				<el-form ref="form" :inline="true" :model="queryData" label-width="80px">
+				<el-form
+					ref="form"
+					:inline="true"
+					:model="queryData"
+					label-width="80px"
+				>
 					<el-form-item label="注单号:">
 						<el-input
 							v-model="queryData.id"
@@ -151,7 +156,7 @@
 						>
 							<el-option label="已结算" value="1"></el-option>
 							<el-option label="未结算" value="2"></el-option>
-                            <el-option label="已取消" value="3"></el-option>
+							<el-option label="已取消" value="3"></el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item label="投注金额:">
@@ -434,7 +439,11 @@
 						align="center"
 						label="投注IP"
 						width="150px"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							{{ scope.row.loginIp || '-' }}
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="deviceType"
 						align="center"
@@ -570,7 +579,7 @@
 					v-else-if="gameType === 'dy'"
 					:dataList="dataList"
 				></eGameDetails>
-				<slotDetails v-else></slotDetails>
+				<slotDetails v-else :dataList="dataList"></slotDetails>
 			</div>
 		</div>
 	</div>
@@ -629,10 +638,10 @@ export default {
 	},
 	computed: {
 		accountType() {
-			return this.globalDics.accountType
+			return this.globalDics.accountType || []
 		},
 		betDeviceType() {
-			return this.globalDics.betDeviceType
+			return this.globalDics.betDeviceType || []
 		}
 	},
 	mounted() {
@@ -641,8 +650,8 @@ export default {
 	methods: {
 		getGameTypeList() {
 			this.$api.getMerchantGameGamePlant().then((res) => {
-				if (res.code === 200) {
-					this.gameTypeList = res.data
+				if (res && res.code === 200) {
+					this.gameTypeList = res.data || []
 				}
 			})
 		},
@@ -673,20 +682,23 @@ export default {
 				this.$api
 					.getGameRecordNotes(params)
 					.then((res) => {
-						if (res.code === 200) {
-							this.tableData = res.data.record
-							this.total = res.data.totalRecord
+						const {
+							code,
+							data: { record, totalRecord, summary }
+						} = res || {}
+						if (code && code === 200) {
+							this.tableData =
+								(record && record.length && Object.freeze(record)) || []
+							this.total = totalRecord || 0
 							this.now = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
-							this.summary =
-								res.data.summary !== null
-									? res.data.summary
-									: {
-											totalCount: 0,
-											settledCount: 0,
-											unSettledCount: 0,
-											betAmount: 0,
-											netAmount: 0
-									  }
+							const initSummary = {
+								totalCount: 0,
+								settledCount: 0,
+								unSettledCount: 0,
+								betAmount: 0,
+								netAmount: 0
+							}
+							this.summary = summary || initSummary
 						}
 						this.loading = false
 					})
@@ -720,13 +732,13 @@ export default {
 			this.$api
 				.getGameRecordDetail(data)
 				.then((res) => {
-					if (res.code === 200 && res.data.record.length > 0) {
-						this.dataList = res.data.record[0]
-						this.gameType = val.gameCode
-						loading.close()
-					} else {
-						this.dataList = {}
-						this.gameType = 'init'
+					const {
+						code,
+						data: { record }
+					} = res || {}
+					if (code && code === 200) {
+						this.dataList = (record && record.length && record[0]) || {}
+						this.gameType = (record && record.length && val.gameCode) || 'init'
 						loading.close()
 					}
 					console.log(res)
@@ -838,18 +850,18 @@ export default {
 							.getGameRecordDownload(params)
 							.then((res) => {
 								this.loading = false
-								const { data, status } = res
-								if (res && status === 200) {
-									const { type } = data
+								const { data, status } = res || {}
+								if (res && status && status === 200) {
+									const { type = [] } = data || {}
 									if (type.includes('application/json')) {
 										const reader = new FileReader()
 										reader.onload = (evt) => {
-											if (evt.target.readyState === 2) {
+											if (evt && evt.target.readyState === 2) {
 												const {
 													target: { result }
 												} = evt
 												const ret = JSON.parse(result)
-												if (ret.code !== 200) {
+												if (ret && ret.code !== 200) {
 													this.$message({
 														type: 'error',
 														message: ret.msg,

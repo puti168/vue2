@@ -223,13 +223,13 @@ export default {
 	},
 	computed: {
 		moduleType() {
-			return this.globalDics.moduleType
+			return this.globalDics.moduleType || []
 		},
 		terminalType() {
-			return this.globalDics.terminalType
+			return this.globalDics.terminalType || []
 		},
 		gameModuleApplyType() {
-			return this.globalDics.gameModuleApplyType
+			return this.globalDics.gameModuleApplyType || []
 		}
 	},
 	mounted() {},
@@ -253,9 +253,14 @@ export default {
 			this.$api
 				.GameCommonModuleOperateRecord(params)
 				.then((res) => {
-					if (res.code === 200) {
-						this.tableData = res.data.record
-						this.total = res.data.totalRecord
+					const {
+						code,
+						data: { record, totalRecord }
+					} = res || {}
+					if (code && code === 200) {
+						this.tableData =
+							(record && record.length && Object.freeze(record)) || []
+						this.total = totalRecord || 0
 						this.loading = false
 					} else {
 						this.loading = false

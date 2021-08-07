@@ -82,8 +82,6 @@
 <script>
 import list from '@/mixins/list'
 import { isHaveEmoji, notSpecial2 } from '@/utils/validate'
-// const storeDatas = []
-
 export default {
 	name: 'EditPage',
 	mixins: [list],
@@ -194,10 +192,6 @@ export default {
 	created() {
 		this.getRoleList()
 	},
-	mounted() {
-		// this.rolePermissions = storeDatas
-	},
-	updated() {},
 	methods: {
 		back() {
 			this.$emit('back')
@@ -205,17 +199,15 @@ export default {
 		async getRoleList() {
 			this.loading = true
 			const { code, data } = await this.$api.getRolePermissionsAPI()
-			if (code === 200) {
-				this.loading = false
+			.catch(() => { this.loading = false })
+			if (code && code === 200) {
 				this.permissions = JSON.parse(JSON.stringify(data))
 				this.allChooseLen = data.length
 				this.rolePermissions = []
 				this.filterData(data)
-			} else {
-				this.loading = false
 			}
+			this.loading = false
 		},
-
 		filterData(data) {
 			const _data = [...data]
 			_data.forEach((ele, i) => {

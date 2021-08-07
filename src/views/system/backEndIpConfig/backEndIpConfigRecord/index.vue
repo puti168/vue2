@@ -213,10 +213,9 @@ export default {
   },
 	computed: {
 		entrAuthorityTypeArr() {
-			return this.globalDics.entrAuthorityType
+			return this.globalDics.entrAuthorityType || []
 		}
 	},
-  mounted() {},
   methods: {
     loadData() {
       const [beginTime, endTime] = this.searchTime || []
@@ -240,7 +239,7 @@ export default {
             data: { records, total },
             msg
           } = res
-          if (code === 200) {
+          if (code && code === 200) {
             this.dataList = records || []
             this.total = total || 0
           } else {
@@ -291,7 +290,8 @@ export default {
         .then(() => {
           this.$api.deleteBackEndIpConfig({ id: rowData.id }).then((res) => {
             this.loading = false
-            if (res.code === 200) {
+            const { code, msg } = res
+            if (code && code === 200) {
               this.$message({
                 message: '操作成功！',
                 type: 'success'
@@ -299,7 +299,7 @@ export default {
               this.loadData()
             } else {
               this.$message({
-                message: res.msg,
+                message: res && msg,
                 type: 'error'
               })
             }
