@@ -11,9 +11,9 @@ import '@/icons' // icon
 import '@/permission' // permission control
 import apiInstall from '@/utils/apiInstall'
 import { hasPermission } from '@/mixins/methods'
-import Viewer from 'v-viewer'
+// import Viewer from 'v-viewer'
 import VueClipboard from 'vue-clipboard2' // 引入复制到剪切板插件
-import 'viewerjs/dist/viewer.css'
+// import 'viewerjs/dist/viewer.css'
 import { supportBrower } from './utils/judgeBrower'
 import App from './App'
 import router from './router'
@@ -21,28 +21,28 @@ supportBrower()
 
 Vue.use(VueClipboard) // 挂载复制到剪切板插件
 
-Vue.use(Viewer)
+// Vue.use(Viewer)
 Vue.use(VueLazyload, {
 	preLoad: 1,
 	attempt: 1
 })
 
-Viewer.setDefaults({
-	// inline: true,
-	// button: true,
-	// navbar: true,
-	// title: true,
-	toolbar: true,
-	// tooltip: false,
-	// movable: true,
-	// zoomable: true,
-	// rotatable: true,
-	// scalable: true,
-	// transition: true,
-	// fullscreen: false,
-	// keyboard: true,
-	url: 'data-source'
-})
+// Viewer.setDefaults({
+// 	// inline: true,
+// 	// button: true,
+// 	// navbar: true,
+// 	// title: true,
+// 	toolbar: true,
+// 	// tooltip: false,
+// 	// movable: true,
+// 	// zoomable: true,
+// 	// rotatable: true,
+// 	// scalable: true,
+// 	// transition: true,
+// 	// fullscreen: false,
+// 	// keyboard: true,
+// 	url: 'data-source'
+// })
 
 Vue.directive('filterSpecialChar', {
 	update: function(el, { value, modifiers }, vnode) {

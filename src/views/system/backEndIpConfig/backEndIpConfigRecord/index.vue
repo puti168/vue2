@@ -24,7 +24,7 @@
               size="medium"
               placeholder="默认选择全部"
               clearable
-              style="width: 300px"
+              style="width: 200px"
             >
               <el-option label="全部" :value="undefined"></el-option>
               <el-option
@@ -41,7 +41,7 @@
               clearable
               size="medium"
               :maxlength="12"
-              style="width: 180px"
+              style="width: 200px"
               placeholder="请输入"
               @keyup.enter.native="enterSearch"
             ></el-input>
@@ -52,7 +52,7 @@
               clearable
               size="medium"
               :maxlength="15"
-              style="width: 180px"
+              style="width: 200px"
               placeholder="请输入"
               @keyup.enter.native="enterSearch"
             ></el-input>
@@ -213,10 +213,9 @@ export default {
   },
 	computed: {
 		entrAuthorityTypeArr() {
-			return this.globalDics.entrAuthorityType
+			return this.globalDics.entrAuthorityType || []
 		}
 	},
-  mounted() {},
   methods: {
     loadData() {
       const [beginTime, endTime] = this.searchTime || []
@@ -240,7 +239,7 @@ export default {
             data: { records, total },
             msg
           } = res
-          if (code === 200) {
+          if (code && code === 200) {
             this.dataList = records || []
             this.total = total || 0
           } else {
@@ -291,7 +290,8 @@ export default {
         .then(() => {
           this.$api.deleteBackEndIpConfig({ id: rowData.id }).then((res) => {
             this.loading = false
-            if (res.code === 200) {
+            const { code, msg } = res
+            if (code && code === 200) {
               this.$message({
                 message: '操作成功！',
                 type: 'success'
@@ -299,7 +299,7 @@ export default {
               this.loadData()
             } else {
               this.$message({
-                message: res.msg,
+                message: res && msg,
                 type: 'error'
               })
             }

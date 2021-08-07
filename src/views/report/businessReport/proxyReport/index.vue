@@ -73,7 +73,7 @@
 							v-model="queryData.totalRebateMin"
 							size="medium"
 							placeholder="最小数值"
-							style="width: 135px"
+							style="width: 143px"
 							maxlength="15"
 							name="totalRebateMin"
 							oninput="value=value.replace(/[^\d]/g,'')"
@@ -84,14 +84,14 @@
 							v-model="queryData.totalRebateMax"
 							size="medium"
 							placeholder="最大数值"
-							style="width: 135px"
+							style="width: 145px"
 							maxlength="15"
 							name="totalRebateMax"
 							oninput="value=value.replace(/[^\d]/g,'')"
 							@blur="checkValue($event)"
 						></el-input>
 					</el-form-item>
-					<el-form-item>
+					<el-form-item style="margin-left: 8px">
 						<el-button
 							type="primary"
 							icon="el-icon-search"

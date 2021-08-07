@@ -23,7 +23,7 @@
             clearable
             size="medium"
             :maxlength="5"
-            style="width: 180px"
+            style="width: 200px"
             placeholder="请输入"
             @keyup.enter.native="enterSearch"
           ></el-input>
@@ -34,7 +34,7 @@
             clearable
             size="medium"
             :maxlength="12"
-            style="width: 180px"
+            style="width: 200px"
             placeholder="请输入"
             @keyup.enter.native="enterSearch"
           ></el-input>
@@ -71,57 +71,51 @@
           style="width: 100%"
           :header-cell-style="getRowClass"
         >
-          <el-table-column type="index" align="center" label="序号"> </el-table-column>
+          <el-table-column type="index" align="center" label="序号" width="100"> </el-table-column>
           <el-table-column
             prop="createdAt"
             align="center"
             label="操作时间"
           >
             <template slot-scope="scope">
-              <span v-if="!!(scope.row.createdAt+'')">
-                {{ scope.row.createdAt }}
+              <span>
+                {{ scope.row.createdAt || '-' }}
               </span>
-              <span v-else>-</span>
             </template>
           </el-table-column>
           <el-table-column prop="createdBy" align="center" label="操作账号">
             <template slot-scope="scope">
-              <span v-if="!!(scope.row.createdBy+'')">
-                {{ scope.row.createdBy }}
+              <span>
+                {{ scope.row.createdBy || '-' }}
               </span>
-              <span v-else>-</span>
             </template>
           </el-table-column>
           <el-table-column prop="operateIp" align="center" label="操作IP">
             <template slot-scope="scope">
-              <span v-if="!!(scope.row.operateIp+'')">
-                {{ scope.row.operateIp }}
+              <span>
+                {{ scope.row.operateIp || '-' }}
               </span>
-              <span v-else>-</span>
             </template>
           </el-table-column>
           <el-table-column prop="changeType" align="center" label="操作类型">
             <template slot-scope="scope">
-              <span v-if="!!(scope.row.changeType+'')">
-                {{ scope.row.changeType }}
+              <span>
+                {{ scope.row.changeType || '-' }}
               </span>
-              <span v-else>-</span>
             </template>
           </el-table-column>
           <el-table-column align="center" label="变更前" prop="beforeValue">
             <template slot-scope="scope">
-              <span v-if="!!(scope.row.beforeValue+'')">
-                {{ scope.row.beforeValue }}
+              <span>
+                {{ scope.row.beforeValue || '-' }}
               </span>
-              <span v-else>-</span>
             </template>
           </el-table-column>
           <el-table-column align="center" label="变更后" prop="afterValue">
             <template slot-scope="scope">
-              <span v-if="!!(scope.row.afterValue+'')">
-                {{ scope.row.afterValue }}
+              <span>
+                {{ scope.row.afterValue || '-' }}
               </span>
-              <span v-else>-</span>
             </template>
           </el-table-column>
 
@@ -164,8 +158,6 @@ export default {
       dataList: []
     }
   },
-  computed: {},
-  mounted() {},
   methods: {
     loadData() {
       const [startTime, endTime] = this.searchTime || []
@@ -189,12 +181,12 @@ export default {
             data: { records, total },
             msg
           } = res
-          if (code === 200) {
+          if (code && code === 200) {
             this.dataList = records || []
             this.total = total || 0
           } else {
             this.$message({
-              message: msg,
+              message: res && msg,
               type: 'error'
             })
           }

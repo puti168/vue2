@@ -120,6 +120,30 @@ export function getDevicetypenetamountAggregation(params) {
 		params
 	})
 }
+// 存取报表==>分页查询存取报表列表
+export function getReportAccessAmountDayListPage(data) {
+	return request({
+		url: '/report/accessAmountDay/listPage',
+		method: 'post',
+		data
+	})
+}
+// 存取报表==>存取报表总计
+export function getReportAccessAmountDaySummary(data) {
+	return request({
+		url: '/report/accessAmountDay/summary',
+		method: 'post',
+		data
+	})
+}
+// 新增会员留存报表列表==>分页查询新增会员留存报表列表
+export function getReportNewMemberRetentionDay(data) {
+	return request({
+		url: '/report/newMemberRetentionDay/listPage',
+		method: 'post',
+		data
+	})
+}
 
 export default {
 	getReportMembernetamountList,
@@ -136,5 +160,8 @@ export default {
 	getGameManagerSelectGameByPlatform,
 	getDevicetypenetamountList,
 	getDevicetypenetamountDetail,
-	getDevicetypenetamountAggregation
+	getDevicetypenetamountAggregation,
+	getReportAccessAmountDayListPage,
+	getReportAccessAmountDaySummary,
+	getReportNewMemberRetentionDay
 }

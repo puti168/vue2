@@ -2,7 +2,12 @@
 	<div class="game-container report-container">
 		<div class="view-container dealer-container">
 			<div class="params">
-				<el-form ref="form" :inline="true" :model="queryData" label-width="80px">
+				<el-form
+					ref="form"
+					:inline="true"
+					:model="queryData"
+					label-width="80px"
+				>
 					<el-form-item label="提款时间:">
 						<el-date-picker
 							v-model="searchTime"
@@ -23,7 +28,7 @@
 							v-model="queryData.thirdOrderNo"
 							clearable
 							size="medium"
-							style="width: 330px"
+							style="width: 300px"
 							placeholder="请输入"
 							:disabled="loading"
 							@keyup.enter.native="enterSearch"
@@ -57,7 +62,7 @@
 						<el-select
 							v-model="queryData.deviceType"
 							clearable
-                            style="width: 400px"
+							style="width: 400px"
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
 						>
@@ -73,7 +78,7 @@
 						<el-select
 							v-model="queryData.orderStatus"
 							clearable
-							style="width: 330px"
+							style="width: 300px"
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
 						>
@@ -101,7 +106,11 @@
 							></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="是否为大额提款:" class="tagheight" label-width="122px">
+					<el-form-item
+						label="是否为大额提款:"
+						class="tagheight"
+						label-width="122px"
+					>
 						<el-select
 							v-model="queryData.isBig"
 							style="width: 218px"
@@ -117,7 +126,11 @@
 							></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="是否为首提:" class="tagheight" label-width="94px">
+					<el-form-item
+						label="是否为首提:"
+						class="tagheight"
+						label-width="94px"
+					>
 						<el-select
 							v-model="queryData.isFirst"
 							clearable
@@ -152,7 +165,7 @@
 							重置
 						</el-button>
 						<el-button
-						    v-if="hasPermission('270')"
+							v-if="hasPermission('270')"
 							icon="el-icon-download"
 							type="warning"
 							:disabled="loading"
@@ -397,27 +410,24 @@ export default {
 	},
 	computed: {
 		withdrawStatus() {
-			return this.globalDics.withdrawStatus
+			return this.globalDics.withdrawStatus || []
 		},
 		loginDeviceType() {
-			return this.globalDics.loginDeviceType
+			return this.globalDics.loginDeviceType || []
 		},
 		accountType() {
-			return this.globalDics.accountType
+			return this.globalDics.accountType || []
 		},
 		payDataType() {
-			return this.globalDics.payDataType
+			return this.globalDics.payDataType || []
 		},
 		firstWithdrawType() {
-			return this.globalDics.firstWithdrawType
+			return this.globalDics.firstWithdrawType || []
 		},
 		withdrawBiggerType() {
-			return this.globalDics.withdrawBiggerType
+			return this.globalDics.withdrawBiggerType || []
 		}
 	},
-	created() {},
-	mounted() {},
-
 	methods: {
 		loadData() {
 			this.loading = true
@@ -427,10 +437,10 @@ export default {
 				...this.queryData,
 				createdAtStart: startTime
 					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
-					: '',
+					: undefined,
 				createdAtEnd: endTime
 					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
-					: ''
+					: undefined
 			}
 			params = {
 				...this.getParams(params)

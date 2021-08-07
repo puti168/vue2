@@ -30,7 +30,7 @@
 							@keyup.enter.native="enterSearch"
 						></el-input>
 					</el-form-item>
-                    <el-form-item label="关联订单号:">
+					<el-form-item label="关联订单号:">
 						<el-input
 							v-model="queryData.eventId"
 							clearable
@@ -280,11 +280,7 @@
 						width="130"
 					>
 						<template slot-scope="scope">
-							{{
-								scope.row.windControlName !== null
-									? scope.row.windControlName
-									: '-'
-							}}
+							{{ scope.row.windControlName || '-' }}
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -383,28 +379,44 @@
 						label="账变前金额"
 						width="120"
 						sortable="custom"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							{{ scope.row.changeBefore || '-' }}
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="amount"
 						align="center"
 						width="130"
 						sortable="custom"
 						label="账变金额"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							{{ scope.row.amount || '-' }}
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="changeAfter"
 						align="center"
 						label="账变后金额"
 						width="120"
 						sortable="custom"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							{{ scope.row.changeAfter || '-' }}
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="occurDt"
 						align="center"
 						label="账变时间"
 						width="170"
 						sortable="custom"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							{{ scope.row.occurDt || '-' }}
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="remark"
 						align="center"
@@ -412,7 +424,7 @@
 						width="150"
 					>
 						<template slot-scope="scope">
-							{{ scope.row.remark !== null ? scope.row.remark : '-' }}
+							{{ scope.row.remark || '-' }}
 						</template>
 					</el-table-column>
 				</el-table>
@@ -444,14 +456,14 @@ const endTime = dayjs()
 	.valueOf()
 
 export default {
-	components: {},
 	mixins: [list],
 	data() {
 		this.loadData = this.throttle(this.loadData, 1000)
 		this._changeTableSort = this.throttle(this._changeTableSort, 1000)
 		return {
 			queryData: {
-				accountType: '0'
+				accountType: '0',
+				type: ''
 			},
 			searchTime: [startTime, endTime],
 			tableData: [],
@@ -468,16 +480,16 @@ export default {
 	},
 	computed: {
 		proxyAccountBizType() {
-			return this.globalDics.proxyAccountBizType
+			return this.globalDics.proxyAccountBizType || []
 		},
 		accountType() {
-			return this.globalDics.accountType
+			return this.globalDics.accountType || []
 		},
 		accountStatusType() {
 			return this.globalDics.accountStatusType || []
 		},
 		proxyAccountChangeType() {
-			return this.globalDics.proxyAccountChangeType
+			return this.globalDics.proxyAccountChangeType || []
 		},
 		accountBizType() {
 			return this.globalDics.accountBizType || []
@@ -503,11 +515,14 @@ export default {
 					const { code } = res
 					if (res && code === 200) {
 						this.accountBizDicList = res.data || []
+					} else {
+						this.accountBizDicList = []
 					}
 				})
 		},
 		changeSelect(val) {
-			const bizCode = val
+			this.queryData.type = ''
+			const bizCode = val || 0
 			this.$api
 				.getProxyFundsRecordsAccountChangeDic({ bizCode })
 				.then((res) => {
@@ -523,8 +538,6 @@ export default {
 			const [startTime, endTime] = create
 			let params = {
 				...this.queryData,
-				bizType: this.bizType === '0' ? '' : this.bizType,
-				type: this.type === '0' ? '' : this.type,
 				occurDtStart: startTime
 					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
 					: '',
@@ -536,7 +549,7 @@ export default {
 			this.$api
 				.getProxyFundsRecordsAccountChange(params)
 				.then((res) => {
-                    this.loading = false
+					this.loading = false
 					const { code } = res
 					if (res && code === 200) {
 						this.tableData = res.data.record || []
@@ -553,7 +566,7 @@ export default {
 			this.$api
 				.getWindControllerLevelDict({ windControlType: 2 })
 				.then((res) => {
-                    const { code } = res
+					const { code } = res
 					if (res && code === 200) {
 						this.windControlLevelList = res.data || []
 					} else {
@@ -563,7 +576,7 @@ export default {
 		},
 		getDictgetAllDictList() {
 			this.$api.getDictgetAllDictList().then((res) => {
-                const { code } = res
+				const { code } = res
 				if (res && code === 200) {
 					this.accountStatusType = res.data || []
 				} else {

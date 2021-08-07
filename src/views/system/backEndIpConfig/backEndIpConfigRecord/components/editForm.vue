@@ -160,8 +160,6 @@ export default {
 			}
 		}
   },
-  watch: {},
-  mounted() {},
   methods: {
     back() {
       this.$emit('back')
@@ -171,13 +169,19 @@ export default {
         .addBackEndIpConfig(val)
         .then((res) => {
           this.loading = false
-          if (res.code === 200) {
+          const { code, msg } = res
+          if (code && code === 200) {
             this.$message.success('创建成功')
             this.pageNum = 1
             this.reset()
             setTimeout(() => {
               this.back()
             }, 500)
+          } else {
+            this.$message({
+              message: res && msg,
+              type: 'error'
+            })
           }
         })
         .catch(() => {
@@ -189,11 +193,17 @@ export default {
         .updateBackEndIpConfig(val)
         .then((res) => {
           this.loading = false
-          if (res.code === 200) {
+          const { code, msg } = res
+          if (code && code === 200) {
             this.$message.success('修改成功')
             setTimeout(() => {
               this.back()
             }, 500)
+          } else {
+            this.$message({
+              message: res && msg,
+              type: 'error'
+            })
           }
         })
         .catch(() => {
@@ -220,7 +230,6 @@ export default {
               .then(() => {
                 this.setCallbackIpWhiteUpdate(params)
               })
-              .catch(() => {})
           } else {
             this.$confirm(`确定创建吗？`, {
               confirmButtonText: '确定',
@@ -230,7 +239,6 @@ export default {
               .then(() => {
                 this.setCallbackIpWhiteInsert(params)
               })
-              .catch(() => {})
           }
         }
       })

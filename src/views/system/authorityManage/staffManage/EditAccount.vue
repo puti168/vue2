@@ -282,7 +282,7 @@ export default {
 		getGoogleAuth() {
 			this.$api.googleAuth().then((res) => {
 				const { code, data } = res
-				if (code === 200) {
+				if (code && code === 200) {
 					this.form.googleAuthCode = data
 				}
 			})

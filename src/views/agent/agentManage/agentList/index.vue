@@ -299,7 +299,12 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="accountType" align="center" label="代理类型" width="100">
+					<el-table-column
+						prop="accountType"
+						align="center"
+						label="代理类型"
+						width="100"
+					>
 						<template slot-scope="scope">
 							<span v-if="!!scope.row.accountType">
 								{{ typeFilter(scope.row.accountType, 'accountType') }}
@@ -339,7 +344,7 @@
 						prop="windControlName"
 						align="center"
 						label="风控层级"
-                        width="100"
+						width="100"
 					>
 						<template slot-scope="scope">
 							<span v-if="!!scope.row.windControlName">
@@ -348,7 +353,12 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="labelName" align="center" label="代理标签" width="180">
+					<el-table-column
+						prop="labelName"
+						align="center"
+						label="代理标签"
+						width="180"
+					>
 						<template slot-scope="scope">
 							<span v-if="!!scope.row.labelName">
 								{{ scope.row.labelName }}
@@ -356,7 +366,12 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="accountStatus" align="center" label="账号状态" width="120">
+					<el-table-column
+						prop="accountStatus"
+						align="center"
+						label="账号状态"
+						width="120"
+					>
 						<template slot-scope="scope">
 							<span
 								v-if="
@@ -409,7 +424,7 @@
 						prop="invitationCode"
 						align="center"
 						label="合营代码"
-                        width="130"
+						width="130"
 					>
 						<template slot-scope="scope">
 							<span v-if="!!scope.row.invitationCode">
@@ -529,6 +544,7 @@ const start = dayjs()
 const end = dayjs()
 	.endOf('day')
 	.valueOf()
+
 export default {
 	name: routerNames.agentList,
 	mixins: [list],
@@ -565,13 +581,13 @@ export default {
 	},
 	computed: {
 		accountStatusArr() {
-			return this.globalDics.accountStatusType
+			return this.globalDics.accountStatusType || []
 		},
 		accountTypeArr() {
-			return this.globalDics.accountType
+			return this.globalDics.accountType || []
 		},
 		entrAuthorityTypeArr() {
-			return this.globalDics.entrAuthorityType
+			return this.globalDics.entrAuthorityType || []
 		}
 	},
 	created() {
@@ -618,28 +634,27 @@ export default {
 			this.$api
 				.AgentListAPI(params)
 				.then((res) => {
+					this.loading = false
 					const {
 						code,
 						data: { record, totalRecord },
 						msg
 					} = res
-					if (code === 200) {
-						this.loading = false
-						this.dataList = record || []
+					if (res && code && code === 200) {
+						this.dataList = Object.freeze(record) || []
 						this.total = totalRecord || 0
 					} else {
-						this.loading = false
 						this.$message({
-							message: msg,
+							message: res && msg,
 							type: 'error'
 						})
 					}
 				})
 				.catch(() => (this.loading = false))
 
-			setTimeout(() => {
-				this.loading = false
-			}, 1000)
+			// setTimeout(() => {
+			// 	this.loading = false
+			// }, 1500)
 		},
 		// 获取代理标签
 		getMerchantDict() {

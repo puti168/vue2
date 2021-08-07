@@ -16,13 +16,13 @@
           </el-form-item>
           <el-form-item label="类型:">
             <el-select
-              v-model="queryData.aaaaa"
+              v-model="queryData.userType"
               clearable
               placeholder="默认选择全部"
               :popper-append-to-body="false"
             >
-              <el-option label="会员" value="0"></el-option>
-              <el-option label="代理" value="1"></el-option>
+              <el-option label="会员" :value="1"></el-option>
+              <el-option label="代理" :value="2"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item>
@@ -79,100 +79,126 @@
         >
           <el-table-column
             v-if="depositWithdrawalReport['日期']"
-            prop="userName"
+            prop="staticsDate"
             align="center"
             label="日期"
-            width="160px"
+            min-width="160px"
             fixed
           >
           </el-table-column>
           <el-table-column
             v-if="depositWithdrawalReport['类型']"
-            prop="realName"
+            prop="userType"
             align="center"
-            width="160px"
+            min-width="160px"
             label="类型"
           >
+            <template slot-scope="scope">
+              <span v-if="scope.row.userType === 1">会员</span>
+              <span v-else>代理</span>
+            </template>
           </el-table-column>
           <el-table-column
             v-if="depositWithdrawalReport['存款人数']"
-            prop="accountType"
+            prop="depositMemberCount"
             align="center"
-            width="160px"
+            min-width="160px"
             label="存款人数"
           >
           </el-table-column>
           <el-table-column
             v-if="depositWithdrawalReport['存款次数']"
-            prop="parentProxyName"
+            prop="depositOrderCount"
             align="center"
-            width="160px"
+            min-width="160px"
             label="存款次数"
           >
           </el-table-column>
           <el-table-column
             v-if="depositWithdrawalReport['存款总额']"
-            prop="vipSerialNum"
+            prop="depositAmount"
             align="center"
-            width="160px"
+            min-width="160px"
             label="存款总额"
           >
+            <template slot-scope="scope">
+              {{ scope.row.depositAmount | filterDecimals }}
+            </template>
           </el-table-column>
           <el-table-column
             v-if="depositWithdrawalReport['取款人数']"
-            prop="accountStatus"
+            prop="withdrawalMemberCount"
             align="center"
-            width="160px"
+            min-width="160px"
             label="取款人数"
           >
           </el-table-column>
           <el-table-column
             v-if="depositWithdrawalReport['大额取款人数']"
-            prop="labelName"
+            prop="largeWithdrawalMemberCount"
             align="center"
-            width="160px"
+            min-width="160px"
             label="大额取款人数"
           >
           </el-table-column>
 
           <el-table-column
             v-if="depositWithdrawalReport['取款次数']"
-            prop="windControlName"
+            prop="withdrawalOrderCount"
             align="center"
-            width="160px"
+            min-width="160px"
             label="取款次数"
           >
           </el-table-column>
           <el-table-column
             v-if="depositWithdrawalReport['大额取款次数']"
-            prop="betCount"
+            prop="largeWithdrawalOrderCount"
             align="center"
-            width="160px"
+            min-width="160px"
             label="大额取款次数"
           >
           </el-table-column>
           <el-table-column
             v-if="depositWithdrawalReport['大额取款金额']"
-            prop="betCount"
+            prop="largeWithdrawalAmount"
             align="center"
-            width="160px"
+            min-width="160px"
             label="大额取款金额"
           >
+            <template slot-scope="scope">
+              {{ scope.row.largeWithdrawalAmount | filterDecimals }}
+            </template>
           </el-table-column>
           <el-table-column
             v-if="depositWithdrawalReport['取款总额']"
-            prop="betCount"
+            prop="withdrawalAmount"
             align="center"
-            width="160px"
+            min-width="160px"
             label="取款总额"
           >
+            <template slot-scope="scope">
+              {{ scope.row.withdrawalAmount | filterDecimals }}
+            </template>
           </el-table-column>
           <el-table-column
             v-if="depositWithdrawalReport['存取差']"
-            prop="betCount"
+            prop="accessAmount"
             align="center"
             label="存取差"
+            min-width="160px"
           >
+            <template slot-scope="scope">
+              <span v-if="scope.row.accessAmount > 0" class="enableColor">
+                {{ scope.row.accessAmount | filterDecimals }}
+              </span>
+              <span v-else-if="scope.row.accessAmount < 0" class="redColor">
+                {{ scope.row.accessAmount | filterDecimals }}
+              </span>
+              <span v-else-if="scope.row.accessAmount === 0">{{
+                scope.row.accessAmount | filterDecimals
+              }}</span>
+              <span v-else>-</span>
+            </template>
           </el-table-column>
         </el-table>
         <!-- 分页 -->
@@ -220,6 +246,7 @@
 <script>
 import list from '@/mixins/list'
 import dayjs from 'dayjs'
+import { Decimal } from 'decimal.js'
 const startTime = dayjs().startOf('day').valueOf()
 const endTime = dayjs().endOf('day').valueOf()
 
@@ -227,7 +254,7 @@ export default {
   filters: {
     filterDecimals: function (val) {
       if (typeof val === 'number') {
-        const newVal = (Math.floor(val * 1000) / 1000).toFixed(2)
+        const newVal = val.toFixed(2, Decimal.ROUND_DOWN)
         return newVal
       } else {
         return '-'
@@ -325,18 +352,7 @@ export default {
         .objectStore('depositWithdrawalReport')
         .add({
           id: this.myName,
-          日期: true,
-          类型: true,
-          存款人数: true,
-          存款次数: true,
-          存款总额: true,
-          取款人数: true,
-          大额取款人数: true,
-          取款次数: true,
-          大额取款次数: true,
-          大额取款金额: true,
-          取款总额: true,
-          存取差: true
+          obj: this.depositWithdrawalReport
         })
       request.onsuccess = (event) => {
         this.getList()
@@ -353,45 +369,23 @@ export default {
           list.push(cursor.value)
           cursor.continue()
         } else {
-          console.log(list, 4654564)
           for (let i = 0; i < list.length; i++) {
             const ele = list[i]
             if (ele.id === this.myName) {
-              this.newList.push(ele)
-              this.depositWithdrawalReport = { ...ele }
-              delete this.depositWithdrawalReport.id
+              this.newList.push(ele.obj)
+              this.depositWithdrawalReport = { ...ele.obj }
             }
           }
-          console.log(this.newList, 4645655465)
         }
       }
     },
     confirm() {
-      const arr = []
-      for (let i = 0; i < this.newList.length; i++) {
-        const ele = this.newList[i]
-        if (ele.id === this.myName) {
-          arr.push(ele)
-        }
-      }
-      console.log(arr, 'arr')
       const request = this.db
         .transaction(['depositWithdrawalReport'], 'readwrite')
         .objectStore('depositWithdrawalReport')
         .put({
           id: this.myName,
-          日期: arr[0]['日期'],
-          类型: arr[0]['类型'],
-          存款人数: arr[0]['存款人数'],
-          存款次数: arr[0]['存款次数'],
-          存款总额: arr[0]['存款总额'],
-          取款人数: arr[0]['取款人数'],
-          大额取款人数: arr[0]['大额取款人数'],
-          取款次数: arr[0]['取款次数'],
-          大额取款次数: arr[0]['大额取款次数'],
-          大额取款金额: arr[0]['大额取款金额'],
-          取款总额: arr[0]['取款总额'],
-          存取差: arr[0]['存取差']
+          obj: this.newList[0]
         })
       request.onsuccess = (event) => {
         this.visible = false
@@ -406,7 +400,6 @@ export default {
     clickDel(id) {
       this.newList = []
       this.newList.push({
-        id: this.myName,
         日期: true,
         类型: true,
         存款人数: true,
@@ -426,12 +419,6 @@ export default {
       const [startTime, endTime] = statistics
       let params = {
         ...this.queryData,
-        accountTypeList: this.queryData.accountTypeList
-          ? this.queryData.accountTypeList.join(',')
-          : [],
-        accountStatusList: this.queryData.accountStatusList
-          ? this.queryData.accountStatusList.join(',')
-          : [],
         startTime: startTime ? dayjs(startTime).format('YYYY-MM-DD') : '',
         endTime: endTime ? dayjs(endTime).format('YYYY-MM-DD') : ''
       }
@@ -444,7 +431,7 @@ export default {
       } else {
         this.loading = true
         this.$api
-          .getReportMembernetamountList(params)
+          .getReportAccessAmountDayListPage(params)
           .then((res) => {
             if (res.code === 200 && res.data !== null) {
               this.loading = false
@@ -459,7 +446,7 @@ export default {
           })
           .catch(() => (this.loading = false))
         this.$api
-          .getReportMembernetamountAggregation(params)
+          .getReportAccessAmountDaySummary(params)
           .then((res) => {
             if (res.code === 200) {
               this.loading = false
@@ -495,7 +482,7 @@ export default {
 
     filterDecimals: function (val) {
       if (typeof val === 'number') {
-        const newVal = (Math.floor(val * 1000) / 1000).toFixed(2)
+        const newVal = val.toFixed(2, Decimal.ROUND_DOWN)
         return newVal
       } else {
         return '-'
@@ -514,7 +501,7 @@ export default {
           )
           sums[index] = el
           return
-        } else if (index >= 8 && this.summary !== null) {
+        } else if (index >= 2 && this.summary !== null) {
           const values = data.map((item) => Number(item[column.property]))
           if (!values.every((value) => isNaN(value))) {
             sums[index] = values.reduce((prev, curr) => {
@@ -527,11 +514,59 @@ export default {
             }, 0)
             const num = sums[index]
             switch (index) {
+              case 2:
+                sums[index] = (
+                  <div class='count_row'>
+                    <p>{this.filterDecimals(num)}</p>
+                    <p>{this.filterDecimals(this.summary.depositMemberCount)}</p>
+                  </div>
+                )
+                break
+              case 3:
+                sums[index] = (
+                  <div class='count_row'>
+                    <p>{this.filterDecimals(num)}</p>
+                    <p>{this.filterDecimals(this.summary.depositOrderCount)}</p>
+                  </div>
+                )
+                break
+              case 4:
+                sums[index] = (
+                  <div class='count_row'>
+                    <p>{this.filterDecimals(num)}</p>
+                    <p>{this.filterDecimals(this.summary.depositAmount)}</p>
+                  </div>
+                )
+                break
+              case 5:
+                sums[index] = (
+                  <div class='count_row'>
+                    <p>{this.filterDecimals(num)}</p>
+                    <p>{this.filterDecimals(this.summary.withdrawalMemberCount)}</p>
+                  </div>
+                )
+                break
+              case 6:
+                sums[index] = (
+                  <div class='count_row'>
+                    <p>{this.filterDecimals(num)}</p>
+                    <p>{this.filterDecimals(this.summary.largeWithdrawalMemberCount)}</p>
+                  </div>
+                )
+                break
+              case 7:
+                sums[index] = (
+                  <div class='count_row'>
+                    <p>{this.filterDecimals(num)}</p>
+                    <p>{this.filterDecimals(this.summary.withdrawalOrderCount)}</p>
+                  </div>
+                )
+                break
               case 8:
                 sums[index] = (
                   <div class='count_row'>
-                    <p>{num}</p>
-                    <p>{this.summary.betCountTotal}</p>
+                    <p>{this.filterDecimals(num)}</p>
+                    <p>{this.filterDecimals(this.summary.largeWithdrawalOrderCount)}</p>
                   </div>
                 )
                 break
@@ -539,7 +574,7 @@ export default {
                 sums[index] = (
                   <div class='count_row'>
                     <p>{this.filterDecimals(num)}</p>
-                    <p>{this.filterDecimals(this.summary.betAmountTotal)}</p>
+                    <p>{this.filterDecimals(this.summary.largeWithdrawalAmount)}</p>
                   </div>
                 )
                 break
@@ -547,15 +582,29 @@ export default {
                 sums[index] = (
                   <div class='count_row'>
                     <p>{this.filterDecimals(num)}</p>
-                    <p>{this.filterDecimals(this.summary.validBetAmountTotal)}</p>
+                    <p>{this.filterDecimals(this.summary.withdrawalAmount)}</p>
                   </div>
                 )
                 break
               case 11:
                 sums[index] = (
                   <div class='count_row'>
-                    <p>{this.filterDecimals(num)}</p>
-                    <p>{this.filterDecimals(this.summary.validBetAmountTotal)}</p>
+                    {num > 0 ? (
+                      <p class='enableColor'>{this.filterDecimals(num)}</p>
+                    ) : (
+                      <p class='redColor'>{this.filterDecimals(num)}</p>
+                    )}
+                    {this.summary.accessAmount > 0 ? (
+                      <p class='enableColor'>
+                        {this.filterDecimals(this.summary.accessAmount)}
+                      </p>
+                    ) : this.summary.accessAmount === 0 ? (
+                      <p>{this.filterDecimals(this.summary.accessAmount)}</p>
+                    ) : (
+                      <p class='redColor'>
+                        {this.filterDecimals(this.summary.accessAmount)}
+                      </p>
+                    )}
                   </div>
                 )
                 break
@@ -580,7 +629,7 @@ export default {
       let k = ''
       console.log(val)
       for (let i = 0; i < val.length; i++) {
-        k = val[i].gamePlatform
+        k = val[i].staticsDate
         console.log(k)
         if (obj[k]) {
           obj[k]++

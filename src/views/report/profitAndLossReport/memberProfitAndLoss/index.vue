@@ -161,7 +161,7 @@
             </el-button>
             <el-button
               icon="el-icon-refresh-left"
-              :disabled="loading"
+              :disabled="flag"
               size="medium"
               @click="reset"
             >
@@ -207,6 +207,7 @@
             prop="userName"
             align="center"
             label="会员账号"
+            width="130"
           >
             <template slot-scope="scope">
               <el-link
@@ -224,6 +225,7 @@
             prop="realName"
             align="center"
             label="姓名"
+            width="120"
           >
             <template slot-scope="scope">
               <Copy v-if="!!scope.row.realName" :title="scope.row.realName" :copy="copy">
@@ -237,6 +239,7 @@
             prop="accountType"
             align="center"
             label="账号类型"
+            width="110"
           >
             <template slot-scope="scope">
               <span v-if="scope.row.accountType">
@@ -250,6 +253,7 @@
             prop="parentProxyName"
             align="center"
             label="上级代理"
+            width="130"
           >
             <template slot-scope="scope">
               <Copy
@@ -267,6 +271,7 @@
             prop="vipSerialNum"
             align="center"
             label="VIP等级"
+            width="110"
           >
             <template slot-scope="scope">
               {{ scope.row.vipSerialNum }}
@@ -277,6 +282,7 @@
             prop="accountStatus"
             align="center"
             label="账号状态"
+            width="110"
           >
             <template slot-scope="scope">
               <span
@@ -302,6 +308,7 @@
             prop="labelName"
             align="center"
             label="会员标签"
+            width="130"
           >
             <template slot-scope="scope">
               <span v-if="!!scope.row.labelName">
@@ -316,6 +323,7 @@
             prop="windControlName"
             align="center"
             label="风控层级"
+            width="100"
           >
             <template slot-scope="scope">
               <span v-if="!!scope.row.windControlName">
@@ -330,6 +338,7 @@
             align="center"
             label="注单量"
             sortable="custom"
+            width="110"
           >
             <template slot-scope="scope">
               {{ scope.row.betCount }}
@@ -341,6 +350,7 @@
             align="center"
             label="投注金额"
             sortable="custom"
+            width="200"
           >
             <template slot-scope="scope">
               {{ scope.row.betAmount | filterDecimals }}
@@ -352,6 +362,7 @@
             align="center"
             label="有效投注"
             sortable="custom"
+            width="200"
           >
             <template slot-scope="scope">
               {{ scope.row.validBetAmount | filterDecimals }}
@@ -363,6 +374,7 @@
             align="center"
             label="投注盈亏"
             sortable="custom"
+            width="200"
           >
             <template slot="header">
               <span>投注盈亏</span>
@@ -464,10 +476,12 @@
       title="列设置"
       center
       :visible.sync="visible"
-      width="300px"
+      width="500px"
       class="col-setting"
     >
-      <el-link type="primary" @click="clickDel">复原缺省</el-link>
+      <div>
+        <el-link type="primary" @click="clickDel">复原缺省</el-link>
+      </div>
       <div v-for="(value, name) in memberProfitAndLoss" :key="name" class="setting-div">
         <el-checkbox v-if="newList.length > 0" v-model="newList[0][name]">{{
           name
@@ -484,6 +498,7 @@
 <script>
 import list from '@/mixins/list'
 import dayjs from 'dayjs'
+import { Decimal } from 'decimal.js'
 const startTime = dayjs().startOf('day').valueOf()
 const endTime = dayjs().endOf('day').valueOf()
 
@@ -491,7 +506,7 @@ export default {
   filters: {
     filterDecimals: function (val) {
       if (typeof val === 'number') {
-        const newVal = (Math.floor(val * 1000) / 1000).toFixed(2)
+        const newVal = val.toFixed(2, Decimal.ROUND_DOWN)
         return newVal
       } else {
         return '-'
@@ -558,8 +573,9 @@ export default {
       summary: {},
       myName: '',
       spanArr: {
-          staticsDate: []
-      }
+        staticsDate: []
+      },
+      timecount: null
     }
   },
   computed: {
@@ -620,18 +636,7 @@ export default {
         .objectStore('memberProfitAndLoss')
         .add({
           id: this.myName,
-          会员账号: true,
-          姓名: true,
-          账号类型: true,
-          上级代理: true,
-          VIP等级: true,
-          账号状态: true,
-          会员标签: true,
-          风控层级: true,
-          注单量: true,
-          投注金额: true,
-          有效投注: true,
-          投注盈亏: true
+          obj: this.memberProfitAndLoss
         })
       request.onsuccess = (event) => {
         this.getList()
@@ -648,45 +653,23 @@ export default {
           list.push(cursor.value)
           cursor.continue()
         } else {
-          console.log(list, 4654564)
           for (let i = 0; i < list.length; i++) {
             const ele = list[i]
             if (ele.id === this.myName) {
-              this.newList.push(ele)
-              this.memberProfitAndLoss = { ...ele }
-              delete this.memberProfitAndLoss.id
+              this.newList.push(ele.obj)
+              this.memberProfitAndLoss = { ...ele.obj }
             }
           }
-          console.log(this.newList, 4645655465)
         }
       }
     },
     confirm() {
-      const arr = []
-      for (let i = 0; i < this.newList.length; i++) {
-        const ele = this.newList[i]
-        if (ele.id === this.myName) {
-          arr.push(ele)
-        }
-      }
-      console.log(arr, 'arr')
       const request = this.db
         .transaction(['memberProfitAndLoss'], 'readwrite')
         .objectStore('memberProfitAndLoss')
         .put({
           id: this.myName,
-          会员账号: arr[0]['会员账号'],
-          姓名: arr[0]['姓名'],
-          账号类型: arr[0]['账号类型'],
-          上级代理: arr[0]['上级代理'],
-          VIP等级: arr[0]['VIP等级'],
-          账号状态: arr[0]['账号状态'],
-          会员标签: arr[0]['会员标签'],
-          风控层级: arr[0]['风控层级'],
-          注单量: arr[0]['注单量'],
-          投注金额: arr[0]['投注金额'],
-          有效投注: arr[0]['有效投注'],
-          投注盈亏: arr[0]['投注盈亏']
+          obj: this.newList[0]
         })
       request.onsuccess = (event) => {
         this.visible = false
@@ -701,7 +684,6 @@ export default {
     clickDel(id) {
       this.newList = []
       this.newList.push({
-        id: this.myName,
         会员账号: true,
         姓名: true,
         账号类型: true,
@@ -770,11 +752,12 @@ export default {
       if (endTime - startTime <= this.day31) {
         this.flag = true
         let t = 10
-        const timecount = setInterval(() => {
+        clearInterval(this.timecount)
+        this.timecount = setInterval(() => {
           t--
           this.queryText = t + 's'
           if (t < 0) {
-            clearInterval(timecount)
+            clearInterval(this.timecount)
             this.queryText = '查询'
             this.flag = false
           }
@@ -816,32 +799,32 @@ export default {
       this.tableVisible = true
     },
     _getSpanArr(data, spanArr, field) {
-        let spanArrIndex
-        if (data && data.length) {
-            for (var i = 0; i < data.length; i++) {
-                if (i === 0) {
-                    spanArr.push(1)
-                    spanArrIndex = 0
-                } else {
-                    if (data[i][field] === data[i - 1][field]) {
-                        spanArr[spanArrIndex] += 1
-                        spanArr.push(0)
-                    } else {
-                        spanArr.push(1)
-                        spanArrIndex = i
-                    }
-                }
+      let spanArrIndex
+      if (data && data.length) {
+        for (var i = 0; i < data.length; i++) {
+          if (i === 0) {
+            spanArr.push(1)
+            spanArrIndex = 0
+          } else {
+            if (data[i][field] === data[i - 1][field]) {
+              spanArr[spanArrIndex] += 1
+              spanArr.push(0)
+            } else {
+              spanArr.push(1)
+              spanArrIndex = i
             }
+          }
         }
+      }
     },
-    spanMethod({ row, column, rowIndex, columnIndex}) {
-        if (columnIndex === 0) {
-            const rowspan = this.spanArr[column.property][rowIndex] || 0
-            return {
-                rowspan,
-                colspan: rowspan > 0 ? 1 : 0
-            }
+    spanMethod({ row, column, rowIndex, columnIndex }) {
+      if (columnIndex === 0) {
+        const rowspan = this.spanArr[column.property][rowIndex] || 0
+        return {
+          rowspan,
+          colspan: rowspan > 0 ? 1 : 0
         }
+      }
     },
     getReportMembernetamountDetail(val) {
       this.loading = true
@@ -861,7 +844,11 @@ export default {
             console.log(res)
             this.memberDetails = res.data.record
             this.dialogTotal = res.data.totalRecord
-            this._getSpanArr(this.memberDetails, this.spanArr.staticsDate = [], 'staticsDate')
+            this._getSpanArr(
+              this.memberDetails,
+              (this.spanArr.staticsDate = []),
+              'staticsDate'
+            )
           }
           this.loading = false
         })
@@ -871,7 +858,7 @@ export default {
     },
     filterDecimals: function (val) {
       if (typeof val === 'number') {
-        const newVal = (Math.floor(val * 1000) / 1000).toFixed(2)
+        const newVal = val.toFixed(2, Decimal.ROUND_DOWN)
         return newVal
       } else {
         return '-'
@@ -1311,5 +1298,9 @@ export default {
 }
 .fenye {
   text-align: center;
+}
+.setting-div {
+  display: inline-block;
+  min-width: 90px;
 }
 </style>

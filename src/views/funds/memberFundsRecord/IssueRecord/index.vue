@@ -38,7 +38,7 @@
               v-model="queryData.id"
               clearable
               size="medium"
-              style="width: 400px"
+              style="width: 360px"
               placeholder="请输入"
               :disabled="loading"
               @keyup.enter.native="enterSearch"
