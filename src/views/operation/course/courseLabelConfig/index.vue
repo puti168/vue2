@@ -5,24 +5,23 @@
         <el-form ref="form" :inline="true" :model="queryData">
           <el-form-item label="教程名称:">
             <el-select
-              v-model="queryData.status"
+              v-model="queryData.tutorId"
               size="medium"
               placeholder="默认选择全部"
               clearable
               style="width: 300px"
             >
-              <el-option label="全部" :value="undefined"></el-option>
               <el-option
-                v-for="item in entrAuthorityTypeArr"
-                :key="item.code"
-                :label="item.description"
-                :value="item.code"
+                v-for="item in tutorList"
+                :key="item.id"
+                :label="item.tutorName"
+                :value="item.id"
               ></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="页签状态:">
             <el-select
-              v-model="queryData.status"
+              v-model="queryData.bookmarkStatus"
               size="medium"
               placeholder="默认选择全部"
               clearable
@@ -39,7 +38,7 @@
           </el-form-item>
           <el-form-item label="页签名称:">
             <el-input
-              v-model="queryData.createdBy"
+              v-model="queryData.bookmarkName"
               clearable
               maxlength="10"
               size="medium"
@@ -60,16 +59,14 @@
               查询
             </el-button>
             <el-button
-              v-if="hasPermission('294')"
               type="primary"
               :disabled="loading"
               size="medium"
-              @click="edit"
+              @click="edit()"
             >
               新增页签
             </el-button>
             <el-button
-              v-if="hasPermission('294')"
               type="warning"
               :disabled="loading"
               size="medium"
@@ -87,8 +84,8 @@
         >
           <draggable v-model="sortareaList" @start="onStart" @end="onEnd">
             <transition-group>
-              <div v-for="tiem in sortareaList" :key="tiem.value" class="reach">
-                {{ tiem.value }}
+              <div v-for="item in sortareaList" :key="item.id" class="reach">
+                {{ item.bookmarkName }}
               </div>
             </transition-group>
           </draggable>
@@ -114,12 +111,14 @@
             align="center"
             label="教程名称"
           ></el-table-column>
-          <el-table-column prop="description" align="center" label="创建人">
+          <el-table-column
+            prop="bookmarkName"
+            align="center"
+            label="页签名称"
+          ></el-table-column>
+          <el-table-column prop="createdBy" align="center" label="创建人">
             <template slot-scope="scope">
-              <span v-if="scope.row.description !== ''">
-                {{ scope.row.description }}
-              </span>
-              <span v-else>-</span>
+              {{ scope.row.createdBy || '-' }}
             </template>
           </el-table-column>
           <el-table-column
@@ -127,65 +126,73 @@
             align="center"
             label="创建时间"
             sortable="custom"
-          ></el-table-column>
+          >
+            <template slot-scope="scope">
+              {{ scope.row.createdAt || '-' }}
+            </template>
+          </el-table-column>
           <el-table-column
             prop="updatedBy"
             align="center"
             label="最近操作人"
-          ></el-table-column>
+          >
+            <template slot-scope="scope">
+              {{ scope.row.updatedBy || '-' }}
+            </template>
+          </el-table-column>
           <el-table-column
             prop="updatedAt"
             align="center"
             label="最近操作时间"
             sortable="custom"
-          ></el-table-column>
+          >
+            <template slot-scope="scope">
+              {{ scope.row.updatedAt || '-' }}
+            </template>
+          </el-table-column>
           <el-table-column
-            prop="updatedAt"
+            prop="bookmarkStatus"
             align="center"
             label="页签状态"
-            sortable="custom"
           >
             <template slot-scope="scope">
               <el-button
-                v-if="hasPermission('295')"
+                v-if="scope.row.bookmarkStatus === 1"
                 type="primary"
                 size="medium"
-                @click="edit(scope.row)"
               >
                 开启中
               </el-button>
 
               <el-button
-                v-if="hasPermission('296')"
+                v-if="scope.row.bookmarkStatus === 0"
                 type="warning"
                 size="medium"
-                @click="deleteLabel(scope.row)"
               >
                 已禁止
               </el-button>
             </template>
           </el-table-column>
-          <el-table-column prop="operating" align="center" label="操作">
+          <el-table-column prop="operating" align="center" label="操作" min-width="260">
             <template slot-scope="scope">
-                            <el-button
-                v-if="hasPermission('295')"
+              <el-button
+                v-if="scope.row.bookmarkStatus === 0"
                 type="primary"
                 size="medium"
-                @click="edit(scope.row)"
+                @click="switchStatus(scope.row)"
               >
                 开启
               </el-button>
 
               <el-button
-                v-if="hasPermission('296')"
+                v-if="scope.row.bookmarkStatus === 1"
                 type="warning"
                 size="medium"
-                @click="deleteLabel(scope.row)"
+                @click="switchStatus(scope.row)"
               >
                 禁止
               </el-button>
               <el-button
-                v-if="hasPermission('295')"
                 type="primary"
                 icon="el-icon-edit"
                 size="medium"
@@ -195,7 +202,6 @@
               </el-button>
 
               <el-button
-                v-if="hasPermission('296')"
                 type="warning"
                 icon="el-icon-delete"
                 size="medium"
@@ -234,35 +240,35 @@
 				>
 					<el-form-item
             label="教程名称:"
-            prop="pageName"
+            prop="tutorId"
             :rules="[
               { required: true, message: '教程名称不能为空', trigger: 'blur' },
             ]"
           >
 						<el-select
-              v-model="queryData.status"
+              v-model="dialogForm.tutorId"
               size="medium"
               placeholder="请选择"
               clearable
               style="width: 500px"
             >
               <el-option
-                v-for="item in entrAuthorityTypeArr"
-                :key="item.code"
-                :label="item.description"
-                :value="item.code"
+                v-for="item in tutorList"
+                :key="item.id"
+                :label="item.tutorName"
+                :value="item.id"
               ></el-option>
             </el-select>
 					</el-form-item>
 					<el-form-item
             label="页签图标:"
-            prop="pictureUrl"
+            prop="bookmarkPicture"
           >
 						<UploadItem
 							ref="imgUpload"
 							:upload-file-type="'image'"
 							:platform="'PC'"
-							:img-urls="dialogForm.pictureUrl"
+							:img-urls="dialogForm.bookmarkPicture"
 							@upoladItemSucess="handleUploadSucess"
 							@startUpoladItem="handleStartUpload"
 							@deleteUpoladItem="handleDeleteUpload"
@@ -275,13 +281,13 @@
 					</el-form-item>
           <el-form-item
             label="页签名称:"
-            prop="clientType"
+            prop="bookmarkName"
             :rules="[
               { required: true, message: '页签名称不能为空', trigger: 'blur' },
             ]"
           >
 						<el-input
-							v-model="dialogForm.pagede"
+							v-model="dialogForm.bookmarkName"
 							:maxlength="20"
 							autocomplete="off"
 							style="width: 500px"
@@ -315,9 +321,14 @@ export default {
     this.lookGame = this.throttle(this.lookGame, 1000)
     this.deleteLabel = this.throttle(this.deleteLabel, 1000)
     this.subAddOrEidt = this.throttle(this.subAddOrEidt, 1000)
-    this.getProxyProxyInfoByLabelId = this.throttle(this.getProxyProxyInfoByLabelId, 1000)
     return {
-      queryData: {},
+      queryData: {
+        orderKey: undefined,
+        orderType: undefined,
+        bookmarkName: undefined,
+        bookmarkStatus: undefined,
+        tutorId: undefined
+      },
       tableData: [],
       dialogFormVisible: false,
       dialogForm: {},
@@ -331,16 +342,48 @@ export default {
       summary: 0,
       drag: false,
       subSort: false,
-      sortareaList: []
+      sortareaList: [],
+      tutorList: []
     }
   },
 	computed: {
 		entrAuthorityTypeArr() {
-			return this.globalDics.entrAuthorityType
+			return this.globalDics.entrAuthorityType || []
 		}
 	},
-  mounted() {},
+  beforeMount() {
+    this.queryAllCourseName()
+  },
   methods: {
+    queryAllCourseName() {
+      this.loading = true
+      const params = {
+        pageNum: 1,
+        pageSize: 100
+      }
+      this.$api
+        .configTutorNameQueryTutorList(params)
+        .then((res) => {
+          this.loading = false
+          const {
+            code,
+            data: { record, totalPage },
+            msg
+          } = res
+          if (code && code === 200) {
+            this.tutorList = record || []
+            this.total = totalPage || 0
+          } else {
+            this.$message({
+              message: res && msg,
+              type: 'error'
+            })
+          }
+        })
+        .catch(() => {
+          this.loading = false
+        })
+    },
     loadData() {
       this.loading = true
       let params = {
@@ -350,41 +393,69 @@ export default {
         ...this.getParams(params)
       }
       this.$api
-        .getProxyPageLabel(params)
+        .bookmarkQueryList(params)
         .then((res) => {
-          if (res.code === 200) {
-            this.tableData = res.data.record
-            this.total = res.data.totalRecord
-            this.loading = false
+          this.loading = false
+          const {
+            code,
+            data: { records, total },
+            msg
+          } = res
+          if (code && code === 200) {
+            this.$set(this, 'tableData', records || [])
+            this.total = total || 0
           } else {
-            this.loading = false
+            this.$message({
+              message: res && msg,
+              type: 'error'
+            })
           }
         })
         .catch(() => {
           this.loading = false
         })
     },
-    // 弹框标签添加人数
-    getProxyProxyInfoByLabelId(val) {
-      const params = {}
-      params.id = val
-      params.pageNum = this.page
-      params.pageSize = this.size
-      this.$api.getProxyProxyInfoByLabelId(params).then((res) => {
-        if (res.code === 200) {
-          this.gameList = res.data.record
-          this.dialogGameVisible = true
+    switchStatus(val) {
+      this.$confirm(
+        `<strong>是否修改该条配置状态?</strong>
+        </br><span style='font-size:12px;color:#c1c1c1'>请谨慎操作</span>`,
+        `确认提示`,
+        {
+          dangerouslyUseHTMLString: true,
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
         }
-      })
-    },
-    lookGame(val) {
-      this.labelName = val.memberLabelName
-      this.summary = val.peopleNum * 1
-      this.id = val.id
-      this.getProxyProxyInfoByLabelId(val.id)
-    },
-    addLabel() {
-
+      )
+        .then(() => {
+          let status = 0
+          if (val.bookmarkStatus === 0) {
+            status = 1
+          }
+          const params = {
+            id: val.id,
+            status: status
+          }
+          this.$api.bookmarkUse(params).then((res) => {
+            this.loading = false
+            const {
+              code,
+              msg
+            } = res
+            if (code && code === 200) {
+              this.dialogGameVisible = true
+              this.loadData()
+            } else {
+              this.$message({
+                message: res && msg,
+                type: 'error'
+              })
+            }
+          })
+        })
+        .catch(() => {
+          this.loading = false
+        })
     },
     edit(val) {
       this.title = '新增'
@@ -408,41 +479,70 @@ export default {
         }
       )
         .then(() => {
-          this.$api.setProxyDeleteLabel({ id: val.id }).then((res) => {
-            if (res.code === 200) {
+          this.$api.bookmarkDeleteBookmark({ id: val.id }).then((res) => {
+            this.loading = false
+            const {
+              code,
+              msg
+            } = res
+            if (code && code === 200) {
               this.$message.success('删除成功')
               this.loadData()
+            } else {
+              this.$message({
+                message: res && msg,
+                type: 'error'
+              })
             }
           })
         })
-        .catch(() => {})
+        .catch(() => {
+          this.loading = false
+        })
     },
     subAddOrEidt() {
-      console.log(this.title)
-      const data = {}
-      data.description = this.dialogForm.description
-      data.memberLabelName = this.dialogForm.memberLabelName
       this.$refs.formSub.validate((valid) => {
         if (valid) {
           if (this.title === '新增') {
-            console.log('新增')
-
-            this.$api.getProxyAddLabel(data).then((res) => {
-              if (res.code === 200) {
+            this.$api.bookmarkInsertBookmark(this.dialogForm).then((res) => {
+              this.loading = false
+              const {
+                code,
+                msg
+              } = res
+              if (code && code === 200) {
                 this.$message.success('新增成功')
                 this.pageNum = 1
                 this.loadData()
+              } else {
+                this.$message({
+                  message: res && msg,
+                  type: 'error'
+                })
               }
               this.dialogFormVisible = false
+            }).catch(() => {
+              this.loading = false
             })
           } else {
-            data.id = this.dialogForm.id
-            this.$api.getProxyAddLabel(data).then((res) => {
-              if (res.code === 200) {
+            this.$api.updateBookmark(this.dialogForm).then((res) => {
+              this.loading = false
+              const {
+                code,
+                msg
+              } = res
+              if (code && code === 200) {
                 this.$message.success('修改成功')
                 this.loadData()
+              } else {
+                this.$message({
+                  message: res && msg,
+                  type: 'error'
+                })
               }
               this.dialogFormVisible = false
+            }).catch(() => {
+              this.loading = false
             })
           }
         }
@@ -450,10 +550,10 @@ export default {
     },
     _changeTableSort({ column, prop, order }) {
       if (prop === 'createdAt') {
-        prop = 1
+        prop = 0
       }
       if (prop === 'updatedAt') {
-        prop = 2
+        prop = 1
       }
       this.pageNum = 1
       this.queryData.orderKey = prop
@@ -471,11 +571,24 @@ export default {
     },
     subSortadd() {
       const clientType = this.clientType
-      this.$api.operatecCnfigBannerQuerySortedBannerArea({ clientType }).then((res) => {
-        if (res.code === 200) {
-          this.sortareaList = res.data
+      this.$api.bookmarkQuerySortedNames({ clientType }).then((res) => {
+        this.loading = false
+        const {
+          code,
+          data,
+          msg
+        } = res
+        if (code && code === 200) {
+          this.sortareaList = data
           this.subSort = true
+        } else {
+          this.$message({
+            message: res && msg,
+            type: 'error'
+          })
         }
+      }).catch(() => {
+        this.loading = false
       })
       this.subSort = false
     },
@@ -492,24 +605,33 @@ export default {
       const newArr = []
       for (let i = 0; i < arr.length; i++) {
         const ele = arr[i]
-        newArr.push(ele.code)
+        newArr.push(ele.id)
       }
-      console.log(this.sortareaList)
       const sortIds = newArr.join(',')
       const clientType = this.clientType
       this.$api
-        .setoperateConfigBannerSort({ sortIds: sortIds, clientType })
+        .bookmarkSort({ sortIds: sortIds, clientType })
         .then((res) => {
-          if (res.code === 200) {
+          const {
+            code,
+            msg
+          } = res
+          if (code && code === 200) {
             this.$message({
               message: '操作成功！',
               type: 'success'
             })
+            this.loadData()
             this.subSort = false
+          } else {
+            this.$message({
+              message: res && msg,
+              type: 'error'
+            })
           }
+        }).catch(() => {
+          this.loading = false
         })
-
-      this.loadData()
     },
     clear() {
       this.$refs.formSub.resetFields()
@@ -518,7 +640,7 @@ export default {
 			this.$message.info('图片开始上传')
 		},
 		handleUploadSucess({ index, file, id }) {
-			this.dialogForm.pictureUrl = file.imgUrl
+			this.dialogForm.bookmarkPicture = file.imgUrl
 		},
 		handleUploadDefeat() {
 			this.dialogForm.pictureUrl = ''

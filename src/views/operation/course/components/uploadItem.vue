@@ -81,10 +81,10 @@ const UploadStateConst = {
 }
 export default {
 	name: 'UploadItem',
-	mixins: [list],
 	components: {
 		Video
 	},
+	mixins: [list],
 	props: {
 		size: {
 			type: String,

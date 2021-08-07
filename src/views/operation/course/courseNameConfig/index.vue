@@ -5,7 +5,7 @@
         <el-form ref="form" :inline="true" :model="queryData">
           <el-form-item label="教程状态:">
             <el-select
-              v-model="queryData.status"
+              v-model="queryData.tutorStatus"
               size="medium"
               placeholder="默认选择全部"
               clearable
@@ -22,7 +22,7 @@
           </el-form-item>
           <el-form-item label="教程名称:">
             <el-input
-              v-model="queryData.createdBy"
+              v-model="queryData.tutorName"
               clearable
               maxlength="10"
               size="medium"
@@ -43,7 +43,6 @@
               查询
             </el-button>
             <el-button
-              v-if="hasPermission('294')"
               type="primary"
               :disabled="loading"
               size="medium"
@@ -52,7 +51,6 @@
               新增教程
             </el-button>
             <el-button
-              v-if="hasPermission('294')"
               type="warning"
               :disabled="loading"
               size="medium"
@@ -70,8 +68,8 @@
         >
           <draggable v-model="sortareaList" @start="onStart" @end="onEnd">
             <transition-group>
-              <div v-for="tiem in sortareaList" :key="tiem.value" class="reach">
-                {{ tiem.value }}
+              <div v-for="tiem in sortareaList" :key="tiem.id" class="reach">
+                {{ tiem.tutorName }}
               </div>
             </transition-group>
           </draggable>
@@ -93,16 +91,13 @@
           @sort-change="_changeTableSort"
         >
           <el-table-column
-            prop="memberLabelName"
+            prop="tutorName"
             align="center"
             label="教程名称"
           ></el-table-column>
-          <el-table-column prop="description" align="center" label="创建人">
+          <el-table-column prop="createdBy" align="center" label="创建人">
             <template slot-scope="scope">
-              <span v-if="scope.row.description !== ''">
-                {{ scope.row.description }}
-              </span>
-              <span v-else>-</span>
+              {{ scope.row.createdBy || '-' }}
             </template>
           </el-table-column>
           <el-table-column
@@ -110,65 +105,73 @@
             align="center"
             label="创建时间"
             sortable="custom"
-          ></el-table-column>
+          >
+            <template slot-scope="scope">
+              {{ scope.row.createdAt || '-' }}
+            </template>
+          </el-table-column>
           <el-table-column
             prop="updatedBy"
             align="center"
             label="最近操作人"
-          ></el-table-column>
+          >
+            <template slot-scope="scope">
+              {{ scope.row.updatedBy || '-' }}
+            </template>
+          </el-table-column>
           <el-table-column
             prop="updatedAt"
             align="center"
             label="最近操作时间"
             sortable="custom"
-          ></el-table-column>
+          >
+            <template slot-scope="scope">
+              {{ scope.row.updatedAt || '-' }}
+            </template>
+          </el-table-column>
           <el-table-column
-            prop="updatedAt"
+            prop="tutorStatus"
             align="center"
             label="教程状态"
-            sortable="custom"
           >
             <template slot-scope="scope">
               <el-button
-                v-if="hasPermission('295')"
+                v-if="scope.row.tutorStatus===1"
                 type="primary"
                 size="medium"
-                @click="edit(scope.row)"
               >
                 开启中
               </el-button>
 
               <el-button
-                v-if="hasPermission('296')"
+                v-else
                 type="warning"
                 size="medium"
-                @click="deleteLabel(scope.row)"
               >
                 已禁止
               </el-button>
             </template>
           </el-table-column>
-          <el-table-column prop="operating" align="center" label="操作">
+          <el-table-column prop="operating" align="center" label="操作" min-width="260">
             <template slot-scope="scope">
                             <el-button
-                v-if="hasPermission('295')"
+                v-if="scope.row.tutorStatus===0"
                 type="primary"
                 size="medium"
-                @click="edit(scope.row)"
+                @click="switchStatus(scope.row)"
               >
                 开启
               </el-button>
 
               <el-button
-                v-if="hasPermission('296')"
+                v-if="scope.row.tutorStatus===1"
                 type="warning"
                 size="medium"
-                @click="deleteLabel(scope.row)"
+                @click="switchStatus(scope.row)"
               >
                 禁止
               </el-button>
               <el-button
-                v-if="hasPermission('295')"
                 type="primary"
                 icon="el-icon-edit"
                 size="medium"
@@ -178,7 +181,6 @@
               </el-button>
 
               <el-button
-                v-if="hasPermission('296')"
                 type="warning"
                 icon="el-icon-delete"
                 size="medium"
@@ -217,13 +219,13 @@
 				>
 					<el-form-item
             label="教程名称:"
-            prop="pageName"
+            prop="tutorName"
             :rules="[
               { required: true, message: '教程名称不能为空', trigger: 'blur' },
             ]"
           >
 						<el-input
-							v-model="dialogForm.pageName"
+							v-model="dialogForm.tutorName"
 							:maxlength="20"
 							autocomplete="off"
 							style="width: 500px"
@@ -233,13 +235,13 @@
 					</el-form-item>
 					<el-form-item
             label="教程描述:"
-            prop="clientType"
+            prop="tutorDescribe"
             :rules="[
               { required: true, message: '教程描述不能为空', trigger: 'blur' },
             ]"
           >
 						<el-input
-							v-model="dialogForm.pagede"
+							v-model="dialogForm.tutorDescribe"
 							:maxlength="20"
 							autocomplete="off"
 							style="width: 500px"
@@ -249,7 +251,7 @@
 					</el-form-item>
 					<el-form-item
             label="教程图片:"
-            prop="pictureUrl"
+            prop="tutorPicture"
             :rules="[
               { required: true, message: '教程图片不能为空', trigger: 'change' },
             ]"
@@ -258,7 +260,7 @@
 							ref="imgUpload"
 							:upload-file-type="'image'"
 							:platform="'PC'"
-							:img-urls="dialogForm.pictureUrl"
+							:img-urls="dialogForm.tutorPicture"
 							@upoladItemSucess="handleUploadSucess"
 							@startUpoladItem="handleStartUpload"
 							@deleteUpoladItem="handleDeleteUpload"
@@ -295,9 +297,13 @@ export default {
     this.lookGame = this.throttle(this.lookGame, 1000)
     this.deleteLabel = this.throttle(this.deleteLabel, 1000)
     this.subAddOrEidt = this.throttle(this.subAddOrEidt, 1000)
-    this.getProxyProxyInfoByLabelId = this.throttle(this.getProxyProxyInfoByLabelId, 1000)
     return {
-      queryData: {},
+      queryData: {
+        orderKey: undefined,
+        orderType: undefined,
+        tutorName: undefined,
+        tutorStatus: undefined
+      },
       tableData: [],
       dialogFormVisible: false,
       dialogForm: {},
@@ -316,10 +322,9 @@ export default {
   },
 	computed: {
 		entrAuthorityTypeArr() {
-			return this.globalDics.entrAuthorityType
+			return this.globalDics.entrAuthorityType || []
 		}
 	},
-  mounted() {},
   methods: {
     loadData() {
       this.loading = true
@@ -330,41 +335,67 @@ export default {
         ...this.getParams(params)
       }
       this.$api
-        .getProxyPageLabel(params)
+        .configTutorNameQueryTutorList(params)
         .then((res) => {
-          if (res.code === 200) {
-            this.tableData = res.data.record
-            this.total = res.data.totalRecord
-            this.loading = false
+          this.loading = false
+          const {
+            code,
+            data: { record, totalPage },
+            msg
+          } = res
+          if (code && code === 200) {
+            this.$set(this, 'tableData', record || [])
+            this.total = totalPage || 0
           } else {
-            this.loading = false
+            this.$message({
+              message: res && msg,
+              type: 'error'
+            })
           }
         })
         .catch(() => {
           this.loading = false
         })
     },
-    // 弹框标签添加人数
-    getProxyProxyInfoByLabelId(val) {
-      const params = {}
-      params.id = val
-      params.pageNum = this.page
-      params.pageSize = this.size
-      this.$api.getProxyProxyInfoByLabelId(params).then((res) => {
-        if (res.code === 200) {
-          this.gameList = res.data.record
-          this.dialogGameVisible = true
+    switchStatus(val) {
+            this.$confirm(
+        `<strong>是否修改该条配置状态?</strong>
+        </br><span style='font-size:12px;color:#c1c1c1'>请谨慎操作</span>`,
+        `确认提示`,
+        {
+          dangerouslyUseHTMLString: true,
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
         }
-      })
-    },
-    lookGame(val) {
-      this.labelName = val.memberLabelName
-      this.summary = val.peopleNum * 1
-      this.id = val.id
-      this.getProxyProxyInfoByLabelId(val.id)
-    },
-    addLabel() {
-
+      )
+        .then(() => {
+          let status = 0
+          if (val.tutorStatus === 0) {
+            status = 1
+          }
+          const params = {
+            id: val.id,
+            status: status
+          }
+          this.$api.configTutorNameUse(params).then((res) => {
+            this.loading = false
+            const {
+              code,
+              msg
+            } = res
+            if (code && code === 200) {
+              this.dialogGameVisible = true
+              this.loadData()
+            } else {
+              this.$message({
+                message: res && msg,
+                type: 'error'
+              })
+            }
+          })
+        })
+        .catch(() => {})
     },
     edit(val) {
       this.title = '新增'
@@ -388,39 +419,64 @@ export default {
         }
       )
         .then(() => {
-          this.$api.setProxyDeleteLabel({ id: val.id }).then((res) => {
-            if (res.code === 200) {
+          this.$api.configTutorNameDelete({ id: val.id }).then((res) => {
+            this.loading = false
+            const {
+              code,
+              msg
+            } = res
+            if (code && code === 200) {
               this.$message.success('删除成功')
               this.loadData()
+            } else {
+              this.$message({
+                message: res && msg,
+                type: 'error'
+              })
             }
           })
         })
-        .catch(() => {})
+        .catch(() => {
+          this.loading = false
+        })
     },
     subAddOrEidt() {
-      console.log(this.title)
-      const data = {}
-      data.description = this.dialogForm.description
-      data.memberLabelName = this.dialogForm.memberLabelName
       this.$refs.formSub.validate((valid) => {
         if (valid) {
           if (this.title === '新增') {
-            console.log('新增')
-
-            this.$api.getProxyAddLabel(data).then((res) => {
-              if (res.code === 200) {
+            this.$api.configTutorNameSave(this.dialogForm).then((res) => {
+              this.loading = false
+              const {
+                code,
+                msg
+              } = res
+              if (code && code === 200) {
                 this.$message.success('新增成功')
                 this.pageNum = 1
                 this.loadData()
+              } else {
+                this.$message({
+                  message: res && msg,
+                  type: 'error'
+                })
               }
               this.dialogFormVisible = false
             })
           } else {
-            data.id = this.dialogForm.id
-            this.$api.getProxyAddLabel(data).then((res) => {
-              if (res.code === 200) {
+            this.$api.configTutorNameSave(this.dialogForm).then((res) => {
+              this.loading = false
+              const {
+                code,
+                msg
+              } = res
+              if (code && code === 200) {
                 this.$message.success('修改成功')
                 this.loadData()
+              } else {
+                this.$message({
+                  message: res && msg,
+                  type: 'error'
+                })
               }
               this.dialogFormVisible = false
             })
@@ -451,11 +507,24 @@ export default {
     },
     subSortadd() {
       const clientType = this.clientType
-      this.$api.operatecCnfigBannerQuerySortedBannerArea({ clientType }).then((res) => {
-        if (res.code === 200) {
-          this.sortareaList = res.data
+      this.$api.configTutorNameQueryTypeList({ clientType }).then((res) => {
+        this.loading = false
+        const {
+          code,
+          data,
+          msg
+        } = res
+        if (code && code === 200) {
+          this.sortareaList = data
           this.subSort = true
+        } else {
+          this.$message({
+            message: res && msg,
+            type: 'error'
+          })
         }
+      }).catch(() => {
+        this.loading = false
       })
       this.subSort = false
     },
@@ -472,24 +541,33 @@ export default {
       const newArr = []
       for (let i = 0; i < arr.length; i++) {
         const ele = arr[i]
-        newArr.push(ele.code)
+        newArr.push(ele.id)
       }
-      console.log(this.sortareaList)
       const sortIds = newArr.join(',')
       const clientType = this.clientType
       this.$api
-        .setoperateConfigBannerSort({ sortIds: sortIds, clientType })
+        .configTutorNameSort({ sortIds: sortIds, clientType })
         .then((res) => {
-          if (res.code === 200) {
+          const {
+            code,
+            msg
+          } = res
+          if (code && code === 200) {
             this.$message({
               message: '操作成功！',
               type: 'success'
             })
             this.subSort = false
+            this.loadData()
+          } else {
+            this.$message({
+              message: res && msg,
+              type: 'error'
+            })
           }
+        }).catch(() => {
+          this.loading = false
         })
-
-      this.loadData()
     },
     clear() {
       this.$refs.formSub.resetFields()
@@ -498,14 +576,14 @@ export default {
 			this.$message.info('图片开始上传')
 		},
 		handleUploadSucess({ index, file, id }) {
-			this.dialogForm.pictureUrl = file.imgUrl
+			this.dialogForm.tutorPicture = file.imgUrl
 		},
 		handleUploadDefeat() {
-			this.dialogForm.pictureUrl = ''
+			this.dialogForm.tutorPicture = ''
 			this.$message.error('图片上传失败')
 		},
 		handleDeleteUpload() {
-			this.dialogForm.pictureUrl = ''
+			this.dialogForm.tutorPicture = ''
 			this.$message.warning('图片已被移除')
 		}
   }
