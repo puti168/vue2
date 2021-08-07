@@ -134,6 +134,14 @@ export function getMemberFundsRecordsArtificialAccountSubDownload(data) {
 	})
 }
 // 会员返水记录
+export function getMemberFundsRecordsRebateReport(data) {
+	return request({
+		url: '/memberFundsRecords/rebateReport',
+		method: 'post',
+		data
+	})
+}
+// 会员返水记录详情
 export function getMemberFundsRecordsRebateRecord(data) {
 	return request({
 		url: '/memberFundsRecords/rebateRecord',
@@ -192,6 +200,7 @@ export default {
 	getMemberFundsRecordsArtificialAccountAddDownload,
 	getMemberFundsRecordsArtificialAccountSub,
 	getMemberFundsRecordsArtificialAccountSubDownload,
+	getMemberFundsRecordsRebateReport,
 	getMemberFundsRecordsRebateRecord,
 	getMemberFundsRecordsRebateRecordDownload,
 	getMemberFundsRecordsDiscount,
