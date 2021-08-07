@@ -598,6 +598,16 @@ export function configTutorNameQueryTypeList(params) {
 		params
 	})
 }
+
+// 教程名称下拉框
+export function operateConfigTutorNameQueryTypeList(params) {
+	return request({
+		url: '/operate/configTutorName/queryTypeList',
+		method: 'get',
+		params
+	})
+}
+
 // 教程名称配置-删除
 export function configTutorNameDelete(data) {
 	return request({
@@ -614,6 +624,16 @@ export function configTutorNameSave(data) {
 		data
 	})
 }
+
+// 教程内容状态下拉框
+export function configTutorContentQuerySortedNames(data) {
+	return request({
+		url: '/configTutorContent/querySortedNames',
+		method: 'post',
+		data
+	})
+}
+
 // 教程名称配置-排序
 export function configTutorNameSort(data) {
 	return request({
@@ -622,6 +642,15 @@ export function configTutorNameSort(data) {
 		data
 	})
 }
+// 教程内容配置分页查询
+export function getConfigTutorContentQueryList(data) {
+	return request({
+		url: '/configTutorContent/queryList',
+		method: 'post',
+		data
+	})
+}
+
 // 教程名称配置-启用、禁用
 export function configTutorNameUse(data) {
 	return request({
@@ -630,6 +659,16 @@ export function configTutorNameUse(data) {
 		data
 	})
 }
+
+// 教程内容配置启用，禁用
+export function getConfigTutorContentUse(data) {
+	return request({
+		url: '/configTutorContent/use',
+		method: 'post',
+		data
+	})
+}
+
 // 教程页签配置-删除页签配置
 export function bookmarkDeleteBookmark(data) {
 	return request({
@@ -638,6 +677,15 @@ export function bookmarkDeleteBookmark(data) {
 		data
 	})
 }
+// 教程内容配置删除
+export function getConfigTutorContentDelete(data) {
+	return request({
+		url: '/configTutorContent/delete',
+		method: 'post',
+		data
+	})
+}
+
 // 教程页签配置-新增页签配置
 export function bookmarkInsertBookmark(data) {
 	return request({
@@ -646,10 +694,27 @@ export function bookmarkInsertBookmark(data) {
 		data
 	})
 }
+// 教程内容配置新增
+export function getConfigTutorContentInsert(data) {
+	return request({
+		url: '/configTutorContent/insert',
+		method: 'post',
+		data
+	})
+}
+
 // 教程页签配置-查询分页列表
 export function bookmarkQueryList(data) {
 	return request({
 		url: '/bookmark/queryList',
+		method: 'post',
+		data
+	})
+}
+// 教程内容配置修改
+export function getConfigTutorContentUpdate(data) {
+	return request({
+		url: '/configTutorContent/update',
 		method: 'post',
 		data
 	})
@@ -662,6 +727,15 @@ export function bookmarkQuerySortedNames(data) {
 		data
 	})
 }
+// 教程内容配置排序
+export function getConfigTutorContentSort(data) {
+	return request({
+		url: '/configTutorContent/sort',
+		method: 'post',
+		data
+	})
+}
+
 // 教程页签配置-排序
 export function bookmarkSort(data) {
 	return request({
@@ -682,6 +756,30 @@ export function updateBookmark(data) {
 export function bookmarkUse(data) {
 	return request({
 		url: '/bookmark/use',
+		method: 'post',
+		data
+	})
+}
+// 教程变更记录==>变更目录下拉框
+export function getOperateObConfigTutorRecordQueryTutorEnums(params) {
+	return request({
+		url: '/operate/obConfigTutorRecord/queryTutorEnums',
+		method: 'get',
+		params
+	})
+}
+// 教程变更记录==>变更类型下拉框
+export function getOperateObConfigTutorRecordQueryAllEnums(params) {
+	return request({
+		url: '/operate/obConfigTutorRecord/queryAllEnums',
+		method: 'get',
+		params
+	})
+}
+// 教程变更记录分页查询
+export function getOperateObConfigTutorRecordSelect(data) {
+	return request({
+		url: '/operate/obConfigTutorRecord/select',
 		method: 'post',
 		data
 	})
@@ -770,5 +868,16 @@ export default {
 	bookmarkQuerySortedNames,
 	bookmarkSort,
 	updateBookmark,
-	bookmarkUse
+	bookmarkUse,
+	operateConfigTutorNameQueryTypeList,
+	configTutorContentQuerySortedNames,
+	getConfigTutorContentQueryList,
+	getConfigTutorContentUse,
+	getConfigTutorContentDelete,
+	getConfigTutorContentInsert,
+	getConfigTutorContentUpdate,
+	getConfigTutorContentSort,
+	getOperateObConfigTutorRecordQueryTutorEnums,
+	getOperateObConfigTutorRecordQueryAllEnums,
+	getOperateObConfigTutorRecordSelect
 }
