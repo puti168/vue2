@@ -444,7 +444,6 @@ export default {
 		},
 		searchInfo(type) {
 			const { windControlType } = this.queryData
-			// console.log('this.queryData', this.queryData)
 			switch (type) {
 				case 'userName': {
 					const { userName } = this.queryData
