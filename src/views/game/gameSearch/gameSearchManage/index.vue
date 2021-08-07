@@ -6,6 +6,7 @@
 				<span>
 					<el-button
 						v-if="hasPermission('1020411')"
+						:disabled="loading"
 						type="success"
 						@click="save"
 					>
@@ -113,7 +114,12 @@
 							width="180px"
 							sortable="custom"
 						></el-table-column>
-						<el-table-column prop="updatedBy" align="center" label="最新操作人" width="120">
+						<el-table-column
+							prop="updatedBy"
+							align="center"
+							label="最新操作人"
+							width="120"
+						>
 							<template slot-scope="scope">
 								<span v-if="!!scope.row.updatedBy">
 									{{ scope.row.updatedBy }}
@@ -215,12 +221,12 @@ export default {
 						code,
 						data: { obSearchConfigList, configlist },
 						msg
-					} = res
-					if (code === 200) {
+					} = res || {}
+					if (code && code === 200) {
 						this.loading = false
-						this.cloneArr = JSON.parse(JSON.stringify(obSearchConfigList))
-						this.dataList = obSearchConfigList || []
-						// this.searchList = configlist || []
+						this.dataList = Array.isArray(obSearchConfigList)
+							? obSearchConfigList
+							: []
 						configlist &&
 							configlist.length &&
 							configlist.forEach((item) => {
@@ -232,13 +238,12 @@ export default {
 								}
 							})
 						this.idArray =
-							obSearchConfigList &&
-							obSearchConfigList.length &&
+							Array.isArray(obSearchConfigList) &&
 							obSearchConfigList.map((item) => item.id)
 					} else {
 						this.loading = false
 						this.$message({
-							message: msg,
+							message: msg || 'error',
 							type: 'error'
 						})
 					}
@@ -256,7 +261,7 @@ export default {
 			return dayjs(cellValue).format('YY-MM-DD HH:mm')
 		},
 		save() {
-			// this.loading = true
+			this.loading = true
 			// const diff = this.dataList.filter(
 			// 	(key) => this.updateArr.indexOf(key.searchInfo) !== -1
 			// )
@@ -276,7 +281,6 @@ export default {
 			// 		})
 			// 	}
 			// })
-
 			// console.log('this.dataList', this.dataList)
 			const createObSearchConfigReqList =
 				this.dataList.map((item) => {
@@ -296,8 +300,8 @@ export default {
 				.gameSearchUpdateAPI(params)
 				.then((res) => {
 					this.loading = false
-					const { code, msg } = res
-					if (code === 200) {
+					const { code, msg } = res || {}
+					if (code && code === 200) {
 						this.$message({
 							message: '保存成功',
 							type: 'success'
@@ -305,7 +309,7 @@ export default {
 						this.reset()
 					} else {
 						this.$message({
-							message: msg,
+							message: msg || 'error',
 							type: 'error'
 						})
 					}
@@ -357,43 +361,39 @@ export default {
 				confirmButtonText: '确定',
 				cancelButtonText: '取消',
 				type: 'warning'
-			})
-				.then(() => {
-					if (this.idArray.includes(id)) {
-						this.$api
-							.gameSearchDeleteAPI({ id })
-							.then((res) => {
-								// loading.close()
-								const { code } = res
-								if (code === 200) {
-									this.$message({
-										type: 'success',
-										message: '删除成功!'
-									})
-								} else {
-									this.$message({
-										type: 'error',
-										message: '删除失败!'
-									})
-								}
-								this.loadData()
-							})
-							.catch(() => {
-								// loading.close()
+			}).then(() => {
+				if (this.idArray.includes(id)) {
+					this.$api
+						.gameSearchDeleteAPI({ id })
+						.then((res) => {
+							if (res && res.code === 200) {
+								this.$message({
+									type: 'success',
+									message: '删除成功!'
+								})
+							} else {
 								this.$message({
 									type: 'error',
 									message: '删除失败!'
 								})
-							})
-					} else {
-						this.dataList = this.dataList.filter((item) => {
-							return item.id !== id
+							}
+							this.loadData()
 						})
-						// this.updateArr = this.updateArr.filter((item) => {
-						// 	return item.id !== id
-						// })
-					}
-				})
+						.catch(() => {
+							this.$message({
+								type: 'error',
+								message: '删除失败!'
+							})
+						})
+				} else {
+					this.dataList = this.dataList.filter((item) => {
+						return item.id !== id
+					})
+					// this.updateArr = this.updateArr.filter((item) => {
+					// 	return item.id !== id
+					// })
+				}
+			})
 		},
 
 		// 列拖动
