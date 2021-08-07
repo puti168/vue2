@@ -574,6 +574,78 @@ export function proxyOperate(data) {
 		data
 	})
 }
+// 教程名称下拉框
+export function operateConfigTutorNameQueryTypeList(params) {
+	return request({
+		url: '/operate/configTutorName/queryTypeList',
+		method: 'get',
+		params
+	})
+}
+// 教程页签下拉框
+export function bookmarkQuerySortedNames(data) {
+	return request({
+		url: '/bookmark/querySortedNames',
+		method: 'post',
+		data
+	})
+}
+// 教程内容状态下拉框
+export function configTutorContentQuerySortedNames(data) {
+	return request({
+		url: '/configTutorContent/querySortedNames',
+		method: 'post',
+		data
+	})
+}
+// 教程内容配置分页查询
+export function getConfigTutorContentQueryList(data) {
+	return request({
+		url: '/configTutorContent/queryList',
+		method: 'post',
+		data
+	})
+}
+// 教程内容配置启用，禁用
+export function getConfigTutorContentUse(data) {
+	return request({
+		url: '/configTutorContent/use',
+		method: 'post',
+		data
+	})
+}
+// 教程内容配置删除
+export function getConfigTutorContentDelete(data) {
+	return request({
+		url: '/configTutorContent/delete',
+		method: 'post',
+		data
+	})
+}
+// 教程内容配置新增
+export function getConfigTutorContentInsert(data) {
+	return request({
+		url: '/configTutorContent/insert',
+		method: 'post',
+		data
+	})
+}
+// 教程内容配置修改
+export function getConfigTutorContentUpdate(data) {
+	return request({
+		url: '/configTutorContent/update',
+		method: 'post',
+		data
+	})
+}
+// 教程内容配置排序
+export function getConfigTutorContentSort(data) {
+	return request({
+		url: '/configTutorContent/sort',
+		method: 'post',
+		data
+	})
+}
 export default {
 	queryDiscountTagList,
 	queryVipActivityList,
@@ -644,6 +716,14 @@ export default {
 	setoperateConfigDiscountTagSort,
 	operatecCnfigBannerQuerySortedBannerArea,
 	operateConfigDiscountTagQuerySortedNames,
-	proxyOperate
-
+	proxyOperate,
+	operateConfigTutorNameQueryTypeList,
+	bookmarkQuerySortedNames,
+	configTutorContentQuerySortedNames,
+	getConfigTutorContentQueryList,
+	getConfigTutorContentUse,
+	getConfigTutorContentDelete,
+	getConfigTutorContentInsert,
+	getConfigTutorContentUpdate,
+	getConfigTutorContentSort
 }

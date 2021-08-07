@@ -10,12 +10,13 @@
 							placeholder="默认选择全部"
 							clearable
 							style="width: 300px"
+							@change="getMerchantDict($event)"
 						>
 							<el-option
-								v-for="item in entrAuthorityTypeArr"
+								v-for="item in tutorNameList"
 								:key="item.code"
-								:label="item.description"
-								:value="item.code"
+								:label="item.tutorName"
+								:value="item.id"
 							></el-option>
 						</el-select>
 					</el-form-item>
@@ -26,12 +27,13 @@
 							placeholder="默认选择全部"
 							clearable
 							style="width: 300px"
+							@change="changeSelect($event)"
 						>
 							<el-option
-								v-for="item in entrAuthorityTypeArr"
+								v-for="item in bookmarkQueryList"
 								:key="item.code"
-								:label="item.description"
-								:value="item.code"
+								:label="item.bookmarkName"
+								:value="item.id"
 							></el-option>
 						</el-select>
 					</el-form-item>
@@ -44,7 +46,7 @@
 							style="width: 300px"
 						>
 							<el-option
-								v-for="item in entrAuthorityTypeArr"
+								v-for="item in configTutorList"
 								:key="item.code"
 								:label="item.description"
 								:value="item.code"
@@ -78,7 +80,7 @@
 							type="primary"
 							:disabled="loading"
 							size="medium"
-							@click="edit"
+							@click="addLabel('新增')"
 						>
 							新增内容
 						</el-button>
@@ -99,10 +101,10 @@
 					width="970px"
 					:destroy-on-close="true"
 				>
-					<draggable v-model="sortareaList" @start="onStart" @end="onEnd">
+					<draggable v-model="configTutorList" @start="onStart" @end="onEnd">
 						<transition-group>
-							<div v-for="tiem in sortareaList" :key="tiem.value" class="reach">
-								{{ tiem.value }}
+							<div v-for="item in configTutorList" :key="item.id" class="reach">
+								{{ item.contentName }}
 							</div>
 						</transition-group>
 					</draggable>
@@ -126,28 +128,25 @@
 					@sort-change="_changeTableSort"
 				>
 					<el-table-column
-						prop="memberLabelName"
+						prop="tutorId"
 						align="center"
 						label="教程名称"
 					></el-table-column>
 					<el-table-column
-						prop="memberLabelName"
+						prop="bookmarkId"
 						align="center"
 						label="页签名称"
 					></el-table-column>
 					<el-table-column
-						prop="memberLabelName"
+						prop="contentName"
 						align="center"
 						label="内容名称"
 					></el-table-column>
-					<el-table-column prop="description" align="center" label="创建人">
-						<template slot-scope="scope">
-							<span v-if="scope.row.description !== ''">
-								{{ scope.row.description }}
-							</span>
-							<span v-else>-</span>
-						</template>
-					</el-table-column>
+					<el-table-column
+						prop="createdBy"
+						align="center"
+						label="创建人"
+					></el-table-column>
 					<el-table-column
 						prop="createdAt"
 						align="center"
@@ -165,42 +164,50 @@
 						label="最近操作时间"
 						sortable="custom"
 					></el-table-column>
-					<el-table-column prop="updatedAt" align="center" label="内容状态">
+					<el-table-column prop="contentStatus" align="center" label="内容状态">
 						<template slot-scope="scope">
-							<span v-if="scope.row.status + '' === '0'" class="disableRgba">
-								{{ typeFilter(scope.row.status, 'operateStatus') }}
+							<span
+								v-if="scope.row.contentStatus + '' === '0'"
+								class="disableRgba"
+							>
+								{{ typeFilter(scope.row.contentStatus, 'operateStatus') }}
 							</span>
-							<span v-else-if="!!scope.row.status" class="normalRgba">
-								{{ typeFilter(scope.row.status, 'operateStatus') }}
+							<span v-else-if="!!scope.row.contentStatus" class="normalRgba">
+								{{ typeFilter(scope.row.contentStatus, 'operateStatus') }}
 							</span>
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="operating" align="center" label="操作">
+					<el-table-column
+						prop="operating"
+						align="center"
+						label="操作"
+						width="270px"
+					>
 						<template slot-scope="scope">
 							<el-button
-								v-if="hasPermission('295')"
+								v-if="hasPermission('295') && scope.row.status === 0"
 								type="success"
 								size="medium"
-								@click="edit(scope.row)"
+								@click="changeStatus(scope.row)"
 							>
 								开启
 							</el-button>
 
 							<el-button
-								v-if="hasPermission('296')"
+								v-if="hasPermission('296') && scope.row.status !== 0"
 								type="danger"
 								size="medium"
-								@click="deleteLabel(scope.row)"
+								@click="changeStatus(scope.row)"
 							>
-								禁止
+								禁用
 							</el-button>
 							<el-button
 								v-if="hasPermission('295')"
 								type="primary"
 								icon="el-icon-edit"
 								size="medium"
-								@click="edit(scope.row)"
+								@click="openEdit(scope.row)"
 							>
 								编辑信息
 							</el-button>
@@ -244,47 +251,48 @@
 						:model="dialogForm"
 						label-width="220px"
 					>
-						<el-form-item label="教程名称:" prop="pageName">
+						<el-form-item label="教程名称:" prop="tutorId">
 							<el-select
-								v-model="dialogForm.status"
+								v-model="dialogForm.tutorId"
 								size="medium"
 								placeholder="默认选择全部"
 								clearable
 								style="width: 500px"
+								@change="getMerchantDict($event)"
 							>
 								<el-option
-									v-for="item in entrAuthorityTypeArr"
+									v-for="item in tutorNameList"
 									:key="item.code"
-									:label="item.description"
-									:value="item.code"
+									:label="item.tutorName"
+									:value="item.id"
 								></el-option>
 							</el-select>
 						</el-form-item>
-						<el-form-item label="教程名称:" prop="pageName">
+						<el-form-item label="页签名称:" prop="bookmarkId">
 							<el-select
-								v-model="dialogForm.status"
+								v-model="dialogForm.bookmarkId"
 								size="medium"
 								placeholder="默认选择全部"
 								clearable
 								style="width: 500px"
 							>
 								<el-option
-									v-for="item in entrAuthorityTypeArr"
+									v-for="item in bookmarkQueryList"
 									:key="item.code"
-									:label="item.description"
-									:value="item.code"
+									:label="item.bookmarkName"
+									:value="item.id"
 								></el-option>
 							</el-select>
 						</el-form-item>
 						<el-form-item
 							label="内容名称:"
-							prop="clientType"
+							prop="contentName"
 							:rules="[
 								{ required: true, message: '内容名称不能为空', trigger: 'blur' }
 							]"
 						>
 							<el-input
-								v-model="dialogForm.pagede"
+								v-model="dialogForm.contentName"
 								:maxlength="20"
 								show-word-limit
 								autocomplete="off"
@@ -294,13 +302,13 @@
 						</el-form-item>
 						<el-form-item
 							label="描述:"
-							prop="clientType"
+							prop="contentDesc"
 							:rules="[
 								{ required: true, message: '描述不能为空', trigger: 'blur' }
 							]"
 						>
 							<el-input
-								v-model="dialogForm.pagede"
+								v-model="dialogForm.contentDesc"
 								type="textarea"
 								:maxlength="100"
 								autocomplete="off"
@@ -311,7 +319,7 @@
 						</el-form-item>
 						<el-form-item
 							label="教程图片:"
-							prop="pictureUrl"
+							prop="contentPicture"
 							:rules="[
 								{
 									required: true,
@@ -324,7 +332,7 @@
 								ref="imgUpload"
 								:upload-file-type="'image'"
 								:platform="'PC'"
-								:img-urls="dialogForm.pictureUrl"
+								:img-urls="dialogForm.contentPicture"
 								@upoladItemSucess="handleUploadSucess"
 								@startUpoladItem="handleStartUpload"
 								@deleteUpoladItem="handleDeleteUpload"
@@ -370,6 +378,9 @@ export default {
 		)
 		return {
 			queryData: {},
+			tutorNameList: [],
+			bookmarkQueryList: [],
+			configTutorList: [],
 			tableData: [],
 			dialogFormVisible: false,
 			dialogForm: {},
@@ -391,16 +402,52 @@ export default {
 			return this.globalDics.entrAuthorityType
 		},
 		rules() {
-			const pageName = [
-				{ required: true, message: '请输入启动页名称', trigger: 'blur' }
+			const tutorId = [
+				{ required: true, message: '请输入教程名称', trigger: 'blur' }
+			]
+			const bookmarkId = [
+				{ required: true, message: '请输入页签名称', trigger: 'blur' }
 			]
 			return {
-				pageName
+				tutorId,
+				bookmarkId
 			}
 		}
 	},
+	created() {
+		this.getTutorNameList()
+	},
 	mounted() {},
 	methods: {
+		getMerchantDict(val) {
+			console.log(val, 'val')
+			const id = val
+			this.$api.bookmarkQuerySortedNames({ id }).then((res) => {
+				console.log(res, 'res2')
+				if (res.code === 200) {
+					this.bookmarkQueryList = res.data
+				}
+			})
+		},
+		changeSelect(val) {
+			console.log(val, 'val')
+			this.queryData.type = ''
+			const { id } = val || 0
+			this.$api.configTutorContentQuerySortedNames({ id }).then((res) => {
+				const { code } = res
+				if (res && code === 200) {
+					this.configTutorList = res.data || []
+				}
+			})
+		},
+		getTutorNameList() {
+			this.$api.operateConfigTutorNameQueryTypeList().then((res) => {
+				console.log(res, 'res')
+				if (res.code === 200) {
+					this.tutorNameList = res.data
+				}
+			})
+		},
 		loadData() {
 			this.loading = true
 			let params = {
@@ -410,14 +457,24 @@ export default {
 				...this.getParams(params)
 			}
 			this.$api
-				.getProxyPageLabel(params)
+				.getConfigTutorContentQueryList(params)
 				.then((res) => {
-					if (res.code === 200) {
-						this.tableData = res.data.record
-						this.total = res.data.totalRecord
+					this.loading = false
+					const {
+						code,
+						data: { records, total },
+						msg
+					} = res
+					if (res && code && res.code === 200) {
+						this.tableData =
+							(res.data && records.length && Object.freeze(records)) || []
+						this.total = (res.data && total) || 0
 						this.loading = false
 					} else {
-						this.loading = false
+						this.$message({
+							message: res && msg,
+							type: 'error'
+						})
 					}
 				})
 				.catch(() => {
@@ -437,20 +494,50 @@ export default {
 				}
 			})
 		},
+		changeStatus(val) {
+			const status = val.contentStatus === 0 ? 1 : 0
+			this.$confirm(
+				`<strong>是否对该配置进行${
+					val.contentStatus === 0 ? '启用' : '禁用'
+				}操作?</strong></br><span style='font-size:12px;color:#c1c1c1'>一旦操作将会立即生效</span>`,
+				`确认提示`,
+				{
+					dangerouslyUseHTMLString: true,
+					confirmButtonText: '确定',
+					cancelButtonText: '取消',
+					type: 'warning'
+				}
+			)
+				.then(() => {
+					this.$api
+						.getConfigTutorContentUse({ id: val.id, status: status })
+						.then((res) => {
+							if (res.code === 200) {
+								this.loadData()
+							}
+						})
+				})
+				.catch(() => {})
+		},
 		lookGame(val) {
 			this.labelName = val.memberLabelName
 			this.summary = val.peopleNum * 1
 			this.id = val.id
 			this.getProxyProxyInfoByLabelId(val.id)
 		},
-		addLabel() {},
-		edit(val) {
+		addLabel() {
 			this.title = '新增'
 			this.dialogForm = {}
-			if (val) {
+			this.dialogFormVisible = true
+		},
+		openEdit(row) {
+			this.title = '新增'
+			this.dialogForm = {}
+			if (row) {
 				this.title = '编辑'
-				this.dialogForm = { ...val }
+				this.dialogForm = { ...row }
 			}
+			console.log(this.dialogForm, 'this.dialogForm')
 			this.dialogFormVisible = true
 		},
 		deleteLabel(val) {
@@ -466,7 +553,7 @@ export default {
 				}
 			)
 				.then(() => {
-					this.$api.setProxyDeleteLabel({ id: val.id }).then((res) => {
+					this.$api.getConfigTutorContentDelete({ id: val.id }).then((res) => {
 						if (res.code === 200) {
 							this.$message.success('删除成功')
 							this.loadData()
@@ -484,8 +571,8 @@ export default {
 				if (valid) {
 					if (this.title === '新增') {
 						console.log('新增')
-
-						this.$api.getProxyAddLabel(data).then((res) => {
+						const params = { ...this.dialogForm }
+						this.$api.getConfigTutorContentInsert(params).then((res) => {
 							if (res.code === 200) {
 								this.$message.success('新增成功')
 								this.pageNum = 1
@@ -494,8 +581,8 @@ export default {
 							this.dialogFormVisible = false
 						})
 					} else {
-						data.id = this.dialogForm.id
-						this.$api.getProxyAddLabel(data).then((res) => {
+						const params = { ...this.dialogForm }
+						this.$api.getConfigTutorContentUpdate(params).then((res) => {
 							if (res.code === 200) {
 								this.$message.success('修改成功')
 								this.loadData()
@@ -508,10 +595,10 @@ export default {
 		},
 		_changeTableSort({ column, prop, order }) {
 			if (prop === 'createdAt') {
-				prop = 1
+				prop = 0
 			}
 			if (prop === 'updatedAt') {
-				prop = 2
+				prop = 1
 			}
 			this.pageNum = 1
 			this.queryData.orderKey = prop
@@ -528,15 +615,14 @@ export default {
 			this.loadData()
 		},
 		subSortadd() {
-			const clientType = this.clientType
-			this.$api
-				.operatecCnfigBannerQuerySortedBannerArea({ clientType })
-				.then((res) => {
-					if (res.code === 200) {
-						this.sortareaList = res.data
-						this.subSort = true
-					}
-				})
+			const sortIds = this.sortIds
+			this.$api.configTutorContentQuerySortedNames({ sortIds }).then((res) => {
+				if (res.code === 200) {
+					this.configTutorList = res.data
+					console.log(this.configTutorList, 'this.configTutorList112')
+					this.subSort = true
+				}
+			})
 			this.subSort = false
 		},
 		// 开始拖拽事件
@@ -548,26 +634,25 @@ export default {
 			this.drag = false
 		},
 		setoperateConfigBannerSort() {
-			const arr = this.sortareaList
+			const arr = this.configTutorList
+
 			const newArr = []
 			for (let i = 0; i < arr.length; i++) {
 				const ele = arr[i]
-				newArr.push(ele.code)
+				console.log(ele, '66')
+				newArr.push(ele.id)
 			}
-			console.log(this.sortareaList)
+			console.log(this.configTutorList)
 			const sortIds = newArr.join(',')
-			const clientType = this.clientType
-			this.$api
-				.setoperateConfigBannerSort({ sortIds: sortIds, clientType })
-				.then((res) => {
-					if (res.code === 200) {
-						this.$message({
-							message: '操作成功！',
-							type: 'success'
-						})
-						this.subSort = false
-					}
-				})
+			this.$api.getConfigTutorContentSort({ sortIds: sortIds }).then((res) => {
+				if (res.code === 200) {
+					this.$message({
+						message: '操作成功！',
+						type: 'success'
+					})
+					this.subSort = false
+				}
+			})
 
 			this.loadData()
 		},
@@ -578,14 +663,14 @@ export default {
 			this.$message.info('图片开始上传')
 		},
 		handleUploadSucess({ index, file, id }) {
-			this.dialogForm.pictureUrl = file.imgUrl
+			this.dialogForm.contentPicture = file.imgUrl
 		},
 		handleUploadDefeat() {
-			this.dialogForm.pictureUrl = ''
+			this.dialogForm.contentPicture = ''
 			this.$message.error('图片上传失败')
 		},
 		handleDeleteUpload() {
-			this.dialogForm.pictureUrl = ''
+			this.dialogForm.contentPicture = ''
 			this.$message.warning('图片已被移除')
 		}
 	}
@@ -636,12 +721,14 @@ export default {
 }
 .reach {
 	padding: 6px;
+	color: rgb(245, 235, 235);
+	font-size: 15px;
 	background-color: #1abc9c;
 	border: solid 1px #eee;
 	margin-bottom: 10px;
 	cursor: move;
 	line-height: 20px;
-	width: 110px;
+	width: 130px;
 	display: inline-block;
 	text-align: center;
 }
