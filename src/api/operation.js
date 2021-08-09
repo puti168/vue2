@@ -574,6 +574,216 @@ export function proxyOperate(data) {
 		data
 	})
 }
+// 教程名称配置-查询详情
+export function configTutorNameQueryDetail(data) {
+	return request({
+		url: '/operate/configTutorName/queryDetail',
+		method: 'post',
+		data
+	})
+}
+// 教程名称配置-查询所有教程名称
+export function configTutorNameQueryTutorList(data) {
+	return request({
+		url: '/operate/configTutorName/queryTutorList',
+		method: 'post',
+		data
+	})
+}
+// 教程名称配置-查询排序后类型
+export function configTutorNameQueryTypeList(params) {
+	return request({
+		url: '/operate/configTutorName/queryTypeList',
+		method: 'get',
+		params
+	})
+}
+
+// 教程名称下拉框
+export function operateConfigTutorNameQueryTypeList(params) {
+	return request({
+		url: '/operate/configTutorName/queryTypeList',
+		method: 'get',
+		params
+	})
+}
+
+// 教程名称配置-删除
+export function configTutorNameDelete(data) {
+	return request({
+		url: '/operate/configTutorName/delete',
+		method: 'post',
+		data
+	})
+}
+// 教程名称配置-保存
+export function configTutorNameSave(data) {
+	return request({
+		url: '/operate/configTutorName/save',
+		method: 'post',
+		data
+	})
+}
+
+// 教程内容状态下拉框
+export function configTutorContentQuerySortedNames(data) {
+	return request({
+		url: '/configTutorContent/querySortedNames',
+		method: 'post',
+		data
+	})
+}
+
+// 教程名称配置-排序
+export function configTutorNameSort(data) {
+	return request({
+		url: '/operate/configTutorName/sort',
+		method: 'post',
+		data
+	})
+}
+// 教程内容配置分页查询
+export function getConfigTutorContentQueryList(data) {
+	return request({
+		url: '/configTutorContent/queryList',
+		method: 'post',
+		data
+	})
+}
+
+// 教程名称配置-启用、禁用
+export function configTutorNameUse(data) {
+	return request({
+		url: '/operate/configTutorName/use',
+		method: 'post',
+		data
+	})
+}
+
+// 教程内容配置启用，禁用
+export function getConfigTutorContentUse(data) {
+	return request({
+		url: '/configTutorContent/use',
+		method: 'post',
+		data
+	})
+}
+
+// 教程页签配置-删除页签配置
+export function bookmarkDeleteBookmark(data) {
+	return request({
+		url: '/bookmark/deleteBookmark',
+		method: 'post',
+		data
+	})
+}
+// 教程内容配置删除
+export function getConfigTutorContentDelete(data) {
+	return request({
+		url: '/configTutorContent/delete',
+		method: 'post',
+		data
+	})
+}
+
+// 教程页签配置-新增页签配置
+export function bookmarkInsertBookmark(data) {
+	return request({
+		url: '/bookmark/insertBookmark',
+		method: 'post',
+		data
+	})
+}
+// 教程内容配置新增
+export function getConfigTutorContentInsert(data) {
+	return request({
+		url: '/configTutorContent/insert',
+		method: 'post',
+		data
+	})
+}
+
+// 教程页签配置-查询分页列表
+export function bookmarkQueryList(data) {
+	return request({
+		url: '/bookmark/queryList',
+		method: 'post',
+		data
+	})
+}
+// 教程内容配置修改
+export function getConfigTutorContentUpdate(data) {
+	return request({
+		url: '/configTutorContent/update',
+		method: 'post',
+		data
+	})
+}
+// 教程页签配置-获取已创建的页签+状态--排序展示
+export function bookmarkQuerySortedNames(data) {
+	return request({
+		url: '/bookmark/querySortedNames',
+		method: 'post',
+		data
+	})
+}
+// 教程内容配置排序
+export function getConfigTutorContentSort(data) {
+	return request({
+		url: '/configTutorContent/sort',
+		method: 'post',
+		data
+	})
+}
+
+// 教程页签配置-排序
+export function bookmarkSort(data) {
+	return request({
+		url: '/bookmark/sort',
+		method: 'post',
+		data
+	})
+}
+// 教程页签配置-页签配置修改
+export function updateBookmark(data) {
+	return request({
+		url: '/bookmark/updateBookmark',
+		method: 'post',
+		data
+	})
+}
+// 教程页签配置-启用、禁用
+export function bookmarkUse(data) {
+	return request({
+		url: '/bookmark/use',
+		method: 'post',
+		data
+	})
+}
+// 教程变更记录==>变更目录下拉框
+export function getOperateObConfigTutorRecordQueryTutorEnums(params) {
+	return request({
+		url: '/operate/obConfigTutorRecord/queryTutorEnums',
+		method: 'get',
+		params
+	})
+}
+// 教程变更记录==>变更类型下拉框
+export function getOperateObConfigTutorRecordQueryAllEnums(params) {
+	return request({
+		url: '/operate/obConfigTutorRecord/queryAllEnums',
+		method: 'get',
+		params
+	})
+}
+// 教程变更记录分页查询
+export function getOperateObConfigTutorRecordSelect(data) {
+	return request({
+		url: '/operate/obConfigTutorRecord/select',
+		method: 'post',
+		data
+	})
+}
 export default {
 	queryDiscountTagList,
 	queryVipActivityList,
@@ -644,6 +854,30 @@ export default {
 	setoperateConfigDiscountTagSort,
 	operatecCnfigBannerQuerySortedBannerArea,
 	operateConfigDiscountTagQuerySortedNames,
-	proxyOperate
-
+	proxyOperate,
+	configTutorNameQueryDetail,
+	configTutorNameQueryTutorList,
+	configTutorNameQueryTypeList,
+	configTutorNameDelete,
+	configTutorNameSave,
+	configTutorNameSort,
+	configTutorNameUse,
+	bookmarkDeleteBookmark,
+	bookmarkInsertBookmark,
+	bookmarkQueryList,
+	bookmarkQuerySortedNames,
+	bookmarkSort,
+	updateBookmark,
+	bookmarkUse,
+	operateConfigTutorNameQueryTypeList,
+	configTutorContentQuerySortedNames,
+	getConfigTutorContentQueryList,
+	getConfigTutorContentUse,
+	getConfigTutorContentDelete,
+	getConfigTutorContentInsert,
+	getConfigTutorContentUpdate,
+	getConfigTutorContentSort,
+	getOperateObConfigTutorRecordQueryTutorEnums,
+	getOperateObConfigTutorRecordQueryAllEnums,
+	getOperateObConfigTutorRecordSelect
 }
