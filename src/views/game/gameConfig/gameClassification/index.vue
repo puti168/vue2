@@ -378,12 +378,13 @@
 
 <script>
 import list from '@/mixins/list'
-// import { UTable } from 'umy-ui'
 import { routerNames } from '@/utils/consts'
-import createPage from './components/createPage'
+
 export default {
 	name: routerNames.gameClassification,
-	components: { createPage },
+	components: {
+		createPage: () => import('./components/createPage')
+	},
 	mixins: [list],
 	data() {
 		this.loadData = this.throttle(this.loadData, 1000)
