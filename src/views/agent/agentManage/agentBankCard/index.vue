@@ -220,24 +220,24 @@
 						</template>
 					</el-table-column>
 					<el-table-column
-						prop="operateType"
+						prop="windControlLevelName"
 						align="center"
 						label="风控层级"
 						width="160"
 					>
 						<template slot-scope="scope">
-							<span>{{ scope.row.windControlName || '-' }}</span>
+							<span>{{ scope.row.windControlLevelName || '-' }}</span>
 						</template>
 					</el-table-column>
 					<el-table-column
-						prop="createDt"
+						prop="withdrawalTime"
 						align="center"
 						label="提款时间"
 						sortable="custom"
 						min-width="200"
 					>
 						<template slot-scope="scope">
-							<span>{{ scope.row.createDt || '-' }}</span>
+							<span>{{ scope.row.withdrawalTime || '-' }}</span>
 						</template>
 					</el-table-column>
 				</el-table>
