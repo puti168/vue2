@@ -320,7 +320,7 @@
 						sortable="custom"
 					>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.subNum || scope.row.subNum === 0">
+							<span v-if="scope.row.subNum || scope.row.subNum === 0">
 								{{ scope.row.subNum }}
 							</span>
 							<span v-else>-</span>
@@ -334,7 +334,7 @@
 						sortable="custom"
 					>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.validSubNum">
+							<span v-if="scope.row.validSubNum || scope.row.validSubNum === 0">
 								{{ scope.row.validSubNum }}
 							</span>
 							<span v-else>-</span>
@@ -347,10 +347,7 @@
 						width="100"
 					>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.windControlName">
-								{{ scope.row.windControlName }}
-							</span>
-							<span v-else>-</span>
+							<span>{{ scope.row.windControlName || '-' }}</span>
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -360,10 +357,7 @@
 						width="180"
 					>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.labelName">
-								{{ scope.row.labelName }}
-							</span>
-							<span v-else>-</span>
+							<span>{{ scope.row.labelName || '-' }}</span>
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -445,9 +439,7 @@
 						width="120"
 					>
 						<template slot-scope="scope">
-							<span
-								v-if="!!scope.row.totalRebate || scope.row.totalRebate === 0"
-							>
+							<span v-if="scope.row.totalRebate || scope.row.totalRebate === 0">
 								{{ scope.row.totalRebate }}
 							</span>
 							<span v-else>-</span>
@@ -494,9 +486,7 @@
 						sortable="custom"
 					>
 						<template slot-scope="scope">
-							<span
-								v-if="!!scope.row.offLineDays || scope.row.offLineDays === 0"
-							>
+							<span v-if="scope.row.offLineDays || scope.row.offLineDays === 0">
 								{{ scope.row.offLineDays }}
 							</span>
 							<span v-else>-</span>
