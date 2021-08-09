@@ -2,13 +2,8 @@
 	<div class="game-container report-container">
 		<div class="view-container dealer-container">
 			<div class="params">
-				<el-form
-					ref="form"
-					:inline="true"
-					:model="queryData"
-					label-width="80px"
-				>
-					<el-form-item label="操作时间:">
+				<el-form ref="form" :inline="true" :model="queryData">
+					<el-form-item label="变更时间:">
 						<el-date-picker
 							v-model="searchTime"
 							size="medium"
@@ -21,63 +16,50 @@
 							align="right"
 							:clearable="false"
 							:default-time="defaultTime"
+							style="width: 375px"
 						></el-date-picker>
 					</el-form-item>
-					<el-form-item label="代理账号:">
-						<el-input
-							v-model="queryData.userName"
-							clearable
-							:maxlength="11"
-							size="medium"
-							style="width: 280px"
-							placeholder="请输入"
-							:disabled="loading"
-							@keyup.enter.native="enterSearch"
-						></el-input>
-					</el-form-item>
-					<el-form-item label="代理类型:" class="tagheight" prop="accountType">
+					<el-form-item label="变更目录:" class="tagheight" prop="gameName">
 						<el-select
-							v-model="queryData.accountType"
+							v-model="queryData.contentType"
 							style="width: 280px"
-							multiple
 							clearable
 							collapse-tags
-							placeholder="默认选择全部"
+							placeholder="全部"
 							:popper-append-to-body="false"
 						>
 							<el-option
-								v-for="item in accountType"
-								:key="item.code"
-								:label="item.description"
+								v-for="item in tutorRecordList"
+								:key="item.id"
+								:label="item.value"
 								:value="item.code"
 							></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="变更类型:" class="tagheight">
+					<el-form-item label="变更类型:" class="tagheight" prop="gameName">
 						<el-select
-							v-model="queryData.applyType"
+							v-model="queryData.changeType"
 							style="width: 280px"
-							multiple
 							clearable
 							collapse-tags
-							placeholder="默认选择全部"
+							placeholder="全部"
 							:popper-append-to-body="false"
 						>
 							<el-option
-								v-for="item in porxyApplyType"
-								:key="item.code"
-								:label="item.description"
+								v-for="item in tutorRecordEnumsList"
+								:key="item.id"
+								:label="item.value"
 								:value="item.code"
 							></el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item label="操作人:">
 						<el-input
-							v-model="queryData.applyName"
+							v-model="queryData.createdBy"
 							clearable
 							:maxlength="12"
 							size="medium"
-							style="width: 211px"
+							style="width: 280px"
 							placeholder="请输入"
 							:disabled="loading"
 							@keyup.enter.native="enterSearch"
@@ -104,6 +86,7 @@
 					</el-form-item>
 				</el-form>
 			</div>
+
 			<div class="content">
 				<el-table
 					v-loading="loading"
@@ -115,75 +98,41 @@
 					:header-cell-style="getRowClass"
 					@sort-change="_changeTableSort"
 				>
-					<el-table-column prop="userName" align="center" label="代理账号">
+					<el-table-column
+						prop="createdAt"
+						align="center"
+						label="变更时间"
+						sortable="custom"
+					></el-table-column>
+					<el-table-column prop="contentType" align="center" label="变更目录">
 						<template slot-scope="scope">
-							<Copy
-								v-if="!!scope.row.userName"
-								:title="scope.row.userName"
-								:copy="copy"
-							>
-								{{ scope.row.userName }}
-							</Copy>
-							<span v-else>-</span>
-						</template>
-					</el-table-column>
-					<el-table-column prop="applyType" align="center" label="代理类型">
-						<template slot-scope="scope">
-							{{ typeFilter(scope.row.accountType, 'accountType') }}
-						</template>
-					</el-table-column>
-					<el-table-column prop="updateDt" align="center" label="变更类型">
-						<template slot-scope="scope">
-							{{ typeFilter(scope.row.applyType, 'porxyApplyType') }}
-						</template>
-					</el-table-column>
-					<el-table-column prop="beforeModify" align="center" label="变更前">
-						<template slot-scope="scope">
-							<span v-if="scope.row.applyType === '1'">
-								{{ typeFilter(scope.row.beforeModify, 'accountStatusType') }}
-							</span>
-							<span v-else-if="scope.row.applyType === '5'">
-								{{ typeFilter(scope.row.beforeModify, 'entrAuthorityType') }}
-							</span>
-							<span v-else>
-								{{ scope.row.beforeModify || '-' }}
+							<span v-for="item in tutorRecordList" :key="item.id">
+								{{ scope.row.contentType === item.code ? item.value : '' }}
 							</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="afterModify" align="center" label="变更后">
+					<el-table-column prop="changeType" align="center" label="变更类型">
 						<template slot-scope="scope">
-							<span v-if="scope.row.applyType === '1'">
-								{{ typeFilter(scope.row.afterModify, 'accountStatusType') }}
+							<span v-for="item in tutorRecordEnumsList" :key="item.id">
+								{{ scope.row.changeType === item.code ? item.value : '' }}
 							</span>
-							<span v-else-if="scope.row.applyType === '5'">
-								{{ typeFilter(scope.row.afterModify, 'entrAuthorityType') }}
-							</span>
-							<span v-else>
-								{{ scope.row.afterModify || '-' }}
-							</span>
-						</template>
-					</el-table-column>
-					<el-table-column prop="applyName" align="center" label="操作人">
-						<template slot-scope="scope">
-							<span>{{ scope.row.applyName || '-' }}</span>
-						</template>
-					</el-table-column>
-					<el-table-column prop="applyInfo" align="center" label="备注">
-						<template slot-scope="scope">
-							<span>{{ scope.row.applyInfo || '-' }}</span>
 						</template>
 					</el-table-column>
 					<el-table-column
-						prop="applyTime"
+						prop="beforeValue"
 						align="center"
-						label="操作时间"
-						sortable="custom"
-						width="260"
-					>
-						<template slot-scope="scope">
-							<span>{{ scope.row.applyTime || '-' }}</span>
-						</template>
-					</el-table-column>
+						label="变更前"
+					></el-table-column>
+					<el-table-column
+						prop="afterValue"
+						align="center"
+						label="变更后"
+					></el-table-column>
+					<el-table-column
+						prop="createdBy"
+						align="center"
+						label="操作人"
+					></el-table-column>
 				</el-table>
 				<!-- 分页 -->
 				<el-pagination
@@ -214,16 +163,20 @@ const endTime = dayjs()
 	.valueOf()
 
 export default {
-	name: routerNames.gamePlatform,
+	name: routerNames.vipRebateRecord,
 	components: {},
 	mixins: [list],
 	data() {
 		this.loadData = this.throttle(this.loadData, 1000)
 		return {
 			queryData: {
-				accountType: [],
-				applyType: []
+				gameName: ''
 			},
+			VipGradeList: [],
+			tutorRecordList: [],
+			tutorRecordEnumsList: [],
+			gameId: [],
+
 			searchTime: [startTime, endTime],
 			now: dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
 			summary: {
@@ -236,32 +189,50 @@ export default {
 	},
 	computed: {
 		accountType() {
-			return this.globalDics.accountType || []
+			return this.globalDics.accountType
 		},
-		porxyApplyType() {
-			return this.globalDics.porxyApplyType || []
+		memberVipOperateType() {
+			return this.globalDics.memberVipOperateType
 		}
+	},
+	created() {
+		this.getTutorRecordList()
+		this.getTutorRecordEnumsList()
 	},
 	mounted() {},
 	methods: {
+		getTutorRecordList() {
+			this.$api.getOperateObConfigTutorRecordQueryTutorEnums().then((res) => {
+				if (res.code === 200) {
+					console.log(res, 'res121')
+					this.tutorRecordList = res.data.contentType
+				}
+			})
+		},
+		getTutorRecordEnumsList() {
+			this.$api.getOperateObConfigTutorRecordQueryAllEnums().then((res) => {
+				if (res.code === 200) {
+					console.log(res, 'res1223')
+					this.tutorRecordEnumsList = res.data.changeType
+				}
+			})
+		},
 		loadData() {
 			this.loading = true
 			const create = this.searchTime || []
 			const [startTime, endTime] = create
 			let params = {
 				...this.queryData,
-				applyTimeStart: startTime
+				startTime: startTime
 					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
 					: '',
-				applyTimeEnd: endTime
-					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
-					: ''
+				endTime: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
 			}
 			params = {
 				...this.getParams(params)
 			}
 			this.$api
-				.getProxyDataInfoChangeRecord(params)
+				.getOperateObConfigTutorRecordSelect(params)
 				.then((res) => {
 					if (res.code === 200) {
 						this.tableData = res.data.record
@@ -282,7 +253,7 @@ export default {
 			this.loadData()
 		},
 		_changeTableSort({ column, prop, order }) {
-			if (prop === 'applyTime') {
+			if (prop === 'updateAt') {
 				prop = 1
 			}
 			this.pageNum = 1
@@ -290,7 +261,7 @@ export default {
 			if (order === 'ascending') {
 				// 升序
 				this.queryData.orderType = 'asc'
-			} else if (order === 'descending') {
+			} else if (column.order === 'descending') {
 				// 降序
 				this.queryData.orderType = 'desc'
 			} else {
@@ -310,6 +281,24 @@ export default {
 /deep/.el-dialog__header {
 	text-align: center;
 	color: #909399;
+	font-weight: 700;
+}
+/deep/ .tagheight .el-tag {
+	height: 24px;
+	line-height: 24px;
+	min-width: 60px;
+}
+.msgList {
+	font-size: 14px;
+	display: flex;
+	p {
+		margin-right: 20px;
+		line-height: 24px;
+	}
+	&:last-child p {
+		margin-bottom: 15px;
+	}
+
 	font-weight: 700;
 }
 /deep/ .tagheight .el-tag {

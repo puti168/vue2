@@ -15,62 +15,82 @@
 			<div class="review-content">
 				<p class="name">代理注册信息</p>
 				<div class="review-flex">
-					<div>注册时间: {{ list.proxyRegistTime }}</div>
+					<div>注册时间: {{ list.proxyRegistTime || '-' }}</div>
 					<div>代理类型: {{ typeFilter(list.accountType, 'accountType') }}</div>
-					<div>上次登录时间: {{ list.proxyLastLoginTime }}</div>
+					<div>上次登录时间: {{ list.proxyLastLoginTime || '-' }}</div>
 					<div>注册端: {{ typeFilter(list.deviceType, 'deviceType') }}</div>
 				</div>
 			</div>
 			<div class="review-content">
 				<p class="name">代理账号信息</p>
 				<div class="review-flex">
-					<div>账号: {{ list.transferProxyName }}</div>
+					<div>账号: {{ list.transferProxyName || '-' }}</div>
 					<div>
 						账号状态:
 						{{ typeFilter(list.proxyAccountStatus, 'accountStatusType') }}
 					</div>
-					<div>风控层级: {{ list.proxyWindControlName }}</div>
-					<div>代理标签: {{ list.proxyLabelName }}</div>
+					<div>风控层级: {{ list.proxyWindControlName || '-' }}</div>
+					<div>代理标签: {{ list.proxyLabelName || '-' }}</div>
 				</div>
 				<div class="review-flex">
-					<div>备注信息: {{ list.proxyRemark }}</div>
+					<div>备注信息: {{ list.proxyRemark || '-' }}</div>
 				</div>
 			</div>
 			<div class="review-content">
 				<p class="name">溢出会员信息</p>
 				<div class="review-flex" style="margin-bottom: 20px">
-					<div>账号: {{ list.userName }}</div>
+					<div>账号: {{ list.userName || '-' }}</div>
 					<div>
 						账号状态:
 						{{ typeFilter(list.memberAccountStatus, 'accountStatusType') }}
 					</div>
-					<div>风控层级: {{ list.memberWindControlName }}</div>
-					<div>会员标签: {{ list.memberLabelName }}</div>
+					<div>风控层级: {{ list.memberWindControlName || '-' }}</div>
+					<div>会员标签: {{ list.memberLabelName || '-' }}</div>
 				</div>
 				<div class="review-flex">
-					<div>VIP等级: VIP{{ list.memberVipLevel }}</div>
-					<div>银行卡数量: {{ list.bankCardNum }}</div>
-					<div>虚拟账号数量: {{ list.virtureAccountNum }}</div>
-					<div>备注信息: {{ list.memberRemark }}</div>
+					<div>
+						VIP等级: VIP{{
+							list.memberVipLevel || list.memberVipLevel === 0
+								? list.memberVipLevel
+								: '-'
+						}}
+					</div>
+					<div>
+						银行卡数量:
+						{{
+							list.bankCardNum || list.bankCardNum === 0
+								? list.bankCardNum
+								: '-'
+						}}
+					</div>
+					<div>
+						虚拟账号数量:
+						{{
+							list.virtureAccountNum || list.virtureAccountNum === 0
+								? list.virtureAccountNum
+								: '-'
+						}}
+					</div>
+					<div>备注信息: {{ list.memberRemark || '-' }}</div>
 				</div>
 				<div class="review-flex">
-					<div>注册时间: {{ list.memberRegistTime }}</div>
-					<div>上次登录时间: {{ list.memberLastLoginTime }}</div>
+					<div>注册时间: {{ list.memberRegistTime || '-' }}</div>
+					<div>上次登录时间: {{ list.memberLastLoginTime || '-' }}</div>
 					<div>注册端: {{ typeFilter(list.deviceType, 'deviceType') }}</div>
 				</div>
 			</div>
 			<div class="review-content">
 				<p class="name">申请信息</p>
 				<div class="review-flex">
-					<div>溢出会员: {{ list.userName }}</div>
-					<div>上级代理: {{ list.applyProxyName }}</div>
-					<div>推广链接: {{ list.promotionLink }}</div>
+					<div>溢出会员: {{ list.userName || '-' }}</div>
+					<div>上级代理: {{ list.applyProxyName || '-' }}</div>
+					<div>推广链接: {{ list.promotionLink || '-' }}</div>
 				</div>
 				<div class="review-flex">
 					<div>
 						推广设备: {{ typeFilter(list.promotionDevice, 'terminalnType') }}
 					</div>
-					<div>申请理由: {{ list.applyInfo }}</div>
+					<div>申请理由: {{ list.applyInfo || '-' }}</div>
 				</div>
 				<div class="review-flex">
 					<div class="img-div">
@@ -88,9 +108,9 @@
 			<div class="review-content">
 				<p class="name">审核信息</p>
 				<div class="review-flex">
-					<div>一审人: {{ list.auditName }}</div>
-					<div>一审时间: {{ list.auditTime }}</div>
-					<div>一审备注: {{ list.auditRemark }}</div>
+					<div>一审人: {{ list.auditName || '-' }}</div>
+					<div>一审时间: {{ list.auditTime || '-' }}</div>
+					<div>一审备注: {{ list.auditRemark || '-' }}</div>
 				</div>
 			</div>
 		</div>

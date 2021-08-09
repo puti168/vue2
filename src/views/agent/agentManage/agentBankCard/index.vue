@@ -159,10 +159,9 @@
 						width="180"
 					>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.accountType">
+							<span>
 								{{ typeFilter(scope.row.accountType, 'accountType') }}
 							</span>
-							<span v-else>-</span>
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -192,10 +191,7 @@
 							银行支行
 						</template>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.bankName">
-								{{ scope.row.bankName }}
-							</span>
-							<span v-else>-</span>
+							<span>{{ scope.row.bankName || '-' }}</span>
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -220,37 +216,28 @@
 						width="230"
 					>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.bankAddress">
-								{{ scope.row.bankAddress }}
-							</span>
-							<span v-else>-</span>
+							<span>{{ scope.row.bankAddress || '-' }}</span>
 						</template>
 					</el-table-column>
 					<el-table-column
-						prop="operateType"
+						prop="windControlLevelName"
 						align="center"
 						label="风控层级"
 						width="160"
 					>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.windControlName">
-								{{ scope.row.windControlName }}
-							</span>
-							<span v-else>-</span>
+							<span>{{ scope.row.windControlLevelName || '-' }}</span>
 						</template>
 					</el-table-column>
 					<el-table-column
-						prop="createDt"
+						prop="withdrawalTime"
 						align="center"
 						label="提款时间"
 						sortable="custom"
 						min-width="200"
 					>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.createDt">
-								{{ scope.row.createDt }}
-							</span>
-							<span v-else>-</span>
+							<span>{{ scope.row.withdrawalTime || '-' }}</span>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -308,7 +295,7 @@ export default {
 	},
 	computed: {
 		accountTypeArr() {
-			return this.globalDics.accountType
+			return this.globalDics.accountType || []
 		}
 	},
 	created() {

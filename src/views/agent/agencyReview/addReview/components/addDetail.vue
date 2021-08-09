@@ -16,24 +16,24 @@
 				<p class="name">新增代理信息</p>
 				<div class="review-flex">
 					<div>代理类型: {{ typeFilter(list.accountType, 'accountType') }}</div>
-					<div>代理账号: {{ list.userName }}</div>
-					<div>登录密码: {{ list.password }}</div>
+					<div>代理账号: {{ list.userName || '-' }}</div>
+					<div>登录密码: {{ list.password || '-' }}</div>
 				</div>
 			</div>
 			<div class="review-content">
 				<p class="name">申请信息</p>
 				<div class="review-flex">
-					<div>申请人: {{ list.applyName }}</div>
-					<div>申请时间: {{ list.applyTime }}</div>
-					<div>申请信息: {{ list.applyInfo }}</div>
+					<div>申请人: {{ list.applyName || '-' }}</div>
+					<div>申请时间: {{ list.applyTime || '-' }}</div>
+					<div>申请信息: {{ list.applyInfo || '-' }}</div>
 				</div>
 			</div>
 			<div class="review-content">
 				<p class="name">审核信息</p>
 				<div class="review-flex">
-					<div>一审人: {{ list.auditName }}</div>
-					<div>一审时间: {{ list.auditTime }}</div>
-					<div>一审备注: {{ list.auditRemark }}</div>
+					<div>一审人: {{ list.auditName || '-' }}</div>
+					<div>一审时间: {{ list.auditTime || '-' }}</div>
+					<div>一审备注: {{ list.auditRemark || '-' }}</div>
 				</div>
 			</div>
 		</div>

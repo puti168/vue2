@@ -327,13 +327,13 @@
 
 <script>
 import list from '@/mixins/list'
-// import { routerNames } from '@/utils/consts'
-import gameHomeRecommendEdit from './editPage/index'
 import Sortable from 'sortablejs'
 
 export default {
 	name: 'GameHomeRecommend',
-	components: { gameHomeRecommendEdit },
+	components: {
+		gameHomeRecommendEdit: () => import('./editPage/index')
+	},
 	mixins: [list],
 	data() {
 		this._changeTableSort = this.throttle(this._changeTableSort, 1000)

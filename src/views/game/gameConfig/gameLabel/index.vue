@@ -309,9 +309,9 @@
 <script>
 import list from '@/mixins/list'
 import { routerNames } from '@/utils/consts'
+
 export default {
 	name: routerNames.gameLabel,
-	components: {},
 	mixins: [list],
 	data() {
 		this.loadData = this.throttle(this.loadData, 1000)

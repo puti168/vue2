@@ -217,7 +217,11 @@
 							align="center"
 							label="审核单号"
 							width="250"
-						></el-table-column>
+						>
+							<template slot-scope="scope">
+								<span>{{ scope.row.auditNum || '-' }}</span>
+							</template>
+						</el-table-column>
 						<el-table-column
 							prop="userName"
 							align="center"
@@ -253,20 +257,32 @@
 							align="center"
 							label="申请人"
 							width="150"
-						></el-table-column>
+						>
+							<template slot-scope="scope">
+								<span>{{ scope.row.applyName || '-' }}</span>
+							</template>
+						</el-table-column>
 						<el-table-column
 							prop="applyTime"
 							align="center"
 							sortable="custom"
 							label="申请时间"
 							width="200"
-						></el-table-column>
+						>
+							<template slot-scope="scope">
+								<span>{{ scope.row.applyTime || '-' }}</span>
+							</template>
+						</el-table-column>
 						<el-table-column
 							prop="applyInfo"
 							align="center"
 							label="申请信息"
 							width="180"
-						></el-table-column>
+						>
+							<template slot-scope="scope">
+								<span>{{ scope.row.applyInfo || '-' }}</span>
+							</template>
+						</el-table-column>
 						<el-table-column align="center" label="审核状态" width="150">
 							<template slot-scope="scope">
 								<span
@@ -292,8 +308,8 @@
 								</span>
 							</template>
 							<template slot-scope="scope">
-								{{ scope.row.auditName ? scope.row.auditName : '-' }}
-								<p>{{ scope.row.auditTime ? scope.row.auditTime : '-' }}</p>
+								{{ scope.row.auditName || '-' }}
+								<p>{{ scope.row.auditTime || '-' }}</p>
 							</template>
 						</el-table-column>
 					</el-table>
@@ -342,16 +358,16 @@ export default {
 		this.lockChange = this.throttle(this.lockChange, 1000)
 		return {
 			queryData: {
-				userName: '',
+				userName: undefined,
 				auditStatus: [],
-				auditStep: '',
-				transferProxyName: '',
-				applyName: '',
-				auditName: '',
-				lockOrder: '',
-				auditNum: '',
-				orderType: '',
-				orderKey: ''
+				auditStep: undefined,
+				transferProxyName: undefined,
+				applyName: undefined,
+				auditName: undefined,
+				lockOrder: undefined,
+				auditNum: undefined,
+				orderType: undefined,
+				orderKey: undefined
 			},
 			type: true,
 			showDetail: false,
@@ -367,16 +383,16 @@ export default {
 	},
 	computed: {
 		accountType() {
-			return this.globalDics.accountType
+			return this.globalDics.accountType || []
 		},
 		auditStatus() {
-			return this.globalDics.auditStatusType
+			return this.globalDics.auditStatusType || []
 		},
 		auditStepType() {
-			return this.globalDics.auditStepType
+			return this.globalDics.auditStepType || []
 		},
 		lockOrderType() {
-			return this.globalDics.lockOrderType
+			return this.globalDics.lockOrderType || []
 		}
 	},
 	mounted() {
@@ -391,16 +407,16 @@ export default {
 				...this.queryData,
 				applyStartTime: startTime
 					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
-					: '',
+					: undefined,
 				applyEndTime: endTime
 					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
-					: '',
+					: undefined,
 				auditStartTime: startTime2
 					? dayjs(startTime2).format('YYYY-MM-DD HH:mm:ss')
-					: '',
+					: undefined,
 				auditEndTime: endTime2
 					? dayjs(endTime2).format('YYYY-MM-DD HH:mm:ss')
-					: ''
+					: undefined
 			}
 			params = {
 				...this.getParams(params)
@@ -461,16 +477,16 @@ export default {
 		},
 		reset() {
 			this.queryData = {
-				userName: '',
-				transferProxyName: '',
+				userName: undefined,
+				transferProxyName: undefined,
 				auditStatus: [],
-				auditStep: '',
-				applyName: '',
-				auditName: '',
-				lockOrder: '',
-				auditNum: '',
-				orderType: '',
-				orderKey: ''
+				auditStep: undefined,
+				applyName: undefined,
+				auditName: undefined,
+				lockOrder: undefined,
+				auditNum: undefined,
+				orderType: undefined,
+				orderKey: undefined
 			}
 			this.formTime = {
 				time: [start, end],

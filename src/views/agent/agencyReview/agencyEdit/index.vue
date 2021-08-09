@@ -224,7 +224,11 @@
 							align="center"
 							label="审核单号"
 							width="220"
-						></el-table-column>
+						>
+							<template slot-scope="scope">
+								<span>{{ scope.row.auditNum || '-' }}</span>
+							</template>
+						</el-table-column>
 						<el-table-column
 							prop="applyType"
 							align="center"
@@ -244,7 +248,7 @@
 									{{ typeFilter(scope.row.beforeModify, 'accountStatusType') }}
 								</template>
 								<template v-else>
-									{{ scope.row.beforeModify ? scope.row.beforeModify : '-' }}
+									{{ scope.row.beforeModify || '-' }}
 								</template>
 							</template>
 						</el-table-column>
@@ -257,7 +261,7 @@
 									{{ typeFilter(scope.row.afterModify, 'accountStatusType') }}
 								</template>
 								<template v-else>
-									{{ scope.row.afterModify ? scope.row.afterModify : '-' }}
+									{{ scope.row.afterModify || '-' }}
 								</template>
 							</template>
 						</el-table-column>
@@ -276,13 +280,7 @@
 									:copy="copy"
 								/>
 								<span v-else>-</span>
-								<p>
-									{{
-										scope.row.accountType
-											? typeFilter(scope.row.accountType, 'accountType')
-											: '-'
-									}}
-								</p>
+								<p>{{ typeFilter(scope.row.accountType, 'accountType') }}</p>
 							</template>
 						</el-table-column>
 						<el-table-column
@@ -290,20 +288,32 @@
 							align="center"
 							label="申请人"
 							width="130px"
-						></el-table-column>
+						>
+							<template slot-scope="scope">
+								<span>{{ scope.row.applyName || '-' }}</span>
+							</template>
+						</el-table-column>
 						<el-table-column
 							prop="applyTime"
 							align="center"
 							sortable="custom"
 							width="180"
 							label="申请时间"
-						></el-table-column>
+						>
+							<template slot-scope="scope">
+								<span>{{ scope.row.applyTime || '-' }}</span>
+							</template>
+						</el-table-column>
 						<el-table-column
 							prop="applyInfo"
 							align="center"
 							label="申请信息"
 							width="180px"
-						></el-table-column>
+						>
+							<template slot-scope="scope">
+								<span>{{ scope.row.applyInfo || '-' }}</span>
+							</template>
+						</el-table-column>
 						<el-table-column align="center" label="审核状态" width="120">
 							<template slot-scope="scope">
 								<span
@@ -329,8 +339,8 @@
 								</span>
 							</template>
 							<template slot-scope="scope">
-								{{ scope.row.auditName ? scope.row.auditName : '-' }}
-								<p>{{ scope.row.auditTime ? scope.row.auditTime : '-' }}</p>
+								{{ scope.row.auditName || '-' }}
+								<p>{{ scope.row.auditTime || '-' }}</p>
 							</template>
 						</el-table-column>
 					</el-table>
@@ -379,17 +389,17 @@ export default {
 		this.lockChange = this.throttle(this.lockChange, 1000)
 		return {
 			queryData: {
-				userName: '',
+				userName: undefined,
 				accountType: [],
-				applyType: '',
+				applyType: undefined,
 				auditStatus: [],
-				auditStep: '',
-				applyName: '',
-				auditName: '',
-				lockOrder: '',
-				auditNum: '',
-				orderType: '',
-				orderKey: ''
+				auditStep: undefined,
+				applyName: undefined,
+				auditName: undefined,
+				lockOrder: undefined,
+				auditNum: undefined,
+				orderType: undefined,
+				orderKey: undefined
 			},
 			type: true,
 			showDetail: false,
@@ -405,19 +415,19 @@ export default {
 	},
 	computed: {
 		accountType() {
-			return this.globalDics.accountType
+			return this.globalDics.accountType || []
 		},
 		auditStatus() {
-			return this.globalDics.auditStatusType
+			return this.globalDics.auditStatusType || []
 		},
 		auditStepType() {
-			return this.globalDics.auditStepType
+			return this.globalDics.auditStepType || []
 		},
 		lockOrderType() {
-			return this.globalDics.lockOrderType
+			return this.globalDics.lockOrderType || []
 		},
 		applyType() {
-			return this.globalDics.applyType
+			return this.globalDics.applyType || []
 		}
 	},
 	mounted() {
@@ -502,17 +512,17 @@ export default {
 		},
 		reset() {
 			this.queryData = {
-				userName: '',
+				userName: undefined,
 				accountType: [],
-				applyType: '',
+				applyType: undefined,
 				auditStatus: [],
-				auditStep: '',
-				applyName: '',
-				auditName: '',
-				lockOrder: '',
-				auditNum: '',
-				orderType: '',
-				orderKey: ''
+				auditStep: undefined,
+				applyName: undefined,
+				auditName: undefined,
+				lockOrder: undefined,
+				auditNum: undefined,
+				orderType: undefined,
+				orderKey: undefined
 			}
 			this.formTime = {
 				time: [start, end],

@@ -130,18 +130,12 @@
 						sortable="custom"
 					>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.createDt">
-								{{ scope.row.createDt }}
-							</span>
-							<span v-else>-</span>
+							{{ scope.row.createDt || '-' }}
 						</template>
 					</el-table-column>
 					<el-table-column prop="accountType" align="center" label="代理类型">
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.accountType">
-								{{ typeFilter(scope.row.accountType, 'accountType') }}
-							</span>
-							<span v-else>-</span>
+							{{ typeFilter(scope.row.accountType, 'accountType') }}
 						</template>
 					</el-table-column>
 					<el-table-column prop="userName" align="center" label="代理账号">
@@ -163,10 +157,7 @@
 							风控层级
 						</template>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.registerIp">
-								{{ scope.row.registerIp }}
-							</span>
-							<span v-else>-</span>
+							<span>{{ scope.row.registerIp || '-' }}</span>
 							<br />
 							<span v-if="!!scope.row.ipControlName" style="color: #e4393c">
 								风控层级：{{ scope.row.ipControlName }}
@@ -176,18 +167,12 @@
 					</el-table-column>
 					<el-table-column prop="ipAttribution" align="center" label="IP归属地">
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.ipAttribution">
-								{{ scope.row.ipAttribution }}
-							</span>
-							<span v-else>-</span>
+							<span>{{ scope.row.ipAttribution || '-' }}</span>
 						</template>
 					</el-table-column>
 					<el-table-column prop="deviceType" align="center" label="注册终端">
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.deviceType">
-								{{ typeFilter(scope.row.deviceType, 'deviceType') }}
-							</span>
-							<span v-else>-</span>
+							<span>{{ typeFilter(scope.row.deviceType, 'deviceType') }}</span>
 						</template>
 					</el-table-column>
 					<el-table-column prop="deviceNo" align="center">
@@ -197,10 +182,7 @@
 							风控层级
 						</template>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.deviceNo">
-								{{ scope.row.deviceNo }}
-							</span>
-							<span v-else>-</span>
+							<span>{{ scope.row.deviceNo || '-' }}</span>
 							<br />
 							<span
 								v-if="!!scope.row.deviceNoControlName"
@@ -251,9 +233,9 @@ export default {
 			queryData: {
 				registerTime: [start, end],
 				accountType: [],
-				userName: '',
-				registerIp: '',
-				ipAttribution: '',
+				userName: undefined,
+				registerIp: undefined,
+				ipAttribution: undefined,
 				deviceType: [],
 				orderType: undefined
 			},
@@ -263,10 +245,10 @@ export default {
 	},
 	computed: {
 		accountTypeArr() {
-			return this.globalDics.accountType
+			return this.globalDics.accountType || []
 		},
 		deviceTypeArr() {
-			return this.globalDics.deviceType
+			return this.globalDics.deviceType || []
 		}
 	},
 	mounted() {},

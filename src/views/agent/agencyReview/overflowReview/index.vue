@@ -252,12 +252,7 @@
 								<span v-else>-</span>
 								<p>
 									{{
-										scope.row.tranferProxyAccountType
-											? typeFilter(
-													scope.row.tranferProxyAccountType,
-													'accountType'
-											  )
-											: '-'
+										typeFilter(scope.row.tranferProxyAccountType, 'accountType')
 									}}
 								</p>
 							</template>
@@ -277,13 +272,7 @@
 									:copy="copy"
 								/>
 								<span v-else>-</span>
-								<p>
-									{{
-										scope.row.accountType
-											? typeFilter(scope.row.accountType, 'accountType')
-											: '-'
-									}}
-								</p>
+								<p>{{ typeFilter(scope.row.accountType, 'accountType') }}</p>
 							</template>
 						</el-table-column>
 						<el-table-column
@@ -291,20 +280,32 @@
 							align="center"
 							label="申请人"
 							width="130"
-						></el-table-column>
+						>
+							<template slot-scope="scope">
+								<span>{{ scope.row.applyName || '-' }}</span>
+							</template>
+						</el-table-column>
 						<el-table-column
 							prop="applyTime"
 							align="center"
 							sortable="custom"
 							label="申请时间"
 							width="200"
-						></el-table-column>
+						>
+							<template slot-scope="scope">
+								<span>{{ scope.row.applyTime || '-' }}</span>
+							</template>
+						</el-table-column>
 						<el-table-column
 							prop="applyInfo"
 							align="center"
 							label="申请信息"
 							width="180"
-						></el-table-column>
+						>
+							<template slot-scope="scope">
+								<span>{{ scope.row.applyInfo || '-' }}</span>
+							</template>
+						</el-table-column>
 						<el-table-column align="center" label="审核状态" width="120">
 							<template slot-scope="scope">
 								<span
@@ -335,8 +336,8 @@
 								</span>
 							</template>
 							<template slot-scope="scope">
-								{{ scope.row.auditName ? scope.row.auditName : '-' }}
-								<p>{{ scope.row.auditTime ? scope.row.auditTime : '-' }}</p>
+								{{ scope.row.auditName || '-' }}
+								<p>{{ scope.row.auditTime || '-' }}</p>
 							</template>
 						</el-table-column>
 					</el-table>
@@ -381,15 +382,15 @@ export default {
 		return {
 			queryData: {
 				auditStatusList: [],
-				auditStep: '',
-				proxyName: '',
-				auditNum: '',
-				applyName: '',
-				auditName: '',
-				accountType: '',
-				lockStatus: '',
-				orderProperties: '',
-				orderType: ''
+				auditStep: undefined,
+				proxyName: undefined,
+				auditNum: undefined,
+				applyName: undefined,
+				auditName: undefined,
+				accountType: undefined,
+				lockStatus: undefined,
+				orderProperties: undefined,
+				orderType: undefined
 			},
 			type: true,
 			showDetail: false,
@@ -405,22 +406,22 @@ export default {
 	},
 	computed: {
 		accountTypeArr() {
-			return this.globalDics.accountType
+			return this.globalDics.accountType || []
 		},
 		accountType() {
-			return this.globalDics.accountType
+			return this.globalDics.accountType || []
 		},
 		auditStatus() {
-			return this.globalDics.auditStatusType
+			return this.globalDics.auditStatusType || []
 		},
 		auditStepType() {
-			return this.globalDics.auditStepType
+			return this.globalDics.auditStepType || []
 		},
 		lockOrderType() {
-			return this.globalDics.lockOrderType
+			return this.globalDics.lockOrderType || []
 		},
 		applyType() {
-			return this.globalDics.applyType
+			return this.globalDics.applyType || []
 		}
 	},
 	mounted() {
@@ -435,16 +436,16 @@ export default {
 				...this.queryData,
 				applyTimeStart: startTime
 					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
-					: '',
+					: undefined,
 				applyTimeEnd: endTime
 					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
-					: '',
+					: undefined,
 				auditTimeStart: startTime2
 					? dayjs(startTime2).format('YYYY-MM-DD HH:mm:ss')
-					: '',
+					: undefined,
 				auditTimeEnd: endTime2
 					? dayjs(endTime2).format('YYYY-MM-DD HH:mm:ss')
-					: ''
+					: undefined
 			}
 			params = {
 				...this.getParams(params)
@@ -491,13 +492,13 @@ export default {
 		reset() {
 			this.queryData = {
 				auditStatusList: [],
-				auditStep: '',
-				lockOrder: '',
-				applyName: '',
-				auditName: '',
-				auditNum: '',
-				orderProperties: '',
-				orderType: ''
+				auditStep: undefined,
+				lockOrder: undefined,
+				applyName: undefined,
+				auditName: undefined,
+				auditNum: undefined,
+				orderProperties: undefined,
+				orderType: undefined
 			}
 			this.formTime = {
 				time: [start, end],

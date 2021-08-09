@@ -191,27 +191,31 @@
 								</el-button>
 							</template>
 						</el-table-column>
-						<el-table-column
-							prop="auditNum"
-							align="center"
-							label="审核单号"
-						></el-table-column>
-						<el-table-column
-							prop="applyName"
-							align="center"
-							label="申请人"
-						></el-table-column>
+						<el-table-column prop="auditNum" align="center" label="审核单号">
+							<template slot-scope="scope">
+								<span>{{ scope.row.auditNum || '-' }}</span>
+							</template>
+						</el-table-column>
+						<el-table-column prop="applyName" align="center" label="申请人">
+							<template slot-scope="scope">
+								<span>{{ scope.row.applyName || '-' }}</span>
+							</template>
+						</el-table-column>
 						<el-table-column
 							prop="applyTime"
 							align="center"
 							sortable="custom"
 							label="申请时间"
-						></el-table-column>
-						<el-table-column
-							prop="applyInfo"
-							align="center"
-							label="申请信息"
-						></el-table-column>
+						>
+							<template slot-scope="scope">
+								<span>{{ scope.row.applyTime || '-' }}</span>
+							</template>
+						</el-table-column>
+						<el-table-column prop="applyInfo" align="center" label="申请信息">
+							<template slot-scope="scope">
+								<span>{{ scope.row.applyInfo || '-' }}</span>
+							</template>
+						</el-table-column>
 						<el-table-column align="center" label="审核状态" width="100">
 							<template slot-scope="scope">
 								<span
@@ -242,8 +246,8 @@
 								</span>
 							</template>
 							<template slot-scope="scope">
-								{{ scope.row.auditName ? scope.row.auditName : '-' }}
-								<p>{{ scope.row.auditTime ? scope.row.auditTime : '-' }}</p>
+								{{ scope.row.auditName || '-' }}
+								<p>{{ scope.row.auditTime || '-' }}</p>
 							</template>
 						</el-table-column>
 					</el-table>
@@ -293,13 +297,13 @@ export default {
 		return {
 			queryData: {
 				auditStatusList: [],
-				auditStep: '',
-				lockOrder: '',
-				applyName: '',
-				auditName: '',
-				auditNum: '',
-				orderProperties: '',
-				orderType: ''
+				auditStep: undefined,
+				lockOrder: undefined,
+				applyName: undefined,
+				auditName: undefined,
+				auditNum: undefined,
+				orderProperties: undefined,
+				orderType: undefined
 			},
 			type: true,
 			showDetail: false,
@@ -342,16 +346,16 @@ export default {
 				...this.queryData,
 				applyTimeStart: startTime
 					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
-					: '',
+					: undefined,
 				applyTimeEnd: endTime
 					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
-					: '',
+					: undefined,
 				auditTimeStart: startTime2
 					? dayjs(startTime2).format('YYYY-MM-DD HH:mm:ss')
-					: '',
+					: undefined,
 				auditTimeEnd: endTime2
 					? dayjs(endTime2).format('YYYY-MM-DD HH:mm:ss')
-					: ''
+					: undefined
 			}
 			params = {
 				...this.getParams(params)
@@ -398,13 +402,13 @@ export default {
 		reset() {
 			this.queryData = {
 				auditStatusList: [],
-				auditStep: '',
-				lockOrder: '',
-				applyName: '',
-				auditName: '',
-				auditNum: '',
-				orderProperties: '',
-				orderType: ''
+				auditStep: undefined,
+				lockOrder: undefined,
+				applyName: undefined,
+				auditName: undefined,
+				auditNum: undefined,
+				orderProperties: undefined,
+				orderType: undefined
 			}
 			this.formTime = {
 				time: [start, end],

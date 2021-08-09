@@ -158,10 +158,9 @@
 					</el-table-column>
 					<el-table-column prop="accountType" align="center" label="代理类型">
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.accountType">
+							<span>
 								{{ typeFilter(scope.row.accountType, 'accountType') }}
 							</span>
-							<span v-else>-</span>
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -180,10 +179,7 @@
 					</el-table-column>
 					<el-table-column prop="virtualKind" align="center" label="虚拟币种类">
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.virtualKind">
-								{{ scope.row.virtualKind }}
-							</span>
-							<span v-else>-</span>
+							<span>{{ scope.row.virtualKind || '-' }}</span>
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -192,18 +188,16 @@
 						label="虚拟币协议"
 					>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.virtualProtocol">
-								{{ scope.row.virtualProtocol }}
-							</span>
-							<span v-else>-</span>
+							<span>{{ scope.row.virtualProtocol || '-' }}</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="operateType" align="center" label="风控层级">
+					<el-table-column
+						prop="windControlLevelName"
+						align="center"
+						label="风控层级"
+					>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.windControlName">
-								{{ scope.row.windControlName }}
-							</span>
-							<span v-else>-</span>
+							<span>{{ scope.row.windControlLevelName || '-' }}</span>
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -213,10 +207,7 @@
 						sortable="custom"
 					>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.withdrawalTime">
-								{{ scope.row.withdrawalTime }}
-							</span>
-							<span v-else>-</span>
+							<span>{{ scope.row.withdrawalTime || '-' }}</span>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -275,13 +266,13 @@ export default {
 	},
 	computed: {
 		accountTypeArr() {
-			return this.globalDics.accountType
+			return this.globalDics.accountType || []
 		},
 		virtualProtocolTypeArr() {
-			return this.globalDics.virtualProtocolType
+			return this.globalDics.virtualProtocolType || []
 		},
 		virtualTypeArr() {
-			return this.globalDics.virtualType
+			return this.globalDics.virtualType || []
 		}
 	},
 	mounted() {
