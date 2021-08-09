@@ -191,9 +191,13 @@
 							<span>{{ scope.row.virtualProtocol || '-' }}</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="operateType" align="center" label="风控层级">
+					<el-table-column
+						prop="windControlLevelName"
+						align="center"
+						label="风控层级"
+					>
 						<template slot-scope="scope">
-							<span>{{ scope.row.windControlName || '-' }}</span>
+							<span>{{ scope.row.windControlLevelName || '-' }}</span>
 						</template>
 					</el-table-column>
 					<el-table-column
