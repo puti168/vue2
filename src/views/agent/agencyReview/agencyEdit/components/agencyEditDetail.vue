@@ -15,31 +15,33 @@
 			<div class="review-content">
 				<p class="name">代理注册信息</p>
 				<div class="review-flex">
-					<div>注册时间: {{ list.createDt }}</div>
+					<div>注册时间: {{ list.createDt || '-' }}</div>
 					<div>代理类型: {{ typeFilter(list.accountType, 'accountType') }}</div>
-					<div>上次登录时间: {{ list.lastLoginTime }}</div>
-					<div>注册端:  {{ typeFilter(list.deviceType, "deviceType") }}</div>
+					<div>上次登录时间: {{ list.lastLoginTime || '-' }}</div>
+					<div>注册端: {{ typeFilter(list.deviceType, 'deviceType') }}</div>
 				</div>
 			</div>
 			<div class="review-content">
 				<p class="name">代理账号信息</p>
 				<div class="review-flex">
-					<div>账号: {{ list.userName }}</div>
-					<div>账号状态: {{ typeFilter(list.accountStatus, 'accountStatusType') }}</div>
-					<div>风控层级: {{ list.windControlName }}</div>
-					<div>代理标签: {{ list.labelName }}</div>
+					<div>账号: {{ list.userName || '-' }}</div>
+					<div>
+						账号状态: {{ typeFilter(list.accountStatus, 'accountStatusType') }}
+					</div>
+					<div>风控层级: {{ list.windControlName || '-' }}</div>
+					<div>代理标签: {{ list.labelName || '-' }}</div>
 				</div>
 				<div class="review-flex">
-					<div>备注信息: {{ list.remark }}</div>
+					<div>备注信息: {{ list.remark || '-' }}</div>
 				</div>
 			</div>
 			<div class="review-content" style="height: 200px">
 				<p class="name">申请信息</p>
 				<div class="review-flex">
-					<div>申请人: {{ list.applyName }}</div>
-					<div>申请时间: {{ list.applyTime }}</div>
+					<div>申请人: {{ list.applyName || '-' }}</div>
+					<div>申请时间: {{ list.applyTime || '-' }}</div>
 					<div>审核申请类型: {{ typeFilter(list.applyType, 'applyType') }}</div>
-					<div>申请原因: {{ list.applyInfo }}</div>
+					<div>申请原因: {{ list.applyInfo || '-' }}</div>
 				</div>
 				<div class="review-flex">
 					<el-table
@@ -81,10 +83,12 @@
 			<div class="review-content">
 				<p class="name">审核信息</p>
 				<div class="review-flex">
-					<div>一审人: {{ list.auditName }}</div>
-					<div>一审时间: {{ list.auditTime }}</div>
-					<div>一审备注: {{ list.auditRemark }}</div>
-					<div>一审状态: {{ typeFilter(rowData.auditStatus, 'auditStatusType') }}</div>
+					<div>一审人: {{ list.auditName || '-' }}</div>
+					<div>一审时间: {{ list.auditTime || '-' }}</div>
+					<div>一审备注: {{ list.auditRemark || '-' }}</div>
+					<div>
+						一审状态: {{ typeFilter(rowData.auditStatus, 'auditStatusType') }}
+					</div>
 				</div>
 			</div>
 		</div>
