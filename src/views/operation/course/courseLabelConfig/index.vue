@@ -275,7 +275,7 @@
 						></UploadItem>
             <div class="remakeBox">
               <span class="danger">*</span>图片格式仅支持png，jpg <br />
-              <span class="danger">*</span>图片大小不能超过2MB
+              <span class="danger">*</span>图片大小不能超过5MB，尺寸大小80 X 80
             </div>
 					</el-form-item>
           <el-form-item
@@ -337,7 +337,8 @@ export default {
       labelName: '',
       id: '',
       page: 1,
-      size: 5,
+      pageSize: 10,
+      pageSizes: [10],
       summary: 0,
       drag: false,
       subSort: false,
@@ -366,12 +367,11 @@ export default {
           this.loading = false
           const {
             code,
-            data: { record, totalPage },
+            data: { record },
             msg
           } = res
           if (code && code === 200) {
             this.tutorList = record || []
-            this.total = totalPage || 0
           } else {
             this.$message({
               message: res && msg,

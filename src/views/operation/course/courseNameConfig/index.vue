@@ -149,7 +149,7 @@
           </el-table-column>
           <el-table-column prop="operating" align="center" label="操作" min-width="260">
             <template slot-scope="scope">
-                            <el-button
+              <el-button
                 v-if="scope.row.tutorStatus===0"
                 type="warning"
                 size="medium"
@@ -157,7 +157,6 @@
               >
                 开启
               </el-button>
-
               <el-button
                 v-if="scope.row.tutorStatus===1"
                 type="danger"
@@ -174,7 +173,6 @@
               >
                 编辑信息
               </el-button>
-
               <el-button
                 type="warning"
                 icon="el-icon-delete"
@@ -263,7 +261,7 @@
 						></UploadItem>
             <div class="remakeBox">
               <span class="danger">*</span>图片格式仅支持png，jpg <br />
-              <span class="danger">*</span>图片大小不能超过2MB
+              <span class="danger">*</span>图片大小不能超过5MB，尺寸大小80 X 80
             </div>
 					</el-form-item>
 				</el-form>
@@ -308,7 +306,8 @@ export default {
       labelName: '',
       id: '',
       page: 1,
-      size: 5,
+      pageSize: 100,
+      pageSizes: [100],
       summary: 0,
       drag: false,
       subSort: false,
@@ -335,12 +334,12 @@ export default {
           this.loading = false
           const {
             code,
-            data: { record, totalPage },
+            data: { record, totalRecord },
             msg
           } = res
           if (code && code === 200) {
             this.$set(this, 'tableData', record || [])
-            this.total = totalPage || 0
+            this.total = totalRecord || 0
           } else {
             this.$message({
               message: res && msg,
@@ -587,7 +586,7 @@ export default {
 
 <style lang="scss" scoped>
 .remakeBox {
-  width: 164px;
+  width: 264px;
   position: absolute;
   left: 200px;
   bottom: 0;
