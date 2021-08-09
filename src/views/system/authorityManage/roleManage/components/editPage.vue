@@ -23,7 +23,7 @@
 							maxlength="20"
 							placeholder="请输入"
 							clearable
-                            :disabled="updateStatus"
+							:disabled="updateStatus"
 							style="width: 365px"
 						></el-input>
 					</el-form-item>
@@ -34,7 +34,7 @@
 							type="textarea"
 							placeholder="请输入内容"
 							clearable
-                            :disabled="updateStatus"
+							:disabled="updateStatus"
 							maxlength="50"
 							show-word-limit
 							style="width: 365px"
@@ -92,7 +92,7 @@ export default {
 		}
 	},
 	data() {
-        this.save = this.throttle(this.save, 2000)
+		this.save = this.throttle(this.save, 2000)
 		return {
 			loading: false,
 			queryData: {
@@ -198,8 +198,11 @@ export default {
 		},
 		async getRoleList() {
 			this.loading = true
-			const { code, data } = await this.$api.getRolePermissionsAPI()
-			.catch(() => { this.loading = false })
+			const { code, data } = await this.$api
+				.getRolePermissionsAPI()
+				.catch(() => {
+					this.loading = false
+				})
 			if (code && code === 200) {
 				this.permissions = JSON.parse(JSON.stringify(data))
 				this.allChooseLen = data.length
@@ -253,10 +256,10 @@ export default {
 				checkedKeys.halfCheckedKeys
 			)
 			!!this.chooseIds.length && this.chooseIds.length < this.allChooseLen
-				? ((this.chooseAll = false), (this.isIndeterminate = true))
+				? (this.chooseAll = false) && (this.isIndeterminate = true)
 				: this.allChooseLen === this.chooseIds.length
-				? ((this.chooseAll = true), (this.isIndeterminate = false))
-				: ((this.chooseAll = false), (this.isIndeterminate = false))
+				? (this.chooseAll = true) && (this.isIndeterminate = false)
+				: (this.chooseAll = false) && (this.isIndeterminate = false)
 		},
 		handleAllChoose(val) {
 			const ids = this.getAllIds(this.permissions, [])

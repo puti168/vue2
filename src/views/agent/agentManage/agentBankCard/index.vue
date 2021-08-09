@@ -42,7 +42,7 @@
 							placeholder="默认选择全部"
 							clearable
 							multiple
-                            collapse-tags
+							collapse-tags
 							style="width: 280px"
 						>
 							<el-option
@@ -53,14 +53,14 @@
 							></el-option>
 						</el-select>
 					</el-form-item>
-                    <el-form-item label="风控层级:">
+					<el-form-item label="风控层级:">
 						<el-select
 							v-model="queryData.windControlId"
 							size="medium"
 							placeholder="全部"
 							clearable
-                            multiple
-                            style="width: 280px"
+							multiple
+							style="width: 280px"
 						>
 							<el-option
 								v-for="item in vipDict"
@@ -137,7 +137,12 @@
 					:header-cell-style="getRowClass"
 					@sort-change="changeTableSort"
 				>
-					<el-table-column prop="userName" align="center" label="代理账号" width="180">
+					<el-table-column
+						prop="userName"
+						align="center"
+						label="代理账号"
+						width="180"
+					>
 						<template slot-scope="scope">
 							<Copy
 								v-if="!!scope.row.userName"
@@ -147,15 +152,24 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="accountType" align="center" label="代理类型" width="180">
+					<el-table-column
+						prop="accountType"
+						align="center"
+						label="代理类型"
+						width="180"
+					>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.accountType">
+							<span>
 								{{ typeFilter(scope.row.accountType, 'accountType') }}
 							</span>
-							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="cardNumber" align="center" label="银行卡号" width="260">
+					<el-table-column
+						prop="cardNumber"
+						align="center"
+						label="银行卡号"
+						width="260"
+					>
 						<template slot-scope="scope">
 							<Copy
 								v-if="!!scope.row.cardNumber"
@@ -165,20 +179,27 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="bankName" align="center" label="银行名称" width="230">
+					<el-table-column
+						prop="bankName"
+						align="center"
+						label="银行名称"
+						width="230"
+					>
 						<template slot="header">
 							银行名称
 							<br />
 							银行支行
 						</template>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.bankName">
-								{{ scope.row.bankName }}
-							</span>
-							<span v-else>-</span>
+							<span>{{ scope.row.bankName || '-' }}</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="cnName" align="center" label="持卡人" width="160">
+					<el-table-column
+						prop="cnName"
+						align="center"
+						label="持卡人"
+						width="160"
+					>
 						<template slot-scope="scope">
 							<Copy
 								v-if="!!scope.row.cnName"
@@ -188,20 +209,24 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="bankAddress" align="center" label="开户地址" width="230">
+					<el-table-column
+						prop="bankAddress"
+						align="center"
+						label="开户地址"
+						width="230"
+					>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.bankAddress">
-								{{ scope.row.bankAddress }}
-							</span>
-							<span v-else>-</span>
+							<span>{{ scope.row.bankAddress || '-' }}</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="operateType" align="center" label="风控层级" width="160">
+					<el-table-column
+						prop="operateType"
+						align="center"
+						label="风控层级"
+						width="160"
+					>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.windControlName">
-								{{ scope.row.windControlName }}
-							</span>
-							<span v-else>-</span>
+							<span>{{ scope.row.windControlName || '-' }}</span>
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -209,13 +234,10 @@
 						align="center"
 						label="提款时间"
 						sortable="custom"
-                        min-width="200"
+						min-width="200"
 					>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.createDt">
-								{{ scope.row.createDt }}
-							</span>
-							<span v-else>-</span>
+							<span>{{ scope.row.createDt || '-' }}</span>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -273,7 +295,7 @@ export default {
 	},
 	computed: {
 		accountTypeArr() {
-			return this.globalDics.accountType
+			return this.globalDics.accountType || []
 		}
 	},
 	created() {
@@ -329,15 +351,15 @@ export default {
 			}, 1000)
 		},
 		// 获取风控层级
-        getWindControllerLevelDict() {
-            this.$api
-                .getWindControllerLevelDict({ windControlType: 3 })
-                .then((res) => {
-                    if (res.code === 200) {
-                        this.vipDict = res.data
-                    }
-                })
-        },
+		getWindControllerLevelDict() {
+			this.$api
+				.getWindControllerLevelDict({ windControlType: 3 })
+				.then((res) => {
+					if (res.code === 200) {
+						this.vipDict = res.data
+					}
+				})
+		},
 		reset() {
 			this.pageNum = 1
 			this.$refs['form'].resetFields()
@@ -345,7 +367,7 @@ export default {
 				createDt: [start, end],
 				userName: undefined,
 				accountType: [],
-                windControlId: undefined,
+				windControlId: undefined,
 				cardNumber: undefined,
 				bankName: undefined,
 				cnName: undefined,

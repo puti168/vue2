@@ -42,7 +42,7 @@
 							placeholder="默认选择全部"
 							clearable
 							multiple
-                            collapse-tags
+							collapse-tags
 							style="width: 270px"
 						>
 							<el-option
@@ -53,23 +53,23 @@
 							></el-option>
 						</el-select>
 					</el-form-item>
-                    <el-form-item label="风控层级:">
-                        <el-select
-                            v-model="queryData.windControlId"
-                            size="medium"
-                            placeholder="全部"
-                            clearable
-                            multiple
-                            style="width: 270px"
-                        >
-                            <el-option
-                                v-for="item in vipDict"
-                                :key="item.windControlId"
-                                :label="item.windControlName"
-                                :value="item.windControlId"
-                            ></el-option>
-                        </el-select>
-                    </el-form-item>
+					<el-form-item label="风控层级:">
+						<el-select
+							v-model="queryData.windControlId"
+							size="medium"
+							placeholder="全部"
+							clearable
+							multiple
+							style="width: 270px"
+						>
+							<el-option
+								v-for="item in vipDict"
+								:key="item.windControlId"
+								:label="item.windControlName"
+								:value="item.windControlId"
+							></el-option>
+						</el-select>
+					</el-form-item>
 					<el-form-item label="虚拟币账户地址:" label-width="120px">
 						<el-input
 							v-model="queryData.virtualAddress"
@@ -158,10 +158,9 @@
 					</el-table-column>
 					<el-table-column prop="accountType" align="center" label="代理类型">
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.accountType">
+							<span>
 								{{ typeFilter(scope.row.accountType, 'accountType') }}
 							</span>
-							<span v-else>-</span>
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -180,10 +179,7 @@
 					</el-table-column>
 					<el-table-column prop="virtualKind" align="center" label="虚拟币种类">
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.virtualKind">
-								{{ scope.row.virtualKind }}
-							</span>
-							<span v-else>-</span>
+							<span>{{ scope.row.virtualKind || '-' }}</span>
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -192,20 +188,14 @@
 						label="虚拟币协议"
 					>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.virtualProtocol">
-								{{ scope.row.virtualProtocol }}
-							</span>
-							<span v-else>-</span>
+							<span>{{ scope.row.virtualProtocol || '-' }}</span>
 						</template>
 					</el-table-column>
-                    <el-table-column prop="operateType" align="center" label="风控层级">
-                        <template slot-scope="scope">
-							<span v-if="!!scope.row.windControlName">
-								{{ scope.row.windControlName }}
-							</span>
-                            <span v-else>-</span>
-                        </template>
-                    </el-table-column>
+					<el-table-column prop="operateType" align="center" label="风控层级">
+						<template slot-scope="scope">
+							<span>{{ scope.row.windControlName || '-' }}</span>
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="withdrawalTime"
 						align="center"
@@ -213,10 +203,7 @@
 						sortable="custom"
 					>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.withdrawalTime">
-								{{ scope.row.withdrawalTime }}
-							</span>
-							<span v-else>-</span>
+							<span>{{ scope.row.withdrawalTime || '-' }}</span>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -264,29 +251,29 @@ export default {
 				virtualAddress: undefined,
 				virtualKind: undefined,
 				virtualProtocol: undefined,
-                windControlId: undefined,
+				windControlId: undefined,
 				orderType: undefined
 			},
 			dataList: [],
 			total: 0,
-            vipDict: [],
-            userLabel: []
+			vipDict: [],
+			userLabel: []
 		}
 	},
 	computed: {
 		accountTypeArr() {
-			return this.globalDics.accountType
+			return this.globalDics.accountType || []
 		},
 		virtualProtocolTypeArr() {
-			return this.globalDics.virtualProtocolType
+			return this.globalDics.virtualProtocolType || []
 		},
 		virtualTypeArr() {
-			return this.globalDics.virtualType
+			return this.globalDics.virtualType || []
 		}
 	},
 	mounted() {
-	    this.getWindControllerLevelDict()
-    },
+		this.getWindControllerLevelDict()
+	},
 	methods: {
 		loadData() {
 			this.dataList = []
@@ -332,17 +319,17 @@ export default {
 				this.loading = false
 			}, 1000)
 		},
-        // 获取风控层级
-        // 获取风控层级
-        getWindControllerLevelDict() {
-            this.$api
-                .getWindControllerLevelDict({ windControlType: 4 })
-                .then((res) => {
-                    if (res.code === 200) {
-                        this.vipDict = res.data
-                    }
-                })
-        },
+		// 获取风控层级
+		// 获取风控层级
+		getWindControllerLevelDict() {
+			this.$api
+				.getWindControllerLevelDict({ windControlType: 4 })
+				.then((res) => {
+					if (res.code === 200) {
+						this.vipDict = res.data
+					}
+				})
+		},
 		reset() {
 			this.pageNum = 1
 			this.$refs['form'].resetFields()
@@ -352,7 +339,7 @@ export default {
 				accountType: [],
 				virtualAddress: undefined,
 				virtualKind: undefined,
-                windControlId: undefined,
+				windControlId: undefined,
 				virtualProtocol: undefined,
 				orderType: undefined
 			}
