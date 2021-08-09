@@ -37,12 +37,12 @@
 							v-model="queryData.orderNo"
 							clearable
 							size="medium"
-							style="width: 180px"
+							style="width: 330px"
 							placeholder="请输入"
 							@keyup.enter.native="enterSearch"
 						></el-input>
 					</el-form-item>
-					<el-form-item style="margin-left: 30px">
+					<el-form-item style="margin-left: 8px">
 						<el-button
 							type="primary"
 							icon="el-icon-search"
@@ -94,7 +94,7 @@
 							prop="auditStep"
 							align="center"
 							label="操作"
-							width="100"
+							width="200"
 						>
 							<template slot-scope="scope">
 								<el-button
@@ -111,7 +111,12 @@
 								</el-button>
 							</template>
 						</el-table-column>
-						<el-table-column prop="orderNo" align="center" label="审核订单号">
+						<el-table-column
+							prop="orderNo"
+							align="center"
+							label="审核订单号"
+							width="260"
+						>
 							<template slot-scope="scope">
 								<span v-if="!!scope.row.orderNo">
 									{{ scope.row.orderNo }}
@@ -119,7 +124,12 @@
 								<span v-else>-</span>
 							</template>
 						</el-table-column>
-						<el-table-column prop="userName" align="center" label="会员账号">
+						<el-table-column
+							prop="userName"
+							align="center"
+							label="会员账号"
+							width="150"
+						>
 							<template slot-scope="scope">
 								<span v-if="!!scope.row.userName">
 									{{ scope.row.userName }}
@@ -127,7 +137,12 @@
 								<span v-else>-</span>
 							</template>
 						</el-table-column>
-						<el-table-column prop="realName" align="center" label="会员姓名">
+						<el-table-column
+							prop="realName"
+							align="center"
+							label="会员姓名"
+							width="150"
+						>
 							<template slot-scope="scope">
 								<span v-if="!!scope.row.realName">
 									{{ scope.row.realName }}
@@ -135,7 +150,12 @@
 								<span v-else>-</span>
 							</template>
 						</el-table-column>
-						<el-table-column prop="applyTime" align="center" label="调整类型">
+						<el-table-column
+							prop="applyTime"
+							align="center"
+							label="调整类型"
+							width="180"
+						>
 							<template slot-scope="scope">
 								{{
 									typeFilter(scope.row.adjustType, 'memberPatchAddAdjustType')
@@ -146,6 +166,7 @@
 							prop="adjustAmount"
 							align="center"
 							label="增加金额"
+							width="200"
 						>
 							<template slot-scope="scope">
 								<span
@@ -163,6 +184,7 @@
 							prop="operatorTime"
 							align="center"
 							label="申请时间"
+							min-width="220"
 						>
 							<template slot-scope="scope">
 								<span v-if="!!scope.row.operatorTime">
@@ -171,7 +193,7 @@
 								<span v-else>-</span>
 							</template>
 						</el-table-column>
-						<el-table-column align="center" label="审核状态">
+						<el-table-column align="center" label="审核状态" width="150">
 							<template slot-scope="scope">
 								<span
 									:class="
@@ -228,9 +250,10 @@ export default {
 	components: { detail },
 	mixins: [list],
 	data() {
+		this.loadData = this.throttle(this.loadData, 1000)
 		return {
 			queryData: {
-                lockStatus: '',
+				lockStatus: '',
 				orderNo: undefined
 			},
 			type: true,
@@ -314,7 +337,7 @@ export default {
 		},
 		reset() {
 			this.queryData = {
-                lockStatus: '',
+				lockStatus: '',
 				orderNo: undefined
 			}
 			this.formTime = {

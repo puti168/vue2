@@ -16,16 +16,18 @@
 							align="right"
 							:clearable="false"
 							:default-time="defaultTime"
-							style="width: 375px"
+							style="width: 400px"
 						></el-date-picker>
 					</el-form-item>
-					<el-form-item label="操作类型:" class="tagheight" prop="operateType">
+					<el-form-item label="操作类型:" class="tagheight">
 						<el-select
 							v-model="queryData.operateType"
-							style="width: 300px"
+							style="width: 230px"
 							multiple
 							placeholder="全部"
+							collapse-tags
 							:popper-append-to-body="false"
+							clearable
 						>
 							<el-option
 								v-for="item in memberVipOperateType"
@@ -38,10 +40,12 @@
 					<el-form-item label="操作项:" class="tagheight">
 						<el-select
 							v-model="queryData.operateField"
-							style="width: 300px"
+							style="width: 230px"
 							multiple
+							collapse-tags
 							placeholder="全部"
 							:popper-append-to-body="false"
+							clearable
 						>
 							<el-option
 								v-for="item in memberVipOperateFieldType"
@@ -101,38 +105,49 @@
 						align="center"
 						label="操作时间"
 						sortable="custom"
-					></el-table-column>
-					<!-- 操作类型 -->
-					<el-table-column prop="operateType" align="center" label="操作类型">
+					>
 						<template slot-scope="scope">
-							{{ typeFilter(scope.row.operateType, 'memberVipOperateType') }}
+							{{ scope.row.createdAt || '-' }}
 						</template>
 					</el-table-column>
-					<!-- 操作项 -->
+					<el-table-column prop="operateType" align="center" label="操作类型">
+						<template slot-scope="scope">
+							<span v-if="!!scope.row.operateType">
+								{{ typeFilter(scope.row.operateType, 'memberVipOperateType') }}
+							</span>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
 					<el-table-column prop="operateField" align="center" label="操作项">
 						<template slot-scope="scope">
-							{{
-								typeFilter(scope.row.operateField, 'memberVipOperateFieldType')
-							}}
+							<span v-if="!!scope.row.operateField">
+								{{
+									typeFilter(
+										scope.row.operateField,
+										'memberVipOperateFieldType'
+									)
+								}}
+							</span>
+							<span v-else>-</span>
 						</template>
 					</el-table-column>
 					<!-- 操作前 -->
 					<el-table-column prop="beforeModify" align="center" label="操作前">
 						<template slot-scope="scope">
-							<span>{{ scope.row.beforeModify }}</span>
+							{{ scope.row.beforeModify || '-' }}
 						</template>
 					</el-table-column>
 					<!-- 操作后-->
 					<el-table-column prop="afterModify" align="center" label="操作后">
 						<template slot-scope="scope">
-							<span>{{ scope.row.afterModify }}</span>
+							{{ scope.row.afterModify || '-' }}
 						</template>
 					</el-table-column>
-					<el-table-column
-						prop="createdBy"
-						align="center"
-						label="操作人"
-					></el-table-column>
+					<el-table-column prop="createdBy" align="center" label="操作人">
+						<template slot-scope="scope">
+							{{ scope.row.createdBy || '-' }}
+						</template>
+					</el-table-column>
 				</el-table>
 				<!-- 分页 -->
 				<el-pagination
@@ -162,9 +177,10 @@ const endTime = dayjs()
 	.valueOf()
 
 export default {
-	components: {},
 	mixins: [list],
 	data() {
+		this.search = this.throttle(this.search, 1000)
+		this.reset = this.throttle(this.reset, 1000)
 		return {
 			queryData: {},
 			searchTime: [startTime, endTime],
@@ -179,13 +195,12 @@ export default {
 	},
 	computed: {
 		memberVipOperateFieldType() {
-			return this.globalDics.memberVipOperateFieldType
+			return this.globalDics.memberVipOperateFieldType || []
 		},
 		memberVipOperateType() {
-			return this.globalDics.memberVipOperateType
+			return this.globalDics.memberVipOperateType || []
 		}
 	},
-	mounted() {},
 	methods: {
 		loadData() {
 			this.loading = true
@@ -195,8 +210,10 @@ export default {
 				...this.queryData,
 				beginTime: startTime
 					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
-					: '',
-				endTime: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
+					: undefined,
+				endTime: endTime
+					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
+					: undefined
 			}
 			params = {
 				...this.getParams(params)
@@ -204,12 +221,21 @@ export default {
 			this.$api
 				.getlistSelectMemberVipOperate(params)
 				.then((res) => {
-					if (res.code === 200) {
-						this.tableData = res.data.record
-						this.total = res.data.totalRecord
-						this.loading = false
+					this.loading = false
+					const {
+						code,
+						data: { record, totalRecord },
+						msg
+					} = res
+					if (res && code && code === 200) {
+						this.tableData =
+							(res.data && record.length && Object.freeze(record)) || []
+						this.total = (res.data && totalRecord) || 0
 					} else {
-						this.loading = false
+						this.$message({
+							message: res && msg,
+							type: 'error'
+						})
 					}
 				})
 				.catch(() => {

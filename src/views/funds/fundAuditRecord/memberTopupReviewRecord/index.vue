@@ -22,7 +22,7 @@
 							v-model="queryData.orderNo"
 							clearable
 							size="medium"
-							style="width: 180px"
+							style="width: 300px"
 							placeholder="请输入"
 							@keyup.enter.native="enterSearch"
 						></el-input>
@@ -54,7 +54,7 @@
 							></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item style="margin-left: 30px">
+					<el-form-item style="margin-left: 8px">
 						<el-button
 							type="primary"
 							icon="el-icon-search"
@@ -102,7 +102,12 @@
 								</el-button>
 							</template>
 						</el-table-column>
-						<el-table-column prop="id" align="center" label="订单号" width="240">
+						<el-table-column
+							prop="id"
+							align="center"
+							label="订单号"
+							width="220"
+						>
 							<template slot-scope="scope">
 								<span v-if="!!scope.row.orderNo">
 									{{ scope.row.orderNo }}
@@ -114,7 +119,7 @@
 							prop="userName"
 							align="center"
 							label="会员账号"
-							width="120"
+							width="130"
 						>
 							<template slot-scope="scope">
 								<span v-if="!!scope.row.userName">
@@ -155,7 +160,7 @@
 							prop="adjustType"
 							align="center"
 							label="调整类型"
-							width="120"
+							width="130"
 						>
 							<template slot-scope="scope">
 								<span v-if="!!scope.row.adjustType">
@@ -170,7 +175,7 @@
 							prop="adjustAmount"
 							align="center"
 							label="增加金额"
-                            width="120"
+							width="150"
 						>
 							<template slot-scope="scope">
 								<span v-if="!!scope.row.adjustAmount">
@@ -214,7 +219,7 @@
 							prop="details"
 							align="center"
 							label="审核时间"
-							width="210"
+							width="220"
 						>
 							<template slot-scope="scope">
 								<div v-if="!!scope.row.details && scope.row.details.length">
@@ -232,7 +237,7 @@
 							prop="details"
 							align="center"
 							label="审核用时"
-							width="180"
+							width="150"
 						>
 							<template slot-scope="scope">
 								<div v-if="!!scope.row.details && scope.row.details.length">
@@ -250,7 +255,7 @@
 							prop="remark"
 							align="center"
 							label="备注"
-							width="150"
+							width="180"
 						>
 							<template slot-scope="scope">
 								<div v-if="!!scope.row.details && scope.row.details.length">
@@ -267,7 +272,7 @@
 											!!scope.row.details[1] && !!scope.row.details[1].remark
 										"
 									>
-                                        {{ scope.row.details[1].remark }}
+										{{ scope.row.details[1].remark }}
 									</p>
 									<p v-else>-</p>
 								</div>
@@ -312,6 +317,7 @@ export default {
 	components: { detail },
 	mixins: [list],
 	data() {
+		this.loadData = this.throttle(this.loadData, 1000)
 		return {
 			queryData: {
 				time: [start, end],

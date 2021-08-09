@@ -6,6 +6,18 @@ import settings from './modules/settings'
 import user from './modules/user'
 import permission from './modules/permission'
 import tagsView from './modules/tagsView'
+// import createPersistedState from 'vuex-persistedstate'
+// import createLogger from 'vuex/dist/logger'
+// const debug = process.env.NODE_ENV !== 'production'
+
+// const createPersisted = createPersistedState({
+// 	storage: window.sessionStorage,
+// 	reducer(val) {
+// 		return {
+// 			permission: val.permission
+// 		}
+// 	}
+// })
 
 Vue.use(Vuex)
 

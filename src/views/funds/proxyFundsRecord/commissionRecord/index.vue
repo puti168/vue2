@@ -11,6 +11,7 @@
 							format="yyyy-MM"
 							type="month"
 							align="right"
+							style="width: 230px"
 						></el-date-picker>
 					</el-form-item>
 					<el-form-item label="订单号:">
@@ -18,7 +19,7 @@
 							v-model="queryData.orderNo"
 							clearable
 							size="medium"
-							style="width: 200px"
+							style="width: 330px"
 							placeholder="请输入"
 							:disabled="loading"
 							@keyup.enter.native="enterSearch"
@@ -27,7 +28,7 @@
 					<el-form-item label="订单状态:" class="tagheight">
 						<el-select
 							v-model="queryData.orderStatus"
-							style="width: 300px"
+							style="width: 230px"
 							clearable
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
@@ -46,7 +47,7 @@
 							clearable
 							:maxlength="11"
 							size="medium"
-							style="width: 200px"
+							style="width: 230px"
 							placeholder="请输入"
 							:disabled="loading"
 							@keyup.enter.native="enterSearch"
@@ -71,7 +72,7 @@
 							重置
 						</el-button>
 						<el-button
-						    v-if="hasPermission('275')"
+							v-if="hasPermission('275')"
 							icon="el-icon-download"
 							type="warning"
 							:disabled="loading"
@@ -99,7 +100,7 @@
 				>
 					<el-table-column
 						prop="orderNo"
-						width="180px"
+						width="200px"
 						align="center"
 						label="订单号"
 					>
@@ -112,7 +113,7 @@
 					</el-table-column>
 					<el-table-column
 						prop="orderStatus"
-						width="180px"
+						width="150px"
 						align="center"
 						label="订单状态"
 					>
@@ -149,7 +150,7 @@
 						prop="accountType"
 						align="center"
 						label="代理类型"
-						width="100px"
+						width="120px"
 					>
 						<template slot-scope="scope">
 							{{ typeFilter(scope.row.accountType, 'accountType') }}
@@ -159,7 +160,7 @@
 						prop="accountStatus"
 						align="center"
 						label="账号状态"
-						width="150px"
+						width="130px"
 					>
 						<template slot-scope="scope">
 							<span v-if="scope.row.accountStatus === 1" class="normalRgba">
@@ -190,18 +191,18 @@
 						prop="windControlName"
 						align="center"
 						label="风控层级"
-						width="180px"
+						width="130px"
 					></el-table-column>
 					<el-table-column
 						prop="currentLevel"
 						align="center"
 						label="代理等级"
-						width="150px"
+						width="130px"
 					></el-table-column>
 					<el-table-column
 						prop="totalNetAmount"
 						align="center"
-						width="130px"
+						width="180px"
 						label="总输赢"
 					></el-table-column>
 					<el-table-column
@@ -219,7 +220,7 @@
 					<el-table-column
 						prop="totalRebateAmount"
 						align="center"
-						width="130px"
+						width="150px"
 						label="返水"
 					></el-table-column>
 					<el-table-column
@@ -237,7 +238,7 @@
 					<el-table-column
 						prop="totalPureAmount"
 						align="center"
-						width="130px"
+						width="150px"
 						label="净输赢"
 					></el-table-column>
 					<el-table-column
@@ -299,6 +300,8 @@ export default {
 	components: {},
 	mixins: [list],
 	data() {
+		this.loadData = this.throttle(this.loadData, 1000)
+		this._changeTableSort = this.throttle(this._changeTableSort, 1000)
 		return {
 			queryData: {},
 			onlineTime: Date.now(),

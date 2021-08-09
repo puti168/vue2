@@ -1,436 +1,957 @@
 <template>
-  <div class="game-container report-container">
-    <div class="view-container dealer-container">
-      <div class="params">
-        <el-form ref="form" :inline="true" :model="queryData">
-          <el-form-item label="日期:">
-            <el-date-picker
-              v-model="searchTime"
-              size="medium"
-              format="yyyy-MM-dd"
-              type="daterange"
-              range-separator="-"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-              align="right"
-              clearable
-              style="width: 240px"
-            ></el-date-picker>
-          </el-form-item>
-          <el-form-item>
-            <el-button
-              type="primary"
-              icon="el-icon-search"
-              :disabled="queryText !== '查询'"
-              size="medium"
-              @click="search"
-            >
-              {{ queryText }}
-            </el-button>
-            <el-button
-              icon="el-icon-refresh-left"
-              :disabled="loading"
-              size="medium"
-              @click="reset"
-            >
-              重置
-            </el-button>
-            <el-button
-              v-if="hasPermission('352')"
-              icon="el-icon-download"
-              type="warning"
-              :disabled="loading"
-              size="medium"
-              @click="exportExcel"
-            >
-              导出
-            </el-button>
-            <el-button
-              type="success"
-              icon="el-icon-setting"
-              :disabled="loading"
-              size="medium"
-              @click="openSetting"
-            >
-              列设置
-            </el-button>
-          </el-form-item>
-        </el-form>
-      </div>
-      <div class="content">
-        <el-table
-          ref="tables"
-          v-loading="loading"
-          border
-          size="mini"
-          class="small-size-table"
-          :data="tableData"
-          style="width: 100%"
-          show-summary
-          :summary-method="getSummaries"
-          :header-cell-style="getRowClass"
-          @sort-change="_changeTableSort"
-        >
-          <el-table-column prop="gameName" align="center" label="日期"> </el-table-column>
-          <el-table-column
-            v-if="settingList['会员注册人数']"
-            prop="gameRebateRate"
-            align="center"
-            label="会员注册人数"
-          >
-          </el-table-column>
-          <el-table-column prop="gameRebateRate" align="center" label="会员登录人数">
-          </el-table-column>
-          <el-table-column prop="gameRebateRate" align="center" label="会员总存款">
-          </el-table-column>
-          <el-table-column prop="gameRebateRate" align="center" label="会员总取款 ">
-          </el-table-column>
-          <el-table-column prop="gameRebateRate" align="center" label="会员存取差">
-          </el-table-column>
-          <el-table-column prop="gameRebateRate" align="center" label="上级转入">
-          </el-table-column>
-          <el-table-column prop="gameRebateRate" align="center" label="会员首存">
-          </el-table-column>
-          <el-table-column prop="gameRebateRate" align="center" label="会员有效投注">
-          </el-table-column>
-          <el-table-column prop="gameRebateRate" align="center" label="会员投注盈亏">
-          </el-table-column>
-          <el-table-column prop="gameRebateRate" align="center" label="会员总优惠">
-          </el-table-column>
-          <el-table-column prop="gameRebateRate" align="center" label="会员总返水">
-          </el-table-column>
-          <el-table-column prop="gameRebateRate" align="center" label="会员调整">
-          </el-table-column>
-          <el-table-column prop="gameRebateRate" align="center" label="代理注册人数">
-          </el-table-column>
-          <el-table-column prop="gameRebateRate" align="center" label="代理总存款">
-          </el-table-column>
-          <el-table-column prop="gameRebateRate" align="center" label="代理总取款">
-          </el-table-column>
-          <el-table-column prop="gameRebateRate" align="center" label="代理存取差">
-          </el-table-column>
-          <el-table-column prop="gameRebateRate" align="center" label="转给下级">
-          </el-table-column>
-          <el-table-column prop="gameRebateRate" align="center" label="代理总优惠">
-          </el-table-column>
-          <el-table-column prop="gameRebateRate" align="center" label="代理调整">
-          </el-table-column>
-        </el-table>
-        <!-- 分页 -->
-        <el-pagination
-          :current-page.sync="pageNum"
-          class="pageValue"
-          background
-          layout="total, sizes,prev, pager, next, jumper"
-          :page-size="pageSize"
-          :page-sizes="pageSizes"
-          :total="total"
-          @current-change="handleCurrentChange"
-          @size-change="handleSizeChange"
-        ></el-pagination>
-      </div>
-      <el-dialog
-        title="列设置"
-        center
-        :visible.sync="visible"
-        width="610px"
-        class="col-setting"
-      >
-        <el-button type="primary" @click="setAll">复原缺省</el-button>
-        <div v-for="(value, name) in settingList" :key="name" class="setting-div">
-          <el-checkbox v-model="newList[name]">{{ name }}</el-checkbox>
-        </div>
-        <div slot="footer" class="dialog-footer">
-          <el-button @click="visible = false">取 消</el-button>
-          <el-button type="primary" @click="confirm"> 提交 </el-button>
-        </div>
-      </el-dialog>
-    </div>
-  </div>
+	<div class="game-container report-container">
+		<div class="view-container dealer-container">
+			<div class="params">
+				<el-form ref="form" :inline="true" :model="queryData">
+					<el-form-item label="日期:" prop="statisticsTime">
+						<el-date-picker
+							v-model="statisticsTime"
+							type="daterange"
+							range-separator="-"
+							:clearable="false"
+							start-placeholder="开始日期"
+							end-placeholder="结束日期"
+							:picker-options="timeControl"
+						></el-date-picker>
+					</el-form-item>
+
+					<el-form-item>
+						<el-button
+							type="primary"
+							icon="el-icon-search"
+							:disabled="flag"
+							size="medium"
+							@click="search"
+						>
+							{{ queryText }}
+						</el-button>
+						<el-button
+							icon="el-icon-refresh-left"
+							size="medium"
+							:disabled="flag"
+							@click="reset"
+						>
+							重置
+						</el-button>
+						<el-button
+							v-if="hasPermission('342')"
+							type="warning"
+							icon="el-icon-folder-add"
+							size="medium"
+							:disabled="loading"
+							@click="exportExcel"
+						>
+							导出
+						</el-button>
+						<el-button
+							type="success"
+							size="medium"
+							:disabled="loading"
+							@click="openSetting"
+						>
+							列设置
+						</el-button>
+					</el-form-item>
+				</el-form>
+			</div>
+
+			<div class="content">
+				<el-table
+					v-loading="loading"
+					border
+					size="mini"
+					class="small-size-table"
+					:data="dataList"
+					style="width: 100%"
+					show-summary
+					:summary-method="getSummaries"
+					:header-cell-style="getRowClass"
+				>
+					<el-table-column
+						v-if="comprehensiveReport['日期']"
+						prop="userName"
+						align="center"
+						label="日期"
+						width="160px"
+						fixed
+					></el-table-column>
+					<el-table-column
+						v-if="comprehensiveReport['会员注册人数']"
+						prop="realName"
+						align="center"
+						width="160px"
+						label="会员注册人数"
+					></el-table-column>
+					<el-table-column
+						v-if="comprehensiveReport['会员登录人数']"
+						prop="accountType"
+						align="center"
+						width="160px"
+						label="会员登录人数"
+					></el-table-column>
+					<el-table-column
+						v-if="comprehensiveReport['会员总存款']"
+						prop="parentProxyName"
+						align="center"
+						width="160px"
+						label="会员总存款"
+					></el-table-column>
+					<el-table-column
+						v-if="comprehensiveReport['会员总取款']"
+						prop="vipSerialNum"
+						align="center"
+						width="160px"
+						label="会员总取款"
+					></el-table-column>
+					<el-table-column
+						v-if="comprehensiveReport['会员存取差']"
+						prop="accountStatus"
+						align="center"
+						width="160px"
+						label="会员存取差"
+					></el-table-column>
+					<el-table-column
+						v-if="comprehensiveReport['会员首存']"
+						prop="labelName"
+						align="center"
+						label="会员首存"
+					></el-table-column>
+
+					<el-table-column
+						v-if="comprehensiveReport['会员有效投注']"
+						prop="windControlName"
+						align="center"
+						width="160px"
+						label="会员有效投注"
+					></el-table-column>
+					<el-table-column
+						v-if="comprehensiveReport['会员投注盈亏']"
+						prop="betCount"
+						align="center"
+						width="160px"
+						label="会员投注盈亏"
+					></el-table-column>
+					<el-table-column
+						v-if="comprehensiveReport['会员总优惠']"
+						prop="betCount"
+						align="center"
+						width="160px"
+						label="会员总优惠"
+					></el-table-column>
+					<el-table-column
+						v-if="comprehensiveReport['会员总返水']"
+						prop="betCount"
+						align="center"
+						width="160px"
+						label="会员总返水"
+					></el-table-column>
+					<el-table-column
+						v-if="comprehensiveReport['会员调整']"
+						prop="betCount"
+						align="center"
+						label="会员调整"
+					></el-table-column>
+					<el-table-column
+						v-if="comprehensiveReport['代理注册人数']"
+						prop="betCount"
+						align="center"
+						width="160px"
+						label="代理注册人数"
+					></el-table-column>
+					<el-table-column
+						v-if="comprehensiveReport['代理总存款']"
+						prop="betCount"
+						align="center"
+						width="160px"
+						label="代理总存款"
+					></el-table-column>
+					<el-table-column
+						v-if="comprehensiveReport['代理总取款']"
+						prop="betCount"
+						align="center"
+						width="160px"
+						label="代理总取款"
+					></el-table-column>
+					<el-table-column
+						v-if="comprehensiveReport['代理存取差']"
+						prop="betCount"
+						align="center"
+						width="160px"
+						label="代理存取差"
+					></el-table-column>
+					<el-table-column
+						v-if="comprehensiveReport['转给下级']"
+						prop="betCount"
+						align="center"
+						label="转给下级"
+					></el-table-column>
+					<el-table-column
+						v-if="comprehensiveReport['代理总优惠']"
+						prop="betCount"
+						align="center"
+						width="160px"
+						label="代理总优惠"
+					></el-table-column>
+					<el-table-column
+						v-if="comprehensiveReport['代理调整']"
+						prop="betCount"
+						align="center"
+						label="代理调整"
+					></el-table-column>
+				</el-table>
+				<!-- 分页 -->
+				<el-pagination
+					v-show="!!total"
+					class="pageValue"
+					:current-page.sync="pageNum"
+					background
+					layout="total, sizes,prev, pager, next, jumper"
+					:page-size="pageSize"
+					:page-sizes="$store.getters.pageSizes"
+					:total="total"
+					@current-change="handleCurrentChange"
+					@size-change="handleSizeChange"
+				></el-pagination>
+			</div>
+		</div>
+		<el-dialog
+			title="列设置"
+			center
+			:visible.sync="visible"
+			width="500px"
+			class="col-setting"
+		>
+			<div>
+				<el-link type="primary" @click="clickDel">复原缺省</el-link>
+			</div>
+			<div
+				v-for="(value, name) in comprehensiveReport"
+				:key="name"
+				class="setting-div"
+			>
+				<el-checkbox v-if="newList.length > 0" v-model="newList[0][name]">
+					{{ name }}
+				</el-checkbox>
+			</div>
+			<div slot="footer" class="dialog-footer">
+				<el-button @click="visible = false">取 消</el-button>
+				<el-button type="primary" @click="confirm">确定</el-button>
+			</div>
+		</el-dialog>
+	</div>
 </template>
 
 <script>
 import list from '@/mixins/list'
 import dayjs from 'dayjs'
-const startTime = dayjs().startOf('day').valueOf()
-const endTime = dayjs().endOf('day').valueOf()
+const startTime = dayjs()
+	.startOf('day')
+	.valueOf()
+const endTime = dayjs()
+	.endOf('day')
+	.valueOf()
 
 export default {
-  components: {},
-  mixins: [list],
-  data() {
-    return {
-      queryData: {},
-      searchTime: [startTime, endTime],
-      queryText: '查询',
-      tableData: [],
-      visible: false,
-      settingList: {
-        会员注册人数: true
-      },
-      newList: []
-    }
-  },
-  computed: {},
-  mounted() {
-    if (localStorage.getItem('venueProfitAndLoss')) {
-      this.settingList = JSON.parse(localStorage.getItem('venueProfitAndLoss'))
-    }
-  },
+	filters: {
+		filterDecimals: function(val) {
+			if (typeof val === 'number') {
+				const newVal = (Math.floor(val * 1000) / 1000).toFixed(2)
+				return newVal
+			} else {
+				return '-'
+			}
+		}
+	},
+	mixins: [list],
+	data() {
+		return {
+			queryData: {},
+			statisticsTime: [startTime, endTime],
+			day31: 30 * 24 * 3600 * 1000,
+			// 日期使用
+			timeControl: {
+				onPick: ({ maxDate, minDate }) => {
+					console.log(maxDate, minDate)
+					if (maxDate - minDate > this.day31) {
+						this.flag = true
+						this.$message.warning('请缩小搜索范围至31天')
+					}
+					if (
+						maxDate !== null &&
+						minDate !== null &&
+						maxDate - minDate <= this.day31 &&
+						this.queryText === '查询'
+					) {
+						this.flag = false
+					} else {
+						this.flag = true
+					}
+				},
+				disabledDate: (time) => {
+					return time.getTime() > Date.now()
+				}
+			},
+			comprehensiveReport: {
+				日期: true,
+				会员注册人数: true,
+				会员登录人数: true,
+				会员总存款: true,
+				会员总取款: true,
+				会员存取差: true,
+				会员首存: true,
+				会员有效投注: true,
+				会员投注盈亏: true,
+				会员总优惠: true,
+				会员总返水: true,
+				会员调整: true,
+				代理注册人数: true,
+				代理总存款: true,
+				代理总取款: true,
+				代理存取差: true,
+				转给下级: true,
+				代理总优惠: true,
+				代理调整: true
+			},
+			queryText: '查询',
+			flag: false,
+			visible: false,
+			newList: [],
+			dataList: [],
+			summary: {},
+			myName: '',
+			timecount: null
+		}
+	},
+	computed: {},
+	created() {},
+	mounted() {
+		this.myName = localStorage.getItem('username')
+		this.initDB()
+	},
+	methods: {
+		// 列设置
+		openSetting() {
+			this.getList()
+			this.visible = true
+		},
+		initDB() {
+			const request = indexedDB.open('comprehensiveReport')
+			request.onupgradeneeded = (event) => {
+				const db = event.target.result
+				this.db = db
+				// 建表 名为person,主键为id
+				db.createObjectStore('comprehensiveReport', {
+					keyPath: 'id',
+					autoIncrement: true
+				})
+			}
 
-  methods: {
-    loadData() {
-      this.loading = true
-      const create = this.searchTime || []
-      const [startTime, endTime] = create
-      let params = {
-        ...this.queryData,
-        createAtStart: startTime ? dayjs(startTime).format('YYYY-MM-DD') : '',
-        createAtEnd: endTime ? dayjs(endTime).format('YYYY-MM-DD') : ''
-      }
-      params = {
-        ...this.getParams(params)
-      }
-      this.$api
-        .gameList(params)
-        .then((res) => {
-          if (res.code === 200) {
-            this.tableData = res.data.record
-            this.total = res.data.totalRecord
-          }
-          this.loading = false
-        })
-        .catch(() => {
-          this.loading = false
-        })
-    },
-    search() {
-      let t = 10
-      const timecount = setInterval(() => {
-        t--
-        this.queryText = t + 's'
-        if (t < 0) {
-          clearInterval(timecount)
-          this.queryText = '查询'
-        }
-      }, 1000)
-      this.loadData()
-    },
-    reset() {
-      this.queryData = {}
-      this.searchTime = [startTime, endTime]
-      this.pageNum = 1
-      this.loadData()
-    },
-    exportExcel() {
-      const create = this.searchTime || []
-      const [startTime, endTime] = create
-      let params = {
-        ...this.queryData,
-        createAtStart: startTime ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss') : '',
-        createAtEnd: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
-      }
-      params = {
-        ...this.getParams(params)
-      }
-      delete params.registerTime
-      delete params.lastLoginTime
-      delete params.firstSaveTime
-      delete params.accountStatus
-      delete params.deviceType
-      this.$confirm(
-        `<strong>是否导出?</strong></br><span style='font-size:12px;color:#c1c1c1'>数据过大时，请耐心等待</span>`,
-        '确认提示',
-        {
-          dangerouslyUseHTMLString: true,
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }
-      )
-        .then(() => {
-          this.$api
-            .getGameRecordDownload(params)
-            .then((res) => {
-              this.loading = false
-              const { data, status } = res
-              if (res && status === 200) {
-                const { type } = data
-                if (type.includes('application/json')) {
-                  const reader = new FileReader()
-                  reader.onload = (evt) => {
-                    if (evt.target.readyState === 2) {
-                      const {
-                        target: { result }
-                      } = evt
-                      const ret = JSON.parse(result)
-                      if (ret.code !== 200) {
-                        this.$message({
-                          type: 'error',
-                          message: ret.msg,
-                          duration: 1500
-                        })
-                      }
-                    }
-                  }
-                  reader.readAsText(data)
-                } else {
-                  const result = res.data
-                  const disposition = res.headers['content-disposition']
-                  const fileNames = disposition && disposition.split("''")
-                  let fileName = fileNames[1]
-                  fileName = decodeURIComponent(fileName)
-                  const blob = new Blob([result], {
-                    type: 'application/octet-stream'
-                  })
-                  if ('download' in document.createElement('a')) {
-                    const downloadLink = document.createElement('a')
-                    downloadLink.download = fileName || ''
-                    downloadLink.style.display = 'none'
-                    downloadLink.href = URL.createObjectURL(blob)
-                    document.body.appendChild(downloadLink)
-                    downloadLink.click()
-                    URL.revokeObjectURL(downloadLink.href)
-                    document.body.removeChild(downloadLink)
-                  } else {
-                    window.navigator.msSaveBlob(blob, fileName)
-                  }
-                  this.$message({
-                    type: 'success',
-                    message: '导出成功',
-                    duration: 1500
-                  })
-                }
-              }
-            })
-            .catch(() => {
-              this.loading = false
-              this.$message({
-                type: 'error',
-                message: '导出失败',
-                duration: 1500
-              })
-            })
-        })
-        .catch(() => {})
-    },
-    _changeTableSort({ column, prop, order }) {
-      if (prop === 'betAmount') {
-        prop = 1
-      }
-      if (prop === 'netAmount') {
-        prop = 2
-      }
-      if (prop === 'createAt') {
-        prop = 3
-      }
-      if (prop === 'netAt') {
-        prop = 4
-      }
-      this.queryData.orderKey = prop
-      if (order === 'ascending') {
-        // 升序
-        this.queryData.orderType = 'asc'
-      } else if (column.order === 'descending') {
-        // 降序
-        this.queryData.orderType = 'desc'
-      } else {
-          delete this.queryData.orderKey
-          delete this.queryData.orderType
-      }
-      this.loadData()
-    },
-    // 列设置
-    openSetting() {
-      this.visible = true
-      this.newList = JSON.parse(JSON.stringify(this.settingList))
-    },
-    confirm() {
-      localStorage.setItem('venueProfitAndLoss', JSON.stringify(this.newList))
-      this.settingList = this.newList
-      this.visible = false
-    },
-    setAll() {
-      Object.keys(this.newList).forEach((item) => {
-        this.newList[item] = true
-      })
-    },
-    getSummaries(param) {
-      const { columns, data } = param
-      const sums = []
-      columns.forEach((column, index) => {
-        if (index === 0) {
-          const el = (
-            <div class='count_row'>
-              <p>本页合计</p>
-              <p>全部合计</p>
-            </div>
-          )
-          sums[index] = el
-          return
-        }
-        const values = data.map((item) => Number(item[column.property]))
-        if (!values.every((value) => isNaN(value))) {
-          sums[index] = values.reduce((prev, curr) => {
-            const value = Number(curr)
-            if (!isNaN(value)) {
-              return prev + curr
-            } else {
-              return prev
-            }
-          }, 0)
-          sums[index] = (
-            <div class='count_row'>
-              <p>{sums[index]}</p>
-              <p>2000</p>
-            </div>
-          )
-        } else {
-          sums[index] = ''
-        }
-      })
+			request.onsuccess = (event) => {
+				this.db = event.target.result
+				console.log('数据库打开/创建成功', event)
+				this.clickAdd()
+				this.getList()
+			}
+		},
+		clickAdd() {
+			const request = this.db
+				.transaction(['comprehensiveReport'], 'readwrite')
+				.objectStore('comprehensiveReport')
+				.add({
+					id: this.myName,
+					日期: true,
+					会员注册人数: true,
+					会员登录人数: true,
+					会员总存款: true,
+					会员总取款: true,
+					会员存取差: true,
+					会员首存: true,
+					会员有效投注: true,
+					会员投注盈亏: true,
+					会员总优惠: true,
+					会员总返水: true,
+					会员调整: true,
+					代理注册人数: true,
+					代理总存款: true,
+					代理总取款: true,
+					代理存取差: true,
+					转给下级: true,
+					代理总优惠: true,
+					代理调整: true
+				})
+			request.onsuccess = (event) => {
+				this.getList()
+			}
+		},
+		getList() {
+			this.newList = []
+			var transaction = this.db.transaction(['comprehensiveReport'])
+			const objectStore = transaction.objectStore('comprehensiveReport')
+			const list = []
+			objectStore.openCursor().onsuccess = (event) => {
+				const cursor = event.target.result
+				if (cursor) {
+					list.push(cursor.value)
+					cursor.continue()
+				} else {
+					console.log(list, 4654564)
+					for (let i = 0; i < list.length; i++) {
+						const ele = list[i]
+						if (ele.id === this.myName) {
+							this.newList.push(ele)
+							this.comprehensiveReport = { ...ele }
+							delete this.comprehensiveReport.id
+						}
+					}
+					console.log(this.newList, 4645655465)
+				}
+			}
+		},
+		confirm() {
+			const arr = []
+			for (let i = 0; i < this.newList.length; i++) {
+				const ele = this.newList[i]
+				if (ele.id === this.myName) {
+					arr.push(ele)
+				}
+			}
+			console.log(arr, 'arr')
+			const request = this.db
+				.transaction(['comprehensiveReport'], 'readwrite')
+				.objectStore('comprehensiveReport')
+				.put({
+					id: this.myName,
+					日期: arr[0]['日期'],
+					会员注册人数: arr[0]['会员注册人数'],
+					会员登录人数: arr[0]['会员登录人数'],
+					会员总存款: arr[0]['会员总存款'],
+					会员总取款: arr[0]['会员总取款'],
+					会员存取差: arr[0]['会员存取差'],
+					会员首存: arr[0]['会员首存'],
+					会员有效投注: arr[0]['会员有效投注'],
+					会员投注盈亏: arr[0]['会员投注盈亏'],
+					会员总优惠: arr[0]['会员总优惠'],
+					会员总返水: arr[0]['会员总返水'],
+					会员调整: arr[0]['会员调整'],
+					代理注册人数: arr[0]['代理注册人数'],
+					代理总存款: arr[0]['代理总存款'],
+					代理总取款: arr[0]['代理总取款'],
+					代理存取差: arr[0]['代理存取差'],
+					转给下级: arr[0]['转给下级'],
+					代理总优惠: arr[0]['代理总优惠'],
+					代理调整: arr[0]['代理调整'],
+					存取差: arr[0]['存取差'],
+					总优惠: arr[0]['总优惠'],
+					总返水: arr[0]['总返水'],
+					其他调整: arr[0]['其他调整'],
+					注单量: arr[0]['注单量'],
+					投注金额: arr[0]['投注金额'],
+					有效投注: arr[0]['有效投注'],
+					投注盈亏: arr[0]['投注盈亏'],
+					转代次数: arr[0]['转代次数'],
+					中心钱包余额: arr[0]['中心钱包余额'],
+					钱包总余额: arr[0]['钱包总余额']
+				})
+			request.onsuccess = (event) => {
+				this.visible = false
+				this.getList()
+				console.log('数据更新成功')
+			}
 
-      return sums
-    }
-  }
+			request.onerror = (event) => {
+				console.log('数据更新失败')
+			}
+		},
+		clickDel(id) {
+			this.newList = []
+			this.newList.push({
+				id: this.myName,
+				日期: true,
+				会员注册人数: true,
+				会员登录人数: true,
+				会员总存款: true,
+				会员总取款: true,
+				会员存取差: true,
+				会员首存: true,
+				会员有效投注: true,
+				会员投注盈亏: true,
+				会员总优惠: true,
+				会员总返水: true,
+				会员调整: true,
+				代理注册人数: true,
+				代理总存款: true,
+				代理总取款: true,
+				代理存取差: true,
+				转给下级: true,
+				代理总优惠: true,
+				代理调整: true
+			})
+		},
+		loadData() {
+			const statistics = this.statisticsTime || []
+			const [startTime, endTime] = statistics
+			let params = {
+				...this.queryData,
+				accountTypeList: this.queryData.accountTypeList
+					? this.queryData.accountTypeList.join(',')
+					: [],
+				accountStatusList: this.queryData.accountStatusList
+					? this.queryData.accountStatusList.join(',')
+					: [],
+				startTime: startTime ? dayjs(startTime).format('YYYY-MM-DD') : '',
+				endTime: endTime ? dayjs(endTime).format('YYYY-MM-DD') : ''
+			}
+			params = {
+				...this.getParams(params)
+			}
+			console.log(params)
+			if (endTime - startTime > this.day31) {
+				this.$message.warning('请缩小搜索范围至31天')
+			} else {
+				this.loading = true
+				this.$api
+					.getReportMembernetamountList(params)
+					.then((res) => {
+						if (res.code === 200 && res.data !== null) {
+							this.loading = false
+							this.dataList = res.data.record
+							this.total = res.data.totalRecord
+						} else {
+							this.dataList = []
+							this.total = 0
+							this.loading = false
+						}
+					})
+					.catch(() => (this.loading = false))
+				this.$api
+					.getReportMembernetamountAggregation(params)
+					.then((res) => {
+						if (res.code === 200) {
+							this.loading = false
+							this.summary = res.data
+							console.log(res)
+						}
+					})
+					.catch(() => (this.loading = false))
+			}
+		},
+		search() {
+			const statistics = this.statisticsTime || []
+			const [startTime, endTime] = statistics
+			if (endTime - startTime <= this.day31) {
+				this.flag = true
+				let t = 10
+				clearInterval(this.timecount)
+				this.timecount = setInterval(() => {
+					t--
+					this.queryText = t + 's'
+					if (t < 0) {
+						clearInterval(this.timecount)
+						this.queryText = '查询'
+						this.flag = false
+					}
+				}, 1000)
+				this.loadData()
+			} else {
+				this.flag = true
+				this.loadData()
+			}
+		},
+
+		filterDecimals: function(val) {
+			if (typeof val === 'number') {
+				const newVal = (Math.floor(val * 1000) / 1000).toFixed(2)
+				return newVal
+			} else {
+				return '-'
+			}
+		},
+		getSummaries(param) {
+			const { columns, data } = param
+			const sums = []
+			columns.forEach((column, index) => {
+				if (index === 0) {
+					const el = (
+						<div class='count_row'>
+							<p>本页合计</p>
+							<p>全部合计</p>
+						</div>
+					)
+					sums[index] = el
+					return
+				} else if (index >= 8 && this.summary !== null) {
+					const values = data.map((item) => Number(item[column.property]))
+					if (!values.every((value) => isNaN(value))) {
+						sums[index] = values.reduce((prev, curr) => {
+							const value = Number(curr)
+							if (!isNaN(value)) {
+								return prev + curr
+							} else {
+								return prev
+							}
+						}, 0)
+						const num = sums[index]
+						switch (index) {
+							case 8:
+								sums[index] = (
+									<div class='count_row'>
+										<p>{num}</p>
+										<p>{this.summary.betCountTotal}</p>
+									</div>
+								)
+								break
+							case 9:
+								sums[index] = (
+									<div class='count_row'>
+										<p>{this.filterDecimals(num)}</p>
+										<p>{this.filterDecimals(this.summary.betAmountTotal)}</p>
+									</div>
+								)
+								break
+							case 10:
+								sums[index] = (
+									<div class='count_row'>
+										<p>{this.filterDecimals(num)}</p>
+										<p>
+											{this.filterDecimals(this.summary.validBetAmountTotal)}
+										</p>
+									</div>
+								)
+								break
+							case 11:
+								sums[index] = (
+									<div class='count_row'>
+										{num > 0 ? (
+											<p class='enableColor'>{this.filterDecimals(num)}</p>
+										) : (
+											<p class='redColor'>{this.filterDecimals(num)}</p>
+										)}
+										{this.summary.netAmountTotal > 0 ? (
+											<p class='enableColor'>
+												{this.filterDecimals(this.summary.netAmountTotal)}
+											</p>
+										) : this.summary.netAmountTotal === 0 ? (
+											<p>{this.filterDecimals(this.summary.netAmountTotal)}</p>
+										) : (
+											<p class='redColor'>
+												{this.filterDecimals(this.summary.netAmountTotal)}
+											</p>
+										)}
+									</div>
+								)
+								break
+							case 12:
+								sums[index] = (
+									<div class='count_row'>
+										{num > 0 ? (
+											<p class='enableColor'>{this.filterDecimals(num)}</p>
+										) : (
+											<p class='redColor'>{this.filterDecimals(num)}</p>
+										)}
+										{this.summary.netAmountTotal > 0 ? (
+											<p class='enableColor'>
+												{this.filterDecimals(this.summary.netAmountTotal)}
+											</p>
+										) : this.summary.netAmountTotal === 0 ? (
+											<p>{this.filterDecimals(this.summary.netAmountTotal)}</p>
+										) : (
+											<p class='redColor'>
+												{this.filterDecimals(this.summary.netAmountTotal)}
+											</p>
+										)}
+									</div>
+								)
+								break
+							case 13:
+								sums[index] = (
+									<div class='count_row'>
+										{num > 0 ? (
+											<p class='enableColor'>{this.filterDecimals(num)}</p>
+										) : (
+											<p class='redColor'>{this.filterDecimals(num)}</p>
+										)}
+										{this.summary.netAmountTotal > 0 ? (
+											<p class='enableColor'>
+												{this.filterDecimals(this.summary.netAmountTotal)}
+											</p>
+										) : this.summary.netAmountTotal === 0 ? (
+											<p>{this.filterDecimals(this.summary.netAmountTotal)}</p>
+										) : (
+											<p class='redColor'>
+												{this.filterDecimals(this.summary.netAmountTotal)}
+											</p>
+										)}
+									</div>
+								)
+								break
+							case 14:
+								sums[index] = (
+									<div class='count_row'>
+										{num > 0 ? (
+											<p class='enableColor'>{this.filterDecimals(num)}</p>
+										) : (
+											<p class='redColor'>{this.filterDecimals(num)}</p>
+										)}
+										{this.summary.netAmountTotal > 0 ? (
+											<p class='enableColor'>
+												{this.filterDecimals(this.summary.netAmountTotal)}
+											</p>
+										) : this.summary.netAmountTotal === 0 ? (
+											<p>{this.filterDecimals(this.summary.netAmountTotal)}</p>
+										) : (
+											<p class='redColor'>
+												{this.filterDecimals(this.summary.netAmountTotal)}
+											</p>
+										)}
+									</div>
+								)
+								break
+							case 15:
+								sums[index] = (
+									<div class='count_row'>
+										{num > 0 ? (
+											<p class='enableColor'>{this.filterDecimals(num)}</p>
+										) : (
+											<p class='redColor'>{this.filterDecimals(num)}</p>
+										)}
+										{this.summary.netAmountTotal > 0 ? (
+											<p class='enableColor'>
+												{this.filterDecimals(this.summary.netAmountTotal)}
+											</p>
+										) : this.summary.netAmountTotal === 0 ? (
+											<p>{this.filterDecimals(this.summary.netAmountTotal)}</p>
+										) : (
+											<p class='redColor'>
+												{this.filterDecimals(this.summary.netAmountTotal)}
+											</p>
+										)}
+									</div>
+								)
+								break
+							case 16:
+								sums[index] = (
+									<div class='count_row'>
+										{num > 0 ? (
+											<p class='enableColor'>{this.filterDecimals(num)}</p>
+										) : (
+											<p class='redColor'>{this.filterDecimals(num)}</p>
+										)}
+										{this.summary.netAmountTotal > 0 ? (
+											<p class='enableColor'>
+												{this.filterDecimals(this.summary.netAmountTotal)}
+											</p>
+										) : this.summary.netAmountTotal === 0 ? (
+											<p>{this.filterDecimals(this.summary.netAmountTotal)}</p>
+										) : (
+											<p class='redColor'>
+												{this.filterDecimals(this.summary.netAmountTotal)}
+											</p>
+										)}
+									</div>
+								)
+								break
+							case 17:
+								sums[index] = (
+									<div class='count_row'>
+										{num > 0 ? (
+											<p class='enableColor'>{this.filterDecimals(num)}</p>
+										) : (
+											<p class='redColor'>{this.filterDecimals(num)}</p>
+										)}
+										{this.summary.netAmountTotal > 0 ? (
+											<p class='enableColor'>
+												{this.filterDecimals(this.summary.netAmountTotal)}
+											</p>
+										) : this.summary.netAmountTotal === 0 ? (
+											<p>{this.filterDecimals(this.summary.netAmountTotal)}</p>
+										) : (
+											<p class='redColor'>
+												{this.filterDecimals(this.summary.netAmountTotal)}
+											</p>
+										)}
+									</div>
+								)
+								break
+							case 18:
+								sums[index] = (
+									<div class='count_row'>
+										{num > 0 ? (
+											<p class='enableColor'>{this.filterDecimals(num)}</p>
+										) : (
+											<p class='redColor'>{this.filterDecimals(num)}</p>
+										)}
+										{this.summary.netAmountTotal > 0 ? (
+											<p class='enableColor'>
+												{this.filterDecimals(this.summary.netAmountTotal)}
+											</p>
+										) : this.summary.netAmountTotal === 0 ? (
+											<p>{this.filterDecimals(this.summary.netAmountTotal)}</p>
+										) : (
+											<p class='redColor'>
+												{this.filterDecimals(this.summary.netAmountTotal)}
+											</p>
+										)}
+									</div>
+								)
+								break
+						}
+					} else {
+						sums[index] = ''
+					}
+				}
+			})
+
+			return sums
+		},
+		reset() {
+			this.pageNum = 1
+			this.queryData = {}
+			this.statisticsTime = [startTime, endTime]
+			this.$refs['form'].resetFields()
+			this.search()
+		},
+
+		exportExcel() {
+			this.loading = true
+			const statistics = this.statisticsTime || []
+			const [startTime, endTime] = statistics
+			let params = {
+				...this.queryData,
+				startTime: startTime ? dayjs(startTime).format('YYYY-MM-DD') : '',
+				endTime: endTime ? dayjs(endTime).format('YYYY-MM-DD') : ''
+			}
+			params = {
+				...this.getParams(params)
+			}
+			this.$confirm(
+				`<strong>是否导出?</strong></br><span style='font-size:12px;color:#c1c1c1'>数据过大时，请耐心等待</span>`,
+				'确认提示',
+				{
+					dangerouslyUseHTMLString: true,
+					confirmButtonText: '确定',
+					cancelButtonText: '取消',
+					type: 'warning'
+				}
+			)
+				.then(() => {
+					this.$api
+						.getGameRecordDownload(params)
+						.then((res) => {
+							this.loading = false
+							const { data, status } = res
+							if (res && status === 200) {
+								const { type } = data
+								if (type.includes('application/json')) {
+									const reader = new FileReader()
+									reader.onload = (evt) => {
+										if (evt.target.readyState === 2) {
+											const {
+												target: { result }
+											} = evt
+											const ret = JSON.parse(result)
+											if (ret.code !== 200) {
+												this.$message({
+													type: 'error',
+													message: ret.msg,
+													duration: 1500
+												})
+											}
+										}
+									}
+									reader.readAsText(data)
+								} else {
+									const result = res.data
+									const disposition = res.headers['content-disposition']
+									const fileNames = disposition && disposition.split("''")
+									let fileName = fileNames[1]
+									fileName = decodeURIComponent(fileName)
+									const blob = new Blob([result], {
+										type: 'application/octet-stream'
+									})
+									if ('download' in document.createElement('a')) {
+										const downloadLink = document.createElement('a')
+										downloadLink.download = fileName || ''
+										downloadLink.style.display = 'none'
+										downloadLink.href = URL.createObjectURL(blob)
+										document.body.appendChild(downloadLink)
+										downloadLink.click()
+										URL.revokeObjectURL(downloadLink.href)
+										document.body.removeChild(downloadLink)
+									} else {
+										window.navigator.msSaveBlob(blob, fileName)
+									}
+									this.$message({
+										type: 'success',
+										message: '导出成功',
+										duration: 1500
+									})
+								}
+							}
+						})
+						.catch(() => {
+							this.loading = false
+							this.$message({
+								type: 'error',
+								message: '导出失败',
+								duration: 1500
+							})
+						})
+				})
+				.catch(() => {})
+		}
+	}
 }
 </script>
 
 <style lang="scss" scoped>
 /deep/.el-dialog__header {
-  color: #5c5c5c;
-  font-weight: 700;
+	color: #909399;
+	font-weight: 700;
+}
+.numberBox /deep/.el-input-number__decrease,
+.numberBox /deep/.el-input-number__increase {
+	display: none;
+}
+.numberBox /deep/.el-input__inner {
+	padding: 0 15px;
+	text-align: left;
 }
 /deep/ .el-table__footer-wrapper .cell::after {
-  border: 1px solid #ebeef5;
-  content: "";
-  position: absolute;
-  top: 41px;
-  left: 0;
-  width: 100%;
+	border: 1px solid #ebeef5;
+	content: '';
+	position: absolute;
+	top: 41px;
+	left: 0;
+	width: 100%;
 }
 
 /deep/ .el-table__fixed-footer-wrapper tr::after {
-  border: 1px solid #ebeef5;
-  content: "";
-  position: absolute;
-  top: 41px;
-  left: 0;
-  width: 100%;
+	border: 1px solid #ebeef5;
+	content: '';
+	position: absolute;
+	top: 41px;
+	left: 0;
+	width: 100%;
 }
 .count_row {
-  height: 80px;
-  p {
-    height: 40px;
-    line-height: 40px;
-    span {
-      display: inline-block;
-      width: 20px;
-      height: 20px;
-    }
-  }
+	height: 80px;
+	color: #5c5c5c;
+	p {
+		height: 40px;
+		line-height: 40px;
+		font-weight: 700;
+		span {
+			display: inline-block;
+			width: 20px;
+			height: 20px;
+		}
+	}
 }
 .fenye {
-  text-align: center;
+	text-align: center;
+}
+.setting-div {
+	display: inline-block;
+	min-width: 110px;
 }
 </style>

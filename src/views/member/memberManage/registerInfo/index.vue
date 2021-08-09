@@ -6,7 +6,7 @@
 					ref="form"
 					:inline="true"
 					:model="queryData"
-					label-width="100px"
+					label-width="80px"
 				>
 					<el-form-item label="注册时间:">
 						<el-date-picker
@@ -21,9 +21,19 @@
 							align="right"
 							:clearable="false"
 							value-format="timestamp"
-							style="width: 382px"
+							style="width: 455px"
 							:default-time="defaultTime"
 						></el-date-picker>
+					</el-form-item>
+					<el-form-item label="会员账号:">
+						<el-input
+							v-model="queryData.userName"
+							size="medium"
+							placeholder="请输入"
+							clearable
+							maxlength="11"
+							style="width: 270px"
+						></el-input>
 					</el-form-item>
 					<el-form-item label="账号类型:">
 						<el-select
@@ -32,7 +42,8 @@
 							placeholder="默认选择全部"
 							clearable
 							multiple
-							style="width: 300px"
+							collapse-tags
+							style="width: 270px"
 						>
 							<el-option
 								v-for="item in accountTypeArr"
@@ -42,16 +53,7 @@
 							></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="会员账号:">
-						<el-input
-							v-model="queryData.userName"
-							size="medium"
-							placeholder="请输入"
-							clearable
-							maxlength="11"
-							style="width: 180px"
-						></el-input>
-					</el-form-item>
+
 					<el-form-item label="上级代理:">
 						<el-input
 							v-model="queryData.parentProxyName"
@@ -59,10 +61,10 @@
 							placeholder="请输入"
 							clearable
 							maxlength="11"
-							style="width: 180px"
+							style="width: 270px"
 						></el-input>
 					</el-form-item>
-					<el-form-item label="注册手机号:">
+					<el-form-item label="注册手机号:" label-width="95px">
 						<el-input
 							v-model.number="queryData.registerPhone"
 							size="medium"
@@ -73,7 +75,7 @@
 							@keyup.native="checkValue"
 						></el-input>
 					</el-form-item>
-					<el-form-item label="注册IP:">
+					<el-form-item label="注册IP:" label-width="66px">
 						<el-input
 							v-model="queryData.registerIp"
 							size="medium"
@@ -90,7 +92,7 @@
 							placeholder="请输入"
 							clearable
 							maxlength="10"
-							style="width: 180px"
+							style="width: 270px"
 						></el-input>
 					</el-form-item>
 					<el-form-item label="注册终端:">
@@ -100,7 +102,8 @@
 							placeholder="默认选择全部"
 							clearable
 							multiple
-							style="width: 300px"
+							collapse-tags
+							style="width: 270px"
 						>
 							<el-option
 								v-for="item in deviceTypeArr"
@@ -110,7 +113,7 @@
 							></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item>
+					<el-form-item style="margin-left: 10px">
 						<el-button
 							type="primary"
 							icon="el-icon-search"
@@ -148,12 +151,10 @@
 						align="center"
 						label="注册时间"
 						sortable="custom"
+						width="210"
 					>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.createDt">
-								{{ scope.row.createDt }}
-							</span>
-							<span v-else>-</span>
+							{{ scope.row.createDt || '-' }}
 						</template>
 					</el-table-column>
 					<el-table-column prop="accountType" align="center" label="账号类型">
@@ -183,7 +184,10 @@
 					>
 						<template slot-scope="scope">
 							<Copy
-								v-if="!!scope.row.parentProxyName"
+								v-if="
+									!!scope.row.parentProxyName &&
+										scope.row.parentProxyName !== '-'
+								"
 								:title="scope.row.parentProxyName"
 								:copy="copy"
 							>
@@ -215,10 +219,7 @@
 							风控层级
 						</template>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.registerIp">
-								{{ scope.row.registerIp }}
-							</span>
-							<span v-else>-</span>
+							{{ scope.row.registerIp || '-' }}
 							<br />
 							<span
 								v-if="!!scope.row.ipWindControlLevelName"
@@ -231,10 +232,7 @@
 					</el-table-column>
 					<el-table-column prop="ipAttribution" align="center" label="IP归属地">
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.ipAttribution">
-								{{ scope.row.ipAttribution }}
-							</span>
-							<span v-else>-</span>
+							{{ scope.row.ipAttribution || '-' }}
 						</template>
 					</el-table-column>
 					<el-table-column prop="deviceType" align="center" label="注册终端">
@@ -295,12 +293,13 @@ const start = dayjs()
 const end = dayjs()
 	.endOf('day')
 	.valueOf()
-// import editForm from './components/editForm'
-// import { UTable } from 'umy-ui'
+
 export default {
 	name: routerNames.registerInfo,
 	mixins: [list],
 	data() {
+		this.search = this.throttle(this.search, 1000)
+		this.reset = this.throttle(this.reset, 1000)
 		return {
 			queryData: {
 				registerTime: [start, end],
@@ -319,10 +318,10 @@ export default {
 	},
 	computed: {
 		accountTypeArr() {
-			return this.globalDics.accountType
+			return this.globalDics.accountType || []
 		},
 		deviceTypeArr() {
-			return this.globalDics.deviceType
+			return this.globalDics.deviceType || []
 		}
 	},
 	mounted() {},
@@ -356,19 +355,18 @@ export default {
 			this.$api
 				.memberRegisterInfoListAPI(params)
 				.then((res) => {
+					this.loading = false
 					const {
 						code,
 						data: { record, totalRecord },
 						msg
 					} = res
-					if (code === 200) {
-						this.loading = false
+					if (res && res.data && code && code === 200) {
 						this.dataList = record || []
 						this.total = totalRecord || 0
 					} else {
-						this.loading = false
 						this.$message({
-							message: msg,
+							message: res && msg,
 							type: 'error'
 						})
 					}

@@ -235,7 +235,7 @@ export default {
 							this.$parent.notHasRoles = true
 						}
 					})
-                this.getGoogleAuth()
+				this.getGoogleAuth()
 			}
 		},
 		isCreated(val) {
@@ -282,7 +282,7 @@ export default {
 		getGoogleAuth() {
 			this.$api.googleAuth().then((res) => {
 				const { code, data } = res
-				if (code === 200) {
+				if (code && code === 200) {
 					this.form.googleAuthCode = data
 				}
 			})
@@ -335,7 +335,6 @@ export default {
 							}
 						})
 					} else {
-						console.log('error submit!!')
 						return false
 					}
 				})
@@ -369,7 +368,7 @@ export default {
 
 <style lang="scss" scoped>
 /deep/ .el-checkbox {
-   width: 80%;
+	width: 80%;
 }
 .edit-drawer {
 	.card {

@@ -5,7 +5,7 @@
 			<div class="form-header">
 				<span>编辑风控层级</span>
 				<span>
-					<code style="color:#FF3B30;">*</code>
+					<code style="color: #ff3b30">*</code>
 					为必填项
 				</span>
 			</div>
@@ -114,8 +114,8 @@
 					<!--             虚拟币      -->
 					<el-input
 						v-model="queryData.virtualAddress"
-                        show-word-limit
-                        type="textarea"
+						show-word-limit
+						type="textarea"
 						size="medium"
 						maxlength="100"
 						placeholder="请输入"
@@ -260,6 +260,7 @@ export default {
 	components: { UserName, AgentName, BankCard, Virtual, Ip, Device },
 	mixins: [list],
 	data() {
+		this.searchInfo = this.throttle(this.searchInfo, 1000)
 		return {
 			loading: false,
 			loadingT: false,
@@ -282,7 +283,7 @@ export default {
 	},
 	computed: {
 		windLevelTypeArr() {
-			return this.globalDics.windLevelType
+			return this.globalDics.windLevelType || []
 		},
 		content() {
 			const obj = [
@@ -347,18 +348,18 @@ export default {
 			}
 			let lock = true
 			params.windControlType = params.windControlType * 1
-            params.userName ? (params.objectInfo = params.userName) : null
+			params.userName ? (params.objectInfo = params.userName) : null
 			params.proxyUserName ? (params.objectInfo = params.proxyUserName) : null
-            params.cardNumber ? (params.objectInfo = params.cardNumber) : null
-            params.virtualAddress ? (params.objectInfo = params.virtualAddress) : null
-            params.registerIp ? (params.objectInfo = params.registerIp) : null
-            params.deviceNo ? (params.objectInfo = params.deviceNo) : null
-            delete params.userName
-            delete params.proxyUserName
-            delete params.cardNumber
-            delete params.virtualAddress
-            delete params.registerIp
-            delete params.deviceNo
+			params.cardNumber ? (params.objectInfo = params.cardNumber) : null
+			params.virtualAddress ? (params.objectInfo = params.virtualAddress) : null
+			params.registerIp ? (params.objectInfo = params.registerIp) : null
+			params.deviceNo ? (params.objectInfo = params.deviceNo) : null
+			delete params.userName
+			delete params.proxyUserName
+			delete params.cardNumber
+			delete params.virtualAddress
+			delete params.registerIp
+			delete params.deviceNo
 			this.$refs['form'].validate((valid) => {
 				if (valid && lock && !this.tipsShow) {
 					lock = false
@@ -443,7 +444,6 @@ export default {
 		},
 		searchInfo(type) {
 			const { windControlType } = this.queryData
-			// console.log('this.queryData', this.queryData)
 			switch (type) {
 				case 'userName': {
 					const { userName } = this.queryData
@@ -455,14 +455,14 @@ export default {
 							(res) => {
 								const { id } = res
 								if (id || id + '' === '0') {
-                                    this.tipsShow = null
-                                    this.current = 0
+									this.tipsShow = null
+									this.current = 0
 								} else {
-                                    this.tipsShow = '查询的风险会员不存在'
-                                    return this.$message({
-                                        message: '查询的风险会员不存在',
-                                        type: 'error'
-                                    })
+									this.tipsShow = '查询的风险会员不存在'
+									return this.$message({
+										message: '查询的风险会员不存在',
+										type: 'error'
+									})
 								}
 							}
 						)
@@ -500,7 +500,10 @@ export default {
 					if (cardNumber) {
 						this.$refs.form.clearValidate('windControlName')
 						this.$refs.form.clearValidate('windReason')
-						this.queryInfoData({ objectInfo: cardNumber }, windControlType).then((res) => {
+						this.queryInfoData(
+							{ objectInfo: cardNumber },
+							windControlType
+						).then((res) => {
 							const { id } = res
 							if (id || id + '' === '0') {
 								this.tipsShow = null
@@ -522,21 +525,22 @@ export default {
 					if (virtualAddress) {
 						this.$refs.form.clearValidate('windControlName')
 						this.$refs.form.clearValidate('windReason')
-						this.queryInfoData({ objectInfo: virtualAddress }, windControlType).then(
-							(res) => {
-								const { id } = res
-								if (id || id + '' === '0') {
-									this.tipsShow = null
-									this.current = 3
-								} else {
-									this.tipsShow = '查询的虚拟币账号不存在'
-									return this.$message({
-										message: '查询的虚拟币账号不存在',
-										type: 'error'
-									})
-								}
+						this.queryInfoData(
+							{ objectInfo: virtualAddress },
+							windControlType
+						).then((res) => {
+							const { id } = res
+							if (id || id + '' === '0') {
+								this.tipsShow = null
+								this.current = 3
+							} else {
+								this.tipsShow = '查询的虚拟币账号不存在'
+								return this.$message({
+									message: '查询的虚拟币账号不存在',
+									type: 'error'
+								})
 							}
-						)
+						})
 					}
 					break
 				}
@@ -546,9 +550,12 @@ export default {
 					if (registerIp) {
 						this.$refs.form.clearValidate('windControlName')
 						this.$refs.form.clearValidate('windReason')
-						this.queryInfoData({ objectInfo: registerIp }, windControlType).then((res) => {
+						this.queryInfoData(
+							{ objectInfo: registerIp },
+							windControlType
+						).then((res) => {
 							const { id } = res
-                            this.tipsShow = null
+							this.tipsShow = null
 							if (id || id + '' === '0') {
 								this.current = 4
 							} else {
@@ -567,18 +574,20 @@ export default {
 					if (deviceNo) {
 						this.$refs.form.clearValidate('windControlName')
 						this.$refs.form.clearValidate('windReason')
-						this.queryInfoData({ objectInfo: deviceNo }, windControlType).then((res) => {
-							const { id } = res
-                            this.tipsShow = null
-							if (id || id + '' === '0') {
-								this.current = 5
-							} else {
-								return this.$message({
-									message: '查询的风险终端号不存在',
-									type: 'error'
-								})
+						this.queryInfoData({ objectInfo: deviceNo }, windControlType).then(
+							(res) => {
+								const { id } = res
+								this.tipsShow = null
+								if (id || id + '' === '0') {
+									this.current = 5
+								} else {
+									return this.$message({
+										message: '查询的风险终端号不存在',
+										type: 'error'
+									})
+								}
 							}
-						})
+						)
 					}
 					break
 				}
@@ -586,7 +595,7 @@ export default {
 		},
 		queryInfoData(value, windControlType) {
 			// let lock = true
-            this.loading = true
+			this.loading = true
 			this.showInfoData = undefined
 			if (this.loading) {
 				return new Promise((resolve) => {

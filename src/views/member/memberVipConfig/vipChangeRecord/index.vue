@@ -16,7 +16,6 @@
 							align="right"
 							:clearable="false"
 							:default-time="defaultTime"
-							style="width: 375px"
 						></el-date-picker>
 					</el-form-item>
 					<el-form-item
@@ -26,9 +25,10 @@
 					>
 						<el-select
 							v-model="queryData.changeType"
-							style="width: 300px"
+							style="width: 200px"
 							multiple
 							placeholder="全部"
+							clearable
 							:popper-append-to-body="false"
 						>
 							<el-option
@@ -102,22 +102,34 @@
 						align="center"
 						label="变更时间"
 						sortable="custom"
-					></el-table-column>
-					<el-table-column prop="changeType" align="center" label="变更类型">
+						width="200"
+					>
 						<template slot-scope="scope">
-							{{ typeFilter(scope.row.changeType, 'vipChangeType') }}
+							{{ scope.row.createdAt || '-' }}
 						</template>
 					</el-table-column>
-					<el-table-column
-						prop="beforeGrade"
-						align="center"
-						label="变更前"
-					></el-table-column>
-					<el-table-column
-						prop="afterGrade"
-						align="center"
-						label="变更后"
-					></el-table-column>
+					<el-table-column prop="changeType" align="center" label="变更类型">
+						<template slot-scope="scope">
+							<span
+								v-if="
+									!!scope.row.accountType || scope.row.accountType + '' === '0'
+								"
+							>
+								{{ typeFilter(scope.row.changeType, 'vipChangeType') }}
+							</span>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
+					<el-table-column prop="beforeGrade" align="center" label="变更前">
+						<template slot-scope="scope">
+							{{ scope.row.beforeGrade || '-' }}
+						</template>
+					</el-table-column>
+					<el-table-column prop="afterGrade" align="center" label="变更后">
+						<template slot-scope="scope">
+							{{ scope.row.afterGrade || '-' }}
+						</template>
+					</el-table-column>
 
 					<el-table-column prop="userName" align="center" label="会员账号">
 						<template slot-scope="scope">
@@ -131,18 +143,14 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-
-					<el-table-column
-						prop="accountTypeZn"
-						align="center"
-						label="账号类型"
-					></el-table-column>
+					<el-table-column prop="accountTypeZn" align="center" label="账号类型">
+						<template slot-scope="scope">
+							{{ scope.row.accountTypeZn || '-' }}
+						</template>
+					</el-table-column>
 					<el-table-column prop="labelName" align="center" label="会员标签">
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.labelName">
-								{{ scope.row.labelName }}
-							</span>
-							<span v-else>-</span>
+							{{ scope.row.labelName || '-' }}
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -151,10 +159,7 @@
 						label="风控层级"
 					>
 						<template slot-scope="scope">
-							<span v-if="scope.row.windControlName !== null">
-								{{ scope.row.windControlName }}
-							</span>
-							<span v-else>-</span>
+							{{ scope.row.windControlName || '-' }}
 						</template>
 					</el-table-column>
 					<el-table-column prop="accountStatus" align="center" label="账号状态">
@@ -184,14 +189,12 @@
 						</template>
 					</el-table-column>
 
-					<el-table-column
-						prop="createdBy"
-						align="center"
-						label="操作人"
-					></el-table-column>
+					<el-table-column prop="createdBy" align="center" label="操作人">
+						<template slot-scope="scope">
+							{{ scope.row.createdBy || '-' }}
+						</template>
+					</el-table-column>
 				</el-table>
-
-				<!-- 分页 -->
 				<el-pagination
 					:current-page.sync="pageNum"
 					class="pageValue"
@@ -221,9 +224,10 @@ const endTime = dayjs()
 
 export default {
 	name: routerNames.vipChangeRecord,
-	components: {},
 	mixins: [list],
 	data() {
+		this.search = this.throttle(this.search, 1000)
+		this.reset = this.throttle(this.reset, 1000)
 		return {
 			queryData: {},
 			searchTime: [startTime, endTime],
@@ -238,13 +242,13 @@ export default {
 	},
 	computed: {
 		vipChangeType() {
-			return this.globalDics.vipChangeType
+			return this.globalDics.vipChangeType || []
 		},
 		accountType() {
-			return this.globalDics.accountType
+			return this.globalDics.accountType || []
 		},
 		porxyApplyType() {
-			return this.globalDics.porxyApplyType
+			return this.globalDics.porxyApplyType || []
 		}
 	},
 	mounted() {},
@@ -257,10 +261,10 @@ export default {
 				...this.queryData,
 				startCreatedAt: startTime
 					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
-					: '',
+					: undefined,
 				engCreatedAt: endTime
 					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
-					: ''
+					: undefined
 			}
 			params = {
 				...this.getParams(params)
@@ -268,12 +272,21 @@ export default {
 			this.$api
 				.getqueryMemberVipChangeRecordPage(params)
 				.then((res) => {
-					if (res.code === 200) {
-						this.tableData = res.data.record
-						this.total = res.data.totalRecord
-						this.loading = false
+					this.loading = false
+					const {
+						code,
+						data: { record, totalRecord },
+						msg
+					} = res
+					if (res && code && code === 200) {
+						this.tableData =
+							(res.data && record.length && Object.freeze(record)) || []
+						this.total = (res.data && totalRecord) || 0
 					} else {
-						this.loading = false
+						this.$message({
+							message: res && msg,
+							type: 'error'
+						})
 					}
 				})
 				.catch(() => {

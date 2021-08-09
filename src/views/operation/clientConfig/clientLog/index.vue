@@ -21,8 +21,10 @@
 				<el-form-item label="操作页面:">
 					<el-select
 						v-model="queryData.pageName"
-						style="width: 300px"
+						style="width: 270px"
 						multiple
+						clearable
+						collapse-tags
 						placeholder="默认选择全部"
 						:popper-append-to-body="false"
 					>
@@ -38,8 +40,9 @@
 				<el-form-item label="显示终端:">
 					<el-select
 						v-model="queryData.clientType"
-						style="width: 300px"
+						style="width: 270px"
 						multiple
+						clearable
 						placeholder="默认选择全部"
 						:popper-append-to-body="false"
 					>
@@ -57,7 +60,7 @@
 						clearable
 						size="medium"
 						:maxlength="20"
-						style="width: 180px"
+						style="width: 270px"
 						placeholder="请输入"
 						@keyup.enter.native="enterSearch"
 					></el-input>
@@ -65,8 +68,10 @@
 				<el-form-item label="变更类型:">
 					<el-select
 						v-model="queryData.changeType"
-						style="width: 300px"
+						style="width: 270px"
 						multiple
+						clearable
+						collapse-tags
 						placeholder="默认选择全部"
 						:popper-append-to-body="false"
 					>
@@ -84,7 +89,7 @@
 						clearable
 						size="medium"
 						:maxlength="12"
-						style="width: 180px"
+						style="width: 197px"
 						placeholder="请输入"
 						@keyup.enter.native="enterSearch"
 					></el-input>
@@ -122,17 +127,27 @@
 					:header-cell-style="getRowClass"
 					@sort-change="changeTableSort"
 				>
-					<el-table-column prop="pageName" align="center" label="操作页面">
+					<el-table-column
+						prop="pageName"
+						align="center"
+						label="操作页面"
+						width="200"
+					>
 						<template slot-scope="scope">
 							<span v-for="item in operatePage" :key="item.value">
 								{{ scope.row.pageName === item.code ? item.value : '' }}
 							</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="client" align="center" label="显示终端">
+					<el-table-column
+						prop="client"
+						align="center"
+						label="显示终端"
+						width="150"
+					>
 						<template slot-scope="scope">
-							<span v-if="scope.row.pageName === 1 ">
-                                 --
+							<span v-if="scope.row.pageName === 1">
+								--
 							</span>
 							<span
 								v-else-if="
@@ -144,10 +159,15 @@
 							<span v-else></span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="fieldName" align="center" label="名称">
+					<el-table-column
+						prop="fieldName"
+						align="center"
+						label="名称"
+						width="220"
+					>
 						<template slot-scope="scope">
-							<span v-if="scope.row.pageName === 1 ">
-                                 --
+							<span v-if="scope.row.pageName === 1">
+								--
 							</span>
 							<span v-else-if="!!scope.row.fieldName">
 								{{ scope.row.fieldName }}
@@ -155,14 +175,24 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="changeType" align="center" label="变更类型">
+					<el-table-column
+						prop="changeType"
+						align="center"
+						label="变更类型"
+						width="180"
+					>
 						<template slot-scope="scope">
 							<span v-for="item in changeType" :key="item.value">
 								{{ scope.row.changeType === item.code ? item.value : '' }}
 							</span>
 						</template>
 					</el-table-column>
-					<el-table-column align="center" prop="beforeValue" label="变更前">
+					<el-table-column
+						align="center"
+						prop="beforeValue"
+						label="变更前"
+						width="180"
+					>
 						<template slot-scope="scope">
 							<p v-if="!!scope.row.beforeValue">
 								<span v-if="[21].includes(scope.row.changeType)">
@@ -173,18 +203,28 @@
 							<p v-else>-</p>
 						</template>
 					</el-table-column>
-					<el-table-column align="center" prop="afterValue" label="变更后">
+					<el-table-column
+						align="center"
+						prop="afterValue"
+						label="变更后"
+						width="180"
+					>
 						<template slot-scope="scope">
-                            <p v-if="!!scope.row.afterValue">
+							<p v-if="!!scope.row.afterValue">
 								<span v-if="[21].includes(scope.row.changeType)">
 									{{ scope.row.afterValue === '0' ? '已禁用' : '开启中' }}
 								</span>
-                                <span v-else>{{ scope.row.afterValue }}</span>
-                            </p>
-                            <p v-else>-</p>
+								<span v-else>{{ scope.row.afterValue }}</span>
+							</p>
+							<p v-else>-</p>
 						</template>
 					</el-table-column>
-					<el-table-column prop="remark" align="center" label="备注">
+					<el-table-column
+						prop="remark"
+						align="center"
+						label="备注"
+						width="200"
+					>
 						<template slot-scope="scope">
 							<span v-if="!!scope.row.remark">
 								{{ scope.row.remark }}
@@ -195,7 +235,7 @@
 					<el-table-column
 						prop="createdBy"
 						align="center"
-						width="100"
+						width="120"
 						label="操作人"
 					>
 						<template slot-scope="scope">
@@ -207,7 +247,7 @@
 					</el-table-column>
 					<el-table-column
 						prop="createdAt"
-						width="200"
+						min-width="200"
 						align="center"
 						label="操作时间"
 						sortable="custom"
@@ -251,6 +291,7 @@ export default {
 	components: {},
 	mixins: [list],
 	data() {
+		this.loadData = this.throttle(this.loadData, 1000)
 		return {
 			queryData: {},
 			formTime: {

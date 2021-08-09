@@ -57,7 +57,8 @@
 							placeholder="默认选择全部"
 							clearable
 							multiple
-							style="width: 300px"
+							collapse-tags
+							style="width: 250px"
 						>
 							<el-option
 								v-for="item in accountTypeArr"
@@ -67,61 +68,12 @@
 							></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="账号状态:">
-						<el-select
-							v-model="queryData.accountStatus"
-							size="medium"
-							placeholder="默认选择全部"
-							clearable
-							multiple
-							style="width: 300px"
-						>
-							<el-option
-								v-for="item in accountStatusArr"
-								:key="item.code"
-								:label="item.description"
-								:value="item.code"
-							></el-option>
-						</el-select>
-					</el-form-item>
-					<el-form-item label="风控层级:">
-						<el-select
-							v-model="queryData.windControlId"
-							size="medium"
-							placeholder="全部"
-							clearable
-							style="width: 180px"
-						>
-							<el-option
-								v-for="item in vipDict"
-								:key="item.windControlId"
-								:label="item.windControlName"
-								:value="item.windControlId"
-							></el-option>
-						</el-select>
-					</el-form-item>
-					<el-form-item label="代理标签:">
-						<el-select
-							v-model="queryData.labelId"
-							size="medium"
-							placeholder="全部"
-							clearable
-							style="width: 180px"
-						>
-							<el-option
-								v-for="item in userLabel"
-								:key="item.labelId"
-								:label="item.labelName"
-								:value="item.labelId"
-							></el-option>
-						</el-select>
-					</el-form-item>
 					<el-form-item label="累计返佣:">
 						<el-input
 							v-model="queryData.totalRebateMin"
 							size="medium"
 							placeholder="最小数值"
-							style="width: 135px"
+							style="width: 143px"
 							maxlength="15"
 							name="totalRebateMin"
 							oninput="value=value.replace(/[^\d]/g,'')"
@@ -132,14 +84,14 @@
 							v-model="queryData.totalRebateMax"
 							size="medium"
 							placeholder="最大数值"
-							style="width: 135px"
+							style="width: 145px"
 							maxlength="15"
 							name="totalRebateMax"
 							oninput="value=value.replace(/[^\d]/g,'')"
 							@blur="checkValue($event)"
 						></el-input>
 					</el-form-item>
-					<el-form-item>
+					<el-form-item style="margin-left: 8px">
 						<el-button
 							type="primary"
 							icon="el-icon-search"
@@ -872,7 +824,7 @@ export default {
 	data() {
 		return {
 			queryData: {
-                countTime: [],
+				countTime: [],
 				registerTime: [],
 				userName: undefined,
 				accountType: [],
@@ -1116,11 +1068,7 @@ export default {
 		// 获取代理标签
 		getMerchantDict() {
 			this.$api.agentDictAPI().then((res) => {
-				const {
-					code,
-					data,
-					msg
-				} = res
+				const { code, data, msg } = res
 				if (code === 200) {
 					this.userLabel = data || []
 				} else {
@@ -1134,17 +1082,17 @@ export default {
 		reset() {
 			this.pageNum = 1
 			this.queryData = {
-                countTime: [],
-                registerTime: [],
-                userName: undefined,
-                accountType: [],
-                accountStatus: [],
-                windControlId: undefined,
-                labelId: undefined,
-                totalRebateMin: undefined,
-                totalRebateMax: undefined,
-                orderKey: undefined,
-                orderType: undefined
+				countTime: [],
+				registerTime: [],
+				userName: undefined,
+				accountType: [],
+				accountStatus: [],
+				windControlId: undefined,
+				labelId: undefined,
+				totalRebateMin: undefined,
+				totalRebateMax: undefined,
+				orderKey: undefined,
+				orderType: undefined
 			}
 			this.$refs['form'].resetFields()
 			this.loadData()
@@ -1179,9 +1127,9 @@ export default {
 				// 降序
 				this.queryData.orderType = 'desc'
 			} else {
-                delete this.queryData.orderKey
-                delete this.queryData.orderType
-            }
+				delete this.queryData.orderKey
+				delete this.queryData.orderType
+			}
 			this.loadData()
 		},
 
@@ -1227,25 +1175,25 @@ export default {
 				})
 		},
 		exportExcel() {
-            const create = this.queryData.registerTime || []
-            const countTime = this.queryData.countTime || []
-            const [startTime, endTime] = create
-            const [timeStart, timeEnd] = countTime
-            let params = {
-                ...this.queryData,
-                createDtStart: startTime
-                    ? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
-                    : undefined,
-                createDtEnd: endTime
-                    ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
-                    : undefined,
-                lastLoginTimeStart: timeStart
-                    ? dayjs(timeStart).format('YYYY-MM-DD HH:mm:ss')
-                    : undefined,
-                lastLoginTimeEnd: timeEnd
-                    ? dayjs(timeEnd).format('YYYY-MM-DD HH:mm:ss')
-                    : undefined
-            }
+			const create = this.queryData.registerTime || []
+			const countTime = this.queryData.countTime || []
+			const [startTime, endTime] = create
+			const [timeStart, timeEnd] = countTime
+			let params = {
+				...this.queryData,
+				createDtStart: startTime
+					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
+					: undefined,
+				createDtEnd: endTime
+					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
+					: undefined,
+				lastLoginTimeStart: timeStart
+					? dayjs(timeStart).format('YYYY-MM-DD HH:mm:ss')
+					: undefined,
+				lastLoginTimeEnd: timeEnd
+					? dayjs(timeEnd).format('YYYY-MM-DD HH:mm:ss')
+					: undefined
+			}
 			this.loading = true
 			params = {
 				...this.getParams(params)

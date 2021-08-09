@@ -31,7 +31,7 @@
 						重置
 					</el-button>
 					<el-button
-                        v-if="hasPermission('369')"
+						v-if="hasPermission('369')"
 						type="success"
 						icon="el-icon-folder-add"
 						size="medium"
@@ -48,6 +48,7 @@
 				:data="list"
 				style="width: 100%"
 				:header-cell-style="getRowClass"
+				border
 			>
 				<el-table-column
 					align="center"
@@ -55,33 +56,34 @@
 					:label="$t('system_component_account_275')"
 					width="120"
 				></el-table-column>
-				<el-table-column align="center" prop="userName" label="用户名称">
+				<el-table-column
+					align="center"
+					prop="userName"
+					label="用户名称"
+					width="150"
+				>
 					<template slot-scope="scope">
-						<span v-if="!!scope.row.userName">
-							{{ scope.row.userName }}
-						</span>
-						<span v-else>-</span>
+						{{ scope.row.userName || '-' }}
 					</template>
 				</el-table-column>
-				<el-table-column align="center" prop="nickName" label="姓名">
+				<el-table-column
+					align="center"
+					prop="nickName"
+					label="姓名"
+					width="120"
+				>
 					<template slot-scope="scope">
-						<span v-if="!!scope.row.nickName">
-							{{ scope.row.nickName }}
-						</span>
-						<span v-else>-</span>
+						{{ scope.row.nickName || '-' }}
 					</template>
 				</el-table-column>
 				<el-table-column
 					align="center"
 					prop="googleAuthCode"
 					label="谷歌验证秘钥"
-					width="200"
+					width="220"
 				>
 					<template slot-scope="scope">
-						<span v-if="!!scope.row.googleAuthCode">
-							{{ scope.row.googleAuthCode }}
-						</span>
-						<span v-else>-</span>
+						{{ scope.row.googleAuthCode || '-' }}
 					</template>
 				</el-table-column>
 				<el-table-column
@@ -91,18 +93,17 @@
 					width="180"
 				>
 					<template slot-scope="scope">
-						<span v-if="!!scope.row.createAt">
-							{{ scope.row.createAt }}
-						</span>
-						<span v-else>-</span>
+						{{ scope.row.createAt || '-' }}
 					</template>
 				</el-table-column>
-				<el-table-column align="center" prop="createBy" label="创建人">
+				<el-table-column
+					align="center"
+					prop="createBy"
+					label="创建人"
+					width="150"
+				>
 					<template slot-scope="scope">
-						<span v-if="!!scope.row.createBy">
-							{{ scope.row.createBy }}
-						</span>
-						<span v-else>-</span>
+						{{ scope.row.createBy || '-' }}
 					</template>
 				</el-table-column>
 				<el-table-column
@@ -112,13 +113,10 @@
 					width="180"
 				>
 					<template slot-scope="scope">
-						<span v-if="!!scope.row.lastLoginAt">
-							{{ scope.row.lastLoginAt }}
-						</span>
-						<span v-else>-</span>
+						{{ scope.row.lastLoginAt || '-' }}
 					</template>
 				</el-table-column>
-				<el-table-column label="状态">
+				<el-table-column label="状态" align="center" width="120">
 					<template slot-scope="scope">
 						<el-switch
 							:disabled="scope.row.userName === username"
@@ -134,11 +132,11 @@
 					align="center"
 					fixed="right"
 					:label="$t('system_component_account_280')"
-					min-width="250"
+					min-width="360"
 				>
 					<template slot-scope="scope">
 						<el-button
-                            v-if="hasPermission('365')"
+							v-if="hasPermission('365')"
 							type="primary"
 							size="medium"
 							@click.native.prevent="popupPwdDialog(scope.row)"
@@ -146,7 +144,7 @@
 							重置密码
 						</el-button>
 						<el-button
-                            v-if="hasPermission('363')"
+							v-if="hasPermission('363')"
 							type="primary"
 							icon="el-icon-edit"
 							size="medium"
@@ -155,7 +153,7 @@
 							编辑
 						</el-button>
 						<el-button
-                            v-if="hasPermission('364')"
+							v-if="hasPermission('364')"
 							type="danger"
 							icon="el-icon-delete"
 							:disabled="scope.row.status === '1'"
@@ -165,7 +163,7 @@
 							删除
 						</el-button>
 						<el-button
-                            v-if="hasPermission('371')"
+							v-if="hasPermission('371')"
 							type="primary"
 							:disabled="scope.row.lockStatus === '0'"
 							size="medium"
@@ -259,6 +257,8 @@ export default {
 	components: { EditAccount, AccountUpdatePass },
 	mixins: [list],
 	data() {
+		this.handleSearch = this.throttle(this.handleSearch, 1000)
+		this.handleReset = this.throttle(this.handleReset, 1000)
 		return {
 			curUsername: '',
 			username: getUsername(),
@@ -287,7 +287,6 @@ export default {
 			id: ''
 		}
 	},
-	computed: {},
 	methods: {
 		loadData() {
 			const [startTime, endTime] = this.listQuery.time || []
@@ -300,11 +299,26 @@ export default {
 				...this.getParams(params)
 			}
 
-			this.$api.getUsers(params).then((response) => {
-				this.loading = false
-				this.list = response.data.records
-				this.total = response.data.total
-			})
+			this.$api
+				.getUsers(params)
+				.then((res) => {
+					this.loading = false
+					const {
+						code,
+						data: { records, total },
+						msg
+					} = res
+					if (code && code === 200) {
+						this.list = records || []
+						this.total = total || 0
+					} else {
+						this.$message({
+							message: res && msg,
+							type: 'error'
+						})
+					}
+				})
+				.catch(() => (this.loading = false))
 		},
 		deleteUser(val) {
 			const loading = this.$loading({
@@ -326,7 +340,7 @@ export default {
 						.then((res) => {
 							loading.close()
 							const { code } = res
-							if (code === 200) {
+							if (code && code === 200) {
 								this.$message.success('删除成功')
 							} else {
 								this.$message({
@@ -334,7 +348,6 @@ export default {
 									message: '删除失败!'
 								})
 							}
-
 							this.loadData()
 						})
 						.catch(() => {
@@ -344,10 +357,6 @@ export default {
 				.catch(() => {
 					loading.close()
 				})
-
-			setTimeout(() => {
-				loading.close()
-			}, 1000)
 		},
 		closeDialog() {
 			this.$refs.dialogForm.resetFields()
@@ -399,8 +408,9 @@ export default {
 					userId: form.id,
 					userName: this.userName
 				})
-				.then((_) => {
-					if (_.code === 200) {
+				.then((res) => {
+					const { code } = res
+					if (code && code === 200) {
 						this.$message({
 							message: '操作成功',
 							type: 'success'
@@ -453,31 +463,28 @@ export default {
 				type: 'warning'
 			})
 				.then(() => {
-					this.$api.unLockUser({ id, status })
-							.then((res) => {
-								loading.close()
-								const { code } = res
-								if (code === 200) {
-									this.$message.success('解锁成功')
-								} else {
-									this.$message({
-										type: 'error',
-										message: '解锁失败!'
-									})
-								}
-
-								this.loadData()
-							})
-							.catch(() => {
-								loading.close()
-							})
+					this.$api
+						.unLockUser({ id, status })
+						.then((res) => {
+							loading.close()
+							const { code } = res
+							if (code && code === 200) {
+								this.$message.success('解锁成功')
+							} else {
+								this.$message({
+									type: 'error',
+									message: '解锁失败!'
+								})
+							}
+							this.loadData()
+						})
+						.catch(() => {
+							loading.close()
+						})
 				})
 				.catch(() => {
 					loading.close()
 				})
-			setTimeout(() => {
-				loading.close()
-			}, 1000)
 		}
 	}
 }

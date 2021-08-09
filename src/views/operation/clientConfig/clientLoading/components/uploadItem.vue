@@ -115,6 +115,7 @@ export default {
 		}
 	},
 	data() {
+		this.uploadFile = this.throttle(this.uploadFile, 1000)
 		return {
 			dialogUrl: '',
 			dialogVisible: false,
@@ -165,7 +166,7 @@ export default {
 			// 	)
 			// }
 
-            return true
+			return true
 		}
 	},
 	watch: {

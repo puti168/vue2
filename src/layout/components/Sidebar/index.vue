@@ -64,7 +64,7 @@ export default {
 	watch: {
 		showRoute(newQuestion, oldQuestion) {
 			this.defaultOpeneds = []
-			if (newQuestion.length) {
+			if (newQuestion && newQuestion.length) {
 				for (let i = 0; i < newQuestion.length; i++) {
 					const ele = newQuestion[i]
 					this.defaultOpeneds.push(ele.path)
@@ -77,15 +77,17 @@ export default {
 	},
 	methods: {
 		init() {
-			let arr = []
+			let arr = ''
 			this.routes.forEach((item) => {
 				if (item.id === this.nowRoute) {
 					arr = item
 				}
 			})
-			arr.children.forEach((item) => {
-				this.defaultOpeneds.push(item.path)
-			})
+			if (arr) {
+				arr.children.forEach((item) => {
+					this.defaultOpeneds.push(item.path)
+				})
+			}
 		},
 		handleClose(key, keyPath) {
 			this.$refs.menus.open(keyPath)

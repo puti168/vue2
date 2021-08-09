@@ -1,7 +1,7 @@
 <template>
 	<div class="game-container report-container">
 		<div class="params">
-			<el-form ref="form" :inline="true" :model="queryData">
+			<el-form ref="form" :inline="true" :model="queryData" label-width="80px">
 				<el-form-item label="登录时间:">
 					<el-date-picker
 						v-model="formTime.time"
@@ -15,26 +15,19 @@
 						align="right"
 						:clearable="false"
 						:default-time="defaultTime"
+						style="width: 452px"
 					></el-date-picker>
 				</el-form-item>
-				<el-form-item label="会员账号:">
-					<el-input
-						v-model="queryData.userName"
-						clearable
-						:maxlength="11"
-						size="medium"
-						style="width: 180px"
-						placeholder="请输入"
-						@keyup.enter.native="enterSearch"
-					></el-input>
-				</el-form-item>
+
 				<el-form-item label="账号类型:">
 					<el-select
 						v-model="accountType1"
 						multiple
+						collapse-tags
 						placeholder="默认选择全部"
 						:popper-append-to-body="false"
-						style="width: 300px"
+						style="width: 270px"
+						clearable
 					>
 						<el-option
 							v-for="item in accountType"
@@ -44,10 +37,23 @@
 						></el-option>
 					</el-select>
 				</el-form-item>
+
+				<el-form-item label="会员账号:">
+					<el-input
+						v-model="queryData.userName"
+						clearable
+						:maxlength="11"
+						size="medium"
+						style="width: 270px"
+						placeholder="请输入"
+						@keyup.enter.native="enterSearch"
+					></el-input>
+				</el-form-item>
+
 				<el-form-item label="登录状态:">
 					<el-select
 						v-model="queryData.loginStatus"
-						style="width: 180px"
+						style="width: 270px"
 						:popper-append-to-body="false"
 					>
 						<el-option label="全部" value=""></el-option>
@@ -60,7 +66,19 @@
 					</el-select>
 				</el-form-item>
 
-				<el-form-item label="登录IP:">
+				<el-form-item label="IP归属地:">
+					<el-input
+						v-model="queryData.ipAttribution"
+						clearable
+						size="medium"
+						:maxlength="10"
+						style="width: 187px"
+						placeholder="请输入"
+						@keyup.enter.native="enterSearch"
+					></el-input>
+				</el-form-item>
+
+				<el-form-item label="登录 IP:" label-width="71px">
 					<el-input
 						v-model="queryData.loginIp"
 						clearable
@@ -71,24 +89,16 @@
 						@keyup.enter.native="enterSearch"
 					></el-input>
 				</el-form-item>
-				<el-form-item label="IP归属地:">
-					<el-input
-						v-model="queryData.ipAttribution"
-						clearable
-						size="medium"
-						:maxlength="10"
-						style="width: 180px"
-						placeholder="请输入"
-						@keyup.enter.native="enterSearch"
-					></el-input>
-				</el-form-item>
+
 				<el-form-item label="登录终端:">
 					<el-select
 						v-model="deviceType1"
-						style="width: 300px"
+						style="width: 270px"
 						:popper-append-to-body="false"
 						placeholder="默认选择全部"
 						multiple
+						collapse-tags
+						clearable
 					>
 						<el-option
 							v-for="item in deviceType"
@@ -98,18 +108,20 @@
 						></el-option>
 					</el-select>
 				</el-form-item>
-				<el-form-item label="终端设备号:">
+
+				<el-form-item label="终端设备号:" label-width="90px">
 					<el-input
 						v-model="queryData.deviceNo"
 						clearable
 						size="medium"
 						:maxlength="50"
-						style="width: 180px"
+						style="width: 261px"
 						placeholder="请输入"
 						@keyup.enter.native="enterSearch"
 					></el-input>
 				</el-form-item>
-				<el-form-item style="margin-left: 30px">
+
+				<el-form-item style="margin-left: 10px">
 					<el-button
 						type="primary"
 						icon="el-icon-search"
@@ -122,6 +134,7 @@
 						重置
 					</el-button>
 				</el-form-item>
+
 				<p class="login1">
 					数据更新时间：{{ now }}
 					<span>总登录次数：{{ summary.count }}次</span>
@@ -153,7 +166,12 @@
 						align="center"
 						label="登录时间"
 						sortable="custom"
-					></el-table-column>
+						width="200"
+					>
+						<template slot-scope="scope">
+							{{ scope.row.loginTime || '-' }}
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="loginStatus"
 						align="center"
@@ -173,8 +191,14 @@
 						prop="userName"
 						align="center"
 						label="会员账号"
+						width="120"
 					>
-						<Copy :title="scope.row.userName" :copy="copy" />
+						<Copy
+							v-if="!!scope.row.userName"
+							:title="scope.row.userName"
+							:copy="copy"
+						/>
+						<span v-else>-</span>
 					</el-table-column>
 					<el-table-column
 						prop="accountType"
@@ -190,7 +214,7 @@
 						prop="loginIp"
 						align="center"
 						label="登录IP"
-						width="120"
+						width="130"
 					>
 						<template slot="header">
 							登录IP
@@ -198,17 +222,10 @@
 							风控层级
 						</template>
 						<template slot-scope="scope">
-							<span v-if="scope.row.loginIp !== null">
-								{{ scope.row.loginIp }}
-							</span>
-							<span v-else>-</span>
+							{{ scope.row.loginIp || '-' }}
 							<br />
 							<span class="redColor">
-								风控层级：{{
-									scope.row.ipControlName === null
-										? '无'
-										: scope.row.ipControlName
-								}}
+								风控层级：{{ scope.row.deviceNoControlName || '无' }}
 							</span>
 						</template>
 					</el-table-column>
@@ -216,35 +233,38 @@
 						prop="ipAttribution"
 						align="center"
 						label="IP归属地"
-					></el-table-column>
+						width="120"
+					>
+						<template slot-scope="scope">
+							{{ scope.row.ipAttribution || '-' }}
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="deviceType"
 						align="center"
 						label="登录终端"
-						width="80"
+						width="120"
 					>
 						<template slot-scope="scope">
-							{{ typeFilter(scope.row.deviceType, 'loginDeviceType') }}
+							{{ typeFilter(scope.row.deviceType, 'userType') }}
 						</template>
 					</el-table-column>
-					<el-table-column prop="deviceNo" align="center" label="终端设备号">
+					<el-table-column
+						prop="deviceNo"
+						align="center"
+						label="终端设备号"
+						width="200"
+					>
 						<template slot="header">
 							终端设备号
 							<br />
 							风控层级
 						</template>
 						<template slot-scope="scope">
-							<span v-if="scope.row.deviceNo !== null">
-								{{ scope.row.deviceNo }}
-							</span>
-							<span v-else>-</span>
+							{{ scope.row.deviceNo || '-' }}
 							<br />
 							<span class="redColor">
-								风控层级：{{
-									scope.row.deviceNoControlName === null
-										? '无'
-										: scope.row.deviceNoControlName
-								}}
+								风控层级：{{ scope.row.deviceNoControlName || '无' }}
 							</span>
 						</template>
 					</el-table-column>
@@ -252,16 +272,25 @@
 						prop="loginReference"
 						align="center"
 						label="登录地址"
-					></el-table-column>
+						width="200"
+					>
+						<template slot-scope="scope">
+							{{ scope.row.loginReference || '-' }}
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="browseContent"
 						align="center"
 						label="设备版本"
 						width="280"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							{{ scope.row.browseContent || '-' }}
+						</template>
+					</el-table-column>
 					<el-table-column prop="loginError" align="center" label="备注">
 						<template slot-scope="scope">
-							{{ scope.row.loginError ? scope.row.loginError : '-' }}
+							{{ scope.row.loginError || '-' }}
 						</template>
 					</el-table-column>
 				</el-table>
@@ -292,20 +321,23 @@ const end = dayjs()
 const start = dayjs()
 	.startOf('day')
 	.valueOf()
+
 export default {
 	name: routerNames.memberLogin,
 	components: {},
 	mixins: [list],
 	data() {
+		this.search = this.throttle(this.search, 1000)
+		this.reset = this.throttle(this.reset, 1000)
 		return {
 			queryData: {
-				userName: '',
+				userName: undefined,
 				accountType: [],
-				loginStatus: '',
-				loginIp: '',
-				ipAttribution: '',
+				loginStatus: undefined,
+				loginIp: undefined,
+				ipAttribution: undefined,
 				deviceType: [],
-				deviceNo: ''
+				deviceNo: undefined
 			},
 			accountType1: [],
 			deviceType1: [],
@@ -323,13 +355,13 @@ export default {
 	},
 	computed: {
 		accountType() {
-			return this.globalDics.accountType
+			return this.globalDics.accountType || []
 		},
 		loginStatusType() {
-			return this.globalDics.loginStatusType
+			return this.globalDics.loginStatusType || []
 		},
 		deviceType() {
-			return this.globalDics.loginDeviceType
+			return this.globalDics.userType || []
 		}
 	},
 	mounted() {},
@@ -340,10 +372,10 @@ export default {
 				...this.queryData,
 				loginStartTime: startTime
 					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
-					: '',
+					: undefined,
 				loginEndTime: endTime
 					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
-					: ''
+					: undefined
 			}
 			if (!params.loginStartTime || !params.loginEndTime) {
 				this.$message({
@@ -361,20 +393,24 @@ export default {
 			this.$api
 				.memberLoginLog(params)
 				.then((res) => {
-					if (res.code === 200) {
+					this.loading = false
+					const { code, msg } = res
+					if (res && code === 200) {
 						this.now = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
-						const response = res.data
-						this.loading = false
-						this.dataList = response !== null ? response.record : []
-						this.total = response !== null ? response.totalRecord : 0
-						this.summary =
-							response !== null
-								? response.summary
-								: { count: 0, failCount: 0, successCount: 0 }
+						const data = res.data
+						this.dataList =
+							(data &&
+								data.record &&
+								data.record.length &&
+								Object.freeze(data.record)) ||
+							[]
+						this.total = (data && data.totalRecord) || 0
+						this.summary = data
+							? data.summary
+							: { count: 0, failCount: 0, successCount: 0 }
 					} else {
-						this.loading = false
 						this.$message({
-							message: res.msg,
+							message: res && msg,
 							type: 'error'
 						})
 					}
@@ -385,13 +421,13 @@ export default {
 		},
 		reset() {
 			this.queryData = {
-				userName: '',
+				userName: undefined,
 				accountType: [],
-				loginStatus: '',
-				loginIp: '',
-				ipAttribution: '',
+				loginStatus: undefined,
+				loginIp: undefined,
+				ipAttribution: undefined,
 				deviceType: [],
-				deviceNo: ''
+				deviceNo: undefined
 			}
 			this.pageNum = 1
 			this.accountType1 = []

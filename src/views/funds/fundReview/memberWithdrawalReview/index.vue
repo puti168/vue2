@@ -37,12 +37,12 @@
 							v-model="queryData.thirdOrderNo"
 							clearable
 							size="medium"
-							style="width: 180px"
+							style="width: 330px"
 							placeholder="请输入"
 							@keyup.enter.native="enterSearch"
 						></el-input>
 					</el-form-item>
-					<el-form-item style="margin-left: 30px">
+					<el-form-item style="margin-left: 8px">
 						<el-button
 							type="primary"
 							icon="el-icon-search"
@@ -130,7 +130,8 @@
 									<el-button
 										type="danger"
 										size="medium"
-										:disabled="scope.row.lockStatus !== 0 &&
+										:disabled="
+											scope.row.lockStatus !== 0 &&
 												scope.row.lockAccount !== name
 										"
 										@click="confirm(scope.row, false)"
@@ -144,6 +145,7 @@
 							prop="thirdOrderNo"
 							align="center"
 							label="审核订单号"
+							width="220"
 						>
 							<template slot-scope="scope">
 								<span v-if="!!scope.row.thirdOrderNo">
@@ -152,7 +154,12 @@
 								<span v-else>-</span>
 							</template>
 						</el-table-column>
-						<el-table-column prop="userName" align="center" label="会员账号">
+						<el-table-column
+							prop="userName"
+							align="center"
+							label="会员账号"
+							width="150"
+						>
 							<template slot-scope="scope">
 								<span v-if="!!scope.row.userName">
 									{{ scope.row.userName }}
@@ -160,7 +167,12 @@
 								<span v-else>-</span>
 							</template>
 						</el-table-column>
-						<el-table-column prop="realName" align="center" label="会员姓名">
+						<el-table-column
+							prop="realName"
+							align="center"
+							label="会员姓名"
+							width="150"
+						>
 							<template slot-scope="scope">
 								<span v-if="!!scope.row.realName">
 									{{ scope.row.realName }}
@@ -168,12 +180,22 @@
 								<span v-else>-</span>
 							</template>
 						</el-table-column>
-						<el-table-column prop="isBig" align="center" label="是否为大额提款">
+						<el-table-column
+							prop="isBig"
+							align="center"
+							label="是否为大额提款"
+							width="150"
+						>
 							<template slot-scope="scope">
 								{{ Number(scope.row.isBig) === 1 ? '是' : '否' }}
 							</template>
 						</el-table-column>
-						<el-table-column prop="orderAmount" align="center" label="提款金额">
+						<el-table-column
+							prop="orderAmount"
+							align="center"
+							label="提款金额"
+							width="180"
+						>
 							<template slot-scope="scope">
 								<span v-if="!!scope.row.orderAmount">
 									{{ scope.row.orderAmount }}
@@ -185,6 +207,7 @@
 							prop="orderRateAmount"
 							align="center"
 							label="提款手续费"
+							width="150"
 						>
 							<template slot-scope="scope">
 								<span v-if="!!scope.row.orderRateAmount">
@@ -193,7 +216,12 @@
 								<span v-else>-</span>
 							</template>
 						</el-table-column>
-						<el-table-column prop="createdAt" align="center" label="申请时间">
+						<el-table-column
+							prop="createdAt"
+							align="center"
+							label="申请时间"
+							min-width="220"
+						>
 							<template slot-scope="scope">
 								<span v-if="!!scope.row.createdAt">
 									{{ scope.row.createdAt }}
@@ -201,7 +229,7 @@
 								<span v-else>-</span>
 							</template>
 						</el-table-column>
-						<el-table-column align="center" label="审核状态">
+						<el-table-column align="center" label="审核状态" width="150">
 							<template slot-scope="scope">
 								<span
 									:class="
@@ -287,6 +315,7 @@ export default {
 	components: { detail },
 	mixins: [list],
 	data() {
+		this.loadData = this.throttle(this.loadData, 1000)
 		return {
 			queryData: {
 				thirdOrderNo: undefined,

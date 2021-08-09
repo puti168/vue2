@@ -47,11 +47,91 @@ export function getQueryRecordList(data) {
 		data
 	})
 }
-//
+// 第三方回调IP白名单查询
+export function getCallbackIpWhiteList(data) {
+	return request({
+		url: '/callbackIpWhite/select',
+		method: 'post',
+		data
+	})
+}
+// 新增第三方回调IP白名单
+export function addCallbackIpWhite(data) {
+	return request({
+		url: '/callbackIpWhite/insert',
+		method: 'post',
+		data
+	})
+}
+// 删除第三方回调IP白名单管理
+export function deleteCallbackIpWhite(data) {
+	return request({
+		url: '/callbackIpWhite/delete',
+		method: 'post',
+		data
+	})
+}
+// 修改第三方回调IP白名单管理
+export function updateCallbackIpWhite(data) {
+	return request({
+		url: '/callbackIpWhite/update',
+		method: 'post',
+		data
+	})
+}
+// 修改第三方回调IP白名单状态
+export function updateStatusCallbackIpWhite(data) {
+	return request({
+		url: '/callbackIpWhite/updateStatus',
+		method: 'post',
+		data
+	})
+}
+// ip白名单列表分页查询
+export function queryBackEndIpConfigList(data) {
+	return request({
+		url: '/ipWhiteInfo/listPage',
+		method: 'post',
+		data
+	})
+}
+// 添加ip白名单
+export function addBackEndIpConfig(data) {
+	return request({
+		url: '/ipWhiteInfo/add',
+		method: 'post',
+		data
+	})
+}
+// 删除ip白名单
+export function deleteBackEndIpConfig(data) {
+	return request({
+		url: '/ipWhiteInfo/del',
+		method: 'post',
+		data
+	})
+}
+// 编辑ip白名单
+export function updateBackEndIpConfig(data) {
+	return request({
+		url: '/ipWhiteInfo/edit',
+		method: 'post',
+		data
+	})
+}
 export default {
-    getkvconfigQueryList,
+	getkvconfigQueryList,
 	getkvconfigUpdate,
 	getSystemUserLoginRecordQueryLoginLog,
 	getuserInfolist,
-	getQueryRecordList
+	getQueryRecordList,
+	getCallbackIpWhiteList,
+	addCallbackIpWhite,
+	deleteCallbackIpWhite,
+	updateCallbackIpWhite,
+	updateStatusCallbackIpWhite,
+	queryBackEndIpConfigList,
+	addBackEndIpConfig,
+	deleteBackEndIpConfig,
+	updateBackEndIpConfig
 }

@@ -4,7 +4,9 @@
 			<span class="title">游戏专题模块</span>
 			<div class="right-btn">
 				<el-button plain @click="back">取消</el-button>
-				<el-button type="success" @click="save(true)">保存</el-button>
+				<el-button :disabled="saveDisabled" type="success" @click="save(true)">
+					保存
+				</el-button>
 			</div>
 		</div>
 		<div class="main-content">
@@ -53,10 +55,7 @@
 									width="120"
 								>
 									<template slot-scope="scope">
-										<span v-if="!!scope.row.displayOrder">
-											{{ scope.row.displayOrder }}
-										</span>
-										<span v-else>-</span>
+										{{ scope.row.displayOrder || '-' }}
 									</template>
 								</el-table-column>
 								<el-table-column
@@ -92,7 +91,6 @@
 												size="medium"
 												placeholder="请选择"
 												style="width: 245px"
-												@change="changeType($event)"
 											>
 												<el-option
 													v-for="item in gameAssortDicList"
@@ -217,6 +215,7 @@ export default {
 	data() {
 		return {
 			loading: false,
+			saveDisabled: false,
 			list: {},
 			form: {
 				moduleDesc: undefined
@@ -306,8 +305,8 @@ export default {
 						code,
 						data: { gameTopicModuleMetaVos, moduleDesc, id },
 						msg
-					} = res
-					if (code === 200) {
+					} = res || {}
+					if (code && code === 200) {
 						this.queryData.dataList = gameTopicModuleMetaVos || []
 						status &&
 							this.$nextTick(() => {
@@ -329,7 +328,6 @@ export default {
 							type: 'error'
 						})
 					}
-					console.log('res', res)
 				})
 				.catch(() => (this.loading = false))
 
@@ -339,18 +337,11 @@ export default {
 		},
 		gameAssortList() {
 			this.$api.gameAssortDicAPI().then((res) => {
-				const { code, data } = res
-				if (code === 200) {
+				const { code, data } = res || {}
+				if (code && code === 200) {
 					this.gameAssortDicList = data || []
 				}
 			})
-		},
-		changeType(evt) {
-			// console.log('evt', evt)
-			// this.queryData = {
-			//     activityType: evt.description,
-			//     activityCode: evt.code
-			// }
 		},
 		deleteRow(val) {
 			const { id } = val
@@ -371,8 +362,7 @@ export default {
 							.gameDelTopicModuleAPI({ id })
 							.then((res) => {
 								loading.close()
-								const { code } = res
-								if (code === 200) {
+								if (res && res.code === 200) {
 									this.$message({
 										type: 'success',
 										message: '删除成功!'
@@ -407,7 +397,6 @@ export default {
 				.catch(() => {})
 		},
 		save() {
-			this.loading = true
 			const gameTopicModuleMetaVos =
 				this.queryData.dataList.map((item) => {
 					return {
@@ -431,12 +420,12 @@ export default {
 			}
 			this.$refs['form'].validate((valid) => {
 				if (valid) {
+					this.saveDisabled = true
 					this.$api
 						.editGameTopicModuleAPI(params)
 						.then((res) => {
-							this.loading = false
-							const { code, msg } = res
-							if (code === 200) {
+							const { code, msg } = res || {}
+							if (code && code === 200) {
 								this.$message({
 									message: '保存成功',
 									type: 'success'
@@ -449,16 +438,13 @@ export default {
 									type: 'error'
 								})
 							}
+							this.disabledDelay('saveDisabled', false)
 						})
 						.catch(() => {
-							this.loading = false
+							this.disabledDelay('saveDisabled', false)
 						})
 				}
 			})
-
-			setTimeout(() => {
-				this.loading = false
-			}, 1000)
 		},
 		addRow() {
 			const lastRow = this.queryData.dataList.length
@@ -523,8 +509,7 @@ export default {
 						moduleStatus: status === 1 ? 0 : 1
 					})
 					.then((res) => {
-						const { code } = res
-						if (code === 200) {
+						if (res && res.code === 200) {
 							this.$message({
 								type: 'success',
 								message: '操作成功!'

@@ -2,14 +2,19 @@
 	<div class="game-container report-container">
 		<div class="view-container dealer-container">
 			<div class="params">
-				<el-form ref="form" :inline="true" :model="queryData">
+				<el-form
+					ref="form"
+					:inline="true"
+					:model="queryData"
+					label-width="100px"
+				>
 					<el-form-item label="游戏标签ID:">
 						<el-input
 							v-model="queryData.gameLabelId"
 							maxlength="3"
 							clearable
 							size="medium"
-							style="width: 180px"
+							style="width: 300px"
 							placeholder="请输入"
 							:disabled="loading"
 							oninput="value=value.replace(/[^\w\.\/]/ig ,'')"
@@ -23,7 +28,7 @@
 							clearable
 							:maxlength="10"
 							size="medium"
-							style="width: 180px; margin-right: 20px"
+							style="width: 300px"
 							placeholder="请输入"
 							:disabled="loading"
 							@keyup.enter.native="enterSearch"
@@ -32,18 +37,18 @@
 					<el-form-item label="状态:" class="tagheight">
 						<el-select
 							v-model="queryData.status"
-							style="width: 180px"
+							style="width: 300px"
 							clearable
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
 						>
-							<el-option label="全部"></el-option>
+							<el-option label="全部" value=""></el-option>
 							<el-option label="禁用中" :value="0"></el-option>
 							<el-option label="开启中" :value="1"></el-option>
 						</el-select>
 					</el-form-item>
 
-					<el-form-item>
+					<el-form-item style="margin-left: 28px">
 						<el-button
 							type="primary"
 							icon="el-icon-search"
@@ -62,7 +67,7 @@
 							重置
 						</el-button>
 						<el-button
-						    v-if="hasPermission('1020119')"
+							v-if="hasPermission('1020119')"
 							type="warning"
 							icon="el-icon-folder"
 							:disabled="loading"
@@ -102,7 +107,7 @@
 						prop="labelStatus"
 						align="center"
 						label="状态"
-						width="100px"
+						width="100"
 					>
 						<template slot-scope="scope">
 							<div v-if="scope.row.labelStatus === 0" class="disableRgba">
@@ -118,69 +123,70 @@
 						prop="description"
 						align="center"
 						label="标签描述"
+						min-width="200"
 					></el-table-column>
 					<el-table-column
 						prop="gameLabelCount"
 						align="center"
 						label="已标签游戏"
-						width="120px"
+						width="120"
 					>
 						<template slot-scope="scope">
-							<div class="blueColor decoration" @click="lookGame(scope.row)">
+							<div
+								v-if="scope.row.gameLabelCount"
+								class="blueColor decoration"
+								@click="lookGame(scope.row)"
+							>
 								{{ scope.row.gameLabelCount }}
 							</div>
+							<div v-else>{{ scope.row.gameLabelCount }}</div>
 						</template>
 					</el-table-column>
 					<el-table-column
 						prop="createdBy"
 						align="center"
 						label="创建人"
-						width="100px"
+						width="100"
 					></el-table-column>
 					<el-table-column
 						prop="createdAt"
 						align="center"
 						label="创建时间"
 						sortable="custom"
-						width="160px"
+						width="160"
 					></el-table-column>
 					<el-table-column
 						prop="updatedBy"
 						align="center"
 						label="最近操作人"
-						width="100px"
+						width="100"
 					></el-table-column>
 					<el-table-column
 						prop="updatedAt"
 						align="center"
 						label="最近操作时间"
 						sortable="custom"
-						width="160px"
+						width="160"
 					></el-table-column>
 					<el-table-column
 						prop="operating"
 						align="center"
 						label="操作"
-						width="240px"
+						width="240"
 					>
 						<template slot-scope="scope">
 							<el-button
-							     v-if="hasPermission('1020120')"
+								v-if="hasPermission('1020120')"
 								:disabled="loading"
 								:type="scope.row.labelStatus ? 'danger' : 'success'"
 								size="medium"
 								class="noicon"
 								@click="switchClick(scope.row)"
 							>
-								<div v-if="scope.row.labelStatus">
-										禁用
-									</div>
-									<div v-else>
-										开启
-									</div>
+								{{ scope.row.labelStatus ? '禁用' : '开启' }}
 							</el-button>
 							<el-button
-							    v-if="hasPermission('1020121')"
+								v-if="hasPermission('1020121')"
 								type="primary"
 								icon="el-icon-edit"
 								:disabled="scope.row.labelStatus === 1"
@@ -191,7 +197,7 @@
 							</el-button>
 
 							<el-button
-							    v-if="hasPermission('1020122')"
+								v-if="hasPermission('1020122')"
 								type="warning"
 								icon="el-icon-delete"
 								:disabled="scope.row.labelStatus === 1"
@@ -267,7 +273,13 @@
 				<el-divider></el-divider>
 				<div slot="footer" class="dialog-footer">
 					<el-button @click="dialogFormVisible = false">取消</el-button>
-					<el-button type="primary" @click="subAddOrEidt">保存</el-button>
+					<el-button
+						:disabled="addOrEidtDisabled"
+						type="primary"
+						@click="subAddOrEidt"
+					>
+						保存
+					</el-button>
 				</div>
 			</el-dialog>
 			<el-dialog
@@ -284,7 +296,7 @@
 					<span>添加时间</span>
 				</p>
 				<div class="bodyBox">
-					<p v-for="item in gameList" :key="item.gameName">
+					<p v-for="(item, i) in gameList" :key="i">
 						<span>{{ item.gameName }}</span>
 						<span>{{ item.createdAt }}</span>
 					</p>
@@ -302,6 +314,8 @@ export default {
 	components: {},
 	mixins: [list],
 	data() {
+		this.loadData = this.throttle(this.loadData, 1000)
+		this._changeTableSort = this.throttle(this._changeTableSort, 1000)
 		return {
 			queryData: {},
 			tableData: [],
@@ -309,8 +323,9 @@ export default {
 			dialogForm: {},
 			gameList: [],
 			dialogGameVisible: false,
-			title: '',
-			labelName: ''
+			title: undefined,
+			labelName: undefined,
+			addOrEidtDisabled: false
 		}
 	},
 	computed: {},
@@ -327,9 +342,14 @@ export default {
 			this.$api
 				.getTabelData(params)
 				.then((res) => {
-					if (res.code === 200) {
-						this.tableData = res.data.record
-						this.total = res.data.totalRecord
+					const {
+						code,
+						data: { record, totalRecord }
+					} = res || {}
+					if (code && code === 200) {
+						this.tableData =
+							(record && record.length && Object.freeze(record)) || []
+						this.total = totalRecord || 0
 						this.loading = false
 					} else {
 						this.loading = false
@@ -340,13 +360,15 @@ export default {
 				})
 		},
 		lookGame(val) {
+			this.loading = true
 			this.labelName = val.gameLabelName
 			const data = {}
 			data.gameLabelId = val.gameLabelId
 			data.gameLabelName = val.gameLabelName
 			this.$api.getGameLabelRelation(data).then((res) => {
-				if (res.code === 200) {
-					this.gameList = res.data
+				if (res && res.code === 200) {
+					this.loading = false
+					this.gameList = res.data || []
 					this.dialogGameVisible = true
 				}
 			})
@@ -375,7 +397,7 @@ export default {
 					this.$api
 						.setUpdateStatus({ id: val.id, status: status })
 						.then((res) => {
-							if (res.code === 200) {
+							if (res && res.code === 200) {
 								this.loadData()
 							}
 						})
@@ -405,7 +427,7 @@ export default {
 			})
 				.then(() => {
 					this.$api.setUpdateDelete(data).then((res) => {
-						if (res.code === 200) {
+						if (res && res.code === 200) {
 							this.$message.success('删除成功')
 							this.loadData()
 						}
@@ -414,31 +436,33 @@ export default {
 				.catch(() => {})
 		},
 		subAddOrEidt() {
-			console.log(this.title)
 			const data = {}
 			data.id = this.dialogForm.id
 			data.description = this.dialogForm.description
 			data.gameLabelName = this.dialogForm.gameLabelName
 			this.$refs.formSub.validate((valid) => {
 				if (valid) {
+					this.addOrEidtDisabled = true
 					if (this.title === '新增') {
-						console.log('新增')
 						this.$api.addObGameLabel(data).then((res) => {
-							if (res.code === 200) {
+							if (res && res.code === 200) {
 								this.$message.success('创建成功')
 								this.pageNum = 1
+								this.dialogFormVisible = false
 								this.loadData()
+								this.disabledDelay('addOrEidtDisabled', false)
 							}
 						})
 					} else {
 						this.$api.setUpdateLabel(data).then((res) => {
-							if (res.code === 200) {
+							if (res && res.code === 200) {
 								this.$message.success('修改成功')
+								this.dialogFormVisible = false
 								this.loadData()
+								this.disabledDelay('addOrEidtDisabled', false)
 							}
 						})
 					}
-					this.dialogFormVisible = false
 				}
 			})
 		},

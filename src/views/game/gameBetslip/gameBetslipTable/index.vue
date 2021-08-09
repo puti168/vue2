@@ -2,26 +2,31 @@
 	<div class="game-container report-container">
 		<div v-if="gameType === 'init'" class="view-container dealer-container">
 			<div class="params">
-				<el-form ref="form" :inline="true" :model="queryData">
+				<el-form
+					ref="form"
+					:inline="true"
+					:model="queryData"
+					label-width="80px"
+				>
 					<el-form-item label="注单号:">
 						<el-input
 							v-model="queryData.id"
 							clearable
 							:maxlength="100"
 							size="medium"
-							style="width: 180px"
+							style="width: 230px"
 							placeholder="请输入"
 							:disabled="loading"
 							@keyup.enter.native="enterSearch"
 						></el-input>
 					</el-form-item>
-					<el-form-item label="三方注单号:">
+					<el-form-item label="三方注单号:" label-width="90px">
 						<el-input
 							v-model="queryData.thirdOrderId"
 							clearable
 							:maxlength="100"
 							size="medium"
-							style="width: 180px"
+							style="width: 220px"
 							placeholder="请输入"
 							:disabled="loading"
 							@keyup.enter.native="enterSearch"
@@ -40,7 +45,6 @@
 							align="right"
 							clearable
 							:default-time="defaultTime"
-							style="width: 375px"
 						></el-date-picker>
 					</el-form-item>
 					<el-form-item label="结算时间:">
@@ -56,14 +60,15 @@
 							align="right"
 							clearable
 							:default-time="defaultTime"
-							style="width: 375px"
 						></el-date-picker>
 					</el-form-item>
 					<el-form-item label="游戏平台:" class="tagheight">
 						<el-select
 							v-model="queryData.gameCode"
-							style="width: 300px"
+							style="width: 230px"
 							multiple
+							clearable
+							collapse-tags
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
 						>
@@ -75,13 +80,13 @@
 							></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="游戏类型:">
+					<el-form-item label="游戏名称:">
 						<el-input
 							v-model="queryData.gameTypeName"
 							clearable
 							:maxlength="100"
 							size="medium"
-							style="width: 180px"
+							style="width: 230px"
 							placeholder="请输入"
 							:disabled="loading"
 							@keyup.enter.native="enterSearch"
@@ -93,7 +98,7 @@
 							clearable
 							:maxlength="11"
 							size="medium"
-							style="width: 200px"
+							style="width: 230px"
 							placeholder="请输入"
 							:disabled="loading"
 							@keyup.enter.native="enterSearch"
@@ -102,8 +107,10 @@
 					<el-form-item label="账号类型:" class="tagheight">
 						<el-select
 							v-model="queryData.accountType"
-							style="width: 300px"
+							style="width: 230px"
 							multiple
+							clearable
+							collapse-tags
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
 						>
@@ -121,7 +128,7 @@
 							clearable
 							:maxlength="11"
 							size="medium"
-							style="width: 200px"
+							style="width: 245px"
 							placeholder="请输入"
 							:disabled="loading"
 							@keyup.enter.native="enterSearch"
@@ -133,22 +140,23 @@
 							clearable
 							:maxlength="25"
 							size="medium"
-							style="width: 180px"
+							style="width: 230px"
 							placeholder="请输入"
 							:disabled="loading"
 							@keyup.enter.native="enterSearch"
 						></el-input>
 					</el-form-item>
-					<el-form-item label="注单状态:" class="tagheight">
+					<el-form-item label="状态归类:" class="tagheight">
 						<el-select
 							v-model="queryData.betStatus"
-							style="width: 180px"
+							style="width: 230px"
 							clearable
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
 						>
 							<el-option label="已结算" value="1"></el-option>
 							<el-option label="未结算" value="2"></el-option>
+							<el-option label="已取消" value="3"></el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item label="投注金额:">
@@ -156,7 +164,7 @@
 							v-model="queryData.betAmountMin"
 							size="medium"
 							placeholder="最小数值"
-							style="width: 100px"
+							style="width: 109px"
 							:maxlength="10"
 							name="betAmountMin"
 							oninput="value=value.replace(/[^\d]/g,'')"
@@ -167,7 +175,7 @@
 							v-model="queryData.betAmountMax"
 							size="medium"
 							placeholder="最大数值"
-							style="width: 100px"
+							style="width: 109px"
 							:maxlength="10"
 							name="betAmountMax"
 							oninput="value=value.replace(/[^\d]/g,'')"
@@ -179,7 +187,7 @@
 							v-model="queryData.netAmountMin"
 							size="medium"
 							placeholder="最小数值"
-							style="width: 100px"
+							style="width: 109px"
 							:maxlength="10"
 							name="netAmountMin"
 							oninput="value=value.replace(/[^\d]/g,'')"
@@ -190,7 +198,7 @@
 							v-model="queryData.netAmountMax"
 							size="medium"
 							placeholder="最大数值"
-							style="width: 100px"
+							style="width: 109px"
 							:maxlength="10"
 							name="netAmountMax"
 							oninput="value=value.replace(/[^\d]/g,'')"
@@ -203,7 +211,7 @@
 							clearable
 							:maxlength="15"
 							size="medium"
-							style="width: 180px"
+							style="width: 245px"
 							placeholder="请输入"
 							:disabled="loading"
 							@keyup.enter.native="enterSearch"
@@ -212,8 +220,9 @@
 					<el-form-item label="投注终端:" class="tagheight">
 						<el-select
 							v-model="queryData.deviceType"
-							style="width: 300px; margin-right: 20px"
+							style="width: 400px; margin-right: 20px"
 							multiple
+							clearable
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
 						>
@@ -244,7 +253,7 @@
 							重置
 						</el-button>
 						<el-button
-						    v-if="hasPermission('1020311')"
+							v-if="hasPermission('1020311')"
 							icon="el-icon-download"
 							type="warning"
 							:disabled="loading"
@@ -307,7 +316,7 @@
 						<template slot="header">
 							游戏平台
 							<br />
-							游戏类型
+							游戏名称
 						</template>
 						<template slot-scope="scope">
 							<span v-for="item in gameTypeList" :key="item.gameCode">
@@ -381,7 +390,7 @@
 					<el-table-column
 						prop="betStatus"
 						align="center"
-						label="注单状态"
+						label="状态归类"
 						width="100px"
 					>
 						<template slot-scope="scope">
@@ -389,6 +398,9 @@
 								已结算
 							</span>
 							<span v-else-if="scope.row.betStatus === 2" class="deleteRgba">
+								未结算
+							</span>
+							<span v-else-if="scope.row.betStatus === 3" class="lockingRgba">
 								未结算
 							</span>
 							<span v-else>-</span>
@@ -427,7 +439,11 @@
 						align="center"
 						label="投注IP"
 						width="150px"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							{{ scope.row.loginIp || '-' }}
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="deviceType"
 						align="center"
@@ -451,7 +467,7 @@
 					>
 						<template slot-scope="scope">
 							<el-button
-							    v-if="hasPermission('1020312')"
+								v-if="hasPermission('1020312')"
 								type="primary"
 								icon="el-icon-view"
 								size="medium"
@@ -563,7 +579,7 @@
 					v-else-if="gameType === 'dy'"
 					:dataList="dataList"
 				></eGameDetails>
-				<slotDetails v-else></slotDetails>
+				<slotDetails v-else :dataList="dataList"></slotDetails>
 			</div>
 		</div>
 	</div>
@@ -600,6 +616,8 @@ export default {
 	},
 	mixins: [list],
 	data() {
+		this.loadData = this.throttle(this.loadData, 1000)
+		this._changeTableSort = this.throttle(this._changeTableSort, 1000)
 		return {
 			queryData: {},
 			gameTypeList: [],
@@ -620,10 +638,10 @@ export default {
 	},
 	computed: {
 		accountType() {
-			return this.globalDics.accountType
+			return this.globalDics.accountType || []
 		},
 		betDeviceType() {
-			return this.globalDics.betDeviceType
+			return this.globalDics.betDeviceType || []
 		}
 	},
 	mounted() {
@@ -632,8 +650,8 @@ export default {
 	methods: {
 		getGameTypeList() {
 			this.$api.getMerchantGameGamePlant().then((res) => {
-				if (res.code === 200) {
-					this.gameTypeList = res.data
+				if (res && res.code === 200) {
+					this.gameTypeList = res.data || []
 				}
 			})
 		},
@@ -664,20 +682,23 @@ export default {
 				this.$api
 					.getGameRecordNotes(params)
 					.then((res) => {
-						if (res.code === 200) {
-							this.tableData = res.data.record
-							this.total = res.data.totalRecord
+						const {
+							code,
+							data: { record, totalRecord, summary }
+						} = res || {}
+						if (code && code === 200) {
+							this.tableData =
+								(record && record.length && Object.freeze(record)) || []
+							this.total = totalRecord || 0
 							this.now = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
-							this.summary =
-								res.data.summary !== null
-									? res.data.summary
-									: {
-											totalCount: 0,
-											settledCount: 0,
-											unSettledCount: 0,
-											betAmount: 0,
-											netAmount: 0
-									  }
+							const initSummary = {
+								totalCount: 0,
+								settledCount: 0,
+								unSettledCount: 0,
+								betAmount: 0,
+								netAmount: 0
+							}
+							this.summary = summary || initSummary
 						}
 						this.loading = false
 					})
@@ -711,13 +732,13 @@ export default {
 			this.$api
 				.getGameRecordDetail(data)
 				.then((res) => {
-					if (res.code === 200 && res.data.record.length > 0) {
-						this.dataList = res.data.record[0]
-						this.gameType = val.gameCode
-						loading.close()
-					} else {
-						this.dataList = {}
-						this.gameType = 'init'
+					const {
+						code,
+						data: { record }
+					} = res || {}
+					if (code && code === 200) {
+						this.dataList = (record && record.length && record[0]) || {}
+						this.gameType = (record && record.length && val.gameCode) || 'init'
 						loading.close()
 					}
 					console.log(res)
@@ -829,18 +850,18 @@ export default {
 							.getGameRecordDownload(params)
 							.then((res) => {
 								this.loading = false
-								const { data, status } = res
-								if (res && status === 200) {
-									const { type } = data
+								const { data, status } = res || {}
+								if (res && status && status === 200) {
+									const { type = [] } = data || {}
 									if (type.includes('application/json')) {
 										const reader = new FileReader()
 										reader.onload = (evt) => {
-											if (evt.target.readyState === 2) {
+											if (evt && evt.target.readyState === 2) {
 												const {
 													target: { result }
 												} = evt
 												const ret = JSON.parse(result)
-												if (ret.code !== 200) {
+												if (ret && ret.code !== 200) {
 													this.$message({
 														type: 'error',
 														message: ret.msg,
@@ -926,10 +947,10 @@ export default {
 		margin-bottom: 15px;
 	}
 }
-.view-container {
-	border: 1px solid #dcdfe6;
-	font-size: 14px;
-}
+// .view-container {
+// 	border: 1px solid #dcdfe6;
+// 	font-size: 14px;
+// }
 .review-content {
 	line-height: 30px;
 }

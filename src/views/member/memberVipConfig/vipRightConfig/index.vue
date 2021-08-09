@@ -28,10 +28,10 @@
 									v-model="scope.row.dayWithdrawalNum"
 									size="medium"
 									:max="999999999"
-									:min="0"
+									:min="1"
 									placeholder="请输入"
 									clearable
-									style="width: 150px"
+									style="width: auto"
 									@blur="checkTransferValue(scope.row, 'dayWithdrawalNum')"
 								></el-input-number>
 							</span>
@@ -48,10 +48,10 @@
 									v-model.number="scope.row.dayWithdrawalQuota"
 									size="medium"
 									:max="999999999"
-									:min="0"
+									:min="1"
 									placeholder="请输入"
 									clearable
-									style="width: 150px"
+									style="width: auto"
 									@blur="checkTransferValue(scope.row, 'dayWithdrawalQuota')"
 								></el-input-number>
 							</span>
@@ -59,7 +59,7 @@
 					</el-table-column>
 					<el-table-column prop="upgradeBonus" align="center" label="升级礼金">
 						<template slot-scope="scope">
-							<span v-if="scope.row.vipSerialNum!=='VIP0'">
+							<span v-if="scope.row.vipSerialNum !== 'VIP0'">
 								<el-input-number
 									v-model="scope.row.upgradeBonus"
 									size="medium"
@@ -68,7 +68,7 @@
 									placeholder="请输入"
 									clearable
 									:precision="0"
-									style="width: 150px"
+									style="width: auto"
 									@blur="checkTransferValue(scope.row, 'upgradeBonus')"
 								></el-input-number>
 							</span>
@@ -97,7 +97,7 @@
 							</el-popover>
 						</template>
 						<template slot-scope="scope">
-							<span v-if="scope.row.vipSerialNum!=='VIP0'">
+							<span v-if="scope.row.vipSerialNum !== 'VIP0'">
 								<el-input-number
 									v-model="scope.row.birthdayBonus"
 									size="medium"
@@ -105,7 +105,7 @@
 									:min="0"
 									placeholder="请输入"
 									clearable
-									style="width: 150px"
+									style="width: auto"
 									@blur="checkTransferValue(scope.row, 'birthdayBonus')"
 								></el-input-number>
 							</span>
@@ -133,7 +133,7 @@
 							</el-popover>
 						</template>
 						<template slot-scope="scope">
-							<span v-if="scope.row.vipSerialNum!=='VIP0'">
+							<span v-if="scope.row.vipSerialNum !== 'VIP0'">
 								<el-input-number
 									v-model="scope.row.aboveMonthRedEnvelope"
 									size="medium"
@@ -141,14 +141,14 @@
 									:min="0"
 									placeholder="请输入"
 									clearable
-									style="width: 150px"
-									@blur="checkTransferValue(scope.row, 'aboveMonthRedEnvelope')"
+									style="width: auto"
+									@blur="auto(scope.row, 'aboveMonthRedEnvelope')"
 								></el-input-number>
 							</span>
 							<span v-else>0</span>
 						</template>
 					</el-table-column>
-					<el-table-column align="center" label="下半月红包" width="300">
+					<el-table-column align="center" label="下半月红包">
 						<template slot="header" slot-scope="scope">
 							<el-popover
 								placement="top-start"
@@ -165,7 +165,7 @@
 							</el-popover>
 						</template>
 						<template slot-scope="scope">
-							<span v-if="scope.row.vipSerialNum!=='VIP0'">
+							<span v-if="scope.row.vipSerialNum !== 'VIP0'">
 								<el-input-number
 									v-model="scope.row.belowMonthRedEnvelope"
 									size="medium"
@@ -173,7 +173,7 @@
 									:min="0"
 									placeholder="请输入"
 									clearable
-									style="width: 150px"
+									style="width: auto"
 									@blur="checkTransferValue(scope.row, 'belowMonthRedEnvelope')"
 								></el-input-number>
 							</span>
@@ -184,7 +184,7 @@
 			</div>
 			<div class="btn_footer">
 				<el-button
-                    v-if="hasPermission('247')"
+					v-if="hasPermission('247')"
 					type="primary"
 					icon="el-icon-search"
 					size="medium"
@@ -212,9 +212,9 @@ import { routerNames } from '@/utils/consts'
 
 export default {
 	name: routerNames.vipDiscountConfig,
-	components: {},
 	mixins: [list],
 	data() {
+		this.saveData = this.throttle(this.saveData, 1000)
 		return {
 			dataList: []
 		}
@@ -227,14 +227,13 @@ export default {
 			this.$api
 				.memberInComQuery()
 				.then((res) => {
-					if (res.code === 200) {
-						const response = res.data
-						this.loading = false
-						this.dataList = response
+					this.loading = false
+					const { code, data, msg } = res
+					if (res && code && code === 200) {
+						this.dataList = data || []
 					} else {
-						this.loading = false
 						this.$message({
-							message: res.msg,
+							message: res && msg,
 							type: 'error'
 						})
 					}
@@ -254,14 +253,15 @@ export default {
 					incomeList: this.dataList
 				})
 				.then((res) => {
-					if (res.code === 200) {
+					const { code, msg } = res
+					if (res && code === 200) {
 						this.$message({
 							message: '保存成功',
 							type: 'success'
 						})
 					} else {
 						this.$message({
-							message: res.msg,
+							message: res && msg,
 							type: 'error'
 						})
 					}
@@ -272,14 +272,15 @@ export default {
 			this.$api
 				.memberInComComback()
 				.then((res) => {
-					if (res.code === 200) {
+					const { code, msg } = res
+					if (res && code === 200) {
 						this.$message({
 							message: '重置成功',
 							type: 'success'
 						})
 					} else {
 						this.$message({
-							message: res.msg,
+							message: res && msg,
 							type: 'error'
 						})
 					}

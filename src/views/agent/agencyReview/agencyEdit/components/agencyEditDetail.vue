@@ -18,14 +18,16 @@
 					<div>注册时间: {{ list.createDt }}</div>
 					<div>代理类型: {{ typeFilter(list.accountType, 'accountType') }}</div>
 					<div>上次登录时间: {{ list.lastLoginTime }}</div>
-					<div>注册端:  {{ typeFilter(list.deviceType, "deviceType") }}</div>
+					<div>注册端: {{ typeFilter(list.deviceType, 'deviceType') }}</div>
 				</div>
 			</div>
 			<div class="review-content">
 				<p class="name">代理账号信息</p>
 				<div class="review-flex">
 					<div>账号: {{ list.userName }}</div>
-					<div>账号状态: {{ typeFilter(list.accountStatus, 'accountStatusType') }}</div>
+					<div>
+						账号状态: {{ typeFilter(list.accountStatus, 'accountStatusType') }}
+					</div>
 					<div>风控层级: {{ list.windControlName }}</div>
 					<div>代理标签: {{ list.labelName }}</div>
 				</div>
@@ -84,7 +86,9 @@
 					<div>一审人: {{ list.auditName }}</div>
 					<div>一审时间: {{ list.auditTime }}</div>
 					<div>一审备注: {{ list.auditRemark }}</div>
-					<div>一审状态: {{ typeFilter(rowData.auditStatus, 'auditStatusType') }}</div>
+					<div>
+						一审状态: {{ typeFilter(rowData.auditStatus, 'auditStatusType') }}
+					</div>
 				</div>
 			</div>
 		</div>
@@ -147,6 +151,7 @@ export default {
 		}
 	},
 	data() {
+		this.auditOne = this.throttle(this.auditOne, 1000)
 		return {
 			list: {},
 			form: {

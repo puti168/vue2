@@ -64,7 +64,7 @@ const operation = [
 		id: '68',
 		parentId: '60',
 		path: '/operation/platform/platformRate',
-		title: '场馆费率配置'
+		title: '代理场馆费率配置'
 	},
 	{
 		id: '69',

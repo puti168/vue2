@@ -13,6 +13,8 @@ export const routerNames = {
 	virtualRecord: 'virtualRecord',
 	addMemberReview: 'addMemberReview',
 	memberChangeReview: 'memberChangeReview',
+	memberBankManage: 'memberBankManage',
+	VirtualManage: 'VirtualManage',
 	gameClassify: 'gameClassify',
 	gamePlatform: 'gamePlatform',
 	addMemberCheck: 'addMemberCheck',
@@ -62,7 +64,9 @@ export const routerNames = {
 	platformRate: 'platformRate',
 	roleManage: 'roleManage',
 	memberReport: 'memberReport',
-	agentReport: 'agentReport'
+	agentReport: 'agentReport',
+	operationRecord: 'operationRecord',
+	searchOperationRecord: 'searchOperationRecord'
 }
 const month = dayjs().month()
 const year = dayjs().year()

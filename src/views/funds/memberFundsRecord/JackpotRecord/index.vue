@@ -1,217 +1,307 @@
 <template>
-  <div class="game-container report-container">
-    <div class="view-container dealer-container">
-      <div class="params">
-        <el-form ref="form" :inline="true" :model="queryData">
-          <el-form-item label="派彩时间:">
-            <el-date-picker
-              v-model="searchTime"
-              size="medium"
-              :picker-options="pickerOptions"
-              format="yyyy-MM-dd HH:mm:ss"
-              type="datetimerange"
-              range-separator="-"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-              align="right"
-              :clearable="false"
-              :default-time="defaultTime"
-              style="width: 375px"
-            ></el-date-picker>
-          </el-form-item>
-          <el-form-item label="订单号:">
-            <el-input
-              v-model="queryData.id"
-              clearable
-              size="medium"
-              style="width: 200px"
-              placeholder="请输入"
-              :disabled="loading"
-              @keyup.enter.native="enterSearch"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="会员账号:">
-            <el-input
-              v-model="queryData.userName"
-              clearable
-              :maxlength="11"
-              size="medium"
-              style="width: 200px"
-              placeholder="请输入"
-              :disabled="loading"
-              @keyup.enter.native="enterSearch"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="会员姓名:">
-            <el-input
-              v-model="queryData.realName"
-              clearable
-              :maxlength="15"
-              size="medium"
-              style="width: 200px"
-              placeholder="请输入"
-              :disabled="loading"
-              @keyup.enter.native="enterSearch"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="订单状态：" class="tagheight">
-            <el-select
-              v-model="queryData.auditStatus"
-              clearable
-              placeholder="默认选择全部"
-              :popper-append-to-body="false"
-            >
-              <el-option
-                v-for="item in activityPayoutStatus"
-                :key="item.code"
-                :label="item.description"
-                :value="item.code"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="活动ID:">
-            <el-input
-              v-model="queryData.activityId"
-              clearable
-              :maxlength="11"
-              size="medium"
-              style="width: 200px"
-              placeholder="请输入"
-              :disabled="loading"
-              @keyup.enter.native="enterSearch"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="派彩方式:" class="tagheight">
-            <el-select
-              v-model="queryData.approveType"
-              clearable
-              placeholder="默认选择全部"
-              :popper-append-to-body="false"
-            >
-              <el-option
-                v-for="item in activityApproveType"
-                :key="item.code"
-                :label="item.description"
-                :value="item.code"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item>
-            <el-button
-              type="primary"
-              icon="el-icon-search"
-              :disabled="loading"
-              size="medium"
-              @click="search"
-            >
-              查询
-            </el-button>
-            <el-button
-              icon="el-icon-refresh-left"
-              :disabled="loading"
-              size="medium"
-              @click="reset"
-            >
-              重置
-            </el-button>
-            <el-button
-			  v-if="hasPermission('267')"
-              icon="el-icon-download"
-              type="warning"
-              :disabled="loading"
-              size="medium"
-              @click="exportExcel"
-            >
-              导出
-            </el-button>
-          </el-form-item>
-        </el-form>
-      </div>
-      <div class="content">
-        <el-table
-          v-loading="loading"
-          border
-          show-summary
-          :summary-method="getSummaries"
-          size="mini"
-          class="small-size-table"
-          :data="tableData"
-          style="width: 100%"
-          :header-cell-style="getRowClass"
-          @sort-change="_changeTableSort"
-        >
-          <el-table-column prop="id" align="center" label="订单号" width="240px">
-            <template slot-scope="scope">
-              <Copy v-if="!!scope.row.id" :title="scope.row.id" :copy="copy">
-                {{ scope.row.id }}
-              </Copy>
-              <span v-else>-</span>
-            </template>
-          </el-table-column>
-          <el-table-column prop="userName" align="center" label="会员账号">
-            <template slot-scope="scope">
-              <Copy v-if="!!scope.row.userName" :title="scope.row.userName" :copy="copy">
-                {{ scope.row.userName }}
-              </Copy>
-              <span v-else>-</span>
-            </template>
-          </el-table-column>
-          <el-table-column prop="realName" align="center" label="会员姓名">
-            <template slot-scope="scope">
-              <Copy v-if="!!scope.row.realName" :title="scope.row.realName" :copy="copy">
-                {{ scope.row.realName }}
-              </Copy>
-              <span v-else>-</span>
-            </template>
-          </el-table-column>
-          <el-table-column prop="auditStatus" align="center" label="订单状态">
-            <template slot-scope="scope">
-              {{ typeFilter(scope.row.auditStatus, "activityPayoutStatus") }}
-            </template>
-          </el-table-column>
-          <el-table-column prop="type" align="center" label="活动类型">
-            <template slot-scope="scope">
-              {{ typeFilter(scope.row.type, "activityType") }}
-            </template>
-          </el-table-column>
-          <el-table-column prop="activityId" align="center" label="活动ID ">
-          </el-table-column>
-          <el-table-column prop="approveType" align="center" label="派彩方式">
-            <template slot-scope="scope">
-              {{ typeFilter(scope.row.approveType, "activityApproveType") }}
-            </template>
-          </el-table-column>
-          <el-table-column
-            prop="amount"
-            align="center"
-            label="彩金金额"
-            width="200px"
-            sortable="custom"
-          >
-          </el-table-column>
-          <el-table-column
-            prop="createdAt"
-            align="center"
-            label="派彩时间"
-            sortable="custom"
-          >
-          </el-table-column>
-        </el-table>
-        <!-- 分页 -->
-        <el-pagination
-          :current-page.sync="pageNum"
-          class="pageValue"
-          background
-          layout="total, sizes,prev, pager, next, jumper"
-          :page-size="pageSize"
-          :page-sizes="pageSizes"
-          :total="total"
-          @current-change="handleCurrentChange"
-          @size-change="handleSizeChange"
-        ></el-pagination>
-      </div>
-    </div>
-  </div>
+	<div class="game-container report-container">
+		<div class="view-container dealer-container">
+			<div class="params">
+				<el-form
+					ref="form"
+					:inline="true"
+					:model="queryData"
+					label-width="80px"
+				>
+					<el-form-item label="领取时间:">
+						<el-date-picker
+							v-model="receiveTime"
+							size="medium"
+							:picker-options="pickerOptions"
+							format="yyyy-MM-dd HH:mm:ss"
+							type="datetimerange"
+							range-separator="-"
+							start-placeholder="开始日期"
+							end-placeholder="结束日期"
+							align="right"
+							style="width: 420px"
+							:default-time="defaultTime"
+						></el-date-picker>
+					</el-form-item>
+					<el-form-item label="订单生成时间:" label-width="116px">
+						<el-date-picker
+							v-model="orderTime"
+							size="medium"
+							:picker-options="pickerOptions"
+							format="yyyy-MM-dd HH:mm:ss"
+							type="datetimerange"
+							range-separator="-"
+							start-placeholder="开始日期"
+							end-placeholder="结束日期"
+							align="right"
+							style="width: 420px"
+							:clearable="false"
+							:default-time="defaultTime"
+						></el-date-picker>
+					</el-form-item>
+					<el-form-item label="订单号:">
+						<el-input
+							v-model="queryData.businessId"
+							clearable
+							size="medium"
+							style="width: 415px"
+							placeholder="请输入"
+							:disabled="loading"
+							@keyup.enter.native="enterSearch"
+						></el-input>
+					</el-form-item>
+					<el-form-item label="会员账号:">
+						<el-input
+							v-model="queryData.userName"
+							clearable
+							:maxlength="11"
+							size="medium"
+							style="width: 220px"
+							placeholder="请输入"
+							:disabled="loading"
+							@keyup.enter.native="enterSearch"
+						></el-input>
+					</el-form-item>
+					<el-form-item label="会员姓名:">
+						<el-input
+							v-model="queryData.realName"
+							clearable
+							:maxlength="15"
+							size="medium"
+							style="width: 220px"
+							placeholder="请输入"
+							:disabled="loading"
+							@keyup.enter.native="enterSearch"
+						></el-input>
+					</el-form-item>
+					<el-form-item label="领取方式:" class="tagheight">
+						<el-select
+							v-model="queryData.approveType"
+							clearable
+							placeholder="默认选择全部"
+							style="width: 220px"
+							:popper-append-to-body="false"
+						>
+							<el-option
+								v-for="item in activityApproveType"
+								:key="item.code"
+								:label="item.description"
+								:value="item.code"
+							></el-option>
+						</el-select>
+					</el-form-item>
+					<el-form-item label="领取状态:" class="tagheight">
+						<el-select
+							v-model="queryData.auditStatus"
+							clearable
+							placeholder="默认选择全部"
+							style="width: 220px"
+							:popper-append-to-body="false"
+						>
+							<el-option
+								v-for="item in activityPayoutStatus"
+								:key="item.code"
+								:label="item.description"
+								:value="item.code"
+							></el-option>
+						</el-select>
+					</el-form-item>
+					<el-form-item label="活动类型:" class="tagheight">
+						<el-select
+							v-model="queryData.type"
+							clearable
+							placeholder="默认选择全部"
+							style="width: 222px"
+							:popper-append-to-body="false"
+						>
+							<el-option
+								v-for="item in activityType"
+								:key="item.code"
+								:label="item.description"
+								:value="item.code"
+							></el-option>
+						</el-select>
+					</el-form-item>
+					<el-form-item label="活动ID:">
+						<el-input
+							v-model="queryData.activityId"
+							clearable
+							:maxlength="11"
+							size="medium"
+							style="width: 220px"
+							placeholder="请输入"
+							:disabled="loading"
+							@keyup.enter.native="enterSearch"
+						></el-input>
+					</el-form-item>
+
+					<el-form-item style="margin-left: 8px">
+						<el-button
+							type="primary"
+							icon="el-icon-search"
+							:disabled="loading"
+							size="medium"
+							@click="search"
+						>
+							查询
+						</el-button>
+						<el-button
+							icon="el-icon-refresh-left"
+							:disabled="loading"
+							size="medium"
+							@click="reset"
+						>
+							重置
+						</el-button>
+						<el-button
+							v-if="hasPermission('267')"
+							icon="el-icon-download"
+							type="warning"
+							:disabled="loading"
+							size="medium"
+							@click="exportExcel"
+						>
+							导出
+						</el-button>
+					</el-form-item>
+				</el-form>
+			</div>
+			<div class="content">
+				<el-table
+					v-loading="loading"
+					border
+					show-summary
+					:summary-method="getSummaries"
+					size="mini"
+					class="small-size-table"
+					:data="tableData"
+					style="width: 100%"
+					:header-cell-style="getRowClass"
+					@sort-change="_changeTableSort"
+				>
+					<el-table-column
+						prop="businessId"
+						align="center"
+						label="订单号"
+						width="240px"
+					>
+						<template slot-scope="scope">
+							<Copy
+								v-if="!!scope.row.businessId"
+								:title="scope.row.businessId"
+								:copy="copy"
+							>
+								{{ scope.row.businessId }}
+							</Copy>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
+					<el-table-column
+						prop="userName"
+						align="center"
+						label="会员账号"
+						width="130px"
+					>
+						<template slot-scope="scope">
+							<Copy
+								v-if="!!scope.row.userName"
+								:title="scope.row.userName"
+								:copy="copy"
+							>
+								{{ scope.row.userName }}
+							</Copy>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
+					<el-table-column
+						prop="realName"
+						align="center"
+						label="会员姓名"
+						width="120px"
+					>
+						<template slot-scope="scope">
+							<Copy
+								v-if="!!scope.row.realName"
+								:title="scope.row.realName"
+								:copy="copy"
+							>
+								{{ scope.row.realName }}
+							</Copy>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
+					<el-table-column
+						prop="auditStatus"
+						align="center"
+						label="领取方式"
+						width="120px"
+					>
+						<template slot-scope="scope">
+							{{ typeFilter(scope.row.approveType, 'activityApproveType') }}
+						</template>
+					</el-table-column>
+					<el-table-column
+						prop="auditStatus"
+						align="center"
+						label="领取状态"
+						width="120px"
+					>
+						<template slot-scope="scope">
+							{{ typeFilter(scope.row.auditStatus, 'activityPayoutStatus') }}
+						</template>
+					</el-table-column>
+					<el-table-column
+						prop="type"
+						align="center"
+						label="活动类型"
+						width="150px"
+					>
+						<template slot-scope="scope">
+							{{ typeFilter(scope.row.type, 'activityType') }}
+						</template>
+					</el-table-column>
+					<el-table-column
+						prop="activityId"
+						align="center"
+						label="活动ID"
+					></el-table-column>
+					<el-table-column
+						prop="amount"
+						align="center"
+						label="优惠金额"
+						width="200px"
+						sortable="custom"
+					></el-table-column>
+					<el-table-column
+						prop="approveTime"
+						align="center"
+						label="领取时间"
+						sortable="custom"
+						width="200p"
+					></el-table-column>
+					<el-table-column
+						prop="createdAt"
+						align="center"
+						label="订单生成时间"
+						sortable="custom"
+						width="200p"
+					></el-table-column>
+				</el-table>
+				<!-- 分页 -->
+				<el-pagination
+					:current-page.sync="pageNum"
+					class="pageValue"
+					background
+					layout="total, sizes,prev, pager, next, jumper"
+					:page-size="pageSize"
+					:page-sizes="pageSizes"
+					:total="total"
+					@current-change="handleCurrentChange"
+					@size-change="handleSizeChange"
+				></el-pagination>
+			</div>
+		</div>
+	</div>
 </template>
 
 <script>
@@ -228,35 +318,45 @@ export default {
 	components: {},
 	mixins: [list],
 	data() {
+		this.loadData = this.throttle(this.loadData, 1000)
+		this._changeTableSort = this.throttle(this._changeTableSort, 1000)
 		return {
 			queryData: {},
-			searchTime: [startTime, endTime],
+			receiveTime: [startTime, endTime],
+			orderTime: [startTime, endTime],
 			tableData: [],
 			summary: {}
 		}
 	},
 	computed: {
+		activityApproveType() {
+			return this.globalDics.activityApproveType
+		},
 		activityPayoutStatus() {
 			return this.globalDics.activityPayoutStatus
 		},
-		activityApproveType() {
-			return this.globalDics.activityApproveType
+		activityType() {
+			return this.globalDics.activityType
 		}
 	},
 	created() {},
 	methods: {
 		loadData() {
 			this.loading = true
-			const create = this.searchTime || []
-			const [startTime, endTime] = create
+			const receive = this.receiveTime || []
+			const [startTime, endTime] = receive
+			const order = this.orderTime || []
+			const [start, end] = order
 			let params = {
 				...this.queryData,
-				createdAtStart: startTime
+				approveTimeStart: startTime
 					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
 					: '',
-				createdAtEnd: endTime
+				approveTimeEnd: endTime
 					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
-					: ''
+					: '',
+				createdAtStart: start ? dayjs(start).format('YYYY-MM-DD HH:mm:ss') : '',
+				createdAtEnd: end ? dayjs(end).format('YYYY-MM-DD HH:mm:ss') : ''
 			}
 			params = {
 				...this.getParams(params)
@@ -277,7 +377,8 @@ export default {
 		},
 		reset() {
 			this.queryData = {}
-			this.searchTime = [startTime, endTime]
+			this.receiveTime = [startTime, endTime]
+			this.orderTime = [startTime, endTime]
 			this.pageNum = 1
 			this.loadData()
 		},
@@ -285,8 +386,11 @@ export default {
 			if (prop === 'amount') {
 				prop = 1
 			}
-			if (prop === 'createdAt') {
+			if (prop === 'approveTime') {
 				prop = 2
+			}
+			if (prop === 'createdAt') {
+				prop = 3
 			}
 			this.pageNum = 1
 			this.queryData.orderKey = prop
@@ -304,16 +408,20 @@ export default {
 		},
 		exportExcel() {
 			this.loading = true
-			const create = this.searchTime || []
-			const [startTime, endTime] = create
+			const receive = this.receiveTime || []
+			const [startTime, endTime] = receive
+			const order = this.orderTime || []
+			const [start, end] = order
 			let params = {
 				...this.queryData,
-				createdAtStart: startTime
+				approveTimeStart: startTime
 					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
 					: '',
-				createdAtEnd: endTime
+				approveTimeEnd: endTime
 					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
-					: ''
+					: '',
+				createdAtStart: start ? dayjs(start).format('YYYY-MM-DD HH:mm:ss') : '',
+				createdAtEnd: end ? dayjs(end).format('YYYY-MM-DD HH:mm:ss') : ''
 			}
 			params = {
 				...this.getParams(params)

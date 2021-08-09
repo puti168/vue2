@@ -3,71 +3,72 @@
 		<el-tabs v-model="activeName" @tab-click="handleClick">
 			<el-tab-pane label="活动类型名称配置" name="0">
 				<div class="view-container dealer-container">
-                    <div class="params">
-                        <el-form ref="form" :inline="true" :model="queryData">
-                            <el-form-item label="操作时间:">
-                                <el-date-picker
-                                    v-model="formTime.time"
-                                    size="medium"
-                                    :picker-options="pickerOptions"
-                                    format="yyyy-MM-dd HH:mm:ss"
-                                    type="datetimerange"
-                                    range-separator="-"
-                                    start-placeholder="开始日期"
-                                    end-placeholder="结束日期"
-                                    align="right"
-                                    :clearable="false"
-                                    :default-time="defaultTime"
-                                ></el-date-picker>
-                            </el-form-item>
-                            <el-form-item label="变更类型:">
-                                <el-select
-                                    v-model="queryData.changeType"
-                                    style="width: 300px"
-                                    multiple
-                                    placeholder="默认选择全部"
-                                    :popper-append-to-body="false"
-                                >
-                                    <el-option
-                                        v-for="item in operateChangeTypeName"
-                                        :key="item.code"
-                                        :label="item.description"
-                                        :value="item.code"
-                                    ></el-option>
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item label="操作人:">
-                                <el-input
-                                    v-model="queryData.operatorBy"
-                                    clearable
-                                    size="medium"
-                                    :maxlength="12"
-                                    style="width: 180px"
-                                    placeholder="请输入"
-                                    @keyup.enter.native="enterSearch"
-                                ></el-input>
-                            </el-form-item>
-                            <el-form-item style="margin-left: 30px">
-                                <el-button
-                                    type="primary"
-                                    icon="el-icon-search"
-                                    :disabled="loading"
-                                    size="medium"
-                                    @click="search"
-                                >
-                                    查询
-                                </el-button>
-                                <el-button
-                                    icon="el-icon-refresh-left"
-                                    :disabled="loading"
-                                    size="medium"
-                                    @click="reset"
-                                >
-                                    重置
-                                </el-button>
-                            </el-form-item>
-                        </el-form>
-                    </div>
+					<div class="params">
+						<el-form ref="form" :inline="true" :model="queryData">
+							<el-form-item label="操作时间:">
+								<el-date-picker
+									v-model="formTime.time"
+									size="medium"
+									:picker-options="pickerOptions"
+									format="yyyy-MM-dd HH:mm:ss"
+									type="datetimerange"
+									range-separator="-"
+									start-placeholder="开始日期"
+									end-placeholder="结束日期"
+									align="right"
+									:clearable="false"
+									:default-time="defaultTime"
+								></el-date-picker>
+							</el-form-item>
+							<el-form-item label="变更类型:">
+								<el-select
+									v-model="queryData.changeType"
+									style="width: 300px"
+									multiple
+									collapse-tags
+									placeholder="默认选择全部"
+									:popper-append-to-body="false"
+								>
+									<el-option
+										v-for="item in operateChangeTypeName"
+										:key="item.code"
+										:label="item.description"
+										:value="item.code"
+									></el-option>
+								</el-select>
+							</el-form-item>
+							<el-form-item label="操作人:">
+								<el-input
+									v-model="queryData.operatorBy"
+									clearable
+									size="medium"
+									:maxlength="12"
+									style="width: 180px"
+									placeholder="请输入"
+									@keyup.enter.native="enterSearch"
+								></el-input>
+							</el-form-item>
+							<el-form-item style="margin-left: 30px">
+								<el-button
+									type="primary"
+									icon="el-icon-search"
+									:disabled="loading"
+									size="medium"
+									@click="search"
+								>
+									查询
+								</el-button>
+								<el-button
+									icon="el-icon-refresh-left"
+									:disabled="loading"
+									size="medium"
+									@click="reset"
+								>
+									重置
+								</el-button>
+							</el-form-item>
+						</el-form>
+					</div>
 					<div class="content">
 						<el-table
 							v-loading="loading"
@@ -170,88 +171,91 @@
 			</el-tab-pane>
 			<el-tab-pane label="创建优惠类型页签" name="1">
 				<div class="view-container dealer-container">
-                    <div class="params">
-                        <el-form ref="form" :inline="true" :model="queryData">
-                            <el-form-item label="操作时间:">
-                                <el-date-picker
-                                    v-model="formTime.time"
-                                    size="medium"
-                                    :picker-options="pickerOptions"
-                                    format="yyyy-MM-dd HH:mm:ss"
-                                    type="datetimerange"
-                                    range-separator="-"
-                                    start-placeholder="开始日期"
-                                    end-placeholder="结束日期"
-                                    align="right"
-                                    :clearable="false"
-                                    :default-time="defaultTime"
-                                ></el-date-picker>
-                            </el-form-item>
+					<div class="params">
+						<el-form ref="form" :inline="true" :model="queryData">
+							<el-form-item label="操作时间:">
+								<el-date-picker
+									v-model="formTime.time"
+									size="medium"
+									:picker-options="pickerOptions"
+									format="yyyy-MM-dd HH:mm:ss"
+									type="datetimerange"
+									range-separator="-"
+									start-placeholder="开始日期"
+									end-placeholder="结束日期"
+									align="right"
+									:clearable="false"
+									:default-time="defaultTime"
+								></el-date-picker>
+							</el-form-item>
 
-                            <el-form-item label="活动页签:">
-                                <el-select
-                                    v-model="queryData.tagIds"
-                                    style="width: 300px"
-                                    multiple
-                                    placeholder="默认选择全部"
-                                    :popper-append-to-body="false"
-                                >
-                                    <el-option
-                                        v-for="item in gameList"
-                                        :key="item.id"
-                                        :label="item.activityName"
-                                        :value="item.id"
-                                    ></el-option>
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item label="变更类型:">
-                                <el-select
-                                    v-model="queryData.changeType"
-                                    style="width: 300px"
-                                    multiple
-                                    placeholder="默认选择全部"
-                                    :popper-append-to-body="false"
-                                >
-                                    <el-option
-                                        v-for="item in operateChangeTypeTag"
-                                        :key="item.code"
-                                        :label="item.description"
-                                        :value="item.code"
-                                    ></el-option>
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item label="操作人:">
-                                <el-input
-                                    v-model="queryData.operatorBy"
-                                    clearable
-                                    size="medium"
-                                    :maxlength="12"
-                                    style="width: 180px"
-                                    placeholder="请输入"
-                                    @keyup.enter.native="enterSearch"
-                                ></el-input>
-                            </el-form-item>
-                            <el-form-item style="margin-left: 30px">
-                                <el-button
-                                    type="primary"
-                                    icon="el-icon-search"
-                                    :disabled="loading"
-                                    size="medium"
-                                    @click="search"
-                                >
-                                    查询
-                                </el-button>
-                                <el-button
-                                    icon="el-icon-refresh-left"
-                                    :disabled="loading"
-                                    size="medium"
-                                    @click="reset"
-                                >
-                                    重置
-                                </el-button>
-                            </el-form-item>
-                        </el-form>
-                    </div>
+							<el-form-item label="活动页签:">
+								<el-select
+									v-model="queryData.tagIds"
+									style="width: 300px"
+									multiple
+									clearable
+									collapse-tags
+									placeholder="默认选择全部"
+									:popper-append-to-body="false"
+								>
+									<el-option
+										v-for="item in gameList"
+										:key="item.id"
+										:label="item.activityName"
+										:value="item.id"
+									></el-option>
+								</el-select>
+							</el-form-item>
+							<el-form-item label="变更类型:">
+								<el-select
+									v-model="queryData.changeType"
+									style="width: 300px"
+									multiple
+									collapse-tags
+									placeholder="默认选择全部"
+									:popper-append-to-body="false"
+								>
+									<el-option
+										v-for="item in operateChangeTypeTag"
+										:key="item.code"
+										:label="item.description"
+										:value="item.code"
+									></el-option>
+								</el-select>
+							</el-form-item>
+							<el-form-item label="操作人:">
+								<el-input
+									v-model="queryData.operatorBy"
+									clearable
+									size="medium"
+									:maxlength="12"
+									style="width: 180px"
+									placeholder="请输入"
+									@keyup.enter.native="enterSearch"
+								></el-input>
+							</el-form-item>
+							<el-form-item style="margin-left: 30px">
+								<el-button
+									type="primary"
+									icon="el-icon-search"
+									:disabled="loading"
+									size="medium"
+									@click="search"
+								>
+									查询
+								</el-button>
+								<el-button
+									icon="el-icon-refresh-left"
+									:disabled="loading"
+									size="medium"
+									@click="reset"
+								>
+									重置
+								</el-button>
+							</el-form-item>
+						</el-form>
+					</div>
 					<div class="content">
 						<el-table
 							v-loading="loading"
@@ -375,82 +379,84 @@
 			</el-tab-pane>
 			<el-tab-pane label="优惠活动配置" name="2">
 				<div class="view-container dealer-container">
-                    <div class="params">
-                        <el-form ref="form" :inline="true" :model="queryData">
-                            <el-form-item label="操作时间:">
-                                <el-date-picker
-                                    v-model="formTime.time"
-                                    size="medium"
-                                    :picker-options="pickerOptions"
-                                    format="yyyy-MM-dd HH:mm:ss"
-                                    type="datetimerange"
-                                    range-separator="-"
-                                    start-placeholder="开始日期"
-                                    end-placeholder="结束日期"
-                                    align="right"
-                                    :clearable="false"
-                                    :default-time="defaultTime"
-                                ></el-date-picker>
-                            </el-form-item>
-                            <el-form-item label="活动ID:">
-                                <el-input
-                                    v-model="queryData.activityId"
-                                    clearable
-                                    size="medium"
-                                    :maxlength="20"
-                                    style="width: 210px"
-                                    placeholder="请输入"
-                                    @keyup.enter.native="enterSearch"
-                                ></el-input>
-                            </el-form-item>
-                            <el-form-item label="变更类型:">
-                                <el-select
-                                    v-model="queryData.changeType"
-                                    style="width: 300px"
-                                    multiple
-                                    placeholder="默认选择全部"
-                                    :popper-append-to-body="false"
-                                >
-                                    <el-option
-                                        v-for="item in operateChangeTypeDis"
-                                        :key="item.code"
-                                        :label="item.description"
-                                        :value="item.code"
-                                    ></el-option>
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item label="操作人:">
-                                <el-input
-                                    v-model="queryData.operatorBy"
-                                    clearable
-                                    size="medium"
-                                    :maxlength="12"
-                                    style="width: 180px"
-                                    placeholder="请输入"
-                                    @keyup.enter.native="enterSearch"
-                                ></el-input>
-                            </el-form-item>
-                            <el-form-item style="margin-left: 30px">
-                                <el-button
-                                    type="primary"
-                                    icon="el-icon-search"
-                                    :disabled="loading"
-                                    size="medium"
-                                    @click="search"
-                                >
-                                    查询
-                                </el-button>
-                                <el-button
-                                    icon="el-icon-refresh-left"
-                                    :disabled="loading"
-                                    size="medium"
-                                    @click="reset"
-                                >
-                                    重置
-                                </el-button>
-                            </el-form-item>
-                        </el-form>
-                    </div>
+					<div class="params">
+						<el-form ref="form" :inline="true" :model="queryData">
+							<el-form-item label="操作时间:">
+								<el-date-picker
+									v-model="formTime.time"
+									size="medium"
+									:picker-options="pickerOptions"
+									format="yyyy-MM-dd HH:mm:ss"
+									type="datetimerange"
+									range-separator="-"
+									start-placeholder="开始日期"
+									end-placeholder="结束日期"
+									align="right"
+									:clearable="false"
+									:default-time="defaultTime"
+								></el-date-picker>
+							</el-form-item>
+							<el-form-item label="活动ID:">
+								<el-input
+									v-model="queryData.activityId"
+									clearable
+									size="medium"
+									:maxlength="20"
+									style="width: 210px"
+									placeholder="请输入"
+									@keyup.enter.native="enterSearch"
+								></el-input>
+							</el-form-item>
+							<el-form-item label="变更类型:">
+								<el-select
+									v-model="queryData.changeType"
+									style="width: 300px"
+									multiple
+									clearable
+									collapse-tags
+									placeholder="默认选择全部"
+									:popper-append-to-body="false"
+								>
+									<el-option
+										v-for="item in operateChangeTypeDis"
+										:key="item.code"
+										:label="item.description"
+										:value="item.code"
+									></el-option>
+								</el-select>
+							</el-form-item>
+							<el-form-item label="操作人:">
+								<el-input
+									v-model="queryData.operatorBy"
+									clearable
+									size="medium"
+									:maxlength="12"
+									style="width: 180px"
+									placeholder="请输入"
+									@keyup.enter.native="enterSearch"
+								></el-input>
+							</el-form-item>
+							<el-form-item style="margin-left: 30px">
+								<el-button
+									type="primary"
+									icon="el-icon-search"
+									:disabled="loading"
+									size="medium"
+									@click="search"
+								>
+									查询
+								</el-button>
+								<el-button
+									icon="el-icon-refresh-left"
+									:disabled="loading"
+									size="medium"
+									@click="reset"
+								>
+									重置
+								</el-button>
+							</el-form-item>
+						</el-form>
+					</div>
 					<div class="content">
 						<el-table
 							v-loading="loading"
@@ -568,99 +574,100 @@
 			</el-tab-pane>
 			<el-tab-pane label="赞助/vip活动配置" name="3">
 				<div class="view-container dealer-container">
-                    <div class="params">
-                        <el-form ref="form" :inline="true" :model="queryData">
-                            <el-form-item label="操作时间:">
-                                <el-date-picker
-                                    v-model="formTime.time"
-                                    size="medium"
-                                    :picker-options="pickerOptions"
-                                    format="yyyy-MM-dd HH:mm:ss"
-                                    type="datetimerange"
-                                    range-separator="-"
-                                    start-placeholder="开始日期"
-                                    end-placeholder="结束日期"
-                                    align="right"
-                                    :clearable="false"
-                                    :default-time="defaultTime"
-                                ></el-date-picker>
-                            </el-form-item>
-                            <el-form-item label="活动类型:">
-                                <el-select
-                                    v-model="queryData.activityType"
-                                    style="width: 300px"
-                                    multiple
-                                    placeholder="默认选择全部"
-                                    :popper-append-to-body="false"
-                                >
-                                    <el-option
-                                        v-for="item in operateActivityType"
-                                        :key="item.code"
-                                        :label="item.description"
-                                        :value="item.code"
-                                    ></el-option>
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item label="活动ID:">
-                                <el-input
-                                    v-model="queryData.activityId"
-                                    clearable
-                                    size="medium"
-                                    :maxlength="20"
-                                    style="width: 210px"
-                                    placeholder="请输入"
-                                    @keyup.enter.native="enterSearch"
-                                ></el-input>
-                            </el-form-item>
-                            <el-form-item label="变更类型:">
-                                <el-select
-                                    v-model="queryData.changeType"
-                                    style="width: 300px"
-                                    multiple
-                                    collapse-tags
-                                    placeholder="默认选择全部"
-                                    :popper-append-to-body="false"
-                                >
-                                    <el-option
-                                        v-for="item in operateChangeTypeVip"
-                                        :key="item.code"
-                                        :label="item.description"
-                                        :value="item.code"
-                                    ></el-option>
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item label="操作人:">
-                                <el-input
-                                    v-model="queryData.operatorBy"
-                                    clearable
-                                    size="medium"
-                                    :maxlength="12"
-                                    style="width: 180px"
-                                    placeholder="请输入"
-                                    @keyup.enter.native="enterSearch"
-                                ></el-input>
-                            </el-form-item>
-                            <el-form-item style="margin-left: 30px">
-                                <el-button
-                                    type="primary"
-                                    icon="el-icon-search"
-                                    :disabled="loading"
-                                    size="medium"
-                                    @click="search"
-                                >
-                                    查询
-                                </el-button>
-                                <el-button
-                                    icon="el-icon-refresh-left"
-                                    :disabled="loading"
-                                    size="medium"
-                                    @click="reset"
-                                >
-                                    重置
-                                </el-button>
-                            </el-form-item>
-                        </el-form>
-                    </div>
+					<div class="params">
+						<el-form ref="form" :inline="true" :model="queryData">
+							<el-form-item label="操作时间:">
+								<el-date-picker
+									v-model="formTime.time"
+									size="medium"
+									:picker-options="pickerOptions"
+									format="yyyy-MM-dd HH:mm:ss"
+									type="datetimerange"
+									range-separator="-"
+									start-placeholder="开始日期"
+									end-placeholder="结束日期"
+									align="right"
+									:clearable="false"
+									:default-time="defaultTime"
+								></el-date-picker>
+							</el-form-item>
+							<el-form-item label="活动类型:">
+								<el-select
+									v-model="queryData.activityType"
+									style="width: 300px"
+									multiple
+									placeholder="默认选择全部"
+									:popper-append-to-body="false"
+								>
+									<el-option
+										v-for="item in operateActivityType"
+										:key="item.code"
+										:label="item.description"
+										:value="item.code"
+									></el-option>
+								</el-select>
+							</el-form-item>
+							<el-form-item label="活动ID:">
+								<el-input
+									v-model="queryData.activityId"
+									clearable
+									size="medium"
+									:maxlength="20"
+									style="width: 210px"
+									placeholder="请输入"
+									@keyup.enter.native="enterSearch"
+								></el-input>
+							</el-form-item>
+							<el-form-item label="变更类型:">
+								<el-select
+									v-model="queryData.changeType"
+									style="width: 300px"
+									multiple
+									clearable
+									collapse-tags
+									placeholder="默认选择全部"
+									:popper-append-to-body="false"
+								>
+									<el-option
+										v-for="item in operateChangeTypeVip"
+										:key="item.code"
+										:label="item.description"
+										:value="item.code"
+									></el-option>
+								</el-select>
+							</el-form-item>
+							<el-form-item label="操作人:">
+								<el-input
+									v-model="queryData.operatorBy"
+									clearable
+									size="medium"
+									:maxlength="12"
+									style="width: 180px"
+									placeholder="请输入"
+									@keyup.enter.native="enterSearch"
+								></el-input>
+							</el-form-item>
+							<el-form-item style="margin-left: 30px">
+								<el-button
+									type="primary"
+									icon="el-icon-search"
+									:disabled="loading"
+									size="medium"
+									@click="search"
+								>
+									查询
+								</el-button>
+								<el-button
+									icon="el-icon-refresh-left"
+									:disabled="loading"
+									size="medium"
+									@click="reset"
+								>
+									重置
+								</el-button>
+							</el-form-item>
+						</el-form>
+					</div>
 					<div class="content">
 						<el-table
 							v-loading="loading"
@@ -697,10 +704,7 @@
 										"
 									>
 										{{
-											typeFilter(
-												scope.row.activityType,
-												'operateActivityType'
-											)
+											typeFilter(scope.row.activityType, 'operateActivityType')
 										}}
 									</span>
 									<span v-else>-</span>
@@ -812,6 +816,7 @@ export default {
 	name: 'MemberMsgChange',
 	mixins: [list],
 	data() {
+		this.loadData = this.throttle(this.loadData, 1000)
 		return {
 			queryData: {
 				operatorBy: undefined,
@@ -986,6 +991,6 @@ export default {
 	font-weight: 700;
 }
 .view-container {
-    min-height: 500px;
+	min-height: 500px;
 }
 </style>

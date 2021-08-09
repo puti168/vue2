@@ -224,7 +224,13 @@
 		</el-table>
 		<div v-show="tableData.length > 0">
 			<p class="subBox">
-				<el-button v-if="hasPermission('249')" type="primary" @click="submitData()">保存</el-button>
+				<el-button
+					v-if="hasPermission('249')"
+					type="primary"
+					@click="submitData()"
+				>
+					保存
+				</el-button>
 				<el-button class="pad" @click="resetData()">恢复上次设置</el-button>
 			</p>
 		</div>
@@ -237,6 +243,8 @@ export default {
 	components: {},
 	mixins: [list],
 	data() {
+		this.submitData = this.throttle(this.submitData, 1000)
+		this.resetData = this.throttle(this.resetData, 1000)
 		return {
 			tableData: [],
 			activeName: '',
@@ -251,7 +259,8 @@ export default {
 			this.$api
 				.getMerchantGameGetMerchantGames()
 				.then((res) => {
-					if (res.code === 200) {
+					const { code } = res
+					if (res && code && code === 200) {
 						for (let i = 0; i < res.data.length; i++) {
 							const obj = {}
 							const ele = res.data[i]
@@ -277,10 +286,10 @@ export default {
 			this.$api
 				.getMemberVipRebateSelectAllInfo(params)
 				.then((res) => {
-					if (res.code === 200) {
-						console.log(res)
-						this.tableData = res.data
-						this.loading = false
+					this.loading = false
+					const { code, data } = res
+					if (res && code && code === 200) {
+						this.tableData = data || []
 					}
 				})
 				.catch(() => {
@@ -297,7 +306,6 @@ export default {
 			this.getMemberVipRebateSelectAllInfo(params)
 		},
 		submitData() {
-			console.log(111111, this.id)
 			this.loading = true
 			const params = [...this.tableData]
 			for (let i = 0; i < params.length; i++) {
@@ -309,12 +317,16 @@ export default {
 			this.$api
 				.setMemberVipRebateUpdateRebateInfo(params)
 				.then((res) => {
-					if (res.code === 200) {
+					this.loading = false
+					const { code, data, msg } = res
+					if (res && code && code === 200) {
 						this.$message.success('保存成功')
-						this.loading = false
-						this.tableData = res.data
+						this.tableData = data || []
 					} else {
-						this.$message.error(res.mgs)
+						this.$message({
+							message: res && msg,
+							type: 'error'
+						})
 					}
 				})
 				.catch(() => {
@@ -330,7 +342,6 @@ export default {
 					params.gamePlatform = ele.gamePlatform
 				}
 			}
-			console.log(params)
 			this.getMemberVipRebateSelectAllInfo(params)
 		},
 		checkTransferValue(row, val) {

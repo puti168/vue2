@@ -124,7 +124,12 @@
 							<span v-else></span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="pageName" align="center" label="loading名称">
+					<el-table-column
+						prop="pageName"
+						align="center"
+						label="loading名称"
+						width="160"
+					>
 						<template slot-scope="scope">
 							<span v-if="!!scope.row.pageName">
 								{{ scope.row.pageName }}
@@ -132,7 +137,12 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="remark" align="center" label="备注">
+					<el-table-column
+						prop="remark"
+						align="center"
+						label="备注"
+						width="160"
+					>
 						<template slot-scope="scope">
 							<span v-if="!!scope.row.remark">
 								{{ scope.row.remark }}
@@ -140,7 +150,12 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="status" align="center" label="状态">
+					<el-table-column
+						prop="status"
+						align="center"
+						label="状态"
+						width="100"
+					>
 						<template slot-scope="scope">
 							<span v-if="scope.row.status + '' === '0'" class="disableRgba">
 								{{ typeFilter(scope.row.status, 'operateStatus') }}
@@ -155,7 +170,7 @@
 						<template slot-scope="scope">
 							<div
 								v-if="!!scope.row.pictureUrl"
-                                class="blueColor decoration"
+								class="blueColor decoration"
 								@click="preViewPicture(scope.row)"
 							>
 								点击预览
@@ -163,7 +178,12 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="createdBy" align="center" label="创建人">
+					<el-table-column
+						prop="createdBy"
+						align="center"
+						label="创建人"
+						width="120"
+					>
 						<template slot-scope="scope">
 							<span v-if="!!scope.row.createdBy">
 								{{ scope.row.createdBy }}
@@ -185,7 +205,12 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="updatedBy" align="center" label="最近操作人">
+					<el-table-column
+						prop="updatedBy"
+						align="center"
+						label="最近操作人"
+						width="120"
+					>
 						<template slot-scope="scope">
 							<span v-if="!!scope.row.updatedBy">
 								{{ scope.row.updatedBy }}
@@ -219,10 +244,14 @@
 								size="medium"
 								@click="recycle(scope.row)"
 							>
-								<div v-if="hasPermission('337')&&scope.row.status + '' === '1'">
+								<div
+									v-if="hasPermission('337') && scope.row.status + '' === '1'"
+								>
 									禁用
 								</div>
-								<div v-if="hasPermission('337')&&scope.row.status + '' !== '1'">
+								<div
+									v-if="hasPermission('337') && scope.row.status + '' !== '1'"
+								>
 									开启
 								</div>
 							</el-button>
@@ -230,7 +259,7 @@
 								v-if="hasPermission('335')"
 								type="primary"
 								icon="el-icon-edit"
-                                :disabled="scope.row.status === 1"
+								:disabled="scope.row.status === 1"
 								size="medium"
 								@click="edit(scope.row)"
 							>
@@ -240,7 +269,7 @@
 								v-if="hasPermission('336')"
 								type="danger"
 								icon="el-icon-delete"
-                                :disabled="scope.row.status === 1"
+								:disabled="scope.row.status === 1"
 								size="medium"
 								@click="deleteLabel(scope.row)"
 							>
@@ -335,10 +364,12 @@
 				title="图片"
 				:visible.sync="dialogPictureVisible"
 				:destroy-on-close="true"
-				width="650px"
+				width="750px"
 				class="imgCenter"
 			>
-				<img :src="pictureUrl" />
+				<div class="img-box">
+					<img v-lazy="pictureUrl" />
+				</div>
 			</el-dialog>
 		</div>
 	</div>
@@ -355,6 +386,10 @@ export default {
 	components: { UploadItem },
 	mixins: [list],
 	data() {
+		this.loadData = this.throttle(this.loadData, 1000)
+		this.deleteLabel = this.throttle(this.deleteLabel, 1000)
+		this.subAddOrEdit = this.throttle(this.subAddOrEdit, 1000)
+		this.recycle = this.throttle(this.recycle, 1000)
 		return {
 			queryData: {
 				clientType: undefined,
@@ -696,8 +731,13 @@ p {
 	margin-top: 15px;
 }
 .imgCenter {
-	img {
-		width: 100%;
+	.img-box {
+		height: 500px;
+		img {
+			margin: 0;
+			width: 100%;
+			height: 100%;
+		}
 	}
 }
 </style>

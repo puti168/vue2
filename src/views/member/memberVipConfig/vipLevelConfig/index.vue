@@ -31,19 +31,15 @@
 							label="VIP等级名称"
 						>
 							<template slot-scope="scope">
-								<span class="span-row-style">
-									<el-form-item :error="scope.row.error">
-										<el-input
-											v-model="scope.row.vipGradeName"
-											size="medium"
-											placeholder="请输入"
-											maxlength="10"
-											clearable
-											style="width: 180px"
-											@input="tableVipGradeNameChange(scope.row)"
-										></el-input>
-									</el-form-item>
-								</span>
+								<el-input
+									v-model="scope.row.vipGradeName"
+									size="medium"
+									placeholder="请输入"
+									maxlength="10"
+									clearable
+									style="width: auto"
+									@input="tableVipGradeNameChange(scope.row)"
+								></el-input>
 							</template>
 						</el-table-column>
 						<el-table-column prop="totalDeposit" align="center">
@@ -61,7 +57,7 @@
 										placeholder="请输入"
 										:precision="0"
 										:min="0"
-										style="width: 180px"
+										style="width: auto"
 										@blur="checkTransferValue(scope.row, 'totalDeposit')"
 									></el-input-number>
 								</span>
@@ -83,7 +79,7 @@
 										:precision="0"
 										:min="0"
 										placeholder="请输入"
-										style="width: 180px"
+										style="width: auto"
 										@blur="checkTransferValue(scope.row, 'tatalValidWater')"
 									></el-input-number>
 								</span>
@@ -104,7 +100,7 @@
 										:precision="0"
 										:min="0"
 										placeholder="请输入"
-										style="width: 180px"
+										style="width: auto"
 										@blur="checkTransferValue(scope.row, 'relegationWater')"
 									></el-input-number>
 								</span>
@@ -125,7 +121,7 @@
 										:precision="0"
 										:min="0"
 										placeholder="请输入"
-										style="width: 180px"
+										style="width: auto"
 										@blur="
 											checkTransferValue(scope.row, 'relegationValidPeriod')
 										"
@@ -165,12 +161,12 @@
 <script>
 import list from '@/mixins/list'
 import { routerNames } from '@/utils/consts'
-// import { notSpecial2, isHaveEmoji } from '@/utils/validate'
 
 export default {
 	name: routerNames.vipLevelConfig,
 	mixins: [list],
 	data() {
+		this.saveData = this.throttle(this.saveData, 1000)
 		return {
 			dataList: [],
 			loading: false,
@@ -200,12 +196,12 @@ export default {
 				.then((res) => {
 					this.loading = false
 					const { code, data, msg } = res
-					if (code === 200) {
+					if (res && code && code === 200) {
 						this.dataList = data || []
 						this.dataList.reverse()
 					} else {
 						this.$message({
-							message: msg,
+							message: res && msg,
 							type: 'error'
 						})
 					}
@@ -219,7 +215,7 @@ export default {
 			const errorArr = []
 			const listUpdateMemberVipGradeReqDto =
 				this.dataList.map((item) => {
-					item.error ? errorArr.push(item.error) : null
+					item.error && errorArr.push(item.error)
 					return {
 						id: item.id,
 						relegationValidPeriod: item.relegationValidPeriod,
@@ -230,21 +226,20 @@ export default {
 						tatalValidWater: item.tatalValidWater
 					}
 				}) || []
-			console.log('errorArr', errorArr, errorArr.length)
 			if (!errorArr.length) {
 				this.$api
 					.memberVipGradeUpDateAPI({ listUpdateMemberVipGradeReqDto })
 					.then((res) => {
 						this.loadingT = false
 						const { code, msg } = res
-						if (code === 200) {
+						if (res && code && code === 200) {
 							this.$message({
 								message: '保存成功',
 								type: 'success'
 							})
 						} else {
 							this.$message({
-								message: msg,
+								message: res && msg,
 								type: 'error'
 							})
 						}

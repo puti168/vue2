@@ -2,12 +2,7 @@
 	<div class="game-container report-container">
 		<div class="view-container dealer-container">
 			<div class="params">
-				<el-form
-					ref="form"
-					:inline="true"
-					:model="queryData"
-					label-width="100px"
-				>
+				<el-form ref="form" :inline="true" :model="queryData">
 					<el-form-item label="操作类型:">
 						<el-select
 							v-model="queryData.operateType"
@@ -37,7 +32,7 @@
 							align="right"
 							:clearable="false"
 							value-format="timestamp"
-							style="width: 382px"
+							style="width: 400px"
 							:default-time="defaultTime"
 						></el-date-picker>
 					</el-form-item>
@@ -70,7 +65,8 @@
 							placeholder="默认选择全部"
 							clearable
 							multiple
-							style="width: 300px"
+							collapse-tags
+							style="width: 220px"
 						>
 							<el-option
 								v-for="item in accountTypeArr"
@@ -86,7 +82,7 @@
 							size="medium"
 							placeholder="请输入"
 							clearable
-							style="width: 180px"
+							style="width: 250px"
 							maxlength="10"
 							@keyup.enter.native="enterSearch"
 						></el-input>
@@ -97,7 +93,7 @@
 							size="medium"
 							placeholder="请输入"
 							clearable
-							style="width: 180px"
+							style="width: 330px"
 							maxlength="25"
 							oninput="value=value.replace(/[^\d]/g,'')"
 							@keyup.enter.native="enterSearch"
@@ -119,7 +115,7 @@
 							></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="上级代理:">
+					<el-form-item label="上级代理:" label-width="88px">
 						<el-input
 							v-model="queryData.parentProxyName"
 							size="medium"
@@ -163,7 +159,12 @@
 					:header-cell-style="getRowClass"
 					@sort-change="_changeTableSort"
 				>
-					<el-table-column prop="userName" align="center" label="会员账号">
+					<el-table-column
+						prop="userName"
+						align="center"
+						label="会员账号"
+						width="150"
+					>
 						<template slot-scope="scope">
 							<Copy
 								v-if="!!scope.row.userName"
@@ -173,9 +174,18 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="accountType" align="center" label="账号类型">
+					<el-table-column
+						prop="accountType"
+						align="center"
+						label="账号类型"
+						width="100"
+					>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.accountType">
+							<span
+								v-if="
+									!!scope.row.accountType || scope.row.accountType + '' === '0'
+								"
+							>
 								{{ typeFilter(scope.row.accountType, 'accountType') }}
 							</span>
 							<span v-else>-</span>
@@ -185,6 +195,7 @@
 						prop="parentProxyName"
 						align="center"
 						label="上级代理"
+						width="100"
 					>
 						<template slot-scope="scope">
 							<Copy
@@ -195,7 +206,12 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="cardNumber" align="center" label="银行卡号">
+					<el-table-column
+						prop="cardNumber"
+						align="center"
+						label="银行卡号"
+						min-width="170"
+					>
 						<template slot-scope="scope">
 							<Copy
 								v-if="!!scope.row.cardNumber"
@@ -205,32 +221,37 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="bankName" align="center" label="银行名称">
+					<el-table-column
+						prop="bankName"
+						align="center"
+						label="银行名称"
+						min-width="120"
+					>
 						<template slot="header">
 							银行名称
 							<br />
 							银行支行
 						</template>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.bankName">
-								{{ scope.row.bankName }}
-							</span>
-							<span v-else>-</span>
+							{{ scope.row.bankName || '-' }}
 						</template>
 					</el-table-column>
 					<el-table-column
 						prop="windControlLevelName"
 						align="center"
 						label="风控层级"
+						width="110"
 					>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.windControlLevelName">
-								{{ scope.row.windControlLevelName }}
-							</span>
-							<span v-else>-</span>
+							{{ scope.row.windControlLevelName || '-' }}
 						</template>
 					</el-table-column>
-					<el-table-column prop="cnName" align="center" label="持卡人">
+					<el-table-column
+						prop="cnName"
+						align="center"
+						label="持卡人"
+						width="120"
+					>
 						<template slot-scope="scope">
 							<Copy
 								v-if="!!scope.row.cnName"
@@ -240,28 +261,41 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="operateType" align="center" label="操作类型">
+					<el-table-column
+						prop="operateType"
+						align="center"
+						label="操作类型"
+						width="100"
+					>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.operateType">
+							<span
+								v-if="
+									!!scope.row.operateType || scope.row.operateType + '' === '0'
+								"
+							>
 								{{ typeFilter(scope.row.operateType, 'bindType') }}
 							</span>
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="operateType" align="center" label="备注信息">
+					<el-table-column
+						prop="operateType"
+						align="center"
+						label="备注信息"
+						width="150"
+					>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.remark">
-								{{ scope.row.remark }}
-							</span>
-							<span v-else>-</span>
+							{{ scope.row.remark || '-' }}
 						</template>
 					</el-table-column>
-					<el-table-column prop="updatedBy" align="center" label="操作人">
+					<el-table-column
+						prop="updatedBy"
+						align="center"
+						label="操作人"
+						width="120"
+					>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.updatedBy">
-								{{ scope.row.updatedBy }}
-							</span>
-							<span v-else>-</span>
+							{{ scope.row.updatedBy || '-' }}
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -269,12 +303,10 @@
 						align="center"
 						label="操作时间"
 						sortable="custom"
+						min-width="170"
 					>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.createDt">
-								{{ scope.row.createDt }}
-							</span>
-							<span v-else>-</span>
+							{{ scope.row.createDt || '-' }}
 						</template>
 					</el-table-column>
 				</el-table>
@@ -307,12 +339,13 @@ const start = dayjs()
 const end = dayjs()
 	.endOf('day')
 	.valueOf()
-// import { UTable } from 'umy-ui'
 
 export default {
 	name: routerNames.bankRecord,
 	mixins: [list],
 	data() {
+		this.search = this.throttle(this.search, 1000)
+		this.reset = this.throttle(this.reset, 1000)
 		return {
 			queryData: {
 				operateType: undefined,
@@ -333,10 +366,10 @@ export default {
 	},
 	computed: {
 		bindType() {
-			return this.globalDics.bindType
+			return this.globalDics.bindType || []
 		},
 		accountTypeArr() {
-			return this.globalDics.accountType
+			return this.globalDics.accountType || []
 		}
 	},
 	mounted() {
@@ -365,41 +398,39 @@ export default {
 			this.$api
 				.bankRecordListAPI(params)
 				.then((res) => {
+					this.loading = false
 					const {
 						code,
 						data: { record, totalRecord },
 						msg
 					} = res
-					if (code === 200) {
-						this.loading = false
-						this.dataList = record || []
-						this.total = totalRecord || 0
+					if (res && code && code === 200) {
+						this.dataList =
+							(res.data && record.length && Object.freeze(record)) || []
+						this.total = (res.data && totalRecord) || 0
 					} else {
-						this.loading = false
 						this.$message({
-							message: msg,
+							message: res && msg,
 							type: 'error'
 						})
 					}
 				})
 				.catch(() => (this.loading = false))
-
-			setTimeout(() => {
-				this.loading = false
-			}, 1000)
 		},
 		reset() {
 			this.pageNum = 1
 			this.$refs['form'].resetFields()
 			this.queryData = {
-				operateType: '',
+				operateType: undefined,
 				createDt: [start, end],
-				userName: '',
-				cnName: '',
-				bankName: '',
-				cardNumber: '',
-				parentProxyName: '',
-				accountType: undefined
+				userName: undefined,
+				cnName: undefined,
+				bankName: undefined,
+				accountType: [],
+				cardNumber: undefined,
+				windControlId: undefined,
+				parentProxyName: undefined,
+				orderType: undefined
 			}
 			this.loadData()
 		},
@@ -407,12 +438,14 @@ export default {
 			this.$api
 				.getWindControllerLevelDict({ windControlType: 3 })
 				.then((res) => {
-					if (res.code === 200) {
+					if (res && res.code === 200) {
 						this.vipDict = res.data
+					} else {
+						this.vipDict = []
 					}
 				})
 		},
-		_changeTableSort({ column, prop, order }) {
+		_changeTableSort({ column, order }) {
 			if (order === 'ascending') {
 				// 升序
 				this.queryData.orderType = 'asc'
@@ -420,8 +453,8 @@ export default {
 				// 降序
 				this.queryData.orderType = 'desc'
 			} else {
-			    delete this.queryData.orderType
-            }
+				delete this.queryData.orderType
+			}
 			this.loadData()
 		}
 	}

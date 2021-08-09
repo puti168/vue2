@@ -2,7 +2,12 @@
 	<div class="game-container report-container">
 		<template v-if="!showDetail">
 			<div class="params">
-				<el-form ref="form" :inline="true" :model="queryData">
+				<el-form
+					ref="form"
+					:inline="true"
+					:model="queryData"
+					label-width="80px"
+				>
 					<el-form-item label="申请时间:">
 						<el-date-picker
 							v-model="formTime.time"
@@ -14,31 +19,18 @@
 							start-placeholder="开始日期"
 							end-placeholder="结束日期"
 							align="right"
+							style="width: 428px"
 							:default-time="defaultTime"
 						></el-date-picker>
 					</el-form-item>
-					<el-form-item label="一审完成时间:">
-						<el-date-picker
-							v-model="formTime.time2"
-							size="medium"
-							:picker-options="pickerOptions"
-							format="yyyy-MM-dd HH:mm:ss"
-							type="datetimerange"
-							range-separator="-"
-							start-placeholder="开始日期"
-							end-placeholder="结束日期"
-							align="right"
-							clearable
-							:default-time="defaultTime"
-						></el-date-picker>
-					</el-form-item>
+
 					<el-form-item label="代理账号:">
 						<el-input
 							v-model="queryData.userName"
 							clearable
 							:maxlength="11"
 							size="medium"
-							style="width: 180px"
+							style="width: 270px"
 							placeholder="请输入"
 							@keyup.enter.native="enterSearch"
 						></el-input>
@@ -46,8 +38,10 @@
 					<el-form-item label="账号类型:" class="tagheight">
 						<el-select
 							v-model="queryData.accountType"
-							style="width: 300px"
+							style="width: 270px"
 							multiple
+							clearable
+							collapse-tags
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
 						>
@@ -62,7 +56,7 @@
 					<el-form-item label="审核操作:">
 						<el-select
 							v-model="queryData.auditStep"
-							style="width: 180px"
+							style="width: 270px"
 							:popper-append-to-body="false"
 						>
 							<el-option label="全部" value=""></el-option>
@@ -74,11 +68,28 @@
 							></el-option>
 						</el-select>
 					</el-form-item>
+					<el-form-item label="一审完成时间:" label-width="108px">
+						<el-date-picker
+							v-model="formTime.time2"
+							size="medium"
+							:picker-options="pickerOptions"
+							format="yyyy-MM-dd HH:mm:ss"
+							type="datetimerange"
+							range-separator="-"
+							start-placeholder="开始日期"
+							end-placeholder="结束日期"
+							align="right"
+							clearable
+							:default-time="defaultTime"
+						></el-date-picker>
+					</el-form-item>
 					<el-form-item label="审核状态:">
 						<el-select
 							v-model="queryData.auditStatus"
-							style="width: 300px"
+							style="width: 270px"
 							multiple
+							clearable
+							collapse-tags
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
 						>
@@ -90,24 +101,24 @@
 							></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="申请人:">
+					<el-form-item label="申请人:" label-width="66px">
 						<el-input
 							v-model="queryData.applyName"
 							:maxlength="12"
 							clearable
 							size="medium"
-							style="width: 180px"
+							style="width: 284px"
 							placeholder="请输入"
 							@keyup.enter.native="enterSearch"
 						></el-input>
 					</el-form-item>
-					<el-form-item label="一审人:">
+					<el-form-item label="一审人:" label-width="66px">
 						<el-input
 							v-model="queryData.auditName"
 							clearable
 							size="medium"
 							:maxlength="12"
-							style="width: 180px"
+							style="width: 284px"
 							placeholder="请输入"
 							@keyup.enter.native="enterSearch"
 						></el-input>
@@ -115,7 +126,7 @@
 					<el-form-item label="锁单状态:">
 						<el-select
 							v-model="queryData.lockOrder"
-							style="width: 180px"
+							style="width: 219px"
 							:popper-append-to-body="false"
 						>
 							<el-option label="全部" value=""></el-option>
@@ -133,12 +144,12 @@
 							clearable
 							size="medium"
 							:maxlength="19"
-							style="width: 200px"
+							style="width: 282px"
 							placeholder="请输入"
 							@keyup.enter.native="enterSearch"
 						></el-input>
 					</el-form-item>
-					<el-form-item style="margin-left: 30px">
+					<el-form-item style="margin-left: 8px">
 						<el-button
 							type="primary"
 							icon="el-icon-search"
@@ -212,18 +223,19 @@
 							prop="auditNum"
 							align="center"
 							label="审核单号"
-							width="180"
+							width="220"
 						></el-table-column>
 						<el-table-column
 							prop="applyType"
 							align="center"
 							label="审核申请类型"
+							width="150px"
 						>
 							<template slot-scope="scope">
 								{{ typeFilter(scope.row.applyType, 'porxyApplyType') }}
 							</template>
 						</el-table-column>
-						<el-table-column align="center" label="修改前">
+						<el-table-column align="center" label="修改前" width="150">
 							<template slot-scope="scope">
 								<template v-if="Number(scope.row.applyType === 2)">
 									{{ typeFilter(scope.row.beforeModify, 'genderType') }}
@@ -236,7 +248,7 @@
 								</template>
 							</template>
 						</el-table-column>
-						<el-table-column align="center" label="修改后">
+						<el-table-column align="center" label="修改后" width="150">
 							<template slot-scope="scope">
 								<template v-if="Number(scope.row.applyType === 2)">
 									{{ typeFilter(scope.row.afterModify, 'genderType') }}
@@ -249,7 +261,7 @@
 								</template>
 							</template>
 						</el-table-column>
-						<el-table-column align="center">
+						<el-table-column align="center" width="130">
 							<template slot="header">
 								<span>
 									代理账号
@@ -277,20 +289,22 @@
 							prop="applyName"
 							align="center"
 							label="申请人"
+							width="130px"
 						></el-table-column>
 						<el-table-column
 							prop="applyTime"
 							align="center"
 							sortable="custom"
-							width="170"
+							width="180"
 							label="申请时间"
 						></el-table-column>
 						<el-table-column
 							prop="applyInfo"
 							align="center"
 							label="申请信息"
+							width="180px"
 						></el-table-column>
-						<el-table-column align="center" label="审核状态" width="100">
+						<el-table-column align="center" label="审核状态" width="120">
 							<template slot-scope="scope">
 								<span
 									v-if="Number(auditStatus) !== 0"
@@ -361,6 +375,8 @@ export default {
 	components: { agencyEditDetail },
 	mixins: [list],
 	data() {
+		this.loadData = this.throttle(this.loadData, 1000)
+		this.lockChange = this.throttle(this.lockChange, 1000)
 		return {
 			queryData: {
 				userName: '',
@@ -470,9 +486,9 @@ export default {
 				// 降序
 				this.queryData.orderType = 'desc'
 			} else {
-                delete this.queryData.orderKey
-                delete this.queryData.orderType
-            }
+				delete this.queryData.orderKey
+				delete this.queryData.orderType
+			}
 			this.loadData()
 		},
 		goDetail(row) {

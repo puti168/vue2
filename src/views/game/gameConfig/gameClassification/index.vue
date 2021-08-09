@@ -7,14 +7,14 @@
 						ref="form"
 						:inline="true"
 						:model="queryData"
-						label-width="85px"
+						label-width="80px"
 					>
 						<el-form-item label="分类顺序:">
 							<el-input
 								v-model="queryData.assortSortMin"
 								size="medium"
 								placeholder="最小数值"
-								style="width: 100px"
+								style="width: 110px"
 								maxlength="5"
 								name="assortSortMin"
 								oninput="value=value.replace(/[^\d]/g,'')"
@@ -25,7 +25,7 @@
 								v-model="queryData.assortSortMax"
 								size="medium"
 								placeholder="最大数值"
-								style="width: 100px"
+								style="width: 110px"
 								maxlength="5"
 								name="assortSortMax"
 								oninput="value=value.replace(/[^\d]/g,'')"
@@ -38,7 +38,7 @@
 								size="medium"
 								placeholder="请输入"
 								clearable
-								style="width: 180px"
+								style="width: 230px"
 								maxlength="10"
 							></el-input>
 						</el-form-item>
@@ -49,7 +49,7 @@
 								placeholder="默认选择全部"
 								clearable
 								multiple
-								style="width: 300px"
+								style="width: 230px"
 							>
 								<el-option
 									v-for="item in assortStatusArr"
@@ -66,7 +66,8 @@
 								placeholder="默认选择全部"
 								clearable
 								multiple
-								style="width: 300px"
+								collapse-tags
+								style="width: 230px"
 							>
 								<el-option
 									v-for="item in terminalTypeArr"
@@ -86,7 +87,7 @@
 								size="medium"
 								placeholder="全部"
 								clearable
-								style="width: 180px"
+								style="width: 200px"
 							>
 								<el-option
 									v-for="item in gameDisplayArr"
@@ -96,7 +97,7 @@
 								></el-option>
 							</el-select>
 						</el-form-item>
-						<el-form-item>
+						<el-form-item style="margin-left: 5px">
 							<el-button
 								type="primary"
 								icon="el-icon-search"
@@ -115,7 +116,7 @@
 								重置
 							</el-button>
 							<el-button
-							     v-if="hasPermission('1020115')"
+								v-if="hasPermission('1020115')"
 								type="warning"
 								icon="el-icon-folder-add"
 								size="medium"
@@ -146,10 +147,7 @@
 							sortable="custom"
 						>
 							<template slot-scope="scope">
-								<span v-if="!!scope.row.assortSort">
-									{{ scope.row.assortSort }}
-								</span>
-								<span v-else>-</span>
+								{{ scope.row.assortSort || '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column
@@ -211,10 +209,7 @@
 							width="150px"
 						>
 							<template slot-scope="scope">
-								<span v-if="!!scope.row.supportTerminal">
-									{{ scope.row.supportTerminal }}
-								</span>
-								<span v-else></span>
+								{{ scope.row.supportTerminal || '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column
@@ -224,9 +219,14 @@
 							width="100px"
 						>
 							<template slot-scope="scope">
-								<div class="blueColor decoration" @click="lookGame(scope.row)">
+								<div
+									v-if="scope.row.gameNumber"
+									class="blueColor decoration"
+									@click="lookGame(scope.row)"
+								>
 									{{ scope.row.gameNumber }} 款
 								</div>
+								<div v-else>-</div>
 							</template>
 						</el-table-column>
 						<el-table-column
@@ -236,10 +236,7 @@
 							width="180px"
 						>
 							<template slot-scope="scope">
-								<span v-if="!!scope.row.remark">
-									{{ scope.row.remark }}
-								</span>
-								<span v-else>-</span>
+								{{ scope.row.remark || '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column
@@ -249,10 +246,7 @@
 							label="创建人"
 						>
 							<template slot-scope="scope">
-								<span v-if="!!scope.row.createdBy">
-									{{ scope.row.createdBy }}
-								</span>
-								<span v-else>-</span>
+								{{ scope.row.createdBy || '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column
@@ -263,10 +257,7 @@
 							sortable="custom"
 						>
 							<template slot-scope="scope">
-								<span v-if="!!scope.row.createdAt">
-									{{ scope.row.createdAt }}
-								</span>
-								<span v-else>-</span>
+								{{ scope.row.createdAt || '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column
@@ -276,10 +267,7 @@
 							width="100px"
 						>
 							<template slot-scope="scope">
-								<span v-if="!!scope.row.updatedBy">
-									{{ scope.row.updatedBy }}
-								</span>
-								<span v-else>-</span>
+								{{ scope.row.updatedBy || '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column
@@ -290,29 +278,21 @@
 							sortable="custom"
 						>
 							<template slot-scope="scope">
-								<span v-if="!!scope.row.updatedAt">
-									{{ scope.row.updatedAt }}
-								</span>
-								<span v-else>-</span>
+								{{ scope.row.updatedAt || '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="操作" width="300px">
 							<template slot-scope="scope">
 								<el-button
-								    v-if="hasPermission('1020116')"
+									v-if="hasPermission('1020116')"
 									:type="scope.row.assortStatus ? 'danger' : 'success'"
 									size="medium"
 									@click="recycle(scope.row)"
 								>
-									<div v-if="scope.row.assortStatus">
-										禁用
-									</div>
-									<div v-else>
-										开启
-									</div>
+									{{ scope.row.assortStatus ? '禁用' : '开启' }}
 								</el-button>
 								<el-button
-								    v-if="hasPermission('1020117')"
+									v-if="hasPermission('1020117')"
 									type="primary"
 									icon="el-icon-edit"
 									size="medium"
@@ -322,7 +302,7 @@
 									编辑信息
 								</el-button>
 								<el-button
-								    v-if="hasPermission('1020117')"
+									v-if="hasPermission('1020117')"
 									type="warning"
 									icon="el-icon-delete"
 									size="medium"
@@ -406,6 +386,8 @@ export default {
 	components: { createPage },
 	mixins: [list],
 	data() {
+		this.loadData = this.throttle(this.loadData, 1000)
+		this._changeTableSort = this.throttle(this._changeTableSort, 1000)
 		return {
 			queryData: {
 				assortSortMin: undefined,
@@ -436,13 +418,13 @@ export default {
 	},
 	computed: {
 		assortStatusArr() {
-			return this.globalDics.gameAssortStatusType
+			return this.globalDics.gameAssortStatusType || []
 		},
 		terminalTypeArr() {
-			return this.globalDics.betDeviceType
+			return this.globalDics.betDeviceType || []
 		},
 		gameDisplayArr() {
-			return this.globalDics.gameDisplayType
+			return this.globalDics.gameDisplayType || []
 		}
 	},
 	created() {},
@@ -474,10 +456,11 @@ export default {
 						code,
 						data: { record, totalRecord },
 						msg
-					} = res
-					if (code === 200) {
+					} = res || {}
+					if (code && code === 200) {
 						this.loading = false
-						this.dataList = record || []
+						this.dataList =
+							(record && record.length && Object.freeze(record)) || []
 						this.total = totalRecord || 0
 					} else {
 						this.loading = false
@@ -592,8 +575,8 @@ export default {
 					this.$api
 						.gameUpdateStatusAPI({ assortId: id, status })
 						.then((res) => {
-							const { code, msg } = res
-							if (code === 200) {
+							const { code, msg } = res || {}
+							if (code && code === 200) {
 								this.$message({
 									message: '操作成功',
 									type: 'success'
@@ -630,9 +613,10 @@ export default {
 						code,
 						data: { record, totalRecord },
 						msg
-					} = res
-					if (code === 200) {
-						this.childDataList = record || []
+					} = res || {}
+					if (code && code === 200) {
+						this.childDataList =
+							(record && record.length && Object.freeze(record)) || []
 						this.childTotal = totalRecord || 0
 					} else {
 						this.$message({
@@ -663,8 +647,8 @@ export default {
 						.gameDeleteAPI({ id })
 						.then((res) => {
 							loading.close()
-							const { code } = res
-							if (code === 200) {
+							const { code } = res || {}
+							if (code && code === 200) {
 								this.$message({
 									type: 'success',
 									message: '删除成功!'

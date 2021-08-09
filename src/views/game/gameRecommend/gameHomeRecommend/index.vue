@@ -26,10 +26,7 @@
 								label="模块顺序"
 							>
 								<template slot-scope="scope">
-									<span v-if="!!scope.row.displayOrder">
-										{{ scope.row.displayOrder }}
-									</span>
-									<span v-else>-</span>
+									{{ scope.row.displayOrder || '-' }}
 								</template>
 							</el-table-column>
 							<el-table-column
@@ -38,10 +35,7 @@
 								label="模块名称"
 							>
 								<template slot-scope="scope">
-									<span v-if="!!scope.row.moduleName">
-										{{ scope.row.moduleName }}
-									</span>
-									<span v-else>-</span>
+									{{ scope.row.moduleName || '-' }}
 								</template>
 							</el-table-column>
 							<el-table-column prop="status" align="center" label="状态">
@@ -58,15 +52,12 @@
 								</template>
 							</el-table-column>
 							<el-table-column
-								prop="description"
+								prop="moduleDesc"
 								align="center"
 								label="模块描述"
 							>
 								<template slot-scope="scope">
-									<span v-if="!!scope.row.moduleDesc">
-										{{ scope.row.moduleDesc }}
-									</span>
-									<span v-else>-</span>
+									{{ scope.row.moduleDesc || '-' }}
 								</template>
 							</el-table-column>
 							<el-table-column
@@ -75,10 +66,7 @@
 								label="最近操作人"
 							>
 								<template slot-scope="scope">
-									<span v-if="!!scope.row.updatedBy">
-										{{ scope.row.updatedBy }}
-									</span>
-									<span v-else>-</span>
+									{{ scope.row.updatedBy || '-' }}
 								</template>
 							</el-table-column>
 							<el-table-column
@@ -88,10 +76,7 @@
 								sortable="custom"
 							>
 								<template slot-scope="scope">
-									<span v-if="!!scope.row.updatedAt">
-										{{ scope.row.updatedAt }}
-									</span>
-									<span v-else>-</span>
+									{{ scope.row.updatedAt || '-' }}
 								</template>
 							</el-table-column>
 							<el-table-column
@@ -116,7 +101,7 @@
 										{{ scope.row.moduleStatus === 0 ? '启用' : '禁用' }}
 									</el-button>
 									<el-button
-                                        :disabled="scope.row.moduleStatus === 1"
+										:disabled="scope.row.moduleStatus === 1"
 										type="primary"
 										icon="el-icon-edit"
 										size="medium"
@@ -149,10 +134,7 @@
 								label="模块顺序"
 							>
 								<template slot-scope="scope">
-									<span v-if="!!scope.row.displayOrder">
-										{{ scope.row.displayOrder }}
-									</span>
-									<span v-else>-</span>
+									{{ scope.row.displayOrder || '-' }}
 								</template>
 							</el-table-column>
 							<el-table-column
@@ -161,10 +143,7 @@
 								label="模块名称"
 							>
 								<template slot-scope="scope">
-									<span v-if="!!scope.row.moduleName">
-										{{ scope.row.moduleName }}
-									</span>
-									<span v-else>-</span>
+									{{ scope.row.moduleName || '-' }}
 								</template>
 							</el-table-column>
 							<el-table-column prop="moduleStatus" align="center" label="状态">
@@ -181,15 +160,12 @@
 								</template>
 							</el-table-column>
 							<el-table-column
-								prop="description"
+								prop="moduleDesc"
 								align="center"
 								label="模块描述"
 							>
 								<template slot-scope="scope">
-									<span v-if="!!scope.row.moduleDesc">
-										{{ scope.row.moduleDesc }}
-									</span>
-									<span v-else>-</span>
+									{{ scope.row.moduleDesc || '-' }}
 								</template>
 							</el-table-column>
 							<el-table-column
@@ -198,10 +174,7 @@
 								label="最近操作人"
 							>
 								<template slot-scope="scope">
-									<span v-if="!!scope.row.updatedBy">
-										{{ scope.row.updatedBy }}
-									</span>
-									<span v-else>-</span>
+									{{ scope.row.updatedBy || '-' }}
 								</template>
 							</el-table-column>
 							<el-table-column
@@ -211,10 +184,7 @@
 								sortable="custom"
 							>
 								<template slot-scope="scope">
-									<span v-if="!!scope.row.updatedAt">
-										{{ scope.row.updatedAt }}
-									</span>
-									<span v-else>-</span>
+									{{ scope.row.updatedAt || '-' }}
 								</template>
 							</el-table-column>
 							<el-table-column
@@ -267,10 +237,7 @@
 								label="模块顺序"
 							>
 								<template slot-scope="scope">
-									<span v-if="!!scope.row.displayOrder">
-										{{ scope.row.displayOrder }}
-									</span>
-									<span v-else>-</span>
+									{{ scope.row.displayOrder || '-' }}
 								</template>
 							</el-table-column>
 							<el-table-column
@@ -279,10 +246,7 @@
 								label="模块名称"
 							>
 								<template slot-scope="scope">
-									<span v-if="!!scope.row.moduleName">
-										{{ scope.row.moduleName }}
-									</span>
-									<span v-else>-</span>
+									{{ scope.row.moduleName || '-' }}
 								</template>
 							</el-table-column>
 							<el-table-column prop="status" align="center" label="状态">
@@ -299,15 +263,12 @@
 								</template>
 							</el-table-column>
 							<el-table-column
-								prop="description"
+								prop="moduleDesc"
 								align="center"
 								label="模块描述"
 							>
 								<template slot-scope="scope">
-									<span v-if="!!scope.row.moduleDesc">
-										{{ scope.row.moduleDesc }}
-									</span>
-									<span v-else>-</span>
+									{{ scope.row.moduleDesc || '-' }}
 								</template>
 							</el-table-column>
 							<el-table-column
@@ -316,10 +277,7 @@
 								label="最近操作人"
 							>
 								<template slot-scope="scope">
-									<span v-if="!!scope.row.updatedBy">
-										{{ scope.row.updatedBy }}
-									</span>
-									<span v-else>-</span>
+									{{ scope.row.updatedBy || '-' }}
 								</template>
 							</el-table-column>
 							<el-table-column
@@ -329,10 +287,7 @@
 								sortable="custom"
 							>
 								<template slot-scope="scope">
-									<span v-if="!!scope.row.updatedAt">
-										{{ scope.row.updatedAt }}
-									</span>
-									<span v-else>-</span>
+									{{ scope.row.updatedAt || '-' }}
 								</template>
 							</el-table-column>
 							<el-table-column
@@ -381,6 +336,7 @@ export default {
 	components: { gameHomeRecommendEdit },
 	mixins: [list],
 	data() {
+		this._changeTableSort = this.throttle(this._changeTableSort, 1000)
 		return {
 			isEdit: false,
 			dataList: [],
@@ -443,8 +399,8 @@ export default {
 				.gameModuleSortAPI(params)
 				.then((res) => {
 					this.loading = false
-					const { code, msg } = res
-					if (code === 200) {
+					const { code, msg } = res || {}
+					if (code && code === 200) {
 						this.$message({
 							message: '排序成功',
 							type: 'success'
@@ -476,16 +432,14 @@ export default {
 			this.$api
 				.gameHomeRecommendListAPI(params)
 				.then((res) => {
-					const { code, data } = res
-					if (code === 200) {
-						// const response = res.data
+					const { code, data, msg } = res || {}
+					if (code && code === 200) {
 						this.loading = false
-						this.dataList = data
-						// this.total = response.totalRecord
+						this.dataList = (data && data.length && Object.freeze(data)) || []
 					} else {
 						this.loading = false
 						this.$message({
-							message: res.msg,
+							message: msg,
 							type: 'error'
 						})
 					}
@@ -494,12 +448,7 @@ export default {
 					this.loading = false
 				})
 		},
-		// openEdit(row) {
-		// 	this.$router.push({
-		// 		path: '/game/gameConfig/editPage',
-		// 		query: { id: row.id, userId: row.userId }
-		// 	})
-		// },
+
 		// 禁用
 		disable(val) {
 			const { moduleStatus, id } = val
@@ -527,9 +476,8 @@ export default {
 							moduleStatus: moduleStatus === 1 ? 0 : 1
 						})
 						.then((res) => {
-							const { code } = res
 							loading.close()
-							if (code === 200) {
+							if (res && res.code === 200) {
 								this.$message({
 									type: 'success',
 									message: '操作成功!'

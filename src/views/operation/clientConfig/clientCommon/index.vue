@@ -35,8 +35,8 @@
 					<el-input
 						v-model="queryData.userAddress"
 						size="medium"
-                        type="textarea"
-                        show-word-limit
+						type="textarea"
+						show-word-limit
 						maxlength="70"
 						placeholder="请输入"
 						clearable
@@ -54,8 +54,8 @@
 						v-model="queryData.agentAddress"
 						size="medium"
 						maxlength="70"
-                        type="textarea"
-                        show-word-limit
+						type="textarea"
+						show-word-limit
 						placeholder="请输入"
 						clearable
 						oninput="value=value.replace(/[\u4E00-\u9FA5]/g ,'')"
@@ -72,8 +72,8 @@
 						v-model="queryData.iosAddress"
 						size="medium"
 						maxlength="70"
-                        type="textarea"
-                        show-word-limit
+						type="textarea"
+						show-word-limit
 						oninput="value=value.replace(/[\u4E00-\u9FA5]/g ,'')"
 						placeholder="请输入"
 						clearable
@@ -90,8 +90,8 @@
 						v-model="queryData.androidAddress"
 						size="medium"
 						maxlength="70"
-                        type="textarea"
-                        show-word-limit
+						type="textarea"
+						show-word-limit
 						placeholder="请输入"
 						clearable
 						oninput="value=value.replace(/[\u4E00-\u9FA5]/g ,'')"
@@ -108,8 +108,8 @@
 						v-model="queryData.pcAddress"
 						size="medium"
 						maxlength="70"
-                        type="textarea"
-                        show-word-limit
+						type="textarea"
+						show-word-limit
 						placeholder="请输入"
 						clearable
 						oninput="value=value.replace(/[\u4E00-\u9FA5]/g ,'')"
@@ -126,8 +126,8 @@
 						v-model="queryData.complainAddress"
 						size="medium"
 						maxlength="70"
-                        type="textarea"
-                        show-word-limit
+						type="textarea"
+						show-word-limit
 						placeholder="请输入"
 						clearable
 						oninput="value=value.replace(/[\u4E00-\u9FA5]/g ,'')"
@@ -144,8 +144,8 @@
 						v-model="queryData.serviceAddress"
 						size="medium"
 						maxlength="70"
-                        type="textarea"
-                        show-word-limit
+						type="textarea"
+						show-word-limit
 						placeholder="请输入"
 						clearable
 						oninput="value=value.replace(/[\u4E00-\u9FA5]/g ,'')"
@@ -162,8 +162,8 @@
 						v-model="queryData.IdAddress"
 						size="medium"
 						maxlength="70"
-                        type="textarea"
-                        show-word-limit
+						type="textarea"
+						show-word-limit
 						oninput="value=value.replace(/[\u4E00-\u9FA5]/g ,'')"
 						placeholder="请输入"
 						clearable
@@ -180,8 +180,8 @@
 						v-model="queryData.Hospitality"
 						size="medium"
 						maxlength="70"
-                        type="textarea"
-                        show-word-limit
+						type="textarea"
+						show-word-limit
 						oninput="value=value.replace(/[\u4E00-\u9FA5]/g ,'')"
 						placeholder="请输入"
 						clearable
@@ -308,16 +308,16 @@
 								}}
 							</span>
 						</p>
-                        <p v-else>
-                            <span>代客充值客服地址：</span>
-                            <span>
+						<p v-else>
+							<span>代客充值客服地址：</span>
+							<span>
 								{{
-                                    showInfoData && showInfoData.resourcesUrl
-                                        ? showInfoData.resourcesUrl
-                                        : '-'
-                                }}
+									showInfoData && showInfoData.resourcesUrl
+										? showInfoData.resourcesUrl
+										: '-'
+								}}
 							</span>
-                        </p>
+						</p>
 					</div>
 					<div>
 						<span>备注：</span>
@@ -359,6 +359,8 @@ export default {
 	name: 'ClientCommon',
 	mixins: [list],
 	data() {
+		this.add = this.throttle(this.add, 1000)
+		this.changeRiskType = this.throttle(this.changeRiskType, 1000)
 		return {
 			loading: false,
 			loadingT: false,
@@ -482,7 +484,7 @@ export default {
 				complainAddress,
 				serviceAddress,
 				IdAddress,
-                Hospitality,
+				Hospitality,
 				remark
 			} = this.queryData
 			const params = {
@@ -655,15 +657,15 @@ export default {
 		.info-content {
 			margin-top: 30px;
 			font-size: 14px;
-            margin-left: 15px;
+			margin-left: 15px;
 			.info-content-row {
 				padding-top: 20px;
 				padding-bottom: 20px;
-                > div {
-                    min-width: 165px;
-                    padding-top: 6px;
-                    padding-bottom: 6px;
-                }
+				> div {
+					min-width: 165px;
+					padding-top: 6px;
+					padding-bottom: 6px;
+				}
 			}
 		}
 	}

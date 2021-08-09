@@ -180,8 +180,8 @@ export default {
 				password: undefined,
 				mobile: undefined,
 				parentProxyName: undefined,
-				gender: '1',
-                vipId: undefined,
+				gender: '-1',
+				vipId: undefined,
 				email: undefined,
 				realName: undefined,
 				applyInfo: undefined,
@@ -192,7 +192,7 @@ export default {
 	},
 	computed: {
 		accountTypeArr() {
-			return this.globalDics.accountType
+			return this.globalDics.accountType || []
 		},
 		genderType() {
 			const arr = []
@@ -307,10 +307,10 @@ export default {
 		},
 		add() {
 			this.loading = true
-            const item = this.vipRiskList.find((item) => item.id === this.form.vipId)
+			const item = this.vipRiskList.find((item) => item.id === this.form.vipId)
 			const params = {
 				...this.form,
-                vipSerialNum: item && item.gradeNum
+				vipSerialNum: item && item.gradeNum
 			}
 			let lock = true
 			this.$refs['form'].validate((valid) => {
@@ -357,8 +357,8 @@ export default {
 				password: undefined,
 				mobile: undefined,
 				parentProxyName: undefined,
-				gender: '1',
-                vipId: undefined,
+				gender: '-1',
+				vipId: undefined,
 				email: undefined,
 				realName: undefined,
 				applyInfo: undefined,

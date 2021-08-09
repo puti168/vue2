@@ -9,7 +9,7 @@
 							clearable
 							:maxlength="50"
 							size="medium"
-							style="width: 180px;"
+							style="width: 250px"
 							placeholder="请输入"
 							:disabled="loading"
 							@keyup.enter.native="enterSearch"
@@ -18,7 +18,7 @@
 					<el-form-item label="变更前风控层级:" class="tagheight">
 						<el-select
 							v-model="queryData.beforeWindControlId"
-							style="width: 180px"
+							style="width: 200px"
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
 						>
@@ -34,7 +34,7 @@
 					<el-form-item label="变更后风控层级:" class="tagheight">
 						<el-select
 							v-model="queryData.afterWindControlId"
-							style="width: 180px"
+							style="width: 200px"
 							clearable
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
@@ -54,7 +54,7 @@
 							clearable
 							:maxlength="15"
 							size="medium"
-							style="width: 180px"
+							style="width: 200px"
 							placeholder="请输入"
 							:disabled="loading"
 							@keyup.enter.native="enterSearch"
@@ -171,12 +171,15 @@ export default {
 	components: {},
 	mixins: [list],
 	data() {
+		this.loadData = this.throttle(this.loadData, 1000)
+		this.reset = this.throttle(this.reset, 1000)
+		this._changeTableSort = this.throttle(this._changeTableSort, 1000)
 		return {
 			queryData: {
 				objectInfo: undefined,
-				afterWindControlId: '',
-				orderType: '',
-				beforeWindControlId: '',
+				afterWindControlId: undefined,
+				orderType: undefined,
+				beforeWindControlId: undefined,
 				createdBy: undefined,
 				windType: 6
 			},
@@ -216,11 +219,22 @@ export default {
 			this.$api
 				.selectWindControlRecord(params)
 				.then((res) => {
-					if (res.code === 200) {
-						this.tableData = res.data.record
-						this.total = res.data.totalRecord
-					}
 					this.loading = false
+					const {
+						code,
+						data: { record, totalRecord },
+						msg
+					} = res
+					if (res && code && res.code === 200) {
+						this.tableData =
+							(res.data && record.length && Object.freeze(record)) || []
+						this.total = (res.data && totalRecord) || 0
+					} else {
+						this.$message({
+							message: res && msg,
+							type: 'error'
+						})
+					}
 				})
 				.catch(() => {
 					this.loading = false
@@ -246,8 +260,8 @@ export default {
 				// 降序
 				this.queryData.orderType = 'desc'
 			} else {
-                delete this.queryData.orderType
-            }
+				delete this.queryData.orderType
+			}
 			this.loadData()
 		}
 	}

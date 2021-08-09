@@ -2,6 +2,7 @@ import Vue from 'vue'
 import 'normalize.css/normalize.css' // A modern alternative to CSS resets
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
+import VueLazyload from 'vue-lazyload'
 import '@/styles/index.scss' // global css
 import { parseTime } from '@/utils/index'
 import store from './store'
@@ -21,6 +22,11 @@ supportBrower()
 Vue.use(VueClipboard) // 挂载复制到剪切板插件
 
 // Vue.use(Viewer)
+Vue.use(VueLazyload, {
+	preLoad: 1,
+	attempt: 1
+})
+
 // Viewer.setDefaults({
 // 	// inline: true,
 // 	// button: true,
@@ -37,6 +43,20 @@ Vue.use(VueClipboard) // 挂载复制到剪切板插件
 // 	// keyboard: true,
 // 	url: 'data-source'
 // })
+
+Vue.directive('filterSpecialChar', {
+	update: function(el, { value, modifiers }, vnode) {
+		try {
+			if (!el.value) {
+				return false
+			}
+			el.value = el.value.replace(/[^\u4e00-\u9fa5a-zA-Z0-9]/g, '')
+			el.dispatchEvent(new Event(modifiers.lazy ? 'change' : 'input'))
+		} catch (e) {
+			console.log(e)
+		}
+	}
+})
 
 // 多语言支持
 Vue.use(ElementUI, {

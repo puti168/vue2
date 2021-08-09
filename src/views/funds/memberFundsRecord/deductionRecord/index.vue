@@ -1,224 +1,283 @@
 <template>
-  <div class="game-container report-container">
-    <div class="view-container dealer-container">
-      <div class="params">
-        <el-form ref="form" :inline="true" :model="queryData">
-          <el-form-item label="操作时间:">
-            <el-date-picker
-              v-model="searchTime"
-              size="medium"
-              :picker-options="pickerOptions"
-              format="yyyy-MM-dd HH:mm:ss"
-              type="datetimerange"
-              range-separator="-"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-              align="right"
-              :clearable="false"
-              :default-time="defaultTime"
-              style="width: 375px"
-            ></el-date-picker>
-          </el-form-item>
-          <el-form-item label="订单号:">
-            <el-input
-              v-model="queryData.orderNo"
-              clearable
-              size="medium"
-              style="width: 200px"
-              placeholder="请输入"
-              :disabled="loading"
-              @keyup.enter.native="enterSearch"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="会员账号:">
-            <el-input
-              v-model="queryData.userName"
-              clearable
-              :maxlength="11"
-              size="medium"
-              style="width: 200px"
-              placeholder="请输入"
-              :disabled="loading"
-              @keyup.enter.native="enterSearch"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="会员姓名:">
-            <el-input
-              v-model="queryData.realName"
-              clearable
-              :maxlength="15"
-              size="medium"
-              style="width: 200px"
-              placeholder="请输入"
-              :disabled="loading"
-              @keyup.enter.native="enterSearch"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="状态:" class="tagheight">
-            <el-select
-              v-model="queryData.orderStatus"
-              clearable
-              placeholder="默认选择全部"
-              :popper-append-to-body="false"
-            >
-              <el-option
-                v-for="item in successOrFail"
-                :key="item.code"
-                :label="item.description"
-                :value="item.code"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="调整类型:" class="tagheight">
-            <el-select
-              v-model="queryData.adjustType"
-              clearable
-              placeholder="默认选择全部"
-              :popper-append-to-body="false"
-            >
-              <el-option
-                v-for="item in memberPatchSubAdjustType"
-                :key="item.code"
-                :label="item.description"
-                :value="item.code"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="调整金额:">
-            <el-input
-              v-model="queryData.adjustAmountMin"
-              size="medium"
-              placeholder="最小数值"
-              style="width: 100px"
-              :maxlength="10"
-              name="adjustAmountMin"
-              oninput="value=value.replace(/[^\d]/g,'')"
-              @blur="checkValue($event)"
-            ></el-input>
-            -
-            <el-input
-              v-model="queryData.adjustAmountMax"
-              size="medium"
-              placeholder="最大数值"
-              style="width: 100px"
-              :maxlength="10"
-              name="adjustAmountMax"
-              oninput="value=value.replace(/[^\d]/g,'')"
-              @blur="checkValue($event)"
-            ></el-input>
-          </el-form-item>
-          <el-form-item>
-            <el-button
-              type="primary"
-              icon="el-icon-search"
-              :disabled="loading"
-              size="medium"
-              @click="search"
-            >
-              查询
-            </el-button>
-            <el-button
-              icon="el-icon-refresh-left"
-              :disabled="loading"
-              size="medium"
-              @click="reset"
-            >
-              重置
-            </el-button>
-            <el-button
-			  v-if="hasPermission('265')"
-              icon="el-icon-download"
-              type="warning"
-              :disabled="loading"
-              size="medium"
-              @click="exportExcel"
-            >
-              导出
-            </el-button>
-          </el-form-item>
-        </el-form>
-      </div>
-      <div class="content">
-        <el-table
-          v-loading="loading"
-          border
-          show-summary
-          :summary-method="getSummaries"
-          size="mini"
-          class="small-size-table"
-          :data="tableData"
-          style="width: 100%"
-          :header-cell-style="getRowClass"
-          @sort-change="_changeTableSort"
-        >
-          <el-table-column prop="orderNo" align="center" width="240px" label="订单号">
-            <template slot-scope="scope">
-              <Copy v-if="!!scope.row.orderNo" :title="scope.row.orderNo" :copy="copy">
-                {{ scope.row.orderNo }}
-              </Copy>
-              <span v-else>-</span>
-            </template>
-          </el-table-column>
-          <el-table-column prop="userName" align="center" label="会员账号">
-            <template slot-scope="scope">
-              <Copy v-if="!!scope.row.userName" :title="scope.row.userName" :copy="copy">
-                {{ scope.row.userName }}
-              </Copy>
-              <span v-else>-</span>
-            </template>
-          </el-table-column>
-          <el-table-column prop="realName" align="center" label="会员姓名">
-            <template slot-scope="scope">
-              <Copy v-if="!!scope.row.realName" :title="scope.row.realName" :copy="copy">
-                {{ scope.row.realName }}
-              </Copy>
-              <span v-else>-</span>
-            </template>
-          </el-table-column>
-          <el-table-column prop="adjustStyle" align="center" label="调整方式">
-          </el-table-column>
-          <el-table-column prop="orderStatus" align="center" label="状态">
-            <template slot-scope="scope">
-              {{
-                scope.row.orderStatus !== null
-                  ? typeFilter(scope.row.orderStatus, "successOrFail")
-                  : "-"
-              }}
-            </template>
-          </el-table-column>
-          <el-table-column prop="adjustType" align="center" label="调整类型">
-            <template slot-scope="scope">
-              {{ typeFilter(scope.row.adjustType, "memberPatchSubAdjustType") }}
-            </template>
-          </el-table-column>
-          <el-table-column prop="adjustAmount" align="center" label="调整金额 " width="200px">
-          </el-table-column>
-          <el-table-column prop="operator" align="center" label="操作人">
-          </el-table-column>
-          <el-table-column
-            prop="operatorTime"
-            align="center"
-            label="操作时间"
-            sortable="custom"
-          >
-          </el-table-column>
-          <el-table-column prop="remark" align="center" label="备注"> </el-table-column>
-        </el-table>
-        <!-- 分页 -->
-        <el-pagination
-          :current-page.sync="pageNum"
-          class="pageValue"
-          background
-          layout="total, sizes,prev, pager, next, jumper"
-          :page-size="pageSize"
-          :page-sizes="pageSizes"
-          :total="total"
-          @current-change="handleCurrentChange"
-          @size-change="handleSizeChange"
-        ></el-pagination>
-      </div>
-    </div>
-  </div>
+	<div class="game-container report-container">
+		<div class="view-container dealer-container">
+			<div class="params">
+				<el-form
+					ref="form"
+					:inline="true"
+					:model="queryData"
+					label-width="80px"
+				>
+					<el-form-item label="操作时间:">
+						<el-date-picker
+							v-model="searchTime"
+							size="medium"
+							:picker-options="pickerOptions"
+							format="yyyy-MM-dd HH:mm:ss"
+							type="datetimerange"
+							range-separator="-"
+							start-placeholder="开始日期"
+							end-placeholder="结束日期"
+							align="right"
+							:clearable="false"
+							:default-time="defaultTime"
+						></el-date-picker>
+					</el-form-item>
+					<el-form-item label="订单号:">
+						<el-input
+							v-model="queryData.orderNo"
+							clearable
+							size="medium"
+							style="width: 300px"
+							placeholder="请输入"
+							:disabled="loading"
+							@keyup.enter.native="enterSearch"
+						></el-input>
+					</el-form-item>
+					<el-form-item label="会员账号:">
+						<el-input
+							v-model="queryData.userName"
+							clearable
+							:maxlength="11"
+							size="medium"
+							style="width: 270px"
+							placeholder="请输入"
+							:disabled="loading"
+							@keyup.enter.native="enterSearch"
+						></el-input>
+					</el-form-item>
+					<el-form-item label="会员姓名:">
+						<el-input
+							v-model="queryData.realName"
+							clearable
+							:maxlength="15"
+							size="medium"
+							style="width: 270px"
+							placeholder="请输入"
+							:disabled="loading"
+							@keyup.enter.native="enterSearch"
+						></el-input>
+					</el-form-item>
+					<el-form-item label="状态:" class="tagheight">
+						<el-select
+							v-model="queryData.orderStatus"
+							clearable
+							style="width: 170px"
+							placeholder="默认选择全部"
+							:popper-append-to-body="false"
+						>
+							<el-option
+								v-for="item in successOrFail"
+								:key="item.code"
+								:label="item.description"
+								:value="item.code"
+							></el-option>
+						</el-select>
+					</el-form-item>
+					<el-form-item label="调整类型:" class="tagheight">
+						<el-select
+							v-model="queryData.adjustType"
+							clearable
+							placeholder="默认选择全部"
+							:popper-append-to-body="false"
+						>
+							<el-option
+								v-for="item in memberPatchSubAdjustType"
+								:key="item.code"
+								:label="item.description"
+								:value="item.code"
+							></el-option>
+						</el-select>
+					</el-form-item>
+					<el-form-item label="调整金额:">
+						<el-input
+							v-model="queryData.adjustAmountMin"
+							size="medium"
+							placeholder="最小数值"
+							style="width: 121px"
+							:maxlength="10"
+							name="adjustAmountMin"
+							oninput="value=value.replace(/[^\d]/g,'')"
+							@blur="checkValue($event)"
+						></el-input>
+						-
+						<el-input
+							v-model="queryData.adjustAmountMax"
+							size="medium"
+							placeholder="最大数值"
+							style="width: 121px"
+							:maxlength="10"
+							name="adjustAmountMax"
+							oninput="value=value.replace(/[^\d]/g,'')"
+							@blur="checkValue($event)"
+						></el-input>
+					</el-form-item>
+					<el-form-item style="margin-left: 8px">
+						<el-button
+							type="primary"
+							icon="el-icon-search"
+							:disabled="loading"
+							size="medium"
+							@click="search"
+						>
+							查询
+						</el-button>
+						<el-button
+							icon="el-icon-refresh-left"
+							:disabled="loading"
+							size="medium"
+							@click="reset"
+						>
+							重置
+						</el-button>
+						<el-button
+							v-if="hasPermission('265')"
+							icon="el-icon-download"
+							type="warning"
+							:disabled="loading"
+							size="medium"
+							@click="exportExcel"
+						>
+							导出
+						</el-button>
+					</el-form-item>
+				</el-form>
+			</div>
+			<div class="content">
+				<el-table
+					v-loading="loading"
+					border
+					show-summary
+					:summary-method="getSummaries"
+					size="mini"
+					class="small-size-table"
+					:data="tableData"
+					style="width: 100%"
+					:header-cell-style="getRowClass"
+					@sort-change="_changeTableSort"
+				>
+					<el-table-column
+						prop="orderNo"
+						align="center"
+						width="260px"
+						label="订单号"
+					>
+						<template slot-scope="scope">
+							<Copy
+								v-if="!!scope.row.orderNo"
+								:title="scope.row.orderNo"
+								:copy="copy"
+							>
+								{{ scope.row.orderNo }}
+							</Copy>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
+					<el-table-column
+						prop="userName"
+						align="center"
+						label="会员账号"
+						width="130px"
+					>
+						<template slot-scope="scope">
+							<Copy
+								v-if="!!scope.row.userName"
+								:title="scope.row.userName"
+								:copy="copy"
+							>
+								{{ scope.row.userName }}
+							</Copy>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
+					<el-table-column
+						prop="realName"
+						align="center"
+						label="会员姓名"
+						width="120px"
+					>
+						<template slot-scope="scope">
+							<Copy
+								v-if="!!scope.row.realName"
+								:title="scope.row.realName"
+								:copy="copy"
+							>
+								{{ scope.row.realName }}
+							</Copy>
+							<span v-else>-</span>
+						</template>
+					</el-table-column>
+					<el-table-column
+						prop="adjustStyle"
+						align="center"
+						label="调整方式"
+						width="130px"
+					></el-table-column>
+					<el-table-column
+						prop="orderStatus"
+						align="center"
+						label="状态"
+						width="100px"
+					>
+						<template slot-scope="scope">
+							{{
+								scope.row.orderStatus !== null
+									? typeFilter(scope.row.orderStatus, 'successOrFail')
+									: '-'
+							}}
+						</template>
+					</el-table-column>
+					<el-table-column
+						prop="adjustType"
+						align="center"
+						label="调整类型"
+						width="150px"
+					>
+						<template slot-scope="scope">
+							{{ typeFilter(scope.row.adjustType, 'memberPatchSubAdjustType') }}
+						</template>
+					</el-table-column>
+					<el-table-column
+						prop="adjustAmount"
+						align="center"
+						label="调整金额"
+						width="200px"
+					></el-table-column>
+					<el-table-column
+						prop="operator"
+						align="center"
+						label="操作人"
+						width="130px"
+					></el-table-column>
+					<el-table-column
+						prop="operatorTime"
+						align="center"
+						label="操作时间"
+						sortable="custom"
+						min-width="200px"
+					></el-table-column>
+					<el-table-column
+						prop="remark"
+						align="center"
+						label="备注"
+						width="220px"
+					></el-table-column>
+				</el-table>
+				<!-- 分页 -->
+				<el-pagination
+					:current-page.sync="pageNum"
+					class="pageValue"
+					background
+					layout="total, sizes,prev, pager, next, jumper"
+					:page-size="pageSize"
+					:page-sizes="pageSizes"
+					:total="total"
+					@current-change="handleCurrentChange"
+					@size-change="handleSizeChange"
+				></el-pagination>
+			</div>
+		</div>
+	</div>
 </template>
 
 <script>
@@ -235,6 +294,8 @@ export default {
 	components: {},
 	mixins: [list],
 	data() {
+		this.loadData = this.throttle(this.loadData, 1000)
+		this._changeTableSort = this.throttle(this._changeTableSort, 1000)
 		return {
 			queryData: {},
 			searchTime: [startTime, endTime],

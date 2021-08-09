@@ -17,17 +17,17 @@
 							:default-time="defaultTime"
 						></el-date-picker>
 					</el-form-item>
-          <el-form-item label="订单号:">
+					<el-form-item label="订单号:">
 						<el-input
 							v-model="queryData.orderNo"
 							clearable
 							size="medium"
-							style="width: 180px"
+							style="width: 300px"
 							placeholder="请输入"
 							@keyup.enter.native="enterSearch"
 						></el-input>
 					</el-form-item>
-          <el-form-item label="代理账号:">
+					<el-form-item label="代理账号:">
 						<el-input
 							v-model="queryData.proxyAccount"
 							clearable
@@ -53,7 +53,7 @@
 							></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item style="margin-left: 30px">
+					<el-form-item style="margin-left: 8px">
 						<el-button
 							type="primary"
 							icon="el-icon-search"
@@ -89,7 +89,7 @@
 							prop="auditStep"
 							align="center"
 							label="操作"
-							width="100"
+							width="120"
 						>
 							<template slot-scope="scope">
 								<el-button
@@ -105,7 +105,9 @@
 							prop="orderNo"
 							align="center"
 							label="订单号"
-						>	<template slot-scope="scope">
+							width="200"
+						>
+							<template slot-scope="scope">
 								<span v-if="!!scope.row.orderNo">
 									{{ scope.row.orderNo }}
 								</span>
@@ -116,13 +118,15 @@
 							prop="createdTime"
 							align="center"
 							label="日期"
+							width="180"
 						></el-table-column>
 						<el-table-column
 							prop="proxyAccount"
 							align="center"
 							label="代理账号"
+							width="130"
 						>
-						<template slot-scope="scope">
+							<template slot-scope="scope">
 								<span v-if="!!scope.row.proxyAccount">
 									{{ scope.row.proxyAccount }}
 								</span>
@@ -133,8 +137,9 @@
 							prop="proxyName"
 							align="center"
 							label="代理姓名"
+							width="120"
 						>
-						<template slot-scope="scope">
+							<template slot-scope="scope">
 								<span v-if="!!scope.row.proxyName">
 									{{ scope.row.proxyName }}
 								</span>
@@ -145,27 +150,29 @@
 							prop="orderStatus"
 							align="center"
 							label="订单状态"
+							width="120"
 						>
-						<template slot-scope="scope">
+							<template slot-scope="scope">
 								<span v-if="!!scope.row.orderStatus">
-									{{ typeFilter(scope.row.orderStatus, 'patchAdjustStatusFinish') }}
+									{{
+										typeFilter(scope.row.orderStatus, 'patchAdjustStatusFinish')
+									}}
 								</span>
 								<span v-else>-</span>
 							</template>
-
-							</el-table-column>
-						<el-table-column
-							align="center"
-							label="调整类型"
-						><template slot-scope="scope">
+						</el-table-column>
+						<el-table-column align="center" label="调整类型" width="150">
+							<template slot-scope="scope">
 								<p v-if="scope.row">佣金</p>
-							</template></el-table-column>
+							</template>
+						</el-table-column>
 						<el-table-column
 							prop="commissionAmount"
 							align="center"
 							label="佣金金额"
+							width="150"
 						>
-						<template slot-scope="scope">
+							<template slot-scope="scope">
 								<span v-if="!!scope.row.commissionAmount">
 									{{ scope.row.commissionAmount.toFixed(2) }}
 								</span>
@@ -176,43 +183,56 @@
 							prop="createdTime"
 							align="center"
 							label="申请时间"
+							width="180"
 						>
-						<template slot-scope="scope">
+							<template slot-scope="scope">
 								<span v-if="!!scope.row.createdTime">
 									{{ scope.row.createdTime }}
 								</span>
 								<span v-else>-</span>
 							</template>
 						</el-table-column>
-						<el-table-column
-							align="center"
-							label="审核人"
-						>
-						<template slot-scope="scope">
-								<p>一审：{{ scope.row.audit1Operator ? scope.row.audit1Operator : '-' }}</p>
-								<p>二审：{{ scope.row.audit2Operator ? scope.row.audit2Operator : '-' }}</p>
+						<el-table-column align="center" label="审核人" width="180">
+							<template slot-scope="scope">
+								<p>
+									一审：{{
+										scope.row.audit1Operator ? scope.row.audit1Operator : '-'
+									}}
+								</p>
+								<p>
+									二审：{{
+										scope.row.audit2Operator ? scope.row.audit2Operator : '-'
+									}}
+								</p>
 							</template>
 						</el-table-column>
-						<el-table-column
-							align="center"
-							label="审核时间"
-						><template slot-scope="scope">
-								<p>一审：{{ scope.row.audit1Time ? scope.row.audit1Time : '-' }}</p>
-								<p>二审：{{ scope.row.audit2Time ? scope.row.audit2Time : '-' }}</p>
-							</template></el-table-column>
-						<el-table-column
-							align="center"
-							label="审核用时"
-						><template slot-scope="scope">
-								<p>一审：{{ scope.row.audit1Time ? scope.row.audit1Time : '-' }}m</p>
-								<p>二审：{{ scope.row.audit2Time ? scope.row.audit2Time : '-' }}m</p>
-							</template></el-table-column>
+						<el-table-column align="center" label="审核时间" width="220">
+							<template slot-scope="scope">
+								<p>
+									一审：{{ scope.row.audit1Time ? scope.row.audit1Time : '-' }}
+								</p>
+								<p>
+									二审：{{ scope.row.audit2Time ? scope.row.audit2Time : '-' }}
+								</p>
+							</template>
+						</el-table-column>
+						<el-table-column align="center" label="审核用时" width="150">
+							<template slot-scope="scope">
+								<p>
+									一审：{{ scope.row.audit1Time ? scope.row.audit1Time : '-' }}m
+								</p>
+								<p>
+									二审：{{ scope.row.audit2Time ? scope.row.audit2Time : '-' }}m
+								</p>
+							</template>
+						</el-table-column>
 						<el-table-column
 							prop="remark"
 							align="center"
 							label="备注"
+							width="180"
 						>
-						<template slot-scope="scope">
+							<template slot-scope="scope">
 								<span v-if="!!scope.row.remark">
 									{{ scope.row.remark }}
 								</span>
@@ -255,6 +275,7 @@ export default {
 	components: { detail },
 	mixins: [list],
 	data() {
+		this.loadData = this.throttle(this.loadData, 1000)
 		return {
 			queryData: {
 				orderNo: '',
@@ -288,9 +309,7 @@ export default {
 				beginTime: startTime
 					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
 					: '',
-				endTime: endTime
-					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
-					: ''
+				endTime: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
 			}
 			params = {
 				...this.getParams(params)

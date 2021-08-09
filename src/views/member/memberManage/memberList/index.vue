@@ -6,7 +6,7 @@
 					ref="form"
 					:inline="true"
 					:model="queryData"
-					label-width="85px"
+					label-width="80px"
 				>
 					<el-form-item label="注册时间:" prop="registerTime">
 						<el-date-picker
@@ -21,7 +21,7 @@
 							align="right"
 							:clearable="true"
 							value-format="timestamp"
-							style="width: 388px"
+							style="width: 430px"
 							:default-time="defaultTime"
 						></el-date-picker>
 					</el-form-item>
@@ -31,7 +31,7 @@
 							size="medium"
 							placeholder="请输入"
 							clearable
-							style="width: 180px"
+							style="width: 278px"
 							maxlength="11"
 						></el-input>
 					</el-form-item>
@@ -41,7 +41,7 @@
 							size="medium"
 							placeholder="请输入"
 							clearable
-							style="width: 180px"
+							style="width: 278px"
 							maxlength="15"
 						></el-input>
 					</el-form-item>
@@ -52,7 +52,8 @@
 							placeholder="默认选择全部"
 							clearable
 							multiple
-							style="width: 300px"
+							collapse-tags
+							style="width: 278px"
 						>
 							<el-option
 								v-for="item in accountStatusArr"
@@ -61,45 +62,6 @@
 								:value="item.code"
 							></el-option>
 						</el-select>
-					</el-form-item>
-					<el-form-item label="风控层级:">
-						<el-select
-							v-model="queryData.windControlId"
-							size="medium"
-							placeholder="全部"
-							clearable
-							style="width: 180px"
-						>
-							<el-option
-								v-for="item in vipDict"
-								:key="item.windControlId"
-								:label="item.windControlName"
-								:value="item.windControlId"
-							></el-option>
-						</el-select>
-					</el-form-item>
-					<el-form-item label="离线天数:">
-						<el-input
-							v-model="queryData.offLineDaysStart"
-							size="medium"
-							placeholder="最小数值"
-							style="width: 100px"
-							maxlength="5"
-							name="offLineDaysStart"
-							oninput="value=value.replace(/[^\d]/g,'')"
-							@blur="checkValue($event)"
-						></el-input>
-						-
-						<el-input
-							v-model="queryData.offLineDaysEnd"
-							size="medium"
-							placeholder="最大数值"
-							style="width: 100px"
-							maxlength="5"
-							name="offLineDaysEnd"
-							oninput="value=value.replace(/[^\d]/g,'')"
-							@blur="checkValue($event)"
-						></el-input>
 					</el-form-item>
 					<el-form-item label="最后登录时间:" label-width="110px">
 						<el-date-picker
@@ -115,16 +77,55 @@
 							align="right"
 							clearable
 							value-format="timestamp"
-							style="width: 382px"
+							style="width: 400px"
 							:default-time="defaultTime"
 						></el-date-picker>
 					</el-form-item>
-					<el-form-item label="VIP等级:">
+					<el-form-item label="风控层级:">
+						<el-select
+							v-model="queryData.windControlId"
+							size="medium"
+							placeholder="全部"
+							clearable
+							style="width: 278px"
+						>
+							<el-option
+								v-for="item in vipDict"
+								:key="item.windControlId"
+								:label="item.windControlName"
+								:value="item.windControlId"
+							></el-option>
+						</el-select>
+					</el-form-item>
+					<el-form-item label="离线天数:">
+						<el-input
+							v-model="queryData.offLineDaysStart"
+							size="medium"
+							placeholder="最小数值"
+							style="width: 133px"
+							maxlength="5"
+							name="offLineDaysStart"
+							oninput="value=value.replace(/[^\d]/g,'')"
+							@blur="checkValue($event)"
+						></el-input>
+						-
+						<el-input
+							v-model="queryData.offLineDaysEnd"
+							size="medium"
+							placeholder="最大数值"
+							style="width: 133px"
+							maxlength="5"
+							name="offLineDaysEnd"
+							oninput="value=value.replace(/[^\d]/g,'')"
+							@blur="checkValue($event)"
+						></el-input>
+					</el-form-item>
+					<el-form-item label="VIP 等级:">
 						<el-input
 							v-model="queryData.vipSerialNumMin"
 							size="medium"
 							placeholder="最小数值"
-							style="width: 100px"
+							style="width: 133px"
 							maxlength="3"
 							name="vipSerialNumMin"
 							oninput="value=value.replace(/[^\d]/g,'')"
@@ -135,10 +136,82 @@
 							v-model="queryData.vipSerialNumMax"
 							size="medium"
 							placeholder="最大数值"
-							style="width: 100px"
+							style="width: 133px"
 							maxlength="3"
 							oninput="value=value.replace(/[^\d]/g,'')"
 							name="vipSerialNumMax"
+							@blur="checkValue($event)"
+						></el-input>
+					</el-form-item>
+					<el-form-item label="首存时间:">
+						<el-date-picker
+							v-model="queryData.firstSaveTime"
+							size="medium"
+							:picker-options="pickerOptions"
+							format="yyyy-MM-dd HH:mm:ss"
+							type="datetimerange"
+							range-separator="-"
+							start-placeholder="开始日期"
+							end-placeholder="结束日期"
+							align="right"
+							clearable
+							value-format="timestamp"
+							style="width: 430px"
+						></el-date-picker>
+					</el-form-item>
+					<el-form-item label="上级代理:">
+						<el-input
+							v-model="queryData.parentProxyName"
+							size="medium"
+							placeholder="请输入"
+							clearable
+							style="width: 278px"
+							maxlength="11"
+						></el-input>
+					</el-form-item>
+					<el-form-item label="首存金额:">
+						<el-input
+							v-model="queryData.firstDepositAmountMin"
+							size="medium"
+							placeholder="最小数值"
+							style="width: 133px"
+							maxlength="10"
+							oninput="value=value.replace(/[^\d]/g,'')"
+							name="firstDepositAmountMin"
+							@blur="checkValue($event)"
+						></el-input>
+						-
+						<el-input
+							v-model="queryData.firstDepositAmountMax"
+							size="medium"
+							placeholder="最大数值"
+							style="width: 133px"
+							maxlength="10"
+							oninput="value=value.replace(/[^\d]/g,'')"
+							name="firstDepositAmountMax"
+							@blur="checkValue($event)"
+						></el-input>
+					</el-form-item>
+					<el-form-item label="转代次数:">
+						<el-input
+							v-model="queryData.transforNumMin"
+							size="medium"
+							placeholder="最小数值"
+							style="width: 133px"
+							maxlength="10"
+							oninput="value=value.replace(/[^\d]/g,'')"
+							name="transforNumMin"
+							@blur="checkValue($event)"
+						></el-input>
+						-
+						<el-input
+							v-model="queryData.transforNumMax"
+							size="medium"
+							placeholder="最大数值"
+							style="width: 133px"
+							maxlength="10"
+							oninput="value=value.replace(/[^\d]/g,'')"
+							name="transforNumMax"
 							@blur="checkValue($event)"
 						></el-input>
 					</el-form-item>
@@ -149,7 +222,8 @@
 							placeholder="默认选择全部"
 							clearable
 							multiple
-							style="width: 300px"
+							collapse-tags
+							style="width: 230px"
 						>
 							<el-option
 								v-for="item in accountTypeArr"
@@ -166,7 +240,8 @@
 							placeholder="默认选择全部"
 							clearable
 							multiple
-							style="width: 300px"
+							collapse-tags
+							style="width: 230px"
 						>
 							<el-option
 								v-for="item in deviceTypeArr"
@@ -176,75 +251,14 @@
 							></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="首存金额:">
-						<el-input
-							v-model="queryData.firstDepositAmountMin"
-							size="medium"
-							placeholder="最小数值"
-							style="width: 100px"
-							maxlength="10"
-							oninput="value=value.replace(/[^\d]/g,'')"
-							name="firstDepositAmountMin"
-							@blur="checkValue($event)"
-						></el-input>
-						-
-						<el-input
-							v-model="queryData.firstDepositAmountMax"
-							size="medium"
-							placeholder="最大数值"
-							style="width: 100px"
-							maxlength="10"
-							oninput="value=value.replace(/[^\d]/g,'')"
-							name="firstDepositAmountMax"
-							@blur="checkValue($event)"
-						></el-input>
-					</el-form-item>
-					<el-form-item label="转代次数:">
-						<el-input
-							v-model="queryData.transforNumMin"
-							size="medium"
-							placeholder="最小数值"
-							style="width: 100px"
-							maxlength="10"
-							oninput="value=value.replace(/[^\d]/g,'')"
-							name="transforNumMin"
-							@blur="checkValue($event)"
-						></el-input>
-						-
-						<el-input
-							v-model="queryData.transforNumMax"
-							size="medium"
-							placeholder="最大数值"
-							style="width: 100px"
-							maxlength="10"
-							oninput="value=value.replace(/[^\d]/g,'')"
-							name="transforNumMax"
-							@blur="checkValue($event)"
-						></el-input>
-					</el-form-item>
-					<el-form-item label="首存时间:" label-width="100px">
-						<el-date-picker
-							v-model="queryData.firstSaveTime"
-							size="medium"
-							:picker-options="pickerOptions"
-							format="yyyy-MM-dd HH:mm:ss"
-							type="datetimerange"
-							range-separator="-"
-							start-placeholder="开始日期"
-							end-placeholder="结束日期"
-							align="right"
-							clearable
-							value-format="timestamp"
-							style="width: 382px"
-						></el-date-picker>
-					</el-form-item>
+
 					<el-form-item label="会员标签:">
 						<el-select
 							v-model="queryData.labelId"
 							size="medium"
 							placeholder="全部"
 							clearable
-							style="width: 180px"
+							style="width: 230px"
 						>
 							<el-option
 								v-for="item in userLabel"
@@ -254,17 +268,8 @@
 							></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="上级代理:">
-						<el-input
-							v-model="queryData.parentProxyName"
-							size="medium"
-							placeholder="请输入"
-							clearable
-							style="width: 180px"
-							maxlength="11"
-						></el-input>
-					</el-form-item>
-					<el-form-item>
+
+					<el-form-item label=" " label-width="15px">
 						<el-button
 							type="primary"
 							icon="el-icon-search"
@@ -311,7 +316,7 @@
 						prop="userName"
 						align="center"
 						label="会员账号"
-						width="150px"
+						width="150"
 					>
 						<template slot-scope="scope">
 							<Copy
@@ -345,7 +350,7 @@
 						prop="parentProxyName"
 						align="center"
 						label="代理上级"
-						width="150px"
+						width="150"
 					>
 						<template slot-scope="scope">
 							<Copy
@@ -360,7 +365,11 @@
 					</el-table-column>
 					<el-table-column prop="accountType" align="center" label="账号类型">
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.accountType">
+							<span
+								v-if="
+									!!scope.row.accountType || scope.row.accountType + '' === '0'
+								"
+							>
 								{{ typeFilter(scope.row.accountType, 'accountType') }}
 							</span>
 							<span v-else>-</span>
@@ -368,10 +377,7 @@
 					</el-table-column>
 					<el-table-column prop="labelName" align="center" label="会员标签">
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.labelName">
-								{{ scope.row.labelName }}
-							</span>
-							<span v-else>-</span>
+							{{ scope.row.labelName || '-' }}
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -380,10 +386,7 @@
 						label="风控层级"
 					>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.windControlName">
-								{{ scope.row.windControlName }}
-							</span>
-							<span v-else>-</span>
+							{{ scope.row.windControlName || '-' }}
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -410,7 +413,7 @@
 						<template slot-scope="scope">
 							<span
 								v-if="
-									!!scope.row.transforNum || scope.row.transforNum * 1 === 0
+									!!scope.row.transforNum || scope.row.transforNum + '' === '0'
 								"
 							>
 								{{ scope.row.transforNum }}
@@ -422,7 +425,7 @@
 						prop="accountStatus"
 						align="center"
 						label="账号状态"
-						width="100px"
+						width="100"
 					>
 						<template slot-scope="scope">
 							<span
@@ -464,12 +467,15 @@
 						prop="vipSerialNum"
 						align="center"
 						label="VIP等级"
-						width="100px"
+						width="100"
 						sortable="custom"
 					>
 						<template slot-scope="scope">
 							<span
-								v-if="!!scope.row.vipSerialNum || scope.row.vipSerialNum === 0"
+								v-if="
+									!!scope.row.vipSerialNum ||
+										scope.row.vipSerialNum + '' === '0'
+								"
 							>
 								{{ scope.row.vipSerialNum }}
 							</span>
@@ -480,14 +486,11 @@
 						prop="createDt"
 						align="center"
 						label="注册时间"
-						width="180px"
+						width="180"
 						sortable="custom"
 					>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.createDt">
-								{{ scope.row.createDt }}
-							</span>
-							<span v-else>-</span>
+							{{ scope.row.createDt || '-' }}
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -498,10 +501,7 @@
 						sortable="custom"
 					>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.firstDepositTime">
-								{{ scope.row.firstDepositTime }}
-							</span>
-							<span v-else>-</span>
+							{{ scope.row.firstDepositTime || '-' }}
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -509,13 +509,13 @@
 						align="center"
 						label="首存金额"
 						sortable="custom"
-						width="100px"
+						width="100"
 					>
 						<template slot-scope="scope">
 							<span
 								v-if="
 									!!scope.row.firstDepositAmount ||
-										scope.row.firstDepositAmount === 0
+										scope.row.firstDepositAmount + '' === '0'
 								"
 							>
 								{{ scope.row.firstDepositAmount }}
@@ -527,11 +527,13 @@
 						prop="userBalance"
 						align="center"
 						label="中心钱包"
-						width="100px"
+						width="100"
 					>
 						<template slot-scope="scope">
 							<span
-								v-if="!!scope.row.userBalance || scope.row.userBalance === 0"
+								v-if="
+									!!scope.row.userBalance || scope.row.userBalance + '' === '0'
+								"
 							>
 								{{ scope.row.userBalance }}
 							</span>
@@ -542,26 +544,25 @@
 						prop="lastLoginTime"
 						align="center"
 						label="最后登录时间"
-						width="180px"
+						width="180"
 						sortable="custom"
 					>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.lastLoginTime">
-								{{ scope.row.lastLoginTime }}
-							</span>
-							<span v-else>-</span>
+							{{ scope.row.lastLoginTime || '-' }}
 						</template>
 					</el-table-column>
 					<el-table-column
 						prop="offLineDays"
 						align="center"
 						label="离线天数"
-						width="150px"
+						width="150"
 						sortable="custom"
 					>
 						<template slot-scope="scope">
 							<span
-								v-if="!!scope.row.offLineDays || scope.row.offLineDays === 0"
+								v-if="
+									!!scope.row.offLineDays || scope.row.offLineDays + '' === '0'
+								"
 							>
 								{{ scope.row.offLineDays }}
 							</span>
@@ -598,8 +599,6 @@
 <script>
 import list from '@/mixins/list'
 import dayjs from 'dayjs'
-// import { mapGetters } from 'vuex'
-// import { UTable } from 'umy-ui'
 import { routerNames } from '@/utils/consts'
 const start = dayjs()
 	.startOf('day')
@@ -612,6 +611,8 @@ export default {
 	name: routerNames.memberList,
 	mixins: [list],
 	data() {
+		this.loadData = this.throttle(this.loadData, 1000)
+		this._changeTableSort = this.throttle(this._changeTableSort, 1000)
 		return {
 			queryData: {
 				registerTime: [start, end],
@@ -643,15 +644,18 @@ export default {
 		}
 	},
 	computed: {
-		// ...mapGetters(['vipDict', 'userLabel']),
-		accountStatusArr() {
-			return this.globalDics.accountStatusType
+		accountStatusArr({ $attrs, $route, $store, $listeners, $ref }) {
+			// console.log('$attrs', $attrs)
+			// console.log('$route', $route)
+			// console.log('$store', $store)
+			// console.log('$listeners', $listeners)
+			return this.globalDics.accountStatusType || []
 		},
 		accountTypeArr() {
-			return this.globalDics.accountType
+			return this.globalDics.accountType || []
 		},
 		deviceTypeArr() {
-			return this.globalDics.deviceType
+			return this.globalDics.deviceType || []
 		}
 	},
 	created() {
@@ -714,38 +718,34 @@ export default {
 			this.$api
 				.memberListAPI(params)
 				.then((res) => {
+					this.loading = false
 					const {
 						code,
 						data: { record, totalRecord },
 						msg
 					} = res
-					if (code === 200) {
-						this.loading = false
-						this.dataList = record
-						this.total = totalRecord
+					if (res && code && code === 200) {
+						this.dataList =
+							(res.data && record.length && Object.freeze(record)) || []
+						this.total = (res.data && totalRecord) || 0
 					} else {
-						this.loading = false
 						this.$message({
-							message: msg,
+							message: (res && msg) || '接口异常',
 							type: 'error'
 						})
 					}
 				})
 				.catch(() => (this.loading = false))
-
-			setTimeout(() => {
-				this.loading = false
-			}, 1000)
 		},
 		// 获取会员标签
 		getMemberLabelDict() {
 			this.$api.getMemberLabelDict().then((res) => {
 				const { code, data, msg } = res
-				if (code === 200) {
+				if (res && code && code === 200) {
 					this.userLabel = data || []
 				} else {
 					this.$message({
-						message: msg,
+						message: res && msg,
 						type: 'error'
 					})
 				}
@@ -756,8 +756,8 @@ export default {
 			this.$api
 				.getWindControllerLevelDict({ windControlType: 1 })
 				.then((res) => {
-					if (res.code === 200) {
-						this.vipDict = res.data
+					if (res && res.code === 200) {
+						this.vipDict = res.data || []
 					}
 				})
 		},
@@ -936,7 +936,6 @@ export default {
 			const [startTime, endTime] = create
 			const [loginTimeStart, loginTimeEnd] = lastLoginTime
 			const [firstDepositTimeStart, firstDepositTimeEnd] = firstSaveTime
-			this.loading = true
 			let params = {
 				...this.queryData,
 				createDtStart: startTime
@@ -990,7 +989,6 @@ export default {
 					this.$api
 						.exportExcelAPI(params)
 						.then((res) => {
-							this.loading = false
 							const { data, status } = res
 							if (res && status === 200) {
 								const { type } = data
@@ -1042,7 +1040,6 @@ export default {
 							}
 						})
 						.catch(() => {
-							this.loading = false
 							this.$message({
 								type: 'error',
 								message: '导出失败',
@@ -1051,10 +1048,6 @@ export default {
 						})
 				})
 				.catch(() => {})
-
-			setTimeout(() => {
-				this.loading = false
-			}, 1500)
 		}
 	}
 }

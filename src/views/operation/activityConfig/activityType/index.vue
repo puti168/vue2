@@ -138,6 +138,9 @@ export default {
 	components: { draggable },
 	mixins: [list],
 	data() {
+		this.changeType = this.throttle(this.changeType, 1000)
+		this.add = this.throttle(this.add, 1000)
+		this.handleClickSort = this.throttle(this.handleClickSort, 1000)
 		return {
 			loadingT: false,
 			queryData: {
@@ -275,7 +278,7 @@ export default {
 		changeType(evt) {
 			this.$refs['form'] && this.$refs['form'].resetFields()
 			this.showInfoData = undefined
-            const item = this.activityTypeArr.find((item) => item.description === evt)
+			const item = this.activityTypeArr.find((item) => item.description === evt)
 			this.queryData = {
 				activityType: item && item.description,
 				activityCode: item && item.code

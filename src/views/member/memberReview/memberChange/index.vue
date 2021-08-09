@@ -2,7 +2,12 @@
 	<div class="game-container report-container">
 		<template v-if="!showDetail">
 			<div class="params">
-				<el-form ref="form" :inline="true" :model="queryData">
+				<el-form
+					ref="form"
+					:inline="true"
+					:model="queryData"
+					label-width="80px"
+				>
 					<el-form-item label="申请时间:">
 						<el-date-picker
 							v-model="formTime.time"
@@ -14,10 +19,62 @@
 							start-placeholder="开始日期"
 							end-placeholder="结束日期"
 							align="right"
+							style="width: 428px"
 							:default-time="defaultTime"
 						></el-date-picker>
 					</el-form-item>
-					<el-form-item label="一审完成时间:">
+
+					<el-form-item label="会员账号:">
+						<el-input
+							v-model="queryData.userName"
+							clearable
+							size="medium"
+							:maxlength="11"
+							style="width: 270px"
+							placeholder="请输入"
+							@keyup.enter.native="enterSearch"
+						></el-input>
+					</el-form-item>
+
+					<el-form-item label="账号类型:" label-width="80px">
+						<el-select
+							v-model="queryData.accountType"
+							style="width: 270px"
+							multiple
+							collapse-tags
+							:popper-append-to-body="false"
+							placeholder="默认选择全部"
+							clearable
+						>
+							<el-option
+								v-for="item in accountType"
+								:key="item.code"
+								:label="item.description"
+								:value="item.code"
+							></el-option>
+						</el-select>
+					</el-form-item>
+
+					<el-form-item label="审核申请类型:" label-width="105px">
+						<el-select
+							v-model="queryData.applyType"
+							style="width: 270px"
+							multiple
+							collapse-tags
+							placeholder="默认选择全部"
+							:popper-append-to-body="false"
+							clearable
+						>
+							<el-option
+								v-for="item in applyType"
+								:key="item.code"
+								:label="item.description"
+								:value="item.code"
+							></el-option>
+						</el-select>
+					</el-form-item>
+
+					<el-form-item label="一审完成时间:" label-width="108px">
 						<el-date-picker
 							v-model="formTime.time2"
 							size="medium"
@@ -28,57 +85,59 @@
 							start-placeholder="开始日期"
 							end-placeholder="结束日期"
 							align="right"
+							style="width: 400px"
 							clearable
 							:default-time="defaultTime"
 						></el-date-picker>
 					</el-form-item>
-					<el-form-item label="会员账号:">
+
+					<el-form-item label="申请人:" label-width="67px">
 						<el-input
-							v-model="queryData.userName"
+							v-model="queryData.applyName"
 							clearable
 							size="medium"
-							:maxlength="11"
-							style="width: 180px"
+							:maxlength="12"
+							style="width: 283px"
 							placeholder="请输入"
 							@keyup.enter.native="enterSearch"
 						></el-input>
 					</el-form-item>
-					<el-form-item label="账号类型:">
+
+					<el-form-item label="一审人:" label-width="67px">
+						<el-input
+							v-model="queryData.auditName"
+							clearable
+							size="medium"
+							:maxlength="12"
+							style="width: 283px"
+							placeholder="请输入"
+							@keyup.enter.native="enterSearch"
+						></el-input>
+					</el-form-item>
+
+					<el-form-item label="审核状态:">
 						<el-select
-							v-model="queryData.accountType"
-							style="width: 300px"
+							v-model="queryData.auditStatus"
+							style="width: 295px"
 							multiple
-							:popper-append-to-body="false"
+							collapse-tags
 							placeholder="默认选择全部"
+							:popper-append-to-body="false"
+							clearable
 						>
 							<el-option
-								v-for="item in accountType"
+								v-for="item in auditStatus"
 								:key="item.code"
 								:label="item.description"
 								:value="item.code"
 							></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="审核申请类型:">
-						<el-select
-							v-model="queryData.applyType"
-							style="width: 300px"
-							multiple
-							placeholder="默认选择全部"
-							:popper-append-to-body="false"
-						>
-							<el-option
-								v-for="item in applyType"
-								:key="item.code"
-								:label="item.description"
-								:value="item.code"
-							></el-option>
-						</el-select>
-					</el-form-item>
+
 					<el-form-item label="审核操作:">
 						<el-select
 							v-model="queryData.auditStep"
-							style="width: 300px"
+							style="width: 167px"
 							:popper-append-to-body="false"
 						>
 							<el-option label="全部" value=""></el-option>
@@ -90,48 +149,10 @@
 							></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="审核状态:">
-						<el-select
-							v-model="queryData.auditStatus"
-							style="width: 300px"
-							multiple
-							placeholder="默认选择全部"
-							:popper-append-to-body="false"
-						>
-							<el-option
-								v-for="item in auditStatus"
-								:key="item.code"
-								:label="item.description"
-								:value="item.code"
-							></el-option>
-						</el-select>
-					</el-form-item>
-					<el-form-item label="申请人:">
-						<el-input
-							v-model="queryData.applyName"
-							clearable
-							size="medium"
-							:maxlength="12"
-							style="width: 180px"
-							placeholder="请输入"
-							@keyup.enter.native="enterSearch"
-						></el-input>
-					</el-form-item>
-					<el-form-item label="一审人:">
-						<el-input
-							v-model="queryData.auditName"
-							clearable
-							size="medium"
-							:maxlength="12"
-							style="width: 180px"
-							placeholder="请输入"
-							@keyup.enter.native="enterSearch"
-						></el-input>
-					</el-form-item>
 					<el-form-item label="锁单状态:">
 						<el-select
 							v-model="queryData.lockOrder"
-							style="width: 180px"
+							style="width: 167px"
 							:popper-append-to-body="false"
 						>
 							<el-option label="全部" value></el-option>
@@ -143,19 +164,20 @@
 							></el-option>
 						</el-select>
 					</el-form-item>
+
 					<el-form-item label="审核单号:">
 						<el-input
 							v-model="queryData.auditNum"
 							clearable
 							size="medium"
 							:maxlength="19"
-							style="width: 180px"
+							style="width: 270px"
 							placeholder="请输入"
 							@keyup.enter.native="enterSearch"
 						></el-input>
 					</el-form-item>
 
-					<el-form-item style="margin-left: 30px">
+					<el-form-item style="margin-left: 10px">
 						<el-button
 							type="primary"
 							icon="el-icon-search"
@@ -174,6 +196,7 @@
 							重置
 						</el-button>
 					</el-form-item>
+
 					<p class="danger data-refresh">数据更新时间： {{ now }}</p>
 				</el-form>
 			</div>
@@ -246,18 +269,23 @@
 							prop="auditNum"
 							align="center"
 							label="审核单号"
-							width="170"
-						></el-table-column>
+							width="180"
+						>
+							<template slot-scope="scope">
+								{{ scope.row.auditNum || '-' }}
+							</template>
+						</el-table-column>
 						<el-table-column
 							prop="applyType"
 							align="center"
 							label="审核申请类型"
+							width="160"
 						>
 							<template slot-scope="scope">
 								{{ typeFilter(scope.row.applyType, 'applyType') }}
 							</template>
 						</el-table-column>
-						<el-table-column align="center" label="修改前">
+						<el-table-column align="center" label="修改前" width="120">
 							<template slot-scope="scope">
 								<template v-if="Number(scope.row.applyType) === 2">
 									{{ typeFilter(scope.row.beforeModify, 'genderType') }}
@@ -266,11 +294,11 @@
 									{{ typeFilter(scope.row.beforeModify, 'accountStatusType') }}
 								</template>
 								<template v-else>
-									{{ scope.row.beforeModify ? scope.row.beforeModify : '-' }}
+									{{ scope.row.beforeModify || '-' }}
 								</template>
 							</template>
 						</el-table-column>
-						<el-table-column align="center" label="修改后">
+						<el-table-column align="center" label="修改后" width="120">
 							<template slot-scope="scope">
 								<template v-if="Number(scope.row.applyType) === 2">
 									{{ typeFilter(scope.row.afterModify, 'genderType') }}
@@ -279,11 +307,11 @@
 									{{ typeFilter(scope.row.afterModify, 'accountStatusType') }}
 								</template>
 								<template v-else>
-									{{ scope.row.afterModify ? scope.row.afterModify : '-' }}
+									{{ scope.row.afterModify || '-' }}
 								</template>
 							</template>
 						</el-table-column>
-						<el-table-column align="center" label="操作类型">
+						<el-table-column align="center" label="操作类型" width="120">
 							<template slot="header">
 								<p style="font-weight: 600">会员账号</p>
 								<p style="font-weight: 600">账号类型</p>
@@ -294,23 +322,32 @@
 								<p>{{ typeFilter(scope.row.accountType, 'accountType') }}</p>
 							</template>
 						</el-table-column>
-						<el-table-column
-							prop="applyName"
-							align="center"
-							label="申请人"
-						></el-table-column>
+						<el-table-column prop="applyName" align="center" label="申请人">
+							<template slot-scope="scope">
+								{{ scope.row.applyName || '-' }}
+							</template>
+						</el-table-column>
 						<el-table-column
 							prop="applyTime"
 							align="center"
 							sortable="custom"
-							width="160"
+							width="180"
 							label="申请时间"
-						></el-table-column>
+						>
+							<template slot-scope="scope">
+								{{ scope.row.applyTime || '-' }}
+							</template>
+						</el-table-column>
 						<el-table-column
 							prop="applyInfo"
 							align="center"
 							label="申请信息"
-						></el-table-column>
+							width="120"
+						>
+							<template slot-scope="scope">
+								{{ scope.row.applyInfo || '-' }}
+							</template>
+						</el-table-column>
 						<el-table-column align="center" label="审核状态" width="100">
 							<template slot-scope="scope">
 								<span
@@ -331,7 +368,7 @@
 							prop="auditTime"
 							align="center"
 							sortable="custom"
-							width="200px"
+							width="200"
 						>
 							<template slot="header">
 								<span>
@@ -341,8 +378,8 @@
 								</span>
 							</template>
 							<template slot-scope="scope">
-								{{ scope.row.auditName ? scope.row.auditName : '-' }}
-								<p>{{ scope.row.auditTime ? scope.row.auditTime : '-' }}</p>
+								{{ scope.row.auditName || '-' }}
+								<p>{{ scope.row.auditTime || '-' }}</p>
 							</template>
 						</el-table-column>
 					</el-table>
@@ -373,7 +410,6 @@
 <script>
 import list from '@/mixins/list'
 import dayjs from 'dayjs'
-import memberChangeReview from './components/memberChangeReview'
 import { routerNames } from '@/utils/consts'
 import { getUsername } from '@/utils/auth'
 const end = dayjs()
@@ -382,24 +418,29 @@ const end = dayjs()
 const start = dayjs()
 	.startOf('day')
 	.valueOf()
+
 export default {
 	name: routerNames.memberChange,
-	components: { memberChangeReview },
+	components: {
+		memberChangeReview: () => import('./components/memberChangeReview')
+	},
 	mixins: [list],
 	data() {
+		this.search = this.throttle(this.search, 1000)
+		this.reset = this.throttle(this.reset, 1000)
 		return {
 			queryData: {
-				userName: '',
+				userName: undefined,
 				accountType: [],
 				applyType: [],
 				auditStatus: [],
 				auditStep: '',
-				applyName: '',
-				auditName: '',
+				applyName: undefined,
+				auditName: undefined,
 				lockOrder: '',
-				auditNum: '',
-				orderType: '',
-				orderKey: ''
+				auditNum: undefined,
+				orderType: undefined,
+				orderKey: undefined
 			},
 			showDetail: false,
 			rowData: {},
@@ -415,19 +456,19 @@ export default {
 	},
 	computed: {
 		accountType() {
-			return this.globalDics.accountType
+			return this.globalDics.accountType || []
 		},
 		auditStatus() {
-			return this.globalDics.auditStatusType
+			return this.globalDics.auditStatusType || []
 		},
 		auditStepType() {
-			return this.globalDics.auditStepType
+			return this.globalDics.auditStepType || []
 		},
 		lockOrderType() {
-			return this.globalDics.lockOrderType
+			return this.globalDics.lockOrderType || []
 		},
 		applyType() {
-			return this.globalDics.applyType
+			return this.globalDics.applyType || []
 		}
 	},
 	mounted() {
@@ -442,16 +483,16 @@ export default {
 				...this.queryData,
 				applyTimeStart: startTime
 					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
-					: '',
+					: undefined,
 				applyTimeEnd: endTime
 					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
-					: '',
+					: undefined,
 				auditTimeStart: startTime2
 					? dayjs(startTime2).format('YYYY-MM-DD HH:mm:ss')
-					: '',
+					: undefined,
 				auditTimeEnd: endTime2
 					? dayjs(endTime2).format('YYYY-MM-DD HH:mm:ss')
-					: ''
+					: undefined
 			}
 			params = {
 				...this.getParams(params)
@@ -459,25 +500,20 @@ export default {
 			this.$api
 				.memberChange(params)
 				.then((res) => {
-					if (res.code === 200) {
+					this.loading = false
+					const { code, data, msg } = res
+					if (res && code === 200) {
 						this.now = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
-						const response = res.data
-						this.loading = false
-						this.dataList = response.record
+						this.dataList = (data && data.record) || []
+						this.total = (data && data.totalRecord) || 0
 						if (this.dataList) {
 							this.dataList.forEach((item) => {
-								if (Number(item.lockOrder) === 1) {
-									item.lockStatus = true
-								} else {
-									item.lockStatus = false
-								}
+								item.lockStatus = item.lockOrder * 1 === 1
 							})
 						}
-						this.total = response.totalRecord
 					} else {
-						this.loading = false
 						this.$message({
-							message: res.msg,
+							message: res && msg,
 							type: 'error'
 						})
 					}
@@ -496,19 +532,20 @@ export default {
 			this.loadData()
 		},
 		reset() {
+			this.pageNum = 1
 			this.queryData = {
-				userName: '',
+				userName: undefined,
 				accountType: [],
 				applyType: [],
+				auditStep: '',
 				auditStatus: [],
-				applyName: '',
-				auditName: '',
+				applyName: undefined,
+				auditName: undefined,
 				lockOrder: '',
-				auditNum: '',
-				orderType: '',
-				orderKey: ''
+				auditNum: undefined,
+				orderType: undefined,
+				orderKey: undefined
 			}
-			this.pageNum = 1
 			this.formTime = {
 				time: [start, end],
 				time2: []
@@ -547,17 +584,17 @@ export default {
 			this.$api
 				.lock({ id: val.id, lockFlag: Number(val.lockOrder) === 0 ? 0 : 1 })
 				.then((res) => {
-					if (res.code === 200) {
-						loading.close()
+					loading.close()
+					const { code, msg } = res
+					if (res && code === 200) {
 						this.$message({
 							type: 'success',
 							message: '操作成功!'
 						})
 						this.loadData()
 					} else {
-						loading.close()
 						this.$message({
-							message: res.msg,
+							message: res && msg,
 							type: 'error'
 						})
 					}
