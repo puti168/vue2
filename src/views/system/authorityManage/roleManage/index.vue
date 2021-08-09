@@ -71,30 +71,22 @@
 						></el-table-column>
 						<el-table-column prop="roleName" align="center" label="角色名称">
 							<template slot-scope="scope">
-								<span>
-									{{ scope.row.roleName || '-' }}
-								</span>
+								{{ scope.row.roleName || '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column prop="remark" align="center" label="角色描述">
 							<template slot-scope="scope">
-								<span>
-									{{ scope.row.remark || '-' }}
-								</span>
+								{{ scope.row.remark || '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column prop="createdAt" align="center" label="添加时间">
 							<template slot-scope="scope">
-								<span>
-									{{ formatTime(scope.row.createdAt) || '-' }}
-								</span>
+								{{ formatTime(scope.row.createdAt) || '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column prop="createBy" align="center" label="创建人">
 							<template slot-scope="scope">
-								<span>
-									{{ scope.row.createBy || '-' }}
-								</span>
+								{{ scope.row.createBy || '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="操作">

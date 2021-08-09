@@ -78,44 +78,32 @@
             label="操作时间"
           >
             <template slot-scope="scope">
-              <span>
-                {{ scope.row.createdAt || '-' }}
-              </span>
+              {{ scope.row.createdAt || '-' }}
             </template>
           </el-table-column>
           <el-table-column prop="createdBy" align="center" label="操作账号">
             <template slot-scope="scope">
-              <span>
-                {{ scope.row.createdBy || '-' }}
-              </span>
+              {{ scope.row.createdBy || '-' }}
             </template>
           </el-table-column>
           <el-table-column prop="operateIp" align="center" label="操作IP">
             <template slot-scope="scope">
-              <span>
-                {{ scope.row.operateIp || '-' }}
-              </span>
+              {{ scope.row.operateIp || '-' }}
             </template>
           </el-table-column>
           <el-table-column prop="changeType" align="center" label="操作类型">
             <template slot-scope="scope">
-              <span>
-                {{ scope.row.changeType || '-' }}
-              </span>
+              {{ scope.row.changeType || '-' }}
             </template>
           </el-table-column>
           <el-table-column align="center" label="变更前" prop="beforeValue">
             <template slot-scope="scope">
-              <span>
-                {{ scope.row.beforeValue || '-' }}
-              </span>
+              {{ scope.row.beforeValue || '-' }}
             </template>
           </el-table-column>
           <el-table-column align="center" label="变更后" prop="afterValue">
             <template slot-scope="scope">
-              <span>
-                {{ scope.row.afterValue || '-' }}
-              </span>
+              {{ scope.row.afterValue || '-' }}
             </template>
           </el-table-column>
 

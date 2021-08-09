@@ -58,16 +58,12 @@
 				></el-table-column>
 				<el-table-column align="center" prop="userName" label="用户名称" width="150">
 					<template slot-scope="scope">
-						<span>
-							{{ scope.row.userName || '-' }}
-						</span>
+						{{ scope.row.userName || '-' }}
 					</template>
 				</el-table-column>
 				<el-table-column align="center" prop="nickName" label="姓名" width="120">
 					<template slot-scope="scope">
-						<span>
-							{{ scope.row.nickName || '-' }}
-						</span>
+						{{ scope.row.nickName || '-' }}
 					</template>
 				</el-table-column>
 				<el-table-column
@@ -77,9 +73,7 @@
 					width="220"
 				>
 					<template slot-scope="scope">
-						<span>
-							{{ scope.row.googleAuthCode || '-' }}
-						</span>
+						{{ scope.row.googleAuthCode || '-' }}
 					</template>
 				</el-table-column>
 				<el-table-column
@@ -89,16 +83,12 @@
 					width="180"
 				>
 					<template slot-scope="scope">
-						<span>
-							{{ scope.row.createAt || '-' }}
-						</span>
+						{{ scope.row.createAt || '-' }}
 					</template>
 				</el-table-column>
 				<el-table-column align="center" prop="createBy" label="创建人" width="150">
 					<template slot-scope="scope">
-						<span>
-							{{ scope.row.createBy || '-' }}
-						</span>
+						{{ scope.row.createBy || '-' }}
 					</template>
 				</el-table-column>
 				<el-table-column
@@ -108,9 +98,7 @@
 					width="180"
 				>
 					<template slot-scope="scope">
-						<span>
-							{{ scope.row.lastLoginAt || '-' }}
-						</span>
+						{{ scope.row.lastLoginAt || '-' }}
 					</template>
 				</el-table-column>
 				<el-table-column label="状态" align="center" width="120">
