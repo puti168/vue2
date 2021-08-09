@@ -2,7 +2,12 @@
 	<div class="game-container report-container">
 		<template v-if="!showDetail">
 			<div class="params">
-				<el-form ref="form" :inline="true" :model="queryData" label-width="80px">
+				<el-form
+					ref="form"
+					:inline="true"
+					:model="queryData"
+					label-width="80px"
+				>
 					<el-form-item label="申请时间:">
 						<el-date-picker
 							v-model="formTime.time"
@@ -14,7 +19,7 @@
 							start-placeholder="开始日期"
 							end-placeholder="结束日期"
 							align="right"
-                            style="width: 428px"
+							style="width: 428px"
 							:default-time="defaultTime"
 						></el-date-picker>
 					</el-form-item>
@@ -55,7 +60,7 @@
 							></el-option>
 						</el-select>
 					</el-form-item>
-                    <el-form-item label="一审完成时间:" label-width="108px">
+					<el-form-item label="一审完成时间:" label-width="108px">
 						<el-date-picker
 							v-model="formTime.time2"
 							size="medium"
@@ -75,7 +80,7 @@
 							v-model="queryData.auditStatusList"
 							style="width: 270px"
 							multiple
-                            clearable
+							clearable
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
 						>
@@ -131,7 +136,7 @@
 							placeholder="默认选择全部"
 							clearable
 							multiple
-                            collapse-tags
+							collapse-tags
 							style="width: 250px"
 						>
 							<el-option
@@ -228,7 +233,7 @@
 							prop="auditNum"
 							align="center"
 							label="审核单号"
-                            width="260"
+							width="260"
 						></el-table-column>
 						<el-table-column align="center" width="180px">
 							<template slot="header">
@@ -247,12 +252,7 @@
 								<span v-else>-</span>
 								<p>
 									{{
-										scope.row.tranferProxyAccountType
-											? typeFilter(
-													scope.row.tranferProxyAccountType,
-													'accountType'
-											  )
-											: '-'
+										typeFilter(scope.row.tranferProxyAccountType, 'accountType')
 									}}
 								</p>
 							</template>
@@ -272,34 +272,40 @@
 									:copy="copy"
 								/>
 								<span v-else>-</span>
-								<p>
-									{{
-										scope.row.accountType
-											? typeFilter(scope.row.accountType, 'accountType')
-											: '-'
-									}}
-								</p>
+								<p>{{ typeFilter(scope.row.accountType, 'accountType') }}</p>
 							</template>
 						</el-table-column>
 						<el-table-column
 							prop="applyName"
 							align="center"
 							label="申请人"
-                            width="130"
-						></el-table-column>
+							width="130"
+						>
+							<template slot-scope="scope">
+								<span>{{ scope.row.applyName || '-' }}</span>
+							</template>
+						</el-table-column>
 						<el-table-column
 							prop="applyTime"
 							align="center"
 							sortable="custom"
 							label="申请时间"
-                            width="200"
-						></el-table-column>
+							width="200"
+						>
+							<template slot-scope="scope">
+								<span>{{ scope.row.applyTime || '-' }}</span>
+							</template>
+						</el-table-column>
 						<el-table-column
 							prop="applyInfo"
 							align="center"
 							label="申请信息"
-                            width="180"
-						></el-table-column>
+							width="180"
+						>
+							<template slot-scope="scope">
+								<span>{{ scope.row.applyInfo || '-' }}</span>
+							</template>
+						</el-table-column>
 						<el-table-column align="center" label="审核状态" width="120">
 							<template slot-scope="scope">
 								<span
@@ -316,7 +322,12 @@
 								</span>
 							</template>
 						</el-table-column>
-						<el-table-column align="center" sortable="custom" min-width="200px" prop="auditTime">
+						<el-table-column
+							align="center"
+							sortable="custom"
+							min-width="200px"
+							prop="auditTime"
+						>
 							<template slot="header">
 								<span>
 									一审审核人
@@ -325,8 +336,8 @@
 								</span>
 							</template>
 							<template slot-scope="scope">
-								{{ scope.row.auditName ? scope.row.auditName : '-' }}
-								<p>{{ scope.row.auditTime ? scope.row.auditTime : '-' }}</p>
+								{{ scope.row.auditName || '-' }}
+								<p>{{ scope.row.auditTime || '-' }}</p>
 							</template>
 						</el-table-column>
 					</el-table>
@@ -371,15 +382,15 @@ export default {
 		return {
 			queryData: {
 				auditStatusList: [],
-				auditStep: '',
-				proxyName: '',
-				auditNum: '',
-				applyName: '',
-				auditName: '',
-				accountType: '',
-				lockStatus: '',
-				orderProperties: '',
-				orderType: ''
+				auditStep: undefined,
+				proxyName: undefined,
+				auditNum: undefined,
+				applyName: undefined,
+				auditName: undefined,
+				accountType: undefined,
+				lockStatus: undefined,
+				orderProperties: undefined,
+				orderType: undefined
 			},
 			type: true,
 			showDetail: false,
@@ -395,22 +406,22 @@ export default {
 	},
 	computed: {
 		accountTypeArr() {
-			return this.globalDics.accountType
+			return this.globalDics.accountType || []
 		},
 		accountType() {
-			return this.globalDics.accountType
+			return this.globalDics.accountType || []
 		},
 		auditStatus() {
-			return this.globalDics.auditStatusType
+			return this.globalDics.auditStatusType || []
 		},
 		auditStepType() {
-			return this.globalDics.auditStepType
+			return this.globalDics.auditStepType || []
 		},
 		lockOrderType() {
-			return this.globalDics.lockOrderType
+			return this.globalDics.lockOrderType || []
 		},
 		applyType() {
-			return this.globalDics.applyType
+			return this.globalDics.applyType || []
 		}
 	},
 	mounted() {
@@ -425,16 +436,16 @@ export default {
 				...this.queryData,
 				applyTimeStart: startTime
 					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
-					: '',
+					: undefined,
 				applyTimeEnd: endTime
 					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
-					: '',
+					: undefined,
 				auditTimeStart: startTime2
 					? dayjs(startTime2).format('YYYY-MM-DD HH:mm:ss')
-					: '',
+					: undefined,
 				auditTimeEnd: endTime2
 					? dayjs(endTime2).format('YYYY-MM-DD HH:mm:ss')
-					: ''
+					: undefined
 			}
 			params = {
 				...this.getParams(params)
@@ -481,13 +492,13 @@ export default {
 		reset() {
 			this.queryData = {
 				auditStatusList: [],
-				auditStep: '',
-				lockOrder: '',
-				applyName: '',
-				auditName: '',
-				auditNum: '',
-				orderProperties: '',
-				orderType: ''
+				auditStep: undefined,
+				lockOrder: undefined,
+				applyName: undefined,
+				auditName: undefined,
+				auditNum: undefined,
+				orderProperties: undefined,
+				orderType: undefined
 			}
 			this.formTime = {
 				time: [start, end],
