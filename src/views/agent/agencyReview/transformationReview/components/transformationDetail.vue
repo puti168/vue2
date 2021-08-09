@@ -15,24 +15,26 @@
 			<div class="review-content">
 				<p class="name">转代会员信息</p>
 				<div class="review-flex">
-					<div>会员账号: {{ list.userName }}</div>
+					<div>会员账号: {{ list.userName || '-' }}</div>
 					<div>账号类型: {{ typeFilter(list.accountType, 'accountType') }}</div>
-					<div>注册时间: {{ list.registerDt }}</div>
-					<div>风控层级: {{ list.windControlName }}</div>
+					<div>注册时间: {{ list.registerDt || '-' }}</div>
+					<div>风控层级: {{ list.windControlName || '-' }}</div>
 				</div>
 				<div class="review-flex">
-					<div>当前上级代理: {{ list.parentProxyName }}</div>
+					<div>当前上级代理: {{ list.parentProxyName || '-' }}</div>
 					<div>代理类型: {{ typeFilter(list.proxyType, 'accountType') }}</div>
-					<div>绑定时间: {{ list.bindingDt }}</div>
+					<div>绑定时间: {{ list.bindingDt || '-' }}</div>
 				</div>
 			</div>
 			<div class="review-content">
 				<p class="name">转入代理信息</p>
 				<div class="review-flex">
-					<div>代理账号: {{ list.transferProxyName }}</div>
-					<div>代理类型: {{ typeFilter(list.transferProxyType, 'accountType') }}</div>
-					<div>注册时间: {{ list.transferProxyRegisterDt }}</div>
-					<div>风控层级: {{ list.transferWindControlName }}</div>
+					<div>代理账号: {{ list.transferProxyName || '-' }}</div>
+					<div>
+						代理类型: {{ typeFilter(list.transferProxyType, 'accountType') }}
+					</div>
+					<div>注册时间: {{ list.transferProxyRegisterDt || '-' }}</div>
+					<div>风控层级: {{ list.transferWindControlName || '-' }}</div>
 				</div>
 			</div>
 			<div class="review-content" style="height: 200px">
@@ -47,28 +49,28 @@
 					>
 						<el-table-column align="center" label="修改前上级代理">
 							<template>
-								{{ list.currentProxyName }}
+								{{ list.currentProxyName || '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="修改后上级代理">
 							<template>
-								{{ list.transferProxyName }}
+								{{ list.transferProxyName || '-' }}
 							</template>
 						</el-table-column>
 					</el-table>
 				</div>
 				<div class="review-flex">
-					<div>申请人: {{ list.applyName }}</div>
-					<div>申请时间: {{ list.applyTime }}</div>
-					<div>申请信息: {{ list.applyInfo }}</div>
+					<div>申请人: {{ list.applyName || '-' }}</div>
+					<div>申请时间: {{ list.applyTime || '-' }}</div>
+					<div>申请信息: {{ list.applyInfo || '-' }}</div>
 				</div>
 			</div>
 			<div class="review-content">
 				<p class="name">审核信息</p>
 				<div class="review-flex">
-					<div>一审人: {{ list.auditName }}</div>
-					<div>一审时间: {{ list.auditTime }}</div>
-					<div>一审备注: {{ list.auditRemark }}</div>
+					<div>一审人: {{ list.auditName || '-' }}</div>
+					<div>一审时间: {{ list.auditTime || '-' }}</div>
+					<div>一审备注: {{ list.auditRemark || '-' }}</div>
 				</div>
 			</div>
 		</div>
