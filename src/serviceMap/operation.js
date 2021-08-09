@@ -30,7 +30,7 @@ const operation = [
 		title: '活动配置管理'
 	},
 	{
-		id: '1888',
+		id: '444',
 		parentId: '58',
 		icon: 'bb_report',
 		title: '教程配置管理'
@@ -139,26 +139,26 @@ const operation = [
 		title: '操作记录'
 	},
 	{
-		id: '1995',
-		parentId: '1888',
+		id: '445',
+		parentId: '444',
 		path: '/operation/course/courseNameConfig',
 		title: '教程名称配置'
 	},
 	{
-		id: '1996',
-		parentId: '1888',
+		id: '446',
+		parentId: '444',
 		path: '/operation/course/courseLabelConfig',
 		title: '教程页签配置'
 	},
 	{
-		id: '1997',
-		parentId: '1888',
+		id: '447',
+		parentId: '444',
 		path: '/operation/course/courseContentConfig',
 		title: '教程内容配置'
 	},
 	{
-		id: '1998',
-		parentId: '1888',
+		id: '448',
+		parentId: '444',
 		path: '/operation/course/courseConfigChange',
 		title: '教程变更记录'
 	}

@@ -75,7 +75,7 @@
 							查询
 						</el-button>
 						<el-button
-							v-if="hasPermission('294')"
+							v-if="hasPermission('462')"
 							type="primary"
 							:disabled="loading"
 							size="medium"
@@ -84,7 +84,7 @@
 							新增内容
 						</el-button>
 						<el-button
-							v-if="hasPermission('294')"
+							v-if="hasPermission('466')"
 							type="warning"
 							:disabled="loading"
 							size="medium"
@@ -191,7 +191,7 @@
 					>
 						<template slot-scope="scope">
 							<el-button
-								v-if="hasPermission('295') && scope.row.status === 0"
+								v-if="hasPermission('465') && scope.row.contentStatus === 0"
 								type="success"
 								size="medium"
 								@click="changeStatus(scope.row)"
@@ -200,7 +200,7 @@
 							</el-button>
 
 							<el-button
-								v-if="hasPermission('296') && scope.row.status !== 0"
+								v-if="hasPermission('465') && scope.row.contentStatus !== 0"
 								type="danger"
 								size="medium"
 								@click="changeStatus(scope.row)"
@@ -208,7 +208,7 @@
 								禁用
 							</el-button>
 							<el-button
-								v-if="hasPermission('295')"
+								v-if="hasPermission('463')"
 								type="primary"
 								icon="el-icon-edit"
 								size="medium"
@@ -218,7 +218,7 @@
 							</el-button>
 
 							<el-button
-								v-if="hasPermission('296')"
+								v-if="hasPermission('464')"
 								type="warning"
 								icon="el-icon-delete"
 								size="medium"

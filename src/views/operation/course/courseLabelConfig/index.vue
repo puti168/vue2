@@ -59,6 +59,7 @@
               查询
             </el-button>
             <el-button
+              v-if="hasPermission('456')"
               type="primary"
               :disabled="loading"
               size="medium"
@@ -67,6 +68,7 @@
               新增页签
             </el-button>
             <el-button
+              v-if="hasPermission('460')"
               type="warning"
               :disabled="loading"
               size="medium"
@@ -165,7 +167,7 @@
 									typeFilter(scope.row.bookmarkStatus, 'gameAssortStatusType')
 								}}
               </span>
-              <span v-else  class="disableRgba">
+              <span v-else class="disableRgba">
                 {{
 									typeFilter(scope.row.bookmarkStatus, 'gameAssortStatusType')
 								}}
@@ -175,8 +177,8 @@
           <el-table-column prop="operating" align="center" label="操作" min-width="260">
             <template slot-scope="scope">
               <el-button
-                v-if="scope.row.bookmarkStatus === 0"
-                type="warning"
+                v-if="scope.row.bookmarkStatus === 0 && hasPermission('459')"
+                type="success"
                 size="medium"
                 @click="switchStatus(scope.row)"
               >
@@ -184,7 +186,7 @@
               </el-button>
 
               <el-button
-                v-if="scope.row.bookmarkStatus === 1"
+                v-if="scope.row.bookmarkStatus === 1 && hasPermission('459')"
                 type="danger"
                 size="medium"
                 @click="switchStatus(scope.row)"
@@ -192,6 +194,7 @@
                 禁止
               </el-button>
               <el-button
+                v-if="hasPermission('457')"
                 type="primary"
                 icon="el-icon-edit"
                 size="medium"
@@ -201,6 +204,7 @@
               </el-button>
 
               <el-button
+                v-if="hasPermission('458')"
                 type="warning"
                 icon="el-icon-delete"
                 size="medium"
@@ -415,9 +419,19 @@ export default {
         })
     },
     switchStatus(val) {
+      let content = '禁用'
+      let status = 0
+      if (val.bookmarkStatus === 0) {
+        status = 1
+        content = '开启'
+      }
+      const params = {
+        id: val.id,
+        status: status
+      }
       this.$confirm(
-        `<strong>是否修改该条配置状态?</strong>
-        </br><span style='font-size:12px;color:#c1c1c1'>请谨慎操作</span>`,
+        `<strong>是否对该配置进行${content}操作?</strong>
+        </br><span style='font-size:12px;color:#c1c1c1'>一旦操作将会立即生效</span>`,
         `确认提示`,
         {
           dangerouslyUseHTMLString: true,
@@ -427,14 +441,6 @@ export default {
         }
       )
         .then(() => {
-          let status = 0
-          if (val.bookmarkStatus === 0) {
-            status = 1
-          }
-          const params = {
-            id: val.id,
-            status: status
-          }
           this.$api.bookmarkUse(params).then((res) => {
             this.loading = false
             const {
