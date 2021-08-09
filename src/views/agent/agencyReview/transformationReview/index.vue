@@ -2,7 +2,12 @@
 	<div class="game-container report-container">
 		<template v-if="!showDetail">
 			<div class="params">
-				<el-form ref="form" :inline="true" :model="queryData" label-width="80px">
+				<el-form
+					ref="form"
+					:inline="true"
+					:model="queryData"
+					label-width="80px"
+				>
 					<el-form-item label="申请时间:">
 						<el-date-picker
 							v-model="formTime.time"
@@ -11,7 +16,7 @@
 							format="yyyy-MM-dd HH:mm:ss"
 							type="datetimerange"
 							range-separator="-"
-                            style="width: 428px"
+							style="width: 428px"
 							start-placeholder="开始日期"
 							end-placeholder="结束日期"
 							align="right"
@@ -24,7 +29,7 @@
 							v-model="queryData.auditStatus"
 							style="width: 270px"
 							multiple
-                            collapse-tags
+							collapse-tags
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
 						>
@@ -66,7 +71,7 @@
 							></el-option>
 						</el-select>
 					</el-form-item>
-                    <el-form-item label="一审完成时间:" label-width="108px">
+					<el-form-item label="一审完成时间:" label-width="108px">
 						<el-date-picker
 							v-model="formTime.time2"
 							size="medium"
@@ -190,7 +195,7 @@
 						>
 							<template slot-scope="scope">
 								<el-button
-								v-if="hasPermission('281')"
+									v-if="hasPermission('281')"
 									:class="
 										Number(scope.row.auditStep) === 1 &&
 										scope.row.auditName !== name
@@ -211,53 +216,73 @@
 							prop="auditNum"
 							align="center"
 							label="审核单号"
-                            width="250"
-						></el-table-column>
+							width="250"
+						>
+							<template slot-scope="scope">
+								<span>{{ scope.row.auditNum || '-' }}</span>
+							</template>
+						</el-table-column>
 						<el-table-column
 							prop="userName"
 							align="center"
 							label="转代会员账号"
-                            width="150"
-						><template slot-scope="scope">
+							width="150"
+						>
+							<template slot-scope="scope">
 								<Copy
 									v-if="!!scope.row.userName"
 									:title="scope.row.userName"
 									:copy="copy"
 								/>
 								<span v-else>-</span>
-							</template></el-table-column>
+							</template>
+						</el-table-column>
 						<el-table-column
 							prop="transferProxyName"
 							align="center"
 							label="转入代理账号"
-                            width="150"
-						><template slot-scope="scope">
+							width="150"
+						>
+							<template slot-scope="scope">
 								<Copy
 									v-if="!!scope.row.transferProxyName"
 									:title="scope.row.transferProxyName"
 									:copy="copy"
 								/>
 								<span v-else>-</span>
-							</template></el-table-column>
+							</template>
+						</el-table-column>
 						<el-table-column
 							prop="applyName"
 							align="center"
 							label="申请人"
-                            width="150"
-						></el-table-column>
+							width="150"
+						>
+							<template slot-scope="scope">
+								<span>{{ scope.row.applyName || '-' }}</span>
+							</template>
+						</el-table-column>
 						<el-table-column
 							prop="applyTime"
 							align="center"
 							sortable="custom"
 							label="申请时间"
-                            width="200"
-						></el-table-column>
+							width="200"
+						>
+							<template slot-scope="scope">
+								<span>{{ scope.row.applyTime || '-' }}</span>
+							</template>
+						</el-table-column>
 						<el-table-column
 							prop="applyInfo"
 							align="center"
 							label="申请信息"
-                            width="180"
-						></el-table-column>
+							width="180"
+						>
+							<template slot-scope="scope">
+								<span>{{ scope.row.applyInfo || '-' }}</span>
+							</template>
+						</el-table-column>
 						<el-table-column align="center" label="审核状态" width="150">
 							<template slot-scope="scope">
 								<span
@@ -283,8 +308,8 @@
 								</span>
 							</template>
 							<template slot-scope="scope">
-								{{ scope.row.auditName ? scope.row.auditName : '-' }}
-								<p>{{ scope.row.auditTime ? scope.row.auditTime : '-' }}</p>
+								{{ scope.row.auditName || '-' }}
+								<p>{{ scope.row.auditTime || '-' }}</p>
 							</template>
 						</el-table-column>
 					</el-table>
@@ -333,16 +358,16 @@ export default {
 		this.lockChange = this.throttle(this.lockChange, 1000)
 		return {
 			queryData: {
-				userName: '',
+				userName: undefined,
 				auditStatus: [],
-				auditStep: '',
-				transferProxyName: '',
-				applyName: '',
-				auditName: '',
-				lockOrder: '',
-				auditNum: '',
-				orderType: '',
-				orderKey: ''
+				auditStep: undefined,
+				transferProxyName: undefined,
+				applyName: undefined,
+				auditName: undefined,
+				lockOrder: undefined,
+				auditNum: undefined,
+				orderType: undefined,
+				orderKey: undefined
 			},
 			type: true,
 			showDetail: false,
@@ -358,16 +383,16 @@ export default {
 	},
 	computed: {
 		accountType() {
-			return this.globalDics.accountType
+			return this.globalDics.accountType || []
 		},
 		auditStatus() {
-			return this.globalDics.auditStatusType
+			return this.globalDics.auditStatusType || []
 		},
 		auditStepType() {
-			return this.globalDics.auditStepType
+			return this.globalDics.auditStepType || []
 		},
 		lockOrderType() {
-			return this.globalDics.lockOrderType
+			return this.globalDics.lockOrderType || []
 		}
 	},
 	mounted() {
@@ -382,16 +407,16 @@ export default {
 				...this.queryData,
 				applyStartTime: startTime
 					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
-					: '',
+					: undefined,
 				applyEndTime: endTime
 					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
-					: '',
+					: undefined,
 				auditStartTime: startTime2
 					? dayjs(startTime2).format('YYYY-MM-DD HH:mm:ss')
-					: '',
+					: undefined,
 				auditEndTime: endTime2
 					? dayjs(endTime2).format('YYYY-MM-DD HH:mm:ss')
-					: ''
+					: undefined
 			}
 			params = {
 				...this.getParams(params)
@@ -436,9 +461,9 @@ export default {
 				// 降序
 				this.queryData.orderType = 'desc'
 			} else {
-                delete this.queryData.orderKey
-                delete this.queryData.orderType
-            }
+				delete this.queryData.orderKey
+				delete this.queryData.orderType
+			}
 			this.loadData()
 		},
 		goDetail(row) {
@@ -452,16 +477,16 @@ export default {
 		},
 		reset() {
 			this.queryData = {
-				userName: '',
-				transferProxyName: '',
+				userName: undefined,
+				transferProxyName: undefined,
 				auditStatus: [],
-				auditStep: '',
-				applyName: '',
-				auditName: '',
-				lockOrder: '',
-				auditNum: '',
-				orderType: '',
-				orderKey: ''
+				auditStep: undefined,
+				applyName: undefined,
+				auditName: undefined,
+				lockOrder: undefined,
+				auditNum: undefined,
+				orderType: undefined,
+				orderKey: undefined
 			}
 			this.formTime = {
 				time: [start, end],
