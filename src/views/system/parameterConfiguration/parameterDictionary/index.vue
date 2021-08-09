@@ -65,37 +65,27 @@
           </el-table-column>
           <el-table-column prop="k" align="center" label="字典code">
             <template slot-scope="scope">
-              <span>
-                {{ scope.row.k || '-' }}
-              </span>
+              {{ scope.row.k || '-' }}
             </template>
           </el-table-column>
           <el-table-column prop="tag" align="center" label="标签">
             <template slot-scope="scope">
-              <span>
-                {{ scope.row.tag || '-' }}
-              </span>
+              {{ scope.row.tag || '-' }}
             </template>
           </el-table-column>
           <el-table-column prop="valueType" align="center" label="控制类型">
             <template slot-scope="scope">
-              <span>
-                {{ scope.row.valueType || '-' }}
-              </span>
+              {{ scope.row.valueType || '-' }}
             </template>
           </el-table-column>
           <el-table-column prop="module" align="center" label="模块">
             <template slot-scope="scope">
-              <span>
-                {{ scope.row.module || '-' }}
-              </span>
+              {{ scope.row.module || '-' }}
             </template>
           </el-table-column>
           <el-table-column prop="description" align="center" label="注释">
             <template slot-scope="scope">
-              <span>
-                {{ scope.row.description || '-' }}
-              </span>
+              {{ scope.row.description || '-' }}
             </template>
           </el-table-column>
           <el-table-column prop="v" align="center" label="值"></el-table-column>
@@ -328,7 +318,6 @@ export default {
       this.loadData()
     },
     edit(val) {
-      console.log(val)
       this.title = '编辑'
       this.dialogForm.k = val.k
       this.dialogFormVisible = true

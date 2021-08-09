@@ -56,16 +56,12 @@
           <el-table-column prop="ip" align="center" label="登录IP">
             <template slot="header"> 登录IP </template>
             <template slot-scope="scope">
-              <span>
-                {{ scope.row.ip || '-' }}
-              </span>
+              {{ scope.row.ip || '-' }}
             </template>
           </el-table-column>
           <el-table-column prop="deviceNo" align="center" label="终端设备号" width="350">
             <template slot-scope="scope">
-              <span>
-                {{ scope.row.deviceNo || '-' }}
-              </span>
+              {{ scope.row.deviceNo || '-' }}
             </template>
           </el-table-column>
          <el-table-column
@@ -190,7 +186,6 @@ export default {
 				prop = 1
 			}
       this.queryData.orderKey = prop
-      console.log(this.queryData.orderKey, '小明')
       if (order === 'ascending') {
         // 升序
         this.queryData.orderType = 'asc'

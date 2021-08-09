@@ -198,7 +198,6 @@ export default {
       const params = {
         ...this.queryData
       }
-      console.log(params)
       this.$refs['form'].validate((valid) => {
         if (valid) {
           if (params.id) {

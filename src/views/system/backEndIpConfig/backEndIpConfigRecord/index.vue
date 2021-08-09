@@ -103,42 +103,27 @@
           >
             <el-table-column prop="createdAt" align="center" label="创建时间">
               <template slot-scope="scope">
-                <span v-if="!!(scope.row.createdAt+'')">
-                  {{ scope.row.createdAt }}
-                </span>
-                <span v-else>-</span>
+                {{ scope.row.createdAt || '-' }}
               </template>
             </el-table-column>
             <el-table-column align="center" label="创建人" prop="createdBy">
               <template slot-scope="scope">
-                <span v-if="scope.row.createdBy">
-                  {{ scope.row.createdBy }}
-                </span>
-                <span v-else>-</span>
+                {{ scope.row.createdBy || '-' }}
               </template>
             </el-table-column>
             <el-table-column align="center" label="ip" prop="ip">
               <template slot-scope="scope">
-                <span v-if="scope.row.ip">
-                  {{ scope.row.ip }}
-                </span>
-                <span v-else>-</span>
+                {{ scope.row.ip || '-' }}
               </template>
             </el-table-column>
             <el-table-column align="center" label="状态" prop="status">
               <template slot-scope="scope">
-                <span v-if="!!(scope.row.status+'')">
-                  {{ typeFilter(scope.row.status, 'entrAuthorityType') }}
-                </span>
-                <span v-else>-</span>
+                {{ typeFilter(scope.row.status, 'entrAuthorityType') || '-' }}
               </template>
             </el-table-column>
             <el-table-column align="center" label="备注" prop="remark" min-width="150">
               <template slot-scope="scope">
-                <span v-if="scope.row.remark">
-                  {{ scope.row.remark }}
-                </span>
-                <span v-else>-</span>
+                {{ scope.row.remark || '-' }}
               </template>
             </el-table-column>
             <el-table-column v-if="hasPermission('407')||hasPermission('406')" align="center" label="操作" min-width="100">
