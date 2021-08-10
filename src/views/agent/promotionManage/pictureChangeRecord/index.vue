@@ -145,18 +145,12 @@
 						label="操作人"
 					>
 						<template slot-scope="scope">
-							<span v-if="!!(scope.row.createdBy + '')">
-								{{ scope.row.createdBy }}
-							</span>
-							<span v-else>-</span>
+							<span>{{ scope.row.createdBy || '-' }}</span>
 						</template>
 					</el-table-column>
 					<el-table-column align="center" label="备注" prop="remark">
 						<template slot-scope="scope">
-							<span v-if="!!(scope.row.remark + '')">
-								{{ scope.row.remark }}
-							</span>
-							<span v-else>-</span>
+							<span>{{ scope.row.remark || '-' }}</span>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -219,7 +213,7 @@ export default {
 	},
 	computed: {
 		enumProxyMaterialImageOperateArr() {
-			return this.globalDics.enumProxyMaterialImageOperate
+			return this.globalDics.enumProxyMaterialImageOperate || []
 		}
 	},
 	mounted() {},
