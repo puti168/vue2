@@ -74,7 +74,11 @@
 						align="center"
 						label="标签名称"
 						width="220"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							<span>{{ scope.row.memberLabelName || '-' }}</span>
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="description"
 						align="center"
@@ -82,10 +86,7 @@
 						width="300"
 					>
 						<template slot-scope="scope">
-							<span v-if="scope.row.description !== ''">
-								{{ scope.row.description }}
-							</span>
-							<span v-else>-</span>
+							<span>{{ scope.row.description || '-' }}</span>
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -110,27 +111,43 @@
 						align="center"
 						label="创建人"
 						width="150"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							<span>{{ scope.row.createdBy || '-' }}</span>
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="createdAt"
 						align="center"
 						label="创建时间"
 						sortable="custom"
 						width="200"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							<span>{{ scope.row.createdAt || '-' }}</span>
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="updatedBy"
 						align="center"
 						label="最近操作人"
 						width="180"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							<span>{{ scope.row.updatedBy || '-' }}</span>
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="updatedAt"
 						align="center"
 						label="最近操作时间"
 						sortable="custom"
 						width="200"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							<span>{{ scope.row.updatedAt || '-' }}</span>
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="operating"
 						align="center"
