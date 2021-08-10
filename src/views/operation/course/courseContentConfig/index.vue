@@ -459,10 +459,15 @@ export default {
 				}
 			})
 		},
-		getBookmarkId(val) {
-			const tutorId = val
-			this.firstStatusShow = false
-			this.popBookmarkQueryList = []
+		getBookmarkId(tutorId) {
+			this.$nextTick(() => {
+				this.firstStatusShow = false
+				this.popBookmarkQueryList = []
+				this.dialogForm = {
+					...this.dialogForm,
+					bookmarkId: ''
+				}
+			})
 			this.$api.bookmarkQuerySortedNames({ tutorId }).then((res) => {
 				if (res && res.code === 200) {
 					if (res.data && res.data.length) {
@@ -563,7 +568,6 @@ export default {
 				this.dialogForm = { ...row }
 			}
 			this.dialogFormVisible = true
-			console.log(this.dialogForm, '1')
 			if (this.dialogForm.contentPicture) {
 				this.$nextTick(() => {
 					this.$refs.imgUpload.state = 'image'
@@ -600,10 +604,9 @@ export default {
 			this.$refs.formSub.validate((valid) => {
 				if (valid) {
 					if (this.title === '新增') {
-						console.log('新增')
 						const params = { ...this.dialogForm }
 						this.$api.getConfigTutorContentInsert(params).then((res) => {
-							if (res.code === 200) {
+							if (res && res.code === 200) {
 								this.$message.success('新增成功')
 								this.pageNum = 1
 								this.loadData()
@@ -613,7 +616,7 @@ export default {
 					} else {
 						const params = { ...this.dialogForm }
 						this.$api.getConfigTutorContentUpdate(params).then((res) => {
-							if (res.code === 200) {
+							if (res && res.code === 200) {
 								this.$message.success('修改成功')
 								this.loadData()
 							}
