@@ -163,7 +163,7 @@ const endTime = dayjs()
 	.valueOf()
 
 export default {
-	name: routerNames.vipRebateRecord,
+	name: routerNames.courseConfigChange,
 	components: {},
 	mixins: [list],
 	data() {

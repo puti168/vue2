@@ -68,7 +68,8 @@ export const routerNames = {
 	agentReport: 'agentReport',
 	operationRecord: 'operationRecord',
 	searchOperationRecord: 'searchOperationRecord',
-	courseContentConfig: 'courseContentConfig'
+	courseContentConfig: 'courseContentConfig',
+	courseConfigChange: 'courseConfigChange'
 }
 const month = dayjs().month()
 const year = dayjs().year()
