@@ -143,7 +143,7 @@
 						prop="operating"
 						align="center"
 						label="操作"
-						min-width="260"
+						min-width="160"
 					>
 						<template slot-scope="scope">
 							<el-button
@@ -284,7 +284,7 @@ import { routerNames } from '@/utils/consts'
 import draggable from 'vuedraggable'
 import UploadItem from '../components/uploadItem.vue'
 export default {
-	name: routerNames.memberLabelConfig,
+	name: routerNames.courseNameConfig,
 	components: { draggable, UploadItem },
 	mixins: [list],
 	data() {
@@ -400,6 +400,12 @@ export default {
 				this.dialogForm = { ...val }
 			}
 			this.dialogFormVisible = true
+			if (this.dialogForm.tutorPicture) {
+				this.$nextTick(() => {
+					this.$refs.imgUpload.state = 'image'
+					this.$refs.imgUpload.fileUrl = this.dialogForm.tutorPicture
+				})
+			}
 		},
 		deleteLabel(val) {
 			this.$confirm(

@@ -191,7 +191,7 @@ export default {
 					this.loading = true
 					lock = false
 					Finger.load().then((res) => {
-					    this.loginForm.finger = res
+						this.loginForm.finger = res
 						this.$store
 							.dispatch('user/login', this.loginForm)
 							.then(() => {
@@ -224,7 +224,7 @@ export default {
 /* 修复input 背景不协调 和光标变色 */
 /* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
 
-$bg: #283443;
+$bg: #e4e8ec;
 $light_gray: #fff;
 $cursor: #999;
 $bgc: #2d3a4b;

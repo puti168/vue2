@@ -126,45 +126,51 @@
 					:header-cell-style="getRowClass"
 					@sort-change="_changeTableSort"
 				>
-					<el-table-column
-						prop="tutorId"
-						align="center"
-						label="教程名称"
-					></el-table-column>
-					<el-table-column prop="bookmarkId" align="center" label="页签名称">
+					<el-table-column prop="tutorName" align="center" label="教程名称">
 						<template slot-scope="scope">
-							<span v-for="item in bookmarkQueryList" :key="item.id">
-								{{ scope.row.bookmarkId === item.id ? item.bookmarkName : '' }}
-							</span>
+							{{ scope.row.tutorName || '-' }}
 						</template>
 					</el-table-column>
-					<el-table-column
-						prop="contentName"
-						align="center"
-						label="内容名称"
-					></el-table-column>
-					<el-table-column
-						prop="createdBy"
-						align="center"
-						label="创建人"
-					></el-table-column>
+					<el-table-column prop="bookmarkName" align="center" label="页签名称">
+						<template slot-scope="scope">
+							{{ scope.row.bookmarkName || '-' }}
+						</template>
+					</el-table-column>
+					<el-table-column prop="contentName" align="center" label="内容名称">
+						<template slot-scope="scope">
+							{{ scope.row.contentName || '-' }}
+						</template>
+					</el-table-column>
+					<el-table-column prop="createdBy" align="center" label="创建人">
+						<template slot-scope="scope">
+							{{ scope.row.createdBy || '-' }}
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="createdAt"
 						align="center"
 						label="创建时间"
 						sortable="custom"
-					></el-table-column>
-					<el-table-column
-						prop="updatedBy"
-						align="center"
-						label="最近操作人"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							{{ scope.row.createdAt || '-' }}
+						</template>
+					</el-table-column>
+					<el-table-column prop="updatedBy" align="center" label="最近操作人">
+						<template slot-scope="scope">
+							{{ scope.row.updatedBy || '-' }}
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="updatedAt"
 						align="center"
 						label="最近操作时间"
 						sortable="custom"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							{{ scope.row.updatedAt || '-' }}
+						</template>
+					</el-table-column>
 					<el-table-column prop="contentStatus" align="center" label="内容状态">
 						<template slot-scope="scope">
 							<span
@@ -263,17 +269,21 @@
 								placeholder="默认选择全部"
 								clearable
 								style="width: 500px"
-								@change="getMerchantDict($event)"
+								@change="getBookmarkId($event)"
 							>
 								<el-option
 									v-for="item in tutorNameList"
-									:key="item.code"
+									:key="item.id"
 									:label="item.tutorName"
 									:value="item.id"
 								></el-option>
 							</el-select>
 						</el-form-item>
-						<el-form-item label="页签名称:" prop="bookmarkId">
+						<el-form-item
+							v-if="firstStatusShow"
+							label="页签名称:"
+							prop="bookmarkId"
+						>
 							<el-select
 								v-model="dialogForm.bookmarkId"
 								size="medium"
@@ -282,8 +292,8 @@
 								style="width: 500px"
 							>
 								<el-option
-									v-for="item in bookmarkQueryList"
-									:key="item.code"
+									v-for="item in popBookmarkQueryList"
+									:key="item.id"
 									:label="item.bookmarkName"
 									:value="item.id"
 								></el-option>
@@ -366,11 +376,13 @@
 <script>
 import list from '@/mixins/list'
 import { routerNames } from '@/utils/consts'
-import draggable from 'vuedraggable'
-import UploadItem from '../components/uploadItem.vue'
+
 export default {
-	name: routerNames.memberLabelConfig,
-	components: { draggable, UploadItem },
+	name: routerNames.courseContentConfig,
+	components: {
+		draggable: () => import('vuedraggable'),
+		UploadItem: () => import('../components/uploadItem.vue')
+	},
 	mixins: [list],
 	data() {
 		this.loadData = this.throttle(this.loadData, 1000)
@@ -382,9 +394,11 @@ export default {
 			1000
 		)
 		return {
+			firstStatusShow: false,
 			queryData: {},
 			tutorNameList: [],
 			bookmarkQueryList: [],
+			popBookmarkQueryList: [],
 			configTutorList: [],
 			tableData: [],
 			dialogFormVisible: false,
@@ -427,20 +441,42 @@ export default {
 	},
 	methods: {
 		getMerchantDict(val) {
-			console.log(val, 'val')
 			const tutorId = val
 			this.$api.bookmarkQuerySortedNames({ tutorId }).then((res) => {
-				console.log(res, 'res2')
-				if (res.code === 200) {
-					this.bookmarkQueryList = res.data
+				if (res && res.code === 200) {
+					this.bookmarkQueryList = res.data || []
+				} else {
+					this.bookmarkQueryList = []
 				}
 			})
 		},
 		getTutorNameList() {
 			this.$api.operateConfigTutorNameQueryTypeList().then((res) => {
-				console.log(res, 'res')
-				if (res.code === 200) {
-					this.tutorNameList = res.data
+				if (res && res.code === 200) {
+					this.tutorNameList = res.data || []
+				} else {
+					this.tutorNameList = []
+				}
+			})
+		},
+		getBookmarkId(tutorId) {
+			this.$nextTick(() => {
+				this.firstStatusShow = false
+				this.popBookmarkQueryList = []
+				this.dialogForm = {
+					...this.dialogForm,
+					bookmarkId: undefined
+				}
+			})
+			this.$api.bookmarkQuerySortedNames({ tutorId }).then((res) => {
+				if (res && res.code === 200) {
+					if (res.data && res.data.length) {
+						this.popBookmarkQueryList = res.data
+						this.firstStatusShow = true
+					} else {
+						this.popBookmarkQueryList = []
+						this.firstStatusShow = false
+					}
 				}
 			})
 		},
@@ -461,14 +497,13 @@ export default {
 						data: { records, total },
 						msg
 					} = res
-					if (res && code && res.code === 200) {
+					if (res && code && code === 200) {
 						this.tableData =
 							(res.data && records.length && Object.freeze(records)) || []
 						this.total = (res.data && total) || 0
-						this.loading = false
 					} else {
 						this.$message({
-							message: res && msg,
+							message: (res && msg) || '接口异常',
 							type: 'error'
 						})
 					}
@@ -484,8 +519,8 @@ export default {
 			params.pageNum = this.page
 			params.pageSize = this.size
 			this.$api.getProxyProxyInfoByLabelId(params).then((res) => {
-				if (res.code === 200) {
-					this.gameList = res.data.record
+				if (res && res.code === 200) {
+					this.gameList = res.data.record || []
 					this.dialogGameVisible = true
 				}
 			})
@@ -508,7 +543,7 @@ export default {
 					this.$api
 						.getConfigTutorContentUse({ id: val.id, status: status })
 						.then((res) => {
-							if (res.code === 200) {
+							if (res && res.code === 200) {
 								this.loadData()
 							}
 						})
@@ -527,14 +562,34 @@ export default {
 			this.dialogFormVisible = true
 		},
 		openEdit(row) {
-			this.title = '新增'
-			this.dialogForm = {}
+			console.log('row', row)
 			if (row) {
 				this.title = '编辑'
-				this.dialogForm = { ...row }
+				const { bookmarkId, bookmarkName } = row
+				if (bookmarkName) {
+					this.firstStatusShow = true
+					this.popBookmarkQueryList = [
+						{
+							id: bookmarkId,
+							bookmarkName
+						}
+					]
+				} else {
+					this.firstStatusShow = false
+					this.popBookmarkQueryList = []
+				}
+				this.dialogForm = {
+					...this.dialogForm,
+					...row
+				}
 			}
-			console.log(this.dialogForm, 'this.dialogForm')
 			this.dialogFormVisible = true
+			if (this.dialogForm.contentPicture) {
+				this.$nextTick(() => {
+					this.$refs.imgUpload.state = 'image'
+					this.$refs.imgUpload.fileUrl = this.dialogForm.contentPicture
+				})
+			}
 		},
 		deleteLabel(val) {
 			this.$confirm(
@@ -550,7 +605,7 @@ export default {
 			)
 				.then(() => {
 					this.$api.getConfigTutorContentDelete({ id: val.id }).then((res) => {
-						if (res.code === 200) {
+						if (res && res.code === 200) {
 							this.$message.success('删除成功')
 							this.loadData()
 						}
@@ -559,17 +614,15 @@ export default {
 				.catch(() => {})
 		},
 		subAddOrEidt() {
-			console.log(this.title)
 			const data = {}
 			data.description = this.dialogForm.description
 			data.memberLabelName = this.dialogForm.memberLabelName
 			this.$refs.formSub.validate((valid) => {
 				if (valid) {
 					if (this.title === '新增') {
-						console.log('新增')
 						const params = { ...this.dialogForm }
 						this.$api.getConfigTutorContentInsert(params).then((res) => {
-							if (res.code === 200) {
+							if (res && res.code === 200) {
 								this.$message.success('新增成功')
 								this.pageNum = 1
 								this.loadData()
@@ -579,7 +632,7 @@ export default {
 					} else {
 						const params = { ...this.dialogForm }
 						this.$api.getConfigTutorContentUpdate(params).then((res) => {
-							if (res.code === 200) {
+							if (res && res.code === 200) {
 								this.$message.success('修改成功')
 								this.loadData()
 							}
@@ -589,15 +642,13 @@ export default {
 				}
 			})
 		},
-		_changeTableSort({ column, prop, order }) {
-			if (prop === 'createdAt') {
-				prop = 0
-			}
-			if (prop === 'updatedAt') {
-				prop = 1
+		_changeTableSort({ prop, order }) {
+			const obj = {
+				createdAt: 0,
+				updatedAt: 1
 			}
 			this.pageNum = 1
-			this.queryData.orderKey = prop
+			this.queryData.orderKey = prop && obj[prop]
 			if (order === 'ascending') {
 				// 升序
 				this.queryData.orderType = 'asc'
@@ -613,7 +664,7 @@ export default {
 		subSortadd() {
 			const sortIds = this.sortIds
 			this.$api.configTutorContentQuerySortedNames({ sortIds }).then((res) => {
-				if (res.code === 200) {
+				if (res && res.code === 200) {
 					this.configTutorList = res.data
 					console.log(this.configTutorList, 'this.configTutorList112')
 					this.subSort = true
