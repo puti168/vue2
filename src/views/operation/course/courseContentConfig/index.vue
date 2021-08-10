@@ -269,7 +269,7 @@
 								placeholder="默认选择全部"
 								clearable
 								style="width: 500px"
-								@change="getbookmarkId($event)"
+								@change="getBookmarkId($event)"
 							>
 								<el-option
 									v-for="item in tutorNameList"
@@ -280,7 +280,7 @@
 							</el-select>
 						</el-form-item>
 						<el-form-item
-							v-if="(firstStatusShow = true)"
+							v-if="firstStatusShow"
 							label="页签名称:"
 							prop="bookmarkId"
 						>
@@ -292,7 +292,7 @@
 								style="width: 500px"
 							>
 								<el-option
-									v-for="item in bookmarkQueryList"
+									v-for="item in popBookmarkQueryList"
 									:key="item.code"
 									:label="item.bookmarkName"
 									:value="item.id"
@@ -398,6 +398,7 @@ export default {
 			queryData: {},
 			tutorNameList: [],
 			bookmarkQueryList: [],
+			popBookmarkQueryList: [],
 			configTutorList: [],
 			tableData: [],
 			dialogFormVisible: false,
@@ -458,17 +459,17 @@ export default {
 				}
 			})
 		},
-		getbookmarkId(val) {
+		getBookmarkId(val) {
 			const tutorId = val
+			this.firstStatusShow = false
 			this.$api.bookmarkQuerySortedNames({ tutorId }).then((res) => {
-				console.log(res, 'res2')
-				if (res.code === 200) {
-					console.log(res.data.length, '323')
-					if (res.data.length === 0) {
-						this.firstStatusShow = false
-					} else {
-						this.bookmarkQueryList = res.data
+				console.log('res2', res)
+				if (res && res.code === 200) {
+					if (res.data && res.data.length) {
+						this.popBookmarkQueryList = res.data
 						this.firstStatusShow = true
+					} else {
+						this.firstStatusShow = false
 					}
 				}
 			})
@@ -512,8 +513,8 @@ export default {
 			params.pageNum = this.page
 			params.pageSize = this.size
 			this.$api.getProxyProxyInfoByLabelId(params).then((res) => {
-				if (res.code === 200) {
-					this.gameList = res.data.record
+				if (res && res.code === 200) {
+					this.gameList = res.data.record || []
 					this.dialogGameVisible = true
 				}
 			})
@@ -536,7 +537,7 @@ export default {
 					this.$api
 						.getConfigTutorContentUse({ id: val.id, status: status })
 						.then((res) => {
-							if (res.code === 200) {
+							if (res && res.code === 200) {
 								this.loadData()
 							}
 						})
@@ -555,7 +556,6 @@ export default {
 			this.dialogFormVisible = true
 		},
 		openEdit(row) {
-			this.title = '新增'
 			this.dialogForm = {}
 			if (row) {
 				this.title = '编辑'
