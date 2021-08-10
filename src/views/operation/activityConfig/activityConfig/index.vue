@@ -153,7 +153,7 @@
 							clearable
 							:maxlength="15"
 							size="medium"
-							style="width:230px"
+							style="width: 230px"
 							placeholder="请输入"
 							@keyup.enter.native="enterSearch"
 						></el-input>
@@ -164,7 +164,7 @@
 							clearable
 							:maxlength="15"
 							size="medium"
-							style="width:246px;margin-right: 8px"
+							style="width: 246px; margin-right: 8px"
 							placeholder="请输入"
 							@keyup.enter.native="enterSearch"
 						></el-input>
@@ -672,7 +672,6 @@
 						<el-form-item
 							label="活动图上架时间:"
 							label-width="125px"
-							style="margin-bottom: 25px"
 							:rules="[
 								{
 									required: true
@@ -692,7 +691,7 @@
 							<span v-show="upAt" class="el-form-item__error">
 								{{
 									dialogForm.activityPrescription === '0'
-										? ' 活动图上架时间不能大于活动图下架时间,活动开始时间和活动结束时间'
+										? '活动图上架时间不能大于活动图下架时间'
 										: '活动图上架时间不能大于活动开始时间'
 								}}
 							</span>
@@ -714,7 +713,7 @@
 								@change="changeDownAt"
 							></el-date-picker>
 							<span v-show="downAt" class="el-form-item__error">
-								活动图下架时间不能小于活动图上架时间,活动开始时间和活动结束时间
+								活动图下架时间不能小于活动图上架时间
 							</span>
 						</el-form-item>
 						<br />
@@ -741,7 +740,7 @@
 							<span v-show="startAt" class="el-form-item__error">
 								{{
 									dialogForm.activityPrescription === '0'
-										? ' 活动开始时间不能小于活动图上架时间且不能大于活动图下架时间和活动结束时间'
+										? '活动开始时间不能大于活动结束时间'
 										: '活动开始时间不能小于活动图上架时间'
 								}}
 							</span>
@@ -763,7 +762,7 @@
 								@change="changeEndAt"
 							></el-date-picker>
 							<span v-show="endAt" class="el-form-item__error">
-								活动结束时间不能大于活动图下架时间且不能小于活动图上架时间和活动开始时间
+								活动结束时间不能小于活动开始时间
 							</span>
 						</el-form-item>
 						<el-form-item
@@ -1148,26 +1147,10 @@ export default {
 			activityPictureDownAt: endTime,
 			activityStartAt: Date.now(),
 			activityEndAt: endTime,
-			dateNow: {
-				disabledDate(time) {
-					return time.getTime() < Date.now() - 24 * 60 * 60 * 1000
-				}
-			},
-			dateEnd: {
-				disabledDate(time) {
-					return time.getTime() < Date.now() - 24 * 60 * 60 * 1000
-				}
-			},
-			activityNow: {
-				disabledDate(time) {
-					return time.getTime() < Date.now() - 24 * 60 * 60 * 1000
-				}
-			},
-			activityEnd: {
-				disabledDate(time) {
-					return time.getTime() < Date.now() - 24 * 60 * 60 * 1000
-				}
-			},
+			dateNow: {},
+			dateEnd: {},
+			activityNow: {},
+			activityEnd: {},
 			bigImage: '',
 			imgVisible: false,
 			sortVisible: false,
@@ -1199,6 +1182,255 @@ export default {
 		},
 		enumPaymentDepositType() {
 			return this.globalDics.enumPaymentDepositType
+		}
+	},
+	watch: {
+		activityPictureUpAt: {
+			handler(oval, nval) {
+				console.log('watch info', oval, nval)
+				const up = this.activityPictureUpAt
+				const down = this.activityPictureDownAt
+				const sx = this.dialogForm.activityPrescription
+				const selectableRange = (() => {
+					const upT = new Date(up)
+					const downT = new Date(down)
+					const hour = upT.getHours()
+					const minute = upT.getMinutes()
+					const second = upT.getSeconds()
+					const dhour = downT.getHours()
+					const dminute = downT.getMinutes()
+					const dsecond = downT.getSeconds()
+					return [
+						`${hour}:${minute}:${second} - ${dhour}:${dminute}:${dsecond}`
+					]
+				})()
+				this.dateEnd = {
+					selectableRange: selectableRange,
+					disabledDate(time) {
+						return time.getTime() < new Date(up).getTime() - 24 * 60 * 60 * 1000
+					}
+				}
+				this.activityNow = {
+					selectableRange: selectableRange,
+					disabledDate(time) {
+						if (sx === '1') {
+							return (
+								time.getTime() < new Date(up).getTime() - 24 * 60 * 60 * 1000
+							)
+						} else {
+							return (
+								time.getTime() < new Date(up).getTime() - 24 * 60 * 60 * 1000 ||
+								time.getTime() > new Date(down).getTime()
+							)
+						}
+					}
+				}
+				this.activityEnd = {
+					selectableRange: selectableRange,
+					disabledDate(time) {
+						return (
+							time.getTime() < new Date(up).getTime() - 24 * 60 * 60 * 1000 ||
+							time.getTime() > new Date(down).getTime()
+						)
+					}
+				}
+			},
+			deep: true // 深度监听
+		},
+		activityPictureDownAt: {
+			handler(oval, nval) {
+				console.log('watch info', oval, nval)
+				const up = this.activityPictureUpAt
+				const down = this.activityPictureDownAt
+				const start = this.activityStartAt
+				const sx = this.dialogForm.activityPrescription
+				const U = dayjs(up).format('YYYY-MM-DD ')
+				const D = dayjs(down).format('YYYY-MM-DD ')
+				const S = dayjs(start).format('YYYY-MM-DD ')
+				this.dateEnd = {
+					selectableRange: (() => {
+						const upT = new Date(up)
+						const hour = upT.getHours()
+						const minute = upT.getMinutes()
+						const second = upT.getSeconds()
+						return U === D
+							? [`${hour}:${minute}:${second} - 23:59:59}`]
+							: ['00:00:00 - 23:59:59']
+					})(),
+					disabledDate(time) {
+						return time.getTime() < new Date(up).getTime() - 24 * 60 * 60 * 1000
+					}
+				}
+				this.activityNow = {
+					selectableRange: (() => {
+						const upT = new Date(up)
+						const downT = new Date(down)
+						const hour = upT.getHours()
+						const minute = upT.getMinutes()
+						const second = upT.getSeconds()
+						const dhour = downT.getHours()
+						const dminute = downT.getMinutes()
+						const dsecond = downT.getSeconds()
+						if (U === S && D === S) {
+							return [
+								`${hour}:${minute}:${second} - ${dhour}:${dminute}:${dsecond}`
+							]
+						} else if (D === S && U !== S) {
+							return [`00:00:00 -  ${dhour}:${dminute}:${dsecond}`]
+						} else if (D !== S && U === S) {
+							return [`${hour}:${minute}:${second} -  23:59:59`]
+						} else {
+							return [`00:00:00 -  23:59:59`]
+						}
+					})(),
+					disabledDate(time) {
+						if (sx === '1') {
+							return (
+								time.getTime() < new Date(up).getTime() - 24 * 60 * 60 * 1000
+							)
+						} else {
+							return (
+								time.getTime() < new Date(up).getTime() - 24 * 60 * 60 * 1000 ||
+								time.getTime() > new Date(down).getTime()
+							)
+						}
+					}
+				}
+			},
+			deep: true // 深度监听
+		},
+		activityStartAt: {
+			handler(oval, nval) {
+				console.log('watch info', oval, nval)
+				const up = this.activityPictureUpAt
+				const down = this.activityPictureDownAt
+				const start = this.activityStartAt
+				const sx = this.dialogForm.activityPrescription
+				const U = dayjs(up).format('YYYY-MM-DD ')
+				const D = dayjs(down).format('YYYY-MM-DD ')
+				const S = dayjs(this.activityStartAt).format('YYYY-MM-DD ')
+				const E = dayjs(this.activityEndAt).format('YYYY-MM-DD ')
+				this.activityNow = {
+					selectableRange: (() => {
+						const upT = new Date(up)
+						const downT = new Date(down)
+						const hour = upT.getHours()
+						const minute = upT.getMinutes()
+						const second = upT.getSeconds()
+						const dhour = downT.getHours()
+						const dminute = downT.getMinutes()
+						const dsecond = downT.getSeconds()
+						if (U === S && D === S) {
+							return [
+								`${hour}:${minute}:${second} - ${dhour}:${dminute}:${dsecond}`
+							]
+						} else if (D === S && U !== S) {
+							return [`00:00:00 -  ${dhour}:${dminute}:${dsecond}`]
+						} else if (D !== S && U === S) {
+							return [`${hour}:${minute}:${second} -  23:59:59`]
+						} else {
+							return [`00:00:00 -  23:59:59`]
+						}
+					})(),
+					disabledDate(time) {
+						if (sx === '1') {
+							return (
+								time.getTime() < new Date(up).getTime() - 24 * 60 * 60 * 1000
+							)
+						} else {
+							return (
+								time.getTime() < new Date(up).getTime() - 24 * 60 * 60 * 1000 ||
+								time.getTime() > new Date(down).getTime()
+							)
+						}
+					}
+				}
+				this.activityEnd = {
+					selectableRange: (() => {
+						const upT = new Date(start)
+						const downT = new Date(down)
+						const hour = upT.getHours()
+						const minute = upT.getMinutes()
+						const second = upT.getSeconds()
+						const dhour = downT.getHours()
+						const dminute = downT.getMinutes()
+						const dsecond = downT.getSeconds()
+						if (S === E && D === E) {
+							return [
+								`${hour}:${minute}:${second} - ${dhour}:${dminute}:${dsecond}`
+							]
+						} else if (D === E && S !== E) {
+							return [`00:00:00 -  ${dhour}:${dminute}:${dsecond}`]
+						} else if (D !== E && S === E) {
+							return [`${hour}:${minute}:${second} -  23:59:59`]
+						} else {
+							return [`00:00:00 -  23:59:59`]
+						}
+					})(),
+					disabledDate(time) {
+						if (sx === '1') {
+							return (
+								time.getTime() < new Date(start).getTime() - 24 * 60 * 60 * 1000
+							)
+						} else {
+							return (
+								time.getTime() <
+									new Date(start).getTime() - 24 * 60 * 60 * 1000 + 1000 ||
+								time.getTime() > new Date(down).getTime()
+							)
+						}
+					}
+				}
+			},
+			deep: true // 深度监听
+		},
+		activityEndAt: {
+			handler(oval, nval) {
+				console.log('watch info', oval, nval)
+				const down = this.activityPictureDownAt
+				const start = this.activityStartAt
+				const sx = this.dialogForm.activityPrescription
+				const D = dayjs(down).format('YYYY-MM-DD ')
+				const S = dayjs(this.activityStartAt).format('YYYY-MM-DD ')
+				const E = dayjs(this.activityEndAt).format('YYYY-MM-DD ')
+				this.activityEnd = {
+					selectableRange: (() => {
+						const upT = new Date(start)
+						const downT = new Date(down)
+						const hour = upT.getHours()
+						const minute = upT.getMinutes()
+						const second = upT.getSeconds()
+						const dhour = downT.getHours()
+						const dminute = downT.getMinutes()
+						const dsecond = downT.getSeconds()
+						if (S === E && D === E) {
+							return [
+								`${hour}:${minute}:${second} - ${dhour}:${dminute}:${dsecond}`
+							]
+						} else if (D === E && S !== E) {
+							return [`00:00:00 -  ${dhour}:${dminute}:${dsecond}`]
+						} else if (D !== E && S === E) {
+							return [`${hour}:${minute}:${second} -  23:59:59`]
+						} else {
+							return [`00:00:00 -  23:59:59`]
+						}
+					})(),
+					disabledDate(time) {
+						if (sx === '1') {
+							return (
+								time.getTime() < new Date(start).getTime() - 24 * 60 * 60 * 1000
+							)
+						} else {
+							return (
+								time.getTime() <
+									new Date(start).getTime() - 24 * 60 * 60 * 1000 + 1000 ||
+								time.getTime() > new Date(down).getTime()
+							)
+						}
+					}
+				}
+			},
+			deep: true // 深度监听
 		}
 	},
 	created() {
@@ -1286,32 +1518,14 @@ export default {
 				})
 		},
 		subAddOrEdit() {
-			if (
-				this.dialogForm.activityPrescription === '0' &&
-				this.activityPictureUpAt <= this.activityPictureDownAt &&
-				this.activityPictureUpAt <= this.activityStartAt &&
-				this.activityPictureUpAt <= this.activityEndAt &&
-				this.activityPictureDownAt >= this.activityStartAt &&
-				this.activityPictureDownAt >= this.activityEndAt &&
-				this.activityStartAt <= this.activityEndAt
-			) {
-				this.upAt = false
-				this.downAt = false
-				this.startAt = false
-				this.endAt = false
-			} else if (
-				this.dialogForm.activityPrescription === '1' &&
-				this.activityPictureUpAt <= this.activityStartAt
-			) {
-				this.upAt = false
-				this.downAt = false
-				this.startAt = false
-				this.endAt = false
-			} else {
-				this.upAt = true
-				this.downAt = true
-				this.startAt = true
-				this.endAt = true
+			if (this.dialogForm.activityPrescription === '0') {
+				this.upAt = this.activityPictureUpAt > this.activityPictureDownAt
+				this.downAt = this.activityPictureUpAt > this.activityPictureDownAt
+				this.startAt = this.activityStartAt > this.activityEndAt
+				this.endAt = this.activityStartAt > this.activityEndAt
+			} else if (this.dialogForm.activityPrescription === '1') {
+				this.startAt = this.activityStartAt > this.activityEndAt
+				this.endAt = this.activityStartAt > this.activityEndAt
 			}
 			if (this.dialogForm.activityPrescription === '0') {
 				this.dialogForm.activityPictureUpAt = dayjs(
@@ -1387,74 +1601,40 @@ export default {
 		changeUpAt(val) {
 			this.activityPictureUpAt = val
 			this.activityStartAt = val
-			if (
-				this.dialogForm.activityPrescription === '0' &&
-				(val > this.activityPictureDownAt ||
-					val > this.activityStartAt ||
-					val > this.activityEndAt)
-			) {
-				this.upAt = true
-			} else if (
-				this.dialogForm.activityPrescription === '1' &&
-				val > this.activityStartAt
-			) {
-				this.upAt = true
+			if (this.dialogForm.activityPrescription === '0') {
+				this.upAt = val > this.activityPictureDownAt
+				this.startAt = this.activityStartAt > this.activityEndAt
+				this.downAt = val > this.activityPictureDownAt
+				this.endAt = this.activityStartAt > this.activityEndAt
 			} else {
-				this.upAt = false
-				this.downAt = false
-				this.startAt = false
-				this.endAt = false
+				this.startAt = val > this.activityStartAt
 			}
 		},
 		changeDownAt(val) {
 			this.activityPictureDownAt = val
 			this.activityEndAt = val
-			if (
-				val < this.activityPictureUpAt ||
-				val < this.activityStartAt ||
-				val < this.activityEndAt
-			) {
-				this.downAt = true
-			} else {
-				this.upAt = false
-				this.downAt = false
-				this.startAt = false
-				this.endAt = false
+			if (this.dialogForm.activityPrescription === '0') {
+				this.upAt = val < this.activityPictureUpAt
+				this.startAt = this.activityStartAt > this.activityEndAt
+				this.downAt = val < this.activityPictureUpAt
+				this.endAt = this.activityStartAt > this.activityEndAt
 			}
 		},
 		changeStartAt(val) {
-			if (
-				this.dialogForm.activityPrescription === '0' &&
-				(val < this.activityPictureUpAt ||
-					val > this.activityPictureDownAt ||
-					val > this.activityEndAt)
-			) {
-				this.startAt = true
-			} else if (
-				this.dialogForm.activityPrescription === '1' &&
-				val < this.activityPictureUpAt
-			) {
-				console.log(11111)
-				this.startAt = true
+			if (this.dialogForm.activityPrescription === '0') {
+				this.upAt = val < this.activityPictureUpAt
+				this.startAt = this.activityStartAt > this.activityEndAt
+				this.endAt = this.activityStartAt > this.activityEndAt
 			} else {
-				this.upAt = false
-				this.downAt = false
-				this.startAt = false
-				this.endAt = false
+				this.startAt = val < this.activityPictureUpAt
 			}
 		},
 		changeEndAt(val) {
-			if (
-				val < this.activityPictureUpAt ||
-				val > this.activityPictureDownAt ||
-				val < this.activityStartAt
-			) {
-				this.endAt = true
-			} else {
-				this.upAt = false
-				this.downAt = false
-				this.startAt = false
-				this.endAt = false
+			if (this.dialogForm.activityPrescription === '0') {
+				this.upAt = val < this.activityPictureUpAt
+				this.startAt = this.activityStartAt > this.activityEndAt
+				this.downAt = val > this.activityPictureDownAt
+				this.endAt = this.activityStartAt > this.activityEndAt
 			}
 		},
 		clear() {
