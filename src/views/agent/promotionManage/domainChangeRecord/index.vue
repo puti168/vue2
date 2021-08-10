@@ -159,7 +159,7 @@
 									}}
 								</span>
 							</div>
-							<div v-else>{{ scope.row.afterModify }}</div>
+							<div v-else>{{ scope.row.afterModify || '-' }}</div>
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -167,10 +167,14 @@
 						align="center"
 						width="120"
 						label="操作人"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							{{ scope.row.createdBy || '-' }}
+						</template>
+					</el-table-column>
 					<el-table-column align="center" label="备注" prop="remark">
 						<template slot-scope="scope">
-							{{ scope.row.remark ? scope.row.remark : '-' }}
+							{{ scope.row.remark || '-' }}
 						</template>
 					</el-table-column>
 				</el-table>
@@ -214,13 +218,13 @@ export default {
 	},
 	computed: {
 		domainStatusType() {
-			return this.globalDics.domainStatusType
+			return this.globalDics.domainStatusType || []
 		},
 		enumProxyDomainoperate() {
-			return this.globalDics.enumProxyDomainoperate
+			return this.globalDics.enumProxyDomainoperate || []
 		},
 		enumProxyDomainTypeOperate() {
-			return this.globalDics.enumProxyDomainTypeOperate
+			return this.globalDics.enumProxyDomainTypeOperate || []
 		}
 	},
 	mounted() {},
