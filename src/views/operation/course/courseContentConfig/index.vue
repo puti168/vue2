@@ -427,20 +427,21 @@ export default {
 	},
 	methods: {
 		getMerchantDict(val) {
-			console.log(val, 'val')
 			const tutorId = val
 			this.$api.bookmarkQuerySortedNames({ tutorId }).then((res) => {
-				console.log(res, 'res2')
-				if (res.code === 200) {
-					this.bookmarkQueryList = res.data
+				if (res && res.code === 200) {
+					this.bookmarkQueryList = res.data || []
+				} else {
+					this.bookmarkQueryList = []
 				}
 			})
 		},
 		getTutorNameList() {
 			this.$api.operateConfigTutorNameQueryTypeList().then((res) => {
-				console.log(res, 'res')
-				if (res.code === 200) {
-					this.tutorNameList = res.data
+				if (res && res.code === 200) {
+					this.tutorNameList = res.data || []
+				} else {
+					this.tutorNameList = []
 				}
 			})
 		},
@@ -461,14 +462,13 @@ export default {
 						data: { records, total },
 						msg
 					} = res
-					if (res && code && res.code === 200) {
+					if (res && code && code === 200) {
 						this.tableData =
 							(res.data && records.length && Object.freeze(records)) || []
 						this.total = (res.data && total) || 0
-						this.loading = false
 					} else {
 						this.$message({
-							message: res && msg,
+							message: (res && msg) || '接口异常',
 							type: 'error'
 						})
 					}
