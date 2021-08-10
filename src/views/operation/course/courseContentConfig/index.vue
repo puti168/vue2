@@ -462,13 +462,14 @@ export default {
 		getBookmarkId(val) {
 			const tutorId = val
 			this.firstStatusShow = false
+			this.popBookmarkQueryList = []
 			this.$api.bookmarkQuerySortedNames({ tutorId }).then((res) => {
-				console.log('res2', res)
 				if (res && res.code === 200) {
 					if (res.data && res.data.length) {
 						this.popBookmarkQueryList = res.data
 						this.firstStatusShow = true
 					} else {
+						this.popBookmarkQueryList = []
 						this.firstStatusShow = false
 					}
 				}
@@ -578,7 +579,7 @@ export default {
 			)
 				.then(() => {
 					this.$api.getConfigTutorContentDelete({ id: val.id }).then((res) => {
-						if (res.code === 200) {
+						if (res && res.code === 200) {
 							this.$message.success('删除成功')
 							this.loadData()
 						}
@@ -587,7 +588,6 @@ export default {
 				.catch(() => {})
 		},
 		subAddOrEidt() {
-			console.log(this.title)
 			const data = {}
 			data.description = this.dialogForm.description
 			data.memberLabelName = this.dialogForm.memberLabelName
@@ -617,15 +617,13 @@ export default {
 				}
 			})
 		},
-		_changeTableSort({ column, prop, order }) {
-			if (prop === 'createdAt') {
-				prop = 0
-			}
-			if (prop === 'updatedAt') {
-				prop = 1
+		_changeTableSort({ prop, order }) {
+			const obj = {
+				createdAt: 0,
+				updatedAt: 1
 			}
 			this.pageNum = 1
-			this.queryData.orderKey = prop
+			this.queryData.orderKey = prop && obj[prop]
 			if (order === 'ascending') {
 				// 升序
 				this.queryData.orderType = 'asc'
@@ -641,7 +639,7 @@ export default {
 		subSortadd() {
 			const sortIds = this.sortIds
 			this.$api.configTutorContentQuerySortedNames({ sortIds }).then((res) => {
-				if (res.code === 200) {
+				if (res && res.code === 200) {
 					this.configTutorList = res.data
 					console.log(this.configTutorList, 'this.configTutorList112')
 					this.subSort = true
