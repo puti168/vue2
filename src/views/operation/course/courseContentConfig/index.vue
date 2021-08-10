@@ -126,43 +126,51 @@
 					:header-cell-style="getRowClass"
 					@sort-change="_changeTableSort"
 				>
-					<el-table-column
-						prop="tutorName"
-						align="center"
-						label="教程名称"
-					></el-table-column>
-					<el-table-column
-						prop="bookmarkName"
-						align="center"
-						label="页签名称"
-					></el-table-column>
-					<el-table-column
-						prop="contentName"
-						align="center"
-						label="内容名称"
-					></el-table-column>
-					<el-table-column
-						prop="createdBy"
-						align="center"
-						label="创建人"
-					></el-table-column>
+					<el-table-column prop="tutorName" align="center" label="教程名称">
+						<template slot-scope="scope">
+							{{ scope.row.tutorName || '-' }}
+						</template>
+					</el-table-column>
+					<el-table-column prop="bookmarkName" align="center" label="页签名称">
+						<template slot-scope="scope">
+							{{ scope.row.bookmarkName || '-' }}
+						</template>
+					</el-table-column>
+					<el-table-column prop="contentName" align="center" label="内容名称">
+						<template slot-scope="scope">
+							{{ scope.row.contentName || '-' }}
+						</template>
+					</el-table-column>
+					<el-table-column prop="createdBy" align="center" label="创建人">
+						<template slot-scope="scope">
+							{{ scope.row.createdBy || '-' }}
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="createdAt"
 						align="center"
 						label="创建时间"
 						sortable="custom"
-					></el-table-column>
-					<el-table-column
-						prop="updatedBy"
-						align="center"
-						label="最近操作人"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							{{ scope.row.createdAt || '-' }}
+						</template>
+					</el-table-column>
+					<el-table-column prop="updatedBy" align="center" label="最近操作人">
+						<template slot-scope="scope">
+							{{ scope.row.updatedBy || '-' }}
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="updatedAt"
 						align="center"
 						label="最近操作时间"
 						sortable="custom"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							{{ scope.row.updatedAt || '-' }}
+						</template>
+					</el-table-column>
 					<el-table-column prop="contentStatus" align="center" label="内容状态">
 						<template slot-scope="scope">
 							<span
@@ -368,11 +376,13 @@
 <script>
 import list from '@/mixins/list'
 import { routerNames } from '@/utils/consts'
-import draggable from 'vuedraggable'
-import UploadItem from '../components/uploadItem.vue'
+
 export default {
-	name: routerNames.memberLabelConfig,
-	components: { draggable, UploadItem },
+	name: routerNames.courseContentConfig,
+	components: {
+		draggable: () => import('vuedraggable'),
+		UploadItem: () => import('../components/uploadItem.vue')
+	},
 	mixins: [list],
 	data() {
 		this.loadData = this.throttle(this.loadData, 1000)
