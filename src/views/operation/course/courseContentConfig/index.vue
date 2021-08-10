@@ -561,8 +561,14 @@ export default {
 				this.title = '编辑'
 				this.dialogForm = { ...row }
 			}
-			console.log(this.dialogForm, 'this.dialogForm')
 			this.dialogFormVisible = true
+			console.log(this.dialogForm, '1')
+			if (this.dialogForm.contentPicture) {
+				this.$nextTick(() => {
+					this.$refs.imgUpload.state = 'image'
+					this.$refs.imgUpload.fileUrl = this.dialogForm.contentPicture
+				})
+			}
 		},
 		deleteLabel(val) {
 			this.$confirm(
