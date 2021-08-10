@@ -394,7 +394,6 @@ export default {
 			const params = {
 				gameModuleVos
 			}
-			console.log('params', params)
 			this.$api
 				.gameModuleSortAPI(params)
 				.then((res) => {
@@ -435,7 +434,7 @@ export default {
 					const { code, data, msg } = res || {}
 					if (code && code === 200) {
 						this.loading = false
-						this.dataList = (data && data.length && Object.freeze(data)) || []
+						this.dataList = (data && data.length && data) || []
 					} else {
 						this.loading = false
 						this.$message({
