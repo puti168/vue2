@@ -227,8 +227,7 @@ export default {
 						data: { record, totalRecord, summary }
 					} = res || {}
 					if (code && code === 200) {
-						this.tableData =
-							(record && record.length && Object.freeze(record)) || []
+						this.tableData = (record && record.length && record) || []
 						this.summary = summary || { count: 0 }
 						this.total = totalRecord || 0
 						this.now = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss')
