@@ -127,17 +127,15 @@
 					@sort-change="_changeTableSort"
 				>
 					<el-table-column
-						prop="tutorId"
+						prop="tutorName"
 						align="center"
 						label="教程名称"
 					></el-table-column>
-					<el-table-column prop="bookmarkId" align="center" label="页签名称">
-						<template slot-scope="scope">
-							<span v-for="item in bookmarkQueryList" :key="item.id">
-								{{ scope.row.bookmarkId === item.id ? item.bookmarkName : '' }}
-							</span>
-						</template>
-					</el-table-column>
+					<el-table-column
+						prop="bookmarkName"
+						align="center"
+						label="页签名称"
+					></el-table-column>
 					<el-table-column
 						prop="contentName"
 						align="center"
@@ -263,7 +261,7 @@
 								placeholder="默认选择全部"
 								clearable
 								style="width: 500px"
-								@change="getMerchantDict($event)"
+								@change="getbookmarkId($event)"
 							>
 								<el-option
 									v-for="item in tutorNameList"
@@ -273,7 +271,11 @@
 								></el-option>
 							</el-select>
 						</el-form-item>
-						<el-form-item label="页签名称:" prop="bookmarkId">
+						<el-form-item
+							v-if="(firstStatusShow = true)"
+							label="页签名称:"
+							prop="bookmarkId"
+						>
 							<el-select
 								v-model="dialogForm.bookmarkId"
 								size="medium"
@@ -382,6 +384,7 @@ export default {
 			1000
 		)
 		return {
+			firstStatusShow: false,
 			queryData: {},
 			tutorNameList: [],
 			bookmarkQueryList: [],
@@ -441,6 +444,21 @@ export default {
 				console.log(res, 'res')
 				if (res.code === 200) {
 					this.tutorNameList = res.data
+				}
+			})
+		},
+		getbookmarkId(val) {
+			const tutorId = val
+			this.$api.bookmarkQuerySortedNames({ tutorId }).then((res) => {
+				console.log(res, 'res2')
+				if (res.code === 200) {
+					console.log(res.data.length, '323')
+					if (res.data.length === 0) {
+						this.firstStatusShow = false
+					} else {
+						this.bookmarkQueryList = res.data
+						this.firstStatusShow = true
+					}
 				}
 			})
 		},
