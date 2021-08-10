@@ -273,7 +273,7 @@
 							>
 								<el-option
 									v-for="item in tutorNameList"
-									:key="item.code"
+									:key="item.id"
 									:label="item.tutorName"
 									:value="item.id"
 								></el-option>
@@ -293,7 +293,7 @@
 							>
 								<el-option
 									v-for="item in popBookmarkQueryList"
-									:key="item.code"
+									:key="item.id"
 									:label="item.bookmarkName"
 									:value="item.id"
 								></el-option>
@@ -465,7 +465,7 @@ export default {
 				this.popBookmarkQueryList = []
 				this.dialogForm = {
 					...this.dialogForm,
-					bookmarkId: ''
+					bookmarkId: undefined
 				}
 			})
 			this.$api.bookmarkQuerySortedNames({ tutorId }).then((res) => {
@@ -562,10 +562,26 @@ export default {
 			this.dialogFormVisible = true
 		},
 		openEdit(row) {
-			this.dialogForm = {}
+			console.log('row', row)
 			if (row) {
 				this.title = '编辑'
-				this.dialogForm = { ...row }
+				const { bookmarkId, bookmarkName } = row
+				if (bookmarkName) {
+					this.firstStatusShow = true
+					this.popBookmarkQueryList = [
+						{
+							id: bookmarkId,
+							bookmarkName
+						}
+					]
+				} else {
+					this.firstStatusShow = false
+					this.popBookmarkQueryList = []
+				}
+				this.dialogForm = {
+					...this.dialogForm,
+					...row
+				}
 			}
 			this.dialogFormVisible = true
 			if (this.dialogForm.contentPicture) {
