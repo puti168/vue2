@@ -136,6 +136,30 @@ export function getReportAccessAmountDaySummary(data) {
 		data
 	})
 }
+// 佣金报表==>佣金报表列表(分页)
+export function getReportCommissionList(params) {
+	return request({
+		url: '/report/commission/list',
+		method: 'get',
+		params
+	})
+}
+// 佣金报表==>佣金报表总计
+export function getReportCommissionAggregation(params) {
+	return request({
+		url: '/report/commission/aggregation',
+		method: 'get',
+		params
+	})
+}
+// 佣金报表==>佣金报表详情(分页)
+export function getReportCommissionDetail(params) {
+	return request({
+		url: '/report/commission/detail',
+		method: 'get',
+		params
+	})
+}
 // 新增会员留存报表列表==>分页查询新增会员留存报表列表
 export function getReportNewMemberRetentionDay(data) {
 	return request({
@@ -163,5 +187,8 @@ export default {
 	getDevicetypenetamountAggregation,
 	getReportAccessAmountDayListPage,
 	getReportAccessAmountDaySummary,
+	getReportCommissionList,
+	getReportCommissionAggregation,
+	getReportCommissionDetail,
 	getReportNewMemberRetentionDay
 }

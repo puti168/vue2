@@ -441,7 +441,7 @@
 				</span>
 			</div>
 			<el-table
-				v-loading="loading"
+				v-loading="loadingDialog"
 				size="mini"
 				border
 				class="small-size-table"
@@ -601,6 +601,7 @@ export default {
 			queryText: '查询',
 			flag: false,
 			tableVisible: false,
+			loadingDialog: false,
 			visible: false,
 			newList: [],
 			userName: '',
@@ -871,7 +872,7 @@ export default {
 			}
 		},
 		getReportMembernetamountDetail(val) {
-			this.loading = true
+			this.loadingDialog = true
 			const create = this.searchTime || []
 			const [startTime, endTime] = create
 			const params = {
@@ -894,10 +895,10 @@ export default {
 							'staticsDate'
 						)
 					}
-					this.loading = false
+					this.loadingDialog = false
 				})
 				.catch(() => {
-					this.loading = false
+					this.loadingDialog = false
 				})
 		},
 		filterDecimals: function(val) {

@@ -166,7 +166,7 @@
 					<span class="title-text">客户端:{{ title }}</span>
 				</div>
 				<el-table
-					v-loading="loading"
+					v-loading="loadingDialog"
 					size="mini"
 					border
 					class="small-size-table"
@@ -325,6 +325,7 @@ export default {
 			title: '',
 			visible: false,
 			tableVisible: false,
+			loadingDialog: false,
 			clientProfitAndLoss: {
 				客户端: true,
 				投注人数: true,
@@ -513,7 +514,7 @@ export default {
 			this.tableVisible = true
 		},
 		getDevicetypenetamountDetail(val) {
-			this.loading = true
+			this.loadingDialog = true
 			const create = this.searchTime || []
 			const [startTime, endTime] = create
 			const params = {
@@ -531,10 +532,10 @@ export default {
 						this.dialogList = res.data.record
 						this.dialogTotal = res.data.totalRecord
 					}
-					this.loading = false
+					this.loadingDialog = false
 				})
 				.catch(() => {
-					this.loading = false
+					this.loadingDialog = false
 				})
 		},
 		handleCurrentChangeDialog(val) {
