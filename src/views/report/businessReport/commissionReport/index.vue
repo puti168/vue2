@@ -3,18 +3,17 @@
 		<div class="view-container dealer-container">
 			<div class="params">
 				<el-form ref="form" :inline="true" :model="queryData">
-					<el-form-item label="日期:">
+					<el-form-item label="月份:">
 						<el-date-picker
 							v-model="searchTime"
-							type="daterange"
+							type="monthrange"
 							range-separator="-"
 							:clearable="false"
-							start-placeholder="开始日期"
-							end-placeholder="结束日期"
+							start-placeholder="开始月份"
+							end-placeholder="结束月份"
 							:picker-options="timeControl"
 						></el-date-picker>
 					</el-form-item>
-
 					<el-form-item>
 						<el-button
 							type="primary"
@@ -27,14 +26,14 @@
 						</el-button>
 						<el-button
 							icon="el-icon-refresh-left"
-							:disabled="loading"
+							:disabled="flag"
 							size="medium"
 							@click="reset"
 						>
 							重置
 						</el-button>
 						<el-button
-							v-if="hasPermission('348')"
+							v-if="hasPermission('347')"
 							icon="el-icon-download"
 							type="warning"
 							:disabled="loading"
@@ -67,68 +66,73 @@
 					:data="tableData"
 					style="width: 100%"
 					:header-cell-style="getRowClass"
-					@sort-change="_changeTableSort"
 				>
 					<el-table-column
-						v-if="dailyProfitAndLoss['月份']"
-						prop="staticsDate"
+						v-if="commissionReport['月份']"
+						prop="month"
 						align="center"
 						label="月份"
 					></el-table-column>
 					<el-table-column
-						v-if="dailyProfitAndLoss['返佣人数']"
-						prop="discountAmount"
+						v-if="commissionReport['返佣人数']"
+						prop="commissionPersonCount"
 						align="center"
 						label="返佣人数"
 					>
 						<template slot-scope="scope">
-							{{ scope.row.discountAmount | filterDecimals }}
+							<el-link
+								class="lightBlueColor"
+								type="primary"
+								@click="dialogData(scope.row)"
+							>
+								{{ scope.row.commissionPersonCount }}
+							</el-link>
 						</template>
 					</el-table-column>
 					<el-table-column
-						v-if="dailyProfitAndLoss['总返佣']"
-						prop="rebateAmount"
+						v-if="commissionReport['总返佣']"
+						prop="commission"
 						align="center"
 						label="总返佣"
 					>
 						<template slot-scope="scope">
-							{{ scope.row.rebateAmount | filterDecimals }}
+							{{ scope.row.commission | filterDecimals }}
 						</template>
 					</el-table-column>
 					<el-table-column
-						v-if="dailyProfitAndLoss['等级福利']"
-						prop="artificialPatchAmount"
+						v-if="commissionReport['等级福利']"
+						prop="levelWelfare"
 						align="center"
 						label="等级福利"
 					>
 						<template slot-scope="scope">
-							{{ scope.row.artificialPatchAmount | filterDecimals }}
+							{{ scope.row.levelWelfare | filterDecimals }}
 						</template>
 					</el-table-column>
 					<el-table-column
-						v-if="dailyProfitAndLoss['总投注人数']"
-						prop="memberCount"
+						v-if="commissionReport['总投注人数']"
+						prop="betPersonCount"
 						align="center"
 						label="总投注人数"
 					></el-table-column>
 					<el-table-column
-						v-if="dailyProfitAndLoss['总注单量']"
+						v-if="commissionReport['总注单量']"
 						prop="betCount"
 						align="center"
-						label="总注单量"
+						label="总注单量 "
 					></el-table-column>
 					<el-table-column
-						v-if="dailyProfitAndLoss['总投注金额']"
+						v-if="commissionReport['总投注金额']"
 						prop="betAmount"
 						align="center"
-						label="总投注金额"
+						label="总投注金额 "
 					>
 						<template slot-scope="scope">
 							{{ scope.row.betAmount | filterDecimals }}
 						</template>
 					</el-table-column>
 					<el-table-column
-						v-if="dailyProfitAndLoss['总有效投注']"
+						v-if="commissionReport['总有效投注']"
 						prop="validBetAmount"
 						align="center"
 						label="总有效投注 "
@@ -138,7 +142,7 @@
 						</template>
 					</el-table-column>
 					<el-table-column
-						v-if="dailyProfitAndLoss['总投注盈亏']"
+						v-if="commissionReport['总投注盈亏']"
 						prop="netAmount"
 						align="center"
 						label="总投注盈亏"
@@ -157,29 +161,103 @@
 						</template>
 					</el-table-column>
 				</el-table>
+			</div>
+			<el-dialog
+				:visible.sync="tableVisible"
+				:destroy-on-close="true"
+				class="rempadding"
+			>
+				<div slot="title" class="dialog-title">
+					<span class="title-text">月份:{{ title }}</span>
+				</div>
+				<el-table
+					v-loading="loadingDialog"
+					size="mini"
+					border
+					class="small-size-table"
+					:data="dialogList"
+					style="margin-bottom: 15px"
+					:header-cell-style="getRowClass"
+					@sort-change="_changeTableSort"
+				>
+					<el-table-column
+						prop="proxyAccount"
+						align="center"
+						label="代理账号"
+					></el-table-column>
+					<el-table-column prop="accountType" align="center" label="代理类型">
+						<template slot-scope="scope">
+							{{ typeFilter(scope.row.accountType, 'accountType') }}
+						</template>
+					</el-table-column>
+					<el-table-column prop="accountStatus" align="center" label="账号状态">
+						<template slot-scope="scope">
+							{{ typeFilter(scope.row.accountStatus, 'accountStatusType') }}
+						</template>
+					</el-table-column>
+					<el-table-column
+						prop="windControlName"
+						align="center"
+						label="风控层级"
+					>
+						<template slot-scope="scope">
+							{{ scope.row.windControlName ? scope.row.windControlName : '-' }}
+						</template>
+					</el-table-column>
+					<el-table-column prop="currentLevel" align="center" label="代理等级">
+						<template slot-scope="scope">
+							{{ scope.row.currentLevel ? scope.row.currentLevel : '-' }}
+						</template>
+					</el-table-column>
+					<el-table-column
+						prop="rewardAmount"
+						align="center"
+						label="等级福利"
+						sortable="custom"
+					>
+						<template slot-scope="scope">
+							{{ scope.row.rewardAmount | filterDecimals }}
+						</template>
+					</el-table-column>
+					<el-table-column
+						prop="commissionAmount"
+						align="center"
+						label="返佣金额"
+						sortable="custom"
+					>
+						<template slot-scope="scope">
+							{{ scope.row.commissionAmount | filterDecimals }}
+						</template>
+					</el-table-column>
+				</el-table>
 				<!-- 分页 -->
 				<el-pagination
-					:current-page.sync="pageNum"
-					class="pageValue"
+					:current-page.sync="pageR"
 					background
+					class="fenye"
 					layout="total, sizes,prev, pager, next, jumper"
-					:page-size="pageSize"
-					:page-sizes="pageSizes"
-					:total="total"
-					@current-change="handleCurrentChange"
-					@size-change="handleSizeChange"
+					:page-size="sizeR"
+					:page-sizes="[10, 20, 50]"
+					:total="dialogTotal"
+					@current-change="handleCurrentChangeDialog"
+					@size-change="handleSizeChangeDialog"
 				></el-pagination>
-			</div>
+				<div slot="footer" class="dialog-footer" style="text-align: center">
+					<el-button @click="tableVisible = false">关闭</el-button>
+				</div>
+			</el-dialog>
 			<el-dialog
 				title="列设置"
 				center
 				:visible.sync="visible"
-				width="300px"
+				width="450px"
 				class="col-setting"
 			>
-				<el-link type="primary" @click="clickDel">复原缺省</el-link>
+				<div>
+					<el-link type="primary" @click="clickDel">复原缺省</el-link>
+				</div>
 				<div
-					v-for="(value, name) in dailyProfitAndLoss"
+					v-for="(value, name) in commissionReport"
 					:key="name"
 					class="setting-div"
 				>
@@ -199,21 +277,19 @@
 <script>
 import list from '@/mixins/list'
 import dayjs from 'dayjs'
-const startTime =
-	dayjs()
-		.startOf('day')
-		.valueOf() -
-	6 * 24 * 60 * 60 * 1000
+import { Decimal } from 'decimal.js'
+const startTime = dayjs()
+	.startOf('month')
+	.subtract(6, 'month')
 const endTime = dayjs()
-	.endOf('day')
-	.valueOf()
-
+	.subtract(0, 'month')
+	.endOf('month')
 export default {
 	components: {},
 	filters: {
 		filterDecimals: function(val) {
 			if (typeof val === 'number') {
-				const newVal = (Math.floor(val * 1000) / 1000).toFixed(2)
+				const newVal = val.toFixed(2, Decimal.ROUND_DOWN)
 				return newVal
 			} else {
 				return '-'
@@ -225,19 +301,23 @@ export default {
 		return {
 			queryData: {},
 			searchTime: [startTime, endTime],
-			day31: 30 * 24 * 3600 * 1000,
+			month12: 336,
 			// 日期使用
 			timeControl: {
-				onPick: ({ maxDate, minDate }) => {
-					console.log(maxDate, minDate)
-					if (maxDate - minDate > this.day31) {
-						this.flag = true
-						this.$message.warning('请缩小搜索范围至31天')
-					}
+				onPick: ({ minDate, maxDate }) => {
+					const min = new Date(minDate).getTime() / (24 * 3600 * 1000)
+					const max = new Date(maxDate).getTime() / (24 * 3600 * 1000)
+					console.log(max - min)
 					if (
-						maxDate !== null &&
 						minDate !== null &&
-						maxDate - minDate <= this.day31 &&
+						maxDate !== null &&
+						max - min > this.month12
+					) {
+						this.flag = true
+						this.$message.warning('请缩小搜索范围至12个月')
+					} else if (
+						minDate !== null &&
+						maxDate !== null &&
 						this.queryText === '查询'
 					) {
 						this.flag = false
@@ -252,15 +332,17 @@ export default {
 			flag: false,
 			queryText: '查询',
 			tableData: [],
-			dataList: {},
-			isIndeterminate: true,
-			gameList: [],
-			page: 1,
-			size: 10,
+			dialogList: [],
+			pageR: 1,
+			sizeR: 10,
+			dialogTotal: 0,
+			monthNum: '',
 			summary: {},
+			title: '',
 			visible: false,
 			tableVisible: false,
-			dailyProfitAndLoss: {
+			loadingDialog: false,
+			commissionReport: {
 				月份: true,
 				返佣人数: true,
 				总返佣: true,
@@ -272,10 +354,16 @@ export default {
 				总投注盈亏: true
 			},
 			myName: '',
-			newList: []
+			newList: [],
+			timecount: null,
+			dialogSort: {}
 		}
 	},
-	computed: {},
+	computed: {
+		loginDeviceType() {
+			return this.globalDics.loginDeviceType
+		}
+	},
 	mounted() {
 		this.myName = localStorage.getItem('username')
 		this.initDB()
@@ -288,12 +376,12 @@ export default {
 			this.visible = true
 		},
 		initDB() {
-			const request = indexedDB.open('dailyProfitAndLoss')
+			const request = indexedDB.open('commissionReport')
 			request.onupgradeneeded = (event) => {
 				const db = event.target.result
 				this.db = db
 				// 建表 名为person,主键为id
-				db.createObjectStore('dailyProfitAndLoss', {
+				db.createObjectStore('commissionReport', {
 					keyPath: 'id',
 					autoIncrement: true
 				})
@@ -308,19 +396,11 @@ export default {
 		},
 		clickAdd() {
 			const request = this.db
-				.transaction(['dailyProfitAndLoss'], 'readwrite')
-				.objectStore('dailyProfitAndLoss')
+				.transaction(['commissionReport'], 'readwrite')
+				.objectStore('commissionReport')
 				.add({
 					id: this.myName,
-					月份: true,
-					返佣人数: true,
-					总返佣: true,
-					等级福利: true,
-					总投注人数: true,
-					总注单量: true,
-					总投注金额: true,
-					总有效投注: true,
-					总投注盈亏: true
+					obj: this.commissionReport
 				})
 			request.onsuccess = (event) => {
 				this.getList()
@@ -328,8 +408,8 @@ export default {
 		},
 		getList() {
 			this.newList = []
-			var transaction = this.db.transaction(['dailyProfitAndLoss'])
-			const objectStore = transaction.objectStore('dailyProfitAndLoss')
+			var transaction = this.db.transaction(['commissionReport'])
+			const objectStore = transaction.objectStore('commissionReport')
 			const list = []
 			objectStore.openCursor().onsuccess = (event) => {
 				const cursor = event.target.result
@@ -340,37 +420,20 @@ export default {
 					for (let i = 0; i < list.length; i++) {
 						const ele = list[i]
 						if (ele.id === this.myName) {
-							this.newList.push(ele)
-							this.dailyProfitAndLoss = { ...ele }
-							delete this.dailyProfitAndLoss.id
+							this.newList.push(ele.obj)
+							this.commissionReport = { ...ele.obj }
 						}
 					}
 				}
 			}
 		},
 		confirm() {
-			console.log(this.newList, 446464)
-			const arr = []
-			for (let i = 0; i < this.newList.length; i++) {
-				const ele = this.newList[i]
-				if (ele.id === this.myName) {
-					arr.push(ele)
-				}
-			}
 			const request = this.db
-				.transaction(['dailyProfitAndLoss'], 'readwrite')
-				.objectStore('dailyProfitAndLoss')
+				.transaction(['commissionReport'], 'readwrite')
+				.objectStore('commissionReport')
 				.put({
 					id: this.myName,
-					月份: arr[0]['月份'],
-					返佣人数: arr[0]['返佣人数'],
-					总返佣: arr[0]['总返佣'],
-					等级福利: arr[0]['等级福利'],
-					总投注人数: arr[0]['总投注人数'],
-					总注单量: arr[0]['总注单量'],
-					总投注金额: arr[0]['总投注金额'],
-					总有效投注: arr[0]['总有效投注'],
-					总投注盈亏: arr[0]['总投注盈亏']
+					obj: this.newList[0]
 				})
 			request.onsuccess = (event) => {
 				this.visible = false
@@ -385,17 +448,15 @@ export default {
 		clickDel(id) {
 			this.newList = []
 			this.newList.push({
-				id: this.myName,
 				月份: true,
-				总优惠: true,
-				总返水: true,
-				其他调整: true,
-				投注人数: true,
-				投注量: true,
-				投注金额: true,
-				有效投注: true,
-				投注盈亏: true,
-				净盈亏: true
+				返佣人数: true,
+				总返佣: true,
+				等级福利: true,
+				总投注人数: true,
+				总注单量: true,
+				总投注金额: true,
+				总有效投注: true,
+				总投注盈亏: true
 			})
 		},
 		loadData() {
@@ -403,76 +464,113 @@ export default {
 			const [startTime, endTime] = create
 			let params = {
 				...this.queryData,
-				startTime: startTime ? dayjs(startTime).format('YYYY-MM-DD') : '',
-				endTime: endTime ? dayjs(endTime).format('YYYY-MM-DD') : ''
+				startMonth: dayjs(startTime).format('YYYYMM') * 1,
+				endMonth: dayjs(endTime).format('YYYYMM') * 1
 			}
 			params = {
 				...this.getParams(params)
 			}
-			if (endTime - startTime > this.day31) {
-				this.$message.warning('请缩小搜索范围至31天')
-			} else {
-				this.loading = true
-				this.$api
-					.getReportDaynetamountList(params)
-					.then((res) => {
-						if (res.code === 200 && res.data !== null) {
-							this.tableData = res.data.record
-							this.total = res.data.totalRecord
-							console.log(res)
-						} else {
-							this.tableData = []
-							this.total = 0
-						}
-						this.loading = false
-					})
-					.catch(() => {
-						this.loading = false
-					})
-				this.$api
-					.getReportDaynetamountAggregation(params)
-					.then((res) => {
-						if (res.code === 200) {
-							this.summary = res.data
-						}
-						this.loading = false
-					})
-					.catch(() => {
-						this.loading = false
-					})
-			}
+			this.loading = true
+			this.$api
+				.getReportCommissionList(params)
+				.then((res) => {
+					if (res.code === 200 && res.data !== null) {
+						this.tableData = res.data.record
+					} else {
+						this.tableData = []
+					}
+					this.loading = false
+				})
+				.catch(() => {
+					this.loading = false
+				})
+			this.$api
+				.getReportCommissionAggregation(params)
+				.then((res) => {
+					if (res.code === 200) {
+						this.summary = res.data
+					}
+					this.loading = false
+				})
+				.catch(() => {
+					this.loading = false
+				})
 		},
 		search() {
 			const create = this.searchTime || []
 			const [startTime, endTime] = create
-			console.log(create)
-			if (endTime - startTime <= this.day31) {
+			const min = new Date(startTime).getTime() / (24 * 3600 * 1000)
+			const max = new Date(endTime).getTime() / (24 * 3600 * 1000)
+			if (max - min > this.month12) {
+				this.flag = true
+				this.$message.warning('请缩小搜索范围至12个月')
+			} else if (this.queryText === '查询') {
 				this.flag = true
 				let t = 10
-				const timecount = setInterval(() => {
+				clearInterval(this.timecount)
+				this.timecount = setInterval(() => {
 					t--
 					this.queryText = t + 's'
 					if (t < 0) {
-						clearInterval(timecount)
+						clearInterval(this.timecount)
 						this.queryText = '查询'
 						this.flag = false
 					}
 				}, 1000)
 				this.loadData()
-			} else {
-				this.flag = true
-				this.loadData()
 			}
 		},
 		reset() {
 			this.queryData = {}
+			this.dialogSort = {}
 			this.searchTime = [startTime, endTime]
 			this.pageNum = 1
 			this.search()
 		},
+		dialogData(val) {
+			const num = val.month.split('-')
+			this.pageR = 1
+			this.sizeR = 10
+			this.title = val.month
+			this.monthNum = num[0] + num[1]
+			this.getReportCommissionDetail(this.monthNum)
+			this.tableVisible = true
+		},
+		getReportCommissionDetail(val) {
+			console.log(val)
+			this.loadingDialog = true
+			const params = {
+				...this.dialogSort,
+				pageNum: this.pageR,
+				pageSize: this.sizeR,
+				startMonth: val * 1,
+				endMonth: val * 1
+			}
+			this.$api
+				.getReportCommissionDetail(params)
+				.then((res) => {
+					if (res.code === 200) {
+						console.log(res)
+						this.dialogList = res.data.record
+						this.dialogTotal = res.data.totalRecord
+					}
+					this.loadingDialog = false
+				})
+				.catch(() => {
+					this.loadingDialog = false
+				})
+		},
+		handleCurrentChangeDialog(val) {
+			this.pageR = val
+			this.getReportCommissionDetail(this.monthNum)
+		},
+		handleSizeChangeDialog(val) {
+			this.sizeR = val
+			this.getReportCommissionDetail(this.monthNum)
+		},
 		filterDecimals: function(val) {
 			if (typeof val === 'number') {
-				const newVal = (Math.floor(val * 1000) / 1000).toFixed(2)
+				const newVal = val.toFixed(2, Decimal.ROUND_DOWN)
 				return newVal
 			} else {
 				return '-'
@@ -491,7 +589,7 @@ export default {
 					)
 					sums[index] = el
 					return
-				} else {
+				} else if (index >= 1) {
 					const values = data.map((item) => Number(item[column.property]))
 					if (!values.every((value) => isNaN(value))) {
 						sums[index] = values.reduce((prev, curr) => {
@@ -507,8 +605,8 @@ export default {
 							case 1:
 								sums[index] = (
 									<div class='count_row'>
-										<p>{this.filterDecimals(num)}</p>
-										<p>{this.filterDecimals(this.summary.discountAmount)}</p>
+										<p>{num}</p>
+										<p>{this.summary.commissionPersonCountTotal}</p>
 									</div>
 								)
 								break
@@ -516,7 +614,7 @@ export default {
 								sums[index] = (
 									<div class='count_row'>
 										<p>{this.filterDecimals(num)}</p>
-										<p>{this.filterDecimals(this.summary.rebateAmount)}</p>
+										<p>{this.filterDecimals(this.summary.commissionTotal)}</p>
 									</div>
 								)
 								break
@@ -524,9 +622,7 @@ export default {
 								sums[index] = (
 									<div class='count_row'>
 										<p>{this.filterDecimals(num)}</p>
-										<p>
-											{this.filterDecimals(this.summary.artificialPatchAmount)}
-										</p>
+										<p>{this.filterDecimals(this.summary.levelWelfareTotal)}</p>
 									</div>
 								)
 								break
@@ -534,7 +630,7 @@ export default {
 								sums[index] = (
 									<div class='count_row'>
 										<p>{num}</p>
-										<p>{this.summary.memberCount}</p>
+										<p>{this.summary.betPersonCountTotal}</p>
 									</div>
 								)
 								break
@@ -542,7 +638,7 @@ export default {
 								sums[index] = (
 									<div class='count_row'>
 										<p>{num}</p>
-										<p>{this.summary.betCount}</p>
+										<p>{this.summary.betCountTotal}</p>
 									</div>
 								)
 								break
@@ -550,16 +646,17 @@ export default {
 								sums[index] = (
 									<div class='count_row'>
 										<p>{this.filterDecimals(num)}</p>
-										<p>{this.filterDecimals(this.summary.betAmount)}</p>
+										<p>{this.filterDecimals(this.summary.betAmountTotal)}</p>
 									</div>
 								)
-
 								break
 							case 7:
 								sums[index] = (
 									<div class='count_row'>
 										<p>{this.filterDecimals(num)}</p>
-										<p>{this.filterDecimals(this.summary.validBetAmount)}</p>
+										<p>
+											{this.filterDecimals(this.summary.validBetAmountTotal)}
+										</p>
 									</div>
 								)
 								break
@@ -571,37 +668,15 @@ export default {
 										) : (
 											<p class='redColor'>{this.filterDecimals(num)}</p>
 										)}
-										{this.summary.netAmount > 0 ? (
+										{this.summary.netAmountTotal > 0 ? (
 											<p class='enableColor'>
-												{this.filterDecimals(this.summary.netAmount)}
+												{this.filterDecimals(this.summary.netAmountTotal)}
 											</p>
-										) : this.summary.netAmount === 0 ? (
-											<p>{this.filterDecimals(this.summary.netAmount)}</p>
+										) : this.summary.netAmountTotal === 0 ? (
+											<p>{this.filterDecimals(this.summary.netAmountTotal)}</p>
 										) : (
 											<p class='redColor'>
-												{this.filterDecimals(this.summary.netAmount)}
-											</p>
-										)}
-									</div>
-								)
-								break
-							case 9:
-								sums[index] = (
-									<div class='count_row'>
-										{num > 0 ? (
-											<p class='enableColor'>{this.filterDecimals(num)}</p>
-										) : (
-											<p class='redColor'>{this.filterDecimals(num)}</p>
-										)}
-										{this.summary.net > 0 ? (
-											<p class='enableColor'>
-												{this.filterDecimals(this.summary.net)}
-											</p>
-										) : this.summary.net === 0 ? (
-											<p>{this.filterDecimals(this.summary.net)}</p>
-										) : (
-											<p class='redColor'>
-												{this.filterDecimals(this.summary.net)}
+												{this.filterDecimals(this.summary.netAmountTotal)}
 											</p>
 										)}
 									</div>
@@ -618,34 +693,25 @@ export default {
 		},
 		_changeTableSort({ column, prop, order }) {
 			switch (prop) {
-				case 'memberCount':
+				case 'rewardAmount':
 					prop = 1
 					break
-				case 'betCount':
+				case 'commissionAmount':
 					prop = 2
 					break
-				case 'betAmount':
-					prop = 3
-					break
-				case 'validBetAmount':
-					prop = 4
-					break
-				case 'netAmount':
-					prop = 5
-					break
 			}
-			this.queryData.orderKey = prop
+			this.dialogSort.orderKey = prop
 			if (order === 'ascending') {
 				// 升序
-				this.queryData.orderType = 'asc'
+				this.dialogSort.orderType = 'asc'
 			} else if (column.order === 'descending') {
 				// 降序
-				this.queryData.orderType = 'desc'
+				this.dialogSort.orderType = 'desc'
 			} else {
-				delete this.queryData.orderKey
-				delete this.queryData.orderType
+				delete this.dialogSort.orderKey
+				delete this.dialogSort.orderType
 			}
-			this.loadData()
+			this.getReportCommissionDetail(this.monthNum)
 		},
 		exportExcel() {
 			this.loading = true
@@ -653,8 +719,8 @@ export default {
 			const [startTime, endTime] = create
 			let params = {
 				...this.queryData,
-				startTime: startTime ? dayjs(startTime).format('YYYY-MM-DD') : '',
-				endTime: endTime ? dayjs(endTime).format('YYYY-MM-DD') : ''
+				startMonth: startTime ? dayjs(startTime).format('YYYY-MM') : '',
+				endMonth: endTime ? dayjs(endTime).format('YYYY-MM') : ''
 			}
 			params = {
 				...this.getParams(params)
@@ -744,9 +810,6 @@ export default {
 	color: #5c5c5c;
 	font-weight: 700;
 }
-.params {
-	padding-bottom: 15px;
-}
 /deep/ .el-table__footer-wrapper .cell::after {
 	border: 1px solid #ebeef5;
 	content: '';
@@ -765,7 +828,6 @@ export default {
 	width: 100%;
 }
 .count_row {
-	height: 80px;
 	color: #5c5c5c;
 	p {
 		height: 40px;
@@ -780,5 +842,9 @@ export default {
 }
 .fenye {
 	text-align: center;
+}
+.setting-div {
+	display: inline-block;
+	min-width: 100px;
 }
 </style>
