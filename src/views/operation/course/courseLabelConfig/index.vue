@@ -462,6 +462,17 @@ export default {
 			if (val) {
 				this.title = '编辑'
 				this.dialogForm = { ...val }
+			} else {
+				const tempList = this.tableData.filter(element => {
+					return element.tutorId === this.dialogForm.tutorId
+				})
+				if (tempList.length > 4) {
+					this.$message({
+						message: '具体教程名称下最多不超过5条教程页签！',
+						type: 'error'
+					})
+					return
+				}
 			}
 			this.dialogFormVisible = true
 			if (this.dialogForm.bookmarkPicture) {
