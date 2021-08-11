@@ -718,6 +718,8 @@ export default {
 			this.$api
 				.memberListAPI(params)
 				.then((res) => {
+					// const t = res?.data?.record
+					// console.log('t', t)
 					this.loading = false
 					const {
 						code,
