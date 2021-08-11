@@ -183,7 +183,7 @@
 						prop="businessId"
 						align="center"
 						label="订单号"
-						width="240px"
+						width="240"
 					>
 						<template slot-scope="scope">
 							<Copy
@@ -200,7 +200,7 @@
 						prop="userName"
 						align="center"
 						label="会员账号"
-						width="130px"
+						width="130"
 					>
 						<template slot-scope="scope">
 							<Copy
@@ -217,7 +217,7 @@
 						prop="realName"
 						align="center"
 						label="会员姓名"
-						width="120px"
+						width="120"
 					>
 						<template slot-scope="scope">
 							<Copy
@@ -234,7 +234,7 @@
 						prop="auditStatus"
 						align="center"
 						label="领取方式"
-						width="120px"
+						width="120"
 					>
 						<template slot-scope="scope">
 							{{ typeFilter(scope.row.approveType, 'activityApproveType') }}
@@ -244,7 +244,7 @@
 						prop="auditStatus"
 						align="center"
 						label="领取状态"
-						width="120px"
+						width="120"
 					>
 						<template slot-scope="scope">
 							{{ typeFilter(scope.row.auditStatus, 'activityPayoutStatus') }}
@@ -254,38 +254,50 @@
 						prop="type"
 						align="center"
 						label="活动类型"
-						width="150px"
+						width="150"
 					>
 						<template slot-scope="scope">
 							{{ typeFilter(scope.row.type, 'activityType') }}
 						</template>
 					</el-table-column>
-					<el-table-column
-						prop="activityId"
-						align="center"
-						label="活动ID"
-					></el-table-column>
+					<el-table-column prop="activityId" align="center" label="活动ID">
+						<template slot-scope="scope">
+							{{ scope.row.activityId || '-' }}
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="amount"
 						align="center"
 						label="优惠金额"
-						width="200px"
+						width="200"
 						sortable="custom"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							{{ scope.row.amount || '-' }}
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="approveTime"
 						align="center"
 						label="领取时间"
 						sortable="custom"
 						width="200p"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							{{ scope.row.approveTime || '-' }}
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="createdAt"
 						align="center"
 						label="订单生成时间"
 						sortable="custom"
 						width="200p"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							{{ scope.row.createdAt || '-' }}
+						</template>
+					</el-table-column>
 				</el-table>
 				<!-- 分页 -->
 				<el-pagination
@@ -315,7 +327,6 @@ const endTime = dayjs()
 	.valueOf()
 
 export default {
-	components: {},
 	mixins: [list],
 	data() {
 		this.loadData = this.throttle(this.loadData, 1000)
@@ -330,13 +341,13 @@ export default {
 	},
 	computed: {
 		activityApproveType() {
-			return this.globalDics.activityApproveType
+			return this.globalDics.activityApproveType || []
 		},
 		activityPayoutStatus() {
-			return this.globalDics.activityPayoutStatus
+			return this.globalDics.activityPayoutStatus || []
 		},
 		activityType() {
-			return this.globalDics.activityType
+			return this.globalDics.activityType || []
 		}
 	},
 	created() {},
@@ -351,10 +362,10 @@ export default {
 				...this.queryData,
 				approveTimeStart: startTime
 					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
-					: '',
+					: undefined,
 				approveTimeEnd: endTime
 					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
-					: '',
+					: undefined,
 				createdAtStart: start ? dayjs(start).format('YYYY-MM-DD HH:mm:ss') : '',
 				createdAtEnd: end ? dayjs(end).format('YYYY-MM-DD HH:mm:ss') : ''
 			}
@@ -382,18 +393,14 @@ export default {
 			this.pageNum = 1
 			this.loadData()
 		},
-		_changeTableSort({ column, prop, order }) {
-			if (prop === 'amount') {
-				prop = 1
-			}
-			if (prop === 'approveTime') {
-				prop = 2
-			}
-			if (prop === 'createdAt') {
-				prop = 3
+		_changeTableSort({ prop, order }) {
+			const obj = {
+				amount: 1,
+				approveTime: 2,
+				createdAt: 3
 			}
 			this.pageNum = 1
-			this.queryData.orderKey = prop
+			this.queryData.orderKey = prop && obj[prop]
 			if (order === 'ascending') {
 				// 升序
 				this.queryData.orderType = 'asc'
@@ -416,10 +423,10 @@ export default {
 				...this.queryData,
 				approveTimeStart: startTime
 					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
-					: '',
+					: undefined,
 				approveTimeEnd: endTime
 					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
-					: '',
+					: undefined,
 				createdAtStart: start ? dayjs(start).format('YYYY-MM-DD HH:mm:ss') : '',
 				createdAtEnd: end ? dayjs(end).format('YYYY-MM-DD HH:mm:ss') : ''
 			}
