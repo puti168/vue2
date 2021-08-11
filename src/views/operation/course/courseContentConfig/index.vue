@@ -199,8 +199,9 @@
 							<el-button
 								v-if="hasPermission('465') && scope.row.contentStatus === 0"
 								type="success"
+								:disabled="loading"
 								size="medium"
-								@click="changeStatus(scope.row)"
+								@click="changeStatus(scope.row, 1)"
 							>
 								开启
 							</el-button>
@@ -208,13 +209,15 @@
 							<el-button
 								v-if="hasPermission('465') && scope.row.contentStatus !== 0"
 								type="danger"
+								:disabled="loading"
 								size="medium"
-								@click="changeStatus(scope.row)"
+								@click="changeStatus(scope.row, 2)"
 							>
 								禁用
 							</el-button>
 							<el-button
 								v-if="hasPermission('463')"
+								:disabled="loading || Number(scope.row.contentStatus) === 1"
 								type="primary"
 								icon="el-icon-edit"
 								size="medium"
@@ -225,6 +228,7 @@
 
 							<el-button
 								v-if="hasPermission('464')"
+								:disabled="loading || Number(scope.row.contentStatus) === 1"
 								type="warning"
 								icon="el-icon-delete"
 								size="medium"
@@ -491,17 +495,19 @@ export default {
 			this.$api
 				.getConfigTutorContentQueryList(params)
 				.then((res) => {
-					this.loading = false
+					this.loading = true
 					const {
 						code,
 						data: { records, total },
 						msg
 					} = res
 					if (res && code && code === 200) {
+						this.loading = false
 						this.tableData =
 							(res.data && records.length && Object.freeze(records)) || []
 						this.total = (res.data && total) || 0
 					} else {
+						this.loading = false
 						this.$message({
 							message: (res && msg) || '接口异常',
 							type: 'error'
@@ -525,11 +531,11 @@ export default {
 				}
 			})
 		},
-		changeStatus(val) {
+		changeStatus(val, type) {
 			const status = val.contentStatus === 0 ? 1 : 0
 			this.$confirm(
 				`<strong>是否对该配置进行${
-					val.contentStatus === 0 ? '启用' : '禁用'
+					Number(type) === 0 ? '启用' : '禁用'
 				}操作?</strong></br><span style='font-size:12px;color:#c1c1c1'>一旦操作将会立即生效</span>`,
 				`确认提示`,
 				{
