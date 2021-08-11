@@ -398,6 +398,7 @@ export default {
 			1000
 		)
 		return {
+			tutorId: '',
 			firstStatusShow: false,
 			queryData: {},
 			tutorNameList: [],
@@ -668,14 +669,17 @@ export default {
 			this.loadData()
 		},
 		subSortadd() {
+			const tutorId = this.queryData.tutorId
 			const sortIds = this.sortIds
-			this.$api.configTutorContentQuerySortedNames({ sortIds }).then((res) => {
-				if (res && res.code === 200) {
-					this.configTutorList = res.data
-					console.log(this.configTutorList, 'this.configTutorList112')
-					this.subSort = true
-				}
-			})
+			this.$api
+				.configTutorContentQuerySortedNames({ sortIds, tutorId })
+				.then((res) => {
+					if (res && res.code === 200) {
+						this.configTutorList = res.data
+						console.log(this.configTutorList, 'this.configTutorList112')
+						this.subSort = true
+					}
+				})
 			this.subSort = false
 		},
 		// 开始拖拽事件
@@ -695,7 +699,9 @@ export default {
 				console.log(ele, '66')
 				newArr.push(ele.id)
 			}
-			console.log(this.configTutorList)
+			console.log('1111')
+			console.log(this.tutorId, 'this.tutorId')
+
 			const sortIds = newArr.join(',')
 			this.$api.getConfigTutorContentSort({ sortIds: sortIds }).then((res) => {
 				if (res.code === 200) {
