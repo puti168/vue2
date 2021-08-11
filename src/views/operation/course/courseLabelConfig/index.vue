@@ -194,6 +194,7 @@
 							</el-button>
 							<el-button
 								v-if="hasPermission('457')"
+								:disabled="scope.row.bookmarkStatus === 1"
 								type="primary"
 								icon="el-icon-edit"
 								size="medium"
@@ -204,6 +205,7 @@
 
 							<el-button
 								v-if="hasPermission('458')"
+								:disabled="scope.row.bookmarkStatus === 1"
 								type="warning"
 								icon="el-icon-delete"
 								size="medium"
@@ -570,9 +572,8 @@ export default {
 			this.loadData()
 		},
 		subSortadd() {
-			const clientType = this.clientType
 			this.$api
-				.bookmarkQuerySortedNames({ clientType })
+				.bookmarkQuerySortedNames(this.queryData)
 				.then((res) => {
 					this.loading = false
 					const { code, data, msg } = res
