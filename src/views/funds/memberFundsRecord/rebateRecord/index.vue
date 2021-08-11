@@ -376,10 +376,10 @@ export default {
 				...this.queryData,
 				rebateAtStart: startTime
 					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
-					: '',
+					: undefined,
 				rebateAtEnd: endTime
 					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
-					: '',
+					: undefined,
 				createdAtStart: start ? dayjs(start).format('YYYY-MM-DD HH:mm:ss') : '',
 				createdAtEnd: end ? dayjs(end).format('YYYY-MM-DD HH:mm:ss') : ''
 			}
@@ -431,26 +431,20 @@ export default {
 		},
 
 		handleCurrentChangeDialog(val) {
-			console.log(111, val)
 			this.pageR = val
 			this.getMemberFundsRecordsRebateRecord()
 		},
 		handleSizeChangeDialog(val) {
-			console.log(222, val)
 			this.sizeR = val
 			this.getMemberFundsRecordsRebateRecord()
 		},
-		_changeTableSort({ column, prop, order }) {
-			switch (prop) {
-				case 'rebateAt':
-					prop = 1
-					break
-				case 'createdAt':
-					prop = 2
-					break
-			}
+		_changeTableSort({ prop, order }) {
 			this.pageNum = 1
-			this.queryData.orderKey = prop
+			const obj = {
+				rebateAt: 1,
+				createdAt: 2
+			}
+			this.queryData.orderKey = obj[prop]
 			if (order === 'ascending') {
 				// 升序
 				this.queryData.orderType = 'asc'
@@ -463,7 +457,7 @@ export default {
 			}
 			this.loadData()
 		},
-		changeTableSort({ column, prop, order }) {
+		changeTableSort({ prop, order }) {
 			this.pageR = 1
 			this.detailsObj.orderKey = prop
 			if (order === 'ascending') {
@@ -488,12 +482,14 @@ export default {
 				...this.queryData,
 				rebateAtStart: startTime
 					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
-					: '',
+					: undefined,
 				rebateAtEnd: endTime
 					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
-					: '',
-				createdAtStart: start ? dayjs(start).format('YYYY-MM-DD HH:mm:ss') : '',
-				createdAtEnd: end ? dayjs(end).format('YYYY-MM-DD HH:mm:ss') : ''
+					: undefined,
+				createdAtStart: start
+					? dayjs(start).format('YYYY-MM-DD HH:mm:ss')
+					: undefined,
+				createdAtEnd: end ? dayjs(end).format('YYYY-MM-DD HH:mm:ss') : undefined
 			}
 			params = {
 				...this.getParams(params)
@@ -565,11 +561,6 @@ export default {
 						})
 						.catch(() => {
 							this.loading = false
-							// this.$message({
-							//   type: "error",
-							//   message: "导出失败",
-							//   duration: 1500,
-							// });
 						})
 				})
 				.catch(() => {})
