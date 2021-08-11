@@ -132,12 +132,7 @@
 					:header-cell-style="getRowClass"
 					@sort-change="_changeTableSort"
 				>
-					<el-table-column
-						prop="id"
-						align="center"
-						width="300px"
-						label="订单号"
-					>
+					<el-table-column prop="id" align="center" width="300" label="订单号">
 						<template slot-scope="scope">
 							<Copy v-if="!!scope.row.id" :title="scope.row.id" :copy="copy">
 								{{ scope.row.id }}
@@ -149,7 +144,7 @@
 						prop="userName"
 						align="center"
 						label="会员账号"
-						min-width="160px"
+						min-width="160"
 					>
 						<template slot-scope="scope">
 							<Copy
@@ -166,7 +161,7 @@
 						prop="realName"
 						align="center"
 						label="会员姓名"
-						width="150px"
+						width="150"
 					>
 						<template slot-scope="scope">
 							<Copy
@@ -183,7 +178,7 @@
 						prop="rebateStatus"
 						align="center"
 						label="领取状态"
-						width="150px"
+						width="150"
 					>
 						<template slot-scope="scope">
 							{{ typeFilter(scope.row.rebateStatus, 'rebateType') }}
@@ -193,13 +188,17 @@
 						prop="validBetAmount"
 						align="center"
 						label="有效投注金额 "
-						width="200px"
-					></el-table-column>
+						width="200"
+					>
+						<template slot-scope="scope">
+							{{ scope.row.validBetAmount || '-' }}
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="rebateAmount"
 						align="center"
 						label="返水金额"
-						width="200px"
+						width="200"
 					>
 						<template slot-scope="scope">
 							<el-link type="primary" @click="dialogData(scope.row)">
@@ -212,15 +211,23 @@
 						align="center"
 						sortable="custom"
 						label="领取时间"
-						width="250px"
-					></el-table-column>
+						width="250"
+					>
+						<template slot-scope="scope">
+							{{ scope.row.rebateAt || '-' }}
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="createdAt"
 						align="center"
 						sortable="custom"
 						label="订单生成时间"
-						width="250px"
-					></el-table-column>
+						width="250"
+					>
+						<template slot-scope="scope">
+							{{ scope.row.createdAt || '-' }}
+						</template>
+					</el-table-column>
 				</el-table>
 				<!-- 分页 -->
 				<el-pagination
@@ -256,32 +263,40 @@
 				:header-cell-style="getRowClass"
 				@sort-change="changeTableSort"
 			>
-				<el-table-column
-					prop="venueName"
-					align="center"
-					label="游戏平台"
-				></el-table-column>
-				<el-table-column
-					prop="gameName"
-					align="center"
-					label="游戏类型"
-				></el-table-column>
+				<el-table-column prop="venueName" align="center" label="游戏平台">
+					<template slot-scope="scope">
+						{{ scope.row.venueName || '-' }}
+					</template>
+				</el-table-column>
+				<el-table-column prop="gameName" align="center" label="游戏类型">
+					<template slot-scope="scope">
+						{{ scope.row.gameName || '-' }}
+					</template>
+				</el-table-column>
 				<el-table-column
 					prop="validBetAmount"
 					align="center"
 					label="有效投注金额"
-				></el-table-column>
-				<el-table-column
-					prop="rebateRatio"
-					align="center"
-					label="返水比例"
-				></el-table-column>
+				>
+					<template slot-scope="scope">
+						{{ scope.row.validBetAmount || '-' }}
+					</template>
+				</el-table-column>
+				<el-table-column prop="rebateRatio" align="center" label="返水比例">
+					<template slot-scope="scope">
+						{{ scope.row.rebateRatio || '-' }}
+					</template>
+				</el-table-column>
 				<el-table-column
 					prop="rebateAmount"
 					align="center"
 					label="返水金额"
 					sortable="custom"
-				></el-table-column>
+				>
+					<template slot-scope="scope">
+						{{ scope.row.rebateAmount || '-' }}
+					</template>
+				</el-table-column>
 			</el-table>
 			<!-- 分页 -->
 			<el-pagination
@@ -337,7 +352,7 @@ export default {
 	},
 	computed: {
 		rebateType() {
-			return this.globalDics.rebateType
+			return this.globalDics.rebateType || []
 		}
 	},
 	created() {
