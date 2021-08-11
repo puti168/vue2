@@ -108,10 +108,7 @@
 							width="200"
 						>
 							<template slot-scope="scope">
-								<span v-if="!!scope.row.orderNo">
-									{{ scope.row.orderNo }}
-								</span>
-								<span v-else>-</span>
+								{{ scope.row.orderNo || '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column
@@ -119,7 +116,11 @@
 							align="center"
 							label="日期"
 							width="180"
-						></el-table-column>
+						>
+							<template slot-scope="scope">
+								{{ scope.row.createdTime || '-' }}
+							</template>
+						</el-table-column>
 						<el-table-column
 							prop="proxyAccount"
 							align="center"
@@ -127,10 +128,7 @@
 							width="130"
 						>
 							<template slot-scope="scope">
-								<span v-if="!!scope.row.proxyAccount">
-									{{ scope.row.proxyAccount }}
-								</span>
-								<span v-else>-</span>
+								{{ scope.row.proxyAccount || '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column
@@ -140,10 +138,7 @@
 							width="120"
 						>
 							<template slot-scope="scope">
-								<span v-if="!!scope.row.proxyName">
-									{{ scope.row.proxyName }}
-								</span>
-								<span v-else>-</span>
+								{{ scope.row.proxyName || '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column
@@ -186,10 +181,7 @@
 							width="180"
 						>
 							<template slot-scope="scope">
-								<span v-if="!!scope.row.createdTime">
-									{{ scope.row.createdTime }}
-								</span>
-								<span v-else>-</span>
+								{{ scope.row.createdTime || '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="审核人" width="180">
@@ -233,10 +225,7 @@
 							width="180"
 						>
 							<template slot-scope="scope">
-								<span v-if="!!scope.row.remark">
-									{{ scope.row.remark }}
-								</span>
-								<span v-else>-</span>
+								{{ scope.row.remark || '-' }}
 							</template>
 						</el-table-column>
 					</el-table>
@@ -261,7 +250,6 @@
 
 <script>
 import list from '@/mixins/list'
-import detail from './components/detail'
 import dayjs from 'dayjs'
 import { getUsername } from '@/utils/auth'
 const end = dayjs()
@@ -270,17 +258,18 @@ const end = dayjs()
 const start = dayjs()
 	.startOf('day')
 	.valueOf()
+
 export default {
 	name: 'CommissionReviewRecord',
-	components: { detail },
+	components: { detail: () => import('./components/detail') },
 	mixins: [list],
 	data() {
 		this.loadData = this.throttle(this.loadData, 1000)
 		return {
 			queryData: {
-				orderNo: '',
-				proxyAccount: '',
-				orderStatus: ''
+				orderNo: undefined,
+				proxyAccount: undefined,
+				orderStatus: undefined
 			},
 			type: true,
 			showDetail: false,
@@ -294,7 +283,7 @@ export default {
 	},
 	computed: {
 		patchAdjustStatusFinish() {
-			return this.globalDics.patchAdjustStatusFinish
+			return this.globalDics.patchAdjustStatusFinish || []
 		}
 	},
 	mounted() {
@@ -308,8 +297,10 @@ export default {
 				...this.queryData,
 				beginTime: startTime
 					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
-					: '',
-				endTime: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
+					: undefined,
+				endTime: endTime
+					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
+					: undefined
 			}
 			params = {
 				...this.getParams(params)
@@ -345,9 +336,9 @@ export default {
 		},
 		reset() {
 			this.queryData = {
-				orderNo: '',
-				proxyAccount: '',
-				orderStatus: ''
+				orderNo: undefined,
+				proxyAccount: undefined,
+				orderStatus: undefined
 			}
 			this.formTime = {
 				time: [start, end]

@@ -119,10 +119,7 @@
 							width="220"
 						>
 							<template slot-scope="scope">
-								<span v-if="!!scope.row.thirdOrderNo">
-									{{ scope.row.thirdOrderNo }}
-								</span>
-								<span v-else>-</span>
+								{{ scope.row.thirdOrderNo || '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column
@@ -132,10 +129,7 @@
 							width="130"
 						>
 							<template slot-scope="scope">
-								<span v-if="!!scope.row.userName">
-									{{ scope.row.userName }}
-								</span>
-								<span v-else>-</span>
+								{{ scope.row.userName || '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column
@@ -171,10 +165,7 @@
 							width="150"
 						>
 							<template slot-scope="scope">
-								<span v-if="!!scope.row.isBig">
-									{{ scope.row.isBig }}
-								</span>
-								<span v-else>-</span>
+								{{ scope.row.isBig || '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column
@@ -184,10 +175,7 @@
 							width="150"
 						>
 							<template slot-scope="scope">
-								<span v-if="!!scope.row.orderAmount">
-									{{ scope.row.orderAmount }}
-								</span>
-								<span v-else>-</span>
+								{{ scope.row.orderAmount || '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column
@@ -215,10 +203,7 @@
 							width="180"
 						>
 							<template slot-scope="scope">
-								<span v-if="!!scope.row.createdAt">
-									{{ scope.row.createdAt }}
-								</span>
-								<span v-else>-</span>
+								{{ scope.row.createdAt || '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column
@@ -282,10 +267,7 @@
 							width="180"
 						>
 							<template slot-scope="scope">
-								<span v-if="!!scope.row.remark">
-									{{ scope.row.remark }}
-								</span>
-								<span v-else>-</span>
+								{{ scope.row.remark || '-' }}
 							</template>
 						</el-table-column>
 					</el-table>
@@ -310,10 +292,8 @@
 
 <script>
 import list from '@/mixins/list'
-import detail from './components/detail'
 import dayjs from 'dayjs'
 import { getUsername } from '@/utils/auth'
-import { routerNames } from '@/utils/consts'
 const end = dayjs()
 	.endOf('day')
 	.valueOf()
@@ -322,8 +302,10 @@ const start = dayjs()
 	.valueOf()
 
 export default {
-	name: routerNames.agentWithdrawalReviewRecord,
-	components: { detail },
+	name: 'AgentWithdrawalReviewRecord',
+	components: {
+		detail: () => import('./components/detail')
+	},
 	mixins: [list],
 	data() {
 		this.loadData = this.throttle(this.loadData, 1000)
@@ -344,7 +326,7 @@ export default {
 	},
 	computed: {
 		orderTypeArr() {
-			return this.globalDics.withdrawStatusFinish
+			return this.globalDics.withdrawStatusFinish || []
 		}
 	},
 	mounted() {
