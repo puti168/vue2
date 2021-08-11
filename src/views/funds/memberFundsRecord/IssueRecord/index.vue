@@ -129,7 +129,7 @@
 						prop="bizId"
 						align="center"
 						label="订单号"
-						width="260px"
+						width="260"
 					>
 						<template slot-scope="scope">
 							<Copy
@@ -147,21 +147,28 @@
 						align="center"
 						label="订单生成时间"
 						sortable="custom"
-						min-width="200px"
-					></el-table-column>
+						min-width="200"
+					>
+						<template slot-scope="scope">
+							{{ scope.row.createdAt || '-' }}
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="provideAt"
 						align="center"
 						label="领取时间"
 						sortable="custom"
-						min-width="200px"
-					></el-table-column>
-
+						min-width="200"
+					>
+						<template slot-scope="scope">
+							{{ scope.row.provideAt || '-' }}
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="provideType"
 						align="center"
 						label="奖励类型"
-						width="150px"
+						width="150"
 					>
 						<template slot-scope="scope">
 							{{ typeFilter(scope.row.provideType, 'vipRewardType') }}
@@ -171,13 +178,17 @@
 						prop="provideAmount"
 						align="center"
 						label="奖励金额"
-						width="200px"
-					></el-table-column>
+						width="200"
+					>
+						<template slot-scope="scope">
+							{{ scope.row.provideAmount || '-' }}
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="provideStatus"
 						align="center"
 						label="领取状态"
-						width="200px"
+						width="200"
 					>
 						<template slot-scope="scope">
 							{{ typeFilter(scope.row.provideStatus, 'rebateType') }}
@@ -187,7 +198,7 @@
 						prop="userName"
 						align="center"
 						label="会员账号"
-						width="130px"
+						width="130"
 					>
 						<template slot-scope="scope">
 							<Copy
@@ -205,7 +216,7 @@
 						align="center"
 						label="VIP等级"
 						sortable="custom"
-						width="130px"
+						width="130"
 					>
 						<template slot-scope="scope">
 							VIP{{ scope.row.vipSerialNum }}
@@ -215,7 +226,7 @@
 						prop="accountType"
 						align="center"
 						label="账号类型"
-						width="130px"
+						width="130"
 					>
 						<template slot-scope="scope">
 							{{ typeFilter(scope.row.accountType, 'accountType') }}
