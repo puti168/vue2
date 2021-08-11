@@ -250,7 +250,7 @@
 					<el-table-column
 						prop="eventId"
 						align="center"
-						width="240px"
+						width="240"
 						label="关联订单号"
 					>
 						<template slot-scope="scope">
@@ -268,7 +268,7 @@
 						prop="userName"
 						align="center"
 						label="会员账号"
-						width="140px"
+						width="140"
 					>
 						<template slot-scope="scope">
 							<Copy
@@ -285,7 +285,7 @@
 						prop="realName"
 						align="center"
 						label="会员姓名"
-						width="140px"
+						width="140"
 					>
 						<template slot-scope="scope">
 							<Copy
@@ -302,7 +302,7 @@
 						prop="parentProxyName"
 						align="center"
 						label="上级代理"
-						width="140px"
+						width="140"
 					>
 						<template slot-scope="scope">
 							<Copy
@@ -319,21 +319,17 @@
 						prop="windControlName"
 						align="center"
 						label="风控等级"
-						width="90px"
+						width="90"
 					>
 						<template slot-scope="scope">
-							{{
-								scope.row.windControlName !== null
-									? scope.row.windControlName
-									: '-'
-							}}
+							{{ scope.row.windControlName || '-' }}
 						</template>
 					</el-table-column>
 					<el-table-column
 						prop="accountStatus"
 						align="center"
 						label="账号状态"
-						width="100px"
+						width="100"
 					>
 						<template slot-scope="scope">
 							<span v-if="scope.row.accountStatus === 1" class="normalRgba">
@@ -364,7 +360,7 @@
 						prop="vipIdName"
 						align="center"
 						label="VIP等级"
-						width="100px"
+						width="100"
 						sortable="custom"
 					>
 						<template slot-scope="scope">
@@ -396,7 +392,7 @@
 						prop="type"
 						align="center"
 						label="账变类型"
-						width="180px"
+						width="180"
 					>
 						<template slot-scope="scope">
 							{{ typeFilter(scope.row.type, 'memberAccountChangeType') }}
@@ -406,7 +402,7 @@
 						prop="transType"
 						align="center"
 						label="收支类型"
-						width="70px"
+						width="70"
 					>
 						<template slot-scope="scope">
 							{{
@@ -420,38 +416,54 @@
 						prop="changeBefore"
 						align="center"
 						label="账变前金额"
-						width="200px"
+						width="200"
 						sortable="custom"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							{{ scope.row.changeBefore || '-' }}
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="amount"
 						align="center"
 						label="账变金额"
-						width="200px"
+						width="200"
 						sortable="custom"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							{{ scope.row.amount || '-' }}
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="changeAfter"
 						align="center"
 						label="账变后金额"
-						width="200px"
+						width="200"
 						sortable="custom"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							{{ scope.row.changeAfter || '-' }}
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="occurDt"
 						align="center"
 						label="账变时间"
-						width="155px"
+						width="155"
 						sortable="custom"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							{{ scope.row.occurDt || '-' }}
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="remark"
 						align="center"
 						label="备注"
-						width="150px"
+						width="150"
 					>
 						<template slot-scope="scope">
-							{{ scope.row.remark !== null ? scope.row.remark : '-' }}
+							{{ scope.row.remark || '-' }}
 						</template>
 					</el-table-column>
 				</el-table>
@@ -544,12 +556,11 @@ export default {
 			this.$api
 				.getMemberFundsRecordsAccountChangeDic({ bizCode })
 				.then((res) => {
-					if (res.code === 200) {
+					if (res && res.code === 200) {
 						this.AccountChangeDicList = res.data || []
 						console.log(this.AccountChangeDicList, '11')
 					}
 				})
-			console.log(val, 'val')
 		},
 		loadData() {
 			const create = this.searchTime || []
