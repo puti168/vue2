@@ -160,6 +160,22 @@ export function getReportCommissionDetail(params) {
 		params
 	})
 }
+// 转账报表==>分页查询转账报表列表
+export function getReportTransferAmountListPage(data) {
+	return request({
+		url: '/report/transferAmount/listPage',
+		method: 'post',
+		data
+	})
+}
+// 转账报表==>转账报表总计
+export function getReportTransferAmountSummary(data) {
+	return request({
+		url: '/report/transferAmount/summary',
+		method: 'post',
+		data
+	})
+}
 // 新增会员留存报表列表==>分页查询新增会员留存报表列表
 export function getReportNewMemberRetentionDay(data) {
 	return request({
@@ -190,5 +206,7 @@ export default {
 	getReportCommissionList,
 	getReportCommissionAggregation,
 	getReportCommissionDetail,
+	getReportTransferAmountListPage,
+	getReportTransferAmountSummary,
 	getReportNewMemberRetentionDay
 }

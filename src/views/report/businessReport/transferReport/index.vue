@@ -66,13 +66,14 @@
 							</el-checkbox>
 						</div>
 						<el-checkbox-group
-							v-model="gameCodeList"
+							v-model="gamePlatformIdList"
 							@change="handleCheckedCitiesChange"
 						>
+							<el-checkbox label="0">中心钱包</el-checkbox>
 							<el-checkbox
 								v-for="itme in gameTypeList"
 								:key="itme.gameCode"
-								:label="itme.gameCode"
+								:label="itme.id"
 							>
 								{{ itme.gameName }}
 							</el-checkbox>
@@ -96,100 +97,58 @@
 				>
 					<el-table-column
 						v-if="transferReport['钱包名称']"
-						prop="venueName"
+						prop="walletName"
 						align="center"
 						label="钱包名称"
-					>
-						<template slot-scope="scope">
-							<el-link
-								class="lightBlueColor"
-								type="primary"
-								:disabled="scope.row.projectType === 2"
-								@click="dialogData(scope.row)"
-							>
-								{{ scope.row.venueName }}
-							</el-link>
-						</template>
-					</el-table-column>
+					></el-table-column>
 					<el-table-column
 						v-if="transferReport['转入人数']"
-						prop="projectType"
+						prop="transferInNum"
 						align="center"
 						label="转入人数"
-					>
-						<template slot-scope="scope">
-							<span v-if="scope.row.projectType === 1">游戏</span>
-							<span v-else>打赏</span>
-						</template>
-					</el-table-column>
+						sortable="custom"
+					></el-table-column>
 					<el-table-column
 						v-if="transferReport['转入次数']"
-						prop="memberCount"
+						prop="transferInTimes"
 						align="center"
 						sortable="custom"
 						label="转入次数"
 					></el-table-column>
 					<el-table-column
 						v-if="transferReport['转入总额']"
-						prop="betCount"
+						prop="transferInAmount"
 						align="center"
 						sortable="custom"
 						label="转入总额"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							{{ scope.row.transferInAmount | filterDecimals }}
+						</template>
+					</el-table-column>
 					<el-table-column
 						v-if="transferReport['转出人数']"
-						prop="betAmount"
+						prop="transferOutNum"
 						align="center"
 						sortable="custom"
 						label="转出人数"
-					>
-						<template slot-scope="scope">
-							{{ scope.row.betAmount | filterDecimals }}
-						</template>
-					</el-table-column>
+					></el-table-column>
 					<el-table-column
 						v-if="transferReport['转出次数']"
-						prop="validBetAmount"
+						prop="transferOutTimes"
 						align="center"
 						sortable="custom"
 						label="转出次数 "
-					>
-						<template slot-scope="scope">
-							{{ scope.row.validBetAmount | filterDecimals }}
-						</template>
-					</el-table-column>
+					></el-table-column>
 					<el-table-column
 						v-if="transferReport['转出总额']"
-						prop="netAmount"
+						prop="transferOutAmount"
 						align="center"
 						sortable="custom"
 						label="转出总额"
 					>
-						<template slot="header">
-							<span>转出总额</span>
-							<el-tooltip class="item" effect="dark">
-								<i
-									class="el-icon-question"
-									style="position: absolute; right: 10px"
-								></i>
-								<div slot="content">
-									盈亏金额指游戏输赢金额
-									<br />
-									负数表示会员输
-								</div>
-							</el-tooltip>
-						</template>
 						<template slot-scope="scope">
-							<span v-if="scope.row.netAmount > 0" class="enableColor">
-								{{ scope.row.netAmount | filterDecimals }}
-							</span>
-							<span v-else-if="scope.row.netAmount < 0" class="redColor">
-								{{ scope.row.netAmount | filterDecimals }}
-							</span>
-							<span v-else-if="scope.row.netAmount === 0">
-								{{ scope.row.netAmount | filterDecimals }}
-							</span>
-							<span v-else>-</span>
+							{{ scope.row.transferOutAmount | filterDecimals }}
 						</template>
 					</el-table-column>
 				</el-table>
@@ -206,86 +165,6 @@
 					@size-change="handleSizeChange"
 				></el-pagination>
 			</div>
-			<el-dialog
-				:visible.sync="tableVisible"
-				:destroy-on-close="true"
-				class="rempadding"
-			>
-				<div slot="title" class="dialog-title">
-					<span class="title-text" style="margin-right: 15px">
-						场馆名称:{{ venueName }}
-					</span>
-					<!-- <span class="title-text">项目名称:{{ title1 }}</span> -->
-				</div>
-				<el-table
-					v-loading="loadingDialog"
-					size="mini"
-					border
-					class="small-size-table"
-					:data="gameList"
-					style="margin-bottom: 15px"
-					:header-cell-style="getRowClass"
-				>
-					<el-table-column
-						prop="staticsDate"
-						align="center"
-						label="日期"
-					></el-table-column>
-					<el-table-column
-						prop="memberCount"
-						align="center"
-						label="转入次数"
-					></el-table-column>
-					<el-table-column
-						prop="betCount"
-						align="center"
-						label="转入总额"
-					></el-table-column>
-					<el-table-column prop="betAmount" align="center" label="转出人数">
-						<template slot-scope="scope">
-							{{ scope.row.betAmount | filterDecimals }}
-						</template>
-					</el-table-column>
-					<el-table-column
-						prop="validBetAmount"
-						align="center"
-						label="转出次数"
-					>
-						<template slot-scope="scope">
-							{{ scope.row.validBetAmount | filterDecimals }}
-						</template>
-					</el-table-column>
-					<el-table-column prop="netAmount" align="center" label="转出总额">
-						<template slot-scope="scope">
-							<span v-if="scope.row.netAmount > 0" class="enableColor">
-								{{ scope.row.netAmount | filterDecimals }}
-							</span>
-							<span v-else-if="scope.row.netAmount < 0" class="redColor">
-								{{ scope.row.netAmount | filterDecimals }}
-							</span>
-							<span v-else-if="scope.row.netAmount === 0">
-								{{ scope.row.netAmount | filterDecimals }}
-							</span>
-							<span v-else>-</span>
-						</template>
-					</el-table-column>
-				</el-table>
-				<!-- 分页 -->
-				<el-pagination
-					:current-page.sync="pageR"
-					background
-					class="fenye"
-					layout="total, sizes,prev, pager, next, jumper"
-					:page-size="sizeR"
-					:page-sizes="[10, 20, 50]"
-					:total="dialogTotal"
-					@current-change="handleCurrentChangeDialog"
-					@size-change="handleSizeChangeDialog"
-				></el-pagination>
-				<div slot="footer" class="dialog-footer" style="text-align: center">
-					<el-button @click="tableVisible = false">关闭</el-button>
-				</div>
-			</el-dialog>
 			<el-dialog
 				title="列设置"
 				center
@@ -370,19 +249,11 @@ export default {
 			queryText: '查询',
 			tableData: [],
 			checkAll: true,
-			gameCodeList: [],
+			gamePlatformIdList: [],
 			gameTypeList: [],
 			isIndeterminate: false,
-			gameList: [],
-			pageR: 1,
-			sizeR: 10,
-			gameCode: '',
-			dialogTotal: 0,
 			summary: {},
-			venueName: '',
 			visible: false,
-			tableVisible: false,
-			loadingDialog: false,
 			transferReport: {
 				钱包名称: true,
 				转入人数: true,
@@ -392,8 +263,7 @@ export default {
 				转出次数: true,
 				转出总额: true
 			},
-			newList: [],
-			timecount: null
+			newList: []
 		}
 	},
 	computed: {},
@@ -499,18 +369,23 @@ export default {
 					this.gameTypeList = res.data
 					for (let i = 0; i < res.data.length; i++) {
 						const ele = res.data[i]
-						this.gameCodeList.push(ele.gameCode)
+						this.gamePlatformIdList.push(ele.id)
 					}
+					this.gamePlatformIdList.push('0')
 					this.initData()
 				}
 			})
 		},
 		initData() {
+			console.log((999999999999999).toFixed(2, Decimal.ROUND_DOWN))
 			const create = this.searchTime || []
 			const [startTime, endTime] = create
 			let params = {
 				...this.queryData,
-				gameCodeList: this.gameCodeList,
+				gamePlatformIdList:
+					this.gamePlatformIdList.length === this.gameTypeList.length + 1
+						? []
+						: this.gamePlatformIdList,
 				startTime: startTime ? dayjs(startTime).format('YYYY-MM-DD') : '',
 				endTime: endTime ? dayjs(endTime).format('YYYY-MM-DD') : ''
 			}
@@ -523,10 +398,10 @@ export default {
 			} else {
 				this.loading = true
 				this.$api
-					.getReportVenueNetAmountDayListPage(params)
+					.getReportTransferAmountListPage(params)
 					.then((res) => {
 						if (res.code === 200) {
-							this.tableData = res.data.record
+							this.tableData = res.data.record || []
 							this.total = res.data.totalRecord
 						}
 						this.loading = false
@@ -535,7 +410,7 @@ export default {
 						this.loading = false
 					})
 				this.$api
-					.getReportVenueNetAmountDaySummary(params)
+					.getReportTransferAmountSummary(params)
 					.then((res) => {
 						if (res.code === 200) {
 							console.log(res)
@@ -574,19 +449,20 @@ export default {
 			console.log(val)
 			const arr = []
 			for (let i = 0; i < this.gameTypeList.length; i++) {
-				const ele = this.gameTypeList[i].gameCode
+				const ele = this.gameTypeList[i].id
 				arr.push(ele)
 			}
-			this.gameCodeList = val ? arr : []
+			arr.push('0')
+			this.gamePlatformIdList = val ? arr : []
 			this.checkAll = val
 			this.isIndeterminate = false
 		},
 		handleCheckedCitiesChange(val) {
 			console.log(val)
 			const checkedCount = val.length
-			this.checkAll = checkedCount === this.gameTypeList.length
+			this.checkAll = checkedCount === this.gameTypeList.length + 1
 			this.isIndeterminate =
-				checkedCount > 0 && checkedCount < this.gameTypeList.length
+				checkedCount > 0 && checkedCount < this.gameTypeList.length + 1
 		},
 		reset() {
 			this.queryData = {}
@@ -594,47 +470,6 @@ export default {
 			this.pageNum = 1
 			this.handleCheckAllChange(true)
 			this.search()
-		},
-		dialogData(val) {
-			this.pageR = 1
-			this.sizeR = 10
-			this.venueName = val.venueName
-			this.gameCode = val.gameCode
-			this.getReportVenueNetAmountDayDetailListPage(val.gameCode)
-			this.tableVisible = true
-		},
-		getReportVenueNetAmountDayDetailListPage(val) {
-			this.loadingDialog = true
-			const create = this.searchTime || []
-			const [startTime, endTime] = create
-			const params = {
-				pageNum: this.pageR,
-				pageSize: this.sizeR,
-				gameCode: val,
-				startTime: startTime ? dayjs(startTime).format('YYYY-MM-DD') : '',
-				endTime: endTime ? dayjs(endTime).format('YYYY-MM-DD') : ''
-			}
-			this.$api
-				.getReportVenueNetAmountDayDetailListPage(params)
-				.then((res) => {
-					if (res.code === 200) {
-						console.log(res)
-						this.gameList = res.data.records
-						this.dialogTotal = res.data.total
-					}
-					this.loadingDialog = false
-				})
-				.catch(() => {
-					this.loadingDialog = false
-				})
-		},
-		handleCurrentChangeDialog(val) {
-			this.pageR = val
-			this.getReportVenueNetAmountDayDetailListPage(this.gameCode)
-		},
-		handleSizeChangeDialog(val) {
-			this.sizeR = val
-			this.getReportVenueNetAmountDayDetailListPage(this.gameCode)
 		},
 		filterDecimals: function(val) {
 			if (typeof val === 'number') {
@@ -657,7 +492,7 @@ export default {
 					)
 					sums[index] = el
 					return
-				} else if (index >= 2) {
+				} else if (index >= 1) {
 					const values = data.map((item) => Number(item[column.property]))
 					if (!values.every((value) => isNaN(value))) {
 						sums[index] = values.reduce((prev, curr) => {
@@ -670,59 +505,51 @@ export default {
 						}, 0)
 						const num = sums[index]
 						switch (index) {
+							case 1:
+								sums[index] = (
+									<div class='count_row'>
+										<p>{num}</p>
+										<p>{this.summary.transferInNum}</p>
+									</div>
+								)
+								break
 							case 2:
 								sums[index] = (
 									<div class='count_row'>
 										<p>{num}</p>
-										<p>{this.summary.memberCountTotal}</p>
+										<p>{this.summary.transferInTimes}</p>
 									</div>
 								)
 								break
 							case 3:
 								sums[index] = (
 									<div class='count_row'>
-										<p>{num}</p>
-										<p>{this.summary.betCountTotal}</p>
+										<p>{this.filterDecimals(num)}</p>
+										<p>{this.filterDecimals(this.summary.transferInAmount)}</p>
 									</div>
 								)
 								break
 							case 4:
 								sums[index] = (
 									<div class='count_row'>
-										<p>{this.filterDecimals(num)}</p>
-										<p>{this.filterDecimals(this.summary.betAmountTotal)}</p>
+										<p>{num}</p>
+										<p>{this.summary.transferOutNum}</p>
 									</div>
 								)
 								break
 							case 5:
 								sums[index] = (
 									<div class='count_row'>
-										<p>{this.filterDecimals(num)}</p>
-										<p>
-											{this.filterDecimals(this.summary.validBetAmountTotal)}
-										</p>
+										<p>{num}</p>
+										<p>{this.summary.transferOutTimes}</p>
 									</div>
 								)
 								break
 							case 6:
 								sums[index] = (
 									<div class='count_row'>
-										{num > 0 ? (
-											<p class='enableColor'>{this.filterDecimals(num)}</p>
-										) : (
-											<p class='redColor'>{this.filterDecimals(num)}</p>
-										)}
-										{this.summary.netAmountTotal > 0 ? (
-											<p class='enableColor'>
-												{this.filterDecimals(this.summary.netAmountTotal)}
-											</p>
-										) : this.summary.netAmountTotal === 0 ? (
-											<p>{this.filterDecimals(this.summary.netAmountTotal)}</p>
-										) : (
-											<p class='redColor'>
-												{this.filterDecimals(this.summary.netAmountTotal)}
-											</p>
-										)}
+										<p>{this.filterDecimals(num)}</p>
+										<p>{this.filterDecimals(this.summary.transferOutAmount)}</p>
 									</div>
 								)
 								break
@@ -737,20 +564,23 @@ export default {
 		},
 		_changeTableSort({ column, prop, order }) {
 			switch (prop) {
-				case 'memberCount':
+				case 'transferInNum':
 					prop = 1
 					break
-				case 'betCount':
+				case 'transferInTimes':
 					prop = 2
 					break
-				case 'betAmount':
+				case 'transferInAmount':
 					prop = 3
 					break
-				case 'validBetAmount':
+				case 'transferOutNum':
 					prop = 4
 					break
-				case 'netAmount':
+				case 'transferOutTimes':
 					prop = 5
+					break
+				case 'transferOutAmount':
+					prop = 6
 					break
 			}
 			this.queryData.orderKey = prop
@@ -772,7 +602,7 @@ export default {
 			const [startTime, endTime] = create
 			let params = {
 				...this.queryData,
-				gameCodeList: this.gameCodeList,
+				gamePlatformIdList: this.gamePlatformIdList,
 				startTime: startTime ? dayjs(startTime).format('YYYY-MM-DD') : '',
 				endTime: endTime ? dayjs(endTime).format('YYYY-MM-DD') : ''
 			}
