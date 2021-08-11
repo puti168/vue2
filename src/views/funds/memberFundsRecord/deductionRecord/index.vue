@@ -320,10 +320,10 @@ export default {
 	},
 	computed: {
 		successOrFail() {
-			return this.globalDics.successOrFail
+			return this.globalDics.successOrFail || []
 		},
 		memberPatchSubAdjustType() {
-			return this.globalDics.memberPatchSubAdjustType
+			return this.globalDics.memberPatchSubAdjustType || []
 		}
 	},
 	created() {},
@@ -336,10 +336,10 @@ export default {
 				...this.queryData,
 				operatorTimeStart: startTime
 					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
-					: '',
+					: undefined,
 				operatorTimeEnd: endTime
 					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
-					: ''
+					: undefined
 			}
 			params = {
 				...this.getParams(params)
@@ -347,12 +347,12 @@ export default {
 			this.$api
 				.getMemberFundsRecordsArtificialAccountSub(params)
 				.then((res) => {
+					this.loading = false
 					if (res.code === 200) {
 						this.tableData = res.data.record
 						this.total = res.data.totalRecord
 						this.summary = res.data.summary
 					}
-					this.loading = false
 				})
 				.catch(() => {
 					this.loading = false
@@ -495,11 +495,6 @@ export default {
 						})
 						.catch(() => {
 							this.loading = false
-							// this.$message({
-							//   type: "error",
-							//   message: "导出失败",
-							//   duration: 1500,
-							// });
 						})
 				})
 				.catch(() => {})
