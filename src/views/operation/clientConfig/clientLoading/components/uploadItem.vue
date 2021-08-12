@@ -56,6 +56,7 @@
 
 <script>
 import Video from '@/components/Video'
+import list from '@/mixins/list'
 const FileTypeConst = {
 	ImageJpeg: 'image/jpeg',
 	ImagePng: 'image/png',
@@ -83,6 +84,7 @@ export default {
 	components: {
 		Video
 	},
+	mixins: [list],
 	props: {
 		size: {
 			type: String,

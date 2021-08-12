@@ -121,7 +121,7 @@
 							>
 								{{ typeFilter(scope.row.clientType, 'operateClient') }}
 							</span>
-							<span v-else></span>
+							<span v-else>-</span>
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -131,10 +131,7 @@
 						width="160"
 					>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.pageName">
-								{{ scope.row.pageName }}
-							</span>
-							<span v-else>-</span>
+							<span>{{ scope.row.pageName || '-' }}</span>
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -144,10 +141,7 @@
 						width="160"
 					>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.remark">
-								{{ scope.row.remark }}
-							</span>
-							<span v-else>-</span>
+							<span>{{ scope.row.remark || '-' }}</span>
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -185,10 +179,7 @@
 						width="120"
 					>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.createdBy">
-								{{ scope.row.createdBy }}
-							</span>
-							<span v-else>-</span>
+							<span>{{ scope.row.createdBy || '-' }}</span>
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -199,10 +190,7 @@
 						width="160px"
 					>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.createdAt">
-								{{ scope.row.createdAt }}
-							</span>
-							<span v-else>-</span>
+							<span>{{ scope.row.createdAt || '-' }}</span>
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -212,10 +200,7 @@
 						width="120"
 					>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.updatedBy">
-								{{ scope.row.updatedBy }}
-							</span>
-							<span v-else>-</span>
+							<span>{{ scope.row.updatedBy || '-' }}</span>
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -226,10 +211,7 @@
 						width="160px"
 					>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.updatedAt">
-								{{ scope.row.updatedAt }}
-							</span>
-							<span v-else>-</span>
+							<span>{{ scope.row.updatedAt || '-' }}</span>
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -416,10 +398,10 @@ export default {
 	},
 	computed: {
 		terminalTypeArr() {
-			return this.globalDics.operateLoadingClient
+			return this.globalDics.operateLoadingClient || []
 		},
 		statusArr() {
-			return this.globalDics.operateStatus
+			return this.globalDics.operateStatus || []
 		},
 		rules() {
 			const pageName = [
