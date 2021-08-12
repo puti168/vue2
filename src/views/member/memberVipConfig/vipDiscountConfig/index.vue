@@ -18,7 +18,10 @@
 						width="120"
 					>
 						<template slot-scope="scope">
-							{{ scope.row.vipSerialNum || '-' }}
+							{{
+								(scope.row.vipSerialNum && 'VIP' + scope.row.vipSerialNum) ||
+									'-'
+							}}
 						</template>
 					</el-table-column>
 					<el-table-column

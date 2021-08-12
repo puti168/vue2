@@ -112,17 +112,17 @@
 					label="绑定时间"
 				></el-table-column>
 				<el-table-column
-					prop="virtual_address"
+					prop="virtualAddress"
 					align="center"
 					label="虚拟币账户地址"
 				></el-table-column>
 				<el-table-column
-					prop="virtual_kind"
+					prop="virtualKind"
 					align="center"
 					label="虚拟币种类"
 				></el-table-column>
 				<el-table-column
-					prop="virtual_protocol"
+					prop="virtualProtocol"
 					align="center"
 					label="虚拟币协议"
 				></el-table-column>

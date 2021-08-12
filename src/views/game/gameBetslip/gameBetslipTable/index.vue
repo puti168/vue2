@@ -154,9 +154,12 @@
 							placeholder="默认选择全部"
 							:popper-append-to-body="false"
 						>
-							<el-option label="已结算" value="1"></el-option>
-							<el-option label="未结算" value="2"></el-option>
-							<el-option label="已取消" value="3"></el-option>
+							<el-option
+								v-for="item in betStatusType"
+								:key="item.code"
+								:label="item.description"
+								:value="item.code"
+							></el-option>
 						</el-select>
 					</el-form-item>
 					<el-form-item label="投注金额:">
@@ -388,20 +391,20 @@
 						</template>
 					</el-table-column>
 					<el-table-column
-						prop="betStatus"
+						prop="obBetStatus"
 						align="center"
 						label="状态归类"
 						width="100px"
 					>
 						<template slot-scope="scope">
-							<span v-if="scope.row.betStatus === 1" class="normalRgba">
+							<span v-if="scope.row.obBetStatus === 0" class="deleteRgba">
+								未结算
+							</span>
+							<span v-else-if="scope.row.obBetStatus === 1" class="normalRgba">
 								已结算
 							</span>
-							<span v-else-if="scope.row.betStatus === 2" class="deleteRgba">
-								未结算
-							</span>
-							<span v-else-if="scope.row.betStatus === 3" class="lockingRgba">
-								未结算
+							<span v-else-if="scope.row.obBetStatus === 2" class="disableRgba">
+								不结算
 							</span>
 							<span v-else>-</span>
 						</template>
@@ -642,6 +645,9 @@ export default {
 		},
 		betDeviceType() {
 			return this.globalDics.betDeviceType || []
+		},
+		betStatusType() {
+			return this.globalDics.betStatusType || []
 		}
 	},
 	mounted() {

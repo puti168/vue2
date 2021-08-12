@@ -1563,6 +1563,10 @@ export default {
 					params.venueOrPayType = params.venueOrPayType.join(',')
 					params.activityAppType = params.activityAppType.join(',')
 					params.activityUserType = params.activityUserType.join(',')
+					params.activityDiscountScale =
+						params.activityDiscountType === 0
+							? params.activityDiscountScale / 100
+							: params.activityDiscountScale
 					console.log(params)
 					if (this.addOrEdit === 'add') {
 						this.setOperateDiscountActivityAdd(params)
