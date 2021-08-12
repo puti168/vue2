@@ -14,7 +14,6 @@
 							name="cardNumber"
 							clearable
 							oninput="value=value.replace(/[^\d]/g,'')"
-							@blur="queryData.cardNumber = $event.target.value"
 							@keyup.enter.native="enterSearch"
 						></el-input>
 					</el-form-item>
@@ -336,7 +335,7 @@
 						<template slot-scope="scope">
 							{{ scope.row.bankName || '-' }}
 							<br />
-							{{ scope.row.bankBranch || '-' }}
+							{{ scope.row.province + scope.row.city || '-' }}
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -681,6 +680,7 @@
 <script>
 import list from '@/mixins/list'
 import { routerNames } from '@/utils/consts'
+
 export default {
 	name: routerNames.memberBankManage,
 	mixins: [list],
@@ -716,8 +716,8 @@ export default {
 			this.$api
 				.getWindControllerLevelDict({ windControlType: 3 })
 				.then((res) => {
-					if (res && res.code === 200) {
-						this.vipDict = res.data || []
+					if (res?.code === 200) {
+						this.vipDict = res?.data || []
 					} else {
 						this.vipDict = []
 					}
@@ -732,23 +732,18 @@ export default {
 			params = {
 				...this.getParams(params)
 			}
-			console.log(params)
 			this.$api
 				.getListUserBankAndVirtual(params)
 				.then((res) => {
 					this.loading = false
-					const {
-						code,
-						data: { record, totalRecord },
-						msg
-					} = res
-					if (res && code && code === 200) {
+					if (res?.code === 200) {
+						const { record, totalRecord } = res?.data || {}
 						this.tableData =
-							(res.data && record.length && Object.freeze(record)) || []
-						this.total = (res.data && totalRecord) || 0
+							(Array.isArray(record) && Object.freeze(record)) || []
+						this.total = totalRecord || 0
 					} else {
 						this.$message({
-							message: res && msg,
+							message: res?.msg || '接口异常',
 							type: 'error'
 						})
 					}
@@ -1041,9 +1036,6 @@ export default {
 					}
 					break
 			}
-		},
-		enterSearch() {
-			this.loadData()
 		}
 	}
 }
