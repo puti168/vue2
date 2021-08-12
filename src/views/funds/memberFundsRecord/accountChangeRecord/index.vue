@@ -495,7 +495,6 @@ const endTime = dayjs()
 	.valueOf()
 
 export default {
-	components: {},
 	mixins: [list],
 	data() {
 		this.loadData = this.throttle(this.loadData, 1000)
@@ -558,7 +557,6 @@ export default {
 				.then((res) => {
 					if (res && res.code === 200) {
 						this.AccountChangeDicList = res.data || []
-						console.log(this.AccountChangeDicList, '11')
 					}
 				})
 		},
@@ -570,8 +568,10 @@ export default {
 				bizType: this.bizType === '0' ? '' : this.bizType,
 				occurDtStart: startTime
 					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
-					: '',
-				occurDtEnd: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
+					: undefined,
+				occurDtEnd: endTime
+					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
+					: undefined
 			}
 			params = {
 				...this.getParams(params)
@@ -597,26 +597,16 @@ export default {
 			this.pageNum = 1
 			this.loadData()
 		},
-		_changeTableSort({ column, prop, order }) {
-			switch (prop) {
-				case 'vipIdName':
-					prop = 1
-					break
-				case 'changeBefore':
-					prop = 2
-					break
-				case 'amount':
-					prop = 3
-					break
-				case 'changeAfter':
-					prop = 4
-					break
-				case 'occurDt':
-					prop = 5
-					break
-			}
+		_changeTableSort({ prop, order }) {
 			this.pageNum = 1
-			this.queryData.orderKey = prop
+			const obj = {
+				vipIdName: 1,
+				changeBefore: 2,
+				amount: 3,
+				changeAfter: 4,
+				occurDt: 5
+			}
+			this.queryData.orderKey = prop && obj[prop]
 			if (order === 'ascending') {
 				// 升序
 				this.queryData.orderType = 'asc'
@@ -702,8 +692,10 @@ export default {
 				...this.queryData,
 				occurDtStart: startTime
 					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
-					: '',
-				occurDtEnd: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
+					: undefined,
+				occurDtEnd: endTime
+					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
+					: undefined
 			}
 			params = {
 				...this.getParams(params)
