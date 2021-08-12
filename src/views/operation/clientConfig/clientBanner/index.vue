@@ -28,7 +28,7 @@
 							clearable
 							:maxlength="20"
 							size="medium"
-							style="width: 280px"
+							style="width: 260px"
 							placeholder="请输入"
 							@keyup.enter.native="enterSearch"
 						></el-input>
@@ -103,7 +103,7 @@
 							clearable
 							:maxlength="15"
 							size="medium"
-							style="width: 308px"
+							style="width: 289px"
 							placeholder="请输入"
 							@keyup.enter.native="enterSearch"
 						></el-input>
@@ -199,16 +199,19 @@
 							label="轮播图区域"
 							width="100"
 						>
-							<template slot-scope="scope">
+							<template
+								v-if="scope.row.areaType || scope.row.areaType === 0"
+								slot-scope="scope"
+							>
 								<span v-for="item in QueryareaList" :key="item.code">
 									{{ scope.row.areaType === item.code ? item.value : '' }}
 								</span>
 							</template>
+							<span v-else>-</span>
 						</el-table-column>
 						<el-table-column align="center" label="轮播图名称" width="160px">
 							<template slot-scope="scope">
-								<span v-if="scope.row.bannerName === '0'">-</span>
-								<span v-else>{{ scope.row.bannerName }}</span>
+								<span>{{ scope.row.bannerName || '-' }}</span>
 							</template>
 						</el-table-column>
 						<el-table-column
@@ -218,7 +221,13 @@
 							width="120"
 						>
 							<template slot-scope="scope">
-								{{ !scope.row.bannerValidity ? '限时' : '永久' }}
+								{{
+									scope.row.bannerValidity === 0
+										? '限时'
+										: scope.row.bannerValidity === 1
+										? '永久'
+										: '-'
+								}}
 							</template>
 						</el-table-column>
 						<el-table-column
@@ -250,7 +259,13 @@
 							width="100"
 						>
 							<template slot-scope="scope">
-								{{ scope.row.isLink === 1 ? '是' : '否' }}
+								{{
+									scope.row.isLink === 1
+										? '是'
+										: scope.row.isLink === 0
+										? '否'
+										: '-'
+								}}
 							</template>
 						</el-table-column>
 						<el-table-column
@@ -685,16 +700,16 @@ export default {
 	},
 	computed: {
 		operateValidityType() {
-			return this.globalDics.operateValidityType
+			return this.globalDics.operateValidityType || []
 		},
 		operateYesNo() {
-			return this.globalDics.operateYesNo
+			return this.globalDics.operateYesNo || []
 		},
 		operateTargetType() {
-			return this.globalDics.operateTargetType
+			return this.globalDics.operateTargetType || []
 		},
 		operateStatus() {
-			return this.globalDics.operateStatus
+			return this.globalDics.operateStatus || []
 		}
 	},
 	watch: {
@@ -722,17 +737,17 @@ export default {
 				...this.queryData,
 				...this.getParams()
 			}
-			console.log(params)
 			this.$api
 				.getQperateConfigBannerQueryBannerList(params)
 				.then((res) => {
-					if (res.code === 200) {
-						this.tableData = res.data.records
-						this.total = res.data.total
-						this.loading = false
-					} else {
-						this.loading = false
+					if (res?.code === 200 && res.data) {
+						const { records, total } = res.data
+						this.tableData = Array.isArray(records)
+							? Object.freeze(records)
+							: []
+						this.total = total || 0
 					}
+					this.loading = false
 				})
 				.catch(() => {
 					this.loading = false
@@ -829,6 +844,7 @@ export default {
 					if (res.code === 200) {
 						console.log(res)
 						this.$message.success('新增成功!')
+						this.loadData()
 					}
 					this.dialogFormVisible = false
 				})
@@ -1079,6 +1095,9 @@ export default {
 	text-align: center;
 	color: #909399;
 	font-weight: 700;
+}
+/deep/ .el-tabs__content {
+	overflow: unset;
 }
 .remakeBox {
 	width: 164px;
