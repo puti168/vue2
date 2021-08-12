@@ -133,11 +133,15 @@
 						label="操作页面"
 						width="200"
 					>
-						<template slot-scope="scope">
+						<template
+							v-if="scope.row.pageName || scope.row.pageName === 0"
+							slot-scope="scope"
+						>
 							<span v-for="item in operatePage" :key="item.value">
 								{{ scope.row.pageName === item.code ? item.value : '' }}
 							</span>
 						</template>
+						<span v-else>-</span>
 					</el-table-column>
 					<el-table-column
 						prop="client"
@@ -156,7 +160,7 @@
 							>
 								{{ typeFilter(scope.row.clientType, 'operateClient') }}
 							</span>
-							<span v-else></span>
+							<span v-else>-</span>
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -181,11 +185,15 @@
 						label="变更类型"
 						width="180"
 					>
-						<template slot-scope="scope">
+						<template
+							v-if="scope.row.changeType || scope.row.changeType === 0"
+							slot-scope="scope"
+						>
 							<span v-for="item in changeType" :key="item.value">
 								{{ scope.row.changeType === item.code ? item.value : '' }}
 							</span>
 						</template>
+						<span v-else>-</span>
 					</el-table-column>
 					<el-table-column
 						align="center"
@@ -226,10 +234,7 @@
 						width="200"
 					>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.remark">
-								{{ scope.row.remark }}
-							</span>
-							<span v-else>-</span>
+							<span>{{ scope.row.remark || '-' }}</span>
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -239,10 +244,7 @@
 						label="操作人"
 					>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.createdBy">
-								{{ scope.row.createdBy }}
-							</span>
-							<span v-else>-</span>
+							<span>{{ scope.row.createdBy || '-' }}</span>
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -253,10 +255,7 @@
 						sortable="custom"
 					>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.createdAt">
-								{{ scope.row.createdAt }}
-							</span>
-							<span v-else>-</span>
+							<span>{{ scope.row.createdAt || '-' }}</span>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -306,19 +305,19 @@ export default {
 	},
 	computed: {
 		accountType() {
-			return this.globalDics.accountType
+			return this.globalDics.accountType || []
 		},
 		virtualType() {
-			return this.globalDics.virtualType
+			return this.globalDics.virtualType || []
 		},
 		virtualProtocolType() {
-			return this.globalDics.virtualProtocolType
+			return this.globalDics.virtualProtocolType || []
 		},
 		applyType() {
-			return this.globalDics.applyType
+			return this.globalDics.applyType || []
 		},
 		operateClient() {
-			return this.globalDics.operateClient
+			return this.globalDics.operateClient || []
 		}
 	},
 	created() {
@@ -332,8 +331,10 @@ export default {
 				...this.queryData,
 				startAt: startTime
 					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
-					: '',
-				endAt: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
+					: undefined,
+				endAt: endTime
+					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
+					: undefined
 			}
 			if (!params.startAt || !params.endAt) {
 				this.$message({
