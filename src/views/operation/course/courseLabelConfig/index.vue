@@ -194,6 +194,7 @@
 							</el-button>
 							<el-button
 								v-if="hasPermission('457')"
+								:disabled="scope.row.bookmarkStatus === 1"
 								type="primary"
 								icon="el-icon-edit"
 								size="medium"
@@ -204,6 +205,7 @@
 
 							<el-button
 								v-if="hasPermission('458')"
+								:disabled="scope.row.bookmarkStatus === 1"
 								type="warning"
 								icon="el-icon-delete"
 								size="medium"
@@ -460,6 +462,17 @@ export default {
 			if (val) {
 				this.title = '编辑'
 				this.dialogForm = { ...val }
+			} else {
+				const tempList = this.tableData.filter(element => {
+					return element.tutorId === this.dialogForm.tutorId
+				})
+				if (tempList.length > 4) {
+					this.$message({
+						message: '具体教程名称下最多不超过5条教程页签！',
+						type: 'error'
+					})
+					return
+				}
 			}
 			this.dialogFormVisible = true
 			if (this.dialogForm.bookmarkPicture) {
@@ -570,9 +583,8 @@ export default {
 			this.loadData()
 		},
 		subSortadd() {
-			const clientType = this.clientType
 			this.$api
-				.bookmarkQuerySortedNames({ clientType })
+				.bookmarkQuerySortedNames(this.queryData)
 				.then((res) => {
 					this.loading = false
 					const { code, data, msg } = res

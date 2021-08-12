@@ -47,7 +47,7 @@
 							type="primary"
 							:disabled="loading"
 							size="medium"
-							@click="edit"
+							@click="edit()"
 						>
 							新增教程
 						</el-button>
@@ -70,8 +70,8 @@
 				>
 					<draggable v-model="sortareaList" @start="onStart" @end="onEnd">
 						<transition-group>
-							<div v-for="tiem in sortareaList" :key="tiem.id" class="reach">
-								{{ tiem.tutorName }}
+							<div v-for="item in sortareaList" :key="item.id" class="reach">
+								{{ item.tutorName }}
 							</div>
 						</transition-group>
 					</draggable>
@@ -164,6 +164,7 @@
 							</el-button>
 							<el-button
 								v-if="hasPermission('450')"
+								:disabled="scope.row.tutorStatus === 1"
 								type="primary"
 								icon="el-icon-edit"
 								size="medium"
@@ -173,6 +174,7 @@
 							</el-button>
 							<el-button
 								v-if="hasPermission('451')"
+								:disabled="scope.row.tutorStatus === 1"
 								type="warning"
 								icon="el-icon-delete"
 								size="medium"
@@ -214,7 +216,7 @@
 						>
 							<el-input
 								v-model="dialogForm.tutorName"
-								:maxlength="20"
+								:maxlength="10"
 								autocomplete="off"
 								style="width: 500px"
 								placeholder="请输入"
@@ -398,6 +400,14 @@ export default {
 			if (val) {
 				this.title = '编辑'
 				this.dialogForm = { ...val }
+			} else {
+				if (this.tableData.length > 99) {
+					this.$message({
+						message: '最多创建100条教程名称。',
+						type: 'error'
+					})
+					return
+				}
 			}
 			this.dialogFormVisible = true
 			if (this.dialogForm.tutorPicture) {
