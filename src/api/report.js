@@ -72,22 +72,6 @@ export function getReportGameProfitDetailListPage(data) {
 		data
 	})
 }
-// 每日盈亏报表==>每日盈亏列表和小计(分页)
-export function getReportDaynetamountList(params) {
-	return request({
-		url: '/report/daynetamount/list',
-		method: 'get',
-		params
-	})
-}
-// 每日盈亏报表==>每日盈亏总计
-export function getReportDaynetamountAggregation(params) {
-	return request({
-		url: '/report/daynetamount/aggregation',
-		method: 'get',
-		params
-	})
-}
 // 游戏盈亏报表==>根据场馆查询游戏
 export function getGameManagerSelectGameByPlatform(params) {
 	return request({
@@ -120,6 +104,47 @@ export function getDevicetypenetamountAggregation(params) {
 		params
 	})
 }
+// 每日盈亏报表==>每日盈亏列表和小计(分页)
+export function getReportDaynetamountList(params) {
+	return request({
+		url: '/report/daynetamount/list',
+		method: 'get',
+		params
+	})
+}
+// 每日盈亏报表==>每日盈亏总计
+export function getReportDaynetamountAggregation(params) {
+	return request({
+		url: '/report/daynetamount/aggregation',
+		method: 'get',
+		params
+	})
+}
+// 会员报表==>会员报表列表(分页)
+export function getReportPlayerReportLlistPage(data) {
+	return request({
+		url: '/report/playerReport/listPage',
+		method: 'post',
+		data
+	})
+}
+// 会员报表==>会员报表总计
+export function getReportPlayerReportSummary(data) {
+	return request({
+		url: '/report/playerReport/summary',
+		method: 'post',
+		data
+	})
+}
+// 会员报表==>会员报表详情(分页)
+export function getReportPlayerReportDetailListPage(data) {
+	return request({
+		url: '/report/playerReport/detailListPage',
+		method: 'post',
+		data
+	})
+}
+
 // 存取报表==>分页查询存取报表列表
 export function getReportAccessAmountDayListPage(data) {
 	return request({
@@ -195,12 +220,15 @@ export default {
 	getReportGameProfitListPage,
 	getReportGameProfitSummary,
 	getReportGameProfitDetailListPage,
-	getReportDaynetamountList,
-	getReportDaynetamountAggregation,
 	getGameManagerSelectGameByPlatform,
 	getDevicetypenetamountList,
 	getDevicetypenetamountDetail,
 	getDevicetypenetamountAggregation,
+	getReportDaynetamountList,
+	getReportDaynetamountAggregation,
+	getReportPlayerReportLlistPage,
+	getReportPlayerReportSummary,
+	getReportPlayerReportDetailListPage,
 	getReportAccessAmountDayListPage,
 	getReportAccessAmountDaySummary,
 	getReportCommissionList,

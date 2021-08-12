@@ -44,7 +44,7 @@
 							重置
 						</el-button>
 						<el-button
-							v-if="hasPermission('342')"
+							v-if="hasPermission('351')"
 							type="warning"
 							icon="el-icon-folder-add"
 							size="medium"
