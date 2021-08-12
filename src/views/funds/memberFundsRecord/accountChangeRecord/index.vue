@@ -580,12 +580,12 @@ export default {
 			this.$api
 				.getMemberFundsRecordsAccountChange(params)
 				.then((res) => {
-					if (res.code === 200) {
-						this.tableData = res.data.record
+					this.loading = false
+					if (res?.code === 200) {
+						this.tableData = res?.data?.record
 						this.total = res.data.totalRecord
 						this.summary = res.data.summary
 					}
-					this.loading = false
 				})
 				.catch(() => {
 					this.loading = false
