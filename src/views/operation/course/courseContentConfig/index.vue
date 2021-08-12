@@ -86,7 +86,7 @@
 						<el-button
 							v-if="hasPermission('466')"
 							type="warning"
-							:disabled="loading"
+							:disabled="subSortabled"
 							size="medium"
 							@click="subSortadd"
 						>
@@ -398,6 +398,7 @@ export default {
 			1000
 		)
 		return {
+			subSortabled: false,
 			tutorId: '',
 			firstStatusShow: false,
 			queryData: {},
@@ -449,6 +450,12 @@ export default {
 			const tutorId = val
 			this.$api.bookmarkQuerySortedNames({ tutorId }).then((res) => {
 				if (res && res.code === 200) {
+					if (res.data.length && tutorId) {
+						console.log(res.data.length, '213')
+						this.subSortabled = false
+					} else {
+						this.subSortabled = true
+					}
 					this.bookmarkQueryList = res.data || []
 				} else {
 					this.bookmarkQueryList = []
