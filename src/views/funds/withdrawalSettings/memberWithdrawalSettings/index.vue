@@ -300,7 +300,7 @@ export default {
 				for (let i = 0; i < this.vipExclusive.length; i++) {
 					const ele = this.vipExclusive[i]
 					if (num === ele.vipele) {
-						console.log(ele.vipele, '111')
+						// console.log(ele.vipele, '111')
 					}
 				}
 				if (value === undefined) {
@@ -328,7 +328,7 @@ export default {
 				for (let i = 0; i < this.vipExclusive.length; i++) {
 					const ele = this.vipExclusive[i]
 					if (num === ele.vipele) {
-						console.log(ele.vipele, '111')
+						// console.log(ele.vipele, '111')
 					}
 				}
 				if (value === undefined) {
@@ -341,7 +341,7 @@ export default {
 			}
 			// 2.虚拟币单次最低额度
 			const virtualCardMinlimit = (rule, value, callback) => {
-				console.log(value, '112')
+				// console.log(value, '112')
 				if (value === undefined) {
 					callback(new Error('请输入金额'))
 				} else if (value > this.dialogForm.virtualCardMaxAmount) {
@@ -361,7 +361,7 @@ export default {
 				for (let i = 0; i < this.vipExclusive.length; i++) {
 					const ele = this.vipExclusive[i]
 					if (num === ele.vipele) {
-						console.log(ele.vipele, '111')
+						// console.log(ele.vipele, '111')
 					}
 				}
 				if (value === undefined) {
@@ -444,7 +444,6 @@ export default {
 			const params = {
 				...this.dialogForm
 			}
-			console.log(params, '11222')
 			if (this.title === '新增') {
 				this.$refs.formSub.validate((valid) => {
 					if (valid) {
@@ -461,8 +460,7 @@ export default {
 						)
 							.then(() => {
 								this.$api.getMemberWithdrawalAdd(params).then((res) => {
-									if (res.code === 200) {
-										console.log(res)
+									if (res?.code === 200) {
 										this.$message.success('新增成功!')
 										this.loadData()
 									}
@@ -494,8 +492,7 @@ export default {
 
 							.then(() => {
 								this.$api.getMemberWithdrawalUpdate(params).then((res) => {
-									if (res.code === 200) {
-										console.log(params, 'params')
+									if (res?.code === 200) {
 										this.$message.success('修改成功!')
 										this.loadData()
 									}
@@ -522,13 +519,12 @@ export default {
 			this.$api
 				.getMemberWithdrawalSelectAll(params)
 				.then((res) => {
-					if (res.code === 200) {
-						this.tableData = res.data
-						this.total = res.data.totalRecord
-						console.log(res.data, 'this.tableData')
-						this.loading = false
+					this.loading = false
+					if (res?.code === 200) {
+						this.tableData = res?.data || []
+						this.total = res?.data?.totalRecord || 0
 					} else {
-						this.loading = false
+						// this.loading = false
 					}
 				})
 				.catch(() => {
@@ -537,16 +533,14 @@ export default {
 		},
 		getEnums() {
 			this.$api.getMemberWithdrawalSelect().then((res) => {
-				if (res.code === 200) {
+				if (res?.code === 200) {
 					for (let i = 0; i < res.data.length; i++) {
 						const obj = {}
 						const ele = res.data[i]
 						obj.vipele = ele.vipSerialNum
 						this.vipExclusive.push(obj)
-						console.log(obj, '222')
 					}
 					this.vipNumName = res.data
-					console.log(this.vipNumName, '234')
 				}
 			})
 		},
@@ -570,10 +564,8 @@ export default {
 		edit(val) {
 			this.title = '修改'
 			this.dialogForm = { ...val }
-			console.log(val, 'val')
 			this.dialogFormVisible = true
 			this.isDisabled = true
-			console.log(this.dialogForm.id, ' this.dialogForm.id')
 			this.dialogForm.vipNum = val.vipNum
 			this.dialogForm.dayWithdrawalNum = val.dateTotalNum
 			this.dialogForm.dayWithdrawalQuota = val.dateMaxAmount
@@ -599,7 +591,7 @@ export default {
 }
 .form-header {
 	width: 930px;
-	left: 0px;
+	left: 0;
 	background-color: #d3d7df;
 	height: 45px;
 	line-height: 45px;
