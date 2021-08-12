@@ -38,7 +38,11 @@
 					align="center"
 					label="佣金等级"
 					width="150"
-				></el-table-column>
+				>
+					<template slot-scope="scope">
+						<span>{{ scope.row.rebateLevel || '-' }}</span>
+					</template>
+				</el-table-column>
 				<el-table-column
 					prop="totalMinNetAmount"
 					align="center"
@@ -75,27 +79,43 @@
 					align="center"
 					label="创建人"
 					width="120"
-				></el-table-column>
+				>
+					<template slot-scope="scope">
+						<span>{{ scope.row.createdBy || '-' }}</span>
+					</template>
+				</el-table-column>
 				<el-table-column
 					prop="createdAt"
 					align="center"
 					label="创建时间"
 					width="200px"
 					sortable="custom"
-				></el-table-column>
+				>
+					<template slot-scope="scope">
+						<span>{{ scope.row.createdAt || '-' }}</span>
+					</template>
+				</el-table-column>
 				<el-table-column
 					prop="updatedBy"
 					align="center"
 					label="最近操作人"
 					width="150"
-				></el-table-column>
+				>
+					<template slot-scope="scope">
+						<span>{{ scope.row.updatedBy || '-' }}</span>
+					</template>
+				</el-table-column>
 				<el-table-column
 					prop="updatedAt"
 					align="center"
 					width="200px"
 					label="最近操作时间"
 					sortable="custom"
-				></el-table-column>
+				>
+					<template slot-scope="scope">
+						<span>{{ scope.row.updatedAt || '-' }}</span>
+					</template>
+				</el-table-column>
 				<el-table-column
 					prop="operating"
 					align="center"

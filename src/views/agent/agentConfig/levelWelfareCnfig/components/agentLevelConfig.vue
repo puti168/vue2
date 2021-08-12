@@ -38,7 +38,11 @@
 					align="center"
 					label="代理等级"
 					width="110"
-				></el-table-column>
+				>
+					<template slot-scope="scope">
+						<span>{{ scope.row.proxyGradeName || '-' }}</span>
+					</template>
+				</el-table-column>
 				<el-table-column
 					prop="monthActiveNum"
 					align="center"
@@ -73,7 +77,11 @@
 					width="150"
 				>
 					<template slot-scope="scope">
-						{{ scope.row.giveJackpot }}元
+						{{
+							scope.row.giveJackpot || scope.row.giveJackpot === 0
+								? scope.row.giveJackpot
+								: '-'
+						}}元
 					</template>
 				</el-table-column>
 				<el-table-column
@@ -81,27 +89,43 @@
 					align="center"
 					label="创建人"
 					width="120"
-				></el-table-column>
+				>
+					<template slot-scope="scope">
+						<span>{{ scope.row.createdBy || '-' }}</span>
+					</template>
+				</el-table-column>
 				<el-table-column
 					prop="createdAt"
 					align="center"
 					label="创建时间"
 					width="160px"
 					sortable="custom"
-				></el-table-column>
+				>
+					<template slot-scope="scope">
+						<span>{{ scope.row.createdAt || '-' }}</span>
+					</template>
+				</el-table-column>
 				<el-table-column
 					prop="updatedBy"
 					align="center"
 					label="最近操作人"
 					width="120"
-				></el-table-column>
+				>
+					<template slot-scope="scope">
+						<span>{{ scope.row.updatedBy || '-' }}</span>
+					</template>
+				</el-table-column>
 				<el-table-column
 					prop="updatedAt"
 					align="center"
 					width="160px"
 					label="最近操作时间"
 					sortable="custom"
-				></el-table-column>
+				>
+					<template slot-scope="scope">
+						<span>{{ scope.row.updatedAt || '-' }}</span>
+					</template>
+				</el-table-column>
 				<el-table-column
 					prop="operating"
 					align="center"

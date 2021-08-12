@@ -103,11 +103,7 @@
 							<span
 								v-if="scope.row.changeType || scope.row.changeType + '' === '0'"
 							>
-								{{
-									changeType.filter(
-										(item) => item.code === scope.row.changeType
-									)[0].value
-								}}
+								{{ filterChangeType(scope.row.changeType) }}
 							</span>
 							<span v-else>-</span>
 						</template>
@@ -238,6 +234,10 @@ export default {
 				.catch(() => {
 					this.loading = false
 				})
+		},
+		filterChangeType(val) {
+			const lis = this.changeType.find((item) => item.code + '' === val + '')
+			return lis?.value || '-'
 		},
 		queryEnums() {
 			this.$api.activityInfoLogAPI().then((res) => {

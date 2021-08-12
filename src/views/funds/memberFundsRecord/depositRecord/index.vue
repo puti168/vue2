@@ -164,7 +164,7 @@
 					<el-table-column
 						prop="thirdOrderNo"
 						align="center"
-						width="260px"
+						width="260"
 						label="订单号"
 					>
 						<template slot-scope="scope">
@@ -280,16 +280,24 @@
 						prop="orderAmount"
 						align="center"
 						sortable="custom"
-						width="200px"
+						width="200"
 						label="存款金额"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							{{ scope.row.orderAmount || '-' }}
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="createdAt"
 						align="center"
 						label="存款时间"
 						sortable="custom"
 						min-width="200"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							{{ scope.row.createdAt || '-' }}
+						</template>
+					</el-table-column>
 				</el-table>
 				<!-- 分页 -->
 				<el-pagination
@@ -333,13 +341,13 @@ export default {
 	},
 	computed: {
 		loginDeviceType() {
-			return this.globalDics.loginDeviceType
+			return this.globalDics.loginDeviceType || []
 		},
 		depositStatus() {
-			return this.globalDics.depositStatus
+			return this.globalDics.depositStatus || []
 		},
 		enumPaymentDepositType() {
-			return this.globalDics.enumPaymentDepositType
+			return this.globalDics.enumPaymentDepositType || []
 		}
 	},
 	created() {},

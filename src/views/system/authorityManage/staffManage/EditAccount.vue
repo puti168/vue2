@@ -11,7 +11,7 @@
 			:direction="direction"
 			:before-close="handleClose"
 			:close-on-click-modal="false"
-			width="750px"
+			width="810px"
 			:destroy-on-close="true"
 			@close="handleClose"
 		>

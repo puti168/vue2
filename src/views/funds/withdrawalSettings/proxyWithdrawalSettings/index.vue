@@ -24,7 +24,6 @@
 					:header-cell-style="getRowClass"
 				>
 					<el-table-column
-						prop="description"
 						align="center"
 						label="序号"
 						type="index"
@@ -135,49 +134,81 @@
 						align="center"
 						label="风控层级"
 						width="110"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							{{ scope.row.windControlName || '-' }}
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="bankCardMinAmount"
 						align="center"
 						label="银行卡单次提款最低限额"
 						width="170"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							{{ scope.row.bankCardMinAmount || '-' }}
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="bankCardMaxAmount"
 						align="center"
 						label="银行卡单次提款最高限额"
 						width="170"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							{{ scope.row.bankCardMaxAmount || '-' }}
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="virtualCardMinAmount"
 						align="center"
 						label="虚拟币单次提款最低限额"
 						width="170"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							{{ scope.row.virtualCardMinAmount || '-' }}
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="virtualCardMaxAmount"
 						align="center"
 						label="虚拟币单次提款最高限额"
 						width="170"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							{{ scope.row.virtualCardMaxAmount || '-' }}
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="dateTotalNum"
 						align="center"
 						label="单日提款总次数"
 						width="130"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							{{ scope.row.dateTotalNum || '-' }}
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="dateMaxAmount"
 						align="center"
 						label="单日提款总额度"
 						width="130"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							{{ scope.row.dateMaxAmount || '-' }}
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="bigAmount"
 						align="center"
 						label="大额提现标记金额"
 						width="140"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							{{ scope.row.bigAmount || '-' }}
+						</template>
+					</el-table-column>
 				</el-table>
 				<!-- 分页 -->
 				<el-pagination

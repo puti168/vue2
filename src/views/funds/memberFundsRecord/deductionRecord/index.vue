@@ -159,7 +159,7 @@
 					<el-table-column
 						prop="orderNo"
 						align="center"
-						width="260px"
+						width="260"
 						label="订单号"
 					>
 						<template slot-scope="scope">
@@ -177,7 +177,7 @@
 						prop="userName"
 						align="center"
 						label="会员账号"
-						width="130px"
+						width="130"
 					>
 						<template slot-scope="scope">
 							<Copy
@@ -194,7 +194,7 @@
 						prop="realName"
 						align="center"
 						label="会员姓名"
-						width="120px"
+						width="120"
 					>
 						<template slot-scope="scope">
 							<Copy
@@ -211,13 +211,13 @@
 						prop="adjustStyle"
 						align="center"
 						label="调整方式"
-						width="130px"
+						width="130"
 					></el-table-column>
 					<el-table-column
 						prop="orderStatus"
 						align="center"
 						label="状态"
-						width="100px"
+						width="100"
 					>
 						<template slot-scope="scope">
 							{{
@@ -231,7 +231,7 @@
 						prop="adjustType"
 						align="center"
 						label="调整类型"
-						width="150px"
+						width="150"
 					>
 						<template slot-scope="scope">
 							{{ typeFilter(scope.row.adjustType, 'memberPatchSubAdjustType') }}
@@ -241,27 +241,43 @@
 						prop="adjustAmount"
 						align="center"
 						label="调整金额"
-						width="200px"
-					></el-table-column>
+						width="200"
+					>
+						<template slot-scope="scope">
+							{{ scope.row.adjustAmount || '-' }}
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="operator"
 						align="center"
 						label="操作人"
-						width="130px"
-					></el-table-column>
+						width="130"
+					>
+						<template slot-scope="scope">
+							{{ scope.row.operator || '-' }}
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="operatorTime"
 						align="center"
 						label="操作时间"
 						sortable="custom"
-						min-width="200px"
-					></el-table-column>
+						min-width="200"
+					>
+						<template slot-scope="scope">
+							{{ scope.row.operatorTime || '-' }}
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="remark"
 						align="center"
 						label="备注"
-						width="220px"
-					></el-table-column>
+						width="220"
+					>
+						<template slot-scope="scope">
+							{{ scope.row.remark || '-' }}
+						</template>
+					</el-table-column>
 				</el-table>
 				<!-- 分页 -->
 				<el-pagination
@@ -291,7 +307,6 @@ const endTime = dayjs()
 	.valueOf()
 
 export default {
-	components: {},
 	mixins: [list],
 	data() {
 		this.loadData = this.throttle(this.loadData, 1000)
@@ -305,10 +320,10 @@ export default {
 	},
 	computed: {
 		successOrFail() {
-			return this.globalDics.successOrFail
+			return this.globalDics.successOrFail || []
 		},
 		memberPatchSubAdjustType() {
-			return this.globalDics.memberPatchSubAdjustType
+			return this.globalDics.memberPatchSubAdjustType || []
 		}
 	},
 	created() {},
@@ -321,10 +336,10 @@ export default {
 				...this.queryData,
 				operatorTimeStart: startTime
 					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
-					: '',
+					: undefined,
 				operatorTimeEnd: endTime
 					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
-					: ''
+					: undefined
 			}
 			params = {
 				...this.getParams(params)
@@ -332,12 +347,12 @@ export default {
 			this.$api
 				.getMemberFundsRecordsArtificialAccountSub(params)
 				.then((res) => {
+					this.loading = false
 					if (res.code === 200) {
 						this.tableData = res.data.record
 						this.total = res.data.totalRecord
 						this.summary = res.data.summary
 					}
-					this.loading = false
 				})
 				.catch(() => {
 					this.loading = false
@@ -480,11 +495,6 @@ export default {
 						})
 						.catch(() => {
 							this.loading = false
-							// this.$message({
-							//   type: "error",
-							//   message: "导出失败",
-							//   duration: 1500,
-							// });
 						})
 				})
 				.catch(() => {})

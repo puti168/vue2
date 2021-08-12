@@ -207,7 +207,7 @@
 					<span class="title-text">所属场馆:{{ venueName }}</span>
 				</div>
 				<el-table
-					v-loading="loading"
+					v-loading="loadingDialog"
 					size="mini"
 					border
 					class="small-size-table"
@@ -440,6 +440,7 @@ export default {
 			dialogp: {},
 			visible: false,
 			tableVisible: false,
+			loadingDialog: false,
 			gameProfitAndLoss: {
 				游戏: true,
 				场馆: true,
@@ -801,7 +802,7 @@ export default {
 			this.tableVisible = true
 		},
 		getReportGameProfitDetailListPage(val) {
-			this.loading = true
+			this.loadingDialog = true
 			const create = this.searchTime || []
 			const [startTime, endTime] = create
 			const params = {
@@ -820,10 +821,10 @@ export default {
 						this.gameList = res.data.records
 						this.dialogTotal = res.data.total
 					}
-					this.loading = false
+					this.loadingDialog = false
 				})
 				.catch(() => {
-					this.loading = false
+					this.loadingDialog = false
 				})
 		},
 

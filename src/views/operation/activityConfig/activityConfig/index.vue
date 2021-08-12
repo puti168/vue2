@@ -1563,6 +1563,7 @@ export default {
 					params.venueOrPayType = params.venueOrPayType.join(',')
 					params.activityAppType = params.activityAppType.join(',')
 					params.activityUserType = params.activityUserType.join(',')
+					params.activityDiscountScale = params.activityDiscountScale / 100
 					console.log(params)
 					if (this.addOrEdit === 'add') {
 						this.setOperateDiscountActivityAdd(params)
@@ -1667,6 +1668,7 @@ export default {
 			this.dialogForm.venueOrPayType = row.venueOrPayType.split(',')
 			this.dialogForm.activityAppType = row.activityAppType.split(',')
 			this.dialogForm.activityUserType = row.activityUserType.split(',')
+			this.dialogForm.activityDiscountScale = row.activityDiscountScale * 100
 			this.dialogForm.activityPrescription = row.activityPrescription + ''
 			this.activityPictureUpAt = row.activityPictureUpAt
 			this.activityPictureDownAt = row.activityPictureDownAt

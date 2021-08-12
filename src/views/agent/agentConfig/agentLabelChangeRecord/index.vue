@@ -98,41 +98,31 @@
 					></el-table-column>
 					<el-table-column prop="labelName" align="center" label="标签名称">
 						<template slot-scope="scope">
-							<span v-if="scope.row.labelName !== null">
-								{{ scope.row.labelName }}
-							</span>
-							<span v-else>-</span>
+							<span>{{ scope.row.labelName || '-' }}</span>
 						</template>
 					</el-table-column>
 					<el-table-column prop="applyType" align="center" label="变更类型">
 						<template slot-scope="scope">
-							<span v-if="!!(scope.row.applyType + '')">
+							<span>
 								{{ typeFilter(scope.row.applyType, 'labelApplyType') }}
 							</span>
-							<span v-else>-</span>
 						</template>
 					</el-table-column>
 					<el-table-column prop="beforeModify" align="center" label="变更前">
 						<template slot-scope="scope">
-							<span v-if="scope.row.beforeModify !== null">
-								{{ scope.row.beforeModify }}
-							</span>
-							<span v-else>-</span>
+							<span>{{ scope.row.beforeModify || '-' }}</span>
 						</template>
 					</el-table-column>
 					<el-table-column prop="afterModify" align="center" label="变更后">
 						<template slot-scope="scope">
-							<span v-if="scope.row.afterModify !== null">
-								{{ scope.row.afterModify }}
-							</span>
-							<span v-else>-</span>
+							<span>{{ scope.row.afterModify || '-' }}</span>
 						</template>
 					</el-table-column>
-					<el-table-column
-						prop="createdBy"
-						align="center"
-						label="操作人"
-					></el-table-column>
+					<el-table-column prop="createdBy" align="center" label="操作人">
+						<template slot-scope="scope">
+							<span>{{ scope.row.createdBy || '-' }}</span>
+						</template>
+					</el-table-column>
 				</el-table>
 				<!-- 分页 -->
 				<el-pagination
@@ -185,7 +175,7 @@ export default {
 	},
 	computed: {
 		applyTypeArr() {
-			return this.globalDics.labelApplyType
+			return this.globalDics.labelApplyType || []
 		}
 	},
 	mounted() {},

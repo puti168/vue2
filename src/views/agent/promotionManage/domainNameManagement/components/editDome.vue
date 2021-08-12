@@ -147,10 +147,10 @@ export default {
 	},
 	computed: {
 		domainStatusType() {
-			return this.globalDics.domainStatusType
+			return this.globalDics.domainStatusType || []
 		},
 		enumProxyDomainTypeOperate() {
-			return this.globalDics.enumProxyDomainTypeOperate
+			return this.globalDics.enumProxyDomainTypeOperate || []
 		},
 		rules() {
 			const checkAge = (rule, value, callback) => {

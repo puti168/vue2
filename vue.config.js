@@ -5,7 +5,6 @@ const defaultSettings = require('./src/settings.js')
 const chalk = require('chalk')
 const CompressionWebpackPlugin = require('compression-webpack-plugin')
 const productionGzipExtensions = ['js', 'css']
-
 function resolve(dir) {
 	return path.join(__dirname, dir)
 }
@@ -98,7 +97,8 @@ module.exports = {
 		}
 	},
 	chainWebpack(config) {
-		// config.cache(true)
+		// config.plugin(true).use(HardSourceWebpackPlugin)
+		config.cache(true)
 		config.plugins.delete('preload') // TODO: need test
 		config.plugins.delete('prefetch') // TODO: need test
 		// set svg-sprite-loader

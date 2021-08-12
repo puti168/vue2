@@ -73,12 +73,12 @@
 					>
 						<el-table-column align="center" label="代理账号">
 							<template>
-								{{ accountsVo.userName ? accountsVo.userName : '-' }}
+								{{ accountsVo.userName || '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="代理姓名">
 							<template>
-								{{ accountsVo.realName ? accountsVo.realName : '-' }}
+								{{ accountsVo.realName || '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="账号状态">
@@ -92,40 +92,32 @@
 						</el-table-column>
 						<el-table-column align="center" label="代理标签">
 							<template>
-								{{ accountsVo.labelId ? accountsVo.labelId : '-' }}
+								{{ accountsVo.labelId || '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="代理等级">
 							<template>
-								{{ accountsVo.currentLevel ? accountsVo.currentLevel : '-' }}
+								{{ accountsVo.currentLevel || '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="绑定银行卡数量">
 							<template>
-								{{ accountsVo.bankCount ? accountsVo.bankCount : '-' }}
+								{{ accountsVo.bankCount || '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="虚拟币账号数量">
 							<template>
-								{{ accountsVo.virtualCount ? accountsVo.virtualCount : '-' }}
+								{{ accountsVo.virtualCount || '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="累计提款次数">
 							<template>
-								{{
-									accountsVo.commonWithdrawTimes
-										? accountsVo.commonWithdrawTimes
-										: '-'
-								}}
+								{{ accountsVo.commonWithdrawTimes || '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="累计提款总额（万元）">
 							<template>
-								{{
-									accountsVo.sumWithdrawAmount
-										? accountsVo.sumWithdrawAmount
-										: '-'
-								}}
+								{{ accountsVo.sumWithdrawAmount || '-' }}
 							</template>
 						</el-table-column>
 					</el-table>
@@ -151,38 +143,22 @@
 						</el-table-column>
 						<el-table-column align="center" label="风险银行卡">
 							<template>
-								{{
-									proxyRiskControlLevelVo.riskyBankCard
-										? proxyRiskControlLevelVo.riskyBankCard
-										: '-'
-								}}
+								{{ proxyRiskControlLevelVo.riskyBankCard || '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="风险虚拟币">
 							<template>
-								{{
-									proxyRiskControlLevelVo.riskyVirtualCurrency
-										? proxyRiskControlLevelVo.riskyVirtualCurrency
-										: '-'
-								}}
+								{{ proxyRiskControlLevelVo.riskyVirtualCurrency || '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="风险IP">
 							<template>
-								{{
-									proxyRiskControlLevelVo.riskyIP
-										? proxyRiskControlLevelVo.riskyIP
-										: '-'
-								}}
+								{{ proxyRiskControlLevelVo.riskyIP || '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="风险终端设备号">
 							<template>
-								{{
-									proxyRiskControlLevelVo.riskTerminalDeviceNumber
-										? proxyRiskControlLevelVo.riskTerminalDeviceNumber
-										: '-'
-								}}
+								{{ proxyRiskControlLevelVo.riskTerminalDeviceNumber || '-' }}
 							</template>
 						</el-table-column>
 					</el-table>
@@ -196,137 +172,73 @@
 							<tr>
 								<td class="td-title">日期</td>
 								<td>
-									{{
-										commissionRecordVo.reportDate
-											? commissionRecordVo.reportDate
-											: '-'
-									}}
+									{{ commissionRecordVo.reportDate || '-' }}
 								</td>
 								<td class="td-title">佣金比例</td>
 								<td>
-									{{
-										commissionRecordVo.commissionRate
-											? commissionRecordVo.commissionRate
-											: '-'
-									}}
+									{{ commissionRecordVo.commissionRate || '-' }}
 								</td>
 								<td class="td-title">佣金金额</td>
 								<td>
-									{{
-										commissionRecordVo.totalRebateAmount
-											? commissionRecordVo.totalRebateAmount
-											: '-'
-									}}
+									{{ commissionRecordVo.totalRebateAmount || '-' }}
 								</td>
 								<td class="td-title">等级专享</td>
 								<td>
-									{{
-										commissionRecordVo.totalRushAmount
-											? commissionRecordVo.totalRushAmount
-											: '-'
-									}}
+									{{ commissionRecordVo.totalRushAmount || '-' }}
 								</td>
 							</tr>
 							<tr>
 								<td class="td-title">活跃下级</td>
 								<td class="disColor" @click="active()">
-									{{
-										commissionRecordVo.activeSubordinate
-											? commissionRecordVo.activeSubordinate
-											: '-'
-									}}
+									{{ commissionRecordVo.activeSubordinate || '-' }}
 								</td>
 								<td class="td-title">有效活跃下级</td>
 								<td class="disColor" @click="effective()">
-									{{
-										commissionRecordVo.effectivelyActiveSubordinates
-											? commissionRecordVo.effectivelyActiveSubordinates
-											: '-'
-									}}
+									{{ commissionRecordVo.effectivelyActiveSubordinates || '-' }}
 								</td>
 								<td class="td-title">新增活跃下级</td>
 								<td class="disColor" @click="addactive()">
-									{{
-										commissionRecordVo.addActiveSubordinates
-											? commissionRecordVo.addActiveSubordinates
-											: '-'
-									}}
+									{{ commissionRecordVo.addActiveSubordinates || '-' }}
 								</td>
 								<td class="td-title">新增有效活跃下级</td>
 								<td class="disColor" @click="addSubordinate()">
-									{{
-										commissionRecordVo.addEffectiveActiveSubordinates
-											? commissionRecordVo.addEffectiveActiveSubordinates
-											: '-'
-									}}
+									{{ commissionRecordVo.addEffectiveActiveSubordinates || '-' }}
 								</td>
 							</tr>
 							<tr>
 								<td class="td-title">总输赢</td>
 								<td class="disColor" @click="totalNet()">
-									{{
-										commissionRecordVo.totalNetAmount
-											? commissionRecordVo.totalNetAmount
-											: '-'
-									}}
+									{{ commissionRecordVo.totalNetAmount || '-' }}
 								</td>
 								<td class="td-title">场馆费</td>
 								<td class="disColor" @click="VenuefeeNet()">
-									{{
-										commissionRecordVo.totalPlatformAmount
-											? commissionRecordVo.totalPlatformAmount
-											: '-'
-									}}
+									{{ commissionRecordVo.totalPlatformAmount || '-' }}
 								</td>
 								<td class="td-title">总优惠</td>
 								<td class="disColor" @click="totalDiscount()">
-									{{
-										commissionRecordVo.totalActivityAmount
-											? commissionRecordVo.totalActivityAmount
-											: '-'
-									}}
+									{{ commissionRecordVo.totalActivityAmount || '-' }}
 								</td>
 								<td class="td-title">总返水</td>
 								<td class="disColor" @click="totalBackwater()">
-									{{
-										commissionRecordVo.commissionAmount
-											? commissionRecordVo.commissionAmount
-											: '-'
-									}}
+									{{ commissionRecordVo.commissionAmount || '-' }}
 								</td>
 							</tr>
 							<tr>
 								<td class="td-title">补单输赢</td>
 								<td>
-									{{
-										commissionRecordVo.totalPatchNetAmount
-											? commissionRecordVo.totalPatchNetAmount
-											: '-'
-									}}
+									{{ commissionRecordVo.totalPatchNetAmount || '-' }}
 								</td>
 								<td class="td-title">净输赢</td>
 								<td>
-									{{
-										commissionRecordVo.totalPureAmount
-											? commissionRecordVo.totalPureAmount
-											: '-'
-									}}
+									{{ commissionRecordVo.totalPureAmount || '-' }}
 								</td>
 								<td class="td-title">上月结余</td>
 								<td class="disColor" @click="Balance()">
-									{{
-										commissionRecordVo.totalLastAmount
-											? commissionRecordVo.totalLastAmount
-											: '-'
-									}}
+									{{ commissionRecordVo.totalLastAmount || '-' }}
 								</td>
 								<td class="td-title">冲正后净输赢</td>
 								<td>
-									{{
-										commissionRecordVo.totalRushAmount
-											? commissionRecordVo.totalRushAmount
-											: '-'
-									}}
+									{{ commissionRecordVo.totalRushAmount || '-' }}
 								</td>
 							</tr>
 						</tbody>
@@ -418,21 +330,21 @@
 						</Copy>
 					</template>
 				</el-table-column>
-				<el-table-column
-					prop="playerName"
-					align="center"
-					label="姓名"
-				></el-table-column>
-				<el-table-column
-					prop="depositAmount"
-					align="center"
-					label="存款金额"
-				></el-table-column>
-				<el-table-column
-					prop="validBetAmount"
-					align="center"
-					label="有效投注"
-				></el-table-column>
+				<el-table-column prop="playerName" align="center" label="姓名">
+					<template slot-scope="scope">
+						{{ scope.row.playerName || '-' }}
+					</template>
+				</el-table-column>
+				<el-table-column prop="depositAmount" align="center" label="存款金额">
+					<template slot-scope="scope">
+						{{ scope.row.depositAmount || '-' }}
+					</template>
+				</el-table-column>
+				<el-table-column prop="validBetAmount" align="center" label="有效投注">
+					<template slot-scope="scope">
+						{{ scope.row.validBetAmount || '-' }}
+					</template>
+				</el-table-column>
 			</el-table>
 			<div slot="footer" class="dialog-footer">
 				<el-button type="primary" @click="dialogVisible = false">
@@ -479,28 +391,29 @@
 						>
 							{{ scope.row.playerId }}
 						</Copy>
+						<span v-else>-</span>
 					</template>
 				</el-table-column>
-				<el-table-column
-					prop="playerName"
-					align="center"
-					label="姓名"
-				></el-table-column>
-				<el-table-column
-					prop="depositAmount"
-					align="center"
-					label="存款金额"
-				></el-table-column>
-				<el-table-column
-					prop="validBetAmount"
-					align="center"
-					label="有效投注"
-				></el-table-column>
-				<el-table-column
-					prop="bindDate"
-					align="center"
-					label="绑定时间"
-				></el-table-column>
+				<el-table-column prop="playerName" align="center" label="姓名">
+					<template slot-scope="scope">
+						{{ scope.row.playerName || '-' }}
+					</template>
+				</el-table-column>
+				<el-table-column prop="depositAmount" align="center" label="存款金额">
+					<template slot-scope="scope">
+						{{ scope.row.depositAmount || '-' }}
+					</template>
+				</el-table-column>
+				<el-table-column prop="validBetAmount" align="center" label="有效投注">
+					<template slot-scope="scope">
+						{{ scope.row.validBetAmount || '-' }}
+					</template>
+				</el-table-column>
+				<el-table-column prop="bindDate" align="center" label="绑定时间">
+					<template slot-scope="scope">
+						{{ scope.row.bindDate || '-' }}
+					</template>
+				</el-table-column>
 			</el-table>
 			<div slot="footer" class="dialog-footer">
 				<el-button type="primary" @click="dialogaddactive = false">
@@ -538,21 +451,21 @@
 				:data="winOrLoseList"
 				:header-cell-style="getRowClass"
 			>
-				<el-table-column
-					prop="venueName"
-					align="center"
-					label="场馆"
-				></el-table-column>
-				<el-table-column
-					prop="netAmount"
-					align="center"
-					label="总输赢"
-				></el-table-column>
-				<el-table-column
-					prop="validBetAmount"
-					align="center"
-					label="有效投注"
-				></el-table-column>
+				<el-table-column prop="venueName" align="center" label="场馆">
+					<template slot-scope="scope">
+						{{ scope.row.venueName || '-' }}
+					</template>
+				</el-table-column>
+				<el-table-column prop="netAmount" align="center" label="总输赢">
+					<template slot-scope="scope">
+						{{ scope.row.netAmount || '-' }}
+					</template>
+				</el-table-column>
+				<el-table-column prop="validBetAmount" align="center" label="有效投注">
+					<template slot-scope="scope">
+						{{ scope.row.validBetAmount || '-' }}
+					</template>
+				</el-table-column>
 			</el-table>
 			<div slot="footer" class="dialog-footer">
 				<el-button type="primary" @click="diawinOrLoseList = false">
@@ -590,21 +503,21 @@
 				:data="venueFeeList"
 				:header-cell-style="getRowClass"
 			>
-				<el-table-column
-					prop="venueName"
-					align="center"
-					label="场馆"
-				></el-table-column>
-				<el-table-column
-					prop="venueRate"
-					align="center"
-					label="场馆费率"
-				></el-table-column>
-				<el-table-column
-					prop="amount"
-					align="center"
-					label="场馆费"
-				></el-table-column>
+				<el-table-column prop="venueName" align="center" label="场馆">
+					<template slot-scope="scope">
+						{{ scope.row.venueName || '-' }}
+					</template>
+				</el-table-column>
+				<el-table-column prop="venueRate" align="center" label="场馆费率">
+					<template slot-scope="scope">
+						{{ scope.row.venueRate || '-' }}
+					</template>
+				</el-table-column>
+				<el-table-column prop="amount" align="center" label="场馆费">
+					<template slot-scope="scope">
+						{{ scope.row.amount || '-' }}
+					</template>
+				</el-table-column>
 			</el-table>
 			<div slot="footer" class="dialog-footer">
 				<el-button type="primary" @click="dialogVenuefee = false">
@@ -694,21 +607,21 @@
 				:data="backwaterList"
 				:header-cell-style="getRowClass"
 			>
-				<el-table-column
-					prop="venueName"
-					align="center"
-					label="返水项目"
-				></el-table-column>
-				<el-table-column
-					prop="userCount"
-					align="center"
-					label="人数"
-				></el-table-column>
-				<el-table-column
-					prop="rebateAmount"
-					align="center"
-					label="金额"
-				></el-table-column>
+				<el-table-column prop="venueName" align="center" label="返水项目">
+					<template slot-scope="scope">
+						{{ scope.row.venueName || '-' }}
+					</template>
+				</el-table-column>
+				<el-table-column prop="userCount" align="center" label="人数">
+					<template slot-scope="scope">
+						{{ scope.row.userCount || '-' }}
+					</template>
+				</el-table-column>
+				<el-table-column prop="rebateAmount" align="center" label="金额">
+					<template slot-scope="scope">
+						{{ scope.row.rebateAmount || '-' }}
+					</template>
+				</el-table-column>
 			</el-table>
 			<div slot="footer" class="dialog-footer">
 				<el-button type="primary" @click="dialogBackwater = false">
@@ -757,21 +670,21 @@
 						</Copy>
 					</template>
 				</el-table-column>
-				<el-table-column
-					prop="playerName"
-					align="center"
-					label="姓名"
-				></el-table-column>
-				<el-table-column
-					prop="depositAmount"
-					align="center"
-					label="存款金额"
-				></el-table-column>
-				<el-table-column
-					prop="validBetAmount"
-					align="center"
-					label="有效投注"
-				></el-table-column>
+				<el-table-column prop="playerName" align="center" label="姓名">
+					<template slot-scope="scope">
+						{{ scope.row.playerName || '-' }}
+					</template>
+				</el-table-column>
+				<el-table-column prop="depositAmount" align="center" label="存款金额">
+					<template slot-scope="scope">
+						{{ scope.row.depositAmount || '-' }}
+					</template>
+				</el-table-column>
+				<el-table-column prop="validBetAmount" align="center" label="有效投注">
+					<template slot-scope="scope">
+						{{ scope.row.validBetAmount || '-' }}
+					</template>
+				</el-table-column>
 			</el-table>
 			<div slot="footer" class="dialog-footer">
 				<el-button type="primary" @click="dialogEffVisible = false">
@@ -875,21 +788,21 @@
 				:data="balanceList"
 				:header-cell-style="getRowClass"
 			>
-				<el-table-column
-					prop="reportDate"
-					align="center"
-					label="历史月份"
-				></el-table-column>
-				<el-table-column
-					prop="totalPureAmount"
-					align="center"
-					label="净输赢"
-				></el-table-column>
-				<el-table-column
-					prop="totalLastAmount"
-					align="center"
-					label="结余金额"
-				></el-table-column>
+				<el-table-column prop="reportDate" align="center" label="历史月份">
+					<template slot-scope="scope">
+						{{ scope.row.reportDate || '-' }}
+					</template>
+				</el-table-column>
+				<el-table-column prop="totalPureAmount" align="center" label="净输赢">
+					<template slot-scope="scope">
+						{{ scope.row.totalPureAmount || '-' }}
+					</template>
+				</el-table-column>
+				<el-table-column prop="totalLastAmount" align="center" label="结余金额">
+					<template slot-scope="scope">
+						{{ scope.row.totalLastAmount || '-' }}
+					</template>
+				</el-table-column>
 			</el-table>
 			<div slot="footer" class="dialog-footer">
 				<el-button type="primary" @click="dialogBalance = false">
@@ -915,7 +828,6 @@
 <script>
 import list from '@/mixins/list'
 export default {
-	components: {},
 	mixins: [list],
 	props: {
 		// 审核 true 仅返回 false

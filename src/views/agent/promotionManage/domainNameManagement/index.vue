@@ -155,19 +155,31 @@
 						align="center"
 						label="排序"
 						width="100"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							<span>{{ scope.row.displayOrder || '-' }}</span>
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="domainName"
 						align="center"
 						label="域名"
 						width="220"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							<span>{{ scope.row.domainName || '-' }}</span>
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="description"
 						align="center"
 						label="描述"
 						width="200"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							<span>{{ scope.row.description || '-' }}</span>
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="status"
 						align="center"
@@ -200,33 +212,53 @@
 						align="center"
 						label="备注"
 						width="120"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							<span>{{ scope.row.remark || '-' }}</span>
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="createdBy"
 						align="center"
 						label="创建人"
 						width="120px"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							<span>{{ scope.row.createdBy || '-' }}</span>
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="createdAt"
 						align="center"
 						label="创建时间"
 						sortable="custom"
 						width="160"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							<span>{{ scope.row.createdAt || '-' }}</span>
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="updatedBy"
 						align="center"
 						label="最近操作人"
 						width="120"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							<span>{{ scope.row.updatedBy || '-' }}</span>
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="updatedAt"
 						align="center"
 						label="最近操作时间"
 						sortable="custom"
 						width="160px"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							<span>{{ scope.row.updatedAt || '-' }}</span>
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="operating"
 						align="center"
@@ -375,10 +407,10 @@ export default {
 	},
 	computed: {
 		domainStatusType() {
-			return this.globalDics.domainStatusType
+			return this.globalDics.domainStatusType || []
 		},
 		enumProxyDomainTypeOperate() {
-			return this.globalDics.enumProxyDomainTypeOperate
+			return this.globalDics.enumProxyDomainTypeOperate || []
 		}
 	},
 	mounted() {},

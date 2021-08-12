@@ -110,10 +110,7 @@
 							width="220"
 						>
 							<template slot-scope="scope">
-								<span v-if="!!scope.row.orderNo">
-									{{ scope.row.orderNo }}
-								</span>
-								<span v-else>-</span>
+								{{ scope.row.orderNo || '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column
@@ -123,10 +120,7 @@
 							width="130"
 						>
 							<template slot-scope="scope">
-								<span v-if="!!scope.row.userName">
-									{{ scope.row.userName }}
-								</span>
-								<span v-else>-</span>
+								{{ scope.row.userName || '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column
@@ -136,10 +130,7 @@
 							width="120"
 						>
 							<template slot-scope="scope">
-								<span v-if="!!scope.row.realName">
-									{{ scope.row.realName }}
-								</span>
-								<span v-else>-</span>
+								{{ scope.row.realName || '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column
@@ -173,12 +164,9 @@
 							label="增加金额"
 							width="150"
 						>
-							<!-- <template slot-scope="scope">
-                <span v-if="!!scope.row.adjustAmount">
-                  {{ scope.row.adjustAmount.toFixed(2) }}
-                </span>
-                <span v-else>-</span>
-              </template> -->
+							<template slot-scope="scope">
+								{{ scope.row.adjustAmount || '-' }}
+							</template>
 						</el-table-column>
 						<el-table-column
 							prop="operatorTime"
@@ -187,10 +175,7 @@
 							width="180"
 						>
 							<template slot-scope="scope">
-								<span v-if="!!scope.row.operatorTime">
-									{{ scope.row.operatorTime }}
-								</span>
-								<span v-else>-</span>
+								{{ scope.row.operatorTime || '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column
@@ -253,12 +238,6 @@
 							label="备注"
 							width="180"
 						>
-							<!-- <template slot-scope="scope">
-								<span v-if="!!scope.row.remark">
-									{{ scope.row.remark }}
-								</span>
-								<span v-else>-</span>
-							</template> -->
 							<template slot-scope="scope">
 								<div v-if="!!scope.row.details && scope.row.details.length">
 									<p
@@ -303,7 +282,6 @@
 
 <script>
 import list from '@/mixins/list'
-import detail from './components/detail'
 import dayjs from 'dayjs'
 import { getUsername } from '@/utils/auth'
 const end = dayjs()
@@ -312,17 +290,20 @@ const end = dayjs()
 const start = dayjs()
 	.startOf('day')
 	.valueOf()
+
 export default {
-	name: 'AgentTopupReviewRecord',
-	components: { detail },
+	name: 'AgentTopUpReviewRecord',
+	components: {
+		detail: () => import('./components/detail')
+	},
 	mixins: [list],
 	data() {
 		this.loadData = this.throttle(this.loadData, 1000)
 		return {
 			queryData: {
-				id: '',
-				userName: '',
-				orderStatus: ''
+				id: undefined,
+				userName: undefined,
+				orderStatus: undefined
 			},
 			type: true,
 			showDetail: false,
@@ -337,7 +318,7 @@ export default {
 	},
 	computed: {
 		patchAdjustStatusFinish() {
-			return this.globalDics.patchAdjustStatusFinish
+			return this.globalDics.patchAdjustStatusFinish || []
 		}
 	},
 	mounted() {
@@ -351,10 +332,10 @@ export default {
 				...this.queryData,
 				operatorTimeStart: startTime
 					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
-					: '',
+					: undefined,
 				operatorTimeEnd: endTime
 					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
-					: ''
+					: undefined
 			}
 			params = {
 				...this.getParams(params)
@@ -368,11 +349,7 @@ export default {
 						this.dataList = response.record
 						if (this.dataList) {
 							this.dataList.forEach((item) => {
-								if (Number(item.lockOrder) === 1) {
-									item.lockStatus = true
-								} else {
-									item.lockStatus = false
-								}
+								item.lockStatus = Number(item.lockOrder) === 1
 							})
 						}
 						this.total = response.totalRecord
@@ -398,9 +375,9 @@ export default {
 		},
 		reset() {
 			this.queryData = {
-				id: '',
-				userName: '',
-				orderStatus: ''
+				id: undefined,
+				userName: undefined,
+				orderStatus: undefined
 			}
 			this.formTime = {
 				time: [start, end]

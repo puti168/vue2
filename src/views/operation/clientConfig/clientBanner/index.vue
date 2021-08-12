@@ -197,7 +197,7 @@
 							prop="areaType"
 							align="center"
 							label="轮播图区域"
-							width="100px"
+							width="100"
 						>
 							<template slot-scope="scope">
 								<span v-for="item in QueryareaList" :key="item.code">
@@ -215,11 +215,10 @@
 							prop="bannerValidity"
 							align="center"
 							label="轮播图时效"
-							width="120px"
+							width="120"
 						>
 							<template slot-scope="scope">
-								<!-- {{ typeFilter(scope.row.bannerValidity, "operateValidityType") }} -->
-								{{ scope.row.bannerValidity === 0 ? '限时' : '永久' }}
+								{{ !scope.row.bannerValidity ? '限时' : '永久' }}
 							</template>
 						</el-table-column>
 						<el-table-column
@@ -227,20 +226,28 @@
 							align="center"
 							label="轮播图上架时间"
 							sortable="custom"
-							width="160px"
-						></el-table-column>
+							width="160"
+						>
+							<template slot-scope="scope">
+								{{ scope.row.upTime || '-' }}
+							</template>
+						</el-table-column>
 						<el-table-column
 							prop="downTime"
 							align="center"
 							sortable="custom"
 							label="轮播图下架时间"
-							width="160px"
-						></el-table-column>
+							width="160"
+						>
+							<template slot-scope="scope">
+								{{ scope.row.downTime || '-' }}
+							</template>
+						</el-table-column>
 						<el-table-column
 							prop="isLink"
 							align="center"
 							label="是否跳转"
-							width="100px"
+							width="100"
 						>
 							<template slot-scope="scope">
 								{{ scope.row.isLink === 1 ? '是' : '否' }}
@@ -250,18 +257,11 @@
 							prop="linkTarget"
 							align="center"
 							label="跳转目标"
-							width="150px"
+							width="150"
 						>
 							<template slot-scope="scope">
 								<div v-if="scope.row.linkTarget === 0">
-									<span v-for="(item, index) in QueryGameList" :key="index">
-										<!-- {{ scope.row.linkTarget === item.gameName ? item.gameId : ''}} -->
-										{{
-											scope.row.targetUrl === item.gameId + ''
-												? item.gameName
-												: ''
-										}}
-									</span>
+									{{ filterGameName(scope.row.targetUrl) }}
 								</div>
 								<div
 									v-else-if="
@@ -277,7 +277,7 @@
 							prop="status"
 							align="center"
 							label="状态"
-							width="120px"
+							width="120"
 						>
 							<template slot-scope="scope">
 								<div v-if="scope.row.status === 0" class="disableRgba">
@@ -289,7 +289,7 @@
 								<span v-else>-</span>
 							</template>
 						</el-table-column>
-						<el-table-column align="center" label="图片" width="80px">
+						<el-table-column align="center" label="图片" width="80">
 							<template slot-scope="scope">
 								<span class="text-link" @click="lookGame(scope.row.pictureUrl)">
 									点击预览
@@ -300,33 +300,49 @@
 							prop="createdBy"
 							align="center"
 							label="创建人"
-							width="150px"
-						></el-table-column>
+							width="150"
+						>
+							<template slot-scope="scope">
+								{{ scope.row.createdBy || '-' }}
+							</template>
+						</el-table-column>
 						<el-table-column
 							prop="createdAt"
 							align="center"
 							label="创建时间"
 							sortable="custom"
-							width="160px"
-						></el-table-column>
+							width="160"
+						>
+							<template slot-scope="scope">
+								{{ scope.row.createdAt || '-' }}
+							</template>
+						</el-table-column>
 						<el-table-column
 							prop="updatedBy"
 							align="center"
 							label="最近操作人"
-							width="120px"
-						></el-table-column>
+							width="120"
+						>
+							<template slot-scope="scope">
+								{{ scope.row.updatedBy || '-' }}
+							</template>
+						</el-table-column>
 						<el-table-column
 							prop="updatedAt"
 							align="center"
 							label="最近操作时间"
 							sortable="custom"
-							width="160px"
-						></el-table-column>
+							width="160"
+						>
+							<template slot-scope="scope">
+								{{ scope.row.updatedAt || '-' }}
+							</template>
+						</el-table-column>
 						<el-table-column
 							prop="operating"
 							align="center"
 							label="操作"
-							width="270px"
+							width="270"
 						>
 							<template slot-scope="scope">
 								<el-button
@@ -737,6 +753,12 @@ export default {
 				}
 				console.log(this.QueryGameList, 'this.QueryGameList')
 			})
+		},
+		filterGameName(val) {
+			const lis = this.QueryGameList.find(
+				(item) => item.gameId + '' === val + ''
+			)
+			return lis?.gameName || '-'
 		},
 		addLabel(val) {
 			this.dialogForm = {

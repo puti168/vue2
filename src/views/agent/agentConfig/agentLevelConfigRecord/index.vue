@@ -90,10 +90,7 @@
 						width="150"
 					>
 						<template slot-scope="scope">
-							<span v-if="!!(scope.row.rebateLevel + '')">
-								{{ scope.row.rebateLevel }}
-							</span>
-							<span v-else>-</span>
+							<span>{{ scope.row.rebateLevel || '-' }}</span>
 						</template>
 					</el-table-column>
 					<el-table-column prop="operateField" align="center" label="变更类型">
@@ -106,20 +103,14 @@
 							<span v-else>-</span>
 						</template>
 					</el-table-column>
-					<el-table-column align="center" label="变更前" prop="beforeValue">
+					<el-table-column align="center" label="变更前" prop="beforeModify">
 						<template slot-scope="scope">
-							<span v-if="!!(scope.row.beforeModify + '')">
-								{{ scope.row.beforeModify }}
-							</span>
-							<span v-else>-</span>
+							<span>{{ scope.row.beforeModify || '-' }}</span>
 						</template>
 					</el-table-column>
-					<el-table-column align="center" label="变更后" prop="afterValue">
+					<el-table-column align="center" label="变更后" prop="afterModify">
 						<template slot-scope="scope">
-							<span v-if="!!(scope.row.afterModify + '')">
-								{{ scope.row.afterModify }}
-							</span>
-							<span v-else>-</span>
+							<span>{{ scope.row.afterModify || '-' }}</span>
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -129,10 +120,7 @@
 						label="操作人"
 					>
 						<template slot-scope="scope">
-							<span v-if="!!(scope.row.createdBy + '')">
-								{{ scope.row.createdBy }}
-							</span>
-							<span v-else>-</span>
+							<span>{{ scope.row.createdBy || '-' }}</span>
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -140,7 +128,11 @@
 						align="center"
 						label="操作时间"
 						sortable="custom"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							<span>{{ scope.row.createdAt || '-' }}</span>
+						</template>
+					</el-table-column>
 				</el-table>
 				<!-- 分页 -->
 				<el-pagination

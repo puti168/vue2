@@ -9,6 +9,18 @@ const install = (Vue) => {
 			get() {
 				return apis
 			}
+		},
+		$$: {
+			get() {
+				const optionalChaining = (obj, ...rest) => {
+					let tmp = obj
+					for (const key in rest) {
+						const name = rest[key]
+						tmp = tmp?.[name]
+					}
+				}
+				return optionalChaining || ''
+			}
 		}
 	})
 }
