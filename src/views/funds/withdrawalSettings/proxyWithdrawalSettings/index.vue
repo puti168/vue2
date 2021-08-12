@@ -101,11 +101,7 @@
 						<template slot-scope="scope">
 							<span v-if="scope.row.proxyAccount === '0'">-</span>
 							<span v-else>
-								{{
-									typeFilter(scope.row.proxyAccountType, 'accountType')
-										? typeFilter(scope.row.proxyAccountType, 'accountType')
-										: '-'
-								}}
+								{{ typeFilter(scope.row.proxyAccountType, 'accountType') }}
 							</span>
 						</template>
 					</el-table-column>
@@ -120,11 +116,6 @@
 							<span v-else>
 								{{
 									typeFilter(scope.row.proxyAccountStatus, 'accountStatusType')
-										? typeFilter(
-												scope.row.proxyAccountStatus,
-												'accountStatusType'
-										  )
-										: '-'
 								}}
 							</span>
 						</template>
@@ -461,10 +452,9 @@
 
 <script>
 import list from '@/mixins/list'
-import { routerNames } from '@/utils/consts'
+
 export default {
-	name: routerNames.gameLabel,
-	components: {},
+	name: 'ProxyWithdrawalSetting',
 	mixins: [list],
 	data() {
 		return {
@@ -489,10 +479,10 @@ export default {
 	},
 	computed: {
 		accountType() {
-			return this.globalDics.accountType
+			return this.globalDics.accountType || []
 		},
 		accountStatusType() {
-			return this.globalDics.accountStatusType
+			return this.globalDics.accountStatusType || []
 		},
 
 		rules() {
@@ -627,12 +617,12 @@ export default {
 			this.$api
 				.getProxyWithdrawalSelectPage(params)
 				.then((res) => {
-					if (res.code === 200) {
-						this.tableData = res.data.records
-						this.total = res.data.total
-						this.loading = false
+					this.loading = false
+					if (res?.code === 200) {
+						this.tableData = res?.data?.records || []
+						this.total = res?.data?.total || 0
 					} else {
-						this.loading = false
+						// this.loading = false
 					}
 				})
 				.catch(() => {
@@ -641,7 +631,7 @@ export default {
 		},
 		getProxyDetailQueryDetail(val) {
 			this.$api.getProxyDetailQueryDetail({ userName: val }).then((res) => {
-				if (res.code === 200) {
+				if (res?.code === 200) {
 					const {
 						id,
 						realName,
@@ -754,7 +744,6 @@ export default {
 						}
 						this.$refs.formSub.validate((valid) => {
 							if (valid) {
-								console.log(params)
 								this.$confirm(
 									`<strong>您确认要执行新增代理提款设置的操作?</strong>`,
 									`确认提示`,
@@ -767,8 +756,7 @@ export default {
 								)
 									.then(() => {
 										this.$api.setProxyWithdrawalAdd(params).then((res) => {
-											if (res.code === 200) {
-												console.log(res)
+											if (res?.code === 200) {
 												this.$message.success('新增成功!')
 												this.loadData()
 											}
@@ -789,7 +777,6 @@ export default {
 				}
 				this.$refs.formSub.validate((valid) => {
 					if (valid) {
-						console.log(params)
 						this.$confirm(
 							`<strong>您确认要执行修改代理提款设置的操作?</strong>`,
 							`确认提示`,
@@ -801,10 +788,8 @@ export default {
 							}
 						)
 							.then(() => {
-								console.log(params)
 								this.$api.setproxyWithdrawalUpdate(params).then((res) => {
-									if (res.code === 200) {
-										console.log(res)
+									if (res?.code === 200) {
 										this.$message.success('修改成功!')
 										this.loadData()
 									}
