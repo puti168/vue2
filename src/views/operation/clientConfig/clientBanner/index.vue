@@ -203,8 +203,8 @@
 								v-if="scope.row.areaType || scope.row.areaType === 0"
 								slot-scope="scope"
 							>
-								<span v-for="item in QueryareaList" :key="item.code">
-									{{ scope.row.areaType === item.code ? item.value : '' }}
+								<span>
+									{{ filterAreaList(scope.row.areaType) }}
 								</span>
 							</template>
 							<span v-else>-</span>
@@ -740,8 +740,8 @@ export default {
 			this.$api
 				.getQperateConfigBannerQueryBannerList(params)
 				.then((res) => {
-					if (res?.code === 200 && res.data) {
-						const { records, total } = res.data
+					if (res?.code === 200) {
+						const { records, total } = res.data || {}
 						this.tableData = Array.isArray(records)
 							? Object.freeze(records)
 							: []
@@ -755,18 +755,17 @@ export default {
 		},
 		getQueryarea() {
 			this.$api.operateConfigBannerQueryBannerAreaAPI().then((res) => {
-				if (res.code === 200) {
-					this.QueryareaList = res.data
+				if (res?.code === 200) {
+					this.QueryareaList = res.data || []
 				}
 			})
 		},
 		// 获取所有游戏
 		getQueryGameList() {
 			this.$api.operateConfigBannerQueryGameList().then((res) => {
-				if (res.code === 200) {
-					this.QueryGameList = res.data
+				if (res?.code === 200) {
+					this.QueryGameList = res.data || []
 				}
-				console.log(this.QueryGameList, 'this.QueryGameList')
 			})
 		},
 		filterGameName(val) {
@@ -841,14 +840,12 @@ export default {
 			this.$api
 				.getOperateConfigBannerAdd(val)
 				.then((res) => {
-					if (res.code === 200) {
-						console.log(res)
+					if (res?.code === 200) {
 						this.$message.success('新增成功!')
 						this.loadData()
 					}
 					this.dialogFormVisible = false
 				})
-
 				.catch(() => {})
 		},
 
@@ -876,7 +873,7 @@ export default {
 		},
 		setBannerUpdate(val) {
 			this.$api.getPperateConfigBannerUpdate(val).then((res) => {
-				if (res.code === 200) {
+				if (res?.code === 200) {
 					this.$message({
 						message: '编辑成功！',
 						type: 'success'
@@ -909,8 +906,7 @@ export default {
 						.getOperateConfigBannerDelete({ id })
 						.then((res) => {
 							loading.close()
-							const { code } = res
-							if (code === 200) {
+							if (res?.code === 200) {
 								this.$message({
 									type: 'success',
 									message: '删除成功!'
@@ -947,9 +943,18 @@ export default {
 					this.$api
 						.getOperateConfigBannerUse({ id: val.id, status: status })
 						.then((res) => {
-							if (res.code === 200) {
-								this.loadData()
+							if (res?.code === 200) {
+								this.$message({
+									type: 'success',
+									message: '操作成功!'
+								})
+							} else {
+								this.$message({
+									type: 'error',
+									message: '操作失败!'
+								})
 							}
+							this.loadData()
 						})
 				})
 				.catch(() => {})
@@ -976,7 +981,7 @@ export default {
 			this.$api
 				.setoperateConfigBannerSort({ sortIds: sortIds, clientType })
 				.then((res) => {
-					if (res.code === 200) {
+					if (res?.code === 200) {
 						this.$message({
 							message: '操作成功！',
 							type: 'success'
@@ -1000,13 +1005,12 @@ export default {
 			this.$api
 				.operatecCnfigBannerQuerySortedBannerArea({ clientType })
 				.then((res) => {
-					if (res.code === 200) {
-						this.sortareaList = res.data
+					if (res?.code === 200) {
+						this.sortareaList = res.data || []
 						this.subSort = true
 					}
 				})
 			this.subSort = false
-			console.log('111111111')
 		},
 		lookGame(val) {
 			this.imgVisible = true
@@ -1059,6 +1063,10 @@ export default {
 			this.queryData = {}
 			this.pageNum = 1
 			this.loadData()
+		},
+		filterAreaList(val) {
+			const res = this.QueryareaList.find((item) => item.code === val)
+			return res?.value || '-'
 		}
 	}
 }
