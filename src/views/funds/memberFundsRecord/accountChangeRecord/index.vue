@@ -582,7 +582,7 @@ export default {
 				.then((res) => {
 					this.loading = false
 					if (res?.code === 200) {
-						this.tableData = res?.data?.record
+						this.tableData = res?.data?.record || []
 						this.total = res.data.totalRecord
 						this.summary = res.data.summary
 					}
