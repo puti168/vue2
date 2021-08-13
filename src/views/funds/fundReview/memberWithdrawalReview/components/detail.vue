@@ -56,7 +56,7 @@
 						<el-table-column align="center" label="注册端">
 							<template>
 								{{
-									list && list.deviceType
+									(list && list.deviceType) || list.deviceType === 0
 										? typeFilter(list.deviceType, 'deviceType')
 										: '-'
 								}}
@@ -75,7 +75,7 @@
 						<el-table-column align="center" label="账号类型">
 							<template>
 								{{
-									list && list.accountType
+									(list && list.accountType) || list.accountType === 0
 										? typeFilter(list.accountType, 'accountType')
 										: '-'
 								}}
@@ -119,7 +119,7 @@
 						<el-table-column align="center" label="账号状态">
 							<template>
 								{{
-									list && list.accountStatus
+									(list && list.accountStatus) || list.accountStatus === 0
 										? typeFilter(list.accountStatus, 'accountStatusType')
 										: '-'
 								}}
@@ -137,12 +137,20 @@
 						</el-table-column>
 						<el-table-column align="center" label="绑定银行卡数量">
 							<template>
-								{{ list && list.bankNum ? list.bankNum : '-' }}
+								{{
+									(list && list.bankNum) || list.bankNum === 0
+										? list.bankNum
+										: '-'
+								}}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="虚拟币账号数量">
 							<template>
-								{{ list && list.virtualNum ? list.virtualNum : '-' }}
+								{{
+									(list && list.virtualNum) || list.virtualNum === 0
+										? list.virtualNum
+										: '-'
+								}}
 							</template>
 						</el-table-column>
 					</el-table>
@@ -158,7 +166,8 @@
 						<el-table-column align="center" label="累计总存款金额（万元）">
 							<template>
 								{{
-									list && list.totalDepositAmount
+									(list && list.totalDepositAmount) ||
+									list.totalDepositAmount === 0
 										? list.totalDepositAmount
 										: '-'
 								}}
@@ -166,13 +175,18 @@
 						</el-table-column>
 						<el-table-column align="center" label="累计总存款次数">
 							<template>
-								{{ list && list.totalDepositNum ? list.totalDepositNum : '-' }}
+								{{
+									(list && list.totalDepositNum) || list.totalDepositNum === 0
+										? list.totalDepositNum
+										: '-'
+								}}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="累计总提款金额（万元）">
 							<template>
 								{{
-									list && list.totalWithdrawAmount
+									(list && list.totalWithdrawAmount) ||
+									list.totalWithdrawAmount === 0
 										? list.totalWithdrawAmount
 										: '-'
 								}}
@@ -181,14 +195,19 @@
 						<el-table-column align="center" label="累计总提款次数">
 							<template>
 								{{
-									list && list.totalWithdrawNum ? list.totalWithdrawNum : '-'
+									(list && list.totalWithdrawNum) || list.totalWithdrawNum === 0
+										? list.totalWithdrawNum
+										: '-'
 								}}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="累计总存提款差额（万元）">
 							<template>
 								{{
-									list && list.totalWithdrawDiff ? list.totalWithdrawDiff : '-'
+									(list && list.totalWithdrawDiff) ||
+									list.totalWithdrawDiff === 0
+										? list.totalWithdrawDiff
+										: '-'
 								}}
 							</template>
 						</el-table-column>
@@ -252,7 +271,11 @@
 						</el-table-column>
 						<el-table-column align="center" label="上次提款金额">
 							<template>
-								{{ list && list.lastAmount ? list.lastAmount : '-' }}
+								{{
+									(list && list.lastAmount) || list.lastAmount === 0
+										? list.lastAmount
+										: '-'
+								}}
 							</template>
 						</el-table-column>
 						<el-table-column
@@ -261,7 +284,8 @@
 						>
 							<template>
 								{{
-									list && list.lastBetweenThisDepositAmount
+									(list && list.lastBetweenThisDepositAmount) ||
+									list.lastBetweenThisDepositAmount === 0
 										? list.lastBetweenThisDepositAmount
 										: '-'
 								}}
@@ -270,7 +294,7 @@
 						<el-table-column align="center" label="上次提款方式">
 							<template>
 								{{
-									list && list.lastType
+									(list && list.lastType) || list.lastType === 0
 										? typeFilter(list.lastType, 'payDataType')
 										: '-'
 								}}
@@ -279,7 +303,7 @@
 						<el-table-column align="center" label="上次是否为大额提款">
 							<template>
 								{{
-									list && list.lastBig
+									(list && list.lastBig) || list.lastBig === 0
 										? typeFilter(list.lastBig, 'withdrawBiggerType')
 										: '-'
 								}}
@@ -305,7 +329,7 @@
 								<td class="td-title">是否为首提</td>
 								<td>
 									{{
-										list && list.isOneWith
+										(list && list.isOneWith) || list.isOneWith === 0
 											? typeFilter(list.isOneWith, 'withdrawOneStatus')
 											: '-'
 									}}
@@ -313,7 +337,7 @@
 								<td class="td-title">是否为大额提款</td>
 								<td>
 									{{
-										list && (list.isBig || list.isBig + '' === '0')
+										(list && list.isBig) || list.isBig === 0
 											? typeFilter(String(list.isBig), 'withdrawBiggerType')
 											: '-'
 									}}
@@ -322,22 +346,33 @@
 							<tr>
 								<td class="td-title">今日提款次数</td>
 								<td>
-									{{ list && list.dayWithDrawNum ? list.dayWithDrawNum : '-' }}
+									{{
+										(list && list.dayWithDrawNum) || list.dayWithDrawNum === 0
+											? list.dayWithDrawNum
+											: '-'
+									}}
 								</td>
 								<td class="td-title">免费提款次数</td>
-								<td>{{ list && list.freeNum ? list.freeNum : '-' }}</td>
+								<td>
+									{{
+										(list && list.freeNum) || list.freeNum === 0
+											? list.freeNum
+											: '-'
+									}}
+								</td>
 								<td class="td-title">今日提款总额</td>
 								<td>
 									{{
-										list && list.dayWithDrawNumSum
-											? list.dayWithDrawNumSum
+										(list && list.dayWithDrawSum) || list.dayWithDrawSum === 0
+											? list.dayWithDrawSum
 											: '-'
 									}}
 								</td>
 								<td class="td-title">是否连续提款</td>
 								<td>
 									{{
-										list && list.isContinuityWithDraw
+										(list && list.isContinuityWithDraw) ||
+										list.isContinuityWithDraw === 0
 											? Number(list.isContinuityWithDraw) === 1
 												? '是'
 												: '否'
@@ -347,7 +382,7 @@
 								<td class="td-title">提款方式</td>
 								<td>
 									{{
-										list && list.withdrawType
+										(list && list.withdrawType) || list.withdrawType === 0
 											? typeFilter(list.withdrawType, 'payDataType')
 											: '-'
 									}}
@@ -357,8 +392,9 @@
 								<td class="td-title">提款设备终端</td>
 								<td colspan="2">
 									{{
-										list && list.withdrawDeviceType
-											? list.withdrawDeviceType
+										(list && list.withdrawDeviceType) ||
+										list.withdrawDeviceType === 0
+											? typeFilter(list.withdrawDeviceType, 'loginDeviceType')
 											: '-'
 									}}
 								</td>
@@ -382,14 +418,20 @@
 							</tr>
 							<tr>
 								<td colspan="3">
-									{{ list && list.withdrawWater ? list.withdrawWater : '-' }}
+									{{
+										(list && list.withdrawWater) || list.withdrawWater === 0
+											? list.withdrawWater
+											: '-'
+									}}
 								</td>
 								<td colspan="2">
 									{{ list && list.orderAmount ? list.orderAmount : '-' }}
 								</td>
 								<td colspan="2">
 									{{
-										list && list.orderRateAmount ? list.orderRateAmount : '-'
+										(list && list.orderRateAmount) || list.orderRateAmount === 0
+											? list.orderRateAmount
+											: '-'
 									}}
 								</td>
 								<td colspan="2">

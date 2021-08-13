@@ -466,13 +466,6 @@ export default {
 				const tempList = this.tableData.filter(element => {
 					return element.tutorId === this.dialogForm.tutorId
 				})
-				if (tempList.length > 4) {
-					this.$message({
-						message: '具体教程名称下最多不超过5条教程页签！',
-						type: 'error'
-					})
-					return
-				}
 			}
 			this.dialogFormVisible = true
 			if (this.dialogForm.bookmarkPicture) {
@@ -583,6 +576,13 @@ export default {
 			this.loadData()
 		},
 		subSortadd() {
+			if (!this.queryData.tutorId) {
+				this.$message({
+					message: '选择教程名称后才可以对教程页签排序。',
+					type: 'error'
+				})
+				return
+			}
 			this.$api
 				.bookmarkQuerySortedNames(this.queryData)
 				.then((res) => {
