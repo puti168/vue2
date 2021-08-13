@@ -549,8 +549,8 @@ export default {
 					// 后端说都用update const url = this.rowAssortId ? 'gameUpdateAPI' : 'gameCreateAPI'
 					this.$api.gameUpdateAPI(params).then((res) => {
 						const { code, msg } = res || {}
+						loading.close()
 						if (code && code === 200) {
-							loading.close()
 							this.$message({
 								message: '保存成功!',
 								type: 'success'
@@ -558,13 +558,12 @@ export default {
 							this.back()
 							this.reset()
 						} else {
-							loading.close()
 							this.$message({
 								message: msg,
 								type: 'error'
 							})
 						}
-					})
+					}).catch(() => (loading.close()))
 				}
 			})
 		},
