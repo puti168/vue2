@@ -98,7 +98,7 @@ module.exports = {
 	},
 	chainWebpack: (config) => {
 		// config.plugin(true).use(HardSourceWebpackPlugin)
-		config.cache(true)
+		// config.cache(true)
 		config.plugins.delete('preload') // TODO: need test
 		config.plugins.delete('prefetch') // TODO: need test
 		// set svg-sprite-loader

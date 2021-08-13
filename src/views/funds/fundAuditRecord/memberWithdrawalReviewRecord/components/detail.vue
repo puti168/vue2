@@ -19,45 +19,45 @@
 					>
 						<el-table-column align="center" label="注册时间">
 							<template>
-                                {{ list && list.createDt ? list.createDt : '-' }}
+								{{ (list && list.createDt) || '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="上次登录时间">
 							<template>
-                                {{ list && list.lastLoginTime ? list.lastLoginTime : '-' }}
+								{{ (list && list.lastLoginTime) || '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="最后下注时间">
 							<template>
-                                {{ list && list.lastBetTime ? list.lastBetTime : '-' }}
+								{{ (list && list.lastBetTime) || '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="注册端">
 							<template>
-                                {{
-                                    list && list.deviceType
-                                        ? typeFilter(list.deviceType, 'deviceType')
-                                        : '-'
-                                }}
+								{{
+									list && list.deviceType
+										? typeFilter(list.deviceType, 'deviceType')
+										: '-'
+								}}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="注册IP">
 							<template>
-                                {{ list && list.registerIp ? list.registerIp : '-' }}
+								{{ (list && list.registerIp) || '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="注册端设备编号">
 							<template>
-                                {{ list && list.deviceNo ? list.deviceNo : '-' }}
+								{{ (list && list.deviceNo) || '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="账号类型">
 							<template>
-                                {{
-                                    list && list.accountType
-                                        ? typeFilter(list.accountType, 'accountType')
-                                        : '-'
-                                }}
+								{{
+									list && list.accountType
+										? typeFilter(list.accountType, 'accountType')
+										: '-'
+								}}
 							</template>
 						</el-table-column>
 					</el-table>
@@ -75,41 +75,41 @@
 					>
 						<el-table-column align="center" label="会员账号">
 							<template>
-                                {{ list && list.userName ? list.userName : '-' }}
+								{{ (list && list.userName) || '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="会员姓名">
 							<template>
-								{{ list && list.realName ? list.realName : '-' }}
+								{{ (list && list.realName) || '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="账号状态">
 							<template>
-                                {{
-                                    list && list.accountStatus
-                                        ? typeFilter(list.accountStatus, 'accountStatusType')
-                                        : '-'
-                                }}
+								{{
+									list && list.accountStatus
+										? typeFilter(list.accountStatus, 'accountStatusType')
+										: '-'
+								}}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="会员标签">
 							<template>
-                                {{ list && list.labelName ? list.labelName : '-' }}
+								{{ (list && list.labelName) || '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="备注">
 							<template>
-                                {{ list && list.remark ? list.remark : '-' }}
+								{{ (list && list.remark) || '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="绑定银行卡数量">
 							<template>
-                                {{ list && list.bankNum ? list.bankNum : '-' }}
+								{{ (list && list.bankNum) || '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="虚拟币账号数量">
 							<template>
-                                {{ list && list.virtualNum ? list.virtualNum : '-' }}
+								{{ (list && list.virtualNum) || '-' }}
 							</template>
 						</el-table-column>
 					</el-table>
@@ -127,41 +127,27 @@
 					>
 						<el-table-column align="center" label="风险会员">
 							<template>
-                                {{ list && list.windControlName ? list.windControlName : '-' }}
+								{{ (list && list.windControlName) || '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="风险银行卡">
 							<template>
-                                {{
-                                    list && list.cardWindControlName
-                                        ? list.cardWindControlName
-                                        : '-'
-                                }}
+								{{ (list && list.cardWindControlName) || '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="风险虚拟币">
 							<template>
-                                {{
-                                    list && list.virtualWindControlName
-                                        ? list.virtualWindControlName
-                                        : '-'
-                                }}
+								{{ (list && list.virtualWindControlName) || '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="风险IP">
 							<template>
-                                {{
-                                    list && list.ipWindControlName ? list.ipWindControlName : '-'
-                                }}
+								{{ (list && list.ipWindControlName) || '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="风险终端设备号">
 							<template>
-                                {{
-                                    list && list.deviceNoWindControlName
-                                        ? list.deviceNoWindControlName
-                                        : '-'
-                                }}
+								{{ (list && list.deviceNoWindControlName) || '-' }}
 							</template>
 						</el-table-column>
 					</el-table>
@@ -177,49 +163,49 @@
 						style="width: 100%"
 						:header-cell-style="getRowClass"
 					>
-                        <el-table-column align="center" label="申请人">
-                            <template>
-                                {{ list && list.operator ? list.operator : '-' }}
-                            </template>
-                        </el-table-column>
-                        <el-table-column align="center" label="申请时间">
-                            <template>
-                                {{ list && list.operatorTime ? list.operatorTime : '-' }}
-                            </template>
-                        </el-table-column>
-                        <el-table-column align="center" label="申请原因">
-                            <template>
-                                {{ list && list.operatorRemark ? list.operatorRemark : '-' }}
-                            </template>
-                        </el-table-column>
+						<el-table-column align="center" label="申请人">
+							<template>
+								{{ (list && list.operator) || '-' }}
+							</template>
+						</el-table-column>
+						<el-table-column align="center" label="申请时间">
+							<template>
+								{{ (list && list.operatorTime) || '-' }}
+							</template>
+						</el-table-column>
+						<el-table-column align="center" label="申请原因">
+							<template>
+								{{ (list && list.operatorRemark) || '-' }}
+							</template>
+						</el-table-column>
 						<el-table-column align="center" label="提现金额">
 							<template>
-								{{ list && list.orderAmount ? list.orderAmount : '-' }}
+								{{ (list && list.orderAmount) || '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="提现手续费">
 							<template>
-								{{ list && list.orderRateAmount ? list.orderRateAmount : '-' }}
+								{{ (list && list.orderRateAmount) || '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="提现前余额(元)">
 							<template>
-								{{ list && list.beforeModify ? list.beforeModify : '-' }}
+								{{ (list && list.beforeModify) || '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="提现后余额(元)">
 							<template>
-								{{ list && list.beforeModify ? list.beforeModify : '-' }}
+								{{ (list && list.beforeModify) || '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="实际到账金额">
 							<template>
-								{{ list && list.realAmount ? list.realAmount : '-' }}
+								{{ (list && list.realAmount) || '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="是否为大额提款">
 							<template>
-								{{ list && list.isBig ? list.isBig : '-' }}
+								{{ (list && list.isBig) || '-' }}
 							</template>
 						</el-table-column>
 					</el-table>
@@ -230,19 +216,19 @@
 				<div class="review-flex">
 					<div>
 						一审人:
-						{{ list && list.audit1Operator ? list.audit1Operator : '-' }}
+						{{ (list && list.audit1Operator) || '-' }}
 					</div>
 					<div>
 						一审时间:
-						{{ list && list.audit1Time ? list.audit1Time : '-' }}
+						{{ (list && list.audit1Time) || '-' }}
 					</div>
 					<div>
 						一审备注:
-						{{ list && list.audit1Desc ? list.audit1Desc : '-' }}
+						{{ (list && list.audit1Desc) || '-' }}
 					</div>
 					<div>
 						审核结果:
-						{{ list && list.audit1Result ? list.audit1Result : '-' }}
+						{{ (list && list.audit1Result) || '-' }}
 					</div>
 				</div>
 			</div>
@@ -281,7 +267,7 @@ export default {
 		getInfo() {
 			const { thirdOrderNo, createdAt } = this.rowData
 			const params = {
-                thirdOrderNo,
+				thirdOrderNo,
 				createdAt
 			}
 			this.$api.memberWithdrawDetailsAPI(params).then((res) => {
@@ -345,7 +331,7 @@ export default {
 		.review-content {
 			min-height: 150px;
 			border: 1px solid rgba(192, 190, 190, 0.5);
-			border-top: 0px;
+			border-top: 0;
 			padding: 30px;
 			.name {
 				font-weight: 600;

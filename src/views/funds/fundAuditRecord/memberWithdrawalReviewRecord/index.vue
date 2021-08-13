@@ -314,7 +314,6 @@
 
 <script>
 import list from '@/mixins/list'
-import detail from './components/detail'
 import dayjs from 'dayjs'
 import { getUsername } from '@/utils/auth'
 const end = dayjs()
@@ -326,7 +325,7 @@ const start = dayjs()
 
 export default {
 	name: 'MemberWithdrawalReviewRecord',
-	components: { detail },
+	components: { detail: () => import('./components/detail') },
 	mixins: [list],
 	data() {
 		this.loadData = this.throttle(this.loadData, 1000)
@@ -346,7 +345,7 @@ export default {
 	},
 	computed: {
 		orderTypeArr() {
-			return this.globalDics.withdrawStatusFinish
+			return this.globalDics.withdrawStatusFinish || []
 		}
 	},
 	mounted() {
