@@ -1,11 +1,10 @@
 import dayjs from 'dayjs'
 import { shortcuts, shortcutsNoToday, shortcutsM } from '@/utils/consts'
 import { formatCurrency } from '@/utils'
-import Copy from '@/components/Copy/copy'
 import { mapGetters } from 'vuex'
 
 export default {
-	components: { Copy },
+	components: { Copy: () => import('@/components/Copy/copy') },
 	data() {
 		return {
 			list: [],
