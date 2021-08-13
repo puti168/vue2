@@ -110,10 +110,7 @@
 							width="220"
 						>
 							<template slot-scope="scope">
-								<span v-if="!!scope.row.thirdOrderNo">
-									{{ scope.row.thirdOrderNo }}
-								</span>
-								<span v-else>-</span>
+								{{ scope.row.thirdOrderNo || '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column
@@ -123,10 +120,7 @@
 							width="130"
 						>
 							<template slot-scope="scope">
-								<span v-if="!!scope.row.userName">
-									{{ scope.row.userName }}
-								</span>
-								<span v-else>-</span>
+								{{ scope.row.userName || '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column
@@ -136,10 +130,7 @@
 							width="120"
 						>
 							<template slot-scope="scope">
-								<span v-if="!!scope.row.realName">
-									{{ scope.row.realName }}
-								</span>
-								<span v-else>-</span>
+								{{ scope.row.realName || '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column
@@ -162,10 +153,7 @@
 							width="150"
 						>
 							<template slot-scope="scope">
-								<span v-if="!!scope.row.isBig">
-									{{ scope.row.isBig }}
-								</span>
-								<span v-else>-</span>
+								{{ scope.row.isBig || '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column
@@ -175,10 +163,7 @@
 							width="120"
 						>
 							<template slot-scope="scope">
-								<span v-if="!!scope.row.isFirst">
-									{{ scope.row.isFirst }}
-								</span>
-								<span v-else>-</span>
+								{{ scope.row.isFirst || '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column
@@ -188,10 +173,7 @@
 							width="150"
 						>
 							<template slot-scope="scope">
-								<span v-if="!!scope.row.orderAmount">
-									{{ scope.row.orderAmount }}
-								</span>
-								<span v-else>-</span>
+								{{ scope.row.orderAmount || '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column
@@ -219,10 +201,7 @@
 							width="180"
 						>
 							<template slot-scope="scope">
-								<span v-if="!!scope.row.createdAt">
-									{{ scope.row.createdAt }}
-								</span>
-								<span v-else>-</span>
+								{{ scope.row.createdAt || '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column
@@ -286,10 +265,7 @@
 							width="180"
 						>
 							<template slot-scope="scope">
-								<span v-if="!!scope.row.remark">
-									{{ scope.row.remark }}
-								</span>
-								<span v-else>-</span>
+								{{ scope.row.remark || '-' }}
 							</template>
 						</el-table-column>
 					</el-table>
