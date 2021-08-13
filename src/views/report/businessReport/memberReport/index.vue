@@ -269,7 +269,6 @@
 						prop="playerName"
 						align="center"
 						label="会员账号"
-						fixed
 						width="120"
 					>
 						<template slot-scope="scope">
@@ -429,7 +428,7 @@
 					</el-table-column>
 					<el-table-column
 						v-if="memberReport['总存款']"
-						prop="depositAmount "
+						prop="depositAmount"
 						align="center"
 						label="总存款"
 						sortable="custom"
@@ -728,7 +727,7 @@
 				:data="memberDetails"
 				style="margin-bottom: 15px"
 				:header-cell-style="getRowClass"
-				:span-method="spanMethod"
+				:span-method="objectSpanMethod"
 			>
 				<el-table-column
 					prop="staticDate"
@@ -936,7 +935,7 @@ export default {
 			pageR: 1,
 			sizeR: 10,
 			dialogTotal: 0,
-			summary: {},
+			summary: null,
 			myName: '',
 			spanArr: []
 		}
@@ -1186,7 +1185,8 @@ export default {
 						console.log(res)
 						this.memberDetails = res.data.records
 						this.dialogTotal = res.data.total
-						this._getSpanArr(res.data.records, 'staticDate')
+
+						this.setdates(this.memberDetails)
 					}
 					this.loadingDialog = false
 				})
@@ -1194,31 +1194,41 @@ export default {
 					this.loadingDialog = false
 				})
 		},
-		_getSpanArr(data, field) {
-			let spanArrIndex
-			if (data && data.length) {
-				for (var i = 0; i < data.length; i++) {
+		setdates(val) {
+			const obj = {}
+			let k = ''
+			for (let i = 0; i < val.length; i++) {
+				k = val[i].staticDate
+				console.log(k)
+				if (obj[k]) {
+					obj[k]++
+				} else {
+					obj[k] = 1
+				}
+			}
+			// 保存结果{el-'元素'，count-出现次数}
+			for (const o in obj) {
+				for (let i = 0; i < obj[o]; i++) {
 					if (i === 0) {
-						this.spanArr.push(1)
-						spanArrIndex = 0
+						this.spanArr.push(obj[o])
 					} else {
-						if (data[i][field] === data[i - 1][field]) {
-							this.spanArr[spanArrIndex] += 1
-							this.spanArr.push(0)
-						} else {
-							this.spanArr.push(1)
-							spanArrIndex = i
-						}
+						this.spanArr.push(0)
 					}
 				}
 			}
 		},
-		spanMethod({ row, column, rowIndex, columnIndex }) {
+		objectSpanMethod({ row, column, rowIndex, columnIndex }) {
 			if (columnIndex === 0) {
-				const rowspan = this.spanArr[column.property][rowIndex] || 0
-				return {
-					rowspan,
-					colspan: rowspan > 0 ? 1 : 0
+				if (this.spanArr[rowIndex]) {
+					return {
+						rowspan: this.spanArr[rowIndex],
+						colspan: 1
+					}
+				} else {
+					return {
+						rowspan: 0,
+						colspan: 0
+					}
 				}
 			}
 		},
@@ -1274,6 +1284,7 @@ export default {
 									</div>
 								)
 								break
+
 							case 11:
 								sums[index] = (
 									<div class='count_row'>
@@ -1411,8 +1422,10 @@ export default {
 									<div class='count_row'>
 										{num > 0 ? (
 											<p class='enableColor'>{this.filterDecimals(num)}</p>
-										) : (
+										) : num < 0 ? (
 											<p class='redColor'>{this.filterDecimals(num)}</p>
+										) : (
+											<p>{this.filterDecimals(num)}</p>
 										)}
 										{this.summary.netAmount > 0 ? (
 											<p class='enableColor'>
@@ -1474,21 +1487,91 @@ export default {
 			this.search()
 		},
 		_changeTableSort({ column, prop, order }) {
-			switch (prop) {
-				case 'betCount':
-					prop = 1
-					break
-				case 'betAmount':
-					prop = 2
-					break
-				case 'validBetAmount':
-					prop = 3
-					break
-				case 'netAmount':
-					prop = 4
-					break
+			const arr = {
+				registerAtStr: 1,
+				firstDepositAmount: 2,
+				depositAmount: 3,
+				depositTimes: 4,
+				proxyAssistDepositAmount: 5,
+				proxyAssistDepositTimes: 6,
+				proxyTransferInnerAmount: 7,
+				proxyTransferInnerTimes: 8,
+				withdrawAmount: 9,
+				withdrawTimes: 10,
+				bigWithdrawTimes: 11,
+				depositWithdrawDifferAmount: 12,
+				discountAmount: 13,
+				returnWaterAmount: 14,
+				otherAdjustAmount: 15,
+				betCount: 16,
+				betAmount: 17,
+				validBetAmount: 18,
+				netAmount: 19,
+				transferNum: 20
 			}
-			this.queryData.orderKey = prop
+			this.queryData.orderKey = arr[prop]
+			// switch (prop) {
+			// 	case 'betCount':
+			// 		prop = 1
+			// 		break
+			// 	case 'betAmount':
+			// 		prop = 2
+			// 		break
+			// 	case 'validBetAmount':
+			// 		prop = 3
+			// 		break
+			// 	case 'netAmount':
+			// 		prop = 4
+			// 		break
+			// 	case 'netAmount':
+			// 		prop = 5
+			// 		break
+			// 	case 'netAmount':
+			// 		prop = 6
+			// 		break
+			// 	case 'netAmount':
+			// 		prop = 7
+			// 		break
+			// 	case 'netAmount':
+			// 		prop = 8
+			// 		break
+			// 	case 'netAmount':
+			// 		prop = 9
+			// 		break
+			// 	case 'netAmount':
+			// 		prop = 10
+			// 		break
+			// 	case 'netAmount':
+			// 		prop = 11
+			// 		break
+			// 	case 'netAmount':
+			// 		prop = 12
+			// 		break
+			// 	case 'netAmount':
+			// 		prop = 13
+			// 		break
+			// 	case 'netAmount':
+			// 		prop = 14
+			// 		break
+			// 	case 'netAmount':
+			// 		prop = 15
+			// 		break
+			// 	case 'netAmount':
+			// 		prop = 16
+			// 		break
+			// 	case 'netAmount':
+			// 		prop = 17
+			// 		break
+			// 	case 'netAmount':
+			// 		prop = 18
+			// 		break
+			// 	case 'netAmount':
+			// 		prop = 19
+			// 		break
+			// 	case 'netAmount':
+			// 		prop = 20
+			// 		break
+			// }
 			if (order === 'ascending') {
 				// 升序
 				this.queryData.orderType = 'asc'
