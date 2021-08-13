@@ -329,7 +329,7 @@
 							<el-input
 								v-model="dialogForm.contentDesc"
 								type="textarea"
-								:maxlength="500"
+								:maxlength="2000"
 								autocomplete="off"
 								style="width: 500px"
 								placeholder="请输入"
