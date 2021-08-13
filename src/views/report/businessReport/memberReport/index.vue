@@ -1510,68 +1510,6 @@ export default {
 				transferNum: 20
 			}
 			this.queryData.orderKey = arr[prop]
-			// switch (prop) {
-			// 	case 'betCount':
-			// 		prop = 1
-			// 		break
-			// 	case 'betAmount':
-			// 		prop = 2
-			// 		break
-			// 	case 'validBetAmount':
-			// 		prop = 3
-			// 		break
-			// 	case 'netAmount':
-			// 		prop = 4
-			// 		break
-			// 	case 'netAmount':
-			// 		prop = 5
-			// 		break
-			// 	case 'netAmount':
-			// 		prop = 6
-			// 		break
-			// 	case 'netAmount':
-			// 		prop = 7
-			// 		break
-			// 	case 'netAmount':
-			// 		prop = 8
-			// 		break
-			// 	case 'netAmount':
-			// 		prop = 9
-			// 		break
-			// 	case 'netAmount':
-			// 		prop = 10
-			// 		break
-			// 	case 'netAmount':
-			// 		prop = 11
-			// 		break
-			// 	case 'netAmount':
-			// 		prop = 12
-			// 		break
-			// 	case 'netAmount':
-			// 		prop = 13
-			// 		break
-			// 	case 'netAmount':
-			// 		prop = 14
-			// 		break
-			// 	case 'netAmount':
-			// 		prop = 15
-			// 		break
-			// 	case 'netAmount':
-			// 		prop = 16
-			// 		break
-			// 	case 'netAmount':
-			// 		prop = 17
-			// 		break
-			// 	case 'netAmount':
-			// 		prop = 18
-			// 		break
-			// 	case 'netAmount':
-			// 		prop = 19
-			// 		break
-			// 	case 'netAmount':
-			// 		prop = 20
-			// 		break
-			// }
 			if (order === 'ascending') {
 				// 升序
 				this.queryData.orderType = 'asc'
