@@ -201,11 +201,9 @@ export default {
 		// 查询详情
 		queryDetails(id) {
 			this.$api.platformSelectAPI(Number(id)).then((res) => {
-				const { code, data } = res
-				console.log('res', res)
-				if (code === 200) {
-					this.showInfoData = data
-					const { id, merchantId, gameCode } = data
+				if (res?.code === 200) {
+					this.showInfoData = res.data || {}
+					const { id, merchantId, gameCode } = res.data || {}
 					this.queryData.id = id
 					this.queryData.merchantId = merchantId
 					this.queryData.gameCode = gameCode
@@ -229,8 +227,7 @@ export default {
 						.then((res) => {
 							this.loadingT = false
 							lock = true
-							const { code, msg } = res
-							if (code === 200) {
+							if (res?.code === 200) {
 								this.$confirm(`提交成功`, {
 									confirmButtonText: '确定',
 									type: 'success',
@@ -239,7 +236,7 @@ export default {
 								this.reset()
 							} else {
 								this.$message({
-									message: msg,
+									message: res?.msg || '接口异常',
 									type: 'error'
 								})
 							}
@@ -283,9 +280,8 @@ export default {
 		// 获取商户场馆
 		getMemberVipMerchantGame() {
 			this.$api.memberVipMerchantGameAPI().then((res) => {
-				const { code, data } = res
-				if (code === 200) {
-					this.gameVenueList = data || []
+				if (res?.code === 200) {
+					this.gameVenueList = res.data || []
 				}
 			})
 		}
