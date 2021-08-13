@@ -56,7 +56,7 @@
 						<el-input
 							v-model="queryData.contentName"
 							clearable
-							maxlength="12"
+							maxlength="50"
 							size="medium"
 							style="width: 180px; margin-right: 20px"
 							placeholder="请输入"
