@@ -312,7 +312,7 @@
 						>
 							<el-input
 								v-model="dialogForm.contentName"
-								:maxlength="20"
+								:maxlength="50"
 								show-word-limit
 								autocomplete="off"
 								style="width: 500px"
