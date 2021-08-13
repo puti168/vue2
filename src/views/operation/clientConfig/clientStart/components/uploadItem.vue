@@ -411,14 +411,13 @@ export default {
 				this.$api
 					.clientStartUploadAPI(formData, this.handleProgress)
 					.then((res) => {
-						if (this.isUploading && res) {
+						if (this.isUploading && res?.code === 200) {
 							this.$message({
 								message: '上传成功!',
 								type: 'success'
 							})
 						}
-						console.log('res', res)
-						res && res.data
+						res?.data
 							? this.handleAvatarSuccess(res.data)
 							: this.handleAvatarSuccess()
 					})
