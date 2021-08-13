@@ -83,7 +83,7 @@
 							@keyup.enter.native="enterSearch"
 						></el-input>
 					</el-form-item>
-					<el-form-item label="最近操作人:">
+					<el-form-item label="最近操作人:" label-width="93px">
 						<el-input
 							v-model="queryData.updatedBy"
 							clearable
@@ -141,13 +141,21 @@
 						align="center"
 						width="200px"
 						label="公告标题"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							<span>{{ scope.row.announcementTitle || '-' }}</span>
+						</template>
+					</el-table-column>
 					<el-table-column
 						align="center"
 						label="公告内容"
 						width="200px"
 						prop="announcementContent"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							<span>{{ scope.row.announcementContent || '-' }}</span>
+						</template>
+					</el-table-column>
 					<el-table-column prop="tag" align="center" label="标识">
 						<template slot-scope="scope">
 							{{ scope.row.tag === 0 ? '无' : '重要' }}
@@ -156,22 +164,11 @@
 					<el-table-column
 						align="center"
 						label="发送终端"
-						width="120px"
+						width="200px"
 						prop="terminal"
 					>
 						<template slot-scope="scope">
-							<div v-if="scope.row.terminal.length === 0">
-								<span v-for="(item, index) in loginDeviceType" :key="index">
-									{{ item.description + '，' }}
-								</span>
-							</div>
-							<div v-else>
-								<p v-for="(item, index) in scope.row.terminal" :key="index">
-									<span v-for="(obj, j) in loginDeviceType" :key="j">
-										{{ item === obj.code ? obj.description + '，' : '' }}
-									</span>
-								</p>
-							</div>
+							<span>{{ filterTerminal(scope.row.terminal) }}</span>
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -179,9 +176,10 @@
 						label="公告时效"
 						prop="announcementAging"
 					>
-						<template slot-scope="scope">
+						<template v-if="scope.row.announcementAging" slot-scope="scope">
 							{{ scope.row.announcementAging === 1 ? '限时' : '永久' }}
 						</template>
+						<span v-else>-</span>
 					</el-table-column>
 					<el-table-column
 						align="center"
@@ -221,14 +219,22 @@
 						align="center"
 						label="创建人"
 						width="120"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							<span>{{ scope.row.createdBy || '-' }}</span>
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="createdAt"
 						align="center"
 						label="创建时间"
 						width="155px"
 						sortable="custom"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							<span>{{ scope.row.createdAt || '-' }}</span>
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="updatedBy"
 						align="center"
@@ -236,7 +242,7 @@
 						width="120"
 					>
 						<template slot-scope="scope">
-							{{ scope.row.updatedBy ? scope.row.updatedBy : '-' }}
+							{{ scope.row.updatedBy || '-' }}
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -247,7 +253,7 @@
 						sortable="custom"
 					>
 						<template slot-scope="scope">
-							{{ scope.row.updatedAt ? scope.row.updatedAt : '-' }}
+							{{ scope.row.updatedAt || '-' }}
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -520,10 +526,10 @@ export default {
 	},
 	computed: {
 		blackStatusType() {
-			return this.globalDics.blackStatusType
+			return this.globalDics.blackStatusType || []
 		},
 		loginDeviceType() {
-			return this.globalDics.loginDeviceType
+			return this.globalDics.loginDeviceType || []
 		}
 	},
 	watch: {
@@ -550,18 +556,17 @@ export default {
 			this.$api
 				.getOperateConfigAnnouncementSelectAll(params)
 				.then((res) => {
-					if (res.code === 200) {
-						const response = res.data
-						this.loading = false
-						this.list = response.record
-						this.total = response.totalRecord
+					if (res?.code === 200) {
+						const { record, totalRecord } = res.data || {}
+						this.list = Array.isArray(record) ? Object.freeze(record) : []
+						this.total = totalRecord || 0
 					} else {
-						this.loading = false
 						this.$message({
-							message: res.msg,
+							message: res?.msg || '接口异常',
 							type: 'error'
 						})
 					}
+					this.loading = false
 				})
 				.catch(() => {
 					this.loading = false
@@ -581,13 +586,14 @@ export default {
 			this.dialogFormVisible = true
 		},
 		openEdit(val, row) {
+			this.loading = true
 			this.flag = val
 			this.$api
 				.getOperateConfigAnnouncementSelect({ id: row.id })
 				.then((res) => {
-					if (res.code === 200) {
-						this.dialogForm = res.data
-						if (res.data.terminal.length === 0) {
+					if (res?.code === 200) {
+						this.dialogForm = res.data || {}
+						if (res.data?.terminal?.length === 0) {
 							for (let i = 0; i < this.loginDeviceType.length; i++) {
 								const ele = this.loginDeviceType[i]
 								this.dialogForm.terminal.push(ele.code)
@@ -597,6 +603,7 @@ export default {
 						this.offlineTime = res.data.downTime
 						this.dialogFormVisible = true
 					}
+					this.loading = false
 				})
 		},
 		subAddOrEidt() {
@@ -611,23 +618,21 @@ export default {
 							...this.dialogForm,
 							upTime: startTime
 								? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
-								: '',
+								: undefined,
 							downTime: endTime
 								? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
-								: ''
+								: undefined
 						}
-						console.log(params, '000')
 						this.getOperateConfigAnnouncementSave(params)
 					} else if (this.dialogForm.announcementAging === 2) {
 						this.errTime = false
 						const params = {
 							...this.dialogForm,
-							downTime: '',
+							downTime: undefined,
 							upTime: startTime
 								? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
-								: ''
+								: undefined
 						}
-						console.log(params, '111')
 						this.getOperateConfigAnnouncementSave(params)
 					} else {
 						this.errTime = true
@@ -639,7 +644,7 @@ export default {
 			this.loading = true
 			this.$api.getOperateConfigAnnouncementSave(val).then((res) => {
 				this.loading = false
-				if (res.code === 200) {
+				if (res?.code === 200) {
 					this.$message({
 						message: this.flag === '新增' ? '新增成功！' : '编辑成功！',
 						type: 'success'
@@ -670,7 +675,7 @@ export default {
 					this.$api
 						.getOperateConfigAnnouncementDelete({ id: row.id })
 						.then((res) => {
-							if (res.code === 200) {
+							if (res?.code === 200) {
 								this.$message({
 									message: '删除成功！',
 									type: 'success'
@@ -703,7 +708,7 @@ export default {
 							status: status
 						})
 						.then((res) => {
-							if (res.code === 200) {
+							if (res?.code === 200) {
 								this.$message({
 									message: '操作成功！',
 									type: 'success'
@@ -711,7 +716,7 @@ export default {
 								this.loadData()
 							} else {
 								this.$message({
-									message: res.msg,
+									message: res?.msg || '接口异常',
 									type: 'error'
 								})
 							}
@@ -754,6 +759,19 @@ export default {
 		},
 		enterSearch() {
 			this.loadData()
+		},
+		filterTerminal(val) {
+			let arr = []
+			if (Array.isArray(val) && val.length && this.loginDeviceType.length) {
+				arr = this.loginDeviceType.filter((item) => val.includes(item.code))
+			}
+			const arr2 = []
+			if (arr.length) {
+				arr.forEach((item) => {
+					arr2.push(item.description)
+				})
+			}
+			return arr2.length ? arr2.join('，') : '-'
 		}
 	}
 }
