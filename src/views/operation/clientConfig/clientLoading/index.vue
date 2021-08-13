@@ -440,17 +440,15 @@ export default {
 				.clientStartListAPI(params)
 				.then((res) => {
 					this.loading = false
-					const {
-						code,
-						data: { records, total },
-						msg
-					} = res
-					if (code === 200) {
-						this.tableData = records || []
+					if (res?.code === 200) {
+						const { records, total } = res.data || {}
+						this.tableData = Array.isArray(records)
+							? Object.freeze(records)
+							: []
 						this.total = total || 0
 					} else {
 						this.$message({
-							message: msg,
+							message: res?.msg || '接口异常',
 							type: 'error'
 						})
 					}
@@ -519,8 +517,7 @@ export default {
 						.clientStartDeleteAPI({ id })
 						.then((res) => {
 							loading.close()
-							const { code } = res
-							if (code === 200) {
+							if (res?.code === 200) {
 								this.$message.success('删除成功')
 							} else {
 								this.$message({
@@ -552,22 +549,20 @@ export default {
 			this.$refs.formSub.validate((valid) => {
 				if (valid) {
 					handleClick(params).then((res) => {
-						const { code, msg } = res
-						if (code === 200) {
+						if (res?.code === 200) {
 							this.$message({
 								message: `${this.title !== '编辑' ? '新增' : '更新'}成功`,
 								type: 'success'
 							})
 						} else {
 							this.$message({
-								message: msg,
+								message: res?.msg || '接口异常',
 								type: 'error'
 							})
 						}
-
+						this.dialogFormVisible = false
 						this.loadData()
 					})
-					this.dialogFormVisible = false
 				}
 			})
 		},
@@ -620,15 +615,14 @@ export default {
 			)
 				.then(() => {
 					this.$api.clientStartUseAPI({ id, status }).then((res) => {
-						const { code, msg } = res
-						if (code === 200) {
+						if (res?.code === 200) {
 							this.$message({
 								message: '操作成功',
 								type: 'success'
 							})
 						} else {
 							this.$message({
-								message: msg,
+								message: res?.msg || '接口异常',
 								type: 'error'
 							})
 						}
