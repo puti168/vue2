@@ -137,9 +137,7 @@
 							v-if="scope.row.pageName || scope.row.pageName === 0"
 							slot-scope="scope"
 						>
-							<span v-for="item in operatePage" :key="item.value">
-								{{ scope.row.pageName === item.code ? item.value : '' }}
-							</span>
+							<span>{{ filterOperatePage(scope.row.pageName) }}</span>
 						</template>
 						<span v-else>-</span>
 					</el-table-column>
@@ -189,9 +187,7 @@
 							v-if="scope.row.changeType || scope.row.changeType === 0"
 							slot-scope="scope"
 						>
-							<span v-for="item in changeType" :key="item.value">
-								{{ scope.row.changeType === item.code ? item.value : '' }}
-							</span>
+							<span>{{ filterChangeType(scope.row.pageName) }}</span>
 						</template>
 						<span v-else>-</span>
 					</el-table-column>
@@ -351,17 +347,17 @@ export default {
 			this.$api
 				.getOperateConfigClientRecordQueryRecordList(params)
 				.then((res) => {
-					if (res.code === 200) {
-						this.loading = false
-						this.dataList = res.data.records
-						this.total = res.data.total
+					if (res?.code === 200) {
+						const { records, total } = res.data || {}
+						this.dataList = Array.isArray(records) ? Object.freeze(records) : []
+						this.total = total || 0
 					} else {
-						this.loading = false
 						this.$message({
-							message: res.msg,
+							message: res?.msg || '接口异常',
 							type: 'error'
 						})
 					}
+					this.loading = false
 				})
 				.catch(() => {
 					this.loading = false
@@ -369,11 +365,10 @@ export default {
 		},
 		getEnums() {
 			this.$api.operateConfigClientRecordQueryEnumsAPI().then((res) => {
-				if (res.code === 200) {
-					this.changeType = res.data.changeType
-					this.client = res.data.client
-					console.log(this.client, '显示')
-					this.operatePage = res.data.operatePage
+				if (res?.code === 200) {
+					this.changeType = res.data?.changeType || []
+					this.client = res.data?.client || []
+					this.operatePage = res.data?.operatePage || []
 				}
 			})
 		},
@@ -407,6 +402,14 @@ export default {
 			this.pageNum = 1
 			this.formTime.time = [start, end]
 			this.loadData()
+		},
+		filterOperatePage(val) {
+			const res = this.operatePage.find((item) => item.code === val)
+			return res?.value || '-'
+		},
+		filterChangeType(val) {
+			const res = this.changeType.find((item) => item.code === val)
+			return res?.value || '-'
 		}
 	}
 }
