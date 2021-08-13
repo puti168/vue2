@@ -336,17 +336,7 @@
 								show-word-limit
 							></el-input>
 						</el-form-item>
-						<el-form-item
-							label="教程图片:"
-							prop="contentPicture"
-							:rules="[
-								{
-									required: true,
-									message: '教程图片不能为空',
-									trigger: 'change'
-								}
-							]"
-						>
+						<el-form-item label="教程图片:" prop="contentPicture">
 							<UploadItem
 								ref="imgUpload"
 								:upload-file-type="'image'"
