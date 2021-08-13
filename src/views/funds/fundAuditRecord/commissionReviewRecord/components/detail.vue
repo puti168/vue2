@@ -135,10 +135,7 @@
 					>
 						<el-table-column align="center" label="风险代理">
 							<template slot-scope="scope">
-								<span v-if="!!scope.row.orderNo">
-									{{ scope.row.orderNo }}
-								</span>
-								<span v-else>-</span>
+								{{ scope.row.orderNo || '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column align="center" label="风险银行卡">
@@ -555,21 +552,21 @@
 				:data="discountList"
 				:header-cell-style="getRowClass"
 			>
-				<el-table-column
-					prop="provideName"
-					align="center"
-					label="优惠类型"
-				></el-table-column>
-				<el-table-column
-					prop="userCount"
-					align="center"
-					label="人数"
-				></el-table-column>
-				<el-table-column
-					prop="amount"
-					align="center"
-					label="金额"
-				></el-table-column>
+				<el-table-column prop="provideName" align="center" label="优惠类型">
+					<template slot-scope="scope">
+						{{ scope.row.provideName || '-' }}
+					</template>
+				</el-table-column>
+				<el-table-column prop="userCount" align="center" label="人数">
+					<template slot-scope="scope">
+						{{ scope.row.userCount || '-' }}
+					</template>
+				</el-table-column>
+				<el-table-column prop="amount" align="center" label="金额">
+					<template slot-scope="scope">
+						{{ scope.row.amount || '-' }}
+					</template>
+				</el-table-column>
 			</el-table>
 			<div slot="footer" class="dialog-footer">
 				<el-button type="primary" @click="dialogDiscount = false">
