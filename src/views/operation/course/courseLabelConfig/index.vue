@@ -583,6 +583,13 @@ export default {
 			this.loadData()
 		},
 		subSortadd() {
+			if (!this.queryData.tutorId) {
+				this.$message({
+					message: '选择游戏名称后才可以对页签排序。',
+					type: 'error'
+				})
+				return
+			}
 			this.$api
 				.bookmarkQuerySortedNames(this.queryData)
 				.then((res) => {
