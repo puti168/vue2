@@ -109,10 +109,7 @@
 							width="220"
 						>
 							<template slot-scope="scope">
-								<span v-if="!!scope.row.orderNo">
-									{{ scope.row.orderNo }}
-								</span>
-								<span v-else>-</span>
+								{{ scope.row.orderNo || '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column
@@ -122,10 +119,7 @@
 							width="130"
 						>
 							<template slot-scope="scope">
-								<span v-if="!!scope.row.userName">
-									{{ scope.row.userName }}
-								</span>
-								<span v-else>-</span>
+								{{ scope.row.userName || '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column
@@ -135,10 +129,7 @@
 							width="120"
 						>
 							<template slot-scope="scope">
-								<span v-if="!!scope.row.realName">
-									{{ scope.row.realName }}
-								</span>
-								<span v-else>-</span>
+								{{ scope.row.realName || '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column
@@ -191,10 +182,7 @@
 							width="180"
 						>
 							<template slot-scope="scope">
-								<span v-if="!!scope.row.operatorTime">
-									{{ scope.row.operatorTime }}
-								</span>
-								<span v-else>-</span>
+								{{ scope.row.operatorTime || '-' }}
 							</template>
 						</el-table-column>
 						<el-table-column
@@ -301,7 +289,6 @@
 
 <script>
 import list from '@/mixins/list'
-import detail from './components/detail'
 import dayjs from 'dayjs'
 import { getUsername } from '@/utils/auth'
 
@@ -314,7 +301,7 @@ const start = dayjs()
 
 export default {
 	name: 'MemberTopUpReviewRecord',
-	components: { detail },
+	components: { detail: () => import('./components/detail') },
 	mixins: [list],
 	data() {
 		this.loadData = this.throttle(this.loadData, 1000)
@@ -334,7 +321,7 @@ export default {
 	},
 	computed: {
 		orderTypeArr() {
-			return this.globalDics.patchAdjustStatusFinish
+			return this.globalDics.patchAdjustStatusFinish || []
 		}
 	},
 	mounted() {
