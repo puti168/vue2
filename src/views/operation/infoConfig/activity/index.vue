@@ -82,7 +82,11 @@
 						prop="noticeTitle"
 						align="center"
 						label="活动消息标题"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							<span>{{ scope.row.noticeTitle || '-' }}</span>
+						</template>
+					</el-table-column>
 					<el-table-column
 						align="center"
 						label="活动消息内容"
@@ -95,56 +99,57 @@
 						</template>
 					</el-table-column>
 					<el-table-column prop="sendObj" align="center" label="发送对象">
-						<template slot-scope="scope">
+						<template v-if="scope.row.sendObj" slot-scope="scope">
 							<span>
 								{{ scope.row.sendObj === 1 ? '会员' : '终端' }}
 							</span>
 						</template>
+						<span v-else>-</span>
 					</el-table-column>
 					<el-table-column align="center" label="发送对象详情" prop="sendObj">
 						<template slot-scope="scope">
-							<div v-if="scope.row.sendObj === 1">
-								{{ scope.row.objDetail }}
-							</div>
-							<div
-								v-else-if="
+							<span
+								v-if="
 									scope.row.sendObj === 2 && scope.row.deviceType.length === 0
 								"
 							>
-								<span v-for="(item, index) in loginDeviceType" :key="index">
-									{{ item.description + '，' }}
-								</span>
-							</div>
-							<div v-else>
-								<p v-for="(item, index) in scope.row.deviceType" :key="index">
-									<span v-for="(obj, j) in loginDeviceType" :key="j">
-										{{ item === obj.code ? obj.description + '，' : '' }}
-									</span>
-								</p>
-							</div>
-							<div v-if="scope.row.userType === 0 && scope.row.sendObj === 1">
+								{{ joinDeviceTypeArr() }}
+							</span>
+							<span
+								v-else-if="
+									scope.row.sendObj === 2 && scope.row.deviceType.length
+								"
+							>
+								{{ filterTerminal(scope.row.deviceType) }}
+							</span>
+							<div v-if="scope.row.sendObj === 1 && scope.row.userType === 0">
 								全部
 							</div>
 							<div
-								v-if="scope.row.userType === 1"
-								class="decoration"
-								@click="lookGame(scope.row)"
+								v-else-if="scope.row.sendObj === 1 && scope.row.userType === 1"
 							>
-								点击查看更多会员
+								{{ scope.row.objDetail }}
+								<div class="decoration" @click="lookGame(scope.row)">
+									点击查看更多会员
+								</div>
 							</div>
 						</template>
 					</el-table-column>
-					<el-table-column
-						prop="createdBy"
-						align="center"
-						label="创建人"
-					></el-table-column>
+					<el-table-column prop="createdBy" align="center" label="创建人">
+						<template slot-scope="scope">
+							<span>{{ scope.row.createdBy || '-' }}</span>
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="createdAt"
 						align="center"
 						label="创建时间"
 						sortable="custom"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							<span>{{ scope.row.createdAt || '-' }}</span>
+						</template>
+					</el-table-column>
 					<el-table-column prop="operating" align="center" label="操作">
 						<template slot-scope="scope">
 							<el-button
@@ -362,7 +367,6 @@
 <script>
 import list from '@/mixins/list'
 export default {
-	components: {},
 	mixins: [list],
 	data() {
 		this.loadData = this.throttle(this.loadData, 1000)
@@ -390,10 +394,10 @@ export default {
 	},
 	computed: {
 		blackStatusType() {
-			return this.globalDics.blackStatusType
+			return this.globalDics.blackStatusType || []
 		},
 		loginDeviceType() {
-			return this.globalDics.loginDeviceType
+			return this.globalDics.loginDeviceType || []
 		}
 	},
 	created() {},
@@ -407,18 +411,17 @@ export default {
 			this.$api
 				.getOperateObConfigNoticeSelectAll(params)
 				.then((res) => {
-					if (res.code === 200) {
-						const response = res.data
-						this.loading = false
-						this.list = response.record
-						this.total = response.totalRecord
+					if (res?.code === 200) {
+						const { record, totalRecord } = res.data || {}
+						this.list = Array.isArray(record) ? Object.freeze(record) : []
+						this.total = totalRecord || 0
 					} else {
-						this.loading = false
 						this.$message({
-							message: res.msg,
+							message: res?.msg || '接口异常',
 							type: 'error'
 						})
 					}
+					this.loading = false
 				})
 				.catch(() => {
 					this.loading = false
@@ -455,7 +458,7 @@ export default {
 			this.$refs.formSub.validate((valid) => {
 				if (valid) {
 					this.$api.getOperateConfigNoticeSave(params).then((res) => {
-						if (res.code === 200) {
+						if (res?.code === 200) {
 							this.$message.success('保存成功')
 							this.dialogFormVisible = false
 							this.loadData()
@@ -482,7 +485,7 @@ export default {
 					params.type = 2
 					params.id = row.id
 					this.$api.getOperateConfigNoticeRetract(params).then((res) => {
-						if (res.code === 200) {
+						if (res?.code === 200) {
 							this.$message.success('成功撤回！')
 							this.loadData()
 						}
@@ -501,9 +504,9 @@ export default {
 			params.pageNum = this.page
 			params.pageSize = this.size
 			this.$api.getOperateConfigNoticeSelectDetail(params).then((res) => {
-				if (res.code === 200) {
-					this.userList = res.data.records
-					this.summary = res.data.total
+				if (res?.code === 200) {
+					this.userList = res.data?.records || []
+					this.summary = res.data?.total || 0
 					this.lookVisible = true
 				}
 			})
@@ -544,6 +547,26 @@ export default {
 
 		enterSearch() {
 			this.loadData()
+		},
+		filterTerminal(val) {
+			let arr = []
+			if (Array.isArray(val) && val.length && this.loginDeviceType.length) {
+				arr = this.loginDeviceType.filter((item) => val.includes(item.code))
+			}
+			const arr2 = []
+			if (arr.length) {
+				arr.forEach((item) => {
+					arr2.push(item.description)
+				})
+			}
+			return arr2.length ? arr2.join(',') : '-'
+		},
+		joinDeviceTypeArr() {
+			const arr = []
+			this.loginDeviceType.forEach((item) => {
+				arr.push(item.description)
+			})
+			return arr.length ? arr.join(',') : '-'
 		}
 	}
 }
