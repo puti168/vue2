@@ -84,7 +84,7 @@
 				>
 					<el-table-column prop="gameName" align="center" label="场馆名称">
 						<template slot-scope="scope">
-							<span>{{ scope.row.gameName }}</span>
+							<span>{{ scope.row.gameName || '-' }}</span>
 						</template>
 					</el-table-column>
 					<el-table-column prop="rateType" align="center" label="变更类型">
@@ -95,32 +95,36 @@
             </template> -->
 						费率
 					</el-table-column>
-					<el-table-column
-						prop="changeFront"
-						align="center"
-						label="变更前"
-					></el-table-column>
-					<el-table-column
-						prop="changeAfter"
-						align="center"
-						label="变更后"
-					></el-table-column>
-					<el-table-column
-						prop="remark"
-						align="center"
-						label="备注"
-					></el-table-column>
-					<el-table-column
-						prop="updateBy"
-						align="center"
-						label="操作人"
-					></el-table-column>
+					<el-table-column prop="changeFront" align="center" label="变更前">
+						<template slot-scope="scope">
+							<span>{{ getFeeRate(scope.row.changeFront) }}</span>
+						</template>
+					</el-table-column>
+					<el-table-column prop="changeAfter" align="center" label="变更后">
+						<template slot-scope="scope">
+							<span>{{ getFeeRate(scope.row.changeAfter) }}</span>
+						</template>
+					</el-table-column>
+					<el-table-column prop="remark" align="center" label="备注">
+						<template slot-scope="scope">
+							<span>{{ scope.row.remark || '-' }}</span>
+						</template>
+					</el-table-column>
+					<el-table-column prop="updateBy" align="center" label="操作人">
+						<template slot-scope="scope">
+							<span>{{ scope.row.updateBy || '-' }}</span>
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="updateAt"
 						align="center"
 						label="操作时间"
 						sortable="custom"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							<span>{{ scope.row.updateAt || '-' }}</span>
+						</template>
+					</el-table-column>
 				</el-table>
 				<!-- 分页 -->
 				<el-pagination
@@ -141,6 +145,7 @@
 
 <script>
 import list from '@/mixins/list'
+import { Decimal } from 'decimal.js'
 import dayjs from 'dayjs'
 import { routerNames } from '@/utils/consts'
 const startTime = dayjs()
@@ -158,7 +163,7 @@ export default {
 		this.loadData = this.throttle(this.loadData, 1000)
 		return {
 			queryData: {
-				gameName: ''
+				gameName: undefined
 			},
 			VipGradeList: [],
 			gameTypeList: [],
@@ -174,14 +179,7 @@ export default {
 			tableData: []
 		}
 	},
-	computed: {
-		accountType() {
-			return this.globalDics.accountType
-		},
-		memberVipOperateType() {
-			return this.globalDics.memberVipOperateType
-		}
-	},
+	computed: {},
 	created() {
 		this.getGameTypeList()
 	},
@@ -189,8 +187,8 @@ export default {
 	methods: {
 		getGameTypeList() {
 			this.$api.getMerchantGameGamePlant().then((res) => {
-				if (res.code === 200) {
-					this.gameTypeList = res.data
+				if (res?.code === 200) {
+					this.gameTypeList = res.data || []
 				}
 			})
 		},
@@ -202,8 +200,10 @@ export default {
 				...this.queryData,
 				startTime: startTime
 					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
-					: '',
-				endTime: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
+					: undefined,
+				endTime: endTime
+					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
+					: undefined
 			}
 			params = {
 				...this.getParams(params)
@@ -211,13 +211,17 @@ export default {
 			this.$api
 				.getOperateObMerchantGameRecordSelect(params)
 				.then((res) => {
-					if (res.code === 200) {
-						this.tableData = res.data.record
-						this.total = res.data.totalRecord
-						this.loading = false
+					if (res?.code === 200) {
+						const { record, totalRecord } = res.data || {}
+						this.tableData = Array.isArray(record) ? Object.freeze(record) : []
+						this.total = totalRecord || 0
 					} else {
-						this.loading = false
+						this.$message({
+							message: res?.msg || '接口异常',
+							type: 'error'
+						})
 					}
+					this.loading = false
 				})
 				.catch(() => {
 					this.loading = false
@@ -249,6 +253,9 @@ export default {
 		},
 		enterSubmit() {
 			this.loadData()
+		},
+		getFeeRate(val) {
+			return val ? new Decimal(val).mul(100) + '%' : '-'
 		}
 	}
 }
