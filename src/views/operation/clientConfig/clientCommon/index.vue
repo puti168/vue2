@@ -365,7 +365,7 @@ export default {
 			loading: false,
 			loadingT: false,
 			queryData: {
-				operateType: 0,
+				operateType: undefined,
 				userAddress: undefined,
 				agentAddress: undefined,
 				iosAddress: undefined,
@@ -452,9 +452,9 @@ export default {
 		// 查询类型
 		queryPublicResources() {
 			this.$api.clientCommonQueryPublicResourcesAPI().then((res) => {
-				const { code, data } = res
-				if (code === 200) {
-					this.windLevelTypeArr = data || []
+				if (res?.code === 200) {
+					this.windLevelTypeArr = res.data || []
+					this.queryData.operateType = 0
 				} else {
 					this.windLevelTypeArr = []
 				}
@@ -464,9 +464,8 @@ export default {
 		// 查询详情
 		queryByType(type) {
 			this.$api.clientCommonQueryByTypeAPI({ type }).then((res) => {
-				const { code, data } = res
-				if (code === 200) {
-					this.showInfoData = data
+				if (res?.code === 200) {
+					this.showInfoData = res.data
 				} else {
 					this.showInfoData = undefined
 				}
@@ -510,8 +509,7 @@ export default {
 						.then((res) => {
 							this.loadingT = false
 							lock = true
-							const { code, msg } = res
-							if (code === 200) {
+							if (res?.code === 200) {
 								this.$confirm(`提交成功`, {
 									confirmButtonText: '确定',
 									type: 'success',
@@ -521,7 +519,7 @@ export default {
 								this.queryByType(operateType)
 							} else {
 								this.$message({
-									message: msg,
+									message: res?.msg || '接口异常',
 									type: 'error'
 								})
 							}
