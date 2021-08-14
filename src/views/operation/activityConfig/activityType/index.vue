@@ -157,7 +157,7 @@ export default {
 	},
 	computed: {
 		activityTypeArr() {
-			return this.globalDics.operateActivityNameType
+			return this.globalDics.operateActivityNameType || []
 		},
 		cloneActivityArr: {
 			get() {
@@ -193,33 +193,25 @@ export default {
 		// 查询详情
 		queryDetails(type) {
 			this.$api.activityTypeDetailAPI({ type }).then((res) => {
-				const { code, data } = res
-				console.log('res', res)
-				if (code === 200) {
-					const { id } = data
-					this.showInfoData = data
-					this.queryData.id = id
-				} else {
-					this.showInfoData = undefined
-					this.queryData.id = undefined
+				if (res?.code === 200) {
+					this.showInfoData = res.data || undefined
+					this.queryData.id = res.data?.id || undefined
 				}
 			})
 		},
 		// 查询弹框列表
 		queryTypeList(type) {
 			this.$api.activityQueryTypeListAPI({ type }).then((res) => {
-				const { code, data } = res
 				const arr = JSON.stringify(this.globalDics.operateActivityNameType)
 				const newArr = JSON.parse(arr)
-				if (code === 200) {
+				if (res?.code === 200) {
+					const data = res.data || []
 					newArr.forEach((item, idx) => {
 						this.newActivityTypeArr.push({
 							code: data[idx] + '',
 							description: newArr[data[idx]].description
 						})
 					})
-				} else {
-					this.newActivityTypeArr = []
 				}
 			})
 		},
@@ -239,8 +231,7 @@ export default {
 						.then((res) => {
 							this.loadingT = false
 							lock = true
-							const { code, msg } = res
-							if (code === 200) {
+							if (res?.code === 200) {
 								this.$confirm(`提交成功`, {
 									confirmButtonText: '确定',
 									type: 'success',
@@ -249,7 +240,7 @@ export default {
 								this.reset()
 							} else {
 								this.$message({
-									message: msg,
+									message: res?.msg || '接口异常',
 									type: 'error'
 								})
 							}
@@ -297,8 +288,7 @@ export default {
 			let sortIds = this.newActivityTypeArr.map((item) => item.code)
 			sortIds = sortIds.join(',')
 			this.$api.activitySortAPI({ sortIds }).then((res) => {
-				const { code } = res
-				if (code === 200) {
+				if (res?.code === 200) {
 					this.$message({
 						message: '操作成功',
 						type: 'success'
