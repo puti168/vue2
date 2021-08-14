@@ -92,10 +92,7 @@
 				>
 					<el-table-column prop="announcementTitle" align="center" label="标题">
 						<template slot-scope="scope">
-							<span v-if="scope.row.announcementTitle">
-								{{ scope.row.announcementTitle }}
-							</span>
-							<span v-else>-</span>
+							<span>{{ scope.row.announcementTitle || '-' }}</span>
 						</template>
 					</el-table-column>
 					<el-table-column prop="changeType" align="center" label="变更类型">
@@ -110,18 +107,12 @@
 					</el-table-column>
 					<el-table-column align="center" label="变更前" prop="beforeValue">
 						<template slot-scope="scope">
-							<span v-if="scope.row.beforeValue">
-								{{ scope.row.beforeValue }}
-							</span>
-							<span v-else>-</span>
+							<span>{{ scope.row.beforeValue || '-' }}</span>
 						</template>
 					</el-table-column>
 					<el-table-column align="center" label="变更后" prop="afterValue">
 						<template slot-scope="scope">
-							<span v-if="scope.row.afterValue">
-								{{ scope.row.afterValue }}
-							</span>
-							<span v-else>-</span>
+							<span>{{ scope.row.afterValue || '-' }}</span>
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -131,8 +122,7 @@
 						label="操作人"
 					>
 						<template slot-scope="scope">
-							<span v-if="scope.row.createdBy">{{ scope.row.createdBy }}</span>
-							<span v-else>-</span>
+							<span>{{ scope.row.createdBy || '-' }}</span>
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -142,8 +132,7 @@
 						sortable="custom"
 					>
 						<template slot-scope="scope">
-							<span v-if="scope.row.createdAt">{{ scope.row.createdAt }}</span>
-							<span v-else>-</span>
+							<span>{{ scope.row.createdAt || '-' }}</span>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -203,8 +192,10 @@ export default {
 				...this.queryData,
 				startTime: startTime
 					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
-					: '',
-				endTime: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
+					: undefined,
+				endTime: endTime
+					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
+					: undefined
 			}
 			params = {
 				...this.getParams(params)
@@ -216,17 +207,13 @@ export default {
 				.activityInfoLogListAPI(params)
 				.then((res) => {
 					this.loading = false
-					const {
-						code,
-						data: { record, totalRecord },
-						msg
-					} = res
-					if (code === 200) {
-						this.dataList = record || []
+					if (res?.code === 200) {
+						const { record, totalRecord } = res.data || {}
+						this.dataList = Array.isArray(record) ? Object.freeze(record) : []
 						this.total = totalRecord || 0
 					} else {
 						this.$message({
-							message: msg,
+							message: res?.msg || '接口异常',
 							type: 'error'
 						})
 					}
@@ -241,14 +228,8 @@ export default {
 		},
 		queryEnums() {
 			this.$api.activityInfoLogAPI().then((res) => {
-				const {
-					code,
-					data: { changeType }
-				} = res
-				if (code === 200) {
-					this.changeType = changeType
-				} else {
-					this.changeType = []
+				if (res?.code === 200) {
+					this.changeType = res.data?.changeType || []
 				}
 			})
 		},
