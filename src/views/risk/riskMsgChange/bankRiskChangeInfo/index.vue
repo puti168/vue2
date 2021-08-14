@@ -147,22 +147,26 @@
 							<div v-else>{{ scope.row.afterWindControlName }}</div>
 						</template>
 					</el-table-column>
-					<el-table-column
-						prop="windReason"
-						align="center"
-						label="风控原因"
-					></el-table-column>
-					<el-table-column
-						prop="createdBy"
-						align="center"
-						label="操作人"
-					></el-table-column>
+					<el-table-column prop="windReason" align="center" label="风控原因">
+						<template slot-scope="scope">
+							{{ scope.row.windReason || '-' }}
+						</template>
+					</el-table-column>
+					<el-table-column prop="createdBy" align="center" label="操作人">
+						<template slot-scope="scope">
+							{{ scope.row.createdBy || '-' }}
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="createdAt"
 						align="center"
 						label="操作时间"
 						sortable="custom"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							{{ scope.row.createdAt || '-' }}
+						</template>
+					</el-table-column>
 				</el-table>
 				<!-- 分页 -->
 				<el-pagination
@@ -187,7 +191,6 @@ import { routerNames } from '@/utils/consts'
 
 export default {
 	name: routerNames.bankRiskChangeInfo,
-	components: {},
 	mixins: [list],
 	data() {
 		this.loadData = this.throttle(this.loadData, 1000)
@@ -253,12 +256,12 @@ export default {
 				})
 		},
 		reset() {
+			this.pageNum = 1
 			this.queryData = {
 				objectInfo: undefined,
-				afterWindControlId: '',
-				beforeWindControlId: ''
+				afterWindControlId: undefined,
+				beforeWindControlId: undefined
 			}
-			this.pageNum = 1
 			this.loadData()
 		},
 		_changeTableSort({ column, prop, order }) {
