@@ -94,11 +94,11 @@
 					:header-cell-style="getRowClass"
 					@sort-change="_changeTableSort"
 				>
-					<el-table-column
-						prop="tutorName"
-						align="center"
-						label="教程名称"
-					></el-table-column>
+					<el-table-column prop="tutorName" align="center" label="教程名称">
+						<template slot-scope="scope">
+							{{ scope.row.tutorName || '-' }}
+						</template>
+					</el-table-column>
 					<el-table-column prop="createdBy" align="center" label="创建人">
 						<template slot-scope="scope">
 							{{ scope.row.createdBy || '-' }}
@@ -336,17 +336,13 @@ export default {
 				.configTutorNameQueryTutorList(params)
 				.then((res) => {
 					this.loading = false
-					const {
-						code,
-						data: { record, totalRecord },
-						msg
-					} = res
-					if (code && code === 200) {
-						this.$set(this, 'tableData', record || [])
+					if (res?.code === 200) {
+						const { record, totalRecord } = res.data || {}
+						this.tableData = Array.isArray(record) ? Object.freeze(record) : []
 						this.total = totalRecord || 0
 					} else {
 						this.$message({
-							message: res && msg,
+							message: res?.msg || '接口异常',
 							type: 'error'
 						})
 					}
@@ -380,13 +376,12 @@ export default {
 				.then(() => {
 					this.$api.configTutorNameUse(params).then((res) => {
 						this.loading = false
-						const { code, msg } = res
-						if (code && code === 200) {
+						if (res?.code === 200) {
 							this.dialogGameVisible = true
 							this.loadData()
 						} else {
 							this.$message({
-								message: res && msg,
+								message: res?.msg || '接口异常',
 								type: 'error'
 							})
 						}
@@ -432,13 +427,12 @@ export default {
 				.then(() => {
 					this.$api.configTutorNameDelete({ id: val.id }).then((res) => {
 						this.loading = false
-						const { code, msg } = res
-						if (code && code === 200) {
+						if (res?.code === 200) {
 							this.$message.success('删除成功')
 							this.loadData()
 						} else {
 							this.$message({
-								message: res && msg,
+								message: res?.msg || '接口异常',
 								type: 'error'
 							})
 						}
@@ -454,14 +448,13 @@ export default {
 					if (this.title === '新增') {
 						this.$api.configTutorNameSave(this.dialogForm).then((res) => {
 							this.loading = false
-							const { code, msg } = res
-							if (code && code === 200) {
+							if (res?.code === 200) {
 								this.$message.success('新增成功')
 								this.pageNum = 1
 								this.loadData()
 							} else {
 								this.$message({
-									message: res && msg,
+									message: res?.msg || '接口异常',
 									type: 'error'
 								})
 							}
@@ -470,13 +463,12 @@ export default {
 					} else {
 						this.$api.configTutorNameSave(this.dialogForm).then((res) => {
 							this.loading = false
-							const { code, msg } = res
-							if (code && code === 200) {
+							if (res?.code === 200) {
 								this.$message.success('修改成功')
 								this.loadData()
 							} else {
 								this.$message({
-									message: res && msg,
+									message: res?.msg || '接口异常',
 									type: 'error'
 								})
 							}
@@ -513,13 +505,12 @@ export default {
 				.configTutorNameQueryTypeList({ clientType })
 				.then((res) => {
 					this.loading = false
-					const { code, data, msg } = res
-					if (code && code === 200) {
-						this.sortareaList = data
+					if (res?.code === 200) {
+						this.sortareaList = res.data || []
 						this.subSort = true
 					} else {
 						this.$message({
-							message: res && msg,
+							message: res?.msg || '接口异常',
 							type: 'error'
 						})
 					}
@@ -549,8 +540,7 @@ export default {
 			this.$api
 				.configTutorNameSort({ sortIds: sortIds, clientType })
 				.then((res) => {
-					const { code, msg } = res
-					if (code && code === 200) {
+					if (res?.code === 200) {
 						this.$message({
 							message: '操作成功！',
 							type: 'success'
@@ -559,7 +549,7 @@ export default {
 						this.loadData()
 					} else {
 						this.$message({
-							message: res && msg,
+							message: res?.msg || '接口异常',
 							type: 'error'
 						})
 					}
