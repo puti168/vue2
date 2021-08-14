@@ -147,12 +147,11 @@
 <script>
 // import { routerNames } from '@/utils/consts'
 import list from '@/mixins/list'
-import UploadItem from '@/components/UploadItem'
 import { notSpecial2, isHaveEmoji } from '@/utils/validate'
 
 export default {
 	name: 'AgentDeduction',
-	components: { UploadItem },
+	components: { UploadItem: () => import('@/components/UploadItem') },
 	mixins: [list],
 	data() {
 		return {
@@ -178,7 +177,7 @@ export default {
 	},
 	computed: {
 		proxyPatchSubAdjustTypeArr() {
-			return this.globalDics.proxyPatchSubAdjustType
+			return this.globalDics.proxyPatchSubAdjustType || []
 		},
 		accountTypeArr() {
 			return [
@@ -218,10 +217,10 @@ export default {
 
 			const lessMoney = [
 				{ required: true, message: '请输入调整金额', trigger: 'blur' },
-                {
-                    pattern: /(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/,
-                    message: '请输入正确的金额,可保留两位小数'
-                }
+				{
+					pattern: /(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/,
+					message: '请输入正确的金额,可保留两位小数'
+				}
 			]
 
 			const balance = [
@@ -241,13 +240,10 @@ export default {
 			}
 		}
 	},
-	mounted() {
-		// this.getRelationId()
-	},
 	methods: {
 		getRelationId() {
 			this.$api.getImageIdAPI().then((res) => {
-				this.queryData.relationId = res.data
+				this.queryData.relationId = res?.data || undefined
 			})
 		},
 		searchRealName() {
@@ -273,10 +269,10 @@ export default {
 		},
 		searchBalance() {
 			const { userName, userType } = this.queryData
-            this.$refs.form.clearValidate('adjustType')
-            this.$refs.form.clearValidate('lessMoney')
-            this.$refs.form.clearValidate('balance')
-            this.$refs.form.clearValidate('remark')
+			this.$refs.form.clearValidate('adjustType')
+			this.$refs.form.clearValidate('lessMoney')
+			this.$refs.form.clearValidate('balance')
+			this.$refs.form.clearValidate('remark')
 			this.$refs.form.validateField('userName', (errMsg) => {
 				if (!errMsg) {
 					this.loading = true
@@ -358,14 +354,14 @@ export default {
 				relationId: undefined,
 				imageAddress: undefined
 			}
-            this.$nextTick(() => {
-                this.$refs.imgUpload && this.$refs.imgUpload.handleDeleteImgUrl()
-            })
+			this.$nextTick(() => {
+				this.$refs.imgUpload && this.$refs.imgUpload.handleDeleteImgUrl()
+			})
 		},
 		checkRiskValue(val) {
-            val === '2'
-                ? (this.queryData.userType = '6')
-                : (this.queryData.userType = '7')
+			val === '2'
+				? (this.queryData.userType = '6')
+				: (this.queryData.userType = '7')
 		},
 		checkValue() {
 			// this.tipsShow = null
