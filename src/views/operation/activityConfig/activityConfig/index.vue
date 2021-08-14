@@ -227,13 +227,21 @@
 						label="活动ID"
 						prop="id"
 						width="200px"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							<span>{{ scope.row.id || '-' }}</span>
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="activityName"
 						align="center"
 						label="活动名称"
 						width="150px"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							<span>{{ scope.row.activityName || '-' }}</span>
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="discountTagId"
 						align="center"
@@ -241,13 +249,7 @@
 						width="120px"
 					>
 						<template slot-scope="scope">
-							<span v-for="item in activityList" :key="item.id">
-								{{
-									scope.row.discountTagId === item.id + ''
-										? item.activityName
-										: ''
-								}}
-							</span>
+							<span>{{ filterDiscountTag(scope.row.discountTagId) }}</span>
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -272,24 +274,40 @@
 						prop="activityTitle"
 						label="活动主标题"
 						width="155px"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							<span>{{ scope.row.activityTitle || '-' }}</span>
+						</template>
+					</el-table-column>
 					<el-table-column
 						align="center"
 						prop="activityWashCodeTimes"
 						label="洗码倍率"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							<span>{{ scope.row.activityWashCodeTimes || '-' }}</span>
+						</template>
+					</el-table-column>
 					<el-table-column
 						align="center"
 						prop="activityAppTypeName"
 						label="活动支持终端"
 						width="155px"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							<span>{{ scope.row.activityAppTypeName || '-' }}</span>
+						</template>
+					</el-table-column>
 					<el-table-column
 						align="center"
 						prop="activityUserTypeName"
 						label="活动支持账户类型"
 						width="155px"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							<span>{{ scope.row.activityUserTypeName || '-' }}</span>
+						</template>
+					</el-table-column>
 					<el-table-column
 						align="center"
 						prop="activityPrescription"
@@ -400,27 +418,43 @@
 						align="center"
 						label="创建人"
 						width="120"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							<span>{{ scope.row.createdBy || '-' }}</span>
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="createdAt"
 						align="center"
 						label="创建时间"
 						width="160"
 						sortable="custom"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							<span>{{ scope.row.createdAt || '-' }}</span>
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="updatedBy"
 						align="center"
 						label="最近操作人"
 						width="120"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							<span>{{ scope.row.updatedBy || '-' }}</span>
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="updatedAt"
 						align="center"
 						label="最近操作时间"
 						width="160"
 						sortable="custom"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							<span>{{ scope.row.updatedAt || '-' }}</span>
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="operating"
 						align="center"
@@ -1843,6 +1877,10 @@ export default {
 		},
 		enterSearch() {
 			this.loadData()
+		},
+		filterDiscountTag(val) {
+			const res = this.activityList.find((item) => item.id === Number(val))
+			return res?.activityName || '-'
 		}
 	}
 }
