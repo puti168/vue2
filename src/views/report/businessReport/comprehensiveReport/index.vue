@@ -69,7 +69,7 @@
 				>
 					<el-table-column
 						v-if="comprehensiveReport['日期']"
-						prop="userName"
+						prop="staticsDate"
 						align="center"
 						label="日期"
 						width="160px"
@@ -77,124 +77,129 @@
 					></el-table-column>
 					<el-table-column
 						v-if="comprehensiveReport['会员注册人数']"
-						prop="realName"
+						prop="registerDeviceInfo"
 						align="center"
 						width="160px"
 						label="会员注册人数"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							{{ scope.row.registerDeviceInfo }}
+							<!-- {{ scope.row.registerDeviceInfo[1] }} -->
+						</template>
+					</el-table-column>
 					<el-table-column
 						v-if="comprehensiveReport['会员登录人数']"
-						prop="accountType"
+						prop="loginDeviceInfo"
 						align="center"
 						width="160px"
 						label="会员登录人数"
 					></el-table-column>
 					<el-table-column
 						v-if="comprehensiveReport['会员总存款']"
-						prop="parentProxyName"
+						prop="depositMoneyInfo"
 						align="center"
 						width="160px"
 						label="会员总存款"
 					></el-table-column>
 					<el-table-column
 						v-if="comprehensiveReport['会员总取款']"
-						prop="vipSerialNum"
+						prop="withdrawMoneyInfo"
 						align="center"
 						width="160px"
 						label="会员总取款"
 					></el-table-column>
 					<el-table-column
 						v-if="comprehensiveReport['会员存取差']"
-						prop="accountStatus"
+						prop="depositWithdrawMoney"
 						align="center"
 						width="160px"
 						label="会员存取差"
 					></el-table-column>
 					<el-table-column
 						v-if="comprehensiveReport['会员首存']"
-						prop="labelName"
+						prop="firstDepositMoneyInfo"
 						align="center"
 						label="会员首存"
 					></el-table-column>
 
 					<el-table-column
 						v-if="comprehensiveReport['会员有效投注']"
-						prop="windControlName"
+						prop="betInfo"
 						align="center"
 						width="160px"
 						label="会员有效投注"
 					></el-table-column>
 					<el-table-column
 						v-if="comprehensiveReport['会员投注盈亏']"
-						prop="betCount"
+						prop="betNetAmount"
 						align="center"
 						width="160px"
 						label="会员投注盈亏"
 					></el-table-column>
 					<el-table-column
 						v-if="comprehensiveReport['会员总优惠']"
-						prop="betCount"
+						prop="discountInfo"
 						align="center"
 						width="160px"
 						label="会员总优惠"
 					></el-table-column>
 					<el-table-column
 						v-if="comprehensiveReport['会员总返水']"
-						prop="betCount"
+						prop="rebateInfo"
 						align="center"
 						width="160px"
 						label="会员总返水"
 					></el-table-column>
 					<el-table-column
 						v-if="comprehensiveReport['会员调整']"
-						prop="betCount"
+						prop="changeInfo"
 						align="center"
 						label="会员调整"
 					></el-table-column>
 					<el-table-column
 						v-if="comprehensiveReport['代理注册人数']"
-						prop="betCount"
+						prop="proxyRegisterDeviceInfo"
 						align="center"
 						width="160px"
 						label="代理注册人数"
 					></el-table-column>
 					<el-table-column
 						v-if="comprehensiveReport['代理总存款']"
-						prop="betCount"
+						prop="proxyDepositMoneyInfo"
 						align="center"
 						width="160px"
 						label="代理总存款"
 					></el-table-column>
 					<el-table-column
 						v-if="comprehensiveReport['代理总取款']"
-						prop="betCount"
+						prop="proxyWithdrawMoneyInfo"
 						align="center"
 						width="160px"
 						label="代理总取款"
 					></el-table-column>
 					<el-table-column
 						v-if="comprehensiveReport['代理存取差']"
-						prop="betCount"
+						prop="proxyDepositWithdrawMoney"
 						align="center"
 						width="160px"
 						label="代理存取差"
 					></el-table-column>
 					<el-table-column
 						v-if="comprehensiveReport['转给下级']"
-						prop="betCount"
+						prop="passSubInfo"
 						align="center"
 						label="转给下级"
 					></el-table-column>
 					<el-table-column
 						v-if="comprehensiveReport['代理总优惠']"
-						prop="betCount"
+						prop="proxyDiscountInfo"
 						align="center"
 						width="160px"
 						label="代理总优惠"
 					></el-table-column>
 					<el-table-column
 						v-if="comprehensiveReport['代理调整']"
-						prop="betCount"
+						prop="proxyChangeInfo"
 						align="center"
 						label="代理调整"
 					></el-table-column>
@@ -244,9 +249,7 @@
 <script>
 import list from '@/mixins/list'
 import dayjs from 'dayjs'
-const startTime = dayjs()
-	.startOf('day')
-	.valueOf()
+const startTime = new Date().getTime() - 3600 * 1000 * 24 * 6
 const endTime = dayjs()
 	.endOf('day')
 	.valueOf()
@@ -273,13 +276,10 @@ export default {
 				onPick: ({ maxDate, minDate }) => {
 					console.log(maxDate, minDate)
 					if (maxDate - minDate > this.day31) {
-						this.flag = true
 						this.$message.warning('请缩小搜索范围至31天')
-					}
-					if (
-						maxDate !== null &&
+					} else if (
 						minDate !== null &&
-						maxDate - minDate <= this.day31 &&
+						maxDate !== null &&
 						this.queryText === '查询'
 					) {
 						this.flag = false
@@ -359,25 +359,7 @@ export default {
 				.objectStore('comprehensiveReport')
 				.add({
 					id: this.myName,
-					日期: true,
-					会员注册人数: true,
-					会员登录人数: true,
-					会员总存款: true,
-					会员总取款: true,
-					会员存取差: true,
-					会员首存: true,
-					会员有效投注: true,
-					会员投注盈亏: true,
-					会员总优惠: true,
-					会员总返水: true,
-					会员调整: true,
-					代理注册人数: true,
-					代理总存款: true,
-					代理总取款: true,
-					代理存取差: true,
-					转给下级: true,
-					代理总优惠: true,
-					代理调整: true
+					obj: this.comprehensiveReport
 				})
 			request.onsuccess = (event) => {
 				this.getList()
@@ -394,63 +376,23 @@ export default {
 					list.push(cursor.value)
 					cursor.continue()
 				} else {
-					console.log(list, 4654564)
 					for (let i = 0; i < list.length; i++) {
 						const ele = list[i]
 						if (ele.id === this.myName) {
-							this.newList.push(ele)
-							this.comprehensiveReport = { ...ele }
-							delete this.comprehensiveReport.id
+							this.newList.push(ele.obj)
+							this.comprehensiveReport = { ...ele.obj }
 						}
 					}
-					console.log(this.newList, 4645655465)
 				}
 			}
 		},
 		confirm() {
-			const arr = []
-			for (let i = 0; i < this.newList.length; i++) {
-				const ele = this.newList[i]
-				if (ele.id === this.myName) {
-					arr.push(ele)
-				}
-			}
-			console.log(arr, 'arr')
 			const request = this.db
 				.transaction(['comprehensiveReport'], 'readwrite')
 				.objectStore('comprehensiveReport')
 				.put({
 					id: this.myName,
-					日期: arr[0]['日期'],
-					会员注册人数: arr[0]['会员注册人数'],
-					会员登录人数: arr[0]['会员登录人数'],
-					会员总存款: arr[0]['会员总存款'],
-					会员总取款: arr[0]['会员总取款'],
-					会员存取差: arr[0]['会员存取差'],
-					会员首存: arr[0]['会员首存'],
-					会员有效投注: arr[0]['会员有效投注'],
-					会员投注盈亏: arr[0]['会员投注盈亏'],
-					会员总优惠: arr[0]['会员总优惠'],
-					会员总返水: arr[0]['会员总返水'],
-					会员调整: arr[0]['会员调整'],
-					代理注册人数: arr[0]['代理注册人数'],
-					代理总存款: arr[0]['代理总存款'],
-					代理总取款: arr[0]['代理总取款'],
-					代理存取差: arr[0]['代理存取差'],
-					转给下级: arr[0]['转给下级'],
-					代理总优惠: arr[0]['代理总优惠'],
-					代理调整: arr[0]['代理调整'],
-					存取差: arr[0]['存取差'],
-					总优惠: arr[0]['总优惠'],
-					总返水: arr[0]['总返水'],
-					其他调整: arr[0]['其他调整'],
-					注单量: arr[0]['注单量'],
-					投注金额: arr[0]['投注金额'],
-					有效投注: arr[0]['有效投注'],
-					投注盈亏: arr[0]['投注盈亏'],
-					转代次数: arr[0]['转代次数'],
-					中心钱包余额: arr[0]['中心钱包余额'],
-					钱包总余额: arr[0]['钱包总余额']
+					obj: this.newList[0]
 				})
 			request.onsuccess = (event) => {
 				this.visible = false
@@ -465,7 +407,6 @@ export default {
 		clickDel(id) {
 			this.newList = []
 			this.newList.push({
-				id: this.myName,
 				日期: true,
 				会员注册人数: true,
 				会员登录人数: true,
@@ -504,41 +445,39 @@ export default {
 			params = {
 				...this.getParams(params)
 			}
-			console.log(params)
-			if (endTime - startTime > this.day31) {
-				this.$message.warning('请缩小搜索范围至31天')
-			} else {
-				this.loading = true
-				this.$api
-					.getReportMembernetamountList(params)
-					.then((res) => {
-						if (res.code === 200 && res.data !== null) {
-							this.loading = false
-							this.dataList = res.data.record
-							this.total = res.data.totalRecord
-						} else {
-							this.dataList = []
-							this.total = 0
-							this.loading = false
-						}
-					})
-					.catch(() => (this.loading = false))
-				this.$api
-					.getReportMembernetamountAggregation(params)
-					.then((res) => {
-						if (res.code === 200) {
-							this.loading = false
-							this.summary = res.data
-							console.log(res)
-						}
-					})
-					.catch(() => (this.loading = false))
-			}
+			this.loading = true
+			this.$api
+				.getReportIntegratereportList(params)
+				.then((res) => {
+					if (res.code === 200 && res.data !== null) {
+						this.loading = false
+						this.dataList = res.data.record
+						this.total = res.data.totalRecord
+					} else {
+						this.dataList = []
+						this.total = 0
+						this.loading = false
+					}
+				})
+				.catch(() => (this.loading = false))
+			this.$api
+				.getReportIntegratereportAggregation(params)
+				.then((res) => {
+					if (res.code === 200) {
+						this.loading = false
+						this.summary = res.data
+						console.log(res)
+					}
+				})
+				.catch(() => (this.loading = false))
 		},
 		search() {
 			const statistics = this.statisticsTime || []
 			const [startTime, endTime] = statistics
-			if (endTime - startTime <= this.day31) {
+			if (endTime - startTime > this.day31) {
+				this.flag = true
+				this.$message.warning('请缩小搜索范围至31天')
+			} else {
 				this.flag = true
 				let t = 10
 				clearInterval(this.timecount)
@@ -551,9 +490,6 @@ export default {
 						this.flag = false
 					}
 				}, 1000)
-				this.loadData()
-			} else {
-				this.flag = true
 				this.loadData()
 			}
 		},
@@ -569,6 +505,7 @@ export default {
 		getSummaries(param) {
 			const { columns, data } = param
 			const sums = []
+
 			columns.forEach((column, index) => {
 				if (index === 0) {
 					const el = (
@@ -579,8 +516,19 @@ export default {
 					)
 					sums[index] = el
 					return
-				} else if (index >= 8 && this.summary !== null) {
-					const values = data.map((item) => Number(item[column.property]))
+				} else if (index >= 1 && this.summary !== null) {
+					//   const values = data.map((item) => Number(item[column.property]));
+					const values = data.map((item, index) => {
+						// console.log(55555, item[column.property], column.label);
+						if (typeof item[column.property] === 'number') {
+							return Number(item[column.property])
+							//   console.log(1111, Number(item[column.property]));
+						} else {
+							return Number(item[column.property].primary)
+							//   console.log(2222, item[column.property].primary);
+						}
+					})
+					console.log('values', values, column.label)
 					if (!values.every((value) => isNaN(value))) {
 						sums[index] = values.reduce((prev, curr) => {
 							const value = Number(curr)
@@ -592,7 +540,7 @@ export default {
 						}, 0)
 						const num = sums[index]
 						switch (index) {
-							case 8:
+							case 1:
 								sums[index] = (
 									<div class='count_row'>
 										<p>{num}</p>
@@ -600,11 +548,94 @@ export default {
 									</div>
 								)
 								break
-							case 9:
+							case 2:
 								sums[index] = (
 									<div class='count_row'>
 										<p>{this.filterDecimals(num)}</p>
 										<p>{this.filterDecimals(this.summary.betAmountTotal)}</p>
+									</div>
+								)
+								break
+							case 3:
+								sums[index] = (
+									<div class='count_row'>
+										<p>{this.filterDecimals(num)}</p>
+										<p>
+											{this.filterDecimals(this.summary.validBetAmountTotal)}
+										</p>
+									</div>
+								)
+								break
+							case 4:
+								sums[index] = (
+									<div class='count_row'>
+										<p>{this.filterDecimals(num)}</p>
+										<p>
+											{this.filterDecimals(this.summary.validBetAmountTotal)}
+										</p>
+									</div>
+								)
+								break
+							case 5:
+								sums[index] = (
+									<div class='count_row'>
+										<p>{this.filterDecimals(num)}</p>
+										<p>
+											{this.filterDecimals(this.summary.validBetAmountTotal)}
+										</p>
+									</div>
+								)
+								break
+							case 6:
+								sums[index] = (
+									<div class='count_row'>
+										<p>{this.filterDecimals(num)}</p>
+										<p>
+											{this.filterDecimals(this.summary.validBetAmountTotal)}
+										</p>
+									</div>
+								)
+								break
+							case 7:
+								sums[index] = (
+									<div class='count_row'>
+										<p>{this.filterDecimals(num)}</p>
+										<p>
+											{this.filterDecimals(this.summary.validBetAmountTotal)}
+										</p>
+									</div>
+								)
+								break
+
+							case 8:
+								sums[index] = (
+									<div class='count_row'>
+										{num > 0 ? (
+											<p class='enableColor'>{this.filterDecimals(num)}</p>
+										) : (
+											<p class='redColor'>{this.filterDecimals(num)}</p>
+										)}
+										{this.summary.netAmountTotal > 0 ? (
+											<p class='enableColor'>
+												{this.filterDecimals(this.summary.netAmountTotal)}
+											</p>
+										) : this.summary.netAmountTotal === 0 ? (
+											<p>{this.filterDecimals(this.summary.netAmountTotal)}</p>
+										) : (
+											<p class='redColor'>
+												{this.filterDecimals(this.summary.netAmountTotal)}
+											</p>
+										)}
+									</div>
+								)
+								break
+							case 9:
+								sums[index] = (
+									<div class='count_row'>
+										<p>{this.filterDecimals(num)}</p>
+										<p>
+											{this.filterDecimals(this.summary.validBetAmountTotal)}
+										</p>
 									</div>
 								)
 								break
@@ -621,176 +652,80 @@ export default {
 							case 11:
 								sums[index] = (
 									<div class='count_row'>
-										{num > 0 ? (
-											<p class='enableColor'>{this.filterDecimals(num)}</p>
-										) : (
-											<p class='redColor'>{this.filterDecimals(num)}</p>
-										)}
-										{this.summary.netAmountTotal > 0 ? (
-											<p class='enableColor'>
-												{this.filterDecimals(this.summary.netAmountTotal)}
-											</p>
-										) : this.summary.netAmountTotal === 0 ? (
-											<p>{this.filterDecimals(this.summary.netAmountTotal)}</p>
-										) : (
-											<p class='redColor'>
-												{this.filterDecimals(this.summary.netAmountTotal)}
-											</p>
-										)}
+										<p>{this.filterDecimals(num)}</p>
+										<p>
+											{this.filterDecimals(this.summary.validBetAmountTotal)}
+										</p>
 									</div>
 								)
 								break
 							case 12:
 								sums[index] = (
 									<div class='count_row'>
-										{num > 0 ? (
-											<p class='enableColor'>{this.filterDecimals(num)}</p>
-										) : (
-											<p class='redColor'>{this.filterDecimals(num)}</p>
-										)}
-										{this.summary.netAmountTotal > 0 ? (
-											<p class='enableColor'>
-												{this.filterDecimals(this.summary.netAmountTotal)}
-											</p>
-										) : this.summary.netAmountTotal === 0 ? (
-											<p>{this.filterDecimals(this.summary.netAmountTotal)}</p>
-										) : (
-											<p class='redColor'>
-												{this.filterDecimals(this.summary.netAmountTotal)}
-											</p>
-										)}
+										<p>{this.filterDecimals(num)}</p>
+										<p>
+											{this.filterDecimals(this.summary.validBetAmountTotal)}
+										</p>
 									</div>
 								)
 								break
 							case 13:
 								sums[index] = (
 									<div class='count_row'>
-										{num > 0 ? (
-											<p class='enableColor'>{this.filterDecimals(num)}</p>
-										) : (
-											<p class='redColor'>{this.filterDecimals(num)}</p>
-										)}
-										{this.summary.netAmountTotal > 0 ? (
-											<p class='enableColor'>
-												{this.filterDecimals(this.summary.netAmountTotal)}
-											</p>
-										) : this.summary.netAmountTotal === 0 ? (
-											<p>{this.filterDecimals(this.summary.netAmountTotal)}</p>
-										) : (
-											<p class='redColor'>
-												{this.filterDecimals(this.summary.netAmountTotal)}
-											</p>
-										)}
+										<p>{this.filterDecimals(num)}</p>
+										<p>
+											{this.filterDecimals(this.summary.validBetAmountTotal)}
+										</p>
 									</div>
 								)
 								break
 							case 14:
 								sums[index] = (
 									<div class='count_row'>
-										{num > 0 ? (
-											<p class='enableColor'>{this.filterDecimals(num)}</p>
-										) : (
-											<p class='redColor'>{this.filterDecimals(num)}</p>
-										)}
-										{this.summary.netAmountTotal > 0 ? (
-											<p class='enableColor'>
-												{this.filterDecimals(this.summary.netAmountTotal)}
-											</p>
-										) : this.summary.netAmountTotal === 0 ? (
-											<p>{this.filterDecimals(this.summary.netAmountTotal)}</p>
-										) : (
-											<p class='redColor'>
-												{this.filterDecimals(this.summary.netAmountTotal)}
-											</p>
-										)}
+										<p>{this.filterDecimals(num)}</p>
+										<p>
+											{this.filterDecimals(this.summary.validBetAmountTotal)}
+										</p>
 									</div>
 								)
 								break
 							case 15:
 								sums[index] = (
 									<div class='count_row'>
-										{num > 0 ? (
-											<p class='enableColor'>{this.filterDecimals(num)}</p>
-										) : (
-											<p class='redColor'>{this.filterDecimals(num)}</p>
-										)}
-										{this.summary.netAmountTotal > 0 ? (
-											<p class='enableColor'>
-												{this.filterDecimals(this.summary.netAmountTotal)}
-											</p>
-										) : this.summary.netAmountTotal === 0 ? (
-											<p>{this.filterDecimals(this.summary.netAmountTotal)}</p>
-										) : (
-											<p class='redColor'>
-												{this.filterDecimals(this.summary.netAmountTotal)}
-											</p>
-										)}
+										<p>{this.filterDecimals(num)}</p>
+										<p>
+											{this.filterDecimals(this.summary.validBetAmountTotal)}
+										</p>
 									</div>
 								)
 								break
 							case 16:
 								sums[index] = (
 									<div class='count_row'>
-										{num > 0 ? (
-											<p class='enableColor'>{this.filterDecimals(num)}</p>
-										) : (
-											<p class='redColor'>{this.filterDecimals(num)}</p>
-										)}
-										{this.summary.netAmountTotal > 0 ? (
-											<p class='enableColor'>
-												{this.filterDecimals(this.summary.netAmountTotal)}
-											</p>
-										) : this.summary.netAmountTotal === 0 ? (
-											<p>{this.filterDecimals(this.summary.netAmountTotal)}</p>
-										) : (
-											<p class='redColor'>
-												{this.filterDecimals(this.summary.netAmountTotal)}
-											</p>
-										)}
+										<p>{this.filterDecimals(num)}</p>
+										<p>
+											{this.filterDecimals(this.summary.validBetAmountTotal)}
+										</p>
 									</div>
 								)
 								break
 							case 17:
 								sums[index] = (
 									<div class='count_row'>
-										{num > 0 ? (
-											<p class='enableColor'>{this.filterDecimals(num)}</p>
-										) : (
-											<p class='redColor'>{this.filterDecimals(num)}</p>
-										)}
-										{this.summary.netAmountTotal > 0 ? (
-											<p class='enableColor'>
-												{this.filterDecimals(this.summary.netAmountTotal)}
-											</p>
-										) : this.summary.netAmountTotal === 0 ? (
-											<p>{this.filterDecimals(this.summary.netAmountTotal)}</p>
-										) : (
-											<p class='redColor'>
-												{this.filterDecimals(this.summary.netAmountTotal)}
-											</p>
-										)}
+										<p>{this.filterDecimals(num)}</p>
+										<p>
+											{this.filterDecimals(this.summary.validBetAmountTotal)}
+										</p>
 									</div>
 								)
 								break
 							case 18:
 								sums[index] = (
 									<div class='count_row'>
-										{num > 0 ? (
-											<p class='enableColor'>{this.filterDecimals(num)}</p>
-										) : (
-											<p class='redColor'>{this.filterDecimals(num)}</p>
-										)}
-										{this.summary.netAmountTotal > 0 ? (
-											<p class='enableColor'>
-												{this.filterDecimals(this.summary.netAmountTotal)}
-											</p>
-										) : this.summary.netAmountTotal === 0 ? (
-											<p>{this.filterDecimals(this.summary.netAmountTotal)}</p>
-										) : (
-											<p class='redColor'>
-												{this.filterDecimals(this.summary.netAmountTotal)}
-											</p>
-										)}
+										<p>{this.filterDecimals(num)}</p>
+										<p>
+											{this.filterDecimals(this.summary.validBetAmountTotal)}
+										</p>
 									</div>
 								)
 								break

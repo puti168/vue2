@@ -161,6 +161,22 @@ export function getReportAccessAmountDaySummary(data) {
 		data
 	})
 }
+// 综合报表==>综合报表列表(分页)
+export function getReportIntegratereportList(params) {
+	return request({
+		url: '/report/integratereport/list',
+		method: 'get',
+		params
+	})
+}
+// 综合报表==>综合报表总计
+export function getReportIntegratereportAggregation(params) {
+	return request({
+		url: '/report/integratereport/aggregation',
+		method: 'get',
+		params
+	})
+}
 // 佣金报表==>佣金报表列表(分页)
 export function getReportCommissionList(params) {
 	return request({
@@ -231,6 +247,8 @@ export default {
 	getReportPlayerReportDetailListPage,
 	getReportAccessAmountDayListPage,
 	getReportAccessAmountDaySummary,
+	getReportIntegratereportList,
+	getReportIntegratereportAggregation,
 	getReportCommissionList,
 	getReportCommissionAggregation,
 	getReportCommissionDetail,
