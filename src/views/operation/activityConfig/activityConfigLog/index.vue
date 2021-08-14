@@ -86,10 +86,7 @@
 								label="操作页面"
 							>
 								<template slot-scope="scope">
-									<span v-if="!!scope.row.operationPage">
-										{{ scope.row.operationPage }}
-									</span>
-									<span v-else>-</span>
+									<span>{{ scope.row.operationPage || '-' }}</span>
 								</template>
 							</el-table-column>
 							<el-table-column
@@ -112,18 +109,12 @@
 							</el-table-column>
 							<el-table-column prop="changeFront" align="center" label="变更前">
 								<template slot-scope="scope">
-									<span v-if="!!scope.row.changeFront">
-										{{ scope.row.changeFront }}
-									</span>
-									<span v-else>-</span>
+									<span>{{ scope.row.changeFront || '-' }}</span>
 								</template>
 							</el-table-column>
 							<el-table-column prop="changeAfter" align="center" label="变更后">
 								<template slot-scope="scope">
-									<span v-if="!!scope.row.changeAfter">
-										{{ scope.row.changeAfter }}
-									</span>
-									<span v-else>-</span>
+									<span>{{ scope.row.changeAfter || '-' }}</span>
 								</template>
 							</el-table-column>
 							<el-table-column
@@ -133,10 +124,7 @@
 								label="操作人"
 							>
 								<template slot-scope="scope">
-									<span v-if="!!scope.row.operatorBy">
-										{{ scope.row.operatorBy }}
-									</span>
-									<span v-else>-</span>
+									<span>{{ scope.row.operatorBy || '-' }}</span>
 								</template>
 							</el-table-column>
 							<el-table-column
@@ -147,10 +135,7 @@
 								label="操作时间"
 							>
 								<template slot-scope="scope">
-									<span v-if="!!scope.row.operatorAt">
-										{{ scope.row.operatorAt }}
-									</span>
-									<span v-else>-</span>
+									<span>{{ scope.row.operatorAt || '-' }}</span>
 								</template>
 							</el-table-column>
 						</el-table>
@@ -273,10 +258,7 @@
 								label="操作页面"
 							>
 								<template slot-scope="scope">
-									<span v-if="!!scope.row.operationPage">
-										{{ scope.row.operationPage }}
-									</span>
-									<span v-else>-</span>
+									<span>{{ scope.row.operationPage || '-' }}</span>
 								</template>
 							</el-table-column>
 							<el-table-column
@@ -285,10 +267,7 @@
 								label="活动页签名称"
 							>
 								<template slot-scope="scope">
-									<span v-if="scope.row.operationPageName">
-										{{ scope.row.operationPageName }}
-									</span>
-									<span v-else>-</span>
+									<span>{{ scope.row.operationPageName || '-' }}</span>
 								</template>
 							</el-table-column>
 							<el-table-column
@@ -312,26 +291,17 @@
 							</el-table-column>
 							<el-table-column prop="changeFront" align="center" label="变更前">
 								<template slot-scope="scope">
-									<span v-if="scope.row.changeFront">
-										{{ scope.row.changeFront }}
-									</span>
-									<span v-else>-</span>
+									<span>{{ scope.row.changeFront || '-' }}</span>
 								</template>
 							</el-table-column>
 							<el-table-column prop="changeAfter" align="center" label="变更后">
 								<template slot-scope="scope">
-									<span v-if="scope.row.changeAfter">
-										{{ scope.row.changeAfter }}
-									</span>
-									<span v-else>-</span>
+									<span>{{ scope.row.changeAfter || '-' }}</span>
 								</template>
 							</el-table-column>
 							<el-table-column prop="remark" align="center" label="备注">
 								<template slot-scope="scope">
-									<span v-if="scope.row.remark">
-										{{ scope.row.remark }}
-									</span>
-									<span v-else>-</span>
+									<span>{{ scope.row.remark || '-' }}</span>
 								</template>
 							</el-table-column>
 							<el-table-column
@@ -341,10 +311,7 @@
 								label="操作人"
 							>
 								<template slot-scope="scope">
-									<span v-if="scope.row.operatorBy">
-										{{ scope.row.operatorBy }}
-									</span>
-									<span v-else>-</span>
+									<span>{{ scope.row.operatorBy || '-' }}</span>
 								</template>
 							</el-table-column>
 							<el-table-column
@@ -355,10 +322,7 @@
 								label="操作时间"
 							>
 								<template slot-scope="scope">
-									<span v-if="scope.row.operatorAt">
-										{{ scope.row.operatorAt }}
-									</span>
-									<span v-else>-</span>
+									<span>{{ scope.row.operatorAt || '-' }}</span>
 								</template>
 							</el-table-column>
 						</el-table>
@@ -474,10 +438,7 @@
 								label="操作页面"
 							>
 								<template slot-scope="scope">
-									<span v-if="scope.row.operationPage">
-										{{ scope.row.operationPage }}
-									</span>
-									<span v-else>-</span>
+									<span>{{ scope.row.operationPage || '-' }}</span>
 								</template>
 							</el-table-column>
 							<el-table-column
@@ -486,18 +447,12 @@
 								label="活动类型"
 							>
 								<template slot-scope="scope">
-									<span v-if="scope.row.activityType">
-										{{ scope.row.activityType }}
-									</span>
-									<span v-else>-</span>
+									<span>{{ scope.row.activityType || '-' }}</span>
 								</template>
 							</el-table-column>
 							<el-table-column prop="activityId" align="center" label="活动ID">
 								<template slot-scope="scope">
-									<span v-if="!!scope.row.activityId">
-										{{ scope.row.activityId }}
-									</span>
-									<span v-else>-</span>
+									<span>{{ scope.row.activityId || '-' }}</span>
 								</template>
 							</el-table-column>
 							<el-table-column
@@ -515,18 +470,12 @@
 							</el-table-column>
 							<el-table-column prop="changeFront" align="center" label="变更前">
 								<template slot-scope="scope">
-									<span v-if="!!scope.row.changeFront">
-										{{ scope.row.changeFront }}
-									</span>
-									<span v-else>-</span>
+									<span>{{ scope.row.changeFront || '-' }}</span>
 								</template>
 							</el-table-column>
 							<el-table-column prop="changeAfter" align="center" label="变更后">
 								<template slot-scope="scope">
-									<span v-if="!!scope.row.changeAfter">
-										{{ scope.row.changeAfter }}
-									</span>
-									<span v-else>-</span>
+									<span>{{ scope.row.changeAfter || '-' }}</span>
 								</template>
 							</el-table-column>
 							<el-table-column
@@ -536,10 +485,7 @@
 								label="操作人"
 							>
 								<template slot-scope="scope">
-									<span v-if="!!scope.row.operatorBy">
-										{{ scope.row.operatorBy }}
-									</span>
-									<span v-else>-</span>
+									<span>{{ scope.row.operatorBy || '-' }}</span>
 								</template>
 							</el-table-column>
 							<el-table-column
@@ -550,10 +496,7 @@
 								label="操作时间"
 							>
 								<template slot-scope="scope">
-									<span v-if="!!scope.row.operatorAt">
-										{{ scope.row.operatorAt }}
-									</span>
-									<span v-else>-</span>
+									<span>{{ scope.row.operatorAt || '-' }}</span>
 								</template>
 							</el-table-column>
 						</el-table>
@@ -685,10 +628,7 @@
 								label="操作页面"
 							>
 								<template slot-scope="scope">
-									<span v-if="!!scope.row.operationPage">
-										{{ scope.row.operationPage }}
-									</span>
-									<span v-else>-</span>
+									<span>{{ scope.row.operationPage || '-' }}</span>
 								</template>
 							</el-table-column>
 							<el-table-column
@@ -741,18 +681,12 @@
 							</el-table-column>
 							<el-table-column prop="changeFront" align="center" label="变更前">
 								<template slot-scope="scope">
-									<span v-if="!!scope.row.changeFront">
-										{{ scope.row.changeFront }}
-									</span>
-									<span v-else>-</span>
+									<span>{{ scope.row.changeFront || '-' }}</span>
 								</template>
 							</el-table-column>
 							<el-table-column prop="changeAfter" align="center" label="变更后">
 								<template slot-scope="scope">
-									<span v-if="!!scope.row.changeAfter">
-										{{ scope.row.changeAfter }}
-									</span>
-									<span v-else>-</span>
+									<span>{{ scope.row.changeAfter || '-' }}</span>
 								</template>
 							</el-table-column>
 							<el-table-column
@@ -762,10 +696,7 @@
 								label="操作人"
 							>
 								<template slot-scope="scope">
-									<span v-if="!!scope.row.operatorBy">
-										{{ scope.row.operatorBy }}
-									</span>
-									<span v-else>-</span>
+									<span>{{ scope.row.operatorBy || '-' }}</span>
 								</template>
 							</el-table-column>
 							<el-table-column
@@ -776,10 +707,7 @@
 								label="操作时间"
 							>
 								<template slot-scope="scope">
-									<span v-if="!!scope.row.operatorAt">
-										{{ scope.row.operatorAt }}
-									</span>
-									<span v-else>-</span>
+									<span>{{ scope.row.operatorAt || '-' }}</span>
 								</template>
 							</el-table-column>
 						</el-table>
@@ -837,19 +765,19 @@ export default {
 	},
 	computed: {
 		operateChangeTypeName() {
-			return this.globalDics.operateChangeTypeName
+			return this.globalDics.operateChangeTypeName || []
 		},
 		operateChangeTypeTag() {
-			return this.globalDics.operateChangeTypeTag
+			return this.globalDics.operateChangeTypeTag || []
 		},
 		operateChangeTypeDis() {
-			return this.globalDics.operateChangeTypeDis
+			return this.globalDics.operateChangeTypeDis || []
 		},
 		operateChangeTypeVip() {
-			return this.globalDics.operateChangeTypeVip
+			return this.globalDics.operateChangeTypeVip || []
 		},
 		operateActivityType() {
-			return this.globalDics.operateActivityType
+			return this.globalDics.operateActivityType || []
 		}
 	},
 	mounted() {
@@ -860,9 +788,8 @@ export default {
 			this.$api
 				.configDiscountTagQueryNames()
 				.then((res) => {
-					const { code, data } = res
-					if (code === 200) {
-						this.gameList = data || []
+					if (res?.code === 200) {
+						this.gameList = res.data || []
 					}
 				})
 				.catch(() => {})
@@ -885,8 +812,10 @@ export default {
 					orderType: this.queryData.orderType,
 					startAt: startTime
 						? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
-						: '',
-					endAt: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
+						: undefined,
+					endAt: endTime
+						? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
+						: undefined
 				}
 			} else if (this.activeName === '1') {
 				type = 'queryDiscountTagList'
@@ -898,8 +827,10 @@ export default {
 					orderType: this.queryData.orderType,
 					startAt: startTime
 						? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
-						: '',
-					endAt: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
+						: undefined,
+					endAt: endTime
+						? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
+						: undefined
 				}
 			} else if (this.activeName === '2') {
 				type = 'queryDiscountActivityList'
@@ -911,8 +842,10 @@ export default {
 					orderType: this.queryData.orderType,
 					startAt: startTime
 						? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
-						: '',
-					endAt: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
+						: undefined,
+					endAt: endTime
+						? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
+						: undefined
 				}
 			} else if (this.activeName === '3') {
 				type = 'queryVipActivityList'
@@ -925,8 +858,10 @@ export default {
 					orderType: this.queryData.orderType,
 					startAt: startTime
 						? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
-						: '',
-					endAt: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
+						: undefined,
+					endAt: endTime
+						? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
+						: undefined
 				}
 			}
 			params = {
@@ -935,13 +870,13 @@ export default {
 			this.$api[type](params)
 				.then((res) => {
 					this.loading = false
-					const { code, data, msg } = res
-					if (code === 200) {
-						this.dataList = data.records
-						this.total = data.total
+					if (res?.code === 200) {
+						const { records, total } = res.data || {}
+						this.dataList = Array.isArray(records) ? Object.freeze(records) : []
+						this.total = total || 0
 					} else {
 						this.$message({
-							message: msg,
+							message: res?.msg || '接口异常',
 							type: 'error'
 						})
 					}
