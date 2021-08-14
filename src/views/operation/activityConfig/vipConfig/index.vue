@@ -207,31 +207,51 @@
 						label="活动ID"
 						prop="id"
 						width="200px"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							<span>{{ scope.row.id || '-' }}</span>
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="activityName"
 						align="center"
 						width="180px"
 						label="活动名称"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							<span>{{ scope.row.activityName || '-' }}</span>
+						</template>
+					</el-table-column>
 					<el-table-column
 						align="center"
 						prop="activityTitle"
 						label="活动主标题"
 						width="180px"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							<span>{{ scope.row.activityTitle || '-' }}</span>
+						</template>
+					</el-table-column>
 					<el-table-column
 						align="center"
 						prop="activityAppTypeName"
 						label="活动支持终端"
 						width="130px"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							<span>{{ scope.row.activityAppTypeName || '-' }}</span>
+						</template>
+					</el-table-column>
 					<el-table-column
 						align="center"
 						width="130px"
 						prop="activityUserTypeName"
 						label="活动生效账户类型"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							<span>{{ scope.row.activityUserTypeName || '-' }}</span>
+						</template>
+					</el-table-column>
 					<el-table-column
 						align="center"
 						prop="activityPrescription"
@@ -320,27 +340,43 @@
 						align="center"
 						label="创建人"
 						width="110"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							<span>{{ scope.row.createdBy || '-' }}</span>
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="createdAt"
 						align="center"
 						label="创建时间"
 						width="160"
 						sortable="custom"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							<span>{{ scope.row.createdAt || '-' }}</span>
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="updatedBy"
 						align="center"
 						label="最近操作人"
 						width="110"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							<span>{{ scope.row.updatedBy || '-' }}</span>
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="updatedAt"
 						align="center"
 						label="最近操作时间"
 						width="160"
 						sortable="custom"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							<span>{{ scope.row.updatedAt || '-' }}</span>
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="operating"
 						align="center"
@@ -840,16 +876,16 @@ export default {
 	},
 	computed: {
 		operateVipActivityType() {
-			return this.globalDics.operateVipActivityType
+			return this.globalDics.operateVipActivityType || []
 		},
 		operateValidityType() {
-			return this.globalDics.operateValidityType
+			return this.globalDics.operateValidityType || []
 		},
 		operateActivitySupportClient() {
-			return this.globalDics.operateActivitySupportClient
+			return this.globalDics.operateActivitySupportClient || []
 		},
 		operateActivityUserType() {
-			return this.globalDics.operateActivityUserType
+			return this.globalDics.operateActivityUserType || []
 		},
 		errTime() {
 			if (
@@ -888,11 +924,11 @@ export default {
 			this.$api
 				.getOperateActivityVipQueryList(params)
 				.then((res) => {
-					if (res.code === 200) {
-						const response = res.data
+					if (res?.code === 200) {
+						const { records, total } = res.data || {}
 						this.loading = false
-						this.list = response.records
-						this.total = response.total
+						this.list = Array.isArray(records) ? Object.freeze(records) : []
+						this.total = total || 0
 					} else {
 						this.loading = false
 						this.$message({
@@ -912,8 +948,8 @@ export default {
 			this.$api
 				.getOperateActivityVipQueryActivityNameList(params)
 				.then((res) => {
-					if (res.code === 200) {
-						this.sortList[0].sortLabel = res.data
+					if (res?.code === 200) {
+						this.sortList[0].sortLabel = res.data || []
 						this.sortVisible = true
 						this.sortActivityType = type
 					}
@@ -936,7 +972,7 @@ export default {
 			const sortIds = newArr.join(',')
 			console.log(sortIds)
 			this.$api.setOperateActivityVipSort({ sortIds: sortIds }).then((res) => {
-				if (res.code === 200) {
+				if (res?.code === 200) {
 					this.$message({
 						message: '操作成功！',
 						type: 'success'
@@ -980,7 +1016,7 @@ export default {
 		// 新增保存
 		setOperateActivityVipAdd(val) {
 			this.$api.setOperateActivityVipAdd(val).then((res) => {
-				if (res.code === 200) {
+				if (res?.code === 200) {
 					this.$message({
 						message: '新增成功！',
 						type: 'success'
@@ -993,7 +1029,7 @@ export default {
 		// 修改保存
 		setOperateActivityVipUpdate(val) {
 			this.$api.setOperateActivityVipUpdate(val).then((res) => {
-				if (res.code === 200) {
+				if (res?.code === 200) {
 					this.$message({
 						message: '编辑成功！',
 						type: 'success'
@@ -1058,7 +1094,7 @@ export default {
 							status: val.status === 0 ? 1 : 0
 						})
 						.then((res) => {
-							if (res.code === 200) {
+							if (res?.code === 200) {
 								this.$message({
 									message: '修改成功！',
 									type: 'success'
@@ -1066,7 +1102,7 @@ export default {
 								this.loadData()
 							} else {
 								this.$message({
-									message: res.msg,
+									message: res?.msg || '接口异常',
 									type: 'error'
 								})
 							}
@@ -1088,7 +1124,7 @@ export default {
 			)
 				.then(() => {
 					this.$api.setOperateActivityVipDelete({ id: row.id }).then((res) => {
-						if (res.code === 200) {
+						if (res?.code === 200) {
 							this.$message({
 								message: '操作成功！',
 								type: 'success'
@@ -1096,7 +1132,7 @@ export default {
 							this.loadData()
 						} else {
 							this.$message({
-								message: res.msg,
+								message: res?.msg || '接口异常',
 								type: 'error'
 							})
 						}
