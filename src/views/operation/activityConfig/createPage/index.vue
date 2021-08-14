@@ -119,13 +119,21 @@
 						align="center"
 						label="活动页签"
 						width="180"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							<span>{{ scope.row.activityTagName || '-' }}</span>
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="activityTagRemark"
 						align="center"
 						label="备注"
 						width="220"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							<span>{{ scope.row.activityTagRemark || '-' }}</span>
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="status"
 						align="center"
@@ -147,27 +155,43 @@
 						align="center"
 						label="创建人"
 						width="180"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							<span>{{ scope.row.createdBy || '-' }}</span>
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="createdAt"
 						align="center"
 						label="创建时间"
 						width="220"
 						sortable="custom"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							<span>{{ scope.row.createdAt || '-' }}</span>
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="updatedBy"
 						align="center"
 						label="最近操作人"
 						width="180"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							<span>{{ scope.row.updatedBy || '-' }}</span>
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="updatedAt"
 						align="center"
 						label="最近操作时间"
 						width="220"
 						sortable="custom"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							<span>{{ scope.row.updatedAt || '-' }}</span>
+						</template>
+					</el-table-column>
 					<el-table-column
 						prop="operating"
 						align="center"
@@ -342,11 +366,11 @@ export default {
 			carouselData: [],
 			queryData: {
 				ids: [],
-				status: '',
-				createdBy: '',
-				orderAsc: '',
-				orderDesc: '',
-				updatedBy: ''
+				status: undefined,
+				createdBy: undefined,
+				orderAsc: undefined,
+				orderDesc: undefined,
+				updatedBy: undefined
 			},
 			sortLabel: false,
 			tableData: [],
@@ -359,7 +383,7 @@ export default {
 	},
 	computed: {
 		operateStatus() {
-			return this.globalDics.operateStatus
+			return this.globalDics.operateStatus || []
 		}
 	},
 	mounted() {
@@ -380,8 +404,8 @@ export default {
 			this.$api
 				.configDiscountTagQueryNames()
 				.then((res) => {
-					if (res.code === 200) {
-						this.gameList = res.data
+					if (res?.code === 200) {
+						this.gameList = res.data || []
 					}
 				})
 				.catch(() => {
@@ -399,13 +423,14 @@ export default {
 			this.$api
 				.configDiscountTagQueryList(params)
 				.then((res) => {
-					if (res.code === 200) {
-						this.tableData = res.data.records
-						this.total = res.data.total
-						this.loading = false
-					} else {
-						this.loading = false
+					if (res?.code === 200) {
+						const { records, total } = res.data || {}
+						this.tableData = Array.isArray(records)
+							? Object.freeze(records)
+							: []
+						this.total = total || 0
 					}
+					this.loading = false
 				})
 				.catch(() => {
 					this.loading = false
@@ -413,9 +438,8 @@ export default {
 		},
 		activepage() {
 			this.$api.operateConfigDiscountTagQuerySortedNames().then((res) => {
-				if (res.code === 200) {
-					console.log(res)
-					this.carouselData = res.data
+				if (res?.code === 200) {
+					this.carouselData = res.data || []
 				}
 			})
 			this.sortLabel = true
@@ -432,7 +456,7 @@ export default {
 				.setoperateConfigDiscountTagSort({ sortIds: sortIds })
 				.then((res) => {
 					this.sortLabel = false
-					if (res.code === 200) {
+					if (res?.code === 200) {
 						this.$message({
 							message: '操作成功！',
 							type: 'success'
@@ -444,11 +468,11 @@ export default {
 		reset() {
 			this.queryData = {
 				ids: [],
-				status: '',
-				createdBy: '',
-				updatedBy: '',
-				orderAsc: '',
-				orderDesc: ''
+				status: undefined,
+				createdBy: undefined,
+				updatedBy: undefined,
+				orderAsc: undefined,
+				orderDesc: undefined
 			}
 			this.pageNum = 1
 			this.loadData()
@@ -472,7 +496,7 @@ export default {
 					this.$api
 						.configDiscountTagUse({ id: val.id, status: status })
 						.then((res) => {
-							if (res.code === 200) {
+							if (res?.code === 200) {
 								this.loadData()
 							}
 						})
@@ -500,7 +524,7 @@ export default {
 			})
 				.then(() => {
 					this.$api.configDiscountTagDelete(data).then((res) => {
-						if (res.code === 200) {
+						if (res?.code === 200) {
 							this.$message.success('删除成功')
 							this.loadData()
 						}
@@ -519,7 +543,7 @@ export default {
 					if (this.title === '新增') {
 						console.log('新增')
 						this.$api.configDiscountTagAdd(data).then((res) => {
-							if (res.code === 200) {
+							if (res?.code === 200) {
 								this.$message.success('创建成功')
 								this.pageNum = 1
 								this.loadData()
@@ -527,7 +551,7 @@ export default {
 						})
 					} else {
 						this.$api.configDiscountTagEdit(data).then((res) => {
-							if (res.code === 200) {
+							if (res?.code === 200) {
 								this.$message.success('修改成功')
 								this.loadData()
 							}
