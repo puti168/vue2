@@ -40,7 +40,7 @@
 							></el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="创建人:" prop="createBy">
+					<el-form-item label="创建人:">
 						<el-input
 							v-model="queryData.createdBy"
 							size="medium"
@@ -50,7 +50,7 @@
 							maxlength="15"
 						></el-input>
 					</el-form-item>
-					<el-form-item label="最近操作人:" prop="updatedBy">
+					<el-form-item label="最近操作人:">
 						<el-input
 							v-model="queryData.updatedBy"
 							size="medium"
@@ -113,6 +113,7 @@
 									typeFilter(scope.row.windControlType || '-', 'windLevelType')
 								}}
 							</span>
+							<span>-</span>
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -121,23 +122,17 @@
 						label="风控层级"
 					>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.windControlLevelName">
-								{{ scope.row.windControlLevelName || '-' }}
-							</span>
+							{{ scope.row.windControlLevelName || '-' }}
 						</template>
 					</el-table-column>
 					<el-table-column prop="miaoShu" align="center" label="风控层级描述">
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.description">
-								{{ scope.row.description || '-' }}
-							</span>
+							{{ scope.row.description || '-' }}
 						</template>
 					</el-table-column>
 					<el-table-column prop="createdBy" align="center" label="创建人">
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.createdBy">
-								{{ scope.row.createdBy || '-' }}
-							</span>
+							{{ scope.row.createdBy || '-' }}
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -145,20 +140,15 @@
 						align="center"
 						label="创建时间"
 						sortable="custom"
-						width="160px"
+						width="160"
 					>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.createdAt">
-								{{ scope.row.createdAt || '-' }}
-							</span>
+							{{ scope.row.createdAt || '-' }}
 						</template>
 					</el-table-column>
 					<el-table-column prop="updatedBy" align="center" label="最近操作人">
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.updatedBy">
-								{{ scope.row.updatedBy || '-' }}
-							</span>
-							<span v-else>-</span>
+							{{ scope.row.updatedBy || '-' }}
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -166,19 +156,17 @@
 						align="center"
 						label="最近操作时间"
 						sortable="custom"
-						width="160px"
+						width="160"
 					>
 						<template slot-scope="scope">
-							<span v-if="!!scope.row.updatedAt">
-								{{ scope.row.updatedAt || '-' }}
-							</span>
+							{{ scope.row.updatedAt || '-' }}
 						</template>
 					</el-table-column>
 					<el-table-column
 						prop="operating"
 						align="center"
 						label="操作"
-						width="240px"
+						width="240"
 					>
 						<template slot-scope="scope">
 							<el-button
@@ -289,9 +277,7 @@ import { routerNames } from '@/utils/consts'
 
 export default {
 	name: routerNames.createRiskRank,
-	components: {},
 	mixins: [list],
-
 	data() {
 		this.loadData = this.throttle(this.loadData, 1000)
 		this.reset = this.throttle(this.reset, 1000)
@@ -349,9 +335,6 @@ export default {
 			}
 		}
 	},
-	mounted() {
-		// this.getMerchantDict('')
-	},
 	methods: {
 		loadData() {
 			this.loading = true
@@ -376,20 +359,14 @@ export default {
 			this.$api
 				.riskRankListAPI(params)
 				.then((res) => {
-					const {
-						code,
-						data: { record, totalRecord },
-						msg
-					} = res || {}
 					this.loading = false
-					if (code && code === 200) {
-						this.tableData =
-							(record && record.length && Object.freeze(record)) || []
+					if (res?.code === 200) {
+						const { record, totalRecord } = res.data || {}
+						this.tableData = Array.isArray(record) ? Object.freeze(record) : []
 						this.total = totalRecord || 0
 					} else {
-						this.loading = false
 						this.$message({
-							message: msg,
+							message: res?.msg || '接口请求异常',
 							type: 'error'
 						})
 					}
@@ -413,32 +390,6 @@ export default {
 			}
 			this.loadData()
 		},
-		switchClick(val) {
-			const status = val.labelStatus === 0 ? 1 : 0
-			console.log(val)
-			this.$confirm(
-				`<strong>是否对 ${val.gameLabelName} 进行${
-					val.labelStatus === 1 ? '启用' : '禁用'
-				}操作?</strong></br><span style='font-size:12px;color:#c1c1c1'>一旦操作将会立即生效</span>`,
-				`确认提示`,
-				{
-					dangerouslyUseHTMLString: true,
-					confirmButtonText: '确定',
-					cancelButtonText: '取消',
-					type: 'warning'
-				}
-			)
-				.then(() => {
-					this.$api
-						.setUpdateStatus({ id: val.id, status: status })
-						.then((res) => {
-							if (res.code === 200) {
-								this.loadData()
-							}
-						})
-				})
-				.catch(() => {})
-		},
 		addLabel() {
 			this.dialogFormVisible = true
 			this.$refs['form'].resetFields()
@@ -456,12 +407,6 @@ export default {
 			this.dialogFormVisible = true
 		},
 		deleteLabel(val) {
-			const loading = this.$loading({
-				lock: true,
-				text: 'Loading',
-				spinner: 'el-icon-loading',
-				background: 'rgba(0, 0, 0, 0.7)'
-			})
 			const { id } = val
 			this.$confirm(`<strong>确定删除此条配置?</strong>`, `确认提示`, {
 				dangerouslyUseHTMLString: true,
@@ -470,12 +415,17 @@ export default {
 				type: 'warning'
 			})
 				.then(() => {
+					const loading = this.$loading({
+						lock: true,
+						text: 'Loading',
+						spinner: 'el-icon-loading',
+						background: 'rgba(0, 0, 0, 0.7)'
+					})
 					this.$api
 						.deleteRiskRankAPI({ id })
 						.then((res) => {
 							loading.close()
-							const { code } = res
-							if (code === 200) {
+							if (res?.code === 200) {
 								this.$message.success('删除成功')
 							} else {
 								this.$message({
@@ -489,14 +439,11 @@ export default {
 						.catch(() => {
 							loading.close()
 						})
+					setTimeout(() => {
+						loading.close()
+					}, 1000)
 				})
-				.catch(() => {
-					loading.close()
-				})
-
-			setTimeout(() => {
-				loading.close()
-			}, 1000)
+				.catch(() => {})
 		},
 		subAddOrEdit() {
 			const params = {
@@ -527,25 +474,21 @@ export default {
 				}
 			})
 		},
-		checkValue(e) {
-			const { value } = e.target
-			this.queryData.gameLabelId = value
-			console.log(value)
-		},
 		_changeTableSort({ column, prop, order }) {
-			if (prop === 'createdAt') {
-				prop = 1
+			const obj = {
+				createdAt: 1,
+				updatedAt: 2
 			}
-			if (prop === 'updatedAt') {
-				prop = 2
-			}
-			this.queryData.orderKey = prop
+			this.queryData.orderKey = obj[prop]
 			if (order === 'ascending') {
 				// 升序
 				this.queryData.orderType = 'asc'
 			} else if (column.order === 'descending') {
 				// 降序
 				this.queryData.orderType = 'desc'
+			} else {
+				delete this.queryData.orderType
+				delete this.queryData.orderKey
 			}
 			this.loadData()
 		},
@@ -555,13 +498,12 @@ export default {
 		// 获取风控层级
 		getMerchantDict(val) {
 			this.queryData.windControlLevelName = []
-
 			this.$api
 				.getSelectWindControlLevel({
 					windControlType: val * 1
 				})
 				.then((res) => {
-					const { code, data, msg } = res
+					const { code, data, msg } = res || {}
 					if (code === 200) {
 						this.vipDict = data || []
 					} else {
