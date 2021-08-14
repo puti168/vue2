@@ -368,8 +368,8 @@ export default {
 						.then((res) => {
 							this.loadingT = false
 							lock = true
-							const { code, msg } = res
-							if (code === 200) {
+							const { msg } = res
+							if (res?.code === 200) {
 								this.$confirm(`提交成功`, {
 									confirmButtonText: '确定',
 									type: 'success',
@@ -431,8 +431,8 @@ export default {
 			this.$api
 				.getSelectWindControlLevel({ windControlType: val * 1 })
 				.then((res) => {
-					const { code, data, msg } = res
-					if (code === 200) {
+					const { data, msg } = res
+					if (res?.code === 200) {
 						this.vipDict = data || []
 					} else {
 						this.$message({
@@ -604,8 +604,8 @@ export default {
 						.then((res) => {
 							// lock = false
 							this.loading = false
-							const { code, data } = res
-							if (code === 200) {
+							const { data } = res
+							if (res?.code === 200) {
 								if (data) {
 									this.showInfoData =
 										!!data.id || data.id + '' === '0' ? data : undefined
