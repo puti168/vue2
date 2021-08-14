@@ -101,7 +101,11 @@
 						align="center"
 						label="反馈时间"
 						sortable="custom"
-					></el-table-column>
+					>
+						<template slot-scope="scope">
+							<span>{{ scope.row.createDt || '-' }}</span>
+						</template>
+					</el-table-column>
 
 					<el-table-column prop="userName" align="center" label="会员账号">
 						<template slot-scope="scope">
@@ -127,7 +131,7 @@
 
 					<el-table-column prop="labelName" align="center" label="会员标签">
 						<template slot-scope="scope">
-							<span>{{ scope.row.labelName }}</span>
+							<span>{{ scope.row.labelName || '-' }}</span>
 						</template>
 					</el-table-column>
 
@@ -141,9 +145,7 @@
 					</el-table-column>
 					<el-table-column align="center" label="反馈类型">
 						<template slot-scope="scope">
-							<span v-for="item in backEnumsList" :key="item.value">
-								{{ scope.row.problemType === item.code ? item.value : '' }}
-							</span>
+							<span>{{ filterProblemType(scope.row.problemType) }}</span>
 						</template>
 					</el-table-column>
 					<el-table-column
@@ -152,7 +154,7 @@
 						label="反馈内容"
 					>
 						<template slot-scope="scope">
-							<span>{{ scope.row.problemDescribe }}</span>
+							<span>{{ scope.row.problemDescribe || '-' }}</span>
 						</template>
 					</el-table-column>
 					<el-table-column prop="operation" align="center" label="操作">
@@ -185,7 +187,7 @@
 		<foundIn
 			v-else
 			:rowData="rowData"
-			:rowAssortId="rowAssortId"
+			:problemType="problemType"
 			@back="back"
 		></foundIn>
 	</div>
@@ -194,7 +196,7 @@
 <script>
 import list from '@/mixins/list'
 import dayjs from 'dayjs'
-import foundIn from './components/foundIn'
+
 const startTime = dayjs()
 	.startOf('day')
 	.valueOf()
@@ -203,14 +205,16 @@ const endTime = dayjs()
 	.valueOf()
 
 export default {
-	components: { foundIn },
+	components: {
+		foundIn: () => import('./components/foundIn')
+	},
 	mixins: [list],
 	data() {
 		this.loadData = this.throttle(this.loadData, 1000)
 		return {
 			accountType: '',
 			foundIn: false,
-			rowAssortId: '',
+			problemType: undefined,
 			rowData: {},
 			backEnumsList: [],
 			queryData: {},
@@ -226,10 +230,10 @@ export default {
 	},
 	computed: {
 		accountTypeArr() {
-			return this.globalDics.accountType
+			return this.globalDics.accountType || []
 		},
 		memberVipOperateFieldType() {
-			return this.globalDics.memberVipOperateFieldType
+			return this.globalDics.memberVipOperateFieldType || []
 		}
 	},
 	created() {
@@ -245,8 +249,10 @@ export default {
 				...this.queryData,
 				startTime: startTime
 					? dayjs(startTime).format('YYYY-MM-DD HH:mm:ss')
-					: '',
-				endTime: endTime ? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss') : ''
+					: undefined,
+				endTime: endTime
+					? dayjs(endTime).format('YYYY-MM-DD HH:mm:ss')
+					: undefined
 			}
 			params = {
 				...this.getParams(params)
@@ -254,13 +260,12 @@ export default {
 			this.$api
 				.getFeedBackPageFeedBack(params)
 				.then((res) => {
-					if (res.code === 200) {
-						this.tableData = res.data.record
-						this.total = res.data.totalRecord
-						this.loading = false
-					} else {
-						this.loading = false
+					if (res?.code === 200) {
+						const { record, totalRecord } = res.data || {}
+						this.tableData = Array.isArray(record) ? Object.freeze(record) : []
+						this.total = totalRecord || 0
 					}
+					this.loading = false
 				})
 				.catch(() => {
 					this.loading = false
@@ -276,8 +281,8 @@ export default {
 			this.$api
 				.OperateObConfigAnnouncementRecordQueryFeedBackEnums()
 				.then((res) => {
-					if (res.code === 200) {
-						this.backEnumsList = res.data.problemType
+					if (res?.code === 200) {
+						this.backEnumsList = res.data?.problemType || []
 					}
 				})
 		},
@@ -302,15 +307,17 @@ export default {
 			this.loadData()
 		},
 		lookMsg(val) {
-			console.log(val)
-			const { id } = val
 			this.rowData = val
-			this.rowAssortId = id
+			this.problemType = this.filterProblemType(val.problemType)
 			this.foundIn = true
 		},
 		back() {
 			this.foundIn = false
 			this.loadData()
+		},
+		filterProblemType(val) {
+			const res = this.backEnumsList.find((item) => item.code === val)
+			return res?.value || '-'
 		}
 	}
 }
