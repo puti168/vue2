@@ -56,7 +56,7 @@
 						<el-input
 							v-model="queryData.contentName"
 							clearable
-							maxlength="12"
+							maxlength="50"
 							size="medium"
 							style="width: 180px; margin-right: 20px"
 							placeholder="请输入"
@@ -86,7 +86,6 @@
 						<el-button
 							v-if="hasPermission('466')"
 							type="warning"
-							:disabled="loading"
 							size="medium"
 							@click="subSortadd"
 						>
@@ -199,8 +198,9 @@
 							<el-button
 								v-if="hasPermission('465') && scope.row.contentStatus === 0"
 								type="success"
+								:disabled="loading"
 								size="medium"
-								@click="changeStatus(scope.row)"
+								@click="changeStatus(scope.row, 1)"
 							>
 								开启
 							</el-button>
@@ -208,13 +208,15 @@
 							<el-button
 								v-if="hasPermission('465') && scope.row.contentStatus !== 0"
 								type="danger"
+								:disabled="loading"
 								size="medium"
-								@click="changeStatus(scope.row)"
+								@click="changeStatus(scope.row, 2)"
 							>
 								禁用
 							</el-button>
 							<el-button
 								v-if="hasPermission('463')"
+								:disabled="loading || Number(scope.row.contentStatus) === 1"
 								type="primary"
 								icon="el-icon-edit"
 								size="medium"
@@ -225,6 +227,7 @@
 
 							<el-button
 								v-if="hasPermission('464')"
+								:disabled="loading || Number(scope.row.contentStatus) === 1"
 								type="warning"
 								icon="el-icon-delete"
 								size="medium"
@@ -308,7 +311,7 @@
 						>
 							<el-input
 								v-model="dialogForm.contentName"
-								:maxlength="20"
+								:maxlength="50"
 								show-word-limit
 								autocomplete="off"
 								style="width: 500px"
@@ -325,24 +328,14 @@
 							<el-input
 								v-model="dialogForm.contentDesc"
 								type="textarea"
-								:maxlength="100"
+								:maxlength="2000"
 								autocomplete="off"
 								style="width: 500px"
 								placeholder="请输入"
 								show-word-limit
 							></el-input>
 						</el-form-item>
-						<el-form-item
-							label="教程图片:"
-							prop="contentPicture"
-							:rules="[
-								{
-									required: true,
-									message: '教程图片不能为空',
-									trigger: 'change'
-								}
-							]"
-						>
+						<el-form-item label="教程图片:" prop="contentPicture">
 							<UploadItem
 								ref="imgUpload"
 								:upload-file-type="'image'"
@@ -394,6 +387,7 @@ export default {
 			1000
 		)
 		return {
+			tutorId: '',
 			firstStatusShow: false,
 			queryData: {},
 			tutorNameList: [],
@@ -491,17 +485,19 @@ export default {
 			this.$api
 				.getConfigTutorContentQueryList(params)
 				.then((res) => {
-					this.loading = false
+					this.loading = true
 					const {
 						code,
 						data: { records, total },
 						msg
 					} = res
 					if (res && code && code === 200) {
+						this.loading = false
 						this.tableData =
 							(res.data && records.length && Object.freeze(records)) || []
 						this.total = (res.data && total) || 0
 					} else {
+						this.loading = false
 						this.$message({
 							message: (res && msg) || '接口异常',
 							type: 'error'
@@ -525,11 +521,11 @@ export default {
 				}
 			})
 		},
-		changeStatus(val) {
+		changeStatus(val, type) {
 			const status = val.contentStatus === 0 ? 1 : 0
 			this.$confirm(
 				`<strong>是否对该配置进行${
-					val.contentStatus === 0 ? '启用' : '禁用'
+					Number(type) === 0 ? '启用' : '禁用'
 				}操作?</strong></br><span style='font-size:12px;color:#c1c1c1'>一旦操作将会立即生效</span>`,
 				`确认提示`,
 				{
@@ -662,14 +658,25 @@ export default {
 			this.loadData()
 		},
 		subSortadd() {
+			if (!this.queryData.tutorId || !this.queryData.bookmarkId) {
+				this.$message({
+					message: '选择教程名称和页签名称后才可以对内容名称排序。',
+					type: 'error'
+				})
+				return
+			}
+			const tutorId = this.queryData.tutorId
+			const bookmarkId = this.queryData.bookmarkId
 			const sortIds = this.sortIds
-			this.$api.configTutorContentQuerySortedNames({ sortIds }).then((res) => {
-				if (res && res.code === 200) {
-					this.configTutorList = res.data
-					console.log(this.configTutorList, 'this.configTutorList112')
-					this.subSort = true
-				}
-			})
+			this.$api
+				.configTutorContentQuerySortedNames({ sortIds, tutorId, bookmarkId })
+				.then((res) => {
+					if (res && res.code === 200) {
+						this.configTutorList = res.data
+						console.log(this.configTutorList, 'this.configTutorList112')
+						this.subSort = true
+					}
+				})
 			this.subSort = false
 		},
 		// 开始拖拽事件
@@ -689,7 +696,9 @@ export default {
 				console.log(ele, '66')
 				newArr.push(ele.id)
 			}
-			console.log(this.configTutorList)
+			console.log('1111')
+			console.log(this.tutorId, 'this.tutorId')
+
 			const sortIds = newArr.join(',')
 			this.$api.getConfigTutorContentSort({ sortIds: sortIds }).then((res) => {
 				if (res.code === 200) {

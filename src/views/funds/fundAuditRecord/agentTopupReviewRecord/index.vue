@@ -245,7 +245,7 @@
 											!!scope.row.details[0] && !!scope.row.details[0].remark
 										"
 									>
-										一审：{{ scope.row.details[0].remark }}
+										{{ scope.row.details[0].remark }}
 									</p>
 									<p v-else>-</p>
 									<p
@@ -253,7 +253,7 @@
 											!!scope.row.details[1] && !!scope.row.details[1].remark
 										"
 									>
-										一审：{{ scope.row.details[1].remark }}
+										{{ scope.row.details[1].remark }}
 									</p>
 									<p v-else>-</p>
 								</div>
