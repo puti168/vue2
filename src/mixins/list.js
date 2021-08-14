@@ -86,9 +86,7 @@ export default {
 			this.initList()
 		}
 	},
-	watch: {
-		page: 'loadData'
-	},
+	watch: {},
 	methods: {
 		formatCurrency,
 		getRowClass({ row, column, rowIndex, columnIndex }) {
