@@ -241,18 +241,13 @@ export default {
 				.selectWindControlRecord(params)
 				.then((res) => {
 					this.loading = false
-					const {
-						code,
-						data: { record, totalRecord },
-						msg
-					} = res
-					if (res && code && res.code === 200) {
-						this.tableData =
-							(res.data && record.length && Object.freeze(record)) || []
-						this.total = (res.data && totalRecord) || 0
+					if (res?.code === 200) {
+						const { record, totalRecord } = res.data || {}
+						this.tableData = Array.isArray(record) ? Object.freeze(record) : []
+						this.total = totalRecord || 0
 					} else {
 						this.$message({
-							message: res && msg,
+							message: res?.msg || '接口请求异常',
 							type: 'error'
 						})
 					}
