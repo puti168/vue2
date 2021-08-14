@@ -405,7 +405,7 @@ export default {
 						createdAt: this.row.createdAt,
 						auditDesc: this.form.remark,
 						auditResult: this.action ? 1 : 2,
-						orderStatus: 7
+						orderStatus: this.row.orderStatus
 					}
 					this.$api
 						.memberWithDrawProxyUpdateWithdraw(params)

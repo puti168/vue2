@@ -206,13 +206,13 @@
 						label="总输赢"
 					></el-table-column>
 					<el-table-column
-						prop="totalPlatformAmount	"
+						prop="totalPlatformAmount"
 						align="center"
 						label="场馆费"
 						width="130px"
 					></el-table-column>
 					<el-table-column
-						prop="totalActivityAmount	"
+						prop="totalActivityAmount"
 						align="center"
 						width="130px"
 						label="活动彩金"
