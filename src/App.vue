@@ -19,7 +19,7 @@ export default {
 	// 	window.localStorage.getItem('role') &&
 	// 		this.$store.replaceState(
 	// 			Object.assign(
-	// 				this.$store.state,
+	// 				this.$store.state,v
 	// 				JSON.parse(window.localStorage.getItem('role'))
 	// 			)
 	// 		)
